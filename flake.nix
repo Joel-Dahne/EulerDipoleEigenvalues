@@ -12,14 +12,21 @@
       # Only provides leanblueprint. Building the blueprint also needs TeX
       # (xelatex and latexmk for the pdf; kpsewhich, which plasTeX uses to find
       # \input files, for the web version), which is expected on the host.
-      devShells = forAllSystems (pkgs: {
-        default = pkgs.mkShell {
-          packages = [
-            # leanblueprint runs plasTeX in a subprocess, so both must come from
-            # one Python environment that also contains the plasTeX plugins.
-            (pkgs.python3.withPackages (ps: [ ps.leanblueprint ]))
-          ];
-        };
-      });
+      devShells = forAllSystems (pkgs:
+        let
+          # leanblueprint runs plasTeX in a subprocess, so both must come from
+          # one Python environment that also contains the plasTeX plugins.
+          pythonEnv = pkgs.python3.withPackages (ps: [ ps.leanblueprint ]);
+        in
+        {
+          default = pkgs.mkShell {
+            packages = [ pythonEnv ];
+            # The environment's wrappers pass their packages through
+            # NIX_PYTHONPATH, which Python removes at startup, so the plastex
+            # subprocess started by leanblueprint cannot import the plugins.
+            # PYTHONPATH is inherited by every subprocess.
+            PYTHONPATH = "${pythonEnv}/${pkgs.python3.sitePackages}";
+          };
+        });
     };
 }
