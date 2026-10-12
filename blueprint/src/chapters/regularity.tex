@@ -1,0 +1,218 @@
+\chapter{Regularity of eigenfunctions}
+\label{chap:regularity}
+
+The odd--odd and mixed arguments need regularity well beyond
+$\omega\in L^2$: weighted bounds at the saddles, $H^1$ regularity across the
+separatrix, $H^2$ regularity of quotients $\psi/\Psi$ or $\psi/\cos a$, and
+$H^1$ regularity at the elliptic centers. This chapter is the most
+analysis-heavy part of the proof, and the manuscript's arguments here are the
+most compressed. Most nodes are therefore marked \verb|\notready|. In this
+chapter $d$ is distance to the saddle set and $r$ distance to a fixed saddle.
+
+\section{Weighted elliptic estimates at a saddle}
+
+\begin{lemma}[Cylinder inverse]
+\label{lem:cylinder-inverse}
+\notready
+Let $u\in H^2$ near a saddle with a prescribed reflection parity in the two
+separatrix directions, and $\Delta u=F$. Let $a>1$ avoid the indicial roots
+allowed by the parity (the angular frequencies $m$ of the parity class). If
+$r^{1-a}F\in L^2(r\,dr\,d\theta)$ (that is, $r^{2-a}F\in L^2$ on the
+logarithmic cylinder), then $u=u_0+\mathfrak h$, where $\mathfrak h$ is
+harmonic near the saddle with Taylor series containing only the allowed
+degrees, and
+\[
+  \int\Big(\frac{|u_0|^2}{r^{2a+2}}+\frac{|\nabla u_0|^2}{r^{2a}}
+           +\frac{|D^2u_0|^2}{r^{2a-2}}\Big)\,dx\,dy<\infty
+\]
+(manuscript \texttt{(eq:subcritical-elliptic-norm)}).
+\end{lemma}
+
+\begin{proof}
+With $u=r^aV(-\log r,\theta)$, $\Delta(r^aV)=r^{a-2}((\partial_t-a)^2+\partial_\theta^2)V$.
+On the allowed angular modes the multiplier has squared modulus
+$(\xi^2+(m-a)^2)(\xi^2+(m+a)^2)$, bounded below, so the operator has a bounded
+inverse $L^2\to H^2$ on the full cylinder. Invert on the cut-off right side;
+cutting the output off inside radius $\epsilon$ produces Laplacian errors
+$O(\epsilon^{a-1})$ in $L^2$, so no distribution at the saddle appears and the
+difference from $u$ is harmonic.
+\end{proof}
+
+\section{Saddle estimates}
+
+\begin{proposition}[First weighted vorticity estimate]
+\label{prop:saddle-first-gain}
+\uses{def:eigen-problem}
+Every eigenfunction satisfies $\omega/d\in L^2$ (manuscript
+\texttt{(prop:saddle-gains)}, first assertion).
+\end{proposition}
+
+\begin{proof}
+\uses{lem:transport-first-gain, lem:rotation-characters}
+Apply Lemma~\ref{lem:transport-first-gain} to the transport pair
+$(\omega,\psi)$, in each rotation character.
+\end{proof}
+
+\begin{proposition}[Odd--odd saddle estimates]
+\label{prop:saddle-dd}
+\uses{def:eigen-problem, def:sectors}
+\notready
+In the odd--odd sector, $\omega/d^2\in L^2$, and at each saddle there is a
+unique homogeneous harmonic quadratic $q=a\,uv$ (in the coordinates of
+Lemma~\ref{lem:saddle-normal-form}) such that
+\[
+  \int_{r<r_0}\Big(\frac{|\psi-q|^2}{r^8}+\frac{|\nabla(\psi-q)|^2}{r^6}
+  +\frac{|D^2(\psi-q)|^2}{r^4}\Big)<\infty
+\]
+(manuscript \texttt{(eq:quadratic-saddle-jet)}).
+\end{proposition}
+
+\begin{proof}
+\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain, lem:saddle-normal-form}
+Apply Lemma~\ref{lem:cylinder-inverse} with $a=2-\delta$: the first gain makes
+$r^\delta\omega$ square integrable on the cylinder, so $\psi$ satisfies the
+subcritical weighted estimate and $|\psi|\le Cr^{2-\delta}$. Then
+Lemma~\ref{lem:transport-second-gain} gives $\omega/d^2\in L^2$. Finally apply
+Lemma~\ref{lem:cylinder-inverse} with $a=3$ to $r^{-1}\omega$ and subtract the
+degree-two term of the harmonic remainder. Uniqueness: a nonzero quadratic has
+infinite norm in the first term.
+\end{proof}
+
+\begin{corollary}[Mixed saddle jet]
+\label{cor:mixed-saddle-jet}
+\uses{def:eigen-problem, def:sectors}
+\notready
+In either mixed sector, at each saddle there is a unique permitted linear
+harmonic $\ell$ such that
+$\int\big(|\psi-\ell|^2r^{-6}+|\nabla(\psi-\ell)|^2r^{-4}+|D^2(\psi-\ell)|^2r^{-2}\big)<\infty$.
+\end{corollary}
+
+\begin{proof}
+\uses{prop:saddle-first-gain, lem:cylinder-inverse}
+Lemma~\ref{lem:cylinder-inverse} with $a=2$; central odd parity restricts the
+angular frequencies to odd integers, so the multiplier has no zero.
+\end{proof}
+
+\section{Odd--odd sector: regularity across the separatrix}
+
+\begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
+\label{prop:dd-separatrix-h1}
+\uses{def:eigen-problem, def:sectors}
+\notready
+In the odd--odd sector, $\omega\in H^1$ on a neighbourhood of the separatrix
+(including the saddles), with zero trace on each regular edge, and $\psi\in H^3$
+on a possibly smaller neighbourhood (manuscript \texttt{(prop:separatrix-h1)}).
+\end{proposition}
+
+\begin{proof}
+\uses{lem:transport-h1-gain, prop:saddle-dd, lem:elliptic-regularity}
+Show $hN''\in L^2$ from the second variation bound
+$|\partial_h^2\gamma_h|\le C/d^2$ and the quadratic jet (for the endpoint
+terms), then apply Lemma~\ref{lem:transport-h1-gain}. $A(0)=0$ follows from
+$C/h\in L^2$ and the Dirichlet trace of $\psi$. The zero edge trace glues the
+reflected cells in $H^1$; the saddles are removable. Local elliptic regularity
+gives $\psi\in H^3$.
+\end{proof}
+
+\begin{proposition}[Quotient domain, odd--odd]
+\label{prop:dd-quotient-domain}
+\uses{def:eigen-problem, def:sectors}
+\notready
+For every odd--odd eigenfunction,
+\[
+  \phi:=\psi/\Psi\in H^2(\T^2),\qquad \nu:=\omega/\Psi\in L^2(\T^2),\qquad
+  \nu/d\in L^2(\T^2).
+\]
+$\phi$ is even under both separatrix reflections, $(\nu,\phi)$ is a transport
+pair ($H(\nu+\phi)=\lambda\nu$ in the graph domain), and at each saddle there is
+a constant $a$ with $(\phi-a)/r^2,\ \nabla\phi/r\in L^2$ locally and
+$\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
+\end{proposition}
+
+\begin{proof}
+\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:transport-first-gain, lem:hardy-1d, lem:elliptic-regularity, lem:sobolev-embedding}
+Strengthen to $\nabla\omega/d\in L^2$ near the saddles using a logarithmic
+weight $\Lambda(h)=1+|\log h|$ in all numerator estimates. The angular Hardy
+inequality then gives $\omega/\Psi\in L^2$. Dyadic elliptic estimates give
+$D^3R/r\in L^2$ for $R=\psi-a\Psi$, and the division formula
+$R/(uv)=u^{-1}\int_0^1R_v(u,tv)\,dt$ gives the $H^2$ quotient. Multiplying
+the graph equation by $\chi_\epsilon(\Psi)/\Psi$ (using $L_0\Psi=0$) and
+closedness give the quotient transport equation. Finally
+Lemma~\ref{lem:transport-first-gain} for $(\nu,\phi)$ gives $\nu/d\in L^2$.
+\end{proof}
+
+\section{Mixed sectors: regularity across the separatrix}
+
+\begin{proposition}[Mixed-sector regularity]
+\label{prop:mixed-quotient-domain}
+\uses{def:eigen-problem, def:sectors, def:cells}
+\notready
+In the mixed sector $(-,+)$ (odd across $a=\pm\pi/2$, even across
+$b=\pm\pi/2$), $\omega\in H^1$ near the separatrix with zero trace on the odd
+edges, $\psi\in H^3$ near the separatrix, and on the positive cell
+\[
+  \phi=\psi/\cos a\in H^2(\Cell),\qquad \nu=\omega/\cos a\in L^2(\Cell),
+\]
+including the corners (manuscript \texttt{(prop:mixed-quotient-domain)}).
+\end{proposition}
+
+\begin{proof}
+\uses{cor:mixed-saddle-jet, lem:saddle-normal-form, lem:transport-second-gain, lem:transport-h1-gain, lem:elliptic-regularity, lem:hardy-1d}
+Choose a smooth $z_0$, affine near each saddle, whose linear term solves
+$(H_s-\lambda)z_0=\ell$ (possible since $H_s$ has eigenvalues $\pm i$ on linear
+functions). Then $(\omega_0,\psi_0)=(-Hz_0,(H-\lambda)z_0)$ is a transport pair,
+and $\Delta\psi_0=\omega_0$ where $z_0$ is affine (the coefficients of $L_0$
+are first Laplace eigenfunctions). The remainder pair $(v,f)=(\omega-\omega_0,
+\psi-\psi_0)$ has zero jet. Apply the transport gains to $(v,f)$. On an odd
+edge the boundary trace satisfies $-i\partial_t\omega=\lambda\omega$, hence
+equals $ce^{i\lambda t}$, and the angular trace inequality forces $c=0$.
+Division by the normal coordinate gives the quotients.
+\end{proof}
+
+\section{Elliptic centers}
+
+\begin{proposition}[Regularity at the elliptic centers]
+\label{prop:center-regularity}
+\uses{def:eigen-problem}
+\notready
+Every eigenfunction has $\omega\in H^1$ near each elliptic center, including
+the case $\lambda\in\Z$ (manuscript \texttt{(prop:center-regularity)}).
+\end{proposition}
+
+\begin{proof}
+\uses{lem:period, lem:elliptic-regularity, lem:hardy-1d}
+Construct smooth action-angle-type coordinates $F(p)=\frac1{2\pi}\int_0^{2\pi}R_{-t}\Phi^t(p)\,dt$
+for the normalized flow $L_0/b(\Psi)$, in which $H=b(r)D_\theta$ and
+$b(r)=1-r^2/8+O(r^4)$. In angular modes
+$\omega_n=-\frac{nb}{nb-\lambda}\psi_n$. For $\lambda\notin\Z$ the multipliers
+are bounded with radial derivatives $O(r)$. For $\lambda=m\in\Z\setminus\{0\}$
+the resonant mode solves $(\Delta_0-8/r^2)p=G$ with $G/r\in L^2$; solve on the
+cylinder (indicial roots $\pm\sqrt{m^2+8}$) to get $p/r^3,\nabla p/r^2,D^2p/r\in L^2$.
+\end{proof}
+
+\begin{corollary}[Global $H^1$ regularity]
+\label{cor:global-h1}
+\uses{def:eigen-problem, def:sectors}
+\notready
+In the odd--odd and mixed sectors every eigenfunction has $\omega\in H^1(\T^2)$
+and $\psi\in H^3(\T^2)$ (manuscript \texttt{(cor:global-eigenfunction-h1)}).
+\end{corollary}
+
+\begin{proof}
+\uses{prop:dd-separatrix-h1, prop:mixed-quotient-domain, prop:center-regularity, lem:resonant-vanishing, lem:hardy-1d, lem:elliptic-regularity}
+Separatrix neighbourhoods and centers are covered above. On compact regular
+annuli only finitely many angular modes can be resonant. For each, the
+numerator is $H^2$ in the transverse variable and vanishes at the simple
+resonant level, and division gives an $H^1$ quotient. The other modes have
+uniformly bounded multipliers.
+\end{proof}
+
+\begin{remark}[Digest note]
+Corollary~\ref{cor:global-h1} is used only in the mixed sector, to show that the
+angular trace of $\omega$ at a corner is in $L^2(dt)$
+(Lemma~\ref{lem:mixed-boundary-square-traces}). It would be worth checking
+whether the local statements suffice there, so that the elliptic-center
+analysis can be dropped entirely. If so, Proposition~\ref{prop:center-regularity}
+(including the delicate resonant case $\lambda\in\Z$) disappears from the
+proof.
+\end{remark}

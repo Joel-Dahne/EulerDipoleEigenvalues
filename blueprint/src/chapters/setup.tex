@@ -1,0 +1,131 @@
+\chapter{Setting and main theorem}
+\label{chap:setup}
+
+All function spaces are complex valued. Inner products are linear in the
+first argument.
+
+\begin{definition}[Torus and Lebesgue spaces]
+\label{def:torus}
+Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$
+and
+\[
+  L^2_0=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\}.
+\]
+For $s\ge0$, $H^s=H^s(\T^2)$ is the Sobolev space defined through Fourier
+coefficients, $\sum_{k\in\Z^2}(1+|k|^2)^s|\hat g_k|^2<\infty$.
+\end{definition}
+
+\begin{definition}[Inverse Laplacian]
+\label{def:inverse-laplacian}
+\uses{def:torus}
+For $\omega\in L^2_0$ let $\Delta^{-1}\omega$ be the function with Fourier
+coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. Then
+$\Delta^{-1}:L^2_0\to H^2\cap L^2_0$ is bounded and $\Delta\Delta^{-1}\omega=\omega$.
+For $\omega\in L^2_0$ we always write $\psi=\Delta^{-1}\omega$ (the stream
+function of the perturbation).
+\end{definition}
+
+\begin{definition}[The dipole and the transport operator]
+\label{def:dipole}
+\uses{def:torus}
+The steady state is the symmetric dipole with stream function
+$\Psi(x,y)=\cos x+\cos y$, vorticity $\Omega=-\Psi$ and velocity
+$\nabla^\perp\Psi=(\sin y,-\sin x)$ (manuscript \texttt{(Int1.1)}). Define the
+first order differential operators
+\[
+  L_0=\sin y\,\partial_x-\sin x\,\partial_y,\qquad H=-iL_0,
+\]
+acting on distributions on $\T^2$.
+\end{definition}
+
+\begin{definition}[Operator domain]
+\label{def:domain}
+\uses{def:dipole, def:torus}
+$\Dom=\{g\in L^2_0: L_0g\in L^2\}$, where $L_0g$ is understood in the sense of
+distributions (manuscript \texttt{(Intm3)}).
+\end{definition}
+
+\begin{definition}[Linearized operator]
+\label{def:linearized-operator}
+\uses{def:domain, def:inverse-laplacian}
+Let $A=I+\Delta^{-1}$ on $L^2_0$ and $L=L_0A$ with domain $\Dom$. This is well
+defined: for $\omega\in\Dom$, $\Delta^{-1}\omega\in H^2$ so
+$L_0\Delta^{-1}\omega\in H^1\subset L^2$.
+\end{definition}
+
+\begin{theorem}[Main theorem]
+\label{thm:main}
+\uses{def:linearized-operator}
+For every $\lambda\in\R\setminus\{0\}$ and $\omega\in\Dom$, if
+$L\omega=i\lambda\omega$ then $\omega=0$. That is, $\ker(L-i\lambda)=\{0\}$
+(manuscript \texttt{(Intm6)}).
+\end{theorem}
+
+\begin{proof}
+\uses{lem:reduction, lem:sector-reduction, lem:sector-swap, thm:ee-exclusion, thm:dd-exclusion, thm:mixed-exclusion}
+By Lemma~\ref{lem:reduction} it suffices to show that the eigenvalue
+problem~\ref{def:eigen-problem} has only the trivial solution. By
+Lemma~\ref{lem:sector-reduction} each of the four sector projections of a
+solution is again a solution, so it suffices to treat each sector. The
+even--even sector is Theorem~\ref{thm:ee-exclusion}, the odd--odd sector is
+Theorem~\ref{thm:dd-exclusion}, and the mixed sector $(-,+)$ is
+Theorem~\ref{thm:mixed-exclusion}. The other mixed sector $(+,-)$ is mapped to
+$(-,+)$ by the rotation $R$ (Lemma~\ref{lem:sector-swap}).
+\end{proof}
+
+\begin{definition}[The eigenvalue problem]
+\label{def:eigen-problem}
+\uses{def:dipole, def:inverse-laplacian}
+A \emph{solution of the eigenvalue problem with parameter
+$\lambda\in\R\setminus\{0\}$} is a function $\omega\in L^2_0$ such that, with
+$\psi=\Delta^{-1}\omega\in H^2$,
+\[
+  H(\omega+\psi)=\lambda\omega
+\]
+in the sense of distributions (manuscript \texttt{(sf:eigen)}). We say that
+$\omega$ is an \emph{eigenfunction}.
+\end{definition}
+
+\begin{lemma}[Reduction to the real-parameter equation]
+\label{lem:reduction}
+\uses{def:eigen-problem, def:linearized-operator}
+Let $\lambda\in\R\setminus\{0\}$. A function $\omega\in\Dom$ satisfies
+$L\omega=i\lambda\omega$ if and only if $\omega\in L^2_0$ is a solution of the
+eigenvalue problem~\ref{def:eigen-problem} with parameter $\lambda$. Moreover
+every such solution lies in $\Dom$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-regularity}
+$L\omega=L_0(\omega+\psi)$ and $H=-iL_0$, so $L\omega=i\lambda\omega$ is
+equivalent to $H(\omega+\psi)=\lambda\omega$. If the latter holds in
+distributions then $L_0\omega=i\lambda\omega-L_0\psi\in L^2$ because
+$\psi\in H^2$, so $\omega\in\Dom$.
+\end{proof}
+
+\begin{remark}
+The manuscript also shows that a nonzero eigenfunction of $L$ can only have
+purely imaginary eigenvalue (using $A\ge0$), and explains why $\lambda=0$ must
+be excluded: $L$ annihilates $\ker L_0\cap\Dom$ and the first Laplace modes
+$\cos x,\sin x,\cos y,\sin y$, which span $\ker A$. Neither fact is needed for
+Theorem~\ref{thm:main} as stated.
+\end{remark}
+
+\begin{remark}[Digest note: formal statement]
+Choices to settle when stating Theorem~\ref{thm:main} in Lean:
+(i) model $L^2_0$ as a subspace of \texttt{Lp} on
+\texttt{AddCircle}$\times$\texttt{AddCircle} or through Fourier coefficients in
+$\ell^2(\Z^2)$; (ii) define $L_0g$ for $g\in L^2$ distributionally, for
+instance as a weak derivative tested against smooth periodic functions; (iii)
+whether to state the theorem for $L$ or directly for
+Definition~\ref{def:eigen-problem}. The Fourier-coefficient model makes
+$\Delta^{-1}$ and $H^s$ trivial to define, and $L_0$ is then an explicit
+finite-difference operator on coefficients: with $e_1=(1,0)$, $e_2=(0,1)$,
+\[
+  \widehat{(L_0g)}_k=\tfrac12\big[k_1(\hat g_{k-e_2}-\hat g_{k+e_2})
+                         -k_2(\hat g_{k-e_1}-\hat g_{k+e_1})\big],
+\]
+so ``$L_0g\in L^2$'' means that the right side is square summable.
+Most of the later analysis is local in physical space, however, which
+favours the \texttt{Lp} model.
+\end{remark}

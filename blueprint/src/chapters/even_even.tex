@@ -1,0 +1,300 @@
+\chapter{The even--even sector}
+\label{chap:even-even}
+
+In this sector $\psi$ satisfies a Neumann condition on the separatrix. The
+argument: a virial identity with the normal field $W$ gives a nonnegative bulk
+integral equal to boundary terms; the transport equation identifies the
+boundary limit as $-2\sum_\gamma\mathcal F_\lambda$; and an exact sum of
+squares shows $\mathcal F_\lambda\ge0$. Throughout, $\omega$ is an
+eigenfunction in sector $(+,+)$ and, by Lemma~\ref{lem:rotation-characters},
+in an $R$-character $\kappa\in\{1,-1\}$.
+
+\section{The normal field}
+
+\begin{definition}[Normal field]
+\label{def:normal-field}
+\uses{def:cells, lem:dipole-identities}
+On $\Cell$ minus its center, with $\rho^2=|\nabla\Psi|^2$ and
+$\delta=\cos x-\cos y$, let (manuscript \texttt{(ee:normal-field)})
+\[
+  W=(\Psi-2)\frac{\nabla\Psi}{\rho^2},\qquad
+  f=\frac{\Psi(2-\Psi)\delta^2}{\rho^4},\qquad
+  c=\frac{\Psi(2-\Psi)}{\rho^2}.
+\]
+\end{definition}
+
+\begin{lemma}[Normal field algebra]
+\label{lem:normal-field-algebra}
+\uses{def:normal-field, def:adapted-field}
+$W$ is adapted with coefficient $f$, $\Div W=f+1$, and in the orthonormal
+normal--tangent frame $(\nabla\Psi/\rho,\nabla^\perp\Psi/\rho)$,
+\[
+  2\sym DW-fI=\begin{pmatrix}2-c&0\\0&c\end{pmatrix}.
+\]
+Moreover $0<c\le1$ on $\Cell$ minus its center (manuscript
+\texttt{(ee:normal-algebra)}, \texttt{(ee:c-positive)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities}
+Direct differentiation, using $\Div(\nabla\Psi/\rho^2)=-\Psi\delta^2/\rho^4$
+and $\Delta\Psi=-\Psi$. The bound $c\le1$ is
+$\rho^2-\Psi(2-\Psi)=2(1-\cos x)(1-\cos y)\ge0$.
+\end{proof}
+
+\begin{remark}
+These identities have been checked numerically at sample points (scratch
+computation, October 2026); they are a natural first Lean target in the
+$C^\infty$ setting.
+\end{remark}
+
+\begin{lemma}[Regularity at the center]
+\label{lem:normal-field-center}
+\uses{def:normal-field}
+Near the center, with $R=(x^2+y^2)^{1/2}$, $W=\tfrac12(x,y)+O(R^3)$ and
+$f=O(R^2)$, with derivative bounds $O(R^{3-j})$ for $j\le3$ and $O(R^{2-j})$
+for $j\le2$ respectively. Consequently, if $\chi$ is smooth, vanishes on
+$(-\infty,\epsilon]$ and equals one near $2$, the field $\chi(\Psi)W$ (extended
+by zero) is in $W^{3,\infty}(\T^2)$ and is adapted with coefficient
+$\chi(\Psi)f\in W^{2,\infty}$.
+\end{lemma}
+
+\begin{proof}
+Divide the analytic Taylor series of $\Psi-2$, $\nabla\Psi$ and $\rho^2$,
+whose leading denominator is $R^2$. Since $L_0\Psi=0$, multiplying an adapted
+field by a function of $\Psi$ multiplies the coefficient by the same function.
+\end{proof}
+
+\begin{lemma}[Positivity of the bulk density]
+\label{lem:ee-density}
+\uses{lem:normal-field-algebra}
+The density $\mathcal J=f|\omega|^2+(2-c)|\psi_n|^2+c|\psi_t|^2$ is
+nonnegative on $\Cell$, and its gradient part is strictly positive at every
+regular interior point where $\nabla\psi\ne0$ (manuscript
+\texttt{(ee:positive-density)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-algebra}
+$f\ge0$ and $0<c\le1$.
+\end{proof}
+
+\begin{lemma}[Truncated virial identity]
+\label{lem:ee-truncated-virial}
+\uses{lem:ee-density, def:eigen-problem}
+For almost every $\epsilon\in(0,2)$, with $n$ pointing out of
+$\{\Psi>\epsilon\}$, $d\ell$ arclength and $ds=d\ell/\rho$ flow-time measure,
+\[
+  \int_{\{\Psi>\epsilon\}}\mathcal J
+  =\int_{\{\Psi=\epsilon\}}\operatorname{Re}(\psi\overline{\psi_n})\,d\ell
+   +(2-\epsilon)\int_{\{\Psi=\epsilon\}}
+     \big(|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)\big)\,ds,
+\]
+where the $\omega$ integral is the almost-everywhere coarea restriction
+(manuscript \texttt{(ee:truncated-virial)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:virial-l2, lem:normal-field-center, lem:coarea}
+Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$, for which
+$\chi f-\Div(\chi W)=-\chi-(\Psi-2)\chi'$. Use
+$\tfrac12\Delta|\psi|^2=|\nabla\psi|^2+\operatorname{Re}(\omega\bar\psi)$ and
+integrate by parts twice. Let $\chi$ tend to $\mathbf 1_{(\epsilon,2]}$; coarea
+and Lebesgue differentiation give the identity at almost every level.
+\end{proof}
+
+\section{Boundary limits}
+
+\begin{lemma}[Neumann condition]
+\label{lem:ee-neumann}
+\uses{def:sectors, def:cells}
+In the even--even sector, $\psi$ is even under both separatrix reflections,
+so its normal derivative trace vanishes on every regular separatrix arc.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sector-reduction, lem:traces}
+The reflection $S_j$ fixes the arc and reverses its normal.
+\end{proof}
+
+\begin{lemma}[Weighted gradient traces]
+\label{lem:ee-gradient-traces}
+\uses{lem:ee-neumann}
+Let $\psi\in H^2$ be even under $S_1,S_2$. As $\epsilon\to0$, over the regular
+levels $\{\Psi=\epsilon\}$,
+\[
+  \int|\psi_n|^2\,ds\to0,\qquad
+  \int|\psi_t|^2\,ds\to\sum_\gamma\int_\gamma|\psi_t|^2\,ds<\infty,\qquad
+  \int\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0
+\]
+(manuscript \texttt{(ee:gradient-traces)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:sobolev-embedding}
+Away from the saddles this is trace continuity. Near a corner use the
+coordinates $u,v$ of Lemma~\ref{lem:corner-coordinates}, in which levels are
+$uv=h$ and $\psi$ is even in each variable. Then $\psi_u(u,0)$ is odd, and
+Lemma~\ref{lem:odd-hardy} gives $\int_0^{u_0}|\psi_u(u,0)|^2du/u<\infty$. On
+the half-hyperbola $u\ge v=h/u$, for $F\in H^1$,
+$\int_{\sqrt h}^{u_0}|F(u,h/u)-F(u,0)|^2du/u\le\int_{(0,u_0)^2}|F_v|^2$.
+Apply this to $F=\psi_u,\psi_v$. Since $dt\sim du/u$, the corner tails are
+uniformly small. The last limit follows from boundedness of $\psi$ and
+Cauchy--Schwarz.
+\end{proof}
+
+\section{The boundary form}
+
+\begin{definition}[Boundary form]
+\label{def:boundary-form}
+\uses{def:canonical-profile}
+For a function $z$ on $\R$ with $P=-i\partial_s$, let
+(manuscript \texttt{(ee:trace-form)})
+\[
+  \mathcal F_\lambda(z)=\frac12\int_\R\cosh^2s\,|\partial_s(P-\lambda)z|^2\,ds
+  -\operatorname{Re}\int_\R Pz\,\overline{(P-\lambda)z}\,ds .
+\]
+In the variable $\xi=\tanh s$, with $w=1-\xi^2$ and $F(\xi)=z(s)$, we also write
+$\mathcal F_\lambda(F)$, and $G=-iwF'-\lambda F$ corresponds to $(P-\lambda)z$.
+\end{definition}
+
+\begin{lemma}[Boundary form in the $\xi$ variable]
+\label{lem:boundary-form-xi}
+\uses{def:boundary-form}
+\[
+  \mathcal F_\lambda(F)=\frac12\int_{-1}^1|wF''-2\xi F'-i\lambda F'|^2\,d\xi
+  -\int_{-1}^1w|F'|^2\,d\xi+\lambda\operatorname{Im}\int_{-1}^1F'\bar F\,d\xi
+\]
+(manuscript \texttt{(ee:trace-xi)}).
+\end{lemma}
+
+\begin{proof}
+$\partial_s=w\partial_\xi$, $\cosh^2s=1/w$, $ds=d\xi/w$, and
+$G'=-i(wF''-2\xi F'-i\lambda F')$.
+\end{proof}
+
+\begin{lemma}[Sum of squares, smooth case]
+\label{lem:trace-sos-smooth}
+\uses{lem:boundary-form-xi}
+For $F\in C_c^\infty(-1,1)$ and real $\lambda$,
+\[
+  \mathcal F_\lambda(F)=\frac12\int_{-1}^1|wF''-\xi F'+F-i\lambda F'|^2\,d\xi
+  +\frac12\int_{-1}^1|F'|^2\,d\xi
+\]
+(manuscript \texttt{(ee:trace-sos)}).
+\end{lemma}
+
+\begin{proof}
+Integration by parts. At $\lambda=0$ the key step is
+$\|wF''-\xi F'+F\|_2^2=\|wF''\|_2^2-\|F'\|_2^2$. The terms linear in $\lambda$
+agree because
+$\operatorname{Im}\int(wF''-\xi F'+F)\overline{F'}
+=\operatorname{Im}\int wF''\overline{F'}-\operatorname{Im}\int F'\bar F$.
+\end{proof}
+
+\begin{remark}
+Lemmas~\ref{lem:trace-sos-smooth} and~\ref{lem:affine-splitting} have been
+checked symbolically on a test polynomial vanishing at $\pm1$ (scratch sympy
+computation). This identity is the heart of the even--even argument, and a
+good early formalization target: it is pure one-variable calculus.
+\end{remark}
+
+\begin{lemma}[Sum of squares, extension]
+\label{lem:trace-sos-extension}
+\uses{lem:trace-sos-smooth}
+The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in H^1_0(-1,1)$
+with $wF''\in L^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:hardy-1d}
+Endpoint cutoffs are dense in the norm $\|F\|_{H^1}+\|wF''\|_2$: on an
+endpoint interval of length $\eta$ the cutoff errors are controlled by local
+norms of $F'$, $wF''$ and by $\|F/\eta\|_2$, which tends to zero by the
+$H^1_0$ Hardy inequality. Then mollify away from the endpoints.
+\end{proof}
+
+\begin{lemma}[Affine splitting]
+\label{lem:affine-splitting}
+\uses{lem:boundary-form-xi}
+If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$, $F\in H^1$ and $wF''\in L^2$, then
+\[
+  \mathcal F_\lambda(F)=\mathcal F_\lambda(F_0)+\lambda^2|b|^2
+  +2\lambda\operatorname{Im}(b\bar a)
+\]
+(manuscript \texttt{(ee:affine-splitting)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-sos-extension}
+Expand; all mixed terms with $F_0$ cancel (the quadratic $\lambda$ term uses
+$\int F_0'=0$; in the linear term $\int wF_0''=-2\int F_0$ cancels the two
+mixed current terms). Extend by the same density argument.
+\end{proof}
+
+\begin{lemma}[Regularity of the boundary unknown]
+\label{lem:ee-boundary-regularity}
+\uses{def:boundary-form, def:canonical-profile}
+For an even--even eigenfunction, the canonical transport unknown $z$ on each
+arc, written as $F(\xi)$, satisfies $F\in H^1(-1,1)$, $wF''\in L^2$ and
+$G\in H^1(-1,1)$. Its endpoint values are $-c_\pm/\lambda$, where $c_\pm$ are the
+saddle values of $\psi$, and $c_+=\kappa c_-$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-gradient-traces, lem:canonical-profile, lem:separatrix-arc}
+$G\in H^1$ from the tangential trace bound and the arc speed
+$\sqrt2\sech s$. The weighted bound of Lemma~\ref{lem:canonical-profile} and
+$Pz=-\Omega$ give $F\in H^1$; differentiating $G=-iwF'-\lambda F$ gives
+$wF''\in L^2$.
+\end{proof}
+
+\begin{lemma}[Positivity of the boundary form]
+\label{lem:ee-trace-positivity}
+\uses{def:boundary-form}
+If $F\in H^1(-1,1)$, $wF''\in L^2$ and $F(1)=\pm F(-1)$, then
+$\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-splitting, lem:trace-sos-extension}
+Write $F=F_0+a+b\xi$ with $F_0(\pm1)=0$. If $F(1)=F(-1)$ then $b=0$; if
+$F(1)=-F(-1)$ then $a=0$. In both cases the last term of
+Lemma~\ref{lem:affine-splitting} vanishes, and
+Lemma~\ref{lem:trace-sos-extension} shows $\mathcal F_\lambda(F_0)\ge0$.
+\end{proof}
+
+\section{Conclusion}
+
+\begin{theorem}[Even--even exclusion]
+\label{thm:ee-exclusion}
+\uses{def:eigen-problem, def:sectors}
+If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
+$S_1^*\omega=S_2^*\omega=\omega$, then $\omega=0$ (manuscript
+\texttt{(ee:theorem)}).
+\end{theorem}
+
+\begin{proof}
+\uses{lem:rotation-characters, lem:ee-truncated-virial, lem:ee-gradient-traces, lem:pairing-limit, lem:ee-boundary-regularity, lem:ee-trace-positivity, lem:ee-density}
+Fix an $R$-character. Apply Lemma~\ref{lem:ee-truncated-virial} along good
+levels from Lemma~\ref{lem:pairing-limit}, applied to the transport pair
+$(\omega,\psi)$. By Lemma~\ref{lem:ee-gradient-traces} the first-order and
+normal boundary terms vanish in the limit, and the tangential and pairing
+terms converge. Since $g=(P-\lambda)z$, $\Omega=-Pz$ and
+$|\psi_t|^2=\tfrac12\cosh^2s|g'|^2$ on the arc, the limit of the right side is
+$-2\sum_\gamma\mathcal F_\lambda(z_\gamma)\le0$ by
+Lemmas~\ref{lem:ee-boundary-regularity} and~\ref{lem:ee-trace-positivity}. The
+left side is nonnegative and increasing as $\epsilon\to0$, so it is zero.
+Hence $\nabla\psi=0$ on $\Cell$. By $S_1$-symmetry $\psi$ takes the same
+constant on the negative cell; mean zero gives $\psi=0$, so $\omega=\Delta\psi=0$.
+\end{proof}
+
+\begin{remark}[Digest note]
+The manuscript's overview in the introduction normalizes the boundary
+unknown by $F(\pm1)=0$ (``suppose also that $\psi$ vanishes at the
+saddles'') and handles the general case with the affine splitting. The
+$R$-character enters only to guarantee $c_+=\pm c_-$, which kills the cross
+term $2\lambda\operatorname{Im}(b\bar a)$. It would be worth checking whether
+the $R$-decomposition is needed anywhere else in this sector (it is used in
+the Melnikov argument, Lemma~\ref{lem:melnikov}).
+\end{remark}

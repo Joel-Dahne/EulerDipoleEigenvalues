@@ -1,0 +1,259 @@
+\chapter{The transport equation near the separatrix}
+\label{chap:transport}
+
+The eigenvalue equation $H(\omega+\psi)=\lambda\omega$ is a first order
+transport equation for $\omega$ along the orbits of the dipole, forced by
+$\psi$. Near the separatrix the orbits have period $S(h)\to\infty$, and the
+equation can be solved explicitly orbit by orbit. The manuscript uses this in
+three ways:
+\begin{enumerate}
+  \item to identify the limit of boundary terms on the separatrix (the
+        \emph{canonical transport profile});
+  \item to prove weighted estimates for $\omega$ near the saddles (the
+        \emph{transport gains});
+  \item to prove $H^1$ regularity of $\omega$ across the separatrix.
+\end{enumerate}
+Each is applied to several different pairs (the eigenfunction itself, the
+odd--odd quotient, and a jet-subtracted remainder in the mixed sector). The
+manuscript handles this by reusing earlier \emph{proofs}. Here we state the
+results for a general transport pair.
+
+\begin{definition}[Transport pair]
+\label{def:transport-pair}
+\uses{def:eigen-problem, def:cells}
+Let $\lambda\in\R\setminus\{0\}$ and let $U$ be an open union of orbits. A
+\emph{transport pair} on $U$ is $(v,f)$ with $v\in L^2(U)$, $f\in H^2(U)$ and
+$H(v+f)=\lambda v$ in distributions on $U$. Its \emph{transport unknown} is
+$z=-(v+f)/\lambda$, which satisfies $Hz=-v$ and $(H-\lambda)z=f$.
+Examples: $(\omega,\psi)$ for an eigenfunction; $(\nu,\phi)$ for the odd--odd
+quotient (Proposition~\ref{prop:dd-quotient-domain}); $(v,f)$ after subtracting
+an explicit jet in the mixed sector (Proposition~\ref{prop:mixed-quotient-domain}).
+\end{definition}
+
+\begin{lemma}[Orbitwise transport and resonant vanishing]
+\label{lem:resonant-vanishing}
+\uses{def:transport-pair, def:period}
+Let $(v,f)$ be a transport pair on a compact regular orbit annulus. On almost
+every orbit, $z$ restricted to the orbit is in $H^1$ of flow time and
+satisfies $(-i\partial_t-\lambda)z=f$ there. In angular Fourier modes with
+respect to the orbital frequency $b(h)$,
+\[
+  (kb(h)-\lambda)\,v_k(h)=-kb(h)f_k(h).
+\]
+If $kb(h_k)=\lambda$ at a level $h_k$ in the annulus, then $f_k(h_k)=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea, lem:period, lem:sobolev-embedding}
+On orbits, $L_0=\partial_t$. The coefficient $f_k$ is continuous in $h$, and
+$v_k$ is locally square integrable in $h$. Since $S'<0$ the denominator
+$kb(h)-\lambda$ has a simple zero at $h_k$, so $f_k(h_k)\ne0$ would make $v_k$
+behave like $1/(h-h_k)$.
+\end{proof}
+
+\section{The canonical transport profile on a separatrix arc}
+
+Throughout this section $(v,f)$ is a transport pair on a neighbourhood of the
+closed positive cell that is invariant under $R$ with character
+$\kappa\in\{1,-1\}$: $R^*f=\kappa f$, $R^*v=\kappa v$. Let
+$g(s)=f(\gamma(s))$ be the trace of $f$ on the arc of
+Definition~\ref{def:separatrix-arc}, with endpoint limits $c_\pm$. Then
+$c_+=\kappa c_-$.
+
+\begin{lemma}[Melnikov condition]
+\label{lem:melnikov}
+\uses{def:transport-pair, def:separatrix-arc, lem:resonant-vanishing}
+$\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison, lem:traces}
+There are infinitely many resonant levels $h_k\to0$ with $kb(h_k)=\lambda$ and
+$e^{i\pi k/2}=\kappa$. By the character, the four quarter-orbit integrals of
+$f_k$ coincide, so
+$\int_{-L}^{L}f(\gamma_{h_k}(t))e^{-i\lambda t}\,dt=0$. Integration by parts
+(the endpoint terms cancel because $e^{2i\lambda L(h_k)}=\kappa$) gives the
+same for the derivative. Compare with $g'$ using
+$\|g_h-g\|_{L^\infty(-L,L)}\le C_\alpha h^{\alpha/2}$ and
+$\|g_h-g\|_{L^1(-L,L)}\le C_\alpha h^{\alpha/2}|\log h|$
+(manuscript \texttt{(ee:forcing-comparison)}). Finally $g'\in L^1(ds)$ since
+the trace of an $H^2$ function on a straight arc is $H^{3/2}$.
+\end{proof}
+
+\begin{definition}[Canonical transport profile]
+\label{def:canonical-profile}
+\uses{def:separatrix-arc}
+The \emph{canonical profile} of the arc trace $g$ is the solution $\Omega$ of
+$(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as $s\to\pm\infty$
+(manuscript \texttt{(ee:canonical-ode)}). The canonical transport unknown is
+$z=-(\Omega+g)/\lambda$, so that $(P-\lambda)z=g$ and $Pz=-\Omega$ with
+$P=-i\partial_s$.
+\end{definition}
+
+\begin{lemma}[Existence and decay of the canonical profile]
+\label{lem:canonical-profile}
+\uses{def:canonical-profile, lem:melnikov}
+The canonical profile exists and is unique, given by
+$\Omega(s)=-e^{i\lambda s}\int_{-\infty}^sg'(t)e^{-i\lambda t}\,dt
+=e^{i\lambda s}\int_s^\infty g'(t)e^{-i\lambda t}\,dt$. It satisfies
+$|\Omega(s)|\le C_\alpha e^{-\alpha|s|}$ for every $\alpha<1$, and
+$\|e^{|s|}\Omega\|_{L^2(ds)}\le C\|e^{|s|}g'\|_{L^2(ds)}$ whenever the right
+side is finite.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:melnikov, lem:sobolev-embedding}
+The two formulas agree by Lemma~\ref{lem:melnikov}. Decay follows by
+integration by parts using $g-c_\pm=O(e^{-\alpha|s|})$, which comes from
+$H^2\subset C^{0,\alpha}$. The weighted bound is a one-sided convolution
+estimate with kernel $e^{-t}\mathbf 1_{t>0}$. A difference of two solutions is
+$Ce^{i\lambda s}$, which does not decay.
+\end{proof}
+
+\begin{lemma}[Good windows]
+\label{lem:good-windows}
+\uses{def:period}
+The set of levels $h$ with $|\lambda S(h)-2\pi(j+\tfrac12)|<\pi/3$ for some
+integer $j$ (of the sign of $\lambda$) has positive measure in every interval
+$(0,\eta)$, and on it $|e^{i\lambda S(h)/4}-\kappa|\ge c>0$ uniformly
+(manuscript \texttt{(ee:good-windows)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period}
+$S$ is continuous, strictly monotone and tends to $\infty$ at $0$. On the
+windows, $\lambda S/4$ lies within $\pi/12$ of an odd multiple of $\pi/4$.
+\end{proof}
+
+\begin{lemma}[Limit of the vorticity pairing]
+\label{lem:pairing-limit}
+\uses{def:canonical-profile, def:transport-pair, lem:good-windows}
+There are levels $h_j\to0$ in the good windows, avoiding any prescribed null
+set, such that
+\[
+  \int_{\{\Psi=2h_j\}}\operatorname{Re}(v\bar f)\,dt
+  \longrightarrow\sum_\gamma\int_\R\operatorname{Re}(\Omega_\gamma\bar g_\gamma)\,ds
+\]
+where the sum runs over the four arcs bounding $\Cell$ (manuscript
+\texttt{(ee:pairing-limit)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile, lem:resonant-vanishing, lem:orbit-comparison, lem:good-windows}
+On a good orbit $z_h=-(v_h+g_h)/\lambda$ solves $(P-\lambda)z_h=g_h$ with
+$z_h(L)=\kappa z_h(-L)$. The difference $z_h-z$ solves the same equation with
+forcing $g_h-g$ and boundary mismatch $\kappa z(-L)-z(L)=O(e^{-\alpha L})$
+(using $c_+=\kappa c_-$). Variation of constants and the window lower bound
+give $\|v_h-\Omega\|_{L^\infty(-L,L)}\le C_\alpha h^{\alpha/2}|\log h|$. Since
+$L=O(|\log h|)$, the pairing error is $O(h^{\alpha/2}|\log h|^2)$, and the
+tails of $\Omega\bar g$ vanish by exponential decay.
+\end{proof}
+
+\section{Weighted transport gains near the saddles}
+
+Let $d$ denote distance to the saddle set. In this section $(v,f)$ is a
+transport pair on a neighbourhood of the separatrix, decomposed into rotation
+characters as in Lemma~\ref{lem:rotation-characters}.
+
+\begin{definition}[Quarter-orbit numerator and divisor]
+\label{def:numerator}
+\uses{def:transport-pair, def:period}
+For the quarter orbits of Definition~\ref{def:period} and a character $\kappa$, let
+\[
+  N(h)=\int_{-L(h)}^{L(h)}f(\gamma_h(t))e^{-i\lambda t}\,dt,\qquad
+  D(h)=\kappa-e^{2i\lambda L(h)},\qquad C(h)=N(h)/D(h).
+\]
+Variation of constants gives $|z_h(-L)|=|C(h)|$ and $z_h(L)=\kappa z_h(-L)$
+(manuscript \texttt{(eq:quarter-transport-divisor)}).
+\end{definition}
+
+\begin{lemma}[Numerator vanishes at divisor zeros]
+\label{lem:numerator-zeros}
+\uses{def:numerator}
+$N\in H^1_{\mathrm{loc}}(0,h_0)$ and $N(h_j)=0$ at every zero $h_j$ of $D$.
+The zeros are simple and form a geometric sequence. On the phase cell $I_j$
+around $h_j$ one has $h\sim h_j$ and $|D(h)|\ge c_\lambda|h-h_j|/h_j$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period, lem:resonant-vanishing, lem:coarea}
+The endpoint traces of $z_h$ are locally square integrable in $h$, so
+$|N/D|$ cannot blow up like $1/|h-h_j|$; continuity of $N$ forces $N(h_j)=0$.
+Simplicity and spacing follow from $L'(h)\sim-1/(2h)$.
+\end{proof}
+
+\begin{lemma}[First transport gain]
+\label{lem:transport-first-gain}
+\uses{def:transport-pair}
+\notready
+If $(v,f)$ is a transport pair near the separatrix with $f\in H^2$, then
+$v/d\in L^2$ near the saddles. No elliptic relation between $v$ and $f$ is
+used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:numerator-zeros, lem:orbit-comparison, lem:hardy-1d, lem:sobolev-embedding}
+First assume $f$ vanishes at the saddles. Differentiating $N$ (including the
+moving endpoints) gives
+$|N'(h)|^2\le Ch^{-1}\int_{-L}^{L}|\nabla f(\gamma_h)|^2\,dt+Ch^{\alpha-2}$
+(manuscript \texttt{(eq:first-numerator-estimate)}). Hardy's inequality on
+each side of $h_j$ in each phase cell gives
+$\int_{I_j}|N/D|^2\,dh/h\le C\int_{I_j}\!\int|\nabla f_h|^2\,dt\,dh+Ch_j^\alpha$,
+which is summable. Reconstruction of $v_h$ from the endpoint value
+gives $|v_h(t)|\le C|N/D|+Ce^{-\alpha|t|}$, and
+$\int_{-L}^Ld^{-2}dt\le C/h$ completes the estimate. For nonzero saddle values
+subtract a smooth function $a(t)$ with the same tail values (these satisfy
+$a_+=\kappa a_-$); the same estimates apply to the difference.
+\end{proof}
+
+\begin{lemma}[Second transport gain]
+\label{lem:transport-second-gain}
+\uses{def:transport-pair}
+\notready
+Let $0<\delta<1$. If in addition $|f|\le Cd^{2-\delta}$ near the saddles and
+$\int_0^{h_0}\!\int_{-L}^{L}|\nabla f(\gamma_h(t))|^2d^{-(4-2\delta)}\,dt\,dh<\infty$,
+then $v/d^2\in L^2$ near the saddles.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-first-gain, lem:numerator-zeros, lem:orbit-comparison, lem:hardy-1d}
+Now $|N'|^2\le C\int|\nabla f_h|^2d^{-(4-2\delta)}\,dt+Ch^{-\delta}$, so
+$N'\in L^2$, and the phase-cell Hardy inequality with weight $h^{-2}$ gives
+$\int_{I_j}|N/D|^2\,dh/h^2\le C\int_{I_j}|N'|^2$. Reconstruction has forcing
+tail $Ce^{-(2-\delta)|t|}$, whose squared $d^{-4}$ integral is $O(h^{-\delta})$,
+while $\int d^{-4}dt=O(h^{-2})$.
+\end{proof}
+
+\begin{lemma}[$H^1$ transport gain]
+\label{lem:transport-h1-gain}
+\uses{def:transport-pair}
+\notready
+Suppose in addition that $hN''\in L^2(0,h_0)$, $C/h\in L^2(0,h_0)$, and
+$\int_0^{h_0}\!\int_{-L}^L|\nabla f_h|^2d^{-(4-2\delta)}\,dt\,dh<\infty$. Then
+$d\,\partial_hv$ and $d^{-1}\partial_tv$ are square integrable in the orbit
+coordinates, and hence $v\in H^1$ on each cell's separatrix neighbourhood.
+If moreover the midpoint value $A(h)=z_h(0)$ satisfies $A(0)=0$, the trace of
+$v$ on the regular edges is zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:numerator-zeros, lem:hardy-1d, lem:orbit-comparison}
+Factor $D=(h-h_j)d_j(h)/h_j$ on each phase cell. The second Hardy inequality
+gives $C'\in L^2$. The midpoint formula
+$A(h)=ie^{2i\lambda L}C+i\int_{-L}^0f_he^{-i\lambda t}dt$ is then in $H^1$,
+and $z_h(t)=e^{i\lambda t}A(h)+i\int_0^te^{i\lambda(t-u)}f_h(u)\,du$
+controls $\partial_hz$. Finally $\partial_tv=i\lambda v-\partial_tf$, and the
+inverse coordinate bounds $|\nabla h|\le Cd$, $|\nabla t|\le C/d$ convert to
+physical derivatives.
+\end{proof}
+
+\begin{remark}[Digest note]
+Lemmas~\ref{lem:transport-first-gain}--\ref{lem:transport-h1-gain} are
+extracted from the proofs of the manuscript's
+Propositions~\texttt{prop:saddle-gains}, \texttt{prop:separatrix-h1},
+\texttt{prop:dd-quotient-domain} and \texttt{prop:mixed-quotient-domain}. The
+hypotheses above are a first guess at what those proofs actually use and must
+be pinned down before formalization; hence \verb|\notready|. Getting these
+statements right is probably the single most useful restructuring for the
+paper as well.
+\end{remark}

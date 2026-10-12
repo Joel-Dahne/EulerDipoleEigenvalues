@@ -1,0 +1,184 @@
+\chapter{Geometry of the dipole flow}
+\label{chap:geometry}
+
+This chapter collects explicit facts about $\Psi=\cos x+\cos y$ and its flow.
+Most are elementary trigonometric identities or one-variable estimates and are
+good early formalization targets.
+
+\begin{remark}[Digest note: notation]
+The manuscript reuses letters heavily across sections. The level variable is
+$r=\Psi$ in the even--even section, $s=\Psi$ in the odd--odd section (where
+$r=|\nabla\Psi|^2$ instead), and $r$ denotes distance to a saddle in the
+regularity section. Similarly $h$ is $\Psi/2$, $\cos a$, or a generic level,
+depending on the section. In this blueprint we write $\Psi$ for the stream
+function, $h=\Psi/2$ for the level on the positive cell, $\rho=|\nabla\Psi|$,
+and $d$ for distance to the saddle set. Local deviations are flagged.
+\end{remark}
+
+\section{Cells, separatrix, critical points}
+
+\begin{definition}[Cells and diagonal coordinates]
+\label{def:cells}
+\uses{def:dipole}
+The critical points of $\Psi$ are the elliptic centers $(0,0)$ (maximum,
+$\Psi=2$) and $(\pi,\pi)$ (minimum, $\Psi=-2$), and the two saddles $(\pi,0)$,
+$(0,\pi)$ (where $\Psi=0$). The separatrix $\{\Psi=0\}$ is the union of the
+two closed lines $\{x+y\equiv\pi\}$ and $\{x-y\equiv\pi\}$. The positive cell
+is $\Cell=\{\Psi>0\}$, the negative cell $\{\Psi<0\}$.
+
+On a lift of $\Cell$ put $a=(x+y)/2$, $b=(x-y)/2$. Then $\Cell$ is the square
+$|a|,|b|<\pi/2$, and $\Psi=2\cos a\cos b$, $dx\,dy=2\,da\,db$, and
+$\Delta=\tfrac12(\partial_a^2+\partial_b^2)$. The edges $a=\pm\pi/2$ lie on the
+fixed line of $S_1$ and the edges $b=\pm\pi/2$ on the fixed line of $S_2$.
+The four corners $(a,b)=(\pm\pi/2,\pm\pi/2)$ project to the two saddles, each
+saddle being a corner twice.
+\end{definition}
+
+\begin{lemma}[Algebraic identities for the dipole]
+\label{lem:dipole-identities}
+\uses{def:dipole}
+Write $s=\Psi$, $\rho^2=|\nabla\Psi|^2$, $\delta=\cos x-\cos y$. Then
+\begin{align*}
+  &\Delta\Psi=-\Psi,\qquad L_0\Psi=0,\qquad \rho^2=\sin^2x+\sin^2y,\\
+  &\rho^2-s(2-s)=2(1-\cos x)(1-\cos y)\ \ge0,\qquad
+   \delta^2=4-2\rho^2-s^2,\\
+  &\nabla s\cdot\nabla\rho^2=s(4-s^2-3\rho^2),\qquad
+   \Delta\rho^2=4(1-\rho^2),\\
+  &|\nabla\rho^2|^2=4\rho^2-2\rho^4+4\rho^2s^2+2s^4-8s^2.
+\end{align*}
+The coefficients of $L_0$, namely $\sin y$ and $\sin x$, are first Laplace
+eigenfunctions: $\Delta\sin x=-\sin x$.
+(Manuscript \texttt{(ee:c-positive)} and the list before the coefficient
+table in Section~5.)
+\end{lemma}
+
+\begin{proof}
+Trigonometric identities. For example, with $p=\cos x$ and $q=\cos y$,
+$\rho^2=2-p^2-q^2$ and $\nabla s\cdot\nabla\rho^2=-2p(1-p^2)-2q(1-q^2)$.
+\end{proof}
+
+\section{The separatrix arcs}
+
+\begin{definition}[Heteroclinic arc]
+\label{def:separatrix-arc}
+\uses{def:cells}
+Let $\gamma(s)=\big(2\arctan(e^{-s}),\,2\arctan(e^{-s})-\pi\big)$, $s\in\R$
+(manuscript \texttt{(ee:arc)}). The images of $\gamma$ under the rotation $R$
+give the four directed arcs bounding $\Cell$.
+\end{definition}
+
+\begin{lemma}[Arc parametrization]
+\label{lem:separatrix-arc}
+\uses{def:separatrix-arc}
+$\gamma$ is an integral curve of the velocity $(\sin y,-\sin x)$, lies on
+$\{x-y=\pi\}$, runs from the saddle $(\pi,0)$ ($s\to-\infty$) to the saddle
+$(0,-\pi)\equiv(0,\pi)$ ($s\to+\infty$), and has speed
+$|\gamma'(s)|=\sqrt2\sech s$ (manuscript \texttt{(ee:arc-speed)}). In the
+variable $\xi=\tanh s$ one has $ds=d\xi/(1-\xi^2)$.
+\end{lemma}
+
+\begin{proof}
+With $x=2\arctan(e^{-s})$ one has $\sin x=\sech s$ and $x'=-\sech s$; since
+$y=x-\pi$, $\sin y=-\sin x$.
+\end{proof}
+
+\section{Orbits near the separatrix}
+
+\begin{definition}[Quarter orbits and the period]
+\label{def:period}
+\uses{def:cells}
+For $0<h<1$ let $\gamma_h$ be the orbit on the level $\{\Psi=2h\}$ in $\Cell$,
+parametrized by flow time and centered at $(a,b)=(0,\arccos h)$, i.e. at
+$(x,y)=(\arccos h,-\arccos h)$. One quarter of the orbit is
+$\gamma_h([-L(h),L(h)])$, where
+\[
+  L(h)=\int_0^{\arccos\sqrt h}\frac{da}{\sqrt{\cos^2a-h^2}}
+      =\int_0^1\frac{dt}{\sqrt{1-(1-h)t^2}\sqrt{1+h-t^2}}
+\]
+(manuscript \texttt{(ee:period)}). The full period is $S(h)=8L(h)$, and the
+orbital frequency is $b(h)=2\pi/S(h)$.
+\end{definition}
+
+\begin{lemma}[The period function]
+\label{lem:period}
+\uses{def:period}
+$L$ is strictly decreasing on $(0,1)$, $S(h)=4\mathbf K(1-h^2)$ with
+$\mathbf K(m)=\int_0^{\pi/2}(1-m\sin^2\theta)^{-1/2}d\theta$, and as $h\to0$,
+\[
+  L(h)=\tfrac12\log(4/h)+O(h^2\log(1/h)),\qquad
+  L'(h)=-\frac1{2h}+O(h\log(1/h)).
+\]
+In particular $e^{L(h)}\le Ch^{-1/2}$, and $S$ has simple level sets.
+\end{lemma}
+
+\begin{proof}
+Monotonicity: the derivative in $h$ of the squared denominator is
+$t^2(1+h-t^2)+1-t^2+ht^2>0$. The asymptotics follow by substituting $y=1-t^2$
+and splitting at $y=h$; the precise expansion follows from the classical
+expansion of $\mathbf K$ near $m=1$.
+\end{proof}
+
+\begin{lemma}[Orbit comparison]
+\label{lem:orbit-comparison}
+\uses{def:period, def:separatrix-arc}
+Let $d$ denote distance to the saddle set. For $|t|\le L(h)$ and small $h$:
+\begin{enumerate}
+  \item $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$ (after matching the centering of
+        $\gamma$ and $\gamma_h$) (manuscript \texttt{(ee:orbit-comparison)});
+  \item $ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$; in particular both
+        endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a
+        saddle;
+  \item $|\partial_h\gamma_h(t)|\le Ce^{|t|}\le C/d$ and
+        $|\partial_h^2\gamma_h(t)|\le Ce^{2|t|}\le C/d^2$
+        (manuscript \texttt{(eq:quarter-orbit-bounds)});
+  \item in the orbit coordinates $(h,t)$ the area element is $2\,dh\,dt$, and
+        $|\nabla h|\le Cd$, $|\nabla t|\le C/d$;
+  \item $\int_{-L}^{L}d^{-2}\,dt\le C/h$, $\int_{-L}^{L}d^{-4}\,dt\le C/h^2$,
+        and $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period}
+The velocity field has Lipschitz constant at most one; the midpoint
+displacement is $O(h)$ and grows at most like $e^{|t|}$, while $he^{2L}$ is
+bounded. The remaining bounds follow from comparison with the hyperbolic
+linearization at the saddles.
+\end{proof}
+
+\begin{remark}[Digest note]
+Items (3)--(5) are used throughout Chapter~\ref{chap:regularity} but are only
+asserted in the manuscript. A cleaner route may be the exact corner coordinates
+of Lemma~\ref{lem:corner-coordinates}, in which level sets are exact
+hyperbolas.
+\end{remark}
+
+\begin{lemma}[Corner coordinates]
+\label{lem:corner-coordinates}
+\uses{def:cells}
+Near a corner of $\Cell$, let $\alpha,\beta>0$ be the distances in the $(a,b)$
+coordinates to the two sides meeting there, and put $u=\sin\alpha$,
+$v=\sin\beta$. Then $\Psi/2=uv$ exactly, the metric coefficients in $(u,v)$
+are smooth, even in each variable, and uniformly comparable to constants on a
+fixed small corner. Along the level $uv=h$, flow-time measure $dt$ is
+comparable to $du/u$.
+\end{lemma}
+
+\begin{proof}
+$\cos a=\sin\alpha$ and $\cos b=\sin\beta$ at the corner $(\pi/2,\pi/2)$, and
+similarly at the other corners.
+\end{proof}
+
+\begin{lemma}[Saddle normal form]
+\label{lem:saddle-normal-form}
+\uses{def:cells}
+Near each saddle there are orthonormal coordinates $(u,v)$, in which the two
+separatrix rays are the coordinate axes, such that
+$\Psi=uv+O(r^4)$ and $|\nabla\Psi|^2=u^2+v^2+O(r^4)$, $r=(u^2+v^2)^{1/2}$.
+The linearization $H_s$ of $H$ at the saddle has eigenvalues $\pm i$ on linear
+polynomials.
+\end{lemma}
+
+\begin{proof}
+Taylor expansion of $\cos x+\cos y$ at $(\pi,0)$ in the rotated coordinates.
+\end{proof}

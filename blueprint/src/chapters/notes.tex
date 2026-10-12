@@ -1,0 +1,64 @@
+\chapter{Digest notes}
+\label{chap:notes}
+
+A running list of questions about the manuscript, collected while writing
+the blueprint. Each item points to the node where it arises. Items are removed
+once resolved; record the resolution in the relevant node.
+
+\section*{Gaps and unverified steps}
+\begin{enumerate}
+  \item \textbf{Odd--odd renormalized virial identity}
+        (Proposition~\ref{prop:dd-virial}). The weighted analogue of the
+        virial lemma, the boundary integral on $\{s=\epsilon\}$ and the passage
+        to $-\tfrac83\sum Q_\lambda$ are asserted rather than derived. This is
+        the largest gap.
+  \item \textbf{Transport lemmas used through proofs}
+        (Chapter~\ref{chap:transport}). Several results apply ``the argument
+        of'' earlier proofs to new pairs $(v,f)$. The general statements in
+        Lemmas~\ref{lem:transport-first-gain}--\ref{lem:transport-h1-gain}
+        are a first guess at the right hypotheses.
+  \item \textbf{Orbit geometry} (Lemma~\ref{lem:orbit-comparison}). Bounds on
+        $\partial_h\gamma_h$, $\partial_h^2\gamma_h$ and the inverse
+        coordinates are asserted.
+  \item \textbf{Weighted Poincar\'e inequality} (Lemma~\ref{lem:zonal-poincare}).
+        The identification with zonal $S^3$ Laplacians is sketched only.
+  \item \textbf{Constants in the $\kappa=-1$ boundary estimate}
+        (Proposition~\ref{prop:corrected-trace}). These need to be re-derived.
+  \item \textbf{Missing verification scripts}
+        (Chapter~\ref{chap:certificates}).
+\end{enumerate}
+
+\section*{Possible simplifications}
+\begin{enumerate}
+  \item \textbf{Elliptic centers.} The global $H^1$ corollary, and with it the
+        resonant analysis at the elliptic centers, is used only once, near the
+        corners in the mixed sector (Lemma~\ref{lem:mixed-boundary-square-traces}).
+        Local regularity near the separatrix may suffice there.
+  \item \textbf{Virial identity.} For smooth eigenfunctions the virial identity
+        is a three-line computation (Lemma~\ref{lem:virial-smooth}). Stating
+        it this way in the paper, followed by the justification on the $L^2$
+        domain, would make the mechanism more visible.
+  \item \textbf{Second mixed sector.} It is obtained from the first by the
+        rotation $R$ (Lemma~\ref{lem:sector-swap}).
+\end{enumerate}
+
+\section*{Presentation}
+\begin{enumerate}
+  \item \textbf{Notation clashes}: $r$, $s$, $h$, $w$, $G$, $V$, $D$ each have
+        several meanings across sections (remarks in
+        Chapters~\ref{chap:geometry} and~\ref{chap:mixed}).
+\end{enumerate}
+
+\section*{Checks done so far}
+Scratch computations (not part of the repository) confirmed numerically or
+symbolically:
+the normal, odd--odd and mixed field identities
+(Lemmas~\ref{lem:normal-field-algebra}, \ref{lem:dd-virial-algebra},
+\ref{lem:mixed-field-algebra}, the last apart from the formula for $M$);
+the sums of squares and the affine splitting
+(Lemmas~\ref{lem:trace-sos-smooth}, \ref{lem:affine-splitting},
+\ref{lem:mixed-boundary-square}) on test polynomials;
+the determinant formula of Lemma~\ref{lem:mixed-G-positive};
+and the coefficient table of Lemma~\ref{cert:dd-residual} against a direct
+computation of $Pw_*+\tfrac52s^2w_*$.
+These are sanity checks, not proofs.

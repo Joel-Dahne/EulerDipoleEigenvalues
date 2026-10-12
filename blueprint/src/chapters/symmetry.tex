@@ -1,0 +1,118 @@
+\chapter{Symmetries and the sector decomposition}
+\label{chap:symmetry}
+
+\begin{definition}[Reflections and rotation]
+\label{def:reflections}
+\uses{def:torus}
+On $\T^2$ define (manuscript \texttt{(ee:reflections)})
+\[
+  S_1(x,y)=(\pi-y,\pi-x),\qquad S_2(x,y)=(\pi+y,\pi+x),\qquad
+  R(x,y)=(y,-x),\qquad I_c(x,y)=(-x,-y).
+\]
+$S_1$ and $S_2$ are the reflections across the two components
+$\{x+y\equiv\pi\}$ and $\{x-y\equiv\pi\}$ of the separatrix $\{\Psi=0\}$; $R$ is
+the clockwise quarter rotation and $I_c$ the central inversion. For a map $T$
+of $\T^2$ write $T^*g=g\circ T$.
+\end{definition}
+
+\begin{lemma}[Group relations]
+\label{lem:reflection-algebra}
+\uses{def:reflections, def:dipole}
+$S_1^2=S_2^2=I$, $S_1S_2=S_2S_1=I_c$, $R^2=I_c$, $RS_1=S_2R$ and $RS_2=S_1R$.
+Moreover $\Psi\circ S_j=-\Psi$ and $\Psi\circ R=\Psi\circ I_c=\Psi$.
+\end{lemma}
+
+\begin{proof}
+Direct computation modulo $2\pi$.
+\end{proof}
+
+\begin{lemma}[The symmetries commute with the equation]
+\label{lem:symmetries-commute}
+\uses{def:reflections, def:dipole, def:inverse-laplacian}
+For $T\in\{S_1,S_2,R\}$, the map $T^*$ is unitary on $L^2$, preserves $L^2_0$
+and $H^s$, and commutes with $\Delta^{-1}$ and with $L_0$ (in distributions).
+Consequently, if $\omega$ solves the eigenvalue problem~\ref{def:eigen-problem}
+with parameter $\lambda$, so does $T^*\omega$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:reflection-algebra}
+Each $T$ is an isometry of the flat torus, so $T^*$ commutes with $\Delta$ and
+preserves integrals. For $L_0$ one checks $DT\,X=X\circ T$ for the velocity
+field $X=(\sin y,-\sin x)$. For instance $DS_1=\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$ and
+$X(S_1(x,y))=(\sin x,-\sin y)=DS_1X(x,y)$. Equivalently: $T$ maps $\Psi$ to
+$\pm\Psi$ with the same sign as $\det DT$.
+\end{proof}
+
+\begin{definition}[Parity sectors]
+\label{def:sectors}
+\uses{def:reflections}
+For $\epsilon=(\epsilon_1,\epsilon_2)\in\{1,-1\}^2$ let
+\[
+  P_\epsilon=\tfrac14(I+\epsilon_1S_1^*)(I+\epsilon_2S_2^*).
+\]
+The \emph{sector} $\epsilon$ consists of the $\omega$ with
+$S_1^*\omega=\epsilon_1\omega$ and $S_2^*\omega=\epsilon_2\omega$. We call
+$(+,+)$ the even--even sector, $(-,-)$ the odd--odd (or DD, ``Dirichlet--Dirichlet'')
+sector, and $(+,-)$, $(-,+)$ the mixed sectors.
+\end{definition}
+
+\begin{lemma}[Sector decomposition]
+\label{lem:sector-reduction}
+\uses{def:sectors, def:eigen-problem}
+The $P_\epsilon$ are commuting orthogonal projections with
+$\sum_\epsilon P_\epsilon=I$, and $P_\epsilon$ maps $L^2$ onto sector
+$\epsilon$. If $\omega$ solves the eigenvalue problem with parameter
+$\lambda$, then so does every $P_\epsilon\omega$, and $\psi$ has the same
+parities as $\omega$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:reflection-algebra, lem:symmetries-commute}
+$S_1^*,S_2^*$ are commuting unitary involutions, and the problem is linear and
+invariant under each of them.
+\end{proof}
+
+\begin{lemma}[Swapping the mixed sectors]
+\label{lem:sector-swap}
+\uses{def:sectors, def:eigen-problem}
+If $\omega$ lies in sector $(\epsilon_1,\epsilon_2)$, then $R^*\omega$ lies in
+sector $(\epsilon_2,\epsilon_1)$. In particular $R^*$ maps solutions in sector
+$(+,-)$ to solutions in sector $(-,+)$, and the sectors $(+,+)$ and $(-,-)$ are
+invariant under $R^*$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:reflection-algebra, lem:symmetries-commute}
+From $RS_1=S_2R$: $S_1^*R^*\omega=(R S_1)^*\omega=(S_2R)^*\omega
+=R^*S_2^*\omega=\epsilon_2R^*\omega$, and similarly for $S_2$.
+\end{proof}
+
+\begin{remark}
+The manuscript treats the second mixed sector by ``interchanging the two
+diagonal coordinates''. Lemma~\ref{lem:sector-swap} does this with the
+rotation $R$, which commutes with $L_0$, so no sign change of $\lambda$ is
+needed.
+\end{remark}
+
+\begin{lemma}[Rotation characters]
+\label{lem:rotation-characters}
+\uses{def:sectors, def:eigen-problem}
+On the sectors $(+,+)$ and $(-,-)$ one has $(R^*)^2=I_c^*=S_1^*S_2^*=I$. Hence
+these sectors split further into the two eigenspaces
+$R^*\omega=\kappa\omega$, $\kappa\in\{1,-1\}$, each again invariant under the
+eigenvalue problem (manuscript \texttt{(ee:rotation-character)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:reflection-algebra, lem:sector-swap, lem:symmetries-commute}
+$R^2=I_c=S_1S_2$, and $S_1^*S_2^*$ acts as $\epsilon_1\epsilon_2=1$ on these sectors.
+\end{proof}
+
+\begin{remark}
+In the mixed sectors $I_c^*=-1$, and $R^*$ exchanges the two mixed sectors;
+on their direct sum $(R^*)^2=-1$, so the rotation characters there are $\pm i$.
+The manuscript uses these characters only inside the regularity proofs
+(``decomposition into rotation characters preserves the zero-jet
+estimates'').
+\end{remark}

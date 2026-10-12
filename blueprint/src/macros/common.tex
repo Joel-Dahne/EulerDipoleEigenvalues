@@ -1,0 +1,36 @@
+% Macros and settings shared by the pdf and the web version.
+
+% Theorem-like environments. Those listed in the dependency graph by default
+% are definition, lemma, proposition, theorem and corollary. Remarks are
+% deliberately *not* part of the graph: we use them for commentary and for
+% "digest notes" recording questions about the manuscript.
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Number sets
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+
+% Operators and notation
+\newcommand{\Div}{\operatorname{div}}
+\newcommand{\sym}{\operatorname{sym}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Jac}{\operatorname{Jac}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\arctanh}{\operatorname{arctanh}}
+\newcommand{\FP}{\operatorname{FP}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\Dom}{\mathcal{D}}
+\newcommand{\Cell}{\mathcal{C}}

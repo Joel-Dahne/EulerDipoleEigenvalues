@@ -1,0 +1,116 @@
+\chapter{Analytic background}
+\label{chap:analysis}
+
+This chapter lists the general analytic facts the argument relies on. The
+first group is standard textbook material that Mathlib does not currently
+provide on $\T^2$ in this form. These are the candidates for the initial
+\emph{assumptions} of the formalization: they would be stated in a single Lean
+file, each with a reference, and proved later or never. The second group
+consists of elementary inequalities that the manuscript proves itself and that
+are directly formalizable.
+
+\section{Standard facts (candidate assumptions)}
+
+\begin{lemma}[Elliptic regularity on the torus]
+\label{lem:elliptic-regularity}
+\uses{def:inverse-laplacian}
+$\Delta^{-1}:H^s\cap L^2_0\to H^{s+2}$ is bounded for $s\ge0$. Locally: if
+$u\in H^2$ near a point and $\Delta u\in H^1$ there, then $u\in H^3$ there.
+Dyadic annular estimates of the form
+$\|D^3u\|_{L^2(A_r)}\le C(\|\nabla\Delta u\|_{L^2(A_r^*)}
++r^{-1}\|\Delta u\|_{L^2(A_r^*)}+r^{-3}\|u\|_{L^2(A_r^*)})$ hold, with constants
+independent of $r$.
+\end{lemma}
+
+\begin{lemma}[Sobolev embeddings]
+\label{lem:sobolev-embedding}
+In two dimensions $H^2\subset C^{0,\alpha}$ for every $\alpha<1$, and
+$H^1\subset L^p$ for every $p<\infty$, locally and on $\T^2$.
+\end{lemma}
+
+\begin{lemma}[Traces]
+\label{lem:traces}
+Restriction to a smooth (or uniformly Lipschitz) curve maps $H^1$ to
+$H^{1/2}$ and $H^2$ to $H^{3/2}$, continuously and locally uniformly in
+families of such curves. In particular the traces of $\nabla\psi$ on the
+regular level sets of $\Psi$ depend continuously on the level.
+\end{lemma}
+
+\begin{lemma}[Coarea and a.e.\ restrictions]
+\label{lem:coarea}
+\uses{def:cells}
+On a compact regular orbit annulus $\{\epsilon_1\le\Psi\le\epsilon_2\}$, for
+$g\in L^1$,
+$\int g\,dx\,dy=\int\!\big(\oint_{\{\Psi=c\}}g\,d\ell/\rho\big)dc$, so the
+restriction of an $L^2$ function to almost every level is defined and square
+integrable in flow time. If $g\in L^2$ and $L_0g\in L^2$, then on almost every
+level the restriction is in $H^1$ of the orbit, with derivative $(L_0g)|$ in
+flow time.
+\end{lemma}
+
+\begin{lemma}[Self-adjointness of the transport operator]
+\label{lem:H-selfadjoint}
+\uses{def:dipole}
+$H=-iL_0$ with domain $\{u\in L^2:L_0u\in L^2\}$ is self-adjoint on $L^2(\T^2)$,
+and smooth functions form a core. It generates the unitary group
+$u\mapsto u\circ\Phi_t$, where $\Phi_t$ is the (area preserving) flow of
+$(\sin y,-\sin x)$.
+\end{lemma}
+
+\begin{remark}
+Lemma~\ref{lem:H-selfadjoint} is the classical fact that a smooth divergence
+free vector field on a compact manifold gives an essentially skew-adjoint
+operator on smooth functions, whose closure is the maximal (distributional)
+operator. Together with Stone's theorem this is the main functional-analytic
+input to the virial identities.
+\end{remark}
+
+\section{Elementary inequalities}
+
+\begin{lemma}[One-dimensional Hardy inequalities]
+\label{lem:hardy-1d}
+\begin{enumerate}
+  \item If $F\in H^1(0,\eta)$ and $F(0)=0$, then
+        $\int_0^\eta|F/x|^2\,dx\le4\int_0^\eta|F'|^2\,dx$.
+  \item If $N\in H^2$ on an interval containing $x_0$ and $N(x_0)=0$, then
+        $\|(N/(x-x_0))'\|_{L^2}\le C\|N''\|_{L^2}$; this follows from
+        $N(x)/(x-x_0)=\int_0^1N'(x_0+t(x-x_0))\,dt$.
+  \item (Angular Hardy) If $g\in H^1(0,\pi/2)$ vanishes at both endpoints, then
+        $\int_0^{\pi/2}|g|^2/(\sin^2\theta\cos^2\theta)\,d\theta\le
+        C\int_0^{\pi/2}|g'|^2\,d\theta$.
+\end{enumerate}
+\end{lemma}
+
+\begin{lemma}[Critical Hardy inequality for odd functions]
+\label{lem:odd-hardy}
+If $a\in H^{1/2}(\R)$ is odd and compactly supported, then
+$\int_0^\infty|a(u)|^2\,du/u\le C\|a\|_{H^{1/2}(\R)}^2$
+(manuscript \texttt{(ee:odd-hardy)}).
+\end{lemma}
+
+\begin{proof}
+The cross-half-line part of the Gagliardo seminorm contains
+$\int_0^\infty\!\int_0^\infty|a(u)+a(v)|^2(u+v)^{-2}\,du\,dv$. The mixed term
+is nonnegative since $(u+v)^{-2}=\int_0^\infty te^{-tu}e^{-tv}\,dt$, and the
+two diagonal terms give $2\int_0^\infty|a(u)|^2\,du/u$.
+\end{proof}
+
+\begin{lemma}[Picone identity]
+\label{lem:picone}
+Let $G$ be a symmetric matrix field and $g>0$ smooth. Then pointwise
+\[
+  G\nabla z\cdot\nabla\bar z
+  =g^2\,G\nabla(z/g)\cdot\nabla(\bar z/g)+G\nabla g\cdot\nabla(|z|^2/g).
+\]
+Consequently, after integration by parts on a domain $U$,
+\[
+  \int_U G\nabla z\cdot\nabla\bar z-V|z|^2
+  =\int_U g^2G\nabla(z/g)\cdot\nabla(\bar z/g)
+   +\int_U\frac{(-\Div(G\nabla g)-Vg)}{g}|z|^2
+   +\int_{\partial U}\frac{\nu\cdot G\nabla g}{g}|z|^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+Expand $\nabla(z/g)=(\nabla z)/g-z\nabla g/g^2$.
+\end{proof}

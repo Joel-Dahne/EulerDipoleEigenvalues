@@ -1,0 +1,402 @@
+\chapter{The mixed sectors}
+\label{chap:mixed}
+
+By Lemma~\ref{lem:sector-swap} it suffices to treat the sector $(-,+)$: odd
+under $S_1$ (Dirichlet on the edges $a=\pm\pi/2$) and even under $S_2$ (Neumann
+on the edges $b=\pm\pi/2$). We write $D$ for the Dirichlet and $N$ for the
+Neumann edges of $\Cell$.
+
+\emph{Local notation:} $a=(x+y)/2$, $b=(x-y)/2$, $h=\cos a$, $k=\cos b$,
+$u=\sin a$, $v=\sin b$, $s=\Psi=2hk$, $p=h+k$, $R=u^2+v^2$, $\mu=h^2$.
+
+\begin{remark}[Digest note: notation]
+Within this sector the manuscript uses three overlapping naming schemes for
+the same objects: $(G,V,g,j)$ in the completed square, $(\mathsf G,U,D,E)$ in
+the comparison lemma (with $U=-V$), and $(G,V,d,c,S,R)$ in the comparison
+certificates (with $S=p$ and $R=2-h^2-k^2=u^2+v^2$). The letter $w$ means
+$1-x^2$ on the edges but the comparison function in the certificates. This
+should be unified in the paper.
+\end{remark}
+
+\section{Virial identities}
+
+\begin{definition}[Mixed field]
+\label{def:mixed-field}
+\uses{def:cells, def:adapted-field}
+On $\Cell$ let
+$W=\tan(x/2)\partial_x+\tan(y/2)\partial_y=\frac{u}{p}\partial_a+\frac{v}{p}\partial_b$
+and $f=R/p^2$.
+\end{definition}
+
+\begin{lemma}[Mixed field algebra]
+\label{lem:mixed-field-algebra}
+\uses{def:mixed-field}
+$W\Psi=\Psi-2$, $W$ is adapted with coefficient $f$, $\Div W=f+1$, and in the
+orthonormal directions parallel to the $a$, $b$ axes
+\[
+  M:=2\sym DW-fI=\begin{pmatrix}1&2uv/p^2\\2uv/p^2&1\end{pmatrix}.
+\]
+The eigenvalues of $2\sym DW$ are $\sec^2((a+b)/2)$ and $\sec^2((a-b)/2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities}
+Direct differentiation. In $U=\sin(x/2)$, $V=\sin(y/2)$ the field is
+$(U\partial_U+V\partial_V)/2$.
+\end{proof}
+
+\begin{proposition}[Paired flux identity for the normal field]
+\label{prop:mixed-paired-flux}
+\uses{def:normal-field, def:canonical-profile}
+\notready
+With $f,c$ from Definition~\ref{def:normal-field}, every mixed-sector
+eigenfunction satisfies
+\[
+  \int_\Cell\big[f|\omega|^2+(2-c)|\psi_n|^2+c|\psi_t|^2\big]
+  =2\lim_{T\to\infty}\Big\{\sum_D\int_{-T}^T|\psi_n|^2\,dt
+  -\sum_N\int_{-T}^T\big[|\psi_t|^2+\operatorname{Re}(\Omega\bar g)\big]\,dt\Big\},
+\]
+where on a Neumann edge $g=\psi|_N$ and $\Omega$ is its canonical profile. The
+bulk integral and the paired limit are finite although individual edge
+energies may diverge (manuscript \texttt{(mf:paired)}).
+\end{proposition}
+
+\begin{proof}
+\uses{lem:ee-truncated-virial, lem:pairing-limit, prop:saddle-first-gain, cor:mixed-saddle-jet, lem:saddle-normal-form}
+The bulk is integrable since $f\le C/d^2$ and $\omega/d\in L^2$. Apply the
+truncated virial along good levels. Near a saddle the linear jet $\ell=a\,u$
+has $(|\ell_n|^2-|\ell_t|^2)dt=|a|^2\frac{v^2-u^2}{u^2+v^2}\frac{du}u$ on
+$uv=h$, whose integral vanishes under $u\mapsto h/u$; this cancels the adjacent
+normal and tangential logarithms. The remainder is controlled by the weighted
+jet estimate.
+\end{proof}
+
+\begin{proposition}[Mixed virial identity]
+\label{prop:mixed-virial}
+\uses{def:mixed-field}
+\notready
+Every mixed-sector eigenfunction satisfies, with the same centered flow-time
+cutoff on all four edges,
+\[
+  \int_\Cell f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi}
+  =2\lim_{T\to\infty}\Big\{\sum_D\int_{-T}^T|\psi_n|^2\,dt
+  -\sum_N\int_{-T}^T\big(|\partial_\tau\psi|^2+\operatorname{Re}(\omega|_N\,\bar\psi)\big)dt\Big\},
+\]
+and the bulk integral converges absolutely (manuscript
+\texttt{(prop:r5-new-virial)}).
+\end{proposition}
+
+\begin{proof}
+\uses{prop:mixed-paired-flux, lem:mixed-field-algebra, cor:mixed-saddle-jet, prop:saddle-first-gain}
+$W-W_0$, with $W_0$ the normal field, is tangent to the orbits, and the
+tangential virial on $\{s>\epsilon\}$ gives
+$J_W-J_{W_0}=2\operatorname{Re}\int_{\partial}((W-W_0)\psi)\,\partial_n\bar\psi\,d\ell$.
+This current vanishes on regular edges by the Dirichlet or Neumann condition,
+and its corner contribution
+$4|A|^2\frac{UV(U-V)}{(U+V)(U^2+V^2)}\frac{dU}U$ integrates to zero by
+$U\leftrightarrow V$ symmetry.
+\end{proof}
+
+\section{The boundary square}
+
+\begin{lemma}[Mixed boundary square, smooth case]
+\label{lem:mixed-boundary-square}
+With $w=1-x^2$, $T_\lambda F=-i(wF'-xF)-\lambda F$ and $G=T_\lambda F$, for
+smooth $F$ on $[-1,1]$ and real $\lambda$,
+\[
+  \int_{-1}^1w|G'|^2\,dx-2\operatorname{Re}\int_{-1}^1T_0F\,\bar G\,dx
+  =\int_{-1}^1w\,|wF''-3xF'-i\lambda F'|^2\,dx
+\]
+(manuscript \texttt{(eq:mixed-boundary-square)}). No boundary conditions on
+$F$ are needed.
+\end{lemma}
+
+\begin{proof}
+With $Sv=-i(wv'-3xv)-\lambda v$ one has $G'=S(F')+iF$. Expanding, the
+difference of the two sides is
+$\int[(1-3x^2)|F|^2-2w^2|F'|^2-2w^2\operatorname{Re}(F''\bar F)
++10xw\operatorname{Re}(F'\bar F)]$, the $\lambda$ terms cancelling before
+integration; integrating the third term by parts leaves
+$\int[(1-3x^2)|F|^2+xw(|F|^2)']=0$. All boundary currents carry a factor $w$.
+\end{proof}
+
+\begin{remark}
+Checked symbolically for a test polynomial with nonzero endpoint values
+(scratch sympy computation).
+\end{remark}
+
+\begin{lemma}[Boundary square for eigenfunction traces]
+\label{lem:mixed-boundary-square-traces}
+\uses{lem:mixed-boundary-square}
+\notready
+On a Neumann edge, write the canonical transport pair as $z=\sqrt wF$,
+$\psi=\sqrt wG$. Then $G$ is bounded, $\int w|G'|^2<\infty$, $F$ and $wF'$ are
+bounded, and the identity of Lemma~\ref{lem:mixed-boundary-square} holds.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:mixed-quotient-domain, cor:global-h1, prop:saddle-first-gain}
+$G$ comes from the $H^2$ quotient trace. $\omega\in H^1$ and $\omega/r\in L^2$
+put $\omega$ in $H^1$ of the logarithmic corner strip, so $z\in L^2(dt)$; the
+equation $(-i\partial_t-\lambda)z=hG$ excludes the non-decaying homogeneous
+solution, giving $|z|\le Ch\|G\|_\infty$. The complete boundary current
+$[xw|F|^2-2w^2\operatorname{Re}(F'\bar F)]_{-1}^1$ vanishes.
+\end{proof}
+
+\begin{definition}[Trace mass and static form]
+\label{def:mixed-K}
+\uses{def:mixed-field, prop:mixed-quotient-domain}
+With $\psi=h\phi$, define
+\[
+  M_{\mathrm{tr}}[\phi]=\lim_{T\to\infty}\Big(\sum_D\int_{-T}^T|\phi|^2dt
+  -\sum_N\int_{-T}^T|\phi|^2dt\Big),\qquad
+  K[\phi]=J_W[h\phi]-M_{\mathrm{tr}}[\phi]-\sum_{P\text{ corner}}|\phi(P)|^2,
+\]
+where $J_W[\psi]=\int_\Cell f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi}$.
+\end{definition}
+
+\begin{lemma}[Trace mass as a volume integral]
+\label{lem:mixed-trace-mass}
+\uses{def:mixed-K}
+The field $V=\frac up\partial_a-\frac vp\partial_b$ is divergence free in the
+$(a,b)$ rectangle, with outer normal flux $1/k$ on $D$ and $-1/h$ on $N$.
+Consequently
+$M_{\mathrm{tr}}[\phi]=2\operatorname{Re}\int_\Cell\frac{u\phi_a-v\phi_b}{p}\bar\phi\,da\,db$,
+an absolutely convergent integral.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:mixed-quotient-domain}
+Divergence theorem; at a corner the circular flux of the constant jet cancels
+by interchanging the two inward coordinates.
+\end{proof}
+
+\begin{lemma}[Static identity]
+\label{lem:mixed-K-identity}
+\uses{def:mixed-K}
+Every mixed eigenfunction satisfies
+$0=K[\phi]+\sum_N\int_{-1}^1w|wF''-3xF'-i\lambda F'|^2$. In particular
+$K[\phi]\le0$ (manuscript \texttt{(eq:mixed-K-identity)}).
+\end{lemma}
+
+\begin{proof}
+\uses{prop:mixed-virial, lem:mixed-trace-mass, lem:mixed-boundary-square-traces}
+In the $x=\tanh t$ variable, Proposition~\ref{prop:mixed-virial} becomes
+$0=J_W-M_{\mathrm{tr}}+\sum_N\{\int w|G'|^2-2\operatorname{Re}\int T_0F\bar G
+-|G(1)|^2-|G(-1)|^2\}$, the endpoint constants coming from integrating
+$|G_t-\tanh(t)G|^2$ by parts. The endpoint values are the corner values of
+$\phi$. Apply Lemma~\ref{lem:mixed-boundary-square-traces}.
+\end{proof}
+
+\section{The second-order form}
+
+\begin{lemma}[Rellich form of $K$]
+\label{lem:mixed-rellich}
+\uses{def:mixed-K}
+$K[\phi]=\int_\Cell\big(f|\omega|^2+|\nabla\psi|^2-2\operatorname{Re}((W\psi)\bar\omega)\big)\,dx\,dy
+-\sum_N\int h|\phi_a|^2\,da$ (manuscript \texttt{(eq:mixed-static-rellich)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-field-algebra, cor:mixed-saddle-jet}
+Apply the Rellich identity
+$\Div\{2\operatorname{Re}((W\psi)\nabla\bar\psi)-W|\nabla\psi|^2\}
+=(2\sym DW-\Div W\,I)\nabla\psi\cdot\nabla\bar\psi+2\operatorname{Re}((W\psi)\bar\omega)$.
+The Dirichlet-edge current cancels its part of $M_{\mathrm{tr}}$; on a
+Neumann edge
+$\int(-|\psi_a|^2/h+|\psi|^2/h^3)\,da=\sum_{\text{endpoints}}|\phi|^2-\int h|\phi_a|^2\,da$
+produces the corner values. The corner flux of the leading jet integrates to
+zero by $\theta\mapsto\pi/2-\theta$.
+\end{proof}
+
+\begin{lemma}[Weighted interior form]
+\label{lem:mixed-weighted-form}
+\uses{lem:mixed-rellich}
+With $L_\mu=\partial_a^2-2\tan a\,\partial_a+\partial_b^2$ and
+$C_0=-f+\frac{2u^2}{hp}=1-\Div_\mu W$,
+\[
+  K[\phi]=\int\mu\Big[\frac f2|L_\mu\phi|^2+2\sym DW\nabla_0\phi\cdot\nabla_0\bar\phi
+  +(2W-\nabla_0C_0)\cdot\operatorname{Re}(\phi\nabla_0\bar\phi)
+  +\Big(1-C_0-\frac f2\Big)|\phi|^2\Big]\,da\,db
+\]
+(manuscript \texttt{(eq:weighted-static-K)}).
+\end{lemma}
+
+\begin{proof}
+Use $\Delta_0(h\phi)=h(L_\mu-1)\phi$ and
+$\int|\nabla_0(h\phi)|^2=\int\mu(|\nabla_0\phi|^2+|\phi|^2)$, and expand.
+\end{proof}
+
+\begin{lemma}[Completion of the square]
+\label{lem:mixed-completion}
+\uses{lem:mixed-weighted-form}
+\[
+  K[\phi]=\int_\Cell\frac{\mu f}2\Big|L_\mu\phi+\frac{C_0}f\phi\Big|^2\,da\,db+Q_2[\phi],
+\]
+\[
+  Q_2[\phi]=\int_\Cell\big(G\nabla_0\phi\cdot\nabla_0\bar\phi+V|\phi|^2\big)\,da\,db
+  +\sum_N\int h|\phi|^2\,da,
+\]
+\[
+  G=\begin{pmatrix}g&j\\j&g\end{pmatrix},\quad g=h^2+\frac{2hu^2}p,\quad
+  j=\frac{2h^2uv}{p^2},\quad V=-\frac{h^2R}{p^2}+\frac{2hu^2}p-\frac{2u^4}R.
+\]
+All terms are finite; $G$ and $V$ are bounded, so $Q_2$ is continuous on
+$H^1(\Cell)$ (manuscript \texttt{(eq:static-second-completion)}).
+\end{lemma}
+
+\begin{proof}
+\uses{prop:mixed-quotient-domain, lem:hardy-1d}
+Integrate the drift by parts, complete the square, and use
+$2\int\mu W\cdot\operatorname{Re}(\phi\nabla_0\bar\phi)
+=-\int\mu\Div_\mu W|\phi|^2+\sum_N\int h|\phi|^2\,da$. Finiteness:
+$\mu f$ and $\mu C_0^2/f=\mu f-4hu^2/p+4u^4/R$ are bounded, and
+$L_\mu\phi=2\omega/h+\phi$. The corner currents vanish by angular Poincar\'e
+applied to $\nabla_0\phi$.
+\end{proof}
+
+\begin{lemma}[Positivity of the second-order matrix]
+\label{lem:mixed-G-positive}
+\uses{lem:mixed-completion}
+$G$ is positive definite in the open cell:
+\[
+  \det G=\frac{h^2}{p^4}\big[h^6+4h(2-h^2)k+(4+8h^2-6h^4)k^2+4hk^3+h^2k^4\big]>0 .
+\]
+\end{lemma}
+
+\begin{proof}
+Direct computation (checked numerically); every coefficient in the bracket is
+positive for $0<h,k\le1$.
+\end{proof}
+
+\section{Positive comparisons}
+
+\begin{definition}[Comparison form on the quarter cell]
+\label{def:comparison-form}
+\uses{lem:mixed-completion}
+On $Q=(0,\pi/2)^2$ with $U=-V$ and $\mathsf G=G$, let
+\[
+  \mathcal Q[z]=\int_Q\big(\mathsf G\nabla z\cdot\nabla\bar z-U|z|^2\big)\,da\,db
+  +\int_0^{\pi/2}h|z(a,\pi/2)|^2\,da,\qquad
+  \mathcal P=-\Div(\mathsf G\nabla)-U .
+\]
+\end{definition}
+
+\begin{lemma}[Comparison lemma with logarithmic weights]
+\label{lem:robin-comparison}
+\uses{def:comparison-form}
+Let $\rho(h,k)$ be positive, smooth for $h>0$, continuous on $[0,1]^2$, with
+$m\le\rho\le M$ and $|\rho_h|+|\rho_k|\le C(1+|\log h|)$. If $g=v\rho$
+satisfies $\mathcal Pg\ge ch^2g$ in $Q$ and
+$h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$, then
+$\mathcal Q[z]\ge c\int_Qh^2|z|^2$ for all $z\in H^1(Q)$ with $z(a,0)=0$.
+The same holds for $z(0,b)=0$ if $g=u\rho$ satisfies $\mathcal Pg\ge ch^2g$ and
+$3h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$
+(manuscript \texttt{(lem:logarithmic-robin-comparison)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:picone, lem:traces}
+Picone identity (Lemma~\ref{lem:picone}) on a rectangle truncated at
+$h=\epsilon$ and at distance $\delta$ from the odd axis. The Robin current has
+the stated numerator; the current near the odd axis is $O(\delta)$; the
+current on $h=\epsilon$ is $O(\epsilon(1+|\log\epsilon|)^2)$. Extend by density
+(odd reflection and mollification).
+\end{proof}
+
+\begin{definition}[Odd-in-$b$ comparison function]
+\label{def:odd-b-comparison}
+\uses{def:comparison-form}
+Let $w_v=vF_v(h,k)$ with
+\[
+  F_v=1+\frac{4132k^2+2167k^3-2011hk-7640hk^2-226h^2+3795h^2k-834h^3}{10000}
+  +\frac{808hk+2505hk^2}{10000}\log h .
+\]
+\end{definition}
+
+\begin{lemma}[Odd-in-$b$ comparison]
+\label{lem:mixed-v-comparison}
+\uses{def:odd-b-comparison}
+$\tfrac34<F_v<\tfrac53$, $\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$, and the
+Robin numerator of Lemma~\ref{lem:robin-comparison} for $\rho=F_v$ is
+$\ge\tfrac{1789}{2500}h$ on $b=\pi/2$ (manuscript
+\texttt{(lem:mixed-v-comparison)}).
+\end{lemma}
+
+\begin{proof}
+\uses{cert:odd-b}
+The bounds on $F_v$ follow from positive definiteness of the quadratic form
+$(2502h^2-7590hk+7640k^2)/10000$ (so $\partial_hF_v\le0$ for the polynomial
+part), the Bernstein coefficients of the cubic $F_v(1,k)$, and
+$-h\log h\le e^{-1}$. The Robin inequality is a one-variable estimate. The
+interior inequality is Lemma~\ref{cert:odd-b}.
+\end{proof}
+
+\begin{definition}[Odd-in-$a$ comparison function]
+\label{def:odd-a-comparison}
+\uses{def:comparison-form}
+Let $w_u=ue^{F_u}$, where $F_u$ is the explicit rational function of the
+manuscript (\texttt{lem:mixed-u-comparison}): a polynomial in $(h,k)$ plus the
+terms $-h/2-4k-4h^3/S^2-2744h^6/S^4+1033h^8/S^6+224h^4/S+235h^8/S^5$, all
+divided by $1000$, with $S=h+k$. Every rational term is homogeneous of degree
+at least one, so $F_u$ and its first derivatives are bounded on $Q$.
+\end{definition}
+
+\begin{lemma}[Odd-in-$a$ comparison]
+\label{lem:mixed-u-comparison}
+\uses{def:odd-a-comparison}
+$\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ in $Q$, and the Robin numerator for
+$\rho=e^{F_u}$ is $\ge\tfrac h{250}$ on $b=\pi/2$
+(manuscript \texttt{(lem:mixed-u-comparison)}).
+\end{lemma}
+
+\begin{proof}
+\uses{cert:odd-a, cert:robin}
+Lemmas~\ref{cert:odd-a} and~\ref{cert:robin}.
+\end{proof}
+
+\section{Conclusion}
+
+\begin{lemma}[Parity splitting]
+\label{lem:mixed-parity-split}
+\uses{lem:mixed-completion}
+Write $\phi=\phi_u+\phi_v$ with $\phi_u$ odd in $a$ and even in $b$, $\phi_v$
+even in $a$ and odd in $b$ (possible since $\phi$ is centrally odd). Then
+$Q_2[\phi]=Q_2[\phi_u]+Q_2[\phi_v]$.
+\end{lemma}
+
+\begin{proof}
+The diagonal and scalar coefficients of $Q_2$ are even in both variables and
+the off-diagonal coefficient is odd in each.
+\end{proof}
+
+\begin{theorem}[Static coercivity]
+\label{thm:mixed-coercivity}
+\uses{lem:mixed-completion}
+For the mixed quotient,
+$K[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db=\frac1{400}\int_\Cell|\psi|^2\,dx\,dy$
+(manuscript \texttt{(eq:mixed-static-coercivity)}).
+\end{theorem}
+
+\begin{proof}
+\uses{lem:mixed-parity-split, lem:robin-comparison, lem:mixed-u-comparison, lem:mixed-v-comparison, lem:mixed-G-positive}
+Apply Lemma~\ref{lem:robin-comparison} on the quarter cells to $\phi_u$ (with
+Lemma~\ref{lem:mixed-u-comparison}) and to $\phi_v$ (with
+Lemma~\ref{lem:mixed-v-comparison}), reflect, and drop the nonnegative square
+of Lemma~\ref{lem:mixed-completion}.
+\end{proof}
+
+\begin{theorem}[Mixed exclusion]
+\label{thm:mixed-exclusion}
+\uses{def:eigen-problem, def:sectors}
+If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
+$S_1^*\omega=-\omega$, $S_2^*\omega=\omega$, then $\omega=0$.
+\end{theorem}
+
+\begin{proof}
+\uses{thm:mixed-coercivity, lem:mixed-K-identity, prop:mixed-quotient-domain}
+$K[\phi]\le0$ by Lemma~\ref{lem:mixed-K-identity} and
+$K[\phi]\ge\frac1{400}\int_\Cell|\psi|^2$ by Theorem~\ref{thm:mixed-coercivity},
+so $\psi=0$ on $\Cell$. The reflections determine $\psi$ on the other cell, so
+$\psi=0$ and $\omega=\Delta\psi=0$.
+\end{proof}

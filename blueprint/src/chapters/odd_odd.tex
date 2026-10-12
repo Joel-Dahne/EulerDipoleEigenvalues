@@ -1,0 +1,358 @@
+\chapter{The odd--odd sector}
+\label{chap:odd-odd}
+
+Here $\psi$ vanishes on the separatrix, so the even--even boundary term is
+replaced by a normal derivative term of the wrong sign. The fix is to divide
+by $\Psi$. The quotient $\phi=\psi/\Psi$ is even across the separatrix and
+satisfies a weighted problem. A weighted virial identity, a Picone
+decomposition with an explicit comparison function, and a corrected
+boundary form then give the contradiction.
+
+\emph{Local notation (as in the manuscript):} on $\Cell$, $s=\Psi$,
+$r=|\nabla\Psi|^2$ (not a distance), $\mu=s^2$, $\delta=\cos x-\cos y$,
+$n=\nabla s/\sqrt r$, and $t$ the unit tangent.
+
+\section{The quotient problem}
+
+\begin{definition}[Odd--odd quotient]
+\label{def:dd-quotient}
+\uses{def:eigen-problem, def:cells}
+For an odd--odd eigenfunction let $\phi=\psi/\Psi$ and $\nu=\omega/\Psi$, and
+on $\Cell$ define $E=1-s^{-2}\Div(s^2\nabla)$.
+\end{definition}
+
+\begin{lemma}[Quotient equations]
+\label{lem:dd-quotient-equations}
+\uses{def:dd-quotient}
+$\nu=-E\phi$. Multiplication by $s$ is unitary from $L^2(\Cell,\mu\,dx)$ onto
+$L^2(\Cell)$ and conjugates $E$ to $-\Delta$: $sE(s^{-1}u)=-\Delta u$. If
+$(\omega,\psi)$ is a transport pair then so is $(\nu,\phi)$, since $L_0\Psi=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities}
+$\Delta(s\phi)=s\Delta\phi+2\nabla s\cdot\nabla\phi-s\phi
+=s\big(s^{-2}\Div(s^2\nabla\phi)-\phi\big)$, using $\Delta s=-s$. The
+conjugation is the same computation.
+\end{proof}
+
+\begin{lemma}[Orthogonality and parity of the quotient]
+\label{lem:dd-orthogonality}
+\uses{def:dd-quotient}
+$\int_\Cell\Psi^2\phi=0$, and $\phi$ is even under central inversion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:H-selfadjoint, lem:dipole-identities, lem:sector-reduction}
+$H\Psi=0$, so pairing the eigenvalue equation with $\Psi$ gives
+$\omega\perp\Psi$; then $\Delta\Psi=-\Psi$ gives $\psi\perp\Psi$. The product
+$\psi\Psi$ is invariant under the reflections exchanging the cells, so
+$\int_\Cell\Psi\psi=0$. Both $\psi$ and $\Psi$ are centrally even.
+\end{proof}
+
+\section{The weighted virial identity}
+
+\begin{definition}[Odd--odd virial field]
+\label{def:dd-virial-field}
+\uses{def:dd-quotient}
+Let $q(s)=(s^3-8)/(3s^2)$, $W=q(s)\nabla s/r$, and
+\[
+  F=\frac{s(8-s^3)\delta^2}{3r^2},\quad
+  C_0=\frac{s(8-s^3)}{3r},\quad
+  A_0=\frac{2s^2}3+\frac{32}{3s}-C_0,\quad
+  M=A_0\,n\otimes n+C_0\,t\otimes t,
+\]
+and $P=-\Div(M\nabla)-F$. Note $\delta^2=4-2r-s^2$.
+\end{definition}
+
+\begin{lemma}[Odd--odd virial algebra]
+\label{lem:dd-virial-algebra}
+\uses{def:dd-virial-field, def:adapted-field}
+$W$ is adapted with coefficient $f=F/\mu$, it has constant defect
+$f-\Div_\mu W=-1$ where $\Div_\mu W=\mu^{-1}\Div(\mu W)$, and
+$\mu(2\sym DW-fI)=M$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities}
+Direct differentiation; $f-\Div_\mu W=-q'-2q/s=-1$.
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:dd-virial-algebra} has been checked numerically at sample
+points (scratch computation).
+\end{remark}
+
+\begin{lemma}[Finite part of the bulk weight]
+\label{lem:dd-finite-part}
+\uses{def:dd-virial-field, def:period}
+With $T(s)=4\mathbf K(1-s^2/4)$ the period on the level $\{\Psi=s\}$,
+\[
+  \int_{\{s>\epsilon\}}F=\frac{8-\epsilon^3}3T(\epsilon)-\int_{\{s>\epsilon\}}s^2,
+  \qquad
+  \FP\int_\Cell F=\frac{32}3\log8-2\pi^2,
+\]
+where the finite part removes $\tfrac{32}{3}\log(1/\epsilon)$, that is
+$\tfrac83$ per corner.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea, lem:period}
+Coarea and integration by parts; $\int_\Cell\Psi^2=2\pi^2$ and
+$T(\epsilon)=4\log8+4\log(1/\epsilon)+o(1)$.
+\end{proof}
+
+\begin{proposition}[Renormalized virial identity]
+\label{prop:dd-virial}
+\uses{def:dd-virial-field, lem:dd-quotient-equations}
+\notready
+For an odd--odd eigenfunction, with the bulk form
+$J[\phi]=\int F(|E\phi|^2-|\phi|^2)+\ip{M\nabla\phi}{\nabla\phi}$ and
+\[
+  J_{\FP}[\phi]=\lim_{\epsilon\to0}\Big\{J_{\{s>\epsilon\}}[\phi]
+  +\tfrac83\sum_P|\phi(P)|^2\log(1/\epsilon)\Big\},
+\]
+one has $J_{\FP}[\phi]=-\tfrac83\sum_{\text{edges}}Q_\lambda$, where on each edge
+$g=\phi|_{\text{edge}}=(P_t-\lambda)z$, $\nu=-P_tz$ and
+\[
+  Q_\lambda=\int\frac{|g'|^2}{2\sech^2t}-\operatorname{Re}\int P_tz\,\bar g
+  +\int\big(|g|^2-|g_-|^2\mathbf1_{t<0}-|g_+|^2\mathbf1_{t>0}\big)
+  +\frac{\log8}2(|g_-|^2+|g_+|^2).
+\]
+\end{proposition}
+
+\begin{proof}
+\uses{lem:virial-l2, lem:dd-virial-algebra, lem:dd-finite-part, prop:dd-quotient-domain, lem:pairing-limit, lem:ee-gradient-traces}
+Apply the virial argument in the weighted space (conjugating by $s$, with
+$A=I-E^{-1}$) for fields cut off near $s=0$. On $C_\epsilon=\{s>\epsilon\}$,
+Green's formula for $E$ gives the boundary integral
+\[
+  J_{C_\epsilon}=\int_{s=\epsilon}\Big[\frac{8-\epsilon^3}{3\sqrt r}
+  \big(|p|^2-|\partial_\tau\phi|^2-|\phi|^2+\operatorname{Re}(E\phi\,\bar\phi)\big)
+  -\epsilon^2\operatorname{Re}(\bar\phi p)\Big]d\ell,\qquad p=\partial_n\phi.
+\]
+The normal derivative tends to zero by even reflection, the pairing converges
+by the canonical transport argument applied to $(\nu,\phi)$, and the corner
+logarithms depend only on $\phi(P)$.
+\end{proof}
+
+\begin{remark}[Digest note: gap]
+This is the least detailed step of the manuscript. Three points need to be
+written out: (i) the weighted analogue of Lemma~\ref{lem:virial-l2} (the
+manuscript says ``the same finite-difference argument applies with
+$A=I-E^{-1}$''); (ii) the derivation of the boundary integral for
+$J_{C_\epsilon}$; (iii) the passage from that boundary integral to
+$-\tfrac83\sum Q_\lambda$, including the corner finite parts. Only the final
+formula is stated.
+\end{remark}
+
+\section{The Picone decomposition}
+
+\begin{definition}[Logarithmic ground state]
+\label{def:dd-ground-state}
+\uses{def:dd-virial-field}
+Let
+\[
+  w_*=1+\frac{r+s^2}{16}-\frac{r^2}{256}\log(r/2),\qquad
+  w_b(r)=1+\frac r{16}-\frac{r^2}{256}\log(r/2),
+\]
+(with $r^2\log r$ extended continuously at $0$), and
+\[
+  B(r)=1-\frac{4[r/8+(4-3r)w_b'(r)]}{w_b(r)}
+  =\frac{5r/16+(r/256)[(32-25r)\log(r/2)+16-12r]}{w_b(r)}.
+\]
+\end{definition}
+
+\begin{lemma}[Boundary current of the ground state]
+\label{lem:dd-picone-current}
+\uses{def:dd-ground-state, prop:dd-virial}
+\notready
+For an odd--odd eigenfunction,
+\[
+  \int_\Cell F|E\phi|^2+\int_\Cell Mw_*^2|\nabla(\phi/w_*)|^2
+  +\int_\Cell\frac{Pw_*}{w_*}|\phi|^2
+  =-\frac83\sum_{\text{edges}}\Big\{\mathcal F_\lambda[z]+\int B(r)|g|^2\,dt\Big\},
+\]
+with all bulk terms ordinary (absolutely convergent) integrals and
+$\mathcal F_\lambda$ the first line of $Q_\lambda$ (manuscript
+\texttt{(r4:picone-global)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:picone, prop:dd-virial, lem:dipole-identities, prop:dd-quotient-domain}
+Apply Lemma~\ref{lem:picone} on $C_\epsilon$ with $g=w_*$. Using
+$\nabla s\cdot\nabla r=s(4-s^2-3r)$, the boundary current in flow time is
+$b_\epsilon|\phi|^2dt$ with $b_\epsilon=-\tfrac83(1-B(r))+O(\epsilon)$
+uniformly. The universal $-\tfrac83$ part reproduces exactly the finite part
+already present in $Q_\lambda$, so the corner logarithms cancel. Near a corner
+$Pw_*=O(1+|\log r|)$, so the residual is integrable.
+\end{proof}
+
+\begin{lemma}[Bulk coefficient bounds]
+\label{lem:dd-bulk-coefficients}
+\uses{def:dd-ground-state}
+On $\Cell$, writing $w=w_*$,
+\[
+  1\le w\le\tfrac54,\qquad Mw^2\ge\tfrac{25}{16}\mu I,\qquad Pw\ge-\tfrac52\mu w.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities, cert:dd-residual}
+The geometric range is $0<s<2$, $s(2-s)\le r\le2-s^2/2$. Since $0<r\le2$, the
+logarithmic term is nonnegative, and $s^2+r\le4-r$, $r\log(2/r)\le2/e$ give
+$w\le5/4$. Next, $3sr(A_0-C_0)\ge4s(s-2)^2(s+4)\ge0$, so it suffices to bound
+$C_0w^2$; for fixed $s$, $(16+r+s^2)^2/r$ decreases in $r$, and at
+$r=2-s^2/2$ the inequality reduces to
+$2(s^2+2s+4)(s^2+36)^2-4800s(s+2)\ge0$, which with $t=2-s$ is
+$t(1920+4544t-1984t^2+312t^3-28t^4+2t^5)\ge0$, true since
+$4544-1984t\ge576$ and $312-28t\ge256$ on $[0,2]$. The bound
+$Pw\ge-\tfrac52\mu w$ is Lemma~\ref{cert:dd-residual}.
+\end{proof}
+
+\begin{lemma}[Weighted Poincar\'e inequality]
+\label{lem:zonal-poincare}
+\uses{def:cells}
+\notready
+Normalize $\mu\,dx$ to a probability measure on $\Cell$. If $z$ is even under
+central inversion, then
+$\int\mu|\nabla z|^2\ge3\int\mu|z-\ip{z}{1}_\mu|^2$.
+\end{lemma}
+
+\begin{proof}
+In the $(a,b)$ coordinates $\mu\,dx=c\cos^2a\cos^2b\,da\,db$, and the weighted
+Neumann Laplacian is half the sum of two zonal Laplacians on $S^3$ (polar angle
+$a+\pi/2$), with eigenvalues $n(n+2)$. Central inversion removes the modes of
+degree $(1,0)$ and $(0,1)$; the next is $(1,1)$ with eigenvalue
+$\tfrac12(3+3)=3$.
+\end{proof}
+
+\begin{remark}[Digest note]
+Lemma~\ref{lem:zonal-poincare} needs a precise statement of the function space
+(the form domain of the weighted Neumann Laplacian on the square) and of the
+spectral decomposition, as the ``zonal $S^3$'' identification is only
+sketched. A self-contained alternative: separation of variables in $a$ and
+$b$ with Gegenbauer polynomials $C^{(1)}_n(\sin a)$.
+\end{remark}
+
+\begin{lemma}[Kantorovich-type bound]
+\label{lem:kantorovich}
+For a probability measure and a function $1\le w\le5/4$,
+$\Var(w)/\ip{w}{1}^2\le1/80$.
+\end{lemma}
+
+\begin{proof}
+Integrate $(w-1)(\tfrac54-w)\ge0$ to get $\Var(w)\le(m-1)(\tfrac54-m)$ with
+$m=\ip{w}{1}$, and maximize $(m-1)(\tfrac54-m)/m^2$ (at $m=10/9$).
+\end{proof}
+
+\begin{lemma}[Bulk Picone bound]
+\label{lem:dd-bulk-picone}
+\uses{def:dd-ground-state}
+If $\phi$ is centrally even with $\int_\Cell\mu\phi=0$, then
+\[
+  \int_\Cell Mw_*^2|\nabla(\phi/w_*)|^2+\int_\Cell\frac{Pw_*}{w_*}|\phi|^2
+  \ge\frac{25}{54}\int_\Cell\mu|\phi|^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-bulk-coefficients, lem:zonal-poincare, lem:kantorovich}
+With $z=\phi/w_*$ and $m=\ip{z}{1}_\mu$, the constraint $\ip{w_*z}{1}_\mu=0$
+and Cauchy--Schwarz give $|m|^2\le\tfrac1{80}\int\mu|z-m|^2$. Hence
+$\int Mw_*^2|\nabla z|^2\ge\tfrac{25}{16}\cdot\tfrac{3}{1+1/80}\int\mu|z|^2
+\ge\tfrac{80}{27}\int\mu|\phi|^2$ (using $|\phi|\le\tfrac54|z|$), and
+$\tfrac{80}{27}-\tfrac52=\tfrac{25}{54}$.
+\end{proof}
+
+\section{The corrected boundary form}
+
+\begin{definition}[Corrected boundary form]
+\label{def:corrected-boundary-form}
+\uses{def:boundary-form, def:dd-ground-state}
+With $x=\tanh t$, $w=1-x^2$, let
+\[
+  \beta(x)=\frac{\tfrac34-\tfrac3{16}w+(\tfrac14-\tfrac{25}{64}w)\log w}
+               {1+\tfrac18w-\tfrac1{64}w^2\log w}=\frac{B(2w)}w .
+\]
+For $f\in H^1(-1,1)$ with $wf''\in L^2$ and $f(1)=\kappa f(-1)$, put
+$g=-iwf'-\lambda f$ and
+$\mathcal B_\lambda(f)=\mathcal F_\lambda(f)+\int_{-1}^1\beta|g|^2\,dx$.
+\end{definition}
+
+\begin{lemma}[Pointwise lower bound for $\beta$]
+\label{lem:beta-lower}
+\uses{def:corrected-boundary-form}
+$\beta\ge\tfrac12+\tfrac14\log w$ on $(-1,1)$ (manuscript
+\texttt{(eq:beta-lower)}).
+\end{lemma}
+
+\begin{proof}
+Multiplying by the positive denominator, the difference is
+$\tfrac{1-w}4+\tfrac{w^2-54w}{128}\log w+\tfrac{w^2}{256}(\log w)^2\ge0$ for
+$0<w\le1$.
+\end{proof}
+
+\begin{lemma}[A positive scalar form]
+\label{lem:scalar-form-positive}
+For $g\in H^1(-1,1)$, $\int_{-1}^1\big(|g'|^2+(2+\log w)|g|^2\big)\,dx\ge0$,
+with equality only for $g=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:picone}
+Use the Picone identity with $h=1+w^2\log w/8>0$, whose endpoint derivatives
+vanish. Then
+$-h''+(2+\log w)h=\tfrac12+\tfrac74w+(\tfrac32w+\tfrac14w^2)\log w
++\tfrac18w^2(\log w)^2\ge\tfrac12-\tfrac32e^{-13/6}-\tfrac1{8e}>\tfrac{17}{64}$.
+\end{proof}
+
+\begin{proposition}[Positivity of the corrected boundary form]
+\label{prop:corrected-trace}
+\uses{def:corrected-boundary-form}
+For $\kappa\in\{1,-1\}$ and real $\lambda\ne0$, $\mathcal B_\lambda(f)>0$
+whenever $f\ne0$ (manuscript \texttt{(prop:corrected-trace)}).
+\end{proposition}
+
+\begin{proof}
+\uses{lem:beta-lower, lem:scalar-form-positive, lem:trace-sos-extension, lem:affine-splitting, lem:hardy-1d}
+For $u\in H^1_0$ with $wu''\in L^2$, write $F_0=\mathcal F_\lambda(u)$ and
+$g_u=-iwu'-\lambda u$; then $\|g_u'\|_2^2\le4F_0$ and $g_u\in H^1_0$.
+If $\kappa=1$, write $f=a+u$; then
+$\mathcal B_\lambda(f)\ge\tfrac14\int(|g'|^2+(2+\log w)|g|^2)$, which is positive
+by Lemma~\ref{lem:scalar-form-positive}, and $g=0$ forces $f=0$ when
+$\lambda\ne0$. If $\kappa=-1$, write $f=bx+u$; then
+$\mathcal F_\lambda(f)=F_0+\lambda^2|b|^2$, and estimating the negative part of
+$\beta$ near the endpoints (with $a=e^{-2}$) and the positive part on
+$[-\tfrac12,\tfrac12]$ gives
+$\mathcal B_\lambda(f)\ge\tfrac25F_0+(\tfrac1{10}+\tfrac45\lambda^2)|b|^2$.
+\end{proof}
+
+\begin{remark}[Digest note]
+The $\kappa=-1$ estimate chains several explicit numerical constants
+($203/1920$, $\lambda^2/96$, $16/\pi^2$, \dots) that the manuscript states
+without intermediate steps. They should be re-derived; this is a good
+candidate for a careful Lean proof, since it is one-dimensional.
+\end{remark}
+
+\section{Conclusion}
+
+\begin{theorem}[Odd--odd exclusion]
+\label{thm:dd-exclusion}
+\uses{def:eigen-problem, def:sectors}
+If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
+$S_1^*\omega=S_2^*\omega=-\omega$, then $\omega=0$ (manuscript
+\texttt{(r4:dd-exclusion)}).
+\end{theorem}
+
+\begin{proof}
+\uses{lem:rotation-characters, prop:dd-quotient-domain, lem:dd-orthogonality, lem:dd-picone-current, lem:dd-bulk-picone, prop:corrected-trace}
+Fix an $R$-character $\kappa$. By Lemmas~\ref{lem:dd-picone-current}
+and~\ref{lem:dd-bulk-picone},
+\[
+  \frac{25}{54}\int_\Cell\Psi^2|\phi|^2\le
+  \int F|E\phi|^2+\int Mw_*^2|\nabla(\phi/w_*)|^2+\int\frac{Pw_*}{w_*}|\phi|^2
+  =-\frac83\sum_{\text{edges}}\mathcal B_\lambda(f)\le0
+\]
+by Proposition~\ref{prop:corrected-trace}. Hence $\phi=0$, so $\psi=0$ and $\omega=0$.
+\end{proof}
