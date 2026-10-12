@@ -1,0 +1,28 @@
+build_dir := "build"
+
+main_tex_file := "main.tex"
+main_joel_tex_file := "main_joel.tex"
+spectral_bounds_tex_file := "dipole_spectral_bounds_and_damping\\ reorganized.tex"
+eigenvalues_tex_file := "eigenvalues.tex"
+
+latex_enginge := "xelatex"
+
+paper:
+    mkdir -p {{build_dir}}
+    latexmk -pvc -pdf -pdflatex='{{latex_enginge}}' \
+    -output-directory={{build_dir}} {{main_tex_file}}
+
+joel:
+    mkdir -p {{build_dir}}
+    latexmk -pvc -pdf -pdflatex='{{latex_enginge}}' \
+    -output-directory={{build_dir}} {{main_joel_tex_file}}
+
+spectral-bounds:
+    mkdir -p {{build_dir}}
+    latexmk -pvc -pdf -pdflatex='{{latex_enginge}}' \
+    -output-directory={{build_dir}} {{spectral_bounds_tex_file}}
+
+eigenvalues:
+    mkdir -p {{build_dir}}
+    latexmk -pvc -pdf -pdflatex='{{latex_enginge}}' \
+    -output-directory={{build_dir}} {{eigenvalues_tex_file}}
