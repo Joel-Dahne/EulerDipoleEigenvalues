@@ -14,21 +14,26 @@ or equivalently distributionally.
 \leanok
 Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$,
 \[
-  L^2_0=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\},
+  X=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\},
 \]
 and $\hat g_k=(2\pi)^{-2}\int_{\T^2}g(x)e^{-ik\cdot x}\,dx$, $k\in\Z^2$, for the
 Fourier coefficients, so that $g\mapsto(\hat g_k)_k$ is (up to the factor
-$2\pi$) a unitary map $L^2\to\ell^2(\Z^2)$ and $g\in L^2_0$ iff $\hat g_0=0$.
+$2\pi$) a unitary map $L^2\to\ell^2(\Z^2)$ and $g\in X$ iff $\hat g_0=0$.
 \end{definition}
+
+\begin{remark}
+The mean-zero space is called $X$ rather than $L^2_0$ because $L^2_0$ and
+$L_0^2$ (the square of the operator $L_0$) are typeset identically.
+\end{remark}
 
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
 \uses{def:torus}
 \lean{NoEmbeddedEigenvalues.invLap}
 \leanok
-For $\omega\in L^2_0$ let $\Delta^{-1}\omega\in L^2_0$ be the function with
+For $\omega\in X$ let $\Delta^{-1}\omega\in X$ be the function with
 Fourier coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. For
-$\omega\in L^2_0$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
+$\omega\in X$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
 of the perturbation). Its derivatives up to order two, defined by the Fourier
 multipliers $ik_j$ and $-k_jk_l$, are again in $L^2$, and
 $\Delta\psi=\omega$.
@@ -67,7 +72,7 @@ characters gives the formula above.
 \uses{def:dipole, def:torus}
 \lean{NoEmbeddedEigenvalues.Dom}
 \leanok
-$\Dom=\{g\in L^2_0: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
+$\Dom=\{g\in X: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \end{definition}
 
 \begin{lemma}[The stream function is in the domain]
@@ -75,7 +80,7 @@ $\Dom=\{g\in L^2_0: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \uses{def:inverse-laplacian, def:dipole}
 \lean{NoEmbeddedEigenvalues.exists_hasL0_invLap}
 \leanok
-For $\omega\in L^2_0$, $L_0\Delta^{-1}\omega\in L^2$.
+For $\omega\in X$, $L_0\Delta^{-1}\omega\in L^2$.
 \end{lemma}
 
 \begin{proof}
@@ -91,7 +96,7 @@ shifted copies of $|\hat\omega|$, which is square summable.
 \uses{def:domain, def:inverse-laplacian, lem:L0-stream}
 \lean{NoEmbeddedEigenvalues.HasL}
 \leanok
-Let $A=I+\Delta^{-1}$ on $L^2_0$ and $L=L_0A$ with domain $\Dom$; by
+Let $A=I+\Delta^{-1}$ on $X$ and $L=L_0A$ with domain $\Dom$; by
 Lemma~\ref{lem:L0-stream}, $L\omega\in L^2$ for $\omega\in\Dom$.
 \end{definition}
 
@@ -123,7 +128,7 @@ $(-,+)$ by the rotation $R$ (Lemma~\ref{lem:sector-swap}).
 \lean{NoEmbeddedEigenvalues.IsEigenSolution}
 \leanok
 A \emph{solution of the eigenvalue problem with parameter
-$\lambda\in\R\setminus\{0\}$} is a function $\omega\in L^2_0$ such that, with
+$\lambda\in\R\setminus\{0\}$} is a function $\omega\in X$ such that, with
 $\psi=\Delta^{-1}\omega$,
 \[
   H(\omega+\psi)=\lambda\omega
@@ -138,7 +143,7 @@ $\omega$ is an \emph{eigenfunction}.
 \lean{NoEmbeddedEigenvalues.hasL_iff_isEigenSolution}
 \leanok
 Let $\lambda\in\R\setminus\{0\}$. A function $\omega\in\Dom$ satisfies
-$L\omega=i\lambda\omega$ if and only if $\omega\in L^2_0$ is a solution of the
+$L\omega=i\lambda\omega$ if and only if $\omega\in X$ is a solution of the
 eigenvalue problem~\ref{def:eigen-problem} with parameter $\lambda$. Moreover
 every such solution lies in $\Dom$.
 \end{lemma}
@@ -152,11 +157,29 @@ Lemma~\ref{lem:L0-stream}, so $\omega\in\Dom$.
 \end{proof}
 
 \begin{remark}
-The manuscript also shows that a nonzero eigenfunction of $L$ can only have
-purely imaginary eigenvalue (using $A\ge0$), and explains why $\lambda=0$ must
-be excluded: $L$ annihilates $\ker L_0\cap\Dom$ and the first Laplace modes
-$\cos x,\sin x,\cos y,\sin y$, which span $\ker A$. Neither fact is needed for
-Theorem~\ref{thm:main} as stated.
+$\lambda=0$ must be excluded: $L$ annihilates $\ker L_0\cap\Dom$ and the first
+Laplace modes $\cos x,\sin x,\cos y,\sin y$, which span $\ker A$.
+\end{remark}
+
+\begin{remark}[Non-real eigenvalues]
+Theorem~\ref{thm:main} is stated for real $\lambda$ only, but $L$ has no
+eigenvalues off the imaginary axis either. Let $L\omega=\mu\omega$ with
+$\mu\in\C\setminus\{0\}$ and $\omega\in\Dom$. Then $L_0(A\omega)=\mu\omega\in L^2$, so
+$A\omega$ is in the domain of $H$, and pairing with $A\omega$ gives
+$\ip{L_0A\omega}{A\omega}=\mu\ip{\omega}{A\omega}$. The left side is purely
+imaginary since $H$ is self-adjoint (Lemma~\ref{lem:H-selfadjoint}), and
+$\ip{\omega}{A\omega}=(2\pi)^2\sum_k(1-|k|^{-2})|\hat\omega_k|^2\ge0$.
+If $\ip{\omega}{A\omega}>0$, then $\mu\in i\R$. If $\ip{\omega}{A\omega}=0$, then
+$\hat\omega_k=0$ for $|k|\ne1$, so $A\omega=0$ and $\mu\omega=L\omega=0$, hence
+$\omega=0$. The only analytic input is that $\ip{L_0u}{u}\in i\R$ on the
+maximal domain.
+\end{remark}
+
+\begin{remark}[Digest note: non-real eigenvalues]
+The manuscript (before \texttt{(ee:reflections)}) argues: if
+$\ip{A\omega}{\omega}=0$, then ``$A\omega=0$ and $\omega=0$''. The second step
+is false as stated, since $\ker A$ is spanned by the four modes with $|k|=1$.
+The conclusion holds because $\mu\ne0$, as in the previous remark. (Resolved.)
 \end{remark}
 
 \begin{remark}[Lean model]

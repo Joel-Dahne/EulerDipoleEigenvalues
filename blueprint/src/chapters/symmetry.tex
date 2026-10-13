@@ -40,7 +40,7 @@ Direct computation modulo $2\pi$.
 \begin{lemma}[The symmetries commute with the equation]
 \label{lem:symmetries-commute}
 \uses{def:reflections, def:dipole, def:inverse-laplacian}
-For $T\in\{S_1,S_2,R\}$, the map $T^*$ is unitary on $L^2$, preserves $L^2_0$,
+For $T\in\{S_1,S_2,R\}$, the map $T^*$ is unitary on $L^2$, preserves $X$,
 and commutes with $\Delta^{-1}$ and with $L_0$ (in distributions).
 Consequently, if $\omega$ solves the eigenvalue problem~\ref{def:eigen-problem}
 with parameter $\lambda$, so does $T^*\omega$.
@@ -49,9 +49,9 @@ with parameter $\lambda$, so does $T^*\omega$.
 \begin{proof}
 \uses{lem:reflection-algebra}
 Each $T$ is an isometry of the flat torus, so $T^*$ commutes with $\Delta$ and
-preserves integrals. For $L_0$ one checks $DT\,X=X\circ T$ for the velocity
-field $X=(\sin y,-\sin x)$. For instance $DS_1=\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$ and
-$X(S_1(x,y))=(\sin x,-\sin y)=DS_1X(x,y)$. Equivalently: $T$ maps $\Psi$ to
+preserves integrals. For $L_0$ one checks $DT\,Y=Y\circ T$ for the velocity
+field $Y=(\sin y,-\sin x)$. For instance $DS_1=\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$ and
+$Y(S_1(x,y))=(\sin x,-\sin y)=DS_1Y(x,y)$. Equivalently: $T$ maps $\Psi$ to
 $\pm\Psi$ with the same sign as $\det DT$.
 \end{proof}
 
