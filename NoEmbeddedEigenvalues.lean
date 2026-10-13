@@ -1,1 +1,2 @@
+import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.Symmetry

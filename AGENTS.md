@@ -70,6 +70,9 @@ There are three layers:
 - `NoEmbeddedEigenvalues.lean`: Lean library root, importing every module.
 - `NoEmbeddedEigenvalues/Symmetry.lean`: the torus as `Real.Angle × Real.Angle`
   (points only), `Ψ`, the reflections `S₁ S₂`, `R`, `Ic` and their relations.
+- `NoEmbeddedEigenvalues/Setup.lean`: `L²` on the torus, characters, Fourier
+  coefficients, `Δ⁻¹`, `L₀` (as the relation `HasL0`), the domain and the
+  main theorem `main`.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `justfile`: build recipes (run `just` to list them).
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
@@ -211,19 +214,26 @@ Keep this section up to date at the end of each work session.
   mention the tiers yet.
 - Lean: first module `Symmetry.lean` (2026-10-12), a minimal end-to-end test
   of the workflow: `def:reflections` and `lem:reflection-algebra` are
-  formalized and marked `\leanok`. The `L²` model (Lp on the torus or Fourier
-  coefficients) is not chosen yet; see the digest note in `setup.tex`.
+  formalized and marked `\leanok`.
+- `L²` model chosen (2026-10-13, as a first attempt; "option C"): `Lp` on
+  `Angle × Angle` with Lebesgue measure; `L₀` defined weakly by testing
+  against the characters `e_k` (a relation `HasL0 g h`, equivalent to the
+  Fourier formula); `Δ⁻¹` as a `tsum` of characters in `L²`. See the remark
+  "Lean model" in `setup.tex`. `Setup.lean` states every node of the setup
+  chapter, including `thm:main`, with `sorry`; the sanity lemmas `char_coe`,
+  `L0char_coe` (the formula for `L₀ e_k` agrees with actual derivatives) and
+  `volume_univ_torus` are proved. The user reviewed the definitions
+  (2026-10-13).
 - Not set up yet (needs Lean declarations and a GitHub remote first):
   `checkdecls` in the lakefile, the `\home`/`\github`/`\dochome` links in
   `blueprint/src/web.tex`, `blueprint: true` in the docgen CI step, and the
   GitHub settings described in the top-level `README.md`. There is no git
   remote.
 - **Next steps** (agreed 2026-10-12):
-  1. Setup chapter: first present the two options for modelling `L²(T²)`
-     (`Lp` on the torus vs. Fourier coefficients in `ℓ²(ℤ²)`; note Mathlib's
-     `UnitAddTorus`/`mFourierBasis` has period 1, not 2π) with what each makes
-     easy and hard, and let the user choose. Then state the setup definitions
-     and `thm:main` in Lean with `sorry`, for the user to review.
+  1. Setup chapter: the infrastructure, Parseval/Hilbert basis for the 2π-torus
+     (transport Mathlib's `mFourierBasis` along the scaling map), which the
+     setup lemmas (`hasL0_iff_fourierCoeff`, `exists_hasL0_invLap`,
+     `hasL_iff_isEigenSolution`) need.
   2. Digest the even–even sector end to end (check identities with SymPy,
      explain the mechanism, digest notes, formalize the algebraic nodes).
   3. Soon after: assess the largest gap, the odd–odd renormalized virial

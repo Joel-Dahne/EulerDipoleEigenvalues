@@ -8,6 +8,10 @@ or equivalently distributionally.
 
 \begin{definition}[Torus and Lebesgue spaces]
 \label{def:torus}
+\lean{NoEmbeddedEigenvalues.L2, NoEmbeddedEigenvalues.char,
+  NoEmbeddedEigenvalues.charLp, NoEmbeddedEigenvalues.fourierCoeff,
+  NoEmbeddedEigenvalues.MeanZero}
+\leanok
 Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$,
 \[
   L^2_0=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\},
@@ -20,6 +24,8 @@ $2\pi$) a unitary map $L^2\to\ell^2(\Z^2)$ and $g\in L^2_0$ iff $\hat g_0=0$.
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
 \uses{def:torus}
+\lean{NoEmbeddedEigenvalues.invLap}
+\leanok
 For $\omega\in L^2_0$ let $\Delta^{-1}\omega\in L^2_0$ be the function with
 Fourier coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. For
 $\omega\in L^2_0$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
@@ -31,6 +37,8 @@ $\Delta\psi=\omega$.
 \begin{definition}[The dipole and the transport operator]
 \label{def:dipole}
 \uses{def:torus}
+\lean{NoEmbeddedEigenvalues.L0char, NoEmbeddedEigenvalues.HasL0}
+\leanok
 The steady state is the symmetric dipole with stream function
 $\Psi(x,y)=\cos x+\cos y$, vorticity $\Omega=-\Psi$ and velocity
 $\nabla^\perp\Psi=(\sin y,-\sin x)$ (manuscript \texttt{(Int1.1)}). Define the
@@ -45,17 +53,28 @@ distribution with Fourier coefficients ($e_1=(1,0)$, $e_2=(0,1)$)
                          -k_2(\hat g_{k-e_1}-\hat g_{k+e_1})\big],
 \]
 and ``$L_0g\in L^2$'' means that this sequence is square summable.
+Equivalently, $L_0g=h\in L^2$ if and only if
+$\ip{h}{e_k}=-\ip{g}{L_0e_k}$ for all characters
+$e_k(x)=e^{ik\cdot x}$, where
+$L_0e_k=i(k_1\sin y-k_2\sin x)e_k$; this is the weak definition tested against
+characters $\bar e_k$ (as $L_0$ is a real divergence-free field,
+$\int(L_0g)\varphi=-\int g\,L_0\varphi$), and expanding $\sin$ into
+characters gives the formula above.
 \end{definition}
 
 \begin{definition}[Operator domain]
 \label{def:domain}
 \uses{def:dipole, def:torus}
+\lean{NoEmbeddedEigenvalues.Dom}
+\leanok
 $\Dom=\{g\in L^2_0: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \end{definition}
 
 \begin{lemma}[The stream function is in the domain]
 \label{lem:L0-stream}
 \uses{def:inverse-laplacian, def:dipole}
+\lean{NoEmbeddedEigenvalues.exists_hasL0_invLap}
+\leanok
 For $\omega\in L^2_0$, $L_0\Delta^{-1}\omega\in L^2$.
 \end{lemma}
 
@@ -70,6 +89,8 @@ shifted copies of $|\hat\omega|$, which is square summable.
 \begin{definition}[Linearized operator]
 \label{def:linearized-operator}
 \uses{def:domain, def:inverse-laplacian, lem:L0-stream}
+\lean{NoEmbeddedEigenvalues.HasL}
+\leanok
 Let $A=I+\Delta^{-1}$ on $L^2_0$ and $L=L_0A$ with domain $\Dom$; by
 Lemma~\ref{lem:L0-stream}, $L\omega\in L^2$ for $\omega\in\Dom$.
 \end{definition}
@@ -77,6 +98,8 @@ Lemma~\ref{lem:L0-stream}, $L\omega\in L^2$ for $\omega\in\Dom$.
 \begin{theorem}[Main theorem]
 \label{thm:main}
 \uses{def:linearized-operator}
+\lean{NoEmbeddedEigenvalues.main}
+\leanok
 For every $\lambda\in\R\setminus\{0\}$ and $\omega\in\Dom$, if
 $L\omega=i\lambda\omega$ then $\omega=0$. That is, $\ker(L-i\lambda)=\{0\}$
 (manuscript \texttt{(Intm6)}).
@@ -97,6 +120,8 @@ $(-,+)$ by the rotation $R$ (Lemma~\ref{lem:sector-swap}).
 \begin{definition}[The eigenvalue problem]
 \label{def:eigen-problem}
 \uses{def:dipole, def:inverse-laplacian}
+\lean{NoEmbeddedEigenvalues.IsEigenSolution}
+\leanok
 A \emph{solution of the eigenvalue problem with parameter
 $\lambda\in\R\setminus\{0\}$} is a function $\omega\in L^2_0$ such that, with
 $\psi=\Delta^{-1}\omega$,
@@ -110,6 +135,8 @@ $\omega$ is an \emph{eigenfunction}.
 \begin{lemma}[Reduction to the real-parameter equation]
 \label{lem:reduction}
 \uses{def:eigen-problem, def:linearized-operator}
+\lean{NoEmbeddedEigenvalues.hasL_iff_isEigenSolution}
+\leanok
 Let $\lambda\in\R\setminus\{0\}$. A function $\omega\in\Dom$ satisfies
 $L\omega=i\lambda\omega$ if and only if $\omega\in L^2_0$ is a solution of the
 eigenvalue problem~\ref{def:eigen-problem} with parameter $\lambda$. Moreover
@@ -132,15 +159,25 @@ $\cos x,\sin x,\cos y,\sin y$, which span $\ker A$. Neither fact is needed for
 Theorem~\ref{thm:main} as stated.
 \end{remark}
 
-\begin{remark}[Digest note: formal statement]
-Choices to settle when stating Theorem~\ref{thm:main} in Lean:
-(i) model $L^2$ as \texttt{Lp} on a torus or through Fourier coefficients in
-$\ell^2(\Z^2)$. Mathlib's \texttt{UnitAddTorus} comes with the Hilbert basis
-\texttt{mFourierBasis} of $L^2$, but has period $1$ rather than $2\pi$;
-(ii) define $L_0g$ by the Fourier formula of Definition~\ref{def:dipole} or as a
-weak derivative tested against smooth periodic functions (the two agree);
-(iii) whether to state the theorem for $L$ or directly for
-Definition~\ref{def:eigen-problem}. The Fourier model makes this chapter
-elementary. Most of the later analysis is local in physical space, however,
-which favours the \texttt{Lp} model with Parseval as the bridge.
+\begin{remark}[Lean model]
+Decided 2026-10-13, as a first attempt. $L^2$ is Mathlib's \texttt{Lp} for
+Lebesgue measure on $\T^2=\texttt{Real.Angle}\times\texttt{Real.Angle}$
+(\texttt{NoEmbeddedEigenvalues/Setup.lean}), not $\ell^2(\Z^2)$, because the
+later chapters argue in physical space. The operators are defined through
+the characters $e_k$:
+(i) $L_0$ is a relation, \texttt{HasL0 g h} (``$L_0g=h$''), given by the weak
+definition tested against characters (Definition~\ref{def:dipole}); its
+equivalence with the Fourier formula is
+\texttt{hasL0\_iff\_fourierCoeff}. That smooth test functions give the same
+notion is a density argument, deferred until a later chapter needs it;
+(ii) $\Delta^{-1}\omega$ is the Fourier series
+$\sum_{k\ne0}(-\hat\omega_k/|k|^2)e_k$ in $L^2$, defined on all of $L^2$
+(it ignores $\hat\omega_0$);
+(iii) the main theorem is stated for $L$ (\texttt{HasL}), and
+Lemma~\ref{lem:reduction} connects it to Definition~\ref{def:eigen-problem}.
+Mathlib's inner product is conjugate linear in the \emph{first} argument, the
+opposite of the convention above.
+The remaining infrastructure is Parseval for $\T^2$ with period $2\pi$: Mathlib
+has it only for the unit torus (\texttt{mFourierBasis}), so it must be
+transported along the scaling map.
 \end{remark}
