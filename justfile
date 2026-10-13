@@ -8,6 +8,14 @@ default:
 build:
     lake build
 
+# Build the manuscript PDF (Manuscript/build/eigenvalues.pdf)
+manuscript:
+    cd Manuscript && latexmk -pdf -pdflatex=xelatex -output-directory=build eigenvalues.tex
+
+# Rebuild the manuscript PDF whenever the source changes
+manuscript-watch:
+    cd Manuscript && latexmk -pvc -pdf -pdflatex=xelatex -output-directory=build eigenvalues.tex
+
 # Build the blueprint website (blueprint/web), including the dependency graph
 web:
     # With a Nix-installed plasTeX, the copied static files are read-only, which
@@ -19,9 +27,9 @@ web:
 pdf:
     leanblueprint pdf
 
-# Serve the built website at http://localhost:8000
+# Serve the built website at http://localhost:8000 (needs only python3)
 serve:
-    leanblueprint serve
+    python3 -m http.server -d blueprint/web 8000
 
 # Build the website and serve it
 view: web serve

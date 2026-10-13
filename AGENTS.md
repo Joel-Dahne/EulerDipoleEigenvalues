@@ -1,0 +1,178 @@
+# AGENTS.md
+
+Guidance for AI agents (and humans) working in this repository.
+
+## Project
+
+Formalization in Lean 4 + Mathlib of the paper *Absence of nonzero embedded
+eigenvalues for the two-dimensional Euler equation linearized around the
+dipole* (Joel Dahne, Hao Jia). The dipole is the stream function
+`cos x + cos y` on the torus `(R/2πZ)^2`. The argument uses virial identities
+and explicit comparison functions whose signs are certified by exact
+arithmetic.
+
+The project has three goals of equal weight, pursued together:
+
+1. **Formalize** the result in Lean.
+2. **Digest** the result. The manuscript was mostly AI-generated, and the
+   authors do not yet fully own the argument. The aim is to understand why
+   each step works, find gaps and errors, and find simpler routes.
+3. **Improve the manuscript**, which is currently very rough, into a
+   well-presented paper.
+
+The blueprint links all three: breaking the argument into small nodes for Lean
+is also how we digest it, and the resulting structure is what should go back
+into the paper. This way of working is an experiment; expect to adjust it.
+
+There are three layers:
+
+1. `Manuscript/eigenvalues.tex`: the paper. It is the origin of the argument
+   but **not** a trusted source: treat its claims as unverified until they are
+   checked, either by an independent derivation or in Lean.
+2. `blueprint/`: a [leanblueprint](https://github.com/PatrickMassot/leanblueprint)
+   that restructures the manuscript into small nodes (definitions and lemmas)
+   with a dependency graph. It is the to-do list for the formalization, the
+   place to digest the manuscript, and a staging area for changes that should
+   go back into the paper. See `blueprint/README.md` and
+   `blueprint/src/chapters/intro.tex`.
+3. `NoEmbeddedEigenvalues/`: the Lean code (still the `lake new` template).
+
+## Working on the mathematics
+
+- Be skeptical of the manuscript. "Asserted", "by the argument of",
+  "similarly" and unexplained constants are places to look closely. Report
+  what you actually verified and how (symbolic check, numerical check, full
+  derivation), and keep sanity checks clearly separate from proofs.
+- When explaining a step, give the mechanism (why it works, what the key
+  cancellation or sign is), not only a restatement.
+- Record problems as digest notes (see below) instead of quietly fixing them
+  in the blueprint, so the authors see what changed and why.
+- Look out for simplifications and better structure: unused generality, results
+  proved twice, notation clashes, and arguments that become shorter in a
+  different order. These are candidates for the paper.
+- Scratch computations (SymPy, numerics) belong in a scratch directory. Do not
+  add them to the repository unless asked; verification scripts for the
+  certificates are an exception, once they are planned.
+- Do not rewrite the manuscript on your own initiative. Changes go into the
+  blueprint first and are brought back into the paper once a chapter has
+  settled and the authors agree.
+
+## Layout
+
+- `Manuscript/eigenvalues.tex`: the manuscript (built into `Manuscript/build`).
+- `blueprint/src/content.tex`: list of chapters, in order.
+- `blueprint/src/chapters/*.tex`: one file per chapter: `intro`, `setup`,
+  `symmetry`, `geometry`, `analysis`, `virial`, `transport`, `even_even`,
+  `regularity`, `odd_odd`, `mixed`, `certificates`, `notes`.
+- `blueprint/src/macros/common.tex`: theorem environments and math macros for
+  both builds (`\T \R \Z \N \C`, `\Div`, `\Dom`, `\Cell`, `\ip{}{}`, ...).
+  `macros/print.tex` defines no-op versions of the blueprint macros for the PDF.
+- `NoEmbeddedEigenvalues.lean`, `NoEmbeddedEigenvalues/`: Lean library root.
+- `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
+- `justfile`: build recipes (run `just` to list them).
+- `.github/workflows/`: the Lean template CI (lean-action, docgen).
+
+## Building
+
+```sh
+just web             # blueprint website in blueprint/web (with dependency graph)
+just serve           # serve it at http://localhost:8000 (needs only python3)
+just pdf             # blueprint PDF in blueprint/print
+just build           # lake build
+just manuscript      # manuscript PDF in Manuscript/build (needs xelatex, latexmk)
+```
+
+Agents usually run in a VM that has `just`, `leanblueprint` and `kpsewhich`
+installed system-wide; there, run `just web` directly. The user runs
+`just serve` on the host to look at the result. The VM has no
+`xelatex`/`latexmk`, so `just pdf` and `just manuscript` are for the host.
+
+Gotchas:
+
+- **Check the `just web` output for `ERROR: Loading package ...
+  ModuleNotFoundError`.** It exits 0 even then, but the plugins did not load:
+  the dependency graph is not regenerated and the blueprint macros are
+  ignored. The cause is a missing `PYTHONPATH` (next item).
+- `PYTHONPATH` must point to the site-packages of the Python environment that
+  contains `leanblueprint`. leanblueprint runs plasTeX in a subprocess, and the
+  Nix wrappers pass packages through `NIX_PYTHONPATH`, which Python removes at
+  startup, so the subprocess cannot import the plugins. In the VM it must be
+  set in the system configuration.
+- Messages that `gs`, `pdflatex` or `dvisvgm` were not found are harmless:
+  they come from plasTeX's image converters, which this blueprint does not use.
+  `graphviz` is not needed either; the graph is rendered in the browser.
+- `just web` makes `blueprint/web` writable before rebuilding, because
+  plasTeX copies read-only files out of the Nix store.
+- Lean and Mathlib come from `elan`/`lake`; run `lake exe cache get` before the
+  first `lake build` to download Mathlib's build cache.
+
+## Blueprint conventions
+
+- Node environments: `definition`, `lemma`, `proposition`, `theorem`,
+  `corollary`. `remark` is deliberately **not** a graph node; it is used for
+  commentary.
+- Label prefixes: `chap:`, `sec:`, `def:`, `lem:`, `prop:`, `thm:`, `cor:`, and
+  `cert:` for computer-certified inequalities (these are `lemma`s in
+  `certificates.tex`).
+- Dependencies: `\uses{...}` in a statement lists what is needed to *state* the
+  node; in a proof, what is needed to *prove* it. Keep these accurate: they are
+  the whole point of the dependency graph. Every label in `\uses` must exist.
+- Lean status: `\lean{Name}`, `\leanok` (statement in Lean, or in a proof: proof
+  done), `\mathlibok`, `\notready` (not precise enough yet to formalize). No
+  node has `\lean`/`\leanok` yet.
+- Manuscript cross-references are written as `(manuscript \texttt{(label)})`,
+  quoting the manuscript's own `\label`, so they can be found by text search.
+- **Digest notes**: questions or problems found in the manuscript go in
+  `\begin{remark}[Digest note: ...]` next to the relevant node, and are also
+  listed in `chapters/notes.tex`. Remove an item from `notes.tex` once it is
+  resolved and record the resolution in the node.
+- **Sobolev tiers** (see `chapters/analysis.tex`): every node whose statement
+  involves a Sobolev space `\uses` exactly the relevant one of
+  `def:h1-interval` (H^1 on an interval, in Mathlib), `def:sobolev-torus`
+  (H^s(T^2) via Fourier coefficients), or `def:sobolev-local` (Sobolev spaces on
+  open sets, weighted spaces, traces; the main infrastructure gap in Mathlib).
+  This keeps visible in the graph where Sobolev theory enters. The setup and
+  symmetry chapters intentionally use none of them: `Δ^{-1}` and `L_0` are
+  defined through Fourier coefficients.
+- Algebraic identities are separated from their analytic justification; the
+  algebraic nodes and `certificates.tex` (Bernstein-coefficient positivity,
+  meant to be checked by `decide`/`native_decide`) are the first formalization
+  targets.
+- Style: short, precise statements and short proofs; plain prose, no
+  marketing language.
+
+## Workflow
+
+1. Digest a manuscript argument into small blueprint nodes; record doubts as
+   digest notes.
+2. State in Lean with `sorry`; add `\lean{...}` and `\leanok` to the statement.
+   The Lean statement must be reviewed carefully by a human, since Lean cannot
+   check that it says the right thing.
+3. Prove in Lean; add `\leanok` to the proof.
+4. Feed changes in statements or structure back into the blueprint and, once a
+   chapter has settled, into the manuscript.
+
+## Status
+
+Keep this section up to date at the end of each work session.
+
+- Blueprint: first full version of all 13 chapters committed (`565f605`). The
+  web build works.
+- "Sobolev tiers" refactor committed (`4d71a49`, 2026-10-13). It adds
+  `def:h1-interval`, `def:sobolev-torus`, `def:sobolev-local`; splits
+  `lem:elliptic-regularity` into `lem:elliptic-torus` and
+  `lem:elliptic-local`; adds `lem:local-to-global`, `lem:L0-stream` and
+  `def:mixed-coefficients`; makes setup/symmetry Sobolev-free via Fourier
+  formulas; and writes out explicit formulas for `F_u` and the Robin boundary
+  conditions in `mixed.tex`. `intro.tex` and `blueprint/README.md` do not
+  mention the tiers yet.
+- Lean: nothing yet beyond the template (`def hello := "world"`).
+- Not set up yet (needs Lean declarations and a GitHub remote first):
+  `checkdecls` in the lakefile, the `\home`/`\github`/`\dochome` links in
+  `blueprint/src/web.tex`, `blueprint: true` in the docgen CI step, and the
+  GitHub settings described in the top-level `README.md`. There is no git
+  remote.
+- Largest open gaps in the math (see `chapters/notes.tex`): the odd–odd
+  renormalized virial identity (`prop:dd-virial`), the general transport lemmas
+  (`chapters/transport.tex`), orbit geometry bounds (`lem:orbit-comparison`),
+  and the missing verification scripts for the certificates.
