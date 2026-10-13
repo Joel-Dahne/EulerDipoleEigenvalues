@@ -18,17 +18,19 @@ The project has three goals of equal weight, pursued together:
    authors do not yet fully own the argument. The aim is to understand why
    each step works, find gaps and errors, and find simpler routes.
 3. **Improve the manuscript**, which is currently very rough, into a
-   well-presented paper.
+   well-presented paper (`Manuscript/manuscript.tex`).
 
 The blueprint links all three: breaking the argument into small nodes for Lean
 is also how we digest it, and the resulting structure is what should go back
 into the paper. This way of working is an experiment; expect to adjust it.
 
-There are three layers:
+There are three layers, plus the reworked paper:
 
-1. `Manuscript/eigenvalues.tex`: the paper. It is the origin of the argument
-   but **not** a trusted source: treat its claims as unverified until they are
-   checked, either by an independent derivation or in Lean.
+1. `Manuscript/eigenvalues.tex`: the original manuscript, kept unchanged as
+   the reference. In this repository "the manuscript" means this file. It is
+   the origin of the argument but **not** a trusted source: treat its claims
+   as unverified until they are checked, either by an independent derivation
+   or in Lean.
 2. `blueprint/`: a [leanblueprint](https://github.com/PatrickMassot/leanblueprint)
    that restructures the manuscript into small nodes (definitions and lemmas)
    with a dependency graph. It is the to-do list for the formalization, the
@@ -36,6 +38,13 @@ There are three layers:
    go back into the paper. See `blueprint/README.md` and
    `blueprint/src/chapters/intro.tex`.
 3. `NoEmbeddedEigenvalues/`: the Lean code.
+
+The reworked manuscript `Manuscript/manuscript.tex` is the paper being
+written. It is written as we go and should always represent our current
+understanding: a section is filled in once the corresponding part of the
+argument is understood, otherwise it is a placeholder. Its content comes from
+the blueprint, but it is written as a paper: fewer and larger results,
+motivation, and standard facts cited rather than proved.
 
 ## Working on the mathematics
 
@@ -53,13 +62,15 @@ There are three layers:
 - Scratch computations (SymPy, numerics) belong in a scratch directory. Do not
   add them to the repository unless asked; verification scripts for the
   certificates are an exception, once they are planned.
-- Do not rewrite the manuscript on your own initiative. Changes go into the
-  blueprint first and are brought back into the paper once a chapter has
-  settled and the authors agree.
+- Never edit `eigenvalues.tex`. Do not edit `manuscript.tex` on your own
+  initiative: changes go into the blueprint first and are brought into the
+  reworked manuscript once a chapter has settled and the authors agree.
 
 ## Layout
 
-- `Manuscript/eigenvalues.tex`: the manuscript (built into `Manuscript/build`).
+- `Manuscript/eigenvalues.tex`: the original manuscript (unchanged reference).
+- `Manuscript/manuscript.tex`: the reworked manuscript. Both build into
+  `Manuscript/build`.
 - `blueprint/src/content.tex`: list of chapters, in order.
 - `blueprint/src/chapters/*.tex`: one file per chapter: `intro`, `setup`,
   `symmetry`, `geometry`, `analysis`, `virial`, `transport`, `even_even`,
@@ -85,7 +96,8 @@ just web             # blueprint website in blueprint/web (with dependency graph
 just serve           # serve it at http://localhost:8000 (needs only python3)
 just pdf             # blueprint PDF in blueprint/print
 just build           # lake build
-just manuscript      # manuscript PDF in Manuscript/build (needs xelatex, latexmk)
+just manuscript      # reworked manuscript PDF, rebuilt on change (needs xelatex, latexmk)
+just manuscript eigenvalues  # same for the original manuscript
 ```
 
 Agents usually run in a VM that has `just`, `leanblueprint` and `kpsewhich`
@@ -167,7 +179,8 @@ server has a file open, and keep work in one file at a time where possible.
 - New Lean modules must be imported in `NoEmbeddedEigenvalues.lean`. Lean
   names are in the namespace `NoEmbeddedEigenvalues`.
 - Manuscript cross-references are written as `(manuscript \texttt{(label)})`,
-  quoting the manuscript's own `\label`, so they can be found by text search.
+  quoting the `\label` in the original `eigenvalues.tex`, so they can be
+  found by text search.
 - **Digest notes**: questions or problems found in the manuscript go in
   `\begin{remark}[Digest note: ...]` next to the relevant node, and are also
   listed in `chapters/notes.tex`. Remove an item from `notes.tex` once it is
@@ -196,7 +209,7 @@ server has a file open, and keep work in one file at a time where possible.
    check that it says the right thing.
 3. Prove in Lean; add `\leanok` to the proof.
 4. Feed changes in statements or structure back into the blueprint and, once a
-   chapter has settled, into the manuscript.
+   chapter has settled, into the reworked manuscript (`manuscript.tex`).
 
 ## Status
 

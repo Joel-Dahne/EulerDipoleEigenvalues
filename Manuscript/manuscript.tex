@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathrsfs,geometry,microtype,xcolor,tikz}
+%\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{hyperref}
+\usepackage[notref,notcite]{showkeys}
+
+\setcounter{tocdepth}{1}
+\definecolor{linkcol}{HTML}{1A4F9C}
+\hypersetup{
+  bookmarksopen=true,
+  bookmarksdepth=subsubsection,
+  colorlinks=true,
+  allcolors=linkcol
+}
+
+\geometry{margin=1in}
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\T}{\mathbb T}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\eps}{\epsilon}
+\newcommand{\la}{\lambda}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\ker}
+\newcommand{\bv}{\mathbf{V}}
+
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+
+\allowdisplaybreaks[1]
+
+\title{Embedded eigenvalues for the linearized dipole}
+
+\author{Joel Dahne, Hao Jia}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  We study the two-dimensional Euler equation linearized around the
+  symmetric dipole with stream function $\cos x+\cos y$ on the square
+  torus. We prove that the linearized operator has no nonzero embedded
+  eigenvalues.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+Consider the two-dimensional incompressible Euler equation in the
+vorticity formulation
+\begin{equation}\label{eq:euler}
+    \begin{split}
+        &\partial_t\omega+u\cdot\nabla \omega=0,\\
+        &u=\nabla^\perp \psi=(-\partial_y\psi,\partial_x\psi),\quad \Delta\psi=\omega,\\
+        &\omega|_{t=0}=\omega_0,
+    \end{split}
+\end{equation}
+for $(x,y)\in\T^2,\quad t\ge0$. The vorticity field
+\begin{equation*}
+\Omega=-\cos x - \cos y
+\end{equation*}
+is a steady solution of~\eqref{eq:euler}, called the symmetric dipole.
+Its velocity and stream function are $(\sin y, -\sin x)$ and
+$\Psi(x,y)=\cos x + \cos y$, respectively.
+
+We study the Euler equation linearized around $\Omega$:
+\begin{equation}\label{eq:euler-linearized}
+    \begin{split}
+        \partial_t\omega+\Big[\sin y \,\partial_x - \sin x \,\partial_y\Big](\omega+\psi)&=0,\\
+        \Delta\psi &=\omega,
+    \end{split}
+\end{equation}
+for $(x,y)\in\T^2,\, \,t\ge0$. Define the operators
+\begin{equation*}
+  L_0=\sin y \,\partial_x - \sin x \,\partial_y,\qquad
+  L = L_{0}(1+\Delta^{-1})
+\end{equation*}
+so that~\eqref{eq:euler-linearized} reads
+$\partial_t\omega+L\omega=0$. Let
+\begin{equation*}
+    X = \Big\{g\in L^2(\T^2):\, \int_{\T^2}g\,dxdy=0\Big\}
+\end{equation*}
+and
+\begin{equation*}
+    \mathcal{D}=\Big\{g\in X:\, L_0g\in L^2(\T^2)\Big\}.
+\end{equation*}
+We use $\mathcal D$ as the domain of both $L$ and $L_0$ on $X$.
+
+With standard arguments one can show that the spectrum of \(L\) is on
+the imaginary axis. Our goal here is to show that this spectrum
+contains no embedded eigenvalues apart from the one at zero.
+\begin{theorem}\label{thm:main}
+  There is no nonzero embedded eigenvalue for $L$. That is, for every
+  $\lambda\in\R\setminus\{0\}$,
+  \begin{equation*}
+    \ker(L - i\lambda) = \{0\}.
+  \end{equation*}
+\end{theorem}
+
+\subsection{Main ideas of the proof}
+\todo{Finish this once we understand the general structure better.}
+
+\subsection{Organization}
+\todo{Finish this once most of the paper is more complete}
+
+\section{Reflection sectors and domain}\label{sec:spectral-foundations}
+
+\section{The even--even sector}\label{sec:ee-exclusion}
+
+\section{Regularity near the separatrix}\label{sec:saddle-gains}
+
+\section{The odd--odd sector}\label{sec:dd-exclusion}
+
+\section{The mixed sectors: boundary flux and regularity}\label{sec:mixed-regularity}
+
+\section{Exclusion in the mixed sectors}\label{sec:mixed-exclusion}
+
+\end{document}

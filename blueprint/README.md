@@ -36,7 +36,8 @@ questions and problems found in the manuscript, and collect them in
    cannot check for us.
 3. **Prove** in Lean, then add `\leanok` to the proof.
 4. **Feed back:** carry changes in statements or structure back into the
-   blueprint and, once a chapter has settled, into the manuscript.
+   blueprint and, once a chapter has settled, into the reworked manuscript
+   (`Manuscript/manuscript.tex`).
 
 ## Layout
 

@@ -8,9 +8,10 @@ default:
 build:
     lake build
 
-# Build the manuscript PDF (Manuscript/build/eigenvalues.pdf) and rebuild it whenever the source changes
-manuscript:
-    cd Manuscript && latexmk -pvc -pdf -pdflatex=xelatex -output-directory=build eigenvalues.tex
+# Output in Manuscript/build. `just manuscript eigenvalues` builds the original manuscript.
+# Build the reworked manuscript PDF and rebuild it whenever the source changes
+manuscript file="manuscript":
+    cd Manuscript && latexmk -pvc -pdf -pdflatex=xelatex -output-directory=build {{file}}.tex
 
 # Build the blueprint website (blueprint/web), including the dependency graph
 web:
