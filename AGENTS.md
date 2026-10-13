@@ -79,12 +79,11 @@ motivation, and standard facts cited rather than proved.
   both builds (`\T \R \Z \N \C`, `\Div`, `\Dom`, `\Cell`, `\ip{}{}`, ...).
   `macros/print.tex` defines no-op versions of the blueprint macros for the PDF.
 - `NoEmbeddedEigenvalues.lean`: Lean library root, importing every module.
-- `NoEmbeddedEigenvalues/Symmetry.lean`: the torus as `Real.Angle × Real.Angle`
-  (points only), `Ψ`, the reflections `S₁ S₂`, `R`, `Ic` and their relations.
-- `NoEmbeddedEigenvalues/Setup.lean`: `L²` on the torus, characters, Fourier
-  coefficients, `Δ⁻¹`, `L₀` (as the relation `HasL0`), the domain and the
-  main theorem `main`.
+- `NoEmbeddedEigenvalues/*.lean`: one module per blueprint chapter, named
+  after it (`Setup.lean` for `setup.tex`, `Symmetry.lean` for
+  `symmetry.tex`, ...). Each module docstring says what it contains.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
+- `STATUS.md`: current state, decisions and next steps.
 - `justfile`: build recipes (run `just` to list them).
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
 - `.github/workflows/`: the Lean template CI (lean-action, docgen).
@@ -107,20 +106,13 @@ installed system-wide; there, run `just web` directly. The user runs
 
 Gotchas:
 
-- **Check the `just web` output for `ERROR: Loading package ...
-  ModuleNotFoundError`.** It exits 0 even then, but the plugins did not load:
-  the dependency graph is not regenerated and the blueprint macros are
-  ignored. The cause is a missing `PYTHONPATH` (next item).
-- `PYTHONPATH` must point to the site-packages of the Python environment that
-  contains `leanblueprint`. leanblueprint runs plasTeX in a subprocess, and the
-  Nix wrappers pass packages through `NIX_PYTHONPATH`, which Python removes at
-  startup, so the subprocess cannot import the plugins. In the VM the
-  `leanblueprint` command is a wrapper that sets it.
-- Messages that `gs`, `pdflatex` or `dvisvgm` were not found are harmless:
-  they come from plasTeX's image converters, which this blueprint does not use.
-  `graphviz` is not needed either; the graph is rendered in the browser.
-- `just web` makes `blueprint/web` writable before rebuilding, because
-  plasTeX copies read-only files out of the Nix store.
+- Run `just web`, not `leanblueprint web`: the recipe first makes
+  `blueprint/web` writable, because plasTeX copies read-only files out of the
+  Nix store and a second build would fail on them.
+- Messages that `gs`, `pdflatex`, `dvisvgm` or `pdf2svg` were not found are
+  harmless: they come from plasTeX's image converters, which this blueprint
+  does not use. `graphviz` is not needed either; the graph is rendered in the
+  browser.
 - Lean and Mathlib come from `elan`/`lake`; run `lake exe cache get` before the
   first `lake build` to download Mathlib's build cache.
 
@@ -213,46 +205,7 @@ server has a file open, and keep work in one file at a time where possible.
 
 ## Status
 
-Keep this section up to date at the end of each work session.
-
-- Blueprint: first full version of all 13 chapters committed (`565f605`). The
-  web build works.
-- "Sobolev tiers" refactor committed (`4d71a49`, 2026-10-13). It adds
-  `def:h1-interval`, `def:sobolev-torus`, `def:sobolev-local`; splits
-  `lem:elliptic-regularity` into `lem:elliptic-torus` and
-  `lem:elliptic-local`; adds `lem:local-to-global`, `lem:L0-stream` and
-  `def:mixed-coefficients`; makes setup/symmetry Sobolev-free via Fourier
-  formulas; and writes out explicit formulas for `F_u` and the Robin boundary
-  conditions in `mixed.tex`. `intro.tex` and `blueprint/README.md` do not
-  mention the tiers yet.
-- Lean: first module `Symmetry.lean` (2026-10-12), a minimal end-to-end test
-  of the workflow: `def:reflections` and `lem:reflection-algebra` are
-  formalized and marked `\leanok`.
-- `L²` model chosen (2026-10-13, as a first attempt; "option C"): `Lp` on
-  `Angle × Angle` with Lebesgue measure; `L₀` defined weakly by testing
-  against the characters `e_k` (a relation `HasL0 g h`, equivalent to the
-  Fourier formula); `Δ⁻¹` as a `tsum` of characters in `L²`. See the remark
-  "Lean model" in `setup.tex`. `Setup.lean` states every node of the setup
-  chapter, including `thm:main`, with `sorry`; the sanity lemmas `char_coe`,
-  `L0char_coe` (the formula for `L₀ e_k` agrees with actual derivatives) and
-  `volume_univ_torus` are proved. The user reviewed the definitions
-  (2026-10-13).
-- Not set up yet (needs Lean declarations and a GitHub remote first):
-  `checkdecls` in the lakefile, the `\home`/`\github`/`\dochome` links in
-  `blueprint/src/web.tex`, `blueprint: true` in the docgen CI step, and the
-  GitHub settings described in the top-level `README.md`. There is no git
-  remote.
-- **Next steps** (agreed 2026-10-12):
-  1. Setup chapter: the infrastructure, Parseval/Hilbert basis for the 2π-torus
-     (transport Mathlib's `mFourierBasis` along the scaling map), which the
-     setup lemmas (`hasL0_iff_fourierCoeff`, `exists_hasL0_invLap`,
-     `hasL_iff_isEigenSolution`) need.
-  2. Digest the even–even sector end to end (check identities with SymPy,
-     explain the mechanism, digest notes, formalize the algebraic nodes).
-  3. Soon after: assess the largest gap, the odd–odd renormalized virial
-     identity (`prop:dd-virial`). If the user is more worried about the
-     correctness of the result than about the workflow, do this before 2.
-- Largest open gaps in the math (see `chapters/notes.tex`): the odd–odd
-  renormalized virial identity (`prop:dd-virial`), the general transport lemmas
-  (`chapters/transport.tex`), orbit geometry bounds (`lem:orbit-comparison`),
-  and the missing verification scripts for the certificates.
+The current state, decisions and next steps are in `STATUS.md`. Read it at
+the start of a work session and update it at the end. It is a snapshot:
+rewrite it rather than append to it. This file is for guidance that stays
+valid across sessions.
