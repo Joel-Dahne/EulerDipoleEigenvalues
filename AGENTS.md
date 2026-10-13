@@ -218,6 +218,17 @@ Keep this section up to date at the end of each work session.
   `blueprint/src/web.tex`, `blueprint: true` in the docgen CI step, and the
   GitHub settings described in the top-level `README.md`. There is no git
   remote.
+- **Next steps** (agreed 2026-10-12):
+  1. Setup chapter: first present the two options for modelling `L²(T²)`
+     (`Lp` on the torus vs. Fourier coefficients in `ℓ²(ℤ²)`; note Mathlib's
+     `UnitAddTorus`/`mFourierBasis` has period 1, not 2π) with what each makes
+     easy and hard, and let the user choose. Then state the setup definitions
+     and `thm:main` in Lean with `sorry`, for the user to review.
+  2. Digest the even–even sector end to end (check identities with SymPy,
+     explain the mechanism, digest notes, formalize the algebraic nodes).
+  3. Soon after: assess the largest gap, the odd–odd renormalized virial
+     identity (`prop:dd-virial`). If the user is more worried about the
+     correctness of the result than about the workflow, do this before 2.
 - Largest open gaps in the math (see `chapters/notes.tex`): the odd–odd
   renormalized virial identity (`prop:dd-virial`), the general transport lemmas
   (`chapters/transport.tex`), orbit geometry bounds (`lem:orbit-comparison`),
