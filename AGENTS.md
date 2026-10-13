@@ -70,6 +70,7 @@ There are three layers:
 - `NoEmbeddedEigenvalues.lean`, `NoEmbeddedEigenvalues/`: Lean library root.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `justfile`: build recipes (run `just` to list them).
+- `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
 - `.github/workflows/`: the Lean template CI (lean-action, docgen).
 
 ## Building
@@ -96,8 +97,8 @@ Gotchas:
 - `PYTHONPATH` must point to the site-packages of the Python environment that
   contains `leanblueprint`. leanblueprint runs plasTeX in a subprocess, and the
   Nix wrappers pass packages through `NIX_PYTHONPATH`, which Python removes at
-  startup, so the subprocess cannot import the plugins. In the VM it must be
-  set in the system configuration.
+  startup, so the subprocess cannot import the plugins. In the VM the
+  `leanblueprint` command is a wrapper that sets it.
 - Messages that `gs`, `pdflatex` or `dvisvgm` were not found are harmless:
   they come from plasTeX's image converters, which this blueprint does not use.
   `graphviz` is not needed either; the graph is rendered in the browser.
@@ -105,6 +106,41 @@ Gotchas:
   plasTeX copies read-only files out of the Nix store.
 - Lean and Mathlib come from `elan`/`lake`; run `lake exe cache get` before the
   first `lake build` to download Mathlib's build cache.
+
+## Working with Lean
+
+Use the `lean-lsp` MCP server (configured in `.mcp.json`, provided by the
+VM's `lean-lsp-mcp`) rather than repeated `lake build` or `lake env lean`.
+It keeps a Lean language server running, so after a file has been opened once
+an edit is rechecked in well under a second.
+
+Costs measured in the VM (4 cores, 12 GB):
+
+| Operation | Time |
+|---|---|
+| Any new Lean process with `import Mathlib` (`lake env lean`, a module in `lake build`, opening a file in the server) | ~50 s, ~6.5 GB |
+| Same with a single targeted Mathlib import | ~15 s, ~2.4 GB |
+| Recheck after an edit in an open file | ~0.2 s |
+| `lean_multi_attempt` | ~60 s (reloads Mathlib) |
+
+Almost all of the 50 s is spent loading Mathlib's `.olean` files over the
+`virtiofs` share, not computing, and it is paid again by every new process.
+
+Workflow:
+
+1. Write the statement with `sorry`, then use `lean_diagnostic_messages` and
+   `lean_goal` to check it and inspect goals. Read goals instead of guessing.
+2. Fill the proof step by step, editing the file and rechecking diagnostics.
+   Prefer editing and rechecking over `lean_multi_attempt`, which is slow here.
+3. Find lemmas with `lean_local_search` (ripgrep over the project and
+   Mathlib sources), `lean_loogle`, `lean_leansearch` or `lean_leanfinder`,
+   rather than guessing names. The last three are remote services with rate
+   limits.
+4. Run `lake build` only at checkpoints, such as before a commit.
+
+Memory: each process that imports Mathlib takes about 6.5 GB, so two at once
+may not fit in 12 GB (untested). Avoid running `lake build` while the language
+server has a file open, and keep work in one file at a time where possible.
 
 ## Blueprint conventions
 
