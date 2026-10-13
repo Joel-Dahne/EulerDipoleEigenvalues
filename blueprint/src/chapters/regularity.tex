@@ -13,6 +13,7 @@ chapter $d$ is distance to the saddle set and $r$ distance to a fixed saddle.
 
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
+\uses{def:sobolev-local}
 \notready
 Let $u\in H^2$ near a saddle with a prescribed reflection parity in the two
 separatrix directions, and $\Delta u=F$. Let $a>1$ avoid the indicial roots
@@ -55,7 +56,7 @@ $(\omega,\psi)$, in each rotation character.
 
 \begin{proposition}[Odd--odd saddle estimates]
 \label{prop:saddle-dd}
-\uses{def:eigen-problem, def:sectors}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
 \notready
 In the odd--odd sector, $\omega/d^2\in L^2$, and at each saddle there is a
 unique homogeneous harmonic quadratic $q=a\,uv$ (in the coordinates of
@@ -80,7 +81,7 @@ infinite norm in the first term.
 
 \begin{corollary}[Mixed saddle jet]
 \label{cor:mixed-saddle-jet}
-\uses{def:eigen-problem, def:sectors}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
 \notready
 In either mixed sector, at each saddle there is a unique permitted linear
 harmonic $\ell$ such that
@@ -97,7 +98,7 @@ angular frequencies to odd integers, so the multiplier has no zero.
 
 \begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
 \label{prop:dd-separatrix-h1}
-\uses{def:eigen-problem, def:sectors}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
 \notready
 In the odd--odd sector, $\omega\in H^1$ on a neighbourhood of the separatrix
 (including the saddles), with zero trace on each regular edge, and $\psi\in H^3$
@@ -105,7 +106,7 @@ on a possibly smaller neighbourhood (manuscript \texttt{(prop:separatrix-h1)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:transport-h1-gain, prop:saddle-dd, lem:elliptic-regularity}
+\uses{lem:transport-h1-gain, prop:saddle-dd, lem:elliptic-local}
 Show $hN''\in L^2$ from the second variation bound
 $|\partial_h^2\gamma_h|\le C/d^2$ and the quadratic jet (for the endpoint
 terms), then apply Lemma~\ref{lem:transport-h1-gain}. $A(0)=0$ follows from
@@ -116,7 +117,7 @@ gives $\psi\in H^3$.
 
 \begin{proposition}[Quotient domain, odd--odd]
 \label{prop:dd-quotient-domain}
-\uses{def:eigen-problem, def:sectors}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
 \notready
 For every odd--odd eigenfunction,
 \[
@@ -130,7 +131,7 @@ $\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:transport-first-gain, lem:hardy-1d, lem:elliptic-regularity, lem:sobolev-embedding}
+\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:transport-first-gain, lem:hardy-1d, lem:elliptic-local, lem:sobolev-embedding, lem:local-to-global}
 Strengthen to $\nabla\omega/d\in L^2$ near the saddles using a logarithmic
 weight $\Lambda(h)=1+|\log h|$ in all numerator estimates. The angular Hardy
 inequality then gives $\omega/\Psi\in L^2$. Dyadic elliptic estimates give
@@ -145,7 +146,7 @@ Lemma~\ref{lem:transport-first-gain} for $(\nu,\phi)$ gives $\nu/d\in L^2$.
 
 \begin{proposition}[Mixed-sector regularity]
 \label{prop:mixed-quotient-domain}
-\uses{def:eigen-problem, def:sectors, def:cells}
+\uses{def:eigen-problem, def:sectors, def:cells, def:sobolev-local}
 \notready
 In the mixed sector $(-,+)$ (odd across $a=\pm\pi/2$, even across
 $b=\pm\pi/2$), $\omega\in H^1$ near the separatrix with zero trace on the odd
@@ -157,7 +158,7 @@ including the corners (manuscript \texttt{(prop:mixed-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{cor:mixed-saddle-jet, lem:saddle-normal-form, lem:transport-second-gain, lem:transport-h1-gain, lem:elliptic-regularity, lem:hardy-1d}
+\uses{cor:mixed-saddle-jet, lem:saddle-normal-form, lem:transport-second-gain, lem:transport-h1-gain, lem:elliptic-local, lem:hardy-1d}
 Choose a smooth $z_0$, affine near each saddle, whose linear term solves
 $(H_s-\lambda)z_0=\ell$ (possible since $H_s$ has eigenvalues $\pm i$ on linear
 functions). Then $(\omega_0,\psi_0)=(-Hz_0,(H-\lambda)z_0)$ is a transport pair,
@@ -173,14 +174,14 @@ Division by the normal coordinate gives the quotients.
 
 \begin{proposition}[Regularity at the elliptic centers]
 \label{prop:center-regularity}
-\uses{def:eigen-problem}
+\uses{def:eigen-problem, def:sobolev-local}
 \notready
 Every eigenfunction has $\omega\in H^1$ near each elliptic center, including
 the case $\lambda\in\Z$ (manuscript \texttt{(prop:center-regularity)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:period, lem:elliptic-regularity, lem:hardy-1d}
+\uses{lem:period, lem:elliptic-local, lem:hardy-1d}
 Construct smooth action-angle-type coordinates $F(p)=\frac1{2\pi}\int_0^{2\pi}R_{-t}\Phi^t(p)\,dt$
 for the normalized flow $L_0/b(\Psi)$, in which $H=b(r)D_\theta$ and
 $b(r)=1-r^2/8+O(r^4)$. In angular modes
@@ -192,14 +193,14 @@ cylinder (indicial roots $\pm\sqrt{m^2+8}$) to get $p/r^3,\nabla p/r^2,D^2p/r\in
 
 \begin{corollary}[Global $H^1$ regularity]
 \label{cor:global-h1}
-\uses{def:eigen-problem, def:sectors}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
 \notready
 In the odd--odd and mixed sectors every eigenfunction has $\omega\in H^1(\T^2)$
 and $\psi\in H^3(\T^2)$ (manuscript \texttt{(cor:global-eigenfunction-h1)}).
 \end{corollary}
 
 \begin{proof}
-\uses{prop:dd-separatrix-h1, prop:mixed-quotient-domain, prop:center-regularity, lem:resonant-vanishing, lem:hardy-1d, lem:elliptic-regularity}
+\uses{prop:dd-separatrix-h1, prop:mixed-quotient-domain, prop:center-regularity, lem:resonant-vanishing, lem:hardy-1d, lem:elliptic-local}
 Separatrix neighbourhoods and centers are covered above. On compact regular
 annuli only finitely many angular modes can be resonant. For each, the
 numerator is $H^2$ in the transverse variable and vanishes at the simple

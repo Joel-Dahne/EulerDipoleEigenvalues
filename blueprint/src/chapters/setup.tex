@@ -2,27 +2,30 @@
 \label{chap:setup}
 
 All function spaces are complex valued. Inner products are linear in the
-first argument.
+first argument. Nothing in this chapter uses Sobolev spaces: the inverse
+Laplacian and the transport operator are defined through Fourier coefficients,
+or equivalently distributionally.
 
 \begin{definition}[Torus and Lebesgue spaces]
 \label{def:torus}
-Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$
-and
+Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$,
 \[
-  L^2_0=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\}.
+  L^2_0=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\},
 \]
-For $s\ge0$, $H^s=H^s(\T^2)$ is the Sobolev space defined through Fourier
-coefficients, $\sum_{k\in\Z^2}(1+|k|^2)^s|\hat g_k|^2<\infty$.
+and $\hat g_k=(2\pi)^{-2}\int_{\T^2}g(x)e^{-ik\cdot x}\,dx$, $k\in\Z^2$, for the
+Fourier coefficients, so that $g\mapsto(\hat g_k)_k$ is (up to the factor
+$2\pi$) a unitary map $L^2\to\ell^2(\Z^2)$ and $g\in L^2_0$ iff $\hat g_0=0$.
 \end{definition}
 
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
 \uses{def:torus}
-For $\omega\in L^2_0$ let $\Delta^{-1}\omega$ be the function with Fourier
-coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. Then
-$\Delta^{-1}:L^2_0\to H^2\cap L^2_0$ is bounded and $\Delta\Delta^{-1}\omega=\omega$.
-For $\omega\in L^2_0$ we always write $\psi=\Delta^{-1}\omega$ (the stream
-function of the perturbation).
+For $\omega\in L^2_0$ let $\Delta^{-1}\omega\in L^2_0$ be the function with
+Fourier coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. For
+$\omega\in L^2_0$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
+of the perturbation). Its derivatives up to order two, defined by the Fourier
+multipliers $ik_j$ and $-k_jk_l$, are again in $L^2$, and
+$\Delta\psi=\omega$.
 \end{definition}
 
 \begin{definition}[The dipole and the transport operator]
@@ -35,22 +38,40 @@ first order differential operators
 \[
   L_0=\sin y\,\partial_x-\sin x\,\partial_y,\qquad H=-iL_0,
 \]
-acting on distributions on $\T^2$.
+acting on distributions on $\T^2$. For $g\in L^2$, $L_0g$ is the periodic
+distribution with Fourier coefficients ($e_1=(1,0)$, $e_2=(0,1)$)
+\[
+  \widehat{(L_0g)}_k=\tfrac12\big[k_1(\hat g_{k-e_2}-\hat g_{k+e_2})
+                         -k_2(\hat g_{k-e_1}-\hat g_{k+e_1})\big],
+\]
+and ``$L_0g\in L^2$'' means that this sequence is square summable.
 \end{definition}
 
 \begin{definition}[Operator domain]
 \label{def:domain}
 \uses{def:dipole, def:torus}
-$\Dom=\{g\in L^2_0: L_0g\in L^2\}$, where $L_0g$ is understood in the sense of
-distributions (manuscript \texttt{(Intm3)}).
+$\Dom=\{g\in L^2_0: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \end{definition}
+
+\begin{lemma}[The stream function is in the domain]
+\label{lem:L0-stream}
+\uses{def:inverse-laplacian, def:dipole}
+For $\omega\in L^2_0$, $L_0\Delta^{-1}\omega\in L^2$.
+\end{lemma}
+
+\begin{proof}
+By the Fourier formula of Definition~\ref{def:dipole},
+$|\widehat{(L_0\psi)}_k|\le\tfrac12|k|\sum_{\pm,j}|\hat\psi_{k\pm e_j}|$, and
+$|k|\,|\hat\psi_m|\le(|m|+1)|\hat\omega_m|/|m|^2\le2|\hat\omega_m|$ for
+$m=k\pm e_j\ne0$. Hence the coefficients are bounded by a finite sum of
+shifted copies of $|\hat\omega|$, which is square summable.
+\end{proof}
 
 \begin{definition}[Linearized operator]
 \label{def:linearized-operator}
-\uses{def:domain, def:inverse-laplacian}
-Let $A=I+\Delta^{-1}$ on $L^2_0$ and $L=L_0A$ with domain $\Dom$. This is well
-defined: for $\omega\in\Dom$, $\Delta^{-1}\omega\in H^2$ so
-$L_0\Delta^{-1}\omega\in H^1\subset L^2$.
+\uses{def:domain, def:inverse-laplacian, lem:L0-stream}
+Let $A=I+\Delta^{-1}$ on $L^2_0$ and $L=L_0A$ with domain $\Dom$; by
+Lemma~\ref{lem:L0-stream}, $L\omega\in L^2$ for $\omega\in\Dom$.
 \end{definition}
 
 \begin{theorem}[Main theorem]
@@ -78,7 +99,7 @@ $(-,+)$ by the rotation $R$ (Lemma~\ref{lem:sector-swap}).
 \uses{def:dipole, def:inverse-laplacian}
 A \emph{solution of the eigenvalue problem with parameter
 $\lambda\in\R\setminus\{0\}$} is a function $\omega\in L^2_0$ such that, with
-$\psi=\Delta^{-1}\omega\in H^2$,
+$\psi=\Delta^{-1}\omega$,
 \[
   H(\omega+\psi)=\lambda\omega
 \]
@@ -96,11 +117,11 @@ every such solution lies in $\Dom$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:elliptic-regularity}
+\uses{lem:L0-stream}
 $L\omega=L_0(\omega+\psi)$ and $H=-iL_0$, so $L\omega=i\lambda\omega$ is
 equivalent to $H(\omega+\psi)=\lambda\omega$. If the latter holds in
-distributions then $L_0\omega=i\lambda\omega-L_0\psi\in L^2$ because
-$\psi\in H^2$, so $\omega\in\Dom$.
+distributions then $L_0\omega=i\lambda\omega-L_0\psi\in L^2$ by
+Lemma~\ref{lem:L0-stream}, so $\omega\in\Dom$.
 \end{proof}
 
 \begin{remark}
@@ -113,19 +134,13 @@ Theorem~\ref{thm:main} as stated.
 
 \begin{remark}[Digest note: formal statement]
 Choices to settle when stating Theorem~\ref{thm:main} in Lean:
-(i) model $L^2_0$ as a subspace of \texttt{Lp} on
-\texttt{AddCircle}$\times$\texttt{AddCircle} or through Fourier coefficients in
-$\ell^2(\Z^2)$; (ii) define $L_0g$ for $g\in L^2$ distributionally, for
-instance as a weak derivative tested against smooth periodic functions; (iii)
-whether to state the theorem for $L$ or directly for
-Definition~\ref{def:eigen-problem}. The Fourier-coefficient model makes
-$\Delta^{-1}$ and $H^s$ trivial to define, and $L_0$ is then an explicit
-finite-difference operator on coefficients: with $e_1=(1,0)$, $e_2=(0,1)$,
-\[
-  \widehat{(L_0g)}_k=\tfrac12\big[k_1(\hat g_{k-e_2}-\hat g_{k+e_2})
-                         -k_2(\hat g_{k-e_1}-\hat g_{k+e_1})\big],
-\]
-so ``$L_0g\in L^2$'' means that the right side is square summable.
-Most of the later analysis is local in physical space, however, which
-favours the \texttt{Lp} model.
+(i) model $L^2$ as \texttt{Lp} on a torus or through Fourier coefficients in
+$\ell^2(\Z^2)$. Mathlib's \texttt{UnitAddTorus} comes with the Hilbert basis
+\texttt{mFourierBasis} of $L^2$, but has period $1$ rather than $2\pi$;
+(ii) define $L_0g$ by the Fourier formula of Definition~\ref{def:dipole} or as a
+weak derivative tested against smooth periodic functions (the two agree);
+(iii) whether to state the theorem for $L$ or directly for
+Definition~\ref{def:eigen-problem}. The Fourier model makes this chapter
+elementary. Most of the later analysis is local in physical space, however,
+which favours the \texttt{Lp} model with Parseval as the bridge.
 \end{remark}

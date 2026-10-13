@@ -20,7 +20,7 @@ results for a general transport pair.
 
 \begin{definition}[Transport pair]
 \label{def:transport-pair}
-\uses{def:eigen-problem, def:cells}
+\uses{def:eigen-problem, def:cells, def:sobolev-local}
 Let $\lambda\in\R\setminus\{0\}$ and let $U$ be an open union of orbits. A
 \emph{transport pair} on $U$ is $(v,f)$ with $v\in L^2(U)$, $f\in H^2(U)$ and
 $H(v+f)=\lambda v$ in distributions on $U$. Its \emph{transport unknown} is
@@ -32,7 +32,7 @@ an explicit jet in the mixed sector (Proposition~\ref{prop:mixed-quotient-domain
 
 \begin{lemma}[Orbitwise transport and resonant vanishing]
 \label{lem:resonant-vanishing}
-\uses{def:transport-pair, def:period}
+\uses{def:transport-pair, def:period, def:h1-interval}
 Let $(v,f)$ be a transport pair on a compact regular orbit annulus. On almost
 every orbit, $z$ restricted to the orbit is in $H^1$ of flow time and
 satisfies $(-i\partial_t-\lambda)z=f$ there. In angular Fourier modes with
@@ -44,7 +44,7 @@ If $kb(h_k)=\lambda$ at a level $h_k$ in the annulus, then $f_k(h_k)=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:coarea, lem:period, lem:sobolev-embedding}
+\uses{lem:coarea, lem:period, lem:sobolev-embedding, lem:local-to-global}
 On orbits, $L_0=\partial_t$. The coefficient $f_k$ is continuous in $h$, and
 $v_k$ is locally square integrable in $h$. Since $S'<0$ the denominator
 $kb(h)-\lambda$ has a simple zero at $h_k$, so $f_k(h_k)\ne0$ would make $v_k$
@@ -102,7 +102,7 @@ side is finite.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:melnikov, lem:sobolev-embedding}
+\uses{lem:melnikov, lem:sobolev-embedding, lem:local-to-global}
 The two formulas agree by Lemma~\ref{lem:melnikov}. Decay follows by
 integration by parts using $g-c_\pm=O(e^{-\alpha|s|})$, which comes from
 $H^2\subset C^{0,\alpha}$. The weighted bound is a one-sided convolution
@@ -169,7 +169,7 @@ Variation of constants gives $|z_h(-L)|=|C(h)|$ and $z_h(L)=\kappa z_h(-L)$
 
 \begin{lemma}[Numerator vanishes at divisor zeros]
 \label{lem:numerator-zeros}
-\uses{def:numerator}
+\uses{def:numerator, def:h1-interval}
 $N\in H^1_{\mathrm{loc}}(0,h_0)$ and $N(h_j)=0$ at every zero $h_j$ of $D$.
 The zeros are simple and form a geometric sequence. On the phase cell $I_j$
 around $h_j$ one has $h\sim h_j$ and $|D(h)|\ge c_\lambda|h-h_j|/h_j$.
@@ -192,7 +192,7 @@ used.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:numerator-zeros, lem:orbit-comparison, lem:hardy-1d, lem:sobolev-embedding}
+\uses{lem:numerator-zeros, lem:orbit-comparison, lem:hardy-1d, lem:sobolev-embedding, lem:local-to-global}
 First assume $f$ vanishes at the saddles. Differentiating $N$ (including the
 moving endpoints) gives
 $|N'(h)|^2\le Ch^{-1}\int_{-L}^{L}|\nabla f(\gamma_h)|^2\,dt+Ch^{\alpha-2}$

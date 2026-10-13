@@ -55,8 +55,8 @@ Near the center, with $R=(x^2+y^2)^{1/2}$, $W=\tfrac12(x,y)+O(R^3)$ and
 $f=O(R^2)$, with derivative bounds $O(R^{3-j})$ for $j\le3$ and $O(R^{2-j})$
 for $j\le2$ respectively. Consequently, if $\chi$ is smooth, vanishes on
 $(-\infty,\epsilon]$ and equals one near $2$, the field $\chi(\Psi)W$ (extended
-by zero) is in $W^{3,\infty}(\T^2)$ and is adapted with coefficient
-$\chi(\Psi)f\in W^{2,\infty}$.
+by zero) is of class $C^{2,1}$ on $\T^2$ and is adapted with coefficient
+$\chi(\Psi)f$ of class $C^{1,1}$.
 \end{lemma}
 
 \begin{proof}
@@ -107,7 +107,7 @@ and Lebesgue differentiation give the identity at almost every level.
 
 \begin{lemma}[Neumann condition]
 \label{lem:ee-neumann}
-\uses{def:sectors, def:cells}
+\uses{def:sectors, def:cells, lem:traces}
 In the even--even sector, $\psi$ is even under both separatrix reflections,
 so its normal derivative trace vanishes on every regular separatrix arc.
 \end{lemma}
@@ -119,8 +119,8 @@ The reflection $S_j$ fixes the arc and reverses its normal.
 
 \begin{lemma}[Weighted gradient traces]
 \label{lem:ee-gradient-traces}
-\uses{lem:ee-neumann}
-Let $\psi\in H^2$ be even under $S_1,S_2$. As $\epsilon\to0$, over the regular
+\uses{lem:ee-neumann, lem:traces}
+Let $\psi=\Delta^{-1}\omega$, $\omega\in L^2_0$, be even under $S_1,S_2$. As $\epsilon\to0$, over the regular
 levels $\{\Psi=\epsilon\}$,
 \[
   \int|\psi_n|^2\,ds\to0,\qquad
@@ -131,7 +131,7 @@ levels $\{\Psi=\epsilon\}$,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:sobolev-embedding}
+\uses{lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:sobolev-embedding, lem:elliptic-torus}
 Away from the saddles this is trace continuity. Near a corner use the
 coordinates $u,v$ of Lemma~\ref{lem:corner-coordinates}, in which levels are
 $uv=h$ and $\psi$ is even in each variable. Then $\psi_u(u,0)$ is odd, and
@@ -201,7 +201,7 @@ good early formalization target: it is pure one-variable calculus.
 
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
-\uses{lem:trace-sos-smooth}
+\uses{lem:trace-sos-smooth, def:h1-interval}
 The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in H^1_0(-1,1)$
 with $wF''\in L^2$.
 \end{lemma}
@@ -216,7 +216,7 @@ $H^1_0$ Hardy inequality. Then mollify away from the endpoints.
 
 \begin{lemma}[Affine splitting]
 \label{lem:affine-splitting}
-\uses{lem:boundary-form-xi}
+\uses{lem:boundary-form-xi, def:h1-interval}
 If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$, $F\in H^1$ and $wF''\in L^2$, then
 \[
   \mathcal F_\lambda(F)=\mathcal F_\lambda(F_0)+\lambda^2|b|^2
@@ -234,7 +234,7 @@ mixed current terms). Extend by the same density argument.
 
 \begin{lemma}[Regularity of the boundary unknown]
 \label{lem:ee-boundary-regularity}
-\uses{def:boundary-form, def:canonical-profile}
+\uses{def:boundary-form, def:canonical-profile, def:h1-interval}
 For an even--even eigenfunction, the canonical transport unknown $z$ on each
 arc, written as $F(\xi)$, satisfies $F\in H^1(-1,1)$, $wF''\in L^2$ and
 $G\in H^1(-1,1)$. Its endpoint values are $-c_\pm/\lambda$, where $c_\pm$ are the
@@ -251,7 +251,7 @@ $wF''\in L^2$.
 
 \begin{lemma}[Positivity of the boundary form]
 \label{lem:ee-trace-positivity}
-\uses{def:boundary-form}
+\uses{def:boundary-form, def:h1-interval}
 If $F\in H^1(-1,1)$, $wF''\in L^2$ and $F(1)=\pm F(-1)$, then
 $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
 \end{lemma}

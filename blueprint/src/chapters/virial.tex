@@ -84,15 +84,17 @@ when $\omega$ is merely in $L^2$.
 \begin{lemma}[Virial identity on the original domain]
 \label{lem:virial-l2}
 \uses{def:adapted-field, def:eigen-problem}
-Let $W\in W^{3,\infty}(\T^2)$ be real and adapted with coefficient
-$f\in W^{2,\infty}$. Then the conclusion of Lemma~\ref{lem:virial-smooth} holds
-for every eigenfunction $\omega\in L^2_0$ (no regularity beyond
-Definition~\ref{def:eigen-problem}). All three integrals are finite for
-$\psi\in H^2$ (manuscript \texttt{(ee:bounded-virial)}).
+Let $W$ be a real vector field on $\T^2$ of class $C^{2,1}$ (that is,
+$W^{3,\infty}$: twice differentiable with Lipschitz second derivatives),
+adapted with coefficient $f$ of class $C^{1,1}$. Then the conclusion of
+Lemma~\ref{lem:virial-smooth} holds for every eigenfunction
+$\omega\in L^2_0$ (no regularity beyond Definition~\ref{def:eigen-problem}).
+All three integrals are finite, since $\psi$ and its derivatives up to order
+two are in $L^2$ (manuscript \texttt{(ee:bounded-virial)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-smooth, lem:commutator-algebra, lem:H-selfadjoint, lem:elliptic-regularity}
+\uses{lem:virial-smooth, lem:commutator-algebra, lem:H-selfadjoint, lem:elliptic-torus}
 Let $\Phi_t$ be the flow of $W$ and
 $U_tu=\Jac(\Phi_t)^{1/2}u\circ\Phi_t$, a strongly continuous unitary group
 with generator $D$. Extend $\Delta^{-1}$ by zero on constants, since $U_t$ need

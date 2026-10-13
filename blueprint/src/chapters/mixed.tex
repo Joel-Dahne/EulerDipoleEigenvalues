@@ -227,22 +227,31 @@ Use $\Delta_0(h\phi)=h(L_\mu-1)\phi$ and
 $\int|\nabla_0(h\phi)|^2=\int\mu(|\nabla_0\phi|^2+|\phi|^2)$, and expand.
 \end{proof}
 
+\begin{definition}[Second-order coefficients]
+\label{def:mixed-coefficients}
+\uses{def:cells}
+In the local notation of this chapter let
+\[
+  G=\begin{pmatrix}g&j\\j&g\end{pmatrix},\quad g=h^2+\frac{2hu^2}p,\quad
+  j=\frac{2h^2uv}{p^2},\quad V=-\frac{h^2R}{p^2}+\frac{2hu^2}p-\frac{2u^4}R,
+\]
+with $u^4/R$ assigned its continuous value $0$ at the center, and let
+$\mathcal P=-\Div(G\nabla)+V$ in the $(a,b)$ variables. $G$ and $V$ are bounded:
+$0\le-V\le4$, $g\le3$, $|j|\le2$.
+\end{definition}
+
 \begin{lemma}[Completion of the square]
 \label{lem:mixed-completion}
-\uses{lem:mixed-weighted-form}
+\uses{lem:mixed-weighted-form, def:mixed-coefficients, def:sobolev-local}
 \[
   K[\phi]=\int_\Cell\frac{\mu f}2\Big|L_\mu\phi+\frac{C_0}f\phi\Big|^2\,da\,db+Q_2[\phi],
 \]
 \[
   Q_2[\phi]=\int_\Cell\big(G\nabla_0\phi\cdot\nabla_0\bar\phi+V|\phi|^2\big)\,da\,db
-  +\sum_N\int h|\phi|^2\,da,
+  +\sum_N\int h|\phi|^2\,da .
 \]
-\[
-  G=\begin{pmatrix}g&j\\j&g\end{pmatrix},\quad g=h^2+\frac{2hu^2}p,\quad
-  j=\frac{2h^2uv}{p^2},\quad V=-\frac{h^2R}{p^2}+\frac{2hu^2}p-\frac{2u^4}R.
-\]
-All terms are finite; $G$ and $V$ are bounded, so $Q_2$ is continuous on
-$H^1(\Cell)$ (manuscript \texttt{(eq:static-second-completion)}).
+All terms are finite, and $Q_2$ is continuous on $H^1(\Cell)$ (manuscript
+\texttt{(eq:static-second-completion)}).
 \end{lemma}
 
 \begin{proof}
@@ -257,7 +266,7 @@ applied to $\nabla_0\phi$.
 
 \begin{lemma}[Positivity of the second-order matrix]
 \label{lem:mixed-G-positive}
-\uses{lem:mixed-completion}
+\uses{def:mixed-coefficients}
 $G$ is positive definite in the open cell:
 \[
   \det G=\frac{h^2}{p^4}\big[h^6+4h(2-h^2)k+(4+8h^2-6h^4)k^2+4hk^3+h^2k^4\big]>0 .
@@ -273,18 +282,18 @@ positive for $0<h,k\le1$.
 
 \begin{definition}[Comparison form on the quarter cell]
 \label{def:comparison-form}
-\uses{lem:mixed-completion}
-On $Q=(0,\pi/2)^2$ with $U=-V$ and $\mathsf G=G$, let
+\uses{def:mixed-coefficients, def:sobolev-local}
+On $Q=(0,\pi/2)^2$, for $z\in H^1(Q)$, let
 \[
-  \mathcal Q[z]=\int_Q\big(\mathsf G\nabla z\cdot\nabla\bar z-U|z|^2\big)\,da\,db
-  +\int_0^{\pi/2}h|z(a,\pi/2)|^2\,da,\qquad
-  \mathcal P=-\Div(\mathsf G\nabla)-U .
+  \mathcal Q[z]=\int_Q\big(G\nabla z\cdot\nabla\bar z+V|z|^2\big)\,da\,db
+  +\int_0^{\pi/2}h|z(a,\pi/2)|^2\,da .
 \]
+(The manuscript writes $\mathsf G=G$ and $U=-V$ here.)
 \end{definition}
 
 \begin{lemma}[Comparison lemma with logarithmic weights]
 \label{lem:robin-comparison}
-\uses{def:comparison-form}
+\uses{def:comparison-form, def:sobolev-local}
 Let $\rho(h,k)$ be positive, smooth for $h>0$, continuous on $[0,1]^2$, with
 $m\le\rho\le M$ and $|\rho_h|+|\rho_k|\le C(1+|\log h|)$. If $g=v\rho$
 satisfies $\mathcal Pg\ge ch^2g$ in $Q$ and
@@ -306,7 +315,7 @@ current on $h=\epsilon$ is $O(\epsilon(1+|\log\epsilon|)^2)$. Extend by density
 
 \begin{definition}[Odd-in-$b$ comparison function]
 \label{def:odd-b-comparison}
-\uses{def:comparison-form}
+\uses{def:mixed-coefficients}
 Let $w_v=vF_v(h,k)$ with
 \[
   F_v=1+\frac{4132k^2+2167k^3-2011hk-7640hk^2-226h^2+3795h^2k-834h^3}{10000}
@@ -317,10 +326,12 @@ Let $w_v=vF_v(h,k)$ with
 \begin{lemma}[Odd-in-$b$ comparison]
 \label{lem:mixed-v-comparison}
 \uses{def:odd-b-comparison}
-$\tfrac34<F_v<\tfrac53$, $\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$, and the
-Robin numerator of Lemma~\ref{lem:robin-comparison} for $\rho=F_v$ is
-$\ge\tfrac{1789}{2500}h$ on $b=\pi/2$ (manuscript
-\texttt{(lem:mixed-v-comparison)}).
+$\tfrac34<F_v<\tfrac53$, $\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$, and on
+$b=\pi/2$ (that is, $k=0$)
+\[
+  hF_v-2(1-h^2)\partial_hF_v-(2-h^2)\partial_kF_v\ge\tfrac{1789}{2500}h
+\]
+(manuscript \texttt{(lem:mixed-v-comparison)}).
 \end{lemma}
 
 \begin{proof}
@@ -334,19 +345,27 @@ interior inequality is Lemma~\ref{cert:odd-b}.
 
 \begin{definition}[Odd-in-$a$ comparison function]
 \label{def:odd-a-comparison}
-\uses{def:comparison-form}
-Let $w_u=ue^{F_u}$, where $F_u$ is the explicit rational function of the
-manuscript (\texttt{lem:mixed-u-comparison}): a polynomial in $(h,k)$ plus the
-terms $-h/2-4k-4h^3/S^2-2744h^6/S^4+1033h^8/S^6+224h^4/S+235h^8/S^5$, all
-divided by $1000$, with $S=h+k$. Every rational term is homogeneous of degree
-at least one, so $F_u$ and its first derivatives are bounded on $Q$.
+\uses{def:mixed-coefficients}
+Let $w_u=ue^{F_u}$, where, with $S=h+k$,
+\begin{align*}
+1000F_u={}&721k^2-107k^3+60k^4+85k^6
+ +h(-519k-64k^2-26k^3-400k^5)+h^2(-98-79k^2+890k^4)\\
+ &+h^3(781-583k-842k^3)+h^4(-240+677k+124k^2)+h^5(-263+37k)+53h^6\\
+ &-\frac h2-4k-\frac{4h^3}{S^2}-\frac{2744h^6}{S^4}+\frac{1033h^8}{S^6}
+  +\frac{224h^4}{S}+\frac{235h^8}{S^5}
+\end{align*}
+(manuscript \texttt{(lem:mixed-u-comparison)}). Every rational term is
+homogeneous of degree at least one, so $F_u$ and its first derivatives are
+bounded on $Q$.
 \end{definition}
 
 \begin{lemma}[Odd-in-$a$ comparison]
 \label{lem:mixed-u-comparison}
 \uses{def:odd-a-comparison}
-$\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ in $Q$, and the Robin numerator for
-$\rho=e^{F_u}$ is $\ge\tfrac h{250}$ on $b=\pi/2$
+$\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ in $Q$, and on $b=\pi/2$ (that is, $k=0$)
+\[
+  3h-2(1-h^2)\partial_hF_u-(2-h^2)\partial_kF_u\ge\tfrac h{250}
+\]
 (manuscript \texttt{(lem:mixed-u-comparison)}).
 \end{lemma}
 

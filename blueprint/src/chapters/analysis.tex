@@ -1,44 +1,118 @@
 \chapter{Analytic background}
 \label{chap:analysis}
 
-This chapter lists the general analytic facts the argument relies on. The
-first group is standard textbook material that Mathlib does not currently
-provide on $\T^2$ in this form. These are the candidates for the initial
-\emph{assumptions} of the formalization: they would be stated in a single Lean
-file, each with a reference, and proved later or never. The second group
-consists of elementary inequalities that the manuscript proves itself and that
-are directly formalizable.
+This chapter lists the general analytic facts the argument relies on, sorted
+by how much Sobolev theory they need. Mathlib has Fourier analysis on the torus
+(\texttt{UnitAddTorus}, \texttt{mFourierBasis}), absolutely continuous
+functions on intervals, and Sobolev spaces $H^{s,p}(\R^n)$ defined through
+tempered distributions. It has no Sobolev spaces on open subsets, no traces on
+curves, no coarea formula, and no Sobolev embeddings into H\"older spaces.
 
-\section{Standard facts (candidate assumptions)}
+\paragraph{Sobolev tiers.} Every node whose \emph{statement} involves a Sobolev
+space uses one of the three definitions below, so the dependency graph shows
+where Sobolev spaces enter.
+\begin{enumerate}
+  \item Definition~\ref{def:h1-interval}: $H^1$ on an interval, that is,
+        absolutely continuous functions with square integrable derivative.
+        Classical, and available in Mathlib in this form.
+  \item Definition~\ref{def:sobolev-torus}: $H^s(\T^2)$ through Fourier
+        coefficients. Cheap to define and use ourselves.
+  \item Definition~\ref{def:sobolev-local}: Sobolev spaces on open sets,
+        weighted spaces and traces. This is the real infrastructure gap.
+\end{enumerate}
+The main theorem's statement and the sector reduction use none of them.
+The candidates for the initial \emph{assumptions} of the formalization are
+the lemmas of Section~\ref{sec:local-sobolev}: they would be stated in a single
+Lean file, each with a reference, and proved later or never.
+
+\section{Function spaces}
+
+\begin{definition}[$H^1$ on an interval]
+\label{def:h1-interval}
+For an interval $I\subset\R$, $H^1(I)$ is the space of functions that are
+absolutely continuous on every compact subinterval, with $F,F'\in L^2(I)$;
+$H^2(I)$ requires in addition $F'\in H^1(I)$. For bounded $I$ these functions
+extend continuously to the endpoints, and $H^1_0(I)$ consists of those
+vanishing there. The periodic version on a circle (an orbit of the flow) is
+defined in the same way.
+\end{definition}
+
+\begin{definition}[Sobolev spaces on the torus]
+\label{def:sobolev-torus}
+\uses{def:torus}
+For $s\ge0$, $H^s(\T^2)=\{g\in L^2:\sum_k(1+|k|^2)^s|\hat g_k|^2<\infty\}$.
+Derivatives are the Fourier multipliers $ik_j$.
+\end{definition}
+
+\begin{definition}[Local Sobolev spaces and traces]
+\label{def:sobolev-local}
+\uses{def:sobolev-torus}
+For an open $U\subset\T^2$ or $U\subset\R^2$ and an integer $k\ge0$, $H^k(U)$ is
+the space of $L^2(U)$ functions whose weak derivatives up to order $k$ are in
+$L^2(U)$, and $H^k_{\mathrm{loc}}(U)$ the space of functions in $H^k(V)$ for
+every $V\Subset U$. Weighted versions require the weak derivatives to be in a
+weighted $L^2$ space. Traces on curves are defined in Lemma~\ref{lem:traces}.
+The fractional space $H^{1/2}(\R)$ is Mathlib's $H^{s,2}(\R)$; its norm is
+equivalent to the one given by the Gagliardo seminorm.
+\end{definition}
+
+\section{Sobolev spaces on the torus}
 
 \begin{lemma}[Elliptic regularity on the torus]
-\label{lem:elliptic-regularity}
-\uses{def:inverse-laplacian}
-$\Delta^{-1}:H^s\cap L^2_0\to H^{s+2}$ is bounded for $s\ge0$. Locally: if
-$u\in H^2$ near a point and $\Delta u\in H^1$ there, then $u\in H^3$ there.
+\label{lem:elliptic-torus}
+\uses{def:sobolev-torus, def:inverse-laplacian}
+$\Delta^{-1}:H^s\cap L^2_0\to H^{s+2}$ is bounded for $s\ge0$, and
+$\partial_j:H^{s+1}\to H^s$. In particular $\psi=\Delta^{-1}\omega\in H^2$ for
+$\omega\in L^2_0$.
+\end{lemma}
+
+\begin{proof}
+Fourier multipliers.
+\end{proof}
+
+\begin{lemma}[Sobolev embeddings on the torus]
+\label{lem:sobolev-embedding}
+\uses{def:sobolev-torus}
+$H^2(\T^2)\subset C^{0,\alpha}(\T^2)$ for every $\alpha<1$, and
+$H^1(\T^2)\subset L^p(\T^2)$ for every $p<\infty$, with continuous inclusions.
+\end{lemma}
+
+\section{Local Sobolev theory (candidate assumptions)}
+\label{sec:local-sobolev}
+
+\begin{lemma}[Localization]
+\label{lem:local-to-global}
+\uses{def:sobolev-local}
+If $u\in H^k_{\mathrm{loc}}(U)$ and $\chi$ is smooth with compact support in
+$U$, then $\chi u\in H^k(\T^2)$ (extended by zero). Conversely the restriction
+of an $H^k(\T^2)$ function to $U$ lies in $H^k(U)$, and weak derivatives agree
+with the Fourier derivatives of Definition~\ref{def:sobolev-torus}.
+\end{lemma}
+
+\begin{lemma}[Local elliptic regularity]
+\label{lem:elliptic-local}
+\uses{def:sobolev-local}
+If $u\in H^2$ near a point and $\Delta u\in H^1$ there, then $u\in H^3$ there.
 Dyadic annular estimates of the form
 $\|D^3u\|_{L^2(A_r)}\le C(\|\nabla\Delta u\|_{L^2(A_r^*)}
 +r^{-1}\|\Delta u\|_{L^2(A_r^*)}+r^{-3}\|u\|_{L^2(A_r^*)})$ hold, with constants
 independent of $r$.
 \end{lemma}
 
-\begin{lemma}[Sobolev embeddings]
-\label{lem:sobolev-embedding}
-In two dimensions $H^2\subset C^{0,\alpha}$ for every $\alpha<1$, and
-$H^1\subset L^p$ for every $p<\infty$, locally and on $\T^2$.
-\end{lemma}
-
 \begin{lemma}[Traces]
 \label{lem:traces}
+\uses{def:sobolev-local}
 Restriction to a smooth (or uniformly Lipschitz) curve maps $H^1$ to
 $H^{1/2}$ and $H^2$ to $H^{3/2}$, continuously and locally uniformly in
 families of such curves. In particular the traces of $\nabla\psi$ on the
 regular level sets of $\Psi$ depend continuously on the level.
 \end{lemma}
 
+\section{Measure theory and operator theory}
+
 \begin{lemma}[Coarea and a.e.\ restrictions]
 \label{lem:coarea}
-\uses{def:cells}
+\uses{def:cells, def:h1-interval}
 On a compact regular orbit annulus $\{\epsilon_1\le\Psi\le\epsilon_2\}$, for
 $g\in L^1$,
 $\int g\,dx\,dy=\int\!\big(\oint_{\{\Psi=c\}}g\,d\ell/\rho\big)dc$, so the
@@ -47,6 +121,12 @@ integrable in flow time. If $g\in L^2$ and $L_0g\in L^2$, then on almost every
 level the restriction is in $H^1$ of the orbit, with derivative $(L_0g)|$ in
 flow time.
 \end{lemma}
+
+\begin{remark}
+On a compact regular annulus the orbit coordinates (level, flow time) are a
+smooth diffeomorphism onto a product, so Lemma~\ref{lem:coarea} reduces to
+change of variables and Fubini; no general coarea formula is needed.
+\end{remark}
 
 \begin{lemma}[Self-adjointness of the transport operator]
 \label{lem:H-selfadjoint}
@@ -62,13 +142,14 @@ Lemma~\ref{lem:H-selfadjoint} is the classical fact that a smooth divergence
 free vector field on a compact manifold gives an essentially skew-adjoint
 operator on smooth functions, whose closure is the maximal (distributional)
 operator. Together with Stone's theorem this is the main functional-analytic
-input to the virial identities.
+input to the virial identities. It needs no Sobolev spaces.
 \end{remark}
 
 \section{Elementary inequalities}
 
 \begin{lemma}[One-dimensional Hardy inequalities]
 \label{lem:hardy-1d}
+\uses{def:h1-interval}
 \begin{enumerate}
   \item If $F\in H^1(0,\eta)$ and $F(0)=0$, then
         $\int_0^\eta|F/x|^2\,dx\le4\int_0^\eta|F'|^2\,dx$.
@@ -83,6 +164,7 @@ input to the virial identities.
 
 \begin{lemma}[Critical Hardy inequality for odd functions]
 \label{lem:odd-hardy}
+\uses{def:sobolev-local}
 If $a\in H^{1/2}(\R)$ is odd and compactly supported, then
 $\int_0^\infty|a(u)|^2\,du/u\le C\|a\|_{H^{1/2}(\R)}^2$
 (manuscript \texttt{(ee:odd-hardy)}).
