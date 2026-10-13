@@ -35,7 +35,7 @@ There are three layers:
    place to digest the manuscript, and a staging area for changes that should
    go back into the paper. See `blueprint/README.md` and
    `blueprint/src/chapters/intro.tex`.
-3. `NoEmbeddedEigenvalues/`: the Lean code (still the `lake new` template).
+3. `NoEmbeddedEigenvalues/`: the Lean code.
 
 ## Working on the mathematics
 
@@ -67,7 +67,9 @@ There are three layers:
 - `blueprint/src/macros/common.tex`: theorem environments and math macros for
   both builds (`\T \R \Z \N \C`, `\Div`, `\Dom`, `\Cell`, `\ip{}{}`, ...).
   `macros/print.tex` defines no-op versions of the blueprint macros for the PDF.
-- `NoEmbeddedEigenvalues.lean`, `NoEmbeddedEigenvalues/`: Lean library root.
+- `NoEmbeddedEigenvalues.lean`: Lean library root, importing every module.
+- `NoEmbeddedEigenvalues/Symmetry.lean`: the torus as `Real.Angle × Real.Angle`
+  (points only), `Ψ`, the reflections `S₁ S₂`, `R`, `Ic` and their relations.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `justfile`: build recipes (run `just` to list them).
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
@@ -133,9 +135,12 @@ Workflow:
 2. Fill the proof step by step, editing the file and rechecking diagnostics.
    Prefer editing and rechecking over `lean_multi_attempt`, which is slow here.
 3. Find lemmas with `lean_local_search` (ripgrep over the project and
-   Mathlib sources), `lean_loogle`, `lean_leansearch` or `lean_leanfinder`,
-   rather than guessing names. The last three are remote services with rate
-   limits.
+   Mathlib sources; it matches declaration names, not prefixes like
+   `Real.Angle.cos_`, so use `rg` in `.lake/packages/mathlib` for those),
+   `lean_loogle`, `lean_leansearch` or `lean_leanfinder`, rather than
+   guessing names. The last three are remote services with rate limits.
+   Prefer targeted Mathlib imports while the file is small: they load in
+   ~15 s instead of ~50 s.
 4. Run `lake build` only at checkpoints, such as before a commit.
 
 Memory: each process that imports Mathlib takes about 6.5 GB, so two at once
@@ -154,8 +159,10 @@ server has a file open, and keep work in one file at a time where possible.
   node; in a proof, what is needed to *prove* it. Keep these accurate: they are
   the whole point of the dependency graph. Every label in `\uses` must exist.
 - Lean status: `\lean{Name}`, `\leanok` (statement in Lean, or in a proof: proof
-  done), `\mathlibok`, `\notready` (not precise enough yet to formalize). No
-  node has `\lean`/`\leanok` yet.
+  done), `\mathlibok`, `\notready` (not precise enough yet to formalize). Only
+  mark a node `\leanok` when the Lean code covers the whole statement.
+- New Lean modules must be imported in `NoEmbeddedEigenvalues.lean`. Lean
+  names are in the namespace `NoEmbeddedEigenvalues`.
 - Manuscript cross-references are written as `(manuscript \texttt{(label)})`,
   quoting the manuscript's own `\label`, so they can be found by text search.
 - **Digest notes**: questions or problems found in the manuscript go in
@@ -202,7 +209,10 @@ Keep this section up to date at the end of each work session.
   formulas; and writes out explicit formulas for `F_u` and the Robin boundary
   conditions in `mixed.tex`. `intro.tex` and `blueprint/README.md` do not
   mention the tiers yet.
-- Lean: nothing yet beyond the template (`def hello := "world"`).
+- Lean: first module `Symmetry.lean` (2026-10-12), a minimal end-to-end test
+  of the workflow: `def:reflections` and `lem:reflection-algebra` are
+  formalized and marked `\leanok`. The `L²` model (Lp on the torus or Fourier
+  coefficients) is not chosen yet; see the digest note in `setup.tex`.
 - Not set up yet (needs Lean declarations and a GitHub remote first):
   `checkdecls` in the lakefile, the `\home`/`\github`/`\dochome` links in
   `blueprint/src/web.tex`, `blueprint: true` in the docgen CI step, and the

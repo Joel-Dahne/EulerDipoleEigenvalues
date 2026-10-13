@@ -4,6 +4,9 @@
 \begin{definition}[Reflections and rotation]
 \label{def:reflections}
 \uses{def:torus}
+\lean{NoEmbeddedEigenvalues.S₁, NoEmbeddedEigenvalues.S₂, NoEmbeddedEigenvalues.R,
+  NoEmbeddedEigenvalues.Ic}
+\leanok
 On $\T^2$ define (manuscript \texttt{(ee:reflections)})
 \[
   S_1(x,y)=(\pi-y,\pi-x),\qquad S_2(x,y)=(\pi+y,\pi+x),\qquad
@@ -18,11 +21,19 @@ of $\T^2$ write $T^*g=g\circ T$.
 \begin{lemma}[Group relations]
 \label{lem:reflection-algebra}
 \uses{def:reflections, def:dipole}
+\lean{NoEmbeddedEigenvalues.S₁_comp_S₁, NoEmbeddedEigenvalues.S₂_comp_S₂,
+  NoEmbeddedEigenvalues.S₁_comp_S₂, NoEmbeddedEigenvalues.S₂_comp_S₁,
+  NoEmbeddedEigenvalues.R_comp_R, NoEmbeddedEigenvalues.R_comp_S₁,
+  NoEmbeddedEigenvalues.R_comp_S₂, NoEmbeddedEigenvalues.Ψ_comp_S₁,
+  NoEmbeddedEigenvalues.Ψ_comp_S₂, NoEmbeddedEigenvalues.Ψ_comp_R,
+  NoEmbeddedEigenvalues.Ψ_comp_Ic}
+\leanok
 $S_1^2=S_2^2=I$, $S_1S_2=S_2S_1=I_c$, $R^2=I_c$, $RS_1=S_2R$ and $RS_2=S_1R$.
 Moreover $\Psi\circ S_j=-\Psi$ and $\Psi\circ R=\Psi\circ I_c=\Psi$.
 \end{lemma}
 
 \begin{proof}
+\leanok
 Direct computation modulo $2\pi$.
 \end{proof}
 
