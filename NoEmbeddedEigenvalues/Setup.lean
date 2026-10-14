@@ -3,10 +3,11 @@ import NoEmbeddedEigenvalues.Fourier
 /-!
 # The setting and the eigenvalue equation
 
-The space `L²(𝕋²)` on the torus `𝕋² = (ℝ/2πℤ)²`, Fourier coefficients, the inverse Laplacian,
-the transport operator `L₀ = sin y ∂ₓ - sin x ∂_y`, its domain and reduction of the
-eigenvalue equation (blueprint: chapter `chap:setup`). The main theorem is assembled
-in `Main.lean` from the sector exclusions.
+The inverse Laplacian, the transport operator `L₀ = sin y ∂ₓ - sin x ∂_y`, its domain, the
+linearized operator and reduction of the eigenvalue equation (blueprint: chapter `chap:setup`).
+The space `L²(𝕋²)` and Fourier coefficients are in `TorusL2.lean` and `Fourier.lean`,
+Fourier-defined derivatives in `Derivatives.lean`. The main theorem is assembled in
+`Main.lean` from the sector exclusions.
 
 ## Model
 
@@ -16,7 +17,8 @@ The operators are defined through the characters `e_k(x, y) = exp(i(k₁x + k₂
 * `L₀` is not a function on `L²` but a relation: `HasL0 g h` says that `L₀ g = h` weakly, tested
   against all characters. Since `L₀ e_k` is an explicit trigonometric polynomial, this is the
   same as the Fourier formula of the blueprint (`hasL0_iff_fourierCoeff`).
-* `Δ⁻¹` is the Fourier series `∑_{k ≠ 0} (-ω̂_k / |k|²) e_k`, a `tsum` in `L²`.
+* `Δ⁻¹` is the Fourier multiplier `-1/|k|²` (`0` at `k = 0`), that is, the series
+  `∑_{k ≠ 0} (-ω̂_k / |k|²) e_k` in `L²`; it is a continuous linear map.
 
 Mathlib's inner product `⟪f, g⟫ = ∫ conj f * g` is conjugate linear in the *first* argument, the
 opposite of the blueprint's convention.
@@ -34,11 +36,6 @@ open scoped InnerProductSpace ENNReal
 /-- `|k|² = k₁² + k₂²`. -/
 def normSq (k : ℤ × ℤ) : ℤ := k.1 ^ 2 + k.2 ^ 2
 
-/-- The inverse Laplacian `Δ⁻¹ω = ∑_{k ≠ 0} (-ω̂_k / |k|²) e_k`. It ignores the mean of `ω`, so
-it is defined on all of `L²`; the blueprint only uses it on `L²₀`. -/
-def invLap (ω : L2) : L2 :=
-  ∑' k : ℤ × ℤ, (if k = 0 then 0 else -fourierCoeff ω k / normSq k) • charLp k
-
 /-- A nonzero integer frequency has squared length at least one. -/
 theorem normSq_pos (k : ℤ × ℤ) (hk : k ≠ 0) : 0 < normSq k := by
   rcases k with ⟨a, b⟩
@@ -52,37 +49,74 @@ theorem normSq_pos (k : ℤ × ℤ) (hk : k ≠ 0) : 0 < normSq k := by
     simpa [ha] using sq_pos_of_ne_zero hb
   · nlinarith [sq_pos_of_ne_zero ha, sq_nonneg b]
 
-/-- The inverse-Laplacian coefficient multiplier is bounded by one. -/
-theorem norm_invLap_coeff_le (ω : L2) (k : ℤ × ℤ) :
-    ‖(if k = 0 then 0 else -fourierCoeff ω k / normSq k : ℂ)‖ ≤ ‖fourierCoeff ω k‖ := by
+/-- Each component of an integer frequency is bounded by its squared length. -/
+theorem abs_components_le_normSq (k : ℤ × ℤ) :
+    |k.1| ≤ normSq k ∧ |k.2| ≤ normSq k := by
+  have h1 := Int.natAbs_le_self_sq k.1
+  have h2 := Int.natAbs_le_self_sq k.2
+  rw [Int.natCast_natAbs] at h1 h2
+  unfold normSq
+  constructor <;> nlinarith [sq_nonneg k.1, sq_nonneg k.2]
+
+/-- The multiplier of the inverse Laplacian: `-1/|k|²`, and `0` at `k = 0`. -/
+def invLapSymbol (k : ℤ × ℤ) : ℂ := if k = 0 then 0 else -1 / normSq k
+
+/-- An integer factor bounded by `|k|²` is absorbed by the inverse-Laplacian multiplier. -/
+theorem norm_intCast_mul_invLapSymbol_le (k : ℤ × ℤ) (a : ℤ) (ha : k ≠ 0 → |a| ≤ normSq k) :
+    ‖(a : ℂ) * invLapSymbol k‖ ≤ 1 := by
+  unfold invLapSymbol
   split_ifs with hk
   · simp
   · have hpos := normSq_pos k hk
-    have hone : (1 : ℝ) ≤ (normSq k : ℝ) := by exact_mod_cast hpos
-    rw [norm_div, norm_neg, Complex.norm_int_of_nonneg hpos.le]
-    exact div_le_self (norm_nonneg _) hone
+    have hposR : (0 : ℝ) < normSq k := by exact_mod_cast hpos
+    have haR : |(a : ℝ)| ≤ (normSq k : ℝ) := by exact_mod_cast ha hk
+    rw [norm_mul, norm_div, norm_neg, norm_one, Complex.norm_intCast,
+      Complex.norm_int_of_nonneg hpos.le, mul_one_div, div_le_one hposR]
+    exact haR
 
-/-- The intended inverse-Laplacian coefficients are square summable. -/
-theorem summable_sq_invLap_coeff (ω : L2) :
-    Summable (fun k => ‖(if k = 0 then 0 else -fourierCoeff ω k / normSq k : ℂ)‖ ^ 2) := by
-  apply Summable.of_nonneg_of_le (fun k => sq_nonneg _)
-    (fun k => pow_le_pow_left₀ (norm_nonneg _) (norm_invLap_coeff_le ω k) 2)
-    (summable_sq_fourierCoeff ω)
+/-- The inverse-Laplacian multiplier is bounded by one. -/
+theorem norm_invLapSymbol_le (k : ℤ × ℤ) : ‖invLapSymbol k‖ ≤ 1 := by
+  simpa using norm_intCast_mul_invLapSymbol_le k 1 fun hk => by
+    have := normSq_pos k hk
+    rw [abs_one]
+    omega
 
-/-- The `invLap` series converges in `L²` (blueprint: `lem:inverse-laplacian-fourier`). -/
-theorem hasSum_invLap (ω : L2) :
-    HasSum (fun k : ℤ × ℤ =>
-      (if k = 0 then 0 else -fourierCoeff ω k / normSq k) • charLp k) (invLap ω) :=
-  (summable_fourier_series _ (summable_sq_invLap_coeff ω)).hasSum
+/-- The inverse Laplacian `Δ⁻¹ω = ∑_{k ≠ 0} (-ω̂_k / |k|²) e_k`, as a Fourier multiplier. It
+ignores the mean of `ω`, so it is defined on all of `L²`; the blueprint only uses it on `L²₀`. -/
+def invLap : L2 →L[ℂ] L2 := fourierMultiplier norm_invLapSymbol_le
+
+theorem fourierCoeff_invLap_eq_mul (ω : L2) (k : ℤ × ℤ) :
+    fourierCoeff (invLap ω) k = invLapSymbol k * fourierCoeff ω k :=
+  fourierCoeff_fourierMultiplier _ ω k
 
 /-- The inverse Laplacian has the intended Fourier coefficients, including its zero mode. -/
 theorem fourierCoeff_invLap (ω : L2) (k : ℤ × ℤ) :
     fourierCoeff (invLap ω) k = if k = 0 then 0 else -fourierCoeff ω k / normSq k := by
-  exact fourierCoeff_tsum _ (summable_sq_invLap_coeff ω) k
+  rw [fourierCoeff_invLap_eq_mul, invLapSymbol]
+  split_ifs <;> ring
+
+/-- The `invLap` series converges in `L²` (blueprint: `lem:inverse-laplacian-fourier`). -/
+theorem hasSum_invLap (ω : L2) :
+    HasSum (fun k : ℤ × ℤ =>
+      (if k = 0 then 0 else -fourierCoeff ω k / normSq k) • charLp k) (invLap ω) := by
+  simpa only [fourierCoeff_invLap] using hasSum_fourier_series (invLap ω)
+
+/-- The inverse Laplacian has operator norm at most one. -/
+theorem norm_invLap_apply_le (ω : L2) : ‖invLap ω‖ ≤ ‖ω‖ := by
+  have h := norm_fourierMultiplier_apply_le norm_invLapSymbol_le ω
+  rw [one_mul] at h
+  exact h
 
 /-- The inverse Laplacian ignores the input mean and always has mean zero. -/
 theorem meanZero_invLap (ω : L2) : MeanZero (invLap ω) := by
   simp [MeanZero, fourierCoeff_invLap]
+
+/-- An integer factor bounded by `|k|²` is absorbed by the inverse Laplacian. -/
+theorem norm_mul_fourierCoeff_invLap_le (ω : L2) (k : ℤ × ℤ) (a : ℤ)
+    (ha : k ≠ 0 → |a| ≤ normSq k) :
+    ‖(a : ℂ) * fourierCoeff (invLap ω) k‖ ≤ ‖fourierCoeff ω k‖ := by
+  rw [fourierCoeff_invLap_eq_mul, ← mul_assoc, norm_mul]
+  exact mul_le_of_le_one_left (norm_nonneg _) (norm_intCast_mul_invLapSymbol_le k a ha)
 
 /-! ### The transport operator `L₀` -/
 
@@ -152,14 +186,18 @@ theorem L0charLp_fourier (k : ℤ × ℤ) :
   unfold L0charLp charLp
   rw [L0char_fourier, map_sub, map_smul, map_smul, map_sub, map_sub]
 
+/-- The Fourier coefficients of `L₀ g` (blueprint: `def:dipole`):
+`(L₀g)^_k = (k₁(ĝ_{k-e₂} - ĝ_{k+e₂}) - k₂(ĝ_{k-e₁} - ĝ_{k+e₁}))/2`. -/
+def transportCoeff (g : L2) (k : ℤ × ℤ) : ℂ :=
+  (k.1 * (fourierCoeff g (k - (0, 1)) - fourierCoeff g (k + (0, 1))) -
+    k.2 * (fourierCoeff g (k - (1, 0)) - fourierCoeff g (k + (1, 0)))) / 2
+
 /-- The weak transport pairing in Fourier coordinates. -/
 theorem fourier_transport_pairing (g : L2) (k : ℤ × ℤ) :
-    ((2 * π : ℂ) ^ 2)⁻¹ * (-⟪L0charLp k, g⟫_ℂ) =
-      (k.1 * (fourierCoeff g (k - (0, 1)) - fourierCoeff g (k + (0, 1))) -
-        k.2 * (fourierCoeff g (k - (1, 0)) - fourierCoeff g (k + (1, 0)))) / 2 := by
+    ((2 * π : ℂ) ^ 2)⁻¹ * (-⟪L0charLp k, g⟫_ℂ) = transportCoeff g k := by
   rw [L0charLp_fourier]
   simp only [inner_sub_left, inner_smul_left, map_div₀, map_intCast, map_ofNat,
-    fourierCoeff]
+    transportCoeff, fourierCoeff]
   ring
 
 /-- `L₀ g = h` in the weak sense, tested against the characters: since `L₀` is a real vector
@@ -194,9 +232,7 @@ theorem HasL0.smul {g h : L2} (hL0 : HasL0 g h) (c : ℂ) :
 /-- The weak definition of `L₀` agrees with the Fourier formula of the blueprint
 (`lem:transport-fourier`). -/
 theorem hasL0_iff_fourierCoeff (g h : L2) :
-    HasL0 g h ↔ ∀ k : ℤ × ℤ, fourierCoeff h k =
-      (k.1 * (fourierCoeff g (k - (0, 1)) - fourierCoeff g (k + (0, 1))) -
-        k.2 * (fourierCoeff g (k - (1, 0)) - fourierCoeff g (k + (1, 0)))) / 2 := by
+    HasL0 g h ↔ ∀ k : ℤ × ℤ, fourierCoeff h k = transportCoeff g k := by
   constructor
   · intro hL0 k
     rw [fourierCoeff, hL0 k]
@@ -205,192 +241,51 @@ theorem hasL0_iff_fourierCoeff (g h : L2) :
     have h := hcoeff k
     rw [← fourier_transport_pairing g k] at h
     unfold fourierCoeff at h
-    exact mul_left_cancel₀ (by
-      exact inv_ne_zero (pow_ne_zero 2 (by
-        exact_mod_cast (show (2 * π : ℝ) ≠ 0 by positivity)))) h
+    exact mul_left_cancel₀ two_pi_sq_inv_ne_zero h
 
-/-- An integer component bounded by `|k|²` is absorbed by the inverse Laplacian. -/
-theorem norm_mul_fourierCoeff_invLap_le (ω : L2) (k : ℤ × ℤ) (a : ℤ)
-    (ha : |a| ≤ normSq k) :
-    ‖(a : ℂ) * fourierCoeff (invLap ω) k‖ ≤ ‖fourierCoeff ω k‖ := by
-  rw [fourierCoeff_invLap]
-  split_ifs with hk
-  · simp
-  · have hpos := normSq_pos k hk
-    have hposR : (0 : ℝ) < normSq k := by exact_mod_cast hpos
-    have haR : |(a : ℝ)| ≤ (normSq k : ℝ) := by exact_mod_cast ha
-    rw [norm_mul, norm_div, norm_neg, Complex.norm_intCast,
-      Complex.norm_int_of_nonneg hpos.le, ← mul_div_assoc]
-    apply (div_le_iff₀ hposR).mpr
-    simpa only [mul_comm] using mul_le_mul_of_nonneg_right haR (norm_nonneg _)
+/-- Weak transport is a functional relation: `L₀ g` is unique. -/
+theorem HasL0.unique {g h₁ h₂ : L2} (h₁L0 : HasL0 g h₁) (h₂L0 : HasL0 g h₂) : h₁ = h₂ :=
+  fourierCoeff_ext fun k => ((hasL0_iff_fourierCoeff g h₁).mp h₁L0 k).trans
+    ((hasL0_iff_fourierCoeff g h₂).mp h₂L0 k).symm
 
-/-- Each component of an integer frequency is bounded by its squared length. -/
-theorem abs_components_le_normSq (k : ℤ × ℤ) :
-    |k.1| ≤ normSq k ∧ |k.2| ≤ normSq k := by
-  have h1 := Int.natAbs_le_self_sq k.1
-  have h2 := Int.natAbs_le_self_sq k.2
-  rw [Int.natCast_natAbs] at h1 h2
-  unfold normSq
-  constructor <;> nlinarith [sq_nonneg k.1, sq_nonneg k.2]
+/-- `L₀ g ∈ L²` exactly when the Fourier formula for `L₀ g` is square summable, which is how
+the blueprint defines it (`def:dipole`). -/
+theorem exists_hasL0_iff_summable (g : L2) :
+    (∃ h, HasL0 g h) ↔ Summable (fun k => ‖transportCoeff g k‖ ^ 2) := by
+  constructor
+  · rintro ⟨h, hh⟩
+    simpa only [(hasL0_iff_fourierCoeff g h).mp hh] using summable_sq_fourierCoeff h
+  · intro hs
+    obtain ⟨h, hh⟩ := exists_fourierCoeff _ hs
+    exact ⟨h, (hasL0_iff_fourierCoeff g h).mpr hh⟩
 
 /-- The transport coefficients of the stream function are square summable. -/
-theorem summable_sq_transport_invLap (ω : L2) :
-    Summable (fun k : ℤ × ℤ =>
-      ‖(k.1 * (fourierCoeff (invLap ω) (k - (0, 1)) -
-          fourierCoeff (invLap ω) (k + (0, 1))) -
-        k.2 * (fourierCoeff (invLap ω) (k - (1, 0)) -
-          fourierCoeff (invLap ω) (k + (1, 0)))) / 2‖ ^ 2) := by
+theorem summable_sq_transportCoeff_invLap (ω : L2) :
+    Summable (fun k : ℤ × ℤ => ‖transportCoeff (invLap ω) k‖ ^ 2) := by
   have hω : Memℓp (fourierCoeff ω) 2 := by
     rw [memℓp_gen_iff (by norm_num : 0 < (2 : ℝ≥0∞).toReal)]
     simpa only [ENNReal.toReal_ofNat, Real.rpow_two] using summable_sq_fourierCoeff ω
   let f1 : (ℤ × ℤ) → ℂ := fun k => k.1 * fourierCoeff (invLap ω) k
   let f2 : (ℤ × ℤ) → ℂ := fun k => k.2 * fourierCoeff (invLap ω) k
   have hf1 : Memℓp f1 2 := hω.mono' fun k =>
-    norm_mul_fourierCoeff_invLap_le ω k k.1 (abs_components_le_normSq k).1
+    norm_mul_fourierCoeff_invLap_le ω k k.1 fun _ => (abs_components_le_normSq k).1
   have hf2 : Memℓp f2 2 := hω.mono' fun k =>
-    norm_mul_fourierCoeff_invLap_le ω k k.2 (abs_components_le_normSq k).2
+    norm_mul_fourierCoeff_invLap_le ω k k.2 fun _ => (abs_components_le_normSq k).2
   have shift (f : (ℤ × ℤ) → ℂ) (hf : Memℓp f 2) (a : ℤ × ℤ) :
       Memℓp (fun k => f (k + a)) 2 := by
     rw [memℓp_gen_iff (by norm_num : 0 < (2 : ℝ≥0∞).toReal)] at hf ⊢
     exact (Equiv.addRight a).summable_iff.mpr hf
   have hc := (((shift f1 hf1 (-(0, 1))).sub (shift f1 hf1 (0, 1))).sub
     ((shift f2 hf2 (-(1, 0))).sub (shift f2 hf2 (1, 0)))).const_mul (2 : ℂ)⁻¹
-  have ht : Memℓp (fun k : ℤ × ℤ =>
-      (k.1 * (fourierCoeff (invLap ω) (k - (0, 1)) -
-          fourierCoeff (invLap ω) (k + (0, 1))) -
-        k.2 * (fourierCoeff (invLap ω) (k - (1, 0)) -
-          fourierCoeff (invLap ω) (k + (1, 0)))) / 2) 2 := by
+  have ht : Memℓp (transportCoeff (invLap ω)) 2 := by
     convert hc using 1
     ext k
-    dsimp only [f1, f2, Pi.sub_apply]
+    dsimp only [f1, f2, Pi.sub_apply, transportCoeff]
     simp only [Prod.fst_add, Prod.snd_add, Prod.fst_neg, Prod.snd_neg,
       neg_zero, add_zero, sub_eq_add_neg]
     ring
   simpa only [ENNReal.toReal_ofNat, Real.rpow_two] using
     ht.summable (by norm_num : 0 < (2 : ℝ≥0∞).toReal)
-
-/-! ### Derivatives defined by Fourier multipliers -/
-
-/-- Coordinate frequency: `j = 0` is the x coordinate, `j = 1` the y coordinate. -/
-def frequencyComponent (k : ℤ × ℤ) (j : Fin 2) : ℤ := if j = 0 then k.1 else k.2
-
-/-- A first partial derivative in the Fourier-multiplier sense, with output in `L²`.
-This is a partial-operator relation, not an assertion that every `L²` input has a derivative.
-Equivalence with testing against all smooth functions is not asserted here. -/
-def HasFourierPartial (j : Fin 2) (g h : L2) : Prop :=
-  ∀ k, fourierCoeff h k = (I * frequencyComponent k j) * fourierCoeff g k
-
-/-- A second partial derivative in the Fourier-multiplier sense, with output in `L²`.
-The intermediate first derivative is not assumed to be in `L²`; when it is,
-`hasFourierPartial_iff_second` identifies this with successive differentiation. -/
-def HasFourierSecondPartial (i j : Fin 2) (g h : L2) : Prop :=
-  ∀ k, fourierCoeff h k =
-    -((frequencyComponent k i : ℂ) * frequencyComponent k j) * fourierCoeff g k
-
-/-- Differentiating a first derivative again agrees with the second-order multiplier. -/
-theorem hasFourierPartial_iff_second {g d h : L2} {i j : Fin 2}
-    (hd : HasFourierPartial j g d) :
-    HasFourierPartial i d h ↔ HasFourierSecondPartial i j g h := by
-  unfold HasFourierPartial HasFourierSecondPartial
-  apply forall_congr'
-  intro k
-  rw [hd k]
-  have hm : (I * frequencyComponent k i) *
-      ((I * frequencyComponent k j) * fourierCoeff g k) =
-      -((frequencyComponent k i : ℂ) * frequencyComponent k j) * fourierCoeff g k := by
-    calc
-      _ = (I * I) * ((frequencyComponent k i : ℂ) * frequencyComponent k j) *
-          fourierCoeff g k := by ring
-      _ = _ := by rw [Complex.I_mul_I]; ring
-  rw [hm]
-
-/-- The Laplacian in the Fourier-multiplier sense. -/
-def HasFourierLaplacian (g h : L2) : Prop :=
-  ∀ k, fourierCoeff h k = -(normSq k : ℂ) * fourierCoeff g k
-
-/-- The Fourier Laplacian is the sum of the two pure second partial derivatives. -/
-theorem hasFourierLaplacian_of_second {g h₀ h₁ : L2}
-    (h₀deriv : HasFourierSecondPartial 0 0 g h₀)
-    (h₁deriv : HasFourierSecondPartial 1 1 g h₁) :
-    HasFourierLaplacian g (h₀ + h₁) := by
-  intro k
-  have hadd : fourierCoeff (h₀ + h₁) k = fourierCoeff h₀ k + fourierCoeff h₁ k := by
-    simp only [fourierCoeff, inner_add_right, mul_add]
-  rw [hadd, h₀deriv k, h₁deriv k]
-  simp only [frequencyComponent, normSq]
-  push_cast
-  ring
-
-/-- First and second coordinate multipliers are bounded by the Laplace frequency. -/
-theorem abs_frequencyComponent_le_normSq (k : ℤ × ℤ) (j : Fin 2) :
-    |frequencyComponent k j| ≤ normSq k := by
-  unfold frequencyComponent
-  split_ifs
-  · exact (abs_components_le_normSq k).1
-  · exact (abs_components_le_normSq k).2
-
-theorem abs_frequencyProduct_le_normSq (k : ℤ × ℤ) (i j : Fin 2) :
-    |frequencyComponent k i * frequencyComponent k j| ≤ normSq k := by
-  have hcross : |k.1 * k.2| ≤ normSq k := by
-    rw [abs_le]
-    unfold normSq
-    constructor <;> nlinarith [sq_nonneg (k.1 + k.2), sq_nonneg (k.1 - k.2)]
-  unfold frequencyComponent
-  split_ifs
-  · rw [← sq, abs_of_nonneg (sq_nonneg _)]
-    unfold normSq
-    nlinarith [sq_nonneg k.2]
-  · exact hcross
-  · simpa only [mul_comm] using hcross
-  · rw [← sq, abs_of_nonneg (sq_nonneg _)]
-    unfold normSq
-    nlinarith [sq_nonneg k.1]
-
-/-- Any integer multiplier dominated by `|k|²` yields square-summable stream coefficients. -/
-theorem summable_sq_invLap_multiplier (ω : L2) (a : (ℤ × ℤ) → ℤ)
-    (ha : ∀ k, |a k| ≤ normSq k) :
-    Summable (fun k => ‖(a k : ℂ) * fourierCoeff (invLap ω) k‖ ^ 2) :=
-  Summable.of_nonneg_of_le (fun _ => sq_nonneg _)
-    (fun k => pow_le_pow_left₀ (norm_nonneg _)
-      (norm_mul_fourierCoeff_invLap_le ω k (a k) (ha k)) 2)
-    (summable_sq_fourierCoeff ω)
-
-/-- The stream function has each first derivative in `L²`, defined by Fourier multipliers. -/
-theorem exists_fourierPartial_invLap (ω : L2) (j : Fin 2) :
-    ∃ h, HasFourierPartial j (invLap ω) h := by
-  have hs := summable_sq_invLap_multiplier ω (fun k => frequencyComponent k j)
-    (fun k => abs_frequencyComponent_le_normSq k j)
-  have hs' : Summable (fun k =>
-      ‖(I * frequencyComponent k j) * fourierCoeff (invLap ω) k‖ ^ 2) := by
-    simpa only [mul_assoc, norm_mul, Complex.norm_I, one_mul] using hs
-  obtain ⟨h, hh⟩ := exists_fourierCoeff _ hs'
-  exact ⟨h, hh⟩
-
-/-- The stream function has each second derivative in `L²`, defined by Fourier multipliers. -/
-theorem exists_fourierSecondPartial_invLap (ω : L2) (i j : Fin 2) :
-    ∃ h, HasFourierSecondPartial i j (invLap ω) h := by
-  have hs := summable_sq_invLap_multiplier ω
-    (fun k => frequencyComponent k i * frequencyComponent k j)
-    (fun k => abs_frequencyProduct_le_normSq k i j)
-  have hs' : Summable (fun k =>
-      ‖-((frequencyComponent k i : ℂ) * frequencyComponent k j) *
-        fourierCoeff (invLap ω) k‖ ^ 2) := by
-    simpa only [Int.cast_mul, neg_mul, norm_neg] using hs
-  obtain ⟨h, hh⟩ := exists_fourierCoeff _ hs'
-  exact ⟨h, hh⟩
-
-/-- On mean-zero inputs the stream function solves the Fourier-defined Poisson equation. -/
-theorem hasFourierLaplacian_invLap (ω : L2) (hω : MeanZero ω) :
-    HasFourierLaplacian (invLap ω) ω := by
-  intro k
-  rw [fourierCoeff_invLap]
-  by_cases hk : k = 0
-  · subst k
-    simpa [normSq, MeanZero] using hω
-  · simp only [hk, ite_false]
-    have hn : (normSq k : ℂ) ≠ 0 := by
-      exact_mod_cast (normSq_pos k hk).ne'
-    field_simp
 
 /-! ### The domain, the linearized operator and the eigenvalue equation -/
 
@@ -398,9 +293,8 @@ theorem hasFourierLaplacian_invLap (ω : L2) (hω : MeanZero ω) :
 def Dom : Set L2 := {g | MeanZero g ∧ ∃ h, HasL0 g h}
 
 /-- The stream function is in the domain of `L₀` (blueprint: `lem:L0-stream`). -/
-theorem exists_hasL0_invLap (ω : L2) : ∃ h, HasL0 (invLap ω) h := by
-  obtain ⟨h, hh⟩ := exists_fourierCoeff _ (summable_sq_transport_invLap ω)
-  exact ⟨h, (hasL0_iff_fourierCoeff _ _).mpr hh⟩
+theorem exists_hasL0_invLap (ω : L2) : ∃ h, HasL0 (invLap ω) h :=
+  (exists_hasL0_iff_summable _).mpr (summable_sq_transportCoeff_invLap ω)
 
 /-- `L ω = h` for the linearized operator `L = L₀(I + Δ⁻¹)` with domain `𝒟`. -/
 def HasL (ω h : L2) : Prop := ω ∈ Dom ∧ HasL0 (ω + invLap ω) h
@@ -409,6 +303,19 @@ def HasL (ω h : L2) : Prop := ω ∈ Dom ∧ HasL0 (ω + invLap ω) h
 `L₀(ω + ψ) = iλω` (blueprint: `def:eigen-problem`). -/
 def IsEigenSolution (lam : ℝ) (ω : L2) : Prop :=
   MeanZero ω ∧ HasL0 (ω + invLap ω) ((I * lam) • ω)
+
+/-- Solutions of the eigenvalue problem form a linear subspace. -/
+theorem IsEigenSolution.add {lam : ℝ} {g h : L2}
+    (hg : IsEigenSolution lam g) (hh : IsEigenSolution lam h) :
+    IsEigenSolution lam (g + h) :=
+  ⟨hg.1.add hh.1, by simpa only [map_add, add_add_add_comm, smul_add] using hg.2.add hh.2⟩
+
+theorem IsEigenSolution.smul {lam : ℝ} {g : L2}
+    (hg : IsEigenSolution lam g) (c : ℂ) : IsEigenSolution lam (c • g) := by
+  refine ⟨hg.1.smul c, ?_⟩
+  have hd := hg.2.smul c
+  rw [smul_comm c (I * lam)] at hd
+  simpa only [map_smul, smul_add] using hd
 
 /-- Reduction to the real-parameter equation (blueprint: `lem:reduction`). -/
 theorem hasL_iff_isEigenSolution (lam : ℝ) (ω : L2) :

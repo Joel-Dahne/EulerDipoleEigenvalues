@@ -79,9 +79,15 @@ motivation, and standard facts cited rather than proved.
   both builds (`\T \R \Z \N \C`, `\Div`, `\Dom`, `\Cell`, `\ip{}{}`, ...).
   `macros/print.tex` defines no-op versions of the blueprint macros for the PDF.
 - `NoEmbeddedEigenvalues.lean`: Lean library root, importing every module.
-- `NoEmbeddedEigenvalues/*.lean`: one module per blueprint chapter, named
-  after it (`Setup.lean` for `setup.tex`, `Symmetry.lean` for
-  `symmetry.tex`, ...). Each module docstring says what it contains.
+- `NoEmbeddedEigenvalues/*.lean`: the Lean modules, following the blueprint
+  chapters; a chapter may be split over several modules. Setup chapter:
+  `TorusL2.lean` (measure, `L²`, characters, coefficients), `Fourier.lean`
+  (Hilbert basis, Parseval, bounded Fourier multipliers), `Setup.lean`
+  (`Δ⁻¹`, `L₀`, domain, eigenvalue problem), `Derivatives.lean`
+  (Fourier-defined and weak derivatives). Symmetry chapter: `Symmetry.lean`
+  (pointwise maps), `SymmetryL2.lean` (action on `L²`), `Sectors.lean`. Then
+  `EvenEven.lean`, `OddOdd.lean`, `Mixed.lean` and `Main.lean`. Each module
+  docstring says what it contains and which blueprint nodes it covers.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `STATUS.md`: current state, decisions and next steps.
 - `justfile`: build recipes (run `just` to list them).

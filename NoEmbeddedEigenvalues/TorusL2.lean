@@ -18,6 +18,13 @@ open scoped InnerProductSpace ComplexConjugate
 
 instance : Fact (0 < 2 * π) := ⟨by positivity⟩
 
+theorem two_pi_ne_zero_complex : (2 * π : ℂ) ≠ 0 := by
+  exact_mod_cast (show (2 * π : ℝ) ≠ 0 by positivity)
+
+/-- The normalization factor of the Fourier coefficients is nonzero. -/
+theorem two_pi_sq_inv_ne_zero : ((2 * π : ℂ) ^ 2)⁻¹ ≠ 0 :=
+  inv_ne_zero (pow_ne_zero 2 two_pi_ne_zero_complex)
+
 /-! ### Measure on the torus -/
 
 /-- Lebesgue measure on `ℝ/2πℤ`, of total mass `2π`. -/
@@ -82,6 +89,51 @@ theorem char_zero (p : Torus) : char 0 p = 1 := by
   change fourier (T := 2 * π) 0 p.1 * fourier (T := 2 * π) 0 p.2 = 1
   rw [fourier_zero, fourier_zero, mul_one]
 
+/-- The character of a sum of torus points is the product of their characters. -/
+theorem char_add_point (k : ℤ × ℤ) (p q : Torus) :
+    char k (p + q) = char k p * char k q := by
+  change AddCircle (2 * π) × AddCircle (2 * π) at p q
+  change fourier k.1 (p.1 + q.1) * fourier k.2 (p.2 + q.2) =
+    (fourier k.1 p.1 * fourier k.2 p.2) * (fourier k.1 q.1 * fourier k.2 q.2)
+  simp only [fourier_apply, zsmul_add, AddCircle.toCircle_add, Circle.coe_mul]
+  ring
+
+theorem char_neg_point (k : ℤ × ℤ) (p : Torus) : char k (-p) = char (-k) p := by
+  change AddCircle (2 * π) × AddCircle (2 * π) at p
+  change fourier k.1 (-p.1) * fourier k.2 (-p.2) =
+    fourier (-k.1) p.1 * fourier (-k.2) p.2
+  simp only [fourier_apply, smul_neg, neg_smul]
+
+theorem char_ne_zero (k : ℤ × ℤ) (p : Torus) : char k p ≠ 0 := by
+  change AddCircle (2 * π) × AddCircle (2 * π) at p
+  have hn : ‖char k p‖ = 1 := by
+    change ‖fourier k.1 p.1 * fourier k.2 p.2‖ = 1
+    simp only [norm_mul, fourier_apply, Circle.norm_coe, one_mul]
+  intro hz
+  rw [hz, norm_zero] at hn
+  norm_num at hn
+
+/-! ### Linearity of the coefficients -/
+
+theorem fourierCoeff_add (g h : L2) (k : ℤ × ℤ) :
+    fourierCoeff (g + h) k = fourierCoeff g k + fourierCoeff h k := by
+  simp only [fourierCoeff, inner_add_right, mul_add]
+
+theorem fourierCoeff_smul (c : ℂ) (g : L2) (k : ℤ × ℤ) :
+    fourierCoeff (c • g) k = c * fourierCoeff g k := by
+  simp only [fourierCoeff, inner_smul_right]
+  ring
+
+theorem fourierCoeff_sub (g h : L2) (k : ℤ × ℤ) :
+    fourierCoeff (g - h) k = fourierCoeff g k - fourierCoeff h k := by
+  simp only [fourierCoeff, inner_sub_right, mul_sub]
+
+theorem MeanZero.add {g h : L2} (hg : MeanZero g) (hh : MeanZero h) : MeanZero (g + h) := by
+  rw [MeanZero, fourierCoeff_add, hg, hh, add_zero]
+
+theorem MeanZero.smul {g : L2} (hg : MeanZero g) (c : ℂ) : MeanZero (c • g) := by
+  rw [MeanZero, fourierCoeff_smul, hg, mul_zero]
+
 /-- An `L²` function on the finite-volume torus is integrable. -/
 theorem integrable_L2 (g : L2) : Integrable g := by
   exact (Lp.memLp g).integrable (by norm_num)
@@ -118,10 +170,7 @@ theorem fourierCoeff_zero (g : L2) :
 theorem meanZero_iff_integral_eq_zero (g : L2) :
     MeanZero g ↔ (∫ p, g p) = 0 := by
   rw [MeanZero, fourierCoeff_zero, mul_eq_zero]
-  have h : ((2 * π : ℂ) ^ 2)⁻¹ ≠ 0 := by
-    exact inv_ne_zero (pow_ne_zero 2 (by
-      exact_mod_cast (show (2 * π : ℝ) ≠ 0 by positivity)))
-  simp only [h, false_or]
+  simp only [two_pi_sq_inv_ne_zero, false_or]
 
 end NoEmbeddedEigenvalues
 

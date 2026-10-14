@@ -31,7 +31,10 @@ these agree with the definitions above.
   NoEmbeddedEigenvalues.fourierCoeff_eq_integral,
   NoEmbeddedEigenvalues.fourierCoeff_eq_integral_char_neg,
   NoEmbeddedEigenvalues.fourierCoeff_zero,
-  NoEmbeddedEigenvalues.meanZero_iff_integral_eq_zero}
+  NoEmbeddedEigenvalues.meanZero_iff_integral_eq_zero,
+  NoEmbeddedEigenvalues.fourierCoeff_add, NoEmbeddedEigenvalues.fourierCoeff_sub,
+  NoEmbeddedEigenvalues.fourierCoeff_smul, NoEmbeddedEigenvalues.MeanZero.add,
+  NoEmbeddedEigenvalues.MeanZero.smul}
 \leanok
 Every $g\in L^2$ is integrable, as is $\bar e_k g$ for each $k$. The
 inner-product definition of the Fourier coefficient agrees with
@@ -40,7 +43,8 @@ inner-product definition of the Fourier coefficient agrees with
          =(2\pi)^{-2}\int_{\T^2}e_{-k}g.
 \]
 In particular $\hat g_0=(2\pi)^{-2}\int_{\T^2}g$, and
-$\hat g_0=0$ if and only if $\int_{\T^2}g=0$.
+$\hat g_0=0$ if and only if $\int_{\T^2}g=0$. The coefficients $\hat g_k$ are
+linear in $g$, so $X$ is a linear subspace.
 \end{lemma}
 
 \begin{proof}
@@ -102,13 +106,39 @@ Apply Hilbert-basis reconstruction and the norm identity to the coordinates
 $2\pi\hat g_k$. Surjectivity of the coordinate map gives the last assertion.
 \end{proof}
 
+\begin{lemma}[Bounded Fourier multipliers]
+\label{lem:fourier-multiplier}
+\uses{lem:torus-fourier}
+\lean{NoEmbeddedEigenvalues.summable_sq_mul_fourierCoeff,
+  NoEmbeddedEigenvalues.fourierMultiplier,
+  NoEmbeddedEigenvalues.fourierCoeff_fourierMultiplier,
+  NoEmbeddedEigenvalues.norm_fourierMultiplier_apply_le}
+\leanok
+Let $m:\Z^2\to\C$ with $|m_k|\le C$ for all $k$. For $g\in L^2$ the series
+\[
+  T_mg=\sum_{k\in\Z^2}m_k\hat g_ke_k
+\]
+converges in $L^2$, $\widehat{(T_mg)}_k=m_k\hat g_k$, and $T_m$ is a bounded
+linear operator on $L^2$ with $\|T_mg\|\le C\|g\|$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:torus-fourier}
+\leanok
+$(m_k\hat g_k)_k$ is square summable by comparison with $(\hat g_k)_k$, so by
+Lemma~\ref{lem:torus-fourier} it is the coefficient sequence of a function,
+whose Fourier series is the series above. Linearity follows from uniqueness of
+coefficients, and the bound from Parseval:
+$\|T_mg\|^2=(2\pi)^2\sum_k|m_k\hat g_k|^2\le C^2\|g\|^2$.
+\end{proof}
+
 \begin{remark}[Lean coverage]
 The integral characterizations, the Fourier Hilbert basis and reconstruction
 are in \texttt{TorusL2.lean} and \texttt{Fourier.lean}; the inverse
 Laplacian, the transport operator and the eigenvalue problem are in
-\texttt{Setup.lean}. For first partial derivatives, equivalence with testing
-against smooth periodic test pairs is in \texttt{WeakDerivatives.lean}
-(Lemma~\ref{lem:partial-weak-equivalence}). The corresponding bridges for
+\texttt{Setup.lean}. Fourier-defined derivatives, and for first partial
+derivatives the equivalence with testing against smooth periodic test pairs
+(Lemma~\ref{lem:partial-weak-equivalence}), are in \texttt{Derivatives.lean}. The corresponding bridges for
 $L_0$, second-order derivatives and the Laplacian are not formalized; no
 Sobolev or trace theory is used in this chapter.
 \end{remark}
@@ -241,14 +271,16 @@ smooth tests together with their derivatives.
 
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
-\uses{def:torus}
-\lean{NoEmbeddedEigenvalues.normSq, NoEmbeddedEigenvalues.invLap}
+\uses{def:torus, lem:fourier-multiplier}
+\lean{NoEmbeddedEigenvalues.normSq, NoEmbeddedEigenvalues.invLapSymbol,
+  NoEmbeddedEigenvalues.invLap}
 \leanok
 For $\omega\in L^2$ let
 \[
   \Delta^{-1}\omega=\sum_{k\ne0}\Big(-\frac{\hat\omega_k}{|k|^2}\Big)e_k,
 \]
-a series that converges in $L^2$ (Lemma~\ref{lem:inverse-laplacian-fourier}).
+the Fourier multiplier (Lemma~\ref{lem:fourier-multiplier}) with $m_0=0$ and
+$m_k=-1/|k|^2$ for $k\ne0$.
 For $\omega\in X$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
 of the perturbation); it lies in $X$, and $\Delta\psi=\omega$
 (Lemmas~\ref{lem:inverse-laplacian-fourier}
@@ -259,39 +291,34 @@ and~\ref{lem:inverse-laplacian-derivatives}).
 \label{lem:inverse-laplacian-fourier}
 \uses{def:inverse-laplacian, def:torus}
 \lean{NoEmbeddedEigenvalues.normSq_pos,
-  NoEmbeddedEigenvalues.norm_invLap_coeff_le,
-  NoEmbeddedEigenvalues.summable_sq_invLap_coeff,
-  NoEmbeddedEigenvalues.hasSum_invLap,
+  NoEmbeddedEigenvalues.norm_invLapSymbol_le,
+  NoEmbeddedEigenvalues.fourierCoeff_invLap_eq_mul,
   NoEmbeddedEigenvalues.fourierCoeff_invLap,
+  NoEmbeddedEigenvalues.hasSum_invLap,
+  NoEmbeddedEigenvalues.norm_invLap_apply_le,
   NoEmbeddedEigenvalues.meanZero_invLap}
 \leanok
-For every $\omega\in L^2$, set
-$c_0=0$ and $c_k=-\hat\omega_k/|k|^2$ for $k\ne0$.
-Then $|c_k|\le|\hat\omega_k|$, the sequence $(c_k)_k$ is square summable,
-and
-\[
- \Delta^{-1}\omega=\sum_{k\in\Z^2}c_ke_k
- \quad\text{converges in }L^2.
-\]
-The sum has Fourier coefficients $c_k$, and hence belongs to $X$ even when
-$\omega$ does not have mean zero.
+The multiplier of $\Delta^{-1}$ satisfies $|m_k|\le1$. Hence $\Delta^{-1}$ is
+a bounded linear operator on $L^2$ with $\|\Delta^{-1}\omega\|\le\|\omega\|$,
+the series defining $\Delta^{-1}\omega$ converges in $L^2$, and
+$\Delta^{-1}\omega$ has Fourier coefficients $0$ at $k=0$ and
+$-\hat\omega_k/|k|^2$ for $k\ne0$. In particular $\Delta^{-1}\omega\in X$ even
+when $\omega$ does not have mean zero.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:torus-fourier}
+\uses{lem:fourier-multiplier, lem:torus-fourier}
 \leanok
-For $k\ne0$, the positive integer $|k|^2$ is at least one, giving
-$|c_k|\le|\hat\omega_k|$. Square summability follows by comparison with
-the coefficients of $\omega$. Choose an $L^2$ function with coefficients
-$c_k$ and apply Fourier reconstruction to that function. Its convergent
-series is the series defining $\Delta^{-1}\omega$, so the sum has the
-prescribed coefficients. The zero coefficient vanishes.
+For $k\ne0$, the positive integer $|k|^2$ is at least one, so $|m_k|\le1$.
+Apply Lemma~\ref{lem:fourier-multiplier}.
 \end{proof}
 
 \begin{lemma}[Inverse-Laplacian derivatives]
 \label{lem:inverse-laplacian-derivatives}
 \uses{def:inverse-laplacian, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.summable_sq_invLap_multiplier,
+\lean{NoEmbeddedEigenvalues.norm_intCast_mul_invLapSymbol_le,
+  NoEmbeddedEigenvalues.abs_frequencyComponent_le_normSq,
+  NoEmbeddedEigenvalues.abs_frequencyProduct_le_normSq,
   NoEmbeddedEigenvalues.exists_fourierPartial_invLap,
   NoEmbeddedEigenvalues.exists_fourierSecondPartial_invLap,
   NoEmbeddedEigenvalues.hasFourierLaplacian_invLap}
@@ -302,14 +329,14 @@ If $\omega\in X$, then $\Delta\psi=\omega$ in the Fourier sense.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:torus-fourier, lem:inverse-laplacian-fourier}
+\uses{lem:fourier-multiplier, lem:inverse-laplacian-fourier}
 \leanok
 For integer frequencies, $|k_j|\le|k|^2$, and
 $|k_i k_j|\le|k|^2$. For the mixed product, use
 $2|k_1 k_2|\le k_1^2+k_2^2$; the pure products are squares.
-Thus each derivative coefficient is bounded in absolute value by
-$|\hat\omega_k|$, and is zero at $k=0$.
-Square summability and Fourier surjectivity supply the derivatives in $L^2$.
+Thus the multipliers $ik_jm_k$ and $-k_ik_jm_k$, with $m_k$ the multiplier
+of $\Delta^{-1}$, are bounded by $1$, and applying them to $\omega$
+(Lemma~\ref{lem:fourier-multiplier}) gives the derivatives of $\psi$ in $L^2$.
 For $k\ne0$, multiplication by $-|k|^2$ cancels the inverse-Laplacian
 multiplier. At $k=0$, the equation uses $\hat\omega_0=0$.
 \end{proof}
@@ -317,7 +344,8 @@ multiplier. At $k=0$, the equation uses $\hat\omega_0=0$.
 \begin{definition}[The dipole and the transport operator]
 \label{def:dipole}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.L0char, NoEmbeddedEigenvalues.HasL0}
+\lean{NoEmbeddedEigenvalues.L0char, NoEmbeddedEigenvalues.L0charLp,
+  NoEmbeddedEigenvalues.transportCoeff, NoEmbeddedEigenvalues.HasL0}
 \leanok
 The steady state is the symmetric dipole with stream function
 $\Psi(x,y)=\cos x+\cos y$, vorticity $\Omega=-\Psi$ and velocity
@@ -373,6 +401,27 @@ Multiply the pairing by $(2\pi)^{-2}$; this factor is nonzero, so the
 implication also reverses. No Fourier completeness or Sobolev theory is needed.
 \end{proof}
 
+\begin{lemma}[Transport into $L^2$]
+\label{lem:transport-l2}
+\uses{def:dipole}
+\lean{NoEmbeddedEigenvalues.HasL0.unique,
+  NoEmbeddedEigenvalues.exists_hasL0_iff_summable}
+\leanok
+For $g\in L^2$ there is at most one $h\in L^2$ with $L_0g=h$, and such an $h$
+exists if and only if the sequence $\widehat{(L_0g)}_k$ of
+Definition~\ref{def:dipole} is square summable. So the two descriptions of
+``$L_0g\in L^2$'' in Definition~\ref{def:dipole} agree.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-fourier, lem:torus-fourier}
+\leanok
+By Lemma~\ref{lem:transport-fourier}, $L_0g=h$ prescribes every Fourier
+coefficient of $h$; coefficients determine $h$, and every square-summable
+sequence is the coefficient sequence of some $h\in L^2$
+(Lemma~\ref{lem:torus-fourier}).
+\end{proof}
+
 \begin{lemma}[Linearity of weak transport]
 \label{lem:L0-linearity}
 \uses{def:dipole}
@@ -405,13 +454,16 @@ $\Dom=\{g\in X: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \begin{lemma}[The stream function is in the domain]
 \label{lem:L0-stream}
 \uses{def:inverse-laplacian, def:dipole}
-\lean{NoEmbeddedEigenvalues.exists_hasL0_invLap}
+\lean{NoEmbeddedEigenvalues.abs_components_le_normSq,
+  NoEmbeddedEigenvalues.norm_mul_fourierCoeff_invLap_le,
+  NoEmbeddedEigenvalues.summable_sq_transportCoeff_invLap,
+  NoEmbeddedEigenvalues.exists_hasL0_invLap}
 \leanok
 For $\omega\in X$, $L_0\Delta^{-1}\omega\in L^2$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-fourier, lem:torus-fourier, lem:inverse-laplacian-fourier}
+\uses{lem:transport-l2, lem:inverse-laplacian-fourier}
 \leanok
 Write $\psi=\Delta^{-1}\omega$, $a_k=k_1\hat\psi_k$ and $b_k=k_2\hat\psi_k$.
 For integer frequencies, $|k_j|\le k_j^2\le|k|^2$. Thus
@@ -422,9 +474,8 @@ that component unchanged, the transport formula becomes
  \widehat{(L_0\psi)}_k
  =\tfrac12\big[(a_{k-e_2}-a_{k+e_2})-(b_{k-e_1}-b_{k+e_1})\big].
 \]
-Shifts, differences and scalar multiplication preserve $\ell^2$.
-Fourier surjectivity supplies $h\in L^2$ with these coefficients; the
-weak/Fourier equivalence gives $L_0\psi=h$.
+Shifts, differences and scalar multiplication preserve $\ell^2$, so
+Lemma~\ref{lem:transport-l2} gives $L_0\psi\in L^2$.
 \end{proof}
 
 \begin{remark}[Proof simplification]

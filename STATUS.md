@@ -12,24 +12,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
    and fixed the blueprint where they did not (see "Current state").
-2. Lean follow-ups from that review, not done yet:
-   - Lean lemmas for the two new non-`\leanok` nodes: `lem:sector-projections`
-     (the `P_ε` are commuting orthogonal projections, identity on their sector)
-     and `lem:stream-sector` (`ψ` has the parities of `ω`; short from
-     `invLap_commute`).
-   - `exists_hasL0_iff_summable` (the blueprint defines `L₀g ∈ L²` by square
-     summability, `Dom` by `∃ h, HasL0 g h`) and uniqueness `HasL0.unique`.
-   - Restructuring: move `fourierCoeff_add/smul`, `char_ne_zero`,
-     `char_add_point`, `char_neg_point` to `TorusL2.lean`; `invLap_add/smul`
-     and `IsEigenSolution.add/smul` to `Setup.lean`; move the Fourier-multiplier
-     derivative section of `Setup.lean` (not on the import path of `main`)
-     next to `WeakDerivatives.lean`; consider a general Fourier-multiplier
-     operator `L2 →L[ℂ] L2` (gives linearity and continuity of `invLap`); drop
-     the derivable fields `zero_iff` and `phase_ne_zero` of
-     `CharacterSymmetry`; one lemma for `(2π : ℂ) ≠ 0`; fix stale module
-     docstrings in `Symmetry.lean` and `Setup.lean`. `AGENTS.md` still says
-     one module per chapter, which no longer holds; update it or use
-     subdirectories.
+2. Lean lemmas for the two blueprint nodes that are not `\leanok` yet:
+   `lem:sector-projections` (the `P_ε` are commuting orthogonal projections,
+   the identity on their sector) and `lem:stream-sector` (`ψ` has the parities
+   of `ω`; short from `invLap_commute` and linearity of `invLap`).
 3. The user had paused starting the even–even sector. When requested, digest it
    end to end: check identities with SymPy, explain the mechanism, write digest
    notes, and formalize the algebraic nodes.
@@ -60,41 +46,43 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   swapping. The sector exclusion theorem statements in the even–even, odd–odd,
   and mixed chapters are linked to their Lean declarations, but their proofs
   are still mathematical placeholders/admissions.
-- **Lean foundations**: `Symmetry.lean` proves pointwise torus reflections,
-  rotation and reflection algebra. `TorusL2.lean` holds the measure/L2/character
-  foundations and proves integrability, integral formulas for Fourier
-  coefficients, conjugation/zero-character identities, and
-  `meanZero_iff_integral_eq_zero`. `Fourier.lean` proves the normalized Hilbert
-  basis `(2π)⁻¹ e_k`, coordinates `2π ĝ_k`, reconstruction, Parseval,
-  uniqueness and existence for square-summable coefficients, and convergence
-  with exact coefficients for arbitrary square-summable Fourier series. The
-  Lean import chain now continues through `Setup`, `SymmetryL2`, `Sectors`, the
-  three sector files, and `Main`.
-- **Lean setup and weak derivatives**: `Setup.lean` no longer contains the main
-  theorem; it contains the Fourier model, inverse Laplacian, derivative
-  relations, domain, `HasL`, eigenvalue problem, and reduction. The
-  inverse-Laplacian convergence/coefficient/mean-zero results, `exists_hasL0_invLap`,
-  `HasL0` linearity, `hasL_iff_isEigenSolution`, Fourier derivative existence,
-  and Poisson result are proved. `WeakDerivatives.lean` has no `sorry`; the
-  first-partial Fourier relation is proved equivalent to smooth-test weak
-  differentiation and to the stronger classical-test formulation described in
-  that module.
-- **Lean symmetries and sectors**: `SymmetryL2.lean` proves measure-preserving
-  L² pullbacks for `S₁`, `S₂`, and `R`, their action on characters and
-  transport characters, preservation of mean zero, commutation with `Δ⁻¹` and
-  `L₀`, preservation of `IsEigenSolution`, and the L² reflection/rotation
-  algebra. `Sectors.lean` defines `InSector` and `sectorProjection`, proves the
-  four projected pieces lie in the desired parities, reconstruct the original
-  function, preserve the eigenvalue equation, and that rotation swaps parities.
-  `Mixed.lean` proves the second mixed sector from the first by rotation.
-  `Main.lean` proves `main` from reduction, sector decomposition, and the three
-  admitted sector exclusions.
-- **Validation**: `lake build` passes. `just web` passes, with only the usual
-  missing image-converter messages from plasTeX. Warnings are the three sector
-  exclusion `sorry`s. Axiom checks: `IsEigenSolution.sectorProjection` uses only
-  `propext`, `Classical.choice`, and `Quot.sound`; `main` and
-  `mixed_other_exclusion` also depend on `sorryAx`, exactly through the admitted
-  sector exclusions.
+- **Lean foundations** (`TorusL2.lean`, `Fourier.lean`): measure, `L²`,
+  characters, Fourier coefficients and their linearity, integral formulas,
+  mean zero; the Hilbert basis `(2π)⁻¹ e_k`, reconstruction, Parseval,
+  uniqueness and existence for square-summable coefficients; bounded Fourier
+  multipliers `fourierMultiplier : L2 →L[ℂ] L2`.
+- **Lean setup** (`Setup.lean`, `Derivatives.lean`): `Δ⁻¹` is the multiplier
+  `invLapSymbol`, hence a continuous linear map of norm at most one. `L₀` is
+  the character-tested relation `HasL0`, with the Fourier formula
+  `transportCoeff`, uniqueness, and `L₀g ∈ L²` iff `transportCoeff g` is
+  square summable. Domain, `HasL`, `IsEigenSolution` (a linear subspace),
+  `L₀Δ⁻¹ω ∈ L²`, reduction. `Derivatives.lean`: Fourier-defined derivative
+  relations, derivatives of `ψ` up to order two (as multipliers),
+  `Δψ = ω`, and equivalence of first partials with smooth-test and
+  classical-test weak differentiation.
+- **Lean symmetries and sectors** (`Symmetry.lean`, `SymmetryL2.lean`,
+  `Sectors.lean`): pointwise maps and their algebra; `CharacterSymmetry`
+  packages a measure-preserving map with its action on characters and on
+  `L₀e_k`, from which preservation of mean zero, commutation with `Δ⁻¹` and
+  `L₀`, and invariance of the eigenvalue problem follow; `reflect₁`,
+  `reflect₂`, `rotate` are its instances. Sector projections, their parities
+  and sum, invariance of solutions, and the rotation swap of parities.
+  `Mixed.lean` gets the second mixed sector by rotation; `Main.lean` proves
+  `main` from the three admitted sector exclusions.
+- **Lean restructuring** (2026-10-14): the items from the review are done
+  (lemmas moved to where they belong, derivative section moved to
+  `Derivatives.lean`, renamed from `WeakDerivatives.lean`, multiplier
+  operator, `transportCoeff`, derived `CharacterSymmetry` fields, stale
+  docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
+  type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
+  in `Derivatives.lean`.
+- **Validation**: `lake build` passes; the only warnings are the three sector
+  exclusion `sorry`s. `just web` passes, with only the usual missing
+  image-converter messages from plasTeX. Every `\lean` name in the blueprint
+  resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
+  sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
+  `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,
+  `Classical.choice` and `Quot.sound`.
 - **Reworked manuscript** (`manuscript.tex`): front matter and the introduction
   up to the main theorem. The other sections are placeholders. Neither
   manuscript was changed in the setup/Fourier/weak-derivative/symmetry-sector
@@ -105,7 +93,8 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 Each points to where the decision is recorded in detail.
 
 - `L²` model (2026-10-13, as a first attempt): `Lp` on `Angle × Angle`, `L₀`
-  as a relation tested against characters, `Δ⁻¹` as a series of characters.
+  as a relation tested against characters, `Δ⁻¹` as a series of characters,
+  built as a bounded Fourier multiplier (2026-10-14).
   Remark "Lean model" in `setup.tex`.
 - Fourier transport: use the scaling homeomorphism to transport continuous
   monomial density and orthogonality, then construct the physical Hilbert basis

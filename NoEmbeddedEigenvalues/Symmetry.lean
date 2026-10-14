@@ -7,8 +7,8 @@ The reflections `S₁`, `S₂`, the rotation `R` and the central inversion `Ic` 
 `(ℝ/2πℤ)²`, and how the dipole stream function `Ψ(x, y) = cos x + cos y` transforms under
 them (blueprint: `def:reflections`, `lem:reflection-algebra`).
 
-Here the torus is only a set of points, `Real.Angle × Real.Angle`; the choice of model for
-`L²` is not made yet.
+Here the torus is only a set of points, `Real.Angle × Real.Angle`. The action of the symmetries
+on `L²` is in `SymmetryL2.lean`.
 -/
 
 noncomputable section

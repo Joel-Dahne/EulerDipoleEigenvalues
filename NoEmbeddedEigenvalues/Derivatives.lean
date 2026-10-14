@@ -4,6 +4,11 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 /-!
 # Fourier derivatives and classical test functions
 
+First and second partial derivatives and the Laplacian, defined as relations through Fourier
+multipliers, and the derivatives of the stream function `Δ⁻¹ω` (blueprint:
+`def:fourier-derivatives`, `lem:fourier-derivative-composition`,
+`lem:inverse-laplacian-derivatives`).
+
 Classical periodic tests are represented by continuous torus functions and their
 continuous coordinate derivatives. Both all-C1 and all-smooth bilinear weak
 testing are equivalent to the first Fourier derivative relation. The proof
@@ -23,7 +28,118 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Real Complex MeasureTheory
-open scoped InnerProductSpace ComplexConjugate ContDiff
+open scoped InnerProductSpace ComplexConjugate
+
+/-! ### Derivatives defined by Fourier multipliers -/
+
+/-- Coordinate frequency: `j = 0` is the x coordinate, `j = 1` the y coordinate. -/
+def frequencyComponent (k : ℤ × ℤ) (j : Fin 2) : ℤ := if j = 0 then k.1 else k.2
+
+/-- A first partial derivative in the Fourier-multiplier sense, with output in `L²`.
+This is a partial-operator relation, not an assertion that every `L²` input has a derivative.
+Equivalence with testing against all smooth functions is not asserted here. -/
+def HasFourierPartial (j : Fin 2) (g h : L2) : Prop :=
+  ∀ k, fourierCoeff h k = (I * frequencyComponent k j) * fourierCoeff g k
+
+/-- A second partial derivative in the Fourier-multiplier sense, with output in `L²`.
+The intermediate first derivative is not assumed to be in `L²`; when it is,
+`hasFourierPartial_iff_second` identifies this with successive differentiation. -/
+def HasFourierSecondPartial (i j : Fin 2) (g h : L2) : Prop :=
+  ∀ k, fourierCoeff h k =
+    -((frequencyComponent k i : ℂ) * frequencyComponent k j) * fourierCoeff g k
+
+/-- Differentiating a first derivative again agrees with the second-order multiplier. -/
+theorem hasFourierPartial_iff_second {g d h : L2} {i j : Fin 2}
+    (hd : HasFourierPartial j g d) :
+    HasFourierPartial i d h ↔ HasFourierSecondPartial i j g h := by
+  unfold HasFourierPartial HasFourierSecondPartial
+  apply forall_congr'
+  intro k
+  rw [hd k]
+  have hm : (I * frequencyComponent k i) *
+      ((I * frequencyComponent k j) * fourierCoeff g k) =
+      -((frequencyComponent k i : ℂ) * frequencyComponent k j) * fourierCoeff g k := by
+    calc
+      _ = (I * I) * ((frequencyComponent k i : ℂ) * frequencyComponent k j) *
+          fourierCoeff g k := by ring
+      _ = _ := by rw [Complex.I_mul_I]; ring
+  rw [hm]
+
+/-- The Laplacian in the Fourier-multiplier sense. -/
+def HasFourierLaplacian (g h : L2) : Prop :=
+  ∀ k, fourierCoeff h k = -(normSq k : ℂ) * fourierCoeff g k
+
+/-- The Fourier Laplacian is the sum of the two pure second partial derivatives. -/
+theorem hasFourierLaplacian_of_second {g h₀ h₁ : L2}
+    (h₀deriv : HasFourierSecondPartial 0 0 g h₀)
+    (h₁deriv : HasFourierSecondPartial 1 1 g h₁) :
+    HasFourierLaplacian g (h₀ + h₁) := by
+  intro k
+  rw [fourierCoeff_add, h₀deriv k, h₁deriv k]
+  simp only [frequencyComponent, normSq]
+  push_cast
+  ring
+
+/-- First and second coordinate multipliers are bounded by the Laplace frequency. -/
+theorem abs_frequencyComponent_le_normSq (k : ℤ × ℤ) (j : Fin 2) :
+    |frequencyComponent k j| ≤ normSq k := by
+  unfold frequencyComponent
+  split_ifs
+  · exact (abs_components_le_normSq k).1
+  · exact (abs_components_le_normSq k).2
+
+theorem abs_frequencyProduct_le_normSq (k : ℤ × ℤ) (i j : Fin 2) :
+    |frequencyComponent k i * frequencyComponent k j| ≤ normSq k := by
+  have hcross : |k.1 * k.2| ≤ normSq k := by
+    rw [abs_le]
+    unfold normSq
+    constructor <;> nlinarith [sq_nonneg (k.1 + k.2), sq_nonneg (k.1 - k.2)]
+  unfold frequencyComponent
+  split_ifs
+  · rw [← sq, abs_of_nonneg (sq_nonneg _)]
+    unfold normSq
+    nlinarith [sq_nonneg k.2]
+  · exact hcross
+  · simpa only [mul_comm] using hcross
+  · rw [← sq, abs_of_nonneg (sq_nonneg _)]
+    unfold normSq
+    nlinarith [sq_nonneg k.1]
+
+/-- The stream function has each first derivative in `L²`, defined by Fourier multipliers. -/
+theorem exists_fourierPartial_invLap (ω : L2) (j : Fin 2) :
+    ∃ h, HasFourierPartial j (invLap ω) h := by
+  have hm (k : ℤ × ℤ) : ‖I * frequencyComponent k j * invLapSymbol k‖ ≤ 1 := by
+    rw [mul_assoc, norm_mul, Complex.norm_I, one_mul]
+    exact norm_intCast_mul_invLapSymbol_le k _ fun _ => abs_frequencyComponent_le_normSq k j
+  refine ⟨fourierMultiplier hm ω, fun k => ?_⟩
+  rw [fourierCoeff_fourierMultiplier, fourierCoeff_invLap_eq_mul]
+  ring
+
+/-- The stream function has each second derivative in `L²`, defined by Fourier multipliers. -/
+theorem exists_fourierSecondPartial_invLap (ω : L2) (i j : Fin 2) :
+    ∃ h, HasFourierSecondPartial i j (invLap ω) h := by
+  have hm (k : ℤ × ℤ) :
+      ‖-((frequencyComponent k i : ℂ) * frequencyComponent k j) * invLapSymbol k‖ ≤ 1 := by
+    rw [neg_mul, norm_neg, ← Int.cast_mul]
+    exact norm_intCast_mul_invLapSymbol_le k _ fun _ => abs_frequencyProduct_le_normSq k i j
+  refine ⟨fourierMultiplier hm ω, fun k => ?_⟩
+  rw [fourierCoeff_fourierMultiplier, fourierCoeff_invLap_eq_mul]
+  ring
+
+/-- On mean-zero inputs the stream function solves the Fourier-defined Poisson equation. -/
+theorem hasFourierLaplacian_invLap (ω : L2) (hω : MeanZero ω) :
+    HasFourierLaplacian (invLap ω) ω := by
+  intro k
+  rw [fourierCoeff_invLap]
+  by_cases hk : k = 0
+  · subst k
+    simpa [normSq, MeanZero] using hω
+  · simp only [hk, ite_false]
+    have hn : (normSq k : ℂ) ≠ 0 := by
+      exact_mod_cast (normSq_pos k hk).ne'
+    field_simp
+
+/-! ### Classical test functions and weak derivatives -/
 
 /-- A real coordinate line on the torus; coordinate 0 is x, coordinate 1 is y. -/
 def coordinateLine (j : Fin 2) (p : Torus) (t : ℝ) : Torus :=
@@ -240,6 +356,7 @@ theorem classicalPartial_char (j : Fin 2) (k : ℤ × ℤ) :
           simp [coordinateLine, frequencyComponent, ContinuousMap.smul_apply,
             char_coe, mul_comm]
 
+open scoped ContDiff in
 /-- A smooth torus test is a continuous function with a smooth periodic lift to real coordinates. -/
 def IsSmoothTorusTest (φ : C(Torus, ℂ)) : Prop :=
   ContDiff ℝ ∞ (fun p : ℝ × ℝ => φ ((p.1 : Angle), (p.2 : Angle)))
@@ -249,6 +366,7 @@ def HasSmoothWeakPartial (j : Fin 2) (g h : L2) : Prop :=
   ∀ φ dφ : C(Torus, ℂ), IsSmoothTorusTest φ → HasClassicalPartial j φ dφ →
     (∫ p, h p * φ p) = -(∫ p, g p * dφ p)
 
+open scoped ContDiff in
 theorem isSmoothTorusTest_char (k : ℤ × ℤ) : IsSmoothTorusTest (char k) := by
   unfold IsSmoothTorusTest
   simp only [char_coe]

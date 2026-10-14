@@ -11,7 +11,8 @@ We transport orthogonality and continuous-function density from Mathlib's unit
 monomials, then construct the Hilbert basis `(2π)⁻¹ • charLp k` directly.
 This avoids a separate `L²` scaling equivalence. We prove reconstruction,
 Parseval, uniqueness and existence for prescribed square-summable coefficients
-(blueprint: `lem:torus-fourier-basis`, `lem:torus-fourier`).
+(blueprint: `lem:torus-fourier-basis`, `lem:torus-fourier`), and bounded Fourier
+multipliers (`lem:fourier-multiplier`).
 -/
 
 noncomputable section
@@ -186,9 +187,7 @@ theorem span_normalizedChar_closure_eq_top :
       rintro _ ⟨k, rfl⟩
       have h := Submodule.smul_mem (Submodule.span ℂ (Set.range normalizedChar))
         (2 * π : ℂ) (Submodule.subset_span ⟨k, rfl⟩)
-      have hne : (2 * π : ℂ) ≠ 0 := by
-        exact_mod_cast (show (2 * π : ℝ) ≠ 0 by positivity)
-      rw [normalizedChar, smul_smul, mul_inv_cancel₀ hne, one_smul] at h
+      rw [normalizedChar, smul_smul, mul_inv_cancel₀ two_pi_ne_zero_complex, one_smul] at h
       exact h
   rw [hspan, span_charLp_closure_eq_top]
 
@@ -248,7 +247,7 @@ theorem exists_fourierCoeff (c : (ℤ × ℤ) → ℂ)
     (torusFourierBasis.repr.apply_symm_apply a)
   rw [torusFourierBasis_repr] at h
   change (2 * π : ℂ) * fourierCoeff (torusFourierBasis.repr.symm a) k = (2 * π : ℂ) * c k at h
-  exact mul_left_cancel₀ (by exact_mod_cast (show (2 * π : ℝ) ≠ 0 by positivity)) h
+  exact mul_left_cancel₀ two_pi_ne_zero_complex h
 
 /-- A square-summable coefficient sequence defines a convergent series in `L²`. -/
 theorem summable_fourier_series (c : (ℤ × ℤ) → ℂ)
@@ -266,5 +265,67 @@ theorem fourierCoeff_tsum (c : (ℤ × ℤ) → ℂ)
     simpa only [hg] using hasSum_fourier_series g
   rw [hs.tsum_eq]
   exact hg k
+
+/-! ### Bounded Fourier multipliers -/
+
+section Multiplier
+
+variable {m : (ℤ × ℤ) → ℂ} {C : ℝ}
+
+/-- Multiplying the coefficients by a bounded sequence keeps them square summable. -/
+theorem summable_sq_mul_fourierCoeff (hm : ∀ k, ‖m k‖ ≤ C) (g : L2) :
+    Summable (fun k => ‖m k * fourierCoeff g k‖ ^ 2) := by
+  refine Summable.of_nonneg_of_le (fun _ => sq_nonneg _) (fun k => ?_)
+    ((summable_sq_fourierCoeff g).mul_left (C ^ 2))
+  rw [norm_mul, mul_pow]
+  exact mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (norm_nonneg _) (hm k) 2) (sq_nonneg _)
+
+theorem fourierCoeff_multiplierSeries (hm : ∀ k, ‖m k‖ ≤ C) (g : L2) (k : ℤ × ℤ) :
+    fourierCoeff (∑' j, (m j * fourierCoeff g j) • charLp j) k = m k * fourierCoeff g k :=
+  fourierCoeff_tsum (fun j => m j * fourierCoeff g j) (summable_sq_mul_fourierCoeff hm g) k
+
+/-- The series `g ↦ ∑ m_k ĝ_k e_k` as a linear map. -/
+def multiplierₗ (hm : ∀ k, ‖m k‖ ≤ C) : L2 →ₗ[ℂ] L2 where
+  toFun g := ∑' k, (m k * fourierCoeff g k) • charLp k
+  map_add' g h := by
+    apply fourierCoeff_ext
+    intro k
+    rw [fourierCoeff_add, fourierCoeff_multiplierSeries hm, fourierCoeff_multiplierSeries hm,
+      fourierCoeff_multiplierSeries hm, fourierCoeff_add, mul_add]
+  map_smul' c g := by
+    apply fourierCoeff_ext
+    intro k
+    rw [RingHom.id_apply, fourierCoeff_smul, fourierCoeff_multiplierSeries hm,
+      fourierCoeff_multiplierSeries hm, fourierCoeff_smul]
+    ring
+
+theorem norm_multiplierₗ_le (hm : ∀ k, ‖m k‖ ≤ C) (g : L2) :
+    ‖multiplierₗ hm g‖ ≤ C * ‖g‖ := by
+  have hC : 0 ≤ C := (norm_nonneg _).trans (hm 0)
+  have hle : ‖multiplierₗ hm g‖ ^ 2 ≤ C ^ 2 * ‖g‖ ^ 2 := by
+    refine hasSum_le (fun k => ?_) (hasSum_sq_fourierCoeff (multiplierₗ hm g))
+      ((hasSum_sq_fourierCoeff g).mul_left (C ^ 2))
+    change (2 * π) ^ 2 * ‖fourierCoeff (∑' j, (m j * fourierCoeff g j) • charLp j) k‖ ^ 2 ≤ _
+    rw [fourierCoeff_multiplierSeries hm, norm_mul, mul_pow]
+    have h := pow_le_pow_left₀ (norm_nonneg _) (hm k) 2
+    have h2 : 0 ≤ (2 * π) ^ 2 * ‖fourierCoeff g k‖ ^ 2 := by positivity
+    nlinarith
+  rw [← mul_pow] at hle
+  exact (pow_le_pow_iff_left₀ (norm_nonneg _) (by positivity) two_ne_zero).mp hle
+
+/-- The Fourier multiplier `g ↦ ∑ m_k ĝ_k e_k` of a bounded sequence `m`, a bounded
+operator of norm at most `C` (blueprint: `lem:fourier-multiplier`). -/
+def fourierMultiplier (hm : ∀ k, ‖m k‖ ≤ C) : L2 →L[ℂ] L2 :=
+  (multiplierₗ hm).mkContinuous C (norm_multiplierₗ_le hm)
+
+theorem fourierCoeff_fourierMultiplier (hm : ∀ k, ‖m k‖ ≤ C) (g : L2) (k : ℤ × ℤ) :
+    fourierCoeff (fourierMultiplier hm g) k = m k * fourierCoeff g k :=
+  fourierCoeff_multiplierSeries hm g k
+
+theorem norm_fourierMultiplier_apply_le (hm : ∀ k, ‖m k‖ ≤ C) (g : L2) :
+    ‖fourierMultiplier hm g‖ ≤ C * ‖g‖ :=
+  norm_multiplierₗ_le hm g
+
+end Multiplier
 
 end NoEmbeddedEigenvalues
