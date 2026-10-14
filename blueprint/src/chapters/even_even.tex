@@ -278,10 +278,25 @@ $S_1^*\omega=S_2^*\omega=\omega$, then $\omega=0$ (manuscript
 
 \begin{proof}
 \uses{lem:rotation-characters, lem:ee-truncated-virial, lem:ee-gradient-traces, lem:pairing-limit, lem:ee-boundary-regularity, lem:ee-trace-positivity, lem:ee-density}
-Fix an $R$-character. Apply Lemma~\ref{lem:ee-truncated-virial} along good
-levels from Lemma~\ref{lem:pairing-limit}, applied to the transport pair
-$(\omega,\psi)$. By Lemma~\ref{lem:ee-gradient-traces} the first-order and
-normal boundary terms vanish in the limit, and the tangential and pairing
+First decompose $\omega$ into its two rotation characters. By
+Lemma~\ref{lem:rotation-characters}, $(R^*)^2=I$ on the even--even sector, so
+\[
+  \omega=\omega_++\omega_-,\qquad
+  \omega_\kappa=\tfrac12(\omega+\kappa R^*\omega),\qquad
+  R^*\omega_\kappa=\kappa\omega_\kappa,
+  \quad \kappa\in\{1,-1\}.
+\]
+Each $\omega_\kappa$ is still even--even and solves the eigenvalue problem
+with the same $\lambda$. It suffices to show that both components vanish.
+Fix either $\kappa=1$ or $\kappa=-1$ and, for the following argument, write
+$\omega$ for $\omega_\kappa$ and $\psi=\Delta^{-1}\omega$. Thus
+$R^*\omega=\kappa\omega$, and also $R^*\psi=\kappa\psi$ by commutation of
+$\Delta^{-1}$ with $R^*$.
+
+Apply Lemma~\ref{lem:ee-truncated-virial} along good levels from
+Lemma~\ref{lem:pairing-limit}, applied to the transport pair $(\omega,\psi)$.
+By Lemma~\ref{lem:ee-gradient-traces} the first-order and normal boundary
+terms vanish in the limit, and the tangential and pairing
 terms converge. Since $g=(P-\lambda)z$, $\Omega=-Pz$ and
 $|\psi_t|^2=\tfrac12\cosh^2s|g'|^2$ on the arc, the limit of the right side is
 $-2\sum_\gamma\mathcal F_\lambda(z_\gamma)\le0$ by
@@ -289,6 +304,8 @@ Lemmas~\ref{lem:ee-boundary-regularity} and~\ref{lem:ee-trace-positivity}. The
 left side is nonnegative and increasing as $\epsilon\to0$, so it is zero.
 Hence $\nabla\psi=0$ on $\Cell$. By $S_1$-symmetry $\psi$ takes the same
 constant on the negative cell; mean zero gives $\psi=0$, so $\omega=\Delta\psi=0$.
+This proves $\omega_\kappa=0$ for either choice of $\kappa$. Both components
+therefore vanish, and hence so does the original $\omega=\omega_++\omega_-$.
 \end{proof}
 
 \begin{remark}[Digest note]

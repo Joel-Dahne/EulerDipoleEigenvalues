@@ -16,9 +16,15 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:sector-projections` (the `P_ε` are commuting orthogonal projections,
    the identity on their sector) and `lem:stream-sector` (`ψ` has the parities
    of `ω`; short from `invLap_commute` and linearity of `invLap`).
-3. The user had paused starting the even–even sector. When requested, digest it
-   end to end: check identities with SymPy, explain the mechanism, write digest
-   notes, and formalize the algebraic nodes.
+3. The user has begun exploring the even–even proof. Initial source review
+   explained the four analytic inputs (truncated virial, pairing limit,
+   boundary regularity, trace positivity), the additional elementary rotation
+   decomposition, and the infrastructure needed to state them. This was an
+   orientation, not an independent verification of the analytic lemmas.
+   The conclusion in `even_even.tex` now explicitly decomposes into rotation
+   characters, fixes either sign, and reassembles the two vanishing components.
+   Next: digest it end to end, check identities with SymPy, pin down statement
+   interfaces, write digest notes, and formalize the algebraic nodes.
 4. Soon after: assess the largest gap, the odd–odd renormalized virial identity
    (`prop:dd-virial`). If correctness of the result is the priority, do this
    before 3.
