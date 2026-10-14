@@ -40,6 +40,12 @@ Direct computation modulo $2\pi$.
 \begin{lemma}[The symmetries commute with the equation]
 \label{lem:symmetries-commute}
 \uses{def:reflections, def:dipole, def:inverse-laplacian}
+\lean{NoEmbeddedEigenvalues.IsEigenSolution.reflect₁,
+  NoEmbeddedEigenvalues.IsEigenSolution.reflect₂,
+  NoEmbeddedEigenvalues.IsEigenSolution.rotate,
+  NoEmbeddedEigenvalues.CharacterSymmetry.invLap_commute,
+  NoEmbeddedEigenvalues.CharacterSymmetry.hasL0}
+\leanok
 For $T\in\{S_1,S_2,R\}$, the map $T^*$ is unitary on $L^2$, preserves $X$,
 and commutes with $\Delta^{-1}$ and with $L_0$ (in distributions).
 Consequently, if $\omega$ solves the eigenvalue problem~\ref{def:eigen-problem}
@@ -58,6 +64,8 @@ $\pm\Psi$ with the same sign as $\det DT$.
 \begin{definition}[Parity sectors]
 \label{def:sectors}
 \uses{def:reflections}
+\lean{NoEmbeddedEigenvalues.InSector, NoEmbeddedEigenvalues.sectorProjection}
+\leanok
 For $\epsilon=(\epsilon_1,\epsilon_2)\in\{1,-1\}^2$ let
 \[
   P_\epsilon=\tfrac14(I+\epsilon_1S_1^*)(I+\epsilon_2S_2^*).
@@ -71,6 +79,10 @@ sector, and $(+,-)$, $(-,+)$ the mixed sectors.
 \begin{lemma}[Sector decomposition]
 \label{lem:sector-reduction}
 \uses{def:sectors, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.sectorProjection_mem,
+  NoEmbeddedEigenvalues.sectorProjection_sum,
+  NoEmbeddedEigenvalues.IsEigenSolution.sectorProjection}
+\leanok
 The $P_\epsilon$ are commuting orthogonal projections with
 $\sum_\epsilon P_\epsilon=I$, and $P_\epsilon$ maps $L^2$ onto sector
 $\epsilon$. If $\omega$ solves the eigenvalue problem with parameter
@@ -87,6 +99,10 @@ invariant under each of them.
 \begin{lemma}[Swapping the mixed sectors]
 \label{lem:sector-swap}
 \uses{def:sectors, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.InSector.rotate,
+  NoEmbeddedEigenvalues.IsEigenSolution.rotate,
+  NoEmbeddedEigenvalues.mixed_other_exclusion}
+\leanok
 If $\omega$ lies in sector $(\epsilon_1,\epsilon_2)$, then $R^*\omega$ lies in
 sector $(\epsilon_2,\epsilon_1)$. In particular $R^*$ maps solutions in sector
 $(+,-)$ to solutions in sector $(-,+)$, and the sectors $(+,+)$ and $(-,-)$ are

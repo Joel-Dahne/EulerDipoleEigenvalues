@@ -1,11 +1,12 @@
 import NoEmbeddedEigenvalues.Fourier
 
 /-!
-# The setting and the main theorem
+# The setting and the eigenvalue equation
 
 The space `L²(𝕋²)` on the torus `𝕋² = (ℝ/2πℤ)²`, Fourier coefficients, the inverse Laplacian,
-the transport operator `L₀ = sin y ∂ₓ - sin x ∂_y`, its domain and the main theorem
-(blueprint: chapter `chap:setup`).
+the transport operator `L₀ = sin y ∂ₓ - sin x ∂_y`, its domain and reduction of the
+eigenvalue equation (blueprint: chapter `chap:setup`). The main theorem is assembled
+in `Main.lean` from the sector exclusions.
 
 ## Model
 
@@ -391,7 +392,7 @@ theorem hasFourierLaplacian_invLap (ω : L2) (hω : MeanZero ω) :
       exact_mod_cast (normSq_pos k hk).ne'
     field_simp
 
-/-! ### The domain, the linearized operator and the main theorem -/
+/-! ### The domain, the linearized operator and the eigenvalue equation -/
 
 /-- The operator domain `𝒟 = {g ∈ L²₀ : L₀ g ∈ L²}`. -/
 def Dom : Set L2 := {g | MeanZero g ∧ ∃ h, HasL0 g h}
@@ -403,11 +404,6 @@ theorem exists_hasL0_invLap (ω : L2) : ∃ h, HasL0 (invLap ω) h := by
 
 /-- `L ω = h` for the linearized operator `L = L₀(I + Δ⁻¹)` with domain `𝒟`. -/
 def HasL (ω h : L2) : Prop := ω ∈ Dom ∧ HasL0 (ω + invLap ω) h
-
-/-- **Main theorem.** The linearized operator has no nonzero purely imaginary eigenvalues
-`iλ`, `λ ≠ 0` (blueprint: `thm:main`). -/
-theorem main (lam : ℝ) (hlam : lam ≠ 0) (ω : L2) (h : HasL ω ((I * lam) • ω)) : ω = 0 := by
-  sorry
 
 /-- `ω` solves the eigenvalue problem `H(ω + ψ) = λω`, `ψ = Δ⁻¹ω`, `H = -iL₀`, i.e.
 `L₀(ω + ψ) = iλω` (blueprint: `def:eigen-problem`). -/

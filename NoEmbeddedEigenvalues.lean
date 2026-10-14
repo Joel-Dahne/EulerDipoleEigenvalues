@@ -1,5 +1,11 @@
 import NoEmbeddedEigenvalues.Fourier
+import NoEmbeddedEigenvalues.EvenEven
+import NoEmbeddedEigenvalues.OddOdd
+import NoEmbeddedEigenvalues.Mixed
+import NoEmbeddedEigenvalues.Main
+import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.Symmetry
+import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
 import NoEmbeddedEigenvalues.WeakDerivatives
