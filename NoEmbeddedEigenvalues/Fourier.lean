@@ -11,7 +11,7 @@ We transport orthogonality and continuous-function density from Mathlib's unit
 monomials, then construct the Hilbert basis `(2π)⁻¹ • charLp k` directly.
 This avoids a separate `L²` scaling equivalence. We prove reconstruction,
 Parseval, uniqueness and existence for prescribed square-summable coefficients
-(blueprint: `def:torus-fourier-basis`, `lem:torus-fourier`).
+(blueprint: `lem:torus-fourier-basis`, `lem:torus-fourier`).
 -/
 
 noncomputable section

@@ -408,7 +408,7 @@ of Lemma~\ref{lem:mixed-completion}.
 \begin{theorem}[Mixed exclusion]
 \label{thm:mixed-exclusion}
 \uses{def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.mixed_exclusion, NoEmbeddedEigenvalues.mixed_other_exclusion}
+\lean{NoEmbeddedEigenvalues.mixed_exclusion}
 \leanok
 If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
 $S_1^*\omega=-\omega$, $S_2^*\omega=\omega$, then $\omega=0$.
@@ -420,4 +420,22 @@ $K[\phi]\le0$ by Lemma~\ref{lem:mixed-K-identity} and
 $K[\phi]\ge\frac1{400}\int_\Cell|\psi|^2$ by Theorem~\ref{thm:mixed-coercivity},
 so $\psi=0$ on $\Cell$. The reflections determine $\psi$ on the other cell, so
 $\psi=0$ and $\omega=\Delta\psi=0$.
+\end{proof}
+
+\begin{corollary}[The other mixed sector]
+\label{cor:mixed-other-exclusion}
+\uses{def:eigen-problem, def:sectors}
+\lean{NoEmbeddedEigenvalues.mixed_other_exclusion}
+\leanok
+If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
+$S_1^*\omega=\omega$, $S_2^*\omega=-\omega$, then $\omega=0$.
+\end{corollary}
+
+\begin{proof}
+\uses{thm:mixed-exclusion, lem:sector-swap, lem:symmetries-commute}
+\leanok
+$R^*\omega$ solves the eigenvalue problem with the same $\lambda$
+(Lemma~\ref{lem:symmetries-commute}) and lies in sector $(-,+)$
+(Lemma~\ref{lem:sector-swap}), so $R^*\omega=0$ by
+Theorem~\ref{thm:mixed-exclusion}. Since $R^*$ is an isometry, $\omega=0$.
 \end{proof}

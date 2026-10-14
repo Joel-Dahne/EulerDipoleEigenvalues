@@ -9,15 +9,27 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 
 ## Next steps
 
-1. Review the newly added L² symmetry/sector Lean layer: pullbacks for
-   `S₁`, `S₂`, `R`, commutation with `Δ⁻¹` and `L₀`, sector projections,
-   sector preservation of the eigenvalue equation, and assembly of `main` from
-   the three sector exclusions. Lean checked the proofs, but human sign-off on
-   the statements is still needed.
-2. The three sector exclusion theorems are now Lean statements with `sorry`:
-   `even_even_exclusion`, `odd_odd_exclusion`, and `mixed_exclusion`. The main
-   theorem has no local `sorry`, but it depends on these three admitted
-   exclusions.
+1. Human sign-off on the Lean statements of the setup, symmetry and sector
+   layer. On 2026-10-14 an agent checked that they agree with the blueprint
+   and fixed the blueprint where they did not (see "Current state").
+2. Lean follow-ups from that review, not done yet:
+   - Lean lemmas for the two new non-`\leanok` nodes: `lem:sector-projections`
+     (the `P_ε` are commuting orthogonal projections, identity on their sector)
+     and `lem:stream-sector` (`ψ` has the parities of `ω`; short from
+     `invLap_commute`).
+   - `exists_hasL0_iff_summable` (the blueprint defines `L₀g ∈ L²` by square
+     summability, `Dom` by `∃ h, HasL0 g h`) and uniqueness `HasL0.unique`.
+   - Restructuring: move `fourierCoeff_add/smul`, `char_ne_zero`,
+     `char_add_point`, `char_neg_point` to `TorusL2.lean`; `invLap_add/smul`
+     and `IsEigenSolution.add/smul` to `Setup.lean`; move the Fourier-multiplier
+     derivative section of `Setup.lean` (not on the import path of `main`)
+     next to `WeakDerivatives.lean`; consider a general Fourier-multiplier
+     operator `L2 →L[ℂ] L2` (gives linearity and continuity of `invLap`); drop
+     the derivable fields `zero_iff` and `phase_ne_zero` of
+     `CharacterSymmetry`; one lemma for `(2π : ℂ) ≠ 0`; fix stale module
+     docstrings in `Symmetry.lean` and `Setup.lean`. `AGENTS.md` still says
+     one module per chapter, which no longer holds; update it or use
+     subdirectories.
 3. The user had paused starting the even–even sector. When requested, digest it
    end to end: check identities with SymPy, explain the mechanism, write digest
    notes, and formalize the algebraic nodes.
@@ -28,6 +40,15 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 ## Current state
 
 - **Blueprint**: all 13 chapters drafted, with the Sobolev tiers in place.
+  Blueprint/Lean consistency review (2026-10-14): definition nodes now contain
+  only definitions (`lem:torus-fourier-basis` and
+  `lem:fourier-derivative-composition` split off), the over-claimed
+  `lem:sector-reduction` was split into a proved part and the new nodes
+  `lem:sector-projections` and `lem:stream-sector` (used by `lem:ee-neumann`
+  and `lem:dd-orthogonality`), the second mixed sector is the new
+  `cor:mixed-other-exclusion`, no Lean name is listed in two nodes, and
+  proofs done in Lean carry `\leanok` (including `thm:main`, whose proof has
+  no local `sorry`; convention recorded in `AGENTS.md`).
   `intro.tex` and `blueprint/README.md` do not mention the tiers yet. Setup has
   separate proved nodes for integral characterizations, Fourier
   basis/reconstruction, inverse-Laplacian convergence and derivatives,

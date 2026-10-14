@@ -167,7 +167,12 @@ server has a file open, and keep work in one file at a time where possible.
   the whole point of the dependency graph. Every label in `\uses` must exist.
 - Lean status: `\lean{Name}`, `\leanok` (statement in Lean, or in a proof: proof
   done), `\mathlibok`, `\notready` (not precise enough yet to formalize). Only
-  mark a node `\leanok` when the Lean code covers the whole statement.
+  mark a node `\leanok` when the Lean code covers the whole statement;
+  assertions that Lean does not cover yet go in a separate node. In a proof,
+  `\leanok` means the Lean proof has no `sorry` of its own; it may cite
+  results that are still admitted, which the graph shows through their status.
+- A `definition` node contains only definitions; claims about them (that a
+  series converges, that a family is a basis) are separate `lemma` nodes.
 - New Lean modules must be imported in `NoEmbeddedEigenvalues.lean`. Lean
   names are in the namespace `NoEmbeddedEigenvalues`.
 - Manuscript cross-references are written as `(manuscript \texttt{(label)})`,

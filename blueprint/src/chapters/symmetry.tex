@@ -39,32 +39,61 @@ Direct computation modulo $2\pi$.
 
 \begin{lemma}[The symmetries commute with the equation]
 \label{lem:symmetries-commute}
-\uses{def:reflections, def:dipole, def:inverse-laplacian}
-\lean{NoEmbeddedEigenvalues.IsEigenSolution.reflect₁,
-  NoEmbeddedEigenvalues.IsEigenSolution.reflect₂,
-  NoEmbeddedEigenvalues.IsEigenSolution.rotate,
+\uses{def:reflections, def:dipole, def:inverse-laplacian, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.pullback, NoEmbeddedEigenvalues.reflect₁,
+  NoEmbeddedEigenvalues.reflect₂, NoEmbeddedEigenvalues.rotate,
+  NoEmbeddedEigenvalues.CharacterSymmetry,
+  NoEmbeddedEigenvalues.CharacterSymmetry.coefficient,
+  NoEmbeddedEigenvalues.CharacterSymmetry.meanZero,
   NoEmbeddedEigenvalues.CharacterSymmetry.invLap_commute,
-  NoEmbeddedEigenvalues.CharacterSymmetry.hasL0}
+  NoEmbeddedEigenvalues.CharacterSymmetry.hasL0,
+  NoEmbeddedEigenvalues.IsEigenSolution.reflect₁,
+  NoEmbeddedEigenvalues.IsEigenSolution.reflect₂,
+  NoEmbeddedEigenvalues.IsEigenSolution.rotate}
 \leanok
-For $T\in\{S_1,S_2,R\}$, the map $T^*$ is unitary on $L^2$, preserves $X$,
-and commutes with $\Delta^{-1}$ and with $L_0$ (in distributions).
+For $T\in\{S_1,S_2,R\}$, the map $T^*$ is a linear isometry of $L^2$,
+preserves $X$, commutes with $\Delta^{-1}$, and commutes with $L_0$ in the
+weak sense of Definition~\ref{def:dipole}: if $L_0g=h$ then $L_0T^*g=T^*h$.
 Consequently, if $\omega$ solves the eigenvalue problem~\ref{def:eigen-problem}
 with parameter $\lambda$, so does $T^*\omega$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:reflection-algebra}
-Each $T$ is an isometry of the flat torus, so $T^*$ commutes with $\Delta$ and
-preserves integrals. For $L_0$ one checks $DT\,Y=Y\circ T$ for the velocity
-field $Y=(\sin y,-\sin x)$. For instance $DS_1=\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$ and
-$Y(S_1(x,y))=(\sin x,-\sin y)=DS_1Y(x,y)$. Equivalently: $T$ maps $\Psi$ to
-$\pm\Psi$ with the same sign as $\det DT$.
+\leanok
+Each $T$ has the form $T(x)=a+Mx$ with $a\in\{0,(\pi,\pi)\}$ and $M$ a signed
+permutation matrix, so $T$ preserves Lebesgue measure and $T^*$ is an
+isometry. On characters, $T^*e_k=e_k(a)\,e_{M^\top k}$: the frequency map
+$k\mapsto M^\top k$ is $(-k_2,-k_1)$ for $S_1$, $(k_2,k_1)$ for $S_2$ and
+$(-k_2,k_1)$ for $R$, and the phase $e_k(a)$ is $(-1)^{k_1+k_2}$ for the
+reflections and $1$ for $R$. The frequency map is a bijection of $\Z^2$ that
+preserves $|k|$, so $T^*$ permutes Fourier coefficients up to unimodular
+phases. This preserves $\hat g_0=0$ and commutes with the multiplier
+$-1/|k|^2$ of $\Delta^{-1}$.
+
+For $L_0$, a pointwise computation gives $T^*(L_0e_k)=e_k(a)\,L_0e_{M^\top k}$,
+with the same phase and frequency. Since $T^*$ preserves inner products, the
+character-tested identity $\ip{h}{e_k}=-\ip{g}{L_0e_k}$ for all $k$ turns into
+the same identity for $T^*g$, $T^*h$, tested against $e_{M^\top k}$, which
+runs over all characters. The eigenvalue problem is built from $\Delta^{-1}$,
+$L_0$ and scalar multiples, so it is preserved.
 \end{proof}
+
+\begin{remark}[Why $L_0$ commutes with $T^*$]
+The pointwise identity for $L_0e_k$ is the condition $DT\,Y=Y\circ T$ for the
+velocity field $Y=(\sin y,-\sin x)$, which gives
+$L_0(g\circ T)=(L_0g)\circ T$ for smooth $g$. For instance
+$DS_1=\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$ and
+$Y(S_1(x,y))=(\sin x,-\sin y)=DS_1Y(x,y)$. Equivalently: $T$ maps $\Psi$ to
+$\pm\Psi$ with the same sign as $\det DT$, so $Y=\nabla^\perp\Psi$ is
+transported to itself. The relations of Lemma~\ref{lem:reflection-algebra}
+are not needed for this.
+\end{remark}
 
 \begin{definition}[Parity sectors]
 \label{def:sectors}
 \uses{def:reflections}
-\lean{NoEmbeddedEigenvalues.InSector, NoEmbeddedEigenvalues.sectorProjection}
+\lean{NoEmbeddedEigenvalues.paritySign, NoEmbeddedEigenvalues.InSector,
+  NoEmbeddedEigenvalues.sectorProjection}
 \leanok
 For $\epsilon=(\epsilon_1,\epsilon_2)\in\{1,-1\}^2$ let
 \[
@@ -73,35 +102,75 @@ For $\epsilon=(\epsilon_1,\epsilon_2)\in\{1,-1\}^2$ let
 The \emph{sector} $\epsilon$ consists of the $\omega$ with
 $S_1^*\omega=\epsilon_1\omega$ and $S_2^*\omega=\epsilon_2\omega$. We call
 $(+,+)$ the even--even sector, $(-,-)$ the odd--odd (or DD, ``Dirichlet--Dirichlet'')
-sector, and $(+,-)$, $(-,+)$ the mixed sectors.
+sector, and $(+,-)$, $(-,+)$ the mixed sectors. In Lean a parity is a
+boolean, \texttt{true} for $+1$ (even) and \texttt{false} for $-1$ (odd), and
+$P_\epsilon$ is expanded as
+$\frac14(I+\epsilon_1S_1^*+\epsilon_2S_2^*+\epsilon_1\epsilon_2S_1^*S_2^*)$.
 \end{definition}
 
 \begin{lemma}[Sector decomposition]
 \label{lem:sector-reduction}
 \uses{def:sectors, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.sectorProjection_mem,
+\lean{NoEmbeddedEigenvalues.reflect₁_involutive,
+  NoEmbeddedEigenvalues.reflect₂_involutive,
+  NoEmbeddedEigenvalues.reflect_commute,
+  NoEmbeddedEigenvalues.sectorProjection_mem,
   NoEmbeddedEigenvalues.sectorProjection_sum,
+  NoEmbeddedEigenvalues.IsEigenSolution.add,
+  NoEmbeddedEigenvalues.IsEigenSolution.smul,
   NoEmbeddedEigenvalues.IsEigenSolution.sectorProjection}
 \leanok
-The $P_\epsilon$ are commuting orthogonal projections with
-$\sum_\epsilon P_\epsilon=I$, and $P_\epsilon$ maps $L^2$ onto sector
-$\epsilon$. If $\omega$ solves the eigenvalue problem with parameter
-$\lambda$, then so does every $P_\epsilon\omega$, and $\psi$ has the same
-parities as $\omega$.
+$P_\epsilon$ maps $L^2$ into sector $\epsilon$, and
+$\sum_\epsilon P_\epsilon=I$. If $\omega$ solves the eigenvalue problem with
+parameter $\lambda$, then so does every $P_\epsilon\omega$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:reflection-algebra, lem:symmetries-commute}
-$S_1^*,S_2^*$ are commuting unitary involutions, and the problem is linear and
-invariant under each of them.
+\uses{lem:reflection-algebra, lem:symmetries-commute, lem:L0-linearity}
+\leanok
+By Lemma~\ref{lem:reflection-algebra}, $S_1^*$ and $S_2^*$ are commuting
+involutions on $L^2$, which gives the first two assertions by expanding
+$P_\epsilon$. The solutions of the eigenvalue problem with parameter $\lambda$
+form a linear subspace, since $\Delta^{-1}$ is linear and weak transport is
+linear (Lemma~\ref{lem:L0-linearity}), and this subspace is invariant under
+$S_1^*$ and $S_2^*$ by Lemma~\ref{lem:symmetries-commute}.
+\end{proof}
+
+\begin{lemma}[Sector projections are orthogonal]
+\label{lem:sector-projections}
+\uses{def:sectors}
+The $P_\epsilon$ are commuting orthogonal projections, and $P_\epsilon g=g$
+for $g$ in sector $\epsilon$. In particular $P_\epsilon$ maps $L^2$ onto
+sector $\epsilon$, and $L^2$ is the orthogonal direct sum of the four sectors.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sector-reduction, lem:symmetries-commute}
+$S_1^*$ and $S_2^*$ are isometric involutions, hence unitary and self-adjoint,
+and they commute. So each $\frac12(I\pm S_j^*)$ is an orthogonal projection,
+and these commute. On sector $\epsilon$, each factor of $P_\epsilon$ acts as
+the identity.
+\end{proof}
+
+\begin{lemma}[The stream function has the parities of $\omega$]
+\label{lem:stream-sector}
+\uses{def:sectors, def:inverse-laplacian}
+If $\omega\in X$ lies in sector $\epsilon$, then so does
+$\psi=\Delta^{-1}\omega$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:symmetries-commute}
+$S_j^*\psi=\Delta^{-1}S_j^*\omega=\Delta^{-1}(\epsilon_j\omega)=\epsilon_j\psi$,
+using that $\Delta^{-1}$ is linear.
 \end{proof}
 
 \begin{lemma}[Swapping the mixed sectors]
 \label{lem:sector-swap}
 \uses{def:sectors, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.InSector.rotate,
-  NoEmbeddedEigenvalues.IsEigenSolution.rotate,
-  NoEmbeddedEigenvalues.mixed_other_exclusion}
+\lean{NoEmbeddedEigenvalues.reflect₁_rotate,
+  NoEmbeddedEigenvalues.reflect₂_rotate,
+  NoEmbeddedEigenvalues.InSector.rotate}
 \leanok
 If $\omega$ lies in sector $(\epsilon_1,\epsilon_2)$, then $R^*\omega$ lies in
 sector $(\epsilon_2,\epsilon_1)$. In particular $R^*$ maps solutions in sector
@@ -111,6 +180,7 @@ invariant under $R^*$.
 
 \begin{proof}
 \uses{lem:reflection-algebra, lem:symmetries-commute}
+\leanok
 From $RS_1=S_2R$: $S_1^*R^*\omega=(R S_1)^*\omega=(S_2R)^*\omega
 =R^*S_2^*\omega=\epsilon_2R^*\omega$, and similarly for $S_2$.
 \end{proof}
