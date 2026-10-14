@@ -166,6 +166,30 @@ field with zero divergence, `∫ (L₀ g) φ = -∫ g L₀φ`; with `φ = conj e
 `⟪e_k, h⟫ = -⟪L₀ e_k, g⟫`. -/
 def HasL0 (g h : L2) : Prop := ∀ k : ℤ × ℤ, ⟪charLp k, h⟫_ℂ = -⟪L0charLp k, g⟫_ℂ
 
+/-- Weak transport sends zero to zero. -/
+theorem HasL0.zero : HasL0 0 0 := by
+  intro k
+  simp
+
+/-- Weak transport is additive. -/
+theorem HasL0.add {g₁ h₁ g₂ h₂ : L2} (h₁L0 : HasL0 g₁ h₁) (h₂L0 : HasL0 g₂ h₂) :
+    HasL0 (g₁ + g₂) (h₁ + h₂) := by
+  intro k
+  rw [inner_add_right, inner_add_right, h₁L0 k, h₂L0 k, neg_add]
+
+/-- Weak transport respects subtraction. -/
+theorem HasL0.sub {g₁ h₁ g₂ h₂ : L2} (h₁L0 : HasL0 g₁ h₁) (h₂L0 : HasL0 g₂ h₂) :
+    HasL0 (g₁ - g₂) (h₁ - h₂) := by
+  intro k
+  rw [inner_sub_right, inner_sub_right, h₁L0 k, h₂L0 k]
+  ring
+
+/-- Weak transport is complex linear, since the unknown occupies the second argument. -/
+theorem HasL0.smul {g h : L2} (hL0 : HasL0 g h) (c : ℂ) :
+    HasL0 (c • g) (c • h) := by
+  intro k
+  rw [inner_smul_right, inner_smul_right, hL0 k, mul_neg]
+
 /-- The weak definition of `L₀` agrees with the Fourier formula of the blueprint
 (`lem:transport-fourier`). -/
 theorem hasL0_iff_fourierCoeff (g h : L2) :
@@ -244,6 +268,129 @@ theorem summable_sq_transport_invLap (ω : L2) :
   simpa only [ENNReal.toReal_ofNat, Real.rpow_two] using
     ht.summable (by norm_num : 0 < (2 : ℝ≥0∞).toReal)
 
+/-! ### Derivatives defined by Fourier multipliers -/
+
+/-- Coordinate frequency: `j = 0` is the x coordinate, `j = 1` the y coordinate. -/
+def frequencyComponent (k : ℤ × ℤ) (j : Fin 2) : ℤ := if j = 0 then k.1 else k.2
+
+/-- A first partial derivative in the Fourier-multiplier sense, with output in `L²`.
+This is a partial-operator relation, not an assertion that every `L²` input has a derivative.
+Equivalence with testing against all smooth functions is not asserted here. -/
+def HasFourierPartial (j : Fin 2) (g h : L2) : Prop :=
+  ∀ k, fourierCoeff h k = (I * frequencyComponent k j) * fourierCoeff g k
+
+/-- A second partial derivative in the Fourier-multiplier sense, with output in `L²`.
+The intermediate first derivative is not assumed to be in `L²`; when it is,
+`hasFourierPartial_iff_second` identifies this with successive differentiation. -/
+def HasFourierSecondPartial (i j : Fin 2) (g h : L2) : Prop :=
+  ∀ k, fourierCoeff h k =
+    -((frequencyComponent k i : ℂ) * frequencyComponent k j) * fourierCoeff g k
+
+/-- Differentiating a first derivative again agrees with the second-order multiplier. -/
+theorem hasFourierPartial_iff_second {g d h : L2} {i j : Fin 2}
+    (hd : HasFourierPartial j g d) :
+    HasFourierPartial i d h ↔ HasFourierSecondPartial i j g h := by
+  unfold HasFourierPartial HasFourierSecondPartial
+  apply forall_congr'
+  intro k
+  rw [hd k]
+  have hm : (I * frequencyComponent k i) *
+      ((I * frequencyComponent k j) * fourierCoeff g k) =
+      -((frequencyComponent k i : ℂ) * frequencyComponent k j) * fourierCoeff g k := by
+    calc
+      _ = (I * I) * ((frequencyComponent k i : ℂ) * frequencyComponent k j) *
+          fourierCoeff g k := by ring
+      _ = _ := by rw [Complex.I_mul_I]; ring
+  rw [hm]
+
+/-- The Laplacian in the Fourier-multiplier sense. -/
+def HasFourierLaplacian (g h : L2) : Prop :=
+  ∀ k, fourierCoeff h k = -(normSq k : ℂ) * fourierCoeff g k
+
+/-- The Fourier Laplacian is the sum of the two pure second partial derivatives. -/
+theorem hasFourierLaplacian_of_second {g h₀ h₁ : L2}
+    (h₀deriv : HasFourierSecondPartial 0 0 g h₀)
+    (h₁deriv : HasFourierSecondPartial 1 1 g h₁) :
+    HasFourierLaplacian g (h₀ + h₁) := by
+  intro k
+  have hadd : fourierCoeff (h₀ + h₁) k = fourierCoeff h₀ k + fourierCoeff h₁ k := by
+    simp only [fourierCoeff, inner_add_right, mul_add]
+  rw [hadd, h₀deriv k, h₁deriv k]
+  simp only [frequencyComponent, normSq]
+  push_cast
+  ring
+
+/-- First and second coordinate multipliers are bounded by the Laplace frequency. -/
+theorem abs_frequencyComponent_le_normSq (k : ℤ × ℤ) (j : Fin 2) :
+    |frequencyComponent k j| ≤ normSq k := by
+  unfold frequencyComponent
+  split_ifs
+  · exact (abs_components_le_normSq k).1
+  · exact (abs_components_le_normSq k).2
+
+theorem abs_frequencyProduct_le_normSq (k : ℤ × ℤ) (i j : Fin 2) :
+    |frequencyComponent k i * frequencyComponent k j| ≤ normSq k := by
+  have hcross : |k.1 * k.2| ≤ normSq k := by
+    rw [abs_le]
+    unfold normSq
+    constructor <;> nlinarith [sq_nonneg (k.1 + k.2), sq_nonneg (k.1 - k.2)]
+  unfold frequencyComponent
+  split_ifs
+  · rw [← sq, abs_of_nonneg (sq_nonneg _)]
+    unfold normSq
+    nlinarith [sq_nonneg k.2]
+  · exact hcross
+  · simpa only [mul_comm] using hcross
+  · rw [← sq, abs_of_nonneg (sq_nonneg _)]
+    unfold normSq
+    nlinarith [sq_nonneg k.1]
+
+/-- Any integer multiplier dominated by `|k|²` yields square-summable stream coefficients. -/
+theorem summable_sq_invLap_multiplier (ω : L2) (a : (ℤ × ℤ) → ℤ)
+    (ha : ∀ k, |a k| ≤ normSq k) :
+    Summable (fun k => ‖(a k : ℂ) * fourierCoeff (invLap ω) k‖ ^ 2) :=
+  Summable.of_nonneg_of_le (fun _ => sq_nonneg _)
+    (fun k => pow_le_pow_left₀ (norm_nonneg _)
+      (norm_mul_fourierCoeff_invLap_le ω k (a k) (ha k)) 2)
+    (summable_sq_fourierCoeff ω)
+
+/-- The stream function has each first derivative in `L²`, defined by Fourier multipliers. -/
+theorem exists_fourierPartial_invLap (ω : L2) (j : Fin 2) :
+    ∃ h, HasFourierPartial j (invLap ω) h := by
+  have hs := summable_sq_invLap_multiplier ω (fun k => frequencyComponent k j)
+    (fun k => abs_frequencyComponent_le_normSq k j)
+  have hs' : Summable (fun k =>
+      ‖(I * frequencyComponent k j) * fourierCoeff (invLap ω) k‖ ^ 2) := by
+    simpa only [mul_assoc, norm_mul, Complex.norm_I, one_mul] using hs
+  obtain ⟨h, hh⟩ := exists_fourierCoeff _ hs'
+  exact ⟨h, hh⟩
+
+/-- The stream function has each second derivative in `L²`, defined by Fourier multipliers. -/
+theorem exists_fourierSecondPartial_invLap (ω : L2) (i j : Fin 2) :
+    ∃ h, HasFourierSecondPartial i j (invLap ω) h := by
+  have hs := summable_sq_invLap_multiplier ω
+    (fun k => frequencyComponent k i * frequencyComponent k j)
+    (fun k => abs_frequencyProduct_le_normSq k i j)
+  have hs' : Summable (fun k =>
+      ‖-((frequencyComponent k i : ℂ) * frequencyComponent k j) *
+        fourierCoeff (invLap ω) k‖ ^ 2) := by
+    simpa only [Int.cast_mul, neg_mul, norm_neg] using hs
+  obtain ⟨h, hh⟩ := exists_fourierCoeff _ hs'
+  exact ⟨h, hh⟩
+
+/-- On mean-zero inputs the stream function solves the Fourier-defined Poisson equation. -/
+theorem hasFourierLaplacian_invLap (ω : L2) (hω : MeanZero ω) :
+    HasFourierLaplacian (invLap ω) ω := by
+  intro k
+  rw [fourierCoeff_invLap]
+  by_cases hk : k = 0
+  · subst k
+    simpa [normSq, MeanZero] using hω
+  · simp only [hk, ite_false]
+    have hn : (normSq k : ℂ) ≠ 0 := by
+      exact_mod_cast (normSq_pos k hk).ne'
+    field_simp
+
 /-! ### The domain, the linearized operator and the main theorem -/
 
 /-- The operator domain `𝒟 = {g ∈ L²₀ : L₀ g ∈ L²}`. -/
@@ -270,7 +417,14 @@ def IsEigenSolution (lam : ℝ) (ω : L2) : Prop :=
 /-- Reduction to the real-parameter equation (blueprint: `lem:reduction`). -/
 theorem hasL_iff_isEigenSolution (lam : ℝ) (ω : L2) :
     HasL ω ((I * lam) • ω) ↔ IsEigenSolution lam ω := by
-  sorry
+  constructor
+  · intro h
+    exact ⟨h.1.1, h.2⟩
+  · rintro ⟨hmean, heigen⟩
+    obtain ⟨hψ, hψL0⟩ := exists_hasL0_invLap ω
+    have hω : HasL0 ω ((I * lam) • ω - hψ) := by
+      simpa only [add_sub_cancel_right] using heigen.sub hψL0
+    exact ⟨⟨hmean, ⟨_, hω⟩⟩, heigen⟩
 
 end NoEmbeddedEigenvalues
 

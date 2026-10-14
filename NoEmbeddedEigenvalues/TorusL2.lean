@@ -14,7 +14,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Real MeasureTheory Complex
-open scoped InnerProductSpace
+open scoped InnerProductSpace ComplexConjugate
 
 instance : Fact (0 < 2 * π) := ⟨by positivity⟩
 
@@ -64,6 +64,64 @@ def fourierCoeff (g : L2) (k : ℤ × ℤ) : ℂ := ((2 * π : ℂ) ^ 2)⁻¹ * 
 
 /-- `g ∈ L²₀`: `g` has mean zero. -/
 def MeanZero (g : L2) : Prop := fourierCoeff g 0 = 0
+
+/-- Character representatives agree almost everywhere with their continuous functions. -/
+theorem charLp_ae_eq (k : ℤ × ℤ) : charLp k =ᵐ[volume] char k :=
+  ContinuousMap.coeFn_toLp volume (char k)
+
+/-- Conjugation of a character reverses its frequency. -/
+theorem char_neg (k : ℤ × ℤ) (p : Torus) : char (-k) p = conj (char k p) := by
+  change AddCircle (2 * π) × AddCircle (2 * π) at p
+  change fourier (-k.1) p.1 * fourier (-k.2) p.2 =
+    conj (fourier k.1 p.1 * fourier k.2 p.2)
+  rw [fourier_neg, fourier_neg, map_mul]
+
+/-- The zero-frequency character is the constant function one. -/
+theorem char_zero (p : Torus) : char 0 p = 1 := by
+  change AddCircle (2 * π) × AddCircle (2 * π) at p
+  change fourier (T := 2 * π) 0 p.1 * fourier (T := 2 * π) 0 p.2 = 1
+  rw [fourier_zero, fourier_zero, mul_one]
+
+/-- An `L²` function on the finite-volume torus is integrable. -/
+theorem integrable_L2 (g : L2) : Integrable g := by
+  exact (Lp.memLp g).integrable (by norm_num)
+
+/-- The character pairing in the Fourier integral is integrable. -/
+theorem integrable_char_pairing (g : L2) (k : ℤ × ℤ) :
+    Integrable (fun p => conj (char k p) * g p) := by
+  have h := MeasureTheory.L2.integrable_inner (𝕜 := ℂ) (charLp k) g
+  apply h.congr
+  filter_upwards [charLp_ae_eq k] with p hp
+  simp only [hp, RCLike.inner_apply, mul_comm]
+
+/-- The Hilbert-space coefficient is the normalized Lebesgue integral. -/
+theorem fourierCoeff_eq_integral (g : L2) (k : ℤ × ℤ) :
+    fourierCoeff g k = ((2 * π : ℂ) ^ 2)⁻¹ * ∫ p, conj (char k p) * g p := by
+  unfold fourierCoeff
+  congr 1
+  rw [MeasureTheory.L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [charLp_ae_eq k] with p hp
+  simp only [hp, RCLike.inner_apply, mul_comm]
+
+/-- The same integral formula with the negative-frequency character. -/
+theorem fourierCoeff_eq_integral_char_neg (g : L2) (k : ℤ × ℤ) :
+    fourierCoeff g k = ((2 * π : ℂ) ^ 2)⁻¹ * ∫ p, char (-k) p * g p := by
+  simp only [fourierCoeff_eq_integral, char_neg]
+
+/-- The zero coefficient is the normalized integral of the function. -/
+theorem fourierCoeff_zero (g : L2) :
+    fourierCoeff g 0 = ((2 * π : ℂ) ^ 2)⁻¹ * ∫ p, g p := by
+  simp [fourierCoeff_eq_integral, char_zero]
+
+/-- The coefficient definition of mean zero agrees with zero Lebesgue integral. -/
+theorem meanZero_iff_integral_eq_zero (g : L2) :
+    MeanZero g ↔ (∫ p, g p) = 0 := by
+  rw [MeanZero, fourierCoeff_zero, mul_eq_zero]
+  have h : ((2 * π : ℂ) ^ 2)⁻¹ ≠ 0 := by
+    exact inv_ne_zero (pow_ne_zero 2 (by
+      exact_mod_cast (show (2 * π : ℝ) ≠ 0 by positivity)))
+  simp only [h, false_or]
 
 end NoEmbeddedEigenvalues
 

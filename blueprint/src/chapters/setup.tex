@@ -10,7 +10,10 @@ or equivalently distributionally.
 \label{def:torus}
 \lean{NoEmbeddedEigenvalues.L2, NoEmbeddedEigenvalues.char,
   NoEmbeddedEigenvalues.charLp, NoEmbeddedEigenvalues.fourierCoeff,
-  NoEmbeddedEigenvalues.MeanZero}
+  NoEmbeddedEigenvalues.MeanZero,
+  NoEmbeddedEigenvalues.fourierCoeff_eq_integral_char_neg,
+  NoEmbeddedEigenvalues.meanZero_iff_integral_eq_zero}
+\leanok
 Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$,
 \[
   X=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\},
@@ -18,6 +21,35 @@ Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)
 and $\hat g_k=(2\pi)^{-2}\int_{\T^2}g(x)e^{-ik\cdot x}\,dx$, $k\in\Z^2$, for the
 Fourier coefficients, and $g\in X$ iff $\hat g_0=0$.
 \end{definition}
+
+\begin{lemma}[Integral characterizations]
+\label{lem:fourier-integral}
+\uses{def:torus}
+\lean{NoEmbeddedEigenvalues.integrable_L2,
+  NoEmbeddedEigenvalues.integrable_char_pairing,
+  NoEmbeddedEigenvalues.fourierCoeff_eq_integral,
+  NoEmbeddedEigenvalues.fourierCoeff_eq_integral_char_neg,
+  NoEmbeddedEigenvalues.fourierCoeff_zero,
+  NoEmbeddedEigenvalues.meanZero_iff_integral_eq_zero}
+\leanok
+Every $g\in L^2$ is integrable, as is $\bar e_k g$ for each $k$. The
+inner-product definition of the Fourier coefficient agrees with
+\[
+ \hat g_k=(2\pi)^{-2}\int_{\T^2}\bar e_k g
+         =(2\pi)^{-2}\int_{\T^2}e_{-k}g.
+\]
+In particular $\hat g_0=(2\pi)^{-2}\int_{\T^2}g$, and
+$\hat g_0=0$ if and only if $\int_{\T^2}g=0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Finite volume gives $L^2\subset L^1$; the character pairing is integrable by
+the $L^2$ inner-product estimate. The $L^2$ representative of a character
+equals its continuous version almost everywhere, so the integral formula
+for the inner product gives the coefficient formula. Use
+$\bar e_k=e_{-k}$ and $e_0=1$, and cancel the nonzero normalization factor.
+\end{proof}
 
 \begin{definition}[Fourier Hilbert basis]
 \label{def:torus-fourier-basis}
@@ -67,15 +99,17 @@ $2\pi\hat g_k$. Surjectivity of the coordinate map gives the last assertion.
 \end{proof}
 
 \begin{remark}[Lean coverage]
-The Fourier facts above are fully proved in
-\texttt{NoEmbeddedEigenvalues/Fourier.lean}. Definition~\ref{def:torus} is
-not yet marked complete at the statement level: the integral characterizations
-of the Fourier coefficients and of mean zero still need explicit bridge lemmas.
-The \texttt{invLap} series now has proved convergence, coefficients and mean
-zero (Lemma~\ref{lem:inverse-laplacian-fourier}); the derivative assertions of
-Definition~\ref{def:inverse-laplacian} are still pending.
-The previous status markings were too broad; this is a coverage correction,
-not a change to the mathematical statements.
+The integral characterizations, Fourier Hilbert basis and reconstruction
+are proved in \texttt{TorusL2.lean} and \texttt{Fourier.lean}.
+The inverse-Laplacian series and its Fourier-defined derivative assertions
+are now proved as well (Lemmas~\ref{lem:inverse-laplacian-fourier}
+and~\ref{lem:inverse-laplacian-derivatives}). The earlier overly broad status
+markings have been restored only after these bridge lemmas were proved.
+For first partial derivatives, equivalence with testing against every smooth
+periodic test pair is now proved in \texttt{WeakDerivatives.lean}
+(Lemma~\ref{lem:partial-weak-equivalence}). The corresponding transport,
+second-order and Laplace bridges remain deferred; no Sobolev or trace theory
+is asserted here.
 \end{remark}
 
 \begin{remark}
@@ -83,10 +117,133 @@ The mean-zero space is called $X$ rather than $L^2_0$ because $L^2_0$ and
 $L_0^2$ (the square of the operator $L_0$) are typeset identically.
 \end{remark}
 
+\begin{definition}[Fourier-defined derivatives]
+\label{def:fourier-derivatives}
+\uses{def:torus}
+\lean{NoEmbeddedEigenvalues.frequencyComponent,
+  NoEmbeddedEigenvalues.HasFourierPartial,
+  NoEmbeddedEigenvalues.HasFourierSecondPartial,
+  NoEmbeddedEigenvalues.HasFourierLaplacian,
+  NoEmbeddedEigenvalues.hasFourierPartial_iff_second,
+  NoEmbeddedEigenvalues.hasFourierLaplacian_of_second}
+\leanok
+For $g,h\in L^2$, define $\partial_jg=h$ in the Fourier sense by
+$\hat h_k=ik_j\hat g_k$, and $\partial_i\partial_jg=h$ by
+$\hat h_k=-k_i k_j\hat g_k$.
+Define $\Delta g=h$ by $\hat h_k=-|k|^2\hat g_k$.
+If $d=\partial_jg$ belongs to $L^2$, then the relation
+$\partial_i d=h$ is equivalent to the second-order relation above.
+Also $\Delta g=\partial_1^2g+\partial_2^2g$ whenever both pure second
+partials belong to $L^2$.
+Lean indexes coordinates by \texttt{Fin 2}, with $0$ for $x$ and $1$ for $y$.
+\end{definition}
+
+\begin{proof}
+\leanok
+Composition of first-derivative multipliers uses $i^2=-1$.
+Adding the pure second-derivative multipliers gives
+$-k_1^2-k_2^2=-|k|^2$.
+\end{proof}
+
+\begin{remark}[Derivative-definition review]
+The signs and normalization match the physical characters:
+$\partial_j e_k=ik_j e_k$, $\partial_i\partial_j e_k=-k_i k_j e_k$,
+and $\Delta e_k=-|k|^2e_k$. There is no extra $2\pi$ factor because the
+physical torus has period $2\pi$. Mathlib's conjugate-linear first argument
+does not change these signs: the character-tested integration-by-parts
+identity is $\langle e_k,h\rangle=-\langle ik_j e_k,g\rangle$.
+The output in each relation is unique by Fourier coefficient uniqueness.
+These character identities, uniqueness, the coordinate convention and the
+pairing sign were checked in temporary Lean examples; no correction was needed.
+
+The relations are partial operators with $L^2$ output, not derivatives
+defined for every $L^2$ input. A second-order relation does not itself assume
+an intermediate first derivative in $L^2$; the iteration statement explicitly
+includes that hypothesis. The first-partial all-smooth-test equivalence is
+proved separately below; the second-order and Laplace bridges remain deferred.
+\end{remark}
+
+\begin{definition}[Classical periodic test pairs]
+\label{def:classical-tests}
+\uses{def:torus}
+\lean{NoEmbeddedEigenvalues.coordinateLine,
+  NoEmbeddedEigenvalues.HasClassicalPartial,
+  NoEmbeddedEigenvalues.IsSmoothTorusTest,
+  NoEmbeddedEigenvalues.HasWeakPartial,
+  NoEmbeddedEigenvalues.HasSmoothWeakPartial}
+\leanok
+A coordinate-test pair consists of continuous functions $\varphi,d\varphi$
+on $\T^2$ such that, with the other coordinate fixed, the periodic real lift
+of $\varphi$ has classical derivative $d\varphi$ in coordinate $j$.
+The test is smooth when the lift of $\varphi$ to $\R^2$ is $C^\infty$.
+For $g,h\in L^2$, the weak partial relation means
+\[
+ \int_{\T^2}h\varphi=-\int_{\T^2}g\,d\varphi
+\]
+for every coordinate-test pair; its smooth-test version quantifies only over
+pairs with smooth $\varphi$. These are bilinear pairings, without conjugation.
+In Lean the derivative is supplied as part of the test pair and certified by
+\texttt{HasDerivAt} on every real coordinate line. Smoothness is
+\texttt{ContDiff} at order $\infty$, not at order $\omega$ (analyticity).
+\end{definition}
+
+\begin{lemma}[Classical test derivative coefficients]
+\label{lem:classical-partial-fourier}
+\uses{def:classical-tests, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.HasClassicalPartial.hasFourierPartial}
+\leanok
+Every coordinate-test pair satisfies
+$\widehat{d\varphi}_k=ik_j\hat\varphi_k$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fourier-integral}
+\leanok
+On each coordinate circle, integrate $e^{-ik_jt}d\varphi$ by parts.
+Periodicity cancels the boundary term, including at frequency zero.
+Fubini and the coefficient integral formula give the result on $\T^2$.
+\end{proof}
+
+\begin{lemma}[Fourier and arbitrary-test weak partial derivatives]
+\label{lem:partial-weak-equivalence}
+\uses{def:fourier-derivatives, def:classical-tests}
+\lean{NoEmbeddedEigenvalues.hasFourierPartial_iff_smoothWeakPartial,
+  NoEmbeddedEigenvalues.hasFourierPartial_iff_weakPartial}
+\leanok
+For $g,h\in L^2$, the Fourier relation $\hat h_k=ik_j\hat g_k$ for every $k$
+is equivalent to
+\[
+ \int_{\T^2}h\varphi=-\int_{\T^2}g\,d\varphi
+\]
+for every smooth coordinate-test pair. In fact it is equivalent to the same
+identity for every continuous coordinate-test pair.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:classical-partial-fourier, def:torus-fourier-basis,
+  lem:fourier-integral}
+\leanok
+For the forward implication, expand both Hermitian pairings by Parseval.
+The coefficient identities for $h$ and $d\varphi$, together with
+$\overline{ik_j}=-ik_j$, identify their summands with opposite signs.
+This gives $\int\bar\varphi h=-\int\overline{d\varphi}g$.
+Apply it to the conjugate test pair to obtain the bilinear identity.
+For the reverse implication, test against the smooth character $e_{-k}$,
+whose classical derivative is $-ik_j e_{-k}$, and use the coefficient formula.
+This proof needs no pointwise Fourier differentiation or approximation of
+smooth tests together with their derivatives.
+\end{proof}
+
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
-\uses{def:torus}
-\lean{NoEmbeddedEigenvalues.invLap}
+\uses{def:torus, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.invLap,
+  NoEmbeddedEigenvalues.fourierCoeff_invLap,
+  NoEmbeddedEigenvalues.meanZero_invLap,
+  NoEmbeddedEigenvalues.exists_fourierPartial_invLap,
+  NoEmbeddedEigenvalues.exists_fourierSecondPartial_invLap,
+  NoEmbeddedEigenvalues.hasFourierLaplacian_invLap}
+\leanok
 For $\omega\in X$ let $\Delta^{-1}\omega\in X$ be the function with
 Fourier coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. For
 $\omega\in X$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
@@ -125,6 +282,31 @@ the coefficients of $\omega$. Choose an $L^2$ function with coefficients
 $c_k$ and apply Fourier reconstruction to that function. Its convergent
 series is the series defining $\Delta^{-1}\omega$, so the sum has the
 prescribed coefficients. The zero coefficient vanishes.
+\end{proof}
+
+\begin{lemma}[Inverse-Laplacian derivatives]
+\label{lem:inverse-laplacian-derivatives}
+\uses{def:inverse-laplacian, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.exists_fourierPartial_invLap,
+  NoEmbeddedEigenvalues.exists_fourierSecondPartial_invLap,
+  NoEmbeddedEigenvalues.hasFourierLaplacian_invLap}
+\leanok
+For every $\omega\in L^2$, all first and second Fourier-defined partial
+derivatives of $\psi=\Delta^{-1}\omega$ belong to $L^2$.
+If $\omega\in X$, then $\Delta\psi=\omega$ in the Fourier sense.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:torus-fourier, lem:inverse-laplacian-fourier}
+\leanok
+For integer frequencies, $|k_j|\le|k|^2$, and
+$|k_i k_j|\le|k|^2$. For the mixed product, use
+$2|k_1 k_2|\le k_1^2+k_2^2$; the pure products are squares.
+Thus each derivative coefficient is bounded in absolute value by
+$|\hat\omega_k|$, and is zero at $k=0$.
+Square summability and Fourier surjectivity supply the derivatives in $L^2$.
+For $k\ne0$, multiplication by $-|k|^2$ cancels the inverse-Laplacian
+multiplier. At $k=0$, the equation uses $\hat\omega_0=0$.
 \end{proof}
 
 \begin{definition}[The dipole and the transport operator]
@@ -184,6 +366,27 @@ in Mathlib's first inner-product argument leaves them unchanged. The minus
 sign in the weak pairing reverses the order of the shifted coefficients.
 Multiply the pairing by $(2\pi)^{-2}$; this factor is nonzero, so the
 implication also reverses. No Fourier completeness or Sobolev theory is needed.
+\end{proof}
+
+\begin{lemma}[Linearity of weak transport]
+\label{lem:L0-linearity}
+\uses{def:dipole}
+\lean{NoEmbeddedEigenvalues.HasL0.zero, NoEmbeddedEigenvalues.HasL0.add,
+  NoEmbeddedEigenvalues.HasL0.sub, NoEmbeddedEigenvalues.HasL0.smul}
+\leanok
+The character-tested weak relation $L_0g=h$ is complex linear:
+$L_0 0=0$, and if $L_0g_1=h_1$ and $L_0g_2=h_2$, then
+\[
+ L_0(g_1\pm g_2)=h_1\pm h_2,\qquad
+ L_0(cg_1)=ch_1 \quad(c\in\C).
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Both sides of the character-tested identity are linear in the unknown
+function. In Mathlib's convention the unknown lies in the second
+inner-product argument, so complex scalars are not conjugated.
 \end{proof}
 
 \begin{definition}[Operator domain]
@@ -284,11 +487,16 @@ every such solution lies in $\Dom$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:L0-stream}
+\uses{lem:L0-stream, lem:L0-linearity}
+\leanok
 $L\omega=L_0(\omega+\psi)$ and $H=-iL_0$, so $L\omega=i\lambda\omega$ is
-equivalent to $H(\omega+\psi)=\lambda\omega$. If the latter holds in
-distributions then $L_0\omega=i\lambda\omega-L_0\psi\in L^2$ by
-Lemma~\ref{lem:L0-stream}, so $\omega\in\Dom$.
+equivalent to $H(\omega+\psi)=\lambda\omega$. For the converse domain
+inclusion, choose $h_\psi\in L^2$ with $L_0\psi=h_\psi$ by
+Lemma~\ref{lem:L0-stream}. Subtracting this weak relation from
+$L_0(\omega+\psi)=i\lambda\omega$ gives
+$L_0\omega=i\lambda\omega-h_\psi\in L^2$ by
+Lemma~\ref{lem:L0-linearity}. Together with mean zero, this gives
+$\omega\in\Dom$. No step uses $\lambda\ne0$.
 \end{proof}
 
 \begin{remark}
@@ -341,6 +549,10 @@ $2\pi$ are now proved in \texttt{Fourier.lean}. Mathlib's unit-torus monomials
 are transported along the scaling map, at the level of continuous-function
 density and orthogonality; no separate $L^2$ scaling equivalence is needed.
 The inverse-Laplacian series now has proved convergence and the prescribed
-coefficients, and $L_0\Delta^{-1}\omega\in L^2$ is proved. The remaining setup
-work is to establish the derivative assertions and prove the reduction lemma.
+coefficients, and $L_0\Delta^{-1}\omega\in L^2$ is proved. The
+integral bridge lemmas and Fourier-defined derivative assertions are now
+proved, as is the reduction lemma. First-partial differentiation agrees with
+arbitrary smooth-test integration by parts by
+Lemma~\ref{lem:partial-weak-equivalence}. The analogous bridge for $L_0$
+remains deferred.
 \end{remark}

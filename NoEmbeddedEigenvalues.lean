@@ -2,3 +2,4 @@ import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.TorusL2
+import NoEmbeddedEigenvalues.WeakDerivatives
