@@ -11,15 +11,72 @@ or equivalently distributionally.
 \lean{NoEmbeddedEigenvalues.L2, NoEmbeddedEigenvalues.char,
   NoEmbeddedEigenvalues.charLp, NoEmbeddedEigenvalues.fourierCoeff,
   NoEmbeddedEigenvalues.MeanZero}
-\leanok
 Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$,
 \[
   X=\Big\{g\in L^2:\int_{\T^2}g\,dx\,dy=0\Big\},
 \]
 and $\hat g_k=(2\pi)^{-2}\int_{\T^2}g(x)e^{-ik\cdot x}\,dx$, $k\in\Z^2$, for the
-Fourier coefficients, so that $g\mapsto(\hat g_k)_k$ is (up to the factor
-$2\pi$) a unitary map $L^2\to\ell^2(\Z^2)$ and $g\in X$ iff $\hat g_0=0$.
+Fourier coefficients, and $g\in X$ iff $\hat g_0=0$.
 \end{definition}
+
+\begin{definition}[Fourier Hilbert basis]
+\label{def:torus-fourier-basis}
+\uses{def:torus}
+\lean{NoEmbeddedEigenvalues.torusFourierBasis,
+  NoEmbeddedEigenvalues.torusFourierBasis_apply,
+  NoEmbeddedEigenvalues.torusFourierBasis_repr}
+\leanok
+The normalized characters $b_k=(2\pi)^{-1}e_k$, $k\in\Z^2$, form a Hilbert
+basis of $L^2$. Its coordinate map is the unitary map
+$g\mapsto(2\pi\hat g_k)_k$ from $L^2$ to $\ell^2(\Z^2)$.
+\end{definition}
+
+\begin{proof}
+\leanok
+Scale the unit torus by $(t_1,t_2)\mapsto(2\pi t_1,2\pi t_2)$.
+This preserves probability Haar measure; Lebesgue measure on the physical
+torus is $(2\pi)^2$ times that measure. The characters pull back to the unit
+monomials. Transport their orthogonality and their dense span in continuous
+functions, then use density of continuous functions in $L^2$.
+\end{proof}
+
+\begin{lemma}[Fourier reconstruction and Parseval]
+\label{lem:torus-fourier}
+\uses{def:torus-fourier-basis}
+\lean{NoEmbeddedEigenvalues.hasSum_fourier_series,
+  NoEmbeddedEigenvalues.fourierCoeff_ext,
+  NoEmbeddedEigenvalues.hasSum_sq_fourierCoeff,
+  NoEmbeddedEigenvalues.summable_sq_fourierCoeff,
+  NoEmbeddedEigenvalues.exists_fourierCoeff}
+\leanok
+For every $g\in L^2$,
+\[
+  g=\sum_{k\in\Z^2}\hat g_k e_k\quad\text{in }L^2,
+  \qquad \|g\|_{L^2}^2=(2\pi)^2\sum_{k\in\Z^2}|\hat g_k|^2.
+\]
+Fourier coefficients determine $g$ uniquely. They are square summable, and
+every square-summable complex sequence is the coefficient sequence of some
+$g\in L^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{def:torus-fourier-basis}
+\leanok
+Apply Hilbert-basis reconstruction and the norm identity to the coordinates
+$2\pi\hat g_k$. Surjectivity of the coordinate map gives the last assertion.
+\end{proof}
+
+\begin{remark}[Lean coverage]
+The Fourier facts above are fully proved in
+\texttt{NoEmbeddedEigenvalues/Fourier.lean}. Definition~\ref{def:torus} is
+not yet marked complete at the statement level: the integral characterizations
+of the Fourier coefficients and of mean zero still need explicit bridge lemmas.
+The \texttt{invLap} series now has proved convergence, coefficients and mean
+zero (Lemma~\ref{lem:inverse-laplacian-fourier}); the derivative assertions of
+Definition~\ref{def:inverse-laplacian} are still pending.
+The previous status markings were too broad; this is a coverage correction,
+not a change to the mathematical statements.
+\end{remark}
 
 \begin{remark}
 The mean-zero space is called $X$ rather than $L^2_0$ because $L^2_0$ and
@@ -30,7 +87,6 @@ $L_0^2$ (the square of the operator $L_0$) are typeset identically.
 \label{def:inverse-laplacian}
 \uses{def:torus}
 \lean{NoEmbeddedEigenvalues.invLap}
-\leanok
 For $\omega\in X$ let $\Delta^{-1}\omega\in X$ be the function with
 Fourier coefficients $-\hat\omega_k/|k|^2$ for $k\ne0$ and $0$ for $k=0$. For
 $\omega\in X$ we always write $\psi=\Delta^{-1}\omega$ (the stream function
@@ -38,6 +94,38 @@ of the perturbation). Its derivatives up to order two, defined by the Fourier
 multipliers $ik_j$ and $-k_jk_l$, are again in $L^2$, and
 $\Delta\psi=\omega$.
 \end{definition}
+
+\begin{lemma}[Inverse-Laplacian Fourier series]
+\label{lem:inverse-laplacian-fourier}
+\uses{def:inverse-laplacian, def:torus}
+\lean{NoEmbeddedEigenvalues.norm_invLap_coeff_le,
+  NoEmbeddedEigenvalues.summable_sq_invLap_coeff,
+  NoEmbeddedEigenvalues.hasSum_invLap,
+  NoEmbeddedEigenvalues.fourierCoeff_invLap,
+  NoEmbeddedEigenvalues.meanZero_invLap}
+\leanok
+For every $\omega\in L^2$, set
+$c_0=0$ and $c_k=-\hat\omega_k/|k|^2$ for $k\ne0$.
+Then $|c_k|\le|\hat\omega_k|$, the sequence $(c_k)_k$ is square summable,
+and
+\[
+ \Delta^{-1}\omega=\sum_{k\in\Z^2}c_ke_k
+ \quad\text{converges in }L^2.
+\]
+The sum has Fourier coefficients $c_k$, and hence belongs to $X$ even when
+$\omega$ does not have mean zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:torus-fourier}
+\leanok
+For $k\ne0$, the positive integer $|k|^2$ is at least one, giving
+$|c_k|\le|\hat\omega_k|$. Square summability follows by comparison with
+the coefficients of $\omega$. Choose an $L^2$ function with coefficients
+$c_k$ and apply Fourier reconstruction to that function. Its convergent
+series is the series defining $\Delta^{-1}\omega$, so the sum has the
+prescribed coefficients. The zero coefficient vanishes.
+\end{proof}
 
 \begin{definition}[The dipole and the transport operator]
 \label{def:dipole}
@@ -67,6 +155,37 @@ $\int(L_0g)\varphi=-\int g\,L_0\varphi$), and expanding $\sin$ into
 characters gives the formula above.
 \end{definition}
 
+\begin{lemma}[Transport in Fourier coordinates]
+\label{lem:transport-fourier}
+\uses{def:dipole, def:torus}
+\lean{NoEmbeddedEigenvalues.L0char_fourier,
+  NoEmbeddedEigenvalues.L0charLp_fourier,
+  NoEmbeddedEigenvalues.fourier_transport_pairing,
+  NoEmbeddedEigenvalues.hasL0_iff_fourierCoeff}
+\leanok
+For every $k\in\Z^2$,
+\[
+ L_0e_k=\tfrac{k_1}{2}(e_{k+e_2}-e_{k-e_2})
+          -\tfrac{k_2}{2}(e_{k+e_1}-e_{k-e_1}).
+\]
+For $g,h\in L^2$, the character-tested weak relation $L_0g=h$ is equivalent to
+\[
+ \hat h_k=\tfrac12\big[k_1(\hat g_{k-e_2}-\hat g_{k+e_2})
+                    -k_2(\hat g_{k-e_1}-\hat g_{k+e_1})\big]
+ \quad\text{for every }k\in\Z^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use $i\sin t=(e^{it}-e^{-it})/2$ to expand $L_0e_k$, first as continuous
+functions and then in $L^2$. The coefficients $k_j/2$ are real, so conjugation
+in Mathlib's first inner-product argument leaves them unchanged. The minus
+sign in the weak pairing reverses the order of the shifted coefficients.
+Multiply the pairing by $(2\pi)^{-2}$; this factor is nonzero, so the
+implication also reverses. No Fourier completeness or Sobolev theory is needed.
+\end{proof}
+
 \begin{definition}[Operator domain]
 \label{def:domain}
 \uses{def:dipole, def:torus}
@@ -84,12 +203,28 @@ For $\omega\in X$, $L_0\Delta^{-1}\omega\in L^2$.
 \end{lemma}
 
 \begin{proof}
-By the Fourier formula of Definition~\ref{def:dipole},
-$|\widehat{(L_0\psi)}_k|\le\tfrac12|k|\sum_{\pm,j}|\hat\psi_{k\pm e_j}|$, and
-$|k|\,|\hat\psi_m|\le(|m|+1)|\hat\omega_m|/|m|^2\le2|\hat\omega_m|$ for
-$m=k\pm e_j\ne0$. Hence the coefficients are bounded by a finite sum of
-shifted copies of $|\hat\omega|$, which is square summable.
+\uses{lem:transport-fourier, lem:torus-fourier, lem:inverse-laplacian-fourier}
+\leanok
+Write $\psi=\Delta^{-1}\omega$, $a_k=k_1\hat\psi_k$ and $b_k=k_2\hat\psi_k$.
+For integer frequencies, $|k_j|\le k_j^2\le|k|^2$. Thus
+$|a_k|,|b_k|\le|\hat\omega_k|$ for $k\ne0$, and both sequences vanish at zero.
+They are square summable. Since shifts perpendicular to a component leave
+that component unchanged, the transport formula becomes
+\[
+ \widehat{(L_0\psi)}_k
+ =\tfrac12\big[(a_{k-e_2}-a_{k+e_2})-(b_{k-e_1}-b_{k+e_1})\big].
+\]
+Shifts, differences and scalar multiplication preserve $\ell^2$.
+Fourier surjectivity supplies $h\in L^2$ with these coefficients; the
+weak/Fourier equivalence gives $L_0\psi=h$.
 \end{proof}
+
+\begin{remark}[Proof simplification]
+The formal proof uses the unchanged component under a perpendicular shift,
+rather than bounding $|k|$ by $|k\pm e_j|+1$. This removes the extra constant
+in the earlier estimate. It also shows that the mean-zero assumption on
+$\omega$ is unnecessary here: $\Delta^{-1}$ discards the zero mode.
+\end{remark}
 
 \begin{definition}[Linearized operator]
 \label{def:linearized-operator}
@@ -185,13 +320,14 @@ The conclusion holds because $\mu\ne0$, as in the previous remark. (Resolved.)
 \begin{remark}[Lean model]
 Decided 2026-10-13, as a first attempt. $L^2$ is Mathlib's \texttt{Lp} for
 Lebesgue measure on $\T^2=\texttt{Real.Angle}\times\texttt{Real.Angle}$
-(\texttt{NoEmbeddedEigenvalues/Setup.lean}), not $\ell^2(\Z^2)$, because the
+(\texttt{NoEmbeddedEigenvalues/TorusL2.lean}), not $\ell^2(\Z^2)$, because the
 later chapters argue in physical space. The operators are defined through
 the characters $e_k$:
 (i) $L_0$ is a relation, \texttt{HasL0 g h} (``$L_0g=h$''), given by the weak
 definition tested against characters (Definition~\ref{def:dipole}); its
 equivalence with the Fourier formula is
-\texttt{hasL0\_iff\_fourierCoeff}. That smooth test functions give the same
+\texttt{hasL0\_iff\_fourierCoeff}, now proved in Lemma~\ref{lem:transport-fourier}.
+That smooth test functions give the same
 notion is a density argument, deferred until a later chapter needs it;
 (ii) $\Delta^{-1}\omega$ is the Fourier series
 $\sum_{k\ne0}(-\hat\omega_k/|k|^2)e_k$ in $L^2$, defined on all of $L^2$
@@ -200,7 +336,11 @@ $\sum_{k\ne0}(-\hat\omega_k/|k|^2)e_k$ in $L^2$, defined on all of $L^2$
 Lemma~\ref{lem:reduction} connects it to Definition~\ref{def:eigen-problem}.
 Mathlib's inner product is conjugate linear in the \emph{first} argument, the
 opposite of the convention above.
-The remaining infrastructure is Parseval for $\T^2$ with period $2\pi$: Mathlib
-has it only for the unit torus (\texttt{mFourierBasis}), so it must be
-transported along the scaling map.
+The Fourier Hilbert basis, reconstruction and Parseval for $\T^2$ with period
+$2\pi$ are now proved in \texttt{Fourier.lean}. Mathlib's unit-torus monomials
+are transported along the scaling map, at the level of continuous-function
+density and orthogonality; no separate $L^2$ scaling equivalence is needed.
+The inverse-Laplacian series now has proved convergence and the prescribed
+coefficients, and $L_0\Delta^{-1}\omega\in L^2$ is proved. The remaining setup
+work is to establish the derivative assertions and prove the reduction lemma.
 \end{remark}
