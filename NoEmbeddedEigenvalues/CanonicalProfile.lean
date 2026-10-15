@@ -178,7 +178,7 @@ theorem canonicalProfile_unique (hg : Integrable (deriv g))
 
 /-- If `g` approaches its end values `c±` at rate `e^{-α|s|}`, so does `Ω` approach `0`. -/
 theorem norm_canonicalProfile_le_exp (hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d)
-    (hg : Integrable (deriv g)) (hM : ∫ t, profileIntegrand lam g t = 0) {α C cp cm : ℝ}
+    (hg : Integrable (deriv g)) (hM : ∫ t, profileIntegrand lam g t = 0) {α C : ℝ} {cp cm : ℂ}
     (hα : 0 < α) (hp : ∀ s, 0 ≤ s → ‖g s - cp‖ ≤ C * Real.exp (-α * s))
     (hn : ∀ s, s ≤ 0 → ‖g s - cm‖ ≤ C * Real.exp (α * s)) :
     ∃ C', ∀ s, ‖canonicalProfile lam g s‖ ≤ C' * Real.exp (-α * |s|) := by

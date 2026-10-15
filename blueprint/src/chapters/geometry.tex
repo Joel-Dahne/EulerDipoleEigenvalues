@@ -532,12 +532,14 @@ $A(h_1,h_2)$ is the set of points of the punctured cell with $h_1<h<h_2$.
 \lean{NoEmbeddedEigenvalues.mem_orbitDomain,
   NoEmbeddedEigenvalues.dipoleOrbit_levelCoord_timeCoord,
   NoEmbeddedEigenvalues.timeCoord_dipoleOrbit,
+  NoEmbeddedEigenvalues.contDiffAt_timeCoord,
   NoEmbeddedEigenvalues.levelCoord_dipoleOrbit,
   NoEmbeddedEigenvalues.lintegral_cellSquare_eq,
   NoEmbeddedEigenvalues.integral_cellSquare_eq}
 \leanok
 The map $p\mapsto(h,t)$ is a bijection from the punctured cell onto the orbit domain,
-with inverse $(h,t)\mapsto\gamma_h(t)$. In these coordinates $dx\,dy=2\,dh\,dt$: for
+with inverse $(h,t)\mapsto\gamma_h(t)$. The time coordinate is smooth off the cut
+$\{b=0,a>0\}$. In these coordinates $dx\,dy=2\,dh\,dt$: for
 integrable $f$ on the cell, $t\mapsto f(\gamma_h(t))$ is integrable over $[-2L,6L)$ for
 almost every $h$, and
 $\int_{\Cell}f\,dx\,dy=2\int_0^1\int_{-2L(h)}^{6L(h)}f(\gamma_h(t))\,dt\,dh$; likewise for
@@ -557,8 +559,10 @@ The cut $\{b=0,a>0\}$ is a null set.
 \begin{remark}
 The definition uses the explicit inverse of $(h,t)\mapsto\gamma_h(t)$ rather than the
 orbit map itself, because Mathlib has no differentiable dependence of ODE solutions on
-initial data; smoothness and gradient bounds for $(h,t)$ follow by differentiating under
-the integral, and those of $\gamma_h$ by the inverse function theorem. That the time
+initial data. Local smoothness of $(h,t)$ can be established from the explicit integral,
+using a regular local chart to continue across $b=0,a<0$. Uniform bounds near the
+separatrix require the recentered quarter times of
+Definition~\ref{def:quarter-orbit-time}, not this global time. That the time
 coordinate inverts the flow on all of $[-2L,6L)$, and that the improper integral equals
 $2L(h)$, was checked numerically for $h=0.05,0.4,0.85$ (scratch computation,
 October 2026). The area element $2\,dh\,dt$ was item 4 of the manuscript's orbit comparison
@@ -677,26 +681,64 @@ Lemma~\ref{lem:orbit-saddle-distance} these are $\le C/d$ and $\le C/d^2$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:orbit-coordinate-gradients, lem:orbit-saddle-distance}
-Differentiate $(h(\gamma_h(t)),t(\gamma_h(t)))=(h,t)$ (inverse function theorem).
+\uses{lem:dipole-flow, lem:orbit-saddle-distance}
+Differentiate the flow equation with respect to $h$. Writing
+$J=\partial_h\gamma_h$ and $K=\partial_h^2\gamma_h$ gives
+$\dot J=DY(\gamma_h)J$ and
+$\dot K=DY(\gamma_h)K+D^2Y(\gamma_h)[J,J]$.
+The derivatives of the initial point $(\arccos h,-\arccos h)$ are bounded for small $h$,
+$\|DY\|\le1$ and $D^2Y$ is bounded. Gronwall gives
+$|J|\le Ce^{|t|}$ and then $|K|\le Ce^{2|t|}$, also for negative time.
+The comparison with $d$ follows from Lemma~\ref{lem:orbit-saddle-distance}.
+Differentiable dependence on the initial data (or a direct equivalent integral argument)
+and these estimates remain to be formalized.
 \end{proof}
+
+\begin{definition}[Recentered quarter-orbit times]
+\label{def:quarter-orbit-time}
+\uses{def:orbit-coordinates, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterTimeCoord}
+\leanok
+For $k=0,\ldots,3$, define the recentered time by
+$t_k(p)=t(R^{-k}p)=t(R^{3k}p)$, where $t$ is the global time coordinate and $R$ the
+quarter rotation. Lean uses the expression $R^{3k}$.
+\end{definition}
 
 \begin{lemma}[Gradients of the orbit coordinates]
 \label{lem:orbit-coordinate-gradients}
-\uses{def:orbit-coordinates, def:normal-tangent, def:cell-arcs}
+\uses{def:quarter-orbit-time, def:normal-tangent, def:period}
 \lean{NoEmbeddedEigenvalues.gradNorm_le_saddleDist,
-  NoEmbeddedEigenvalues.norm_fderiv_timeCoord_le}
+  NoEmbeddedEigenvalues.norm_fderiv_quarterTimeCoord_le}
 \leanok
-On the cell $|\nabla h|=\rho/2\le Cd$. For small $h$, off the cut $\{b=0,a>0\}$, $t$ is
-differentiable with $|\nabla t|\le C/d$.
+On the cell $|\nabla h|=\rho/2\le Cd$. There are $C$ and $0<h_0<1$ such that,
+for $k=0,\ldots,3$, $0<h<h_0$ and $|\tau|\le L(h)$, the recentered time $t_k$ is
+differentiable at $p=R^k\gamma_h(\tau)$ with $|\nabla t_k(p)|\le C/d(p)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:corner-coordinates}
-$\rho$ vanishes linearly at the saddles. For $t$ differentiate under the integral in
-Definition~\ref{def:orbit-coordinates}; near a corner use the coordinates of
-Lemma~\ref{lem:corner-coordinates}, in which $dt\sim du/u$.
+\uses{lem:orbit-coordinates, lem:orbit-level-derivatives, lem:orbit-saddle-distance}
+The bound for $\rho$ follows from $|\sin x|\le|x-m\pi|$ and
+$|\sin y|\le|y-n\pi|$ at every saddle $(m\pi,n\pi)$.
+For the base quarter, invert the Jacobian of $(h,\tau)\mapsto\gamma_h(\tau)$:
+its determinant has absolute value $2$, so
+$|\nabla t|\le C|\partial_h\gamma_h|\le Ce^{|\tau|}\le C/d$.
+Rotation is an isometry preserving $d$, which gives the same bound for each $t_k$.
 \end{proof}
+
+\begin{remark}[Digest note: correction of the global time-gradient bound]
+The earlier split statement lost the manuscript's quarter-orbit restriction and
+incorrectly asserted $|\nabla t|\le C/d$ for the single global time on the entire cell.
+Indeed, at $p_h=(-\arccos h,\arccos h)$ the definition gives $t(p_h)=4L(h)$ exactly
+(this equality was also checked in Lean without admissions). These points stay away
+from the cut and converge to a regular arc midpoint, not a saddle.
+Along $p=(b,-b)$, $b<0$, one has $t(p)=4L(\cos b)$ and
+$|\partial_b t|=4|\sin b|\,|L'(\cos b)|\sim2/h$, whereas $d(p_h)$ stays bounded away from zero.
+The blueprint and Lean statements now use the recentered times $t_k$ on their respective
+quarter patches. Local smoothness of the global time off its cut is stated separately
+in Lemma~\ref{lem:orbit-coordinates}; the orbitwise restriction lemma uses only that
+local regularity, not the uniform near-separatrix estimate. These are corrected
+statements, not newly formalized analytic proofs.
+\end{remark}
 
 \begin{lemma}[Flow-time integrals of the saddle distance]
 \label{lem:orbit-time-integrals}

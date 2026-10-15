@@ -7,6 +7,36 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 (`\leanok`), and open mathematical problems are in
 `blueprint/src/chapters/notes.tex`.
 
+## Statement-review corrections
+
+The three issues found in the even–even review have been corrected in Lean
+and the blueprint; their analytic proofs remain admitted.
+
+- Replaced the false global `norm_fderiv_timeCoord_le` with
+  `norm_fderiv_quarterTimeCoord_le` on the four separately recentered
+  quarter-orbit patches, using `quarterTimeCoord k p = timeCoord (R^(3k) p)`.
+  The global time's local smoothness off its cut is now the separate
+  `contDiffAt_timeCoord` statement in `lem:orbit-coordinates`.
+  `lem:coarea` needs only this local regularity, not the near-separatrix
+  uniform estimate. The level-derivative proof sketch uses variational
+  equations instead of trying to infer second derivatives from a
+  first-gradient bound. The counterexample to the former global claim is
+  retained at `lem:orbit-coordinate-gradients`.
+- `norm_canonicalProfile_le_exp` now has complex endpoint parameters
+  `cp cm`, with the exponent and bound constant still real.
+- `absolutelyContinuous_trace_of_H2` now requires its returned gradient
+  representative to be locally absolutely continuous on almost every
+  transverse line. This pins down its trace and makes it compatible with
+  other transverse ACL representatives. `exists_acl_trace` now quantifies
+  its nonnegative estimate constant before the open set and functions,
+  making it uniform with the rectangle and trace line fixed.
+  Both trace statements explicitly assume positive rectangle width.
+- Review axiom checks on thirteen representative proved results (weighted
+  boundary calculus, smooth virials, orbit periodicity/minimality, odd
+  Hardy, continuous representatives, lift Sobolev regularity, cutoff
+  localization and the canonical ODE) have no `sorryAx` dependency. This
+  does not validate the remaining admitted analytic results.
+
 ## Next steps
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
@@ -114,8 +144,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    reflection parity of `ψₙ`, `ψₜ`), `lem:ee-truncated-virial`,
    `lem:ee-gradient-traces` (limits along levels outside a null set; arc
    term via `ψ̃ ∘ γ`), `lem:ee-boundary-regularity` (`def:stream-lifts`).
-   The truncated virial identity itself (signs, factor `2 - ε`) is still
-   only the manuscript's claim. Batch C stated: `lem:normal-field-center`
+   The smooth cutoff algebra for the truncated virial identity has now
+   been independently rederived: its signs and factor `2 - ε` are correct
+   (remark at the node). The original-domain justification and the
+   almost-every-level limit remain admitted. Batch C stated: `lem:normal-field-center`
    (series expansion checked; `C^{2,1}`, `C^{1,1}` are sharp),
    `lem:local-to-global`, `lem:traces` (restated as absolute continuity on
    lines and line traces in diagonal coordinates, Gagliardo bound included,
@@ -225,9 +257,8 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   domain. Proved the pointwise flux identity, completion of squares including
   the endpoint correction, the zero-endpoint sum of squares, affine splitting,
   and positivity for equal or opposite endpoints, for every real λ. Dedicated
-  classical blueprint nodes are `\leanok` in statement and proof; the original
-  weighted H¹ positivity and flow-time coordinate-change nodes are not marked
-  formalized. No new `sorry`s. The three main boundary theorems use only
+  classical blueprint nodes are `\leanok` in statement and proof; weighted
+  H¹ positivity and the flow-time coordinate change are now formalized too. No new `sorry`s. The three main boundary theorems use only
   `propext`, `Classical.choice`, and `Quot.sound` (checked with `#print axioms`).
 - **Interval H¹** (`IntervalH1.lean`): `HasIntervalH1 a b F D` records a
   locally absolutely continuous complex representative on `(a,b)`, the a.e.
@@ -247,9 +278,9 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   depends on the still-unproved Hardy inequality. The increment bound,
   rescaled left-layer bound and both vanishing limits use only `propext`,
   `Classical.choice`, `Quot.sound` (checked with `#print axioms`).
-  No normed/quotient Sobolev space, weak-test bridge, density, ordinary
-  interval H² or periodic H¹ yet. The weighted second-order domain is now
-  implemented separately, as described below.
+  No normed/quotient Sobolev space, weak-test bridge or density yet.
+  Ordinary interval H² and periodic H¹ are now defined in `IntervalH1.lean`.
+  The weighted second-order domain is implemented separately, as below.
   The former blueprint `def:h1-interval` is split into bounded H¹, the proved
   endpoint lemma, zero-trace H¹, and separate deferred H²/periodic definitions;
   dependent nodes and the Sobolev-tier guidance now distinguish these. The
@@ -281,11 +312,13 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   value traces, and `D ∈ H¹(c,d)` for every interior subinterval (invert the
   weight, bounded away from zero there). The blueprint now gives the domain
   its own definition and three proved property nodes; full weighted
-  completion/positivity are still unformalized. The example
+  completion/positivity are now proved in `WeightedBoundaryForm.lean`. The example
   `F(x)=(1-x)^(3/2)` distinguishes the domain from ordinary H² by explicit
   differentiation/integration, not a Lean-formalized counterexample.
-  The distributional weak-test bridge, boundary-integrand integrability,
-  density and continuity results remain pending. Classical inclusion,
+  Boundary-integrand integrability is now proved in
+  `WeightedBoundaryForm.lean`. The distributional weak-test bridge,
+  density and continuity results remain pending (density is no longer
+  needed for positivity). Classical inclusion,
   local H¹ and affine subtraction use only `propext`, `Classical.choice`,
   `Quot.sound` (checked with `#print axioms`).
 - **Boundary cutoffs** (`BoundaryCutoff.lean`, `BoundaryCutoffConstruction.lean`):
@@ -320,16 +353,20 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full `lake build` and `just web` pass after first-order zero extension,
-  cutoff construction,
-  conditional-cutoff and weighted-domain,
-  endpoint-estimate, interval-H¹, boundary-form and rotation-character work;
-  the only Lean warnings are the three existing sector exclusion `sorry`s.
-  The interval/endpoint, boundary/weighted/cutoff, symmetry and sector modules have no warnings. The web build has only the usual missing image-converter messages
-  from plasTeX. Every `\lean` name in the blueprint resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
-  sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
-  `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,
-  `Classical.choice` and `Quot.sound`.
+- **Validation**: full Lean build and `just web` pass after the statement
+  corrections; `just graph thm:ee-exclusion` regenerates the even–even graph.
+  All 600 blueprint Lean references resolve without duplicates. The 118-node
+  even–even dependency closure has no cycles or missing labels. A scratch
+  Lean check also proves the former opposite-midpoint counterexample has
+  zero recentered time (`quarterTimeCoord 2 (-arccos h, arccos h) = 0`),
+  without admissions. Lean has 50 admitted declarations, including the
+  separately stated local smoothness input; the proved interval/endpoint,
+  boundary/weighted/cutoff, symmetry and sector modules have no warnings.
+  The web build has only the usual missing image-converter messages from
+  plasTeX. Every `\lean` name in the blueprint resolves. Axiom checks on
+  thirteen representative results from today's work use only `propext`,
+  `Classical.choice` and `Quot.sound`; the sector exclusions and their
+  admitted analytic inputs remain unproved.
 - **Reworked manuscript** (`manuscript.tex`): front matter and the introduction
   up to the main theorem. The other sections are placeholders. Neither
   manuscript was changed in the setup/Fourier/weak-derivative/symmetry-sector

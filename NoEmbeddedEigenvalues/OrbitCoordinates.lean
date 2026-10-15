@@ -28,6 +28,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Real MeasureTheory Set
+open scoped ContDiff
 
 /-! ### Orbit coordinates -/
 
@@ -63,6 +64,13 @@ theorem dipoleOrbit_levelCoord_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedC
 /-- The orbit map inverts the orbit coordinates: `t(γ_h(t)) = t` on the orbit domain. -/
 theorem timeCoord_dipoleOrbit {h t : ℝ} (hq : (h, t) ∈ orbitDomain) :
     timeCoord (dipoleOrbit h t) = t := by
+  sorry
+
+/-- The global time coordinate is smooth off its cut. There is no uniform
+    `C / saddleDist` bound for its derivative on the whole cell as the level tends to zero. -/
+theorem contDiffAt_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) :
+    ContDiffAt ℝ ∞ timeCoord p := by
   sorry
 
 theorem levelCoord_dipoleOrbit {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (t : ℝ) :
@@ -133,6 +141,11 @@ def rotLift (p : ℝ × ℝ) : ℝ × ℝ := (p.2, -p.1)
 /-- The four separatrix arcs `R^k ∘ γ`, `k = 0, …, 3`, bounding the cell, parametrized by
     flow time. -/
 def cellArc (k : ℕ) (s : ℝ) : ℝ × ℝ := rotLift^[k] (separatrixArc s)
+
+/-- Time recentered on the `k`-th quarter-orbit patch: `tₖ(p) = t(R⁻ᵏ p)`. Since `R⁴ = id`,
+    `R^(3k)` is `R⁻ᵏ`. On `Rᵏ(γ_h([-L(h), L(h)]))` this measures time from that arc's midpoint,
+    rather than accumulating the level-dependent time spent on previous quarters. -/
+def quarterTimeCoord (k : ℕ) (p : ℝ × ℝ) : ℝ := timeCoord (rotLift^[3 * k] p)
 
 /-- The saddles `(mπ, nπ)` with `m + n` odd. -/
 def saddleSet : Set (ℝ × ℝ) := {p | ∃ m n : ℤ, Odd (m + n) ∧ p = (m * π, n * π)}
@@ -226,15 +239,18 @@ theorem deriv_dipoleOrbit_level_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Io
       ‖deriv (fun h' ↦ deriv (fun h'' ↦ dipoleOrbit h'' t) h') h‖ ≤ C * exp (2 * |t|) := by
   sorry
 
-/-- `|∇h| ≤ C d` on the cell, and `|∇t| ≤ C/d` near the separatrix, off the cut
-    `{b = 0, a > 0}`. -/
+/-- `|∇h| ≤ C d` on the cell. -/
 theorem gradNorm_le_saddleDist :
     ∃ C : ℝ, ∀ p ∈ cellSquare, gradNorm p / 2 ≤ C * saddleDist p := by
   sorry
 
-theorem norm_fderiv_timeCoord_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ p ∈ puncturedCell,
-    levelCoord p < h₀ → ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1) →
-      DifferentiableAt ℝ timeCoord p ∧ ‖fderiv ℝ timeCoord p‖ ≤ C / saddleDist p := by
+/-- The inverse-time gradient bound holds on each separately recentered quarter-orbit
+    patch, not for the single global unwrapped time coordinate on the entire cell. -/
+theorem norm_fderiv_quarterTimeCoord_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ h₀ < 1 ∧
+    ∀ k < 4, ∀ h ∈ Ioo 0 h₀, ∀ t, |t| ≤ eighthPeriod h →
+      DifferentiableAt ℝ (quarterTimeCoord k) (rotLift^[k] (dipoleOrbit h t)) ∧
+        ‖fderiv ℝ (quarterTimeCoord k) (rotLift^[k] (dipoleOrbit h t))‖ ≤
+          C / saddleDist (rotLift^[k] (dipoleOrbit h t)) := by
   sorry
 
 /-- Flow-time integrals of powers of `d` over the quarter orbit. -/

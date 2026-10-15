@@ -519,32 +519,39 @@ def diagRect (I J : Set ℝ) : Set (ℝ × ℝ) := {p | (diagCoord p).1 ∈ I �
     derivatives `Fx, Fy`. Then `F` has a representative `G` that is locally absolutely
     continuous on almost every line `a = const` in `Q`, with derivative `∂_b = ∂ₓ - ∂_y`, and
     whose trace on the line `b = b₀` (`b₁ < b₀ < b₂`) has finite Gagliardo seminorm, bounded by
-    the `H¹(Q)` norm. -/
-theorem exists_acl_trace {U : Set (ℝ × ℝ)} (hU : IsOpen U) {F Fx Fy : ℝ × ℝ → ℂ}
-    {a₀ a₁ b₁ b₂ b₀ : ℝ} (hQ : diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U)
-    (hb₀ : b₀ ∈ Set.Ioo b₁ b₂) (hF : MemLp F 2 (volume.restrict U))
-    (hFx : MemLp Fx 2 (volume.restrict U)) (hFy : MemLp Fy 2 (volume.restrict U))
-    (hx : HasWeakPartialOn U 0 F Fx) (hy : HasWeakPartialOn U 1 F Fy) :
+    the `H¹(Q)` norm. The constant depends only on the rectangle and the trace line, not
+    on `U`, the function, or its weak derivatives. -/
+theorem exists_acl_trace {a₀ a₁ b₁ b₂ b₀ : ℝ} (ha : a₀ < a₁)
+    (hb₀ : b₀ ∈ Set.Ioo b₁ b₂) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : Set (ℝ × ℝ)) (F Fx Fy : ℝ × ℝ → ℂ),
+      IsOpen U → diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U →
+      MemLp F 2 (volume.restrict U) → MemLp Fx 2 (volume.restrict U) →
+      MemLp Fy 2 (volume.restrict U) → HasWeakPartialOn U 0 F Fx → HasWeakPartialOn U 1 F Fy →
     ∃ G : ℝ × ℝ → ℂ, (∀ᵐ p ∂(volume.restrict U), G p = F p) ∧
       (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)),
         (∀ c d, b₁ < c → c ≤ d → d < b₂ →
           AbsolutelyContinuousOnInterval (fun b ↦ G (diagInv (a, b))) c d) ∧
         ∀ᵐ b ∂(volume.restrict (Set.Ioo b₁ b₂)),
           HasDerivAt (fun b ↦ G (diagInv (a, b))) (Fx (diagInv (a, b)) - Fy (diagInv (a, b))) b) ∧
-      ∃ C : ℝ, ∫⁻ a in Set.Ioo a₀ a₁, ∫⁻ a' in Set.Ioo a₀ a₁,
+      (∫⁻ a in Set.Ioo a₀ a₁, ∫⁻ a' in Set.Ioo a₀ a₁,
           ENNReal.ofReal (‖G (diagInv (a, b₀)) - G (diagInv (a', b₀))‖ ^ 2 / (a - a') ^ 2) ≤
         ENNReal.ofReal (C * ∫ p in diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂),
-          ‖F p‖ ^ 2 + ‖Fx p‖ ^ 2 + ‖Fy p‖ ^ 2) := by
+          ‖F p‖ ^ 2 + ‖Fx p‖ ^ 2 + ‖Fy p‖ ^ 2)) := by
   sorry
 
 /-- Traces of continuous `H²` functions on a line `b = b₀` are absolutely continuous, with
-    derivative the trace of `∂_a F = ∂ₓF + ∂_yF`, which is square integrable. -/
+    derivative the trace of `∂_a F = ∂ₓF + ∂_yF`, which is square integrable. The returned
+    representative of `Fx + Fy` is also locally absolutely continuous on almost every
+    transverse line, so its values on `b = b₀` are genuine ACL trace values. -/
 theorem absolutelyContinuous_trace_of_H2 {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    {F Fx Fy : ℝ × ℝ → ℂ} {a₀ a₁ b₁ b₂ b₀ : ℝ}
+    {F Fx Fy : ℝ × ℝ → ℂ} {a₀ a₁ b₁ b₂ b₀ : ℝ} (ha : a₀ < a₁)
     (hQ : diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U) (hb₀ : b₀ ∈ Set.Ioo b₁ b₂)
     (hFc : ContinuousOn F U) (hF : MemSobolevOn 2 U F) (hx : HasWeakPartialOn U 0 F Fx)
     (hy : HasWeakPartialOn U 1 F Fy) :
     ∃ H : ℝ × ℝ → ℂ, (∀ᵐ p ∂(volume.restrict U), H p = Fx p + Fy p) ∧
+      (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)), ∀ c d,
+        b₁ < c → c ≤ d → d < b₂ →
+          AbsolutelyContinuousOnInterval (fun b ↦ H (diagInv (a, b))) c d) ∧
       (∀ c d, a₀ < c → c ≤ d → d < a₁ →
         AbsolutelyContinuousOnInterval (fun a ↦ F (diagInv (a, b₀))) c d) ∧
       (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)),

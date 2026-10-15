@@ -248,6 +248,13 @@ in (3) is $1$: on each half line the bound is a one-sided convolution with a ker
 of mass $1$, and the two half lines use disjoint parts of $e^{|s|}g'$.
 \end{remark}
 
+\begin{remark}[Digest note: complex endpoint values in Lean]
+The statement review found that \texttt{norm\_canonicalProfile\_le\_exp} restricted
+$c_+,c_-$ to real numbers. Its parameters are now complex, with $\alpha,C$ still real,
+matching the arc traces and their complex saddle values. The integration-by-parts
+proof above is unchanged. This corrects the statement; the decay proof remains admitted.
+\end{remark}
+
 \begin{lemma}[Good windows]
 \label{lem:good-windows}
 \uses{def:period}
@@ -303,7 +310,9 @@ tails of $\Omega\bar g$ vanish by exponential decay.
 
 Let $d$ denote distance to the saddle set. In this section $(v,f)$ is a
 transport pair on a neighbourhood of the separatrix, decomposed into rotation
-characters as in Lemma~\ref{lem:rotation-characters}.
+characters as in Lemma~\ref{lem:rotation-characters}. All time and level derivatives in
+the quarter-orbit estimates below use separately recentered coordinates $t_k$ from
+Definition~\ref{def:quarter-orbit-time}, not the global unwrapped time.
 
 \begin{definition}[Quarter-orbit numerator and divisor]
 \label{def:numerator}
@@ -381,7 +390,8 @@ while $\int d^{-4}dt=O(h^{-2})$.
 Suppose in addition that $hN''\in L^2(0,h_0)$, $C/h\in L^2(0,h_0)$, and
 $\int_0^{h_0}\!\int_{-L}^L|\nabla f_h|^2d^{-(4-2\delta)}\,dt\,dh<\infty$. Then
 $d\,\partial_hv$ and $d^{-1}\partial_tv$ are square integrable in the orbit
-coordinates, and hence $v\in H^1$ on each cell's separatrix neighbourhood.
+coordinates on each separately recentered quarter-orbit patch, and hence $v\in H^1$
+on each cell's separatrix neighbourhood.
 If moreover the midpoint value $A(h)=z_h(0)$ satisfies $A(0)=0$, the trace of
 $v$ on the regular edges is zero.
 \end{lemma}
@@ -393,8 +403,8 @@ gives $C'\in L^2$. The midpoint formula
 $A(h)=ie^{2i\lambda L}C+i\int_{-L}^0f_he^{-i\lambda t}dt$ is then in $H^1$,
 and $z_h(t)=e^{i\lambda t}A(h)+i\int_0^te^{i\lambda(t-u)}f_h(u)\,du$
 controls $\partial_hz$. Finally $\partial_tv=i\lambda v-\partial_tf$, and the
-inverse coordinate bounds $|\nabla h|\le Cd$, $|\nabla t|\le C/d$ convert to
-physical derivatives.
+inverse coordinate bounds $|\nabla h|\le Cd$, $|\nabla t_k|\le C/d$ on each rotated
+quarter-orbit patch convert to physical derivatives.
 \end{proof}
 
 \begin{remark}[Digest note]

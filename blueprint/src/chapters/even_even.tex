@@ -143,6 +143,21 @@ integrate by parts twice. Let $\chi$ tend to $\mathbf 1_{(\epsilon,2]}$; coarea
 and Lebesgue differentiation give the identity at almost every level.
 \end{proof}
 
+\begin{remark}[Cutoff algebra checked independently]
+Writing $s=\Psi$, $q=\chi(s)$, $K=|\nabla\psi|^2+
+\operatorname{Re}(\omega\bar\psi)$ and
+$B=|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)$, the quadratic
+virial identity, after transferring its Laplacian to $|\psi|^2$, becomes
+$0=\int q\mathcal J-\int qK+\int(s-2)\chi'(s)B$.
+Since $K=\Div\operatorname{Re}(\bar\psi\nabla\psi)$ and
+$\nabla s\cdot\nabla\psi=-\rho\psi_n$, integration by parts gives
+$\int qK=\int\chi'(s)\rho\operatorname{Re}(\psi\overline{\psi_n})$.
+This verifies the signs and the factor $2-\epsilon$ in the displayed
+identity independently of the manuscript. This is a smooth cutoff
+derivation, not a proof of the remaining $L^2$ justification and
+almost-every-level limit.
+\end{remark}
+
 \section{Boundary limits}
 
 \begin{lemma}[Neumann condition]

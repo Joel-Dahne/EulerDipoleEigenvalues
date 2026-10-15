@@ -576,24 +576,36 @@ independent of $r$.
 \lean{NoEmbeddedEigenvalues.exists_acl_trace,
   NoEmbeddedEigenvalues.absolutelyContinuous_trace_of_H2}
 \leanok
-Let $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ be a rectangle in diagonal coordinates, $b_0\in(b_1,b_2)$,
-and $F\in H^1$ on a neighbourhood of $Q$ with weak derivatives $F_x,F_y$.
+Fix $a_0<a_1$, $b_1<b_0<b_2$, and let $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal
+coordinates. There is a constant $C\ge0$, depending only on these five geometric
+parameters, such that for every open $U\supset Q$ and $F\in H^1(U)$ with weak
+derivatives $F_x,F_y$:
 \begin{enumerate}
   \item $F$ has a representative that is locally absolutely continuous on almost every
         line $a=\mathrm{const}$ in $Q$, with derivative $\partial_bF=F_x-F_y$, and its trace on
         the line $b=b_0$ has Gagliardo seminorm over $(a_0,a_1)$ at most
-        $C\|F\|_{H^1(Q)}$.
-  \item If moreover $F\in H^2$ is continuous, then $a\mapsto F(a,b_0)$ is locally absolutely
-        continuous with derivative the trace of $\partial_aF=F_x+F_y$, which is in
-        $L^2(a_0,a_1)$.
+        $C^{1/2}\|F\|_{H^1(Q)}$ (equivalently, the squared seminorm is bounded by
+        $C\int_Q(|F|^2+|F_x|^2+|F_y|^2)$).
+  \item If moreover $F\in H^2(U)$ is continuous, then there is a representative
+        $H=F_x+F_y$ almost everywhere on $U$ that is locally absolutely continuous
+        on almost every transverse line $a=\mathrm{const}$ in $Q$.
+        The function $a\mapsto F(a,b_0)$ is locally absolutely continuous with
+        derivative $H(a,b_0)$ almost everywhere, and $H(\cdot,b_0)\in L^2(a_0,a_1)$.
+        Thus the derivative is the ACL trace of $\partial_aF$, not an arbitrary
+        assignment of gradient values on the line.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-For smooth $F$ these are the fundamental theorem of calculus along lines and the
-classical trace estimate (in Gagliardo form: write $F(a,b_0)-F(a',b_0)$ through the
-point $((a+a')/2,b_0+|a-a'|)$ and integrate); the general case follows by density of smooth
-functions in $H^1(Q)$ and the closedness of absolutely continuous limits.
+The standard trace estimate on a rectangle, using a bounded extension and the
+Gagliardo formula, has a constant depending only on the rectangle and the chosen
+line. Fubini and the one-dimensional weak-derivative FTC give the transverse ACL
+representative. For $H^2$ data, approximate in $H^2(Q)$: the traces of $F$ and of its
+first derivatives converge in $L^2$ on the line. Tangential integration by parts
+passes to the limit, giving the weak derivative of the trace as the ACL trace of
+$F_x+F_y$. The one-dimensional FTC and continuity of $F$ identify its locally
+absolutely continuous representative with $F(\cdot,b_0)$. These trace estimates and
+approximation arguments remain to be formalized.
 \end{proof}
 
 \begin{remark}[Digest note: traces]
@@ -607,6 +619,15 @@ $\tilde\psi\circ\gamma$ is absolutely continuous with $g'\in L^1(ds)$ (Melnikov)
 form of $g'$ used in Lemma~\ref{lem:ee-gradient-traces}. Since the trace bound is in
 Gagliardo form, the $H^{1/2}$ link (Lemma~\ref{lem:sobolev-fractional-gagliardo}) is no
 longer needed in the even--even argument.
+
+The statement review found two omissions in Lean, now corrected:
+\texttt{absolutelyContinuous\_trace\_of\_H2} now requires transverse local absolute
+continuity of its returned $H$, and \texttt{exists\_acl\_trace} quantifies $C$ before
+$U,F,F_x,F_y$. The former pins down the trace: two transverse ACL representatives
+equal almost everywhere in two dimensions agree along almost every entire transverse
+line, by Fubini and continuity, hence also at $b=b_0$. The latter makes the estimate
+uniform in the function, with the rectangle and trace line fixed. These strengthened
+statements remain admitted.
 \end{remark}
 
 \section{Measure theory and operator theory}
@@ -624,7 +645,9 @@ $(L_0g)(\gamma_h(t))$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:orbit-coordinate-gradients}
+\uses{lem:orbit-coordinates}
+Use smooth coordinate charts off the time cut on the compact annulus; a second time
+cut supplies charts across the first one. No uniform estimate as $h\to0$ is needed.
 In orbit coordinates $L_0=\partial_t$ and $dx\,dy=2\,dh\,dt$. Testing the weak equation with
 $\alpha(h)\beta(t)$ and letting $\alpha$ run through a countable dense family shows that for
 almost every $h$ the function $t\mapsto g(\gamma_h(t))$ has weak derivative
@@ -634,9 +657,11 @@ integrable weak derivative has an absolutely continuous representative.
 
 \begin{remark}
 The manuscript's coarea formula is now the change of variables of
-Lemma~\ref{lem:orbit-coordinates}: on the cell the orbit coordinates (level, flow time)
-are an explicit diffeomorphism onto a product, so no general coarea formula is needed. This
-lemma keeps the remaining part, $H^1$ along almost every orbit.
+Lemma~\ref{lem:orbit-coordinates}: after cutting each periodic orbit the level and
+flow time give local smooth charts, with $dx\,dy=2\,dh\,dt$, so no general coarea formula
+is needed. The global time itself has a cut and a level-dependent range, not a global
+diffeomorphism onto a product. This lemma keeps the remaining part, $H^1$ along almost
+every orbit.
 \end{remark}
 
 \begin{definition}[The transport operator]
