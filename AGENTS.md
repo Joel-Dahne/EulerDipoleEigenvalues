@@ -92,10 +92,12 @@ motivation, and standard facts cited rather than proved.
   `BoundaryForm.lean` proves the classical boundary positivity argument;
   `WeightedBoundary.lean` defines its weighted second-order domain and proves
   classical inclusion, local regularity and affine stability.
-  `BoundaryCutoff.lean` proves multiplier stability and convergence for
-  uniformly controlled cutoff families. `BoundaryCutoffConstruction.lean`
-  constructs a smooth family with uniform bounds and proves unconditional
-  endpoint cutoff approximation; interior mollification is still pending.
+  `WeightedBoundaryForm.lean` extends the completion of squares, affine
+  splitting and positivity of the boundary form to that domain by exhausting
+  the interval. `BoundaryCutoff.lean` proves multiplier stability and
+  convergence for uniformly controlled cutoff families, and
+  `BoundaryCutoffConstruction.lean` constructs a smooth such family (an
+  approximation route the main argument no longer uses).
   Sector exclusions are in `EvenEven.lean`, `OddOdd.lean`, `Mixed.lean` and
   `Main.lean`. Each module docstring says what it contains and which blueprint
   nodes it covers.

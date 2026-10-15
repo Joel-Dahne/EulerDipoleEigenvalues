@@ -16,3 +16,4 @@ import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
 import NoEmbeddedEigenvalues.WeightedBoundary
+import NoEmbeddedEigenvalues.WeightedBoundaryForm

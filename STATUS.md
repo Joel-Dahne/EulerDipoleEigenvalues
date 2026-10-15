@@ -18,28 +18,30 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:sector-projections` (the `P_ε` are commuting orthogonal projections,
    the identity on their sector) and `lem:stream-sector` (`ψ` has the parities
    of `ω`; short from `invLap_commute` and linearity of `invLap`).
-3. The user has begun exploring the even–even proof. Initial source review
-   explained the four analytic inputs (truncated virial, pairing limit,
-   boundary regularity, trace positivity), the additional elementary rotation
-   decomposition, and the infrastructure needed to state them. The rotation
-   characters lemma is now completely proved in Lean for both equal-parity
-   sectors, including preservation of the eigenvalue parameter. The trace and
-   transport discussion was orientation, not independent verification.
-   The conclusion in `even_even.tex` now explicitly decomposes into rotation
-   characters, fixes either sign, and reassembles the two vanishing components.
-   The classical boundary positivity argument is now proved without `sorry`
-   in `BoundaryForm.lean`, with separate proved blueprint nodes. The weighted
-   interval domain is now defined in `WeightedBoundary.lean`, with classical
-   inclusion, interior regularity and affine stability proved. Conditional
-   cutoff convergence is proved in `BoundaryCutoff.lean`, and the explicit
-   smooth family with uniform bounds and unconditional cutoff approximation
-   is now proved in `BoundaryCutoffConstruction.lean`. First-order zero
-   extension is proved in `IntervalZeroExtension.lean`. Next: apply it to
-   both pairs of each fixed cutoff triple (`lem:boundary-cutoff-global-regularity`),
-   then interior mollification and the density/continuity extension to
-   `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
-   variables. The trace and transport inputs remain unverified. Continue the
-   end-to-end digestion and formalize the normal-field algebra.
+3. Even–even. Boundary positivity on the weighted domain is now proved in
+   Lean (2026-10-15, `WeightedBoundaryForm.lean`), by exhausting (-1,1)
+   with interior intervals instead of cutoff + mollification + density
+   (digest note after `lem:weighted-boundary-positivity`). The new nodes
+   `lem:l2-endpoint-liminf`, `lem:boundary-flux`,
+   `lem:weighted-boundary-integrable`, `lem:weighted-completion`,
+   `lem:weighted-affine-splitting` and `lem:weighted-boundary-positivity`
+   are `\leanok` in statement and proof, using only `propext`,
+   `Classical.choice`, `Quot.sound`. `lem:ee-trace-positivity` now needs only
+   the flow-time/ξ change of variables (`lem:boundary-form-xi`, not in
+   Lean). Next: decide whether to keep the now-unused cutoff/zero-extension
+   modules (`BoundaryCutoff*.lean`, `IntervalZeroExtension.lean`, layer
+   estimates) and their blueprint subsection; restructure `even_even.tex`
+   (generic interval material to `analysis.tex`, remove status chatter from
+   nodes). Remaining even–even inputs: the change of variables, the
+   normal-field algebra, `lem:ee-boundary-regularity`; the trace and
+   transport inputs remain unverified.
+   Lean cleanups found in the 2026-10-15 review (none done yet): shared
+   "locally AC with a.e. derivative" predicate under `HasIntervalH1` and
+   `HasWeightedBoundaryH2`; a `HasIntervalH10` structure for the repeated
+   zero-trace hypothesis pair; merge left/right duplicates in
+   `IntervalH1Estimates.lean`; move general AC/MemLp utilities to one module
+   with Mathlib-style names; a `@[fun_prop]` lemma for the weight; rename
+   `BoundaryJet.weighted_extension_eq`; drop status claims from docstrings.
 4. Soon after: assess the largest gap, the odd–odd renormalized virial identity
    (`prop:dd-virial`). If correctness of the result is the priority, do this
    before 3.

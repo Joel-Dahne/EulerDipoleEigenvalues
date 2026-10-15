@@ -358,18 +358,35 @@ nonnegative and bounded above by the local derivative energy, which tends
 to zero since $D\in L^2(a,b)$. The right endpoint is identical.
 \end{proof}
 
+\begin{lemma}[Square-integrable functions along endpoint sequences]
+\label{lem:l2-endpoint-liminf}
+\lean{NoEmbeddedEigenvalues.frequently_sub_mul_sq_lt_right,
+  NoEmbeddedEigenvalues.frequently_sub_mul_sq_lt_left}
+\leanok
+Let $a<b$ and let $g:(a,b)\to\C$ satisfy $\int_a^b|g|^2<\infty$. Then
+\[
+  \liminf_{x\uparrow b}\,(b-x)|g(x)|^2=0,\qquad
+  \liminf_{x\downarrow a}\,(x-a)|g(x)|^2=0.
+\]
+That is, there are $x_n\uparrow b$ with $(b-x_n)|g(x_n)|^2\to0$, and
+similarly at $a$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Otherwise there are $\delta,r>0$ with $|g(x)|^2\ge\delta/(b-x)$ for every
+$x\in(b-r,b)$, and $\int_{b-r}^b\delta/(b-x)\,dx=\infty$. The left endpoint is
+the same. The statement concerns the values of the given function $g$ at
+every point, not an a.e.\ class; the argument only uses a pointwise lower
+bound, so no regularity of $g$ is needed.
+\end{proof}
+
 \begin{remark}[Digest note: Hardy is not needed for endpoint cutoffs]
 The rescaled layer estimate is weaker than the endpoint Hardy inequality
 below but suffices for the endpoint cutoff errors in
-Lemma~\ref{lem:trace-sos-extension}. This removes that lemma's dependency on
-Hardy. The layer estimate and its limit are proved in Lean, and the weighted
-domain is now defined in Definition~\ref{def:weighted-boundary-domain}.
-The controlled-family convergence theorem and an explicit smooth cutoff
-construction are now formalized, giving the unconditional approximation in
-Lemma~\ref{lem:boundary-cutoff-approximation}. First-order zero extension is
-proved in Lemma~\ref{lem:h1-zero-extension}; its second-order application to
-the cutoff triples, interior mollification and boundary-form continuity remain
-pending in Lean.
+Lemma~\ref{lem:boundary-cutoff-convergence}. The cutoff route itself is no
+longer used for the boundary positivity: Lemma~\ref{lem:l2-endpoint-liminf}
+controls the endpoint flux directly (Lemma~\ref{lem:weighted-completion}).
 \end{remark}
 
 \begin{lemma}[Endpoint Hardy inequality]

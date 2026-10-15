@@ -10,15 +10,14 @@ import Mathlib.Tactic.NormNum
 /-!
 # The even–even boundary quadratic form
 
-Blueprint nodes: `def:boundary-form-xi`, `def:boundary-jet`,
+Blueprint nodes: `def:boundary-form-xi`, `def:boundary-jet`, `lem:boundary-flux`,
 `lem:trace-completion-classical`, `lem:affine-splitting-classical`, and
 `lem:ee-trace-positivity-classical`.
 
-Derivatives are explicit arguments, so the same form can later be used with weak
-derivatives. `BoundaryJet.boundaryForm_nonneg` proves positivity for classical
-jets with equal or opposite endpoint values. It does not assert the weighted
-Sobolev extension (`lem:ee-trace-positivity`). All results here are proved without
-`sorry`; the coordinate change from the flow-time form is not yet formalized.
+Derivatives are explicit arguments, so the same form serves classical jets and weighted
+triples. The derivative identities `hasDerivAt_boundaryFlux` and
+`hasDerivAt_boundaryPrimitive` are pointwise; `WeightedBoundaryForm.lean` uses them
+almost everywhere to extend the results here to the weighted domain.
 -/
 
 noncomputable section
@@ -80,25 +79,25 @@ theorem boundary_density_completion (lam x : ℝ) (f d e : ℂ) :
   simp [normSq_apply, boundaryWeight, Complex.mul_re, Complex.mul_im, -ofReal_pow]
   ring
 
-/-- The flux identity is a genuine derivative identity for a classical jet. -/
-theorem BoundaryJet.hasDerivAt_flux (J : BoundaryJet) (x : ℝ) (hx : x ∈ Icc (-1) 1) :
-    HasDerivAt (boundaryFlux J.value J.first)
-      (boundaryFluxDerivative J.value J.first J.second x) x := by
-  have hf := J.deriv_value x hx
-  have hd := J.deriv_first x hx
-  have hfr : HasDerivAt (fun y ↦ (J.value y).re) (J.first x).re x := by
+theorem hasDerivAt_boundaryWeight (x : ℝ) : HasDerivAt boundaryWeight (-2 * x) x := by
+  convert (hasDerivAt_const x (1 : ℝ)).sub ((hasDerivAt_id x).pow 2) using 1
+  · ext y
+    rfl
+  · simp
+
+/-- The flux identity at a single point, from pointwise first and second derivatives. -/
+theorem hasDerivAt_boundaryFlux {F D E : ℝ → ℂ} {x : ℝ}
+    (hf : HasDerivAt F (D x) x) (hd : HasDerivAt D (E x) x) :
+    HasDerivAt (boundaryFlux F D) (boundaryFluxDerivative F D E x) x := by
+  have hfr : HasDerivAt (fun y ↦ (F y).re) (D x).re x := by
     simpa using! reCLM.hasFDerivAt.comp_hasDerivAt x hf
-  have hfi : HasDerivAt (fun y ↦ (J.value y).im) (J.first x).im x := by
+  have hfi : HasDerivAt (fun y ↦ (F y).im) (D x).im x := by
     simpa using! imCLM.hasFDerivAt.comp_hasDerivAt x hf
-  have hdr : HasDerivAt (fun y ↦ (J.first y).re) (J.second x).re x := by
+  have hdr : HasDerivAt (fun y ↦ (D y).re) (E x).re x := by
     simpa using! reCLM.hasFDerivAt.comp_hasDerivAt x hd
-  have hdi : HasDerivAt (fun y ↦ (J.first y).im) (J.second x).im x := by
+  have hdi : HasDerivAt (fun y ↦ (D y).im) (E x).im x := by
     simpa using! imCLM.hasFDerivAt.comp_hasDerivAt x hd
-  have hw : HasDerivAt boundaryWeight (-2 * x) x := by
-    convert (hasDerivAt_const x (1 : ℝ)).sub ((hasDerivAt_id x).pow 2) using 1
-    · ext y
-      rfl
-    · simp
+  have hw := hasDerivAt_boundaryWeight x
   have hdn := (hdr.mul hdr).add (hdi.mul hdi)
   have hfn := (hfr.mul hfr).add (hfi.mul hfi)
   have hdf := (hdr.mul hfr).add (hdi.mul hfi)
@@ -108,6 +107,28 @@ theorem BoundaryJet.hasDerivAt_flux (J : BoundaryJet) (x : ℝ) (hx : x ∈ Icc 
   · ext y
     simp [boundaryFlux, normSq_apply, mul_re]
   · simp [boundaryFluxDerivative, normSq_apply, mul_re, boundaryWeight]
+    ring
+
+/-- The flux identity is a genuine derivative identity for a classical jet. -/
+theorem BoundaryJet.hasDerivAt_flux (J : BoundaryJet) (x : ℝ) (hx : x ∈ Icc (-1) 1) :
+    HasDerivAt (boundaryFlux J.value J.first)
+      (boundaryFluxDerivative J.value J.first J.second x) x :=
+  hasDerivAt_boundaryFlux (J.deriv_value x hx) (J.deriv_first x hx)
+
+/-- A primitive of the completed-square expression `boundarySquare`. -/
+def boundaryPrimitive (lam : ℝ) (F D : ℝ → ℂ) (x : ℝ) : ℂ :=
+  (boundaryWeight x : ℂ) * D x + (x : ℂ) * F x - I * lam * F x
+
+/-- `boundaryPrimitive` differentiates to `boundarySquare`, pointwise. -/
+theorem hasDerivAt_boundaryPrimitive (lam : ℝ) {F D E : ℝ → ℂ} {x : ℝ}
+    (hf : HasDerivAt F (D x) x) (hd : HasDerivAt D (E x) x) :
+    HasDerivAt (boundaryPrimitive lam F D) (boundarySquare lam F D E x) x := by
+  have h := (((hasDerivAt_boundaryWeight x).ofReal_comp.mul hd).add
+    ((hasDerivAt_id x).ofReal_comp.mul hf)).sub (hf.const_mul (I * lam))
+  convert h using 1
+  · ext y
+    simp [boundaryPrimitive, boundaryWeight]
+  · simp [boundarySquare, boundaryWeight, -ofReal_pow]
     ring
 
 /-- Completion of squares with the endpoint correction retained. -/
@@ -209,42 +230,23 @@ theorem BoundaryJet.integral_square_zero (J : BoundaryJet) (lam : ℝ)
     apply ContinuousOn.intervalIntegrable_of_Icc hle
     unfold boundarySquare boundaryWeight
     fun_prop
-  let Q : ℝ → ℂ := fun x ↦
-    (boundaryWeight x : ℂ) * J.first x + (x : ℂ) * J.value x - I * lam * J.value x
-  have hQ : ∀ x ∈ Icc (-1) 1,
-      HasDerivAt Q (boundarySquare lam J.value J.first J.second x) x := by
-    intro x hx
-    have hw : HasDerivAt boundaryWeight (-2 * x) x := by
-      convert (hasDerivAt_const x (1 : ℝ)).sub ((hasDerivAt_id x).pow 2) using 1
-      · ext y
-        rfl
-      · simp
-    have h := ((hw.ofReal_comp.mul (J.deriv_first x hx)).add
-      ((hasDerivAt_id x).ofReal_comp.mul (J.deriv_value x hx))).sub
-      ((J.deriv_value x hx).const_mul (I * lam))
-    convert h using 1
-    · ext y
-      dsimp [Q]
-    · simp [boundarySquare, boundaryWeight, -ofReal_pow]
-      ring
+  have hQ : ∀ x ∈ Icc (-1) 1, HasDerivAt (boundaryPrimitive lam J.value J.first)
+      (boundarySquare lam J.value J.first J.second x) x := fun x hx ↦
+    hasDerivAt_boundaryPrimitive lam (J.deriv_value x hx) (J.deriv_first x hx)
   have h := intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun x hx ↦ hQ x (by simpa [uIcc_of_le hle] using hx)) hInt
-  simpa [Q, boundaryWeight, hneg, hpos] using h
+  simpa [boundaryPrimitive, boundaryWeight, hneg, hpos] using h
 
 /-- A constant shift is orthogonal, under integration, to a zero-mean function. -/
 theorem integral_normSq_add_const (A : ℝ → ℂ) (c : ℂ)
-    (hc : ContinuousOn A (Icc (-1) 1))
+    (hA : IntervalIntegrable A volume (-1) 1)
+    (hn : IntervalIntegrable (fun x ↦ normSq (A x)) volume (-1) 1)
     (hzero : (∫ x in (-1 : ℝ)..1, A x) = 0) :
     (∫ x in (-1 : ℝ)..1, normSq (A x + c)) =
       (∫ x in (-1 : ℝ)..1, normSq (A x)) + 2 * normSq c := by
-  have hle : (-1 : ℝ) ≤ 1 := by linarith
-  have hA : IntervalIntegrable A volume (-1) 1 := hc.intervalIntegrable_of_Icc hle
-  have hn : IntervalIntegrable (fun x ↦ normSq (A x)) volume (-1) 1 := by
-    apply ContinuousOn.intervalIntegrable_of_Icc hle
-    fun_prop
   have hr : IntervalIntegrable (fun x ↦ (A x * conj c).re) volume (-1) 1 := by
-    apply ContinuousOn.intervalIntegrable_of_Icc hle
-    fun_prop
+    rw [intervalIntegrable_iff] at hA ⊢
+    simpa [IntegrableOn] using (hA.mul_const (conj c)).re
   have hz : (∫ x in (-1 : ℝ)..1, (A x * conj c).re) = 0 := by
     change (∫ x in (-1 : ℝ)..1, reCLM (A x * conj c)) = 0
     rw [reCLM.intervalIntegral_comp_comm (hA.mul_const (conj c))]
@@ -291,7 +293,9 @@ theorem BoundaryJet.affine_splitting (J : BoundaryJet) (lam : ℝ) (a b : ℂ)
       normSq (boundarySquare lam J.value J.first J.second x)) =
       (∫ x in (-1 : ℝ)..1, normSq (boundarySquare lam J0.value J0.first J0.second x)) +
         2 * normSq (a - I * lam * b) := by
-    rw [← integral_normSq_add_const _ (a - I * lam * b) hcS hS0]
+    rw [← integral_normSq_add_const _ (a - I * lam * b)
+      (hcS.intervalIntegrable_of_Icc hle)
+      (ContinuousOn.intervalIntegrable_of_Icc hle (by fun_prop)) hS0]
     apply intervalIntegral.integral_congr
     intro x _
     apply congrArg normSq
@@ -299,7 +303,8 @@ theorem BoundaryJet.affine_splitting (J : BoundaryJet) (lam : ℝ) (a b : ℂ)
     ring
   have hD : (∫ x in (-1 : ℝ)..1, normSq (J.first x)) =
       (∫ x in (-1 : ℝ)..1, normSq (J0.first x)) + 2 * normSq b := by
-    rw [← integral_normSq_add_const _ b hcD hD0]
+    rw [← integral_normSq_add_const _ b (hcD.intervalIntegrable_of_Icc hle)
+      (ContinuousOn.intervalIntegrable_of_Icc hle (by fun_prop)) hD0]
     apply intervalIntegral.integral_congr
     intro x _
     simp [J0, subAffine]
@@ -310,7 +315,7 @@ theorem BoundaryJet.affine_splitting (J : BoundaryJet) (lam : ℝ) (a b : ℂ)
   ring
 
 /-- Boundary positivity for the classical domain, including either endpoint parity.
-    The weighted `H¹` extension is not asserted here. -/
+    See `HasWeightedBoundaryH2.boundaryForm_nonneg` for the weighted domain. -/
 theorem BoundaryJet.boundaryForm_nonneg (J : BoundaryJet) (lam : ℝ)
     (hends : J.value 1 = J.value (-1) ∨ J.value 1 = -J.value (-1)) :
     0 ≤ boundaryForm lam J.value J.first J.second := by

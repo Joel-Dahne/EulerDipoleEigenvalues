@@ -378,15 +378,203 @@ $(F,F',F'')$. The endpoint correction vanishes.
 \end{proof}
 
 \begin{remark}
-The classical completion, affine splitting and positivity are now proved
-in Lean, for arbitrary classical boundary jets rather than only polynomial
-tests. This verifies the one-variable calculus core of the sign argument.
-It does not yet verify the weighted Sobolev extension or the change from
-flow time to $\xi$; the full boundary positivity lemma below remains
-unformalized.
+The classical nodes above are the special case of the weighted nodes below
+in which the endpoint flux can be evaluated directly at $\pm1$.
+\end{remark}
+
+\subsection{The weighted domain}
+
+The classical argument extends to $\mathcal D_w$ without any approximation:
+integrate the flux identity on interior intervals, where a weighted triple
+is an ordinary first-order pair, and let the interval exhaust $(-1,1)$. The
+only point is that the weighted part of the flux vanishes along suitable
+sequences, which follows from $D\in L^2$ alone.
+
+\begin{lemma}[Pointwise flux identity]
+\label{lem:boundary-flux}
+\uses{def:boundary-form-xi}
+\lean{NoEmbeddedEigenvalues.boundaryFlux,
+  NoEmbeddedEigenvalues.boundaryFluxDerivative,
+  NoEmbeddedEigenvalues.boundary_density_completion,
+  NoEmbeddedEigenvalues.hasDerivAt_boundaryFlux}
+\leanok
+Let $\lambda\in\R$, $\xi\in\R$, and let $F,D,E:\R\to\C$ with
+$F'(\xi)=D(\xi)$ and $D'(\xi)=E(\xi)$. Put
+\[
+  K=-\tfrac12 w\xi|D|^2-w\operatorname{Re}(D\bar F)-\tfrac12\xi|F|^2,\qquad
+  A=wE-\xi D+F-i\lambda D.
+\]
+Then $K$ is differentiable at $\xi$ and, at $\xi$,
+\[
+  \tfrac12|wE-2\xi D-i\lambda D|^2-w|D|^2+\lambda\operatorname{Im}(D\bar F)
+  =\tfrac12|A|^2+\tfrac12|D|^2+K'.
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Product rule for $K$, then a polynomial identity in the real and imaginary
+parts of $F(\xi),D(\xi),E(\xi)$.
+\end{proof}
+
+\begin{lemma}[Integrability on the weighted domain]
+\label{lem:weighted-boundary-integrable}
+\uses{def:h1-interval, def:weighted-boundary-domain, def:boundary-form-xi}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memLp_boundarySquare,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memLp_formSquare,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.integrable_weight_normSq,
+  NoEmbeddedEigenvalues.integrable_normSq_of_memLp,
+  NoEmbeddedEigenvalues.integrable_im_mul_conj_of_memLp}
+\leanok
+For a weighted boundary triple $(F,D,E)$ and $\lambda\in\R$, the functions
+$F$, $D$, $wE$, $A$ and $wE-2\xi D-i\lambda D$ are in $L^2(-1,1)$. Hence
+the three integrands of $\mathcal B_\lambda(F,D,E)$ and $|A|^2$, $|D|^2$
+are integrable on $(-1,1)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$L^2(-1,1)$ is closed under sums and under multiplication by bounded
+continuous coefficients, and the product of two $L^2$ functions is
+integrable.
+\end{proof}
+
+\begin{lemma}[Completion of squares on the weighted domain]
+\label{lem:weighted-completion}
+\uses{def:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain,
+  lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.completion,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.sum_of_squares}
+\leanok
+Let $(F,D,E)$ be a weighted boundary triple with traces $\widetilde F(\pm1)$
+(Lemma~\ref{lem:h1-interval-endpoints}), and $\lambda\in\R$. With
+$A=wE-\xi D+F-i\lambda D$,
+\[
+  \mathcal B_\lambda(F,D,E)
+  =\frac12\int_{-1}^1|A|^2\,d\xi
+   +\frac12\int_{-1}^1|D|^2\,d\xi
+   -\frac12\bigl(|\widetilde F(1)|^2+|\widetilde F(-1)|^2\bigr).
+\]
+In particular, for zero traces $\mathcal B_\lambda(F,D,E)$ is a sum of squares.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-flux, lem:weighted-boundary-integrable,
+  lem:weighted-boundary-local, lem:l2-endpoint-liminf}
+\leanok
+Let $-1<c<d<1$. On $[c,d]$ both $F$ and $D$ are absolutely continuous, with
+$F'=D$ and $D'=E$ almost everywhere
+(Lemma~\ref{lem:weighted-boundary-local}). Hence $K$ is absolutely
+continuous on $[c,d]$, and by Lemma~\ref{lem:boundary-flux}
+\[
+  \int_c^d\Bigl(\tfrac12|wE-2\xi D-i\lambda D|^2-w|D|^2
+     +\lambda\operatorname{Im}(D\bar F)\Bigr)
+  =\frac12\int_c^d|A|^2+\frac12\int_c^d|D|^2+K(d)-K(c).
+\]
+By Lemma~\ref{lem:l2-endpoint-liminf} applied to $D$, choose $d_n\uparrow1$
+and $c_n\downarrow-1$ with $w|D|^2\to0$ along both sequences (note
+$w\le2(1-\xi)$ and $w\le2(1+\xi)$). Since $F=\widetilde F$ in the interior
+and $\widetilde F$ is continuous on $[-1,1]$, $F$ stays bounded, so
+$|w\operatorname{Re}(D\bar F)|\le\sqrt w\,(w|D|^2)^{1/2}|F|\to0$ as well.
+Therefore $K(d_n)\to-\tfrac12|\widetilde F(1)|^2$ and
+$K(c_n)\to\tfrac12|\widetilde F(-1)|^2$. The three integrals converge to
+their values on $(-1,1)$ by dominated convergence
+(Lemma~\ref{lem:weighted-boundary-integrable}).
+
+In Lean the sequences are not constructed: an exhaustion lemma
+(\texttt{intervalIntegral\_eq\_of\_frequently}) shows that if $P$ is a
+primitive of an integrable $g$ on $(a,b)$ and $P$ comes arbitrarily close to
+$L_a$, $L_b$ near the endpoints, then $\int_a^bg=L_b-L_a$. Indeed, the
+primitive $P(m)+\int_m^xg$ converges at each endpoint, and its limit must be
+the cluster value.
+\end{proof}
+
+\begin{lemma}[Affine splitting on the weighted domain]
+\label{lem:weighted-affine-splitting}
+\uses{def:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain,
+  lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.affine_splitting,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.extension_subAffine,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.integral_boundarySquare_eq,
+  NoEmbeddedEigenvalues.boundaryPrimitive,
+  NoEmbeddedEigenvalues.hasDerivAt_boundaryPrimitive}
+\leanok
+Let $(F,D,E)$ be a weighted boundary triple, $\lambda\in\R$, and $a,b\in\C$
+with $\widetilde F(-1)=a-b$ and $\widetilde F(1)=a+b$. Then
+$(F_0,D_0,E)=(F-a-b\xi,D-b,E)$ is a weighted boundary triple with zero
+traces, and
+\[
+  \mathcal B_\lambda(F,D,E)=\mathcal B_\lambda(F_0,D_0,E)
+    +\lambda^2|b|^2+2\lambda\operatorname{Im}(b\bar a).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-boundary-linear, lem:weighted-completion,
+  lem:weighted-boundary-integrable, lem:weighted-boundary-local,
+  lem:l2-endpoint-liminf}
+\leanok
+The triple property is Lemma~\ref{lem:weighted-boundary-linear}. Let
+$A_0=wE-\xi D_0+F_0-i\lambda D_0$. Both $\int_{-1}^1D_0$ and
+$\int_{-1}^1A_0$ vanish. For the first, it equals
+$\widetilde F_0(1)-\widetilde F_0(-1)=0$. For the second, on interior
+intervals $Q_0=wD_0+\xi F_0-i\lambda F_0$ is absolutely continuous with
+$Q_0'=A_0$ almost everywhere; along the sequences of
+Lemma~\ref{lem:l2-endpoint-liminf} for $D_0$, $w|D_0|\to0$ and
+$F_0\to0$, so $Q_0\to0$ at both ends.
+
+Since $A=A_0+(a-i\lambda b)$ and $D=D_0+b$, the cross terms vanish and,
+by Lemma~\ref{lem:weighted-completion} applied to both triples,
+\[
+  \mathcal B_\lambda(F,D,E)-\mathcal B_\lambda(F_0,D_0,E)
+  =|a-i\lambda b|^2+|b|^2-\tfrac12\bigl(|a+b|^2+|a-b|^2\bigr)
+  =\lambda^2|b|^2+2\lambda\operatorname{Im}(b\bar a).
+\]
+\end{proof}
+
+\begin{lemma}[Positivity on the weighted domain]
+\label{lem:weighted-boundary-positivity}
+\uses{def:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain,
+  lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.boundaryForm_nonneg}
+\leanok
+For a weighted boundary triple $(F,D,E)$, real $\lambda$, and
+$\widetilde F(1)=\pm\widetilde F(-1)$, one has
+$\mathcal B_\lambda(F,D,E)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-affine-splitting, lem:weighted-completion}
+\leanok
+As in Lemma~\ref{lem:ee-trace-positivity-classical}: take
+$a=(\widetilde F(1)+\widetilde F(-1))/2$ and
+$b=(\widetilde F(1)-\widetilde F(-1))/2$. The zero-trace remainder has
+$\mathcal B_\lambda(F_0,D_0,E)=\frac12\int|A_0|^2+\frac12\int|D_0|^2\ge0$
+by Lemma~\ref{lem:weighted-completion}, and the cross term
+$2\lambda\operatorname{Im}(b\bar a)$ of
+Lemma~\ref{lem:weighted-affine-splitting} vanishes since $a=0$ or $b=0$.
+\end{proof}
+
+\begin{remark}[Digest note: no density argument is needed]
+The manuscript extends the smooth sum of squares to $\mathcal D_w$ ``by the
+same density argument''. The earlier blueprint followed this with endpoint
+cutoffs, zero extension and interior mollification (the subsection below).
+The exhaustion argument of Lemma~\ref{lem:weighted-completion} replaces all
+of it: no approximation, no Hardy inequality, and no continuity of
+$\mathcal B_\lambda$ in a weighted norm. It also gives the identity with
+the endpoint correction for every $F\in\mathcal D_w$, not only for zero
+traces. The identity was checked numerically (scratch computation, October
+2026) on functions $(1-\xi)^p(1+\xi)^qe^{i\xi}+c$ with unbounded $D$ at
+both ends; this is a sanity check, not a proof.
 \end{remark}
 
 \subsection{Endpoint cutoff approximation}
+
+\begin{remark}
+This subsection is not used by the current proof of
+Lemma~\ref{lem:ee-trace-positivity}; see the digest note above. Whether to
+keep it is open.
+\end{remark}
 
 \begin{lemma}[Classical multipliers on the weighted domain]
 \label{lem:weighted-boundary-multiplier}
@@ -671,14 +859,11 @@ weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain
 \end{lemma}
 
 \begin{proof}
-\uses{lem:boundary-cutoff-approximation, lem:boundary-cutoff-global-regularity}
-First apply Lemma~\ref{lem:boundary-cutoff-approximation}.
-Lemma~\ref{lem:boundary-cutoff-global-regularity} supplies global ordinary
-second-order data for each fixed cutoff. Mollify away from the endpoints,
-then pass to the limit in the boundary form. Cutoff approximation and
-first-order zero extension are now formalized, but the global regularity
-lemma's application to the cutoff triples and interior mollification remain
-pending in Lean, as does continuity needed for the boundary-form limit.
+\uses{lem:boundary-form-xi, lem:weighted-completion}
+By Lemma~\ref{lem:boundary-form-xi}, $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,D,E)$.
+Apply Lemma~\ref{lem:weighted-completion}; the endpoint correction vanishes.
+The manuscript argues by density instead; see the digest note after
+Lemma~\ref{lem:weighted-boundary-positivity}.
 \end{proof}
 
 \begin{lemma}[Affine splitting]
@@ -693,12 +878,15 @@ If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$ and $F\in\mathcal D_w$, then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:affine-splitting-classical, lem:trace-sos-extension, lem:weighted-boundary-linear}
-The classical case is Lemma~\ref{lem:affine-splitting-classical}.
+\uses{lem:boundary-form-xi, lem:weighted-affine-splitting}
+Lemma~\ref{lem:boundary-form-xi} and
+Lemma~\ref{lem:weighted-affine-splitting} with $(F_0,D_0,E)=(F-a-b\xi,F'-b,F'')$.
 Equivalently, expand; all mixed terms with $F_0$ cancel (the quadratic
 $\lambda$ term uses $\int F_0'=0$; in the linear term
 $\int wF_0''=-2\int F_0$ cancels the two
-mixed current terms). Extend by the same density argument.
+mixed current terms). On $\mathcal D_w$ the vanishing of these integrals
+needs the endpoint argument in the proof of
+Lemma~\ref{lem:weighted-affine-splitting}.
 \end{proof}
 
 \begin{lemma}[Regularity of the boundary unknown]
@@ -730,11 +918,13 @@ $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:affine-splitting, lem:trace-sos-extension}
-Write $F=F_0+a+b\xi$ with $F_0(\pm1)=0$. If $F(1)=F(-1)$ then $b=0$; if
-$F(1)=-F(-1)$ then $a=0$. In both cases the last term of
-Lemma~\ref{lem:affine-splitting} vanishes, and
-Lemma~\ref{lem:trace-sos-extension} shows $\mathcal F_\lambda(F_0)\ge0$.
+\uses{lem:boundary-form-xi, lem:weighted-boundary-positivity}
+By Lemma~\ref{lem:boundary-form-xi},
+$\mathcal F_\lambda(F)=\mathcal B_\lambda(F,D,E)$ for the derivatives $D,E$
+of $F$, and Lemma~\ref{lem:weighted-boundary-positivity} applies. In the
+manuscript's terms: write $F=F_0+a+b\xi$ with $F_0(\pm1)=0$; one of $a,b$
+vanishes, which kills the cross term of Lemma~\ref{lem:affine-splitting},
+and $\mathcal F_\lambda(F_0)\ge0$ by Lemma~\ref{lem:trace-sos-extension}.
 \end{proof}
 
 \section{Conclusion}
