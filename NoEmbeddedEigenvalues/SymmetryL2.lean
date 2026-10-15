@@ -6,7 +6,8 @@ import Mathlib.MeasureTheory.Group.Prod
 
 Measure-preserving pullbacks, their character action, and invariance of the
 Fourier-defined inverse Laplacian and character-tested transport equation
-(blueprint: `lem:symmetries-commute`, and the L² part of `lem:reflection-algebra`).
+(blueprint: `lem:symmetries-commute`, the L² part of `lem:reflection-algebra`,
+and the pullback identities used by `lem:rotation-characters`).
 A `CharacterSymmetry` collects what this needs: how the map acts on characters and on
 `L₀` of characters.
 -/
@@ -66,6 +67,10 @@ theorem measurePreserving_R : MeasurePreserving R := by
   convert! ((MeasurePreserving.id (volume : Measure Angle)).prod
     (Measure.measurePreserving_neg (volume : Measure Angle))).comp
     Measure.measurePreserving_swap using 1
+
+theorem measurePreserving_Ic : MeasurePreserving Ic := by
+  have h := measurePreserving_R.comp measurePreserving_R
+  rwa [R_comp_R] at h
 
 /-- Pullback through a measure-preserving torus map, as a complex linear isometry. -/
 def pullback (T : Torus → Torus) (hT : MeasurePreserving T) : L2 →ₗᵢ[ℂ] L2 :=
@@ -255,6 +260,8 @@ def reflect₁ : L2 →ₗᵢ[ℂ] L2 := symmetry₁.action
 def reflect₂ : L2 →ₗᵢ[ℂ] L2 := symmetry₂.action
 /-- Clockwise quarter-rotation pullback on L². -/
 def rotate : L2 →ₗᵢ[ℂ] L2 := rotationSymmetry.action
+/-- Central-inversion pullback on L². -/
+def centralInversion : L2 →ₗᵢ[ℂ] L2 := pullback Ic measurePreserving_Ic
 
 theorem IsEigenSolution.reflect₁ {lam : ℝ} {g : L2} (hg : IsEigenSolution lam g) :
     IsEigenSolution lam (reflect₁ g) := symmetry₁.eigenSolution hg
@@ -307,5 +314,19 @@ theorem reflect₁_rotate (g : L2) : reflect₁ (rotate g) = rotate (reflect₂ 
 
 theorem reflect₂_rotate (g : L2) : reflect₂ (rotate g) = rotate (reflect₁ g) :=
   pullback_pullback_of_comp_eq _ _ _ _ R_comp_S₂ g
+
+/-- Two quarter-rotation pullbacks equal central inversion. -/
+theorem rotate_rotate (g : L2) : rotate (rotate g) = centralInversion g := by
+  change pullback R measurePreserving_R (pullback R measurePreserving_R g) = _
+  rw [pullback_comp_apply]
+  exact pullback_congr _ _ R_comp_R g
+
+/-- Central inversion equals the product of the two separatrix reflections. -/
+theorem centralInversion_eq_reflections (g : L2) :
+    centralInversion g = reflect₁ (reflect₂ g) := by
+  change pullback Ic measurePreserving_Ic g =
+    pullback S₁ measurePreserving_S₁ (pullback S₂ measurePreserving_S₂ g)
+  rw [pullback_comp_apply]
+  exact pullback_congr _ _ S₂_comp_S₁.symm g
 
 end NoEmbeddedEigenvalues

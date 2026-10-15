@@ -192,18 +192,58 @@ rotation $R$, which commutes with $L_0$, so no sign change of $\lambda$ is
 needed.
 \end{remark}
 
+\begin{definition}[Rotation characters and components]
+\label{def:rotation-characters}
+\uses{def:reflections}
+\lean{NoEmbeddedEigenvalues.centralInversion,
+  NoEmbeddedEigenvalues.InRotationCharacter, NoEmbeddedEigenvalues.rotationProjection}
+\leanok
+On $L^2$, write $I_c^*g=g\circ I_c$. For $\kappa\in\{1,-1\}$, the rotation-character
+space is $\mathcal E_\kappa=\{g:R^*g=\kappa g\}$, and the corresponding component
+operator is
+\[
+  Q_\kappa g=\tfrac12(g+\kappa R^*g).
+\]
+In Lean, the character is a boolean, \texttt{true} for $+1$ and
+\texttt{false} for $-1$, using the same sign convention as the parity sectors.
+\end{definition}
+
 \begin{lemma}[Rotation characters]
 \label{lem:rotation-characters}
-\uses{def:sectors, def:eigen-problem}
-On the sectors $(+,+)$ and $(-,-)$ one has $(R^*)^2=I_c^*=S_1^*S_2^*=I$. Hence
-these sectors split further into the two eigenspaces
-$R^*\omega=\kappa\omega$, $\kappa\in\{1,-1\}$, each again invariant under the
-eigenvalue problem (manuscript \texttt{(ee:rotation-character)}).
+\uses{def:sectors, def:eigen-problem, def:rotation-characters}
+\lean{NoEmbeddedEigenvalues.rotate_rotate,
+  NoEmbeddedEigenvalues.centralInversion_eq_reflections,
+  NoEmbeddedEigenvalues.InSector.rotate_rotate,
+  NoEmbeddedEigenvalues.InSector.rotationProjection_mem,
+  NoEmbeddedEigenvalues.InSector.rotationProjection_character,
+  NoEmbeddedEigenvalues.rotationProjection_sum,
+  NoEmbeddedEigenvalues.rotation_characters_disjoint,
+  NoEmbeddedEigenvalues.IsEigenSolution.rotationProjection,
+  NoEmbeddedEigenvalues.IsEigenSolution.rotation_decomposition}
+\leanok
+On the sectors $(+,+)$ and $(-,-)$ one has $(R^*)^2=I_c^*=S_1^*S_2^*=I$.
+For $g$ in either sector, both $Q_\kappa g$ remain in that sector and satisfy
+$R^*Q_\kappa g=\kappa Q_\kappa g$, and $g=Q_+g+Q_-g$. The two character spaces
+have zero intersection, so this is a direct-sum decomposition. If $g$ solves
+the eigenvalue problem with parameter $\lambda$, so does each $Q_\kappa g$
+with the same parameter (manuscript \texttt{(ee:rotation-character)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:reflection-algebra, lem:sector-swap, lem:symmetries-commute}
-$R^2=I_c=S_1S_2$, and $S_1^*S_2^*$ acts as $\epsilon_1\epsilon_2=1$ on these sectors.
+\uses{lem:reflection-algebra, lem:sector-swap, lem:symmetries-commute, lem:L0-linearity}
+\leanok
+Lift $R^2=I_c=S_1S_2$ to the pullbacks on $L^2$. On a sector with equal
+parities, $S_1^*S_2^*$ acts as $\epsilon_1\epsilon_2=1$, so $(R^*)^2g=g$.
+Rotation preserves that sector by Lemma~\ref{lem:sector-swap}. Expanding the
+components gives
+\[
+  R^*Q_\kappa g=\tfrac12(R^*g+\kappa g)=\kappa Q_\kappa g,
+  \qquad Q_+g+Q_-g=g.
+\]
+The sector is closed under linear combinations, so both components retain
+its parities. A function with both characters satisfies $g=R^*g=-g$, hence
+is zero. Finally, the eigenvalue equation is linear and preserved by $R^*$;
+therefore each component is a solution with the same $\lambda$.
 \end{proof}
 
 \begin{remark}

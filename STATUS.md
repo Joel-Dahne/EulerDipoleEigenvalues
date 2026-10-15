@@ -19,8 +19,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 3. The user has begun exploring the even–even proof. Initial source review
    explained the four analytic inputs (truncated virial, pairing limit,
    boundary regularity, trace positivity), the additional elementary rotation
-   decomposition, and the infrastructure needed to state them. This was an
-   orientation, not an independent verification of the analytic lemmas.
+   decomposition, and the infrastructure needed to state them. The rotation
+   characters lemma is now completely proved in Lean for both equal-parity
+   sectors, including preservation of the eigenvalue parameter. The trace and
+   transport discussion was orientation, not independent verification.
    The conclusion in `even_even.tex` now explicitly decomposes into rotation
    characters, fixes either sign, and reassembles the two vanishing components.
    The classical boundary positivity argument is now proved without `sorry`
@@ -77,6 +79,13 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   `L₀`, and invariance of the eigenvalue problem follow; `reflect₁`,
   `reflect₂`, `rotate` are its instances. Sector projections, their parities
   and sum, invariance of solutions, and the rotation swap of parities.
+  Rotation characters: lifted `R² = Ic = S₁S₂` to L²; proved involutivity on
+  both equal-parity sectors, defined `(g + κ R*g)/2`, proved character and
+  sector membership, reconstruction, zero intersection, and preservation of
+  eigenfunctions at the same λ. `IsEigenSolution.rotation_decomposition`
+  packages the full decomposition. `lem:rotation-characters` is now `\leanok`
+  in statement and proof; no new `sorry`s. Its decomposition, involutivity and
+  disjointness proofs use only `propext`, `Classical.choice`, and `Quot.sound`.
   `Mixed.lean` gets the second mixed sector by rotation; `Main.lean` proves
   `main` from the three admitted sector exclusions.
 - **Even–even boundary calculus** (`BoundaryForm.lean`): the finite-interval
@@ -97,10 +106,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
 - **Validation**: full `lake build` and `just web` pass after the boundary-form
-  work; the only Lean warnings are the three existing sector exclusion
-  `sorry`s. The new boundary module has no warnings. The web build has only the
-  usual missing image-converter messages from plasTeX. Every `\lean` name in the blueprint
-  resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
+  and rotation-character work; the only Lean warnings are the three existing
+  sector exclusion `sorry`s. The boundary, symmetry and sector modules have no
+  warnings. The web build has only the usual missing image-converter messages
+  from plasTeX. Every `\lean` name in the blueprint resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
   sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
   `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,
   `Classical.choice` and `Quot.sound`.
