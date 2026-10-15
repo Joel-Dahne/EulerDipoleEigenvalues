@@ -60,8 +60,14 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    (`IntervalH1.lean`, with `lem:interval-h2-periodic`). `def:period` is
    now definitions only (`Period.lean`: `L`, `S = 8L`, `b = 2π/S`), with
    `lem:period-integral` proved (second formula by substitution, positivity)
-   and `lem:period-orbit` stated (the flow-time computation; needs the global
-   flow of the dipole velocity in Lean, checked numerically). Other open
+   and `lem:period-orbit` proved (`DipoleFlow.lean`): global flows of bounded
+   Lipschitz fields (`lem:global-flow`), the dipole flow (`def:dipole-flow`,
+   `lem:dipole-velocity`, `lem:dipole-flow`: uniqueness, group property,
+   conservation of `Ψ`, time reversal by reflections), and for the orbit
+   `γ_h`: level and square, diagonal at `±L(h)`, quarter rotation, minimal
+   period `S(h)`. The manuscript's `dt = -da/√(cos²a-h²)` needed a continuity
+   argument (`b > 0` up to `L(h)`); noted in the remark after the lemma,
+   together with the clash of `b` (coordinate) and `b(h)` (frequency). Other open
    definitions: the transport, odd–odd and mixed definitions, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.

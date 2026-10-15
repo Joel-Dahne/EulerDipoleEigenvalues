@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.BoundaryCutoffConstruction
 import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.Derivatives
+import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.DipoleCalculus
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.FlowBoundaryForm

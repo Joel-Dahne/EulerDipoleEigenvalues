@@ -128,13 +128,15 @@ $\partial_a=\partial_x+\partial_y$, $\partial_b=\partial_x-\partial_y$.
   NoEmbeddedEigenvalues.classicalL0,
   NoEmbeddedEigenvalues.gradDot,
   NoEmbeddedEigenvalues.gradSq,
-  NoEmbeddedEigenvalues.dipoleLift}
+  NoEmbeddedEigenvalues.dipoleLift,
+  NoEmbeddedEigenvalues.dipoleVelocity}
 \leanok
 Pointwise differential identities are stated for functions on the real lift
 $\R^2$ of $\T^2$: $\partial_x,\partial_y$ are ordinary partial derivatives,
 $\Delta=\partial_x^2+\partial_y^2$, $L_0=\sin y\,\partial_x-\sin x\,\partial_y$,
 $\nabla u\cdot\nabla v=u_xv_x+u_yv_y$ and $|\nabla u|^2=\nabla u\cdot\nabla u$.
-The dipole lifts to $\Psi(x,y)=\cos x+\cos y$ on $\R^2$.
+The dipole lifts to $\Psi(x,y)=\cos x+\cos y$ on $\R^2$, and the dipole velocity
+is $Y=\nabla^\perp\Psi=(\sin y,-\sin x)$, so that $L_0=Y\cdot\nabla$.
 \end{definition}
 
 \begin{lemma}[Calculus on the lift]
@@ -256,6 +258,81 @@ Trigonometric identities. For example, with $p=\cos x$ and $q=\cos y$,
 $\rho^2=2-p^2-q^2$ and $\nabla s\cdot\nabla\rho^2=-2p(1-p^2)-2q(1-q^2)$.
 \end{proof}
 
+\section{The flow}
+
+\begin{lemma}[Global flows]
+\label{lem:global-flow}
+\lean{NoEmbeddedEigenvalues.exists_local_solution,
+  NoEmbeddedEigenvalues.exists_global_solution}
+\leanok
+Let $E$ be a Banach space and $f\colon E\to E$ bounded and globally Lipschitz. For
+every $x\in E$ there is $\gamma\colon\R\to E$ with $\gamma(0)=x$ and
+$\gamma'(t)=f(\gamma(t))$ for all $t$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Picard--Lindel\"of gives a solution on $[-n-1,n+1]$ for every $n$, with the
+bound on $f$ fixing the time interval. By uniqueness these agree on overlaps,
+so they glue to a global solution.
+\end{proof}
+
+\begin{lemma}[The dipole velocity]
+\label{lem:dipole-velocity}
+\uses{def:lift-operators}
+\lean{NoEmbeddedEigenvalues.norm_dipoleVelocity_le,
+  NoEmbeddedEigenvalues.lipschitzWith_dipoleVelocity}
+\leanok
+In the sup norm on $\R^2$, $|Y|\le1$ and $Y$ is $1$-Lipschitz.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$|\sin u|\le1$ and $|\sin u-\sin v|\le|u-v|$.
+\end{proof}
+
+\begin{definition}[The dipole flow]
+\label{def:dipole-flow}
+\uses{def:lift-operators, lem:global-flow, lem:dipole-velocity}
+\lean{NoEmbeddedEigenvalues.dipoleFlow,
+  NoEmbeddedEigenvalues.dipoleOrbit}
+\leanok
+The flow $\varphi_t(x)$ of $Y$ on $\R^2$ is the global solution of
+$\partial_t\varphi_t(x)=Y(\varphi_t(x))$, $\varphi_0(x)=x$, given by
+Lemmas~\ref{lem:global-flow} and~\ref{lem:dipole-velocity}. For $0<h<1$ the orbit
+$\gamma_h(t)=\varphi_t(\arccos h,-\arccos h)$ starts at $(a,b)=(0,\arccos h)$ in
+diagonal coordinates.
+\end{definition}
+
+\begin{lemma}[Properties of the flow]
+\label{lem:dipole-flow}
+\uses{def:dipole-flow, def:cells}
+\lean{NoEmbeddedEigenvalues.dipoleFlow_zero,
+  NoEmbeddedEigenvalues.hasDerivAt_dipoleFlow,
+  NoEmbeddedEigenvalues.eq_dipoleFlow,
+  NoEmbeddedEigenvalues.dipoleFlow_add,
+  NoEmbeddedEigenvalues.dipoleFlow_reverse,
+  NoEmbeddedEigenvalues.dipoleLift_dipoleFlow,
+  NoEmbeddedEigenvalues.hasDerivAt_diag_fst,
+  NoEmbeddedEigenvalues.hasDerivAt_diag_snd}
+\leanok
+Every global integral curve of $Y$ through $x$ is $t\mapsto\varphi_t(x)$;
+$\varphi_{s+t}=\varphi_t\circ\varphi_s$; and $\Psi\circ\varphi_t=\Psi$. A linear map
+$M$ with $Y\circ M=-MY$ satisfies $\varphi_t\circ M=M\circ\varphi_{-t}$. In
+diagonal coordinates the flow is $\dot a=-\cos a\sin b$, $\dot b=\sin a\cos b$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-velocity}
+\leanok
+Uniqueness holds since $Y$ is Lipschitz; the flow property and the reflection
+property follow from it, since $t\mapsto\varphi_{s+t}(x)$ and
+$t\mapsto M\varphi_{-t}(x)$ are integral curves. Along the flow
+$\frac{d}{dt}\Psi=-\sin x\sin y+\sin y\sin x=0$. The diagonal equations are
+$\dot a=\frac12(\sin y-\sin x)$, $\dot b=\frac12(\sin y+\sin x)$ with $x=a+b$,
+$y=a-b$.
+\end{proof}
+
 \section{The separatrix arcs}
 
 \begin{definition}[Heteroclinic arc]
@@ -339,29 +416,67 @@ $da=\sqrt{1-h}\,dt/\cos a$ and $\cos^2a-h^2=(1-h)(1+h-t^2)$.
 
 \begin{lemma}[Orbits and their period]
 \label{lem:period-orbit}
-\uses{def:period, def:cells, lem:separatrix-lines, lem:cell-square}
-For $0<h<1$ let $\gamma_h$ be the solution of $\gamma'=(\sin y,-\sin x)$ with
-$\gamma_h(0)=(\arccos h,-\arccos h)$, that is $(a,b)=(0,\arccos h)$. It stays on
-the level $\{\Psi=2h\}$ in $\Cell$, reaches the diagonals $a=\mp b$ at times
-$t=\pm L(h)$, and is periodic with minimal period $S(h)$. One quarter of the orbit is
-$\gamma_h([-L(h),L(h)])$, and $b(h)$ is the orbital frequency.
+\uses{def:period, def:dipole-flow, def:cells, lem:cell-square}
+\lean{NoEmbeddedEigenvalues.dipoleLift_dipoleOrbit,
+  NoEmbeddedEigenvalues.dipoleOrbit_mem_cellSquare,
+  NoEmbeddedEigenvalues.diagCoord_dipoleOrbit_eighthPeriod,
+  NoEmbeddedEigenvalues.dipoleOrbit_add_quarter,
+  NoEmbeddedEigenvalues.dipoleOrbit_periodic,
+  NoEmbeddedEigenvalues.dipoleOrbit_ne_zero}
+\leanok
+Let $0<h<1$ and write $(a(t),b(t))$ for the diagonal coordinates of $\gamma_h(t)$.
+The orbit stays on the level $\{\Psi=2h\}$ and in the square $|a|,|b|<\pi/2$, so it
+projects into $\Cell$. It reaches the diagonals $a=\mp b$ at the times
+$t=\pm L(h)$:
+\[
+  (a,b)(\pm L(h))=(\mp\arccos\sqrt h,\arccos\sqrt h).
+\]
+A quarter period rotates it, $(a,b)(t+2L(h))=(-b(t),a(t))$, that is
+$\gamma_h(t+2L(h))=(y,-x)$ for $\gamma_h(t)=(x,y)$. Hence $\gamma_h$ is periodic with
+minimal period $S(h)$, one quarter of the orbit is $\gamma_h([-L(h),L(h)])$, and $b(h)$
+is the orbital frequency.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-integral}
-In diagonal coordinates the flow is $\dot a=-\cos a\sin b$, $\dot b=\sin a\cos b$,
-and $\Psi=2\cos a\cos b$ is conserved. On the level, $\sin b=\sqrt{\cos^2a-h^2}/\cos a$,
-so $dt=-da/\sqrt{\cos^2a-h^2}$, and $a$ moves from $0$ to $-\arccos\sqrt h$, where
-$\cos a=\cos b=\sqrt h$, in time $L(h)$. The reflections $a\mapsto-a$, $b\mapsto-b$
-and $a\leftrightarrow b$ preserve the level and map the flow to itself up to time
-reversal, so the orbit consists of eight congruent pieces.
+\uses{lem:dipole-flow, lem:separatrix-lines, lem:period-integral}
+\leanok
+By conservation of $\Psi=2\cos a\cos b$ we have $\cos a\cos b=h\ne0$ along the orbit,
+so neither $a$ nor $b$ reaches $\pm\pi/2$, and $\cos a,\cos b>0$.
+
+\emph{Flow time.} Where $b\ge0$, $\sin b=\sqrt{1-h^2/\cos^2a}$, so
+$\dot a=-\cos a\sin b=-\sqrt{\cos^2a-h^2}$. Let
+$F(\alpha)=\int_\alpha^0da/\sqrt{\cos^2a-h^2}$ for $|\alpha|<\arccos h$; it is strictly
+decreasing, and $F(-\arccos\sqrt h)=L(h)$ since the integrand is even. Where
+$b\ne0$, $\cos b<1$ gives $\cos a>h$, so $|a|<\arccos h$. Hence if $b>0$ on $[0,t]$,
+the substitution $\alpha=a(s)$ gives $F(a(t))=t$.
+
+\emph{$b>0$ on $[0,L(h)]$.} Otherwise let $t_*\le L(h)$ be the first zero of $b$.
+For $s<t_*$, $0\le F(a(s))=s<L(h)=F(-\arccos\sqrt h)$, so
+$-\arccos\sqrt h<a(s)\le0$. By continuity $\cos a(t_*)\ge\sqrt h>h$, so
+$\cos b(t_*)<1$ and $b(t_*)\ne0$, a contradiction. Therefore $F(a(L))=L=F(-\arccos\sqrt h)$,
+so $a(L)=-\arccos\sqrt h$, and then $\cos b(L)=h/\sqrt h=\sqrt h$.
+
+\emph{Symmetries.} The reflections $\sigma\colon a\mapsto-a$, that is
+$(x,y)\mapsto(-y,-x)$, and $\tau\colon(a,b)\mapsto(-b,-a)$, that is
+$(x,y)\mapsto(-x,y)$, reverse $Y$. Since $\sigma$ fixes $\gamma_h(0)$ and $\tau$
+fixes $\gamma_h(L)$ (where $x=a+b=0$), uniqueness gives $\gamma_h(-t)=\sigma\gamma_h(t)$
+and $\gamma_h(L+u)=\tau\gamma_h(L-u)$. Together,
+$\gamma_h(t+2L)=\tau\sigma\gamma_h(t)$, the quarter rotation. Four rotations give
+period $8L=S(h)$.
+
+\emph{Minimality.} By the reflection $\tau$, $a<0$ on $(0,2L)$ and $b>0$ on
+$[0,2L)$. Writing $t\in(0,8L)$ as $s+2kL$ with $s\in[0,2L)$ and using the rotation,
+$a(t)<0$ ($k=0$, $s>0$), $a(t)=-b(s)<0$ ($k=1$), $b(t)=-b(s)<0$ ($k=2$), or
+$a(t)=b(s)>0$ ($k=3$), so $\gamma_h(t)\ne\gamma_h(0)$.
 \end{proof}
 
 \begin{remark}
 The flow time to the diagonal, the two formulas for $L(h)$ and $8L(h)=4\mathbf K(1-h^2)$
 were checked numerically for $h=0.1,0.5,0.9$ (scratch computation, October 2026).
-The lemma needs the global flow of the dipole velocity, which is not yet set up in
-Lean.
+The manuscript argues with ``$dt=-da/\sqrt{\cos^2a-h^2}$''; the Lean proof needs
+the continuity argument above to know that $b$ keeps its sign up to time
+$L(h)$. The letter $b$ is used both for the diagonal coordinate and for the
+frequency $b(h)$; the paper should rename one of them.
 \end{remark}
 
 \begin{lemma}[The period function]

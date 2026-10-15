@@ -101,7 +101,9 @@ motivation, and standard facts cited rather than proved.
   vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines
   weak derivatives and `Hᵏ(U)`, `Hᵏ_loc(U)`, weighted `Hᵏ` on open `U ⊆ ℝ²`;
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
-  square in diagonal coordinates; `Period.lean` defines the period function.
+  square in diagonal coordinates; `Period.lean` defines the period function;
+  `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
+  period lemma.
   Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
