@@ -67,8 +67,14 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `γ_h`: level and square, diagonal at `±L(h)`, quarter rotation, minimal
    period `S(h)`. The manuscript's `dt = -da/√(cos²a-h²)` needed a continuity
    argument (`b > 0` up to `L(h)`); noted in the remark after the lemma,
-   together with the clash of `b` (coordinate) and `b(h)` (frequency). Other open
-   definitions: the transport, odd–odd and mixed definitions, and
+   together with the clash of `b` (coordinate) and `b(h)` (frequency).
+   `def:transport-pair` is formalized (`Transport.lean`) on the lift: open
+   unions of orbits, weak `L₀` (`∫ g L₀φ = -∫ hφ`), transport pairs and the
+   transport unknown, with `lem:transport-unknown` proved. Modelling choice
+   (remark after the node): `U` is a subset of `ℝ²`, bounded in the
+   applications, instead of the torus. `lem:transport-pair-eigen` (eigenfunctions give
+   pairs) is stated, waiting for `lem:local-to-global`. Other open
+   definitions: `def:numerator`/`def:canonical-profile`, odd–odd and mixed, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.
    Also done (2026-10-15):

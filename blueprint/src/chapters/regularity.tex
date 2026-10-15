@@ -49,7 +49,7 @@ Every eigenfunction satisfies $\omega/d\in L^2$ (manuscript
 \end{proposition}
 
 \begin{proof}
-\uses{lem:transport-first-gain, lem:rotation-characters}
+\uses{lem:transport-first-gain, lem:transport-pair-eigen, lem:rotation-characters}
 Apply Lemma~\ref{lem:transport-first-gain} to the transport pair
 $(\omega,\psi)$, in each rotation character.
 \end{proof}
@@ -69,7 +69,7 @@ Lemma~\ref{lem:saddle-normal-form}) such that
 \end{proposition}
 
 \begin{proof}
-\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain, lem:saddle-normal-form}
+\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain, lem:transport-pair-eigen, lem:saddle-normal-form}
 Apply Lemma~\ref{lem:cylinder-inverse} with $a=2-\delta$: the first gain makes
 $r^\delta\omega$ square integrable on the cylinder, so $\psi$ satisfies the
 subcritical weighted estimate and $|\psi|\le Cr^{2-\delta}$. Then
@@ -106,7 +106,7 @@ on a possibly smaller neighbourhood (manuscript \texttt{(prop:separatrix-h1)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:transport-h1-gain, prop:saddle-dd, lem:elliptic-local}
+\uses{lem:transport-h1-gain, lem:transport-pair-eigen, prop:saddle-dd, lem:elliptic-local}
 Show $hN''\in L^2$ from the second variation bound
 $|\partial_h^2\gamma_h|\le C/d^2$ and the quadratic jet (for the endpoint
 terms), then apply Lemma~\ref{lem:transport-h1-gain}. $A(0)=0$ follows from

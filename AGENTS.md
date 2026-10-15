@@ -103,7 +103,7 @@ motivation, and standard facts cited rather than proved.
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
   square in diagonal coordinates; `Period.lean` defines the period function;
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
-  period lemma.
+  period lemma. `Transport.lean` defines transport pairs on open unions of orbits.
   Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;

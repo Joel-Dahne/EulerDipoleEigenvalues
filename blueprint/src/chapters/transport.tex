@@ -20,15 +20,69 @@ results for a general transport pair.
 
 \begin{definition}[Transport pair]
 \label{def:transport-pair}
-\uses{def:eigen-problem, def:cells, def:sobolev-local}
-Let $\lambda\in\R\setminus\{0\}$ and let $U$ be an open union of orbits. A
-\emph{transport pair} on $U$ is $(v,f)$ with $v\in L^2(U)$, $f\in H^2(U)$ and
-$H(v+f)=\lambda v$ in distributions on $U$. Its \emph{transport unknown} is
-$z=-(v+f)/\lambda$, which satisfies $Hz=-v$ and $(H-\lambda)z=f$.
-Examples: $(\omega,\psi)$ for an eigenfunction; $(\nu,\phi)$ for the odd--odd
-quotient (Proposition~\ref{prop:dd-quotient-domain}); $(v,f)$ after subtracting
-an explicit jet in the mixed sector (Proposition~\ref{prop:mixed-quotient-domain}).
+\uses{def:eigen-problem, def:lift-operators, def:dipole-flow, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.IsOrbitUnion,
+  NoEmbeddedEigenvalues.HasWeakL0On,
+  NoEmbeddedEigenvalues.IsTransportPair,
+  NoEmbeddedEigenvalues.transportUnknown}
+\leanok
+An \emph{open union of orbits} is an open set $U\subset\R^2$ with
+$\varphi_t(U)\subset U$ for all $t$. On such $U$, $L_0g=h$ \emph{weakly} means that
+$g,h$ are locally integrable on $U$ and $\int gL_0\phi=-\int h\phi$ for every test
+function $\phi$ on $U$. Let $\lambda\in\R\setminus\{0\}$. A \emph{transport pair} on
+$U$ is $(v,f)$ with $v\in L^2(U)$, $f\in H^2(U)$ and $H(v+f)=\lambda v$ weakly on $U$,
+that is $L_0(v+f)=i\lambda v$, where $H=-iL_0$ as in
+Definition~\ref{def:eigen-problem}. Its \emph{transport unknown} is
+$z=-(v+f)/\lambda$.
 \end{definition}
+
+\begin{remark}
+The weak form has no zeroth order term because $Y$ is divergence free, so the
+formal adjoint of $L_0$ is $-L_0$. The examples are $(\omega,\psi)$ for an
+eigenfunction (Lemma~\ref{lem:transport-pair-eigen}), $(\nu,\phi)$ for the odd--odd
+quotient (Proposition~\ref{prop:dd-quotient-domain}), and $(v,f)$ after subtracting
+an explicit jet in the mixed sector (Proposition~\ref{prop:mixed-quotient-domain}).
+
+Transport pairs live on the lift $\R^2$, whereas the manuscript works on the
+torus. The lift of a periodic function is not in $L^2$ of an unbounded set, so in
+the applications $U$ is bounded. Such $U$ exist: every orbit away from the saddles
+is a closed loop in one cell, and every separatrix orbit is a single bounded arc, so
+for instance the closed positive cell together with thin annuli of orbits inside
+the neighbouring cells is a bounded open union of orbits.
+\end{remark}
+
+\begin{lemma}[The transport unknown]
+\label{lem:transport-unknown}
+\uses{def:transport-pair}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.const_mul,
+  NoEmbeddedEigenvalues.IsTransportPair.hasWeakL0On_transportUnknown,
+  NoEmbeddedEigenvalues.IsTransportPair.hasWeakL0On_transportUnknown_sub}
+\leanok
+For a transport pair, the transport unknown satisfies $Hz=-v$ and $(H-\lambda)z=f$
+weakly on $U$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The weak relation is linear, and $z=-(v+f)/\lambda$ gives
+$L_0z=-i v$ and $i(\lambda z+f)=-iv$.
+\end{proof}
+
+\begin{lemma}[Eigenfunctions give transport pairs]
+\label{lem:transport-pair-eigen}
+\uses{def:transport-pair, def:eigen-problem, def:torus-of-lift}
+Let $\omega$ be an eigenfunction with parameter $\lambda$, $\psi=\Delta^{-1}\omega$,
+and $U$ a bounded open union of orbits. Then the lifts of $\omega$ and $\psi$ form a
+transport pair on $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-torus, lem:lift-torus, lem:local-to-global}
+$\psi\in H^2(\T^2)$, so its lift is in $H^2(U)$ on the bounded set $U$, and the lift
+of $\omega$ is in $L^2(U)$. The torus equation is tested against characters; by
+density it holds against smooth periodic functions, and a test function on $U$
+periodizes to one, which turns the torus equation into the weak equation on $U$.
+\end{proof}
 
 \begin{lemma}[Orbitwise transport and resonant vanishing]
 \label{lem:resonant-vanishing}
