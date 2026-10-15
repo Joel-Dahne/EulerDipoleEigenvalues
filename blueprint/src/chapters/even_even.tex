@@ -412,6 +412,31 @@ onto $(-1,1)$ and needs no integrability; integrability
 second integral.
 \end{proof}
 
+\begin{lemma}[Almost-everywhere flow derivatives]
+\label{lem:weighted-flow-derivatives}
+\uses{def:boundary-form, def:h1-interval, def:weighted-boundary-domain}
+\lean{NoEmbeddedEigenvalues.ae_comp_tanh,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.ae_hasDerivAt_flowValue,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.ae_hasDerivAt_flowFirst,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.continuous_flowFirst}
+\leanok
+Composition with $\tanh$ preserves almost-everywhere statements on $\R$.
+For a weighted boundary triple $(F,D,E)$, put
+$z_0=F\circ\tanh$, $z_1=(wD)\circ\tanh$ and
+$z_2=(w(wE-2\xi D))\circ\tanh$. Then $z_0'=z_1$ and $z_1'=z_2$ almost everywhere,
+and $z_1$ is continuous.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-form-xi}
+\leanok
+The preimage of a null set under $\tanh$ is its intersection with $(-1,1)$ mapped by
+$\operatorname{artanh}$. The latter is differentiable there and sends null sets to null
+sets. Pull back the two almost-everywhere derivative relations of the weighted domain
+and apply the pointwise chain rules of Lemma~\ref{lem:boundary-form-xi}.
+Local absolute continuity makes $D$ continuous in the interior, hence $z_1$ continuous.
+\end{proof}
+
 \begin{lemma}[Classical completion of squares]
 \label{lem:trace-completion-classical}
 \uses{def:boundary-form-xi, def:boundary-jet}
@@ -1091,13 +1116,19 @@ of Definition~\ref{def:boundary-form}.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile-ode, lem:boundary-form-xi, lem:h1-interval-endpoints}
-This is a still-admitted scalar interface. The tail-integral formula makes $\Omega$
-locally absolutely continuous. Since $F$ is locally absolutely continuous and
-$g=-\lambda z-\Omega$, so is $g$. Thus $Pz=-\Omega$ and $(P-\lambda)z=g$ almost everywhere.
-The weighted domain and the change of variables identify the explicit derivative
-arguments and justify the integrals. In particular, the second term has the plus sign
-because $Pz=-\Omega$.
+\uses{lem:canonical-profile-ode, lem:weighted-flow-derivatives}
+\leanok
+Write $z_0=F\circ\tanh=z$, $z_1=(wD)\circ\tanh$ and
+$z_2=(w(wE-2\xi D))\circ\tanh$. The weighted chain rules give
+$z'=z_1$ and $z_1'=z_2$ almost everywhere. The profile equation and
+$g=-\lambda z-\Omega$ first show that $g$ is differentiable almost everywhere;
+no separate absolute-continuity assumption on $g$ is needed. The canonical ODE
+then gives $z'=-i\Omega$, so $z_1=-i\Omega$ almost everywhere by uniqueness of
+derivatives. Both sides are continuous, hence equal everywhere. Differentiating
+gives $-iz_2-\lambda z_1=g'$ almost everywhere, while
+$-iz_1=-\Omega$ and $-iz_1-\lambda z=g$ everywhere.
+Substitution into the two total integrals proves the identity, with a plus sign
+in the second term because $Pz=-\Omega$.
 \end{proof}
 
 \begin{lemma}[Eigenfunction transport traces]
@@ -1133,9 +1164,11 @@ orbit restrictions to transfer the representatives on almost every level.
 The previous list of Lean statements did not by itself connect the raw eigenfunction
 transport pair to continuous arc traces, nor the canonical unknown to the
 explicit-derivative boundary form. Lemmas~\ref{lem:ee-transport-traces}
-and~\ref{lem:canonical-arc-form} expose these bridges as separate admitted inputs.
-The exclusion proof below has no admission of its own, but these bridges and the
-earlier analytic inputs still need proofs.
+and~\ref{lem:canonical-arc-form} expose these bridges separately.
+The scalar bridge, Lemma~\ref{lem:canonical-arc-form}, is now proved in
+\texttt{CanonicalBoundaryForm.lean} without admissions. The transport specialization
+and the earlier analytic inputs still need proofs; the exclusion proof below has no
+admission of its own.
 \end{remark}
 
 \begin{lemma}[Positivity of the canonical arc contribution]

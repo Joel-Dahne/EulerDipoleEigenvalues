@@ -108,6 +108,8 @@ motivation, and standard facts cited rather than proved.
   period lemma. `OrbitCoordinates.lean` defines the orbit coordinates `(h, t)`,
   flow-time level integrals and normal/tangential derivatives. `Transport.lean` defines transport pairs on open unions of orbits.
   `CanonicalProfile.lean` defines the canonical transport profile on an arc.
+  `CanonicalBoundaryForm.lean` identifies its arc form with the explicit-derivative
+  boundary form, using a.e. chain rules under `tanh` on the weighted domain.
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.

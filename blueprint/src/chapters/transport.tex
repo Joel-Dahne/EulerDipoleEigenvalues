@@ -186,6 +186,7 @@ continuous $g$ represents the weak derivative.
 \label{lem:canonical-profile-ode}
 \uses{def:canonical-profile}
 \lean{NoEmbeddedEigenvalues.integrable_profileIntegrand,
+  NoEmbeddedEigenvalues.continuous_canonicalProfile,
   NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalProfile,
   NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalUnknown,
   NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalUnknown_sub,
@@ -193,7 +194,8 @@ continuous $g$ represents the weak derivative.
   NoEmbeddedEigenvalues.tendsto_canonicalProfile_atBot_iff,
   NoEmbeddedEigenvalues.canonicalProfile_eq_Iic}
 \leanok
-Let $g'\in L^1(\R)$. Then $\Omega'=i\lambda\Omega-g'$ almost everywhere. If moreover
+Let $g'\in L^1(\R)$. Then $\Omega$ is continuous and
+$\Omega'=i\lambda\Omega-g'$ almost everywhere. If moreover
 $\lambda\ne0$ and $g$ is differentiable almost everywhere, then $Pz=-\Omega$ and
 $(P-\lambda)z=g$ almost everywhere. Further $\Omega(s)\to0$ as $s\to+\infty$, and
 $\Omega(s)\to0$ as $s\to-\infty$ if and only if the Melnikov condition holds; in that
@@ -202,7 +204,8 @@ case $\Omega(s)=-e^{i\lambda s}\int_{-\infty}^sg'(t)e^{-i\lambda t}\,dt$.
 
 \begin{proof}
 \leanok
-Write $J(s)=\int_s^\infty q$ with $q(t)=g'(t)e^{-i\lambda t}\in L^1$. By Lebesgue
+Write $J(s)=\int_s^\infty q$ with $q(t)=g'(t)e^{-i\lambda t}\in L^1$. The identity
+$J(s)=J(0)-\int_0^sq$ makes $J$, and hence $\Omega$, continuous. By Lebesgue
 differentiation $J'=-q$ almost everywhere, so
 $\Omega'=i\lambda\Omega+e^{i\lambda s}J'=i\lambda\Omega-g'$. Then
 $z'=-(\Omega'+g')/\lambda=-i\Omega$, that is $Pz=-\Omega$, and

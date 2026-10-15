@@ -54,14 +54,23 @@ The truncated virial statement now explicitly requires `λ ≠ 0`, includes
 integrability on each truncated cell, uses `h = ε/2`, and separates the three
 level integrals.
 
-**Next backwards targets:** the two missing interfaces are now explicit admitted
-blueprint nodes: `lem:canonical-arc-form` (`canonicalArcForm_eq_flowBoundaryForm`,
-canonical unknown versus explicit derivative jets) and `lem:ee-transport-traces`
-(`ee_transport_traces`, Melnikov/pairing specialized to raw eigenfunction lifts
-and continuous arc traces). Prove these next, then the existing
+**The canonical boundary-form interface is now proved.**
+`CanonicalBoundaryForm.lean` proves `canonicalArcForm_eq_flowBoundaryForm`
+(`lem:canonical-arc-form`) with no admissions or additional hypotheses. It also
+proves continuity of the canonical profile, pullback of a.e. statements under
+`tanh`, the two a.e. weighted chain rules, and continuity of the first flow
+jet (`lem:weighted-flow-derivatives`). The weighted-domain derivative of `z`
+and the profile ODE first give a.e. differentiability of `g`; uniqueness of
+derivatives identifies the first jet with `-iΩ` a.e. Continuity upgrades this
+to pointwise equality, allowing differentiation once more to identify the
+second jet. The original weighted trace-energy hypothesis is retained in the
+API, although the equality of total integrals does not use it.
+
+**Next backwards target:** `lem:ee-transport-traces` (`ee_transport_traces`),
+the remaining assembly interface specializing Melnikov/pairing to raw
+eigenfunction lifts and continuous arc traces. Then prove the existing
 `ee_boundary_regularity`, `ee_gradient_traces` and `ee_truncated_virial` inputs.
-This is an assembly proof, not yet a sorry-free sector exclusion; the new
-interface statements need human review like every other admitted statement.
+The sector exclusion still depends on these admitted analytic results.
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
@@ -378,20 +387,19 @@ interface statements need human review like every other admitted statement.
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full Lean build and `just web` pass after the backwards
-  even–even assembly; `just graph thm:ee-exclusion` regenerates its graph.
-  All 612 blueprint Lean references resolve without duplicates. The 129-node
-  even–even dependency closure has no cycles or missing labels; every
-  cross-reference resolves. There are 51 admitted declarations: even–even
-  lost its top-level admission but gained two explicit interface statements.
-  `EvenEven.lean` has only its six admitted-input warnings. Axiom checks on
-  the six new foundational results (cosine null set, coefficient positivity,
-  bulk nonnegativity, density-to-vorticity implication, cell/symmetry transfer,
-  and nonnegative exhaustion) use only `propext`, `Classical.choice` and
-  `Quot.sound`. Arc positivity, both exclusion proofs, and `main` still depend
-  on `sorryAx` through their named analytic inputs. Earlier representative
-  checks on weighted boundary calculus and smooth virials remain valid.
-  The web build has only the usual missing image-converter messages.
+- **Validation**: full Lean build and `just web` pass after proving the
+  canonical boundary-form interface; `just graph thm:ee-exclusion` regenerates
+  its graph. All 617 blueprint Lean references resolve without duplicates.
+  The 130-node even–even dependency closure has no cycles or missing labels;
+  every cross-reference resolves. There are now 50 admitted declarations.
+  `CanonicalBoundaryForm.lean` has no warnings; `EvenEven.lean` has only its
+  five admitted-input warnings. Axiom checks on the canonical arc identity
+  and all five new helpers use only `propext`, `Classical.choice` and
+  `Quot.sound`. The earlier six endgame foundations have the same axiom
+  status. Arc positivity, both exclusion proofs, and `main` still depend
+  on `sorryAx` through their other named analytic inputs. Earlier checks on
+  weighted boundary calculus and smooth virials remain valid. The web build
+  has only the usual missing image-converter messages.
 - **Reworked manuscript** (`manuscript.tex`): front matter and the introduction
   up to the main theorem. The other sections are placeholders. Neither
   manuscript was changed in the setup/Fourier/weak-derivative/symmetry-sector

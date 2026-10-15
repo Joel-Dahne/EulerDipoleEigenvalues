@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.NormalField
-import NoEmbeddedEigenvalues.FlowBoundaryForm
+import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.Transport
 
 /-!
@@ -14,8 +14,8 @@ Proved here: `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
 Inputs: `lem:ee-neumann`, `lem:ee-truncated-virial`, `lem:ee-gradient-traces`,
-`lem:ee-boundary-regularity`, and the newly exposed interfaces
-`lem:canonical-arc-form`, `lem:ee-transport-traces`. Levels are handled in orbit
+`lem:ee-boundary-regularity`, and `lem:ee-transport-traces`. The scalar interface
+`lem:canonical-arc-form` is proved in `CanonicalBoundaryForm.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
 -/
 
@@ -97,22 +97,6 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         (Real.artanh ξ)) D (-1) = -contStream ω (rotLift^[k] (Real.pi, 0)) / lam ∧
       contStream ω (rotLift^[k] (0, -Real.pi)) =
         paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
-  sorry
-
-/-- The canonical arc form, written directly in terms of the arc trace and profile. -/
-def canonicalArcForm (lam : ℝ) (g : ℝ → ℂ) : ℝ :=
-  (∫ s, Real.cosh s ^ 2 / 2 * ‖deriv g s‖ ^ 2) +
-    ∫ s, (canonicalProfile lam g s * (starRingEnd ℂ) (g s)).re
-
-/-- Interface between the canonical profile and the explicit-derivative boundary form.
-    This scalar change-of-variables/weak-chain-rule bridge remains to be proved. -/
-theorem canonicalArcForm_eq_flowBoundaryForm {lam : ℝ} (hlam : lam ≠ 0) {g : ℝ → ℂ}
-    (hg : Integrable (deriv g))
-    (he : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2) {D E : ℝ → ℂ}
-    (hF : HasWeightedBoundaryH2 (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)) D E) :
-    canonicalArcForm lam g = flowBoundaryForm lam
-      (flowValue (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)))
-      (flowFirst D) (flowSecond D E) := by
   sorry
 
 /-- Specialization of Melnikov and the pairing limit to eigenfunctions, with the continuous
