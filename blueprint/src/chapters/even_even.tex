@@ -13,7 +13,7 @@ in an $R$-character $\kappa\in\{1,-1\}$.
 
 \begin{definition}[Normal field]
 \label{def:normal-field}
-\uses{def:cells, lem:dipole-identities}
+\uses{def:cells, lem:dipole-critical-points, lem:dipole-identities}
 \lean{NoEmbeddedEigenvalues.normalField₁,
   NoEmbeddedEigenvalues.normalField₂,
   NoEmbeddedEigenvalues.normalCoeff,
@@ -131,13 +131,13 @@ and Lebesgue differentiation give the identity at almost every level.
 
 \begin{lemma}[Neumann condition]
 \label{lem:ee-neumann}
-\uses{def:sectors, def:cells, lem:traces}
+\uses{def:sectors, def:cells, lem:separatrix-lines, lem:traces}
 In the even--even sector, $\psi$ is even under both separatrix reflections,
 so its normal derivative trace vanishes on every regular separatrix arc.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:stream-sector, lem:traces}
+\uses{lem:stream-sector, lem:separatrix-lines, lem:traces}
 The reflection $S_j$ fixes the arc and reverses its normal.
 \end{proof}
 

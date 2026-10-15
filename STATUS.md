@@ -52,6 +52,13 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:localization-cutoff` (`χu ∈ Hᵏ(ℝ²)`). Open: `lem:local-to-global`, the
    `ℝ² ↔ 𝕋²` unfolding (periodized test functions); then the assumption file
    for `lem:elliptic-local`, `lem:traces`, `lem:coarea`, `lem:odd-hardy`.
+   Remaining definitions (user's focus, 2026-10-15): `def:cells` is now
+   definitions only and formalized (`Cells.lean`), with new proved lemmas
+   `lem:separatrix-lines`, `lem:dipole-critical-points`, `lem:cell-square`;
+   `lem:diagonal-calculus` (`dx dy = 2 da db`, `Δ` in `a, b`) is stated, not
+   formalized. Other open definitions: `def:period`, `def:h2-interval`,
+   `def:h1-periodic`, the transport, odd–odd and mixed definitions, and
+   `def:bernstein`.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`

@@ -20,19 +20,104 @@ and $d$ for distance to the saddle set. Local deviations are flagged.
 \begin{definition}[Cells and diagonal coordinates]
 \label{def:cells}
 \uses{def:dipole}
-The critical points of $\Psi$ are the elliptic centers $(0,0)$ (maximum,
-$\Psi=2$) and $(\pi,\pi)$ (minimum, $\Psi=-2$), and the two saddles $(\pi,0)$,
-$(0,\pi)$ (where $\Psi=0$). The separatrix $\{\Psi=0\}$ is the union of the
-two closed lines $\{x+y\equiv\pi\}$ and $\{x-y\equiv\pi\}$. The positive cell
-is $\Cell=\{\Psi>0\}$, the negative cell $\{\Psi<0\}$.
-
-On a lift of $\Cell$ put $a=(x+y)/2$, $b=(x-y)/2$. Then $\Cell$ is the square
-$|a|,|b|<\pi/2$, and $\Psi=2\cos a\cos b$, $dx\,dy=2\,da\,db$, and
-$\Delta=\tfrac12(\partial_a^2+\partial_b^2)$. The edges $a=\pm\pi/2$ lie on the
-fixed line of $S_1$ and the edges $b=\pm\pi/2$ on the fixed line of $S_2$.
-The four corners $(a,b)=(\pm\pi/2,\pm\pi/2)$ project to the two saddles, each
-saddle being a corner twice.
+\lean{NoEmbeddedEigenvalues.positiveCell,
+  NoEmbeddedEigenvalues.negativeCell,
+  NoEmbeddedEigenvalues.separatrix,
+  NoEmbeddedEigenvalues.diagCoord,
+  NoEmbeddedEigenvalues.cellSquare}
+\leanok
+The positive cell is $\Cell=\{\Psi>0\}$, the negative cell $\{\Psi<0\}$, and the
+separatrix $\{\Psi=0\}$. On the lift $\R^2$ the diagonal coordinates are
+$a=(x+y)/2$, $b=(x-y)/2$, and the square is $\{|a|,|b|<\pi/2\}$.
 \end{definition}
+
+\begin{lemma}[Separatrix lines]
+\label{lem:separatrix-lines}
+\uses{def:cells, def:reflections, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.dipoleLift_eq_diag,
+  NoEmbeddedEigenvalues.Ψ_torusProj,
+  NoEmbeddedEigenvalues.Ψ_eq_zero_iff,
+  NoEmbeddedEigenvalues.S₁_eq_self_iff,
+  NoEmbeddedEigenvalues.S₂_eq_self_iff,
+  NoEmbeddedEigenvalues.mem_separatrix_iff}
+\leanok
+$\Psi=2\cos a\cos b$. The separatrix is the union of the two closed lines
+$\{x+y\equiv\pi\}$ and $\{x-y\equiv\pi\}$, which are exactly the fixed lines of
+$S_1$ and $S_2$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$\cos x+\cos y=2\cos\frac{x+y}2\cos\frac{x-y}2$, and $\cos a=0$ iff
+$x+y\in\pi+2\pi\Z$. $S_1(x,y)=(\pi-y,\pi-x)$ is the identity exactly when
+$x+y\equiv\pi$; for $S_2$ use $-\pi\equiv\pi$.
+\end{proof}
+
+\begin{lemma}[Critical points]
+\label{lem:dipole-critical-points}
+\uses{def:cells, lem:dipole-identities}
+\lean{NoEmbeddedEigenvalues.gradSq_dipoleLift_eq_zero_iff,
+  NoEmbeddedEigenvalues.critical_points_iff,
+  NoEmbeddedEigenvalues.Ψ_center,
+  NoEmbeddedEigenvalues.Ψ_anticenter,
+  NoEmbeddedEigenvalues.Ψ_saddle₁,
+  NoEmbeddedEigenvalues.Ψ_saddle₂,
+  NoEmbeddedEigenvalues.Ψ_le_two,
+  NoEmbeddedEigenvalues.neg_two_le_Ψ,
+  NoEmbeddedEigenvalues.Ψ_eq_two_iff,
+  NoEmbeddedEigenvalues.Ψ_eq_neg_two_iff}
+\leanok
+$\nabla\Psi=0$ exactly where $\sin x=\sin y=0$, that is at the elliptic centers
+$(0,0)$ and $(\pi,\pi)$ and at the two saddles $(\pi,0)$, $(0,\pi)$. Moreover
+$-2\le\Psi\le2$; the maximum $2$ is attained only at $(0,0)$, the minimum $-2$ only
+at $(\pi,\pi)$, and $\Psi=0$ at the saddles.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$|\nabla\Psi|^2=\sin^2x+\sin^2y$, and $\sin\theta=0$ iff $\theta\in\{0,\pi\}$ on the
+circle. $\Psi=2$ forces $\cos x=\cos y=1$.
+\end{proof}
+
+\begin{lemma}[The cell is a square]
+\label{lem:cell-square}
+\uses{def:cells, def:reflections, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.injOn_torusProj_cellSquare,
+  NoEmbeddedEigenvalues.image_torusProj_cellSquare,
+  NoEmbeddedEigenvalues.torusProj_mem_positiveCell,
+  NoEmbeddedEigenvalues.exists_mem_cellSquare,
+  NoEmbeddedEigenvalues.S₁_torusProj_of_edge,
+  NoEmbeddedEigenvalues.S₂_torusProj_of_edge,
+  NoEmbeddedEigenvalues.torusProj_corner}
+\leanok
+The covering map is injective on the open square $|a|,|b|<\pi/2$ and maps it
+onto $\Cell$. The edges $a=\pm\pi/2$ lie on the fixed line of $S_1$, the edges
+$b=\pm\pi/2$ on the fixed line of $S_2$, and the four corners
+$(a,b)=(\pm\pi/2,\pm\pi/2)$ project to the two saddles, each saddle being a corner
+twice.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:separatrix-lines, lem:dipole-critical-points}
+\leanok
+In diagonal coordinates the lattice $2\pi\Z^2$ consists of the shifts
+$\pi(m+n,m-n)$. Two points of the square differ by such a shift with both
+components of absolute value less than $\pi$, so by zero. Conversely, given a
+point of $\Cell$, shift $a$ into $(-\pi/2,\pi/2]$ by a multiple $k\pi$ and then $b$
+into $[-\pi/2,3\pi/2)$ by a shift $l\pi$ with $l\equiv k\pmod2$. Since
+$\cos a\cos b>0$ and $\cos a\ge0$, both lie in $(-\pi/2,\pi/2)$.
+\end{proof}
+
+\begin{lemma}[Calculus in diagonal coordinates]
+\label{lem:diagonal-calculus}
+\uses{def:cells, def:lift-operators}
+$dx\,dy=2\,da\,db$, and $\Delta=\tfrac12(\partial_a^2+\partial_b^2)$.
+\end{lemma}
+
+\begin{proof}
+The map $(a,b)\mapsto(a+b,a-b)$ is linear with determinant $-2$, and
+$\partial_a=\partial_x+\partial_y$, $\partial_b=\partial_x-\partial_y$.
+\end{proof}
 
 \begin{definition}[Classical operators on the lift]
 \label{def:lift-operators}
@@ -219,7 +304,7 @@ $y=x-\pi$, $\sin y=-\sin x$.
 
 \begin{definition}[Quarter orbits and the period]
 \label{def:period}
-\uses{def:cells}
+\uses{def:cells, lem:separatrix-lines, lem:cell-square}
 For $0<h<1$ let $\gamma_h$ be the orbit on the level $\{\Psi=2h\}$ in $\Cell$,
 parametrized by flow time and centered at $(a,b)=(0,\arccos h)$, i.e. at
 $(x,y)=(\arccos h,-\arccos h)$. One quarter of the orbit is
@@ -288,7 +373,7 @@ hyperbolas.
 
 \begin{lemma}[Corner coordinates]
 \label{lem:corner-coordinates}
-\uses{def:cells}
+\uses{def:cells, lem:cell-square}
 Near a corner of $\Cell$, let $\alpha,\beta>0$ be the distances in the $(a,b)$
 coordinates to the two sides meeting there, and put $u=\sin\alpha$,
 $v=\sin\beta$. Then $\Psi/2=uv$ exactly, the metric coefficients in $(u,v)$
@@ -298,13 +383,14 @@ comparable to $du/u$.
 \end{lemma}
 
 \begin{proof}
+\uses{lem:separatrix-lines, lem:diagonal-calculus}
 $\cos a=\sin\alpha$ and $\cos b=\sin\beta$ at the corner $(\pi/2,\pi/2)$, and
 similarly at the other corners.
 \end{proof}
 
 \begin{lemma}[Saddle normal form]
 \label{lem:saddle-normal-form}
-\uses{def:cells}
+\uses{def:cells, lem:dipole-critical-points, lem:separatrix-lines}
 Near each saddle there are orthonormal coordinates $(u,v)$, in which the two
 separatrix rays are the coordinate axes, such that
 $\Psi=uv+O(r^4)$ and $|\nabla\Psi|^2=u^2+v^2+O(r^4)$, $r=(u^2+v^2)^{1/2}$.

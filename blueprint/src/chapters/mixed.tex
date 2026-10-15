@@ -22,7 +22,7 @@ should be unified in the paper.
 
 \begin{definition}[Mixed field]
 \label{def:mixed-field}
-\uses{def:cells, def:adapted-field}
+\uses{def:cells, lem:cell-square, lem:diagonal-calculus, def:adapted-field}
 On $\Cell$ let
 $W=\tan(x/2)\partial_x+\tan(y/2)\partial_y=\frac{u}{p}\partial_a+\frac{v}{p}\partial_b$
 and $f=R/p^2$.
@@ -229,7 +229,7 @@ $\int|\nabla_0(h\phi)|^2=\int\mu(|\nabla_0\phi|^2+|\phi|^2)$, and expand.
 
 \begin{definition}[Second-order coefficients]
 \label{def:mixed-coefficients}
-\uses{def:cells}
+\uses{def:cells, lem:cell-square, lem:diagonal-calculus}
 In the local notation of this chapter let
 \[
   G=\begin{pmatrix}g&j\\j&g\end{pmatrix},\quad g=h^2+\frac{2hu^2}p,\quad
