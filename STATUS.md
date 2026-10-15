@@ -39,6 +39,19 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
+**Proposed next target: backwards even–even assembly.** Prove
+`even_even_exclusion` using the admitted analytic inputs, first for one rotation
+character and then by `IsEigenSolution.rotation_decomposition`. This is feasible
+but still needs interface lemmas: transport pairs with the continuous stream
+representative on an invariant lift neighbourhood; identification of the
+canonical arc form with the explicit-derivative boundary form; and a common
+good-level sequence for the a.e. truncated identity and boundary limits.
+The final measure-theoretic argument can use `f > 0` almost everywhere in the
+cell to deduce `ω = 0` directly from the vanishing bulk density, bypassing a
+weak-gradient constant-function theorem (digest note at `thm:ee-exclusion`).
+This would remove the exclusion theorem's own `sorry`, not the admissions in
+its analytic dependencies. No exclusion proof has been attempted yet.
+
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
    and fixed the blueprint where they did not (see "Current state"). Also
