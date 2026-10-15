@@ -45,6 +45,13 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    lifts descend to the torus, classical partials are the Fourier partials,
    periodic `Cᵏ` lifts are in `Hᵏ`, and lift integrals/pairings are torus
    integrals/`L²` inner products. Not done: `lem:sobolev-embedding`.
+   Local Sobolev spaces (`SobolevLocal.lean`): `def:sobolev-local` split into
+   `def:weak-derivative-local`, `def:sobolev-local` (`Hᵏ(U)`, `Hᵏ_loc`,
+   weighted) and `def:sobolev-fractional` (Mathlib's `MemSobolev`). Proved:
+   `lem:weak-derivative-basic`, `lem:weak-derivative-classical` (`Cᵏ ⊆ Hᵏ_loc`),
+   `lem:localization-cutoff` (`χu ∈ Hᵏ(ℝ²)`). Open: `lem:local-to-global`, the
+   `ℝ² ↔ 𝕋²` unfolding (periodized test functions); then the assumption file
+   for `lem:elliptic-local`, `lem:traces`, `lem:coarea`, `lem:odd-hardy`.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`

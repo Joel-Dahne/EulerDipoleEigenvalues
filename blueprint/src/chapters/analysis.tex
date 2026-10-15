@@ -222,17 +222,113 @@ Parseval, monotonicity of $(1+|k|^2)^s$ in $s$, and
 $|a+b|^2\le2|a|^2+2|b|^2$.
 \end{proof}
 
-\begin{definition}[Local Sobolev spaces and traces]
-\label{def:sobolev-local}
-\uses{def:sobolev-torus}
-For an open $U\subset\T^2$ or $U\subset\R^2$ and an integer $k\ge0$, $H^k(U)$ is
-the space of $L^2(U)$ functions whose weak derivatives up to order $k$ are in
-$L^2(U)$, and $H^k_{\mathrm{loc}}(U)$ the space of functions in $H^k(V)$ for
-every $V\Subset U$. Weighted versions require the weak derivatives to be in a
-weighted $L^2$ space. Traces on curves are defined in Lemma~\ref{lem:traces}.
-The fractional space $H^{1/2}(\R)$ is Mathlib's $H^{s,2}(\R)$; its norm is
-equivalent to the one given by the Gagliardo seminorm.
+\begin{definition}[Weak derivatives on open sets]
+\label{def:weak-derivative-local}
+\uses{def:lift-operators}
+\lean{NoEmbeddedEigenvalues.IsTestFunctionOn,
+  NoEmbeddedEigenvalues.coordPartial,
+  NoEmbeddedEigenvalues.HasWeakPartialOn}
+\leanok
+Let $U\subset\R^2$. A test function on $U$ is a smooth function with compact
+support contained in $U$. A function $h$ is the weak $j$-th partial derivative of
+$g$ on $U$ if $g,h$ are locally integrable on $U$ and
+$\int g\,\partial_j\varphi=-\int h\,\varphi$ for every test function $\varphi$ on $U$.
+Open subsets of $\T^2$ are treated through their lifts to $\R^2$.
 \end{definition}
+
+\begin{definition}[Local Sobolev spaces]
+\label{def:sobolev-local}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevOnWith,
+  NoEmbeddedEigenvalues.MemSobolevOn,
+  NoEmbeddedEigenvalues.MemWeightedSobolevOn,
+  NoEmbeddedEigenvalues.MemSobolevLocOn}
+\leanok
+For $U\subset\R^2$ and an integer $k\ge0$, $H^k(U)$ is the space of $L^2(U)$
+functions whose weak derivatives up to order $k$ exist and are in $L^2(U)$, and
+$H^k_{\mathrm{loc}}(U)$ the space of functions in $H^k(V)$ for every open
+$V\Subset U$ (compact closure contained in $U$). The weighted space
+$H^k(U,w)$ uses $L^2(U,w\,dx)$ instead of $L^2(U)$.
+\end{definition}
+
+\begin{definition}[Fractional Sobolev space on the line]
+\label{def:sobolev-fractional}
+\lean{TemperedDistribution.MemSobolev}
+\mathlibok
+$H^{1/2}(\R)$ is Mathlib's Bessel potential space $H^{s,2}(\R)$ with $s=1/2$; its
+norm is equivalent to the one given by the Gagliardo seminorm.
+\end{definition}
+
+\begin{lemma}[Basic properties of local Sobolev spaces]
+\label{lem:weak-derivative-basic}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.integrable_mul_of_tsupport_subset,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.mono,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.add,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.const_mul,
+  NoEmbeddedEigenvalues.MemSobolevOnWith.of_succ,
+  NoEmbeddedEigenvalues.MemSobolevOnWith.add,
+  NoEmbeddedEigenvalues.MemSobolevOnWith.const_mul,
+  NoEmbeddedEigenvalues.MemSobolevOn.mono,
+  NoEmbeddedEigenvalues.MemSobolevOn.memSobolevLocOn,
+  NoEmbeddedEigenvalues.MemSobolevLocOn.of_succ,
+  NoEmbeddedEigenvalues.MemSobolevLocOn.add}
+\leanok
+Weak derivatives and the spaces $H^k(U)$, $H^k(U,w)$ are linear, restrict to
+smaller sets, decrease in $k$, and $H^k(U)\subset H^k_{\mathrm{loc}}(U)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+A locally integrable function times a continuous function with compact support
+in $U$ is integrable, so the defining integrals split.
+\end{proof}
+
+\begin{lemma}[Classical derivatives are weak derivatives]
+\label{lem:weak-derivative-classical}
+\uses{def:sobolev-local, lem:lift-calculus}
+\lean{NoEmbeddedEigenvalues.integral_partialX_eq_zero,
+  NoEmbeddedEigenvalues.integral_partialY_eq_zero,
+  NoEmbeddedEigenvalues.integral_mul_coordPartial,
+  NoEmbeddedEigenvalues.hasWeakPartialOn_of_contDiff,
+  NoEmbeddedEigenvalues.memSobolevLocOn_of_contDiff}
+\leanok
+For $C^1$ functions $u$ on $\R^2$ and every $U$, the classical partial derivatives
+are weak partial derivatives on $U$. Hence $C^k(\R^2)\subset H^k_{\mathrm{loc}}(U)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+$\int\partial_jf=0$ for $C^1$ functions with compact support, by Fubini and the
+fundamental theorem of calculus on each line; apply this to $f=u\varphi$.
+Continuous functions are square integrable on open sets with compact closure.
+\end{proof}
+
+\begin{lemma}[Localization by cutoffs]
+\label{lem:localization-cutoff}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.cutoff,
+  NoEmbeddedEigenvalues.memLp_cutoff,
+  NoEmbeddedEigenvalues.MemSobolevLocOn.cutoff,
+  NoEmbeddedEigenvalues.contDiff_coordPartial_top}
+\leanok
+Let $U\subset\R^2$ be open and $\chi$ smooth with compact support in $U$. If $h$
+is the weak derivative of $g$ on an open $V\supset\operatorname{supp}\chi$, then
+$(\partial_j\chi)g+\chi h$ is the weak derivative of $\chi g$ on all of $\R^2$. If
+$u\in H^k_{\mathrm{loc}}(U)$, then $\chi u\in H^k(\R^2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic, lem:weak-derivative-classical}
+\leanok
+For a test function $\varphi$ on any set, $\chi\varphi$ is a test function on $V$,
+and $\chi\,\partial_j\varphi=\partial_j(\chi\varphi)-(\partial_j\chi)\varphi$.
+For the second claim choose an open $V$ with compact closure between
+$\operatorname{supp}\chi$ and $U$, and induct on $k$: the derivative
+$(\partial_j\chi)u+\chi\,\partial_ju$ is a sum of two cutoffs of
+$H^{k-1}_{\mathrm{loc}}(V)$ functions.
+\end{proof}
 
 \section{Sobolev spaces on the torus}
 
@@ -339,12 +435,21 @@ $H^1(\T^2)\subset L^p(\T^2)$ for every $p<\infty$, with continuous inclusions.
 
 \begin{lemma}[Localization]
 \label{lem:local-to-global}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift}
 If $u\in H^k_{\mathrm{loc}}(U)$ and $\chi$ is smooth with compact support in
-$U$, then $\chi u\in H^k(\T^2)$ (extended by zero). Conversely the restriction
-of an $H^k(\T^2)$ function to $U$ lies in $H^k(U)$, and weak derivatives agree
-with the Fourier derivatives of Definition~\ref{def:sobolev-torus}.
+$U$, where $U\subset\R^2$ projects injectively to $\T^2$, then $\chi u$ (periodized)
+lies in $H^k(\T^2)$. Conversely the lift to $U$ of an $H^k(\T^2)$ function lies
+in $H^k(U)$, and its weak derivatives are the lifts of the Fourier derivatives
+of Definition~\ref{def:sobolev-torus}.
 \end{lemma}
+
+\begin{proof}
+\uses{lem:localization-cutoff, lem:lift-torus, lem:elliptic-torus}
+The $\R^2$ statement is Lemma~\ref{lem:localization-cutoff}. What remains is the
+passage between $\R^2$ and $\T^2$: periodize test functions and unfold integrals
+over the translates of a fundamental square, then use that classical and Fourier
+derivatives agree on the torus (Lemma~\ref{lem:lift-torus}).
+\end{proof}
 
 \begin{lemma}[Local elliptic regularity]
 \label{lem:elliptic-local}
@@ -358,7 +463,7 @@ independent of $r$.
 
 \begin{lemma}[Traces]
 \label{lem:traces}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:sobolev-fractional}
 Restriction to a smooth (or uniformly Lipschitz) curve maps $H^1$ to
 $H^{1/2}$ and $H^2$ to $H^{3/2}$, continuously and locally uniformly in
 families of such curves. In particular the traces of $\nabla\psi$ on the
@@ -527,7 +632,7 @@ proved layer estimate of Lemma~\ref{lem:h1-endpoint-layers}.
 
 \begin{lemma}[Critical Hardy inequality for odd functions]
 \label{lem:odd-hardy}
-\uses{def:sobolev-local}
+\uses{def:sobolev-fractional}
 If $a\in H^{1/2}(\R)$ is odd and compactly supported, then
 $\int_0^\infty|a(u)|^2\,du/u\le C\|a\|_{H^{1/2}(\R)}^2$
 (manuscript \texttt{(ee:odd-hardy)}).
