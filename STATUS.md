@@ -29,25 +29,29 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    (`[L₀, W·∇] = f L₀`, `L₀ div W = L₀ f`, `[L₀, D] = ½(f L₀ + L₀ f)`) in
    `VirialAlgebra.lean`. Left in `lem:commutator-algebra`: skew-symmetry of
    `D` and the `H = -iL₀` form; these and `lem:virial-smooth` need
-   integration by parts on the torus.
+   integration by parts on the torus. Also done (2026-10-15):
+   `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
+   (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`
+   (`FlowBoundaryForm.lean`, change of variables `ξ = tanh s`), which makes
+   `lem:ee-trace-positivity` `\leanok` in the manuscript's flow-time form.
 4. Even–even. Boundary positivity on the weighted domain is now proved in
    Lean (2026-10-15, `WeightedBoundaryForm.lean`), by exhausting (-1,1)
    with interior intervals instead of cutoff + mollification + density
-   (digest note after `lem:weighted-boundary-positivity`). The new nodes
+   (digest note after `lem:weighted-boundary-positivity`); with
+   `lem:boundary-form-xi` now formalized, `lem:ee-trace-positivity` is
+   `\leanok` too. The new nodes
    `lem:l2-endpoint-liminf`, `lem:boundary-flux`,
    `lem:weighted-boundary-integrable`, `lem:weighted-completion`,
    `lem:weighted-affine-splitting` and `lem:weighted-boundary-positivity`
    are `\leanok` in statement and proof, using only `propext`,
-   `Classical.choice`, `Quot.sound`. `lem:ee-trace-positivity` now needs only
-   the flow-time/ξ change of variables (`lem:boundary-form-xi`, not in
-   Lean). The now-unused cutoff/zero-extension modules (`BoundaryCutoff*.lean`,
+   `Classical.choice`, `Quot.sound`. The now-unused cutoff/zero-extension
+   modules (`BoundaryCutoff*.lean`,
    `IntervalZeroExtension.lean`, layer estimates) and their blueprint
    subsection are kept as infrastructure for now (decision 2026-10-15; noted
    in the module docstrings). Later: restructure `even_even.tex`
    (generic interval material to `analysis.tex`, remove status chatter from
-   nodes). Remaining even–even inputs: the change of variables, the
-   normal-field algebra, `lem:ee-boundary-regularity`; the trace and
-   transport inputs remain unverified.
+   nodes). Remaining even–even inputs: `lem:ee-boundary-regularity` and
+   the trace and transport inputs, which remain unverified.
    Lean cleanups found in the 2026-10-15 review (none done yet): shared
    "locally AC with a.e. derivative" predicate under `HasIntervalH1` and
    `HasWeightedBoundaryH2`; a `HasIntervalH10` structure for the repeated

@@ -4,6 +4,7 @@ import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.DipoleCalculus
 import NoEmbeddedEigenvalues.EvenEven
+import NoEmbeddedEigenvalues.FlowBoundaryForm
 import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.IntervalH1Estimates
@@ -13,6 +14,7 @@ import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.Sectors
+import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2

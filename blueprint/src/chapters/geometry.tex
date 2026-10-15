@@ -125,14 +125,32 @@ $\rho^2=2-p^2-q^2$ and $\nabla s\cdot\nabla\rho^2=-2p(1-p^2)-2q(1-q^2)$.
 \begin{definition}[Heteroclinic arc]
 \label{def:separatrix-arc}
 \uses{def:cells}
+\lean{NoEmbeddedEigenvalues.arcAngle,
+  NoEmbeddedEigenvalues.separatrixArc}
+\leanok
 Let $\gamma(s)=\big(2\arctan(e^{-s}),\,2\arctan(e^{-s})-\pi\big)$, $s\in\R$
-(manuscript \texttt{(ee:arc)}). The images of $\gamma$ under the rotation $R$
-give the four directed arcs bounding $\Cell$.
+(manuscript \texttt{(ee:arc)}).
 \end{definition}
+
+\begin{remark}
+The images of $\gamma$ under the rotation $R$ give the four directed arcs
+bounding $\Cell$. This is not yet a separate node or formalized.
+\end{remark}
 
 \begin{lemma}[Arc parametrization]
 \label{lem:separatrix-arc}
 \uses{def:separatrix-arc}
+\lean{NoEmbeddedEigenvalues.sin_arcAngle,
+  NoEmbeddedEigenvalues.hasDerivAt_arcAngle,
+  NoEmbeddedEigenvalues.separatrixArc_velocity,
+  NoEmbeddedEigenvalues.hasDerivAt_separatrixArc,
+  NoEmbeddedEigenvalues.separatrixArc_speed,
+  NoEmbeddedEigenvalues.separatrixArc_fst_sub_snd,
+  NoEmbeddedEigenvalues.tendsto_separatrixArc_atBot,
+  NoEmbeddedEigenvalues.tendsto_separatrixArc_atTop,
+  NoEmbeddedEigenvalues.hasDerivAt_tanh,
+  NoEmbeddedEigenvalues.one_sub_tanh_sq}
+\leanok
 $\gamma$ is an integral curve of the velocity $(\sin y,-\sin x)$, lies on
 $\{x-y=\pi\}$, runs from the saddle $(\pi,0)$ ($s\to-\infty$) to the saddle
 $(0,-\pi)\equiv(0,\pi)$ ($s\to+\infty$), and has speed
@@ -141,6 +159,7 @@ variable $\xi=\tanh s$ one has $ds=d\xi/(1-\xi^2)$.
 \end{lemma}
 
 \begin{proof}
+\leanok
 With $x=2\arctan(e^{-s})$ one has $\sin x=\sech s$ and $x'=-\sech s$; since
 $y=x-\pi$, $\sin y=-\sin x$.
 \end{proof}

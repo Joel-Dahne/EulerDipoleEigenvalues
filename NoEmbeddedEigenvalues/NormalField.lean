@@ -3,7 +3,7 @@ import NoEmbeddedEigenvalues.DipoleCalculus
 /-!
 # The normal field of the even–even sector
 
-Blueprint: `def:normal-field`, `lem:normal-field-algebra`.
+Blueprint: `def:normal-field`, `lem:normal-field-algebra`, `lem:ee-density`.
 
 On the positive cell minus its center, `W = (Ψ - 2) ∇Ψ / ρ²` is adapted with
 coefficient `f = Ψ (2 - Ψ) δ² / ρ⁴`, has divergence `f + 1`, and in the frame
@@ -269,5 +269,41 @@ theorem normalC_pos_le_one {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipole
   refine ⟨div_pos (mul_pos h0 (by linarith)) hρ, ?_⟩
   rw [normalC, div_le_one hρ]
   exact dipoleLift_mul_le_gradSq p
+
+/-! ### The bulk density -/
+
+/-- The bulk density `J = f |ω|² + (2 - c) |ψₙ|² + c |ψₜ|²` of the even–even virial
+    identity at `p`, for given values of `ω` and of the normal and tangential derivatives
+    `ψₙ`, `ψₜ` of the stream function. -/
+def eeDensity (p : ℝ × ℝ) (ω ψn ψt : ℂ) : ℝ :=
+  normalCoeff p * ‖ω‖ ^ 2 + (2 - normalC p) * ‖ψn‖ ^ 2 + normalC p * ‖ψt‖ ^ 2
+
+/-- On the positive cell minus its center, `f ≥ 0`. -/
+theorem normalCoeff_nonneg {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipoleLift p < 2) :
+    0 ≤ normalCoeff p := by
+  have h2' : 0 ≤ 2 - dipoleLift p := by linarith
+  unfold normalCoeff
+  positivity
+
+/-- The bulk density is nonnegative on the positive cell minus its center. -/
+theorem eeDensity_nonneg {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipoleLift p < 2)
+    (ω ψn ψt : ℂ) : 0 ≤ eeDensity p ω ψn ψt := by
+  obtain ⟨hc0, hc1⟩ := normalC_pos_le_one h0 h2
+  have hf := normalCoeff_nonneg h0 h2
+  have h2c : 0 ≤ 2 - normalC p := by linarith
+  unfold eeDensity
+  positivity
+
+/-- The gradient part of the bulk density is positive where `∇ψ ≠ 0`. -/
+theorem eeDensity_gradient_pos {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipoleLift p < 2)
+    {ψn ψt : ℂ} (hψ : ψn ≠ 0 ∨ ψt ≠ 0) :
+    0 < (2 - normalC p) * ‖ψn‖ ^ 2 + normalC p * ‖ψt‖ ^ 2 := by
+  obtain ⟨hc0, hc1⟩ := normalC_pos_le_one h0 h2
+  have h2c : 0 < 2 - normalC p := by linarith
+  rcases hψ with h | h
+  · have := norm_pos_iff.2 h
+    positivity
+  · have := norm_pos_iff.2 h
+    positivity
 
 end NoEmbeddedEigenvalues

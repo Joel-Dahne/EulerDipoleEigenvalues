@@ -86,14 +86,20 @@ field by a function of $\Psi$ multiplies the coefficient by the same function.
 \begin{lemma}[Positivity of the bulk density]
 \label{lem:ee-density}
 \uses{lem:normal-field-algebra}
+\lean{NoEmbeddedEigenvalues.eeDensity,
+  NoEmbeddedEigenvalues.normalCoeff_nonneg,
+  NoEmbeddedEigenvalues.eeDensity_nonneg,
+  NoEmbeddedEigenvalues.eeDensity_gradient_pos}
+\leanok
 The density $\mathcal J=f|\omega|^2+(2-c)|\psi_n|^2+c|\psi_t|^2$ is
-nonnegative on $\Cell$, and its gradient part is strictly positive at every
+nonnegative on $\Cell$ minus its center, and its gradient part is strictly positive at every
 regular interior point where $\nabla\psi\ne0$ (manuscript
 \texttt{(ee:positive-density)}).
 \end{lemma}
 
 \begin{proof}
 \uses{lem:normal-field-algebra}
+\leanok
 $f\ge0$ and $0<c\le1$.
 \end{proof}
 
@@ -165,7 +171,12 @@ Cauchy--Schwarz.
 
 \begin{definition}[Boundary form]
 \label{def:boundary-form}
-\uses{def:canonical-profile}
+\uses{def:boundary-form-xi}
+\lean{NoEmbeddedEigenvalues.flowBoundaryForm,
+  NoEmbeddedEigenvalues.flowValue,
+  NoEmbeddedEigenvalues.flowFirst,
+  NoEmbeddedEigenvalues.flowSecond}
+\leanok
 For a function $z$ on $\R$ with $P=-i\partial_s$, let
 (manuscript \texttt{(ee:trace-form)})
 \[
@@ -174,6 +185,10 @@ For a function $z$ on $\R$ with $P=-i\partial_s$, let
 \]
 In the variable $\xi=\tanh s$, with $w=1-\xi^2$ and $F(\xi)=z(s)$, we also write
 $\mathcal F_\lambda(F)$, and $G=-iwF'-\lambda F$ corresponds to $(P-\lambda)z$.
+Given $F,D,E$ on $(-1,1)$, the corresponding functions of $s$ are
+$z=F\circ\tanh$, $z_1=(wD)\circ\tanh$ and $z_2=(w(wE-2\xi D))\circ\tanh$.
+As for $\mathcal B_\lambda$, Lean takes the derivatives $z_1=z'$, $z_2=z_1'$
+as explicit arguments, and integrates the real part in the second term.
 \end{definition}
 
 \begin{definition}[Finite-interval boundary form]
@@ -294,18 +309,36 @@ differentiation and elementary integration, not formalized in Lean.
 
 \begin{lemma}[Boundary form in the $\xi$ variable]
 \label{lem:boundary-form-xi}
-\uses{def:boundary-form, def:boundary-form-xi}
+\uses{def:boundary-form, def:boundary-form-xi, def:weighted-boundary-domain}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.flowBoundaryForm_eq,
+  NoEmbeddedEigenvalues.hasDerivAt_flowValue,
+  NoEmbeddedEigenvalues.hasDerivAt_flowFirst,
+  NoEmbeddedEigenvalues.integral_tanh_subst,
+  NoEmbeddedEigenvalues.boundaryWeight_tanh}
+\leanok
+Let $(F,D,E)$ be a weighted boundary triple. Then
 \[
   \mathcal F_\lambda(F)=\frac12\int_{-1}^1|wF''-2\xi F'-i\lambda F'|^2\,d\xi
-  -\int_{-1}^1w|F'|^2\,d\xi+\lambda\operatorname{Im}\int_{-1}^1F'\bar F\,d\xi
+  -\int_{-1}^1w|F'|^2\,d\xi+\lambda\operatorname{Im}\int_{-1}^1F'\bar F\,d\xi ,
 \]
-Thus $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,F',F'')$
-(manuscript \texttt{(ee:trace-xi)}).
+that is, $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,D,E)$, where
+$\mathcal F_\lambda(F)$ is computed from $z=F\circ\tanh$ and the derivatives
+$z_1=(wD)\circ\tanh$, $z_2=(w(wE-2\xi D))\circ\tanh$. These are the derivatives
+of $z$ and $z_1$ at every $s$ where $F'=D$, respectively $D'=E$, holds at
+$\tanh s$ (manuscript \texttt{(ee:trace-xi)}).
 \end{lemma}
 
 \begin{proof}
+\uses{lem:separatrix-arc, lem:weighted-boundary-integrable}
+\leanok
 $\partial_s=w\partial_\xi$, $\cosh^2s=1/w$, $ds=d\xi/w$, and
-$G'=-i(wF''-2\xi F'-i\lambda F')$.
+$G'=-i(wF''-2\xi F'-i\lambda F')$. Pointwise, the first integrand is
+$\cosh^{-2}s\,|wE-2\xi D-i\lambda D|^2$ and the second is
+$\cosh^{-2}s\,(w|D|^2-\lambda\operatorname{Im}(D\bar F))$ at $\xi=\tanh s$. The
+substitution $\xi=\tanh s$ is a change of variables for an injective map
+onto $(-1,1)$ and needs no integrability; integrability
+(Lemma~\ref{lem:weighted-boundary-integrable}) is used only to split the
+second integral.
 \end{proof}
 
 \begin{lemma}[Classical completion of squares]
@@ -931,12 +964,15 @@ remain unformalized.
 \begin{lemma}[Positivity of the boundary form]
 \label{lem:ee-trace-positivity}
 \uses{def:boundary-form, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.flowBoundaryForm_nonneg}
+\leanok
 If $F\in\mathcal D_w$ and $F(1)=\pm F(-1)$, then
 $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
 \end{lemma}
 
 \begin{proof}
 \uses{lem:boundary-form-xi, lem:weighted-boundary-positivity}
+\leanok
 By Lemma~\ref{lem:boundary-form-xi},
 $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,D,E)$ for the derivatives $D,E$
 of $F$, and Lemma~\ref{lem:weighted-boundary-positivity} applies. In the
