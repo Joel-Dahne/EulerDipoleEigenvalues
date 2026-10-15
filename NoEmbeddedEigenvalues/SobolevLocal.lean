@@ -1,12 +1,15 @@
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 import Mathlib.MeasureTheory.Function.LocallyIntegrable
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 import NoEmbeddedEigenvalues.LiftTorus
+import NoEmbeddedEigenvalues.DiagonalCalculus
 
 /-!
 # Sobolev spaces on open subsets of the plane
 
 Blueprint: `def:weak-derivative-local`, `def:sobolev-local`, `lem:weak-derivative-basic`,
-`lem:weak-derivative-classical`, `lem:local-to-global`.
+`lem:weak-derivative-classical`; stated: `lem:local-to-global`, `lem:traces` (absolute
+continuity on lines and traces on lines in diagonal coordinates).
 
 Local Sobolev spaces are defined on open sets `U ⊆ ℝ²`, the lift of the torus, through
 weak derivatives tested against smooth functions with compact support in `U`. The
@@ -475,5 +478,80 @@ theorem MemSobolevLocOn.cutoff (k : ℕ) {u : ℝ × ℝ → ℂ} (hU : IsOpen U
       · exact ih hVo (MemSobolevOn.memSobolevLocOn hdk) hχ hcs hKV
 
 end Cutoff
+
+/-! ### From the lift to the torus and back (`lem:local-to-global`, stated) -/
+
+section LocalToGlobal
+
+/-- Lifts of torus Sobolev functions: on a bounded open set the lift of `g ∈ Hᵏ(𝕋²)` lies in
+    `Hᵏ(U)`. -/
+theorem memSobolevOn_liftL2 {k : ℕ} {g : L2} (hg : MemSobolev k g) {U : Set (ℝ × ℝ)}
+    (hU : IsOpen U) (hb : Bornology.IsBounded U) : MemSobolevOn k U (liftL2 g) := by
+  sorry
+
+/-- The weak derivatives of the lift are the lifts of the Fourier derivatives. -/
+theorem hasWeakPartialOn_liftL2 {j : Fin 2} {g h : L2} (hgh : HasFourierPartial j g h)
+    {U : Set (ℝ × ℝ)} (hU : IsOpen U) : HasWeakPartialOn U j (liftL2 g) (liftL2 h) := by
+  sorry
+
+/-- Periodization of cut-off local functions: if `U` projects injectively to the torus,
+    `u ∈ Hᵏ_loc(U)` and `χ` is a test function on `U`, then there is `g ∈ Hᵏ(𝕋²)` whose lift is
+    `χu` on `U` and vanishes off the translates of the support of `χ`. -/
+theorem exists_memSobolev_periodize {k : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    (hinj : Set.InjOn torusProj U) {u χ : ℝ × ℝ → ℂ} (hu : MemSobolevLocOn k U u)
+    (hχ : IsTestFunctionOn U χ) :
+    ∃ g : L2, MemSobolev k g ∧ (∀ᵐ p ∂(volume.restrict U), liftL2 g p = χ p * u p) ∧
+      ∀ᵐ p, torusProj p ∉ torusProj '' tsupport χ → liftL2 g p = 0 := by
+  sorry
+
+end LocalToGlobal
+
+/-! ### Traces on lines in diagonal coordinates (`lem:traces`, stated) -/
+
+section Traces
+
+/-- The diagonal rectangle `{a ∈ I, b ∈ J}` in diagonal coordinates `a = (x+y)/2`,
+    `b = (x-y)/2`. -/
+def diagRect (I J : Set ℝ) : Set (ℝ × ℝ) := {p | (diagCoord p).1 ∈ I ∧ (diagCoord p).2 ∈ J}
+
+/-- Absolute continuity on lines, and the trace on a line `b = b₀`. Let `F ∈ H¹` on a
+    neighbourhood of the diagonal rectangle `Q = {a₀ < a < a₁, b₁ < b < b₂}` with weak
+    derivatives `Fx, Fy`. Then `F` has a representative `G` that is locally absolutely
+    continuous on almost every line `a = const` in `Q`, with derivative `∂_b = ∂ₓ - ∂_y`, and
+    whose trace on the line `b = b₀` (`b₁ < b₀ < b₂`) has finite Gagliardo seminorm, bounded by
+    the `H¹(Q)` norm. -/
+theorem exists_acl_trace {U : Set (ℝ × ℝ)} (hU : IsOpen U) {F Fx Fy : ℝ × ℝ → ℂ}
+    {a₀ a₁ b₁ b₂ b₀ : ℝ} (hQ : diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U)
+    (hb₀ : b₀ ∈ Set.Ioo b₁ b₂) (hF : MemLp F 2 (volume.restrict U))
+    (hFx : MemLp Fx 2 (volume.restrict U)) (hFy : MemLp Fy 2 (volume.restrict U))
+    (hx : HasWeakPartialOn U 0 F Fx) (hy : HasWeakPartialOn U 1 F Fy) :
+    ∃ G : ℝ × ℝ → ℂ, (∀ᵐ p ∂(volume.restrict U), G p = F p) ∧
+      (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)),
+        (∀ c d, b₁ < c → c ≤ d → d < b₂ →
+          AbsolutelyContinuousOnInterval (fun b ↦ G (diagInv (a, b))) c d) ∧
+        ∀ᵐ b ∂(volume.restrict (Set.Ioo b₁ b₂)),
+          HasDerivAt (fun b ↦ G (diagInv (a, b))) (Fx (diagInv (a, b)) - Fy (diagInv (a, b))) b) ∧
+      ∃ C : ℝ, ∫⁻ a in Set.Ioo a₀ a₁, ∫⁻ a' in Set.Ioo a₀ a₁,
+          ENNReal.ofReal (‖G (diagInv (a, b₀)) - G (diagInv (a', b₀))‖ ^ 2 / (a - a') ^ 2) ≤
+        ENNReal.ofReal (C * ∫ p in diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂),
+          ‖F p‖ ^ 2 + ‖Fx p‖ ^ 2 + ‖Fy p‖ ^ 2) := by
+  sorry
+
+/-- Traces of continuous `H²` functions on a line `b = b₀` are absolutely continuous, with
+    derivative the trace of `∂_a F = ∂ₓF + ∂_yF`, which is square integrable. -/
+theorem absolutelyContinuous_trace_of_H2 {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    {F Fx Fy : ℝ × ℝ → ℂ} {a₀ a₁ b₁ b₂ b₀ : ℝ}
+    (hQ : diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U) (hb₀ : b₀ ∈ Set.Ioo b₁ b₂)
+    (hFc : ContinuousOn F U) (hF : MemSobolevOn 2 U F) (hx : HasWeakPartialOn U 0 F Fx)
+    (hy : HasWeakPartialOn U 1 F Fy) :
+    ∃ H : ℝ × ℝ → ℂ, (∀ᵐ p ∂(volume.restrict U), H p = Fx p + Fy p) ∧
+      (∀ c d, a₀ < c → c ≤ d → d < a₁ →
+        AbsolutelyContinuousOnInterval (fun a ↦ F (diagInv (a, b₀))) c d) ∧
+      (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)),
+        HasDerivAt (fun a ↦ F (diagInv (a, b₀))) (H (diagInv (a, b₀))) a) ∧
+      MemLp (fun a ↦ H (diagInv (a, b₀))) 2 (volume.restrict (Set.Ioo a₀ a₁)) := by
+  sorry
+
+end Traces
 
 end NoEmbeddedEigenvalues

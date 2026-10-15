@@ -3,7 +3,8 @@ import NoEmbeddedEigenvalues.DipoleCalculus
 /-!
 # The normal field of the even–even sector
 
-Blueprint: `def:normal-field`, `lem:normal-field-algebra`, `lem:ee-density`.
+Blueprint: `def:normal-field`, `lem:normal-field-algebra`, `lem:ee-density`;
+`lem:normal-field-center` (stated).
 
 On the positive cell minus its center, `W = (Ψ - 2) ∇Ψ / ρ²` is adapted with
 coefficient `f = Ψ (2 - Ψ) δ² / ρ⁴`, has divergence `f + 1`, and in the frame
@@ -305,5 +306,43 @@ theorem eeDensity_gradient_pos {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : di
     positivity
   · have := norm_pos_iff.2 h
     positivity
+
+/-! ### Behaviour at the center (`lem:normal-field-center`, stated) -/
+
+section Center
+
+open scoped ContDiff
+
+/-- Near the center, `W = ½(x, y) + O(R³)` and `f = O(R²)`, with `j`-th derivatives
+    `O(R^{3-j})` for `j ≤ 3` and `O(R^{2-j})` for `j ≤ 2`, where `R = (x² + y²)^{1/2}`. The
+    leading terms are homogeneous but not polynomial (for `f` it is `(x² - y²)²/(4R²)`), so
+    `C^{2,1}` and `C^{1,1}` are the right classes. -/
+theorem normalField_center_expansion : ∃ C r₀ : ℝ, 0 < r₀ ∧ ∀ p : ℝ × ℝ, p ≠ 0 →
+    √(p.1 ^ 2 + p.2 ^ 2) < r₀ →
+      (∀ j ≤ 3, ‖iteratedFDeriv ℝ j (fun q ↦ normalField₁ q - q.1 / 2) p‖ ≤
+        C * √(p.1 ^ 2 + p.2 ^ 2) ^ ((3 : ℤ) - j)) ∧
+      (∀ j ≤ 3, ‖iteratedFDeriv ℝ j (fun q ↦ normalField₂ q - q.2 / 2) p‖ ≤
+        C * √(p.1 ^ 2 + p.2 ^ 2) ^ ((3 : ℤ) - j)) ∧
+      (∀ j ≤ 2, ‖iteratedFDeriv ℝ j normalCoeff p‖ ≤
+        C * √(p.1 ^ 2 + p.2 ^ 2) ^ ((2 : ℤ) - j)) := by
+  sorry
+
+/-- The cut-off normal field: for smooth `χ` vanishing on `(-∞, ε]` and equal to one near `2`,
+    the field `χ(Ψ)W` is `C^{2,1}` on the lift (it is periodic and vanishes outside
+    `{Ψ > ε}`), adapted everywhere with coefficient `χ(Ψ)f`, and the coefficient is `C^{1,1}`. -/
+theorem cutoff_normalField {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ) {ε : ℝ} (hε : 0 < ε)
+    (hχ0 : ∀ s ≤ ε, χ s = 0) (hχ1 : ∃ δ > 0, ∀ s, 2 - δ < s → χ s = 1) :
+    (ContDiff ℝ 2 (fun p ↦ χ (dipoleLift p) * normalField₁ p) ∧
+      ∃ K, LipschitzWith K (iteratedFDeriv ℝ 2 fun p ↦ χ (dipoleLift p) * normalField₁ p)) ∧
+    (ContDiff ℝ 2 (fun p ↦ χ (dipoleLift p) * normalField₂ p) ∧
+      ∃ K, LipschitzWith K (iteratedFDeriv ℝ 2 fun p ↦ χ (dipoleLift p) * normalField₂ p)) ∧
+    (ContDiff ℝ 1 (fun p ↦ χ (dipoleLift p) * normalCoeff p) ∧
+      ∃ K, LipschitzWith K (fderiv ℝ fun p ↦ χ (dipoleLift p) * normalCoeff p)) ∧
+    IsAdaptedOn (fun p ↦ χ (dipoleLift p) * normalField₁ p)
+      (fun p ↦ χ (dipoleLift p) * normalField₂ p)
+      (fun p ↦ χ (dipoleLift p) * normalCoeff p) Set.univ := by
+  sorry
+
+end Center
 
 end NoEmbeddedEigenvalues

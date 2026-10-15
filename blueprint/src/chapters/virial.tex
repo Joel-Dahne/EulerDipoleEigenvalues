@@ -176,13 +176,17 @@ when $\omega$ is merely in $L^2$.
 
 \begin{lemma}[Virial identity on the original domain]
 \label{lem:virial-l2}
-\uses{def:adapted-field, def:eigen-problem}
+\uses{def:adapted-field, def:eigen-problem, def:half-density-generator, def:square-integral, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.virial_l2}
+\leanok
 Let $W$ be a real vector field on $\T^2$ of class $C^{2,1}$ (that is,
 $W^{3,\infty}$: twice differentiable with Lipschitz second derivatives),
 adapted with coefficient $f$ of class $C^{1,1}$. Then the conclusions of
 Lemmas~\ref{lem:virial-smooth} and~\ref{lem:virial-smooth-quadratic} hold for
 every eigenfunction
-$\omega\in X$ (no regularity beyond Definition~\ref{def:eigen-problem}).
+$\omega\in X$ with $\lambda\ne0$ (no regularity beyond Definition~\ref{def:eigen-problem}),
+with $\nabla\psi$ the Fourier-defined derivatives, $\Delta\psi=\omega$, and
+$\Delta(f-\Div W)$ the almost-everywhere Laplacian of a $C^{1,1}$ function.
 All three integrals are finite, since $\psi$ and its derivatives up to order
 two are in $L^2$ (manuscript \texttt{(ee:bounded-virial)}).
 \end{lemma}
@@ -203,6 +207,19 @@ giving $\operatorname{Re}\ip{f\omega}{\omega+\psi}=\ip{[D,A]\omega}{\omega}
 =2\operatorname{Re}\ip{D\psi}{\omega}$. The integrations by parts are
 justified by approximation of $\psi$ in $H^2$.
 \end{proof}
+
+\begin{remark}[Digest note: what the proof needs from the operator theory]
+The group $U_t$ is needed: the smooth argument applies $D$ to $\omega$, and plain
+mollification does not rescue it, because the error pairs a commutator that tends to $0$
+with $D\omega_\epsilon$, which grows like $1/\epsilon$. But the proof uses
+Lemma~\ref{lem:H-selfadjoint} only for two facts: (1) $U_t$ is a strongly continuous
+unitary group with generator $D$; (2) $U_t$ maps $\{u\in L^2:L_0u\in L^2\}$ to itself with
+the formula for $HU_t$. Fact (2) follows by a change of variables in the weak formulation
+of $L_0u$, using that $W$ is adapted; neither self-adjointness of $H$, nor a core, nor
+Stone's theorem is needed. Fact (1) needs the Jacobian of the flow of $W$, i.e.\
+differentiable dependence of the flow on its initial point, which Mathlib does not
+provide (Liouville's formula and a transport argument may avoid it).
+\end{remark}
 
 \begin{remark}[Digest note]
 An alternative route to Lemma~\ref{lem:virial-l2} would be to approximate

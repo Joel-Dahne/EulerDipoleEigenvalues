@@ -115,9 +115,16 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:ee-gradient-traces` (limits along levels outside a null set; arc
    term via `ψ̃ ∘ γ`), `lem:ee-boundary-regularity` (`def:stream-lifts`).
    The truncated virial identity itself (signs, factor `2 - ε`) is still
-   only the manuscript's claim. Batch C:
-   `lem:virial-l2`, `lem:normal-field-center`, `lem:H-selfadjoint`,
-   `lem:traces`, `lem:local-to-global`. Other open
+   only the manuscript's claim. Batch C stated: `lem:normal-field-center`
+   (series expansion checked; `C^{2,1}`, `C^{1,1}` are sharp),
+   `lem:local-to-global`, `lem:traces` (restated as absolute continuity on
+   lines and line traces in diagonal coordinates, Gagliardo bound included,
+   so `lem:sobolev-fractional-gagliardo` left the even–even graph),
+   `lem:virial-l2` (`VirialL2.lean`). Open decision: `lem:H-selfadjoint`
+   is not needed in its form; the virial proof needs only the flow group
+   `U_t` of `W` and its action on the maximal domain of `L₀` (digest note,
+   notes item). With this, every even–even node except
+   `lem:H-selfadjoint` has a Lean statement. Other open
    definitions: `def:numerator`, odd–odd and mixed, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.

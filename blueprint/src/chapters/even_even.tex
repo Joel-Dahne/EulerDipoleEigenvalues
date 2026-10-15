@@ -68,12 +68,16 @@ $\rho^2\cdot\rho^{-2}=1$, which is how the Lean proofs go.
 
 \begin{lemma}[Regularity at the center]
 \label{lem:normal-field-center}
-\uses{def:normal-field}
+\uses{def:normal-field, def:adapted-field}
+\lean{NoEmbeddedEigenvalues.normalField_center_expansion,
+  NoEmbeddedEigenvalues.cutoff_normalField}
+\leanok
 Near the center, with $R=(x^2+y^2)^{1/2}$, $W=\tfrac12(x,y)+O(R^3)$ and
 $f=O(R^2)$, with derivative bounds $O(R^{3-j})$ for $j\le3$ and $O(R^{2-j})$
-for $j\le2$ respectively. Consequently, if $\chi$ is smooth, vanishes on
-$(-\infty,\epsilon]$ and equals one near $2$, the field $\chi(\Psi)W$ (extended
-by zero) is of class $C^{2,1}$ on $\T^2$ and is adapted with coefficient
+for $j\le2$ respectively (away from the center). Consequently, if $\chi$ is smooth,
+vanishes on $(-\infty,\epsilon]$ for some $\epsilon>0$ and equals one near $2$, the field
+$\chi(\Psi)W$ (extended by zero) is of class $C^{2,1}$ on $\T^2$ (on the lift: $C^2$ with
+globally Lipschitz second derivative) and is adapted everywhere with coefficient
 $\chi(\Psi)f$ of class $C^{1,1}$.
 \end{lemma}
 
@@ -82,6 +86,16 @@ Divide the analytic Taylor series of $\Psi-2$, $\nabla\Psi$ and $\rho^2$,
 whose leading denominator is $R^2$. Since $L_0\Psi=0$, multiplying an adapted
 field by a function of $\Psi$ multiplies the coefficient by the same function.
 \end{proof}
+
+\begin{remark}
+A series expansion (SymPy, October 2026) gives
+$W_1-\tfrac x2=\tfrac{r^3}{24}\cos\theta\,(7\sin^6\theta-15\sin^4\theta+17\sin^2\theta+7\cos^6\theta-6)
++O(r^5)$ and $f=\tfrac14r^2\cos^22\theta+O(r^4)$. The leading terms are homogeneous but not
+polynomial, e.g.\ $f\approx(x^2-y^2)^2/(4R^2)$, so in general $W\notin C^3$ and $f\notin C^2$:
+the classes $C^{2,1}$ and $C^{1,1}$ are sharp, which is why
+Lemma~\ref{lem:virial-l2} is stated for $C^{2,1}$ fields. Adaptedness at the center follows
+by continuity, and elsewhere where $\rho=0$ the cutoff vanishes nearby.
+\end{remark}
 
 \begin{lemma}[Positivity of the bulk density]
 \label{lem:ee-density}
@@ -171,7 +185,7 @@ over the levels $\{\Psi=2h\}$ (manuscript \texttt{(ee:gradient-traces)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-neumann, lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:sobolev-fractional-gagliardo, lem:sobolev-embedding, lem:continuous-representative, lem:orbit-coordinates, lem:elliptic-torus}
+\uses{lem:ee-neumann, lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:local-to-global, lem:sobolev-embedding, lem:continuous-representative, lem:orbit-coordinates, lem:elliptic-torus}
 Away from the saddles this is trace continuity. Near a corner use the
 coordinates $u,v$ of Lemma~\ref{lem:corner-coordinates}, in which levels are
 $uv=h$ and $\psi$ is even in each variable. Then $\psi_u(u,0)$ is odd, and
@@ -976,7 +990,7 @@ the ends of $\gamma_k$, and $c_+=\kappa c_-$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-gradient-traces, lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:separatrix-arc, lem:continuous-representative}
+\uses{lem:ee-gradient-traces, lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:separatrix-arc, lem:continuous-representative, lem:traces, lem:local-to-global}
 $G\in H^1$ from the tangential trace bound and the arc speed
 $\sqrt2\sech s$. The weighted bound of Lemma~\ref{lem:canonical-profile} and
 $Pz=-\Omega$ give $F\in H^1$. On every compact interior interval,

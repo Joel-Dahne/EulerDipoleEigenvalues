@@ -24,11 +24,13 @@ and $d$ for distance to the saddle set. Local deviations are flagged.
   NoEmbeddedEigenvalues.negativeCell,
   NoEmbeddedEigenvalues.separatrix,
   NoEmbeddedEigenvalues.diagCoord,
-  NoEmbeddedEigenvalues.cellSquare}
+  NoEmbeddedEigenvalues.cellSquare,
+  NoEmbeddedEigenvalues.diagRect}
 \leanok
 The positive cell is $\Cell=\{\Psi>0\}$, the negative cell $\{\Psi<0\}$, and the
 separatrix $\{\Psi=0\}$. On the lift $\R^2$ the diagonal coordinates are
-$a=(x+y)/2$, $b=(x-y)/2$, and the square is $\{|a|,|b|<\pi/2\}$.
+$a=(x+y)/2$, $b=(x-y)/2$, and the square is $\{|a|,|b|<\pi/2\}$. A diagonal rectangle is a
+set $\{a\in I,\ b\in J\}$ for intervals $I,J$.
 \end{definition}
 
 \begin{lemma}[Separatrix lines]

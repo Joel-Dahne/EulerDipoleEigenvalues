@@ -539,12 +539,17 @@ $|u(s)-u(t)|\le C\|g\|_{H^2}\,d(s,t)^\alpha$, and $\|g\|_{L^p}\le C\|g\|_{H^1}$.
 
 \begin{lemma}[Localization]
 \label{lem:local-to-global}
-\uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift}
-If $u\in H^k_{\mathrm{loc}}(U)$ and $\chi$ is smooth with compact support in
-$U$, where $U\subset\R^2$ projects injectively to $\T^2$, then $\chi u$ (periodized)
-lies in $H^k(\T^2)$. Conversely the lift to $U$ of an $H^k(\T^2)$ function lies
-in $H^k(U)$, and its weak derivatives are the lifts of the Fourier derivatives
-of Definition~\ref{def:sobolev-torus}.
+\uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.exists_memSobolev_periodize,
+  NoEmbeddedEigenvalues.memSobolevOn_liftL2,
+  NoEmbeddedEigenvalues.hasWeakPartialOn_liftL2}
+\leanok
+If $u\in H^k_{\mathrm{loc}}(U)$ and $\chi$ is a test function on $U$, where $U\subset\R^2$ is
+open and projects injectively to $\T^2$, then $\chi u$ (periodized) lies in $H^k(\T^2)$: there
+is $g\in H^k(\T^2)$ whose lift is $\chi u$ on $U$ and vanishes off the translates of the
+support of $\chi$. Conversely the lift of an $H^k(\T^2)$ function lies in $H^k(U)$ for every
+bounded open $U$, and on every open $U$ the weak derivatives of a lift are the lifts of the
+Fourier derivatives of Definition~\ref{def:fourier-derivatives}.
 \end{lemma}
 
 \begin{proof}
@@ -567,12 +572,42 @@ independent of $r$.
 
 \begin{lemma}[Traces]
 \label{lem:traces}
-\uses{def:sobolev-local, def:sobolev-fractional}
-Restriction to a smooth (or uniformly Lipschitz) curve maps $H^1$ to
-$H^{1/2}$ and $H^2$ to $H^{3/2}$, continuously and locally uniformly in
-families of such curves. In particular the traces of $\nabla\psi$ on the
-regular level sets of $\Psi$ depend continuously on the level.
+\uses{def:sobolev-local, def:gagliardo, def:cells, lem:diagonal-calculus}
+\lean{NoEmbeddedEigenvalues.exists_acl_trace,
+  NoEmbeddedEigenvalues.absolutelyContinuous_trace_of_H2}
+\leanok
+Let $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ be a rectangle in diagonal coordinates, $b_0\in(b_1,b_2)$,
+and $F\in H^1$ on a neighbourhood of $Q$ with weak derivatives $F_x,F_y$.
+\begin{enumerate}
+  \item $F$ has a representative that is locally absolutely continuous on almost every
+        line $a=\mathrm{const}$ in $Q$, with derivative $\partial_bF=F_x-F_y$, and its trace on
+        the line $b=b_0$ has Gagliardo seminorm over $(a_0,a_1)$ at most
+        $C\|F\|_{H^1(Q)}$.
+  \item If moreover $F\in H^2$ is continuous, then $a\mapsto F(a,b_0)$ is locally absolutely
+        continuous with derivative the trace of $\partial_aF=F_x+F_y$, which is in
+        $L^2(a_0,a_1)$.
+\end{enumerate}
 \end{lemma}
+
+\begin{proof}
+For smooth $F$ these are the fundamental theorem of calculus along lines and the
+classical trace estimate (in Gagliardo form: write $F(a,b_0)-F(a',b_0)$ through the
+point $((a+a')/2,b_0+|a-a'|)$ and integrate); the general case follows by density of smooth
+functions in $H^1(Q)$ and the closedness of absolutely continuous limits.
+\end{proof}
+
+\begin{remark}[Digest note: traces]
+Restated. The manuscript's lemma maps $H^1$ to $H^{1/2}$ and $H^2$ to $H^{3/2}$ on curves,
+continuously in families of curves. With levels handled in orbit coordinates only these
+facts on straight lines are used, all on the lines $a,b=\pm\pi/2$ carrying the arcs:
+(1) gives convergence of restrictions to curved levels near an arc, since
+$|F(a,\beta(a))-F(a,b_0)|\le\int|\partial_bF|$ along almost every line, and the Gagliardo
+bound needed by the odd Hardy inequality at the corners; (2) gives that the arc trace
+$\tilde\psi\circ\gamma$ is absolutely continuous with $g'\in L^1(ds)$ (Melnikov) and the
+form of $g'$ used in Lemma~\ref{lem:ee-gradient-traces}. Since the trace bound is in
+Gagliardo form, the $H^{1/2}$ link (Lemma~\ref{lem:sobolev-fractional-gagliardo}) is no
+longer needed in the even--even argument.
+\end{remark}
 
 \section{Measure theory and operator theory}
 
@@ -774,9 +809,9 @@ before $\int|a|^2du/u<\infty$ is known (a truncation to $[\epsilon,\infty)^2$ re
 this). The pointwise proof above avoids this: all terms are nonnegative, so it needs
 neither integrability nor compact support, only oddness and measurability, at the
 cost of the constant $2$ instead of $\tfrac14$. The statement now uses the Gagliardo
-seminorm; the passage from $H^{1/2}$ is
-Lemma~\ref{lem:sobolev-fractional-gagliardo}, used where the trace of $\psi_u$ is
-fed in (Lemma~\ref{lem:ee-gradient-traces}).
+seminorm; the trace input for $\psi_u$ is given directly in Gagliardo form by
+Lemma~\ref{lem:traces}, so the $H^{1/2}$ link (Lemma~\ref{lem:sobolev-fractional-gagliardo})
+is not needed in the even--even argument.
 \end{remark}
 
 \begin{lemma}[Picone identity]

@@ -33,6 +33,7 @@ import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
 import NoEmbeddedEigenvalues.VirialAlgebra
 import NoEmbeddedEigenvalues.VirialQuadratic
+import NoEmbeddedEigenvalues.VirialL2
 import NoEmbeddedEigenvalues.VirialSmooth
 import NoEmbeddedEigenvalues.WeightedBoundary
 import NoEmbeddedEigenvalues.WeightedBoundaryForm
