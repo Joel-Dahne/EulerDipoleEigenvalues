@@ -20,6 +20,11 @@ web:
     [ ! -d blueprint/web ] || chmod -R u+w blueprint/web
     leanblueprint web
 
+# Needs `just web` first; writes blueprint/web/dep_graph_<labels>.html.
+# Dependency graph restricted to the given nodes and everything they depend on
+graph +labels:
+    python3 scripts/blueprint_subgraph.py {{labels}}
+
 # Build the blueprint PDF (blueprint/print/print.pdf)
 pdf:
     leanblueprint pdf

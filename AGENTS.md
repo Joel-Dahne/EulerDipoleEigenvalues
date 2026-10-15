@@ -102,6 +102,8 @@ motivation, and standard facts cited rather than proved.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `STATUS.md`: current state, decisions and next steps.
 - `justfile`: build recipes (run `just` to list them).
+- `scripts/`: helper scripts. `blueprint_subgraph.py` (behind `just graph`)
+  restricts the web dependency graph to some nodes and their dependencies.
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
 - `.github/workflows/`: the Lean template CI (lean-action, docgen).
 
@@ -110,6 +112,7 @@ motivation, and standard facts cited rather than proved.
 ```sh
 just web             # blueprint website in blueprint/web (with dependency graph)
 just serve           # serve it at http://localhost:8000 (needs only python3)
+just graph thm:ee-exclusion  # graph of a node and all it depends on (after just web)
 just pdf             # blueprint PDF in blueprint/print
 just build           # lake build
 just manuscript      # reworked manuscript PDF, rebuilt on change (needs xelatex, latexmk)
