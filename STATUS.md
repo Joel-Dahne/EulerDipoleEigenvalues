@@ -104,12 +104,18 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `orbitTime`; avoids smooth dependence of ODE flows, not in Mathlib) with
    `lem:orbit-coordinates` stated (bijection, `dx dy = 2 dh dt`, a.e. level
    restrictions; `OrbitCoordinates.lean`), `def:level-integral`,
-   `def:normal-tangent`. Next: the batch B statements
-   `lem:corner-coordinates`, `lem:orbit-comparison` (split; its item 4 area
-   element is now in `lem:orbit-coordinates`), `lem:coarea` (restated: only
-   the `H¹` along a.e. orbits part remains), `lem:resonant-vanishing`, `lem:ee-truncated-virial`,
-   `lem:ee-gradient-traces`, `lem:pairing-limit`,
-   `lem:ee-boundary-regularity`, `lem:ee-neumann`. Batch C:
+   `def:normal-tangent`. Batch B statements done (2026-10-15):
+   `lem:corner-coordinates` proved (with `def:corner-chart`);
+   `lem:orbit-comparison` split into closeness, saddle distance, level
+   derivatives, coordinate gradients, time integrals (all checked
+   numerically, `def:cell-arcs` for arcs and `d`); stated: `lem:coarea`
+   (now only `H¹` along a.e. orbit), `lem:resonant-vanishing` (continuity of
+   `f` a hypothesis), `lem:pairing-limit`, `lem:ee-neumann` (restated as
+   reflection parity of `ψₙ`, `ψₜ`), `lem:ee-truncated-virial`,
+   `lem:ee-gradient-traces` (limits along levels outside a null set; arc
+   term via `ψ̃ ∘ γ`), `lem:ee-boundary-regularity` (`def:stream-lifts`).
+   The truncated virial identity itself (signs, factor `2 - ε`) is still
+   only the manuscript's claim. Batch C:
    `lem:virial-l2`, `lem:normal-field-center`, `lem:H-selfadjoint`,
    `lem:traces`, `lem:local-to-global`. Other open
    definitions: `def:numerator`, odd–odd and mixed, and

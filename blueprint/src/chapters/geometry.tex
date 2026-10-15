@@ -391,6 +391,19 @@ With $x=2\arctan(e^{-s})$ one has $\sin x=\sech s$ and $x'=-\sech s$; since
 $y=x-\pi$, $\sin y=-\sin x$.
 \end{proof}
 
+\begin{definition}[The cell arcs and the saddle distance]
+\label{def:cell-arcs}
+\uses{def:separatrix-arc, lem:dipole-critical-points}
+\lean{NoEmbeddedEigenvalues.rotLift,
+  NoEmbeddedEigenvalues.cellArc,
+  NoEmbeddedEigenvalues.saddleSet,
+  NoEmbeddedEigenvalues.saddleDist}
+\leanok
+Let $R(x,y)=(y,-x)$ on the lift. The four arcs bounding the cell are
+$\gamma_k=R^k\circ\gamma$, $k=0,\dots,3$, each parametrized by flow time. The saddle set
+is $\{(m\pi,n\pi):m+n\text{ odd}\}$, and $d$ denotes the distance to it.
+\end{definition}
+
 \section{Orbits near the separatrix}
 
 \begin{definition}[Quarter orbits and the period]
@@ -499,14 +512,16 @@ frequency $b(h)$; the paper should rename one of them.
 \lean{NoEmbeddedEigenvalues.levelCoord,
   NoEmbeddedEigenvalues.timeCoord,
   NoEmbeddedEigenvalues.puncturedCell,
-  NoEmbeddedEigenvalues.orbitDomain}
+  NoEmbeddedEigenvalues.orbitDomain,
+  NoEmbeddedEigenvalues.orbitAnnulus}
 \leanok
 On the punctured cell (the square $|a|,|b|<\pi/2$ minus the center) let $h=\Psi/2$ and
 \[
   t=\begin{cases}\displaystyle\int_a^0\frac{d\alpha}{\sqrt{\cos^2\alpha-h^2}},&b\ge0,\\[2ex]
   \displaystyle4L(h)-\int_a^0\frac{d\alpha}{\sqrt{\cos^2\alpha-h^2}},&b<0.\end{cases}
 \]
-The orbit domain is $\{(h,t):0<h<1,\ -2L(h)\le t<6L(h)\}$.
+The orbit domain is $\{(h,t):0<h<1,\ -2L(h)\le t<6L(h)\}$, and the orbit annulus
+$A(h_1,h_2)$ is the set of points of the punctured cell with $h_1<h<h_2$.
 \end{definition}
 
 \begin{lemma}[Orbit coordinates]
@@ -544,28 +559,33 @@ initial data; smoothness and gradient bounds for $(h,t)$ follow by differentiati
 the integral, and those of $\gamma_h$ by the inverse function theorem. That the time
 coordinate inverts the flow on all of $[-2L,6L)$, and that the improper integral equals
 $2L(h)$, was checked numerically for $h=0.05,0.4,0.85$ (scratch computation,
-October 2026). The area element $2\,dh\,dt$ was item 4 of
-Lemma~\ref{lem:orbit-comparison}; with this lemma, the first part of
-Lemma~\ref{lem:coarea} becomes a change of variables.
+October 2026). The area element $2\,dh\,dt$ was item 4 of the manuscript's orbit comparison
+lemma, and with this lemma the manuscript's coarea formula becomes a change of variables
+(Lemma~\ref{lem:coarea} keeps only $H^1$ along almost every orbit).
 \end{remark}
 
 \begin{definition}[Integrals over levels]
 \label{def:level-integral}
 \uses{def:period, def:dipole-flow}
 \lean{NoEmbeddedEigenvalues.levelIntegral,
-  NoEmbeddedEigenvalues.quarterIntegral}
+  NoEmbeddedEigenvalues.quarterIntegral,
+  NoEmbeddedEigenvalues.angularMode}
 \leanok
 For $0<h<1$ and $g$ on $\R^2$, the flow-time integral over the level $\{\Psi=2h\}$ is
 $\oint g\,dt=\int_0^{S(h)}g(\gamma_h(t))\,dt$, and over the quarter orbit it is
-$\int_{-L(h)}^{L(h)}g(\gamma_h(t))\,dt$. Arclength is $d\ell=\rho\,dt$.
+$\int_{-L(h)}^{L(h)}g(\gamma_h(t))\,dt$. Arclength is $d\ell=\rho\,dt$. The angular modes
+with respect to the orbital frequency are
+$g_k(h)=S(h)^{-1}\int_0^{S(h)}e^{-ikb(h)t}g(\gamma_h(t))\,dt$.
 \end{definition}
 
 \begin{definition}[Normal and tangential derivatives]
 \label{def:normal-tangent}
-\uses{def:lift-operators, def:stream-derivatives}
+\uses{def:lift-operators, def:stream-derivatives, def:stream-lifts}
 \lean{NoEmbeddedEigenvalues.gradNorm,
   NoEmbeddedEigenvalues.normalDeriv,
-  NoEmbeddedEigenvalues.tangentDeriv}
+  NoEmbeddedEigenvalues.tangentDeriv,
+  NoEmbeddedEigenvalues.streamNormal,
+  NoEmbeddedEigenvalues.streamTangent}
 \leanok
 Let $\rho=|\nabla\Psi|=(\sin^2x+\sin^2y)^{1/2}$. For a function $\psi$ with partial
 derivatives $\psi_x,\psi_y$, the normal derivative along the outward normal
@@ -614,55 +634,135 @@ in Lean from $L'<0$.
 
 \begin{lemma}[Orbit comparison]
 \label{lem:orbit-comparison}
-\uses{def:period, lem:period-orbit, def:separatrix-arc}
-Let $d$ denote distance to the saddle set. For $|t|\le L(h)$ and small $h$:
-\begin{enumerate}
-  \item $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$ (after matching the centering of
-        $\gamma$ and $\gamma_h$) (manuscript \texttt{(ee:orbit-comparison)});
-  \item $ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$; in particular both
-        endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a
-        saddle;
-  \item $|\partial_h\gamma_h(t)|\le Ce^{|t|}\le C/d$ and
-        $|\partial_h^2\gamma_h(t)|\le Ce^{2|t|}\le C/d^2$
-        (manuscript \texttt{(eq:quarter-orbit-bounds)});
-  \item in the orbit coordinates $(h,t)$ the area element is $2\,dh\,dt$, and
-        $|\nabla h|\le Cd$, $|\nabla t|\le C/d$;
-  \item $\int_{-L}^{L}d^{-2}\,dt\le C/h$, $\int_{-L}^{L}d^{-4}\,dt\le C/h^2$,
-        and $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
-\end{enumerate}
+\uses{def:period, def:dipole-flow, def:separatrix-arc}
+\lean{NoEmbeddedEigenvalues.orbit_close_arc}
+\leanok
+For small $h$ and $|t|\le L(h)$, $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$, where both orbits
+are centered at $a=0$ at time $0$ (manuscript \texttt{(ee:orbit-comparison)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period}
+\uses{lem:period, lem:period-orbit}
 The velocity field has Lipschitz constant at most one; the midpoint
 displacement is $O(h)$ and grows at most like $e^{|t|}$, while $he^{2L}$ is
-bounded. The remaining bounds follow from comparison with the hyperbolic
-linearization at the saddles.
+bounded.
 \end{proof}
 
-\begin{remark}[Digest note]
-Items (3)--(5) are used throughout Chapter~\ref{chap:regularity} but are only
-asserted in the manuscript. A cleaner route may be the exact corner coordinates
-of Lemma~\ref{lem:corner-coordinates}, in which level sets are exact
-hyperbolas.
+\begin{lemma}[Distance to the saddles along an orbit]
+\label{lem:orbit-saddle-distance}
+\uses{def:period, def:dipole-flow, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.saddleDist_dipoleOrbit}
+\leanok
+For small $h$ and $|t|\le L(h)$, $ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$; in particular
+both endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a saddle.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period, lem:period-orbit, lem:corner-coordinates}
+Comparison with the hyperbolic linearization at the saddles; $e^{-L(h)}\sim\sqrt h$ by
+Lemma~\ref{lem:period}.
+\end{proof}
+
+\begin{lemma}[Derivatives in the level]
+\label{lem:orbit-level-derivatives}
+\uses{def:period, def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le}
+\leanok
+For small $h$ and $|t|\le L(h)$, $h\mapsto\gamma_h(t)$ is twice differentiable with
+$|\partial_h\gamma_h(t)|\le Ce^{|t|}$ and $|\partial_h^2\gamma_h(t)|\le Ce^{2|t|}$
+(manuscript \texttt{(eq:quarter-orbit-bounds)}). By
+Lemma~\ref{lem:orbit-saddle-distance} these are $\le C/d$ and $\le C/d^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates, lem:orbit-coordinate-gradients, lem:orbit-saddle-distance}
+Differentiate $(h(\gamma_h(t)),t(\gamma_h(t)))=(h,t)$ (inverse function theorem).
+\end{proof}
+
+\begin{lemma}[Gradients of the orbit coordinates]
+\label{lem:orbit-coordinate-gradients}
+\uses{def:orbit-coordinates, def:normal-tangent, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.gradNorm_le_saddleDist,
+  NoEmbeddedEigenvalues.norm_fderiv_timeCoord_le}
+\leanok
+On the cell $|\nabla h|=\rho/2\le Cd$. For small $h$, off the cut $\{b=0,a>0\}$, $t$ is
+differentiable with $|\nabla t|\le C/d$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates, lem:corner-coordinates}
+$\rho$ vanishes linearly at the saddles. For $t$ differentiate under the integral in
+Definition~\ref{def:orbit-coordinates}; near a corner use the coordinates of
+Lemma~\ref{lem:corner-coordinates}, in which $dt\sim du/u$.
+\end{proof}
+
+\begin{lemma}[Flow-time integrals of the saddle distance]
+\label{lem:orbit-time-integrals}
+\uses{def:period, def:dipole-flow, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.integral_saddleDist_rpow_le,
+  NoEmbeddedEigenvalues.integral_saddleDist_rpow_pos_le}
+\leanok
+For small $h$, $\int_{-L}^{L}d^{-2}\,dt\le C/h$, $\int_{-L}^{L}d^{-4}\,dt\le C/h^2$, and
+$\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-saddle-distance, lem:period}
+Insert $d\sim e^{-|t|}$ and $e^{2L}\sim1/h$.
+\end{proof}
+
+\begin{remark}
+The manuscript's orbit comparison lemma had five items; it is split into the four
+lemmas above, and its area element is part of Lemma~\ref{lem:orbit-coordinates}. The
+closeness (constant $\approx\sqrt2$), $d\,e^{|t|}\in[2.2,4]$, $d(\gamma_h(\pm L))\approx2\sqrt h$
+and the bounds $|\partial_h\gamma_h|\le1.42\,e^{|t|}$,
+$|\partial_h^2\gamma_h|\le0.26\,e^{2|t|}$ were checked numerically for
+$h=10^{-2},\dots,10^{-6}$ (scratch computation, October 2026).
 \end{remark}
+
+\begin{remark}[Digest note]
+The derivative and gradient bounds are used throughout Chapter~\ref{chap:regularity} but
+are only asserted in the manuscript. A cleaner route may be the exact corner coordinates
+of Lemma~\ref{lem:corner-coordinates}, in which level sets are exact hyperbolas.
+\end{remark}
+
+\begin{definition}[Corner chart]
+\label{def:corner-chart}
+\uses{def:cells, lem:diagonal-calculus}
+\lean{NoEmbeddedEigenvalues.cornerChart}
+\leanok
+The corner chart is $(u,v)\mapsto(a,b)=(\arccos u,\arccos v)$, written in $(x,y)$
+coordinates as $(\arccos u+\arccos v,\arccos u-\arccos v)$.
+\end{definition}
 
 \begin{lemma}[Corner coordinates]
 \label{lem:corner-coordinates}
-\uses{def:cells, lem:cell-square}
-Near a corner of $\Cell$, let $\alpha,\beta>0$ be the distances in the $(a,b)$
-coordinates to the two sides meeting there, and put $u=\sin\alpha$,
-$v=\sin\beta$. Then $\Psi/2=uv$ exactly, the metric coefficients in $(u,v)$
-are smooth, even in each variable, and uniformly comparable to constants on a
-fixed small corner. Along the level $uv=h$, flow-time measure $dt$ is
-comparable to $du/u$.
+\uses{def:cells, lem:cell-square, def:dipole-flow, def:corner-chart}
+\lean{NoEmbeddedEigenvalues.dipoleLift_cornerChart,
+  NoEmbeddedEigenvalues.hasDerivAt_cornerChart,
+  NoEmbeddedEigenvalues.hasDerivAt_cos_diag_fst,
+  NoEmbeddedEigenvalues.hasDerivAt_cos_diag_snd,
+  NoEmbeddedEigenvalues.sin_mul_sin_mem_of_corner}
+\leanok
+Near the corner $(a,b)=(\pi/2,\pi/2)$ of $\Cell$, let $\alpha,\beta>0$ be the distances to
+the two sides and $u=\sin\alpha=\cos a$, $v=\sin\beta=\cos b$, the coordinates of
+Definition~\ref{def:corner-chart}. Then $\Psi/2=uv$ exactly, and the metric is
+$dx^2+dy^2=2\,du^2/(1-u^2)+2\,dv^2/(1-v^2)$: diagonal, smooth and even in each variable,
+and comparable to constants for $|u|,|v|\le\frac12$. Along the flow
+$\dot u=u\sin a\sin b$ and $\dot v=-v\sin a\sin b$, with $\frac34\le\sin a\sin b\le1$ for
+$|u|,|v|\le\frac12$; so along the level $uv=h$, $dt$ is comparable to $du/u$. The other
+corners follow by the rotation $R$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:separatrix-lines, lem:diagonal-calculus}
-$\cos a=\sin\alpha$ and $\cos b=\sin\beta$ at the corner $(\pi/2,\pi/2)$, and
-similarly at the other corners.
+\uses{lem:separatrix-lines, lem:diagonal-calculus, lem:dipole-flow}
+\leanok
+$\Psi=2\cos a\cos b$ (Lemma~\ref{lem:separatrix-lines}). With $x=a+b$, $y=a-b$ the partial
+derivatives of the chart are $-(1-u^2)^{-1/2}(1,1)$ and $(1-v^2)^{-1/2}(-1,1)$, which are
+orthogonal. The flow equations follow from $\dot a=-\cos a\sin b$, $\dot b=\sin a\cos b$
+(Lemma~\ref{lem:dipole-flow}), and $\sin^2a=1-u^2\ge\frac34$.
 \end{proof}
+
 
 \begin{lemma}[Saddle normal form]
 \label{lem:saddle-normal-form}

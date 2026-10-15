@@ -459,6 +459,19 @@ element of $L^2(\T^2)$. Conversely an element $g$ of $L^2(\T^2)$ lifts to the fu
 $g\circ\pi$ on $\R^2$, through a representative.
 \end{definition}
 
+\begin{definition}[Lifts of the stream function]
+\label{def:stream-lifts}
+\uses{def:torus-of-lift, def:stream-derivatives, def:continuous-representative}
+\lean{NoEmbeddedEigenvalues.streamLift,
+  NoEmbeddedEigenvalues.streamLiftX,
+  NoEmbeddedEigenvalues.streamLiftY,
+  NoEmbeddedEigenvalues.contStream}
+\leanok
+For $\omega\in L^2$, the functions $\psi$, $\psi_x$, $\psi_y$ on $\R^2$ are the lifts of
+$\Delta^{-1}\omega$, $\psi_1$, $\psi_2$ through their representatives, and $\tilde\psi$ is the
+lift of the continuous representative of $\Delta^{-1}\omega$.
+\end{definition}
+
 \begin{lemma}[Lifts and the torus]
 \label{lem:lift-torus}
 \uses{def:torus-of-lift, def:lift-operators, def:fourier-derivatives}
@@ -563,22 +576,32 @@ regular level sets of $\Psi$ depend continuously on the level.
 
 \section{Measure theory and operator theory}
 
-\begin{lemma}[Coarea and a.e.\ restrictions]
+\begin{lemma}[Restriction to almost every orbit]
 \label{lem:coarea}
-\uses{def:cells, lem:dipole-critical-points, def:h1-interval, def:h1-periodic}
-On a compact regular orbit annulus $\{\epsilon_1\le\Psi\le\epsilon_2\}$, for
-$g\in L^1$,
-$\int g\,dx\,dy=\int\!\big(\oint_{\{\Psi=c\}}g\,d\ell/\rho\big)dc$, so the
-restriction of an $L^2$ function to almost every level is defined and square
-integrable in flow time. If $g\in L^2$ and $L_0g\in L^2$, then on almost every
-level the restriction is in $H^1$ of the orbit, with derivative $(L_0g)|$ in
-flow time.
+\uses{def:orbit-coordinates, def:transport-pair, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.ae_orbit_restriction}
+\leanok
+Let $U$ be an open set containing the orbit annulus $A(h_1,h_2)$, $0<h_1<h_2<1$, and let
+$g,\ L_0g\in L^2(U)$, with $L_0g$ in the weak sense of Definition~\ref{def:transport-pair}.
+Then for almost every $h\in(h_1,h_2)$, $t\mapsto g(\gamma_h(t))$ agrees almost everywhere with
+an $S(h)$-periodic, locally absolutely continuous function whose derivative is
+$(L_0g)(\gamma_h(t))$.
 \end{lemma}
 
+\begin{proof}
+\uses{lem:orbit-coordinates, lem:orbit-coordinate-gradients}
+In orbit coordinates $L_0=\partial_t$ and $dx\,dy=2\,dh\,dt$. Testing the weak equation with
+$\alpha(h)\beta(t)$ and letting $\alpha$ run through a countable dense family shows that for
+almost every $h$ the function $t\mapsto g(\gamma_h(t))$ has weak derivative
+$(L_0g)(\gamma_h(t))$, which is locally integrable; a function on an interval with an
+integrable weak derivative has an absolutely continuous representative.
+\end{proof}
+
 \begin{remark}
-On a compact regular annulus the orbit coordinates (level, flow time) are a
-smooth diffeomorphism onto a product, so Lemma~\ref{lem:coarea} reduces to
-change of variables and Fubini; no general coarea formula is needed.
+The manuscript's coarea formula is now the change of variables of
+Lemma~\ref{lem:orbit-coordinates}: on the cell the orbit coordinates (level, flow time)
+are an explicit diffeomorphism onto a product, so no general coarea formula is needed. This
+lemma keeps the remaining part, $H^1$ along almost every orbit.
 \end{remark}
 
 \begin{lemma}[Self-adjointness of the transport operator]

@@ -105,21 +105,23 @@ $f\ge0$ and $0<c\le1$.
 
 \begin{lemma}[Truncated virial identity]
 \label{lem:ee-truncated-virial}
-\uses{lem:ee-density, def:eigen-problem}
-For almost every $\epsilon\in(0,2)$, with $n$ pointing out of
-$\{\Psi>\epsilon\}$, $d\ell$ arclength and $ds=d\ell/\rho$ flow-time measure,
+\uses{lem:ee-density, def:eigen-problem, def:level-integral, def:normal-tangent, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.ee_truncated_virial}
+\leanok
+For almost every $\epsilon\in(0,2)$, with $n$ pointing out of $\{\Psi>\epsilon\}$, the level
+integrals in flow time $dt$ over $\{\Psi=\epsilon\}$ (that is $h=\epsilon/2$) and
+$d\ell=\rho\,dt$,
 \[
   \int_{\{\Psi>\epsilon\}}\mathcal J
-  =\int_{\{\Psi=\epsilon\}}\operatorname{Re}(\psi\overline{\psi_n})\,d\ell
-   +(2-\epsilon)\int_{\{\Psi=\epsilon\}}
-     \big(|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)\big)\,ds,
+  =\oint_{\{\Psi=\epsilon\}}\operatorname{Re}(\psi\overline{\psi_n})\,d\ell
+   +(2-\epsilon)\oint_{\{\Psi=\epsilon\}}
+     \big(|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)\big)\,dt
 \]
-where the $\omega$ integral is the almost-everywhere coarea restriction
 (manuscript \texttt{(ee:truncated-virial)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-l2, lem:normal-field-center, lem:coarea}
+\uses{lem:virial-l2, lem:normal-field-center, lem:orbit-coordinates, lem:coarea}
 Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$, for which
 $\chi f-\Div(\chi W)=-\chi-(\Psi-2)\chi'$. Use
 $\tfrac12\Delta|\psi|^2=|\nabla\psi|^2+\operatorname{Re}(\omega\bar\psi)$ and
@@ -131,31 +133,45 @@ and Lebesgue differentiation give the identity at almost every level.
 
 \begin{lemma}[Neumann condition]
 \label{lem:ee-neumann}
-\uses{def:sectors, def:cells, lem:separatrix-lines, lem:traces}
-In the even--even sector, $\psi$ is even under both separatrix reflections,
-so its normal derivative trace vanishes on every regular separatrix arc.
+\uses{def:sectors, def:normal-tangent, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.ee_neumann}
+\leanok
+In the even--even sector, almost everywhere on the lift, $\psi_n$ is odd and $\psi_t$ is
+even under the reflections $S_2(x,y)=(y+\pi,x+\pi)$ and $S_1(x,y)=(\pi-y,\pi-x)$, whose
+fixed lines carry the separatrix arcs.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:stream-sector, lem:separatrix-lines, lem:traces}
+\uses{lem:stream-sector, lem:separatrix-lines}
 The reflection $S_j$ fixes the arc and reverses its normal.
 \end{proof}
 
+\begin{remark}
+Restated. The manuscript says that the normal derivative trace of $\psi$ vanishes on every
+regular separatrix arc; that is a trace on one fixed curve, which the almost-every-level
+approach does not provide. What Lemma~\ref{lem:ee-gradient-traces} uses is the mechanism:
+$\psi$ is even under $S_j$, so $\nabla\psi\circ S_j=M_j\nabla\psi$ with $M_j$ the linear part
+of $S_j$, which reverses the normal $(\sin x,\sin y)/\rho$ and preserves $Y/\rho$.
+\end{remark}
+
 \begin{lemma}[Weighted gradient traces]
 \label{lem:ee-gradient-traces}
-\uses{lem:ee-neumann, lem:traces}
-Let $\psi=\Delta^{-1}\omega$, $\omega\in X$, be even under $S_1,S_2$. As $\epsilon\to0$, over the regular
-levels $\{\Psi=\epsilon\}$,
+\uses{def:sectors, def:normal-tangent, def:stream-lifts, def:level-integral, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.ee_gradient_traces}
+\leanok
+Let $\psi=\Delta^{-1}\omega$, $\omega\in X$, be even under $S_1,S_2$, and let $g_k=\tilde\psi\circ\gamma_k$
+be its traces on the four arcs. Then $\int\cosh^2s\,|g_k'|^2\,ds<\infty$, and as $h\to0$
+outside a null set,
 \[
-  \int|\psi_n|^2\,ds\to0,\qquad
-  \int|\psi_t|^2\,ds\to\sum_\gamma\int_\gamma|\psi_t|^2\,ds<\infty,\qquad
-  \int\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0
+  \oint|\psi_n|^2\,dt\to0,\qquad
+  \oint|\psi_t|^2\,dt\to\sum_{k=0}^{3}\int_\R\tfrac12\cosh^2s\,|g_k'(s)|^2\,ds,\qquad
+  \oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0
 \]
-(manuscript \texttt{(ee:gradient-traces)}).
+over the levels $\{\Psi=2h\}$ (manuscript \texttt{(ee:gradient-traces)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:sobolev-fractional-gagliardo, lem:sobolev-embedding, lem:elliptic-torus}
+\uses{lem:ee-neumann, lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:sobolev-fractional-gagliardo, lem:sobolev-embedding, lem:continuous-representative, lem:orbit-coordinates, lem:elliptic-torus}
 Away from the saddles this is trace continuity. Near a corner use the
 coordinates $u,v$ of Lemma~\ref{lem:corner-coordinates}, in which levels are
 $uv=h$ and $\psi$ is even in each variable. Then $\psi_u(u,0)$ is odd, and
@@ -166,6 +182,12 @@ Apply this to $F=\psi_u,\psi_v$. Since $dt\sim du/u$, the corner tails are
 uniformly small. The last limit follows from boundedness of $\psi$ and
 Cauchy--Schwarz.
 \end{proof}
+
+\begin{remark}
+Restated: limits are taken along levels outside a null set rather than over all regular
+levels, and the arc term is written through the arc trace of $\tilde\psi$: on an arc
+$\psi_t=g'/\rho$ with $\rho=\sqrt2\sech s$, so $|\psi_t|^2=\frac12\cosh^2s\,|g'|^2$.
+\end{remark}
 
 \section{The boundary form}
 
@@ -942,15 +964,19 @@ Lemma~\ref{lem:weighted-affine-splitting}.
 
 \begin{lemma}[Regularity of the boundary unknown]
 \label{lem:ee-boundary-regularity}
-\uses{def:boundary-form, def:canonical-profile, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
-For an even--even eigenfunction, the canonical transport unknown $z$ on each
-arc, written as $F(\xi)$, satisfies $F\in\mathcal D_w$ and
-$G\in H^1(-1,1)$. Its endpoint values are $-c_\pm/\lambda$, where $c_\pm$ are the
-saddle values of $\psi$, and $c_+=\kappa c_-$.
+\uses{def:boundary-form, def:canonical-profile, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints, def:cell-arcs, def:stream-lifts, def:sectors, def:rotation-characters, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.ee_boundary_regularity}
+\leanok
+Let $\omega$ be an even--even eigenfunction with $\lambda\ne0$ and $R^*\omega=\kappa\omega$. On each
+arc $\gamma_k$ let $g=\tilde\psi\circ\gamma_k$, $z=-(\Omega+g)/\lambda$ its canonical transport
+unknown, and $F(\xi)=z(\operatorname{artanh}\xi)$. Then $F\in\mathcal D_w$ with derivatives
+$D,E$, and $G=-iwD-\lambda F\in H^1(-1,1)$. The endpoint values of $F$ are $-c_\pm/\lambda$,
+where $c_+=\tilde\psi(R^k(0,-\pi))$ and $c_-=\tilde\psi(R^k(\pi,0))$ are the saddle values at
+the ends of $\gamma_k$, and $c_+=\kappa c_-$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-gradient-traces, lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:separatrix-arc}
+\uses{lem:ee-gradient-traces, lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:separatrix-arc, lem:continuous-representative}
 $G\in H^1$ from the tangential trace bound and the arc speed
 $\sqrt2\sech s$. The weighted bound of Lemma~\ref{lem:canonical-profile} and
 $Pz=-\Omega$ give $F\in H^1$. On every compact interior interval,

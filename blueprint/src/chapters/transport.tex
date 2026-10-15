@@ -88,24 +88,35 @@ periodizes to one, which turns the torus equation into the weak equation on $U$.
 
 \begin{lemma}[Orbitwise transport and resonant vanishing]
 \label{lem:resonant-vanishing}
-\uses{def:transport-pair, def:period, lem:period-orbit, def:h1-interval, def:h1-periodic}
-Let $(v,f)$ be a transport pair on a compact regular orbit annulus. On almost
-every orbit, $z$ restricted to the orbit is in $H^1$ of flow time and
-satisfies $(-i\partial_t-\lambda)z=f$ there. In angular Fourier modes with
-respect to the orbital frequency $b(h)$,
+\uses{def:transport-pair, def:period, def:orbit-coordinates, def:level-integral}
+\lean{NoEmbeddedEigenvalues.resonant_vanishing}
+\leanok
+Let $(v,f)$ be a transport pair on an open set $U$ containing the orbit annulus
+$A(h_1,h_2)$, $0<h_1<h_2<1$. For almost every $h\in(h_1,h_2)$, the transport unknown
+$z\circ\gamma_h$ agrees almost everywhere with an $S(h)$-periodic, locally absolutely
+continuous $Z$ with $(-i\partial_t-\lambda)Z=f\circ\gamma_h$, and for every $k$ the angular
+modes satisfy
 \[
   (kb(h)-\lambda)\,v_k(h)=-kb(h)f_k(h).
 \]
-If $kb(h_k)=\lambda$ at a level $h_k$ in the annulus, then $f_k(h_k)=0$.
+If $f$ is continuous on $U$ and $kb(h_k)=\lambda$ at a level $h_k\in(h_1,h_2)$, then
+$f_k(h_k)=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:coarea, lem:period, lem:sobolev-embedding, lem:local-to-global}
+\uses{lem:coarea, lem:transport-unknown, lem:orbit-coordinates, lem:period}
 On orbits, $L_0=\partial_t$. The coefficient $f_k$ is continuous in $h$, and
 $v_k$ is locally square integrable in $h$. Since $S'<0$ the denominator
 $kb(h)-\lambda$ has a simple zero at $h_k$, so $f_k(h_k)\ne0$ would make $v_k$
 behave like $1/(h-h_k)$.
 \end{proof}
+
+\begin{remark}
+Restated: the manuscript works on a compact regular orbit annulus and gets the
+continuity of $f_k$ from $f\in H^2$; here continuity of $f$ is a hypothesis, and the mode
+relation follows from $(H-\lambda)z=f$ (Lemma~\ref{lem:transport-unknown}) and
+$z=-(v+f)/\lambda$.
+\end{remark}
 
 \section{The canonical transport profile on a separatrix arc}
 
@@ -129,7 +140,7 @@ $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison, lem:traces}
+\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison, lem:orbit-saddle-distance, lem:traces}
 There are infinitely many resonant levels $h_k\to0$ with $kb(h_k)=\lambda$ and
 $e^{i\pi k/2}=\kappa$. By the character, the four quarter-orbit integrals of
 $f_k$ coincide, so
@@ -264,19 +275,21 @@ $\pm1$.
 
 \begin{lemma}[Limit of the vorticity pairing]
 \label{lem:pairing-limit}
-\uses{def:canonical-profile, def:transport-pair, lem:good-windows}
-There are levels $h_j\to0$ in the good windows, avoiding any prescribed null
-set, such that
+\uses{def:canonical-profile, def:transport-pair, lem:good-windows, def:cell-arcs, def:level-integral, def:cells}
+\lean{NoEmbeddedEigenvalues.pairing_limit}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:melnikov}, for every null set $N$ there are levels
+$h_j\to0$ outside $N$, in the good windows of Lemma~\ref{lem:good-windows}, such that
 \[
-  \int_{\{\Psi=2h_j\}}\operatorname{Re}(v\bar f)\,dt
-  \longrightarrow\sum_\gamma\int_\R\operatorname{Re}(\Omega_\gamma\bar g_\gamma)\,ds
+  \oint_{\{\Psi=2h_j\}}\operatorname{Re}(v\bar f)\,dt
+  \longrightarrow\sum_{k=0}^{3}\int_\R\operatorname{Re}(\Omega_k\bar g_k)\,ds,
 \]
-where the sum runs over the four arcs bounding $\Cell$ (manuscript
-\texttt{(ee:pairing-limit)}).
+where $g_k=f\circ\gamma_k$ are the traces on the four arcs bounding $\Cell$ and $\Omega_k$
+their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-embedding, lem:resonant-vanishing, lem:orbit-comparison, lem:good-windows}
+\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-embedding, lem:resonant-vanishing, lem:orbit-comparison, lem:orbit-saddle-distance, lem:coarea, lem:good-windows}
 On a good orbit $z_h=-(v_h+g_h)/\lambda$ solves $(P-\lambda)z_h=g_h$ with
 $z_h(L)=\kappa z_h(-L)$. The difference $z_h-z$ solves the same equation with
 forcing $g_h-g$ and boundary mismatch $\kappa z(-L)-z(L)=O(e^{-\alpha L})$
@@ -329,7 +342,7 @@ used.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:numerator-zeros, lem:orbit-comparison, lem:hardy-1d, lem:sobolev-embedding, lem:local-to-global}
+\uses{lem:numerator-zeros, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:hardy-1d, lem:sobolev-embedding, lem:local-to-global}
 First assume $f$ vanishes at the saddles. Differentiating $N$ (including the
 moving endpoints) gives
 $|N'(h)|^2\le Ch^{-1}\int_{-L}^{L}|\nabla f(\gamma_h)|^2\,dt+Ch^{\alpha-2}$
@@ -353,7 +366,7 @@ then $v/d^2\in L^2$ near the saddles.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-first-gain, lem:numerator-zeros, lem:orbit-comparison, lem:hardy-1d}
+\uses{lem:transport-first-gain, lem:numerator-zeros, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:hardy-1d}
 Now $|N'|^2\le C\int|\nabla f_h|^2d^{-(4-2\delta)}\,dt+Ch^{-\delta}$, so
 $N'\in L^2$, and the phase-cell Hardy inequality with weight $h^{-2}$ gives
 $\int_{I_j}|N/D|^2\,dh/h^2\le C\int_{I_j}|N'|^2$. Reconstruction has forcing
@@ -374,7 +387,7 @@ $v$ on the regular edges is zero.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:numerator-zeros, lem:hardy-1d, lem:orbit-comparison}
+\uses{lem:numerator-zeros, lem:hardy-1d, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals}
 Factor $D=(h-h_j)d_j(h)/h_j$ on each phase cell. The second Hardy inequality
 gives $C'\in L^2$. The midpoint formula
 $A(h)=ie^{2i\lambda L}C+i\int_{-L}^0f_he^{-i\lambda t}dt$ is then in $H^1$,
