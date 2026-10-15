@@ -88,7 +88,8 @@ motivation, and standard facts cited rather than proved.
   (pointwise maps), `SymmetryL2.lean` (action on `L²`), `Sectors.lean`.
   `DipoleCalculus.lean` defines classical partial derivatives, `L₀` and
   adapted fields on the real lift `ℝ²` and proves the dipole identities;
-  `NormalField.lean` proves the even–even normal field algebra. Then
+  `NormalField.lean` proves the even–even normal field algebra;
+  `VirialAlgebra.lean` proves the pointwise commutator identities. Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
   `IntervalZeroExtension.lean` proves jump-free zero extension of zero-trace H¹ data;

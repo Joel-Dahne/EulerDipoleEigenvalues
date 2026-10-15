@@ -52,6 +52,35 @@ $\nabla u\cdot\nabla v=u_xv_x+u_yv_y$ and $|\nabla u|^2=\nabla u\cdot\nabla u$.
 The dipole lifts to $\Psi(x,y)=\cos x+\cos y$ on $\R^2$.
 \end{definition}
 
+\begin{lemma}[Calculus on the lift]
+\label{lem:lift-calculus}
+\uses{def:lift-operators}
+\lean{NoEmbeddedEigenvalues.partialX_add,
+  NoEmbeddedEigenvalues.partialX_sub,
+  NoEmbeddedEigenvalues.partialX_smul,
+  NoEmbeddedEigenvalues.partialX_const_smul,
+  NoEmbeddedEigenvalues.partialY_add,
+  NoEmbeddedEigenvalues.partialY_sub,
+  NoEmbeddedEigenvalues.partialY_smul,
+  NoEmbeddedEigenvalues.partialY_const_smul,
+  NoEmbeddedEigenvalues.partialX_eq_zero_of_eventually,
+  NoEmbeddedEigenvalues.partialY_eq_zero_of_eventually,
+  NoEmbeddedEigenvalues.partialY_partialX,
+  NoEmbeddedEigenvalues.contDiff_partialX,
+  NoEmbeddedEigenvalues.contDiff_partialY}
+\leanok
+The partial derivatives satisfy the sum and product rules at points of
+differentiability, vanish at $p$ for functions vanishing near $p$, map $C^{n+1}$
+to $C^n$, and commute on $C^2$ functions: $\partial_y\partial_xu=\partial_x\partial_yu$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+One-variable calculus along the coordinate lines. The partials are the
+Fréchet derivative applied to $(1,0)$ and $(0,1)$, so symmetry of mixed
+partials is symmetry of the second Fréchet derivative of a $C^2$ function.
+\end{proof}
+
 \begin{lemma}[Algebraic identities for the dipole]
 \label{lem:dipole-identities}
 \uses{def:dipole, def:lift-operators}

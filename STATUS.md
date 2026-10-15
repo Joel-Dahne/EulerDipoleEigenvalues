@@ -24,10 +24,12 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    half-density generator is the separate `def:half-density-generator`.
    Method: identities are rational in sin/cos; SymPy (Gröbner division in lex
    order) gives the cofactors for `linear_combination` with `sin²+cos²=1` and
-   `ρ²·ρ⁻² = 1`. Next: `lem:commutator-algebra` items (1), (2), (4); these
-   need symmetry of mixed partials for `partialX`/`partialY` (bridge to
-   `fderiv` and `ContDiffAt.isSymmSndFDerivAt`). Item (3) and
-   `lem:virial-smooth` need integration by parts on the torus.
+   `ρ²·ρ⁻² = 1`. Also done: `lem:lift-calculus` (product rules, symmetric
+   mixed partials) and the new node `lem:commutator-pointwise`
+   (`[L₀, W·∇] = f L₀`, `L₀ div W = L₀ f`, `[L₀, D] = ½(f L₀ + L₀ f)`) in
+   `VirialAlgebra.lean`. Left in `lem:commutator-algebra`: skew-symmetry of
+   `D` and the `H = -iL₀` form; these and `lem:virial-smooth` need
+   integration by parts on the torus.
 4. Even–even. Boundary positivity on the weighted domain is now proved in
    Lean (2026-10-15, `WeightedBoundaryForm.lean`), by exhausting (-1,1)
    with interior intervals instead of cutoff + mollification + density

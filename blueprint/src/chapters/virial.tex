@@ -20,24 +20,58 @@ $[Y,W]=(Y\cdot\nabla)W-(W\cdot\nabla)Y$ equals $fY$ on $U$. In components,
 \[
   L_0W_1-\cos y\,W_2=f\sin y,\qquad L_0W_2+\cos x\,W_1=-f\sin x .
 \]
-For $W\in C^2$ this is the operator identity $[L_0,W\cdot\nabla]=f\,L_0$
-(Lemma~\ref{lem:commutator-algebra}).
+For $W\in C^1$ this is the operator identity $[L_0,W\cdot\nabla]=f\,L_0$ on
+$C^2$ functions (Lemma~\ref{lem:commutator-pointwise}).
 \end{definition}
 
 \begin{definition}[Half-density generator]
 \label{def:half-density-generator}
-\uses{def:adapted-field}
-For a $C^1$ vector field $W$ on $\T^2$, its \emph{half-density generator} is
-$D=W\cdot\nabla+\tfrac12\Div W$.
+\uses{def:adapted-field, def:lift-operators}
+\lean{NoEmbeddedEigenvalues.fieldDeriv,
+  NoEmbeddedEigenvalues.divergence,
+  NoEmbeddedEigenvalues.halfDensityGen}
+\leanok
+For a $C^1$ vector field $W$ on $\T^2$ (or on its lift), its
+\emph{half-density generator} is $D=W\cdot\nabla+\tfrac12\Div W$, where
+$W\cdot\nabla u=W_1\partial_xu+W_2\partial_yu$ and
+$\Div W=\partial_xW_1+\partial_yW_2$.
 \end{definition}
+
+\begin{lemma}[Pointwise commutator identities]
+\label{lem:commutator-pointwise}
+\uses{def:adapted-field, def:half-density-generator}
+\lean{NoEmbeddedEigenvalues.IsAdaptedOn.classicalL0_fieldDeriv,
+  NoEmbeddedEigenvalues.IsAdaptedOn.classicalL0_divergence,
+  NoEmbeddedEigenvalues.IsAdaptedOn.classicalL0_halfDensityGen}
+\leanok
+Let $U$ be open, $W$ of class $C^2$ and adapted on $U$ with a differentiable
+coefficient $f$, and $d=\Div W$. Then on $U$, for every $C^2$ function $u$,
+\begin{enumerate}
+  \item $[L_0,W\cdot\nabla]u=f\,L_0u$;
+  \item $L_0d=L_0f$;
+  \item $[L_0,D]u=\tfrac12\bigl(fL_0u+L_0(fu)\bigr)$.
+\end{enumerate}
+Item (1) holds at each point of $U$ and needs only $W$ differentiable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-calculus}
+\leanok
+For (1), $[Y\cdot\nabla,W\cdot\nabla]u=[Y,W]\cdot\nabla u$ because the second
+derivatives of $u$ cancel by symmetry; then use $[Y,W]=fY$. For (2), the two
+components of $[Y,W]-fY$ vanish on $U$, so their derivatives do; the
+$x$-derivative of the first plus the $y$-derivative of the second is
+$L_0d-L_0f$, by symmetry of the mixed partials of $W$. (Equivalently: since
+$\Div Y=0$, $\Div[Y,W]=Y\cdot\nabla\Div W$, while $\Div(fY)=Y\cdot\nabla f$.)
+For (3), $[L_0,D]u=[L_0,W\cdot\nabla]u+\tfrac12(L_0d)u=fL_0u+\tfrac12(L_0f)u
+=\tfrac12(fL_0u+L_0(fu))$ by (1) and (2).
+\end{proof}
 
 \begin{lemma}[Commutator algebra]
 \label{lem:commutator-algebra}
 \uses{def:adapted-field, def:half-density-generator}
-Let $W$ be smooth and adapted with coefficient $f$, and $d=\Div W$. Then
+Let $W$ be smooth on $\T^2$ and adapted with coefficient $f$. Then
 \begin{enumerate}
-  \item $[L_0,W\cdot\nabla]=f\,L_0$ on $C^2$ functions;
-  \item $L_0d=L_0f$;
   \item $D$ is skew-symmetric: $\ip{Du}{v}=-\ip{u}{Dv}$ for smooth $u,v$;
   \item $[H,D]=\tfrac12(fH+Hf)$ on smooth functions, where $f$ acts by
         multiplication.
@@ -45,12 +79,9 @@ Let $W$ be smooth and adapted with coefficient $f$, and $d=\Div W$. Then
 \end{lemma}
 
 \begin{proof}
-For (1), $[Y\cdot\nabla,W\cdot\nabla]u=[Y,W]\cdot\nabla u$ because the second
-derivatives of $u$ cancel by symmetry; then use $[Y,W]=fY$. For (2), since
-$\Div Y=0$, $\Div[Y,W]=Y\cdot\nabla\Div W$, while
-$\Div(fY)=Y\cdot\nabla f$. Item (3) is integration by parts.
-For (4), $[L_0,D]=fL_0+\tfrac12L_0d=fL_0+\tfrac12(L_0f)
-=\tfrac12(fL_0+L_0f)$ by (1) and (2); multiply by $-i$.
+\uses{lem:commutator-pointwise}
+Item (1) is integration by parts, using $\int\Div(|u|^2W)=0$. Item (2) is
+Lemma~\ref{lem:commutator-pointwise}(3) multiplied by $-i$, since $H=-iL_0$.
 \end{proof}
 
 \begin{lemma}[Virial identity, smooth case]

@@ -1,10 +1,13 @@
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 import NoEmbeddedEigenvalues.Symmetry
 
 /-!
 # Classical calculus on the real lift and the dipole identities
 
-Blueprint: `lem:dipole-identities`, `def:adapted-field`.
+Blueprint: `def:lift-operators`, `lem:lift-calculus`, `lem:dipole-identities`,
+`def:adapted-field`.
 
 Pointwise differential identities are stated for functions on the real lift
 `ℝ × ℝ` of the torus, as for `IsSmoothTorusTest`. `partialX` and `partialY` are
@@ -47,7 +50,138 @@ theorem partialY_eq_of_hasDerivAt {u d : ℝ × ℝ → E}
     (h : ∀ x y, HasDerivAt (fun t ↦ u (x, t)) (d (x, y)) y) : partialY u = d :=
   funext fun p ↦ (h p.1 p.2).deriv
 
+/-! ### Calculus rules -/
+
+section Rules
+
+variable {u v : ℝ × ℝ → E} {p : ℝ × ℝ}
+
+theorem classicalL0_eq (u : ℝ × ℝ → E) :
+    classicalL0 u = fun q ↦ sin q.2 • partialX u q - sin q.1 • partialY u q := rfl
+
+theorem hasDerivAt_partialX (hu : DifferentiableAt ℝ u p) :
+    HasDerivAt (fun t ↦ u (t, p.2)) (partialX u p) p.1 :=
+  (hu.comp p.1 (differentiableAt_id.prodMk (differentiableAt_const p.2))).hasDerivAt
+
+theorem hasDerivAt_partialY (hu : DifferentiableAt ℝ u p) :
+    HasDerivAt (fun t ↦ u (p.1, t)) (partialY u p) p.2 :=
+  (hu.comp p.2 ((differentiableAt_const p.1).prodMk differentiableAt_id)).hasDerivAt
+
+theorem partialX_eq_fderiv (hu : DifferentiableAt ℝ u p) : partialX u p = fderiv ℝ u p (1, 0) :=
+  (hu.hasFDerivAt.comp_hasDerivAt p.1
+    ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))).deriv
+
+theorem partialY_eq_fderiv (hu : DifferentiableAt ℝ u p) : partialY u p = fderiv ℝ u p (0, 1) :=
+  (hu.hasFDerivAt.comp_hasDerivAt p.2
+    ((hasDerivAt_const p.2 p.1).prodMk (hasDerivAt_id p.2))).deriv
+
+theorem partialX_add (hu : DifferentiableAt ℝ u p) (hv : DifferentiableAt ℝ v p) :
+    partialX (fun q ↦ u q + v q) p = partialX u p + partialX v p :=
+  ((hasDerivAt_partialX hu).add (hasDerivAt_partialX hv)).deriv
+
+theorem partialY_add (hu : DifferentiableAt ℝ u p) (hv : DifferentiableAt ℝ v p) :
+    partialY (fun q ↦ u q + v q) p = partialY u p + partialY v p :=
+  ((hasDerivAt_partialY hu).add (hasDerivAt_partialY hv)).deriv
+
+theorem partialX_sub (hu : DifferentiableAt ℝ u p) (hv : DifferentiableAt ℝ v p) :
+    partialX (fun q ↦ u q - v q) p = partialX u p - partialX v p :=
+  ((hasDerivAt_partialX hu).sub (hasDerivAt_partialX hv)).deriv
+
+theorem partialY_sub (hu : DifferentiableAt ℝ u p) (hv : DifferentiableAt ℝ v p) :
+    partialY (fun q ↦ u q - v q) p = partialY u p - partialY v p :=
+  ((hasDerivAt_partialY hu).sub (hasDerivAt_partialY hv)).deriv
+
+theorem partialX_smul {c : ℝ × ℝ → ℝ} (hc : DifferentiableAt ℝ c p) (hu : DifferentiableAt ℝ u p) :
+    partialX (fun q ↦ c q • u q) p = c p • partialX u p + partialX c p • u p :=
+  ((hasDerivAt_partialX hc).smul (hasDerivAt_partialX hu)).deriv
+
+theorem partialY_smul {c : ℝ × ℝ → ℝ} (hc : DifferentiableAt ℝ c p) (hu : DifferentiableAt ℝ u p) :
+    partialY (fun q ↦ c q • u q) p = c p • partialY u p + partialY c p • u p :=
+  ((hasDerivAt_partialY hc).smul (hasDerivAt_partialY hu)).deriv
+
+theorem partialX_const_smul (c : ℝ) (hu : DifferentiableAt ℝ u p) :
+    partialX (fun q ↦ c • u q) p = c • partialX u p :=
+  ((hasDerivAt_partialX hu).const_smul c).deriv
+
+theorem partialY_const_smul (c : ℝ) (hu : DifferentiableAt ℝ u p) :
+    partialY (fun q ↦ c • u q) p = c • partialY u p :=
+  ((hasDerivAt_partialY hu).const_smul c).deriv
+
+/-- A function vanishing near `p` has vanishing partial derivatives at `p`. -/
+theorem partialX_eq_zero_of_eventually (hu : ∀ᶠ q in nhds p, u q = 0) : partialX u p = 0 := by
+  have hl : Filter.Tendsto (fun t : ℝ ↦ ((t, p.2) : ℝ × ℝ)) (nhds p.1) (nhds p) :=
+    (continuous_id.prodMk continuous_const).tendsto' p.1 p rfl
+  have h : (fun t ↦ u (t, p.2)) =ᶠ[nhds p.1] fun _ ↦ 0 := hl.eventually hu
+  rw [partialX, h.deriv_eq, deriv_const]
+
+theorem partialY_eq_zero_of_eventually (hu : ∀ᶠ q in nhds p, u q = 0) : partialY u p = 0 := by
+  have hl : Filter.Tendsto (fun t : ℝ ↦ ((p.1, t) : ℝ × ℝ)) (nhds p.2) (nhds p) :=
+    (continuous_const.prodMk continuous_id).tendsto' p.2 p rfl
+  have h : (fun t ↦ u (p.1, t)) =ᶠ[nhds p.2] fun _ ↦ 0 := hl.eventually hu
+  rw [partialY, h.deriv_eq, deriv_const]
+
+/-- Symmetry of mixed partial derivatives of a `C²` function. -/
+theorem partialY_partialX (hu : ContDiff ℝ 2 u) (p : ℝ × ℝ) :
+    partialY (partialX u) p = partialX (partialY u) p := by
+  have hd : Differentiable ℝ u := hu.differentiable (by norm_num)
+  have hfd : Differentiable ℝ (fderiv ℝ u) :=
+    (hu.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num)
+  have hX : partialX u = fun q ↦ fderiv ℝ u q (1, 0) :=
+    funext fun q ↦ partialX_eq_fderiv (hd q)
+  have hY : partialY u = fun q ↦ fderiv ℝ u q (0, 1) :=
+    funext fun q ↦ partialY_eq_fderiv (hd q)
+  rw [hX, hY, partialY_eq_fderiv ((hfd p).clm_apply (differentiableAt_const _)),
+    partialX_eq_fderiv ((hfd p).clm_apply (differentiableAt_const _)),
+    fderiv_clm_apply (hfd p) (differentiableAt_const _),
+    fderiv_clm_apply (hfd p) (differentiableAt_const _)]
+  simpa using (hu.contDiffAt.isSymmSndFDerivAt (by simp)) (0, 1) (1, 0)
+
+/-- Partial derivatives of a `C^(n+1)` function are `C^n`. -/
+theorem contDiff_partialX {n : ℕ} (hu : ContDiff ℝ (n + 1) u) : ContDiff ℝ n (partialX u) := by
+  have hd : Differentiable ℝ u := hu.differentiable (by simp)
+  rw [show partialX u = fun q ↦ fderiv ℝ u q (1, 0) from
+    funext fun q ↦ partialX_eq_fderiv (hd q)]
+  exact (hu.fderiv_right le_rfl).clm_apply contDiff_const
+
+theorem contDiff_partialY {n : ℕ} (hu : ContDiff ℝ (n + 1) u) : ContDiff ℝ n (partialY u) := by
+  have hd : Differentiable ℝ u := hu.differentiable (by simp)
+  rw [show partialY u = fun q ↦ fderiv ℝ u q (0, 1) from
+    funext fun q ↦ partialY_eq_fderiv (hd q)]
+  exact (hu.fderiv_right le_rfl).clm_apply contDiff_const
+
+end Rules
+
 end Operators
+
+section Coordinates
+
+variable {p : ℝ × ℝ}
+
+@[simp] theorem partialX_sin_fst : partialX (fun q : ℝ × ℝ ↦ sin q.1) p = cos p.1 :=
+  (hasDerivAt_sin p.1).deriv
+
+@[simp] theorem partialX_cos_fst : partialX (fun q : ℝ × ℝ ↦ cos q.1) p = -sin p.1 :=
+  (hasDerivAt_cos p.1).deriv
+
+@[simp] theorem partialX_sin_snd : partialX (fun q : ℝ × ℝ ↦ sin q.2) p = 0 :=
+  (hasDerivAt_const p.1 (sin p.2)).deriv
+
+@[simp] theorem partialX_cos_snd : partialX (fun q : ℝ × ℝ ↦ cos q.2) p = 0 :=
+  (hasDerivAt_const p.1 (cos p.2)).deriv
+
+@[simp] theorem partialY_sin_snd : partialY (fun q : ℝ × ℝ ↦ sin q.2) p = cos p.2 :=
+  (hasDerivAt_sin p.2).deriv
+
+@[simp] theorem partialY_cos_snd : partialY (fun q : ℝ × ℝ ↦ cos q.2) p = -sin p.2 :=
+  (hasDerivAt_cos p.2).deriv
+
+@[simp] theorem partialY_sin_fst : partialY (fun q : ℝ × ℝ ↦ sin q.1) p = 0 :=
+  (hasDerivAt_const p.2 (sin p.1)).deriv
+
+@[simp] theorem partialY_cos_fst : partialY (fun q : ℝ × ℝ ↦ cos q.1) p = 0 :=
+  (hasDerivAt_const p.2 (cos p.1)).deriv
+
+end Coordinates
 
 /-- A planar vector field `W = (W₁, W₂)` is adapted on `U` with commutator coefficient `f`
     if `[Y, W] = f Y` there, for the dipole velocity `Y = (sin y, -sin x)`. Written in
