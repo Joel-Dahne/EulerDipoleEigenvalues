@@ -129,7 +129,18 @@ $\operatorname{Re}\ip{D\omega}{\omega}=0$. Divide by $\lambda$.
 \begin{lemma}[Virial identity, smooth case, quadratic form]
 \label{lem:virial-smooth-quadratic}
 \uses{lem:virial-smooth}
-In the setting of Lemma~\ref{lem:virial-smooth}, if moreover $\Delta\psi=\omega$,
+\lean{NoEmbeddedEigenvalues.virial_smooth_quadratic,
+  NoEmbeddedEigenvalues.squarePairing_partialX,
+  NoEmbeddedEigenvalues.squarePairing_partialY,
+  NoEmbeddedEigenvalues.re_squarePairing_smul_partialX,
+  NoEmbeddedEigenvalues.re_squarePairing_smul_partialY,
+  NoEmbeddedEigenvalues.re_squarePairing_smul_laplacian,
+  NoEmbeddedEigenvalues.partialX_halfDensityGen,
+  NoEmbeddedEigenvalues.partialY_halfDensityGen,
+  NoEmbeddedEigenvalues.re_squarePairing_halfDensityGen_self}
+\leanok
+In the setting of Lemma~\ref{lem:virial-smooth}, assume moreover $\Delta\psi=\omega$,
+with $\psi\in C^4$, $W\in C^3$ and $f\in C^2$. Then
 \[
   0=\int_{\T^2}f|\Delta\psi|^2
    +\int_{\T^2}(2\sym DW-fI)\nabla\psi\cdot\overline{\nabla\psi}
@@ -139,13 +150,21 @@ In the setting of Lemma~\ref{lem:virial-smooth}, if moreover $\Delta\psi=\omega$
 \end{lemma}
 
 \begin{proof}
-\uses{lem:square-integral-partial, lem:square-pairing}
+\uses{lem:commutator-algebra, lem:square-pairing, lem:lift-calculus}
+\leanok
 Substitute $\omega=\Delta\psi$ in Lemma~\ref{lem:virial-smooth} and use the
 integrations by parts
 $\operatorname{Re}\int f\Delta\psi\,\bar\psi=-\int f|\nabla\psi|^2
 +\tfrac12\int\Delta f|\psi|^2$ and
 $2\operatorname{Re}\int D\psi\,\overline{\Delta\psi}
 =-2\int\sym DW\nabla\psi\cdot\overline{\nabla\psi}+\tfrac12\int\Delta(\Div W)|\psi|^2$.
+
+All integrations by parts follow from skew-symmetry
+(Lemma~\ref{lem:commutator-algebra}): $\partial_x,\partial_y$ are the generators $D$
+of the constant fields $(1,0)$, $(0,1)$. For real $g$ this gives
+$\operatorname{Re}\ip{gu}{\partial_ju}=-\tfrac12\ip{(\partial_jg)u}{u}$. For the second
+identity, $\partial_j(D\psi)=D(\partial_j\psi)+(\partial_jW)\cdot\nabla\psi
++\tfrac12(\partial_j\Div W)\psi$ and $\operatorname{Re}\ip{D\partial_j\psi}{\partial_j\psi}=0$.
 \end{proof}
 
 \begin{remark}

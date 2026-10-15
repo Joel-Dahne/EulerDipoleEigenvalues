@@ -32,8 +32,11 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:square-integral-partial`, `lem:square-pairing`), skew-symmetry of `D`
    and `L₀` (`lem:commutator-algebra`, restated), and the first form of the
    smooth virial identity (`lem:virial-smooth`, `VirialSmooth.lean`) are
-   done. Next on this track: `lem:virial-smooth-quadratic` (split off: the
-   `2 sym DW - f I` form, two more integrations by parts using `Δψ = ω`).
+   done, and so is `lem:virial-smooth-quadratic` (`VirialQuadratic.lean`; all
+   integrations by parts via skew-symmetry of `∂ₓ`, `∂_y`). The next virial
+   step is `lem:virial-l2`, the identity on the original `L²` domain, which
+   needs the analytic setup (self-adjointness, `H²` regularity of `ψ`) and
+   should be digested first.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`
