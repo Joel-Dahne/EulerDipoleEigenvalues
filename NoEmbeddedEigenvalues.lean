@@ -17,6 +17,7 @@ import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup
+import NoEmbeddedEigenvalues.SobolevTorus
 import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2

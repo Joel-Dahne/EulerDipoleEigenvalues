@@ -84,7 +84,8 @@ motivation, and standard facts cited rather than proved.
   `TorusL2.lean` (measure, `L²`, characters, coefficients), `Fourier.lean`
   (Hilbert basis, Parseval, bounded Fourier multipliers), `Setup.lean`
   (`Δ⁻¹`, `L₀`, domain, eigenvalue problem), `Derivatives.lean`
-  (Fourier-defined and weak derivatives). Symmetry chapter: `Symmetry.lean`
+  (Fourier-defined and weak derivatives), `SobolevTorus.lean` (`Hˢ(𝕋²)` via
+  Fourier coefficients, elliptic regularity of `Δ⁻¹`). Symmetry chapter: `Symmetry.lean`
   (pointwise maps), `SymmetryL2.lean` (action on `L²`), `Sectors.lean`.
   `DipoleCalculus.lean` defines classical partial derivatives, `L₀` and
   adapted fields on the real lift `ℝ²` and proves the dipole identities;

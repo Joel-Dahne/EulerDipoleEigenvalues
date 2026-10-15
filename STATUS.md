@@ -36,7 +36,13 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    integrations by parts via skew-symmetry of `∂ₓ`, `∂_y`). The next virial
    step is `lem:virial-l2`, the identity on the original `L²` domain, which
    needs the analytic setup (self-adjointness, `H²` regularity of `ψ`) and
-   should be digested first.
+   should be digested first. `H^s(𝕋²)` is now defined through Fourier
+   coefficients (`SobolevTorus.lean`, `def:sobolev-torus`,
+   `lem:sobolev-torus-basic`), with `lem:elliptic-torus` proved: `Δ⁻¹`
+   gains two derivatives (constant 4), `∂_j` loses one, and `Δ⁻¹ω ∈ H²` for
+   every `ω ∈ L²`. Not yet linked: Fourier `H^s` on the torus versus the
+   classical lift calculus (smooth periodic lifts are in every `H^s`), and
+   `lem:sobolev-embedding`.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`

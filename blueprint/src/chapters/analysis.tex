@@ -189,10 +189,38 @@ interval API.
 
 \begin{definition}[Sobolev spaces on the torus]
 \label{def:sobolev-torus}
-\uses{def:torus}
-For $s\ge0$, $H^s(\T^2)=\{g\in L^2:\sum_k(1+|k|^2)^s|\hat g_k|^2<\infty\}$.
-Derivatives are the Fourier multipliers $ik_j$.
+\uses{def:torus, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.sobolevWeight,
+  NoEmbeddedEigenvalues.MemSobolev,
+  NoEmbeddedEigenvalues.sobolevNormSq,
+  NoEmbeddedEigenvalues.sobolevSubmodule}
+\leanok
+For $s\ge0$, $H^s(\T^2)=\{g\in L^2:\sum_k(1+|k|^2)^s|\hat g_k|^2<\infty\}$,
+with $\|g\|_{H^s}^2=\sum_k(1+|k|^2)^s|\hat g_k|^2$.
+Derivatives are the Fourier multipliers $ik_j$
+(Definition~\ref{def:fourier-derivatives}). The Lean definition allows every
+real $s$; for $s\le0$ it is all of $L^2$.
 \end{definition}
+
+\begin{lemma}[Basic properties of $H^s(\T^2)$]
+\label{lem:sobolev-torus-basic}
+\uses{def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.memSobolev_zero,
+  NoEmbeddedEigenvalues.MemSobolev.mono,
+  NoEmbeddedEigenvalues.memSobolev_of_nonpos,
+  NoEmbeddedEigenvalues.MemSobolev.add,
+  NoEmbeddedEigenvalues.MemSobolev.smul}
+\leanok
+$H^0(\T^2)=L^2$, $H^t\subset H^s$ for $s\le t$, and $H^s$ is a linear subspace
+of $L^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:torus-fourier-basis}
+\leanok
+Parseval, monotonicity of $(1+|k|^2)^s$ in $s$, and
+$|a+b|^2\le2|a|^2+2|b|^2$.
+\end{proof}
 
 \begin{definition}[Local Sobolev spaces and traces]
 \label{def:sobolev-local}
@@ -210,14 +238,30 @@ equivalent to the one given by the Gagliardo seminorm.
 
 \begin{lemma}[Elliptic regularity on the torus]
 \label{lem:elliptic-torus}
-\uses{def:sobolev-torus, def:inverse-laplacian}
-$\Delta^{-1}:H^s\cap X\to H^{s+2}$ is bounded for $s\ge0$, and
-$\partial_j:H^{s+1}\to H^s$. In particular $\psi=\Delta^{-1}\omega\in H^2$ for
-$\omega\in X$.
+\uses{def:sobolev-torus, def:inverse-laplacian, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.MemSobolev.invLap,
+  NoEmbeddedEigenvalues.sobolevNormSq_invLap_le,
+  NoEmbeddedEigenvalues.memSobolev_two_invLap,
+  NoEmbeddedEigenvalues.MemSobolev.of_hasFourierPartial,
+  NoEmbeddedEigenvalues.sobolevNormSq_partial_le,
+  NoEmbeddedEigenvalues.MemSobolev.exists_hasFourierPartial,
+  NoEmbeddedEigenvalues.memSobolev_add_one_of_hasFourierPartial}
+\leanok
+$\Delta^{-1}:H^s\to H^{s+2}$ is bounded, $\|\Delta^{-1}\omega\|_{H^{s+2}}^2\le
+4\|\omega\|_{H^s}^2$, and $\partial_j:H^{s+1}\to H^s$ with
+$\|\partial_jg\|_{H^s}\le\|g\|_{H^{s+1}}$; functions in $H^1$ have both partial
+derivatives in $L^2$. Conversely $g\in H^{s+1}$ if $g,\partial_xg,\partial_yg\in H^s$.
+In particular $\psi=\Delta^{-1}\omega\in H^2$ for every $\omega\in L^2$.
 \end{lemma}
 
 \begin{proof}
-Fourier multipliers.
+\uses{lem:sobolev-torus-basic, lem:inverse-laplacian-fourier, lem:torus-fourier-basis}
+\leanok
+Fourier multipliers, coefficient by coefficient. For $k\ne0$, $|k|^2\ge1$ gives
+$(1+|k|^2)^2\le4|k|^4$, so $(1+|k|^2)^{s+2}|\hat\omega_k|^2/|k|^4\le
+4(1+|k|^2)^s|\hat\omega_k|^2$. For $\partial_j$, $k_j^2\le|k|^2\le1+|k|^2$, and
+$1+|k|^2=1+k_1^2+k_2^2$ gives the converse. Existence of the derivative is
+existence of an $L^2$ function with prescribed square summable coefficients.
 \end{proof}
 
 \begin{lemma}[Sobolev embeddings on the torus]
