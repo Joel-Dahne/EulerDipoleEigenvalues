@@ -88,6 +88,7 @@ motivation, and standard facts cited rather than proved.
   (pointwise maps), `SymmetryL2.lean` (action on `L²`), `Sectors.lean`. Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
+  `IntervalZeroExtension.lean` proves jump-free zero extension of zero-trace H¹ data;
   `BoundaryForm.lean` proves the classical boundary positivity argument;
   `WeightedBoundary.lean` defines its weighted second-order domain and proves
   classical inclusion, local regularity and affine stability.

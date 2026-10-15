@@ -33,8 +33,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    inclusion, interior regularity and affine stability proved. Conditional
    cutoff convergence is proved in `BoundaryCutoff.lean`, and the explicit
    smooth family with uniform bounds and unconditional cutoff approximation
-   is now proved in `BoundaryCutoffConstruction.lean`. Next: zero extension
-   and interior mollification, followed by the density/continuity extension to
+   is now proved in `BoundaryCutoffConstruction.lean`. First-order zero
+   extension is proved in `IntervalZeroExtension.lean`. Next: apply it to
+   both pairs of each fixed cutoff triple (`lem:boundary-cutoff-global-regularity`),
+   then interior mollification and the density/continuity extension to
    `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
    variables. The trace and transport inputs remain unverified. Continue the
    end-to-end digestion and formalize the normal-field algebra.
@@ -131,6 +133,22 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   dependent nodes and the Sobolev-tier guidance now distinguish these. The
   endpoint Hardy inequality is separately stated (not yet proved in Lean);
   it is not needed for the boundary-form cutoff step.
+- **First-order zero extension** (`IntervalZeroExtension.lean`):
+  `intervalZeroExtension a b F` keeps the interior values and is zero
+  elsewhere, including at the endpoints. Proved global L¹/L² membership,
+  compact support in `[a,b]`, preservation of the squared L² integral, and
+  invariance of interval integrals between points of `[a,b]`. For zero-trace
+  H¹ data, the zero extension is globally the primitive of the extended
+  derivative, continuous on ℝ, absolutely continuous on every bounded
+  interval and H¹ on every bounded interval with the correct a.e. derivative.
+  The a.e. derivative statement alone needs no zero traces; the absolute
+  continuity does. There are no new admissions or warnings. The primitive
+  identity, H¹ extension and L² integral identity use only `propext`,
+  `Classical.choice`, `Quot.sound` (checked with `#print axioms`). This is
+  first-order only: applying it to the first derivative of a cutoff triple
+  requires its own zero-trace/support checks, isolated in the still-unformalized
+  `lem:boundary-cutoff-global-regularity`. Mollification and smooth density
+  are not proved.
 - **Weighted boundary domain** (`WeightedBoundary.lean`):
   `HasWeightedBoundaryH2 F D E` combines interval H¹ data `(F,D)`, local
   absolute continuity of `D` with a.e. derivative `E`, and L² membership of
@@ -170,8 +188,9 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   traces, but are not asserted smooth yet. Existence of the controlled
   family, its complex-valued smoothness and unconditional convergence use
   only `propext`, `Classical.choice`, `Quot.sound` (checked with `#print axioms`).
-  Zero extension/interior mollification, full smooth density and boundary-form
-  continuity remain pending. These results do not yet prove weighted boundary positivity.
+  The second-order application of zero extension, interior mollification,
+  full smooth density and boundary-form continuity remain pending. These
+  results do not yet prove weighted boundary positivity.
 - **Lean restructuring** (2026-10-14): the items from the review are done
   (lemmas moved to where they belong, derivative section moved to
   `Derivatives.lean`, renamed from `WeakDerivatives.lean`, multiplier
@@ -179,7 +198,8 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full `lake build` and `just web` pass after the cutoff construction,
+- **Validation**: full `lake build` and `just web` pass after first-order zero extension,
+  cutoff construction,
   conditional-cutoff and weighted-domain,
   endpoint-estimate, interval-H¹, boundary-form and rotation-character work;
   the only Lean warnings are the three existing sector exclusion `sorry`s.

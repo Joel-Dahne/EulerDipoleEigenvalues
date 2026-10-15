@@ -82,6 +82,82 @@ For $a<b$, $H^1_0(a,b)$ consists of the $H^1(a,b)$ representatives whose
 continuous extensions have zero values at both endpoints.
 \end{definition}
 
+\begin{definition}[Zero extension from an interval]
+\label{def:interval-zero-extension}
+\lean{NoEmbeddedEigenvalues.intervalZeroExtension}
+\leanok
+For $a<b$ and $F:\R\to\C$, define $Z_{a,b}F$ to equal $F$ on $(a,b)$
+and zero elsewhere, including at $a,b$. Raw endpoint values are ignored.
+\end{definition}
+
+\begin{lemma}[$L^2$ zero extension]
+\label{lem:interval-zero-extension-l2}
+\uses{def:interval-zero-extension}
+\lean{NoEmbeddedEigenvalues.memLp_intervalZeroExtension,
+  NoEmbeddedEigenvalues.integrable_intervalZeroExtension,
+  NoEmbeddedEigenvalues.tsupport_intervalZeroExtension_subset,
+  NoEmbeddedEigenvalues.hasCompactSupport_intervalZeroExtension,
+  NoEmbeddedEigenvalues.integral_sq_intervalZeroExtension,
+  NoEmbeddedEigenvalues.intervalIntegral_intervalZeroExtension}
+\leanok
+For $F\in L^2(a,b)$, $Z_{a,b}F\in L^1(\R)\cap L^2(\R)$, with compact
+support contained in $[a,b]$, and
+\[
+ \int_\R |Z_{a,b}F|^2=\int_a^b|F|^2.
+\]
+For any $F$ and $c,d\in[a,b]$, zero extension does not change
+$\int_c^d F$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use the indicator of the measurable finite-measure interval $(a,b)$.
+The endpoints have measure zero, and the closure of the support is contained
+in the compact interval $[a,b]$.
+\end{proof}
+
+\begin{lemma}[Zero-trace $H^1$ zero extension]
+\label{lem:h1-zero-extension}
+\uses{def:h1-interval, def:h1-zero-interval, lem:h1-interval-endpoints,
+  def:interval-zero-extension}
+\lean{NoEmbeddedEigenvalues.absolutelyContinuous_complex_primitive,
+  NoEmbeddedEigenvalues.HasIntervalH1.integrable_zeroExtension_derivative,
+  NoEmbeddedEigenvalues.HasIntervalH1.zeroExtension_eq_integral,
+  NoEmbeddedEigenvalues.HasIntervalH1.absolutelyContinuous_zeroExtension,
+  NoEmbeddedEigenvalues.HasIntervalH1.continuous_zeroExtension,
+  NoEmbeddedEigenvalues.HasIntervalH1.hasDerivAt_zeroExtension_ae,
+  NoEmbeddedEigenvalues.HasIntervalH1.zeroExtension}
+\leanok
+Let $(F,D)$ be interval $H^1(a,b)$ data with zero value traces.
+Then on all of $\R$,
+\[
+ Z_{a,b}F(x)=\int_a^x Z_{a,b}D(t)\,dt.
+\]
+Consequently $Z_{a,b}F$ is continuous on $\R$, absolutely continuous on every
+bounded interval, and has a.e.\ derivative $Z_{a,b}D$. The pair
+$(Z_{a,b}F,Z_{a,b}D)$ gives $H^1(c,d)$ data for every $c<d$.
+The a.e.\ derivative assertion alone holds without zero traces.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interval-zero-extension-l2}
+\leanok
+Inside $(a,b)$ use the endpoint FTC and the zero left trace.
+To the left the primitive vanishes; to the right it is the total integral
+of $D$, equal to the difference of the two zero traces.
+The complex primitive is absolutely continuous by applying the real-valued
+primitive theorem to its real and imaginary parts.
+For the derivative relation, work in the interior and in the open complement
+of $[a,b]$, ignoring the two measure-zero endpoints.
+\end{proof}
+
+\begin{remark}
+The a.e.\ derivative assertion by itself does not rule out endpoint jumps;
+absolute continuity uses the zero traces. This is only a first-order result.
+Applying it again to a first derivative requires that derivative's own zero
+traces, not merely the value traces of the original function.
+\end{remark}
+
 \begin{definition}[$H^2$ on an interval]
 \label{def:h2-interval}
 \uses{def:h1-interval}
@@ -98,8 +174,8 @@ on the derivative is imposed at this order.
 \end{definition}
 
 \begin{remark}[Formalization scope]
-The first-order bounded-interval predicates, endpoint theorem and zero-trace
-definition are implemented. The model uses locally absolutely continuous
+The first-order bounded-interval predicates, endpoint theorem, zero-trace
+definition and first-order zero-extension theorem are implemented. The model uses locally absolutely continuous
 representatives, not a bundled normed space of a.e. equivalence classes.
 The interval $H^2$ and periodic definitions are separate, deferred targets.
 As usual, $H^1_{\mathrm{loc}}(I)$ elsewhere means $H^1$ on every compact
@@ -290,8 +366,10 @@ Hardy. The layer estimate and its limit are proved in Lean, and the weighted
 domain is now defined in Definition~\ref{def:weighted-boundary-domain}.
 The controlled-family convergence theorem and an explicit smooth cutoff
 construction are now formalized, giving the unconditional approximation in
-Lemma~\ref{lem:boundary-cutoff-approximation}. Interior mollification and
-boundary-form continuity remain pending in Lean.
+Lemma~\ref{lem:boundary-cutoff-approximation}. First-order zero extension is
+proved in Lemma~\ref{lem:h1-zero-extension}; its second-order application to
+the cutoff triples, interior mollification and boundary-form continuity remain
+pending in Lean.
 \end{remark}
 
 \begin{lemma}[Endpoint Hardy inequality]

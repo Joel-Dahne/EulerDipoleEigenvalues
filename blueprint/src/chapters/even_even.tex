@@ -634,6 +634,34 @@ Interior mollification is still needed to obtain smooth compactly supported
 approximants.
 \end{remark}
 
+\begin{lemma}[Global regularity of a fixed cutoff triple]
+\label{lem:boundary-cutoff-global-regularity}
+\uses{def:h1-interval, def:weighted-boundary-domain, def:boundary-cutoff-family}
+Let $(F,D,E)$ be a weighted boundary triple and $0<\eta\le1$. Form the
+explicit cutoff triple $(F_\eta,D_\eta,E_\eta)$ as above, without any
+assumption on the original value traces. All three components belong to
+$L^2(\R)$ and have compact support in $(-1,1)$. The functions $F_\eta,D_\eta$
+are absolutely continuous on every bounded interval of $\R$, with a.e.\
+derivatives $D_\eta,E_\eta$, respectively. Thus both pairs give interval
+$H^1(c,d)$ data for every $c<d$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-cutoff-existence, lem:weighted-boundary-multiplier,
+  lem:weighted-boundary-local, lem:h1-zero-extension}
+A smooth function and its first two derivatives have support in the same
+closed support bound. Hence all three cutoff components are supported in
+$[-1+\eta/2,1-\eta/2]$. Enlarge this interval to
+$[c,d]=[-1+\eta/4,1-\eta/4]\subset(-1,1)$.
+On this larger interval the weight is bounded away from zero, giving
+ordinary first-order data for both pairs. Their value traces at $c,d$
+vanish since $F_\eta,D_\eta$ vanish on neighborhoods of these endpoints.
+Apply Lemma~\ref{lem:h1-zero-extension} to both pairs. Their zero extensions
+are the original cutoff components on all of $\R$.
+This application, including the derivative-support and trace checks,
+remains to be formalized.
+\end{proof}
+
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
 \uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval, def:weighted-boundary-domain}
@@ -643,13 +671,14 @@ weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain
 \end{lemma}
 
 \begin{proof}
-\uses{lem:boundary-cutoff-approximation}
-First apply Lemma~\ref{lem:boundary-cutoff-approximation}. For a fixed cutoff
-the value is compactly supported in $(-1,1)$, where the weight is bounded
-away from zero. Extend by zero and mollify away from the endpoints, then
-pass to the limit in the boundary form. The cutoff approximation is now
-formalized. The zero-extension/interior mollification step and continuity
-needed for passage to the boundary-form limit remain pending in Lean.
+\uses{lem:boundary-cutoff-approximation, lem:boundary-cutoff-global-regularity}
+First apply Lemma~\ref{lem:boundary-cutoff-approximation}.
+Lemma~\ref{lem:boundary-cutoff-global-regularity} supplies global ordinary
+second-order data for each fixed cutoff. Mollify away from the endpoints,
+then pass to the limit in the boundary form. Cutoff approximation and
+first-order zero extension are now formalized, but the global regularity
+lemma's application to the cutoff triples and interior mollification remain
+pending in Lean, as does continuity needed for the boundary-form limit.
 \end{proof}
 
 \begin{lemma}[Affine splitting]
