@@ -386,6 +386,186 @@ flow time to $\xi$; the full boundary positivity lemma below remains
 unformalized.
 \end{remark}
 
+\subsection{Endpoint cutoff approximation}
+
+\begin{lemma}[Classical multipliers on the weighted domain]
+\label{lem:weighted-boundary-multiplier}
+\uses{def:h1-interval, def:weighted-boundary-domain, def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.mul_boundaryJet}
+\leanok
+If $(F,D,E)$ is a weighted boundary triple and $(\chi,\chi_1,\chi_2)$ is a
+classical boundary jet, then
+\[
+  (\chi F,\ \chi_1F+\chi D,\ \chi_2F+2\chi_1D+\chi E)
+\]
+is a weighted boundary triple.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Apply the product rule twice and use local absolute continuity of products.
+For the weighted second derivative, write
+$w(\chi_2F+2\chi_1D+\chi E)=(w\chi_2)F+(2w\chi_1)D+\chi(wE)$.
+All coefficients are continuous and bounded on $[-1,1]$, so the three
+terms are in $L^2$.
+\end{proof}
+
+\begin{definition}[Endpoint layer energy]
+\label{def:boundary-layer-energy}
+\lean{NoEmbeddedEigenvalues.boundaryLayerEnergy}
+\leanok
+For $0\le\eta\le1$ and $f:\R\to\C$, set
+\[
+  L_\eta(f)=\int_{-1}^{-1+\eta}|f|^2+
+                \int_{1-\eta}^1|f|^2.
+\]
+\end{definition}
+
+\begin{lemma}[Layer localization bound]
+\label{lem:boundary-layer-bound}
+\uses{def:boundary-layer-energy}
+\lean{NoEmbeddedEigenvalues.integral_sq_le_boundaryLayers}
+\leanok
+Let $0\le\eta\le1$, $q,f\in L^2(-1,1)$, and $C\ge0$. If $q=0$ on
+$[-1+\eta,1-\eta]$ and $|q|\le C|f|$ on $[-1,1]$, then
+$\int_{-1}^1|q|^2\le C^2L_\eta(f)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Split the interval into its two endpoint layers and middle interval.
+The middle integral vanishes; integrate the squared bound on the layers.
+\end{proof}
+
+\begin{lemma}[Layer energy limits]
+\label{lem:boundary-layer-limits}
+\uses{def:boundary-layer-energy, def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.tendsto_boundaryLayerEnergy,
+  NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_eq_extension,
+  NoEmbeddedEigenvalues.HasIntervalH1.tendsto_boundaryLayerEnergy_div_sq}
+\leanok
+For $f\in L^2(-1,1)$, $L_\eta(f)\to0$ as $\eta\downarrow0$.
+If $F\in H^1(-1,1)$ has zero traces, then $L_\eta(F)/\eta^2\to0$.
+Changing the raw endpoint values of $F$ to its canonical traces does not
+change any squared-norm interval integral with endpoints in $[-1,1]$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-endpoint-layers}
+\leanok
+Continuity of the integral primitives gives the first limit. Apply the
+rescaled endpoint estimates at both ends for the second. Single endpoints
+have measure zero.
+\end{proof}
+
+\begin{definition}[Controlled cutoff jet]
+\label{def:boundary-cutoff-control}
+\uses{def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.BoundaryCutoffControl}
+\leanok
+For $0<\eta\le1$ and $C\ge0$, a classical jet $(\chi,\chi_1,\chi_2)$ is
+controlled with width $\eta$ and constant $C$ if:
+\begin{itemize}
+  \item $\operatorname{supp}\chi\subset[-1+\eta/2,1-\eta/2]$;
+  \item $(\chi,\chi_1,\chi_2)=(1,0,0)$ on $[-1+\eta,1-\eta]$;
+  \item on $[-1,1]$, $|\chi-1|\le1$, $|\chi_1|\le C/\eta$,
+        and $|\chi_2|\le C/\eta^2$.
+\end{itemize}
+\end{definition}
+
+\begin{lemma}[Cutoff error estimates]
+\label{lem:boundary-cutoff-estimates}
+\uses{def:boundary-cutoff-control, def:boundary-layer-energy, def:boundary-form-xi}
+\lean{NoEmbeddedEigenvalues.BoundaryCutoffControl.value_error_bound,
+  NoEmbeddedEigenvalues.BoundaryCutoffControl.first_error_bound,
+  NoEmbeddedEigenvalues.BoundaryCutoffControl.weighted_first_error_bound,
+  NoEmbeddedEigenvalues.BoundaryCutoffControl.weighted_second_error_bound}
+\leanok
+For a controlled jet and $f\in L^2(-1,1)$,
+\[
+\begin{aligned}
+ \|(\chi-1)f\|_2^2&\le L_\eta(f),&
+ \|\chi_1f\|_2^2&\le C^2L_\eta(f)/\eta^2,\\
+ \|w\chi_1f\|_2^2&\le4C^2L_\eta(f),&
+ \|w\chi_2f\|_2^2&\le4C^2L_\eta(f)/\eta^2 .
+\end{aligned}
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-layer-bound}
+\leanok
+Each error is supported in the endpoint layers. There $0\le w\le2\eta$.
+Multiply the coefficient bounds by this weight bound and apply the layer
+localization estimate.
+\end{proof}
+
+\begin{lemma}[Convergence for a controlled cutoff family]
+\label{lem:boundary-cutoff-convergence}
+\uses{def:h1-interval, def:h1-zero-interval, def:weighted-boundary-domain,
+  lem:h1-interval-endpoints, def:boundary-cutoff-control}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.cutoff_convergence,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.cutoff_memH10,
+  NoEmbeddedEigenvalues.BoundaryCutoffControl.hasCompactSupport_mul,
+  NoEmbeddedEigenvalues.BoundaryCutoffControl.support_mul_subset}
+\leanok
+Let $(F,D,E)$ be a weighted boundary triple with zero value traces. Suppose
+a family of jets $(\chi_\eta,\chi_{1,\eta},\chi_{2,\eta})$ is controlled for
+every $0<\eta\le1$ with a single constant $C\ge0$. Set
+\[
+ F_\eta=\chi_\eta F,\quad
+ D_\eta=\chi_{1,\eta}F+\chi_\eta D,\quad
+ E_\eta=\chi_{2,\eta}F+2\chi_{1,\eta}D+\chi_\eta E.
+\]
+These are weighted triples, $F_\eta$ has compact support in $(-1,1)$ and
+zero traces, and as $\eta\downarrow0$,
+\[
+ \int_{-1}^1|F_\eta-F|^2\to0,\qquad
+ \int_{-1}^1|D_\eta-D|^2\to0,\qquad
+ \int_{-1}^1|w(E_\eta-E)|^2\to0.
+\]
+This is conditional on the cutoff family; it does not assert its existence.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-boundary-multiplier, lem:boundary-cutoff-estimates, lem:boundary-layer-limits}
+\leanok
+Expand the errors as $(\chi_\eta-1)F$,
+$(\chi_\eta-1)D+\chi_{1,\eta}F$, and
+$(\chi_\eta-1)wE+2w\chi_{1,\eta}D+w\chi_{2,\eta}F$.
+Each summand tends to zero by the estimates and layer limits. Use
+$|u+v|^2\le2(|u|^2+|v|^2)$ to assemble the limits.
+The support condition gives compact support and zero endpoint traces.
+\end{proof}
+
+\begin{lemma}[Existence of a controlled cutoff family]
+\label{lem:boundary-cutoff-existence}
+\uses{def:boundary-cutoff-control}
+There are $C\ge0$ and smooth real-valued cutoffs whose classical jets are
+controlled with width $\eta$ and constant $C$ for all $0<\eta\le1$.
+\end{lemma}
+
+\begin{proof}
+Let $\rho$ be a fixed smooth transition, zero on $(-\infty,0]$, one on
+$[1,\infty)$ and valued in $[0,1]$. Mathlib supplies
+\texttt{Real.smoothTransition}. Its first two derivatives are continuous
+and supported in $[0,1]$, so choose $B\ge1$ bounding their absolute values.
+Set
+\[
+ \chi_\eta(x)=
+ \rho\!\left(\frac{4(x+1)}{\eta}-2\right)
+ \rho\!\left(\frac{4(1-x)}{\eta}-2\right).
+\]
+The support lies strictly between $-1+\eta/2$ and $1-\eta/2$.
+On the required middle interval both arguments are at least $2$, so
+$\chi_\eta=1$ on a neighborhood of each point there.
+The product and chain rules give
+$|\chi_\eta'|\le8B/\eta$ and
+$|\chi_\eta''|\le32(B+B^2)/\eta^2$.
+Thus $C=32(B+1)^2$ works. This construction and its uniform derivative
+bounds have been derived here but have not yet been formalized in Lean.
+\end{proof}
+
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
 \uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval, def:weighted-boundary-domain}
@@ -395,15 +575,16 @@ weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain
 \end{lemma}
 
 \begin{proof}
-\uses{lem:h1-endpoint-layers}
+\uses{lem:boundary-cutoff-convergence, lem:boundary-cutoff-existence}
 Use endpoint cutoffs, followed by mollification away from the endpoints, in
 the norm $\|F\|_{H^1}+\|wF''\|_2$. On an endpoint interval of length $\eta$,
 $w=O(\eta)$, while the first and second derivatives of the cutoff are
 $O(\eta^{-1})$ and $O(\eta^{-2})$. Thus the errors are controlled by local
 norms of $F$, $F'$, $wF''$ and by $\|F/\eta\|_2$. The last term tends to
 zero by Lemma~\ref{lem:h1-endpoint-layers}; no Hardy inequality is needed.
-The first-order estimate and the weighted-domain definition are formalized.
-The density construction and passage to the limit remain pending.
+The convergence theorem for a uniformly controlled cutoff family is now
+formalized. Construction of such a family, interior mollification and
+passage to the boundary-form limit remain pending in Lean.
 \end{proof}
 
 \begin{lemma}[Affine splitting]

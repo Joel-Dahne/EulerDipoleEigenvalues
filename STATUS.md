@@ -30,8 +30,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    The classical boundary positivity argument is now proved without `sorry`
    in `BoundaryForm.lean`, with separate proved blueprint nodes. The weighted
    interval domain is now defined in `WeightedBoundary.lean`, with classical
-   inclusion, interior regularity and affine stability proved. Next: prove
-   endpoint cutoff approximation, then interior mollification and the
+   inclusion, interior regularity and affine stability proved. Conditional
+   cutoff convergence is now proved in `BoundaryCutoff.lean`. Next: construct
+   the uniformly controlled smooth cutoff family in Lean (an explicit formula
+   and its bounds are derived in the blueprint), then interior mollification and the
    density/continuity extension to
    `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
    variables. The trace and transport inputs remain unverified. Continue the
@@ -146,6 +148,22 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   density and continuity results remain pending. Classical inclusion,
   local H¹ and affine subtraction use only `propext`, `Classical.choice`,
   `Quot.sound` (checked with `#print axioms`).
+- **Boundary cutoffs** (`BoundaryCutoff.lean`): proved preservation of the
+  weighted domain under multiplication by a classical C² coefficient, the
+  full first/second product rules, layer localization bounds, vanishing L²
+  mass in shrinking layers, and vanishing rescaled mass for zero-trace H¹.
+  `BoundaryCutoffControl` specifies compact interior support, the constant
+  middle jet `(1,0,0)`, and uniform value/first/second derivative bounds.
+  Proved the four cutoff error estimates and conditional convergence of all
+  three graph components `(F,D,wE)`, with genuine compact interior support and
+  zero value traces. All of this is without `sorry`; multiplier stability,
+  conditional convergence and zero traces use only `propext`, `Classical.choice`,
+  `Quot.sound` (checked with `#print axioms`). The blueprint explicitly separates
+  the proved conditional convergence from `lem:boundary-cutoff-existence`:
+  a smoothTransition product and uniform constants are derived there, but the
+  actual family has not yet been constructed/verified in Lean. Interior
+  mollification, full smooth density and boundary-form continuity are still
+  pending. These results do not yet prove weighted boundary positivity.
 - **Lean restructuring** (2026-10-14): the items from the review are done
   (lemmas moved to where they belong, derivative section moved to
   `Derivatives.lean`, renamed from `WeakDerivatives.lean`, multiplier
@@ -153,10 +171,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full `lake build` and `just web` pass after the weighted-domain,
+- **Validation**: full `lake build` and `just web` pass after the conditional-cutoff, weighted-domain,
   endpoint-estimate, interval-H¹, boundary-form and rotation-character work;
   the only Lean warnings are the three existing sector exclusion `sorry`s.
-  The interval/endpoint, boundary/weighted, symmetry and sector modules have no warnings. The web build has only the usual missing image-converter messages
+  The interval/endpoint, boundary/weighted/cutoff, symmetry and sector modules have no warnings. The web build has only the usual missing image-converter messages
   from plasTeX. Every `\lean` name in the blueprint resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
   sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
   `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,
