@@ -158,19 +158,116 @@ In the variable $\xi=\tanh s$, with $w=1-\xi^2$ and $F(\xi)=z(s)$, we also write
 $\mathcal F_\lambda(F)$, and $G=-iwF'-\lambda F$ corresponds to $(P-\lambda)z$.
 \end{definition}
 
+\begin{definition}[Finite-interval boundary form]
+\label{def:boundary-form-xi}
+\lean{NoEmbeddedEigenvalues.boundaryWeight, NoEmbeddedEigenvalues.boundaryForm}
+\leanok
+For $\lambda\in\R$ and $F,D,E:\R\to\C$, put $w(\xi)=1-\xi^2$ and
+\[
+  \mathcal B_\lambda(F,D,E)
+  =\frac12\int_{-1}^1|wE-2\xi D-i\lambda D|^2\,d\xi
+   -\int_{-1}^1w|D|^2\,d\xi
+   +\lambda\int_{-1}^1\operatorname{Im}(D\bar F)\,d\xi.
+\]
+The derivatives are explicit arguments; their relation to $F$ is imposed in
+subsequent statements. Lean uses total Bochner integrals in this definition;
+applications below ensure that the integrands are integrable.
+\end{definition}
+
+\begin{definition}[Classical boundary jet]
+\label{def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.BoundaryJet}
+\leanok
+A classical boundary jet is a triple $(F,D,E)$ of functions $\R\to\C$,
+continuous on $[-1,1]$, with $F'(\xi)=D(\xi)$ and $D'(\xi)=E(\xi)$ at every
+$\xi\in[-1,1]$. The derivatives at the endpoints are ordinary two-sided
+derivatives of the functions on $\R$.
+\end{definition}
+
 \begin{lemma}[Boundary form in the $\xi$ variable]
 \label{lem:boundary-form-xi}
-\uses{def:boundary-form}
+\uses{def:boundary-form, def:boundary-form-xi}
 \[
   \mathcal F_\lambda(F)=\frac12\int_{-1}^1|wF''-2\xi F'-i\lambda F'|^2\,d\xi
   -\int_{-1}^1w|F'|^2\,d\xi+\lambda\operatorname{Im}\int_{-1}^1F'\bar F\,d\xi
 \]
+Thus $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,F',F'')$
 (manuscript \texttt{(ee:trace-xi)}).
 \end{lemma}
 
 \begin{proof}
 $\partial_s=w\partial_\xi$, $\cosh^2s=1/w$, $ds=d\xi/w$, and
 $G'=-i(wF''-2\xi F'-i\lambda F')$.
+\end{proof}
+
+\begin{lemma}[Classical completion of squares]
+\label{lem:trace-completion-classical}
+\uses{def:boundary-form-xi, def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.BoundaryJet.completion,
+  NoEmbeddedEigenvalues.BoundaryJet.sum_of_squares}
+\leanok
+For a classical boundary jet $(F,D,E)$ and real $\lambda$, put
+$A=wE-\xi D+F-i\lambda D$. Then
+\[
+  \mathcal B_\lambda(F,D,E)
+  =\frac12\int_{-1}^1|A|^2\,d\xi
+   +\frac12\int_{-1}^1|D|^2\,d\xi
+   -\frac12\bigl(|F(1)|^2+|F(-1)|^2\bigr).
+\]
+In particular, the last term vanishes if $F(\pm1)=0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The difference between the original density and
+$\tfrac12|A|^2+\tfrac12|D|^2$ is $K'$, where
+\[
+  K=-\tfrac12 w\xi|D|^2-w\operatorname{Re}(D\bar F)-\tfrac12\xi|F|^2.
+\]
+This is a pointwise differentiation and polynomial identity, including all
+terms involving $\lambda$. Integrate by the fundamental theorem of calculus.
+Since $w(\pm1)=0$, $K(1)-K(-1)$ is exactly the displayed endpoint correction.
+\end{proof}
+
+\begin{lemma}[Classical affine splitting]
+\label{lem:affine-splitting-classical}
+\uses{def:boundary-form-xi, def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.BoundaryJet.affine_splitting}
+\leanok
+Let $(F,D,E)$ be a classical boundary jet, $\lambda\in\R$, and $a,b\in\C$
+with $F(-1)=a-b$ and $F(1)=a+b$. Set $F_0=F-a-b\xi$ and $D_0=D-b$. Then
+\[
+  \mathcal B_\lambda(F,D,E)=\mathcal B_\lambda(F_0,D_0,E)
+    +\lambda^2|b|^2+2\lambda\operatorname{Im}(b\bar a).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-completion-classical}
+\leanok
+For $A_0=wE-\xi D_0+F_0-i\lambda D_0$, both $\int_{-1}^1A_0$ and
+$\int_{-1}^1D_0$ vanish: primitives are $wD_0+\xi F_0-i\lambda F_0$ and
+$F_0$, respectively. Since $A=A_0+a-i\lambda b$ and $D=D_0+b$, the mixed
+terms in the integrated squared norms vanish. The endpoint correction then
+gives the formula.
+\end{proof}
+
+\begin{lemma}[Classical boundary positivity]
+\label{lem:ee-trace-positivity-classical}
+\uses{def:boundary-form-xi, def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.BoundaryJet.boundaryForm_nonneg}
+\leanok
+For a classical boundary jet $(F,D,E)$, real $\lambda$, and
+$F(1)=F(-1)$ or $F(1)=-F(-1)$, one has $\mathcal B_\lambda(F,D,E)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-splitting-classical, lem:trace-completion-classical}
+\leanok
+Take $a=(F(1)+F(-1))/2$ and $b=(F(1)-F(-1))/2$. The zero-endpoint
+remainder has nonnegative form by the completion of squares. Equal endpoints
+give $b=0$, and opposite endpoints give $a=0$, so the indefinite affine
+cross term vanishes in either case.
 \end{proof}
 
 \begin{lemma}[Sum of squares, smooth case]
@@ -185,18 +282,18 @@ For $F\in C_c^\infty(-1,1)$ and real $\lambda$,
 \end{lemma}
 
 \begin{proof}
-Integration by parts. At $\lambda=0$ the key step is
-$\|wF''-\xi F'+F\|_2^2=\|wF''\|_2^2-\|F'\|_2^2$. The terms linear in $\lambda$
-agree because
-$\operatorname{Im}\int(wF''-\xi F'+F)\overline{F'}
-=\operatorname{Im}\int wF''\overline{F'}-\operatorname{Im}\int F'\bar F$.
+\uses{lem:trace-completion-classical}
+Extend $F$ by zero to $\R$ and apply the classical completion to
+$(F,F',F'')$. The endpoint correction vanishes.
 \end{proof}
 
 \begin{remark}
-Lemmas~\ref{lem:trace-sos-smooth} and~\ref{lem:affine-splitting} have been
-checked symbolically on a test polynomial vanishing at $\pm1$ (scratch sympy
-computation). This identity is the heart of the even--even argument, and a
-good early formalization target: it is pure one-variable calculus.
+The classical completion, affine splitting and positivity are now proved
+in Lean, for arbitrary classical boundary jets rather than only polynomial
+tests. This verifies the one-variable calculus core of the sign argument.
+It does not yet verify the weighted Sobolev extension or the change from
+flow time to $\xi$; the full boundary positivity lemma below remains
+unformalized.
 \end{remark}
 
 \begin{lemma}[Sum of squares, extension]
@@ -226,9 +323,11 @@ If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$, $F\in H^1$ and $wF''\in L^2$, then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-sos-extension}
-Expand; all mixed terms with $F_0$ cancel (the quadratic $\lambda$ term uses
-$\int F_0'=0$; in the linear term $\int wF_0''=-2\int F_0$ cancels the two
+\uses{lem:affine-splitting-classical, lem:trace-sos-extension}
+The classical case is Lemma~\ref{lem:affine-splitting-classical}.
+Equivalently, expand; all mixed terms with $F_0$ cancel (the quadratic
+$\lambda$ term uses $\int F_0'=0$; in the linear term
+$\int wF_0''=-2\int F_0$ cancels the two
 mixed current terms). Extend by the same density argument.
 \end{proof}
 

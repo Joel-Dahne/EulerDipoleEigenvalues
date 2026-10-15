@@ -23,8 +23,12 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    orientation, not an independent verification of the analytic lemmas.
    The conclusion in `even_even.tex` now explicitly decomposes into rotation
    characters, fixes either sign, and reassembles the two vanishing components.
-   Next: digest it end to end, check identities with SymPy, pin down statement
-   interfaces, write digest notes, and formalize the algebraic nodes.
+   The classical boundary positivity argument is now proved without `sorry`
+   in `BoundaryForm.lean`, with separate proved blueprint nodes. Next: define
+   the weighted interval Sobolev domain and prove the density/continuity
+   extension to `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
+   variables. The trace and transport inputs remain unverified. Continue the
+   end-to-end digestion and formalize the normal-field algebra.
 4. Soon after: assess the largest gap, the odd–odd renormalized virial identity
    (`prop:dd-virial`). If correctness of the result is the priority, do this
    before 3.
@@ -75,6 +79,16 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   and sum, invariance of solutions, and the rotation swap of parities.
   `Mixed.lean` gets the second mixed sector by rotation; `Main.lean` proves
   `main` from the three admitted sector exclusions.
+- **Even–even boundary calculus** (`BoundaryForm.lean`): the finite-interval
+  quadratic form takes explicit value/first/second derivative functions, so
+  it can later accommodate weak derivatives. `BoundaryJet` is the classical
+  domain. Proved the pointwise flux identity, completion of squares including
+  the endpoint correction, the zero-endpoint sum of squares, affine splitting,
+  and positivity for equal or opposite endpoints, for every real λ. Dedicated
+  classical blueprint nodes are `\leanok` in statement and proof; the original
+  weighted H¹ positivity and flow-time coordinate-change nodes are not marked
+  formalized. No new `sorry`s. The three main boundary theorems use only
+  `propext`, `Classical.choice`, and `Quot.sound` (checked with `#print axioms`).
 - **Lean restructuring** (2026-10-14): the items from the review are done
   (lemmas moved to where they belong, derivative section moved to
   `Derivatives.lean`, renamed from `WeakDerivatives.lean`, multiplier
@@ -82,9 +96,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: `lake build` passes; the only warnings are the three sector
-  exclusion `sorry`s. `just web` passes, with only the usual missing
-  image-converter messages from plasTeX. Every `\lean` name in the blueprint
+- **Validation**: full `lake build` and `just web` pass after the boundary-form
+  work; the only Lean warnings are the three existing sector exclusion
+  `sorry`s. The new boundary module has no warnings. The web build has only the
+  usual missing image-converter messages from plasTeX. Every `\lean` name in the blueprint
   resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
   sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
   `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,
