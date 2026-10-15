@@ -27,9 +27,14 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `ρ²·ρ⁻² = 1`. Also done: `lem:lift-calculus` (product rules, symmetric
    mixed partials) and the new node `lem:commutator-pointwise`
    (`[L₀, W·∇] = f L₀`, `L₀ div W = L₀ f`, `[L₀, D] = ½(f L₀ + L₀ f)`) in
-   `VirialAlgebra.lean`. Left in `lem:commutator-algebra`: skew-symmetry of
-   `D` and the `H = -iL₀` form; these and `lem:virial-smooth` need
-   integration by parts on the torus. Also done (2026-10-15):
+   `VirialAlgebra.lean`. Integration by parts on the lift
+   (`LiftIntegration.lean`: `def:square-integral`,
+   `lem:square-integral-partial`, `lem:square-pairing`), skew-symmetry of `D`
+   and `L₀` (`lem:commutator-algebra`, restated), and the first form of the
+   smooth virial identity (`lem:virial-smooth`, `VirialSmooth.lean`) are
+   done. Next on this track: `lem:virial-smooth-quadratic` (split off: the
+   `2 sym DW - f I` form, two more integrations by parts using `Δψ = ω`).
+   Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`
    (`FlowBoundaryForm.lean`, change of variables `ξ = tanh s`), which makes

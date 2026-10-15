@@ -81,6 +81,57 @@ Fréchet derivative applied to $(1,0)$ and $(0,1)$, so symmetry of mixed
 partials is symmetry of the second Fréchet derivative of a $C^2$ function.
 \end{proof}
 
+\begin{definition}[Integration over the torus on the lift]
+\label{def:square-integral}
+\uses{def:lift-operators}
+\lean{NoEmbeddedEigenvalues.IsPeriodicLift,
+  NoEmbeddedEigenvalues.periodSquare,
+  NoEmbeddedEigenvalues.squareIntegral,
+  NoEmbeddedEigenvalues.squarePairing}
+\leanok
+A function on $\R^2$ is a \emph{periodic lift} if it is $2\pi$-periodic in both
+variables. For such functions, $\int_{\T^2}g$ means $\int_{[0,2\pi]^2}g$, and
+$\ip uv=\int_{[0,2\pi]^2}u\bar v$.
+\end{definition}
+
+\begin{lemma}[Integrals of derivatives vanish]
+\label{lem:square-integral-partial}
+\uses{def:square-integral, lem:lift-calculus}
+\lean{NoEmbeddedEigenvalues.squareIntegral_partialX,
+  NoEmbeddedEigenvalues.squareIntegral_partialY,
+  NoEmbeddedEigenvalues.IsPeriodicLift.partialX,
+  NoEmbeddedEigenvalues.IsPeriodicLift.partialY}
+\leanok
+Partial derivatives of periodic lifts are periodic lifts, and
+$\int_{\T^2}\partial_xg=\int_{\T^2}\partial_yg=0$ for every periodic $C^1$ lift $g$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Fubini, and on each coordinate line the fundamental theorem of calculus:
+$\int_0^{2\pi}\partial_yg(x,y)\,dy=g(x,2\pi)-g(x,0)=0$.
+\end{proof}
+
+\begin{lemma}[The pairing]
+\label{lem:square-pairing}
+\uses{def:square-integral}
+\lean{NoEmbeddedEigenvalues.squarePairing_add_left,
+  NoEmbeddedEigenvalues.squarePairing_sub_left,
+  NoEmbeddedEigenvalues.squarePairing_const_mul_left,
+  NoEmbeddedEigenvalues.squarePairing_const_mul_right,
+  NoEmbeddedEigenvalues.squarePairing_comm,
+  NoEmbeddedEigenvalues.squarePairing_real_smul}
+\leanok
+For continuous periodic lifts, $\ip uv$ is additive and $\C$-linear in $u$,
+conjugate linear in $v$, $\ip vu=\overline{\ip uv}$, and $\ip{fu}v=\ip u{fv}$
+for real $f$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Continuous functions are integrable on the compact square.
+\end{proof}
+
 \begin{lemma}[Algebraic identities for the dipole]
 \label{lem:dipole-identities}
 \uses{def:dipole, def:lift-operators}

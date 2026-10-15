@@ -9,6 +9,7 @@ import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.IntervalH1Estimates
 import NoEmbeddedEigenvalues.IntervalZeroExtension
+import NoEmbeddedEigenvalues.LiftIntegration
 import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
@@ -20,5 +21,6 @@ import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
 import NoEmbeddedEigenvalues.VirialAlgebra
+import NoEmbeddedEigenvalues.VirialSmooth
 import NoEmbeddedEigenvalues.WeightedBoundary
 import NoEmbeddedEigenvalues.WeightedBoundaryForm

@@ -67,43 +67,55 @@ For (3), $[L_0,D]u=[L_0,W\cdot\nabla]u+\tfrac12(L_0d)u=fL_0u+\tfrac12(L_0f)u
 =\tfrac12(fL_0u+L_0(fu))$ by (1) and (2).
 \end{proof}
 
-\begin{lemma}[Commutator algebra]
+\begin{lemma}[Skew-symmetry]
 \label{lem:commutator-algebra}
-\uses{def:adapted-field, def:half-density-generator}
-Let $W$ be smooth on $\T^2$ and adapted with coefficient $f$. Then
+\uses{def:half-density-generator, def:square-integral}
+\lean{NoEmbeddedEigenvalues.squarePairing_halfDensityGen,
+  NoEmbeddedEigenvalues.halfDensityGen_mul_conj_add,
+  NoEmbeddedEigenvalues.squarePairing_classicalL0,
+  NoEmbeddedEigenvalues.halfDensityGen_velocity}
+\leanok
+Let $W$ be a periodic $C^1$ vector field. For periodic $C^1$ functions $u,v$,
 \begin{enumerate}
-  \item $D$ is skew-symmetric: $\ip{Du}{v}=-\ip{u}{Dv}$ for smooth $u,v$;
-  \item $[H,D]=\tfrac12(fH+Hf)$ on smooth functions, where $f$ acts by
-        multiplication.
+  \item $D$ is skew-symmetric: $\ip{Du}{v}=-\ip{u}{Dv}$;
+  \item $L_0$ is skew-symmetric, so $H=-iL_0$ is symmetric:
+        $\ip{L_0u}v=-\ip u{L_0v}$.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-\uses{lem:commutator-pointwise}
-Item (1) is integration by parts, using $\int\Div(|u|^2W)=0$. Item (2) is
-Lemma~\ref{lem:commutator-pointwise}(3) multiplied by $-i$, since $H=-iL_0$.
+\uses{lem:square-integral-partial, lem:square-pairing, lem:lift-calculus}
+\leanok
+Pointwise, $(Du)\bar v+u\overline{Dv}=\Div(u\bar vW)$: the half divergence in
+$D$ supplies exactly the term $(\Div W)u\bar v$. The integral of a divergence
+of a periodic $C^1$ field vanishes. Item (2) is the case $W=Y$, for which
+$\Div Y=0$ and $D=L_0$.
 \end{proof}
+
+\begin{remark}
+Multiplying Lemma~\ref{lem:commutator-pointwise}(3) by $-i$ gives
+$[H,D]=\tfrac12(fH+Hf)$, the form used in the manuscript.
+\end{remark}
 
 \begin{lemma}[Virial identity, smooth case]
 \label{lem:virial-smooth}
-\uses{def:adapted-field, def:half-density-generator, def:eigen-problem}
-Let $W$ be smooth and adapted with coefficient $f$. If $\omega$ is a
-\emph{smooth} eigenfunction with parameter $\lambda\ne0$ and
-$\psi=\Delta^{-1}\omega$, then
+\uses{def:adapted-field, def:half-density-generator, def:eigen-problem, def:square-integral}
+\lean{NoEmbeddedEigenvalues.virial_smooth}
+\leanok
+Let $W$ be a periodic $C^2$ vector field, adapted on $\R^2$ with a periodic $C^1$
+coefficient $f$. Let $\omega,\psi$ be periodic $C^2$ functions with
+$L_0(\omega+\psi)=i\lambda\omega$ and $\lambda\ne0$ (for instance a smooth
+eigenfunction and $\psi=\Delta^{-1}\omega$). Then
 \begin{equation*}
   \operatorname{Re}\ip{f\omega}{\omega+\psi}=2\operatorname{Re}\ip{D\psi}{\omega}
 \end{equation*}
-and, equivalently,
-\[
-  0=\int_{\T^2}f|\Delta\psi|^2
-   +\int_{\T^2}(2\sym DW-fI)\nabla\psi\cdot\overline{\nabla\psi}
-   +\frac12\int_{\T^2}\Delta(f-\Div W)|\psi|^2
-\]
-(manuscript \texttt{(ee:commutator-limit)} and \texttt{(ee:bounded-form)}).
+(manuscript \texttt{(ee:commutator-limit)}). The relation $\psi=\Delta^{-1}\omega$
+is not needed for this form.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:commutator-algebra}
+\uses{lem:commutator-pointwise, lem:commutator-algebra, lem:square-pairing}
+\leanok
 Put $a=\omega+\psi$, so $Ha=\lambda\omega$. On the one hand
 $\ip{[H,D]a}{a}=\tfrac12(\ip{fHa}{a}+\ip{fa}{Ha})
 =\lambda\operatorname{Re}\ip{f\omega}{a}$. On the other hand, using
@@ -111,8 +123,25 @@ self-adjointness of $H$ and skew-symmetry of $D$,
 $\ip{[H,D]a}{a}=\ip{Da}{Ha}-\ip{D\,Ha}{a}
 =\lambda\ip{Da}{\omega}+\lambda\ip{\omega}{Da}
 =2\lambda\operatorname{Re}\ip{Da}{\omega}$, and
-$\operatorname{Re}\ip{D\omega}{\omega}=0$. Divide by $\lambda$. The second
-form follows from $\omega=\Delta\psi$ and the integrations by parts
+$\operatorname{Re}\ip{D\omega}{\omega}=0$. Divide by $\lambda$.
+\end{proof}
+
+\begin{lemma}[Virial identity, smooth case, quadratic form]
+\label{lem:virial-smooth-quadratic}
+\uses{lem:virial-smooth}
+In the setting of Lemma~\ref{lem:virial-smooth}, if moreover $\Delta\psi=\omega$,
+\[
+  0=\int_{\T^2}f|\Delta\psi|^2
+   +\int_{\T^2}(2\sym DW-fI)\nabla\psi\cdot\overline{\nabla\psi}
+   +\frac12\int_{\T^2}\Delta(f-\Div W)|\psi|^2
+\]
+(manuscript \texttt{(ee:bounded-form)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:square-integral-partial, lem:square-pairing}
+Substitute $\omega=\Delta\psi$ in Lemma~\ref{lem:virial-smooth} and use the
+integrations by parts
 $\operatorname{Re}\int f\Delta\psi\,\bar\psi=-\int f|\nabla\psi|^2
 +\tfrac12\int\Delta f|\psi|^2$ and
 $2\operatorname{Re}\int D\psi\,\overline{\Delta\psi}
@@ -131,15 +160,16 @@ when $\omega$ is merely in $L^2$.
 \uses{def:adapted-field, def:eigen-problem}
 Let $W$ be a real vector field on $\T^2$ of class $C^{2,1}$ (that is,
 $W^{3,\infty}$: twice differentiable with Lipschitz second derivatives),
-adapted with coefficient $f$ of class $C^{1,1}$. Then the conclusion of
-Lemma~\ref{lem:virial-smooth} holds for every eigenfunction
+adapted with coefficient $f$ of class $C^{1,1}$. Then the conclusions of
+Lemmas~\ref{lem:virial-smooth} and~\ref{lem:virial-smooth-quadratic} hold for
+every eigenfunction
 $\omega\in X$ (no regularity beyond Definition~\ref{def:eigen-problem}).
 All three integrals are finite, since $\psi$ and its derivatives up to order
 two are in $L^2$ (manuscript \texttt{(ee:bounded-virial)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-smooth, lem:commutator-algebra, lem:H-selfadjoint, lem:elliptic-torus}
+\uses{lem:virial-smooth, lem:virial-smooth-quadratic, lem:commutator-algebra, lem:H-selfadjoint, lem:elliptic-torus}
 Let $\Phi_t$ be the flow of $W$ and
 $U_tu=\Jac(\Phi_t)^{1/2}u\circ\Phi_t$, a strongly continuous unitary group
 with generator $D$. Extend $\Delta^{-1}$ by zero on constants, since $U_t$ need
