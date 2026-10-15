@@ -208,17 +208,24 @@ giving $\operatorname{Re}\ip{f\omega}{\omega+\psi}=\ip{[D,A]\omega}{\omega}
 justified by approximation of $\psi$ in $H^2$.
 \end{proof}
 
-\begin{remark}[Digest note: what the proof needs from the operator theory]
-The group $U_t$ is needed: the smooth argument applies $D$ to $\omega$, and plain
-mollification does not rescue it, because the error pairs a commutator that tends to $0$
-with $D\omega_\epsilon$, which grows like $1/\epsilon$. But the proof uses
-Lemma~\ref{lem:H-selfadjoint} only for two facts: (1) $U_t$ is a strongly continuous
-unitary group with generator $D$; (2) $U_t$ maps $\{u\in L^2:L_0u\in L^2\}$ to itself with
-the formula for $HU_t$. Fact (2) follows by a change of variables in the weak formulation
-of $L_0u$, using that $W$ is adapted; neither self-adjointness of $H$, nor a core, nor
-Stone's theorem is needed. Fact (1) needs the Jacobian of the flow of $W$, i.e.\
-differentiable dependence of the flow on its initial point, which Mathlib does not
-provide (Liouville's formula and a transport argument may avoid it).
+\begin{remark}[Digest note: the flow group of $W$]
+The proof needs two groups. The flow of $Y$ (Lemma~\ref{lem:H-selfadjoint}) is used only
+for its core property, to extend the formula for $HU_t$ from smooth functions to the
+domain of $H$ (this step could also be done by a change of variables in the weak
+formulation, using that $W$ is adapted). The main input is the group
+$U_tu=\Jac(\Phi_t)^{1/2}u\circ\Phi_t$ of the flow $\Phi_t$ of the cut-off normal field $W$,
+for which the manuscript only asserts the needed facts: $U_t$ is a strongly continuous
+unitary group with generator $D=W\cdot\nabla+\frac12\Div W$; it preserves the domain of $H$
+with $HU_t=c_tU_tH-\frac i2(L_0\log c_t)U_t$; and $[U_t,A]/t\to[D,A]$ strongly. The group is
+needed: the smooth argument applies $D$ to $\omega$, and plain mollification does not rescue
+it, because the error pairs a commutator that tends to $0$ with $D\omega_\epsilon$, which grows
+like $1/\epsilon$. Since $W$ is not divergence free, $U_t$ needs the Jacobian of $\Phi_t$, that
+is differentiable dependence of the flow on its initial point, which Mathlib does not
+provide. A possible shortcut, not yet checked: $W\cdot\nabla\Psi=\Psi-2$, so along the flow
+of $W$ the level moves explicitly ($\Psi-2=(\Psi_0-2)e^s$); adaptedness means the flow maps
+orbits of $Y$ to orbits; and $W$ is symmetric under $a\mapsto-a$, so it preserves the axis
+$a=0$ where $t=0$. The flow of $W$ may therefore be explicit in orbit coordinates, with a
+computable Jacobian.
 \end{remark}
 
 \begin{remark}[Digest note]

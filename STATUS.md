@@ -120,11 +120,15 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:local-to-global`, `lem:traces` (restated as absolute continuity on
    lines and line traces in diagonal coordinates, Gagliardo bound included,
    so `lem:sobolev-fractional-gagliardo` left the even–even graph),
-   `lem:virial-l2` (`VirialL2.lean`). Open decision: `lem:H-selfadjoint`
-   is not needed in its form; the virial proof needs only the flow group
-   `U_t` of `W` and its action on the maximal domain of `L₀` (digest note,
-   notes item). With this, every even–even node except
-   `lem:H-selfadjoint` has a Lean statement. Other open
+   `lem:virial-l2` (`VirialL2.lean`), and `lem:H-selfadjoint` with
+   `def:transport-operator` (`TransportOperator.lean`: `H = -iL₀` as a
+   `LinearPMap`, `IsSelfAdjoint`, `HasCore` of smooth functions, the flow
+   on the torus measure preserving, generator via difference quotients;
+   Mathlib has no Stone's theorem). Every node of the even–even graph now
+   has a Lean statement. The least verified step is the flow group `U_t` of
+   the cut-off normal field `W` in the proof of `lem:virial-l2` (needs the
+   Jacobian of the flow of `W`; possibly explicit in orbit coordinates;
+   digest note and notes item). Other open
    definitions: `def:numerator`, odd–odd and mixed, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.

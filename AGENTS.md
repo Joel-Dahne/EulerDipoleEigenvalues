@@ -97,7 +97,8 @@ motivation, and standard facts cited rather than proved.
   integrates periodic lifts over `[0, 2π]²` (integration by parts,
   skew-symmetry of `D` and `L₀`); `VirialSmooth.lean` and
   `VirialQuadratic.lean` prove the two forms of the smooth virial identity, and
-  `VirialL2.lean` states them for `L²` eigenfunctions;
+  `VirialL2.lean` states them for `L²` eigenfunctions; `TransportOperator.lean`
+  defines `H = -iL₀` as an unbounded operator and states its self-adjointness;
   `LiftTorus.lean` relates periodic lifts to functions on the torus (classical
   vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines
   weak derivatives and `Hᵏ(U)`, `Hᵏ_loc(U)`, weighted `Hᵏ` on open `U ⊆ ℝ²`;

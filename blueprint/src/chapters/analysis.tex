@@ -639,21 +639,57 @@ are an explicit diffeomorphism onto a product, so no general coarea formula is n
 lemma keeps the remaining part, $H^1$ along almost every orbit.
 \end{remark}
 
+\begin{definition}[The transport operator]
+\label{def:transport-operator}
+\uses{def:dipole, def:dipole-flow, def:torus-of-lift, def:classical-tests}
+\lean{NoEmbeddedEigenvalues.transportDomain,
+  NoEmbeddedEigenvalues.transportL0,
+  NoEmbeddedEigenvalues.transportH,
+  NoEmbeddedEigenvalues.smoothL2,
+  NoEmbeddedEigenvalues.torusFlow}
+\leanok
+$H=-iL_0$ is the partially defined operator on $L^2(\T^2)$ with domain
+$\{u\in L^2:L_0u\in L^2\}$, where $L_0u$ is taken in the weak sense of
+Definition~\ref{def:dipole}. The smooth functions form a subspace of $L^2(\T^2)$, and
+$\Phi_t$ is the flow of $(\sin y,-\sin x)$ on $\T^2$, induced by the flow on the lift.
+\end{definition}
+
 \begin{lemma}[Self-adjointness of the transport operator]
 \label{lem:H-selfadjoint}
-\uses{def:dipole}
-$H=-iL_0$ with domain $\{u\in L^2:L_0u\in L^2\}$ is self-adjoint on $L^2(\T^2)$,
-and smooth functions form a core. It generates the unitary group
-$u\mapsto u\circ\Phi_t$, where $\Phi_t$ is the (area preserving) flow of
-$(\sin y,-\sin x)$.
+\uses{def:transport-operator}
+\lean{NoEmbeddedEigenvalues.measurePreserving_torusFlow,
+  NoEmbeddedEigenvalues.isSelfAdjoint_transportH,
+  NoEmbeddedEigenvalues.hasCore_transportH,
+  NoEmbeddedEigenvalues.tendsto_torusFlow_sub_iff,
+  NoEmbeddedEigenvalues.tendsto_torusFlow_sub}
+\leanok
+$H$ is self-adjoint on $L^2(\T^2)$, and smooth functions form a core. The flow
+$\Phi_t$ is area preserving, and $H$ generates the unitary group $u\mapsto u\circ\Phi_t$:
+$u$ is in the domain of $H$ exactly when $(u\circ\Phi_s-u)/s$ converges in $L^2$ as
+$s\to0$, and the limit is then $L_0u=iHu$.
 \end{lemma}
+
+\begin{proof}
+\uses{lem:transport-l2, lem:orbit-coordinates, lem:dipole-flow, lem:cell-square}
+The maximal domain is by definition the adjoint of $H$ restricted to smooth functions,
+since $L_0u$ is defined by testing against characters, and $H$ is symmetric there.
+Self-adjointness is therefore equivalent to smooth functions being a core, which is
+Friedrichs' lemma: for a mollifier $J_\epsilon$ and $u$ in the maximal domain,
+$J_\epsilon u\to u$ and $L_0J_\epsilon u\to L_0u$, because the commutator
+$[L_0,J_\epsilon]$ tends to $0$ strongly when the coefficients are Lipschitz. The flow is
+area preserving because in orbit coordinates it is $(h,t)\mapsto(h,t+s)$ and
+$dx\,dy=2\,dh\,dt$ (Lemma~\ref{lem:orbit-coordinates}), on the negative cell by
+symmetry, and the separatrix is a null set. The generator is computed on smooth functions
+and extended by the core property.
+\end{proof}
 
 \begin{remark}
 Lemma~\ref{lem:H-selfadjoint} is the classical fact that a smooth divergence
 free vector field on a compact manifold gives an essentially skew-adjoint
 operator on smooth functions, whose closure is the maximal (distributional)
-operator. Together with Stone's theorem this is the main functional-analytic
-input to the virial identities. It needs no Sobolev spaces.
+operator. It needs no Sobolev spaces. Mathlib has unbounded operators, adjoints,
+self-adjointness, closures and cores, but no strongly continuous groups or Stone's
+theorem, so the generator statement is formulated through difference quotients.
 \end{remark}
 
 \section{Elementary inequalities}
