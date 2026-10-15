@@ -117,19 +117,29 @@ regular interior point where $\nabla\psi\ne0$ (manuscript
 $f\ge0$ and $0<c\le1$.
 \end{proof}
 
+\begin{definition}[Bulk density on an $L^2$ vorticity]
+\label{def:ee-bulk-density}
+\uses{lem:ee-density, def:stream-lifts, def:normal-tangent}
+\lean{NoEmbeddedEigenvalues.eeBulkDensity}
+\leanok
+For $\omega\in L^2(\T^2)$, write
+$\mathcal J_\omega(p)=\mathcal J(p,\omega(p),\psi_n(p),\psi_t(p))$
+on the lift, using the representatives of Definition~\ref{def:stream-lifts}.
+\end{definition}
+
 \begin{lemma}[Truncated virial identity]
 \label{lem:ee-truncated-virial}
-\uses{lem:ee-density, def:eigen-problem, def:level-integral, def:normal-tangent, def:stream-lifts}
+\uses{def:ee-bulk-density, def:eigen-problem, def:level-integral, def:normal-tangent, def:stream-lifts}
 \lean{NoEmbeddedEigenvalues.ee_truncated_virial}
 \leanok
-For almost every $\epsilon\in(0,2)$, with $n$ pointing out of $\{\Psi>\epsilon\}$, the level
-integrals in flow time $dt$ over $\{\Psi=\epsilon\}$ (that is $h=\epsilon/2$) and
-$d\ell=\rho\,dt$,
+Let $\lambda\ne0$. For almost every $h\in(0,1)$, put $\epsilon=2h$. The density $\mathcal J_\omega$ is
+integrable on $\{p\in\Cell:\Psi(p)>\epsilon\}$. With $n$ pointing out of this set, the level
+integrals in flow time $dt$ over $\{\Psi=\epsilon\}$ and $d\ell=\rho\,dt$ satisfy
 \[
   \int_{\{\Psi>\epsilon\}}\mathcal J
   =\oint_{\{\Psi=\epsilon\}}\operatorname{Re}(\psi\overline{\psi_n})\,d\ell
-   +(2-\epsilon)\oint_{\{\Psi=\epsilon\}}
-     \big(|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)\big)\,dt
+   +(2-\epsilon)\left(\oint|\psi_n|^2\,dt-\oint|\psi_t|^2\,dt
+     -\oint\operatorname{Re}(\omega\bar\psi)\,dt\right)
 \]
 (manuscript \texttt{(ee:truncated-virial)}).
 \end{lemma}
@@ -156,6 +166,16 @@ This verifies the signs and the factor $2-\epsilon$ in the displayed
 identity independently of the manuscript. This is a smooth cutoff
 derivation, not a proof of the remaining $L^2$ justification and
 almost-every-level limit.
+\end{remark}
+
+\begin{remark}[Digest note: integrability needed for backwards assembly]
+The earlier Lean statement asserted only an equality of total Bochner integrals.
+That is insufficient for the monotonicity and zero-integral steps: a nonintegrable
+function has total integral zero by definition. The statement now includes integrability
+on the truncated cell and explicitly requires $\lambda\ne0$, as does the cited
+original-domain virial identity. It also uses $h=\epsilon/2$ and the three separate level integrals,
+so its exceptional set can be combined directly with the trace limits. No global
+integrability of $\mathcal J_\omega$ at the saddles is asserted or used.
 \end{remark}
 
 \section{Boundary limits}
@@ -1036,6 +1056,217 @@ vanishes, which kills the cross term of Lemma~\ref{lem:affine-splitting},
 and $\mathcal F_\lambda(F_0)\ge0$ by Lemma~\ref{lem:trace-sos-extension}.
 \end{proof}
 
+\section{Assembly interfaces and the direct vorticity endgame}
+
+\begin{definition}[Canonical arc form]
+\label{def:canonical-arc-form}
+\uses{def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.canonicalArcForm}
+\leanok
+For $\lambda\in\R$ and $g:\R\to\C$, define
+\[
+  \mathcal A_\lambda(g)=
+  \int_\R\tfrac12\cosh^2s\,|g'(s)|^2\,ds
+  +\int_\R\operatorname{Re}(\Omega(s)\overline{g(s)})\,ds,
+\]
+where $\Omega$ is the canonical profile of $g$. As elsewhere, the definition uses
+total integrals; the following lemma supplies the analytic hypotheses.
+\end{definition}
+
+\begin{lemma}[Canonical arc form and the explicit boundary form]
+\label{lem:canonical-arc-form}
+\uses{def:canonical-arc-form, def:boundary-form, def:h1-interval, def:weighted-boundary-domain}
+\lean{NoEmbeddedEigenvalues.canonicalArcForm_eq_flowBoundaryForm}
+\leanok
+Let $\lambda\ne0$, $g'\in L^1(\R)$ and
+$\cosh^2s\,|g'(s)|^2\in L^1(\R)$. Set $z=-(\Omega+g)/\lambda$ and
+$F(\xi)=z(\operatorname{artanh}\xi)$. If $(F,D,E)$ is a weighted boundary triple, then
+\[
+  \mathcal A_\lambda(g)=
+  \mathcal F_\lambda\bigl(F\circ\tanh,\ (wD)\circ\tanh,\
+       (w(wE-2\xi D))\circ\tanh\bigr).
+\]
+The three arguments on the right are the explicit value and derivative functions
+of Definition~\ref{def:boundary-form}.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile-ode, lem:boundary-form-xi, lem:h1-interval-endpoints}
+This is a still-admitted scalar interface. The tail-integral formula makes $\Omega$
+locally absolutely continuous. Since $F$ is locally absolutely continuous and
+$g=-\lambda z-\Omega$, so is $g$. Thus $Pz=-\Omega$ and $(P-\lambda)z=g$ almost everywhere.
+The weighted domain and the change of variables identify the explicit derivative
+arguments and justify the integrals. In particular, the second term has the plus sign
+because $Pz=-\Omega$.
+\end{proof}
+
+\begin{lemma}[Eigenfunction transport traces]
+\label{lem:ee-transport-traces}
+\uses{def:eigen-problem, def:sectors, def:rotation-characters, def:stream-lifts,
+  def:cell-arcs, def:level-integral, def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.ee_transport_traces}
+\leanok
+Let $\omega$ be an even--even eigenfunction with $\lambda\ne0$ and rotation character
+$\kappa$. Put $g_k=\tilde\psi\circ\gamma_k$. Then $g_k'\in L^1(\R)$ for $k<4$.
+For every null set $N$ there are $h_j\in(0,1)\setminus N$, $h_j\to0$, such that
+\[
+  \oint_{\{\Psi=2h_j\}}\operatorname{Re}(\omega\bar\psi)\,dt
+   \longrightarrow\sum_{k=0}^3
+      \int_\R\operatorname{Re}(\Omega_k\bar g_k)\,ds .
+\]
+The level pairing uses the raw $L^2$ representatives; the arc traces use the continuous
+stream representative.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-pair-eigen, lem:melnikov, lem:pairing-limit,
+  lem:continuous-representative, lem:local-to-global}
+This specialization remains admitted. Choose a bounded, rotation-invariant open union
+of orbits containing the closed cell. Replace the raw stream representative by its
+continuous representative in the transport pair; the weak equation is unchanged by
+almost-everywhere equality. Continuous representatives have the rotation character
+pointwise. Apply Melnikov on each rotated arc and Lemma~\ref{lem:pairing-limit}, using
+orbit restrictions to transfer the representatives on almost every level.
+\end{proof}
+
+\begin{remark}[Digest note: two assembly interfaces were missing]
+The previous list of Lean statements did not by itself connect the raw eigenfunction
+transport pair to continuous arc traces, nor the canonical unknown to the
+explicit-derivative boundary form. Lemmas~\ref{lem:ee-transport-traces}
+and~\ref{lem:canonical-arc-form} expose these bridges as separate admitted inputs.
+The exclusion proof below has no admission of its own, but these bridges and the
+earlier analytic inputs still need proofs.
+\end{remark}
+
+\begin{lemma}[Positivity of the canonical arc contribution]
+\label{lem:ee-canonical-arc-nonneg}
+\uses{def:canonical-arc-form, def:eigen-problem, def:sectors, def:rotation-characters,
+  def:stream-lifts, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.ee_canonicalArcForm_nonneg}
+\leanok
+Under the eigenfunction and character hypotheses above, if $g_k'\in L^1$ and
+$\cosh^2s\,|g_k'|^2\in L^1$, then $\mathcal A_\lambda(g_k)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-boundary-regularity, lem:canonical-arc-form, lem:ee-trace-positivity}
+\leanok
+Boundary regularity gives a weighted triple for the canonical unknown with equal or
+opposite endpoint traces. Its flow-time form is nonnegative. Identify that form with
+$\mathcal A_\lambda(g_k)$ by Lemma~\ref{lem:canonical-arc-form}.
+\end{proof}
+
+\begin{lemma}[Null cosine diagonal]
+\label{lem:cos-diagonal-null}
+\lean{NoEmbeddedEigenvalues.ae_cos_fst_ne_cos_snd}
+\leanok
+The set $\{(x,y)\in\R^2:\cos x=\cos y\}$ is null.
+\end{lemma}
+
+\begin{proof}
+\leanok
+For each $x$ its vertical section is the countable set
+$\{2m\pi+x,2m\pi-x:m\in\Z\}$. Apply Fubini to the measurable set.
+\end{proof}
+
+\begin{lemma}[Nonnegativity of the evaluated bulk]
+\label{lem:ee-bulk-density-nonneg}
+\uses{def:ee-bulk-density, def:cells}
+\lean{NoEmbeddedEigenvalues.eeBulkDensity_nonneg}
+\leanok
+For every $\omega\in L^2$, $\mathcal J_\omega\ge0$ on the entire lifted cell,
+including its center.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-algebra, lem:ee-density, lem:dipole-critical-points, lem:cell-square}
+\leanok
+Away from the center use Lemma~\ref{lem:ee-density}. At $\Psi=2$, the total definitions
+give $f=c=0$, and the remaining term is $2|\psi_n|^2\ge0$.
+\end{proof}
+
+\begin{lemma}[Vorticity from zero bulk density]
+\label{lem:ee-vorticity-from-density}
+\uses{def:ee-bulk-density, def:normal-field, def:cells, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.normalCoeff_pos_of_cos_ne,
+  NoEmbeddedEigenvalues.lift_ae_zero_of_eeBulkDensity_ae_zero}
+\leanok
+Where $\Psi>0$ and $\cos x\ne\cos y$, the coefficient $f$ is strictly positive.
+Consequently, if $\mathcal J_\omega=0$ almost everywhere on the lifted cell, then
+the lift of $\omega$ is zero almost everywhere there.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-algebra, lem:cos-diagonal-null, lem:cell-square}
+\leanok
+The cosine inequality excludes $\Psi=2$, so $0<\Psi<2$ and $\rho^2>0$.
+The formula $f=\Psi(2-\Psi)(\cos x-\cos y)^2/\rho^4$ is then strictly positive.
+All terms in $\mathcal J_\omega=f|\omega|^2+(2-c)|\psi_n|^2+c|\psi_t|^2$
+are nonnegative. Thus zero density forces $\omega=0$ off the null cosine diagonal.
+\end{proof}
+
+\begin{lemma}[Vanishing on the lifted positive cell]
+\label{lem:ee-cell-vanishing}
+\uses{def:sectors, def:cells, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.InSector.eq_zero_of_lift_ae_zero_on_cellSquare}
+\leanok
+If $\omega$ is even--even and its lift vanishes almost everywhere on the lifted
+positive cell, then $\omega=0$ in $L^2(\T^2)$. No eigenvalue or stream-function relation
+is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:reflection-algebra, lem:separatrix-lines}
+\leanok
+The projection from the fundamental square $(-\pi,\pi]^2$ preserves measure and is
+injective. Its positive part is exactly the lifted positive cell, so $\omega=0$
+almost everywhere on the positive torus cell. The separatrix is null: at each fixed
+$x$ its section has at most two points. Finally $S_1$ preserves measure, exchanges
+the two cells, and acts evenly on $\omega$, giving vanishing on the negative cell.
+\end{proof}
+
+\begin{lemma}[Nonnegative exhaustion without global integrability]
+\label{lem:nonnegative-exhaustion}
+\lean{NoEmbeddedEigenvalues.ae_zero_of_truncated_integral_tendsto}
+\leanok
+Let $(X,\mu)$ be a measure space, $s$ measurable, $r:X\to\R$ measurable and positive on
+$s$, and $J:X\to\R$ nonnegative on $s$. Suppose $t_j>0$, $t_j\to0$, and $J$ is integrable
+on each $s_j=\{x\in s:r(x)>t_j\}$. If $\int_{s_j}J\to b\le0$, then $J=0$ almost everywhere
+on $s$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+For fixed $j$, eventually $t_m<t_j$, hence $s_j\subset s_m$ and
+$0\le\int_{s_j}J\le\int_{s_m}J$. Passing to the limit gives $\int_{s_j}J=0$, hence
+$J=0$ almost everywhere on $s_j$. The countable union of the $s_j$ is $s$.
+Neither monotonicity of the sequence nor integrability on all of $s$ is needed.
+\end{proof}
+
+\begin{lemma}[Even--even exclusion in one rotation character]
+\label{lem:ee-character-exclusion}
+\uses{def:eigen-problem, def:sectors, def:rotation-characters}
+\lean{NoEmbeddedEigenvalues.even_even_character_exclusion}
+\leanok
+An even--even eigenfunction with $\lambda\ne0$ and rotation character $\kappa=\pm1$
+vanishes.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-truncated-virial, lem:ee-gradient-traces, lem:ee-transport-traces,
+  lem:ee-canonical-arc-nonneg, lem:ee-bulk-density-nonneg, lem:nonnegative-exhaustion,
+  lem:ee-vorticity-from-density, lem:ee-cell-vanishing}
+\leanok
+Let $N$ be the union of the exceptional sets for the gradient traces and truncated virial
+identity, including truncated integrability. Apply Lemma~\ref{lem:ee-transport-traces}
+outside $N$. On the resulting levels, the right-hand side of the truncated identity
+converges to $-2\sum_k\mathcal A_\lambda(g_k)\le0$, by the gradient limits and
+Lemma~\ref{lem:ee-canonical-arc-nonneg}. Apply Lemma~\ref{lem:nonnegative-exhaustion}
+with $r=\Psi$ and $t_j=2h_j$ to conclude that $\mathcal J_\omega=0$ almost everywhere on
+the cell. Lemma~\ref{lem:ee-vorticity-from-density} gives vanishing of the vorticity
+lift, and Lemma~\ref{lem:ee-cell-vanishing} gives $\omega=0$.
+\end{proof}
+
 \section{Conclusion}
 
 \begin{theorem}[Even--even exclusion]
@@ -1049,35 +1280,12 @@ $S_1^*\omega=S_2^*\omega=\omega$, then $\omega=0$ (manuscript
 \end{theorem}
 
 \begin{proof}
-\uses{lem:rotation-characters, lem:ee-truncated-virial, lem:ee-gradient-traces, lem:pairing-limit, lem:transport-pair-eigen, lem:ee-boundary-regularity, lem:ee-trace-positivity, lem:ee-density}
-First decompose $\omega$ into its two rotation characters. By
-Lemma~\ref{lem:rotation-characters}, $(R^*)^2=I$ on the even--even sector, so
-\[
-  \omega=\omega_++\omega_-,\qquad
-  \omega_\kappa=\tfrac12(\omega+\kappa R^*\omega),\qquad
-  R^*\omega_\kappa=\kappa\omega_\kappa,
-  \quad \kappa\in\{1,-1\}.
-\]
-Each $\omega_\kappa$ is still even--even and solves the eigenvalue problem
-with the same $\lambda$. It suffices to show that both components vanish.
-Fix either $\kappa=1$ or $\kappa=-1$ and, for the following argument, write
-$\omega$ for $\omega_\kappa$ and $\psi=\Delta^{-1}\omega$. Thus
-$R^*\omega=\kappa\omega$, and also $R^*\psi=\kappa\psi$ by commutation of
-$\Delta^{-1}$ with $R^*$.
-
-Apply Lemma~\ref{lem:ee-truncated-virial} along good levels from
-Lemma~\ref{lem:pairing-limit}, applied to the transport pair $(\omega,\psi)$.
-By Lemma~\ref{lem:ee-gradient-traces} the first-order and normal boundary
-terms vanish in the limit, and the tangential and pairing
-terms converge. Since $g=(P-\lambda)z$, $\Omega=-Pz$ and
-$|\psi_t|^2=\tfrac12\cosh^2s|g'|^2$ on the arc, the limit of the right side is
-$-2\sum_\gamma\mathcal F_\lambda(z_\gamma)\le0$ by
-Lemmas~\ref{lem:ee-boundary-regularity} and~\ref{lem:ee-trace-positivity}. The
-left side is nonnegative and increasing as $\epsilon\to0$, so it is zero.
-Hence $\nabla\psi=0$ on $\Cell$. By $S_1$-symmetry $\psi$ takes the same
-constant on the negative cell; mean zero gives $\psi=0$, so $\omega=\Delta\psi=0$.
-This proves $\omega_\kappa=0$ for either choice of $\kappa$. Both components
-therefore vanish, and hence so does the original $\omega=\omega_++\omega_-$.
+\uses{lem:rotation-characters, lem:ee-character-exclusion}
+\leanok
+Decompose $\omega=\omega_++\omega_-$ into rotation characters by
+Lemma~\ref{lem:rotation-characters}. Both components remain even--even eigenfunctions
+at the same $\lambda$. Apply Lemma~\ref{lem:ee-character-exclusion} to each component
+and add the resulting zero functions.
 \end{proof}
 
 \begin{remark}[Digest note: a shorter exclusion endgame]
@@ -1089,9 +1297,11 @@ is just the union of $a=0$ and $b=0$, a null set. Thus $\mathcal J=0$ almost eve
 implies $\omega=0$ almost everywhere on the positive cell. Even reflection gives the
 same on the negative cell, and the separatrix is null. This avoids the weak-gradient
 constant-function argument and mean-zero normalization at the final step.
-The algebra and null-set argument give a mathematical alternative endgame; this route
-has not yet been formalized. Only integrability on each truncated cell is needed,
-not integrability of $\mathcal J$ up to the saddles.
+This is now the Lean endgame: Lemmas~\ref{lem:cos-diagonal-null},
+\ref{lem:ee-vorticity-from-density} and~\ref{lem:ee-cell-vanishing} are proved without
+admissions. The character exclusion proof uses them with
+Lemma~\ref{lem:nonnegative-exhaustion}. Only integrability on each truncated cell is
+needed, not integrability of $\mathcal J$ up to the saddles.
 \end{remark}
 
 \begin{remark}[Digest note]

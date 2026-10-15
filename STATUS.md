@@ -39,18 +39,29 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
-**Proposed next target: backwards even–even assembly.** Prove
-`even_even_exclusion` using the admitted analytic inputs, first for one rotation
-character and then by `IsEigenSolution.rotation_decomposition`. This is feasible
-but still needs interface lemmas: transport pairs with the continuous stream
-representative on an invariant lift neighbourhood; identification of the
-canonical arc form with the explicit-derivative boundary form; and a common
-good-level sequence for the a.e. truncated identity and boundary limits.
-The final measure-theoretic argument can use `f > 0` almost everywhere in the
-cell to deduce `ω = 0` directly from the vanishing bulk density, bypassing a
-weak-gradient constant-function theorem (digest note at `thm:ee-exclusion`).
-This would remove the exclusion theorem's own `sorry`, not the admissions in
-its analytic dependencies. No exclusion proof has been attempted yet.
+**Backwards even–even assembly is proved.** `even_even_character_exclusion`
+and `even_even_exclusion` now have no `sorry` of their own. The proof combines
+the a.e. truncated virial identity and boundary limits outside a single null
+set, uses the canonical arc positivity, and exhausts the cell with nonnegative
+truncated integrals. The endgame uses `f > 0` almost everywhere to deduce
+`ω = 0` directly; it needs neither global bulk integrability nor a weak-gradient
+constant-function theorem.
+
+Proved without admissions: the null cosine diagonal, strict positivity of `f`
+off it, zero density forcing zero vorticity, the measure/symmetry transfer from
+the positive-cell lift to the torus, and a generic nonnegative exhaustion lemma.
+The truncated virial statement now explicitly requires `λ ≠ 0`, includes
+integrability on each truncated cell, uses `h = ε/2`, and separates the three
+level integrals.
+
+**Next backwards targets:** the two missing interfaces are now explicit admitted
+blueprint nodes: `lem:canonical-arc-form` (`canonicalArcForm_eq_flowBoundaryForm`,
+canonical unknown versus explicit derivative jets) and `lem:ee-transport-traces`
+(`ee_transport_traces`, Melnikov/pairing specialized to raw eigenfunction lifts
+and continuous arc traces). Prove these next, then the existing
+`ee_boundary_regularity`, `ee_gradient_traces` and `ee_truncated_virial` inputs.
+This is an assembly proof, not yet a sorry-free sector exclusion; the new
+interface statements need human review like every other admitted statement.
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
@@ -231,9 +242,9 @@ its analytic dependencies. No exclusion proof has been attempted yet.
   transport, second-order and Laplace arbitrary-test bridges remain deferred.
   Symmetry now has Lean annotations for the L² symmetry commutation layer,
   sector projections/reconstruction, sector preservation, and mixed-sector
-  swapping. The sector exclusion theorem statements in the even–even, odd–odd,
-  and mixed chapters are linked to their Lean declarations, but their proofs
-  are still mathematical placeholders/admissions.
+  swapping. The sector exclusion statements are linked to Lean. Even–even
+  now has a complete assembly proof from admitted analytic inputs; odd–odd
+  and mixed still have admitted exclusion proofs.
 - **Lean foundations** (`TorusL2.lean`, `Fourier.lean`): measure, `L²`,
   characters, Fourier coefficients and their linearity, integral formulas,
   mean zero; the Hilbert basis `(2π)⁻¹ e_k`, reconstruction, Parseval,
@@ -263,7 +274,8 @@ its analytic dependencies. No exclusion proof has been attempted yet.
   in statement and proof; no new `sorry`s. Its decomposition, involutivity and
   disjointness proofs use only `propext`, `Classical.choice`, and `Quot.sound`.
   `Mixed.lean` gets the second mixed sector by rotation; `Main.lean` proves
-  `main` from the three admitted sector exclusions.
+  `main` from the three sector exclusions. Even–even now has an assembly
+  proof from admitted analytic inputs; odd–odd and mixed remain admitted.
 - **Even–even boundary calculus** (`BoundaryForm.lean`): the finite-interval
   quadratic form takes explicit value/first/second derivative functions, so
   it can later accommodate weak derivatives. `BoundaryJet` is the classical
@@ -366,20 +378,20 @@ its analytic dependencies. No exclusion proof has been attempted yet.
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full Lean build and `just web` pass after the statement
-  corrections; `just graph thm:ee-exclusion` regenerates the even–even graph.
-  All 600 blueprint Lean references resolve without duplicates. The 118-node
-  even–even dependency closure has no cycles or missing labels. A scratch
-  Lean check also proves the former opposite-midpoint counterexample has
-  zero recentered time (`quarterTimeCoord 2 (-arccos h, arccos h) = 0`),
-  without admissions. Lean has 50 admitted declarations, including the
-  separately stated local smoothness input; the proved interval/endpoint,
-  boundary/weighted/cutoff, symmetry and sector modules have no warnings.
-  The web build has only the usual missing image-converter messages from
-  plasTeX. Every `\lean` name in the blueprint resolves. Axiom checks on
-  thirteen representative results from today's work use only `propext`,
-  `Classical.choice` and `Quot.sound`; the sector exclusions and their
-  admitted analytic inputs remain unproved.
+- **Validation**: full Lean build and `just web` pass after the backwards
+  even–even assembly; `just graph thm:ee-exclusion` regenerates its graph.
+  All 612 blueprint Lean references resolve without duplicates. The 129-node
+  even–even dependency closure has no cycles or missing labels; every
+  cross-reference resolves. There are 51 admitted declarations: even–even
+  lost its top-level admission but gained two explicit interface statements.
+  `EvenEven.lean` has only its six admitted-input warnings. Axiom checks on
+  the six new foundational results (cosine null set, coefficient positivity,
+  bulk nonnegativity, density-to-vorticity implication, cell/symmetry transfer,
+  and nonnegative exhaustion) use only `propext`, `Classical.choice` and
+  `Quot.sound`. Arc positivity, both exclusion proofs, and `main` still depend
+  on `sorryAx` through their named analytic inputs. Earlier representative
+  checks on weighted boundary calculus and smooth virials remain valid.
+  The web build has only the usual missing image-converter messages.
 - **Reworked manuscript** (`manuscript.tex`): front matter and the introduction
   up to the main theorem. The other sections are placeholders. Neither
   manuscript was changed in the setup/Fourier/weak-derivative/symmetry-sector

@@ -6,11 +6,17 @@ import NoEmbeddedEigenvalues.Transport
 /-!
 # Even–even exclusion
 
-The top-level statement of blueprint `thm:ee-exclusion`, and the statements of the lemmas
-its proof uses: `lem:ee-neumann`, `lem:ee-truncated-virial`, `lem:ee-gradient-traces`,
-`lem:ee-boundary-regularity`. Levels are handled in orbit coordinates: boundary terms are
-flow-time integrals over almost every level, and limits are taken along levels outside a
-null set. The analytic sector argument is not yet formalized.
+The exclusion theorem and its fixed-rotation-character version are proved from named
+analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
+force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
+
+Proved here: `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
+`lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
+`lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
+Inputs: `lem:ee-neumann`, `lem:ee-truncated-virial`, `lem:ee-gradient-traces`,
+`lem:ee-boundary-regularity`, and the newly exposed interfaces
+`lem:canonical-arc-form`, `lem:ee-transport-traces`. Levels are handled in orbit
+coordinates, and one sequence avoids the null sets of both the virial and trace statements.
 -/
 
 noncomputable section
@@ -35,18 +41,24 @@ theorem ee_neumann {ω : L2} (hω : InSector true true ω) :
       streamTangent ω (Real.pi - p.2, Real.pi - p.1) = streamTangent ω p) := by
   sorry
 
-/-- The truncated virial identity (`lem:ee-truncated-virial`): for almost every `ε ∈ (0, 2)`,
-    `∫_{Ψ > ε} J = ∮ Re(ψ ψ̄ₙ) dℓ + (2 - ε) ∮ (|ψₙ|² - |ψₜ|² - Re(ω ψ̄)) dt` over the level
-    `{Ψ = ε}`, with `dℓ = ρ dt`. -/
-theorem ee_truncated_virial {lam : ℝ} {ω : L2} (hω : IsEigenSolution lam ω) :
-    ∀ᵐ ε ∂(volume.restrict (Ioo 0 2)),
-      ∫ p in {p | p ∈ cellSquare ∧ ε < dipoleLift p},
-          eeDensity p (liftL2 ω p) (streamNormal ω p) (streamTangent ω p) =
-        levelIntegral (ε / 2) (fun p ↦
+/-- The bulk density evaluated on an `L²` vorticity and its stream derivatives. -/
+abbrev eeBulkDensity (ω : L2) (p : ℝ × ℝ) : ℝ :=
+  eeDensity p (liftL2 ω p) (streamNormal ω p) (streamTangent ω p)
+
+/-- The truncated virial identity (`lem:ee-truncated-virial`), using `ε = 2h` so its null
+    set can be combined with the boundary limits. Integrability of the bulk is explicit;
+    the boundary integral is written as a difference of the three level integrals. -/
+theorem ee_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) :
+    ∀ᵐ h ∂(volume.restrict (Ioo 0 1)),
+      IntegrableOn (eeBulkDensity ω) {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p} ∧
+      ∫ p in {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p}, eeBulkDensity ω p =
+        levelIntegral h (fun p ↦
             gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re) +
-          (2 - ε) * levelIntegral (ε / 2) (fun p ↦
-            ‖streamNormal ω p‖ ^ 2 - ‖streamTangent ω p‖ ^ 2 -
-              (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) := by
+          (2 - 2 * h) * (levelIntegral h (fun p ↦ ‖streamNormal ω p‖ ^ 2) -
+            levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2) -
+            levelIntegral h (fun p ↦
+              (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)) := by
   sorry
 
 /-- Weighted gradient traces (`lem:ee-gradient-traces`). For `ψ` even under both reflections,
@@ -87,10 +99,306 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
   sorry
 
-/-- An eigenfunction even under both separatrix reflections vanishes
-at every nonzero real spectral parameter. Proof pending. -/
+/-- The canonical arc form, written directly in terms of the arc trace and profile. -/
+def canonicalArcForm (lam : ℝ) (g : ℝ → ℂ) : ℝ :=
+  (∫ s, Real.cosh s ^ 2 / 2 * ‖deriv g s‖ ^ 2) +
+    ∫ s, (canonicalProfile lam g s * (starRingEnd ℂ) (g s)).re
+
+/-- Interface between the canonical profile and the explicit-derivative boundary form.
+    This scalar change-of-variables/weak-chain-rule bridge remains to be proved. -/
+theorem canonicalArcForm_eq_flowBoundaryForm {lam : ℝ} (hlam : lam ≠ 0) {g : ℝ → ℂ}
+    (hg : Integrable (deriv g))
+    (he : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2) {D E : ℝ → ℂ}
+    (hF : HasWeightedBoundaryH2 (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)) D E) :
+    canonicalArcForm lam g = flowBoundaryForm lam
+      (flowValue (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)))
+      (flowFirst D) (flowSecond D E) := by
+  sorry
+
+/-- Specialization of Melnikov and the pairing limit to eigenfunctions, with the continuous
+    stream representative. It isolates the invariant-neighbourhood and a.e.-representative
+    interfaces, rather than assuming that the raw `L²` representative is continuous. -/
+theorem ee_transport_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) :
+    (∀ k < 4, Integrable (deriv (contStream ω ∘ cellArc k))) ∧
+    ∀ N : Set ℝ, volume N = 0 → ∃ hs : ℕ → ℝ,
+      (∀ j, hs j ∈ Ioo 0 1 ∧ hs j ∉ N) ∧ Tendsto hs atTop (𝓝 0) ∧
+      Tendsto (fun j ↦ levelIntegral (hs j) fun p ↦
+        (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) atTop
+        (𝓝 (∑ k ∈ Finset.range 4, ∫ s,
+          (canonicalProfile lam (contStream ω ∘ cellArc k) s *
+            (starRingEnd ℂ) (contStream ω (cellArc k s))).re)) := by
+  sorry
+
+/-- A symmetry/measure bridge: vanishing on a positive-cell lift forces an even vorticity
+    to vanish on both torus cells. It needs no eigenvalue or stream-function hypothesis. -/
+theorem InSector.eq_zero_of_lift_ae_zero_on_cellSquare {ω : L2}
+    (hs : InSector true true ω)
+    (hz : ∀ᵐ p ∂(volume.restrict cellSquare), liftL2 ω p = 0) : ω = 0 := by
+  have hΨ : Continuous Ψ :=
+    (Real.Angle.continuous_cos.comp continuous_fst).add
+      (Real.Angle.continuous_cos.comp continuous_snd)
+  let I : Set ℝ := Ioc (-Real.pi) (-Real.pi + 2 * Real.pi)
+  let F : Set (ℝ × ℝ) := I ×ˢ I
+  have hI : MeasurableSet I := measurableSet_Ioc
+  have hF : MeasurableSet F := hI.prod hI
+  have hproj : MeasurePreserving torusProj (volume.restrict F) volume := by
+    change MeasurePreserving (Prod.map (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))
+      (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))) (volume.restrict F)
+      (volume : Measure (AddCircle (2 * Real.pi) × AddCircle (2 * Real.pi)))
+    have hm := AddCircle.measurePreserving_mk (2 * Real.pi) (-Real.pi)
+    refine ⟨by fun_prop, ?_⟩
+    have hp := (hm.prod hm).map_eq
+    simpa only [F, I, Measure.prod_restrict, ← Measure.volume_eq_prod,
+      torusProj, Real.Angle.coe, Prod.map] using hp
+  have hsub : cellSquare ⊆ F := by
+    intro p hp
+    change |(p.1 + p.2) / 2| < Real.pi / 2 ∧
+      |(p.1 - p.2) / 2| < Real.pi / 2 at hp
+    obtain ⟨ha0, ha1⟩ := abs_lt.mp hp.1
+    obtain ⟨hb0, hb1⟩ := abs_lt.mp hp.2
+    exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+  have hinj : InjOn torusProj F := by
+    intro p hp q hq heq
+    apply Prod.ext
+    · exact (AddCircle.coe_eq_coe_iff_of_mem_Ioc hp.1 hq.1).1 (congrArg Prod.fst heq)
+    · exact (AddCircle.coe_eq_coe_iff_of_mem_Ioc hp.2 hq.2).1 (congrArg Prod.snd heq)
+  have hcell : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  have hz' := (ae_restrict_iff' hcell).1 hz
+  have hpos : ∀ᵐ t : Torus, 0 < Ψ t → ω t = 0 := by
+    have hequiv := ae_map_iff (μ := volume.restrict F) hproj.measurable.aemeasurable
+      (p := fun t : Torus ↦ 0 < Ψ t → ω t = 0)
+      (by
+        simp only [imp_iff_not_or]
+        exact (measurableSet_lt measurable_const hΨ.measurable).compl.union
+          ((Lp.stronglyMeasurable ω).measurable (measurableSet_singleton 0)))
+    simp only [hproj.map_eq] at hequiv
+    apply hequiv.2
+    filter_upwards [ae_restrict_of_ae hz', ae_restrict_mem hF] with p hp hpF hpt
+    obtain ⟨q, hq, hqp⟩ := exists_mem_cellSquare hpt
+    have hqp' : q = p := hinj (hsub hq) hpF hqp
+    subst q
+    exact hp hq
+  have hsingle (x : Real.Angle) : volume ({x} : Set Real.Angle) = 0 := by
+    change (volume : Measure (AddCircle (2 * Real.pi))) {x} = 0
+    have hx := AddCircle.volume_closedBall (T := 2 * Real.pi) (x := x) (ε := 0)
+    have hx0 : (volume : Measure (AddCircle (2 * Real.pi))) (Metric.closedBall x 0) = 0 := by
+      simpa only [mul_zero, min_eq_right (by positivity : (0 : ℝ) ≤ 2 * Real.pi),
+        ENNReal.ofReal_zero] using hx
+    exact measure_mono_null
+      (singleton_subset_iff.mpr (Metric.mem_closedBall_self (by norm_num))) hx0
+  have hnull : ∀ᵐ t : Torus, Ψ t ≠ 0 := by
+    rw [Measure.volume_eq_prod]
+    apply (Measure.ae_prod_iff_ae_ae
+      (isClosed_eq hΨ continuous_const).isOpen_compl.measurableSet).2
+    exact Eventually.of_forall fun x ↦ by
+      rw [ae_iff]
+      simp only [not_not]
+      have hsub' : {y : Real.Angle | Ψ (x, y) = 0} ⊆
+          {((Real.pi : ℝ) : Real.Angle) - x, x - ((Real.pi : ℝ) : Real.Angle)} := by
+        intro y hy
+        rcases Ψ_eq_zero_iff (x, y) |>.mp hy with hy | hy
+        · exact Or.inl (eq_sub_iff_add_eq.mpr (by simpa [add_comm] using hy))
+        · exact Or.inr (eq_sub_iff_add_eq.mpr
+            (by simpa [add_comm] using (sub_eq_iff_eq_add.mp hy).symm))
+      have hpair := measure_union_null (hsingle (((Real.pi : ℝ) : Real.Angle) - x))
+        (hsingle (x - ((Real.pi : ℝ) : Real.Angle)))
+      exact measure_mono_null hsub' (by simpa only [singleton_union] using hpair)
+  have href : reflect₁ ω = ω := by simpa [paritySign] using hs.1
+  have hraw := Lp.coeFn_compMeasurePreserving ω measurePreserving_S₁
+  change (reflect₁ ω : Torus → ℂ) =ᵐ[volume] (fun t ↦ ω (S₁ t)) at hraw
+  rw [href] at hraw
+  apply Lp.eq_zero_iff_ae_eq_zero.mpr
+  filter_upwards [hpos, measurePreserving_S₁.quasiMeasurePreserving.ae hpos, hraw, hnull]
+    with t hp hpn ht hn
+  by_cases hpt : 0 < Ψ t
+  · exact hp hpt
+  · have hsneg : Ψ (S₁ t) = -Ψ t := congrFun Ψ_comp_S₁ t
+    rw [ht]
+    apply hpn
+    rw [hsneg]
+    exact neg_pos.mpr (lt_of_le_of_ne (le_of_not_gt hpt) hn)
+
+/-- The exceptional set `cos x = cos y` is null, independently of any vorticity. -/
+theorem ae_cos_fst_ne_cos_snd : ∀ᵐ p : ℝ × ℝ, Real.cos p.1 ≠ Real.cos p.2 := by
+  rw [Measure.volume_eq_prod]
+  apply (Measure.ae_prod_iff_ae_ae (by measurability)).2
+  exact Eventually.of_forall fun x ↦ by
+    rw [ae_iff]
+    have hc : {y : ℝ | Real.cos x = Real.cos y}.Countable := by
+      apply ((Set.countable_range (fun k : ℤ ↦ 2 * k * Real.pi + x)).union
+        (Set.countable_range (fun k : ℤ ↦ 2 * k * Real.pi - x))).mono
+      intro y hy
+      obtain ⟨k, hk | hk⟩ := Real.cos_eq_cos_iff.mp hy
+      · exact Or.inl ⟨k, hk.symm⟩
+      · exact Or.inr ⟨k, hk.symm⟩
+    simpa using hc.measure_zero volume
+
+/-- Unlike the gradient argument, exclusion only needs strict positivity of the vorticity
+    coefficient away from a null set. -/
+theorem normalCoeff_pos_of_cos_ne {p : ℝ × ℝ} (h0 : 0 < dipoleLift p)
+    (hne : Real.cos p.1 ≠ Real.cos p.2) : 0 < normalCoeff p := by
+  have hx := Real.cos_le_one p.1
+  have hy := Real.cos_le_one p.2
+  have h2 : dipoleLift p < 2 := by
+    unfold dipoleLift
+    by_contra hn
+    exact hne (by linarith)
+  have hρ := gradSq_dipoleLift_pos h0 h2
+  unfold normalCoeff
+  exact div_pos (mul_pos (mul_pos h0 (by linarith)) (sq_pos_of_ne_zero (sub_ne_zero.mpr hne)))
+    (sq_pos_of_pos hρ)
+
+/-- The bulk is nonnegative even at the center (where the total definitions set `c = f = 0`). -/
+theorem eeBulkDensity_nonneg {ω : L2} {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
+    0 ≤ eeBulkDensity ω p := by
+  have h0 : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+  have h2 : dipoleLift p ≤ 2 := by simpa [Ψ_torusProj] using Ψ_le_two (torusProj p)
+  rcases lt_or_eq_of_le h2 with h2 | h2
+  · exact eeDensity_nonneg h0 h2 _ _ _
+  · simp only [eeBulkDensity, eeDensity, normalCoeff, normalC, h2]
+    norm_num
+
+/-- Zero bulk density forces the vorticity itself to vanish on the cell. -/
+theorem lift_ae_zero_of_eeBulkDensity_ae_zero {ω : L2}
+    (hz : ∀ᵐ p ∂(volume.restrict cellSquare), eeBulkDensity ω p = 0) :
+    ∀ᵐ p ∂(volume.restrict cellSquare), liftL2 ω p = 0 := by
+  filter_upwards [hz, ae_restrict_of_ae ae_cos_fst_ne_cos_snd,
+    ae_restrict_mem (show MeasurableSet cellSquare by unfold cellSquare diagCoord; measurability)]
+    with p hp hne hcell
+  have h0 : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hcell
+  have hf := normalCoeff_pos_of_cos_ne h0 hne
+  have h2 : dipoleLift p < 2 := by
+    have hx := Real.cos_le_one p.1
+    have hy := Real.cos_le_one p.2
+    unfold dipoleLift
+    by_contra hn
+    exact hne (by linarith)
+  obtain ⟨hc0, hc1⟩ := normalC_pos_le_one h0 h2
+  have hnc : 0 ≤ 2 - normalC p := by linarith
+  have hgrad : 0 ≤ (2 - normalC p) * ‖streamNormal ω p‖ ^ 2 +
+      normalC p * ‖streamTangent ω p‖ ^ 2 := by positivity
+  have hprod : normalCoeff p * ‖liftL2 ω p‖ ^ 2 = 0 := by
+    change normalCoeff p * ‖liftL2 ω p‖ ^ 2 +
+      (2 - normalC p) * ‖streamNormal ω p‖ ^ 2 +
+      normalC p * ‖streamTangent ω p‖ ^ 2 = 0 at hp
+    have hn : 0 ≤ normalCoeff p * ‖liftL2 ω p‖ ^ 2 := by positivity
+    linarith
+  exact norm_eq_zero.mp (sq_eq_zero_iff.mp ((mul_eq_zero.mp hprod).resolve_left hf.ne'))
+
+/-- Nonnegative bulk integrals tending to a nonpositive limit vanish on every truncated
+    set, hence on their union. No integrability on the full set is assumed. -/
+theorem ae_zero_of_truncated_integral_tendsto {α : Type*} [MeasurableSpace α]
+    {μ : Measure α} {s : Set α} (hs : MeasurableSet s) {r J : α → ℝ}
+    (hr : Measurable r) (hrpos : ∀ x ∈ s, 0 < r x) (hJ : ∀ x ∈ s, 0 ≤ J x)
+    {ts : ℕ → ℝ} (htpos : ∀ n, 0 < ts n) (ht : Tendsto ts atTop (𝓝 0))
+    (hi : ∀ n, IntegrableOn J {x | x ∈ s ∧ ts n < r x} μ)
+    {b : ℝ} (hb : b ≤ 0)
+    (hlim : Tendsto (fun n ↦ ∫ x in {x | x ∈ s ∧ ts n < r x}, J x ∂μ) atTop (𝓝 b)) :
+    ∀ᵐ x ∂(μ.restrict s), J x = 0 := by
+  let S : ℕ → Set α := fun n ↦ {x | x ∈ s ∧ ts n < r x}
+  have hSm n : MeasurableSet (S n) := hs.inter (measurableSet_lt measurable_const hr)
+  have hSn n : 0 ≤ᵐ[μ.restrict (S n)] J :=
+    ae_restrict_of_forall_mem (hSm n) fun x hx ↦ hJ x hx.1
+  have hzero n : (∫ x in S n, J x ∂μ) = 0 := by
+    apply le_antisymm _ (integral_nonneg_of_ae (hSn n))
+    apply le_trans _ hb
+    apply le_of_tendsto_of_tendsto tendsto_const_nhds hlim
+    filter_upwards [ht.eventually (gt_mem_nhds (htpos n))] with m hm
+    exact setIntegral_mono_set (hi m) (hSn m)
+      (Eventually.of_forall fun x hx ↦ ⟨hx.1, hm.trans hx.2⟩)
+  have hza : ∀ n, ∀ᵐ x ∂μ, x ∈ S n → J x = 0 := fun n ↦
+    (ae_restrict_iff' (hSm n)).1 ((integral_eq_zero_iff_of_nonneg_ae (hSn n) (hi n)).1 (hzero n))
+  apply (ae_restrict_iff' hs).2
+  filter_upwards [ae_all_iff.2 hza] with x hx hxs
+  obtain ⟨n, hn⟩ := (ht.eventually (gt_mem_nhds (hrpos x hxs))).exists
+  exact hx n ⟨hxs, hn⟩
+
+/-- Positivity on each canonical arc, from the weighted-domain positivity theorem. -/
+theorem ee_canonicalArcForm_nonneg {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) {k : ℕ} (hk : k < 4)
+    (hg : Integrable (deriv (contStream ω ∘ cellArc k)))
+    (he : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2) :
+    0 ≤ canonicalArcForm lam (contStream ω ∘ cellArc k) := by
+  obtain ⟨D, E, hF, _, hp, hm, hc⟩ := ee_boundary_regularity hlam hω hs hκ hk
+  rw [canonicalArcForm_eq_flowBoundaryForm hlam hg he hF]
+  apply hF.flowBoundaryForm_nonneg
+  have hends : intervalH1Extension (-1) 1
+      (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k) (Real.artanh ξ)) D 1 =
+      paritySign κ * intervalH1Extension (-1) 1
+        (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k) (Real.artanh ξ)) D (-1) := by
+    rw [hp, hm, hc]
+    ring
+  cases κ
+  · exact Or.inr (by simpa [paritySign] using hends)
+  · exact Or.inl (by simpa [paritySign] using hends)
+
+/-- Exclusion for a fixed rotation character, by the vorticity coefficient of the bulk. -/
+theorem even_even_character_exclusion {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) : ω = 0 := by
+  obtain ⟨he, Ng, hNg, hn, ht, hf⟩ := ee_gradient_traces hω.1 hs
+  obtain ⟨hd, hpairs⟩ := ee_transport_traces hlam hω hs hκ
+  let B : ℝ → ℝ := fun h ↦
+    levelIntegral h (fun p ↦
+      gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re) +
+      (2 - 2 * h) * (levelIntegral h (fun p ↦ ‖streamNormal ω p‖ ^ 2) -
+        levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2) -
+        levelIntegral h (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re))
+  let P : ℝ → Prop := fun h ↦
+    IntegrableOn (eeBulkDensity ω) {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p} ∧
+      (∫ p in {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p}, eeBulkDensity ω p) = B h
+  have hv : ∀ᵐ h ∂(volume.restrict (Ioo 0 1)), P h := ee_truncated_virial hlam hω
+  let Nv : Set ℝ := {h | h ∈ Ioo 0 1 ∧ ¬P h}
+  have hNv : volume Nv = 0 := by
+    have hv' := (ae_restrict_iff' measurableSet_Ioo).1 hv
+    simpa only [ae_iff, not_imp] using hv'
+  obtain ⟨seq, hseq, hlim, hpair⟩ :=
+    hpairs (Ng ∪ Nv) (measure_union_null hNg hNv)
+  have hP (j : ℕ) : P (seq j) := by
+    by_contra hj
+    exact (hseq j).2 (Or.inr ⟨(hseq j).1, hj⟩)
+  have hwithin : Tendsto seq atTop (𝓝[Ioi 0 \ Ng] 0) :=
+    tendsto_nhdsWithin_iff.mpr ⟨hlim, Eventually.of_forall fun j ↦
+      ⟨(hseq j).1.1, fun hj ↦ (hseq j).2 (Or.inl hj)⟩⟩
+  have hsum : 0 ≤ ∑ k ∈ Finset.range 4, canonicalArcForm lam (contStream ω ∘ cellArc k) :=
+    Finset.sum_nonneg fun k hk ↦ ee_canonicalArcForm_nonneg hlam hω hs hκ
+      (Finset.mem_range.mp hk) (hd k (Finset.mem_range.mp hk)) (he k (Finset.mem_range.mp hk))
+  have hscaled : Tendsto (fun j ↦ 2 * seq j) atTop (𝓝 0) := by
+    simpa using hlim.const_mul (2 : ℝ)
+  have hfactor : Tendsto (fun j ↦ 2 - 2 * seq j) atTop (𝓝 2) := by
+    simpa using hscaled.const_sub (2 : ℝ)
+  have hlimB : Tendsto (fun j ↦ B (seq j)) atTop
+      (𝓝 (-2 * ∑ k ∈ Finset.range 4, canonicalArcForm lam (contStream ω ∘ cellArc k))) := by
+    have hx := (hf.comp hwithin).add
+      (hfactor.mul (((hn.comp hwithin).sub (ht.comp hwithin)).sub hpair))
+    convert hx using 1
+    · rfl
+    · congr 1
+      simp only [canonicalArcForm, Finset.sum_add_distrib, Function.comp_apply]
+      ring
+  apply hs.eq_zero_of_lift_ae_zero_on_cellSquare
+  apply lift_ae_zero_of_eeBulkDensity_ae_zero
+  have hcell : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  apply ae_zero_of_truncated_integral_tendsto hcell
+    (show Measurable dipoleLift by unfold dipoleLift; fun_prop)
+    (fun p hp ↦ by simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
+    (fun _ hp ↦ eeBulkDensity_nonneg hp)
+    (fun j ↦ mul_pos two_pos (hseq j).1.1) hscaled
+    (fun j ↦ (hP j).1) (by linarith : -2 *
+      (∑ k ∈ Finset.range 4, canonicalArcForm lam (contStream ω ∘ cellArc k)) ≤ 0)
+  exact hlimB.congr fun j ↦ (hP j).2.symm
+
+/-- An eigenfunction even under both separatrix reflections vanishes at every nonzero
+    real spectral parameter. The remaining admissions are in its named analytic inputs. -/
 theorem even_even_exclusion (lam : ℝ) (hlam : lam ≠ 0) (ω : L2)
     (hω : IsEigenSolution lam ω) (hsector : InSector true true ω) : ω = 0 := by
-  sorry
+  obtain ⟨ωp, ωm, heq, hsp, hsm, hkp, hkm, hep, hem⟩ := hω.rotation_decomposition hsector
+  rw [heq, even_even_character_exclusion hlam hep hsp hkp,
+    even_even_character_exclusion hlam hem hsm hkm, add_zero]
 
 end NoEmbeddedEigenvalues

@@ -124,8 +124,9 @@ motivation, and standard facts cited rather than proved.
   convergence for uniformly controlled cutoff families, and
   `BoundaryCutoffConstruction.lean` constructs a smooth such family (an
   approximation route the main argument no longer uses).
-  Sector exclusions are in `EvenEven.lean` (with the statements of the even–even
-  lemmas), `OddOdd.lean`, `Mixed.lean` and `Main.lean`. Each module docstring says what it contains and which blueprint
+  Sector exclusions are in `EvenEven.lean` (the even–even assembly proof, direct
+  vorticity endgame, and named admitted analytic inputs), `OddOdd.lean`,
+  `Mixed.lean` and `Main.lean`. Each module docstring says what it contains and which blueprint
   nodes it covers.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `STATUS.md`: current state, decisions and next steps.
