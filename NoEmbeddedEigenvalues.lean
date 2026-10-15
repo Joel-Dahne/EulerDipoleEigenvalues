@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.Fourier
+import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.OddOdd

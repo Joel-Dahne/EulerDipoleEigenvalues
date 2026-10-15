@@ -11,7 +11,9 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
-   and fixed the blueprint where they did not (see "Current state").
+   and fixed the blueprint where they did not (see "Current state"). Also
+   review the new bounded-interval H¹ representative/derivative model and
+   endpoint-trace statements before building the weighted domain on it.
 2. Lean lemmas for the two blueprint nodes that are not `\leanok` yet:
    `lem:sector-projections` (the `P_ε` are commuting orthogonal projections,
    the identity on their sector) and `lem:stream-sector` (`ψ` has the parities
@@ -27,8 +29,9 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    characters, fixes either sign, and reassembles the two vanishing components.
    The classical boundary positivity argument is now proved without `sorry`
    in `BoundaryForm.lean`, with separate proved blueprint nodes. Next: define
-   the weighted interval Sobolev domain and prove the density/continuity
-   extension to `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
+   the weighted interval Sobolev domain on the new `IntervalH1.lean` API,
+   prove endpoint estimates and the density/continuity extension to
+   `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
    variables. The trace and transport inputs remain unverified. Continue the
    end-to-end digestion and formalize the normal-field algebra.
 4. Soon after: assess the largest gap, the odd–odd renormalized virial identity
@@ -98,6 +101,23 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   weighted H¹ positivity and flow-time coordinate-change nodes are not marked
   formalized. No new `sorry`s. The three main boundary theorems use only
   `propext`, `Classical.choice`, and `Quot.sound` (checked with `#print axioms`).
+- **Interval H¹** (`IntervalH1.lean`): `HasIntervalH1 a b F D` records a
+  locally absolutely continuous complex representative on `(a,b)`, the a.e.
+  derivative `D`, and L² membership of both. `MemIntervalH1` existentially
+  hides `D`; constants, addition and scalar multiplication are supported.
+  Proved complex AC FTC, interior FTC, and the unique continuous extension
+  `F((a+b)/2) + ∫ D`, independent of the derivative chosen. FTC also holds
+  up to the endpoints for that extension. Raw endpoint values are unrestricted.
+  `MemIntervalH10` uses zero traces; proved that its test is independent of
+  the chosen derivative. Endpoint existence/uniqueness, closed-interval FTC
+  and the zero-trace test use only `propext`, `Classical.choice`, `Quot.sound`.
+  No normed/quotient Sobolev space, weak-test bridge,
+  weighted second derivative, density, interval H² or periodic H¹ yet.
+  The former blueprint `def:h1-interval` is split into bounded H¹, the proved
+  endpoint lemma, zero-trace H¹, and separate deferred H²/periodic definitions;
+  dependent nodes and the Sobolev-tier guidance now distinguish these. The
+  endpoint Hardy inequality is separately stated (not yet proved in Lean), so
+  the boundary-form density argument need not depend on the H² Hardy case.
 - **Lean restructuring** (2026-10-14): the items from the review are done
   (lemmas moved to where they belong, derivative section moved to
   `Derivatives.lean`, renamed from `WeakDerivatives.lean`, multiplier
@@ -105,10 +125,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full `lake build` and `just web` pass after the boundary-form
-  and rotation-character work; the only Lean warnings are the three existing
-  sector exclusion `sorry`s. The boundary, symmetry and sector modules have no
-  warnings. The web build has only the usual missing image-converter messages
+- **Validation**: full `lake build` and `just web` pass after the interval-H¹,
+  boundary-form and rotation-character work; the only Lean warnings are the
+  three existing sector exclusion `sorry`s. The interval, boundary, symmetry
+  and sector modules have no warnings. The web build has only the usual missing image-converter messages
   from plasTeX. Every `\lean` name in the blueprint resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
   sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
   `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,

@@ -298,13 +298,13 @@ unformalized.
 
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
-\uses{lem:trace-sos-smooth, def:h1-interval}
+\uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval}
 The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in H^1_0(-1,1)$
 with $wF''\in L^2$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:hardy-1d}
+\uses{lem:hardy-endpoint}
 Endpoint cutoffs are dense in the norm $\|F\|_{H^1}+\|wF''\|_2$: on an
 endpoint interval of length $\eta$ the cutoff errors are controlled by local
 norms of $F'$, $wF''$ and by $\|F/\eta\|_2$, which tends to zero by the
@@ -313,7 +313,7 @@ $H^1_0$ Hardy inequality. Then mollify away from the endpoints.
 
 \begin{lemma}[Affine splitting]
 \label{lem:affine-splitting}
-\uses{lem:boundary-form-xi, def:h1-interval}
+\uses{lem:boundary-form-xi, def:h1-interval, lem:h1-interval-endpoints}
 If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$, $F\in H^1$ and $wF''\in L^2$, then
 \[
   \mathcal F_\lambda(F)=\mathcal F_\lambda(F_0)+\lambda^2|b|^2
@@ -333,7 +333,7 @@ mixed current terms). Extend by the same density argument.
 
 \begin{lemma}[Regularity of the boundary unknown]
 \label{lem:ee-boundary-regularity}
-\uses{def:boundary-form, def:canonical-profile, def:h1-interval}
+\uses{def:boundary-form, def:canonical-profile, def:h1-interval, lem:h1-interval-endpoints}
 For an even--even eigenfunction, the canonical transport unknown $z$ on each
 arc, written as $F(\xi)$, satisfies $F\in H^1(-1,1)$, $wF''\in L^2$ and
 $G\in H^1(-1,1)$. Its endpoint values are $-c_\pm/\lambda$, where $c_\pm$ are the
@@ -350,7 +350,7 @@ $wF''\in L^2$.
 
 \begin{lemma}[Positivity of the boundary form]
 \label{lem:ee-trace-positivity}
-\uses{def:boundary-form, def:h1-interval}
+\uses{def:boundary-form, def:h1-interval, lem:h1-interval-endpoints}
 If $F\in H^1(-1,1)$, $wF''\in L^2$ and $F(1)=\pm F(-1)$, then
 $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
 \end{lemma}

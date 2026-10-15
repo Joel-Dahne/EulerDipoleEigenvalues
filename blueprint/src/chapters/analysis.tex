@@ -12,9 +12,12 @@ curves, no coarea formula, and no Sobolev embeddings into H\"older spaces.
 space uses one of the three definitions below, so the dependency graph shows
 where Sobolev spaces enter.
 \begin{enumerate}
-  \item Definition~\ref{def:h1-interval}: $H^1$ on an interval, that is,
-        absolutely continuous functions with square integrable derivative.
-        Classical, and available in Mathlib in this form.
+  \item Definition~\ref{def:h1-interval}: bounded-interval $H^1$, represented
+        by locally absolutely continuous functions with square integrable
+        derivative. Endpoint traces, $H^1_0$, $H^2$, and periodic $H^1$ are
+        separate nodes below. Mathlib supplies the absolute-continuity and
+        integration tools; our first-order interval API is in
+        \texttt{IntervalH1.lean}.
   \item Definition~\ref{def:sobolev-torus}: $H^s(\T^2)$ through Fourier
         coefficients. Cheap to define and use ourselves.
   \item Definition~\ref{def:sobolev-local}: Sobolev spaces on open sets,
@@ -27,15 +30,83 @@ Lean file, each with a reference, and proved later or never.
 
 \section{Function spaces}
 
-\begin{definition}[$H^1$ on an interval]
+\begin{definition}[$H^1$ on a bounded interval]
 \label{def:h1-interval}
-For an interval $I\subset\R$, $H^1(I)$ is the space of functions that are
-absolutely continuous on every compact subinterval, with $F,F'\in L^2(I)$;
-$H^2(I)$ requires in addition $F'\in H^1(I)$. For bounded $I$ these functions
-extend continuously to the endpoints, and $H^1_0(I)$ consists of those
-vanishing there. The periodic version on a circle (an orbit of the flow) is
-defined in the same way.
+\lean{NoEmbeddedEigenvalues.HasIntervalH1, NoEmbeddedEigenvalues.MemIntervalH1}
+\leanok
+Let $a<b$ be real. An $H^1(a,b)$ representative is a function $F:\R\to\C$
+that is absolutely continuous on each $[c,d]\subset(a,b)$, with
+$F,D\in L^2(a,b)$ for some $D:\R\to\C$ satisfying $F'=D$ almost everywhere
+on $(a,b)$. The predicate \texttt{HasIntervalH1} records $F$ together with
+such an a.e. derivative $D$; \texttt{MemIntervalH1} asserts that a $D$ exists.
+The raw values of $F$ at $a,b$ and outside the interval are unrestricted.
 \end{definition}
+
+\begin{lemma}[Endpoint extension and traces]
+\label{lem:h1-interval-endpoints}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.extension_eq,
+  NoEmbeddedEigenvalues.HasIntervalH1.continuousOn_extension,
+  NoEmbeddedEigenvalues.HasIntervalH1.extension_unique,
+  NoEmbeddedEigenvalues.HasIntervalH1.extension_independent,
+  NoEmbeddedEigenvalues.HasIntervalH1.integral_eq_extension_sub,
+  NoEmbeddedEigenvalues.MemIntervalH1.exists_extension}
+\leanok
+Every $H^1(a,b)$ representative $F$ has a continuous extension from $(a,b)$
+to $[a,b]$, unique on $[a,b]$. Given an a.e. derivative $D$, this extension is
+\[
+  \widetilde F(x)=F(m)+\int_m^xD(t)\,dt,\qquad m=(a+b)/2.
+\]
+It is independent of the choice of $D$, and for all $c,d\in[a,b]$ one has
+$\int_c^d D=\widetilde F(d)-\widetilde F(c)$. Endpoint values in subsequent
+Sobolev statements mean these traces, not the raw values of $F$ on $\R$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+On the finite interval $D\in L^2$ implies $D\in L^1$. On each compact
+subinterval of $(a,b)$, apply the absolutely continuous fundamental theorem
+of calculus to the real and imaginary parts to get
+$\int_c^d D=F(d)-F(c)$. Thus $\widetilde F=F$ in the interior. Continuity
+of the integral primitive gives continuity on $[a,b]$; additivity of interval
+integrals gives the fundamental theorem up to the endpoints. Two continuous
+extensions agree on the dense subset $(a,b)$, hence everywhere on $[a,b]$.
+\end{proof}
+
+\begin{definition}[Zero-trace $H^1$ on an interval]
+\label{def:h1-zero-interval}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.MemIntervalH10}
+\leanok
+For $a<b$, $H^1_0(a,b)$ consists of the $H^1(a,b)$ representatives whose
+continuous extensions have zero values at both endpoints.
+\end{definition}
+
+\begin{definition}[$H^2$ on an interval]
+\label{def:h2-interval}
+\uses{def:h1-interval}
+For a bounded interval $I=(a,b)$, $H^2(I)$ consists of the $F\in H^1(I)$
+whose a.e. first derivative has an $H^1(I)$ representative.
+\end{definition}
+
+\begin{definition}[Periodic $H^1$]
+\label{def:h1-periodic}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+For $T>0$, $H^1(\R/T\Z)$ is represented by the $H^1(0,T)$ functions whose
+endpoint traces agree, with the endpoints identified. No matching condition
+on the derivative is imposed at this order.
+\end{definition}
+
+\begin{remark}[Formalization scope]
+The first-order bounded-interval predicates, endpoint theorem and zero-trace
+definition are implemented. The model uses locally absolutely continuous
+representatives, not a bundled normed space of a.e. equivalence classes.
+The interval $H^2$ and periodic definitions are separate, deferred targets.
+As usual, $H^1_{\mathrm{loc}}(I)$ elsewhere means $H^1$ on every compact
+subinterval; this local notation is not yet formalized. The condition
+$(1-\xi^2)F''\in L^2$ in the boundary argument is a further weighted-domain
+condition, not membership in ordinary $H^2(-1,1)$.
+\end{remark}
 
 \begin{definition}[Sobolev spaces on the torus]
 \label{def:sobolev-torus}
@@ -112,7 +183,7 @@ regular level sets of $\Psi$ depend continuously on the level.
 
 \begin{lemma}[Coarea and a.e.\ restrictions]
 \label{lem:coarea}
-\uses{def:cells, def:h1-interval}
+\uses{def:cells, def:h1-interval, def:h1-periodic}
 On a compact regular orbit annulus $\{\epsilon_1\le\Psi\le\epsilon_2\}$, for
 $g\in L^1$,
 $\int g\,dx\,dy=\int\!\big(\oint_{\{\Psi=c\}}g\,d\ell/\rho\big)dc$, so the
@@ -147,12 +218,26 @@ input to the virial identities. It needs no Sobolev spaces.
 
 \section{Elementary inequalities}
 
+\begin{lemma}[Endpoint Hardy inequality]
+\label{lem:hardy-endpoint}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then
+\[
+  \int_0^\eta|F/x|^2\,dx\le4\int_0^\eta|F'|^2\,dx.
+\]
+\end{lemma}
+
+\begin{remark}
+The endpoint case is separated so that the boundary-form extension does not
+depend on ordinary interval $H^2$ through the collection below. Its Lean
+proof is still pending.
+\end{remark}
+
 \begin{lemma}[One-dimensional Hardy inequalities]
 \label{lem:hardy-1d}
-\uses{def:h1-interval}
+\uses{def:h1-interval, def:h2-interval, lem:h1-interval-endpoints, lem:hardy-endpoint}
 \begin{enumerate}
-  \item If $F\in H^1(0,\eta)$ and $F(0)=0$, then
-        $\int_0^\eta|F/x|^2\,dx\le4\int_0^\eta|F'|^2\,dx$.
+  \item The endpoint inequality of Lemma~\ref{lem:hardy-endpoint}.
   \item If $N\in H^2$ on an interval containing $x_0$ and $N(x_0)=0$, then
         $\|(N/(x-x_0))'\|_{L^2}\le C\|N''\|_{L^2}$; this follows from
         $N(x)/(x-x_0)=\int_0^1N'(x_0+t(x-x_0))\,dt$.

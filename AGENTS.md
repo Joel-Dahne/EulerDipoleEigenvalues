@@ -86,8 +86,11 @@ motivation, and standard facts cited rather than proved.
   (`Δ⁻¹`, `L₀`, domain, eigenvalue problem), `Derivatives.lean`
   (Fourier-defined and weak derivatives). Symmetry chapter: `Symmetry.lean`
   (pointwise maps), `SymmetryL2.lean` (action on `L²`), `Sectors.lean`. Then
-  `EvenEven.lean`, `OddOdd.lean`, `Mixed.lean` and `Main.lean`. Each module
-  docstring says what it contains and which blueprint nodes it covers.
+  `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
+  `BoundaryForm.lean` proves the classical boundary positivity argument.
+  Sector exclusions are in `EvenEven.lean`, `OddOdd.lean`, `Mixed.lean` and
+  `Main.lean`. Each module docstring says what it contains and which blueprint
+  nodes it covers.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
 - `STATUS.md`: current state, decisions and next steps.
 - `justfile`: build recipes (run `just` to list them).
@@ -190,9 +193,12 @@ server has a file open, and keep work in one file at a time where possible.
   resolved and record the resolution in the node.
 - **Sobolev tiers** (see `chapters/analysis.tex`): every node whose statement
   involves a Sobolev space `\uses` exactly the relevant one of
-  `def:h1-interval` (H^1 on an interval, in Mathlib), `def:sobolev-torus`
+  `def:h1-interval` (bounded-interval H^1 via absolute continuity), `def:sobolev-torus`
   (H^s(T^2) via Fourier coefficients), or `def:sobolev-local` (Sobolev spaces on
   open sets, weighted spaces, traces; the main infrastructure gap in Mathlib).
+  Interval nodes also list the relevant derived definitions (`def:h1-zero-interval`,
+  `def:h2-interval`, `def:h1-periodic`) and `lem:h1-interval-endpoints` when
+  endpoint traces are needed. These are distinct targets, not bundled into H^1.
   This keeps visible in the graph where Sobolev theory enters. The setup and
   symmetry chapters intentionally use none of them: `Δ^{-1}` and `L_0` are
   defined through Fourier coefficients.
