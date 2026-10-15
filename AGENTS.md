@@ -104,6 +104,7 @@ motivation, and standard facts cited rather than proved.
   square in diagonal coordinates; `Period.lean` defines the period function;
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
   period lemma. `Transport.lean` defines transport pairs on open unions of orbits.
+  `CanonicalProfile.lean` defines the canonical transport profile on an arc.
   Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;

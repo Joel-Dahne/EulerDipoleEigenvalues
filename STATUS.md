@@ -73,8 +73,15 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    transport unknown, with `lem:transport-unknown` proved. Modelling choice
    (remark after the node): `U` is a subset of `ℝ²`, bounded in the
    applications, instead of the torus. `lem:transport-pair-eigen` (eigenfunctions give
-   pairs) is stated, waiting for `lem:local-to-global`. Other open
-   definitions: `def:numerator`/`def:canonical-profile`, odd–odd and mixed, and
+   pairs) is stated, waiting for `lem:local-to-global`.
+   `def:canonical-profile` is formalized (`CanonicalProfile.lean`) by the
+   formula `Ω(s) = e^{iλs} ∫_s^∞ g' e^{-iλt}` instead of "the decaying
+   solution"; `lem:canonical-profile-ode` is proved (Lebesgue
+   differentiation: `Ω' = iλΩ - g'`, `Pz = -Ω`, `(P - λ)z = g` a.e.; decay at
+   `+∞`; decay at `-∞` iff Melnikov, then the left formula).
+   `lem:canonical-profile` keeps uniqueness and the decay rates. With this all
+   definitions in the even–even graph are in Lean. Other open
+   definitions: `def:numerator`, odd–odd and mixed, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.
    Also done (2026-10-15):

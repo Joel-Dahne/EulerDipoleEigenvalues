@@ -136,32 +136,80 @@ the trace of an $H^2$ function on a straight arc is $H^{3/2}$.
 
 \begin{definition}[Canonical transport profile]
 \label{def:canonical-profile}
-\uses{def:separatrix-arc}
-The \emph{canonical profile} of the arc trace $g$ is the solution $\Omega$ of
-$(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as $s\to\pm\infty$
-(manuscript \texttt{(ee:canonical-ode)}). The canonical transport unknown is
-$z=-(\Omega+g)/\lambda$, so that $(P-\lambda)z=g$ and $Pz=-\Omega$ with
-$P=-i\partial_s$.
+\lean{NoEmbeddedEigenvalues.profileIntegrand,
+  NoEmbeddedEigenvalues.canonicalProfile,
+  NoEmbeddedEigenvalues.canonicalUnknown}
+\leanok
+Let $\lambda\in\R$ and $g\colon\R\to\C$ with $g'\in L^1(\R)$; in the applications $g$ is
+the trace on a separatrix arc (Definition~\ref{def:separatrix-arc}). The
+\emph{canonical profile} of $g$ is
+\[
+  \Omega(s)=e^{i\lambda s}\int_s^\infty g'(t)e^{-i\lambda t}\,dt,
+\]
+and the \emph{canonical transport unknown} is $z=-(\Omega+g)/\lambda$. Write
+$P=-i\partial_s$. The \emph{Melnikov condition} is
+$\int_\R g'(t)e^{-i\lambda t}\,dt=0$.
 \end{definition}
 
-\begin{lemma}[Existence and decay of the canonical profile]
+\begin{remark}[The profile is defined by a formula]
+The manuscript defines $\Omega$ as the solution of
+$(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as $s\to\pm\infty$
+(manuscript \texttt{(ee:canonical-ode)}), which presupposes existence. Here
+$\Omega$ is the solution that decays at $+\infty$, which always exists; it decays at
+$-\infty$ exactly under the Melnikov condition
+(Lemma~\ref{lem:canonical-profile-ode}). This makes explicit that the Melnikov
+condition (Lemma~\ref{lem:melnikov}) is what the canonical profile needs. In Lean,
+$g'$ is the pointwise derivative \texttt{deriv g}, which for locally absolutely
+continuous $g$ represents the weak derivative.
+\end{remark}
+
+\begin{lemma}[The profile equation]
+\label{lem:canonical-profile-ode}
+\uses{def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.integrable_profileIntegrand,
+  NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalProfile,
+  NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalUnknown,
+  NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalUnknown_sub,
+  NoEmbeddedEigenvalues.tendsto_canonicalProfile_atTop,
+  NoEmbeddedEigenvalues.tendsto_canonicalProfile_atBot_iff,
+  NoEmbeddedEigenvalues.canonicalProfile_eq_Iic}
+\leanok
+Let $g'\in L^1(\R)$. Then $\Omega'=i\lambda\Omega-g'$ almost everywhere. If moreover
+$\lambda\ne0$ and $g$ is differentiable almost everywhere, then $Pz=-\Omega$ and
+$(P-\lambda)z=g$ almost everywhere. Further $\Omega(s)\to0$ as $s\to+\infty$, and
+$\Omega(s)\to0$ as $s\to-\infty$ if and only if the Melnikov condition holds; in that
+case $\Omega(s)=-e^{i\lambda s}\int_{-\infty}^sg'(t)e^{-i\lambda t}\,dt$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Write $J(s)=\int_s^\infty q$ with $q(t)=g'(t)e^{-i\lambda t}\in L^1$. By Lebesgue
+differentiation $J'=-q$ almost everywhere, so
+$\Omega'=i\lambda\Omega+e^{i\lambda s}J'=i\lambda\Omega-g'$. Then
+$z'=-(\Omega'+g')/\lambda=-i\Omega$, that is $Pz=-\Omega$, and
+$(P-\lambda)z=-\Omega+\Omega+g=g$. Since $|\Omega|=|J|$, $J(s)\to0$ as $s\to+\infty$
+and $J(s)\to\int_\R q$ as $s\to-\infty$. Finally
+$\int_{-\infty}^sq+\int_s^\infty q=\int_\R q$.
+\end{proof}
+
+\begin{lemma}[Uniqueness and decay of the canonical profile]
 \label{lem:canonical-profile}
 \uses{def:canonical-profile, lem:melnikov}
-The canonical profile exists and is unique, given by
-$\Omega(s)=-e^{i\lambda s}\int_{-\infty}^sg'(t)e^{-i\lambda t}\,dt
-=e^{i\lambda s}\int_s^\infty g'(t)e^{-i\lambda t}\,dt$. It satisfies
+Under the Melnikov condition, $\Omega$ is the unique locally absolutely continuous
+solution of $(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as
+$s\to\pm\infty$. For the arc trace $g$ of an $H^2$ function it satisfies
 $|\Omega(s)|\le C_\alpha e^{-\alpha|s|}$ for every $\alpha<1$, and
 $\|e^{|s|}\Omega\|_{L^2(ds)}\le C\|e^{|s|}g'\|_{L^2(ds)}$ whenever the right
 side is finite.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:melnikov, lem:sobolev-embedding, lem:local-to-global}
-The two formulas agree by Lemma~\ref{lem:melnikov}. Decay follows by
-integration by parts using $g-c_\pm=O(e^{-\alpha|s|})$, which comes from
-$H^2\subset C^{0,\alpha}$. The weighted bound is a one-sided convolution
-estimate with kernel $e^{-t}\mathbf 1_{t>0}$. A difference of two solutions is
-$Ce^{i\lambda s}$, which does not decay.
+\uses{lem:canonical-profile-ode, lem:melnikov, lem:sobolev-embedding, lem:local-to-global}
+Existence is Lemma~\ref{lem:canonical-profile-ode}. A difference of two solutions is
+$Ce^{i\lambda s}$, which does not decay. Decay follows by integration by parts in
+the two formulas of Lemma~\ref{lem:canonical-profile-ode}, using
+$g-c_\pm=O(e^{-\alpha|s|})$, which comes from $H^2\subset C^{0,\alpha}$. The weighted
+bound is a one-sided convolution estimate with kernel $e^{-t}\mathbf 1_{t>0}$.
 \end{proof}
 
 \begin{lemma}[Good windows]
@@ -193,7 +241,7 @@ where the sum runs over the four arcs bounding $\Cell$ (manuscript
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile, lem:resonant-vanishing, lem:orbit-comparison, lem:good-windows}
+\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:resonant-vanishing, lem:orbit-comparison, lem:good-windows}
 On a good orbit $z_h=-(v_h+g_h)/\lambda$ solves $(P-\lambda)z_h=g_h$ with
 $z_h(L)=\kappa z_h(-L)$. The difference $z_h-z$ solves the same equation with
 forcing $g_h-g$ and boundary mismatch $\kappa z(-L)-z(L)=O(e^{-\alpha L})$
