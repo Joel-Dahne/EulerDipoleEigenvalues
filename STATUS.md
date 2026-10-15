@@ -12,8 +12,8 @@ Not repeated here: progress per node is in the blueprint's dependency graph
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
    and fixed the blueprint where they did not (see "Current state"). Also
-   review the new bounded-interval H¹ representative/derivative model and
-   endpoint-trace statements before building the weighted domain on it.
+   review the bounded-interval H¹ representative/derivative model,
+   endpoint traces and the new weighted boundary-domain statements.
 2. Lean lemmas for the two blueprint nodes that are not `\leanok` yet:
    `lem:sector-projections` (the `P_ε` are commuting orthogonal projections,
    the identity on their sector) and `lem:stream-sector` (`ψ` has the parities
@@ -28,9 +28,11 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    The conclusion in `even_even.tex` now explicitly decomposes into rotation
    characters, fixes either sign, and reassembles the two vanishing components.
    The classical boundary positivity argument is now proved without `sorry`
-   in `BoundaryForm.lean`, with separate proved blueprint nodes. Next: define
-   the weighted interval Sobolev domain on the new `IntervalH1.lean` API,
-   prove endpoint estimates and the density/continuity extension to
+   in `BoundaryForm.lean`, with separate proved blueprint nodes. The weighted
+   interval domain is now defined in `WeightedBoundary.lean`, with classical
+   inclusion, interior regularity and affine stability proved. Next: prove
+   endpoint cutoff approximation, then interior mollification and the
+   density/continuity extension to
    `lem:ee-trace-positivity`; formalize the flow-time/ξ change of
    variables. The trace and transport inputs remain unverified. Continue the
    end-to-end digestion and formalize the normal-field algebra.
@@ -111,13 +113,39 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   `MemIntervalH10` uses zero traces; proved that its test is independent of
   the chosen derivative. Endpoint existence/uniqueness, closed-interval FTC
   and the zero-trace test use only `propext`, `Classical.choice`, `Quot.sound`.
-  No normed/quotient Sobolev space, weak-test bridge,
-  weighted second derivative, density, interval H² or periodic H¹ yet.
+  `IntervalH1Estimates.lean` now proves Cauchy–Schwarz bounds for increments
+  of the continuous extension, pointwise zero-trace endpoint bounds, uniform
+  bounds for rescaled layers, and their vanishing limits at both endpoints.
+  These are separate proved blueprint nodes. The local derivative energy
+  controls the cutoff errors directly, so `lem:trace-sos-extension` no longer
+  depends on the still-unproved Hardy inequality. The increment bound,
+  rescaled left-layer bound and both vanishing limits use only `propext`,
+  `Classical.choice`, `Quot.sound` (checked with `#print axioms`).
+  No normed/quotient Sobolev space, weak-test bridge, density, ordinary
+  interval H² or periodic H¹ yet. The weighted second-order domain is now
+  implemented separately, as described below.
   The former blueprint `def:h1-interval` is split into bounded H¹, the proved
   endpoint lemma, zero-trace H¹, and separate deferred H²/periodic definitions;
   dependent nodes and the Sobolev-tier guidance now distinguish these. The
-  endpoint Hardy inequality is separately stated (not yet proved in Lean), so
-  the boundary-form density argument need not depend on the H² Hardy case.
+  endpoint Hardy inequality is separately stated (not yet proved in Lean);
+  it is not needed for the boundary-form cutoff step.
+- **Weighted boundary domain** (`WeightedBoundary.lean`):
+  `HasWeightedBoundaryH2 F D E` combines interval H¹ data `(F,D)`, local
+  absolute continuity of `D` with a.e. derivative `E`, and L² membership of
+  `(1-x²)E`. `MemWeightedBoundaryH2` existentially hides the derivatives.
+  It imposes no global L² condition on `E` or endpoint traces of `D`.
+  Proved addition, scalar multiplication, subtraction, affine membership
+  and subtraction, inclusion of classical boundary jets with the correct
+  value traces, and `D ∈ H¹(c,d)` for every interior subinterval (invert the
+  weight, bounded away from zero there). The blueprint now gives the domain
+  its own definition and three proved property nodes; full weighted
+  completion/positivity are still unformalized. The example
+  `F(x)=(1-x)^(3/2)` distinguishes the domain from ordinary H² by explicit
+  differentiation/integration, not a Lean-formalized counterexample.
+  The distributional weak-test bridge, boundary-integrand integrability,
+  density and continuity results remain pending. Classical inclusion,
+  local H¹ and affine subtraction use only `propext`, `Classical.choice`,
+  `Quot.sound` (checked with `#print axioms`).
 - **Lean restructuring** (2026-10-14): the items from the review are done
   (lemmas moved to where they belong, derivative section moved to
   `Derivatives.lean`, renamed from `WeakDerivatives.lean`, multiplier
@@ -125,10 +153,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full `lake build` and `just web` pass after the interval-H¹,
-  boundary-form and rotation-character work; the only Lean warnings are the
-  three existing sector exclusion `sorry`s. The interval, boundary, symmetry
-  and sector modules have no warnings. The web build has only the usual missing image-converter messages
+- **Validation**: full `lake build` and `just web` pass after the weighted-domain,
+  endpoint-estimate, interval-H¹, boundary-form and rotation-character work;
+  the only Lean warnings are the three existing sector exclusion `sorry`s.
+  The interval/endpoint, boundary/weighted, symmetry and sector modules have no warnings. The web build has only the usual missing image-converter messages
   from plasTeX. Every `\lean` name in the blueprint resolves. Axioms: `main` depends on `sorryAx` exactly through the admitted
   sector exclusions; `IsEigenSolution.sectorProjection`, `exists_hasL0_invLap`,
   `reflect₁_rotate` and `hasFourierPartial_iff_weakPartial` use only `propext`,

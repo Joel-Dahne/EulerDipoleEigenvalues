@@ -184,6 +184,96 @@ $\xi\in[-1,1]$. The derivatives at the endpoints are ordinary two-sided
 derivatives of the functions on $\R$.
 \end{definition}
 
+\begin{definition}[Weighted second-order boundary domain]
+\label{def:weighted-boundary-domain}
+\uses{def:h1-interval, def:boundary-form-xi}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2,
+  NoEmbeddedEigenvalues.MemWeightedBoundaryH2}
+\leanok
+Write $I=(-1,1)$ and $w(\xi)=1-\xi^2$. A weighted boundary triple $(F,D,E)$
+consists of $H^1(I)$ data $(F,D)$, with $D$ absolutely continuous on every
+compact subinterval of $I$, $D'=E$ almost everywhere on $I$, and
+$wE\in L^2(I)$. Let $\mathcal D_w$ be the set of $F$ admitting such $D,E$.
+There is no global $L^2$ condition on $E$, no endpoint trace condition on
+$D$, and no restriction on raw endpoint or outside values.
+\end{definition}
+
+\begin{lemma}[Classical inclusion and traces]
+\label{lem:boundary-jet-weighted}
+\uses{def:boundary-jet, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.BoundaryJet.hasWeightedBoundaryH2,
+  NoEmbeddedEigenvalues.BoundaryJet.weighted_extension_eq}
+\leanok
+Every classical boundary jet $(F,D,E)$ is a weighted boundary triple, and
+its canonical $H^1$ extension agrees with $F$ on $[-1,1]$. In particular
+the trace values are its ordinary endpoint values.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints}
+\leanok
+Continuous functions on a compact interval are bounded and square
+integrable. The continuous derivatives $D$ and $E$ give Lipschitz, hence
+absolutely continuous, restrictions of $F$ and $D$ to compact subintervals.
+The weighted second derivative is continuous on $[-1,1]$. Uniqueness of the
+continuous extension identifies the traces.
+\end{proof}
+
+\begin{lemma}[Linear and affine stability]
+\label{lem:weighted-boundary-linear}
+\uses{def:h1-interval, def:weighted-boundary-domain}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memH1,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.add,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.smul,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.sub,
+  NoEmbeddedEigenvalues.hasWeightedBoundaryH2_affine,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.subAffine}
+\leanok
+Weighted boundary triples are closed under addition, subtraction and complex
+scalar multiplication, with the corresponding operations on all three
+components. Every affine function $a+b\xi$ belongs to $\mathcal D_w$ with
+derivatives $b,0$. Consequently, subtracting it from a triple $(F,D,E)$
+gives the triple $(F-a-b\xi,D-b,E)$. Also $\mathcal D_w\subset H^1(I)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-jet-weighted}
+\leanok
+Absolute continuity, a.e.\ differentiation and $L^2$ membership are linear.
+Affine functions are classical boundary jets.
+\end{proof}
+
+\begin{lemma}[Interior regularity of the first derivative]
+\label{lem:weighted-boundary-local}
+\uses{def:h1-interval, def:weighted-boundary-domain}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memLp_second_local,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.first_hasIntervalH1}
+\leanok
+For every weighted boundary triple $(F,D,E)$ and $-1<c<d<1$, one has
+$E\in L^2(c,d)$ and $D\in H^1(c,d)$ with a.e.\ derivative $E$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The inverse weight $1/w$ is continuous and bounded on $[c,d]$, so
+$E=(1/w)(wE)$ is square integrable there. Combine this with the local
+absolute continuity of $D$ and the given a.e.\ derivative relation.
+\end{proof}
+
+\begin{remark}[Representative model and endpoint singularities]
+The weighted domain uses absolutely continuous representatives, as does
+our interval $H^1$ model. Its equivalence with a distributional weak-second-
+derivative definition has not yet been formalized. Neither global
+$H^1$ regularity nor endpoint traces of $D$ are assumed.
+
+For an analytic example, on $(-1,1)$ take $F(\xi)=(1-\xi)^{3/2}$. Then
+$D=-\tfrac32\sqrt{1-\xi}$ and $E=\tfrac34(1-\xi)^{-1/2}$, while
+$wE=\tfrac34(1+\xi)\sqrt{1-\xi}$ extends continuously to $[-1,1]$.
+Thus $F\in\mathcal D_w$, but $\int|E|^2$ diverges logarithmically at $1$:
+this is not ordinary $H^2$ regularity. This example has been checked by
+differentiation and elementary integration, not formalized in Lean.
+\end{remark}
+
 \begin{lemma}[Boundary form in the $\xi$ variable]
 \label{lem:boundary-form-xi}
 \uses{def:boundary-form, def:boundary-form-xi}
@@ -298,23 +388,28 @@ unformalized.
 
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
-\uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval}
-The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in H^1_0(-1,1)$
-with $wF''\in L^2$.
+\uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval, def:weighted-boundary-domain}
+The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in\mathcal D_w$
+with zero endpoint traces (equivalently, $F\in H^1_0(-1,1)$ with the
+weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:hardy-endpoint}
-Endpoint cutoffs are dense in the norm $\|F\|_{H^1}+\|wF''\|_2$: on an
-endpoint interval of length $\eta$ the cutoff errors are controlled by local
-norms of $F'$, $wF''$ and by $\|F/\eta\|_2$, which tends to zero by the
-$H^1_0$ Hardy inequality. Then mollify away from the endpoints.
+\uses{lem:h1-endpoint-layers}
+Use endpoint cutoffs, followed by mollification away from the endpoints, in
+the norm $\|F\|_{H^1}+\|wF''\|_2$. On an endpoint interval of length $\eta$,
+$w=O(\eta)$, while the first and second derivatives of the cutoff are
+$O(\eta^{-1})$ and $O(\eta^{-2})$. Thus the errors are controlled by local
+norms of $F$, $F'$, $wF''$ and by $\|F/\eta\|_2$. The last term tends to
+zero by Lemma~\ref{lem:h1-endpoint-layers}; no Hardy inequality is needed.
+The first-order estimate and the weighted-domain definition are formalized.
+The density construction and passage to the limit remain pending.
 \end{proof}
 
 \begin{lemma}[Affine splitting]
 \label{lem:affine-splitting}
-\uses{lem:boundary-form-xi, def:h1-interval, lem:h1-interval-endpoints}
-If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$, $F\in H^1$ and $wF''\in L^2$, then
+\uses{lem:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
+If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$ and $F\in\mathcal D_w$, then
 \[
   \mathcal F_\lambda(F)=\mathcal F_\lambda(F_0)+\lambda^2|b|^2
   +2\lambda\operatorname{Im}(b\bar a)
@@ -323,7 +418,7 @@ If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$, $F\in H^1$ and $wF''\in L^2$, then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:affine-splitting-classical, lem:trace-sos-extension}
+\uses{lem:affine-splitting-classical, lem:trace-sos-extension, lem:weighted-boundary-linear}
 The classical case is Lemma~\ref{lem:affine-splitting-classical}.
 Equivalently, expand; all mixed terms with $F_0$ cancel (the quadratic
 $\lambda$ term uses $\int F_0'=0$; in the linear term
@@ -333,9 +428,9 @@ mixed current terms). Extend by the same density argument.
 
 \begin{lemma}[Regularity of the boundary unknown]
 \label{lem:ee-boundary-regularity}
-\uses{def:boundary-form, def:canonical-profile, def:h1-interval, lem:h1-interval-endpoints}
+\uses{def:boundary-form, def:canonical-profile, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
 For an even--even eigenfunction, the canonical transport unknown $z$ on each
-arc, written as $F(\xi)$, satisfies $F\in H^1(-1,1)$, $wF''\in L^2$ and
+arc, written as $F(\xi)$, satisfies $F\in\mathcal D_w$ and
 $G\in H^1(-1,1)$. Its endpoint values are $-c_\pm/\lambda$, where $c_\pm$ are the
 saddle values of $\psi$, and $c_+=\kappa c_-$.
 \end{lemma}
@@ -344,14 +439,18 @@ saddle values of $\psi$, and $c_+=\kappa c_-$.
 \uses{lem:ee-gradient-traces, lem:canonical-profile, lem:separatrix-arc}
 $G\in H^1$ from the tangential trace bound and the arc speed
 $\sqrt2\sech s$. The weighted bound of Lemma~\ref{lem:canonical-profile} and
-$Pz=-\Omega$ give $F\in H^1$; differentiating $G=-iwF'-\lambda F$ gives
-$wF''\in L^2$.
+$Pz=-\Omega$ give $F\in H^1$. On every compact interior interval,
+$D=F'=i(G+\lambda F)/w$ has an absolutely continuous representative, since
+$1/w$ is smooth there. Differentiating $G=-iwD-\lambda F$ then gives
+$wE=i(G'+\lambda D)-w'D\in L^2$, because $w'=-2\xi$ is bounded.
+The transport and trace inputs, and this bridge to the weighted domain,
+remain unformalized.
 \end{proof}
 
 \begin{lemma}[Positivity of the boundary form]
 \label{lem:ee-trace-positivity}
-\uses{def:boundary-form, def:h1-interval, lem:h1-interval-endpoints}
-If $F\in H^1(-1,1)$, $wF''\in L^2$ and $F(1)=\pm F(-1)$, then
+\uses{def:boundary-form, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
+If $F\in\mathcal D_w$ and $F(1)=\pm F(-1)$, then
 $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
 \end{lemma}
 

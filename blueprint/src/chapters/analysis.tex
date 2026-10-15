@@ -105,7 +105,10 @@ The interval $H^2$ and periodic definitions are separate, deferred targets.
 As usual, $H^1_{\mathrm{loc}}(I)$ elsewhere means $H^1$ on every compact
 subinterval; this local notation is not yet formalized. The condition
 $(1-\xi^2)F''\in L^2$ in the boundary argument is a further weighted-domain
-condition, not membership in ordinary $H^2(-1,1)$.
+condition, not membership in ordinary $H^2(-1,1)$. Its representative model
+is now Definition~\ref{def:weighted-boundary-domain}; unlike weighted PDE
+spaces on open subsets, this one-dimensional domain builds directly on the
+interval API.
 \end{remark}
 
 \begin{definition}[Sobolev spaces on the torus]
@@ -218,6 +221,76 @@ input to the virial identities. It needs no Sobolev spaces.
 
 \section{Elementary inequalities}
 
+\begin{lemma}[Endpoint Cauchy--Schwarz estimates]
+\label{lem:h1-endpoint-estimates}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.extension_sub_sq_le,
+  NoEmbeddedEigenvalues.HasIntervalH1.extension_sq_le_left,
+  NoEmbeddedEigenvalues.HasIntervalH1.extension_sq_le_right}
+\leanok
+Let $F\in H^1(a,b)$ have a.e.\ derivative $D$, and write $\widetilde F$ for
+its continuous extension. For $a\le c\le d\le b$,
+\[
+  |\widetilde F(d)-\widetilde F(c)|^2
+  \le (d-c)\int_c^d|D(t)|^2\,dt.
+\]
+In particular, if the left trace vanishes, then for $x\in[a,b]$,
+\[
+  |\widetilde F(x)|^2\le(x-a)\int_a^x|D(t)|^2\,dt.
+\]
+If the right trace vanishes, the corresponding bound is
+$|\widetilde F(x)|^2\le(b-x)\int_x^b|D(t)|^2\,dt$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints}
+\leanok
+The closed-interval fundamental theorem gives
+$\widetilde F(d)-\widetilde F(c)=\int_c^dD$. Apply the integral triangle
+inequality and Cauchy--Schwarz to $|D|$ and the constant function $1$.
+\end{proof}
+
+\begin{lemma}[Vanishing rescaled endpoint layers]
+\label{lem:h1-endpoint-layers}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_extension_sq_le_left,
+  NoEmbeddedEigenvalues.HasIntervalH1.integral_extension_sq_le_right,
+  NoEmbeddedEigenvalues.HasIntervalH1.integral_rescaled_left_le,
+  NoEmbeddedEigenvalues.HasIntervalH1.integral_rescaled_right_le,
+  NoEmbeddedEigenvalues.HasIntervalH1.tendsto_integral_rescaled_left,
+  NoEmbeddedEigenvalues.HasIntervalH1.tendsto_integral_rescaled_right}
+\leanok
+Let $F\in H^1(a,b)$ have a.e.\ derivative $D$. If its left trace vanishes,
+then for $0<\eta\le b-a$,
+\[
+  \int_a^{a+\eta}|\widetilde F(x)|^2\,dx
+  \le\eta^2\int_a^{a+\eta}|D(t)|^2\,dt,\qquad
+  \int_a^{a+\eta}\left|\frac{\widetilde F(x)}{\eta}\right|^2\,dx
+  \le\int_a^{a+\eta}|D(t)|^2\,dt\longrightarrow0
+\]
+as $\eta\downarrow0$. If the right trace vanishes, the same statements hold
+on $[b-\eta,b]$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-endpoint-estimates}
+\leanok
+On the left layer, bound $x-a$ by $\eta$ and the integral of $|D|^2$ on
+$[a,x]$ by its integral on the whole layer. Integrating the resulting
+constant bound gives the factor $\eta^2$. The rescaled integral is
+nonnegative and bounded above by the local derivative energy, which tends
+to zero since $D\in L^2(a,b)$. The right endpoint is identical.
+\end{proof}
+
+\begin{remark}[Digest note: Hardy is not needed for endpoint cutoffs]
+The rescaled layer estimate is weaker than the endpoint Hardy inequality
+below but suffices for the endpoint cutoff errors in
+Lemma~\ref{lem:trace-sos-extension}. This removes that lemma's dependency on
+Hardy. The layer estimate and its limit are proved in Lean, and the weighted
+domain is now defined in Definition~\ref{def:weighted-boundary-domain}.
+The cutoff/mollification argument remains pending.
+\end{remark}
+
 \begin{lemma}[Endpoint Hardy inequality]
 \label{lem:hardy-endpoint}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
@@ -228,9 +301,9 @@ If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then
 \end{lemma}
 
 \begin{remark}
-The endpoint case is separated so that the boundary-form extension does not
-depend on ordinary interval $H^2$ through the collection below. Its Lean
-proof is still pending.
+The endpoint case is separated from the $H^2$ collection below. Its Lean
+proof is still pending; the boundary-form cutoff step instead uses the
+proved layer estimate of Lemma~\ref{lem:h1-endpoint-layers}.
 \end{remark}
 
 \begin{lemma}[One-dimensional Hardy inequalities]
