@@ -9,7 +9,8 @@ import Mathlib.Tactic.NormNum
 /-!
 # Complex H¹ functions on a bounded interval
 
-Blueprint: `def:h1-interval`, `lem:h1-interval-endpoints`, and `def:h1-zero-interval`.
+Blueprint: `def:h1-interval`, `lem:h1-interval-endpoints`, `def:h1-zero-interval`,
+`def:h2-interval`, `def:h1-periodic`, and `lem:interval-h2-periodic`.
 
 `HasIntervalH1 a b F D` records a locally absolutely continuous representative on
 `(a,b)` with explicit a.e. derivative `D`, and square integrability of both. No
@@ -17,8 +18,8 @@ condition is imposed on the arbitrary values of `F` at the endpoints or outside
 the interval. `intervalH1Extension` constructs the canonical endpoint values;
 uniqueness means equality on `[a,b]`, not outside it.
 
-This is an unbundled first-order API, not yet a normed Sobolev space or a
-weighted second-order domain. Interval H² and periodic H¹ are deferred.
+This is an unbundled first-order API, not a normed Sobolev space. Interval `H²`
+(`HasIntervalH2`) and periodic `H¹` (`MemPeriodicH1`) build on it at the end of the file.
 -/
 
 noncomputable section
@@ -224,5 +225,56 @@ theorem HasIntervalH1.memH10_iff {a b : ℝ} {F D : ℝ → ℂ}
     exact ⟨(heq ⟨le_rfl, hab.le⟩).symm.trans ha, (heq ⟨hab.le, le_rfl⟩).symm.trans hb⟩
   · rintro ⟨ha, hb⟩
     exact ⟨D, hD, ha, hb⟩
+
+/-! ### Interval `H²` and periodic `H¹` -/
+
+/-- Interval `H²` data: `(F, D)` and `(D, E)` are both interval `H¹` data, so `D` is an
+    absolutely continuous representative of `F'` with a.e. derivative `E ∈ L²`. -/
+def HasIntervalH2 (a b : ℝ) (F D E : ℝ → ℂ) : Prop :=
+  HasIntervalH1 a b F D ∧ HasIntervalH1 a b D E
+
+/-- Membership in interval `H²`, without choosing the derivatives. -/
+def MemIntervalH2 (a b : ℝ) (F : ℝ → ℂ) : Prop :=
+  ∃ D E, HasIntervalH2 a b F D E
+
+theorem HasIntervalH2.add {a b : ℝ} {F D E G D' E' : ℝ → ℂ} (h : HasIntervalH2 a b F D E)
+    (h' : HasIntervalH2 a b G D' E') : HasIntervalH2 a b (F + G) (D + D') (E + E') :=
+  ⟨h.1.add h'.1, h.2.add h'.2⟩
+
+theorem HasIntervalH2.smul {a b : ℝ} {F D E : ℝ → ℂ} (h : HasIntervalH2 a b F D E) (c : ℂ) :
+    HasIntervalH2 a b (c • F) (c • D) (c • E) :=
+  ⟨h.1.smul c, h.2.smul c⟩
+
+/-- `H² ⊆ H¹`. -/
+theorem MemIntervalH2.memIntervalH1 {a b : ℝ} {F : ℝ → ℂ} (h : MemIntervalH2 a b F) :
+    MemIntervalH1 a b F := by
+  obtain ⟨D, _, hD⟩ := h
+  exact ⟨D, hD.1⟩
+
+/-- The first derivative of an `H²` function is in `H¹`. -/
+theorem HasIntervalH2.memIntervalH1_deriv {a b : ℝ} {F D E : ℝ → ℂ}
+    (h : HasIntervalH2 a b F D E) : MemIntervalH1 a b D :=
+  ⟨E, h.2⟩
+
+/-- Periodic `H¹`: `H¹(0, T)` functions whose two endpoint traces agree. -/
+def MemPeriodicH1 (T : ℝ) (F : ℝ → ℂ) : Prop :=
+  ∃ D, HasIntervalH1 0 T F D ∧ intervalH1Extension 0 T F D 0 = intervalH1Extension 0 T F D T
+
+/-- Periodicity of the traces can be tested with any `H¹` derivative. -/
+theorem HasIntervalH1.memPeriodicH1_iff {T : ℝ} {F D : ℝ → ℂ} (hD : HasIntervalH1 0 T F D)
+    (hT : 0 < T) :
+    MemPeriodicH1 T F ↔ intervalH1Extension 0 T F D 0 = intervalH1Extension 0 T F D T := by
+  constructor
+  · rintro ⟨E, hE, heq⟩
+    have h := hD.extension_independent hE hT
+    rw [← h ⟨le_rfl, hT.le⟩, ← h ⟨hT.le, le_rfl⟩]
+    exact heq
+  · intro heq
+    exact ⟨D, hD, heq⟩
+
+theorem MemPeriodicH1.memIntervalH1 {T : ℝ} {F : ℝ → ℂ} (h : MemPeriodicH1 T F) :
+    MemIntervalH1 0 T F := by
+  obtain ⟨D, hD, _⟩ := h
+  exact ⟨D, hD⟩
 
 end NoEmbeddedEigenvalues

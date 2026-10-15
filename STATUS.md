@@ -56,9 +56,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    definitions only and formalized (`Cells.lean`), with new proved lemmas
    `lem:separatrix-lines`, `lem:dipole-critical-points`, `lem:cell-square`;
    `lem:diagonal-calculus` (`dx dy = 2 da db`, `Δ` in `a, b`) is stated, not
-   formalized. Other open definitions: `def:period`, `def:h2-interval`,
-   `def:h1-periodic`, the transport, odd–odd and mixed definitions, and
-   `def:bernstein`.
+   formalized. `def:h2-interval` and `def:h1-periodic` are formalized too
+   (`IntervalH1.lean`, with `lem:interval-h2-periodic`). Other open
+   definitions: `def:period`, the transport, odd–odd and mixed definitions,
+   and `def:bernstein`.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`

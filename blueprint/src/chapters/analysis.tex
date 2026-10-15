@@ -161,6 +161,9 @@ traces, not merely the value traces of the original function.
 \begin{definition}[$H^2$ on an interval]
 \label{def:h2-interval}
 \uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH2,
+  NoEmbeddedEigenvalues.MemIntervalH2}
+\leanok
 For a bounded interval $I=(a,b)$, $H^2(I)$ consists of the $F\in H^1(I)$
 whose a.e. first derivative has an $H^1(I)$ representative.
 \end{definition}
@@ -168,10 +171,34 @@ whose a.e. first derivative has an $H^1(I)$ representative.
 \begin{definition}[Periodic $H^1$]
 \label{def:h1-periodic}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.MemPeriodicH1}
+\leanok
 For $T>0$, $H^1(\R/T\Z)$ is represented by the $H^1(0,T)$ functions whose
 endpoint traces agree, with the endpoints identified. No matching condition
 on the derivative is imposed at this order.
 \end{definition}
+
+\begin{lemma}[Basic properties of interval $H^2$ and periodic $H^1$]
+\label{lem:interval-h2-periodic}
+\uses{def:h2-interval, def:h1-periodic}
+\lean{NoEmbeddedEigenvalues.HasIntervalH2.add,
+  NoEmbeddedEigenvalues.HasIntervalH2.smul,
+  NoEmbeddedEigenvalues.MemIntervalH2.memIntervalH1,
+  NoEmbeddedEigenvalues.HasIntervalH2.memIntervalH1_deriv,
+  NoEmbeddedEigenvalues.HasIntervalH1.memPeriodicH1_iff,
+  NoEmbeddedEigenvalues.MemPeriodicH1.memIntervalH1}
+\leanok
+$H^2(I)$ is a linear space contained in $H^1(I)$, and the first derivative of an
+$H^2(I)$ function is in $H^1(I)$. Periodic $H^1$ functions are in $H^1(0,T)$, and
+the periodicity of the traces can be tested with any choice of a.e. derivative.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints}
+\leanok
+Linearity of $H^1$, and the independence of the continuous extension from the
+chosen derivative (Lemma~\ref{lem:h1-interval-endpoints}).
+\end{proof}
 
 \begin{remark}[Formalization scope]
 The first-order bounded-interval predicates, endpoint theorem, zero-trace
