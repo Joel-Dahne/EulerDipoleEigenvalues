@@ -96,7 +96,9 @@ motivation, and standard facts cited rather than proved.
   `ξ = tanh s` form and proves its positivity; `LiftIntegration.lean`
   integrates periodic lifts over `[0, 2π]²` (integration by parts,
   skew-symmetry of `D` and `L₀`); `VirialSmooth.lean` and
-  `VirialQuadratic.lean` prove the two forms of the smooth virial identity. Then
+  `VirialQuadratic.lean` prove the two forms of the smooth virial identity;
+  `LiftTorus.lean` relates periodic lifts to functions on the torus (classical
+  vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals). Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
   `IntervalZeroExtension.lean` proves jump-free zero extension of zero-trace H¹ data;

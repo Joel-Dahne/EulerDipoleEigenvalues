@@ -264,6 +264,69 @@ $1+|k|^2=1+k_1^2+k_2^2$ gives the converse. Existence of the derivative is
 existence of an $L^2$ function with prescribed square summable coefficients.
 \end{proof}
 
+\begin{definition}[Functions on the torus from periodic lifts]
+\label{def:torus-of-lift}
+\uses{def:torus, def:square-integral}
+\lean{NoEmbeddedEigenvalues.torusProj,
+  NoEmbeddedEigenvalues.torusOfLift,
+  NoEmbeddedEigenvalues.torusFun,
+  NoEmbeddedEigenvalues.torusL2}
+\leanok
+Let $\pi:\R^2\to\T^2$ be the covering map. A continuous periodic lift $u$
+defines the function $u\circ\pi^{-1}$ on $\T^2$, as a continuous function and as an
+element of $L^2(\T^2)$.
+\end{definition}
+
+\begin{lemma}[Lifts and the torus]
+\label{lem:lift-torus}
+\uses{def:torus-of-lift, def:lift-operators, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.isOpenQuotientMap_torusProj,
+  NoEmbeddedEigenvalues.IsPeriodicLift.eq_of_torusProj_eq,
+  NoEmbeddedEigenvalues.torusOfLift_torusProj,
+  NoEmbeddedEigenvalues.continuous_torusOfLift,
+  NoEmbeddedEigenvalues.hasClassicalPartial_torusFun_x,
+  NoEmbeddedEigenvalues.hasClassicalPartial_torusFun_y,
+  NoEmbeddedEigenvalues.hasFourierPartial_torusL2_x,
+  NoEmbeddedEigenvalues.hasFourierPartial_torusL2_y,
+  NoEmbeddedEigenvalues.squareIntegral_eq_integral_torus,
+  NoEmbeddedEigenvalues.squarePairing_eq_inner}
+\leanok
+Periodic lifts are constant on the fibres of $\pi$, so $u\circ\pi^{-1}$ is well
+defined, takes the value $u(x,y)$ at $\pi(x,y)$, and is continuous if $u$ is.
+If $u$ is a periodic $C^1$ lift, its classical partial derivatives
+$\partial_xu,\partial_yu$ descend to the Fourier partial derivatives of
+$u\circ\pi^{-1}\in L^2$. For continuous periodic lifts,
+$\int_{[0,2\pi]^2}u=\int_{\T^2}u\circ\pi^{-1}$, and the pairing $\ip uv$ of
+Definition~\ref{def:square-integral} is the $L^2(\T^2)$ inner product.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:classical-partial-fourier, lem:lift-calculus}
+\leanok
+$\pi$ is an open quotient map, so continuity can be checked on the lift. Along the
+coordinate lines the classical derivative of $u$ is a classical partial derivative
+on the torus, and these satisfy the Fourier multiplier relation
+(Lemma~\ref{lem:classical-partial-fourier}). The integrals agree by Fubini and
+$\int_{\R/2\pi\Z}f=\int_0^{2\pi}f$.
+\end{proof}
+
+\begin{lemma}[Smooth lifts are Sobolev]
+\label{lem:lift-sobolev}
+\uses{def:torus-of-lift, def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.memSobolev_torusL2,
+  NoEmbeddedEigenvalues.memSobolev_torusL2_of_smooth}
+\leanok
+A periodic $C^k$ lift lies in $H^k(\T^2)$, and a smooth periodic lift lies in every
+$H^s(\T^2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-torus, lem:elliptic-torus, lem:sobolev-torus-basic}
+\leanok
+Induction on $k$: $u$, $\partial_xu$, $\partial_yu$ are $C^k$, so in $H^k$, and
+their Fourier relation gives $u\in H^{k+1}$ (Lemma~\ref{lem:elliptic-torus}).
+\end{proof}
+
 \begin{lemma}[Sobolev embeddings on the torus]
 \label{lem:sobolev-embedding}
 \uses{def:sobolev-torus}

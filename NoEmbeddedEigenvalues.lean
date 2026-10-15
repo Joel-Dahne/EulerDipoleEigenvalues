@@ -10,6 +10,7 @@ import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.IntervalH1Estimates
 import NoEmbeddedEigenvalues.IntervalZeroExtension
 import NoEmbeddedEigenvalues.LiftIntegration
+import NoEmbeddedEigenvalues.LiftTorus
 import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField

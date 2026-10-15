@@ -40,9 +40,11 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    coefficients (`SobolevTorus.lean`, `def:sobolev-torus`,
    `lem:sobolev-torus-basic`), with `lem:elliptic-torus` proved: `Δ⁻¹`
    gains two derivatives (constant 4), `∂_j` loses one, and `Δ⁻¹ω ∈ H²` for
-   every `ω ∈ L²`. Not yet linked: Fourier `H^s` on the torus versus the
-   classical lift calculus (smooth periodic lifts are in every `H^s`), and
-   `lem:sobolev-embedding`.
+   every `ω ∈ L²`. Linked to the lift calculus in `LiftTorus.lean`
+   (`def:torus-of-lift`, `lem:lift-torus`, `lem:lift-sobolev`): periodic
+   lifts descend to the torus, classical partials are the Fourier partials,
+   periodic `Cᵏ` lifts are in `Hᵏ`, and lift integrals/pairings are torus
+   integrals/`L²` inner products. Not done: `lem:sobolev-embedding`.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`
