@@ -407,6 +407,43 @@ $1+|k|^2=1+k_1^2+k_2^2$ gives the converse. Existence of the derivative is
 existence of an $L^2$ function with prescribed square summable coefficients.
 \end{proof}
 
+\begin{definition}[Continuous representative]
+\label{def:continuous-representative}
+\uses{lem:torus-fourier}
+\lean{NoEmbeddedEigenvalues.continuousRep}
+\leanok
+For $g\in L^2(\T^2)$ let $\tilde g=\sum_k\hat g_ke_k$, summed in the space of continuous
+functions with the sup norm (and $\tilde g=0$ if the series does not converge there).
+\end{definition}
+
+\begin{lemma}[$H^2$ functions are continuous]
+\label{lem:continuous-representative}
+\uses{def:continuous-representative, def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.norm_char_le,
+  NoEmbeddedEigenvalues.summable_inv_one_add_sq,
+  NoEmbeddedEigenvalues.summable_inv_sobolevWeight_two,
+  NoEmbeddedEigenvalues.MemSobolev.summable_norm_fourierCoeff,
+  NoEmbeddedEigenvalues.MemSobolev.summable_fourier_char,
+  NoEmbeddedEigenvalues.continuousRep_toLp,
+  NoEmbeddedEigenvalues.coeFn_eq_continuousRep,
+  NoEmbeddedEigenvalues.coeFn_invLap_eq_continuousRep}
+\leanok
+For $g\in H^2(\T^2)$ the coefficients are absolutely summable, the Fourier series
+converges absolutely and uniformly, and $\tilde g=g$ almost everywhere. In particular
+the stream function $\psi$ of every $\omega\in L^2$ has the continuous representative
+$\tilde\psi$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-torus}
+\leanok
+$|\hat g_k|\le\frac12\big((1+|k|^2)^2|\hat g_k|^2+(1+|k|^2)^{-2}\big)$, and
+$\sum_{k\in\Z^2}(1+|k|^2)^{-2}\le\big(\sum_{n\in\Z}(1+n^2)^{-1}\big)^2<\infty$ since
+$(1+a^2)(1+b^2)\le(1+a^2+b^2)^2$. The uniformly convergent series and the $L^2$ Fourier
+series of $g$ have the same limit in $L^2$. For $\psi$ use $\psi\in H^2$
+(Lemma~\ref{lem:elliptic-torus}).
+\end{proof}
+
 \begin{definition}[Functions on the torus from periodic lifts]
 \label{def:torus-of-lift}
 \uses{def:torus, def:square-integral}

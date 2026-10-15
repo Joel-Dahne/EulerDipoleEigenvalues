@@ -7,7 +7,7 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 First and second partial derivatives and the Laplacian, defined as relations through Fourier
 multipliers, and the derivatives of the stream function `Δ⁻¹ω` (blueprint:
 `def:fourier-derivatives`, `lem:fourier-derivative-composition`,
-`lem:inverse-laplacian-derivatives`).
+`lem:inverse-laplacian-derivatives`, `def:stream-derivatives`).
 
 Classical periodic tests are represented by continuous torus functions and their
 continuous coordinate derivatives. Both all-C1 and all-smooth bilinear weak
@@ -105,26 +105,50 @@ theorem abs_frequencyProduct_le_normSq (k : ℤ × ℤ) (i j : Fin 2) :
     unfold normSq
     nlinarith [sq_nonneg k.1]
 
+/-- The multiplier `i kⱼ · (-1/|k|²)` of `∂ⱼΔ⁻¹` is bounded by one. -/
+theorem norm_streamPartialSymbol_le (j : Fin 2) (k : ℤ × ℤ) :
+    ‖I * frequencyComponent k j * invLapSymbol k‖ ≤ 1 := by
+  rw [mul_assoc, norm_mul, Complex.norm_I, one_mul]
+  exact norm_intCast_mul_invLapSymbol_le k _ fun _ => abs_frequencyComponent_le_normSq k j
+
+/-- The multiplier `-kᵢkⱼ · (-1/|k|²)` of `∂ᵢ∂ⱼΔ⁻¹` is bounded by one. -/
+theorem norm_streamSecondPartialSymbol_le (i j : Fin 2) (k : ℤ × ℤ) :
+    ‖-((frequencyComponent k i : ℂ) * frequencyComponent k j) * invLapSymbol k‖ ≤ 1 := by
+  rw [neg_mul, norm_neg, ← Int.cast_mul]
+  exact norm_intCast_mul_invLapSymbol_le k _ fun _ => abs_frequencyProduct_le_normSq k i j
+
+/-- `∂ⱼΔ⁻¹`: the first derivatives `∂ⱼψ` of the stream function `ψ = Δ⁻¹ω`. -/
+def streamPartial (j : Fin 2) : L2 →L[ℂ] L2 := fourierMultiplier (norm_streamPartialSymbol_le j)
+
+/-- `∂ᵢ∂ⱼΔ⁻¹`: the second derivatives `∂ᵢ∂ⱼψ` of the stream function. -/
+def streamSecondPartial (i j : Fin 2) : L2 →L[ℂ] L2 :=
+  fourierMultiplier (norm_streamSecondPartialSymbol_le i j)
+
+theorem hasFourierPartial_streamPartial (ω : L2) (j : Fin 2) :
+    HasFourierPartial j (invLap ω) (streamPartial j ω) := fun k => by
+  rw [streamPartial, fourierCoeff_fourierMultiplier, fourierCoeff_invLap_eq_mul]
+  ring
+
+theorem hasFourierSecondPartial_streamSecondPartial (ω : L2) (i j : Fin 2) :
+    HasFourierSecondPartial i j (invLap ω) (streamSecondPartial i j ω) := fun k => by
+  rw [streamSecondPartial, fourierCoeff_fourierMultiplier, fourierCoeff_invLap_eq_mul]
+  ring
+
+/-- Second derivatives are derivatives of the first derivatives. -/
+theorem hasFourierPartial_streamPartial_streamSecondPartial (ω : L2) (i j : Fin 2) :
+    HasFourierPartial i (streamPartial j ω) (streamSecondPartial i j ω) :=
+  (hasFourierPartial_iff_second (hasFourierPartial_streamPartial ω j)).2
+    (hasFourierSecondPartial_streamSecondPartial ω i j)
+
 /-- The stream function has each first derivative in `L²`, defined by Fourier multipliers. -/
 theorem exists_fourierPartial_invLap (ω : L2) (j : Fin 2) :
-    ∃ h, HasFourierPartial j (invLap ω) h := by
-  have hm (k : ℤ × ℤ) : ‖I * frequencyComponent k j * invLapSymbol k‖ ≤ 1 := by
-    rw [mul_assoc, norm_mul, Complex.norm_I, one_mul]
-    exact norm_intCast_mul_invLapSymbol_le k _ fun _ => abs_frequencyComponent_le_normSq k j
-  refine ⟨fourierMultiplier hm ω, fun k => ?_⟩
-  rw [fourierCoeff_fourierMultiplier, fourierCoeff_invLap_eq_mul]
-  ring
+    ∃ h, HasFourierPartial j (invLap ω) h :=
+  ⟨_, hasFourierPartial_streamPartial ω j⟩
 
 /-- The stream function has each second derivative in `L²`, defined by Fourier multipliers. -/
 theorem exists_fourierSecondPartial_invLap (ω : L2) (i j : Fin 2) :
-    ∃ h, HasFourierSecondPartial i j (invLap ω) h := by
-  have hm (k : ℤ × ℤ) :
-      ‖-((frequencyComponent k i : ℂ) * frequencyComponent k j) * invLapSymbol k‖ ≤ 1 := by
-    rw [neg_mul, norm_neg, ← Int.cast_mul]
-    exact norm_intCast_mul_invLapSymbol_le k _ fun _ => abs_frequencyProduct_le_normSq k i j
-  refine ⟨fourierMultiplier hm ω, fun k => ?_⟩
-  rw [fourierCoeff_fourierMultiplier, fourierCoeff_invLap_eq_mul]
-  ring
+    ∃ h, HasFourierSecondPartial i j (invLap ω) h :=
+  ⟨_, hasFourierSecondPartial_streamSecondPartial ω i j⟩
 
 /-- On mean-zero inputs the stream function solves the Fourier-defined Poisson equation. -/
 theorem hasFourierLaplacian_invLap (ω : L2) (hω : MeanZero ω) :

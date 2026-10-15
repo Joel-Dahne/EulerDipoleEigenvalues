@@ -96,11 +96,18 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    now a hypothesis on `g`, weighted bound with constant 1),
    `lem:sobolev-embedding`, `lem:sobolev-fractional-gagliardo` (iff only),
    `lem:transport-pair-eigen` (with `liftL2`), `lem:melnikov` (hypotheses of
-   the section made explicit). Next: batch B, the orbit-coordinate
-   definitions (orbit map and Jacobian, flow-time level integrals, `ψₙ`,
-   `ψₜ`, lifts of the Fourier derivatives of `ψ`), then
-   `lem:corner-coordinates`, `lem:orbit-comparison` (split), `lem:coarea`
-   (restated), `lem:resonant-vanishing`, `lem:ee-truncated-virial`,
+   the section made explicit). Batch B definitions are done:
+   `def:stream-derivatives` (`∂ⱼΔ⁻¹`, `∂ᵢ∂ⱼΔ⁻¹` as bounded multipliers),
+   `def:continuous-representative` with `lem:continuous-representative`
+   proved (`H²` Fourier series converge absolutely; `ψ̃` continuous),
+   `def:orbit-coordinates` (explicit inverse `h = Ψ/2`, flow time `t` from
+   `orbitTime`; avoids smooth dependence of ODE flows, not in Mathlib) with
+   `lem:orbit-coordinates` stated (bijection, `dx dy = 2 dh dt`, a.e. level
+   restrictions; `OrbitCoordinates.lean`), `def:level-integral`,
+   `def:normal-tangent`. Next: the batch B statements
+   `lem:corner-coordinates`, `lem:orbit-comparison` (split; its item 4 area
+   element is now in `lem:orbit-coordinates`), `lem:coarea` (restated: only
+   the `H¹` along a.e. orbits part remains), `lem:resonant-vanishing`, `lem:ee-truncated-virial`,
    `lem:ee-gradient-traces`, `lem:pairing-limit`,
    `lem:ee-boundary-regularity`, `lem:ee-neumann`. Batch C:
    `lem:virial-l2`, `lem:normal-field-center`, `lem:H-selfadjoint`,

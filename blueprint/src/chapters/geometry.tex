@@ -493,6 +493,88 @@ $L(h)$. The letter $b$ is used both for the diagonal coordinate and for the
 frequency $b(h)$; the paper should rename one of them.
 \end{remark}
 
+\begin{definition}[Orbit coordinates]
+\label{def:orbit-coordinates}
+\uses{def:cells, def:period, def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.levelCoord,
+  NoEmbeddedEigenvalues.timeCoord,
+  NoEmbeddedEigenvalues.puncturedCell,
+  NoEmbeddedEigenvalues.orbitDomain}
+\leanok
+On the punctured cell (the square $|a|,|b|<\pi/2$ minus the center) let $h=\Psi/2$ and
+\[
+  t=\begin{cases}\displaystyle\int_a^0\frac{d\alpha}{\sqrt{\cos^2\alpha-h^2}},&b\ge0,\\[2ex]
+  \displaystyle4L(h)-\int_a^0\frac{d\alpha}{\sqrt{\cos^2\alpha-h^2}},&b<0.\end{cases}
+\]
+The orbit domain is $\{(h,t):0<h<1,\ -2L(h)\le t<6L(h)\}$.
+\end{definition}
+
+\begin{lemma}[Orbit coordinates]
+\label{lem:orbit-coordinates}
+\uses{def:orbit-coordinates}
+\lean{NoEmbeddedEigenvalues.mem_orbitDomain,
+  NoEmbeddedEigenvalues.dipoleOrbit_levelCoord_timeCoord,
+  NoEmbeddedEigenvalues.timeCoord_dipoleOrbit,
+  NoEmbeddedEigenvalues.levelCoord_dipoleOrbit,
+  NoEmbeddedEigenvalues.lintegral_cellSquare_eq,
+  NoEmbeddedEigenvalues.integral_cellSquare_eq}
+\leanok
+The map $p\mapsto(h,t)$ is a bijection from the punctured cell onto the orbit domain,
+with inverse $(h,t)\mapsto\gamma_h(t)$. In these coordinates $dx\,dy=2\,dh\,dt$: for
+integrable $f$ on the cell, $t\mapsto f(\gamma_h(t))$ is integrable over $[-2L,6L)$ for
+almost every $h$, and
+$\int_{\Cell}f\,dx\,dy=2\int_0^1\int_{-2L(h)}^{6L(h)}f(\gamma_h(t))\,dt\,dh$; likewise for
+nonnegative measurable $f$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-orbit, lem:dipole-flow, lem:period-integral}
+Where $b>0$ the proof of Lemma~\ref{lem:period-orbit} shows that $t$ is the flow time from
+$(0,\arccos h)$; the integral up to $a=-\arccos h$ (where $b=0$) is improper but equals
+$2L(h)$. The rotation $(a,b)\mapsto(-a,-b)$ is the time shift by $4L$. Jacobian: in the
+orthonormal frame $\nabla\Psi/\rho$, $Y/\rho$ one has $\nabla h=\frac\rho2\,\nabla\Psi/\rho$
+and $\nabla t\cdot Y=1$, so $|\det\partial(h,t)/\partial(x,y)|=\frac\rho2\cdot\frac1\rho=\frac12$.
+The cut $\{b=0,a>0\}$ is a null set.
+\end{proof}
+
+\begin{remark}
+The definition uses the explicit inverse of $(h,t)\mapsto\gamma_h(t)$ rather than the
+orbit map itself, because Mathlib has no differentiable dependence of ODE solutions on
+initial data; smoothness and gradient bounds for $(h,t)$ follow by differentiating under
+the integral, and those of $\gamma_h$ by the inverse function theorem. That the time
+coordinate inverts the flow on all of $[-2L,6L)$, and that the improper integral equals
+$2L(h)$, was checked numerically for $h=0.05,0.4,0.85$ (scratch computation,
+October 2026). The area element $2\,dh\,dt$ was item 4 of
+Lemma~\ref{lem:orbit-comparison}; with this lemma, the first part of
+Lemma~\ref{lem:coarea} becomes a change of variables.
+\end{remark}
+
+\begin{definition}[Integrals over levels]
+\label{def:level-integral}
+\uses{def:period, def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.levelIntegral,
+  NoEmbeddedEigenvalues.quarterIntegral}
+\leanok
+For $0<h<1$ and $g$ on $\R^2$, the flow-time integral over the level $\{\Psi=2h\}$ is
+$\oint g\,dt=\int_0^{S(h)}g(\gamma_h(t))\,dt$, and over the quarter orbit it is
+$\int_{-L(h)}^{L(h)}g(\gamma_h(t))\,dt$. Arclength is $d\ell=\rho\,dt$.
+\end{definition}
+
+\begin{definition}[Normal and tangential derivatives]
+\label{def:normal-tangent}
+\uses{def:lift-operators, def:stream-derivatives}
+\lean{NoEmbeddedEigenvalues.gradNorm,
+  NoEmbeddedEigenvalues.normalDeriv,
+  NoEmbeddedEigenvalues.tangentDeriv}
+\leanok
+Let $\rho=|\nabla\Psi|=(\sin^2x+\sin^2y)^{1/2}$. For a function $\psi$ with partial
+derivatives $\psi_x,\psi_y$, the normal derivative along the outward normal
+$n=-\nabla\Psi/\rho$ of $\{\Psi>2h\}$ is $\psi_n=(\psi_x\sin x+\psi_y\sin y)/\rho$, and the
+tangential derivative along $Y/\rho$ is $\psi_t=(\psi_x\sin y-\psi_y\sin x)/\rho$. For an
+eigenfunction, $\psi_x,\psi_y$ are the lifts of $\psi_1,\psi_2$
+(Definition~\ref{def:stream-derivatives}).
+\end{definition}
+
 \begin{lemma}[The period function]
 \label{lem:period}
 \uses{def:period}

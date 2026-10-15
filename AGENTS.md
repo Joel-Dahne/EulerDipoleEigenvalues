@@ -103,7 +103,8 @@ motivation, and standard facts cited rather than proved.
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
   square in diagonal coordinates; `Period.lean` defines the period function;
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
-  period lemma. `Transport.lean` defines transport pairs on open unions of orbits.
+  period lemma. `OrbitCoordinates.lean` defines the orbit coordinates `(h, t)`,
+  flow-time level integrals and normal/tangential derivatives. `Transport.lean` defines transport pairs on open unions of orbits.
   `CanonicalProfile.lean` defines the canonical transport profile on an arc.
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `OddHardy.lean` proves the critical Hardy inequality for odd
