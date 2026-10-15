@@ -538,33 +538,101 @@ $|u+v|^2\le2(|u|^2+|v|^2)$ to assemble the limits.
 The support condition gives compact support and zero endpoint traces.
 \end{proof}
 
+\begin{definition}[Explicit endpoint cutoff family]
+\label{def:boundary-cutoff-family}
+\uses{def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.boundaryCutoffLeft,
+  NoEmbeddedEigenvalues.boundaryCutoffRight,
+  NoEmbeddedEigenvalues.boundaryCutoffValue,
+  NoEmbeddedEigenvalues.boundaryCutoffFirst,
+  NoEmbeddedEigenvalues.boundaryCutoffSecond,
+  NoEmbeddedEigenvalues.boundaryCutoffJet}
+\leanok
+Let $\rho=\texttt{Real.smoothTransition}$. For $\eta>0$ set
+$u_\eta(x)=4(x+1)/\eta-2$, $v_\eta(x)=4(1-x)/\eta-2$ and $a_\eta=4/\eta$.
+Define
+\[
+\begin{aligned}
+ \chi_\eta&=\rho(u_\eta)\rho(v_\eta),\\
+ \chi_{1,\eta}&=a_\eta\bigl(\rho'(u_\eta)\rho(v_\eta)
+                        -\rho(u_\eta)\rho'(v_\eta)\bigr),\\
+ \chi_{2,\eta}&=a_\eta^2\bigl(\rho''(u_\eta)\rho(v_\eta)
+           -2\rho'(u_\eta)\rho'(v_\eta)+\rho(u_\eta)\rho''(v_\eta)\bigr).
+\end{aligned}
+\]
+Write $J_\eta$ for this triple regarded as complex-valued functions.
+\end{definition}
+
 \begin{lemma}[Existence of a controlled cutoff family]
 \label{lem:boundary-cutoff-existence}
-\uses{def:boundary-cutoff-control}
-There are $C\ge0$ and smooth real-valued cutoffs whose classical jets are
-controlled with width $\eta$ and constant $C$ for all $0<\eta\le1$.
+\uses{def:boundary-cutoff-control, def:boundary-cutoff-family}
+\lean{NoEmbeddedEigenvalues.exists_smoothTransition_derivative_bound,
+  NoEmbeddedEigenvalues.hasDerivAt_boundaryCutoffValue,
+  NoEmbeddedEigenvalues.hasDerivAt_boundaryCutoffFirst,
+  NoEmbeddedEigenvalues.contDiff_boundaryCutoffValue,
+  NoEmbeddedEigenvalues.contDiff_boundaryCutoffJet_value,
+  NoEmbeddedEigenvalues.boundaryCutoffJet_control,
+  NoEmbeddedEigenvalues.boundaryCutoff_control,
+  NoEmbeddedEigenvalues.exists_controlled_boundaryCutoffs}
+\leanok
+The $\chi_\eta$ are smooth on $\R$, $J_\eta$ are classical jets with
+$\chi_\eta'=\chi_{1,\eta}$ and $\chi_{1,\eta}'=\chi_{2,\eta}$, and there is
+a single $C\ge0$ such that $J_\eta$ is controlled with width $\eta$ and
+constant $C$ for every $0<\eta\le1$.
 \end{lemma}
 
 \begin{proof}
-Let $\rho$ be a fixed smooth transition, zero on $(-\infty,0]$, one on
-$[1,\infty)$ and valued in $[0,1]$. Mathlib supplies
-\texttt{Real.smoothTransition}. Its first two derivatives are continuous
-and supported in $[0,1]$, so choose $B\ge1$ bounding their absolute values.
-Set
-\[
- \chi_\eta(x)=
- \rho\!\left(\frac{4(x+1)}{\eta}-2\right)
- \rho\!\left(\frac{4(1-x)}{\eta}-2\right).
-\]
+\leanok
+The profile $\rho$ is zero on $(-\infty,0]$, one on $[1,\infty)$ and valued
+in $[0,1]$. Its first two derivatives are continuous and supported in
+$[0,1]$, so choose $B\ge1$ bounding their absolute values.
+The product and chain rules give the displayed derivative formulas.
 The support lies strictly between $-1+\eta/2$ and $1-\eta/2$.
-On the required middle interval both arguments are at least $2$, so
-$\chi_\eta=1$ on a neighborhood of each point there.
-The product and chain rules give
-$|\chi_\eta'|\le8B/\eta$ and
-$|\chi_\eta''|\le32(B+B^2)/\eta^2$.
-Thus $C=32(B+1)^2$ works. This construction and its uniform derivative
-bounds have been derived here but have not yet been formalized in Lean.
+On the required middle interval both transition arguments are at least $2$,
+so $\chi_\eta=1$ on a neighborhood of each point there; the first two
+derivatives vanish there.
+The formulas give $|\chi_{1,\eta}|\le8B/\eta$ and
+$|\chi_{2,\eta}|\le32(B+B^2)/\eta^2$. Thus $C=32(B+1)^2$ works,
+independently of $\eta$.
 \end{proof}
+
+\begin{lemma}[Endpoint cutoff approximation]
+\label{lem:boundary-cutoff-approximation}
+\uses{def:h1-interval, def:h1-zero-interval, def:weighted-boundary-domain,
+  lem:h1-interval-endpoints, def:boundary-cutoff-family}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.boundaryCutoff_mem,
+  NoEmbeddedEigenvalues.boundaryCutoff_support,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.boundaryCutoff_memH10,
+  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.boundaryCutoff_convergence}
+\leanok
+Let $(F,D,E)$ be a weighted boundary triple with zero value traces. With the
+explicit cutoff family above, set
+\[
+ F_\eta=\chi_\eta F,\quad D_\eta=\chi_{1,\eta}F+\chi_\eta D,\quad
+ E_\eta=\chi_{2,\eta}F+2\chi_{1,\eta}D+\chi_\eta E.
+\]
+For $0<\eta\le1$ these are weighted triples, $F_\eta$ has compact support in
+$(-1,1)$ and zero value traces, and
+\[
+ \int_{-1}^1|F_\eta-F|^2\to0,\qquad
+ \int_{-1}^1|D_\eta-D|^2\to0,\qquad
+ \int_{-1}^1|w(E_\eta-E)|^2\to0
+ \quad(\eta\downarrow0).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-cutoff-existence, lem:boundary-cutoff-convergence}
+\leanok
+Apply the controlled-family convergence theorem to $J_\eta$ with its
+uniform constant.
+\end{proof}
+
+\begin{remark}
+The cutoff coefficients are smooth, but the products $F_\eta$ need not be.
+Interior mollification is still needed to obtain smooth compactly supported
+approximants.
+\end{remark}
 
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
@@ -575,16 +643,13 @@ weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain
 \end{lemma}
 
 \begin{proof}
-\uses{lem:boundary-cutoff-convergence, lem:boundary-cutoff-existence}
-Use endpoint cutoffs, followed by mollification away from the endpoints, in
-the norm $\|F\|_{H^1}+\|wF''\|_2$. On an endpoint interval of length $\eta$,
-$w=O(\eta)$, while the first and second derivatives of the cutoff are
-$O(\eta^{-1})$ and $O(\eta^{-2})$. Thus the errors are controlled by local
-norms of $F$, $F'$, $wF''$ and by $\|F/\eta\|_2$. The last term tends to
-zero by Lemma~\ref{lem:h1-endpoint-layers}; no Hardy inequality is needed.
-The convergence theorem for a uniformly controlled cutoff family is now
-formalized. Construction of such a family, interior mollification and
-passage to the boundary-form limit remain pending in Lean.
+\uses{lem:boundary-cutoff-approximation}
+First apply Lemma~\ref{lem:boundary-cutoff-approximation}. For a fixed cutoff
+the value is compactly supported in $(-1,1)$, where the weight is bounded
+away from zero. Extend by zero and mollify away from the endpoints, then
+pass to the limit in the boundary form. The cutoff approximation is now
+formalized. The zero-extension/interior mollification step and continuity
+needed for passage to the boundary-form limit remain pending in Lean.
 \end{proof}
 
 \begin{lemma}[Affine splitting]
