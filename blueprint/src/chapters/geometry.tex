@@ -496,13 +496,21 @@ frequency $b(h)$; the paper should rename one of them.
 \begin{lemma}[The period function]
 \label{lem:period}
 \uses{def:period}
-$L$ is strictly decreasing on $(0,1)$, $S(h)=4\mathbf K(1-h^2)$ with
+\lean{NoEmbeddedEigenvalues.deriv_eighthPeriod_neg,
+  NoEmbeddedEigenvalues.eighthPeriod_strictAntiOn,
+  NoEmbeddedEigenvalues.orbitPeriod_eq_ellipticK,
+  NoEmbeddedEigenvalues.eighthPeriod_asymptotics,
+  NoEmbeddedEigenvalues.exp_eighthPeriod_le}
+\leanok
+$L$ is differentiable on $(0,1)$ with $L'<0$, hence strictly decreasing, and
+$S(h)=4\mathbf K(1-h^2)$ with
 $\mathbf K(m)=\int_0^{\pi/2}(1-m\sin^2\theta)^{-1/2}d\theta$, and as $h\to0$,
 \[
   L(h)=\tfrac12\log(4/h)+O(h^2\log(1/h)),\qquad
   L'(h)=-\frac1{2h}+O(h\log(1/h)).
 \]
-In particular $e^{L(h)}\le Ch^{-1/2}$, and $S$ has simple level sets.
+In particular $e^{L(h)}\le Ch^{-1/2}$ on $(0,1)$. Since $S'=8L'<0$, the level sets
+of $S$ are simple.
 \end{lemma}
 
 \begin{proof}
@@ -512,6 +520,15 @@ $t^2(1+h-t^2)+1-t^2+ht^2>0$. The asymptotics follow by substituting $y=1-t^2$
 and splitting at $y=h$; the precise expansion follows from the classical
 expansion of $\mathbf K$ near $m=1$.
 \end{proof}
+
+\begin{remark}
+The asymptotics were checked numerically for $h=10^{-1},\dots,10^{-5}$: the
+ratios $(L-\frac12\log(4/h))/(h^2\log(1/h))$ and $(L'+\frac1{2h})/(h\log(1/h))$
+stay near $0.13$ and $0.25$, and $8L=4\mathbf K(1-h^2)$ to working precision
+(scratch computation, October 2026). In Lean the $O$-terms are written with an
+explicit constant $C$ on an interval $(0,h_0)$. The strict monotonicity is proved
+in Lean from $L'<0$.
+\end{remark}
 
 \begin{lemma}[Orbit comparison]
 \label{lem:orbit-comparison}

@@ -1,11 +1,13 @@
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
 # The canonical transport profile
 
-Blueprint: `def:canonical-profile`, `lem:canonical-profile-ode`.
+Blueprint: `def:canonical-profile`, `lem:canonical-profile-ode`; `lem:canonical-profile`
+(stated, uniqueness and decay).
 
 For a trace `g` on a separatrix arc with `g' ∈ L¹(ℝ)`, the canonical profile is
 `Ω(s) = e^{iλs} ∫_s^∞ g'(t) e^{-iλt} dt` and the canonical transport unknown is
@@ -157,5 +159,39 @@ theorem canonicalProfile_eq_Iic (hg : Integrable (deriv g))
   ring
 
 end Profile
+
+/-! ### Uniqueness and decay (`lem:canonical-profile`, stated) -/
+
+section Decay
+
+variable {lam : ℝ} {g : ℝ → ℂ}
+
+/-- Under the Melnikov condition, `Ω` is the only locally absolutely continuous solution of
+    `Ω' = iλΩ - g'` that tends to `0` at both ends. -/
+theorem canonicalProfile_unique (hg : Integrable (deriv g))
+    (hM : ∫ t, profileIntegrand lam g t = 0) {Ω : ℝ → ℂ}
+    (hac : ∀ c d, AbsolutelyContinuousOnInterval Ω c d)
+    (hode : ∀ᵐ s, HasDerivAt Ω (I * lam * Ω s - deriv g s) s)
+    (htop : Tendsto Ω atTop (𝓝 0)) (hbot : Tendsto Ω atBot (𝓝 0)) :
+    Ω = canonicalProfile lam g := by
+  sorry
+
+/-- If `g` approaches its end values `c±` at rate `e^{-α|s|}`, so does `Ω` approach `0`. -/
+theorem norm_canonicalProfile_le_exp (hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d)
+    (hg : Integrable (deriv g)) (hM : ∫ t, profileIntegrand lam g t = 0) {α C cp cm : ℝ}
+    (hα : 0 < α) (hp : ∀ s, 0 ≤ s → ‖g s - cp‖ ≤ C * Real.exp (-α * s))
+    (hn : ∀ s, s ≤ 0 → ‖g s - cm‖ ≤ C * Real.exp (α * s)) :
+    ∃ C', ∀ s, ‖canonicalProfile lam g s‖ ≤ C' * Real.exp (-α * |s|) := by
+  sorry
+
+/-- The weighted bound `‖e^{|s|} Ω‖_{L²} ≤ ‖e^{|s|} g'‖_{L²}`: on each half line `e^{|s|}Ω` is
+    bounded by a one-sided convolution of `e^{|s|}|g'|` with `e^{-t} 1_{t>0}`. -/
+theorem eLpNorm_exp_mul_canonicalProfile_le (hg : Integrable (deriv g))
+    (hM : ∫ t, profileIntegrand lam g t = 0) :
+    eLpNorm (fun s ↦ (Real.exp |s| : ℂ) * canonicalProfile lam g s) 2 volume ≤
+      eLpNorm (fun s ↦ (Real.exp |s| : ℂ) * deriv g s) 2 volume := by
+  sorry
+
+end Decay
 
 end NoEmbeddedEigenvalues

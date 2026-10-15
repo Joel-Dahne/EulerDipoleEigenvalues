@@ -86,7 +86,25 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    integrability or compact support needed; digest note). The link to
    `H^{1/2}` is the new stated node `lem:sobolev-fractional-gagliardo`
    (Plancherel), used in `lem:ee-gradient-traces`; whether `lem:traces`
-   should give the Gagliardo bound directly is open (notes). Other open
+   should give the Gagliardo bound directly is open (notes).
+   Stating the remaining even–even lemmas (plan agreed 2026-10-15): level
+   curves are handled through orbit coordinates `(h, t) ↦ γ_h(t)` and
+   restrictions to almost every level (Fubini), not trace operators.
+   Batch A (stated with `sorry`, no new infrastructure) is done:
+   `lem:period` (asymptotics checked numerically), `lem:good-windows`
+   (explicit constant `2 sin(π/12)`), `lem:canonical-profile` (decay rate
+   now a hypothesis on `g`, weighted bound with constant 1),
+   `lem:sobolev-embedding`, `lem:sobolev-fractional-gagliardo` (iff only),
+   `lem:transport-pair-eigen` (with `liftL2`), `lem:melnikov` (hypotheses of
+   the section made explicit). Next: batch B, the orbit-coordinate
+   definitions (orbit map and Jacobian, flow-time level integrals, `ψₙ`,
+   `ψₜ`, lifts of the Fourier derivatives of `ψ`), then
+   `lem:corner-coordinates`, `lem:orbit-comparison` (split), `lem:coarea`
+   (restated), `lem:resonant-vanishing`, `lem:ee-truncated-virial`,
+   `lem:ee-gradient-traces`, `lem:pairing-limit`,
+   `lem:ee-boundary-regularity`, `lem:ee-neumann`. Batch C:
+   `lem:virial-l2`, `lem:normal-field-center`, `lem:H-selfadjoint`,
+   `lem:traces`, `lem:local-to-global`. Other open
    definitions: `def:numerator`, odd–odd and mixed, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.

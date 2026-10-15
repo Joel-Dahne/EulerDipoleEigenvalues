@@ -296,8 +296,9 @@ $[a]^2=\int_\R\int_\R|a(u)-a(w)|^2(u-w)^{-2}\,dw\,du\in[0,\infty]$.
 \begin{lemma}[Gagliardo form of $H^{1/2}$]
 \label{lem:sobolev-fractional-gagliardo}
 \uses{def:sobolev-fractional, def:gagliardo}
-For $a\in L^2(\R)$, $a\in H^{1/2}(\R)$ if and only if $[a]<\infty$, and
-$\|a\|_{H^{1/2}}^2$ is comparable to $\|a\|_{L^2}^2+[a]^2$.
+\lean{NoEmbeddedEigenvalues.memSobolev_half_iff_gagliardoSq_lt_top}
+\leanok
+For $a\in L^2(\R)$, $a\in H^{1/2}(\R)$ if and only if $[a]<\infty$.
 \end{lemma}
 
 \begin{proof}
@@ -412,11 +413,13 @@ existence of an $L^2$ function with prescribed square summable coefficients.
 \lean{NoEmbeddedEigenvalues.torusProj,
   NoEmbeddedEigenvalues.torusOfLift,
   NoEmbeddedEigenvalues.torusFun,
-  NoEmbeddedEigenvalues.torusL2}
+  NoEmbeddedEigenvalues.torusL2,
+  NoEmbeddedEigenvalues.liftL2}
 \leanok
 Let $\pi:\R^2\to\T^2$ be the covering map. A continuous periodic lift $u$
 defines the function $u\circ\pi^{-1}$ on $\T^2$, as a continuous function and as an
-element of $L^2(\T^2)$.
+element of $L^2(\T^2)$. Conversely an element $g$ of $L^2(\T^2)$ lifts to the function
+$g\circ\pi$ on $\R^2$, through a representative.
 \end{definition}
 
 \begin{lemma}[Lifts and the torus]
@@ -472,8 +475,13 @@ their Fourier relation gives $u\in H^{k+1}$ (Lemma~\ref{lem:elliptic-torus}).
 \begin{lemma}[Sobolev embeddings on the torus]
 \label{lem:sobolev-embedding}
 \uses{def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.exists_holderWith_of_memSobolev_two,
+  NoEmbeddedEigenvalues.memLp_of_memSobolev_one}
+\leanok
 $H^2(\T^2)\subset C^{0,\alpha}(\T^2)$ for every $\alpha<1$, and
-$H^1(\T^2)\subset L^p(\T^2)$ for every $p<\infty$, with continuous inclusions.
+$H^1(\T^2)\subset L^p(\T^2)$ for every $p<\infty$, with continuous inclusions: every
+$g\in H^2$ has a representative $u$ with $|u|\le C\|g\|_{H^2}$ and
+$|u(s)-u(t)|\le C\|g\|_{H^2}\,d(s,t)^\alpha$, and $\|g\|_{L^p}\le C\|g\|_{H^1}$.
 \end{lemma}
 
 \section{Local Sobolev theory (candidate assumptions)}

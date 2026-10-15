@@ -6,7 +6,8 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 /-!
 # The period function of the dipole orbits
 
-Blueprint: `def:period`, `lem:period-integral`.
+Blueprint: `def:period`, `lem:period-integral`; `lem:period` (stated: `L' < 0`, the
+elliptic-integral formula, asymptotics; monotonicity is derived from `L' < 0`).
 
 For `0 < h < 1` the orbit on the level `{Ψ = 2h}` in the positive cell takes flow time
 `L(h) = ∫₀^{arccos √h} da / √(cos² a - h²)` to go from its point on the axis `a = 0` to
@@ -122,5 +123,36 @@ theorem orbitFrequency_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < orbitFreque
   have := orbitPeriod_pos h0 h1
   unfold orbitFrequency
   positivity
+
+/-! ### The period function (`lem:period`, stated) -/
+
+/-- `L` is differentiable on `(0, 1)` with `L' < 0`; in particular `S` has simple level sets. -/
+theorem deriv_eighthPeriod_neg {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    DifferentiableAt ℝ eighthPeriod h ∧ deriv eighthPeriod h < 0 := by
+  sorry
+
+/-- `L` is strictly decreasing on `(0, 1)`. -/
+theorem eighthPeriod_strictAntiOn : StrictAntiOn eighthPeriod (Set.Ioo 0 1) := by
+  apply strictAntiOn_of_deriv_neg (convex_Ioo 0 1)
+  · exact fun h hh ↦ (deriv_eighthPeriod_neg hh.1 hh.2).1.continuousAt.continuousWithinAt
+  · intro h hh
+    rw [interior_Ioo] at hh
+    exact (deriv_eighthPeriod_neg hh.1 hh.2).2
+
+/-- `S(h) = 4 K(1 - h²)` with `K(m) = ∫₀^{π/2} (1 - m sin² θ)^{-1/2} dθ`. -/
+theorem orbitPeriod_eq_ellipticK {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    orbitPeriod h = 4 * ∫ θ in (0 : ℝ)..π / 2, 1 / √(1 - (1 - h ^ 2) * sin θ ^ 2) := by
+  sorry
+
+/-- `L(h) = ½ log(4/h) + O(h² log(1/h))` and `L'(h) = -1/(2h) + O(h log(1/h))` as `h → 0`. -/
+theorem eighthPeriod_asymptotics : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Set.Ioo 0 h₀,
+    |eighthPeriod h - log (4 / h) / 2| ≤ C * h ^ 2 * log (1 / h) ∧
+      |deriv eighthPeriod h + 1 / (2 * h)| ≤ C * h * log (1 / h) := by
+  sorry
+
+/-- `e^{L(h)} ≤ C h^{-1/2}` on `(0, 1)`. -/
+theorem exp_eighthPeriod_le : ∃ C : ℝ, ∀ h ∈ Set.Ioo (0 : ℝ) 1,
+    exp (eighthPeriod h) ≤ C / √h := by
+  sorry
 
 end NoEmbeddedEigenvalues

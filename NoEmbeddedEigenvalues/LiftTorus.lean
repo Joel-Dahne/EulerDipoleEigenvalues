@@ -4,7 +4,7 @@ import NoEmbeddedEigenvalues.SobolevTorus
 /-!
 # Periodic lifts and functions on the torus
 
-Blueprint: `lem:lift-torus`, `lem:lift-sobolev`.
+Blueprint: `lem:lift-torus`, `lem:lift-sobolev`, and `liftL2` of `def:torus-of-lift`.
 
 A continuous periodic lift `u : ℝ² → ℂ` descends to a continuous function on the
 torus, `torusOfLift u`, with `torusOfLift u (x, y) = u (x, y)`. Classical partial
@@ -205,5 +205,8 @@ theorem squarePairing_eq_inner {u v : ℝ × ℝ → ℂ} (hu : Continuous u) (h
   change u q * (starRingEnd ℂ) (v q) =
     torusOfLift u (torusProj q) * (starRingEnd ℂ) (torusOfLift v (torusProj q))
   rw [torusOfLift_torusProj hpu, torusOfLift_torusProj hpv]
+
+/-- The lift `g ∘ π` of an element of `L²(𝕋²)` to `ℝ²`, through its a.e. representative. -/
+def liftL2 (g : L2) (p : ℝ × ℝ) : ℂ := g (torusProj p)
 
 end NoEmbeddedEigenvalues

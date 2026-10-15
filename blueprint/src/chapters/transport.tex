@@ -71,6 +71,8 @@ $L_0z=-i v$ and $i(\lambda z+f)=-iv$.
 \begin{lemma}[Eigenfunctions give transport pairs]
 \label{lem:transport-pair-eigen}
 \uses{def:transport-pair, def:eigen-problem, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.isTransportPair_of_isEigenSolution}
+\leanok
 Let $\omega$ be an eigenfunction with parameter $\lambda$, $\psi=\Delta^{-1}\omega$,
 and $U$ a bounded open union of orbits. Then the lifts of $\omega$ and $\psi$ form a
 transport pair on $U$.
@@ -116,7 +118,13 @@ $c_+=\kappa c_-$.
 
 \begin{lemma}[Melnikov condition]
 \label{lem:melnikov}
-\uses{def:transport-pair, def:separatrix-arc, lem:resonant-vanishing}
+\uses{def:transport-pair, def:separatrix-arc, def:canonical-profile, def:cells}
+\lean{NoEmbeddedEigenvalues.melnikov}
+\leanok
+Let $(v,f)$ be a transport pair on an open union of orbits $U$ containing the
+closed square $|a|,|b|\le\pi/2$, with $U$ invariant under the rotation
+$R(x,y)=(y,-x)$ and $f\circ R=\kappa f$, $v\circ R=\kappa v$ for $\kappa=\pm1$, and with
+$f$ continuous on $U$. Then the arc trace $g=f\circ\gamma$ has $g'\in L^1(\R)$ and
 $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
 
@@ -194,30 +202,50 @@ $\int_{-\infty}^sq+\int_s^\infty q=\int_\R q$.
 
 \begin{lemma}[Uniqueness and decay of the canonical profile]
 \label{lem:canonical-profile}
-\uses{def:canonical-profile, lem:melnikov}
-Under the Melnikov condition, $\Omega$ is the unique locally absolutely continuous
-solution of $(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as
-$s\to\pm\infty$. For the arc trace $g$ of an $H^2$ function it satisfies
-$|\Omega(s)|\le C_\alpha e^{-\alpha|s|}$ for every $\alpha<1$, and
-$\|e^{|s|}\Omega\|_{L^2(ds)}\le C\|e^{|s|}g'\|_{L^2(ds)}$ whenever the right
-side is finite.
+\uses{def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.canonicalProfile_unique,
+  NoEmbeddedEigenvalues.norm_canonicalProfile_le_exp,
+  NoEmbeddedEigenvalues.eLpNorm_exp_mul_canonicalProfile_le}
+\leanok
+Let $g'\in L^1(\R)$ satisfy the Melnikov condition.
+\begin{enumerate}
+  \item $\Omega$ is the unique locally absolutely continuous solution of
+        $(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as $s\to\pm\infty$.
+  \item If $g$ is locally absolutely continuous and $|g(s)-c_\pm|\le Ce^{-\alpha|s|}$
+        for $\pm s\ge0$, with $\alpha>0$, then $|\Omega(s)|\le C'e^{-\alpha|s|}$.
+  \item $\|e^{|s|}\Omega\|_{L^2(ds)}\le\|e^{|s|}g'\|_{L^2(ds)}$.
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile-ode, lem:melnikov, lem:sobolev-embedding, lem:local-to-global}
+\uses{lem:canonical-profile-ode}
 Existence is Lemma~\ref{lem:canonical-profile-ode}. A difference of two solutions is
-$Ce^{i\lambda s}$, which does not decay. Decay follows by integration by parts in
-the two formulas of Lemma~\ref{lem:canonical-profile-ode}, using
-$g-c_\pm=O(e^{-\alpha|s|})$, which comes from $H^2\subset C^{0,\alpha}$. The weighted
-bound is a one-sided convolution estimate with kernel $e^{-t}\mathbf 1_{t>0}$.
+$Ce^{i\lambda s}$ (multiply by $e^{-i\lambda s}$ and use absolute continuity), which
+does not decay. For $s\ge0$ integrate by parts in the right formula:
+$\Omega(s)=-(g(s)-c_+)+i\lambda e^{i\lambda s}\int_s^\infty(g-c_+)e^{-i\lambda t}dt$, so
+$|\Omega(s)|\le C(1+|\lambda|/\alpha)e^{-\alpha s}$; for $s\le0$ use the left formula. For
+(3), $e^{s}|\Omega(s)|\le\int_s^\infty e^{-(t-s)}e^{t}|g'(t)|\,dt$ for $s\ge0$, and
+Young's inequality applies; similarly for $s\le0$.
 \end{proof}
+
+\begin{remark}
+The manuscript states the decay for the arc trace of an $H^2$ function, for every
+$\alpha<1$. Here the rate is a hypothesis on $g$; for an arc trace it comes from
+$H^2\subset C^{0,\alpha}$ (Lemma~\ref{lem:sobolev-embedding}) and the exponential
+approach of the arc to the saddles, which is where the lemma is applied. The constant
+in (3) is $1$: on each half line the bound is a one-sided convolution with a kernel
+of mass $1$, and the two half lines use disjoint parts of $e^{|s|}g'$.
+\end{remark}
 
 \begin{lemma}[Good windows]
 \label{lem:good-windows}
 \uses{def:period}
-The set of levels $h$ with $|\lambda S(h)-2\pi(j+\tfrac12)|<\pi/3$ for some
-integer $j$ (of the sign of $\lambda$) has positive measure in every interval
-$(0,\eta)$, and on it $|e^{i\lambda S(h)/4}-\kappa|\ge c>0$ uniformly
+\lean{NoEmbeddedEigenvalues.volume_goodWindows_pos,
+  NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow}
+\leanok
+Let $\lambda\ne0$. The set of levels $h$ with $|\lambda S(h)-2\pi(j+\tfrac12)|<\pi/3$
+for some integer $j$ has positive measure in every interval $(0,\eta)$, and on it
+$|e^{i\lambda S(h)/4}-\kappa|\ge2\sin(\pi/12)$ for $\kappa=\pm1$
 (manuscript \texttt{(ee:good-windows)}).
 \end{lemma}
 
@@ -226,6 +254,13 @@ $(0,\eta)$, and on it $|e^{i\lambda S(h)/4}-\kappa|\ge c>0$ uniformly
 $S$ is continuous, strictly monotone and tends to $\infty$ at $0$. On the
 windows, $\lambda S/4$ lies within $\pi/12$ of an odd multiple of $\pi/4$.
 \end{proof}
+
+\begin{remark}
+The manuscript asks $j$ to have the sign of $\lambda$; for small $h$ this is automatic
+since $S(h)\to\infty$, so it is dropped. The constant is explicit: $\lambda S/4$ lies
+within $\pi/12$ of an odd multiple of $\pi/4$, which is at angle at least $\pi/4$ from
+$\pm1$.
+\end{remark}
 
 \begin{lemma}[Limit of the vorticity pairing]
 \label{lem:pairing-limit}
@@ -241,7 +276,7 @@ where the sum runs over the four arcs bounding $\Cell$ (manuscript
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:resonant-vanishing, lem:orbit-comparison, lem:good-windows}
+\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-embedding, lem:resonant-vanishing, lem:orbit-comparison, lem:good-windows}
 On a good orbit $z_h=-(v_h+g_h)/\lambda$ solves $(P-\lambda)z_h=g_h$ with
 $z_h(L)=\kappa z_h(-L)$. The difference $z_h-z$ solves the same equation with
 forcing $g_h-g$ and boundary mismatch $\kappa z(-L)-z(L)=O(e^{-\alpha L})$

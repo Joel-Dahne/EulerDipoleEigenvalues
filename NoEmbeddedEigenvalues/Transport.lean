@@ -1,10 +1,13 @@
 import NoEmbeddedEigenvalues.SobolevLocal
 import NoEmbeddedEigenvalues.DipoleFlow
+import NoEmbeddedEigenvalues.CanonicalProfile
+import NoEmbeddedEigenvalues.SeparatrixArc
 
 /-!
 # Transport pairs
 
-Blueprint: `def:transport-pair`, `lem:transport-unknown`.
+Blueprint: `def:transport-pair`, `lem:transport-unknown`; stated: `lem:transport-pair-eigen`,
+`lem:melnikov`, `lem:good-windows`.
 
 The eigenvalue equation `H(ω + ψ) = λω`, with `H = -i L₀` and `L₀ = Y · ∇`, is a transport
 equation along the orbits of the dipole flow. A transport pair `(v, f)` on an open union of
@@ -79,5 +82,40 @@ theorem IsTransportPair.hasWeakL0On_transportUnknown_sub {lam : ℝ} {U : Set (�
   simp only [transportUnknown]
   field_simp
   ring
+
+/-! ### Statements (`lem:transport-pair-eigen`, `lem:melnikov`, `lem:good-windows`) -/
+
+/-- The lifts of an eigenfunction and its stream function form a transport pair on every
+    bounded open union of orbits. -/
+theorem isTransportPair_of_isEigenSolution {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) {U : Set (ℝ × ℝ)} (hU : IsOrbitUnion U)
+    (hb : Bornology.IsBounded U) :
+    IsTransportPair lam U (liftL2 ω) (liftL2 (invLap ω)) := by
+  sorry
+
+/-- The Melnikov condition. Let `(v, f)` be a transport pair on a neighbourhood of the closed
+    cell square that transforms with the character `κ = ±1` under the rotation
+    `R(x, y) = (y, -x)`, with `f` continuous. Then the trace `g = f ∘ γ` on the separatrix arc
+    has `g' ∈ L¹` and `∫ g'(s) e^{-iλs} ds = 0`. -/
+theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+    (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
+    (hvR : ∀ᵐ p ∂(volume.restrict U), v (p.2, -p.1) = κ * v p) (hfc : ContinuousOn f U) :
+    Integrable (deriv (f ∘ separatrixArc)) ∧
+      ∫ s, profileIntegrand lam (f ∘ separatrixArc) s = 0 := by
+  sorry
+
+/-- The good windows `|λS(h) - 2π(j + ½)| < π/3` have positive measure near `h = 0`. -/
+theorem volume_goodWindows_pos {lam : ℝ} (hlam : lam ≠ 0) {η : ℝ} (hη : 0 < η) :
+    0 < volume {h ∈ Set.Ioo 0 η |
+      ∃ j : ℤ, |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3} := by
+  sorry
+
+/-- On a good window `e^{iλS(h)/4}` stays at distance at least `2 sin(π/12)` from `κ = ±1`. -/
+theorem norm_exp_sub_ge_of_goodWindow {lam h : ℝ} {j : ℤ}
+    (hj : |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3) {κ : ℂ}
+    (hκ : κ = 1 ∨ κ = -1) :
+    2 * Real.sin (Real.pi / 12) ≤ ‖exp (I * (lam * orbitPeriod h / 4)) - κ‖ := by
+  sorry
 
 end NoEmbeddedEigenvalues
