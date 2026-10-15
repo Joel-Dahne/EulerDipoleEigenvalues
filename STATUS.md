@@ -55,8 +55,8 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    Remaining definitions (user's focus, 2026-10-15): `def:cells` is now
    definitions only and formalized (`Cells.lean`), with new proved lemmas
    `lem:separatrix-lines`, `lem:dipole-critical-points`, `lem:cell-square`;
-   `lem:diagonal-calculus` (`dx dy = 2 da db`, `Δ` in `a, b`) is stated, not
-   formalized. `def:h2-interval` and `def:h1-periodic` are formalized too
+   `lem:diagonal-calculus` (`dx dy = 2 da db`, `∂_a, ∂_b`, `Δ` in `a, b`) is
+   proved (`DiagonalCalculus.lean`). `def:h2-interval` and `def:h1-periodic` are formalized too
    (`IntervalH1.lean`, with `lem:interval-h2-periodic`). `def:period` is
    now definitions only (`Period.lean`: `L`, `S = 8L`, `b = 2π/S`), with
    `lem:period-integral` proved (second formula by substitution, positivity)
@@ -80,7 +80,13 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    differentiation: `Ω' = iλΩ - g'`, `Pz = -Ω`, `(P - λ)z = g` a.e.; decay at
    `+∞`; decay at `-∞` iff Melnikov, then the left formula).
    `lem:canonical-profile` keeps uniqueness and the decay rates. With this all
-   definitions in the even–even graph are in Lean. Other open
+   definitions in the even–even graph are in Lean. `lem:odd-hardy` is
+   restated with the Gagliardo seminorm (`def:gagliardo`) and proved
+   (`OddHardy.lean`) by a new pointwise argument (parallelogram law, no
+   integrability or compact support needed; digest note). The link to
+   `H^{1/2}` is the new stated node `lem:sobolev-fractional-gagliardo`
+   (Plancherel), used in `lem:ee-gradient-traces`; whether `lem:traces`
+   should give the Gagliardo bound directly is open (notes). Other open
    definitions: `def:numerator`, odd–odd and mixed, and
    `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
    constants), to split when the transport chapter is digested.

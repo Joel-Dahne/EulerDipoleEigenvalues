@@ -105,6 +105,9 @@ motivation, and standard facts cited rather than proved.
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
   period lemma. `Transport.lean` defines transport pairs on open unions of orbits.
   `CanonicalProfile.lean` defines the canonical transport profile on an arc.
+  `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
+  coordinates; `OddHardy.lean` proves the critical Hardy inequality for odd
+  functions in Gagliardo form.
   Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;

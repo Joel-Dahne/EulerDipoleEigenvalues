@@ -111,12 +111,26 @@ $\cos a\cos b>0$ and $\cos a\ge0$, both lie in $(-\pi/2,\pi/2)$.
 \begin{lemma}[Calculus in diagonal coordinates]
 \label{lem:diagonal-calculus}
 \uses{def:cells, def:lift-operators}
-$dx\,dy=2\,da\,db$, and $\Delta=\tfrac12(\partial_a^2+\partial_b^2)$.
+\lean{NoEmbeddedEigenvalues.integral_eq_two_smul_integral_diagInv,
+  NoEmbeddedEigenvalues.partialX_comp_diagInv,
+  NoEmbeddedEigenvalues.partialY_comp_diagInv,
+  NoEmbeddedEigenvalues.laplacian_comp_diagInv}
+\leanok
+Let $T(a,b)=(a+b,a-b)$, the inverse of the diagonal coordinates. Then
+$dx\,dy=2\,da\,db$, that is $\int f\,dx\,dy=2\int f\circ T\,da\,db$. For
+differentiable $u$, $\partial_a(u\circ T)=(\partial_xu+\partial_yu)\circ T$ and
+$\partial_b(u\circ T)=(\partial_xu-\partial_yu)\circ T$, and for $u\in C^2$,
+$\Delta=\tfrac12(\partial_a^2+\partial_b^2)$, that is
+$(\partial_a^2+\partial_b^2)(u\circ T)=2(\Delta u)\circ T$.
 \end{lemma}
 
 \begin{proof}
+\leanok
 The map $(a,b)\mapsto(a+b,a-b)$ is linear with determinant $-2$, and
-$\partial_a=\partial_x+\partial_y$, $\partial_b=\partial_x-\partial_y$.
+$\partial_a=\partial_x+\partial_y$, $\partial_b=\partial_x-\partial_y$. In
+$\partial_a^2+\partial_b^2$ the mixed terms $\partial_x\partial_y$ and
+$\partial_y\partial_x$ cancel separately, so symmetry of second derivatives is not
+needed.
 \end{proof}
 
 \begin{definition}[Classical operators on the lift]

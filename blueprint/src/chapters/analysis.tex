@@ -282,9 +282,28 @@ $H^k(U,w)$ uses $L^2(U,w\,dx)$ instead of $L^2(U)$.
 \label{def:sobolev-fractional}
 \lean{TemperedDistribution.MemSobolev}
 \mathlibok
-$H^{1/2}(\R)$ is Mathlib's Bessel potential space $H^{s,2}(\R)$ with $s=1/2$; its
-norm is equivalent to the one given by the Gagliardo seminorm.
+$H^{1/2}(\R)$ is Mathlib's Bessel potential space $H^{s,2}(\R)$ with $s=1/2$.
 \end{definition}
+
+\begin{definition}[Gagliardo seminorm]
+\label{def:gagliardo}
+\lean{NoEmbeddedEigenvalues.gagliardoSq}
+\leanok
+For $a\colon\R\to\C$,
+$[a]^2=\int_\R\int_\R|a(u)-a(w)|^2(u-w)^{-2}\,dw\,du\in[0,\infty]$.
+\end{definition}
+
+\begin{lemma}[Gagliardo form of $H^{1/2}$]
+\label{lem:sobolev-fractional-gagliardo}
+\uses{def:sobolev-fractional, def:gagliardo}
+For $a\in L^2(\R)$, $a\in H^{1/2}(\R)$ if and only if $[a]<\infty$, and
+$\|a\|_{H^{1/2}}^2$ is comparable to $\|a\|_{L^2}^2+[a]^2$.
+\end{lemma}
+
+\begin{proof}
+By Plancherel, $[a]^2=c\int|\xi|\,|\hat a(\xi)|^2\,d\xi$, since
+$\int|e^{ih\xi}-1|^2h^{-2}\,dh=c|\xi|$.
+\end{proof}
 
 \begin{lemma}[Basic properties of local Sobolev spaces]
 \label{lem:weak-derivative-basic}
@@ -659,18 +678,38 @@ proved layer estimate of Lemma~\ref{lem:h1-endpoint-layers}.
 
 \begin{lemma}[Critical Hardy inequality for odd functions]
 \label{lem:odd-hardy}
-\uses{def:sobolev-fractional}
-If $a\in H^{1/2}(\R)$ is odd and compactly supported, then
-$\int_0^\infty|a(u)|^2\,du/u\le C\|a\|_{H^{1/2}(\R)}^2$
-(manuscript \texttt{(ee:odd-hardy)}).
+\uses{def:gagliardo}
+\lean{NoEmbeddedEigenvalues.lintegral_sq_div_le_gagliardoSq}
+\leanok
+If $a\colon\R\to\C$ is measurable and odd, then
+$\int_0^\infty|a(u)|^2\,du/u\le2[a]^2$ (manuscript \texttt{(ee:odd-hardy)}).
 \end{lemma}
 
 \begin{proof}
-The cross-half-line part of the Gagliardo seminorm contains
-$\int_0^\infty\!\int_0^\infty|a(u)+a(v)|^2(u+v)^{-2}\,du\,dv$. The mixed term
-is nonnegative since $(u+v)^{-2}=\int_0^\infty te^{-tu}e^{-tv}\,dt$, and the
-two diagonal terms give $2\int_0^\infty|a(u)|^2\,du/u$.
+\leanok
+Let $u>0$ and $|w|\le u$, and write $A(u,w)=|a(u)-a(w)|^2/(u-w)^2$. By oddness
+$a(u)-a(-w)=a(u)+a(w)$, and both denominators $(u\mp w)^2$ are at most $4u^2$, so by the
+parallelogram law
+\[
+  A(u,w)+A(u,-w)\ge\frac{|a(u)-a(w)|^2+|a(u)+a(w)|^2}{4u^2}\ge\frac{|a(u)|^2}{2u^2}.
+\]
+Integrating over $w\in[-u,u]$ and using $w\mapsto-w$ gives
+$|a(u)|^2/u\le2\int_\R A(u,w)\,dw$; integrate over $u>0$.
 \end{proof}
+
+\begin{remark}[Digest note: odd Hardy inequality]
+The manuscript assumes $a\in H^{1/2}$ with compact support and expands
+$|a(u)+a(v)|^2(u+v)^{-2}$ on the cross-half-line part of the Gagliardo seminorm,
+showing the mixed term is nonnegative by $(u+v)^{-2}=\int_0^\infty te^{-t(u+v)}\,dt$.
+Splitting the square needs the mixed term to be integrable, which is not clear
+before $\int|a|^2du/u<\infty$ is known (a truncation to $[\epsilon,\infty)^2$ repairs
+this). The pointwise proof above avoids this: all terms are nonnegative, so it needs
+neither integrability nor compact support, only oddness and measurability, at the
+cost of the constant $2$ instead of $\tfrac14$. The statement now uses the Gagliardo
+seminorm; the passage from $H^{1/2}$ is
+Lemma~\ref{lem:sobolev-fractional-gagliardo}, used where the trace of $\psi_u$ is
+fed in (Lemma~\ref{lem:ee-gradient-traces}).
+\end{remark}
 
 \begin{lemma}[Picone identity]
 \label{lem:picone}
