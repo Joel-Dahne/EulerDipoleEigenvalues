@@ -101,7 +101,8 @@ motivation, and standard facts cited rather than proved.
   vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines
   weak derivatives and `Hᵏ(U)`, `Hᵏ_loc(U)`, weighted `Hᵏ` on open `U ⊆ ℝ²`;
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
-  square in diagonal coordinates. Then
+  square in diagonal coordinates; `Period.lean` defines the period function.
+  Then
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
   `IntervalZeroExtension.lean` proves jump-free zero extension of zero-trace H¹ data;

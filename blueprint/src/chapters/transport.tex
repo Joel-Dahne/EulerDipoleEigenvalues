@@ -32,7 +32,7 @@ an explicit jet in the mixed sector (Proposition~\ref{prop:mixed-quotient-domain
 
 \begin{lemma}[Orbitwise transport and resonant vanishing]
 \label{lem:resonant-vanishing}
-\uses{def:transport-pair, def:period, def:h1-interval, def:h1-periodic}
+\uses{def:transport-pair, def:period, lem:period-orbit, def:h1-interval, def:h1-periodic}
 Let $(v,f)$ be a transport pair on a compact regular orbit annulus. On almost
 every orbit, $z$ restricted to the orbit is in $H^1$ of flow time and
 satisfies $(-i\partial_t-\lambda)z=f$ there. In angular Fourier modes with
@@ -157,7 +157,7 @@ characters as in Lemma~\ref{lem:rotation-characters}.
 
 \begin{definition}[Quarter-orbit numerator and divisor]
 \label{def:numerator}
-\uses{def:transport-pair, def:period}
+\uses{def:transport-pair, def:period, lem:period-orbit}
 For the quarter orbits of Definition~\ref{def:period} and a character $\kappa$, let
 \[
   N(h)=\int_{-L(h)}^{L(h)}f(\gamma_h(t))e^{-i\lambda t}\,dt,\qquad

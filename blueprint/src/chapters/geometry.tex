@@ -304,18 +304,65 @@ $y=x-\pi$, $\sin y=-\sin x$.
 
 \begin{definition}[Quarter orbits and the period]
 \label{def:period}
-\uses{def:cells, lem:separatrix-lines, lem:cell-square}
-For $0<h<1$ let $\gamma_h$ be the orbit on the level $\{\Psi=2h\}$ in $\Cell$,
-parametrized by flow time and centered at $(a,b)=(0,\arccos h)$, i.e. at
-$(x,y)=(\arccos h,-\arccos h)$. One quarter of the orbit is
-$\gamma_h([-L(h),L(h)])$, where
+\lean{NoEmbeddedEigenvalues.eighthPeriod,
+  NoEmbeddedEigenvalues.orbitPeriod,
+  NoEmbeddedEigenvalues.orbitFrequency}
+\leanok
+For $0<h<1$ let
 \[
-  L(h)=\int_0^{\arccos\sqrt h}\frac{da}{\sqrt{\cos^2a-h^2}}
-      =\int_0^1\frac{dt}{\sqrt{1-(1-h)t^2}\sqrt{1+h-t^2}}
+  L(h)=\int_0^{\arccos\sqrt h}\frac{da}{\sqrt{\cos^2a-h^2}},
 \]
-(manuscript \texttt{(ee:period)}). The full period is $S(h)=8L(h)$, and the
-orbital frequency is $b(h)=2\pi/S(h)$.
+$S(h)=8L(h)$ and $b(h)=2\pi/S(h)$ (manuscript \texttt{(ee:period)}). The
+integrand is bounded, since $\cos^2a\ge h>h^2$ on the interval of integration.
 \end{definition}
+
+\begin{lemma}[Second formula for the period]
+\label{lem:period-integral}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.eighthPeriod_eq,
+  NoEmbeddedEigenvalues.eighthPeriod_pos,
+  NoEmbeddedEigenvalues.orbitPeriod_pos,
+  NoEmbeddedEigenvalues.orbitFrequency_pos}
+\leanok
+For $0<h<1$,
+\[
+  L(h)=\int_0^1\frac{dt}{\sqrt{1-(1-h)t^2}\sqrt{1+h-t^2}},
+\]
+and $L(h),S(h),b(h)>0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Substitute $\sin a=\sqrt{1-h}\,t$: then $\cos^2a=1-(1-h)t^2$,
+$da=\sqrt{1-h}\,dt/\cos a$ and $\cos^2a-h^2=(1-h)(1+h-t^2)$.
+\end{proof}
+
+\begin{lemma}[Orbits and their period]
+\label{lem:period-orbit}
+\uses{def:period, def:cells, lem:separatrix-lines, lem:cell-square}
+For $0<h<1$ let $\gamma_h$ be the solution of $\gamma'=(\sin y,-\sin x)$ with
+$\gamma_h(0)=(\arccos h,-\arccos h)$, that is $(a,b)=(0,\arccos h)$. It stays on
+the level $\{\Psi=2h\}$ in $\Cell$, reaches the diagonals $a=\mp b$ at times
+$t=\pm L(h)$, and is periodic with minimal period $S(h)$. One quarter of the orbit is
+$\gamma_h([-L(h),L(h)])$, and $b(h)$ is the orbital frequency.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-integral}
+In diagonal coordinates the flow is $\dot a=-\cos a\sin b$, $\dot b=\sin a\cos b$,
+and $\Psi=2\cos a\cos b$ is conserved. On the level, $\sin b=\sqrt{\cos^2a-h^2}/\cos a$,
+so $dt=-da/\sqrt{\cos^2a-h^2}$, and $a$ moves from $0$ to $-\arccos\sqrt h$, where
+$\cos a=\cos b=\sqrt h$, in time $L(h)$. The reflections $a\mapsto-a$, $b\mapsto-b$
+and $a\leftrightarrow b$ preserve the level and map the flow to itself up to time
+reversal, so the orbit consists of eight congruent pieces.
+\end{proof}
+
+\begin{remark}
+The flow time to the diagonal, the two formulas for $L(h)$ and $8L(h)=4\mathbf K(1-h^2)$
+were checked numerically for $h=0.1,0.5,0.9$ (scratch computation, October 2026).
+The lemma needs the global flow of the dipole velocity, which is not yet set up in
+Lean.
+\end{remark}
 
 \begin{lemma}[The period function]
 \label{lem:period}
@@ -330,6 +377,7 @@ In particular $e^{L(h)}\le Ch^{-1/2}$, and $S$ has simple level sets.
 \end{lemma}
 
 \begin{proof}
+\uses{lem:period-integral}
 Monotonicity: the derivative in $h$ of the squared denominator is
 $t^2(1+h-t^2)+1-t^2+ht^2>0$. The asymptotics follow by substituting $y=1-t^2$
 and splitting at $y=h$; the precise expansion follows from the classical
@@ -338,7 +386,7 @@ expansion of $\mathbf K$ near $m=1$.
 
 \begin{lemma}[Orbit comparison]
 \label{lem:orbit-comparison}
-\uses{def:period, def:separatrix-arc}
+\uses{def:period, lem:period-orbit, def:separatrix-arc}
 Let $d$ denote distance to the saddle set. For $|t|\le L(h)$ and small $h$:
 \begin{enumerate}
   \item $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$ (after matching the centering of

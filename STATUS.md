@@ -57,9 +57,14 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `lem:separatrix-lines`, `lem:dipole-critical-points`, `lem:cell-square`;
    `lem:diagonal-calculus` (`dx dy = 2 da db`, `Δ` in `a, b`) is stated, not
    formalized. `def:h2-interval` and `def:h1-periodic` are formalized too
-   (`IntervalH1.lean`, with `lem:interval-h2-periodic`). Other open
-   definitions: `def:period`, the transport, odd–odd and mixed definitions,
-   and `def:bernstein`.
+   (`IntervalH1.lean`, with `lem:interval-h2-periodic`). `def:period` is
+   now definitions only (`Period.lean`: `L`, `S = 8L`, `b = 2π/S`), with
+   `lem:period-integral` proved (second formula by substitution, positivity)
+   and `lem:period-orbit` stated (the flow-time computation; needs the global
+   flow of the dipole velocity in Lean, checked numerically). Other open
+   definitions: the transport, odd–odd and mixed definitions, and
+   `def:bernstein`. Noticed: `def:numerator` contains a claim (variation of
+   constants), to split when the transport chapter is digested.
    Also done (2026-10-15):
    `lem:ee-density`, `def:separatrix-arc`/`lem:separatrix-arc`
    (`SeparatrixArc.lean`), and `def:boundary-form`/`lem:boundary-form-xi`

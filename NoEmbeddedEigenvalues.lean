@@ -16,6 +16,7 @@ import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.OddOdd
+import NoEmbeddedEigenvalues.Period
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup
