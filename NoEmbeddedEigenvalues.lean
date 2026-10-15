@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.BoundaryCutoff
 import NoEmbeddedEigenvalues.BoundaryCutoffConstruction
 import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.Derivatives
+import NoEmbeddedEigenvalues.DipoleCalculus
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
@@ -9,6 +10,7 @@ import NoEmbeddedEigenvalues.IntervalH1Estimates
 import NoEmbeddedEigenvalues.IntervalZeroExtension
 import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Mixed
+import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.Setup

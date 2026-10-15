@@ -60,13 +60,15 @@ once resolved; record the resolution in the relevant node.
 \section*{Checks done so far}
 Scratch computations (not part of the repository) confirmed numerically or
 symbolically:
-the normal, odd--odd and mixed field identities
-(Lemmas~\ref{lem:normal-field-algebra}, \ref{lem:dd-virial-algebra},
-\ref{lem:mixed-field-algebra}, the last apart from the formula for $M$);
+the odd--odd and mixed field identities
+(Lemmas~\ref{lem:dd-virial-algebra} and \ref{lem:mixed-field-algebra}, the
+last apart from the formula for $M$);
 the sums of squares and the affine splitting
 (Lemmas~\ref{lem:trace-sos-smooth}, \ref{lem:affine-splitting},
 \ref{lem:mixed-boundary-square}) on test polynomials;
 the determinant formula of Lemma~\ref{lem:mixed-G-positive};
 and the coefficient table of Lemma~\ref{cert:dd-residual} against a direct
 computation of $Pw_*+\tfrac52s^2w_*$.
-These are sanity checks, not proofs.
+These are sanity checks, not proofs. The dipole identities
+(Lemma~\ref{lem:dipole-identities}) and the normal field identities
+(Lemma~\ref{lem:normal-field-algebra}) are now proved in Lean.

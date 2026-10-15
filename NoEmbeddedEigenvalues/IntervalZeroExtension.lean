@@ -12,6 +12,10 @@ introducing endpoint jumps. The extension is an integral primitive of the
 zero-extended derivative, hence absolutely continuous on every bounded interval.
 This is first-order infrastructure; no second-order extension or mollification
 is asserted here.
+
+Not used by the main argument: positivity of the boundary form on the weighted
+domain is proved directly in `WeightedBoundaryForm.lean`. Kept as infrastructure
+(decision of 2026-10-15).
 -/
 
 noncomputable section

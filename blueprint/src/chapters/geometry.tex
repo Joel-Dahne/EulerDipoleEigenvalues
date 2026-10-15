@@ -34,9 +34,42 @@ The four corners $(a,b)=(\pm\pi/2,\pm\pi/2)$ project to the two saddles, each
 saddle being a corner twice.
 \end{definition}
 
+\begin{definition}[Classical operators on the lift]
+\label{def:lift-operators}
+\uses{def:dipole}
+\lean{NoEmbeddedEigenvalues.partialX,
+  NoEmbeddedEigenvalues.partialY,
+  NoEmbeddedEigenvalues.laplacian,
+  NoEmbeddedEigenvalues.classicalL0,
+  NoEmbeddedEigenvalues.gradDot,
+  NoEmbeddedEigenvalues.gradSq,
+  NoEmbeddedEigenvalues.dipoleLift}
+\leanok
+Pointwise differential identities are stated for functions on the real lift
+$\R^2$ of $\T^2$: $\partial_x,\partial_y$ are ordinary partial derivatives,
+$\Delta=\partial_x^2+\partial_y^2$, $L_0=\sin y\,\partial_x-\sin x\,\partial_y$,
+$\nabla u\cdot\nabla v=u_xv_x+u_yv_y$ and $|\nabla u|^2=\nabla u\cdot\nabla u$.
+The dipole lifts to $\Psi(x,y)=\cos x+\cos y$ on $\R^2$.
+\end{definition}
+
 \begin{lemma}[Algebraic identities for the dipole]
 \label{lem:dipole-identities}
-\uses{def:dipole}
+\uses{def:dipole, def:lift-operators}
+\lean{NoEmbeddedEigenvalues.Ψ_coe,
+  NoEmbeddedEigenvalues.partialX_dipoleLift,
+  NoEmbeddedEigenvalues.partialY_dipoleLift,
+  NoEmbeddedEigenvalues.gradSq_dipoleLift,
+  NoEmbeddedEigenvalues.laplacian_dipoleLift,
+  NoEmbeddedEigenvalues.classicalL0_dipoleLift,
+  NoEmbeddedEigenvalues.gradSq_dipoleLift_sub,
+  NoEmbeddedEigenvalues.dipoleLift_mul_le_gradSq,
+  NoEmbeddedEigenvalues.sq_cos_sub_cos,
+  NoEmbeddedEigenvalues.gradDot_dipoleLift_gradSq,
+  NoEmbeddedEigenvalues.laplacian_gradSq_dipoleLift,
+  NoEmbeddedEigenvalues.gradSq_gradSq_dipoleLift,
+  NoEmbeddedEigenvalues.laplacian_sin_fst,
+  NoEmbeddedEigenvalues.laplacian_sin_snd}
+\leanok
 Write $s=\Psi$, $\rho^2=|\nabla\Psi|^2$, $\delta=\cos x-\cos y$. Then
 \begin{align*}
   &\Delta\Psi=-\Psi,\qquad L_0\Psi=0,\qquad \rho^2=\sin^2x+\sin^2y,\\
@@ -53,6 +86,7 @@ table in Section~5.)
 \end{lemma}
 
 \begin{proof}
+\leanok
 Trigonometric identities. For example, with $p=\cos x$ and $q=\cos y$,
 $\rho^2=2-p^2-q^2$ and $\nabla s\cdot\nabla\rho^2=-2p(1-p^2)-2q(1-q^2)$.
 \end{proof}

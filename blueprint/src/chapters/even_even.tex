@@ -14,6 +14,11 @@ in an $R$-character $\kappa\in\{1,-1\}$.
 \begin{definition}[Normal field]
 \label{def:normal-field}
 \uses{def:cells, lem:dipole-identities}
+\lean{NoEmbeddedEigenvalues.normalField₁,
+  NoEmbeddedEigenvalues.normalField₂,
+  NoEmbeddedEigenvalues.normalCoeff,
+  NoEmbeddedEigenvalues.normalC}
+\leanok
 On $\Cell$ minus its center, with $\rho^2=|\nabla\Psi|^2$ and
 $\delta=\cos x-\cos y$, let (manuscript \texttt{(ee:normal-field)})
 \[
@@ -26,6 +31,15 @@ $\delta=\cos x-\cos y$, let (manuscript \texttt{(ee:normal-field)})
 \begin{lemma}[Normal field algebra]
 \label{lem:normal-field-algebra}
 \uses{def:normal-field, def:adapted-field}
+\lean{NoEmbeddedEigenvalues.isAdaptedOn_normalField,
+  NoEmbeddedEigenvalues.div_normalField,
+  NoEmbeddedEigenvalues.normalJacForm,
+  NoEmbeddedEigenvalues.normalJacForm_normal,
+  NoEmbeddedEigenvalues.normalJacForm_tangent,
+  NoEmbeddedEigenvalues.normalJacForm_mixed,
+  NoEmbeddedEigenvalues.gradSq_dipoleLift_pos,
+  NoEmbeddedEigenvalues.normalC_pos_le_one}
+\leanok
 $W$ is adapted with coefficient $f$, $\Div W=f+1$, and in the orthonormal
 normal--tangent frame $(\nabla\Psi/\rho,\nabla^\perp\Psi/\rho)$,
 \[
@@ -37,15 +51,19 @@ Moreover $0<c\le1$ on $\Cell$ minus its center (manuscript
 
 \begin{proof}
 \uses{lem:dipole-identities}
+\leanok
 Direct differentiation, using $\Div(\nabla\Psi/\rho^2)=-\Psi\delta^2/\rho^4$
 and $\Delta\Psi=-\Psi$. The bound $c\le1$ is
 $\rho^2-\Psi(2-\Psi)=2(1-\cos x)(1-\cos y)\ge0$.
 \end{proof}
 
 \begin{remark}
-These identities have been checked numerically at sample points (scratch
-computation, October 2026); they are a natural first Lean target in the
-$C^\infty$ setting.
+The identities hold wherever $\rho\ne0$; on $\Cell$ minus its center,
+$\rho^2\ge\Psi(2-\Psi)>0$. Lean states the frame identities with the
+unnormalized frame $(\nabla\Psi,\nabla^\perp\Psi)$, both of squared length
+$\rho^2$, so each entry carries a factor $\rho^2$. All identities are rational
+in $\sin$ and $\cos$; they reduce to zero modulo $\sin^2+\cos^2=1$ and
+$\rho^2\cdot\rho^{-2}=1$, which is how the Lean proofs go.
 \end{remark}
 
 \begin{lemma}[Regularity at the center]

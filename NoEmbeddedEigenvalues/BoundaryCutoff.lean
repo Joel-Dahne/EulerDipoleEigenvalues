@@ -10,6 +10,10 @@ Blueprint: `lem:weighted-boundary-multiplier`, `def:boundary-layer-energy`,
 
 These estimates isolate the analytic part of endpoint cutoff approximation.
 The cutoff construction and subsequent interior mollification are separate.
+
+Not used by the main argument: positivity of the boundary form on the weighted
+domain is proved directly in `WeightedBoundaryForm.lean`. Kept as infrastructure
+(decision of 2026-10-15).
 -/
 
 noncomputable section

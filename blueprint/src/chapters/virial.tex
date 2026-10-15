@@ -10,20 +10,33 @@ lies.
 
 \begin{definition}[Adapted vector field]
 \label{def:adapted-field}
-\uses{def:dipole}
-A real vector field $W$ on (an open subset of) $\T^2$ is \emph{adapted} with
-\emph{commutator coefficient} $f$ if
+\uses{def:dipole, def:lift-operators}
+\lean{NoEmbeddedEigenvalues.IsAdaptedOn}
+\leanok
+Let $Y=\nabla^\perp\Psi=(\sin y,-\sin x)$, so that $L_0=Y\cdot\nabla$. A real
+vector field $W=(W_1,W_2)$ on a subset $U$ of $\T^2$ (or of its lift $\R^2$) is
+\emph{adapted} with \emph{commutator coefficient} $f$ if the Lie bracket
+$[Y,W]=(Y\cdot\nabla)W-(W\cdot\nabla)Y$ equals $fY$ on $U$. In components,
 \[
-  [L_0,W\cdot\nabla]=f\,L_0 .
+  L_0W_1-\cos y\,W_2=f\sin y,\qquad L_0W_2+\cos x\,W_1=-f\sin x .
 \]
-Its \emph{half-density generator} is $D=W\cdot\nabla+\tfrac12\Div W$.
+For $W\in C^2$ this is the operator identity $[L_0,W\cdot\nabla]=f\,L_0$
+(Lemma~\ref{lem:commutator-algebra}).
+\end{definition}
+
+\begin{definition}[Half-density generator]
+\label{def:half-density-generator}
+\uses{def:adapted-field}
+For a $C^1$ vector field $W$ on $\T^2$, its \emph{half-density generator} is
+$D=W\cdot\nabla+\tfrac12\Div W$.
 \end{definition}
 
 \begin{lemma}[Commutator algebra]
 \label{lem:commutator-algebra}
-\uses{def:adapted-field}
+\uses{def:adapted-field, def:half-density-generator}
 Let $W$ be smooth and adapted with coefficient $f$, and $d=\Div W$. Then
 \begin{enumerate}
+  \item $[L_0,W\cdot\nabla]=f\,L_0$ on $C^2$ functions;
   \item $L_0d=L_0f$;
   \item $D$ is skew-symmetric: $\ip{Du}{v}=-\ip{u}{Dv}$ for smooth $u,v$;
   \item $[H,D]=\tfrac12(fH+Hf)$ on smooth functions, where $f$ acts by
@@ -32,16 +45,17 @@ Let $W$ be smooth and adapted with coefficient $f$, and $d=\Div W$. Then
 \end{lemma}
 
 \begin{proof}
-With $Y=(\sin y,-\sin x)$, the hypothesis says that the Lie bracket is
-$[Y,W]=fY$. Since $\Div Y=0$, $\Div[Y,W]=Y\cdot\nabla\Div W$, while
-$\Div(fY)=Y\cdot\nabla f$. This gives (1). Item (2) is integration by parts.
-For (3), $[L_0,D]=fL_0+\tfrac12L_0d=fL_0+\tfrac12(L_0f)
-=\tfrac12(fL_0+L_0f)$ by (1); multiply by $-i$.
+For (1), $[Y\cdot\nabla,W\cdot\nabla]u=[Y,W]\cdot\nabla u$ because the second
+derivatives of $u$ cancel by symmetry; then use $[Y,W]=fY$. For (2), since
+$\Div Y=0$, $\Div[Y,W]=Y\cdot\nabla\Div W$, while
+$\Div(fY)=Y\cdot\nabla f$. Item (3) is integration by parts.
+For (4), $[L_0,D]=fL_0+\tfrac12L_0d=fL_0+\tfrac12(L_0f)
+=\tfrac12(fL_0+L_0f)$ by (1) and (2); multiply by $-i$.
 \end{proof}
 
 \begin{lemma}[Virial identity, smooth case]
 \label{lem:virial-smooth}
-\uses{def:adapted-field, def:eigen-problem}
+\uses{def:adapted-field, def:half-density-generator, def:eigen-problem}
 Let $W$ be smooth and adapted with coefficient $f$. If $\omega$ is a
 \emph{smooth} eigenfunction with parameter $\lambda\ne0$ and
 $\psi=\Delta^{-1}\omega$, then

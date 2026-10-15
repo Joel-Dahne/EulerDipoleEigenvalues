@@ -14,11 +14,21 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    and fixed the blueprint where they did not (see "Current state"). Also
    review the bounded-interval H¹ representative/derivative model,
    endpoint traces and the new weighted boundary-domain statements.
-2. Lean lemmas for the two blueprint nodes that are not `\leanok` yet:
-   `lem:sector-projections` (the `P_ε` are commuting orthogonal projections,
-   the identity on their sector) and `lem:stream-sector` (`ψ` has the parities
-   of `ω`; short from `invLap_commute` and linearity of `invLap`).
-3. Even–even. Boundary positivity on the weighted domain is now proved in
+2. Lean lemma for `lem:sector-projections` (the `P_ε` are commuting
+   orthogonal projections, the identity on their sector); it has no
+   dependents. `lem:stream-sector` is done (`InSector.invLap`).
+3. Cheap algebra (user's choice on 2026-10-15 while digesting is paused).
+   Done: `lem:dipole-identities` and `lem:normal-field-algebra` on the real
+   lift (`DipoleCalculus.lean`, `NormalField.lean`), with `def:lift-operators`
+   and `def:adapted-field` now the Lie-bracket form `[Y,W] = fY`; the
+   half-density generator is the separate `def:half-density-generator`.
+   Method: identities are rational in sin/cos; SymPy (Gröbner division in lex
+   order) gives the cofactors for `linear_combination` with `sin²+cos²=1` and
+   `ρ²·ρ⁻² = 1`. Next: `lem:commutator-algebra` items (1), (2), (4); these
+   need symmetry of mixed partials for `partialX`/`partialY` (bridge to
+   `fderiv` and `ContDiffAt.isSymmSndFDerivAt`). Item (3) and
+   `lem:virial-smooth` need integration by parts on the torus.
+4. Even–even. Boundary positivity on the weighted domain is now proved in
    Lean (2026-10-15, `WeightedBoundaryForm.lean`), by exhausting (-1,1)
    with interior intervals instead of cutoff + mollification + density
    (digest note after `lem:weighted-boundary-positivity`). The new nodes
@@ -28,9 +38,10 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    are `\leanok` in statement and proof, using only `propext`,
    `Classical.choice`, `Quot.sound`. `lem:ee-trace-positivity` now needs only
    the flow-time/ξ change of variables (`lem:boundary-form-xi`, not in
-   Lean). Next: decide whether to keep the now-unused cutoff/zero-extension
-   modules (`BoundaryCutoff*.lean`, `IntervalZeroExtension.lean`, layer
-   estimates) and their blueprint subsection; restructure `even_even.tex`
+   Lean). The now-unused cutoff/zero-extension modules (`BoundaryCutoff*.lean`,
+   `IntervalZeroExtension.lean`, layer estimates) and their blueprint
+   subsection are kept as infrastructure for now (decision 2026-10-15; noted
+   in the module docstrings). Later: restructure `even_even.tex`
    (generic interval material to `analysis.tex`, remove status chatter from
    nodes). Remaining even–even inputs: the change of variables, the
    normal-field algebra, `lem:ee-boundary-regularity`; the trace and
@@ -42,9 +53,9 @@ Not repeated here: progress per node is in the blueprint's dependency graph
    `IntervalH1Estimates.lean`; move general AC/MemLp utilities to one module
    with Mathlib-style names; a `@[fun_prop]` lemma for the weight; rename
    `BoundaryJet.weighted_extension_eq`; drop status claims from docstrings.
-4. Soon after: assess the largest gap, the odd–odd renormalized virial identity
+5. Soon after: assess the largest gap, the odd–odd renormalized virial identity
    (`prop:dd-virial`). If correctness of the result is the priority, do this
-   before 3.
+   before 4.
 
 ## Current state
 

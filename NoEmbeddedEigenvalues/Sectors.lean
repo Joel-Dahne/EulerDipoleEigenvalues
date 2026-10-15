@@ -71,6 +71,19 @@ theorem InSector.smul {ε₁ ε₂ : Bool} {g : L2} (hg : InSector ε₁ ε₂ g
   · rw [map_smul, hg.1, smul_comm]
   · rw [map_smul, hg.2, smul_comm]
 
+/-- The stream function `Δ⁻¹ g` has the parities of `g`. -/
+theorem InSector.invLap {ε₁ ε₂ : Bool} {g : L2} (hg : InSector ε₁ ε₂ g) :
+    InSector ε₁ ε₂ (invLap g) := by
+  constructor
+  · change symmetry₁.action (NoEmbeddedEigenvalues.invLap g) = _
+    rw [symmetry₁.invLap_commute]
+    change NoEmbeddedEigenvalues.invLap (reflect₁ g) = _
+    rw [hg.1, map_smul]
+  · change symmetry₂.action (NoEmbeddedEigenvalues.invLap g) = _
+    rw [symmetry₂.invLap_commute]
+    change NoEmbeddedEigenvalues.invLap (reflect₂ g) = _
+    rw [hg.2, map_smul]
+
 /-- Rotation character +1 (`true`) or -1 (`false`). -/
 def InRotationCharacter (κ : Bool) (g : L2) : Prop :=
   rotate g = paritySign κ • g

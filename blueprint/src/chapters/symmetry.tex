@@ -155,12 +155,15 @@ the identity.
 \begin{lemma}[The stream function has the parities of $\omega$]
 \label{lem:stream-sector}
 \uses{def:sectors, def:inverse-laplacian}
+\lean{NoEmbeddedEigenvalues.InSector.invLap}
+\leanok
 If $\omega\in X$ lies in sector $\epsilon$, then so does
 $\psi=\Delta^{-1}\omega$.
 \end{lemma}
 
 \begin{proof}
 \uses{lem:symmetries-commute}
+\leanok
 $S_j^*\psi=\Delta^{-1}S_j^*\omega=\Delta^{-1}(\epsilon_j\omega)=\epsilon_j\psi$,
 using that $\Delta^{-1}$ is linear.
 \end{proof}

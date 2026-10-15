@@ -11,6 +11,10 @@ and `lem:boundary-cutoff-approximation`.
 
 The fixed smooth transition is rescaled at the two endpoints. Compactness of
 its derivative supports supplies constants independent of the layer width.
+
+Not used by the main argument: positivity of the boundary form on the weighted
+domain is proved directly in `WeightedBoundaryForm.lean`. Kept as infrastructure
+(decision of 2026-10-15).
 -/
 
 noncomputable section
