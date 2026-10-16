@@ -492,6 +492,7 @@ lift of the continuous representative of $\Delta^{-1}\omega$.
   NoEmbeddedEigenvalues.hasFourierPartial_torusL2_x,
   NoEmbeddedEigenvalues.hasFourierPartial_torusL2_y,
   NoEmbeddedEigenvalues.squareIntegral_eq_integral_torus,
+  NoEmbeddedEigenvalues.squareIntegral_comp_torusProj,
   NoEmbeddedEigenvalues.squarePairing_eq_inner}
 \leanok
 Periodic lifts are constant on the fibres of $\pi$, so $u\circ\pi^{-1}$ is well
@@ -500,7 +501,8 @@ If $u$ is a periodic $C^1$ lift, its classical partial derivatives
 $\partial_xu,\partial_yu$ descend to the Fourier partial derivatives of
 $u\circ\pi^{-1}\in L^2$. For continuous periodic lifts,
 $\int_{[0,2\pi]^2}u=\int_{\T^2}u\circ\pi^{-1}$, and the pairing $\ip uv$ of
-Definition~\ref{def:square-integral} is the $L^2(\T^2)$ inner product.
+Definition~\ref{def:square-integral} is the $L^2(\T^2)$ inner product. More generally
+$\int_{[0,2\pi]^2}G\circ\pi=\int_{\T^2}G$ for every measurable $G$ on $\T^2$.
 \end{lemma}
 
 \begin{proof}
@@ -510,7 +512,9 @@ $\pi$ is an open quotient map, so continuity can be checked on the lift. Along t
 coordinate lines the classical derivative of $u$ is a classical partial derivative
 on the torus, and these satisfy the Fourier multiplier relation
 (Lemma~\ref{lem:classical-partial-fourier}). The integrals agree by Fubini and
-$\int_{\R/2\pi\Z}f=\int_0^{2\pi}f$.
+$\int_{\R/2\pi\Z}f=\int_0^{2\pi}f$; for measurable $G$, $\pi$ maps the measure on
+$(0,2\pi]^2$ to the torus measure, and $[0,2\pi]^2$ differs from $(0,2\pi]^2$ by a
+null set.
 \end{proof}
 
 \begin{lemma}[Smooth lifts are Sobolev]

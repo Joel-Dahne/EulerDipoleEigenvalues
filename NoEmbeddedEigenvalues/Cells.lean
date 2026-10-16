@@ -367,7 +367,8 @@ theorem squareIntegral_eq_setIntegral_cellSquare {F : ℝ × ℝ → ℝ} (hF : 
   have hG : Measurable G := hm.comp ((hr.comp measurable_fst).prodMk (hr.comp measurable_snd))
   have hFG (q : ℝ × ℝ) : F q = G (torusProj q) :=
     hF.eq_of_torusProj_eq (by simp [torusProj, hrc])
-  -- The integral over any translate of the fundamental square is the torus integral.
+  -- The integral over the period square, and over any translate of `(0, 2π]²`, is the torus
+  -- integral.
   have hsq (a b : ℝ) : ∫ q in Ioc a (a + 2 * π) ×ˢ Ioc b (b + 2 * π), F q = ∫ t, G t := by
     have hmp := measurePreserving_torusProj_square a b
     have h := integral_map (μ := volume.restrict (Ioc a (a + 2 * π) ×ˢ Ioc b (b + 2 * π)))
@@ -375,30 +376,11 @@ theorem squareIntegral_eq_setIntegral_cellSquare {F : ℝ × ℝ → ℝ} (hF : 
     rw [hmp.map_eq] at h
     rw [h]
     exact integral_congr_ae (Filter.Eventually.of_forall fun q ↦ hFG q)
-  -- The period square differs from `(0, 2π]²` by a null set.
-  have hnull (c : ℝ) : volume {q : ℝ × ℝ | q.1 = c} = 0 ∧ volume {q : ℝ × ℝ | q.2 = c} = 0 := by
-    rw [Measure.volume_eq_prod]
-    constructor
-    · rw [show {q : ℝ × ℝ | q.1 = c} = {c} ×ˢ univ by ext; simp, Measure.prod_prod]
-      simp
-    · rw [show {q : ℝ × ℝ | q.2 = c} = univ ×ˢ {c} by ext; simp, Measure.prod_prod]
-      simp
-  have hae : periodSquare =ᵐ[volume] Ioc 0 (0 + 2 * π) ×ˢ Ioc 0 (0 + 2 * π) := by
-    rw [ae_eq_set]
-    constructor
-    · refine measure_mono_null (fun q hq ↦ ?_) (measure_union_null (hnull 0).1 (hnull 0).2)
-      obtain ⟨⟨⟨h1, h2⟩, h3, h4⟩, hn⟩ := hq
-      simp only [mem_prod, mem_Ioc, zero_add, not_and_or, not_lt] at hn
-      simp only [mem_union, mem_ofPred_eq]
-      rcases hn with (hn | hn) | hn | hn
-      · exact Or.inl (le_antisymm hn h1)
-      · exact absurd h2 (not_le.2 (by linarith))
-      · exact Or.inr (le_antisymm hn h3)
-      · exact absurd h4 (not_le.2 (by linarith))
-    · refine measure_mono_null (fun q hq ↦ ?_) measure_empty
-      obtain ⟨⟨⟨h1, h2⟩, h3, h4⟩, hn⟩ := hq
-      exact hn ⟨⟨h1.le, by linarith⟩, h3.le, by linarith⟩
-  rw [squareIntegral, setIntegral_congr_set hae, hsq, ← hsq (-π) (-π)]
+  have hsquare : squareIntegral F = ∫ t, G t := by
+    rw [show squareIntegral F = squareIntegral (fun q ↦ G (torusProj q)) from
+      congrArg _ (funext hFG)]
+    exact squareIntegral_comp_torusProj hG.aestronglyMeasurable
+  rw [hsquare, ← hsq (-π) (-π)]
   -- On `(-π, π]²`, `F` vanishes off the cell square.
   refine setIntegral_eq_of_subset_of_forall_sdiff_eq_zero
     ((measurableSet_Ioc).prod measurableSet_Ioc) ?_ ?_

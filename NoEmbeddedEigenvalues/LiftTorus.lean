@@ -10,7 +10,8 @@ Blueprint: `lem:lift-torus`, `lem:lift-sobolev`, `liftL2` of `def:torus-of-lift`
 A continuous periodic lift `u : ℝ² → ℂ` descends to a continuous function on the
 torus, `torusOfLift u`, with `torusOfLift u (x, y) = u (x, y)`. Classical partial
 derivatives of `C¹` lifts are then classical, hence Fourier, partial derivatives on the
-torus, and periodic `Cᵏ` lifts lie in `Hᵏ(𝕋²)`.
+torus, and periodic `Cᵏ` lifts lie in `Hᵏ(𝕋²)`. Integrals of lifts `G ∘ π` of
+a.e. strongly measurable torus functions over the period square are torus integrals.
 -/
 
 noncomputable section
@@ -218,6 +219,55 @@ theorem squarePairing_eq_inner {u v : ℝ × ℝ → ℂ} (hu : Continuous u) (h
   change u q * (starRingEnd ℂ) (v q) =
     torusOfLift u (torusProj q) * (starRingEnd ℂ) (torusOfLift v (torusProj q))
   rw [torusOfLift_torusProj hpu, torusOfLift_torusProj hpv]
+
+theorem torusFun_torusProj {u : ℝ × ℝ → ℂ} (hc : Continuous u) (hp : IsPeriodicLift u)
+    (q : ℝ × ℝ) : torusFun hc hp (torusProj q) = u q :=
+  torusOfLift_torusProj hp q
+
+theorem partialX_ofReal {u : ℝ × ℝ → ℝ} (hu : Differentiable ℝ u) :
+    partialX (fun q ↦ (u q : ℂ)) = fun q ↦ ((partialX u q : ℝ) : ℂ) :=
+  funext fun q ↦ (hasDerivAt_partialX (hu q)).ofReal_comp.deriv
+
+theorem partialY_ofReal {u : ℝ × ℝ → ℝ} (hu : Differentiable ℝ u) :
+    partialY (fun q ↦ (u q : ℂ)) = fun q ↦ ((partialY u q : ℝ) : ℂ) :=
+  funext fun q ↦ (hasDerivAt_partialY (hu q)).ofReal_comp.deriv
+
+open Set in
+/-- Integrals over the period square of lifts `G ∘ π` are torus integrals. -/
+theorem squareIntegral_comp_torusProj {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {G : Torus → E} (hG : AEStronglyMeasurable G volume) :
+    squareIntegral (fun q ↦ G (torusProj q)) = ∫ t, G t := by
+  have hmp := measurePreserving_torusProj_square 0 0
+  have hsq : ∫ q in Ioc 0 (0 + 2 * Real.pi) ×ˢ Ioc 0 (0 + 2 * Real.pi), G (torusProj q) =
+      ∫ t, G t := by
+    have h := integral_map (μ := volume.restrict (Ioc 0 (0 + 2 * Real.pi) ×ˢ
+      Ioc 0 (0 + 2 * Real.pi))) hmp.measurable.aemeasurable (f := G)
+      (by rw [hmp.map_eq]; exact hG)
+    rw [hmp.map_eq] at h
+    exact h.symm
+  have hnull (c : ℝ) : volume {q : ℝ × ℝ | q.1 = c} = 0 ∧ volume {q : ℝ × ℝ | q.2 = c} = 0 := by
+    rw [Measure.volume_eq_prod]
+    constructor
+    · rw [show {q : ℝ × ℝ | q.1 = c} = {c} ×ˢ univ by ext; simp, Measure.prod_prod]
+      simp
+    · rw [show {q : ℝ × ℝ | q.2 = c} = univ ×ˢ {c} by ext; simp, Measure.prod_prod]
+      simp
+  have hae : periodSquare =ᵐ[volume] Ioc 0 (0 + 2 * Real.pi) ×ˢ Ioc 0 (0 + 2 * Real.pi) := by
+    rw [ae_eq_set]
+    constructor
+    · refine measure_mono_null (fun q hq ↦ ?_) (measure_union_null (hnull 0).1 (hnull 0).2)
+      obtain ⟨⟨⟨h1, h2⟩, h3, h4⟩, hn⟩ := hq
+      simp only [mem_prod, mem_Ioc, zero_add, not_and_or, not_lt] at hn
+      simp only [mem_union, mem_ofPred_eq]
+      rcases hn with (hn | hn) | hn | hn
+      · exact Or.inl (le_antisymm hn h1)
+      · exact absurd h2 (not_le.2 (by linarith))
+      · exact Or.inr (le_antisymm hn h3)
+      · exact absurd h4 (not_le.2 (by linarith))
+    · refine measure_mono_null (fun q hq ↦ ?_) measure_empty
+      obtain ⟨⟨⟨h1, h2⟩, h3, h4⟩, hn⟩ := hq
+      exact hn ⟨⟨h1.le, by linarith⟩, h3.le, by linarith⟩
+  rw [squareIntegral, setIntegral_congr_set hae, hsq]
 
 /-- The lift `g ∘ π` of an element of `L²(𝕋²)` to `ℝ²`, through its a.e. representative. -/
 def liftL2 (g : L2) (p : ℝ × ℝ) : ℂ := g (torusProj p)

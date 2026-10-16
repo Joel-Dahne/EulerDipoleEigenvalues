@@ -21,6 +21,11 @@ continuous function and its continuous classical coordinate derivative.
 We do not introduce a separate differentiation operator on torus functions,
 or assert the existence of such a derivative for arbitrary continuous tests.
 Transport, second-order and Laplace weak-testing bridges are not proved here.
+
+The last section multiplies `L²` functions by continuous functions (`mulL2`) and proves the
+product rule `∂ⱼ(c g) = (∂ⱼc) g + c ∂ⱼg` for classically differentiable `c`, by weak
+testing, and the integration by parts `⟪b, ∂ⱼa⟫ = -⟪∂ⱼb, a⟫`, by Parseval
+(`lem:l2-product-rule`).
 -/
 
 noncomputable section
@@ -447,5 +452,120 @@ theorem hasFourierPartial_iff_weakPartial (j : Fin 2) (g h : L2) :
     apply HasSmoothWeakPartial.hasFourierPartial
     intro φ dφ _ hφ
     exact hw φ dφ hφ
+
+/-! ### Products with continuous functions and integration by parts in `L²` -/
+
+theorem memLp_continuous_mul (c : C(Torus, ℂ)) (g : L2) :
+    MemLp (fun t ↦ c t * g t) 2 (volume : Measure Torus) :=
+  (Lp.memLp g).of_le_mul (c := ‖c‖)
+    (c.continuous.aestronglyMeasurable.mul (Lp.aestronglyMeasurable g))
+    (Filter.Eventually.of_forall fun t ↦ by
+      rw [norm_mul]
+      exact mul_le_mul_of_nonneg_right (c.norm_coe_le_norm t) (norm_nonneg _))
+
+/-- Multiplication of an `L²` function by a continuous function. -/
+def mulL2 (c : C(Torus, ℂ)) (g : L2) : L2 := (memLp_continuous_mul c g).toLp _
+
+theorem mulL2_ae (c : C(Torus, ℂ)) (g : L2) : mulL2 c g =ᵐ[volume] fun t ↦ c t * g t :=
+  (memLp_continuous_mul c g).coeFn_toLp
+
+theorem integrable_mul_continuous (g : L2) (c : C(Torus, ℂ)) :
+    Integrable (fun t ↦ g t * c t) :=
+  (integrable_L2 g).mul_bdd c.continuous.aestronglyMeasurable
+    (Filter.Eventually.of_forall fun t ↦ c.norm_coe_le_norm t)
+
+/-- `c ḡ h` is integrable for `g, h ∈ L²` and continuous `c`. -/
+theorem integrable_continuous_mul_inner (c : C(Torus, ℂ)) (g h : L2) :
+    Integrable (fun t ↦ c t * (conj (g t) * h t)) := by
+  have hi : Integrable (fun t ↦ conj (g t) * h t) := by
+    refine (L2.integrable_inner (𝕜 := ℂ) g h).congr (Filter.Eventually.of_forall fun t ↦ ?_)
+    simp only [RCLike.inner_apply]
+    ring
+  exact hi.bdd_mul c.continuous.aestronglyMeasurable
+    (Filter.Eventually.of_forall fun t ↦ c.norm_coe_le_norm t)
+
+/-- For real-valued `c`, `⟪c g, h⟫ = ∫ c ḡ h`. -/
+theorem inner_mulL2 {c : C(Torus, ℂ)} (hr : ∀ t, conj (c t) = c t) (g h : L2) :
+    ⟪mulL2 c g, h⟫_ℂ = ∫ t, c t * (conj (g t) * h t) := by
+  rw [L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [mulL2_ae c g] with t ht
+  rw [ht, RCLike.inner_apply, map_mul, hr]
+  ring
+
+/-- For real-valued `c`, `⟪c g, h⟫ = conj ⟪c h, g⟫`. -/
+theorem inner_mulL2_swap {c : C(Torus, ℂ)} (hr : ∀ t, conj (c t) = c t) (g h : L2) :
+    ⟪mulL2 c g, h⟫_ℂ = conj ⟪mulL2 c h, g⟫_ℂ := by
+  rw [inner_mulL2 hr, inner_mulL2 hr, ← integral_conj]
+  congr 1
+  funext t
+  simp only [map_mul, hr, RingHomCompTriple.comp_apply, RingHom.id_apply]
+  ring
+
+/-- Integration by parts in `L²`: `⟪b, ∂ⱼa⟫ = -⟪∂ⱼb, a⟫`, from Parseval. -/
+theorem inner_swap_of_hasFourierPartial {j : Fin 2} {a da b db : L2}
+    (ha : HasFourierPartial j a da) (hb : HasFourierPartial j b db) :
+    ⟪b, da⟫_ℂ = -⟪db, a⟫_ℂ := by
+  have hs := torusFourierBasis.hasSum_inner_mul_inner b da
+  have ht := (torusFourierBasis.hasSum_inner_mul_inner db a).neg
+  refine hs.unique (ht.congr_fun fun k ↦ ?_)
+  rw [← inner_conj_symm (𝕜 := ℂ) db (torusFourierBasis k),
+    ← inner_conj_symm (𝕜 := ℂ) b (torusFourierBasis k)]
+  simp only [← HilbertBasis.repr_apply_apply, torusFourierBasis_repr, ha k, hb k, map_mul,
+    Complex.conj_I, map_intCast, map_ofNat, Complex.conj_ofReal]
+  ring
+
+/-- Product rule for classical partial derivatives on the torus. -/
+theorem HasClassicalPartial.mul {j : Fin 2} {φ dφ η dη : C(Torus, ℂ)}
+    (hφ : HasClassicalPartial j φ dφ) (hη : HasClassicalPartial j η dη) :
+    HasClassicalPartial j (φ * η) (dφ * η + φ * dη) := by
+  intro p t
+  exact (hφ p t).mul (hη p t)
+
+/-- Product rule: `∂ⱼ(c g) = (∂ⱼc) g + c ∂ⱼg` for a classically differentiable `c`. -/
+theorem hasFourierPartial_mulL2 {j : Fin 2} {c dc : C(Torus, ℂ)}
+    (hc : HasClassicalPartial j c dc) {g dg : L2} (hg : HasFourierPartial j g dg) :
+    HasFourierPartial j (mulL2 c g) (mulL2 dc g + mulL2 c dg) := by
+  rw [hasFourierPartial_iff_weakPartial]
+  intro η dη hη
+  have hw := hg.hasWeakPartial (c * η) (dc * η + c * dη) (hc.mul hη)
+  simp only [ContinuousMap.mul_apply, ContinuousMap.add_apply] at hw
+  have e1 : (∫ p, (mulL2 dc g + mulL2 c dg) p * η p) =
+      ∫ p, g p * (dc * η) p + dg p * (c * η) p := by
+    apply integral_congr_ae
+    filter_upwards [Lp.coeFn_add (mulL2 dc g) (mulL2 c dg), mulL2_ae dc g, mulL2_ae c dg]
+      with p h1 h2 h3
+    rw [h1, Pi.add_apply, h2, h3]
+    simp only [ContinuousMap.mul_apply]
+    ring
+  have e2 : (∫ p, mulL2 c g p * dη p) = ∫ p, g p * (c * dη) p := by
+    apply integral_congr_ae
+    filter_upwards [mulL2_ae c g] with p h
+    rw [h]
+    simp only [ContinuousMap.mul_apply]
+    ring
+  have i1 := integrable_mul_continuous g (dc * η)
+  have i2 := integrable_mul_continuous dg (c * η)
+  have i3 := integrable_mul_continuous g (c * dη)
+  simp only [ContinuousMap.mul_apply] at i1 i2 i3 e1 e2
+  have hw' : (∫ p, dg p * (c p * η p)) =
+      -((∫ p, g p * (dc p * η p)) + ∫ p, g p * (c p * dη p)) := by
+    rw [hw, ← integral_add i1 i3]
+    congr 2
+    funext p
+    ring
+  rw [e1, e2, integral_add i1 i2, hw']
+  ring
+
+/-- `Δψ = ω` in `L²` for mean-zero `ω`. -/
+theorem streamSecondPartial_add {ω : L2} (hω : MeanZero ω) :
+    streamSecondPartial 0 0 ω + streamSecondPartial 1 1 ω = ω := by
+  apply fourierCoeff_ext
+  intro k
+  rw [fourierCoeff_add, hasFourierSecondPartial_streamSecondPartial ω 0 0 k,
+    hasFourierSecondPartial_streamSecondPartial ω 1 1 k, hasFourierLaplacian_invLap ω hω k]
+  simp only [frequencyComponent, normSq]
+  push_cast
+  ring
 
 end NoEmbeddedEigenvalues

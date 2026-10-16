@@ -230,11 +230,24 @@ integrals over the period square.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:elliptic-torus, lem:lift-torus, lem:square-integral-partial}
-For trigonometric polynomials these are integrations by parts, with
-$\Div\operatorname{Re}(\bar\psi\nabla\psi)=|\nabla\psi|^2+\operatorname{Re}(\bar\psi\Delta\psi)$ and
-$\Delta\psi=\omega$. All terms are continuous in $\psi\in H^2$, and Fourier truncations converge
-in $H^2$.
+\uses{lem:inverse-laplacian-derivatives, lem:l2-product-rule, lem:lift-torus}
+\leanok
+By Lemma~\ref{lem:lift-torus} all three integrals are integrals over $\T^2$. By
+Lemma~\ref{lem:inverse-laplacian-derivatives}, $\psi$, $\psi_j$ and $\psi_{jj}$ lie in $L^2$,
+$\psi_j$ is the derivative of $\psi$, $\psi_{jj}$ that of $\psi_j$, and
+$\psi_{11}+\psi_{22}=\omega$ since $\omega\in X$. By the product rule
+(Lemma~\ref{lem:l2-product-rule}) $\partial_j(\phi\psi)=\phi_j\psi+\phi\psi_j$, and
+integration by parts gives
+\[
+  \int\phi\bar\psi\,\psi_{jj}=-\int\phi_j\bar\psi\,\psi_j-\int\phi|\psi_j|^2 .
+\]
+Summing over $j$, $\int\phi(|\nabla\psi|^2+\bar\psi\omega)=-\int\bar\psi\,\nabla\phi\cdot\nabla\psi$,
+whose real part is the second identity. Likewise
+$\int\phi_j\bar\psi\,\psi_j=-\int\phi_{jj}|\psi|^2-\int\phi_j\bar\psi_j\psi$, and the last
+integral is the conjugate of the left side since $\phi_j$ is real; so
+$\int\phi_{jj}|\psi|^2=-2\operatorname{Re}\int\phi_j\bar\psi\,\psi_j$. Summing over $j$ gives
+the first identity. No approximation of $\psi$ is needed: the derivatives always fall on
+$\psi\in H^2$ or on the smooth $\phi$.
 \end{proof}
 
 \begin{lemma}[A transversal mollifier]

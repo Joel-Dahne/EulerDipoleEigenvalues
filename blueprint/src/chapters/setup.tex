@@ -269,6 +269,34 @@ This proof needs no pointwise Fourier differentiation or approximation of
 smooth tests together with their derivatives.
 \end{proof}
 
+\begin{lemma}[Product rule and integration by parts in $L^2$]
+\label{lem:l2-product-rule}
+\uses{def:fourier-derivatives, def:classical-tests}
+\lean{NoEmbeddedEigenvalues.mulL2,
+  NoEmbeddedEigenvalues.mulL2_ae,
+  NoEmbeddedEigenvalues.HasClassicalPartial.mul,
+  NoEmbeddedEigenvalues.hasFourierPartial_mulL2,
+  NoEmbeddedEigenvalues.inner_swap_of_hasFourierPartial,
+  NoEmbeddedEigenvalues.inner_mulL2,
+  NoEmbeddedEigenvalues.inner_mulL2_swap}
+\leanok
+Let $g,\partial_jg\in L^2$, with $\partial_jg$ the Fourier partial derivative, and let
+$(c,\partial_jc)$ be a coordinate-test pair. Then $cg\in L^2$ has the Fourier partial
+derivative $(\partial_jc)g+c\,\partial_jg$. If $a,b\in L^2$ have Fourier partial
+derivatives $\partial_ja,\partial_jb\in L^2$, then
+$\ip{\partial_ja}{b}=-\ip{a}{\partial_jb}$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:partial-weak-equivalence, lem:torus-fourier-basis}
+\leanok
+For the product rule use Lemma~\ref{lem:partial-weak-equivalence}: for a test pair
+$(\eta,\partial_j\eta)$, the product $(c\eta,(\partial_jc)\eta+c\,\partial_j\eta)$ is again a
+test pair, and testing $\partial_jg$ against it rearranges to the weak identity for $cg$.
+For the integration by parts expand both inner products by Parseval; the summands
+$\overline{\hat b_k}\,ik_j\hat a_k$ and $-\overline{ik_j\hat b_k}\,\hat a_k$ agree.
+\end{proof}
+
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
 \uses{def:torus, lem:fourier-multiplier}
@@ -338,12 +366,14 @@ $\psi_j=\partial_j\Delta^{-1}\omega$ and $\psi_{ij}=\partial_i\partial_j\Delta^{
   NoEmbeddedEigenvalues.hasFourierPartial_streamPartial_streamSecondPartial,
   NoEmbeddedEigenvalues.exists_fourierPartial_invLap,
   NoEmbeddedEigenvalues.exists_fourierSecondPartial_invLap,
-  NoEmbeddedEigenvalues.hasFourierLaplacian_invLap}
+  NoEmbeddedEigenvalues.hasFourierLaplacian_invLap,
+  NoEmbeddedEigenvalues.streamSecondPartial_add}
 \leanok
 For every $\omega\in L^2$, all first and second Fourier-defined partial
 derivatives of $\psi=\Delta^{-1}\omega$ belong to $L^2$: they are $\psi_j$ and
 $\psi_{ij}$, and $\psi_{ij}$ is the $i$-th derivative of $\psi_j$.
-If $\omega\in X$, then $\Delta\psi=\omega$ in the Fourier sense.
+If $\omega\in X$, then $\Delta\psi=\omega$ in the Fourier sense, that is,
+$\psi_{11}+\psi_{22}=\omega$ in $L^2$.
 \end{lemma}
 
 \begin{proof}

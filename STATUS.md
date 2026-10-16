@@ -133,7 +133,7 @@ Lebesgue points). New admitted pieces: `ee_cutoff_identity`
 (`lem:ee-cutoff-identity`, from `virial_l2`, the cutoff algebra, `H²`
 integration by parts and the period-square-to-cell transfer),
 `cutoff_normalField_algebra` (`lem:normal-field-cutoff-algebra`, checked
-numerically), `stream_ibp` (`lem:stream-ibp`),
+numerically), `stream_ibp` (`lem:stream-ibp`, since proved),
 `squareIntegral_eq_setIntegral_cellSquare` (`lem:cell-periodic-integral`),
 `integrableOn_levelIntegral` and `integral_cellSquare_level_mul`
 (`lem:coarea-level-cutoff`, from the admitted orbit-coordinate formula),
@@ -154,8 +154,20 @@ cofactors for `linear_combination`), `squareIntegral_eq_setIntegral_cellSquare`
 of `lem:ee-boundary-integrable`; the level-term half
 `ae_levelIntegral_eeBoundaryDensity` is still admitted).
 
-**Next:** `lem:stream-ibp` (reusable for `virial_l2`), then
-`ee_cutoff_identity` from its pieces; `lem:coarea-level-cutoff` and the
+**`stream_ibp` is proved (2026-10-16)** (`lem:stream-ibp`), using only
+`propext`, `Classical.choice`, `Quot.sound`, without the density argument
+of the old blueprint proof: on the torus both identities are integrations
+by parts `⟪b, ∂ⱼa⟫ = -⟪∂ⱼb, a⟫` (Parseval) with `b = φψ` or `∂ⱼφ ψ`, and
+the Fourier derivatives of these come from a product rule proved by weak
+testing. New node `lem:l2-product-rule` (`Derivatives.lean`: `mulL2`,
+`hasFourierPartial_mulL2`, `inner_swap_of_hasFourierPartial`,
+`inner_mulL2`, `inner_mulL2_swap`); `streamSecondPartial_add`
+(`ψ₁₁ + ψ₂₂ = ω` in `L²`, in `lem:inverse-laplacian-derivatives`);
+`squareIntegral_comp_torusProj` (`∫_{[0,2π]²} G∘π = ∫_𝕋 G` for
+measurable `G`, in `lem:lift-torus`; `Cells.lean` now uses it). The
+product rule and `L²` integration by parts should also serve `virial_l2`.
+
+**Next:** `ee_cutoff_identity` from its pieces; `lem:coarea-level-cutoff` and the
 level-term half of `lem:ee-boundary-integrable` rest on the admitted
 orbit-coordinate formula. Remaining direct even–even inputs:
 `ee_boundary_regularity`, `ee_gradient_traces`, `ee_cutoff_identity`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
