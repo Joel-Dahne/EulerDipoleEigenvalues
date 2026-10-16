@@ -1,10 +1,11 @@
-import NoEmbeddedEigenvalues.DipoleCalculus
+import NoEmbeddedEigenvalues.LiftIntegration
 
 /-!
 # The normal field of the even–even sector
 
 Blueprint: `def:normal-field`, `lem:normal-field-algebra`, `lem:ee-density`;
-`lem:normal-field-center` (stated).
+`lem:normal-field-annulus` (stated). The center is cut out of the truncated virial
+identity, so only cutoffs to an annulus are needed; no regularity at the center is used.
 
 On the positive cell minus its center, `W = (Ψ - 2) ∇Ψ / ρ²` is adapted with
 coefficient `f = Ψ (2 - Ψ) δ² / ρ⁴`, has divergence `f + 1`, and in the frame
@@ -286,6 +287,25 @@ theorem normalCoeff_nonneg {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipole
   unfold normalCoeff
   positivity
 
+/-- On the positive cell minus its center, `f ≤ (2 - Ψ)/Ψ`. With `δ² = 4 - 2ρ² - Ψ²` this is
+    `(ρ² + Ψ²)² ≥ 4Ψ²`, that is `ρ² ≥ Ψ(2 - Ψ)`. In particular `f` is bounded on `{Ψ ≥ ε}`, and
+    tends to zero at the center, with no series expansion. -/
+theorem normalCoeff_le {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipoleLift p < 2) :
+    normalCoeff p ≤ (2 - dipoleLift p) / dipoleLift p := by
+  have hg := gradSq_dipoleLift_pos h0 h2
+  have hle := dipoleLift_mul_le_gradSq p
+  have hδ : (cos p.1 - cos p.2) ^ 2 =
+      4 - 2 * gradSq dipoleLift p - dipoleLift p ^ 2 := by
+    simp only [gradSq_dipoleLift, dipoleLift]
+    linear_combination (2 : ℝ) * sin_sq_add_cos_sq p.1 + 2 * sin_sq_add_cos_sq p.2
+  unfold normalCoeff
+  rw [hδ, div_le_div_iff₀ (by positivity) h0]
+  set g := gradSq dipoleLift p
+  set s := dipoleLift p
+  have hkey : s ^ 2 * (4 - 2 * g - s ^ 2) ≤ g ^ 2 := by nlinarith [sq_nonneg (g + s ^ 2 - 2 * s)]
+  have h2s : 0 ≤ 2 - s := by linarith
+  nlinarith [mul_le_mul_of_nonneg_left hkey h2s]
+
 /-- The bulk density is nonnegative on the positive cell minus its center. -/
 theorem eeDensity_nonneg {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : dipoleLift p < 2)
     (ω ψn ψt : ℂ) : 0 ≤ eeDensity p ω ψn ψt := by
@@ -307,42 +327,29 @@ theorem eeDensity_gradient_pos {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : di
   · have := norm_pos_iff.2 h
     positivity
 
-/-! ### Behaviour at the center (`lem:normal-field-center`, stated) -/
+/-! ### Cutoff to an annulus (`lem:normal-field-annulus`, stated) -/
 
-section Center
+section Annulus
 
 open scoped ContDiff
 
-/-- Near the center, `W = ½(x, y) + O(R³)` and `f = O(R²)`, with `j`-th derivatives
-    `O(R^{3-j})` for `j ≤ 3` and `O(R^{2-j})` for `j ≤ 2`, where `R = (x² + y²)^{1/2}`. The
-    leading terms are homogeneous but not polynomial (for `f` it is `(x² - y²)²/(4R²)`), so
-    `C^{2,1}` and `C^{1,1}` are the right classes. -/
-theorem normalField_center_expansion : ∃ C r₀ : ℝ, 0 < r₀ ∧ ∀ p : ℝ × ℝ, p ≠ 0 →
-    √(p.1 ^ 2 + p.2 ^ 2) < r₀ →
-      (∀ j ≤ 3, ‖iteratedFDeriv ℝ j (fun q ↦ normalField₁ q - q.1 / 2) p‖ ≤
-        C * √(p.1 ^ 2 + p.2 ^ 2) ^ ((3 : ℤ) - j)) ∧
-      (∀ j ≤ 3, ‖iteratedFDeriv ℝ j (fun q ↦ normalField₂ q - q.2 / 2) p‖ ≤
-        C * √(p.1 ^ 2 + p.2 ^ 2) ^ ((3 : ℤ) - j)) ∧
-      (∀ j ≤ 2, ‖iteratedFDeriv ℝ j normalCoeff p‖ ≤
-        C * √(p.1 ^ 2 + p.2 ^ 2) ^ ((2 : ℤ) - j)) := by
-  sorry
-
-/-- The cut-off normal field: for smooth `χ` vanishing on `(-∞, ε]` and equal to one near `2`,
-    the field `χ(Ψ)W` is `C^{2,1}` on the lift (it is periodic and vanishes outside
-    `{Ψ > ε}`), adapted everywhere with coefficient `χ(Ψ)f`, and the coefficient is `C^{1,1}`. -/
-theorem cutoff_normalField {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ) {ε : ℝ} (hε : 0 < ε)
-    (hχ0 : ∀ s ≤ ε, χ s = 0) (hχ1 : ∃ δ > 0, ∀ s, 2 - δ < s → χ s = 1) :
-    (ContDiff ℝ 2 (fun p ↦ χ (dipoleLift p) * normalField₁ p) ∧
-      ∃ K, LipschitzWith K (iteratedFDeriv ℝ 2 fun p ↦ χ (dipoleLift p) * normalField₁ p)) ∧
-    (ContDiff ℝ 2 (fun p ↦ χ (dipoleLift p) * normalField₂ p) ∧
-      ∃ K, LipschitzWith K (iteratedFDeriv ℝ 2 fun p ↦ χ (dipoleLift p) * normalField₂ p)) ∧
-    (ContDiff ℝ 1 (fun p ↦ χ (dipoleLift p) * normalCoeff p) ∧
-      ∃ K, LipschitzWith K (fderiv ℝ fun p ↦ χ (dipoleLift p) * normalCoeff p)) ∧
+/-- The normal field cut off to an annulus: if `χ` is smooth and vanishes outside
+    `[ε₁, ε₂] ⊂ (0, 2)`, then `χ(Ψ)W` and `χ(Ψ)f` are smooth and periodic on the lift, and
+    `χ(Ψ)W` is adapted everywhere with coefficient `χ(Ψ)f`. On `{0 < Ψ < 2}` we have
+    `ρ² ≥ Ψ(2 - Ψ) > 0`, and `L₀(χ(Ψ)) = 0`. -/
+theorem annularCutoff_normalField {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ) {ε₁ ε₂ : ℝ}
+    (hε₁ : 0 < ε₁) (hε₂ : ε₂ < 2) (hχ0 : ∀ s, χ s ≠ 0 → ε₁ ≤ s ∧ s ≤ ε₂) :
+    ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * normalField₁ p) ∧
+    ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * normalField₂ p) ∧
+    ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * normalCoeff p) ∧
+    IsPeriodicLift (fun p ↦ χ (dipoleLift p) * normalField₁ p) ∧
+    IsPeriodicLift (fun p ↦ χ (dipoleLift p) * normalField₂ p) ∧
+    IsPeriodicLift (fun p ↦ χ (dipoleLift p) * normalCoeff p) ∧
     IsAdaptedOn (fun p ↦ χ (dipoleLift p) * normalField₁ p)
       (fun p ↦ χ (dipoleLift p) * normalField₂ p)
       (fun p ↦ χ (dipoleLift p) * normalCoeff p) Set.univ := by
   sorry
 
-end Center
+end Annulus
 
 end NoEmbeddedEigenvalues

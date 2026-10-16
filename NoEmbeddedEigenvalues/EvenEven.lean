@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EigenfunctionTransport
+import NoEmbeddedEigenvalues.VirialL2
 
 /-!
 # Even–even exclusion
@@ -10,14 +11,17 @@ The exclusion theorem and its fixed-rotation-character version are proved from n
 analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
 force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
 
-Proved here: `lem:ee-neumann`, `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
+Proved here: `lem:ee-neumann`, `lem:ee-truncated-virial` (from the annular identity and the
+center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
-Inputs: `lem:ee-truncated-virial`, `lem:ee-gradient-traces` and
-`lem:ee-boundary-regularity`. The interfaces `lem:canonical-arc-form` and
-`lem:ee-transport-traces` are proved in `CanonicalBoundaryForm.lean` and
-`EigenfunctionTransport.lean`. Levels are handled in orbit
+Inputs: `lem:ee-bulk-integrable`, `lem:ee-annular-virial`, `lem:ee-center-limit`,
+`lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
+`lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
+`CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
+The center is cut out of the virial identity, so it is only needed for fields supported in
+an annulus.
 -/
 
 noncomputable section
@@ -77,6 +81,56 @@ theorem ee_neumann {ω : L2} (hω : InSector true true ω) :
 abbrev eeBulkDensity (ω : L2) (p : ℝ × ℝ) : ℝ :=
   eeDensity p (liftL2 ω p) (streamNormal ω p) (streamTangent ω p)
 
+/-- The exceptional set `cos x = cos y` is null, independently of any vorticity. -/
+theorem ae_cos_fst_ne_cos_snd : ∀ᵐ p : ℝ × ℝ, Real.cos p.1 ≠ Real.cos p.2 := by
+  rw [Measure.volume_eq_prod]
+  apply (Measure.ae_prod_iff_ae_ae (by measurability)).2
+  exact Eventually.of_forall fun x ↦ by
+    rw [ae_iff]
+    have hc : {y : ℝ | Real.cos x = Real.cos y}.Countable := by
+      apply ((Set.countable_range (fun k : ℤ ↦ 2 * k * Real.pi + x)).union
+        (Set.countable_range (fun k : ℤ ↦ 2 * k * Real.pi - x))).mono
+      intro y hy
+      obtain ⟨k, hk | hk⟩ := Real.cos_eq_cos_iff.mp hy
+      · exact Or.inl ⟨k, hk.symm⟩
+      · exact Or.inr ⟨k, hk.symm⟩
+    simpa using hc.measure_zero volume
+
+/-- The level terms of the truncated virial identity on `{Ψ = 2h}`:
+    `∮ Re(ψψ̄ₙ) dℓ + (2 - 2h)(∮|ψₙ|² dt - ∮|ψₜ|² dt - ∮ Re(ωψ̄) dt)`. -/
+def eeLevelTerm (ω : L2) (h : ℝ) : ℝ :=
+  levelIntegral h (fun p ↦ gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re) +
+    (2 - 2 * h) * (levelIntegral h (fun p ↦ ‖streamNormal ω p‖ ^ 2) -
+      levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2) -
+      levelIntegral h (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re))
+
+/-- The bulk density is integrable on every truncated cell `{Ψ > 2h}`, `h > 0`
+    (`lem:ee-bulk-integrable`): there `0 ≤ f ≤ (2 - Ψ)/Ψ ≤ 1/h` and `0 < c ≤ 1`, so
+    `𝒥 ≤ |ω|²/h + 2|∇ψ|²`. No eigenvalue equation is needed. -/
+theorem integrableOn_eeBulkDensity (ω : L2) {h : ℝ} (h0 : 0 < h) :
+    IntegrableOn (eeBulkDensity ω) {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p} := by
+  sorry
+
+/-- The virial identity on an annulus (`lem:ee-annular-virial`): outside one null set of
+    levels, for all `0 < h < h' < 1`, `∫_{2h < Ψ < 2h'} 𝒥 = G(h) - G(h')` with `G` the level
+    terms `eeLevelTerm`. From `lem:virial-l2` with the cutoff field `χ(Ψ)W`,
+    `χ → 𝟙_{(2h, 2h')}`. -/
+theorem ee_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) :
+    ∃ N : Set ℝ, volume N = 0 ∧ ∀ h h' : ℝ, 0 < h → h < h' → h' < 1 → h ∉ N → h' ∉ N →
+      ∫ p in {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'},
+        eeBulkDensity ω p = eeLevelTerm ω h - eeLevelTerm ω h' := by
+  sorry
+
+/-- The level terms vanish at the center along a sequence (`lem:ee-center-limit`): for every
+    null set `N` there are levels `h_j → 1` outside `N` with `G(h_j) → 0`. Both terms of `G`
+    are bounded by `(1 - h)g(h)` or `((1 - h)g(h))^{1/2}` with `∫ g < ∞` by coarea, since
+    `ρ² ~ 2(2 - Ψ)` at the center. Only `ω ∈ L²` and `ψ ∈ H²` are used. -/
+theorem ee_center_limit (ω : L2) {N : Set ℝ} (hN : volume N = 0) :
+    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Ioo 0 1 ∧ hs j ∉ N) ∧ Tendsto hs atTop (𝓝 1) ∧
+      Tendsto (fun j ↦ eeLevelTerm ω (hs j)) atTop (𝓝 0) := by
+  sorry
+
 /-- The truncated virial identity (`lem:ee-truncated-virial`), using `ε = 2h` so its null
     set can be combined with the boundary limits. Integrability of the bulk is explicit;
     the boundary integral is written as a difference of the three level integrals. -/
@@ -91,7 +145,56 @@ theorem ee_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
             levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2) -
             levelIntegral h (fun p ↦
               (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)) := by
-  sorry
+  obtain ⟨N, hN, hann⟩ := ee_annular_virial hlam hω
+  -- `Ψ = 2` only where `cos x = cos y = 1`, a null set.
+  have hlt2 : ∀ᵐ p : ℝ × ℝ, dipoleLift p < 2 := by
+    filter_upwards [ae_cos_fst_ne_cos_snd] with p hp
+    by_contra hge
+    have h1 := Real.cos_le_one p.1
+    have h2 := Real.cos_le_one p.2
+    exact hp (by unfold dipoleLift at hge; linarith)
+  filter_upwards [ae_restrict_mem measurableSet_Ioo,
+    ae_restrict_of_ae (measure_eq_zero_iff_ae_notMem.1 hN)] with h hh hhN
+  have hint := integrableOn_eeBulkDensity ω hh.1
+  refine ⟨hint, ?_⟩
+  obtain ⟨hs, hsN, hs1, hG⟩ := ee_center_limit ω hN
+  set A : Set (ℝ × ℝ) := {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p}
+  have hB (c : ℝ) : MeasurableSet {p : ℝ × ℝ | dipoleLift p < c} :=
+    measurableSet_lt (by unfold dipoleLift; fun_prop) measurable_const
+  have hset (j : ℕ) : {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p ∧ dipoleLift p < 2 * hs j} =
+      A ∩ {p | dipoleLift p < 2 * hs j} := by
+    ext p
+    simp only [A, Set.mem_ofPred_eq, Set.mem_inter_iff, and_assoc]
+  have hev : ∀ᶠ j in atTop, h < hs j := hs1.eventually (lt_mem_nhds hh.2)
+  have hlim1 : Tendsto (fun j ↦ ∫ p in A ∩ {p | dipoleLift p < 2 * hs j}, eeBulkDensity ω p)
+      atTop (𝓝 (eeLevelTerm ω h)) := by
+    have hd := (tendsto_const_nhds (x := eeLevelTerm ω h)).sub hG
+    rw [sub_zero] at hd
+    apply hd.congr'
+    filter_upwards [hev] with j hj
+    rw [← hset]
+    exact (hann h (hs j) hh.1 hj (hsN j).1.2 hhN (hsN j).2).symm
+  have hlim2 : Tendsto (fun j ↦ ∫ p in A ∩ {p | dipoleLift p < 2 * hs j}, eeBulkDensity ω p)
+      atTop (𝓝 (∫ p in A, eeBulkDensity ω p)) := by
+    have hind (j : ℕ) : ∫ p in A ∩ {p | dipoleLift p < 2 * hs j}, eeBulkDensity ω p =
+        ∫ p in A, {p | dipoleLift p < 2 * hs j}.indicator (eeBulkDensity ω) p := by
+      rw [Set.inter_comm A, ← Measure.restrict_restrict (hB _), integral_indicator (hB _)]
+    simp_rw [hind]
+    apply tendsto_integral_of_dominated_convergence (fun p ↦ ‖eeBulkDensity ω p‖)
+    · exact fun j ↦ hint.aestronglyMeasurable.indicator (hB _)
+    · exact hint.norm
+    · intro j
+      filter_upwards with p
+      by_cases hp : p ∈ {p : ℝ × ℝ | dipoleLift p < 2 * hs j}
+      · simp [Set.indicator_of_mem hp]
+      · simp [Set.indicator_of_notMem hp]
+    · filter_upwards [ae_restrict_of_ae hlt2] with p hp
+      apply tendsto_const_nhds.congr'
+      have h2 : Tendsto (fun j ↦ 2 * hs j) atTop (𝓝 2) := by
+        simpa using hs1.const_mul 2
+      filter_upwards [h2.eventually (lt_mem_nhds hp)] with j hj
+      exact (Set.indicator_of_mem (show p ∈ {p : ℝ × ℝ | dipoleLift p < 2 * hs j} from hj) _).symm
+  exact tendsto_nhds_unique hlim2 hlim1
 
 /-- Weighted gradient traces (`lem:ee-gradient-traces`). For `ψ` even under both reflections,
     along levels `h → 0` outside a null set: `∮ |ψₙ|² dt → 0`,
@@ -219,21 +322,6 @@ theorem InSector.eq_zero_of_lift_ae_zero_on_cellSquare {ω : L2}
     apply hpn
     rw [hsneg]
     exact neg_pos.mpr (lt_of_le_of_ne (le_of_not_gt hpt) hn)
-
-/-- The exceptional set `cos x = cos y` is null, independently of any vorticity. -/
-theorem ae_cos_fst_ne_cos_snd : ∀ᵐ p : ℝ × ℝ, Real.cos p.1 ≠ Real.cos p.2 := by
-  rw [Measure.volume_eq_prod]
-  apply (Measure.ae_prod_iff_ae_ae (by measurability)).2
-  exact Eventually.of_forall fun x ↦ by
-    rw [ae_iff]
-    have hc : {y : ℝ | Real.cos x = Real.cos y}.Countable := by
-      apply ((Set.countable_range (fun k : ℤ ↦ 2 * k * Real.pi + x)).union
-        (Set.countable_range (fun k : ℤ ↦ 2 * k * Real.pi - x))).mono
-      intro y hy
-      obtain ⟨k, hk | hk⟩ := Real.cos_eq_cos_iff.mp hy
-      · exact Or.inl ⟨k, hk.symm⟩
-      · exact Or.inr ⟨k, hk.symm⟩
-    simpa using hc.measure_zero volume
 
 /-- Unlike the gradient argument, exclusion only needs strict positivity of the vorticity
     coefficient away from a null set. -/

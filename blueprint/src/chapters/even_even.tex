@@ -66,36 +66,34 @@ in $\sin$ and $\cos$; they reduce to zero modulo $\sin^2+\cos^2=1$ and
 $\rho^2\cdot\rho^{-2}=1$, which is how the Lean proofs go.
 \end{remark}
 
-\begin{lemma}[Regularity at the center]
-\label{lem:normal-field-center}
+\begin{remark}[Regularity at the center]
+The manuscript applies its virial lemma to fields $\chi(\Psi)W$ with $\chi=1$ near the
+center, which needs $W\in W^{3,\infty}$ and $f\in W^{2,\infty}$ there. A series expansion
+(SymPy, October 2026) gives $W=\tfrac12(x,y)+O(R^3)$ and
+$f=\tfrac14R^2\cos^22\theta+O(R^4)$; the leading terms are homogeneous but not polynomial,
+e.g.\ $f\approx(x^2-y^2)^2/(4R^2)$, so $W\notin C^3$ and $f\notin C^2$ in general, and
+$C^{2,1}$, $C^{1,1}$ are sharp. Since the center is cut out of
+Lemma~\ref{lem:ee-truncated-virial}, none of this is needed; the former node and its
+Lean statements were removed (October 2026).
+\end{remark}
+
+\begin{lemma}[The normal field cut off to an annulus]
+\label{lem:normal-field-annulus}
 \uses{def:normal-field, def:adapted-field}
-\lean{NoEmbeddedEigenvalues.normalField_center_expansion,
-  NoEmbeddedEigenvalues.cutoff_normalField}
+\lean{NoEmbeddedEigenvalues.annularCutoff_normalField}
 \leanok
-Near the center, with $R=(x^2+y^2)^{1/2}$, $W=\tfrac12(x,y)+O(R^3)$ and
-$f=O(R^2)$, with derivative bounds $O(R^{3-j})$ for $j\le3$ and $O(R^{2-j})$
-for $j\le2$ respectively (away from the center). Consequently, if $\chi$ is smooth,
-vanishes on $(-\infty,\epsilon]$ for some $\epsilon>0$ and equals one near $2$, the field
-$\chi(\Psi)W$ (extended by zero) is of class $C^{2,1}$ on $\T^2$ (on the lift: $C^2$ with
-globally Lipschitz second derivative) and is adapted everywhere with coefficient
-$\chi(\Psi)f$ of class $C^{1,1}$.
+Let $0<\epsilon_1\le\epsilon_2<2$ and let $\chi$ be smooth and zero outside
+$[\epsilon_1,\epsilon_2]$. Then $\chi(\Psi)W$ and $\chi(\Psi)f$ are smooth and periodic on the
+lift, and $\chi(\Psi)W$ is adapted everywhere with coefficient $\chi(\Psi)f$.
 \end{lemma}
 
 \begin{proof}
-Divide the analytic Taylor series of $\Psi-2$, $\nabla\Psi$ and $\rho^2$,
-whose leading denominator is $R^2$. Since $L_0\Psi=0$, multiplying an adapted
-field by a function of $\Psi$ multiplies the coefficient by the same function.
+\uses{lem:normal-field-algebra}
+On $\{0<\Psi<2\}$, $\rho^2\ge\Psi(2-\Psi)>0$, so $W$ and $f$ are smooth there; outside the
+closed set $\{\epsilon_1\le\Psi\le\epsilon_2\}$ the products vanish identically near each point.
+Adaptedness: $L_0(\chi(\Psi))=\chi'(\Psi)L_0\Psi=0$, so multiplying an adapted field by
+$\chi(\Psi)$ multiplies its coefficient by $\chi(\Psi)$.
 \end{proof}
-
-\begin{remark}
-A series expansion (SymPy, October 2026) gives
-$W_1-\tfrac x2=\tfrac{r^3}{24}\cos\theta\,(7\sin^6\theta-15\sin^4\theta+17\sin^2\theta+7\cos^6\theta-6)
-+O(r^5)$ and $f=\tfrac14r^2\cos^22\theta+O(r^4)$. The leading terms are homogeneous but not
-polynomial, e.g.\ $f\approx(x^2-y^2)^2/(4R^2)$, so in general $W\notin C^3$ and $f\notin C^2$:
-the classes $C^{2,1}$ and $C^{1,1}$ are sharp, which is why
-Lemma~\ref{lem:virial-l2} is stated for $C^{2,1}$ fields. Adaptedness at the center follows
-by continuity, and elsewhere where $\rho=0$ the cutoff vanishes nearby.
-\end{remark}
 
 \begin{lemma}[Positivity of the bulk density]
 \label{lem:ee-density}
@@ -117,6 +115,24 @@ regular interior point where $\nabla\psi\ne0$ (manuscript
 $f\ge0$ and $0<c\le1$.
 \end{proof}
 
+\begin{lemma}[A bound for the vorticity coefficient]
+\label{lem:normal-coeff-bound}
+\uses{def:normal-field}
+\lean{NoEmbeddedEigenvalues.normalCoeff_le}
+\leanok
+On $\Cell$ minus its center, $f\le(2-\Psi)/\Psi$. In particular $f$ is bounded on
+$\{\Psi\ge\epsilon\}$ for every $\epsilon>0$, and $f\to0$ at the center.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-algebra}
+\leanok
+Since $\Psi^2+\delta^2=2(\cos^2x+\cos^2y)=4-2\rho^2$, the claim
+$\Psi(2-\Psi)\delta^2/\rho^4\le(2-\Psi)/\Psi$ is $\Psi^2(4-2\rho^2-\Psi^2)\le\rho^4$, that is
+$(\rho^2+\Psi^2)^2\ge4\Psi^2$, which is $\rho^2\ge\Psi(2-\Psi)$
+(Lemma~\ref{lem:normal-field-algebra}).
+\end{proof}
+
 \begin{definition}[Bulk density on an $L^2$ vorticity]
 \label{def:ee-bulk-density}
 \uses{lem:ee-density, def:stream-lifts, def:normal-tangent}
@@ -126,6 +142,92 @@ For $\omega\in L^2(\T^2)$, write
 $\mathcal J_\omega(p)=\mathcal J(p,\omega(p),\psi_n(p),\psi_t(p))$
 on the lift, using the representatives of Definition~\ref{def:stream-lifts}.
 \end{definition}
+
+\begin{definition}[Level terms]
+\label{def:ee-level-term}
+\uses{def:level-integral, def:normal-tangent, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.eeLevelTerm}
+\leanok
+For $\omega\in L^2$ and $0<h<1$, with $\psi_n$ along $n=-\nabla\Psi/\rho$,
+\[
+  G_\omega(h)=\oint_{\{\Psi=2h\}}\operatorname{Re}(\psi\overline{\psi_n})\,d\ell
+   +(2-2h)\left(\oint|\psi_n|^2\,dt-\oint|\psi_t|^2\,dt
+     -\oint\operatorname{Re}(\omega\bar\psi)\,dt\right).
+\]
+\end{definition}
+
+\begin{lemma}[Integrability of the bulk density]
+\label{lem:ee-bulk-integrable}
+\uses{def:ee-bulk-density}
+\lean{NoEmbeddedEigenvalues.integrableOn_eeBulkDensity}
+\leanok
+For $\omega\in L^2$ and $h>0$, $\mathcal J_\omega$ is integrable on $\{p\in\Cell:\Psi>2h\}$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-coeff-bound, lem:normal-field-algebra, lem:elliptic-torus}
+There $0\le f\le1/h$ (Lemma~\ref{lem:normal-coeff-bound}) and $0<c\le1$, so
+$\mathcal J_\omega\le|\omega|^2/h+2|\nabla\psi|^2$, with $|\psi_n|,|\psi_t|\le|\nabla\psi|$.
+\end{proof}
+
+\begin{lemma}[Virial identity on an annulus]
+\label{lem:ee-annular-virial}
+\uses{def:ee-bulk-density, def:ee-level-term, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.ee_annular_virial}
+\leanok
+Let $\lambda\ne0$. There is a null set $N$ such that for all $0<h<h'<1$ outside $N$,
+\[
+  \int_{\{2h<\Psi<2h'\}\cap\Cell}\mathcal J_\omega=G_\omega(h)-G_\omega(h').
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:virial-l2, lem:normal-field-annulus, lem:ee-bulk-integrable, lem:orbit-coordinates, lem:coarea}
+Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$ with $\chi$ smooth and supported in a
+compact subinterval of $(0,2)$ (Lemma~\ref{lem:normal-field-annulus}). With the cutoff
+algebra below, $\int\chi(\Psi)\mathcal J=\int\chi'(\Psi)\bigl[\rho\operatorname{Re}(\psi\overline{\psi_n})
++(2-\Psi)B\bigr]$, and $dx\,dy=ds\,dt$ with $s=\Psi$ turns the right side into
+$\int\chi'(s)\tilde G(s)\,ds$ with $\tilde G(2h)=G_\omega(h)$, locally integrable in $s$. Let
+$\chi$ tend to $\mathbf 1_{(2h,2h')}$, so that $\chi'\to\delta_{2h}-\delta_{2h'}$. Take $N$ the
+non-Lebesgue points of the level integrals; on the bulk side use dominated convergence
+with Lemma~\ref{lem:ee-bulk-integrable}.
+\end{proof}
+
+\begin{remark}[Cutoff algebra checked independently]
+Writing $s=\Psi$, $q=\chi(s)$, $K=|\nabla\psi|^2+
+\operatorname{Re}(\omega\bar\psi)$ and
+$B=|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)$, the quadratic
+virial identity, after transferring its Laplacian to $|\psi|^2$, becomes
+$0=\int q\mathcal J-\int qK+\int(s-2)\chi'(s)B$.
+Since $K=\Div\operatorname{Re}(\bar\psi\nabla\psi)$ and
+$\nabla s\cdot\nabla\psi=-\rho\psi_n$, integration by parts gives
+$\int qK=\int\chi'(s)\rho\operatorname{Re}(\psi\overline{\psi_n})$.
+This verifies the signs and the factor $2-\epsilon$ in the displayed
+identity independently of the manuscript. This is a smooth cutoff
+derivation, not a proof of the remaining $L^2$ justification and
+almost-every-level limit.
+\end{remark}
+
+\begin{lemma}[The level terms at the center]
+\label{lem:ee-center-limit}
+\uses{def:ee-level-term}
+\lean{NoEmbeddedEigenvalues.ee_center_limit}
+\leanok
+For $\omega\in L^2$ and every null set $N$ there are $h_j\in(0,1)\setminus N$ with $h_j\to1$
+and $G_\omega(h_j)\to0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates, lem:elliptic-torus, lem:continuous-representative}
+Write $\eta=2-2h$ and
+$g(\eta)=\oint_{\{\Psi=2-\eta\}}(|\nabla\psi|^2+|\omega||\psi|)\,dt$. By the change of
+variables $dx\,dy=ds\,dt$, $\int_0^{\eta_0}g\,d\eta=\int_{\{\Psi>2-\eta_0\}}
+(|\nabla\psi|^2+|\omega||\psi|)<\infty$. Hence for every null set $N$ there are
+$\eta_j\to0$ outside the image of $N$ with $\eta_jg(\eta_j)\to0$; otherwise $g\ge c/\eta$
+almost everywhere near $0$. The second term of $G_\omega$ is at most $\eta g(\eta)$. Near the
+center $\rho^2\sim2\eta$ (series expansion) and $\psi$ is bounded, so by Cauchy--Schwarz the
+first is at most $C\sqrt\eta\,(S\,g(\eta))^{1/2}=O\bigl((\eta g(\eta))^{1/2}\bigr)$.
+\end{proof}
 
 \begin{lemma}[Truncated virial identity]
 \label{lem:ee-truncated-virial}
@@ -145,53 +247,25 @@ integrals in flow time $dt$ over $\{\Psi=\epsilon\}$ and $d\ell=\rho\,dt$ satisf
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-l2, lem:normal-field-center, lem:orbit-coordinates, lem:coarea}
-Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$, for which
-$\chi f-\Div(\chi W)=-\chi-(\Psi-2)\chi'$. Use
-$\tfrac12\Delta|\psi|^2=|\nabla\psi|^2+\operatorname{Re}(\omega\bar\psi)$ and
-integrate by parts twice. Let $\chi$ tend to $\mathbf 1_{(\epsilon,2]}$; coarea
-and Lebesgue differentiation give the identity at almost every level.
+\uses{lem:ee-bulk-integrable, lem:ee-annular-virial, lem:ee-center-limit, lem:cos-diagonal-null}
+\leanok
+Let $h\in(0,1)$ lie outside the null set $N$ of Lemma~\ref{lem:ee-annular-virial}.
+Lemma~\ref{lem:ee-center-limit} gives $h'_j\to1$ outside $N$ with $G_\omega(h'_j)\to0$, so
+$\int_{\{2h<\Psi<2h'_j\}}\mathcal J=G_\omega(h)-G_\omega(h'_j)\to G_\omega(h)$. On the other hand
+these integrals tend to $\int_{\{\Psi>2h\}}\mathcal J$ by dominated convergence
+(Lemma~\ref{lem:ee-bulk-integrable}), since $\{\Psi=2\}\subset\{\cos x=\cos y\}$ is null
+(Lemma~\ref{lem:cos-diagonal-null}).
 \end{proof}
 
-\begin{remark}[Cutoff algebra checked independently]
-Writing $s=\Psi$, $q=\chi(s)$, $K=|\nabla\psi|^2+
-\operatorname{Re}(\omega\bar\psi)$ and
-$B=|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)$, the quadratic
-virial identity, after transferring its Laplacian to $|\psi|^2$, becomes
-$0=\int q\mathcal J-\int qK+\int(s-2)\chi'(s)B$.
-Since $K=\Div\operatorname{Re}(\bar\psi\nabla\psi)$ and
-$\nabla s\cdot\nabla\psi=-\rho\psi_n$, integration by parts gives
-$\int qK=\int\chi'(s)\rho\operatorname{Re}(\psi\overline{\psi_n})$.
-This verifies the signs and the factor $2-\epsilon$ in the displayed
-identity independently of the manuscript. This is a smooth cutoff
-derivation, not a proof of the remaining $L^2$ justification and
-almost-every-level limit.
-\end{remark}
-
-\begin{remark}[Digest note: the center can be cut out (October 2026, on paper)]
-Lemma~\ref{lem:ee-truncated-virial} does not need the virial identity for a field that is
-nonzero at the center, so Lemma~\ref{lem:normal-field-center} and the $C^{2,1}$ hypotheses
-of Lemma~\ref{lem:virial-l2} can be dropped from the even--even argument. Take $\chi$ in the
-cutoff algebra above smooth and compactly supported in $(0,2)$, tending to
-$\mathbf 1_{(\epsilon,2-\eta)}$. Then $\chi(\Psi)W$ is smooth and supported in a compact
-sub-annulus, where the proof in the remark after Lemma~\ref{lem:virial-l2} applies. Since
-$dx\,dy=ds\,dt$ with $s=\Psi$, the limit gives, besides the terms at $s=\epsilon$, the inner
-boundary terms
-\[
-  \eta\oint_{\{s=2-\eta\}}B\,dt\qquad\text{and}\qquad
-  \oint_{\{s=2-\eta\}}\rho\operatorname{Re}(\psi\overline{\psi_n})\,dt
-\]
-(with signs from $\chi'=-\delta_{2-\eta}$ there). Put
-$g(\eta)=\oint_{\{s=2-\eta\}}(|\nabla\psi|^2+|\omega||\psi|)\,dt$. By coarea
-$\int_0^{\eta_0}g\,d\eta=\int_{\{s>2-\eta_0\}}(|\nabla\psi|^2+|\omega||\psi|)<\infty$, so for every
-null set $N$ there are $\eta_j\notin N$, $\eta_j\to0$, with $\eta_jg(\eta_j)\to0$ (otherwise
-$g\ge c/\eta$ on a set of full measure near $0$). The first term is at most
-$\eta g(\eta)$. Near the center $\rho^2\sim2\eta$ (checked by series expansion) and $\psi$ is
-bounded, so the second is at most $C\sqrt\eta\,(S\,g(\eta))^{1/2}=O\bigl((\eta g(\eta))^{1/2}\bigr)$.
-Both vanish along $\eta_j$. On the bulk side $\mathcal J_\omega\lesssim|\omega|^2+|\nabla\psi|^2$
-near the center ($f=O(R^2)$, $0<c\le1$), so
-$\int_{\{\epsilon<\Psi<2-\eta_j\}}\mathcal J\to\int_{\{\Psi>\epsilon\}}\mathcal J$.
-This gives the lemma as stated. Not yet checked in Lean.
+\begin{remark}[Digest note: the center is cut out]
+The manuscript applies its virial lemma to $\chi(\Psi)W$ with $\chi=1$ near the center,
+which needs $W\in W^{3,\infty}$ there (remark after Lemma~\ref{lem:normal-field-algebra}). Cutting the
+center out instead (Lemmas~\ref{lem:ee-annular-virial} and~\ref{lem:ee-center-limit})
+means Lemma~\ref{lem:virial-l2} is only needed for fields supported in an annulus, where
+it has a proof without the flow of $W$. The price is the center limit, which needs only
+$\psi\in H^2$ and $\omega\in L^2$, and the bound of Lemma~\ref{lem:normal-coeff-bound} for
+integrability. Checked on paper (October 2026); the reduction of the truncated identity
+to the three lemmas is proved in Lean.
 \end{remark}
 
 \begin{remark}[Digest note: integrability needed for backwards assembly]

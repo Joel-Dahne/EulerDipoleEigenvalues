@@ -95,28 +95,36 @@ reflections, proved on Fourier coefficients
 `Derivatives.lean`), with its sector form in `Sectors.lean`. The pointwise
 algebra was also checked by hand: both reflections reverse `ψₙ` and fix `ψₜ`.
 
-**`lem:virial-l2` digested on paper (2026-10-15).** The manuscript's `U_t`
-argument looks correct (its key formulas were rederived), but needs the flow
-of `W`, its Jacobian and `U_t` theory. Proposed replacement (digest note
-`rem:virial-transversal-mollifier` in `virial.tex`): for `W` supported in a
-compact sub-annulus of the cell, (1) the exact identity
-`⟨Va,Ha⟩ - ⟨VHa,a⟩ = λ(⟨Vψ,ω⟩ - ⟨Vω,ψ⟩)` for any linear `V` replaces the
-`A = I + Δ⁻¹` machinery; (2) in action-angle coordinates `(h, θ)`,
-`L₀ = S(h)⁻¹∂_θ`, so mollifying in `h` gives `‖[H,J_ε]a‖ = O(ε)` while
-`‖DJ_ε a‖ = o(1/ε)`; (3) `V = J_ε† D J_ε` and the limit. Separately, the
-center can be cut out of `lem:ee-truncated-virial` (inner boundary terms
-vanish along a sequence; remark in `even_even.tex`), so the even–even graph
-would no longer need `lem:normal-field-center`, `lem:H-selfadjoint` or
-`C^{2,1}` fields. New infrastructure needed: a `C¹` action-angle chart on a
-compact annulus (from the explicit `(h, t)` map and the inverse function
-theorem). **Decision pending:** restate `lem:virial-l2`/`virial_l2` for
-annulus-supported smooth fields and restructure the proof of
-`lem:ee-truncated-virial` accordingly. Odd–odd (weighted analogue) not yet
-examined.
+**`lem:virial-l2` restated (2026-10-15, user decision).** The manuscript's
+`U_t` argument (flow of `W`, its Jacobian, `U_t` theory, `C^{2,1}` at the
+center) is replaced, checked on paper, by: the exact identity
+`⟨Va,Ha⟩ - ⟨VHa,a⟩ = λ(⟨Vψ,ω⟩ - ⟨Vω,ψ⟩)` (`lem:virial-exact-identity`,
+`inner_virial_exact`, proved); a mollifier in the level variable of
+action-angle coordinates (`def:action-angle`, `lem:action-angle-chart`,
+`lem:transversal-mollifier`, no Lean yet), for which `‖[H,J_ε]a‖ = O(ε)`
+while `‖DJ_ε a‖ = o(1/ε)`; and the smooth identity on `H¹`
+(`lem:virial-h1`, no Lean yet). `virial_l2` now assumes `W ∈ C³`, `f ∈ C²`,
+periodic, supported in `{2h₁ ≤ Ψ ≤ 2h₂}`, `0 < h₁`, `h₂ < 1`.
+The center is cut out of the truncated virial identity: `ee_truncated_virial`
+is now **proved** from three new admitted statements,
+`integrableOn_eeBulkDensity` (`lem:ee-bulk-integrable`), `ee_annular_virial`
+(`lem:ee-annular-virial`) and `ee_center_limit` (`lem:ee-center-limit`), with
+the level terms as `eeLevelTerm` (`def:ee-level-term`). New proved bound
+`normalCoeff_le`: `f ≤ (2 - Ψ)/Ψ` on the cell (`lem:normal-coeff-bound`),
+which gives integrability without a center expansion. New stated
+`annularCutoff_normalField` (`lem:normal-field-annulus`). The center lemmas
+`normalField_center_expansion`, `cutoff_normalField` and the node
+`lem:normal-field-center` were removed (user decision; the sharpness of
+`C^{2,1}` at the center is kept as a remark), and `lem:H-selfadjoint` is no
+longer in the even–even graph. `NormalField.lean` now imports `LiftIntegration.lean`, `EvenEven.lean`
+imports `VirialL2.lean`. Odd–odd (weighted analogue) not yet examined.
 
-**Next:** that decision, then formalize. Remaining direct even–even inputs:
-`ee_boundary_regularity`, `ee_gradient_traces`, `ee_truncated_virial`, and
-the transport inputs (`melnikov`, `pairing_limit`,
+**Next:** the cheapest new statements are `annularCutoff_normalField` and
+`integrableOn_eeBulkDensity` (no new infrastructure); then the action-angle
+chart, transversal mollifier and `H¹` identity behind `virial_l2`.
+Remaining direct even–even inputs: `ee_boundary_regularity`,
+`ee_gradient_traces`, `ee_annular_virial`, `ee_center_limit`,
+`integrableOn_eeBulkDensity`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 
@@ -228,7 +236,7 @@ these admitted analytic results.
    The smooth cutoff algebra for the truncated virial identity has now
    been independently rederived: its signs and factor `2 - ε` are correct
    (remark at the node). The original-domain justification and the
-   almost-every-level limit remain admitted. Batch C stated: `lem:normal-field-center`
+   almost-every-level limit remain admitted. Batch C stated: `lem:normal-field-center` (since removed)
    (series expansion checked; `C^{2,1}`, `C^{1,1}` are sharp),
    `lem:local-to-global`, `lem:traces` (restated as absolute continuity on
    lines and line traces in diagonal coordinates, Gagliardo bound included,
@@ -435,13 +443,17 @@ these admitted analytic results.
   docstrings, module layout in `AGENTS.md`). Not done, optional: a `Parity`
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
-- **Validation**: full Lean build and `just web` pass after proving the
-  even–even Neumann parities; `just graph thm:ee-exclusion` regenerates
-  its graph (135 nodes). All 640 blueprint Lean references resolve without
-  duplicates, and every `\uses` label exists. There are now 48 admitted
-  declarations.
+- **Validation**: full Lean build and `just web` pass after restating the
+  `L²` virial identity; `just graph thm:ee-exclusion` regenerates
+  its graph (141 nodes). All 645 blueprint Lean references resolve without
+  duplicates, and every `\uses` and `\ref` label exists. There are now 49
+  admitted declarations (three new admitted even–even statements replace the
+  admitted truncated identity, plus the stated `annularCutoff_normalField`;
+  the two center lemmas were removed).
   `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
-  warnings; `EvenEven.lean` has only its three admitted-input warnings. Axiom checks on the canonical arc identity
+  warnings; `EvenEven.lean` has only its five admitted-input warnings.
+  `inner_virial_exact` and `normalCoeff_le` use only `propext`,
+  `Classical.choice`, `Quot.sound`. Axiom checks on the canonical arc identity
   and all five new helpers use only `propext`, `Classical.choice` and
   `Quot.sound`. The earlier six endgame foundations have the same axiom
   status. Arc positivity, both exclusion proofs, and `main` still depend
