@@ -152,7 +152,7 @@ cofactors for `linear_combination`), `squareIntegral_eq_setIntegral_cellSquare`
 `AddCircle.equivIoc`, `measurePreserving_torusProj_square` now in
 `LiftTorus.lean`), and `integrableOn_eeBoundaryDensity` (the integrability half
 of `lem:ee-boundary-integrable`; the level-term half
-`ae_levelIntegral_eeBoundaryDensity` is still admitted).
+`ae_levelIntegral_eeBoundaryDensity` was proved later).
 
 **`stream_ibp` is proved (2026-10-16)** (`lem:stream-ibp`), using only
 `propext`, `Classical.choice`, `Quot.sound`, without the density argument
@@ -189,11 +189,20 @@ along a.e. level comes from the continuous representative
 `lem:level-integral-congr`). The per-level bound `abs_eeLevelTerm_le` and the
 sequence lemma `exists_seq_one_sub_mul_tendsto_zero` use no admissions.
 
-**Next:** `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
+**`ae_levelIntegral_eeBoundaryDensity` is proved (2026-10-16)**, completing
+`lem:ee-boundary-integrable` modulo the coarea formula: the four pieces of
+`E` are dominated by `|ψ|² + |ψₓ|² + |ψ_y|² + |ω|²`, integrable on a.e.
+level, and the level integral splits since `Ψ = 2h` there. The virial chain
+of the even–even box now rests only on `virial_l2` and the coarea formula.
+
+**Next:** `ee_gradient_traces` (`lem:ee-gradient-traces`), digest first: the
+blueprint proof is a sketch (corner coordinates, odd Hardy, traces), and it
+is the least verified remaining even–even input; then
+`ee_boundary_regularity`, which depends on it. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
-level-term half of `lem:ee-boundary-integrable` rest on the admitted
-orbit-coordinate formula. Remaining direct even–even inputs:
+coarea formula itself (`lintegral_cellSquare_eq`, now used by many proved
+nodes) remain admitted. Remaining direct even–even inputs:
 `ee_boundary_regularity`, `ee_gradient_traces`, `virial_l2`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.

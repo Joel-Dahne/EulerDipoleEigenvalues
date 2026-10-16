@@ -221,11 +221,16 @@ $\oint_{\{\Psi=2h\}}E_\omega\,dt=G_\omega(h)$ for almost every $h\in(0,1)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-bulk-integrable, lem:lift-representatives, lem:orbit-coordinates}
+\uses{lem:ee-bulk-integrable, lem:lift-representatives, lem:orbit-coordinates,
+  lem:level-integral-congr}
+\leanok
 $|E_\omega|\le2\rho|\psi|(|\psi_x|+|\psi_y|)+2\bigl(2(|\psi_x|+|\psi_y|)^2+|\omega||\psi|\bigr)$, a sum of
-products of functions in $L^2$ of the cell. On the level $\Psi=2h$ the factor $2-\Psi$ is
-$2-2h$, and by Lemma~\ref{lem:orbit-coordinates} each of the three level integrals in
-$G_\omega$ exists for almost every $h$, so the level integral splits.
+products of functions in $L^2$ of the cell. Each of the four pieces
+$\rho\operatorname{Re}(\psi\overline{\psi_n})$, $|\psi_n|^2$, $|\psi_t|^2$, $\operatorname{Re}(\omega\bar\psi)$
+is dominated by a multiple of $|\psi|^2+|\psi_x|^2+|\psi_y|^2+|\omega|^2$, hence integrable on
+the cell, and by Lemma~\ref{lem:orbit-coordinates} its restriction to almost every level is
+integrable in flow time. On the level $\Psi=2h$ the factor $2-\Psi$ is $2-2h$, so the level
+integral splits (Lemma~\ref{lem:level-integral-congr} for the period interval).
 \end{proof}
 
 \begin{lemma}[The cutoff identity]

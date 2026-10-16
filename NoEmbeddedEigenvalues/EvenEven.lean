@@ -18,8 +18,9 @@ the cutoff identity by coarea and du Bois-Reymond), `lem:ee-truncated-virial` (f
 identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`,
-`lem:ee-center-limit` (from the coarea formula of `lem:orbit-coordinates`).
-Inputs: the level-term half of `lem:ee-boundary-integrable`,
+`lem:ee-center-limit` and `lem:ee-boundary-integrable` (from the coarea formula of
+`lem:orbit-coordinates`).
+Inputs:
 `lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
@@ -321,7 +322,112 @@ theorem integrableOn_eeBoundaryDensity (ω : L2) :
 theorem ae_levelIntegral_eeBoundaryDensity (ω : L2) :
     ∀ᵐ h ∂(volume.restrict (Ioo 0 1)),
       levelIntegral h (eeBoundaryDensity ω) = eeLevelTerm ω h := by
-  sorry
+  have hmeas (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
+  have m0 := hmeas (invLap ω)
+  have m1 := hmeas ω
+  have m2 := hmeas (streamPartial 0 ω)
+  have m3 := hmeas (streamPartial 1 ω)
+  have hAs : cellSquare ⊆
+      Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro p ⟨ha, hb⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    simp only [mem_prod, mem_Ioc]
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith [Real.pi_pos]
+  have hsq (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) cellSquare :=
+    (integrableOn_norm_liftL2_sq g).mono_set hAs
+  -- All four pieces of `E` are dominated by `F = |ψ|² + |ψₓ|² + |ψ_y|² + |ω|²`.
+  set F : ℝ × ℝ → ℝ := fun p ↦ ‖streamLift ω p‖ ^ 2 + ‖streamLiftX ω p‖ ^ 2 +
+    ‖streamLiftY ω p‖ ^ 2 + ‖liftL2 ω p‖ ^ 2 with hFdef
+  have hF : IntegrableOn F cellSquare := (((hsq _).add (hsq _)).add (hsq _)).add (hsq _)
+  have hρm : Measurable gradNorm := by
+    unfold gradNorm
+    fun_prop
+  have hnm : Measurable (streamNormal ω) := by
+    change Measurable fun p ↦ normalDeriv (streamLiftX ω) (streamLiftY ω) p
+    simp only [normalDeriv, gradNorm, streamLiftX, streamLiftY]
+    fun_prop
+  have htm : Measurable (streamTangent ω) := by
+    change Measurable fun p ↦ tangentDeriv (streamLiftX ω) (streamLiftY ω) p
+    simp only [tangentDeriv, gradNorm, streamLiftX, streamLiftY]
+    fun_prop
+  have hsm : Measurable (streamLift ω) := m0
+  have hre (u v : ℂ) : |(u * (starRingEnd ℂ) v).re| ≤ ‖u‖ * ‖v‖ := by
+    refine (Complex.abs_re_le_norm _).trans ?_
+    rw [norm_mul, Complex.norm_conj]
+  have hρ2 (p : ℝ × ℝ) : gradNorm p ≤ 2 := by
+    have h0 : 0 ≤ gradNorm p := Real.sqrt_nonneg _
+    have h2 : gradNorm p ^ 2 ≤ 2 := by
+      rw [gradNorm, Real.sq_sqrt (by positivity)]
+      nlinarith [Real.sin_sq_le_one p.1, Real.sin_sq_le_one p.2]
+    nlinarith
+  have hn (p : ℝ × ℝ) : ‖streamNormal ω p‖ ^ 2 ≤ 2 * F p := by
+    have := norm_normalDeriv_le (streamLiftX ω) (streamLiftY ω) p
+    have h0' := norm_nonneg (streamNormal ω p)
+    simp only [hFdef]
+    nlinarith [sq_nonneg (‖streamLiftX ω p‖ - ‖streamLiftY ω p‖),
+      norm_nonneg (streamLiftX ω p), norm_nonneg (streamLiftY ω p),
+      sq_nonneg ‖streamLift ω p‖, sq_nonneg ‖liftL2 ω p‖]
+  have ht (p : ℝ × ℝ) : ‖streamTangent ω p‖ ^ 2 ≤ 2 * F p := by
+    have := norm_tangentDeriv_le (streamLiftX ω) (streamLiftY ω) p
+    have h0' := norm_nonneg (streamTangent ω p)
+    simp only [hFdef]
+    nlinarith [sq_nonneg (‖streamLiftX ω p‖ - ‖streamLiftY ω p‖),
+      norm_nonneg (streamLiftX ω p), norm_nonneg (streamLiftY ω p),
+      sq_nonneg ‖streamLift ω p‖, sq_nonneg ‖liftL2 ω p‖]
+  have hw (p : ℝ × ℝ) : |(liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re| ≤ F p := by
+    refine (hre _ _).trans ?_
+    simp only [hFdef]
+    nlinarith [sq_nonneg (‖liftL2 ω p‖ - ‖streamLift ω p‖),
+      sq_nonneg ‖streamLiftX ω p‖, sq_nonneg ‖streamLiftY ω p‖]
+  have ha (p : ℝ × ℝ) :
+      |gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re| ≤ 3 * F p := by
+    rw [abs_mul, abs_of_nonneg (show 0 ≤ gradNorm p from Real.sqrt_nonneg _)]
+    have h3' : ‖streamLift ω p‖ ^ 2 ≤ F p := by
+      simp only [hFdef]
+      nlinarith [sq_nonneg ‖streamLiftX ω p‖, sq_nonneg ‖streamLiftY ω p‖,
+        sq_nonneg ‖liftL2 ω p‖]
+    nlinarith [mul_le_mul (hρ2 p) (hre (streamLift ω p) (streamNormal ω p)) (abs_nonneg _)
+      (by norm_num : (0 : ℝ) ≤ 2), hn p,
+      sq_nonneg (‖streamLift ω p‖ - ‖streamNormal ω p‖)]
+  have i1 : IntegrableOn (fun p ↦ gradNorm p *
+      (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re) cellSquare :=
+    (hF.const_mul 3).mono' (hρm.mul (Complex.measurable_re.comp
+      (hsm.mul (Complex.continuous_conj.measurable.comp hnm)))).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ ha p)
+  have i2 : IntegrableOn (fun p ↦ ‖streamNormal ω p‖ ^ 2) cellSquare :=
+    (hF.const_mul 2).mono' (hnm.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ by rw [Real.norm_of_nonneg (by positivity)]; exact hn p)
+  have i3 : IntegrableOn (fun p ↦ ‖streamTangent ω p‖ ^ 2) cellSquare :=
+    (hF.const_mul 2).mono' (htm.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ by rw [Real.norm_of_nonneg (by positivity)]; exact ht p)
+  have i4 : IntegrableOn (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)
+      cellSquare :=
+    hF.mono' (Complex.measurable_re.comp
+      (m1.mul (Complex.continuous_conj.measurable.comp hsm))).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ hw p)
+  -- On almost every level the pieces are integrable in flow time, and `Ψ = 2h` there.
+  filter_upwards [(integral_cellSquare_eq i1).1, (integral_cellSquare_eq i2).1,
+    (integral_cellSquare_eq i3).1, (integral_cellSquare_eq i4).1,
+    ae_restrict_mem measurableSet_Ioo] with h j1 j2 j3 j4 hh
+  have hE : (fun t ↦ eeBoundaryDensity ω (dipoleOrbit h t)) = fun t ↦
+      gradNorm (dipoleOrbit h t) * (streamLift ω (dipoleOrbit h t) *
+        (starRingEnd ℂ) (streamNormal ω (dipoleOrbit h t))).re +
+      (2 - 2 * h) * (‖streamNormal ω (dipoleOrbit h t)‖ ^ 2 -
+        ‖streamTangent ω (dipoleOrbit h t)‖ ^ 2 -
+        (liftL2 ω (dipoleOrbit h t) * (starRingEnd ℂ) (streamLift ω (dipoleOrbit h t))).re) := by
+    funext t
+    rw [eeBoundaryDensity, dipoleLift_dipoleOrbit hh.1 hh.2]
+  simp only [eeLevelTerm, levelIntegral_eq_setIntegral hh.1 hh.2]
+  have j23 : IntegrableOn (fun t ↦ ‖streamNormal ω (dipoleOrbit h t)‖ ^ 2 -
+      ‖streamTangent ω (dipoleOrbit h t)‖ ^ 2) (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)) :=
+    j2.sub j3
+  have j234 : IntegrableOn (fun t ↦ (2 - 2 * h) * (‖streamNormal ω (dipoleOrbit h t)‖ ^ 2 -
+      ‖streamTangent ω (dipoleOrbit h t)‖ ^ 2 -
+      (liftL2 ω (dipoleOrbit h t) * (starRingEnd ℂ) (streamLift ω (dipoleOrbit h t))).re))
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)) :=
+    (j23.sub j4).const_mul _
+  rw [hE, integral_add j1 j234, integral_const_mul, integral_sub j23 j4, integral_sub j2 j3]
 
 /-! ### Integrals over the period square of weighted products of lifts
 
