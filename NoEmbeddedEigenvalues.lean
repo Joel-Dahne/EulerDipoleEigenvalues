@@ -7,6 +7,7 @@ import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.DuBoisReymond
 import NoEmbeddedEigenvalues.SegmentEstimates
 import NoEmbeddedEigenvalues.QuarterOrbits
+import NoEmbeddedEigenvalues.SeparatrixTraces
 import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.OrbitCoordinates
 import NoEmbeddedEigenvalues.Transport

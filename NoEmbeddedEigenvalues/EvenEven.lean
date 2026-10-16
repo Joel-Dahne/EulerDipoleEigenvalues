@@ -6,6 +6,7 @@ import NoEmbeddedEigenvalues.VirialL2
 import NoEmbeddedEigenvalues.DuBoisReymond
 import NoEmbeddedEigenvalues.SegmentEstimates
 import NoEmbeddedEigenvalues.QuarterOrbits
+import NoEmbeddedEigenvalues.SeparatrixTraces
 
 /-!
 # Even–even exclusion
@@ -1325,14 +1326,6 @@ theorem ee_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
 
 /-! ### Gradient traces at the separatrix -/
 
-/-- The energy of the arc traces (`lem:ee-arc-energy`): for `ψ` even under both reflections,
-    `∫ cosh² s |g_k'(s)|² ds < ∞` on each arc, with `g_k = ψ̃ ∘ γ_k`. Away from the saddles
-    this is the line trace of `∇ψ ∈ H¹` (`lem:traces`); near a saddle `ds ≈ du/u` in the corner
-    chart and the odd Hardy inequality bounds `∫ |ψ_u(u, 0)|² du/u`, since `ψ_u(·, 0)` is odd. -/
-theorem ee_arc_energy {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω) :
-    ∀ k < 4, Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2 := by
-  sorry
-
 /-- Level traces at the separatrix (`lem:ee-level-traces`): for `ψ` even under both
     reflections, along levels `h → 0` outside a null set, `∮ |ψₙ|² dt → 0` and
     `∮ |ψₜ|² dt → ∑_k ∫ ½ cosh² s |g_k'(s)|² ds`. Away from the saddles the restrictions
@@ -1644,24 +1637,6 @@ theorem AbsolutelyContinuousOnInterval.comp_antitoneOn {X : Type*} [PseudoMetric
     _ < δ := by
       rw [mul_div_assoc', div_lt_iff₀ (by positivity)]
       nlinarith
-
-/-- Changing the left function on a null set preserves weak derivatives. -/
-theorem HasWeakPartialOn.congr_left {U : Set (ℝ × ℝ)} {j : Fin 2} {g g' h : ℝ × ℝ → ℂ}
-    (hgh : HasWeakPartialOn U j g h) (hg : g =ᵐ[volume] g') : HasWeakPartialOn U j g' h := by
-  refine ⟨hgh.1.congr (ae_restrict_of_ae hg), hgh.2.1, fun φ hφ ↦ ?_⟩
-  rw [← hgh.2.2 φ hφ]
-  exact integral_congr_ae (hg.mono fun p hp ↦ by simp [hp])
-
-/-- Changing a function on a null set preserves local Sobolev membership. -/
-theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × ℝ → ℂ}
-    (h : MemSobolevOn k U g) (hg : g =ᵐ[volume] g') : MemSobolevOn k U g' := by
-  cases k with
-  | zero => exact MemLp.ae_eq (ae_restrict_of_ae hg) h
-  | succ k =>
-    obtain ⟨hL, hd⟩ := h
-    refine ⟨MemLp.ae_eq (ae_restrict_of_ae hg) hL, fun j ↦ ?_⟩
-    obtain ⟨d, hd1, hd2⟩ := hd j
-    exact ⟨d, hd1.congr_left hg, hd2⟩
 
 /-- The trace of `ψ̃` on the separatrix arc `γ₀` is locally absolutely continuous and
     differentiable almost everywhere (`lem:arc-trace-ac`). The arc is the segment of the line

@@ -637,6 +637,57 @@ $\tilde\psi\circ\gamma$ is absolutely continuous with $g'\in L^1(ds)$ (Melnikov)
 form of $g'$ used in Lemma~\ref{lem:ee-gradient-traces}. Since the trace bound is in
 Gagliardo form, no link between the Gagliardo seminorm and $H^{1/2}$ is needed (the former
 lemma stating it was removed, October 2026).
+\end{remark}
+
+\begin{definition}[Line representatives]
+\label{def:line-representative}
+\uses{def:cells}
+\lean{NoEmbeddedEigenvalues.IsLineRep}
+\leanok
+Let $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates. A line representative of $F$ on $Q$
+with $b$-derivative $G_b$ is a function $G$ with $G=F$ almost everywhere on $Q$, $G_b$
+measurable and in $L^2(Q)$, such that for almost every $a\in(a_0,a_1)$ the function
+$b\mapsto G(a,b)$ is absolutely continuous on compact subintervals of $(b_1,b_2)$ with
+derivative $G_b(a,b)$ for almost every $b$.
+\end{definition}
+
+\begin{lemma}[Line representatives]
+\label{lem:line-representatives}
+\uses{def:line-representative, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.exists_isLineRep_liftL2,
+  NoEmbeddedEigenvalues.IsLineRep.ae_continuousOn,
+  NoEmbeddedEigenvalues.ae_eqOn_line,
+  NoEmbeddedEigenvalues.IsLineRep.lintegral_lt_top}
+\leanok
+\begin{enumerate}
+  \item If $g\in L^2(\T^2)$ has Fourier derivatives $g_x,g_y\in L^2$, then on every bounded
+        diagonal rectangle the lift of $g$ has a line representative with $b$-derivative
+        $g_x-g_y$ (lifts).
+  \item Line representatives are continuous on almost every line $a=\mathrm{const}$, and
+        $\int_{a_0}^{a_1}\int_{b_1}^{b_2}|G_b|^2\,db\,da<\infty$.
+  \item If $G_1=G_2$ almost everywhere on $Q$ and both are continuous on almost every line
+        $a=\mathrm{const}$, then for almost every $a$, $G_1(a,b)=G_2(a,b)$ for all
+        $b\in(b_1,b_2)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\uses{lem:traces, lem:local-to-global, lem:diagonal-calculus}
+\leanok
+(1) is Lemma~\ref{lem:traces}(1), with the lift in $H^1$ and its weak derivatives the lifts
+of $g_x,g_y$ (Lemma~\ref{lem:local-to-global}). (2): absolute continuity on compact
+subintervals gives continuity on the open interval, and $dx\,dy=2\,da\,db$
+(Lemma~\ref{lem:diagonal-calculus}). (3): by Fubini in $(a,b)$ the two functions agree for
+almost every $b$ on almost every line; continuous functions that agree almost everywhere on an
+open interval agree everywhere on it.
+\end{proof}
+
+\begin{remark}
+By (3), values of line representatives on a fixed line $b=b_0$ are well defined for almost
+every $a$, independently of the representative. This is how traces on the arcs are used:
+statements are made for every line representative, and the trace of $\partial_aF$ from
+Lemma~\ref{lem:traces}(2) is compared with the sum of the line representatives of $F_x$ and
+$F_y$.
 
 The statement review found two omissions in Lean, now corrected:
 \texttt{absolutelyContinuous\_trace\_of\_H2} now requires transverse local absolute
@@ -912,18 +963,31 @@ $|F(u,h/u)-F(u,0)|^2/u\le(h/u^2)\int_0^{h/u}|F_v(u,v)|^2dv$. For $u\ge\sqrt h$ b
 and $h/u\le\sqrt h\le u_0$; integrate over $u$.
 \end{proof}
 
+\begin{remark}
+This is the manuscript's estimate near the saddles, in the corner coordinates $u=\cos a$,
+$v=\cos b$. The even--even corner tails (Lemma~\ref{lem:ee-corner-tails}) now apply the segment
+estimate directly in diagonal coordinates, so this lemma is no longer used there.
+\end{remark}
+
 \begin{lemma}[Segment estimate]
 \label{lem:segment-estimate}
-\lean{NoEmbeddedEigenvalues.lintegral_segment_le, NoEmbeddedEigenvalues.ofReal_norm_sub_sq_le}
+\lean{NoEmbeddedEigenvalues.lintegral_segment_le, NoEmbeddedEigenvalues.ae_segment_le,
+  NoEmbeddedEigenvalues.ofReal_norm_sub_sq_le}
 \leanok
 Let $I$ be a measurable set, $J=(b_1,b_2)$, $b_0\in J$, $\beta\colon I\to J$, $w\ge0$ on $I$,
 $\partial_bG$ measurable, and let $G$ be such that for almost every $a\in I$ the function
 $b\mapsto G(a,b)$ is absolutely continuous on compact subintervals of $J$ with derivative
-$\partial_bG(a,\cdot)$ almost everywhere. Then
+$\partial_bG(a,\cdot)$ almost everywhere. Then for almost every $a\in I$
+\[
+  |G(a,\beta(a))-G(a,b_0)|^2w(a)\le w(a)\,|\beta(a)-b_0|\int_J|\partial_bG(a,b)|^2\,db,
+\]
+and integrating,
 \[
   \int_I|G(a,\beta(a))-G(a,b_0)|^2w(a)\,da\le\int_I w(a)\,|\beta(a)-b_0|
     \int_J|\partial_bG(a,b)|^2\,db\,da .
 \]
+The pointwise form is used when $G$ is only known to be a representative: its right side is
+measurable in $a$ even when $a\mapsto G(a,\beta(a))$ is not known to be.
 \end{lemma}
 
 \begin{proof}

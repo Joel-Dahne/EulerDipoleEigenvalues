@@ -479,6 +479,24 @@ theorem MemSobolevLocOn.cutoff (k : ℕ) {u : ℝ × ℝ → ℂ} (hU : IsOpen U
 
 end Cutoff
 
+/-- Changing the left function on a null set preserves weak derivatives. -/
+theorem HasWeakPartialOn.congr_left {U : Set (ℝ × ℝ)} {j : Fin 2} {g g' h : ℝ × ℝ → ℂ}
+    (hgh : HasWeakPartialOn U j g h) (hg : g =ᵐ[volume] g') : HasWeakPartialOn U j g' h := by
+  refine ⟨hgh.1.congr (ae_restrict_of_ae hg), hgh.2.1, fun φ hφ ↦ ?_⟩
+  rw [← hgh.2.2 φ hφ]
+  exact integral_congr_ae (hg.mono fun p hp ↦ by simp [hp])
+
+/-- Changing a function on a null set preserves local Sobolev membership. -/
+theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × ℝ → ℂ}
+    (h : MemSobolevOn k U g) (hg : g =ᵐ[volume] g') : MemSobolevOn k U g' := by
+  cases k with
+  | zero => exact MemLp.ae_eq (ae_restrict_of_ae hg) h
+  | succ k =>
+    obtain ⟨hL, hd⟩ := h
+    refine ⟨MemLp.ae_eq (ae_restrict_of_ae hg) hL, fun j ↦ ?_⟩
+    obtain ⟨d, hd1, hd2⟩ := hd j
+    exact ⟨d, hd1.congr_left hg, hd2⟩
+
 /-! ### From the lift to the torus and back (`lem:local-to-global`, stated) -/
 
 section LocalToGlobal

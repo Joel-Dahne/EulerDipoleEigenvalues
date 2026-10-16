@@ -132,12 +132,18 @@ $|x+y|,|x-y|>\pi$, impossible since $|x+y|+|x-y|=2\max(|x|,|y|)\le2\pi$.
 \label{lem:diagonal-calculus}
 \uses{def:cells, def:lift-operators}
 \lean{NoEmbeddedEigenvalues.integral_eq_two_smul_integral_diagInv,
+  NoEmbeddedEigenvalues.lintegral_comp_diagInv,
+  NoEmbeddedEigenvalues.setLIntegral_setLIntegral_diagInv,
+  NoEmbeddedEigenvalues.ae_ae_diagInv, NoEmbeddedEigenvalues.ae_ae_diagRect,
   NoEmbeddedEigenvalues.partialX_comp_diagInv,
   NoEmbeddedEigenvalues.partialY_comp_diagInv,
   NoEmbeddedEigenvalues.laplacian_comp_diagInv}
 \leanok
 Let $T(a,b)=(a+b,a-b)$, the inverse of the diagonal coordinates. Then
-$dx\,dy=2\,da\,db$, that is $\int f\,dx\,dy=2\int f\circ T\,da\,db$. For
+$dx\,dy=2\,da\,db$, that is $\int f\,dx\,dy=2\int f\circ T\,da\,db$ (also for
+nonnegative measurable $f$ as iterated integrals over rectangles $I\times J$ in $(a,b)$), and a
+property holding almost everywhere in $(x,y)$ holds, for almost every $a$, at $T(a,b)$ for
+almost every $b$. For
 differentiable $u$, $\partial_a(u\circ T)=(\partial_xu+\partial_yu)\circ T$ and
 $\partial_b(u\circ T)=(\partial_xu-\partial_yu)\circ T$, and for $u\in C^2$,
 $\Delta=\tfrac12(\partial_a^2+\partial_b^2)$, that is
@@ -146,7 +152,8 @@ $(\partial_a^2+\partial_b^2)(u\circ T)=2(\Delta u)\circ T$.
 
 \begin{proof}
 \leanok
-The map $(a,b)\mapsto(a+b,a-b)$ is linear with determinant $-2$, and
+The map $(a,b)\mapsto(a+b,a-b)$ is linear with determinant $-2$ (so it maps null sets to
+null sets, and Tonelli applies in $(a,b)$), and
 $\partial_a=\partial_x+\partial_y$, $\partial_b=\partial_x-\partial_y$. In
 $\partial_a^2+\partial_b^2$ the mixed terms $\partial_x\partial_y$ and
 $\partial_y\partial_x$ cancel separately, so symmetry of second derivatives is not
@@ -572,11 +579,13 @@ $b=\beta_h(a)$ and $\dot a=-\cos a\sin b=-\sqrt{\cos^2a-h^2}$; $a$ runs from $a_
 \begin{lemma}[The arc in diagonal coordinates]
 \label{lem:arc-diagonal}
 \uses{def:separatrix-arc, def:cells}
-\lean{NoEmbeddedEigenvalues.integral_separatrixArc_eq, NoEmbeddedEigenvalues.arcAngle_mem_Ioo,
+\lean{NoEmbeddedEigenvalues.integral_separatrixArc_eq,
+  NoEmbeddedEigenvalues.lintegral_separatrixArc_eq, NoEmbeddedEigenvalues.arcAngle_mem_Ioo,
   NoEmbeddedEigenvalues.strictAnti_arcAngle}
 \leanok
 On the arc $\gamma$, $b=\pi/2$, $a=\alpha(s)-\pi/2$ with $\alpha(s)=2\arctan e^{-s}$, and
-$\cos a=\sech s=-\,da/ds$. Hence $\int_\R F(\gamma(s))\,ds=\int_{-\pi/2}^{\pi/2}F(a,\pi/2)\,da/\cos a$.
+$\cos a=\sech s=-\,da/ds$. Hence $\int_\R F(\gamma(s))\,ds=\int_{-\pi/2}^{\pi/2}F(a,\pi/2)\,da/\cos a$,
+both as Bochner integrals and, for every $F\ge0$, as Lebesgue integrals.
 \end{lemma}
 
 \begin{proof}
@@ -820,6 +829,21 @@ tangential derivative along $Y/\rho$ is $\psi_t=(\psi_x\sin y-\psi_y\sin x)/\rho
 eigenfunction, $\psi_x,\psi_y$ are the lifts of $\psi_1,\psi_2$
 (Definition~\ref{def:stream-derivatives}).
 \end{definition}
+
+\begin{lemma}[The normal--tangential frame]
+\label{lem:normal-tangent-frame}
+\uses{def:normal-tangent}
+\lean{NoEmbeddedEigenvalues.norm_normalDeriv_sq_add_norm_tangentDeriv_sq}
+\leanok
+Where $\rho\ne0$, $|\psi_n|^2+|\psi_t|^2=|\psi_x|^2+|\psi_y|^2$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$(\sin x,\sin y)/\rho$ and $(\sin y,-\sin x)/\rho$ are orthonormal, and $\psi_n,\psi_t$ are the
+components of $(\psi_x,\psi_y)$ in this frame (with complex values, apply this to real and
+imaginary parts).
+\end{proof}
 
 \begin{lemma}[The period function]
 \label{lem:period}

@@ -22,6 +22,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Real MeasureTheory Set
+open scoped ENNReal
 
 /-! ### The arc -/
 
@@ -94,6 +95,43 @@ theorem integral_separatrixArc_eq {E : Type*} [NormedAddCommGroup E] [NormedSpac
   rw [smul_smul, hcos, hpt, abs_neg, abs_of_pos (by positivity)]
   field_simp
   simp
+
+/-- The arc in diagonal coordinates for nonnegative functions (`lem:arc-diagonal`):
+    `∫⁻ F(γ(s)) ds = ∫⁻_{-π/2}^{π/2} F(a, π/2) da / cos a`, for every `F`. -/
+theorem lintegral_separatrixArc_eq (F : ℝ × ℝ → ℝ≥0∞) :
+    ∫⁻ s, F (separatrixArc s) =
+      ∫⁻ a in Ioo (-(π / 2)) (π / 2), ENNReal.ofReal (1 / cos a) * F (diagInv (a, π / 2)) := by
+  set φ : ℝ → ℝ := fun s ↦ arcAngle s - π / 2 with hφ
+  have hφ' (s : ℝ) : HasDerivAt φ (-(1 / cosh s)) s := (hasDerivAt_arcAngle s).sub_const _
+  have hinj : InjOn φ univ := fun s _ t _ hst ↦
+    strictAnti_arcAngle.injective (by simpa [hφ] using hst)
+  have himg : φ '' univ = Ioo (-(π / 2)) (π / 2) := by
+    ext a
+    constructor
+    · rintro ⟨s, -, rfl⟩
+      have := arcAngle_mem_Ioo s
+      exact ⟨by simp only [hφ]; linarith [this.1], by simp only [hφ]; linarith [this.2]⟩
+    · intro ha
+      refine ⟨-Real.log (tan ((a + π / 2) / 2)), mem_univ _, ?_⟩
+      simp only [hφ]
+      rw [arcAngle_surjOn ⟨by linarith [ha.1], by linarith [ha.2]⟩]
+      ring
+  have h := lintegral_image_eq_lintegral_abs_deriv_mul MeasurableSet.univ
+    (fun s _ ↦ (hφ' s).hasDerivWithinAt) hinj
+    (fun a ↦ ENNReal.ofReal (1 / cos a) * F (diagInv (a, π / 2)))
+  rw [himg, Measure.restrict_univ] at h
+  rw [h]
+  congr 1
+  funext s
+  have hc := cosh_pos s
+  have hcos : cos (φ s) = 1 / cosh s := by
+    simp only [hφ, cos_sub_pi_div_two, sin_arcAngle]
+  have hpt : diagInv (φ s, π / 2) = separatrixArc s := by
+    simp only [hφ, diagInv_apply, separatrixArc]
+    congr 1 <;> ring
+  rw [← mul_assoc, ← ENNReal.ofReal_mul (abs_nonneg _), hcos, hpt, abs_neg,
+    abs_of_pos (by positivity), one_div_one_div, one_div_mul_cancel hc.ne', ENNReal.ofReal_one,
+    one_mul]
 
 /-! ### Quarter orbits -/
 

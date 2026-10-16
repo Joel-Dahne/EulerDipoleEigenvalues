@@ -75,20 +75,19 @@ theorem ofReal_norm_sub_sq_le {f f' : ℝ → ℂ} (hf' : Measurable f') {c d : 
         rw [ENNReal.ofReal_mul (by linarith),
           ofReal_integral_eq_lintegral_ofReal hint2 (Eventually.of_forall fun v ↦ by positivity)]
 
-/-- The segment estimate (`lem:segment-estimate`): if `b ↦ G(a, b)` is locally absolutely
-    continuous on `(b₁, b₂)` with derivative `G_b` for almost every `a ∈ I`, and `b₀, β(a)`
-    lie in `(b₁, b₂)`, then
-    `∫_I |G(a, β(a)) - G(a, b₀)|² w(a) da ≤ ∫_I w(a) |β(a) - b₀| ∫_{b₁}^{b₂} |G_b(a, b)|² db da`. -/
-theorem lintegral_segment_le {G Gb : ℝ × ℝ → ℂ} (hGb : Measurable Gb) {I : Set ℝ}
+/-- The segment estimate on almost every line (`lem:segment-estimate`): if `b ↦ G(a, b)` is
+    locally absolutely continuous on `(b₁, b₂)` with derivative `G_b` for almost every `a ∈ I`,
+    and `b₀, β(a)` lie in `(b₁, b₂)`, then for almost every `a ∈ I`
+    `|G(a, β(a)) - G(a, b₀)|² w(a) ≤ w(a) |β(a) - b₀| ∫_{b₁}^{b₂} |G_b(a, b)|² db`. The right
+    side is measurable in `a` even when `G` is not. -/
+theorem ae_segment_le {G Gb : ℝ × ℝ → ℂ} (hGb : Measurable Gb) {I : Set ℝ}
     (hI : MeasurableSet I) {b₁ b₂ b₀ : ℝ} {β w : ℝ → ℝ} (hb₀ : b₀ ∈ Ioo b₁ b₂)
     (hβ : ∀ a ∈ I, β a ∈ Ioo b₁ b₂) (hw : ∀ a ∈ I, 0 ≤ w a)
     (hG : ∀ᵐ a ∂(volume.restrict I),
       (∀ c d, b₁ < c → c ≤ d → d < b₂ → AbsolutelyContinuousOnInterval (fun b ↦ G (a, b)) c d) ∧
         ∀ᵐ b ∂(volume.restrict (Ioo b₁ b₂)), HasDerivAt (fun b ↦ G (a, b)) (Gb (a, b)) b) :
-    ∫⁻ a in I, ENNReal.ofReal (‖G (a, β a) - G (a, b₀)‖ ^ 2 * w a) ≤
-      ∫⁻ a in I, ENNReal.ofReal (w a * |β a - b₀|) *
-        ∫⁻ b in Ioo b₁ b₂, ENNReal.ofReal (‖Gb (a, b)‖ ^ 2) := by
-  refine lintegral_mono_ae ?_
+    ∀ᵐ a ∂(volume.restrict I), ENNReal.ofReal (‖G (a, β a) - G (a, b₀)‖ ^ 2 * w a) ≤
+      ENNReal.ofReal (w a * |β a - b₀|) * ∫⁻ b in Ioo b₁ b₂, ENNReal.ofReal (‖Gb (a, b)‖ ^ 2) := by
   filter_upwards [hG, ae_restrict_mem hI] with a ⟨hac, hder⟩ ha
   have hβa := hβ a ha
   have hm : Measurable fun b ↦ Gb (a, b) := hGb.comp (measurable_const.prodMk measurable_id)
@@ -120,6 +119,19 @@ theorem lintegral_segment_le {G Gb : ℝ × ℝ → ℂ} (hGb : Measurable Gb) {
         rw [hdc]
         exact mul_le_mul' le_rfl (lintegral_mono_set (Ioo_subset_Ioo hc.le hd.le))
     _ = _ := by rw [ENNReal.ofReal_mul (hw a ha), mul_assoc]
+
+/-- The segment estimate (`lem:segment-estimate`), integrated over `a ∈ I`:
+    `∫_I |G(a, β(a)) - G(a, b₀)|² w(a) da ≤ ∫_I w(a) |β(a) - b₀| ∫_{b₁}^{b₂} |G_b(a, b)|² db da`. -/
+theorem lintegral_segment_le {G Gb : ℝ × ℝ → ℂ} (hGb : Measurable Gb) {I : Set ℝ}
+    (hI : MeasurableSet I) {b₁ b₂ b₀ : ℝ} {β w : ℝ → ℝ} (hb₀ : b₀ ∈ Ioo b₁ b₂)
+    (hβ : ∀ a ∈ I, β a ∈ Ioo b₁ b₂) (hw : ∀ a ∈ I, 0 ≤ w a)
+    (hG : ∀ᵐ a ∂(volume.restrict I),
+      (∀ c d, b₁ < c → c ≤ d → d < b₂ → AbsolutelyContinuousOnInterval (fun b ↦ G (a, b)) c d) ∧
+        ∀ᵐ b ∂(volume.restrict (Ioo b₁ b₂)), HasDerivAt (fun b ↦ G (a, b)) (Gb (a, b)) b) :
+    ∫⁻ a in I, ENNReal.ofReal (‖G (a, β a) - G (a, b₀)‖ ^ 2 * w a) ≤
+      ∫⁻ a in I, ENNReal.ofReal (w a * |β a - b₀|) *
+        ∫⁻ b in Ioo b₁ b₂, ENNReal.ofReal (‖Gb (a, b)‖ ^ 2) :=
+  lintegral_mono_ae (ae_segment_le hGb hI hb₀ hβ hw hG)
 
 /-- The hyperbola estimate (`lem:hyperbola-estimate`): if `v ↦ F(u, v)` is absolutely
     continuous on `[0, u₀]` with derivative `F_v` for almost every `u`, then on the

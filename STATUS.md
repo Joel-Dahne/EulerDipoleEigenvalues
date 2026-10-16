@@ -253,8 +253,31 @@ Also `one_div_sqrt_cos_sq_sub_le(_corner)` (`lem:quarter-weight`): for
 `0 ≤ h ≤ cos² a`, `1/√(cos²a - h²) ≤ 1/(cos a |sin a|)`, at most `2/cos a` near
 the corners.
 
-**Next:** `lem:arc-trace-identification`, `lem:ee-arc-energy`,
-`lem:ee-corner-tails` and the assembly of `lem:ee-level-traces`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
+**Arc traces and corner tails proved (2026-10-16)**, in the new module
+`SeparatrixTraces.lean`. `ee_arc_trace_identification` (`lem:arc-trace-identification`) rests
+only on `lem:traces` and `lem:local-to-global`; `ee_corner_tails` (`lem:ee-corner-tails`)
+also on `ee_arc_energy` (moved here from `EvenEven.lean`, still admitted). Both are stated for
+arbitrary line representatives of `ψₓ, ψ_y` (new `def:line-representative`,
+`lem:line-representatives`: existence from `lem:traces`, continuity on a.e. line, and any two
+agree on a.e. whole line), so `ee_level_traces` can pick any representatives. Digest
+(remark after `lem:ee-corner-tails`): `|ψₙ|² + |ψₜ|² = |∇ψ|²` (new
+`lem:normal-tangent-frame`) and the segment estimate directly in `(a, b)` replace the corner
+coordinates, the coefficient bounds and the hyperbola estimate (now unused, kept with a
+remark); the corner tails hold uniformly for all `h ∈ (0, 1)`, and the arc-tail half of the old
+statement follows from finiteness of the arc energy. The arc identification uses the
+`S₂`-parity of `ψₓ, ψ_y` directly, so `lem:ee-neumann` and `lem:arc-trace-ac` are no longer
+needed there. Also new: pointwise segment estimate `ae_segment_le` (the right side is
+measurable even when the representative is not), `lintegral_separatrixArc_eq`, diagonal
+Fubini/Tonelli helpers in `lem:diagonal-calculus`; `HasWeakPartialOn.congr_left` and
+`MemSobolevOn.congr_ae` moved to `SobolevLocal.lean`. The action-angle coordinates
+(`def:action-angle`) are defined in `OrbitCoordinates.lean`; `lem:action-angle-chart` is not
+yet stated in Lean.
+
+**Next:** prove `ee_arc_energy` (`lem:ee-arc-energy`: arc identification, `lem:traces`
+Gagliardo bound for the trace of `ψ_a`, local odd Hardy at `a = ±π/2`) and assemble
+`ee_level_traces` (`lem:ee-level-traces`: quarter decomposition, rotation to `k = 0`, raw vs
+line representatives on a.e. level, the middle convergence by the segment estimate, corner
+tails). Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
 coarea formula itself (`lintegral_cellSquare_eq`, now used by many proved

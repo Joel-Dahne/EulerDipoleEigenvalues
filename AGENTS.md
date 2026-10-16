@@ -116,7 +116,9 @@ motivation, and standard facts cited rather than proved.
   flow, changes of representative on levels and in transport pairs).
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
-  separatrix arc, as explicit graphs in diagonal coordinates; `SegmentEstimates.lean` bounds
+  separatrix arc, as explicit graphs in diagonal coordinates; `SeparatrixTraces.lean` defines
+  line representatives (`IsLineRep`) and treats the traces of `∇ψ` on the even–even arc and
+  the corner tails of the level integrals; `SegmentEstimates.lean` bounds
   restrictions to curves near a line (segment and hyperbola estimates); `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.
   Then
