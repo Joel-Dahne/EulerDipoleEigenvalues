@@ -304,11 +304,14 @@ $\alpha<h<h'<\beta$ outside $N$.
 \end{lemma}
 
 \begin{proof}
-Let $M(h)=\int_c^hm$ for some fixed $c$. Then $\int\varphi'(G+M)=0$ for all test functions,
-by Fubini. Fix a test function $\varphi_0$ with $\int\varphi_0=1$. Every test function
-$\psi$ is $\varphi'+(\int\psi)\varphi_0$ for a test function $\varphi$, so
-$\int\psi(G+M-k)=0$ with $k=\int\varphi_0(G+M)$, and $G+M=k$ almost everywhere by the
-fundamental lemma of the calculus of variations.
+\leanok
+Let $M(x)=\int_c^xm$ for a fixed $c$, and $D=G+M$. For a test function $\varphi$ supported in
+$[a,b]\ni c$, $M$ is absolutely continuous on $[a,b]$ with $M'=m$ almost everywhere, so
+integration by parts gives $\int\varphi'M=-\int\varphi m$, hence $\int\varphi'D=0$. Fix a test
+function $\varphi_0$ with $\int\varphi_0=1$. For a test function $g$, the primitive of
+$g-(\int g)\varphi_0$ is again a test function, so $\int gD=(\int g)k$ with $k=\int\varphi_0D$.
+By the fundamental lemma of the calculus of variations, $D=k$ almost everywhere, and
+$G(h)-G(h')=M(h')-M(h)=\int_h^{h'}m$ wherever $D(h)=D(h')=k$.
 \end{proof}
 
 \begin{lemma}[Basic properties of local Sobolev spaces]

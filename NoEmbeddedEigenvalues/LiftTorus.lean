@@ -161,6 +161,18 @@ theorem memSobolev_torusL2_of_smooth {u : ℝ × ℝ → ℂ} (hu : ContDiff ℝ
 
 /-! ### Integrals -/
 
+/-- The covering map is measure preserving on each translate of the fundamental square. -/
+theorem measurePreserving_torusProj_square (a b : ℝ) :
+    MeasurePreserving torusProj
+      (volume.restrict (Set.Ioc a (a + 2 * π) ×ˢ Set.Ioc b (b + 2 * π))) volume := by
+  change MeasurePreserving
+    (Prod.map (fun x : ℝ ↦ (x : AddCircle (2 * π)))
+      (fun x : ℝ ↦ (x : AddCircle (2 * π)))) _
+    (volume : Measure (AddCircle (2 * π) × AddCircle (2 * π)))
+  have h₁ := AddCircle.measurePreserving_mk (2 * π) a
+  have h₂ := AddCircle.measurePreserving_mk (2 * π) b
+  simpa only [Measure.prod_restrict, ← Measure.volume_eq_prod] using h₁.prod h₂
+
 /-- Integration over a period of an `Angle`-periodic function. -/
 theorem integral_angle_eq (f : Angle → ℂ) :
     ∫ a : Angle, f a = ∫ x in (0 : ℝ)..(2 * π), f (x : Angle) := by

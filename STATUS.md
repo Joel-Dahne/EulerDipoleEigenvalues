@@ -142,12 +142,23 @@ numerically), `stream_ibp` (`lem:stream-ibp`),
 `integrableOn_eeBoundaryDensity`, `ae_levelIntegral_eeBoundaryDensity`
 (`lem:ee-boundary-integrable`).
 
-**Next:** prove the pieces; the smallest are `lem:cell-periodic-integral`,
-`lem:ee-boundary-integrable` (integrability part), `lem:du-bois-reymond` and
-`lem:normal-field-cutoff-algebra`; `lem:stream-ibp` is reusable for
-`virial_l2`. Then `ee_cutoff_identity` from its pieces. Remaining direct
-even–even inputs: `ee_boundary_regularity`, `ee_gradient_traces`,
-`ee_cutoff_identity`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
+**Small pieces proved (2026-10-15)**, all with only `propext`,
+`Classical.choice`, `Quot.sound`: `exists_null_sub_eq_intervalIntegral`
+(`lem:du-bois-reymond`; integration by parts for the absolutely continuous
+primitive, a normed bump and Mathlib's fundamental lemma),
+`cutoff_normalField_algebra` (`lem:normal-field-cutoff-algebra`; SymPy
+cofactors for `linear_combination`), `squareIntegral_eq_setIntegral_cellSquare`
+(`lem:cell-periodic-integral`; a measurable torus representative via
+`AddCircle.equivIoc`, `measurePreserving_torusProj_square` now in
+`LiftTorus.lean`), and `integrableOn_eeBoundaryDensity` (the integrability half
+of `lem:ee-boundary-integrable`; the level-term half
+`ae_levelIntegral_eeBoundaryDensity` is still admitted).
+
+**Next:** `lem:stream-ibp` (reusable for `virial_l2`), then
+`ee_cutoff_identity` from its pieces; `lem:coarea-level-cutoff` and the
+level-term half of `lem:ee-boundary-integrable` rest on the admitted
+orbit-coordinate formula. Remaining direct even–even inputs:
+`ee_boundary_regularity`, `ee_gradient_traces`, `ee_cutoff_identity`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 
@@ -469,11 +480,11 @@ these admitted analytic results.
 - **Validation**: full Lean build and `just web` pass after restating the
   `L²` virial identity; `just graph thm:ee-exclusion` regenerates
   its graph (149 nodes). All 658 blueprint Lean references resolve without
-  duplicates, and every `\uses` and `\ref` label exists. There are now 54
-  admitted declarations (nine new admitted pieces replace the admitted
-  annular identity).
+  duplicates, and every `\uses` and `\ref` label exists. There are now 50
+  admitted declarations (nine pieces of the annular identity were stated and
+  four of them proved).
   `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
-  warnings; `EvenEven.lean` has only its six admitted-input warnings.
+  warnings; `EvenEven.lean` has only its five admitted-input warnings.
   `inner_virial_exact` and `normalCoeff_le` use only `propext`,
   `Classical.choice`, `Quot.sound`. Axiom checks on the canonical arc identity
   and all five new helpers use only `propext`, `Classical.choice` and

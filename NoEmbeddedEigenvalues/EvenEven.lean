@@ -235,7 +235,83 @@ def eeBoundaryDensity (ω : L2) (p : ℝ × ℝ) : ℝ :=
     of products of `L²` functions with bounded coefficients. -/
 theorem integrableOn_eeBoundaryDensity (ω : L2) :
     IntegrableOn (eeBoundaryDensity ω) cellSquare := by
-  sorry
+  have hmeas (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
+  have hC : MeasurableSet cellSquare := by
+    change MeasurableSet ({p : ℝ × ℝ | |(diagCoord p).1| < Real.pi / 2} ∩
+      {p | |(diagCoord p).2| < Real.pi / 2})
+    unfold diagCoord
+    exact (measurableSet_lt (by fun_prop) measurable_const).inter
+      (measurableSet_lt (by fun_prop) measurable_const)
+  have hAs : cellSquare ⊆ Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro p ⟨ha, hb⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    simp only [mem_prod, mem_Ioc]
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith [Real.pi_pos]
+  have hsq (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) cellSquare :=
+    (integrableOn_norm_liftL2_sq g).mono_set hAs
+  have hg : IntegrableOn (fun p ↦ 10 * (‖streamLift ω p‖ ^ 2 + ‖streamLiftX ω p‖ ^ 2 +
+      ‖streamLiftY ω p‖ ^ 2 + ‖liftL2 ω p‖ ^ 2)) cellSquare :=
+    ((((hsq _).add (hsq _)).add (hsq _)).add (hsq _)).const_mul 10
+  refine hg.mono' ?_ ?_
+  · have h0 := hmeas (invLap ω)
+    have h1 := hmeas ω
+    have h2 := hmeas (streamPartial 0 ω)
+    have h3 := hmeas (streamPartial 1 ω)
+    have hm : Measurable (eeBoundaryDensity ω) := by
+      change Measurable fun p ↦ gradNorm p *
+        (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re +
+        (2 - dipoleLift p) * (‖streamNormal ω p‖ ^ 2 - ‖streamTangent ω p‖ ^ 2 -
+          (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)
+      simp only [dipoleLift, streamNormal, streamTangent, normalDeriv, tangentDeriv, gradNorm,
+        streamLiftX, streamLiftY, streamLift]
+      fun_prop
+    exact hm.aestronglyMeasurable
+  · refine (ae_restrict_iff' hC).2 (Eventually.of_forall fun p hp ↦ ?_)
+    have hΨ0 : 0 < dipoleLift p := by
+      simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+    have hΨ2 : dipoleLift p ≤ 2 := by simpa [Ψ_torusProj] using Ψ_le_two (torusProj p)
+    have hρ0 : 0 ≤ gradNorm p := Real.sqrt_nonneg _
+    have hρ2 : gradNorm p ≤ 2 := by
+      have hsq2 : gradNorm p ^ 2 ≤ 2 := by
+        rw [gradNorm, Real.sq_sqrt (by positivity)]
+        nlinarith [Real.sin_sq_le_one p.1, Real.sin_sq_le_one p.2]
+      nlinarith
+    have hn := norm_normalDeriv_le (streamLiftX ω) (streamLiftY ω) p
+    have ht := norm_tangentDeriv_le (streamLiftX ω) (streamLiftY ω) p
+    set a := ‖streamLift ω p‖
+    set X := ‖streamLiftX ω p‖
+    set Y := ‖streamLiftY ω p‖
+    set w := ‖liftL2 ω p‖
+    set n := ‖streamNormal ω p‖
+    set t := ‖streamTangent ω p‖
+    have hn0 : 0 ≤ n := norm_nonneg _
+    have ht0 : 0 ≤ t := norm_nonneg _
+    have ha0 : 0 ≤ a := norm_nonneg _
+    have hw0 : 0 ≤ w := norm_nonneg _
+    have hX0 : 0 ≤ X := norm_nonneg _
+    have hY0 : 0 ≤ Y := norm_nonneg _
+    have e1 : |(streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re| ≤ a * n := by
+      refine (Complex.abs_re_le_norm _).trans ?_
+      rw [norm_mul, Complex.norm_conj]
+    have e2 : |(liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re| ≤ w * a := by
+      refine (Complex.abs_re_le_norm _).trans ?_
+      rw [norm_mul, Complex.norm_conj]
+    have hbd : |eeBoundaryDensity ω p| ≤ 2 * (a * n) + 2 * (n ^ 2 + t ^ 2 + w * a) := by
+      unfold eeBoundaryDensity
+      refine (abs_add_le _ _).trans (add_le_add ?_ ?_)
+      · rw [abs_mul, abs_of_nonneg hρ0]
+        exact mul_le_mul hρ2 e1 (abs_nonneg _) (by norm_num)
+      · rw [abs_mul, abs_of_nonneg (by linarith : (0 : ℝ) ≤ 2 - dipoleLift p)]
+        refine mul_le_mul (by linarith) ?_ (abs_nonneg _) (by norm_num)
+        refine (abs_sub _ _).trans (add_le_add ((abs_sub _ _).trans ?_) e2)
+        rw [abs_of_nonneg (sq_nonneg n), abs_of_nonneg (sq_nonneg t)]
+    rw [Real.norm_eq_abs]
+    refine hbd.trans ?_
+    have hn2 : n ^ 2 ≤ (X + Y) ^ 2 := pow_le_pow_left₀ hn0 hn 2
+    have ht2 : t ^ 2 ≤ (X + Y) ^ 2 := pow_le_pow_left₀ ht0 ht 2
+    have han : a * n ≤ a * (X + Y) := mul_le_mul_of_nonneg_left hn ha0
+    nlinarith [sq_nonneg (a - X), sq_nonneg (a - Y), sq_nonneg (X - Y), sq_nonneg (w - a)]
 
 /-- On almost every level the flow-time integral of the boundary density is the level term
     (`lem:ee-boundary-integrable`): `Ψ = 2h` there, and the three level integrals exist. -/

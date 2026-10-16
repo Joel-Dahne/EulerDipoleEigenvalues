@@ -5,7 +5,7 @@ import NoEmbeddedEigenvalues.LiftTorus
 # Cells, separatrix and critical points of the dipole
 
 Blueprint: `def:cells`, `lem:dipole-product`, `lem:separatrix-lines`,
-`lem:dipole-critical-points`, `lem:cell-square`; `lem:cell-periodic-integral` (stated).
+`lem:dipole-critical-points`, `lem:cell-square`; `lem:cell-periodic-integral`.
 
 In the diagonal coordinates `a = (x + y)/2`, `b = (x - y)/2` the dipole is
 `Ψ = 2 cos a cos b`. Hence the separatrix `{Ψ = 0}` is the union of the lines
@@ -348,15 +348,87 @@ theorem torusProj_corner {p : ℝ × ℝ} (ha : |(diagCoord p).1| = π / 2)
     left
     simp [h1, h2, Angle.coe_neg, Angle.neg_coe_pi]
 
+open MeasureTheory Set in
 /-- Integrals of periodic functions supported in the cells (`lem:cell-periodic-integral`): if
-    `F` is periodic, a.e. strongly measurable and vanishes where `Ψ ≤ 0`, its integral over the
-    period square equals its integral over the cell square. In `(-π, π]²` the set `{Ψ > 0}`
-    is exactly the cell square, and both squares are fundamental domains. -/
-theorem squareIntegral_eq_setIntegral_cellSquare {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] {F : ℝ × ℝ → E} (hF : IsPeriodicLift F)
-    (hm : MeasureTheory.AEStronglyMeasurable F)
-    (h0 : ∀ p, dipoleLift p ≤ 0 → F p = 0) :
-    squareIntegral F = ∫ p in cellSquare, F p ∂MeasureTheory.volume := by
-  sorry
+    `F` is periodic, measurable and vanishes where `Ψ ≤ 0`, its integral over the period square
+    equals its integral over the cell square. In `(-π, π]²` the set `{Ψ > 0}` is exactly the
+    cell square, and both squares are fundamental domains. -/
+theorem squareIntegral_eq_setIntegral_cellSquare {F : ℝ × ℝ → ℝ} (hF : IsPeriodicLift F)
+    (hm : Measurable F) (h0 : ∀ p, dipoleLift p ≤ 0 → F p = 0) :
+    squareIntegral F = ∫ p in cellSquare, F p := by
+  -- A measurable function on the torus inducing `F`, through the representatives in `(0, 2π]`.
+  let r : Angle → ℝ := fun θ ↦ ((AddCircle.equivIoc (2 * π) 0 θ : Ioc 0 (0 + 2 * π)) : ℝ)
+  have hr : Measurable r :=
+    measurable_subtype_coe.comp (AddCircle.measurableEquivIoc (2 * π) 0).measurable
+  have hrc (θ : Angle) : ((r θ : ℝ) : Angle) = θ := by
+    have h := (AddCircle.equivIoc (2 * π) 0).symm_apply_apply θ
+    rwa [AddCircle.equivIoc, QuotientAddGroup.equivIocMod_symm_apply] at h
+  let G : Torus → ℝ := fun t ↦ F (r t.1, r t.2)
+  have hG : Measurable G := hm.comp ((hr.comp measurable_fst).prodMk (hr.comp measurable_snd))
+  have hFG (q : ℝ × ℝ) : F q = G (torusProj q) :=
+    hF.eq_of_torusProj_eq (by simp [torusProj, hrc])
+  -- The integral over any translate of the fundamental square is the torus integral.
+  have hsq (a b : ℝ) : ∫ q in Ioc a (a + 2 * π) ×ˢ Ioc b (b + 2 * π), F q = ∫ t, G t := by
+    have hmp := measurePreserving_torusProj_square a b
+    have h := integral_map (μ := volume.restrict (Ioc a (a + 2 * π) ×ˢ Ioc b (b + 2 * π)))
+      hmp.measurable.aemeasurable (f := G) (by rw [hmp.map_eq]; exact hG.aestronglyMeasurable)
+    rw [hmp.map_eq] at h
+    rw [h]
+    exact integral_congr_ae (Filter.Eventually.of_forall fun q ↦ hFG q)
+  -- The period square differs from `(0, 2π]²` by a null set.
+  have hnull (c : ℝ) : volume {q : ℝ × ℝ | q.1 = c} = 0 ∧ volume {q : ℝ × ℝ | q.2 = c} = 0 := by
+    rw [Measure.volume_eq_prod]
+    constructor
+    · rw [show {q : ℝ × ℝ | q.1 = c} = {c} ×ˢ univ by ext; simp, Measure.prod_prod]
+      simp
+    · rw [show {q : ℝ × ℝ | q.2 = c} = univ ×ˢ {c} by ext; simp, Measure.prod_prod]
+      simp
+  have hae : periodSquare =ᵐ[volume] Ioc 0 (0 + 2 * π) ×ˢ Ioc 0 (0 + 2 * π) := by
+    rw [ae_eq_set]
+    constructor
+    · refine measure_mono_null (fun q hq ↦ ?_) (measure_union_null (hnull 0).1 (hnull 0).2)
+      obtain ⟨⟨⟨h1, h2⟩, h3, h4⟩, hn⟩ := hq
+      simp only [mem_prod, mem_Ioc, zero_add, not_and_or, not_lt] at hn
+      simp only [mem_union, mem_ofPred_eq]
+      rcases hn with (hn | hn) | hn | hn
+      · exact Or.inl (le_antisymm hn h1)
+      · exact absurd h2 (not_le.2 (by linarith))
+      · exact Or.inr (le_antisymm hn h3)
+      · exact absurd h4 (not_le.2 (by linarith))
+    · refine measure_mono_null (fun q hq ↦ ?_) measure_empty
+      obtain ⟨⟨⟨h1, h2⟩, h3, h4⟩, hn⟩ := hq
+      exact hn ⟨⟨h1.le, by linarith⟩, h3.le, by linarith⟩
+  rw [squareIntegral, setIntegral_congr_set hae, hsq, ← hsq (-π) (-π)]
+  -- On `(-π, π]²`, `F` vanishes off the cell square.
+  refine setIntegral_eq_of_subset_of_forall_sdiff_eq_zero
+    ((measurableSet_Ioc).prod measurableSet_Ioc) ?_ ?_
+  · rintro q ⟨ha, hb⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    simp only [mem_prod, mem_Ioc]
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith
+  · rintro q ⟨⟨⟨hx1, hx2⟩, hy1, hy2⟩, hq⟩
+    apply h0
+    rw [dipoleLift_eq_diag]
+    set A := (diagCoord q).1
+    set B := (diagCoord q).2
+    have hsum : |A| + |B| ≤ π := by
+      simp only [A, B, diagCoord]
+      rcases abs_cases ((q.1 + q.2) / 2) with ⟨h1, -⟩ | ⟨h1, -⟩ <;>
+        rcases abs_cases ((q.1 - q.2) / 2) with ⟨h2, -⟩ | ⟨h2, -⟩ <;> linarith
+    have hcos {u v : ℝ} (hu : π / 2 ≤ |u|) (hv : |u| + |v| ≤ π) : 2 * cos u * cos v ≤ 0 := by
+      have hcu : cos u ≤ 0 := by
+        rw [← cos_abs]
+        exact cos_nonpos_of_pi_div_two_le_of_le hu (by linarith [abs_nonneg v])
+      have hcv : 0 ≤ cos v := by
+        rw [← cos_abs]
+        exact cos_nonneg_of_mem_Icc ⟨by linarith [abs_nonneg v, pi_pos], by linarith⟩
+      nlinarith
+    by_cases hA : π / 2 ≤ |A|
+    · exact hcos hA hsum
+    · have hB : π / 2 ≤ |B| := by
+        by_contra hB
+        exact hq ⟨by linarith, by linarith⟩
+      rw [mul_assoc, mul_comm (cos A), ← mul_assoc]
+      exact hcos hB (by linarith)
 
 end NoEmbeddedEigenvalues

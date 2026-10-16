@@ -4,8 +4,9 @@ import NoEmbeddedEigenvalues.LiftIntegration
 # The normal field of the even–even sector
 
 Blueprint: `def:normal-field`, `lem:normal-field-algebra`, `lem:ee-density`;
-`lem:normal-field-annulus`, `lem:normal-coeff-bound`. The center is cut out of the truncated virial
-identity, so only cutoffs to an annulus are needed; no regularity at the center is used.
+`lem:normal-field-annulus`, `lem:normal-coeff-bound`, `lem:normal-field-cutoff-algebra`. The
+center is cut out of the truncated virial identity, so only cutoffs to an annulus are needed;
+no regularity at the center is used.
 
 On the positive cell minus its center, `W = (Ψ - 2) ∇Ψ / ρ²` is adapted with
 coefficient `f = Ψ (2 - Ψ) δ² / ρ⁴`, has divergence `f + 1`, and in the frame
@@ -482,7 +483,108 @@ theorem cutoff_normalField_algebra {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ
               sin p.2 ^ 2) : ℂ)‖ ^ 2) +
         2 * deriv χ (dipoleLift p) * (dipoleLift p - 2) *
           ‖((sin p.1 : ℂ) * X + (sin p.2 : ℂ) * Y) / (√(sin p.1 ^ 2 + sin p.2 ^ 2) : ℂ)‖ ^ 2 := by
-  sorry
+  have hχd : Differentiable ℝ χ := hχ.differentiable (by simp)
+  have hΨc : Continuous dipoleLift := by unfold dipoleLift; fun_prop
+  by_cases hp : ε₁ ≤ dipoleLift p ∧ dipoleLift p ≤ ε₂
+  · have hg : gradSq dipoleLift p ≠ 0 :=
+      (gradSq_dipoleLift_pos (hε₁.trans_le hp.1) (hp.2.trans_lt hε₂)).ne'
+    have hρ : sin p.1 ^ 2 + sin p.2 ^ 2 ≠ 0 := by rwa [gradSq_dipoleLift] at hg
+    have h3 := mul_invGradSq hρ
+    have hd := contDiffAt_normal hg
+    have hd₁ : DifferentiableAt ℝ normalField₁ p := hd.1.differentiableAt (by simp)
+    have hd₂ : DifferentiableAt ℝ normalField₂ p := hd.2.1.differentiableAt (by simp)
+    have hc : DifferentiableAt ℝ (fun q ↦ χ (dipoleLift q)) p :=
+      (hχd _).comp p (by unfold dipoleLift; fun_prop)
+    have hcx : partialX (fun q ↦ χ (dipoleLift q)) p = deriv χ (dipoleLift p) * -sin p.1 :=
+      ((hχd (dipoleLift p)).hasDerivAt.comp p.1
+        ((hasDerivAt_cos p.1).add_const (cos p.2))).deriv
+    have hcy : partialY (fun q ↦ χ (dipoleLift q)) p = deriv χ (dipoleLift p) * -sin p.2 :=
+      ((hχd (dipoleLift p)).hasDerivAt.comp p.2
+        ((hasDerivAt_cos p.2).const_add (cos p.1))).deriv
+    have hpx {u : ℝ × ℝ → ℝ} (hu : DifferentiableAt ℝ u p) :
+        partialX (fun q ↦ χ (dipoleLift q) * u q) p =
+          χ (dipoleLift p) * partialX u p + deriv χ (dipoleLift p) * -sin p.1 * u p := by
+      rw [show (fun q ↦ χ (dipoleLift q) * u q) = fun q ↦ χ (dipoleLift q) • u q from rfl,
+        partialX_smul hc hu, hcx]
+      simp only [smul_eq_mul]
+    have hpy {u : ℝ × ℝ → ℝ} (hu : DifferentiableAt ℝ u p) :
+        partialY (fun q ↦ χ (dipoleLift q) * u q) p =
+          χ (dipoleLift p) * partialY u p + deriv χ (dipoleLift p) * -sin p.2 * u p := by
+      rw [show (fun q ↦ χ (dipoleLift q) * u q) = fun q ↦ χ (dipoleLift q) • u q from rfl,
+        partialY_smul hc hu, hcy]
+      simp only [smul_eq_mul]
+    constructor
+    · rw [divergence, hpx hd₁, hpy hd₂, partialX_normalField₁ hρ, partialY_normalField₂ hρ,
+        normalField₁_apply, normalField₂_apply, normalCoeff_apply]
+      set k0 := χ (dipoleLift p)
+      set k1 := deriv χ (dipoleLift p)
+      set iG := invGradSq p
+      simp only [dipoleLift]
+      linear_combination
+        (-iG*k0*(iG*cos p.1^2 - 2*iG*cos p.1 - 2*iG*cos p.2^2 + 2*iG*cos p.2 + iG*sin p.1^2 + iG -
+          1)) * sin_sq_add_cos_sq p.1 + (-iG*k0*(2*iG*cos p.1 + iG*cos p.2^2 - 2*iG*cos p.2 +
+          2*iG*sin p.1^2 + iG*sin p.2^2 - iG - 1)) * sin_sq_add_cos_sq p.2 + (-2*iG*cos p.1*cos
+          p.2*k0 + 2*iG*cos p.1*k0 + 2*iG*cos p.2*k0 + iG*k0*sin p.1^2 + iG*k0*sin p.2^2 - 2*iG*k0 -
+          cos p.1*k1 - cos p.2*k1 - k0 + 2*k1) * h3
+    · intro X Y
+      have hR : √(sin p.1 ^ 2 + sin p.2 ^ 2) ^ 2 = sin p.1 ^ 2 + sin p.2 ^ 2 :=
+        Real.sq_sqrt (by positivity)
+      have hnorm (z : ℂ) :
+          ‖z / (√(sin p.1 ^ 2 + sin p.2 ^ 2) : ℂ)‖ ^ 2 = ‖z‖ ^ 2 * invGradSq p := by
+        rw [norm_div, Complex.norm_real, Real.norm_of_nonneg (Real.sqrt_nonneg _), div_pow, hR,
+          invGradSq, div_eq_mul_inv]
+      have hsum (a b : ℝ) : ‖(a : ℂ) * X + (b : ℂ) * Y‖ ^ 2 =
+          a ^ 2 * ‖X‖ ^ 2 + 2 * a * b * (X * (starRingEnd ℂ) Y).re + b ^ 2 * ‖Y‖ ^ 2 := by
+        rw [Complex.sq_norm, Complex.sq_norm, Complex.sq_norm, Complex.normSq_add,
+          Complex.normSq_mul, Complex.normSq_mul, Complex.normSq_ofReal, Complex.normSq_ofReal,
+          map_mul, Complex.conj_ofReal,
+          show (a : ℂ) * X * ((b : ℂ) * (starRingEnd ℂ) Y) =
+            ((a * b : ℝ) : ℂ) * (X * (starRingEnd ℂ) Y) by push_cast; ring,
+          Complex.re_ofReal_mul]
+        ring
+      have hsub : (sin p.2 : ℂ) * X - (sin p.1 : ℂ) * Y =
+          (sin p.2 : ℂ) * X + ((-sin p.1 : ℝ) : ℂ) * Y := by push_cast; ring
+      have hYX : (Y * (starRingEnd ℂ) X).re = (X * (starRingEnd ℂ) Y).re := by
+        rw [show Y * (starRingEnd ℂ) X = (starRingEnd ℂ) (X * (starRingEnd ℂ) Y) by
+          simp [mul_comm]]
+        exact Complex.conj_re _
+      rw [hpx hd₁, hpx hd₂, hpy hd₁, hpy hd₂, partialX_normalField₁ hρ,
+        partialY_normalField₁ hρ, partialX_normalField₂ hρ, partialY_normalField₂ hρ,
+        normalField₁_apply, normalField₂_apply, normalCoeff_apply, normalC_apply, hnorm, hnorm,
+        hsub, hsum, hsum, hYX]
+      set k0 := χ (dipoleLift p)
+      set k1 := deriv χ (dipoleLift p)
+      set iG := invGradSq p
+      set X2 := ‖X‖ ^ 2
+      set Y2 := ‖Y‖ ^ 2
+      set m := (X * (starRingEnd ℂ) Y).re
+      simp only [dipoleLift]
+      linear_combination
+        (iG*k0*(iG*X2*cos p.1^2 - 2*iG*X2*cos p.1 - 2*iG*X2*cos p.2^2 + 2*iG*X2*cos p.2 +
+          2*iG*X2*sin p.1^2 + iG*X2*sin p.2^2 + iG*X2 + iG*Y2*cos p.1^2 - 2*iG*Y2*cos p.1 -
+          2*iG*Y2*cos p.2^2 + 2*iG*Y2*cos p.2 - iG*Y2*sin p.2^2 + iG*Y2 - 2*X2)) * sin_sq_add_cos_sq
+          p.1 + (iG*k0*(2*iG*X2*cos p.1 + iG*X2*cos p.2^2 - 2*iG*X2*cos p.2 + iG*X2*sin p.1^2 -
+          iG*X2 + 2*iG*Y2*cos p.1 + iG*Y2*cos p.2^2 - 2*iG*Y2*cos p.2 + 3*iG*Y2*sin p.1^2 +
+          2*iG*Y2*sin p.2^2 - iG*Y2 - 2*Y2)) * sin_sq_add_cos_sq p.2 + (-2*iG*k0*(-X2*cos p.1*cos
+          p.2 + 2*X2*cos p.1 + X2*sin p.1^2 - X2 - Y2*cos p.1*cos p.2 + 2*Y2*cos p.2 + Y2*sin p.2^2
+          - Y2)) * h3
+  · -- The cutoff vanishes near `p` and near `Ψ(p)`.
+    have hout : dipoleLift p ∈ (Set.Icc ε₁ ε₂)ᶜ := hp
+    have hevs : ∀ᶠ s in nhds (dipoleLift p), χ s = 0 := by
+      filter_upwards [isClosed_Icc.isOpen_compl.mem_nhds hout] with s hs
+      by_contra hne
+      exact hs (hχ0 s hne)
+    have hk1 : deriv χ (dipoleLift p) = 0 := by
+      have hfe : χ =ᶠ[nhds (dipoleLift p)] fun _ ↦ (0 : ℝ) := hevs
+      rw [hfe.deriv_eq, deriv_const]
+    have hev : ∀ᶠ q in nhds p, χ (dipoleLift q) = 0 := hΨc.continuousAt.eventually hevs
+    have hk0 : χ (dipoleLift p) = 0 := hev.self_of_nhds
+    have hz {u : ℝ × ℝ → ℝ} : ∀ᶠ q in nhds p, χ (dipoleLift q) * u q = 0 := by
+      filter_upwards [hev] with q hq
+      simp [hq]
+    simp only [divergence, partialX_eq_zero_of_eventually hz, partialY_eq_zero_of_eventually hz,
+      hk0, hk1]
+    refine ⟨by ring, fun X Y ↦ by ring⟩
 
 end Annulus
 

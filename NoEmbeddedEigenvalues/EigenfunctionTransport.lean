@@ -138,18 +138,6 @@ theorem rotLift_mem_cellNeighbourhood {p : ℝ × ℝ} (hp : p ∈ cellNeighbour
     dsimp [diagCoord]
     ring
 
-/-- The covering map is measure preserving on each translate of the fundamental square. -/
-theorem measurePreserving_torusProj_square (a b : ℝ) :
-    MeasurePreserving torusProj
-      (volume.restrict (Ioc a (a + 2 * Real.pi) ×ˢ Ioc b (b + 2 * Real.pi))) volume := by
-  change MeasurePreserving
-    (Prod.map (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))
-      (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))) _
-    (volume : Measure (AddCircle (2 * Real.pi) × AddCircle (2 * Real.pi)))
-  have h₁ := AddCircle.measurePreserving_mk (2 * Real.pi) a
-  have h₂ := AddCircle.measurePreserving_mk (2 * Real.pi) b
-  simpa only [Measure.prod_restrict, ← Measure.volume_eq_prod] using h₁.prod h₂
-
 /-- `|g|²` of an `L²` function on the torus is integrable on the square `(-2π, 2π]²` of the
     lift, which contains the closed cell. -/
 theorem integrableOn_norm_liftL2_sq (g : L2) :
