@@ -168,6 +168,32 @@ derivation, not a proof of the remaining $L^2$ justification and
 almost-every-level limit.
 \end{remark}
 
+\begin{remark}[Digest note: the center can be cut out (October 2026, on paper)]
+Lemma~\ref{lem:ee-truncated-virial} does not need the virial identity for a field that is
+nonzero at the center, so Lemma~\ref{lem:normal-field-center} and the $C^{2,1}$ hypotheses
+of Lemma~\ref{lem:virial-l2} can be dropped from the even--even argument. Take $\chi$ in the
+cutoff algebra above smooth and compactly supported in $(0,2)$, tending to
+$\mathbf 1_{(\epsilon,2-\eta)}$. Then $\chi(\Psi)W$ is smooth and supported in a compact
+sub-annulus, where the proof in the remark after Lemma~\ref{lem:virial-l2} applies. Since
+$dx\,dy=ds\,dt$ with $s=\Psi$, the limit gives, besides the terms at $s=\epsilon$, the inner
+boundary terms
+\[
+  \eta\oint_{\{s=2-\eta\}}B\,dt\qquad\text{and}\qquad
+  \oint_{\{s=2-\eta\}}\rho\operatorname{Re}(\psi\overline{\psi_n})\,dt
+\]
+(with signs from $\chi'=-\delta_{2-\eta}$ there). Put
+$g(\eta)=\oint_{\{s=2-\eta\}}(|\nabla\psi|^2+|\omega||\psi|)\,dt$. By coarea
+$\int_0^{\eta_0}g\,d\eta=\int_{\{s>2-\eta_0\}}(|\nabla\psi|^2+|\omega||\psi|)<\infty$, so for every
+null set $N$ there are $\eta_j\notin N$, $\eta_j\to0$, with $\eta_jg(\eta_j)\to0$ (otherwise
+$g\ge c/\eta$ on a set of full measure near $0$). The first term is at most
+$\eta g(\eta)$. Near the center $\rho^2\sim2\eta$ (checked by series expansion) and $\psi$ is
+bounded, so the second is at most $C\sqrt\eta\,(S\,g(\eta))^{1/2}=O\bigl((\eta g(\eta))^{1/2}\bigr)$.
+Both vanish along $\eta_j$. On the bulk side $\mathcal J_\omega\lesssim|\omega|^2+|\nabla\psi|^2$
+near the center ($f=O(R^2)$, $0<c\le1$), so
+$\int_{\{\epsilon<\Psi<2-\eta_j\}}\mathcal J\to\int_{\{\Psi>\epsilon\}}\mathcal J$.
+This gives the lemma as stated. Not yet checked in Lean.
+\end{remark}
+
 \begin{remark}[Digest note: integrability needed for backwards assembly]
 The earlier Lean statement asserted only an equality of total Bochner integrals.
 That is insufficient for the monotonicity and zero-integral steps: a nonintegrable

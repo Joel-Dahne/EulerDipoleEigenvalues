@@ -237,4 +237,77 @@ continuous in $\omega\in L^2$ since $\psi\in H^2$. The difficulty is that a
 smooth approximation $\omega_n$ is not an exact eigenfunction, so one must
 track the error $H(\omega_n+\psi_n)-\lambda\omega_n\to0$ through the pairing
 with $Da_n$. It is worth deciding which route is simpler to formalize.
+The next remark carries this out with a mollifier adapted to the orbits.
+\end{remark}
+
+\begin{remark}[Digest note: a proof without the flow of $W$ (October 2026, on paper)]
+\label{rem:virial-transversal-mollifier}
+The following argument proves the first identity of Lemma~\ref{lem:virial-l2},
+$\operatorname{Re}\ip{f\omega}{\omega+\psi}=2\operatorname{Re}\ip{D\psi}{\omega}$, for a
+smooth adapted $W$ \emph{supported in a compact sub-annulus}
+$K=\{2h_1\le\Psi\le2h_2\}\cap\Cell$, $0<h_1<h_2<1$, of the positive cell (away from the
+separatrix and from the center). It uses neither the group $U_t$, nor the Jacobian of
+the flow of $W$, nor Lemma~\ref{lem:H-selfadjoint}, nor $\psi=\Delta^{-1}\omega$:
+only $\omega,L_0\omega\in L^2$, $\psi\in H^1$, and $a=\omega+\psi$ with $Ha=\lambda\omega$.
+(The quadratic form then follows from $\psi\in H^2$ as before.)
+Lemma~\ref{lem:ee-truncated-virial} needs no more than this
+(remark after that lemma).
+
+\emph{Step 1: an exact algebraic identity.} For every linear $V$ defined on $a$ and $\omega$,
+\[
+  \ip{Va}{Ha}-\ip{VHa}{a}=\lambda\bigl(\ip{V\psi}{\omega}-\ip{V\omega}{\psi}\bigr),
+\]
+since $Ha=\lambda\omega$ and the two $\ip{V\omega}{\omega}$ terms cancel. This replaces the
+manuscript's $\ip{[H,U_t]a}{a}=\lambda\ip{[U_t,A]\omega}{\omega}$: the operator
+$A=I+\Delta^{-1}$, its extension to constants and the boundedness of $[D,A]$ are not
+needed.
+
+\emph{Step 2: action-angle coordinates on the annulus.} On
+$\{2h_1'<\Psi<2h_2'\}\cap\Cell$ with $0<h_1'<h_1$, $h_2<h_2'<1$, use
+$(h,\theta)$, $h=\Psi/2$, $\theta=t/S(h)\bmod1$, with $t$ the flow time of
+Definition~\ref{def:orbit-coordinates}. Then $dx\,dy=2S(h)\,dh\,d\theta$ and
+$L_0=S(h)^{-1}\partial_\theta$, since $L_0h=0$ and $L_0t=1$. So $H$ contains no
+$h$-derivative, and $\omega\in\mathcal D(H)$ means exactly $\partial_\theta\omega\in L^2$
+on the annulus.
+
+\emph{Step 3: a transversal mollifier.} Let $\chi(h)$ be smooth, supported in
+$(h_1',h_2')$, equal to $1$ near $[h_1,h_2]$, and let $J_\epsilon g=\rho_\epsilon*_h(\chi g)$
+be convolution in $h$ at fixed $\theta$. Then $J_\epsilon$ commutes with $\partial_\theta$ and
+$\partial_h$, $J_\epsilon g\to\chi g$ in $L^2$ (in $H^1$ if $g\in H^1$), and
+$\epsilon\,\|\partial_hJ_\epsilon g\|=\|(\rho')_\epsilon*_h(\chi g)\|\to0$ for $g\in L^2$ because
+$\int\rho'=0$. The commutator with $H$ only sees the variation of the frequency
+$s(h)=1/S(h)$ across the window:
+\[
+  [L_0,J_\epsilon]g(h,\theta)=\int\rho_\epsilon(h-h')\bigl(s(h)-s(h')\bigr)\,
+     \partial_\theta(\chi g)(h',\theta)\,dh',\qquad
+  \|[H,J_\epsilon]g\|\le C\epsilon\,\|\partial_\theta(\chi g)\|.
+\]
+Hence $\|[H,J_\epsilon]a\|=O(\epsilon)$ while $\|DJ_\epsilon a\|=o(1/\epsilon)$, so their pairing
+tends to zero. This is the key point: with an ordinary mollifier in $x,y$ the same pairing is
+only $O(1)$ (its principal symbol does not vanish on the conormal directions of the
+orbits, where an $L^2$ eigenfunction can be rough), which is why plain mollification fails.
+
+\emph{Step 4: the limit.} Apply Step~1 with $V=J_\epsilon^\dagger DJ_\epsilon$ ($\dagger$ the
+$L^2$ adjoint), defined on functions with $\partial_\theta(\chi g)\in L^2$. The functions
+$J_\epsilon a$, $J_\epsilon\omega$, $J_\epsilon\psi$ are in $H^1$ with support in the annulus, where
+$D$ is skew and the smooth identity $2\operatorname{Re}\ip{Du}{Hu}=\operatorname{Re}\ip{fHu}{u}$
+holds by density (it is $\ip{[H,D]u}{u}$ with
+Lemmas~\ref{lem:commutator-pointwise} and~\ref{lem:commutator-algebra}). Writing
+$HJ_\epsilon a=J_\epsilon Ha+[H,J_\epsilon]a$ and using $Ha=\lambda\omega\in\mathcal D(H)$,
+the left side of Step~1 equals
+$\operatorname{Re}\ip{fHJ_\epsilon a}{J_\epsilon a}-2\operatorname{Re}\ip{DJ_\epsilon a}{[H,J_\epsilon]a}
+\to\lambda\operatorname{Re}\ip{f\omega}{a}$, and the right side equals
+$2\lambda\operatorname{Re}\ip{DJ_\epsilon\psi}{J_\epsilon\omega}\to2\lambda\operatorname{Re}\ip{D\psi}{\omega}$.
+Divide by $\lambda$.
+
+\emph{Status.} Checked by hand, not in Lean. The new infrastructure is the action-angle
+chart on a compact annulus: a $C^1$ diffeomorphism with the area formula, obtained from the
+explicit smooth map $p\mapsto(h,\theta)$ (smoothness of $t$ is the admitted part of
+Lemma~\ref{lem:orbit-coordinates}) and the inverse function theorem, together with the
+weak form of $L_0=S^{-1}\partial_\theta$. Numerically $S$ is smooth and decreasing on $(0,1)$ with
+$S\to2\pi$ at the center, so the twist $s'$ is bounded on compact sub-intervals.
+Compared with the manuscript's route this avoids differentiable dependence of ODE flows on
+initial data and Stone-type facts about $U_t$. The manuscript's $U_t$ argument itself looks
+correct: the formulas $D\Phi_tY=c_tY\circ\Phi_t$ and $HU_t=c_tU_tH-\frac i2(L_0\log c_t)U_t$
+were rederived (both sides of the first solve $\dot v=DW(\Phi_t)v$ because $[Y,W]=fY$).
 \end{remark}

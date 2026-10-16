@@ -95,9 +95,26 @@ reflections, proved on Fourier coefficients
 `Derivatives.lean`), with its sector form in `Sectors.lean`. The pointwise
 algebra was also checked by hand: both reflections reverse `ψₙ` and fix `ψₜ`.
 
-**Next:** digest `lem:virial-l2` on paper before formalizing more analysis
-(the flow group of the cut-off normal field `W` is the least verified step;
-it feeds `ee_truncated_virial`). Remaining direct even–even inputs:
+**`lem:virial-l2` digested on paper (2026-10-15).** The manuscript's `U_t`
+argument looks correct (its key formulas were rederived), but needs the flow
+of `W`, its Jacobian and `U_t` theory. Proposed replacement (digest note
+`rem:virial-transversal-mollifier` in `virial.tex`): for `W` supported in a
+compact sub-annulus of the cell, (1) the exact identity
+`⟨Va,Ha⟩ - ⟨VHa,a⟩ = λ(⟨Vψ,ω⟩ - ⟨Vω,ψ⟩)` for any linear `V` replaces the
+`A = I + Δ⁻¹` machinery; (2) in action-angle coordinates `(h, θ)`,
+`L₀ = S(h)⁻¹∂_θ`, so mollifying in `h` gives `‖[H,J_ε]a‖ = O(ε)` while
+`‖DJ_ε a‖ = o(1/ε)`; (3) `V = J_ε† D J_ε` and the limit. Separately, the
+center can be cut out of `lem:ee-truncated-virial` (inner boundary terms
+vanish along a sequence; remark in `even_even.tex`), so the even–even graph
+would no longer need `lem:normal-field-center`, `lem:H-selfadjoint` or
+`C^{2,1}` fields. New infrastructure needed: a `C¹` action-angle chart on a
+compact annulus (from the explicit `(h, t)` map and the inverse function
+theorem). **Decision pending:** restate `lem:virial-l2`/`virial_l2` for
+annulus-supported smooth fields and restructure the proof of
+`lem:ee-truncated-virial` accordingly. Odd–odd (weighted analogue) not yet
+examined.
+
+**Next:** that decision, then formalize. Remaining direct even–even inputs:
 `ee_boundary_regularity`, `ee_gradient_traces`, `ee_truncated_virial`, and
 the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
