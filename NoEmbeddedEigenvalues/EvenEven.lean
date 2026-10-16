@@ -12,12 +12,13 @@ The exclusion theorem and its fixed-rotation-character version are proved from n
 analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
 force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
 
-Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-annular-virial` (from the
-cutoff identity by coarea and du Bois-Reymond), `lem:ee-truncated-virial` (from the annular
+Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-cutoff-identity` (from
+`lem:virial-l2`, which is still admitted, and `lem:stream-ibp`), `lem:ee-annular-virial` (from
+the cutoff identity by coarea and du Bois-Reymond), `lem:ee-truncated-virial` (from the annular
 identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
-Inputs: `lem:ee-cutoff-identity`, `lem:ee-boundary-integrable`, `lem:ee-center-limit`,
+Inputs: the level-term half of `lem:ee-boundary-integrable`, `lem:ee-center-limit`,
 `lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
@@ -320,16 +321,349 @@ theorem ae_levelIntegral_eeBoundaryDensity (ω : L2) :
       levelIntegral h (eeBoundaryDensity ω) = eeLevelTerm ω h := by
   sorry
 
+/-! ### Integrals over the period square of weighted products of lifts
+
+Bookkeeping for `ee_cutoff_identity`: the terms of the virial identity are integrals of
+`c Re(u v̄)` with continuous `c` and lifts `u, v` of `L²` functions. -/
+
+/-- `c Re(u v̄)` for the lifts `u, v` of `g, h ∈ L²`. -/
+def rePair (c : ℝ × ℝ → ℝ) (g h : L2) (p : ℝ × ℝ) : ℝ :=
+  c p * (liftL2 g p * (starRingEnd ℂ) (liftL2 h p)).re
+
+theorem integrableOn_rePair {c : ℝ × ℝ → ℝ} (hc : Continuous c) (g h : L2) :
+    IntegrableOn (rePair c g h) periodSquare :=
+  (integrableOn_liftL2_mul_conj g h).re.continuousOn_mul hc.continuousOn isCompact_periodSquare
+
+/-- `Re ∫ c u v̄ = ∫ c Re(u v̄)` over the period square for real continuous `c`. -/
+theorem re_squarePairing_smul {c : ℝ × ℝ → ℝ} (hc : Continuous c) (g h : L2) :
+    (squarePairing (fun p ↦ c p • liftL2 g p) (liftL2 h)).re = squareIntegral (rePair c g h) := by
+  have hi : IntegrableOn (fun p ↦ ((c p : ℝ) : ℂ) *
+      (liftL2 g p * (starRingEnd ℂ) (liftL2 h p))) periodSquare :=
+    (integrableOn_liftL2_mul_conj g h).continuousOn_mul
+      (Complex.continuous_ofReal.comp hc).continuousOn isCompact_periodSquare
+  have hre := integral_re hi
+  simp only [RCLike.re_to_complex] at hre
+  unfold squarePairing squareIntegral
+  simp only [Complex.real_smul, mul_assoc]
+  rw [← hre]
+  congr 1
+  funext p
+  rw [rePair, Complex.re_ofReal_mul]
+
+/-- Splitting a weighted finite sum of integrable functions on the period square. -/
+theorem squareIntegral_weighted_sum {n : ℕ} (w : Fin n → ℝ) (F : Fin n → ℝ × ℝ → ℝ)
+    (hF : ∀ i, IntegrableOn (F i) periodSquare) :
+    squareIntegral (fun p ↦ ∑ i, w i * F i p) = ∑ i, w i * squareIntegral (F i) := by
+  unfold squareIntegral
+  rw [integral_finsetSum _ (fun i _ ↦ (hF i).const_mul (w i))]
+  exact Finset.sum_congr rfl fun i _ ↦ integral_const_mul (w i) _
+
+theorem re_mul_conj_self (z : ℂ) : (z * (starRingEnd ℂ) z).re = ‖z‖ ^ 2 := by
+  rw [Complex.mul_conj, Complex.ofReal_re, Complex.normSq_eq_norm_sq]
+
+theorem re_mul_conj_smul_add (s X Y : ℂ) (a b : ℝ) :
+    (s * (starRingEnd ℂ) (a • X + b • Y)).re =
+      a * (s * (starRingEnd ℂ) X).re + b * (s * (starRingEnd ℂ) Y).re := by
+  rw [Complex.real_smul, Complex.real_smul, map_add, map_mul, map_mul, Complex.conj_ofReal,
+    Complex.conj_ofReal, mul_add, Complex.add_re,
+    show s * ((a : ℂ) * (starRingEnd ℂ) X) = (a : ℂ) * (s * (starRingEnd ℂ) X) by ring,
+    show s * ((b : ℂ) * (starRingEnd ℂ) Y) = (b : ℂ) * (s * (starRingEnd ℂ) Y) by ring,
+    Complex.re_ofReal_mul, Complex.re_ofReal_mul]
+
+/-- With `N = sₓX + s_yY`, `T = s_yX - sₓY` and `r = (sₓ² + s_y²)^{1/2} ≠ 0`:
+    `r Re(s (N/r)‾) = sₓ Re(sX̄) + s_y Re(sȲ)` and `|N/r|² + |T/r|² = |X|² + |Y|²`. -/
+theorem normal_tangent_frame {sx sy : ℝ} (hρ : sx ^ 2 + sy ^ 2 ≠ 0) (X Y s : ℂ) :
+    √(sx ^ 2 + sy ^ 2) * (s * (starRingEnd ℂ) (((sx : ℂ) * X + (sy : ℂ) * Y) /
+        (√(sx ^ 2 + sy ^ 2) : ℂ))).re =
+      sx * (s * (starRingEnd ℂ) X).re + sy * (s * (starRingEnd ℂ) Y).re ∧
+    ‖((sx : ℂ) * X + (sy : ℂ) * Y) / (√(sx ^ 2 + sy ^ 2) : ℂ)‖ ^ 2 +
+      ‖((sy : ℂ) * X - (sx : ℂ) * Y) / (√(sx ^ 2 + sy ^ 2) : ℂ)‖ ^ 2 = ‖X‖ ^ 2 + ‖Y‖ ^ 2 := by
+  have hpos : 0 < sx ^ 2 + sy ^ 2 := lt_of_le_of_ne (by positivity) (Ne.symm hρ)
+  have hr : 0 < √(sx ^ 2 + sy ^ 2) := Real.sqrt_pos.2 hpos
+  have hR : √(sx ^ 2 + sy ^ 2) ^ 2 = sx ^ 2 + sy ^ 2 := Real.sq_sqrt hpos.le
+  constructor
+  · rw [map_div₀, Complex.conj_ofReal, mul_div_assoc', Complex.div_ofReal_re,
+      mul_div_cancel₀ _ hr.ne', map_add, map_mul, map_mul, Complex.conj_ofReal,
+      Complex.conj_ofReal, mul_add, Complex.add_re,
+      show s * ((sx : ℂ) * (starRingEnd ℂ) X) = (sx : ℂ) * (s * (starRingEnd ℂ) X) by ring,
+      show s * ((sy : ℂ) * (starRingEnd ℂ) Y) = (sy : ℂ) * (s * (starRingEnd ℂ) Y) by ring,
+      Complex.re_ofReal_mul, Complex.re_ofReal_mul]
+  · rw [norm_div, norm_div, Complex.norm_real, Real.norm_of_nonneg hr.le, div_pow, div_pow, hR,
+      ← add_div, div_eq_iff hρ]
+    simp only [Complex.sq_norm, Complex.normSq_apply, Complex.add_re, Complex.mul_re,
+      Complex.ofReal_re, Complex.ofReal_im, Complex.add_im, Complex.mul_im, Complex.sub_re,
+      Complex.sub_im]
+    ring
+
 /-- The cutoff identity (`lem:ee-cutoff-identity`): for smooth `φ` vanishing outside
     `[a, b] ⊂ (0, 1)` and `χ(s) = φ(s/2)`, `∫_cell χ(Ψ) 𝒥 = ∫_cell χ'(Ψ) E`. From
     `lem:virial-l2` for `χ(Ψ)W`, the cutoff algebra, integration by parts for `ψ ∈ H²`, and the
-    passage from the period square to the cell. -/
+    passage from the period square to the cell. Pointwise, `χ(Ψ)𝒥 - χ'(Ψ)E` is a weighted sum
+    of ten integrands that are integrable on the period square; the virial identity and the two
+    integrations by parts make the weighted sum of their integrals vanish. -/
 theorem ee_cutoff_identity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2} (hω : IsEigenSolution lam ω)
     {φ : ℝ → ℝ} (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ) {a b : ℝ} (ha : 0 < a)
     (hb : b < 1) (hsupp : ∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) :
     ∫ p in cellSquare, φ (dipoleLift p / 2) * eeBulkDensity ω p =
       ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 * eeBoundaryDensity ω p := by
-  sorry
+  -- The cutoff `χ(s) = φ(s/2)`, supported in `[2a, 2b] ⊂ (0, 2)`.
+  obtain ⟨χ, hχdef⟩ : ∃ χ : ℝ → ℝ, χ = fun s ↦ φ (s / 2) := ⟨_, rfl⟩
+  have hχv (r : ℝ) : φ (r / 2) = χ r := by rw [hχdef]
+  have hφd : Differentiable ℝ φ := hφ.differentiable (by simp)
+  have hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ := hχdef ▸ hφ.comp (contDiff_id.div_const 2)
+  have hχd : Differentiable ℝ χ := hχ.differentiable (by simp)
+  have hdχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (deriv χ) := (contDiff_infty_iff_deriv.1 hχ).2
+  have hχ' (r : ℝ) : deriv φ (r / 2) / 2 = deriv χ r := by
+    have h := (hφd (r / 2)).hasDerivAt.comp r ((hasDerivAt_id r).div_const 2)
+    rw [hχdef]
+    refine (h.deriv.trans ?_).symm
+    ring
+  have hχ0 : ∀ s, χ s ≠ 0 → 2 * a ≤ s ∧ s ≤ 2 * b := fun s hs ↦ by
+    obtain ⟨h1, h2⟩ := hsupp _ (by rwa [hχdef] at hs)
+    constructor <;> linarith
+  have hdχ0 : ∀ s, deriv χ s ≠ 0 → 2 * a ≤ s ∧ s ≤ 2 * b := by
+    intro s hs
+    by_contra hout
+    have hev : ∀ᶠ r in 𝓝 s, χ r = 0 := by
+      filter_upwards [isClosed_Icc.isOpen_compl.mem_nhds
+        (show s ∈ (Icc (2 * a) (2 * b))ᶜ from fun h ↦ hout h)] with r hr
+      by_contra hne
+      exact hr (hχ0 r hne)
+    have hev' : χ =ᶠ[𝓝 s] fun _ ↦ (0 : ℝ) := hev
+    exact hs (by rw [hev'.deriv_eq, deriv_const])
+  have hε₁ : 0 < 2 * a := by linarith
+  have hε₂ : 2 * b < 2 := by linarith
+  have hΨs : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) dipoleLift := by unfold dipoleLift; fun_prop
+  have hΨc : Continuous dipoleLift := hΨs.continuous
+  have hpΨ : IsPeriodicLift dipoleLift := fun p ↦ by
+    simp only [dipoleLift, Real.cos_add_two_pi, and_self]
+  -- The virial identity for `χ(Ψ)W`.
+  obtain ⟨hW₁, hW₂, hf, hpW₁, hpW₂, hpf, had⟩ := annularCutoff_normalField hχ hε₁ hε₂ hχ0
+  have hle (n : ℕ) : ((n : ℕ∞) : WithTop ℕ∞) ≤ ((⊤ : ℕ∞) : WithTop ℕ∞) :=
+    WithTop.coe_le_coe.2 le_top
+  have hsuppV : ∀ p, ((χ (dipoleLift p) * normalField₁ p ≠ 0 ∨
+      χ (dipoleLift p) * normalField₂ p ≠ 0 ∨ χ (dipoleLift p) * normalCoeff p ≠ 0) →
+      2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b) := by
+    intro p hp
+    apply hχ0
+    rcases hp with h | h | h <;> exact left_ne_zero_of_mul h
+  have V := (virial_l2 had (hW₁.of_le (hle 3)) (hW₂.of_le (hle 3)) (hf.of_le (hle 2)) hpW₁ hpW₂
+    hpf ha hb hsuppV hlam hω).2
+  -- `f_χ - div W_χ = φ₁` with `φ₁ = -χ(Ψ) - (Ψ - 2)χ'(Ψ)`.
+  obtain ⟨φ₁, hφ₁⟩ : ∃ φ₁ : ℝ × ℝ → ℝ, φ₁ = fun p ↦
+      -χ (dipoleLift p) - (dipoleLift p - 2) * deriv χ (dipoleLift p) := ⟨_, rfl⟩
+  have hφ₁eq : (fun q ↦ χ (dipoleLift q) * normalCoeff q -
+      divergence (fun q ↦ χ (dipoleLift q) * normalField₁ q)
+        (fun q ↦ χ (dipoleLift q) * normalField₂ q) q) = φ₁ := by
+    rw [hφ₁]
+    exact funext fun q ↦ (cutoff_normalField_algebra hχ hε₁ hε₂ hχ0 q).1
+  rw [hφ₁eq] at V
+  have hφ₁s : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ₁ := by
+    rw [hφ₁]
+    exact (hχ.comp hΨs).neg.sub ((hΨs.sub contDiff_const).mul (hdχ.comp hΨs))
+  have hφ₁p : IsPeriodicLift φ₁ := fun p ↦ by
+    simp only [hφ₁, (hpΨ p).1, (hpΨ p).2, and_self]
+  have hcs : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun p ↦ χ (dipoleLift p)) := hχ.comp hΨs
+  have hcp : IsPeriodicLift (fun p ↦ χ (dipoleLift p)) := fun p ↦ by
+    simp only [(hpΨ p).1, (hpΨ p).2, and_self]
+  -- Integration by parts for `ψ` with `φ₁` and with `χ(Ψ)`.
+  have S1 := (stream_ibp hω.1 hφ₁s hφ₁p).1
+  have S2 := (stream_ibp hω.1 hcs hcp).2
+  rw [S1] at V
+  simp only [streamLift, streamLiftX, streamLiftY] at V S2
+  -- Continuity of the coefficients.
+  have hc1 {u : ℝ × ℝ → ℝ} (hu : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) u) : Continuous (partialX u) :=
+    (contDiff_partialX (n := 0) (by simpa using hu.of_le (hle 1))).continuous
+  have hc2 {u : ℝ × ℝ → ℝ} (hu : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) u) : Continuous (partialY u) :=
+    (contDiff_partialY (n := 0) (by simpa using hu.of_le (hle 1))).continuous
+  rw [re_squarePairing_smul hf.continuous ω ω,
+    re_squarePairing_smul (hc1 hW₁) (streamPartial 0 ω) (streamPartial 0 ω),
+    re_squarePairing_smul (hc1 hW₂) (streamPartial 1 ω) (streamPartial 0 ω),
+    re_squarePairing_smul (hc2 hW₁) (streamPartial 0 ω) (streamPartial 1 ω),
+    re_squarePairing_smul (hc2 hW₂) (streamPartial 1 ω) (streamPartial 1 ω),
+    re_squarePairing_smul hf.continuous (streamPartial 0 ω) (streamPartial 0 ω),
+    re_squarePairing_smul hf.continuous (streamPartial 1 ω) (streamPartial 1 ω)] at V
+  -- Abbreviations `K = |∇ψ|² + Re(ωψ̄)` and `R = Re(ψ (∇χ(Ψ)·∇ψ)‾)`.
+  obtain ⟨K, hK⟩ : ∃ K : ℝ × ℝ → ℝ, K = fun p ↦ ‖liftL2 (streamPartial 0 ω) p‖ ^ 2 +
+      ‖liftL2 (streamPartial 1 ω) p‖ ^ 2 +
+      (liftL2 ω p * (starRingEnd ℂ) (liftL2 (invLap ω) p)).re := ⟨_, rfl⟩
+  obtain ⟨R, hR⟩ : ∃ R : ℝ × ℝ → ℝ, R = fun p ↦ (liftL2 (invLap ω) p * (starRingEnd ℂ)
+      (partialX (fun p ↦ χ (dipoleLift p)) p • liftL2 (streamPartial 0 ω) p +
+        partialY (fun p ↦ χ (dipoleLift p)) p • liftL2 (streamPartial 1 ω) p)).re := ⟨_, rfl⟩
+  have hKp (p : ℝ × ℝ) : ‖liftL2 (streamPartial 0 ω) p‖ ^ 2 +
+      ‖liftL2 (streamPartial 1 ω) p‖ ^ 2 +
+      (liftL2 ω p * (starRingEnd ℂ) (liftL2 (invLap ω) p)).re = K p := by rw [hK]
+  have hRp (p : ℝ × ℝ) : (liftL2 (invLap ω) p * (starRingEnd ℂ)
+      (partialX (fun p ↦ χ (dipoleLift p)) p • liftL2 (streamPartial 0 ω) p +
+        partialY (fun p ↦ χ (dipoleLift p)) p • liftL2 (streamPartial 1 ω) p)).re = R p := by
+    rw [hR]
+  simp only [hKp, hRp] at V S2
+  -- Integrability on the period square.
+  have hsub : periodSquare ⊆
+      Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro q ⟨⟨h1, h2⟩, h3, h4⟩
+    exact ⟨⟨by linarith [Real.pi_pos], h2⟩, by linarith [Real.pi_pos], h4⟩
+  have hn2 (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) periodSquare :=
+    (integrableOn_norm_liftL2_sq g).mono_set hsub
+  have hKi : IntegrableOn K periodSquare := by
+    rw [hK]
+    exact ((hn2 _).add (hn2 _)).add (integrableOn_liftL2_mul_conj ω (invLap ω)).re
+  have hRi : IntegrableOn R periodSquare := by
+    refine ((integrableOn_rePair (hc1 hcs) (invLap ω) (streamPartial 0 ω)).add
+      (integrableOn_rePair (hc2 hcs) (invLap ω) (streamPartial 1 ω))).congr_fun
+      (fun p _ ↦ ?_) isCompact_periodSquare.isClosed.measurableSet
+    rw [hR]
+    exact (re_mul_conj_smul_add _ _ _ _ _).symm
+  have hFs : ∀ i, IntegrableOn (![rePair (fun p ↦ χ (dipoleLift p) * normalCoeff p) ω ω,
+      rePair (partialX fun p ↦ χ (dipoleLift p) * normalField₁ p) (streamPartial 0 ω)
+        (streamPartial 0 ω),
+      rePair (partialX fun p ↦ χ (dipoleLift p) * normalField₂ p) (streamPartial 1 ω)
+        (streamPartial 0 ω),
+      rePair (partialY fun p ↦ χ (dipoleLift p) * normalField₁ p) (streamPartial 0 ω)
+        (streamPartial 1 ω),
+      rePair (partialY fun p ↦ χ (dipoleLift p) * normalField₂ p) (streamPartial 1 ω)
+        (streamPartial 1 ω),
+      rePair (fun p ↦ χ (dipoleLift p) * normalCoeff p) (streamPartial 0 ω) (streamPartial 0 ω),
+      rePair (fun p ↦ χ (dipoleLift p) * normalCoeff p) (streamPartial 1 ω) (streamPartial 1 ω),
+      fun p ↦ φ₁ p * K p, fun p ↦ χ (dipoleLift p) * K p, R] i) periodSquare := by
+    intro i
+    fin_cases i
+    · exact integrableOn_rePair hf.continuous _ _
+    · exact integrableOn_rePair (hc1 hW₁) _ _
+    · exact integrableOn_rePair (hc1 hW₂) _ _
+    · exact integrableOn_rePair (hc2 hW₁) _ _
+    · exact integrableOn_rePair (hc2 hW₂) _ _
+    · exact integrableOn_rePair hf.continuous _ _
+    · exact integrableOn_rePair hf.continuous _ _
+    · exact hKi.continuousOn_mul hφ₁s.continuous.continuousOn isCompact_periodSquare
+    · exact hKi.continuousOn_mul hcs.continuous.continuousOn isCompact_periodSquare
+    · exact hRi
+  -- The difference of the two sides is pointwise the weighted sum.
+  obtain ⟨D, hDdef⟩ : ∃ D : ℝ × ℝ → ℝ, D = fun p ↦ χ (dipoleLift p) * eeBulkDensity ω p -
+      deriv χ (dipoleLift p) * eeBoundaryDensity ω p := ⟨_, rfl⟩
+  have hD : D = fun p ↦ ∑ i, (![1, 2, 2, 2, 2, -1, -1, 1, 1, 1] : Fin 10 → ℝ) i *
+      (![rePair (fun p ↦ χ (dipoleLift p) * normalCoeff p) ω ω,
+      rePair (partialX fun p ↦ χ (dipoleLift p) * normalField₁ p) (streamPartial 0 ω)
+        (streamPartial 0 ω),
+      rePair (partialX fun p ↦ χ (dipoleLift p) * normalField₂ p) (streamPartial 1 ω)
+        (streamPartial 0 ω),
+      rePair (partialY fun p ↦ χ (dipoleLift p) * normalField₁ p) (streamPartial 0 ω)
+        (streamPartial 1 ω),
+      rePair (partialY fun p ↦ χ (dipoleLift p) * normalField₂ p) (streamPartial 1 ω)
+        (streamPartial 1 ω),
+      rePair (fun p ↦ χ (dipoleLift p) * normalCoeff p) (streamPartial 0 ω) (streamPartial 0 ω),
+      rePair (fun p ↦ χ (dipoleLift p) * normalCoeff p) (streamPartial 1 ω) (streamPartial 1 ω),
+      fun p ↦ φ₁ p * K p, fun p ↦ χ (dipoleLift p) * K p, R] i) p := by
+    funext p
+    have hcx : partialX (fun q ↦ χ (dipoleLift q)) p = deriv χ (dipoleLift p) * -Real.sin p.1 :=
+      ((hχd (dipoleLift p)).hasDerivAt.comp p.1
+        ((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2))).deriv
+    have hcy : partialY (fun q ↦ χ (dipoleLift q)) p = deriv χ (dipoleLift p) * -Real.sin p.2 :=
+      ((hχd (dipoleLift p)).hasDerivAt.comp p.2
+        ((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1))).deriv
+    have alg2 := (cutoff_normalField_algebra hχ hε₁ hε₂ hχ0 p).2
+      (liftL2 (streamPartial 0 ω) p) (liftL2 (streamPartial 1 ω) p)
+    have key : deriv χ (dipoleLift p) *
+        (√(Real.sin p.1 ^ 2 + Real.sin p.2 ^ 2) * (liftL2 (invLap ω) p * (starRingEnd ℂ)
+          (((Real.sin p.1 : ℂ) * liftL2 (streamPartial 0 ω) p +
+            (Real.sin p.2 : ℂ) * liftL2 (streamPartial 1 ω) p) /
+            (√(Real.sin p.1 ^ 2 + Real.sin p.2 ^ 2) : ℂ))).re -
+        (Real.sin p.1 * (liftL2 (invLap ω) p * (starRingEnd ℂ) (liftL2 (streamPartial 0 ω) p)).re +
+          Real.sin p.2 * (liftL2 (invLap ω) p * (starRingEnd ℂ)
+            (liftL2 (streamPartial 1 ω) p)).re) +
+        (2 - dipoleLift p) * (‖liftL2 (streamPartial 0 ω) p‖ ^ 2 +
+          ‖liftL2 (streamPartial 1 ω) p‖ ^ 2 -
+          ‖((Real.sin p.1 : ℂ) * liftL2 (streamPartial 0 ω) p +
+            (Real.sin p.2 : ℂ) * liftL2 (streamPartial 1 ω) p) /
+            (√(Real.sin p.1 ^ 2 + Real.sin p.2 ^ 2) : ℂ)‖ ^ 2 -
+          ‖((Real.sin p.2 : ℂ) * liftL2 (streamPartial 0 ω) p -
+            (Real.sin p.1 : ℂ) * liftL2 (streamPartial 1 ω) p) /
+            (√(Real.sin p.1 ^ 2 + Real.sin p.2 ^ 2) : ℂ)‖ ^ 2)) = 0 := by
+      by_cases hk : deriv χ (dipoleLift p) = 0
+      · rw [hk, zero_mul]
+      · obtain ⟨h1, h2⟩ := hdχ0 _ hk
+        have hg := gradSq_dipoleLift_pos (p := p) (by linarith) (by linarith)
+        rw [gradSq_dipoleLift] at hg
+        have fr := normal_tangent_frame hg.ne' (liftL2 (streamPartial 0 ω) p)
+          (liftL2 (streamPartial 1 ω) p) (liftL2 (invLap ω) p)
+        linear_combination deriv χ (dipoleLift p) * fr.1 -
+          deriv χ (dipoleLift p) * (2 - dipoleLift p) * fr.2
+    simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, Matrix.cons_val_zero, Matrix.cons_val_succ,
+      hDdef, rePair, hK, hR, hφ₁, eeBulkDensity, eeDensity, eeBoundaryDensity, streamNormal,
+      streamTangent, streamLift, streamLiftX, streamLiftY, normalDeriv, tangentDeriv, gradNorm,
+      re_mul_conj_self, re_mul_conj_smul_add, hcx, hcy]
+    linear_combination -alg2 - key
+  have hsum : squareIntegral D = 0 := by
+    rw [hD, squareIntegral_weighted_sum _ _ hFs]
+    simp [Fin.sum_univ_succ]
+    linarith
+  -- From the period square to the cell.
+  have hmeas (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
+  have hDm : Measurable D := by
+    have h0 := hmeas (invLap ω)
+    have h1 := hmeas ω
+    have h2 := hmeas (streamPartial 0 ω)
+    have h3 := hmeas (streamPartial 1 ω)
+    have hχm : Measurable χ := hχ.continuous.measurable
+    have hdχm : Measurable (deriv χ) := hdχ.continuous.measurable
+    rw [hDdef]
+    simp only [eeBulkDensity, eeDensity, eeBoundaryDensity, normalCoeff, normalC,
+      gradSq_dipoleLift, dipoleLift, streamNormal, streamTangent, normalDeriv, tangentDeriv,
+      gradNorm, streamLiftX, streamLiftY, streamLift]
+    fun_prop
+  have hDp : IsPeriodicLift D := by
+    intro p
+    have hl (g : L2) := isPeriodicLift_liftL2 g p
+    rw [hDdef]
+    constructor <;>
+    simp only [eeBulkDensity, eeDensity, eeBoundaryDensity, normalCoeff, normalC,
+      gradSq_dipoleLift, streamNormal, streamTangent, normalDeriv, tangentDeriv, gradNorm,
+      streamLiftX, streamLiftY, streamLift, (hl _).1, (hl _).2, (hpΨ p).1, (hpΨ p).2,
+      Real.sin_add_two_pi, Real.cos_add_two_pi]
+  have hD0 : ∀ p, dipoleLift p ≤ 0 → D p = 0 := by
+    intro p hp
+    have h1 : χ (dipoleLift p) = 0 := by
+      by_contra h
+      linarith [(hχ0 _ h).1]
+    have h2 : deriv χ (dipoleLift p) = 0 := by
+      by_contra h
+      linarith [(hdχ0 _ h).1]
+    rw [hDdef]
+    simp only [h1, h2, zero_mul, sub_zero]
+  -- Integrability on the cell.
+  have hC : MeasurableSet cellSquare := by
+    change MeasurableSet ({p : ℝ × ℝ | |(diagCoord p).1| < Real.pi / 2} ∩
+      {p | |(diagCoord p).2| < Real.pi / 2})
+    unfold diagCoord
+    exact (measurableSet_lt (by fun_prop) measurable_const).inter
+      (measurableSet_lt (by fun_prop) measurable_const)
+  have hcpt {g : ℝ → ℝ} (hg : ∀ s, g s ≠ 0 → 2 * a ≤ s ∧ s ≤ 2 * b) : HasCompactSupport g :=
+    HasCompactSupport.intro isCompact_Icc fun s hs ↦ by
+      by_contra h
+      exact hs (hg s h)
+  obtain ⟨C₀, hC₀⟩ := hχ.continuous.bounded_above_of_compact_support (hcpt hχ0)
+  obtain ⟨C₁, hC₁⟩ := hdχ.continuous.bounded_above_of_compact_support (hcpt hdχ0)
+  have hA : IntegrableOn (fun p ↦ χ (dipoleLift p) * eeBulkDensity ω p) cellSquare := by
+    have hJ : IntegrableOn (fun p ↦ χ (dipoleLift p) * eeBulkDensity ω p)
+        {p | p ∈ cellSquare ∧ 2 * (a / 2) < dipoleLift p} :=
+      (integrableOn_eeBulkDensity ω (show 0 < a / 2 by linarith)).bdd_mul
+      (hχ.continuous.comp hΨc).aestronglyMeasurable (Eventually.of_forall fun p ↦ hC₀ _)
+    refine hJ.of_forall_sdiff_eq_zero hC fun p hp ↦ ?_
+    have hle : dipoleLift p ≤ 2 * (a / 2) := by
+      by_contra h
+      exact hp.2 ⟨hp.1, by linarith⟩
+    have h1 : χ (dipoleLift p) = 0 := by
+      by_contra h
+      linarith [(hχ0 _ h).1]
+    simp [h1]
+  have hB : IntegrableOn (fun p ↦ deriv χ (dipoleLift p) * eeBoundaryDensity ω p) cellSquare :=
+    (integrableOn_eeBoundaryDensity ω).bdd_mul (hdχ.continuous.comp hΨc).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ hC₁ _)
+  have hcell := squareIntegral_eq_setIntegral_cellSquare hDp hDm hD0
+  rw [hsum, hDdef, integral_sub hA hB] at hcell
+  simp only [hχv, hχ']
+  linarith
 
 /-- The virial identity on an annulus (`lem:ee-annular-virial`): outside one null set of
     levels, for all `0 < h < h' < 1`, `∫_{2h < Ψ < 2h'} 𝒥 = G(h) - G(h')` with `G` the level

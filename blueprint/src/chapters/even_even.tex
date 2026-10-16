@@ -239,7 +239,9 @@ $(0,2)$. Then $\int_\Cell\chi(\Psi)\mathcal J_\omega=\int_\Cell\chi'(\Psi)E_\ome
 
 \begin{proof}
 \uses{lem:virial-l2, lem:normal-field-annulus, lem:normal-field-cutoff-algebra,
-  lem:stream-ibp, lem:cell-periodic-integral}
+  lem:stream-ibp, lem:cell-periodic-integral, lem:lift-torus, lem:ee-bulk-integrable,
+  lem:ee-boundary-integrable}
+\leanok
 Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$ (Lemma~\ref{lem:normal-field-annulus}). By
 Lemma~\ref{lem:normal-field-cutoff-algebra} its quadratic form is
 \[
@@ -253,6 +255,16 @@ Where $\chi'(\Psi)\ne0$, $\rho>0$ and $|\nabla\psi|^2=|\psi_n|^2+|\psi_t|^2$, so
 $2|\psi_n|^2-K=|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)$. Collecting terms gives the
 identity on the period square; all integrands are periodic and vanish where $\Psi\le0$, so
 Lemma~\ref{lem:cell-periodic-integral} moves it to the cell.
+
+In Lean the computation is organized pointwise: $\chi(\Psi)\mathcal J_\omega-\chi'(\Psi)E_\omega$
+equals a weighted sum of ten integrands of the form $c\operatorname{Re}(u\bar v)$, $\phi K$
+and $\operatorname{Re}(\bar\psi\,\nabla\chi(\Psi)\cdot\nabla\psi)$, each integrable on the
+period square by Lemma~\ref{lem:lift-torus}. The virial identity and the two cases of
+Lemma~\ref{lem:stream-ibp} make the weighted sum of their integrals vanish. Where
+$\chi'(\Psi)\ne0$ the frame identities $\rho\operatorname{Re}(\psi\overline{\psi_n})
+=\operatorname{Re}(\psi\,\overline{\sin x\,\psi_x+\sin y\,\psi_y})$ and
+$|\psi_n|^2+|\psi_t|^2=|\nabla\psi|^2$ use $\rho>0$. On the cell both sides are integrable by
+Lemmas~\ref{lem:ee-bulk-integrable} and~\ref{lem:ee-boundary-integrable}.
 \end{proof}
 
 \begin{lemma}[Virial identity on an annulus]

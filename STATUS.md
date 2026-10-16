@@ -130,7 +130,7 @@ imports `VirialL2.lean`. Odd–odd (weighted analogue) not yet examined.
 cutoff identity `∫χ(Ψ)𝒥 = ∫χ'(Ψ)E` says that `h ↦ ∮E` has distributional
 derivative `-2∮𝒥`; the du Bois-Reymond lemma integrates this (cleaner than
 Lebesgue points). New admitted pieces: `ee_cutoff_identity`
-(`lem:ee-cutoff-identity`, from `virial_l2`, the cutoff algebra, `H²`
+(`lem:ee-cutoff-identity`, since proved, from `virial_l2`, the cutoff algebra, `H²`
 integration by parts and the period-square-to-cell transfer),
 `cutoff_normalField_algebra` (`lem:normal-field-cutoff-algebra`, checked
 numerically), `stream_ibp` (`lem:stream-ibp`, since proved),
@@ -167,10 +167,24 @@ testing. New node `lem:l2-product-rule` (`Derivatives.lean`: `mulL2`,
 measurable `G`, in `lem:lift-torus`; `Cells.lean` now uses it). The
 product rule and `L²` integration by parts should also serve `virial_l2`.
 
-**Next:** `ee_cutoff_identity` from its pieces; `lem:coarea-level-cutoff` and the
+**`ee_cutoff_identity` is proved from its pieces (2026-10-16)**
+(`lem:ee-cutoff-identity`); its only admitted dependency is `virial_l2`.
+Pointwise, `χ(Ψ)𝒥 - χ'(Ψ)E` is a weighted sum of ten integrands, each
+integrable on the period square (`rePair` terms `c Re(uv̄)`, `φ₁K`, `χ(Ψ)K`
+and `Re(ψ̄∇χ(Ψ)·∇ψ)`); `virial_l2`, `stream_ibp` for `φ₁ = f_χ - div W_χ`
+and for `χ(Ψ)` make their weighted integrals cancel; then
+`lem:cell-periodic-integral`. New in `LiftTorus.lean` (`lem:lift-torus`):
+`periodSquare_ae_eq`, `integrableOn_periodSquare_comp`,
+`isPeriodicLift_liftL2`, `integrableOn_liftL2_mul_conj`. New helpers in
+`EvenEven.lean`: `rePair`, `re_squarePairing_smul`,
+`squareIntegral_weighted_sum`, `normal_tangent_frame`.
+
+**Next:** `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
+and `lem:virial-h1`; the product rule and `L²` integration by parts of
+`lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
 level-term half of `lem:ee-boundary-integrable` rest on the admitted
 orbit-coordinate formula. Remaining direct even–even inputs:
-`ee_boundary_regularity`, `ee_gradient_traces`, `ee_cutoff_identity`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
+`ee_boundary_regularity`, `ee_gradient_traces`, `virial_l2`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 

@@ -493,6 +493,10 @@ lift of the continuous representative of $\Delta^{-1}\omega$.
   NoEmbeddedEigenvalues.hasFourierPartial_torusL2_y,
   NoEmbeddedEigenvalues.squareIntegral_eq_integral_torus,
   NoEmbeddedEigenvalues.squareIntegral_comp_torusProj,
+  NoEmbeddedEigenvalues.periodSquare_ae_eq,
+  NoEmbeddedEigenvalues.integrableOn_periodSquare_comp,
+  NoEmbeddedEigenvalues.isPeriodicLift_liftL2,
+  NoEmbeddedEigenvalues.integrableOn_liftL2_mul_conj,
   NoEmbeddedEigenvalues.squarePairing_eq_inner}
 \leanok
 Periodic lifts are constant on the fibres of $\pi$, so $u\circ\pi^{-1}$ is well
@@ -502,7 +506,9 @@ $\partial_xu,\partial_yu$ descend to the Fourier partial derivatives of
 $u\circ\pi^{-1}\in L^2$. For continuous periodic lifts,
 $\int_{[0,2\pi]^2}u=\int_{\T^2}u\circ\pi^{-1}$, and the pairing $\ip uv$ of
 Definition~\ref{def:square-integral} is the $L^2(\T^2)$ inner product. More generally
-$\int_{[0,2\pi]^2}G\circ\pi=\int_{\T^2}G$ for every measurable $G$ on $\T^2$.
+$\int_{[0,2\pi]^2}G\circ\pi=\int_{\T^2}G$ for every measurable $G$ on $\T^2$, and $G\circ\pi$ is
+integrable on $[0,2\pi]^2$ if $G$ is integrable; in particular $u\bar v$ is, for lifts $u,v$
+of $L^2$ functions.
 \end{lemma}
 
 \begin{proof}
