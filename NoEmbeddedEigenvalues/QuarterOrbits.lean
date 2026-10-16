@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.OrbitCoordinates
 import Mathlib.MeasureTheory.Function.JacobianOneDim
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Quarter orbits and the arc in diagonal coordinates
@@ -141,6 +142,36 @@ theorem levelIntegral_eq_sum_quarter {E : Type*} [NormedAddCommGroup E] [NormedS
 
 /-- The height `β_h(a) = arccos(h / cos a)` of the quarter orbit over `a`. -/
 def quarterHeight (h a : ℝ) : ℝ := arccos (h / cos a)
+
+/-- The quarter orbit approaches the arc `b = π/2` (`lem:quarter-height-limit`): for
+    `0 ≤ h ≤ cos a`, `0 ≤ π/2 - β_h(a) ≤ (π/2) h / cos a`, since `π/2 - arccos z = arcsin z` and
+    `arcsin z ≤ (π/2) z` on `[0, 1]` (Jordan's inequality `sin x ≥ (2/π) x`). -/
+theorem pi_div_two_sub_quarterHeight_le {h a : ℝ} (h0 : 0 ≤ h) (hc0 : 0 < cos a)
+    (hc : h ≤ cos a) :
+    0 ≤ π / 2 - quarterHeight h a ∧ π / 2 - quarterHeight h a ≤ π / 2 * (h / cos a) := by
+  set z := h / cos a with hz
+  have hz0 : 0 ≤ z := div_nonneg h0 hc0.le
+  have hz1 : z ≤ 1 := (div_le_one hc0).2 hc
+  rw [quarterHeight, ← hz, arccos_eq_pi_div_two_sub_arcsin, sub_sub_cancel]
+  have hx0 : 0 ≤ arcsin z := arcsin_nonneg.2 hz0
+  have hj := mul_le_sin hx0 (arcsin_le_pi_div_two z)
+  rw [sin_arcsin (by linarith) hz1] at hj
+  refine ⟨hx0, ?_⟩
+  calc arcsin z = π / 2 * (2 / π * arcsin z) := by field_simp
+    _ ≤ π / 2 * z := by gcongr
+
+/-- Uniform version: on `|a| ≤ π/2 - δ`, `cos a ≥ sin δ`, so
+    `0 ≤ π/2 - β_h(a) ≤ (π/2) h / sin δ` for `h ≤ sin δ`. -/
+theorem pi_div_two_sub_quarterHeight_le_of_abs_le {h a δ : ℝ} (h0 : 0 ≤ h) (hδ : 0 < δ)
+    (hδπ : δ ≤ π / 2) (ha : |a| ≤ π / 2 - δ) (hh : h ≤ sin δ) :
+    0 ≤ π / 2 - quarterHeight h a ∧ π / 2 - quarterHeight h a ≤ π / 2 * (h / sin δ) := by
+  have hsin : 0 < sin δ := sin_pos_of_pos_of_lt_pi hδ (by linarith [pi_pos])
+  have hcos : sin δ ≤ cos a := by
+    rw [← cos_abs, ← cos_pi_div_two_sub]
+    exact cos_le_cos_of_nonneg_of_le_pi (abs_nonneg a) (by linarith [pi_pos]) ha
+  obtain ⟨hlo, hhi⟩ := pi_div_two_sub_quarterHeight_le h0 (hsin.trans_le hcos) (hh.trans hcos)
+  refine ⟨hlo, hhi.trans ?_⟩
+  gcongr
 
 theorem orbitB_pos_of_abs_le (h0 : 0 < h) (h1 : h < 1) {t : ℝ} (ht : |t| ≤ eighthPeriod h) :
     0 < orbitB h t := by

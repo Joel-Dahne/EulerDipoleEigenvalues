@@ -246,7 +246,12 @@ proof was already local, so there is no lower-order term),
 `lem:quarter-orbit-diagonal`, `lem:arc-diagonal`; new module
 `QuarterOrbits.lean`).
 
-**Next:** `lem:arc-trace-identification`, `lem:ee-arc-energy`,
+Also `pi_div_two_sub_quarterHeight_le(_of_abs_le)` (`lem:quarter-height-limit`):
+`0 ≤ π/2 - β_h(a) ≤ (π/2) h / cos a`, uniform on `|a| ≤ π/2 - δ`.
+
+**Next:** the corner weight bound `1/√(cos²a - h²) ≤ 2/u` (`u = cos a`,
+`h ≤ u²`, small `u`; still in the remark after `lem:arc-diagonal`), then
+`lem:arc-trace-identification`, `lem:ee-arc-energy`,
 `lem:ee-corner-tails` and the assembly of `lem:ee-level-traces`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the

@@ -585,9 +585,26 @@ $\cos a=\sech s=-\,da/ds$. Hence $\int_\R F(\gamma(s))\,ds=\int_{-\pi/2}^{\pi/2}
 $\sin\alpha(s)=\sech s$ and $\alpha'(s)=-\sech s$ (Lemma~\ref{lem:separatrix-arc}); substitute.
 \end{proof}
 
+\begin{lemma}[The quarter orbits approach the arc]
+\label{lem:quarter-height-limit}
+\uses{lem:quarter-orbit-diagonal}
+\lean{NoEmbeddedEigenvalues.pi_div_two_sub_quarterHeight_le,
+  NoEmbeddedEigenvalues.pi_div_two_sub_quarterHeight_le_of_abs_le}
+\leanok
+If $0\le h\le\cos a$, then $0\le\pi/2-\beta_h(a)\le\frac\pi2\,h/\cos a$. In particular, if
+$0<\delta\le\pi/2$ and $h\le\sin\delta$, then $0\le\pi/2-\beta_h(a)\le\frac\pi2\,h/\sin\delta$ for
+$|a|\le\pi/2-\delta$, so $\beta_h\to\pi/2$ uniformly there as $h\to0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$\pi/2-\arccos z=\arcsin z$, and $\arcsin z\le\frac\pi2 z$ for $z\in[0,1]$ by Jordan's inequality
+$\sin x\ge\frac2\pi x$ on $[0,\pi/2]$. On $|a|\le\pi/2-\delta$, $\cos a\ge\cos(\pi/2-\delta)=\sin\delta$.
+\end{proof}
+
 \begin{remark}
-As $h\to0$, $a_h\to\pi/2$, $\beta_h\to\pi/2$ uniformly on $|a|\le\pi/2-\delta$ (since
-$\pi/2-\beta_h(a)=\arcsin(h/\cos a)$), and the weight $1/\sqrt{\cos^2a-h^2}\to1/\cos a$, the arc
+As $h\to0$, $a_h\to\pi/2$, $\beta_h\to\pi/2$ uniformly on $|a|\le\pi/2-\delta$
+(Lemma~\ref{lem:quarter-height-limit}), and the weight $1/\sqrt{\cos^2a-h^2}\to1/\cos a$, the arc
 weight of Lemma~\ref{lem:arc-diagonal}. Near the corner $a=\pi/2$, with $u=\cos a$ and
 $v=\cos b$, the quarter orbit is the half-hyperbola $v=h/u\le u$, $u\ge\sqrt h$, and
 $dt=du/(\sqrt{1-u^2}\sqrt{u^2-h^2})\le du/(u(1-u^2))$ since $h\le u^2$. These explicit formulas
