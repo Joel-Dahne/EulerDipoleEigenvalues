@@ -5,6 +5,8 @@ import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.DuBoisReymond
+import NoEmbeddedEigenvalues.SegmentEstimates
+import NoEmbeddedEigenvalues.QuarterOrbits
 import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.OrbitCoordinates
 import NoEmbeddedEigenvalues.Transport

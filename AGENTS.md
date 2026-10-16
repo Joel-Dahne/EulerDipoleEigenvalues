@@ -115,7 +115,9 @@ motivation, and standard facts cited rather than proved.
   eigenfunctions (explicit invariant neighbourhood of the cell, continuity of the
   flow, changes of representative on levels and in transport pairs).
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
-  coordinates; `OddHardy.lean` proves the critical Hardy inequality for odd
+  coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
+  separatrix arc, as explicit graphs in diagonal coordinates; `SegmentEstimates.lean` bounds
+  restrictions to curves near a line (segment and hyperbola estimates); `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.
   Then
   `DuBoisReymond.lean` proves the du Bois-Reymond lemma on an interval;

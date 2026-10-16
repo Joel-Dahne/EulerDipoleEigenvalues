@@ -236,10 +236,17 @@ manuscript's even cutoff), `lem:arc-trace-identification`,
 `lem:ee-corner-tails`; proofs of `lem:ee-level-traces` and
 `lem:ee-arc-energy` rewritten in these terms.
 
-**Next:** formalize bottom-up: `lem:segment-estimate` and
-`lem:local-odd-hardy` (pure analysis), `lem:quarter-orbit-decomposition`,
-`lem:quarter-orbit-diagonal`, `lem:arc-diagonal` (explicit orbit geometry),
-then `lem:arc-trace-identification`, `lem:ee-arc-energy`,
+**Bottom layer formalized (2026-10-16), all without admissions:**
+`lintegral_segment_le` (`lem:segment-estimate`; new module
+`SegmentEstimates.lean`, which now also holds the hyperbola estimate),
+`lintegral_sq_div_le_localGagliardoSq` (`lem:local-odd-hardy`; the existing
+proof was already local, so there is no lower-order term),
+`levelIntegral_eq_sum_quarter`, `integral_quarter_eq`,
+`integral_separatrixArc_eq` (`lem:quarter-orbit-decomposition`,
+`lem:quarter-orbit-diagonal`, `lem:arc-diagonal`; new module
+`QuarterOrbits.lean`).
+
+**Next:** `lem:arc-trace-identification`, `lem:ee-arc-energy`,
 `lem:ee-corner-tails` and the assembly of `lem:ee-level-traces`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the

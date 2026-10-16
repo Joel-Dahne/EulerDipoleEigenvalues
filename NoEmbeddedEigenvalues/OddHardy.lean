@@ -8,7 +8,7 @@ import Mathlib.Analysis.Distribution.Sobolev
 /-!
 # The critical Hardy inequality for odd functions
 
-Blueprint: `def:gagliardo`, `lem:odd-hardy`.
+Blueprint: `def:gagliardo`, `lem:odd-hardy`, `lem:local-odd-hardy`.
 
 For an odd function `a` on `ℝ`, `∫₀^∞ |a(u)|² du/u ≤ 2 [a]²`, where
 `[a]² = ∫∫ |a(u) - a(w)|² / (u - w)² du dw` is the Gagliardo seminorm of `H^{1/2}`.
@@ -18,7 +18,8 @@ and the parallelogram law gives
 `|a(u) - a(w)|² + |a(u) + a(w)|² ≥ 2|a(u)|²`. Both denominators `(u ∓ w)²` are at most
 `4u²`, so `A(u, w) + A(u, -w) ≥ |a(u)|² / (2u²)` with `A(u, w) = |a(u) - a(w)|² / (u - w)²`.
 Integrating over `w ∈ [-u, u]` gives `|a(u)|²/u ≤ 2 ∫ A(u, w) dw`. Everything is
-nonnegative, so no integrability assumption is needed.
+nonnegative, so no integrability assumption is needed. Since `w` only runs over `[-u, u]`,
+the same proof gives the local version on `(-δ, δ)` with no cutoff.
 -/
 
 noncomputable section
@@ -41,7 +42,7 @@ theorem div_four_sq_le {x : ℂ} {u d : ℝ} (hd : 0 ≤ d) (hdu : d ≤ 4 * u ^
   · exact div_le_div_of_nonneg_left (sq_nonneg _) h hdu
 
 /-- The pointwise inequality: `|a(u)|² / (2u²) ≤ A(u, w) + A(u, -w)` for `|w| ≤ u`. -/
-theorem sq_div_le_of_odd {a : ℝ → ℂ} (hodd : ∀ u, a (-u) = -a u) {u w : ℝ} (hu : 0 < u)
+theorem sq_div_le_of_odd {a : ℝ → ℂ} {u w : ℝ} (hodd : a (-w) = -a w) (hu : 0 < u)
     (hw : w ∈ Icc (-u) u) :
     ‖a u‖ ^ 2 / (2 * u ^ 2) ≤
       ‖a u - a w‖ ^ 2 / (u - w) ^ 2 + ‖a u - a (-w)‖ ^ 2 / (u - -w) ^ 2 := by
@@ -86,9 +87,51 @@ theorem lintegral_sq_div_le_gagliardoSq {a : ℝ → ℂ} (ha : AEMeasurable a)
     _ ≤ ∫⁻ w in Icc (-u) u, (A w + A (-w)) := by
         refine setLIntegral_mono' measurableSet_Icc fun w hw ↦ ?_
         rw [hA_def, ← ENNReal.ofReal_add (by positivity) (by positivity)]
-        exact ENNReal.ofReal_le_ofReal (sq_div_le_of_odd hodd hu hw)
+        exact ENNReal.ofReal_le_ofReal (sq_div_le_of_odd (hodd w) hu hw)
     _ ≤ ∫⁻ w, (A w + A (-w)) := setLIntegral_le_lintegral _ _
     _ = (∫⁻ w, A w) + ∫⁻ w, A (-w) := lintegral_add_left' hA _
     _ = 2 * ∫⁻ w, A w := by rw [lintegral_neg_eq_self, two_mul]
+
+/-- The local critical Hardy inequality (`lem:local-odd-hardy`): if `a` is odd on `(-δ, δ)`,
+    then `∫₀^δ |a(u)|² du/u ≤ 2 ∫₀^δ ∫_{-δ}^{δ} |a(u) - a(w)|² / (u - w)² dw du`. For
+    `u ∈ (0, δ)` the proof of `lintegral_sq_div_le_gagliardoSq` only uses `w ∈ [-u, u]`. -/
+theorem lintegral_sq_div_le_localGagliardoSq {a : ℝ → ℂ} (ha : AEMeasurable a) {δ : ℝ}
+    (hodd : ∀ u ∈ Ioo (-δ) δ, a (-u) = -a u) :
+    ∫⁻ u in Ioo 0 δ, ENNReal.ofReal (‖a u‖ ^ 2 / u) ≤
+      2 * ∫⁻ u in Ioo 0 δ, ∫⁻ w in Ioo (-δ) δ, ENNReal.ofReal (‖a u - a w‖ ^ 2 / (u - w) ^ 2) := by
+  rw [← lintegral_const_mul' _ _ (by norm_num)]
+  refine setLIntegral_mono' measurableSet_Ioo fun u hu ↦ ?_
+  have hu0 : (0 : ℝ) < u := hu.1
+  set S : Set ℝ := Ioo (-δ) δ with hS
+  set A : ℝ → ℝ≥0∞ := fun w ↦ ENNReal.ofReal (‖a u - a w‖ ^ 2 / (u - w) ^ 2) with hA_def
+  have hA : AEMeasurable A := by
+    rw [hA_def]
+    exact ENNReal.measurable_ofReal.comp_aemeasurable
+      (((aemeasurable_const.sub ha).norm.pow_const 2).div (by fun_prop))
+  have hsub : Icc (-u) u ⊆ S := fun w hw ↦ ⟨by linarith [hw.1, hu.2], by linarith [hw.2, hu.2]⟩
+  have hneg : ∫⁻ w in S, A (-w) = ∫⁻ w in S, A w := by
+    have hSs : ∀ w, -w ∈ S ↔ w ∈ S := fun w ↦ by
+      simp only [hS, mem_Ioo]
+      constructor <;> intro h <;> constructor <;> linarith [h.1, h.2]
+    rw [← lintegral_indicator measurableSet_Ioo, ← lintegral_indicator measurableSet_Ioo]
+    rw [← lintegral_neg_eq_self (fun w ↦ S.indicator A w)]
+    congr 1
+    funext w
+    by_cases hw : w ∈ S
+    · rw [indicator_of_mem hw, indicator_of_mem ((hSs w).2 hw)]
+    · rw [indicator_of_notMem hw, indicator_of_notMem (fun h ↦ hw ((hSs w).1 h))]
+  calc ENNReal.ofReal (‖a u‖ ^ 2 / u)
+      = ∫⁻ _ in Icc (-u) u, ENNReal.ofReal (‖a u‖ ^ 2 / (2 * u ^ 2)) := by
+        rw [setLIntegral_const, Real.volume_Icc, ← ENNReal.ofReal_mul (by positivity)]
+        congr 1
+        field_simp
+        ring
+    _ ≤ ∫⁻ w in Icc (-u) u, (A w + A (-w)) := by
+        refine setLIntegral_mono' measurableSet_Icc fun w hw ↦ ?_
+        rw [hA_def, ← ENNReal.ofReal_add (by positivity) (by positivity)]
+        exact ENNReal.ofReal_le_ofReal (sq_div_le_of_odd (hodd w (hsub hw)) hu0 hw)
+    _ ≤ ∫⁻ w in S, (A w + A (-w)) := lintegral_mono_set hsub
+    _ = (∫⁻ w in S, A w) + ∫⁻ w in S, A (-w) := lintegral_add_left' hA.restrict _
+    _ = 2 * ∫⁻ w in S, A w := by rw [hneg, two_mul]
 
 end NoEmbeddedEigenvalues

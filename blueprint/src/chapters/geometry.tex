@@ -531,12 +531,16 @@ frequency $b(h)$; the paper should rename one of them.
 \begin{lemma}[Quarter orbits]
 \label{lem:quarter-orbit-decomposition}
 \uses{def:period, def:dipole-flow, def:level-integral}
+\lean{NoEmbeddedEigenvalues.levelIntegral_eq_sum_quarter,
+  NoEmbeddedEigenvalues.dipoleOrbit_add_mul_quarter}
+\leanok
 Let $0<h<1$ and let $f$ be such that $t\mapsto f(\gamma_h(t))$ is integrable over a period.
 Then $\oint_{\{\Psi=2h\}}f\,dt=\sum_{k=0}^{3}\int_{-L(h)}^{L(h)}f(R^k\gamma_h(t))\,dt$.
 \end{lemma}
 
 \begin{proof}
 \uses{lem:period-orbit}
+\leanok
 By Lemma~\ref{lem:period-orbit}, $\gamma_h(t+2L)=R\gamma_h(t)$ and $\gamma_h$ has period $8L$.
 Split one period into four windows of length $2L$ centered at $2kL$.
 \end{proof}
@@ -544,6 +548,9 @@ Split one period into four windows of length $2L$ centered at $2kL$.
 \begin{lemma}[Quarter orbits in diagonal coordinates]
 \label{lem:quarter-orbit-diagonal}
 \uses{def:period, def:dipole-flow, def:cells}
+\lean{NoEmbeddedEigenvalues.integral_quarter_eq, NoEmbeddedEigenvalues.quarterHeight,
+  NoEmbeddedEigenvalues.orbitB_eq_quarterHeight, NoEmbeddedEigenvalues.image_orbitA_quarter}
+\leanok
 Let $0<h<1$, $a_h=\arccos\sqrt h$ and $\beta_h(a)=\arccos(h/\cos a)$ for $|a|\le a_h$. In
 diagonal coordinates the quarter orbit $\gamma_h([-L,L])$ is the graph $b=\beta_h(a)$,
 $|a|\le a_h$, traversed with $\dot a=-\sqrt{\cos^2a-h^2}$. Hence, writing $f$ in diagonal
@@ -556,6 +563,7 @@ whenever one side is defined (for nonnegative measurable or integrable $f$).
 
 \begin{proof}
 \uses{lem:period-orbit, lem:period-integral}
+\leanok
 On the quarter orbit $\cos a\cos b=h$ and $b>0$ (Lemma~\ref{lem:period-orbit}), so
 $b=\beta_h(a)$ and $\dot a=-\cos a\sin b=-\sqrt{\cos^2a-h^2}$; $a$ runs from $a_h$ to $-a_h$
 (the orbit meets the diagonals $|a|=|b|$ at $t=\pm L$). Substitute $a=a(t)$.
@@ -564,12 +572,16 @@ $b=\beta_h(a)$ and $\dot a=-\cos a\sin b=-\sqrt{\cos^2a-h^2}$; $a$ runs from $a_
 \begin{lemma}[The arc in diagonal coordinates]
 \label{lem:arc-diagonal}
 \uses{def:separatrix-arc, def:cells}
+\lean{NoEmbeddedEigenvalues.integral_separatrixArc_eq, NoEmbeddedEigenvalues.arcAngle_mem_Ioo,
+  NoEmbeddedEigenvalues.strictAnti_arcAngle}
+\leanok
 On the arc $\gamma$, $b=\pi/2$, $a=\alpha(s)-\pi/2$ with $\alpha(s)=2\arctan e^{-s}$, and
 $\cos a=\sech s=-\,da/ds$. Hence $\int_\R F(\gamma(s))\,ds=\int_{-\pi/2}^{\pi/2}F(a,\pi/2)\,da/\cos a$.
 \end{lemma}
 
 \begin{proof}
 \uses{lem:separatrix-arc}
+\leanok
 $\sin\alpha(s)=\sech s$ and $\alpha'(s)=-\sech s$ (Lemma~\ref{lem:separatrix-arc}); substitute.
 \end{proof}
 

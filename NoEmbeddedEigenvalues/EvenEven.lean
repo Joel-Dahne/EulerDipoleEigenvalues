@@ -4,6 +4,8 @@ import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.VirialL2
 import NoEmbeddedEigenvalues.DuBoisReymond
+import NoEmbeddedEigenvalues.SegmentEstimates
+import NoEmbeddedEigenvalues.QuarterOrbits
 
 /-!
 # Even–even exclusion
@@ -1331,107 +1333,6 @@ theorem ee_arc_energy {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω)
     ∀ k < 4, Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2 := by
   sorry
 
-/-- The hyperbola estimate (`lem:hyperbola-estimate`): if `v ↦ F(u, v)` is absolutely
-    continuous on `[0, u₀]` with derivative `F_v` for almost every `u`, then on the
-    half-hyperbola `v = h/u`, `√h ≤ u ≤ u₀`,
-    `∫ |F(u, h/u) - F(u, 0)|² du/u ≤ ∫_{(0,u₀)²} |F_v|²`. Each vertical segment has length
-    `h/u`, and Cauchy–Schwarz gives the factor `h/u² ≤ 1`. -/
-theorem lintegral_hyperbola_le {F Fv : ℝ × ℝ → ℂ} (hFv : Measurable Fv) {u₀ h : ℝ}
-    (hh : 0 < h) (hu : √h ≤ u₀)
-    (hF : ∀ᵐ u ∂(volume.restrict (Ioo 0 u₀)),
-      AbsolutelyContinuousOnInterval (fun v ↦ F (u, v)) 0 u₀ ∧
-        ∀ᵐ v ∂(volume.restrict (Ioo 0 u₀)), HasDerivAt (fun v ↦ F (u, v)) (Fv (u, v)) v) :
-    ∫⁻ u in Ioo (√h) u₀, ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u) ≤
-      ∫⁻ p in Ioo 0 u₀ ×ˢ Ioo 0 u₀, ENNReal.ofReal (‖Fv p‖ ^ 2) := by
-  have hsq : 0 < √h := Real.sqrt_pos.2 hh
-  have hsub : Ioo (√h) u₀ ⊆ Ioo 0 u₀ := Ioo_subset_Ioo_left hsq.le
-  -- The pointwise bound on almost every vertical segment.
-  have hpt : ∀ᵐ u ∂(volume.restrict (Ioo (√h) u₀)),
-      ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u) ≤
-        ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) := by
-    filter_upwards [ae_restrict_of_ae_restrict_of_subset hsub hF,
-      ae_restrict_mem measurableSet_Ioo] with u hFu hum
-    obtain ⟨hac, hder⟩ := hFu
-    have hu0 : 0 < u := hsq.trans hum.1
-    set c := h / u with hc_def
-    have hc0 : 0 < c := div_pos hh hu0
-    have hsh : √h * √h = h := Real.mul_self_sqrt hh.le
-    have hcs : c ≤ √h := by
-      rw [hc_def, div_le_iff₀ hu0]
-      nlinarith [hum.1]
-    have hcu : c ≤ u₀ := hcs.trans hu
-    have hcu1 : c / u ≤ 1 := by
-      rw [div_le_one hu0]
-      exact hcs.trans hum.1.le
-    have hmono : ∫⁻ v in Ioo 0 c, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) ≤
-        ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
-      lintegral_mono_set (Ioo_subset_Ioo_right hcu)
-    by_cases hfin : ∫⁻ v in Ioo 0 c, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) = ⊤
-    · rw [hfin, top_le_iff] at hmono
-      rw [hmono]
-      exact le_top
-    have hmeas : Measurable fun v ↦ Fv (u, v) := hFv.comp (measurable_const.prodMk measurable_id)
-    have hint2 : Integrable (fun v ↦ ‖Fv (u, v)‖ ^ 2) (volume.restrict (Ioo 0 c)) := by
-      refine ⟨(hmeas.norm.pow_const 2).aestronglyMeasurable, ?_⟩
-      rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun v ↦ by positivity)]
-      exact lt_top_iff_ne_top.2 hfin
-    have hL2 : MemLp (fun v ↦ Fv (u, v)) 2 (volume.restrict (Ioo 0 c)) :=
-      (memLp_two_iff_integrable_sq_norm hmeas.aestronglyMeasurable).2 hint2
-    have hL1 : IntegrableOn (fun v ↦ Fv (u, v)) (Ioo 0 c) := hL2.integrable (by norm_num)
-    have hII : IntervalIntegrable (fun v ↦ Fv (u, v)) volume 0 c :=
-      (intervalIntegrable_iff_integrableOn_Ioo_of_le hc0.le).2 hL1
-    -- The fundamental theorem of calculus on `[0, c]`.
-    have hFTC : (∫ v in (0 : ℝ)..c, Fv (u, v)) = F (u, c) - F (u, 0) := by
-      refine complex_integral_eq_sub_of_ac (hac.mono ?_) hII ?_
-      · rw [uIcc_of_le hc0.le, uIcc_of_le (hc0.le.trans hcu)]
-        exact Icc_subset_Icc le_rfl hcu
-      · have h0 : ∀ᵐ v : ℝ, v ≠ 0 := by simp [ae_iff, measure_singleton]
-        have h1 : ∀ᵐ v : ℝ, v ≠ u₀ := by simp [ae_iff, measure_singleton]
-        filter_upwards [(ae_restrict_iff' measurableSet_Ioo).1 hder, h0, h1] with v hv hv0 hv1 hvc
-        rw [uIcc_of_le hc0.le] at hvc
-        exact hv ⟨lt_of_le_of_ne hvc.1 (Ne.symm hv0),
-          lt_of_le_of_ne (hvc.2.trans hcu) hv1⟩
-    -- Cauchy–Schwarz on the segment.
-    have hCS := integral_mul_le_Lp_mul_Lq_of_nonneg (μ := volume.restrict (Ioo 0 c))
-      Real.HolderConjugate.two_two (f := fun _ ↦ (1 : ℝ)) (g := fun v ↦ ‖Fv (u, v)‖)
-      (Eventually.of_forall fun _ ↦ zero_le_one)
-      (Eventually.of_forall fun v ↦ norm_nonneg _)
-      (by rw [ENNReal.ofReal_ofNat]; exact memLp_const 1)
-      (by rw [ENNReal.ofReal_ofNat]
-          exact (memLp_two_iff_integrable_sq hmeas.norm.aestronglyMeasurable).2 hint2)
-    have hvol : (volume.restrict (Ioo 0 c)).real univ = c := by
-      simp [Measure.real, Real.volume_Ioo, hc0.le]
-    simp only [one_mul, Real.rpow_two, ← Real.sqrt_eq_rpow, integral_const,
-      hvol, one_pow, smul_eq_mul, mul_one] at hCS
-    have hnorm : ‖F (u, c) - F (u, 0)‖ ≤ √c * √(∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) := by
-      rw [← hFTC, intervalIntegral.integral_of_le hc0.le, integral_Ioc_eq_integral_Ioo]
-      exact (norm_integral_le_integral_norm _).trans hCS
-    have hI0 : 0 ≤ ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := integral_nonneg fun v ↦ by positivity
-    have hsq' : ‖F (u, c) - F (u, 0)‖ ^ 2 ≤ c * ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := by
-      calc ‖F (u, c) - F (u, 0)‖ ^ 2 ≤ (√c * √(∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2)) ^ 2 :=
-            pow_le_pow_left₀ (norm_nonneg _) hnorm 2
-        _ = c * ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := by
-            rw [mul_pow, Real.sq_sqrt hc0.le, Real.sq_sqrt hI0]
-    have hdiv : ‖F (u, c) - F (u, 0)‖ ^ 2 / u ≤ ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := by
-      rw [div_le_iff₀ hu0]
-      calc ‖F (u, c) - F (u, 0)‖ ^ 2 ≤ c * ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := hsq'
-        _ = (c / u) * (∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) * u := by field_simp
-        _ ≤ 1 * (∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) * u := by gcongr
-        _ = _ := by ring
-    calc ENNReal.ofReal (‖F (u, c) - F (u, 0)‖ ^ 2 / u)
-        ≤ ENNReal.ofReal (∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) := ENNReal.ofReal_le_ofReal hdiv
-      _ = ∫⁻ v in Ioo 0 c, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
-          ofReal_integral_eq_lintegral_ofReal hint2 (Eventually.of_forall fun v ↦ by positivity)
-      _ ≤ _ := hmono
-  have hFm : Measurable fun p : ℝ × ℝ ↦ ENNReal.ofReal (‖Fv p‖ ^ 2) := by fun_prop
-  calc ∫⁻ u in Ioo (√h) u₀, ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u)
-      ≤ ∫⁻ u in Ioo (√h) u₀, ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
-        lintegral_mono_ae hpt
-    _ ≤ ∫⁻ u in Ioo 0 u₀, ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
-        lintegral_mono_set hsub
-    _ = ∫⁻ p in Ioo 0 u₀ ×ˢ Ioo 0 u₀, ENNReal.ofReal (‖Fv p‖ ^ 2) := by
-        rw [Measure.volume_eq_prod, setLIntegral_prod _ hFm.aemeasurable]
-
 /-- Level traces at the separatrix (`lem:ee-level-traces`): for `ψ` even under both
     reflections, along levels `h → 0` outside a null set, `∮ |ψₙ|² dt → 0` and
     `∮ |ψₜ|² dt → ∑_k ∫ ½ cosh² s |g_k'(s)|² ds`. Away from the saddles the restrictions
@@ -1761,25 +1662,6 @@ theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × �
     refine ⟨MemLp.ae_eq (ae_restrict_of_ae hg) hL, fun j ↦ ?_⟩
     obtain ⟨d, hd1, hd2⟩ := hd j
     exact ⟨d, hd1.congr_left hg, hd2⟩
-
-/-- The arc angle `2 arctan e^{-s}` lies in `(0, π)`. -/
-theorem arcAngle_mem_Ioo (s : ℝ) : arcAngle s ∈ Ioo 0 Real.pi := by
-  have h1 := Real.arctan_lt_pi_div_two (Real.exp (-s))
-  have h0 := Real.arctan_pos.2 (Real.exp_pos (-s))
-  exact ⟨by unfold arcAngle; linarith, by unfold arcAngle; linarith⟩
-
-theorem antitone_arcAngle : Antitone arcAngle := fun s t hst ↦ by
-  unfold arcAngle
-  have := Real.arctan_strictMono.monotone (Real.exp_le_exp.2 (neg_le_neg hst))
-  linarith
-
-theorem lipschitzWith_arcAngle : LipschitzWith 1 arcAngle := by
-  refine lipschitzWith_of_nnnorm_deriv_le (fun s ↦ (hasDerivAt_arcAngle s).differentiableAt)
-    fun s ↦ ?_
-  rw [(hasDerivAt_arcAngle s).deriv, ← NNReal.coe_le_coe, coe_nnnorm, norm_neg, norm_div,
-    norm_one, Real.norm_of_nonneg (Real.cosh_pos s).le, NNReal.coe_one,
-    div_le_one (Real.cosh_pos s)]
-  exact Real.one_le_cosh s
 
 /-- The trace of `ψ̃` on the separatrix arc `γ₀` is locally absolutely continuous and
     differentiable almost everywhere (`lem:arc-trace-ac`). The arc is the segment of the line
