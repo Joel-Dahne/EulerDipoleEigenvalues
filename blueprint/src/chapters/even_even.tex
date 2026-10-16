@@ -444,34 +444,37 @@ of $S_j$, which reverses the normal $(\sin x,\sin y)/\rho$ and preserves $Y/\rho
 \begin{lemma}[Energy of the arc traces]
 \label{lem:ee-arc-energy}
 \uses{def:sectors, def:stream-lifts, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ee_arc_energy}
+\lean{NoEmbeddedEigenvalues.ee_arc_energy, NoEmbeddedEigenvalues.lintegral_arcTrace_lt_top}
 \leanok
 Let $\psi=\Delta^{-1}\omega$, $\omega\in X$, be even under $S_1,S_2$, and let
 $g_k=\tilde\psi\circ\gamma_k$ be its traces on the four arcs. Then
-$\int\cosh^2s\,|g_k'|^2\,ds<\infty$.
+$\int\cosh^2s\,|g_k'|^2\,ds<\infty$. Equivalently (for $k=0$), with $f(a)=\tilde\psi(a,\pi/2)$,
+$\int_{-\pi/2}^{\pi/2}|f'(a)|^2\,da/\cos a<\infty$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:arc-trace-identification, lem:arc-diagonal, lem:traces, lem:local-to-global,
-  lem:elliptic-torus, lem:local-odd-hardy}
-By the rotation it suffices to take $k=0$ (each $\psi\circ R^k$ is again even under $S_1,S_2$).
-By Lemmas~\ref{lem:arc-trace-identification} and~\ref{lem:arc-diagonal}, with $\psi_a=\partial_a\psi$,
-$g'=-\cos a\,\psi_a(a,\pi/2)$ and $\cosh s=1/\cos a$, so
-\[
-  \int\cosh^2s\,|g'|^2\,ds=\int_{-\pi/2}^{\pi/2}|\psi_a(a,\pi/2)|^2\,\frac{da}{\cos a},
-\]
-in terms of the trace of $\psi_a$ on the line $b=\pi/2$. By Lemma~\ref{lem:traces} applied to
-$\psi_a\in H^1$ (Lemma~\ref{lem:local-to-global}), this trace is in $L^2$ with finite Gagliardo
-seminorm on $(-\pi,\pi)$. Away from $a=\pm\pi/2$ the weight is bounded. Near $a=\pi/2$ put
-$\tau=a-\pi/2$: $\cos a=\sin|\tau|\ge2|\tau|/\pi$, and $\tau\mapsto\psi_a(\pi/2+\tau,\pi/2)$ is odd
-since $\psi$ is even under $S_1\colon a\mapsto\pi-a$; Lemma~\ref{lem:local-odd-hardy} bounds
-$\int|\psi_a|^2d\tau/|\tau|$. The end $a=-\pi/2$ is the same by periodicity.
+\uses{lem:arc-trace-identification, lem:line-representatives, lem:traces, lem:local-to-global,
+  lem:continuous-stream-symmetries, lem:local-odd-hardy}
+\leanok
+The arc $\gamma_k$ for $\omega$ is the arc $\gamma_0$ for $\omega\circ R^k$, again even under $S_1,S_2$
+(Lemma~\ref{lem:continuous-stream-symmetries}), so take $k=0$. By
+Lemma~\ref{lem:arc-trace-identification}(4) the energy is $\int|f'|^2da/\cos a$. By
+Lemma~\ref{lem:traces}(1) applied to $\psi_a=\psi_x+\psi_y\in H^1$
+(Lemma~\ref{lem:local-to-global}), its line representative has a trace on $b=\pi/2$ with finite
+Gagliardo seminorm on $(-\pi,\pi)$, and this trace is $f'$ almost everywhere
+(Lemmas~\ref{lem:line-representatives}(3) and~\ref{lem:arc-trace-identification}(2)). Since
+$\tilde\psi$ is even under $S_1$ and periodic, $f(\pi-a)=f(a)=f(-\pi-a)$ for every $a$, so
+$f'(\pi/2+\tau)=-f'(\pi/2-\tau)$ and $f'(-\pi/2+\tau)=-f'(-\pi/2-\tau)$ for every $\tau$.
+Lemma~\ref{lem:local-odd-hardy} with $\delta=\pi/2$ bounds $\int_0^{\pi/2}|f'(\pm(\pi/2-u))|^2du/u$ by
+twice the Gagliardo seminorm, and $\cos a=\sin(\pi/2-|a|)\ge\frac2\pi(\pi/2-|a|)$ (Jordan).
 \end{proof}
 
 \begin{lemma}[Level traces at the separatrix]
 \label{lem:ee-level-traces}
 \uses{def:sectors, def:normal-tangent, def:stream-lifts, def:level-integral, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ee_level_traces}
+\lean{NoEmbeddedEigenvalues.ee_level_traces, NoEmbeddedEigenvalues.ee_quarter_traces,
+  NoEmbeddedEigenvalues.tendsto_quarter_integral,
+  NoEmbeddedEigenvalues.continuousAt_line_normalDeriv}
 \leanok
 For $\psi$ as in Lemma~\ref{lem:ee-arc-energy}, as $h\to0$ outside a null set,
 \[
@@ -483,37 +486,48 @@ over the levels $\{\Psi=2h\}$ (manuscript \texttt{(ee:normal-trace-limit)},
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-arc-energy, lem:arc-trace-identification, lem:ee-corner-tails,
-  lem:quarter-orbit-decomposition, lem:quarter-orbit-diagonal, lem:arc-diagonal,
-  lem:quarter-height-limit, lem:segment-estimate, lem:line-representatives}
+\uses{lem:ee-quarter-bound, lem:arc-trace-identification, lem:line-representatives,
+  lem:quarter-orbit-decomposition, lem:quarter-orbit-diagonal, lem:quarter-null-sets,
+  lem:arc-diagonal, lem:normal-tangent-rotation, lem:continuous-stream-symmetries}
+\leanok
 By Lemma~\ref{lem:quarter-orbit-decomposition} the level integrals are sums of four quarter
-integrals; $R$ is an isometry preserving $\Psi$ and the flow, so the $k$-th quarter of $\psi$ is
-the $0$-th quarter of $\psi\circ R^k$, again even under $S_1,S_2$. So consider $k=0$. By
-Lemmas~\ref{lem:quarter-orbit-diagonal} and~\ref{lem:arc-diagonal} the claims become, with
-$N=\sin x\,\psi_x+\sin y\,\psi_y=\rho\psi_n$ and $T=\sin y\,\psi_x-\sin x\,\psi_y=\rho\psi_t$,
+integrals, and the $k$-th quarter of $\psi$ is the $0$-th quarter of the stream function of
+$\omega\circ R^k$, again even under $S_1,S_2$ (Lemmas~\ref{lem:normal-tangent-rotation}
+and~\ref{lem:continuous-stream-symmetries}; the almost-everywhere identities hold on almost
+every level by Lemma~\ref{lem:quarter-null-sets}). So consider $k=0$. Let $G_x,G_y$ be line
+representatives of $\psi_x,\psi_y$; by Lemma~\ref{lem:quarter-null-sets} they agree with the raw
+$\psi_x,\psi_y$ at $(a,\beta_h(a))$ for almost every $a$, for $h$ outside a null set. By
+Lemma~\ref{lem:quarter-orbit-diagonal} the quarter integral of $F=|\psi_n|^2$ or $|\psi_t|^2$ is
 \[
-  \int_{-a_h}^{a_h}\frac{|N|^2}{\rho^2}(a,\beta_h(a))\frac{da}{\sqrt{\cos^2a-h^2}}\to0,\qquad
-  \int_{-a_h}^{a_h}\frac{|T|^2}{\rho^2}(a,\beta_h(a))\frac{da}{\sqrt{\cos^2a-h^2}}
-  \to\int_{-\pi/2}^{\pi/2}\frac{|T|^2}{\rho^2}(a,\tfrac\pi2)\frac{da}{\cos a},
+  \int_{-\pi/2}^{\pi/2}\mathbf 1_{|a|<a_h}\,F(a,\beta_h(a))\,\frac{da}{\sqrt{\cos^2a-h^2}} .
 \]
-and the right side is $\int\tfrac12\cosh^2s\,|g'|^2ds$ (Lemma~\ref{lem:arc-trace-identification}),
-while the trace of $N$ on $b=\pi/2$ vanishes. Fix $\delta>0$. On $|a|\le\pi/2-\delta$ the
-weights converge uniformly, $\rho$ is bounded below, the coefficients are uniformly continuous,
-and $\int_{|a|\le\pi/2-\delta}|G(a,\beta_h(a))-G(a,\pi/2)|^2da\to0$ for $G=\psi_x,\psi_y$ by
-Lemma~\ref{lem:segment-estimate}, since $\sup|\beta_h-\pi/2|\to0$ and $\partial_bG\in L^2$
-(using line representatives, Lemma~\ref{lem:line-representatives}). The corner parts of the
-quarter integrals, $|a|>\pi/2-\delta$, are smaller than $\epsilon$ for small $\delta$, uniformly in
-$h$ (Lemma~\ref{lem:ee-corner-tails}), and so is the part of the limit over $|a|>\pi/2-\delta$,
-since the arc energy is finite (Lemma~\ref{lem:ee-arc-energy}). The raw $\psi_x,\psi_y$ agree with these representatives
-on almost every level: the map $(a,h)\mapsto(a,\beta_h(a))$ is a diffeomorphism for fixed $a$,
-so a planar null set meets almost every level in a null set of $a$ (Fubini).
+For $h\le\frac14$ the integrand is bounded by the integrable $\Phi$ of
+Lemma~\ref{lem:ee-quarter-bound}, uniformly in $h$. For almost every $a$, as $h\to0$:
+$a_h\to\pi/2>|a|$, $\beta_h(a)=\arccos(h/\cos a)\to\pi/2$, $G_x,G_y$ are continuous in $b$ on the
+line through $a$ (Lemma~\ref{lem:line-representatives}), $\rho\ne0$ at $(a,\pi/2)$, and the weight
+tends to $1/\cos a$. By dominated convergence the quarter integral tends to
+$\int_{-\pi/2}^{\pi/2}F(a,\pi/2)\,da/\cos a$. For $F=|\psi_n|^2$ this is $0$, and for
+$F=|\psi_t|^2$ it is $\int\frac12\cosh^2s\,|g'|^2ds$ (Lemmas~\ref{lem:arc-diagonal}
+and~\ref{lem:arc-trace-identification}).
 \end{proof}
+
+\begin{remark}[Digest note: level traces]
+Simplified. The sketch split each quarter into a middle part, where a segment estimate gives
+$L^2$ convergence of the restrictions, and corner parts, made small by
+Lemma~\ref{lem:ee-corner-tails}. The pointwise bound behind the corner tails holds on the whole
+quarter orbit once $h\le\frac14$ (Lemma~\ref{lem:ee-quarter-bound}), and the restrictions of line
+representatives converge pointwise on almost every line, so a single dominated convergence
+argument gives both limits; no uniform continuity of coefficients or $\epsilon$-$\delta$ split is
+needed. The null set of levels comes from Fubini in $(a,h)$
+(Lemma~\ref{lem:quarter-null-sets}), so the level traces do not use the coarea formula.
+\end{remark}
 
 \begin{lemma}[Traces on the arc]
 \label{lem:arc-trace-identification}
 \uses{def:sectors, def:stream-lifts, def:normal-tangent, def:separatrix-arc,
   def:line-representative}
-\lean{NoEmbeddedEigenvalues.ee_arc_trace_identification}
+\lean{NoEmbeddedEigenvalues.ee_arc_trace_identification,
+  NoEmbeddedEigenvalues.lintegral_arc_energy_eq}
 \leanok
 Let $\psi$ be as in Lemma~\ref{lem:ee-arc-energy}, and let $G_x,G_y$ be line representatives
 (Definition~\ref{def:line-representative}) of $\psi_x,\psi_y$ on the diagonal rectangle
@@ -527,12 +541,16 @@ $\{|a|<\pi,\ 0<b<\pi\}$. Then:
   \item for almost every $s$, $g=\tilde\psi\circ\gamma$ has derivative
         $g'(s)=T(\gamma(s))$ with $T=\sin y\,G_x-\sin x\,G_y$, and
         $|\psi_t|^2=\frac12\cosh^2s\,|g'(s)|^2$ at $\gamma(s)$, where $\psi_t=T/\rho$.
+  \item With $f(a)=\tilde\psi(a,\pi/2)$,
+        $\int\cosh^2s\,|g'(s)|^2\,ds=\int_{-\pi/2}^{\pi/2}|f'(a)|^2\,da/\cos a$ (as Lebesgue
+        integrals in $[0,\infty]$).
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
 \uses{lem:stream-derivative-parities, lem:line-representatives, lem:traces,
-  lem:local-to-global, lem:lift-representatives, lem:diagonal-calculus, lem:separatrix-arc}
+  lem:local-to-global, lem:lift-representatives, lem:diagonal-calculus, lem:separatrix-arc,
+  lem:arc-diagonal, lem:normal-tangent-frame}
 \leanok
 (1) Combined with a period, $S_2$ is the reflection $\sigma(x,y)=(y+\pi,x-\pi)$, which is
 $b\mapsto\pi-b$ at fixed $a$. Since $\psi$ is even under $S_2$, $\psi_x\circ\sigma=\psi_y$ and
@@ -556,6 +574,11 @@ $a\mapsto-\log\tan((a+\pi/2)/2)$ of $\phi$ is differentiable, so it maps null se
 sets, and for almost every $s$ the point $\phi(s)$ is one where (2) holds. There the chain rule
 gives $g'(s)=-\sech s\,(G_x+G_y)(\gamma(s))$, which is $T(\gamma(s))$ since on the arc
 $\sin x=\sech s$ and $\sin y=-\sech s$. Finally $\rho(\gamma(s))^2=2\sech^2s$.
+
+(4) By (3), $\cosh^2s\,|g'|^2=2|\psi_t|^2$ at $\gamma(s)$; by Lemma~\ref{lem:arc-diagonal} this
+integrates to $\int 2|\psi_t(a,\pi/2)|^2da/\cos a$, and on $b=\pi/2$,
+$2|\psi_t|^2=2(|G_x|^2+|G_y|^2)=|G_x+G_y|^2=|f'|^2$ by (1), (2) and
+Lemma~\ref{lem:normal-tangent-frame}.
 \end{proof}
 
 \begin{remark}
@@ -566,6 +589,44 @@ parity of $\psi_x,\psi_y$ under $S_2$ directly rather than Lemma~\ref{lem:ee-neu
 Lemma~\ref{lem:traces}(2) directly rather than Lemma~\ref{lem:arc-trace-ac}. Only continuity of
 the representatives in $b$ is used, not their absolute continuity.
 \end{remark}
+
+\begin{lemma}[A dominating function on the quarter orbits]
+\label{lem:ee-quarter-bound}
+\uses{def:sectors, def:stream-lifts, def:normal-tangent, def:line-representative}
+\lean{NoEmbeddedEigenvalues.ee_quarter_bound}
+\leanok
+Let $\psi$ and $G_x,G_y$ be as in Lemma~\ref{lem:arc-trace-identification}. There is $\Phi\ge0$ with
+$\int_{-\pi/2}^{\pi/2}\Phi<\infty$ such that for $h\in(0,1)$ and almost every $|a|<a_h$ with
+$|\sin a|\ge\frac12$ or $h\le\frac14$,
+\[
+  \bigl(|\psi_n|^2+|\psi_t|^2\bigr)(a,\beta_h(a))\,\frac1{\sqrt{\cos^2a-h^2}}\le\Phi(a),
+\]
+with $\psi_n,\psi_t$ formed from $G_x,G_y$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-arc-energy, lem:arc-trace-identification, lem:line-representatives,
+  lem:normal-tangent-frame, lem:segment-estimate, lem:quarter-height-limit,
+  lem:quarter-weight}
+\leanok
+The weight is at most $2/\cos a$ (Lemma~\ref{lem:quarter-weight}). By
+Lemma~\ref{lem:normal-tangent-frame}, $|\psi_n|^2+|\psi_t|^2=|G_x|^2+|G_y|^2$ on the quarter orbit
+($\rho\ne0$ there since $\cos a>0$ and $\sin\beta_h(a)>0$). Write
+$|G(a,\beta_h(a))|^2\le2|G(a,\beta_h(a))-G(a,\pi/2)|^2+2|G(a,\pi/2)|^2$ for $G=G_x,G_y$.
+
+Differences: by the segment estimate (Lemma~\ref{lem:segment-estimate}) with $w=1/\cos a$,
+$J=(0,\pi)$, and $\pi/2-\beta_h(a)\le\frac\pi2h/\cos a$ (Lemma~\ref{lem:quarter-height-limit}),
+$w\,|\beta_h-\pi/2|\le\frac\pi2h/\cos^2a\le\frac\pi2$, so the difference terms are bounded by
+$\frac\pi2\int_0^\pi(|\partial_bG_x|^2+|\partial_bG_y|^2)\,db$, which is integrable in $a$
+(Lemma~\ref{lem:line-representatives}).
+
+Traces: by Lemma~\ref{lem:arc-trace-identification},
+$(|G_x|^2+|G_y|^2)(a,\pi/2)=\frac12|f'(a)|^2$ with $f(a)=\tilde\psi(a,\pi/2)$, and
+$\int_{-\pi/2}^{\pi/2}|f'|^2da/\cos a<\infty$ (Lemma~\ref{lem:ee-arc-energy}). So
+$\Phi=4\bigl(\frac\pi2(K_x+K_y)+|f'|^2/(2\cos a)\bigr)$ works, with $K$ the line integrals of
+$|\partial_bG|^2$. The pointwise form of the segment estimate is used since $G(a,\beta_h(a))$ need
+not be measurable in $a$.
+\end{proof}
 
 \begin{lemma}[Corner tails]
 \label{lem:ee-corner-tails}
@@ -584,31 +645,12 @@ the corner parts of the quarter integral (Lemma~\ref{lem:quarter-orbit-diagonal}
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-arc-energy, lem:arc-trace-identification, lem:line-representatives,
-  lem:normal-tangent-frame, lem:segment-estimate, lem:quarter-height-limit,
-  lem:quarter-weight, lem:arc-diagonal}
+\uses{lem:ee-quarter-bound}
 \leanok
-Take $\delta\le\pi/6$, so that $|\sin a|\ge\frac12$ on the range. There $\cos a>\sqrt h$, so
-$h\le\cos^2a$ and the weight is at most $2/\cos a$ (Lemma~\ref{lem:quarter-weight}). By
-Lemma~\ref{lem:normal-tangent-frame}, $|\psi_n|^2+|\psi_t|^2=|G_x|^2+|G_y|^2$ on the quarter orbit
-($\rho\ne0$ there since $\cos a>0$ and $\sin\beta_h(a)>0$). Write
-$|G(a,\beta_h(a))|^2\le2|G(a,\beta_h(a))-G(a,\pi/2)|^2+2|G(a,\pi/2)|^2$ for $G=G_x,G_y$.
-
-Differences: by the segment estimate (Lemma~\ref{lem:segment-estimate}) with $w=1/\cos a$,
-$J=(0,\pi)$, and $\pi/2-\beta_h(a)\le\frac\pi2h/\cos a$ (Lemma~\ref{lem:quarter-height-limit}),
-$w\,|\beta_h-\pi/2|\le\frac\pi2h/\cos^2a\le\frac\pi2$, so the difference terms are bounded by
-$\frac\pi2\int_0^\pi(|\partial_bG_x|^2+|\partial_bG_y|^2)\,db$, which is integrable in $a$
-(Lemma~\ref{lem:line-representatives}).
-
-Traces: by Lemma~\ref{lem:arc-trace-identification}, $(|G_x|^2+|G_y|^2)(a,\pi/2)=|\psi_t(a,\pi/2)|^2$,
-and by Lemma~\ref{lem:arc-diagonal} and~\ref{lem:arc-trace-identification}(3),
-$\int_{-\pi/2}^{\pi/2}|\psi_t(a,\pi/2)|^2\frac{da}{\cos a}=\int\frac12\cosh^2s\,|g'|^2ds<\infty$
-(Lemma~\ref{lem:ee-arc-energy}).
-
-So the integrand is bounded, for almost every $a$ in the range, by a fixed function $\Phi$ with
-$\int_{-\pi/2}^{\pi/2}\Phi<\infty$, independent of $h$. The range lies in
-$\{\pi/2-\delta<|a|<\pi/2\}$, of measure $2\delta$, and by absolute continuity of the integral
-$\int\Phi$ over it is less than $\epsilon$ for small $\delta$.
+Take $\delta\le\pi/6$, so that $|\sin a|\ge\frac12$ for $\pi/2-\delta<|a|<\pi/2$. By
+Lemma~\ref{lem:ee-quarter-bound} the integrand is bounded there by $\Phi(a)$, independently of
+$h$, and the range lies in $\{\pi/2-\delta<|a|<\pi/2\}$, of measure $2\delta$. By absolute
+continuity of the integral, $\int\Phi$ over it is less than $\epsilon$ for small $\delta$.
 \end{proof}
 
 \begin{remark}[Digest note: corner tails]
@@ -622,7 +664,9 @@ need $\partial_bG$ to be small near the arc, only near the two corners in $a$, s
 lines $0<b<\pi$ can be used, and the estimate holds for all $h\in(0,1)$. The local odd Hardy
 inequality enters only through Lemma~\ref{lem:ee-arc-energy}. The part of the arc integral over
 $|a|>\pi/2-\delta$, formerly part of this lemma, is small simply because the arc energy is
-finite, and is left to Lemma~\ref{lem:ee-level-traces}.
+finite, and is left to Lemma~\ref{lem:ee-level-traces}. Since the same bound holds on the whole
+quarter for $h\le\frac14$ (Lemma~\ref{lem:ee-quarter-bound}), Lemma~\ref{lem:ee-level-traces} no
+longer uses this lemma.
 \end{remark}
 
 \begin{lemma}[The first-order trace term]
@@ -697,10 +741,9 @@ estimate is the fundamental theorem of calculus on almost every vertical line, a
 set of levels comes from comparing representatives (Lemma~\ref{lem:level-integral-congr}).
 The lemma was split into Lemmas~\ref{lem:ee-arc-energy}, \ref{lem:ee-level-traces}
 (with Lemmas~\ref{lem:arc-trace-identification} and~\ref{lem:ee-corner-tails}, now formalized)
-and~\ref{lem:ee-first-trace-limit}; the middle convergence in
-Lemma~\ref{lem:ee-level-traces} is the least worked out. The corner tails need neither the
-corner coordinates nor the hyperbola estimate (digest note after
-Lemma~\ref{lem:ee-corner-tails}).
+and~\ref{lem:ee-first-trace-limit}, all now formalized. The level traces are a single dominated
+convergence (digest note after Lemma~\ref{lem:ee-level-traces}) and need neither the corner
+coordinates nor the hyperbola estimate.
 \end{remark}
 
 \begin{remark}
@@ -1714,6 +1757,48 @@ The covering map is measure preserving on each translate of a fundamental square
 $\R^2$ is a countable union of these. Rotation commutes with $\Delta^{-1}$, so $\psi$ has
 the rotation character of $\omega$ almost everywhere. Two continuous functions that agree
 almost everywhere on $\T^2$ agree everywhere, since Haar measure charges open sets.
+\end{proof}
+
+\begin{lemma}[Symmetries of the continuous stream function]
+\label{lem:continuous-stream-symmetries}
+\uses{def:stream-lifts, def:sectors}
+\lean{NoEmbeddedEigenvalues.continuousRep_invLap_comp,
+  NoEmbeddedEigenvalues.contStream_rotate, NoEmbeddedEigenvalues.contStream_iterate_rotate,
+  NoEmbeddedEigenvalues.contStream_reflect₁, NoEmbeddedEigenvalues.contStream_add_two_pi,
+  NoEmbeddedEigenvalues.inSector_iterate_rotate}
+\leanok
+For every $\omega\in L^2$ and every $(x,y)$, the continuous stream function of the rotated
+vorticity $\omega\circ R$ is $\tilde\psi\circ R$, and $\tilde\psi$ is $2\pi$-periodic in each
+variable. If $\omega$ is even under $S_1$, then $\tilde\psi(\pi-y,\pi-x)=\tilde\psi(x,y)$ for every
+$(x,y)$. If $\omega$ is even under $S_1$ and $S_2$, so is $\omega\circ R^k$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:continuous-representative, lem:symmetries-commute}
+\leanok
+If $\Delta^{-1}\omega\circ T=\Delta^{-1}\omega'$ almost everywhere for a continuous
+measure-preserving $T$, the continuous representatives agree almost everywhere and hence
+everywhere. $R$ and $S_1$ commute with $\Delta^{-1}$; $R$ exchanges the two reflections.
+\end{proof}
+
+\begin{lemma}[Rotation of the normal and tangential derivatives]
+\label{lem:normal-tangent-rotation}
+\uses{def:normal-tangent, def:stream-derivatives}
+\lean{NoEmbeddedEigenvalues.measurePreserving_rotLift, NoEmbeddedEigenvalues.liftL2_rotate_ae,
+  NoEmbeddedEigenvalues.streamPartial_rotate, NoEmbeddedEigenvalues.streamNormal_rotate_ae,
+  NoEmbeddedEigenvalues.streamNormal_iterate_rotate_ae}
+\leanok
+For every $\omega\in L^2$ and $k\ge0$, the normal and tangential derivatives of the stream
+function of $\omega\circ R^k$ are those of $\psi$ composed with $R^k$, almost everywhere.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:stream-derivative-parities}
+\leanok
+$\partial_x(\psi\circ R)=-\psi_y\circ R$ and $\partial_y(\psi\circ R)=\psi_x\circ R$ (on Fourier
+coefficients), $\rho\circ R=\rho$, and $R$ maps $(\sin x,\sin y)$ to $(\sin y,-\sin x)$; so the
+components of $\nabla(\psi\circ R)$ in the frame $(n,Y/\rho)$ at $p$ are those of $\nabla\psi$ at
+$Rp$. Induct on $k$; $R$ is measure preserving on $\R^2$.
 \end{proof}
 
 \begin{lemma}[Transport pairs with the continuous stream function]

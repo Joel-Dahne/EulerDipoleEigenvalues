@@ -117,9 +117,11 @@ motivation, and standard facts cited rather than proved.
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
   separatrix arc, as explicit graphs in diagonal coordinates; `SeparatrixTraces.lean` defines
-  line representatives (`IsLineRep`) and treats the traces of `∇ψ` on the even–even arc and
-  the corner tails of the level integrals; `SegmentEstimates.lean` bounds
-  restrictions to curves near a line (segment and hyperbola estimates); `OddHardy.lean` proves the critical Hardy inequality for odd
+  line representatives (`IsLineRep`) and proves the even–even separatrix traces (arc traces,
+  arc energy, level traces, corner tails); `SegmentEstimates.lean` bounds
+  restrictions to curves near a line (segment and hyperbola estimates); `LineMollifier.lean` mollifies functions on `ℝ²` in the first variable;
+  `TransversalMollifier.lean` treats weak derivatives in action-angle coordinates and the
+  mollifier in the level variable used for the `L²` virial identity; `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.
   Then
   `DuBoisReymond.lean` proves the du Bois-Reymond lemma on an interval;

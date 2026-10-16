@@ -7,7 +7,7 @@ import NoEmbeddedEigenvalues.SeparatrixArc
 
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates` (stated), `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
-`lem:corner-coordinates`; stated:
+`lem:corner-coordinates`; stated: `lem:action-angle-chart`,
 `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
@@ -22,6 +22,11 @@ point, which Mathlib does not provide.
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 The normal and tangential derivatives use the outward normal `n = -∇Ψ/ρ` of `{Ψ > 2h}` and
 the unit tangent `Y/ρ`.
+
+The action-angle coordinates are `(h, θ)` with `θ = t/S(h) ∈ [-1/4, 3/4)`; the
+parametrization `P(h, θ) = γ_h(θ S(h))` is defined on the strip `(0, 1) × ℝ` and is
+`1`-periodic in `θ`, so functions in these coordinates are periodic in `θ` rather than
+functions on a circle.
 -/
 
 noncomputable section
@@ -52,16 +57,18 @@ def orbitDomain : Set (ℝ × ℝ) :=
 /-- The open orbit annulus `{h₁ < h < h₂}` in the punctured cell. -/
 def orbitAnnulus (h₁ h₂ : ℝ) : Set (ℝ × ℝ) := {p | p ∈ puncturedCell ∧ levelCoord p ∈ Ioo h₁ h₂}
 
-/-- The angle coordinate `θ = t / S(h)` modulo 1. -/
-def angleCoord (p : ℝ × ℝ) : UnitAddCircle :=
-  ((timeCoord p / orbitPeriod (levelCoord p) : ℝ) : UnitAddCircle)
+/-- The angle coordinate `θ = t / S(h)`, with values in `[-1/4, 3/4)`; it is an angle
+    modulo 1, with a cut where `t` has one. -/
+def angleCoord (p : ℝ × ℝ) : ℝ := timeCoord p / orbitPeriod (levelCoord p)
 
 /-- The action-angle coordinates `(h, θ)` on the punctured cell. -/
-def actionAngle (p : ℝ × ℝ) : ℝ × UnitAddCircle := (levelCoord p, angleCoord p)
+def actionAngle (p : ℝ × ℝ) : ℝ × ℝ := (levelCoord p, angleCoord p)
 
-/-- The parametrization `(h, θ) ↦ γ_h(θ S(h))`, with `θ` represented in `[0, 1)`. -/
-def actionAngleInv (q : ℝ × UnitAddCircle) : ℝ × ℝ :=
-  AddCircle.liftIco (1 : ℝ) 0 (fun θ ↦ dipoleOrbit q.1 (θ * orbitPeriod q.1)) q.2
+/-- The parametrization `(h, θ) ↦ γ_h(θ S(h))`, `1`-periodic in `θ`. -/
+def actionAngleInv (q : ℝ × ℝ) : ℝ × ℝ := dipoleOrbit q.1 (q.2 * orbitPeriod q.1)
+
+/-- The strip `0 < h < 1` of action-angle coordinates. -/
+def actionStrip : Set (ℝ × ℝ) := Ioo 0 1 ×ˢ univ
 
 /-- The orbit coordinates take values in the orbit domain. -/
 theorem mem_orbitDomain {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
@@ -107,6 +114,98 @@ theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace �
       (2 : ℝ) • ∫ h in Ioo 0 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
         f (dipoleOrbit h t) := by
   sorry
+
+/-! ### The action-angle chart (`lem:action-angle-chart`) -/
+
+/-- The period function is smooth on `(0, 1)`. -/
+theorem contDiffOn_orbitPeriod : ContDiffOn ℝ ∞ orbitPeriod (Ioo 0 1) := by
+  sorry
+
+theorem actionAngleInv_mem_puncturedCell {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (θ : ℝ) :
+    actionAngleInv (h, θ) ∈ puncturedCell := by
+  refine ⟨dipoleOrbit_mem_cellSquare h0 h1 _, fun h0' ↦ ?_⟩
+  have e := dipoleLift_dipoleOrbit h0 h1 (θ * orbitPeriod h)
+  rw [show dipoleOrbit h (θ * orbitPeriod h) = 0 from h0'] at e
+  simp only [dipoleLift, Prod.fst_zero, Prod.snd_zero, Real.cos_zero] at e
+  linarith
+
+theorem levelCoord_actionAngleInv {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (θ : ℝ) :
+    levelCoord (actionAngleInv (h, θ)) = h :=
+  levelCoord_dipoleOrbit h0 h1 _
+
+/-- The parametrization is `1`-periodic in the angle. -/
+theorem actionAngleInv_add_one {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (θ : ℝ) :
+    actionAngleInv (h, θ + 1) = actionAngleInv (h, θ) := by
+  simp only [actionAngleInv, add_mul, one_mul]
+  exact dipoleOrbit_periodic h0 h1 _
+
+theorem actionAngleInv_actionAngle {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    actionAngleInv (actionAngle p) = p := by
+  have hd := (mem_orbitDomain hp).1
+  have hS : orbitPeriod (levelCoord p) ≠ 0 := (orbitPeriod_pos hd.1 hd.2).ne'
+  simp only [actionAngleInv, actionAngle, angleCoord, div_mul_cancel₀ _ hS]
+  exact dipoleOrbit_levelCoord_timeCoord hp
+
+theorem actionAngle_actionAngleInv {h θ : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (hθ : θ ∈ Ico (-1 / 4 : ℝ) (3 / 4)) : actionAngle (actionAngleInv (h, θ)) = (h, θ) := by
+  have hL := eighthPeriod_pos h0 h1
+  have hS : orbitPeriod h ≠ 0 := (orbitPeriod_pos h0 h1).ne'
+  have hq : (h, θ * orbitPeriod h) ∈ orbitDomain := by
+    refine ⟨⟨h0, h1⟩, ?_, ?_⟩ <;> simp only [orbitPeriod] <;> nlinarith [hθ.1, hθ.2]
+  have hl := levelCoord_actionAngleInv h0 h1 θ
+  simp only [actionAngleInv] at hl
+  simp only [actionAngle, angleCoord, actionAngleInv, hl, timeCoord_dipoleOrbit hq,
+    mul_div_cancel_right₀ _ hS]
+
+/-- `∂_θ` of the parametrization is `S(h) Y`. -/
+theorem hasDerivAt_actionAngleInv_snd (h θ : ℝ) :
+    HasDerivAt (fun θ ↦ actionAngleInv (h, θ))
+      (orbitPeriod h • dipoleVelocity (actionAngleInv (h, θ))) θ := by
+  exact (hasDerivAt_dipoleFlow (arccos h, -arccos h) (θ * orbitPeriod h)).scomp θ
+    (hasDerivAt_mul_const (orbitPeriod h))
+
+/-- The parametrization is smooth on the strip. -/
+theorem contDiffOn_actionAngleInv : ContDiffOn ℝ ∞ actionAngleInv actionStrip := by
+  sorry
+
+/-- The angle is smooth off the cut. -/
+theorem contDiffAt_angleCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) : ContDiffAt ℝ ∞ angleCoord p := by
+  have hd := (mem_orbitDomain hp).1
+  have hl : ContDiff ℝ ∞ levelCoord := by
+    unfold levelCoord dipoleLift
+    fun_prop
+  have hS : ContDiffAt ℝ ∞ (fun q ↦ orbitPeriod (levelCoord q)) p :=
+    (contDiffOn_orbitPeriod.contDiffAt (Ioo_mem_nhds hd.1 hd.2)).comp (f := levelCoord) p
+      hl.contDiffAt
+  exact (contDiffAt_timeCoord hp hcut).div hS (orbitPeriod_pos hd.1 hd.2).ne'
+
+/-- The angle is smooth modulo 1 on the whole punctured cell: a smooth function on the strip
+    that is `1`-periodic in `θ` is smooth in the original coordinates. -/
+theorem contDiffOn_comp_actionAngle {F : ℝ × ℝ → ℂ} (hF : ContDiffOn ℝ ∞ F actionStrip)
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) :
+    ContDiffOn ℝ ∞ (F ∘ actionAngle) puncturedCell := by
+  sorry
+
+/-- `dx dy = 2 S(h) dh dθ`. -/
+theorem lintegral_cellSquare_actionAngle {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :
+    ∫⁻ p in cellSquare, f p =
+      ∫⁻ h in Ioo 0 1, ∫⁻ θ in Ico (-1 / 4 : ℝ) (3 / 4),
+        ENNReal.ofReal (2 * orbitPeriod h) * f (actionAngleInv (h, θ)) := by
+  rw [lintegral_cellSquare_eq hf, ← lintegral_const_mul' _ _ (by simp)]
+  refine setLIntegral_congr_fun measurableSet_Ioo fun h hh ↦ ?_
+  have hS := orbitPeriod_pos hh.1 hh.2
+  have hI : (fun θ ↦ θ * orbitPeriod h) '' Ico (-1 / 4 : ℝ) (3 / 4) =
+      Ico (-2 * eighthPeriod h) (6 * eighthPeriod h) := by
+    rw [image_mul_right_Ico _ _ hS, orbitPeriod]
+    congr 1 <;> ring
+  rw [← hI, lintegral_image_eq_lintegral_abs_deriv_mul measurableSet_Ico
+    (fun θ _ ↦ (hasDerivAt_mul_const (orbitPeriod h)).hasDerivWithinAt)
+    ((mul_left_injective₀ hS.ne').injOn), ← lintegral_const_mul' _ _ (by simp)]
+  refine setLIntegral_congr_fun measurableSet_Ico fun θ _ ↦ ?_
+  rw [← mul_assoc, ← ENNReal.ofReal_ofNat 2, ← ENNReal.ofReal_mul (by norm_num),
+    abs_of_pos hS]
+  rfl
 
 /-! ### Integrals over levels -/
 

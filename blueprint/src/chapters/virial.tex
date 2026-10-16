@@ -250,35 +250,120 @@ the first identity. No approximation of $\psi$ is needed: the derivatives always
 $\psi\in H^2$ or on the smooth $\phi$.
 \end{proof}
 
-\begin{lemma}[A transversal mollifier]
+\begin{definition}[The transversal mollifier]
+\label{def:transversal-mollifier}
+\uses{def:action-angle, def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.cellCutoff, NoEmbeddedEigenvalues.transversalMollifier}
+\leanok
+Let $\chi$ be a smooth function on $\R$ with support in $(0,1)$. The cell cutoff is
+$\hat\chi=\chi(\Psi/2)$ on the cell and $0$ elsewhere. For a function $u$ on the cell let
+$U=u\circ P$ be $u$ in action-angle coordinates (Definition~\ref{def:action-angle}). The
+transversal mollifier is $J_\epsilon u=M_\epsilon(\chi U)\circ(h,\theta)$ on the punctured cell and $0$
+elsewhere, with $M_\epsilon$ the mollification in $h$ at fixed $\theta$
+(Definition~\ref{def:line-mollifier}).
+\end{definition}
+
+\begin{lemma}[The transversal mollifier on $L^2$]
 \label{lem:transversal-mollifier}
-\uses{def:action-angle, def:sobolev-torus}
-Let $0<h_1'<h_1\le h_2<h_2'<1$, $\chi(h)$ smooth with support in $(h_1',h_2')$ and equal to
-$1$ near $[h_1,h_2]$, and $\rho_\epsilon$ a standard mollifier. In the action-angle
-coordinates of Definition~\ref{def:action-angle} let $J_\epsilon g=\rho_\epsilon*_h(\chi g)$,
-convolution in $h$ at fixed $\theta$, extended by zero. Then for $\epsilon$ small:
+\uses{def:transversal-mollifier}
+\lean{NoEmbeddedEigenvalues.transversalMollifier_const_mul,
+  NoEmbeddedEigenvalues.transversalMollifier_eq_zero,
+  NoEmbeddedEigenvalues.transversalMollifier_add,
+  NoEmbeddedEigenvalues.transversalMollifier_congr_ae,
+  NoEmbeddedEigenvalues.memLp_transversalMollifier,
+  NoEmbeddedEigenvalues.tendsto_transversalMollifier}
+\leanok
+$J_\epsilon$ is linear, up to null sets, and $J_\epsilon u$ depends only on $u$ almost everywhere on the
+cell. There are a compact $K$ in the punctured cell, $\epsilon_0>0$ and $C$ such that for
+$0<\epsilon<\epsilon_0$: $J_\epsilon u$ vanishes off $K$, and $\|J_\epsilon u\|_{L^2(\R^2)}\le
+C\|u\|_{L^2(\Cell)}$. For $u\in L^2(\Cell)$, $J_\epsilon u\to\hat\chi u$ in $L^2$ as $\epsilon\to0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:line-mollifier}
+$\chi U$ vanishes for $h$ outside $\operatorname{supp}\chi=[a,b]\subset(0,1)$, so $M_\epsilon(\chi U)$
+vanishes for $h$ outside $[a-\epsilon,b+\epsilon]$; take $K=\{a-\epsilon_0\le h\le b+\epsilon_0\}$. By the
+area formula (Lemma~\ref{lem:action-angle-chart}) and the inverse relations,
+$\|J_\epsilon u\|^2=\int\int|M_\epsilon(\chi U)|^2\,2S\,dh\,d\theta$ over $(0,1)\times[-\frac14,\frac34)$,
+and $2S$ is bounded above and below on $[a-\epsilon_0,b+\epsilon_0]$. So the $L^2$ statements follow
+from Lemma~\ref{lem:line-mollifier}(1) with $\mu$ Lebesgue measure on $[-\frac14,\frac34)$, using
+$\hat\chi u=(\chi U)\circ(h,\theta)$. Linearity holds wherever the defining integrals converge,
+which is for almost every $\theta$.
+\end{proof}
+
+\begin{lemma}[Derivatives of the transversal mollifier]
+\label{lem:transversal-mollifier-derivatives}
+\uses{def:transversal-mollifier, def:transport-pair, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.tendsto_transversalMollifier_partial,
+  NoEmbeddedEigenvalues.transversalMollifier_hasWeakPartialOn}
+\leanok
 \begin{enumerate}
-  \item $J_\epsilon g\to\chi g$ in $L^2$ for $g\in L^2$, and in $H^1$ for $g\in H^1$;
-  \item if $g,L_0g\in L^2$ then $J_\epsilon g\in H^1$ and $\epsilon\|\nabla J_\epsilon g\|\to0$;
-  \item if $g,L_0g\in L^2$ then $\|[H,J_\epsilon]g\|\le C\epsilon\,(\|g\|+\|L_0g\|)$.
+  \item If $u\in H^1(\Cell)$, then $J_\epsilon u\in H^1(\R^2)$ for small $\epsilon$ and
+    $J_\epsilon u\to\hat\chi u$ in $H^1(\R^2)$.
+  \item If $u,k\in L^2(\Cell)$ with $L_0u=k$ weakly on the cell, then $J_\epsilon u\in H^1(\R^2)$
+    for small $\epsilon$ and $\epsilon\|\nabla J_\epsilon u\|\to0$.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-chart}
-In the chart $L_0=s(h)\partial_\theta$ with $s=1/S$, and $J_\epsilon$ commutes with
-$\partial_h$, $\partial_\theta$ and with multiplication by functions of $h$ up to the
-commutator below. (1) is the approximate identity property. For (2),
-$\partial_\theta J_\epsilon g=J_\epsilon(\partial_\theta(\chi g))$ with
-$\partial_\theta(\chi g)=\chi S\,L_0g\in L^2$, and
-$\epsilon\partial_hJ_\epsilon g=(\rho')_\epsilon*_h(\chi g)\to0$ since $\int\rho'=0$. For (3),
+\uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-weak,
+  lem:line-mollifier, lem:localization-cutoff}
+In coordinates, $J_\epsilon u$ is $M_\epsilon(\chi U)$, whose weak derivatives are
+$\partial_hM_\epsilon(\chi U)=M'_\epsilon(\chi U)$ and $\partial_\theta M_\epsilon(\chi U)=M_\epsilon(\chi\,\partial_\theta U)$
+whenever $\partial_\theta U$ exists (Lemma~\ref{lem:line-mollifier}). These are $1$-periodic in $\theta$, so
+by Lemma~\ref{lem:action-angle-weak}(3)
 \[
-  [L_0,J_\epsilon]g(h,\theta)=\int\rho_\epsilon(h-h')\bigl(s(h)-s(h')\bigr)
-    \partial_\theta(\chi g)(h',\theta)\,dh',
+  \partial_jJ_\epsilon u=(\partial_jh)\,M'_\epsilon(\chi U)\circ(h,\theta)
+    +(\partial_j\theta)\,M_\epsilon(\chi\,\partial_\theta U)\circ(h,\theta),
 \]
-and $|s(h)-s(h')|\le\epsilon\sup|s'|$ on the window. The area density $2S(h)$ is bounded
-above and below on $[h_1',h_2']$, so the coordinate norms are equivalent to the $L^2$ norms.
+and $\partial_jh$, $\partial_j\theta$ are bounded on $K$. (1): by
+Lemma~\ref{lem:action-angle-weak}(2), $\chi U$ has weak derivatives in $L^2$, so
+$M'_\epsilon(\chi U)=M_\epsilon(\partial_h(\chi U))\to\partial_h(\chi U)$ and
+$M_\epsilon(\chi\,\partial_\theta U)\to\chi\,\partial_\theta U$; by the chain rule again the limit is
+$\nabla(\hat\chi u)$. (2): $\partial_\theta U=S(h)K$ (Lemma~\ref{lem:action-angle-weak}(1)), so the
+$\theta$-term is bounded in $L^2$, and $\epsilon M'_\epsilon(\chi U)\to0$ by
+Lemma~\ref{lem:line-mollifier}(2).
 \end{proof}
+
+\begin{lemma}[The commutator with the transport operator]
+\label{lem:transversal-mollifier-commutator}
+\uses{def:transversal-mollifier, def:transport-pair}
+\lean{NoEmbeddedEigenvalues.transversalMollifier_hasWeakL0On}
+\leanok
+There are $\epsilon_0>0$ and $C$ such that for $0<\epsilon<\epsilon_0$ and $u,k\in L^2(\Cell)$ with
+$L_0u=k$ weakly on the cell, $L_0J_\epsilon u$ exists weakly on $\R^2$, lies in $L^2$, and
+\[
+  \|L_0J_\epsilon u-J_\epsilon k\|_{L^2(\R^2)}\le C\epsilon\|k\|_{L^2(\Cell)}.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-weak,
+  lem:line-mollifier}
+In coordinates $L_0=s(h)\partial_\theta$ with $s=1/S$, and $\partial_\theta U=SK$
+(Lemma~\ref{lem:action-angle-weak}(1)). Since $\chi$ depends only on $h$ and $M_\epsilon$ commutes
+with $\partial_\theta$,
+\[
+  L_0J_\epsilon u-J_\epsilon k=s\,M_\epsilon(S\chi K)-M_\epsilon(\chi K)=s\bigl(M_\epsilon(S\,\chi K)-S\,M_\epsilon(\chi K)\bigr)
+\]
+in coordinates, and by Lemma~\ref{lem:action-angle-weak}(1) again this is a weak identity on the
+cell; it extends to $\R^2$ since $J_\epsilon u$ vanishes off $K$. By
+Lemma~\ref{lem:line-mollifier}(3), applied to a Lipschitz function equal to $S$ on
+$[a-\epsilon_0,b+\epsilon_0]$, the bracket is at most $\epsilon\operatorname{Lip}(S)\|\chi K\|$; $s$ is bounded,
+and the coordinate norms are equivalent to the $L^2$ norms (Lemma~\ref{lem:action-angle-chart}).
+\end{proof}
+
+\begin{remark}[Digest note: the transversal mollifier, restated]
+The single mollifier lemma of the first digest is split into the $L^2$ part, the derivatives
+and the commutator, with the analysis moved into a one-dimensional mollifier lemma
+(Lemma~\ref{lem:line-mollifier}) and a lemma on weak derivatives in action-angle coordinates
+(Lemma~\ref{lem:action-angle-weak}). Changes to the statement: the mollifier acts on functions
+on the cell and produces functions on $\R^2$ with support in a fixed compact subset of the
+punctured cell, so the virial identity can be applied on $\R^2$ without periodization; the
+commutator bound is $C\epsilon\|L_0u\|$, without the $\|u\|$ term. The chart is used on the whole punctured cell rather than
+on an annulus, with the angle in $[-\frac14,\frac34)$ and functions in coordinates $1$-periodic in
+$\theta$.
+\end{remark}
 
 \begin{lemma}[Virial identity on the original domain]
 \label{lem:virial-l2}
@@ -296,16 +381,20 @@ $\Delta\psi=\omega$ (manuscript \texttt{(ee:bounded-virial)}, restricted to such
 
 \begin{proof}
 \uses{lem:virial-exact-identity, lem:virial-h1, lem:transversal-mollifier,
-  lem:virial-smooth-quadratic, lem:elliptic-torus}
+  lem:transversal-mollifier-derivatives, lem:transversal-mollifier-commutator,
+  lem:virial-smooth-quadratic, lem:elliptic-torus, lem:local-to-global}
 Here $\omega,L_0\omega\in L^2$ (since $L_0\omega=i\lambda\omega-L_0\psi$ and $\psi\in H^2$),
 $\psi\in H^2$, $a=\omega+\psi$ and $Ha=\lambda\omega$. Take $J_\epsilon$ from
-Lemma~\ref{lem:transversal-mollifier} with $\chi=1$ near the support of $W$, and apply
+Definition~\ref{def:transversal-mollifier} with $\hat\chi=1$ near the support of $W$, and apply
 Lemma~\ref{lem:virial-exact-identity} with $V=J_\epsilon^\dagger DJ_\epsilon$
-($\dagger$ the $L^2$ adjoint). The functions $J_\epsilon a$, $J_\epsilon\omega$, $J_\epsilon\psi$ are in
-$H^1$. Right side: by skew-symmetry of $D$ on $H^1$,
+($\dagger$ the $L^2$ adjoint; $J_\epsilon$ is bounded by Lemma~\ref{lem:transversal-mollifier}). The
+functions $J_\epsilon a$, $J_\epsilon\omega$, $J_\epsilon\psi$ are in $H^1$
+(Lemma~\ref{lem:transversal-mollifier-derivatives}(2)); they vanish off a compact subset of the
+cell, so their periodizations lie in $H^1(\T^2)$ (Lemma~\ref{lem:local-to-global}). Right side: by skew-symmetry of $D$ on $H^1$,
 $\ip{V\psi}{\omega}-\ip{V\omega}{\psi}=2\operatorname{Re}\ip{DJ_\epsilon\psi}{J_\epsilon\omega}
-\to2\operatorname{Re}\ip{D\psi}{\omega}$, using $J_\epsilon\psi\to\chi\psi$ in $H^1$ and
-$\chi D\psi=D\psi$. Left side: it equals $\ip{DJ_\epsilon a}{J_\epsilon Ha}-\ip{DJ_\epsilon Ha}{J_\epsilon a}$.
+\to2\operatorname{Re}\ip{D\psi}{\omega}$, using $J_\epsilon\psi\to\hat\chi\psi$ in $H^1$
+(Lemma~\ref{lem:transversal-mollifier-derivatives}(1)), $J_\epsilon\omega\to\hat\chi\omega$ in $L^2$
+and $\hat\chi D\psi=D(\hat\chi\psi)=D\psi$. Left side: it equals $\ip{DJ_\epsilon a}{J_\epsilon Ha}-\ip{DJ_\epsilon Ha}{J_\epsilon a}$.
 Write $J_\epsilon Ha=HJ_\epsilon a-[H,J_\epsilon]a$ and use skew-symmetry for the second term
 ($Ha=\lambda\omega$ has $L_0Ha\in L^2$, so $J_\epsilon Ha\in H^1$):
 \[
@@ -317,7 +406,8 @@ Write $J_\epsilon Ha=HJ_\epsilon a-[H,J_\epsilon]a$ and use skew-symmetry for th
 by Lemma~\ref{lem:virial-h1}. The first term tends to
 $\operatorname{Re}\ip{fHa}{a}=\lambda\operatorname{Re}\ip{f\omega}{a}$. The second tends to
 zero: $\|DJ_\epsilon a\|=o(1/\epsilon)$ and $\|[H,J_\epsilon]a\|=O(\epsilon)$ by
-Lemma~\ref{lem:transversal-mollifier}. Divide by $\lambda$. The quadratic form follows by
+Lemmas~\ref{lem:transversal-mollifier-derivatives}(2)
+and~\ref{lem:transversal-mollifier-commutator}. Divide by $\lambda$. The quadratic form follows by
 the integrations by parts of Lemma~\ref{lem:virial-smooth-quadratic}, extended to
 $\psi\in H^2$ by density as in Lemma~\ref{lem:stream-ibp}.
 \end{proof}

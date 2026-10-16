@@ -385,6 +385,62 @@ $(\partial_j\chi)u+\chi\,\partial_ju$ is a sum of two cutoffs of
 $H^{k-1}_{\mathrm{loc}}(V)$ functions.
 \end{proof}
 
+\begin{definition}[Mollification in one variable]
+\label{def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.stdBump, NoEmbeddedEigenvalues.mollifierKernel,
+  NoEmbeddedEigenvalues.mollifyFst, NoEmbeddedEigenvalues.mollifyFstDeriv}
+\leanok
+Fix a smooth even $\rho\ge0$, positive exactly on $(-1,1)$, with $\int\rho=1$, and let
+$\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variables $(h,\theta)$,
+\[
+  M_\epsilon F(h,\theta)=\int\rho_\epsilon(h-h')F(h',\theta)\,dh',\qquad
+  M'_\epsilon F(h,\theta)=\int\rho_\epsilon'(h-h')F(h',\theta)\,dh'.
+\]
+\end{definition}
+
+\begin{lemma}[Mollification in one variable]
+\label{lem:line-mollifier}
+\uses{def:line-mollifier, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.contDiff_stdBump, NoEmbeddedEigenvalues.stdBump_nonneg,
+  NoEmbeddedEigenvalues.stdBump_neg, NoEmbeddedEigenvalues.support_stdBump,
+  NoEmbeddedEigenvalues.integral_stdBump,
+  NoEmbeddedEigenvalues.eLpNorm_mollifyFst_le,
+  NoEmbeddedEigenvalues.tendsto_mollifyFst,
+  NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv,
+  NoEmbeddedEigenvalues.eLpNorm_mollifyFst_mul_sub_le,
+  NoEmbeddedEigenvalues.hasWeakPartialOn_mollifyFst,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.mollify,
+  NoEmbeddedEigenvalues.mollifyFstDeriv_ae_eq}
+\leanok
+Such a $\rho$ exists. Let $\mu$ be a $\sigma$-finite measure on $\R$ and $F\in L^2(dh\otimes\mu)$,
+$\epsilon>0$. Then
+\begin{enumerate}
+  \item $\|M_\epsilon F\|\le\|F\|$ and $M_\epsilon F\to F$ as $\epsilon\to0$;
+  \item $M'_\epsilon F\in L^2$ and $\epsilon M'_\epsilon F\to0$;
+  \item if $s$ is $L$-Lipschitz, $\|M_\epsilon(sF)-sM_\epsilon F\|\le\epsilon L\|F\|$, where
+    $s$ acts by multiplication with $s(h)$;
+\end{enumerate}
+all norms in $L^2(dh\otimes\mu)$. For locally integrable $F$ on $\R^2$, $M'_\epsilon F$ is the weak
+$h$-derivative of $M_\epsilon F$ on $\R^2$, and if $G$ is the weak $j$-th derivative of $F$ on $\R^2$,
+then $M_\epsilon G$ is that of $M_\epsilon F$, and $M'_\epsilon F=M_\epsilon G$ almost everywhere when
+$j=h$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+The bump is Mathlib's normed \texttt{ContDiffBump} with radii $\frac12$ and $1$. On each line
+$\theta=\mathrm{const}$, $M_\epsilon$ is convolution with $\rho_\epsilon$, so (1) is Young's inequality
+and the approximate identity property, integrated over $\theta$ by dominated convergence (the
+lines with $F(\cdot,\theta)\in L^2$ have full $\mu$-measure). (2): $\epsilon\rho_\epsilon'$ is the
+rescaling $(\rho')_\epsilon$ of $\rho'$, which has integral $0$, so $\epsilon M'_\epsilon F\to(\int\rho')F=0$
+in the same way. (3): the kernel of the commutator is
+$\rho_\epsilon(h-h')(s(h')-s(h))$, bounded by $L|h-h'|\rho_\epsilon(h-h')$, whose integral is at most
+$\epsilon L$; apply Young's inequality. For the derivatives, move $\partial_j$ from the test
+function $\varphi$ to the kernel by Fubini: $\int M_\epsilon F\,\partial_j\varphi=\int F\,\partial_j\check
+M_\epsilon\varphi$ with $\check M_\epsilon$ the mollification by $\rho_\epsilon(-\cdot)=\rho_\epsilon$, again a
+test function.
+\end{proof}
+
 \section{Sobolev spaces on the torus}
 
 \begin{lemma}[Elliptic regularity on the torus]

@@ -101,7 +101,7 @@ center) is replaced, checked on paper, by: the exact identity
 `⟨Va,Ha⟩ - ⟨VHa,a⟩ = λ(⟨Vψ,ω⟩ - ⟨Vω,ψ⟩)` (`lem:virial-exact-identity`,
 `inner_virial_exact`, proved); a mollifier in the level variable of
 action-angle coordinates (`def:action-angle`, `lem:action-angle-chart`,
-`lem:transversal-mollifier`, no Lean yet), for which `‖[H,J_ε]a‖ = O(ε)`
+`lem:transversal-mollifier`, stated in Lean, see below), for which `‖[H,J_ε]a‖ = O(ε)`
 while `‖DJ_ε a‖ = o(1/ε)`; and the smooth identity on `H¹`
 (`lem:virial-h1`, no Lean yet). `virial_l2` now assumes `W ∈ C³`, `f ∈ C²`,
 periodic, supported in `{2h₁ ≤ Ψ ≤ 2h₂}`, `0 < h₁`, `h₂ < 1`.
@@ -208,7 +208,7 @@ continuity of `g = ψ̃ ∘ γ_k` is the new `lem:arc-trace-ac`
 continuity under monotone/antitone Lipschitz changes of variable,
 `hasDerivAt_artanh`, `ae_comp_artanh`, `integrableOn_Ioo_iff_tanh`,
 `HasIntervalH1.congr_Ioo`, primitives of integrable complex functions.
-The only `sorry` left in `EvenEven.lean` is `ee_gradient_traces`.
+`ee_gradient_traces` was then the only `sorry` in `EvenEven.lean` (now proved).
 
 **`ee_gradient_traces` is split (2026-10-16)** after a digest (correct as
 sketched; four implicit steps recorded in a digest note): `ee_arc_energy`
@@ -253,38 +253,53 @@ Also `one_div_sqrt_cos_sq_sub_le(_corner)` (`lem:quarter-weight`): for
 `0 ≤ h ≤ cos² a`, `1/√(cos²a - h²) ≤ 1/(cos a |sin a|)`, at most `2/cos a` near
 the corners.
 
-**Arc traces and corner tails proved (2026-10-16)**, in the new module
-`SeparatrixTraces.lean`. `ee_arc_trace_identification` (`lem:arc-trace-identification`) rests
-only on `lem:traces` and `lem:local-to-global`; `ee_corner_tails` (`lem:ee-corner-tails`)
-also on `ee_arc_energy` (moved here from `EvenEven.lean`, still admitted). Both are stated for
-arbitrary line representatives of `ψₓ, ψ_y` (new `def:line-representative`,
-`lem:line-representatives`: existence from `lem:traces`, continuity on a.e. line, and any two
-agree on a.e. whole line), so `ee_level_traces` can pick any representatives. Digest
-(remark after `lem:ee-corner-tails`): `|ψₙ|² + |ψₜ|² = |∇ψ|²` (new
-`lem:normal-tangent-frame`) and the segment estimate directly in `(a, b)` replace the corner
-coordinates, the coefficient bounds and the hyperbola estimate (now unused, kept with a
-remark); the corner tails hold uniformly for all `h ∈ (0, 1)`, and the arc-tail half of the old
-statement follows from finiteness of the arc energy. The arc identification uses the
-`S₂`-parity of `ψₓ, ψ_y` directly, so `lem:ee-neumann` and `lem:arc-trace-ac` are no longer
-needed there. Also new: pointwise segment estimate `ae_segment_le` (the right side is
-measurable even when the representative is not), `lintegral_separatrixArc_eq`, diagonal
-Fubini/Tonelli helpers in `lem:diagonal-calculus`; `HasWeakPartialOn.congr_left` and
-`MemSobolevOn.congr_ae` moved to `SobolevLocal.lean`. The action-angle coordinates
-(`def:action-angle`) are defined in `OrbitCoordinates.lean`; `lem:action-angle-chart` is not
-yet stated in Lean.
+**Separatrix traces proved (2026-10-16)**, in `SeparatrixTraces.lean`: arc traces
+(`lem:arc-trace-identification`), arc energy (`lem:ee-arc-energy`), level traces
+(`lem:ee-level-traces`), corner tails; `ee_gradient_traces` and `EvenEven.lean` now have no
+`sorry` of their own. The arc energy and level traces rest only on `lem:traces` and
+`lem:local-to-global`, not on the coarea formula (`ee_gradient_traces` still uses coarea through
+`ee_first_trace_limit`). The `MeanZero` hypotheses of `ee_arc_energy`, `ee_level_traces`,
+`ee_corner_tails` and `ee_gradient_traces` were unused and are dropped.
+Structure: statements are for arbitrary line representatives of `ψₓ, ψ_y`
+(`def:line-representative`, `lem:line-representatives`: existence from `lem:traces`, continuity
+on a.e. line, any two agree on a.e. whole line). Digests (remarks after the nodes):
+`|ψₙ|² + |ψₜ|² = |∇ψ|²` (`lem:normal-tangent-frame`) and the segment estimate in `(a, b)` give
+one dominating function on the whole quarter orbit for `h ≤ 1/4` (`lem:ee-quarter-bound`), so
+the level traces are a single dominated convergence: no middle/corner split, no corner
+coordinates, no hyperbola estimate (kept, now unused), no uniform continuity. Raw values agree
+with representatives on a.e. level by Fubini in `(a, h)` (`lem:quarter-null-sets`). The arc
+energy uses that `ψ̃(·, π/2)` is even about `±π/2` (pointwise `S₁`-evenness and periodicity of
+`ψ̃`, `lem:continuous-stream-symmetries`), so its derivative is odd there and the local odd Hardy
+inequality applies; other arcs and quarters via the rotated vorticity
+(`lem:normal-tangent-rotation`). `lem:ee-corner-tails` is proved but no longer used by the level
+traces; `lem:ee-neumann` and `lem:arc-trace-ac` are no longer needed for the arc traces.
+Also: pointwise segment estimate `ae_segment_le`, `lintegral_separatrixArc_eq`,
+`integrableOn_quarter_iff`, `levelIntegral_eq_sum_quarter'`; `HasWeakPartialOn.congr_left`
+and `MemSobolevOn.congr_ae` moved to `SobolevLocal.lean`.
 
-**Next:** prove `ee_arc_energy` (`lem:ee-arc-energy`: arc identification, `lem:traces`
-Gagliardo bound for the trace of `ψ_a`, local odd Hardy at `a = ±π/2`) and assemble
-`ee_level_traces` (`lem:ee-level-traces`: quarter decomposition, rotation to `k = 0`, raw vs
-line representatives on a.e. level, the middle convergence by the segment estimate, corner
-tails). Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
-and `lem:virial-h1`; the product rule and `L²` integration by parts of
-`lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
-coarea formula itself (`lintegral_cellSquare_eq`, now used by many proved
-nodes) remain admitted. Remaining direct even–even inputs:
-`ee_gradient_traces`, `virial_l2`, and the transport inputs (`melnikov`, `pairing_limit`,
-`isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
-these admitted analytic results.
+**Transversal mollifier stated (2026-10-16).** `lem:transversal-mollifier` is split into
+`def:transversal-mollifier` and three lemmas on the lift (`TransversalMollifier.lean`): the
+`L²` part (support in a fixed compact of the punctured cell, linearity, uniform bound,
+`J_ε u → χ̂u`), the derivatives (`H¹` convergence for `u ∈ H¹`; `J_ε u ∈ H¹` with
+`ε‖∇J_ε u‖ → 0` when `L₀u ∈ L²`) and the commutator (`‖L₀J_ε u - J_ε L₀u‖ ≤ Cε‖L₀u‖`).
+They rest on `lem:line-mollifier` (`LineMollifier.lean`: mollification in `h` with `θ` a
+parameter, `L²(dh ⊗ μ)` bounds, convergence, `ε M'_ε → 0`, Lipschitz commutator, weak
+derivatives), `lem:action-angle-chart` (restated on the whole punctured cell with a real angle in
+`[-1/4, 3/4)` and the parametrization `1`-periodic in `θ`; area formula, inverse relations,
+periodicity and `∂_θP = S Y` proved; smoothness of `S`, of `P` and of the angle modulo 1
+admitted) and `lem:action-angle-weak` (weak `L₀ ↔ ∂_θ` and the weak chain rules, admitted).
+`actionAngle`, `angleCoord`, `actionAngleInv` now use a real angle.
+
+**Next:** prove the mollifier lemmas (`lem:line-mollifier` first, it is pure Mathlib-level
+analysis), state `lem:virial-h1` for compactly supported `H¹` functions on `ℝ²` (what the
+mollifier produces), then `virial_l2` (`lem:virial-l2`; the product rule and `L²` integration
+by parts of `lem:l2-product-rule` should help). Remaining admitted inputs of `thm:ee-exclusion`:
+`virial_l2`; the coarea formula (`lintegral_cellSquare_eq`, `integral_cellSquare_eq`,
+`lem:coarea-level-cutoff`); `lem:traces` and `lem:local-to-global`; the orbit-comparison bounds
+`gradNorm_le_saddleDist`, `integral_saddleDist_rpow_pos_le` (first-order trace term); the
+transport inputs (`melnikov`, `pairing_limit`, `isTransportPair_of_isEigenSolution`) and
+`eLpNorm_exp_mul_canonicalProfile_le`. Possibly the first-order trace term can also avoid
+coarea and the saddle-distance bounds by the explicit quarter-orbit formulas; not examined.
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint

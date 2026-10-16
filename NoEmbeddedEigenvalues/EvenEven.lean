@@ -23,8 +23,9 @@ identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`,
 `lem:ee-center-limit` and `lem:ee-boundary-integrable` (from the coarea formula of
 `lem:orbit-coordinates`), `lem:arc-trace-ac` (from `lem:traces`) and
-`lem:ee-boundary-regularity` (from the arc traces, Melnikov and the weighted profile bound).
-Input: `lem:ee-gradient-traces`. The interfaces
+`lem:ee-boundary-regularity` (from the arc traces, Melnikov and the weighted profile bound),
+`lem:ee-gradient-traces` (from `SeparatrixTraces.lean` and `lem:ee-first-trace-limit`). This
+module has no `sorry` of its own. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
@@ -38,12 +39,6 @@ namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Filter Topology Set
 open scoped ENNReal
-
-/-- The normal derivative `ψₙ` of the stream function of `ω` (outward from `{Ψ > 2h}`). -/
-abbrev streamNormal (ω : L2) : ℝ × ℝ → ℂ := normalDeriv (streamLiftX ω) (streamLiftY ω)
-
-/-- The tangential derivative `ψₜ` of the stream function of `ω`. -/
-abbrev streamTangent (ω : L2) : ℝ × ℝ → ℂ := tangentDeriv (streamLiftX ω) (streamLiftY ω)
 
 /-- Neumann condition (`lem:ee-neumann`): in the even–even sector `ψₙ` is odd and `ψₜ` is even
     under the reflections `S₂(x, y) = (y + π, x + π)` and `S₁(x, y) = (π - y, π - x)` across
@@ -1326,22 +1321,6 @@ theorem ee_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
 
 /-! ### Gradient traces at the separatrix -/
 
-/-- Level traces at the separatrix (`lem:ee-level-traces`): for `ψ` even under both
-    reflections, along levels `h → 0` outside a null set, `∮ |ψₙ|² dt → 0` and
-    `∮ |ψₜ|² dt → ∑_k ∫ ½ cosh² s |g_k'(s)|² ds`. Away from the saddles the restrictions
-    converge by the line traces of `lem:traces`, and the normal trace on the arcs vanishes
-    because `ψₙ` is odd under the reflection across each arc (`lem:ee-neumann`); near the
-    saddles the tails are uniformly small by the hyperbola estimate and the axis tail. On an
-    arc `|ψₜ|² = ½ cosh² s |g'|²`. -/
-theorem ee_level_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω) :
-    ∃ N : Set ℝ, volume N = 0 ∧
-      Tendsto (fun h ↦ levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2)
-        (𝓝[Ioi 0 \ N] 0) (𝓝 0) ∧
-      Tendsto (fun h ↦ levelIntegral h fun p ↦ ‖streamTangent ω p‖ ^ 2) (𝓝[Ioi 0 \ N] 0)
-        (𝓝 (∑ k ∈ Finset.range 4,
-          ∫ s, Real.cosh s ^ 2 / 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2)) := by
-  sorry
-
 /-- `ρ²` is invariant under the quarter rotation, so its level integral is four quarter
     integrals: `∮ ρ² dt = 4 ∫_{-L}^{L} ρ²(γ_h(t)) dt`. -/
 theorem levelIntegral_gradNorm_sq {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
@@ -1567,7 +1546,7 @@ theorem ee_first_trace_limit (ω : L2) {N : Set ℝ}
     `∮ |ψₜ|² dt → ∑_γ ∫ ½ cosh² s |g_γ'(s)|² ds` with `g_γ = ψ̃ ∘ γ` the arc traces (on an arc
     `|ψₜ|² = ½ cosh² s |g'|²`), and `∮ Re(ψ ψ̄ₙ) dℓ → 0`. Assembled from `ee_arc_energy`,
     `ee_level_traces` and `ee_first_trace_limit`. -/
-theorem ee_gradient_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω) :
+theorem ee_gradient_traces {ω : L2} (hω : InSector true true ω) :
     (∀ k < 4, Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2) ∧
     ∃ N : Set ℝ, volume N = 0 ∧
       Tendsto (fun h ↦ levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2)
@@ -1578,11 +1557,11 @@ theorem ee_gradient_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true tru
       Tendsto (fun h ↦ levelIntegral h fun p ↦
           gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re)
         (𝓝[Ioi 0 \ N] 0) (𝓝 0) := by
-  obtain ⟨N, hN, hn, ht⟩ := ee_level_traces h0 hω
+  obtain ⟨N, hN, hn, ht⟩ := ee_level_traces hω
   obtain ⟨N', hN', hf⟩ := ee_first_trace_limit ω hn
   have hmono : 𝓝[Ioi (0 : ℝ) \ (N ∪ N')] 0 ≤ 𝓝[Ioi 0 \ N] 0 :=
     nhdsWithin_mono _ (sdiff_subset_sdiff_right subset_union_left)
-  exact ⟨ee_arc_energy h0 hω, N ∪ N', measure_union_null hN hN', hn.mono_left hmono,
+  exact ⟨ee_arc_energy hω, N ∪ N', measure_union_null hN hN', hn.mono_left hmono,
     ht.mono_left hmono, hf⟩
 
 /-! ### The trace of the stream function on the arcs -/
@@ -1890,7 +1869,7 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         (Real.artanh ξ)) D (-1) = -contStream ω (rotLift^[k] (Real.pi, 0)) / lam ∧
       contStream ω (rotLift^[k] (0, -Real.pi)) =
         paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
-  -- Skeleton. Each `sorry` below names the result it is to come from.
+  -- Each step names the result it comes from.
   set g : ℝ → ℂ := contStream ω ∘ cellArc k with hg_def
   set cp : ℂ := contStream ω (rotLift^[k] (0, -Real.pi)) with hcp_def
   set cm : ℂ := contStream ω (rotLift^[k] (Real.pi, 0)) with hcm_def
@@ -1899,7 +1878,7 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   -- From the transport traces and the weighted gradient traces.
   have hg1 : Integrable (deriv g) := (ee_melnikov hlam hω hκ k).1
   have hg2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2 :=
-    ee_arc_energy hω.1 hs k hk
+    ee_arc_energy hs k hk
   -- Bounded, since `ψ̃` is a continuous periodic function.
   have hgb : ∀ s, ‖g s‖ ≤ ‖continuousRep (invLap ω)‖ := fun s ↦
     (continuousRep (invLap ω)).norm_coe_le_norm _
@@ -2395,7 +2374,7 @@ theorem ee_canonicalArcForm_nonneg {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
 theorem even_even_character_exclusion {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
     (hκ : InRotationCharacter κ ω) : ω = 0 := by
-  obtain ⟨he, Ng, hNg, hn, ht, hf⟩ := ee_gradient_traces hω.1 hs
+  obtain ⟨he, Ng, hNg, hn, ht, hf⟩ := ee_gradient_traces hs
   obtain ⟨hd, hpairs⟩ := ee_transport_traces hlam hω hs hκ
   let B : ℝ → ℝ := fun h ↦
     levelIntegral h (fun p ↦

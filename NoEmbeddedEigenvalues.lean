@@ -24,6 +24,7 @@ import NoEmbeddedEigenvalues.IntervalH1Estimates
 import NoEmbeddedEigenvalues.IntervalZeroExtension
 import NoEmbeddedEigenvalues.LiftIntegration
 import NoEmbeddedEigenvalues.LiftTorus
+import NoEmbeddedEigenvalues.LineMollifier
 import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
@@ -38,6 +39,7 @@ import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
 import NoEmbeddedEigenvalues.TransportOperator
+import NoEmbeddedEigenvalues.TransversalMollifier
 import NoEmbeddedEigenvalues.VirialAlgebra
 import NoEmbeddedEigenvalues.VirialQuadratic
 import NoEmbeddedEigenvalues.VirialL2

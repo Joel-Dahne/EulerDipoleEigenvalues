@@ -539,9 +539,11 @@ frequency $b(h)$; the paper should rename one of them.
 \label{lem:quarter-orbit-decomposition}
 \uses{def:period, def:dipole-flow, def:level-integral}
 \lean{NoEmbeddedEigenvalues.levelIntegral_eq_sum_quarter,
+  NoEmbeddedEigenvalues.levelIntegral_eq_sum_quarter',
   NoEmbeddedEigenvalues.dipoleOrbit_add_mul_quarter}
 \leanok
-Let $0<h<1$ and let $f$ be such that $t\mapsto f(\gamma_h(t))$ is integrable over a period.
+Let $0<h<1$ and let $f$ be such that $t\mapsto f(R^k\gamma_h(t))$ is integrable over $[-L,L]$ for
+$k=0,\dots,3$ (equivalently, $t\mapsto f(\gamma_h(t))$ is integrable over a period).
 Then $\oint_{\{\Psi=2h\}}f\,dt=\sum_{k=0}^{3}\int_{-L(h)}^{L(h)}f(R^k\gamma_h(t))\,dt$.
 \end{lemma}
 
@@ -555,7 +557,8 @@ Split one period into four windows of length $2L$ centered at $2kL$.
 \begin{lemma}[Quarter orbits in diagonal coordinates]
 \label{lem:quarter-orbit-diagonal}
 \uses{def:period, def:dipole-flow, def:cells}
-\lean{NoEmbeddedEigenvalues.integral_quarter_eq, NoEmbeddedEigenvalues.quarterHeight,
+\lean{NoEmbeddedEigenvalues.integral_quarter_eq, NoEmbeddedEigenvalues.integrableOn_quarter_iff,
+  NoEmbeddedEigenvalues.quarterHeight,
   NoEmbeddedEigenvalues.orbitB_eq_quarterHeight, NoEmbeddedEigenvalues.image_orbitA_quarter}
 \leanok
 Let $0<h<1$, $a_h=\arccos\sqrt h$ and $\beta_h(a)=\arccos(h/\cos a)$ for $|a|\le a_h$. In
@@ -565,7 +568,8 @@ coordinates,
 \[
   \int_{-L}^{L}f(\gamma_h(t))\,dt=\int_{-a_h}^{a_h}f(a,\beta_h(a))\,\frac{da}{\sqrt{\cos^2a-h^2}}
 \]
-whenever one side is defined (for nonnegative measurable or integrable $f$).
+whenever one side is defined (for nonnegative measurable or integrable $f$), and one side is
+integrable if and only if the other is.
 \end{lemma}
 
 \begin{proof}
@@ -615,16 +619,38 @@ $\sin x\ge\frac2\pi x$ on $[0,\pi/2]$. On $|a|\le\pi/2-\delta$, $\cos a\ge\cos(\
 \label{lem:quarter-weight}
 \uses{lem:quarter-orbit-diagonal}
 \lean{NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le,
-  NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le_corner}
+  NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le_corner,
+  NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le_two_div}
 \leanok
 If $0\le h\le\cos^2a$ (that is, $|a|\le a_h$), $\cos a>0$ and $\sin a\ne0$, then
 $1/\sqrt{\cos^2a-h^2}\le1/(\cos a\,|\sin a|)$. Near the corners, where $|\sin a|\ge\frac12$, this is
-at most $2/\cos a$.
+at most $2/\cos a$; and if $h\le\frac14$ it is at most $2/\cos a$ for all such $a$.
 \end{lemma}
 
 \begin{proof}
 \leanok
-$\cos^2a-h^2\ge\cos^2a-\cos^4a=\cos^2a\sin^2a$.
+$\cos^2a-h^2\ge\cos^2a-\cos^4a=\cos^2a\sin^2a$. If $|\sin a|<\frac12$ and $h\le\frac14$, then
+$\cos^2a>\frac34$ and $h^2\le\frac1{16}\le\frac34\cos^2a$, so $\cos^2a-h^2\ge\frac14\cos^2a$.
+\end{proof}
+
+\begin{lemma}[Null sets on the quarter orbits]
+\label{lem:quarter-null-sets}
+\uses{lem:quarter-orbit-diagonal}
+\lean{NoEmbeddedEigenvalues.ae_quarterGraph_of_ae,
+  NoEmbeddedEigenvalues.sqrt_lt_cos_of_abs_lt_arccos}
+\leanok
+If a property holds almost everywhere in the plane, then for almost every $h\in(0,1)$ it holds
+at $(a,\beta_h(a))$ for almost every $|a|<a_h$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-calculus}
+\leanok
+By Fubini in $(a,b)$ (Lemma~\ref{lem:diagonal-calculus}), for almost every $a$ the property holds
+at $(a,b)$ for almost every $b$. For fixed $a$, $h\mapsto\beta_h(a)$ has the differentiable inverse
+$b\mapsto\cos a\cos b$, which maps null sets to null sets; so for almost every $a$ the property
+holds at $(a,\beta_h(a))$ for almost every $h$. Exchange the order by Fubini in $(a,h)$. This
+replaces the coarea formula for the level traces.
 \end{proof}
 
 \begin{remark}
@@ -783,34 +809,92 @@ periodicity its integral is the level integral over $[0,S)$.
 \label{def:action-angle}
 \uses{def:orbit-coordinates, def:period}
 \lean{NoEmbeddedEigenvalues.angleCoord, NoEmbeddedEigenvalues.actionAngle,
-  NoEmbeddedEigenvalues.actionAngleInv}
+  NoEmbeddedEigenvalues.actionAngleInv, NoEmbeddedEigenvalues.actionStrip}
 \leanok
 On the punctured cell, the action-angle coordinates are $(h,\theta)$ with $h$ the level
-coordinate and $\theta=t/S(h)\in\R/\Z$, where $t$ is the time coordinate of
-Definition~\ref{def:orbit-coordinates}. The parametrization in these coordinates is
-$(h,\theta)\mapsto\gamma_h(\theta S(h))$, with $\theta$ represented in $[0,1)$; that it inverts
-$(h,\theta)$ is part of Lemma~\ref{lem:action-angle-chart}.
+coordinate and $\theta=t/S(h)\in[-\frac14,\frac34)$, where $t$ is the time coordinate of
+Definition~\ref{def:orbit-coordinates}; $\theta$ is an angle modulo $1$. The
+parametrization is $P(h,\theta)=\gamma_h(\theta S(h))$ on the strip $(0,1)\times\R$.
 \end{definition}
 
-\begin{lemma}[The action-angle chart on an annulus]
+\begin{lemma}[The action-angle chart]
 \label{lem:action-angle-chart}
-\uses{def:action-angle, def:transport-pair}
-Let $0<h_1<h_2<1$. On the annulus $\{2h_1<\Psi<2h_2\}$ of the cell, $(h,\theta)$ is a $C^1$
-diffeomorphism onto $(h_1,h_2)\times\R/\Z$, with inverse $(h,\theta)\mapsto\gamma_h(\theta S(h))$. In these coordinates $dx\,dy=2S(h)\,dh\,d\theta$,
-and for $g,k\in L^2$ of the annulus, $L_0g=k$ weakly if and only if
-$\partial_\theta g=S(h)\,k$ weakly.
+\uses{def:action-angle, def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.contDiffOn_orbitPeriod,
+  NoEmbeddedEigenvalues.actionAngleInv_mem_puncturedCell,
+  NoEmbeddedEigenvalues.levelCoord_actionAngleInv,
+  NoEmbeddedEigenvalues.actionAngleInv_add_one,
+  NoEmbeddedEigenvalues.actionAngleInv_actionAngle,
+  NoEmbeddedEigenvalues.actionAngle_actionAngleInv,
+  NoEmbeddedEigenvalues.hasDerivAt_actionAngleInv_snd,
+  NoEmbeddedEigenvalues.contDiffOn_actionAngleInv,
+  NoEmbeddedEigenvalues.contDiffAt_angleCoord,
+  NoEmbeddedEigenvalues.contDiffOn_comp_actionAngle,
+  NoEmbeddedEigenvalues.lintegral_cellSquare_actionAngle}
+\leanok
+$S$ is smooth on $(0,1)$. The parametrization $P$ is smooth on the strip $(0,1)\times\R$,
+$1$-periodic in $\theta$, takes values in the punctured cell, and $\Psi(P(h,\theta))=2h$ and
+$\partial_\theta P=S(h)\,Y(P)$. It inverts the coordinates: $P(h(p),\theta(p))=p$ on the
+punctured cell, and $(h,\theta)(P(h,\theta))=(h,\theta)$ for $\theta\in[-\frac14,\frac34)$. The angle
+$\theta$ is smooth off the cut $\{b=0,a>0\}$ and smooth modulo $1$ on the whole punctured
+cell: if $F$ is smooth on the strip and $1$-periodic in $\theta$, then $F(h,\theta)$ is smooth on
+the punctured cell. In these coordinates $dx\,dy=2S(h)\,dh\,d\theta$:
+\[
+  \int_\Cell f\,dx\,dy=\int_0^1\int_{-1/4}^{3/4}f(P(h,\theta))\,2S(h)\,d\theta\,dh
+\]
+for nonnegative measurable $f$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:period-orbit}
-The map $p\mapsto(h,t)$ is smooth off the cut $\{b=0,a>0\}$
-(Lemma~\ref{lem:orbit-coordinates}), and $t$ jumps by $S(h)$ across the cut, so $\theta$ is
-smooth on the whole annulus (across the cut use the rotation, which shifts $t$ by
-$S(h)/4$). Its Jacobian determinant is $\frac12\cdot\frac1{S(h)}\ne0$ and the map is
-bijective (Lemma~\ref{lem:orbit-coordinates}), so by the inverse function theorem its
-inverse is $C^1$. The area formula is $dx\,dy=2\,dh\,dt$ with $t=S(h)\theta$. Since
-$L_0h=0$ and $L_0t=1$, the chain rule gives $L_0=S(h)^{-1}\partial_\theta$ on $C^1$
-functions; for weak derivatives change variables in the test integrals.
+\uses{lem:orbit-coordinates, lem:period-orbit, lem:period, lem:dipole-flow}
+Smoothness of $S$: differentiate under the integral of Lemma~\ref{lem:period}, or use
+$S(h)=4\mathbf K(1-h^2)$. Periodicity, the values and the inverse relations are
+Lemmas~\ref{lem:orbit-coordinates} and~\ref{lem:period-orbit} with $t=\theta S(h)$, which maps
+$[-\frac14,\frac34)$ onto $[-2L,6L)$; $\partial_\theta P=S(h)\,Y(P)$ is the flow equation. The
+area formula is $dx\,dy=2\,dh\,dt$ (Lemma~\ref{lem:orbit-coordinates}) with $t=S(h)\theta$.
+
+The map $p\mapsto(h,t)$ is smooth off the cut (Lemma~\ref{lem:orbit-coordinates}), and so is
+$\theta=t/S(h)$. Across the cut $\theta$ jumps by $1$; there use the rotation
+$R(x,y)=(y,-x)$, which preserves the levels, maps a neighbourhood of a cut point off the
+cut, and shifts $\theta$ by $\frac14$ modulo $1$, so a $1$-periodic $F$ composed with
+$(h,\theta)$ is smooth there too. The Jacobian determinant of $P$ is
+$\partial_hP\times S(h)Y=S(h)\,\partial_h(\Psi\circ P)=2S(h)\ne0$, since $Y=(-\Psi_y,\Psi_x)$.
+Smoothness of $P$ follows from the inverse function theorem applied to $(h,\theta)$ off the
+cut, and to $(h,\theta)\circ R$ near it.
+\end{proof}
+
+\begin{lemma}[Weak derivatives in action-angle coordinates]
+\label{lem:action-angle-weak}
+\uses{def:action-angle, def:transport-pair, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.hasWeakL0On_iff_actionAngle,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngle}
+\leanok
+Write $U=u\circ P$ for functions $u$ on the punctured cell.
+\begin{enumerate}
+  \item $L_0u=k$ weakly on the punctured cell if and only if $\partial_\theta U=S(h)\,K$
+    weakly on the strip.
+  \item If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then
+    $\partial_jU=(\partial_jP_1)\,g_x\circ P+(\partial_jP_2)\,g_y\circ P$ weakly on the strip
+    ($j=h,\theta$).
+  \item If $F$ on the strip is $1$-periodic in $\theta$ with weak derivatives $F_h,F_\theta$, then
+    $\partial_j\bigl(F(h,\theta)\bigr)=(\partial_jh)\,F_h(h,\theta)+(\partial_j\theta)\,F_\theta(h,\theta)$
+    weakly on the punctured cell ($j=x,y$), where $\partial_j\theta$ is the classical derivative
+    off the cut.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:weak-derivative-basic, lem:localization-cutoff}
+Weak derivatives are local, so by a partition of unity it suffices to test against test
+functions supported in the image of a window $(0,1)\times(\theta_0,\theta_0+1)$, on which $P$
+is a diffeomorphism (Lemma~\ref{lem:action-angle-chart}); periodicity in $\theta$ makes the
+choice of window irrelevant. Change variables in the test integrals with
+$dx\,dy=2S(h)\,dh\,d\theta$ and use the classical chain rule for the test functions. For (1),
+$L_0\phi=S(h)^{-1}\partial_\theta\Phi$, so the weight $2S$ cancels:
+$\int uL_0\phi\,dx\,dy=2\int U\,\partial_\theta\Phi\,dh\,d\theta$. For (2) and (3) the Jacobian
+factor is not constant; one way is to approximate $u$ by smooth functions locally in $H^1$
+and pass to the limit in the classical chain rule.
 \end{proof}
 
 \begin{definition}[Normal and tangential derivatives]
