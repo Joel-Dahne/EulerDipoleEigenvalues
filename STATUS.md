@@ -87,11 +87,21 @@ equal measurable functions have equal level integrals on a.e. level).
 The admitted `ee_transport_traces` copy was removed from `EvenEven.lean`,
 which now imports the new module.
 
-**Next backwards targets:** the remaining direct inputs of the even–even
-assembly, `ee_boundary_regularity`, `ee_gradient_traces`,
-`ee_truncated_virial` and `ee_neumann`, and the transport inputs
-(`melnikov`, `pairing_limit`, `isTransportPair_of_isEigenSolution`).
-The sector exclusion still depends on these admitted analytic results.
+**`ee_neumann` is proved** (`lem:ee-neumann`), using only `propext`,
+`Classical.choice`, `Quot.sound`. The new node `lem:stream-derivative-parities`
+(symmetry chapter) is the chain rule `∂ⱼΔ⁻¹T* = σ T*∂ⱼ'Δ⁻¹` for the
+reflections, proved on Fourier coefficients
+(`CharacterSymmetry.streamPartial_action`; `SymmetryL2.lean` now imports
+`Derivatives.lean`), with its sector form in `Sectors.lean`. The pointwise
+algebra was also checked by hand: both reflections reverse `ψₙ` and fix `ψₜ`.
+
+**Next:** digest `lem:virial-l2` on paper before formalizing more analysis
+(the flow group of the cut-off normal field `W` is the least verified step;
+it feeds `ee_truncated_virial`). Remaining direct even–even inputs:
+`ee_boundary_regularity`, `ee_gradient_traces`, `ee_truncated_virial`, and
+the transport inputs (`melnikov`, `pairing_limit`,
+`isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
+these admitted analytic results.
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
    layer. On 2026-10-14 an agent checked that they agree with the blueprint
@@ -259,8 +269,8 @@ The sector exclusion still depends on these admitted analytic results.
   only definitions (`lem:torus-fourier-basis` and
   `lem:fourier-derivative-composition` split off), the over-claimed
   `lem:sector-reduction` was split into a proved part and the new nodes
-  `lem:sector-projections` and `lem:stream-sector` (used by `lem:ee-neumann`
-  and `lem:dd-orthogonality`), the second mixed sector is the new
+  `lem:sector-projections` and `lem:stream-sector` (used by
+  `lem:dd-orthogonality`), the second mixed sector is the new
   `cor:mixed-other-exclusion`, no Lean name is listed in two nodes, and
   proofs done in Lean carry `\leanok` (including `thm:main`, whose proof has
   no local `sorry`; convention recorded in `AGENTS.md`).
@@ -409,12 +419,12 @@ The sector exclusion still depends on these admitted analytic results.
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
 - **Validation**: full Lean build and `just web` pass after proving the
-  eigenfunction transport interface; `just graph thm:ee-exclusion` regenerates
-  its graph (135 nodes). All 636 blueprint Lean references resolve without
-  duplicates, and every `\uses` label exists. There are now 49 admitted
+  even–even Neumann parities; `just graph thm:ee-exclusion` regenerates
+  its graph (135 nodes). All 640 blueprint Lean references resolve without
+  duplicates, and every `\uses` label exists. There are now 48 admitted
   declarations.
   `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
-  warnings; `EvenEven.lean` has only its four admitted-input warnings. Axiom checks on the canonical arc identity
+  warnings; `EvenEven.lean` has only its three admitted-input warnings. Axiom checks on the canonical arc identity
   and all five new helpers use only `propext`, `Classical.choice` and
   `Quot.sound`. The earlier six endgame foundations have the same axiom
   status. Arc positivity, both exclusion proofs, and `main` still depend

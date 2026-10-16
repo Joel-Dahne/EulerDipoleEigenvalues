@@ -10,11 +10,11 @@ The exclusion theorem and its fixed-rotation-character version are proved from n
 analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
 force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
 
-Proved here: `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
+Proved here: `lem:ee-neumann`, `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
-Inputs: `lem:ee-neumann`, `lem:ee-truncated-virial`, `lem:ee-gradient-traces`,
-and `lem:ee-boundary-regularity`. The interfaces `lem:canonical-arc-form` and
+Inputs: `lem:ee-truncated-virial`, `lem:ee-gradient-traces` and
+`lem:ee-boundary-regularity`. The interfaces `lem:canonical-arc-form` and
 `lem:ee-transport-traces` are proved in `CanonicalBoundaryForm.lean` and
 `EigenfunctionTransport.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
@@ -40,7 +40,38 @@ theorem ee_neumann {ω : L2} (hω : InSector true true ω) :
       streamTangent ω (p.2 + Real.pi, p.1 + Real.pi) = streamTangent ω p) ∧
     (∀ᵐ p, streamNormal ω (Real.pi - p.2, Real.pi - p.1) = -streamNormal ω p ∧
       streamTangent ω (Real.pi - p.2, Real.pi - p.1) = streamTangent ω p) := by
-  sorry
+  obtain ⟨h₁x, h₁y⟩ := hω.reflect₁_streamPartial
+  obtain ⟨h₂x, h₂y⟩ := hω.reflect₂_streamPartial
+  simp only [paritySign, ite_true, neg_smul, one_smul] at h₁x h₁y h₂x h₂y
+  have hS₁ (p : ℝ × ℝ) : torusProj (Real.pi - p.2, Real.pi - p.1) = S₁ (torusProj p) := by
+    simp [torusProj, S₁]
+  have hS₂ (p : ℝ × ℝ) : torusProj (p.2 + Real.pi, p.1 + Real.pi) = S₂ (torusProj p) := by
+    simp [torusProj, S₂, add_comm]
+  have lift {T : Torus → Torus} {hT : MeasurePreserving T} {g h : L2}
+      (heq : pullback T hT g = h) {M : ℝ × ℝ → ℝ × ℝ}
+      (hM : ∀ p, torusProj (M p) = T (torusProj p)) :
+      ∀ᵐ p, liftL2 g (M p) = liftL2 h p := by
+    filter_upwards [ae_torusProj (ae_comp_of_pullback_eq heq)] with p hp
+    simpa only [liftL2, hM] using hp
+  have hneg (g : L2) : ∀ᵐ p, liftL2 (-g) p = -liftL2 g p :=
+    ae_torusProj (Lp.coeFn_neg g)
+  have hρ₁ (p : ℝ × ℝ) : gradNorm (Real.pi - p.2, Real.pi - p.1) = gradNorm p := by
+    simp only [gradNorm, Real.sin_pi_sub, add_comm]
+  have hρ₂ (p : ℝ × ℝ) : gradNorm (p.2 + Real.pi, p.1 + Real.pi) = gradNorm p := by
+    simp only [gradNorm, Real.sin_add_pi, neg_sq]
+    rw [add_comm]
+  constructor
+  · filter_upwards [lift (M := fun p ↦ (p.2 + Real.pi, p.1 + Real.pi)) h₂x hS₂,
+      lift (M := fun p ↦ (p.2 + Real.pi, p.1 + Real.pi)) h₂y hS₂] with p hx hy
+    simp only [streamNormal, streamTangent, normalDeriv, tangentDeriv, streamLiftX,
+      streamLiftY, hx, hy, hρ₂, Real.sin_add_pi]
+    constructor <;> push_cast <;> ring
+  · filter_upwards [lift (M := fun p ↦ (Real.pi - p.2, Real.pi - p.1)) h₁x hS₁,
+      lift (M := fun p ↦ (Real.pi - p.2, Real.pi - p.1)) h₁y hS₁,
+      hneg (streamPartial 0 ω), hneg (streamPartial 1 ω)] with p hx hy hnx hny
+    simp only [streamNormal, streamTangent, normalDeriv, tangentDeriv, streamLiftX,
+      streamLiftY, hx, hy, hnx, hny, hρ₁, Real.sin_pi_sub]
+    constructor <;> ring
 
 /-- The bulk density evaluated on an `L²` vorticity and its stream derivatives. -/
 abbrev eeBulkDensity (ω : L2) (p : ℝ × ℝ) : ℝ :=

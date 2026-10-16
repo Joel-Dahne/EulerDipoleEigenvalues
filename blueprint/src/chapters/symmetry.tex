@@ -168,6 +168,34 @@ $S_j^*\psi=\Delta^{-1}S_j^*\omega=\Delta^{-1}(\epsilon_j\omega)=\epsilon_j\psi$,
 using that $\Delta^{-1}$ is linear.
 \end{proof}
 
+\begin{lemma}[Parities of the stream derivatives]
+\label{lem:stream-derivative-parities}
+\uses{def:sectors, def:stream-derivatives}
+\lean{NoEmbeddedEigenvalues.CharacterSymmetry.invLapSymbol_frequency,
+  NoEmbeddedEigenvalues.CharacterSymmetry.streamPartial_action,
+  NoEmbeddedEigenvalues.ae_comp_of_pullback_eq,
+  NoEmbeddedEigenvalues.InSector.reflect₁_streamPartial,
+  NoEmbeddedEigenvalues.InSector.reflect₂_streamPartial}
+\leanok
+If $\omega\in L^2$ lies in sector $(\epsilon_1,\epsilon_2)$ and $\psi=\Delta^{-1}\omega$, then
+almost everywhere
+\[
+  \psi_x\circ S_1=-\epsilon_1\psi_y,\quad \psi_y\circ S_1=-\epsilon_1\psi_x,\qquad
+  \psi_x\circ S_2=\epsilon_2\psi_y,\quad \psi_y\circ S_2=\epsilon_2\psi_x .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:symmetries-commute}
+\leanok
+This is the chain rule $\nabla(\psi\circ T)=M^\top(\nabla\psi)\circ T$ for $T(x)=a+Mx$, proved on
+Fourier coefficients. If the frequency map of $T$ sends the $j$th component of $k$ to
+$\sigma$ times the $j'$th, the symbol $ik_j\,(-|k|^{-2})$ of $\partial_j\Delta^{-1}$
+gives $\partial_j\Delta^{-1}T^*=\sigma\,T^*\partial_{j'}\Delta^{-1}$. For $S_1$,
+$(k_1,k_2)\mapsto(-k_2,-k_1)$ gives $\sigma=-1$ with $j,j'$ swapped; for $S_2$,
+$(k_1,k_2)\mapsto(k_2,k_1)$ gives $\sigma=1$. Insert $S_j^*\omega=\epsilon_j\omega$.
+\end{proof}
+
 \begin{lemma}[Swapping the mixed sectors]
 \label{lem:sector-swap}
 \uses{def:sectors, def:eigen-problem}

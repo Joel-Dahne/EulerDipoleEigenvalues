@@ -191,8 +191,18 @@ fixed lines carry the separatrix arcs.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:stream-sector, lem:separatrix-lines}
-The reflection $S_j$ fixes the arc and reverses its normal.
+\uses{lem:stream-derivative-parities, lem:lift-representatives}
+\leanok
+The reflection $S_j$ fixes the arc and reverses its normal. In formulas: by
+Lemma~\ref{lem:stream-derivative-parities} with $\epsilon=(+,+)$, lifted to $\R^2$
+(Lemma~\ref{lem:lift-representatives}), $\psi_x\circ S_2=\psi_y$ and $\psi_y\circ S_2=\psi_x$
+almost everywhere. Since $\sin(y+\pi)=-\sin y$ and $\rho\circ S_2=\rho$,
+\[
+  \psi_n\circ S_2=\frac{-\sin y\,\psi_y-\sin x\,\psi_x}{\rho}=-\psi_n,\qquad
+  \psi_t\circ S_2=\frac{-\sin x\,\psi_y+\sin y\,\psi_x}{\rho}=\psi_t .
+\]
+For $S_1$, $\psi_x\circ S_1=-\psi_y$, $\psi_y\circ S_1=-\psi_x$ and $\sin(\pi-y)=\sin y$ give the
+same signs.
 \end{proof}
 
 \begin{remark}

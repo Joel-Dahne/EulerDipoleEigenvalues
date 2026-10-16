@@ -7,7 +7,8 @@ import Mathlib.Tactic.Module
 The four projections associated with the two separatrix reflections, their
 parities and reconstruction, and preservation of the eigenvalue equation
 (blueprint: `def:sectors`, `lem:sector-reduction`, `lem:sector-swap`,
-`def:rotation-characters`, `lem:rotation-characters`).
+`def:rotation-characters`, `lem:rotation-characters`, `lem:stream-sector`,
+`lem:stream-derivative-parities`).
 The equal-parity sectors split further into rotation characters ±1.
 `true` denotes even parity and `false` denotes odd parity.
 -/
@@ -83,6 +84,38 @@ theorem InSector.invLap {ε₁ ε₂ : Bool} {g : L2} (hg : InSector ε₁ ε₂
     rw [symmetry₂.invLap_commute]
     change NoEmbeddedEigenvalues.invLap (reflect₂ g) = _
     rw [hg.2, map_smul]
+
+/-- Under `S₁(x, y) = (π - y, π - x)`, a stream function with parity `ε₁` has
+    `ψₓ ∘ S₁ = -ε₁ ψ_y` and `ψ_y ∘ S₁ = -ε₁ ψₓ`. -/
+theorem InSector.reflect₁_streamPartial {ε₁ ε₂ : Bool} {g : L2} (hg : InSector ε₁ ε₂ g) :
+    reflect₁ (streamPartial 0 g) = -paritySign ε₁ • streamPartial 1 g ∧
+      reflect₁ (streamPartial 1 g) = -paritySign ε₁ • streamPartial 0 g := by
+  have h0 := symmetry₁.streamPartial_action (j := 1) (j' := 0) (σ := -1)
+    (fun k ↦ by simp [symmetry₁, frequencyComponent]) g
+  have h1 := symmetry₁.streamPartial_action (j := 0) (j' := 1) (σ := -1)
+    (fun k ↦ by simp [symmetry₁, frequencyComponent]) g
+  change streamPartial _ (reflect₁ g) = _ at h0 h1
+  rw [hg.1, map_smul] at h0 h1
+  simp only [Int.cast_neg, Int.cast_one] at h0 h1
+  constructor
+  · change symmetry₁.action _ = _
+    linear_combination (norm := module) h0
+  · change symmetry₁.action _ = _
+    linear_combination (norm := module) h1
+
+/-- Under `S₂(x, y) = (π + y, π + x)`, a stream function with parity `ε₂` has
+    `ψₓ ∘ S₂ = ε₂ ψ_y` and `ψ_y ∘ S₂ = ε₂ ψₓ`. -/
+theorem InSector.reflect₂_streamPartial {ε₁ ε₂ : Bool} {g : L2} (hg : InSector ε₁ ε₂ g) :
+    reflect₂ (streamPartial 0 g) = paritySign ε₂ • streamPartial 1 g ∧
+      reflect₂ (streamPartial 1 g) = paritySign ε₂ • streamPartial 0 g := by
+  have h0 := symmetry₂.streamPartial_action (j := 1) (j' := 0) (σ := 1)
+    (fun k ↦ by simp [symmetry₂, frequencyComponent]) g
+  have h1 := symmetry₂.streamPartial_action (j := 0) (j' := 1) (σ := 1)
+    (fun k ↦ by simp [symmetry₂, frequencyComponent]) g
+  change streamPartial _ (reflect₂ g) = _ at h0 h1
+  rw [hg.2, map_smul] at h0 h1
+  simp only [Int.cast_one, one_smul] at h0 h1
+  exact ⟨h0.symm, h1.symm⟩
 
 /-- Rotation character +1 (`true`) or -1 (`false`). -/
 def InRotationCharacter (κ : Bool) (g : L2) : Prop :=

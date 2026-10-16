@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.Setup
+import NoEmbeddedEigenvalues.Derivatives
 import Mathlib.MeasureTheory.Group.Prod
 
 /-!
@@ -6,7 +6,8 @@ import Mathlib.MeasureTheory.Group.Prod
 
 Measure-preserving pullbacks, their character action, and invariance of the
 Fourier-defined inverse Laplacian and character-tested transport equation
-(blueprint: `lem:symmetries-commute`, the L² part of `lem:reflection-algebra`,
+(blueprint: `lem:symmetries-commute`, the L² part of `lem:reflection-algebra`, the chain
+rule for the stream derivatives in `lem:stream-derivative-parities`,
 and the pullback identities used by `lem:rotation-characters`).
 A `CharacterSymmetry` collects what this needs: how the map acts on characters and on
 `L₀` of characters.
@@ -213,7 +214,35 @@ theorem eigenSolution (s : CharacterSymmetry) {lam : ℝ} {g : L2}
   have hh := s.hasL0 hg.2
   simpa only [map_add, map_smul, s.invLap_commute] using hh
 
+theorem invLapSymbol_frequency (s : CharacterSymmetry) (k : ℤ × ℤ) :
+    invLapSymbol (s.frequency k) = invLapSymbol k := by
+  simp only [invLapSymbol, s.frequency_eq_zero_iff, s.normSq_eq]
+
+/-- Chain rule for the stream derivatives: if the frequency map sends the `j`th component to
+    `σ` times the `j'`th, then `∂ⱼΔ⁻¹(g ∘ T) = σ (∂ⱼ'Δ⁻¹g) ∘ T`. -/
+theorem streamPartial_action (s : CharacterSymmetry) {j j' : Fin 2} {σ : ℤ}
+    (hσ : ∀ k, frequencyComponent (s.frequency k) j = σ * frequencyComponent k j') (g : L2) :
+    streamPartial j (s.action g) = (σ : ℂ) • s.action (streamPartial j' g) := by
+  apply fourierCoeff_ext
+  intro l
+  obtain ⟨k, rfl⟩ := s.onto l
+  apply mul_left_cancel₀ ((map_ne_zero (starRingEnd ℂ)).mpr (s.phase_ne_zero k))
+  rw [fourierCoeff_smul, mul_left_comm, s.coefficient, streamPartial, streamPartial,
+    fourierCoeff_fourierMultiplier, fourierCoeff_fourierMultiplier, hσ,
+    s.invLapSymbol_frequency, mul_left_comm, s.coefficient]
+  push_cast
+  ring
+
 end CharacterSymmetry
+
+/-- A pullback identity holds pointwise almost everywhere. -/
+theorem ae_comp_of_pullback_eq {T : Torus → Torus} {hT : MeasurePreserving T} {g h : L2}
+    (heq : pullback T hT g = h) : ∀ᵐ t, g (T t) = h t := by
+  have hr := Lp.coeFn_compMeasurePreserving g hT
+  change (pullback T hT g : Torus → ℂ) =ᵐ[volume] (fun t ↦ g (T t)) at hr
+  rw [heq] at hr
+  filter_upwards [hr] with t ht
+  exact ht.symm
 
 /-- Reflection S₁ with its character and transport-character data. -/
 def symmetry₁ : CharacterSymmetry where
