@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.VirialL2
+import NoEmbeddedEigenvalues.DuBoisReymond
 
 /-!
 # Even–even exclusion
@@ -11,11 +12,12 @@ The exclusion theorem and its fixed-rotation-character version are proved from n
 analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
 force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
 
-Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-truncated-virial` (from
-the annular identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
+Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-annular-virial` (from the
+cutoff identity by coarea and du Bois-Reymond), `lem:ee-truncated-virial` (from the annular
+identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
-Inputs: `lem:ee-annular-virial`, `lem:ee-center-limit`,
+Inputs: `lem:ee-cutoff-identity`, `lem:ee-boundary-integrable`, `lem:ee-center-limit`,
 `lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
@@ -222,16 +224,167 @@ theorem integrableOn_eeBulkDensity (ω : L2) {h : ℝ} (h0 : 0 < h) :
       have : 0 ≤ 1 / h * ‖liftL2 ω p‖ ^ 2 := by positivity
       linarith [sq_nonneg ‖streamTangent ω p‖]
 
+/-- The boundary density `E = ρ Re(ψψ̄ₙ) + (2 - Ψ)(|ψₙ|² - |ψₜ|² - Re(ωψ̄))`; on the level
+    `{Ψ = 2h}` its flow-time integral is the level term `G(h)`. -/
+def eeBoundaryDensity (ω : L2) (p : ℝ × ℝ) : ℝ :=
+  gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re +
+    (2 - dipoleLift p) * (‖streamNormal ω p‖ ^ 2 - ‖streamTangent ω p‖ ^ 2 -
+      (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)
+
+/-- The boundary density is integrable on the cell (`lem:ee-boundary-integrable`): it is a sum
+    of products of `L²` functions with bounded coefficients. -/
+theorem integrableOn_eeBoundaryDensity (ω : L2) :
+    IntegrableOn (eeBoundaryDensity ω) cellSquare := by
+  sorry
+
+/-- On almost every level the flow-time integral of the boundary density is the level term
+    (`lem:ee-boundary-integrable`): `Ψ = 2h` there, and the three level integrals exist. -/
+theorem ae_levelIntegral_eeBoundaryDensity (ω : L2) :
+    ∀ᵐ h ∂(volume.restrict (Ioo 0 1)),
+      levelIntegral h (eeBoundaryDensity ω) = eeLevelTerm ω h := by
+  sorry
+
+/-- The cutoff identity (`lem:ee-cutoff-identity`): for smooth `φ` vanishing outside
+    `[a, b] ⊂ (0, 1)` and `χ(s) = φ(s/2)`, `∫_cell χ(Ψ) 𝒥 = ∫_cell χ'(Ψ) E`. From
+    `lem:virial-l2` for `χ(Ψ)W`, the cutoff algebra, integration by parts for `ψ ∈ H²`, and the
+    passage from the period square to the cell. -/
+theorem ee_cutoff_identity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2} (hω : IsEigenSolution lam ω)
+    {φ : ℝ → ℝ} (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ) {a b : ℝ} (ha : 0 < a)
+    (hb : b < 1) (hsupp : ∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) :
+    ∫ p in cellSquare, φ (dipoleLift p / 2) * eeBulkDensity ω p =
+      ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 * eeBoundaryDensity ω p := by
+  sorry
+
 /-- The virial identity on an annulus (`lem:ee-annular-virial`): outside one null set of
     levels, for all `0 < h < h' < 1`, `∫_{2h < Ψ < 2h'} 𝒥 = G(h) - G(h')` with `G` the level
-    terms `eeLevelTerm`. From `lem:virial-l2` with the cutoff field `χ(Ψ)W`,
-    `χ → 𝟙_{(2h, 2h')}`. -/
+    terms `eeLevelTerm`. By coarea the cutoff identity says that `G` has distributional
+    derivative `-2∮𝒥`, and the du Bois-Reymond lemma integrates this. -/
 theorem ee_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) :
     ∃ N : Set ℝ, volume N = 0 ∧ ∀ h h' : ℝ, 0 < h → h < h' → h' < 1 → h ∉ N → h' ∉ N →
       ∫ p in {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'},
         eeBulkDensity ω p = eeLevelTerm ω h - eeLevelTerm ω h' := by
-  sorry
+  have hΨ : Measurable dipoleLift := by unfold dipoleLift; fun_prop
+  have hJ (a b : ℝ) (ha : 0 < a) : IntegrableOn (eeBulkDensity ω)
+      {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b} :=
+    (integrableOn_eeBulkDensity ω (half_pos ha)).mono_set
+      fun p hp ↦ ⟨hp.1, by linarith [hp.2.1]⟩
+  have hE (a b : ℝ) : IntegrableOn (eeBoundaryDensity ω)
+      {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b} :=
+    (integrableOn_eeBoundaryDensity ω).mono_set fun p hp ↦ hp.1
+  -- Test functions: support of the derivative, bounds, and integrals over `[a, b]`.
+  have hderiv_supp {φ : ℝ → ℝ} {a b : ℝ} (hsupp : ∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) :
+      ∀ s, deriv φ s ≠ 0 → a ≤ s ∧ s ≤ b := by
+    intro s hs
+    by_contra hns
+    apply hs
+    have hev : φ =ᶠ[nhds s] fun _ ↦ 0 := by
+      filter_upwards [isClosed_Icc.isOpen_compl.mem_nhds (show s ∉ Icc a b from hns)] with t ht
+      by_contra hne
+      exact ht (hsupp t hne)
+    rw [hev.deriv_eq, deriv_const]
+  have hbound {g : ℝ → ℝ} (hg : Continuous g) {a b : ℝ} (hsupp : ∀ s, g s ≠ 0 → a ≤ s ∧ s ≤ b) :
+      ∃ C, ∀ s, |g s| ≤ C := by
+    obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn (hg.continuousOn (s := Icc a b))
+    refine ⟨max C 0, fun s ↦ ?_⟩
+    by_cases hs : g s = 0
+    · simp [hs]
+    · have h1 : |g s| ≤ C := by simpa using hC s (hsupp s hs)
+      exact h1.trans (le_max_left _ _)
+  have hcompl {g F : ℝ → ℝ} {a b : ℝ} (hsupp : ∀ s, g s ≠ 0 → a ≤ s ∧ s ≤ b) :
+      ∫ s, g s * F s = ∫ s in Icc a b, g s * F s := by
+    refine (setIntegral_eq_integral_of_forall_compl_eq_zero fun s hs ↦ ?_).symm
+    have : g s = 0 := by
+      by_contra hne
+      exact hs (hsupp s hne)
+    simp [this]
+  -- The cutoff identity in level form: `∫ φ m = ∫ φ' G` with `m = 2∮𝒥` and `G = ∮E`.
+  have hid : ∀ φ : ℝ → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ → ∀ a b, 0 < a → b < 1 →
+      (∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) →
+      ∫ s, φ s * (2 * levelIntegral s (eeBulkDensity ω)) =
+        ∫ s, deriv φ s * levelIntegral s (eeBoundaryDensity ω) := by
+    intro φ hφ a b ha hb hsupp
+    have hφc : Continuous φ := hφ.continuous
+    have hdc : Continuous (deriv φ) := hφ.continuous_deriv (by simp)
+    obtain ⟨C, hC⟩ := hbound hφc hsupp
+    obtain ⟨C', hC'⟩ := hbound hdc (hderiv_supp hsupp)
+    have hsupp' : ∀ s, deriv φ s / 2 ≠ 0 → a ≤ s ∧ s ≤ b := fun s hs ↦
+      hderiv_supp hsupp s fun h ↦ hs (by simp [h])
+    have hC'' : ∀ s, |deriv φ s / 2| ≤ C' / 2 := fun s ↦ by
+      rw [abs_div, abs_two]
+      exact div_le_div_of_nonneg_right (hC' s) (by norm_num)
+    have c1 := integral_cellSquare_level_mul hφc.measurable hC ha hb hsupp (hJ a b ha)
+    have c2 := integral_cellSquare_level_mul (hdc.measurable.div_const 2) hC'' ha hb hsupp'
+      (hE a b)
+    have cut := ee_cutoff_identity hlam hω hφ ha hb hsupp
+    rw [hcompl hsupp, hcompl (hderiv_supp hsupp)]
+    calc ∫ s in Icc a b, φ s * (2 * levelIntegral s (eeBulkDensity ω))
+        = 2 * ∫ s in Icc a b, φ s * levelIntegral s (eeBulkDensity ω) := by
+          rw [← integral_const_mul]
+          congr 1
+          funext s
+          ring
+      _ = ∫ p in cellSquare, φ (dipoleLift p / 2) * eeBulkDensity ω p := c1.symm
+      _ = ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 * eeBoundaryDensity ω p := cut
+      _ = 2 * ∫ s in Icc a b, deriv φ s / 2 * levelIntegral s (eeBoundaryDensity ω) := c2
+      _ = ∫ s in Icc a b, deriv φ s * levelIntegral s (eeBoundaryDensity ω) := by
+          rw [← integral_const_mul]
+          congr 1
+          funext s
+          ring
+  obtain ⟨N₁, hN₁, hdbr⟩ := exists_null_sub_eq_intervalIntegral (α := 0) (β := 1)
+    (m := fun h ↦ 2 * levelIntegral h (eeBulkDensity ω))
+    (G := fun h ↦ levelIntegral h (eeBoundaryDensity ω))
+    (fun a b ha hb ↦ (integrableOn_levelIntegral ha hb (hJ a b ha)).const_mul 2)
+    (fun a b ha hb ↦ integrableOn_levelIntegral ha hb (hE a b)) hid
+  -- Levels where the boundary integral is not the level term.
+  set N₂ : Set ℝ := {h | h ∈ Ioo 0 1 ∧
+    levelIntegral h (eeBoundaryDensity ω) ≠ eeLevelTerm ω h}
+  have hN₂ : volume N₂ = 0 := by
+    have hh := (ae_restrict_iff' measurableSet_Ioo).1 (ae_levelIntegral_eeBoundaryDensity ω)
+    simpa only [ae_iff, not_imp] using hh
+  refine ⟨N₁ ∪ N₂, measure_union_null hN₁ hN₂, fun h h' h0 hh' h'1 hN hN' ↦ ?_⟩
+  have hG (t : ℝ) (ht0 : 0 < t) (ht1 : t < 1) (htN : t ∉ N₁ ∪ N₂) :
+      levelIntegral t (eeBoundaryDensity ω) = eeLevelTerm ω t := by
+    by_contra hne
+    exact htN (Or.inr ⟨⟨ht0, ht1⟩, hne⟩)
+  rw [← hG h h0 (hh'.trans h'1) hN, ← hG h' (h0.trans hh') h'1 hN',
+    ← hdbr h h' h0 hh' h'1 (fun H ↦ hN (Or.inl H)) (fun H ↦ hN' (Or.inl H))]
+  -- The annulus integral is the coarea formula with `φ = 𝟙_{(h, h')}`.
+  set S : Set (ℝ × ℝ) := {p | 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'}
+  have hS : MeasurableSet S :=
+    (measurableSet_lt measurable_const hΨ).inter (measurableSet_lt hΨ measurable_const)
+  have hind := integral_cellSquare_level_mul
+    (φ := (Ioo h h').indicator fun _ ↦ (1 : ℝ)) (measurable_const.indicator measurableSet_Ioo)
+    (C := 1) (fun s ↦ by by_cases hs : s ∈ Ioo h h' <;> simp [hs]) h0 h'1
+    (fun s hs ↦ by
+      have hm := Set.mem_of_indicator_ne_zero hs
+      exact ⟨hm.1.le, hm.2.le⟩) (hJ h h' h0)
+  have hpt : ∀ p, (Ioo h h').indicator (fun _ ↦ (1 : ℝ)) (dipoleLift p / 2) *
+      eeBulkDensity ω p = S.indicator (eeBulkDensity ω) p := by
+    intro p
+    by_cases hp : p ∈ S
+    · rw [indicator_of_mem (show dipoleLift p / 2 ∈ Ioo h h' from
+        ⟨by linarith [hp.1], by linarith [hp.2]⟩), indicator_of_mem hp, one_mul]
+    · rw [indicator_of_notMem (show dipoleLift p / 2 ∉ Ioo h h' from
+        fun hm ↦ hp ⟨by linarith [hm.1], by linarith [hm.2]⟩), indicator_of_notMem hp,
+        zero_mul]
+  have hst : ∀ s, (Ioo h h').indicator (fun _ ↦ (1 : ℝ)) s *
+      levelIntegral s (eeBulkDensity ω) = (Ioo h h').indicator
+        (fun s ↦ levelIntegral s (eeBulkDensity ω)) s := by
+    intro s
+    by_cases hs : s ∈ Ioo h h' <;> simp [hs]
+  simp_rw [hpt, hst] at hind
+  rw [integral_indicator hS, Measure.restrict_restrict hS, integral_indicator measurableSet_Ioo,
+    Measure.restrict_restrict measurableSet_Ioo,
+    inter_eq_left.2 Ioo_subset_Icc_self] at hind
+  have hset : {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'} =
+      S ∩ cellSquare := by
+    ext p
+    simp only [S, mem_ofPred_eq, mem_inter_iff]
+    tauto
+  rw [hset, hind, intervalIntegral.integral_of_le hh'.le, integral_Ioc_eq_integral_Ioo,
+    integral_const_mul]
 
 /-- The level terms vanish at the center along a sequence (`lem:ee-center-limit`): for every
     null set `N` there are levels `h_j → 1` outside `N` with `G(h_j) → 0`. Both terms of `G`

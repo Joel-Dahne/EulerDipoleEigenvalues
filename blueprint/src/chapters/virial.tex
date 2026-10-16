@@ -216,6 +216,27 @@ Lemma~\ref{lem:commutator-pointwise}(3). Both sides are continuous in $H^1$, and
 truncations converge in $H^1$.
 \end{proof}
 
+\begin{lemma}[Integration by parts for the stream function]
+\label{lem:stream-ibp}
+\uses{def:stream-lifts, def:square-integral, def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.stream_ibp}
+\leanok
+Let $\omega\in X$, $\psi=\Delta^{-1}\omega$ and $K=|\nabla\psi|^2+\operatorname{Re}(\omega\bar\psi)$. For
+every smooth periodic real $\phi$,
+\[
+  \tfrac12\int\Delta\phi\,|\psi|^2=\int\phi K=-\int\operatorname{Re}\bigl(\bar\psi\,\nabla\phi\cdot\nabla\psi\bigr),
+\]
+integrals over the period square.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-torus, lem:lift-torus, lem:square-integral-partial}
+For trigonometric polynomials these are integrations by parts, with
+$\Div\operatorname{Re}(\bar\psi\nabla\psi)=|\nabla\psi|^2+\operatorname{Re}(\bar\psi\Delta\psi)$ and
+$\Delta\psi=\omega$. All terms are continuous in $\psi\in H^2$, and Fourier truncations converge
+in $H^2$.
+\end{proof}
+
 \begin{lemma}[A transversal mollifier]
 \label{lem:transversal-mollifier}
 \uses{def:action-angle, def:sobolev-torus}
@@ -285,7 +306,7 @@ $\operatorname{Re}\ip{fHa}{a}=\lambda\operatorname{Re}\ip{f\omega}{a}$. The seco
 zero: $\|DJ_\epsilon a\|=o(1/\epsilon)$ and $\|[H,J_\epsilon]a\|=O(\epsilon)$ by
 Lemma~\ref{lem:transversal-mollifier}. Divide by $\lambda$. The quadratic form follows by
 the integrations by parts of Lemma~\ref{lem:virial-smooth-quadratic}, extended to
-$\psi\in H^2$ by density.
+$\psi\in H^2$ by density as in Lemma~\ref{lem:stream-ibp}.
 \end{proof}
 
 \begin{remark}[Why the mollifier smooths only across the orbits]

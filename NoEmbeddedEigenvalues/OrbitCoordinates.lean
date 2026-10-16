@@ -119,6 +119,25 @@ def angularMode (h : ℝ) (k : ℤ) (g : ℝ × ℝ → ℂ) : ℂ :=
 
 end Level
 
+/-! ### Coarea with a cutoff in the level (`lem:coarea-level-cutoff`, stated) -/
+
+/-- On a closed annulus `{2a ≤ Ψ ≤ 2b}` of the cell, the level integrals of an integrable
+    function are integrable in `h ∈ [a, b]`. -/
+theorem integrableOn_levelIntegral {F : ℝ × ℝ → ℝ} {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    (hF : IntegrableOn F {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b}) :
+    IntegrableOn (fun h ↦ levelIntegral h F) (Icc a b) := by
+  sorry
+
+/-- Coarea with a cutoff in the level: if `φ` is bounded, measurable and vanishes outside
+    `[a, b] ⊂ (0, 1)`, then `∫_cell φ(Ψ/2) F = 2 ∫_a^b φ(h) ∮_{Ψ = 2h} F dt dh`. -/
+theorem integral_cellSquare_level_mul {F : ℝ × ℝ → ℝ} {φ : ℝ → ℝ} (hφ : Measurable φ)
+    {C : ℝ} (hC : ∀ s, |φ s| ≤ C) {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    (hsupp : ∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b)
+    (hF : IntegrableOn F {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b}) :
+    ∫ p in cellSquare, φ (dipoleLift p / 2) * F p =
+      2 * ∫ h in Icc a b, φ h * levelIntegral h F := by
+  sorry
+
 /-! ### Normal and tangential derivatives -/
 
 /-- `ρ = |∇Ψ|`. -/

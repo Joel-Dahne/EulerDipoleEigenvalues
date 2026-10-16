@@ -96,6 +96,28 @@ Adaptedness: $L_0(\chi(\Psi))=\chi'(\Psi)L_0\Psi=0$, so multiplying an adapted f
 $\chi(\Psi)$ multiplies its coefficient by $\chi(\Psi)$.
 \end{proof}
 
+\begin{lemma}[Cutoff algebra]
+\label{lem:normal-field-cutoff-algebra}
+\uses{def:normal-field, def:adapted-field, def:half-density-generator}
+\lean{NoEmbeddedEigenvalues.cutoff_normalField_algebra}
+\leanok
+In the setting of Lemma~\ref{lem:normal-field-annulus}, with $W_\chi=\chi(\Psi)W$ and
+$f_\chi=\chi(\Psi)f$: $f_\chi-\Div W_\chi=-\chi(\Psi)-(\Psi-2)\chi'(\Psi)$, and for
+$v\in\C^2$ with normal and tangential components $v_n,v_t$,
+\[
+  (2\sym DW_\chi-f_\chi I)v\cdot\bar v
+  =\chi(\Psi)\bigl((2-c)|v_n|^2+c|v_t|^2\bigr)+2\chi'(\Psi)(\Psi-2)|v_n|^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-algebra}
+$\Div(\chi W)=\chi\Div W+\chi'\nabla\Psi\cdot W=\chi(f+1)+\chi'(\Psi-2)$, and
+$D(\chi W)=\chi DW+\chi'\,W\otimes\nabla\Psi$ with $W\otimes\nabla\Psi=(\Psi-2)\rho^{-2}\nabla\Psi\otimes\nabla\Psi$
+symmetric; then use Lemma~\ref{lem:normal-field-algebra}. Both identities were checked
+numerically at random points for a non-polynomial $\chi$ (October 2026).
+\end{proof}
+
 \begin{lemma}[Positivity of the bulk density]
 \label{lem:ee-density}
 \uses{lem:normal-field-algebra}
@@ -177,6 +199,61 @@ $\mathcal J_\omega\le|\omega|^2/h+6(|\psi_x|^2+|\psi_y|^2)$. Each square is inte
 by Lemma~\ref{lem:lift-representatives}, since $\omega,\psi_x,\psi_y\in L^2(\T^2)$.
 \end{proof}
 
+\begin{definition}[Boundary density]
+\label{def:ee-boundary-density}
+\uses{def:stream-lifts, def:normal-tangent}
+\lean{NoEmbeddedEigenvalues.eeBoundaryDensity}
+\leanok
+For $\omega\in L^2$, on the lift,
+$E_\omega=\rho\operatorname{Re}(\psi\overline{\psi_n})+(2-\Psi)\bigl(|\psi_n|^2-|\psi_t|^2
+-\operatorname{Re}(\omega\bar\psi)\bigr)$.
+\end{definition}
+
+\begin{lemma}[The boundary density]
+\label{lem:ee-boundary-integrable}
+\uses{def:ee-boundary-density, def:ee-level-term}
+\lean{NoEmbeddedEigenvalues.integrableOn_eeBoundaryDensity,
+  NoEmbeddedEigenvalues.ae_levelIntegral_eeBoundaryDensity}
+\leanok
+For $\omega\in L^2$, $E_\omega$ is integrable on the cell, and
+$\oint_{\{\Psi=2h\}}E_\omega\,dt=G_\omega(h)$ for almost every $h\in(0,1)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-bulk-integrable, lem:lift-representatives, lem:orbit-coordinates}
+$|E_\omega|\le2\rho|\psi|(|\psi_x|+|\psi_y|)+2\bigl(2(|\psi_x|+|\psi_y|)^2+|\omega||\psi|\bigr)$, a sum of
+products of functions in $L^2$ of the cell. On the level $\Psi=2h$ the factor $2-\Psi$ is
+$2-2h$, and by Lemma~\ref{lem:orbit-coordinates} each of the three level integrals in
+$G_\omega$ exists for almost every $h$, so the level integral splits.
+\end{proof}
+
+\begin{lemma}[The cutoff identity]
+\label{lem:ee-cutoff-identity}
+\uses{def:ee-bulk-density, def:ee-boundary-density, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.ee_cutoff_identity}
+\leanok
+Let $\lambda\ne0$ and let $\chi$ be smooth and vanish outside a compact subinterval of
+$(0,2)$. Then $\int_\Cell\chi(\Psi)\mathcal J_\omega=\int_\Cell\chi'(\Psi)E_\omega$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:virial-l2, lem:normal-field-annulus, lem:normal-field-cutoff-algebra,
+  lem:stream-ibp, lem:cell-periodic-integral}
+Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$ (Lemma~\ref{lem:normal-field-annulus}). By
+Lemma~\ref{lem:normal-field-cutoff-algebra} its quadratic form is
+\[
+  0=\int\chi\mathcal J+2\int\chi'(\Psi-2)|\psi_n|^2
+    +\tfrac12\int\Delta\bigl(-\chi-(\Psi-2)\chi'\bigr)|\psi|^2 .
+\]
+By Lemma~\ref{lem:stream-ibp} the last term is $-\int\chi K-\int(\Psi-2)\chi'K$, and
+$\int\chi K=-\int\operatorname{Re}(\bar\psi\,\nabla\chi(\Psi)\cdot\nabla\psi)
+=\int\chi'(\Psi)\rho\operatorname{Re}(\psi\overline{\psi_n})$ since $\nabla\Psi\cdot\nabla\psi=-\rho\psi_n$.
+Where $\chi'(\Psi)\ne0$, $\rho>0$ and $|\nabla\psi|^2=|\psi_n|^2+|\psi_t|^2$, so
+$2|\psi_n|^2-K=|\psi_n|^2-|\psi_t|^2-\operatorname{Re}(\omega\bar\psi)$. Collecting terms gives the
+identity on the period square; all integrands are periodic and vanish where $\Psi\le0$, so
+Lemma~\ref{lem:cell-periodic-integral} moves it to the cell.
+\end{proof}
+
 \begin{lemma}[Virial identity on an annulus]
 \label{lem:ee-annular-virial}
 \uses{def:ee-bulk-density, def:ee-level-term, def:eigen-problem}
@@ -189,15 +266,18 @@ Let $\lambda\ne0$. There is a null set $N$ such that for all $0<h<h'<1$ outside 
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-l2, lem:normal-field-annulus, lem:ee-bulk-integrable, lem:orbit-coordinates, lem:coarea}
-Apply Lemma~\ref{lem:virial-l2} to $\chi(\Psi)W$ with $\chi$ smooth and supported in a
-compact subinterval of $(0,2)$ (Lemma~\ref{lem:normal-field-annulus}). With the cutoff
-algebra below, $\int\chi(\Psi)\mathcal J=\int\chi'(\Psi)\bigl[\rho\operatorname{Re}(\psi\overline{\psi_n})
-+(2-\Psi)B\bigr]$, and $dx\,dy=ds\,dt$ with $s=\Psi$ turns the right side into
-$\int\chi'(s)\tilde G(s)\,ds$ with $\tilde G(2h)=G_\omega(h)$, locally integrable in $s$. Let
-$\chi$ tend to $\mathbf 1_{(2h,2h')}$, so that $\chi'\to\delta_{2h}-\delta_{2h'}$. Take $N$ the
-non-Lebesgue points of the level integrals; on the bulk side use dominated convergence
-with Lemma~\ref{lem:ee-bulk-integrable}.
+\uses{lem:ee-cutoff-identity, lem:ee-bulk-integrable, lem:ee-boundary-integrable,
+  lem:coarea-level-cutoff, lem:du-bois-reymond}
+\leanok
+Write $\chi(s)=\varphi(s/2)$ with $\varphi$ smooth and vanishing outside $[a,b]\subset(0,1)$.
+By Lemma~\ref{lem:coarea-level-cutoff}, the cutoff identity
+(Lemma~\ref{lem:ee-cutoff-identity}) becomes $\int\varphi\,m=\int\varphi'\tilde G$ with
+$m(h)=2\oint_{\{\Psi=2h\}}\mathcal J_\omega\,dt$ and $\tilde G(h)=\oint_{\{\Psi=2h\}}E_\omega\,dt$, both
+integrable on compact subintervals (Lemmas~\ref{lem:ee-bulk-integrable}
+and~\ref{lem:ee-boundary-integrable}). By Lemma~\ref{lem:du-bois-reymond},
+$\tilde G(h)-\tilde G(h')=\int_h^{h'}m$ outside a null set, and the right side is
+$\int_{\{2h<\Psi<2h'\}\cap\Cell}\mathcal J_\omega$ by Lemma~\ref{lem:coarea-level-cutoff} with
+$\varphi=\mathbf 1_{(h,h')}$. Finally $\tilde G=G_\omega$ almost everywhere.
 \end{proof}
 
 \begin{remark}[Cutoff algebra checked independently]

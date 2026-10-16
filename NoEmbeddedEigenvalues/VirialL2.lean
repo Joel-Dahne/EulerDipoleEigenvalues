@@ -37,6 +37,22 @@ theorem inner_virial_exact {E : Type*} [NormedAddCommGroup E] [InnerProductSpace
     inner_smul_left, inner_smul_right, conj_ofReal]
   ring
 
+/-- Integration by parts for the stream function (`lem:stream-ibp`): for `ω ∈ L²` with mean
+    zero, `ψ = Δ⁻¹ω ∈ H²` and smooth periodic real `φ`, with `K = |∇ψ|² + Re(ωψ̄)`,
+    `½∫ Δφ |ψ|² = ∫ φK = -∫ Re(ψ̄ ∇φ·∇ψ)` over the period square. Both identities hold for
+    trigonometric polynomials and are continuous in `H²`. -/
+theorem stream_ibp {ω : L2} (hω : MeanZero ω) {φ : ℝ × ℝ → ℝ}
+    (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ)
+    (hpφ : IsPeriodicLift φ) :
+    (1 / 2) * (squarePairing (fun p ↦ laplacian φ p • streamLift ω p) (streamLift ω)).re =
+      squareIntegral (fun p ↦ φ p * (‖streamLiftX ω p‖ ^ 2 + ‖streamLiftY ω p‖ ^ 2 +
+        (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)) ∧
+    squareIntegral (fun p ↦ φ p * (‖streamLiftX ω p‖ ^ 2 + ‖streamLiftY ω p‖ ^ 2 +
+        (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re)) =
+      -squareIntegral (fun p ↦ (streamLift ω p * (starRingEnd ℂ)
+        (partialX φ p • streamLiftX ω p + partialY φ p • streamLiftY ω p)).re) := by
+  sorry
+
 /-- The virial identities for an `L²` eigenfunction (`lem:virial-l2`), for a smooth adapted
     field supported in the annulus `{2h₁ ≤ Ψ ≤ 2h₂}`: `Re⟨fω, ω + ψ⟩ = 2 Re⟨Dψ, ω⟩` with
     `D = W·∇ + ½ div W`, and the quadratic form

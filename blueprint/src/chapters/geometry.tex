@@ -110,6 +110,23 @@ into $[-\pi/2,3\pi/2)$ by a shift $l\pi$ with $l\equiv k\pmod2$. Since
 $\cos a\cos b>0$ and $\cos a\ge0$, both lie in $(-\pi/2,\pi/2)$.
 \end{proof}
 
+\begin{lemma}[Integrals of periodic functions over the cell]
+\label{lem:cell-periodic-integral}
+\uses{def:cells, def:square-integral}
+\lean{NoEmbeddedEigenvalues.squareIntegral_eq_setIntegral_cellSquare}
+\leanok
+Let $F$ be periodic and measurable on $\R^2$ and vanish where $\Psi\le0$. Then its integral
+over the period square $[0,2\pi]^2$ equals its integral over the cell square.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:lift-representatives}
+Both $[0,2\pi]^2$ (up to a null set) and $(-\pi,\pi]^2$ are fundamental domains, so the two
+integrals of $F$ over them agree with the integral over $\T^2$. In $(-\pi,\pi]^2$,
+$\Psi=2\cos a\cos b>0$ exactly on the cell square: both $|a|,|b|>\pi/2$ would need
+$|x+y|,|x-y|>\pi$, impossible since $|x+y|+|x-y|=2\max(|x|,|y|)\le2\pi$.
+\end{proof}
+
 \begin{lemma}[Calculus in diagonal coordinates]
 \label{lem:diagonal-calculus}
 \uses{def:cells, def:lift-operators}
@@ -622,6 +639,27 @@ vanishes almost everywhere: for almost every $h$, $|f-g|\circ\gamma_h=0$ almost 
 on $[-2L,6L)$. By periodicity (Lemma~\ref{lem:period-orbit}) the same holds on $(0,S]$,
 so the two level integrals agree. Using the nonnegative formula avoids any integrability
 assumption on $f$ or $g$.
+\end{proof}
+
+\begin{lemma}[Coarea with a cutoff in the level]
+\label{lem:coarea-level-cutoff}
+\uses{def:level-integral, def:cells}
+\lean{NoEmbeddedEigenvalues.integrableOn_levelIntegral,
+  NoEmbeddedEigenvalues.integral_cellSquare_level_mul}
+\leanok
+Let $0<a\le b<1$ and let $F$ be integrable on $\{2a\le\Psi\le2b\}\cap\Cell$. Then
+$h\mapsto\oint_{\{\Psi=2h\}}F\,dt$ is integrable on $[a,b]$, and for every bounded measurable
+$\varphi$ vanishing outside $[a,b]$,
+\[
+  \int_\Cell\varphi(\Psi/2)\,F=2\int_a^b\varphi(h)\oint_{\{\Psi=2h\}}F\,dt\,dh .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates, lem:period-orbit}
+Apply Lemma~\ref{lem:orbit-coordinates} to $\varphi(\Psi/2)F$, which is integrable on the
+cell, and use $\Psi(\gamma_h(t))=2h$. The time window $[-2L,6L)$ is one period, so by
+periodicity its integral is the level integral over $[0,S)$.
 \end{proof}
 
 \begin{definition}[Action-angle coordinates]

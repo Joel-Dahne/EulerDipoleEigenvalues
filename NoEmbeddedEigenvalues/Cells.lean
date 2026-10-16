@@ -5,7 +5,7 @@ import NoEmbeddedEigenvalues.LiftTorus
 # Cells, separatrix and critical points of the dipole
 
 Blueprint: `def:cells`, `lem:dipole-product`, `lem:separatrix-lines`,
-`lem:dipole-critical-points`, `lem:cell-square`.
+`lem:dipole-critical-points`, `lem:cell-square`; `lem:cell-periodic-integral` (stated).
 
 In the diagonal coordinates `a = (x + y)/2`, `b = (x - y)/2` the dipole is
 `Ψ = 2 cos a cos b`. Hence the separatrix `{Ψ = 0}` is the union of the lines
@@ -347,5 +347,16 @@ theorem torusProj_corner {p : ℝ × ℝ} (ha : |(diagCoord p).1| = π / 2)
     have h2 : y = 0 := by linarith
     left
     simp [h1, h2, Angle.coe_neg, Angle.neg_coe_pi]
+
+/-- Integrals of periodic functions supported in the cells (`lem:cell-periodic-integral`): if
+    `F` is periodic, a.e. strongly measurable and vanishes where `Ψ ≤ 0`, its integral over the
+    period square equals its integral over the cell square. In `(-π, π]²` the set `{Ψ > 0}`
+    is exactly the cell square, and both squares are fundamental domains. -/
+theorem squareIntegral_eq_setIntegral_cellSquare {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] {F : ℝ × ℝ → E} (hF : IsPeriodicLift F)
+    (hm : MeasureTheory.AEStronglyMeasurable F)
+    (h0 : ∀ p, dipoleLift p ≤ 0 → F p = 0) :
+    squareIntegral F = ∫ p in cellSquare, F p ∂MeasureTheory.volume := by
+  sorry
 
 end NoEmbeddedEigenvalues

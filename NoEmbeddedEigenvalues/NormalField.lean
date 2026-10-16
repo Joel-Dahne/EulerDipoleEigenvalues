@@ -456,6 +456,34 @@ theorem annularCutoff_normalField {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
         partialY_eq_zero_of_eventually hzF]
     simp [hL, hc0]
 
+/-- The cutoff algebra (`lem:normal-field-cutoff-algebra`): for `W_χ = χ(Ψ)W` with coefficient
+    `f_χ = χ(Ψ)f`, (1) `f_χ - div W_χ = -χ(Ψ) - (Ψ - 2)χ'(Ψ)`, using `f - div W = -1` and
+    `W·∇Ψ = Ψ - 2`; (2) the gradient form of `2 sym DW_χ - f_χ I` on `(X, Y)` is
+    `χ(Ψ)((2 - c)|n|² + c|t|²) + 2χ'(Ψ)(Ψ - 2)|n|²`, with `n, t` the normal and tangential
+    components, since `D(χW) = χ DW + χ'(Ψ) W ⊗ ∇Ψ` and `W ∥ ∇Ψ`. -/
+theorem cutoff_normalField_algebra {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ) {ε₁ ε₂ : ℝ}
+    (hε₁ : 0 < ε₁) (hε₂ : ε₂ < 2) (hχ0 : ∀ s, χ s ≠ 0 → ε₁ ≤ s ∧ s ≤ ε₂) (p : ℝ × ℝ) :
+    χ (dipoleLift p) * normalCoeff p -
+        divergence (fun q ↦ χ (dipoleLift q) * normalField₁ q)
+          (fun q ↦ χ (dipoleLift q) * normalField₂ q) p =
+      -χ (dipoleLift p) - (dipoleLift p - 2) * deriv χ (dipoleLift p) ∧
+    ∀ X Y : ℂ,
+      2 * (partialX (fun q ↦ χ (dipoleLift q) * normalField₁ q) p * ‖X‖ ^ 2 +
+          partialX (fun q ↦ χ (dipoleLift q) * normalField₂ q) p *
+            (Y * (starRingEnd ℂ) X).re +
+          partialY (fun q ↦ χ (dipoleLift q) * normalField₁ q) p *
+            (X * (starRingEnd ℂ) Y).re +
+          partialY (fun q ↦ χ (dipoleLift q) * normalField₂ q) p * ‖Y‖ ^ 2) -
+        χ (dipoleLift p) * normalCoeff p * (‖X‖ ^ 2 + ‖Y‖ ^ 2) =
+      χ (dipoleLift p) *
+          ((2 - normalC p) * ‖((sin p.1 : ℂ) * X + (sin p.2 : ℂ) * Y) / (√(sin p.1 ^ 2 +
+              sin p.2 ^ 2) : ℂ)‖ ^ 2 +
+            normalC p * ‖((sin p.2 : ℂ) * X - (sin p.1 : ℂ) * Y) / (√(sin p.1 ^ 2 +
+              sin p.2 ^ 2) : ℂ)‖ ^ 2) +
+        2 * deriv χ (dipoleLift p) * (dipoleLift p - 2) *
+          ‖((sin p.1 : ℂ) * X + (sin p.2 : ℂ) * Y) / (√(sin p.1 ^ 2 + sin p.2 ^ 2) : ℂ)‖ ^ 2 := by
+  sorry
+
 end Annulus
 
 end NoEmbeddedEigenvalues

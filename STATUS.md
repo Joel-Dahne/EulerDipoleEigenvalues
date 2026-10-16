@@ -126,10 +126,28 @@ imports `VirialL2.lean`. Odd–odd (weighted analogue) not yet examined.
 `measurePreserving_torusProj_square` and `integrableOn_norm_liftL2_sq`
 (in `lem:lift-representatives`; `ae_torusProj` now uses the former).
 
-**Next:** the action-angle chart, transversal mollifier and `H¹` identity
-behind `virial_l2`. Remaining direct even–even inputs:
-`ee_boundary_regularity`, `ee_gradient_traces`, `ee_annular_virial`,
-`ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
+**`ee_annular_virial` is proved from a split (2026-10-15).** By coarea the
+cutoff identity `∫χ(Ψ)𝒥 = ∫χ'(Ψ)E` says that `h ↦ ∮E` has distributional
+derivative `-2∮𝒥`; the du Bois-Reymond lemma integrates this (cleaner than
+Lebesgue points). New admitted pieces: `ee_cutoff_identity`
+(`lem:ee-cutoff-identity`, from `virial_l2`, the cutoff algebra, `H²`
+integration by parts and the period-square-to-cell transfer),
+`cutoff_normalField_algebra` (`lem:normal-field-cutoff-algebra`, checked
+numerically), `stream_ibp` (`lem:stream-ibp`),
+`squareIntegral_eq_setIntegral_cellSquare` (`lem:cell-periodic-integral`),
+`integrableOn_levelIntegral` and `integral_cellSquare_level_mul`
+(`lem:coarea-level-cutoff`, from the admitted orbit-coordinate formula),
+`exists_null_sub_eq_intervalIntegral` (`lem:du-bois-reymond`, new module
+`DuBoisReymond.lean`), and `eeBoundaryDensity` with
+`integrableOn_eeBoundaryDensity`, `ae_levelIntegral_eeBoundaryDensity`
+(`lem:ee-boundary-integrable`).
+
+**Next:** prove the pieces; the smallest are `lem:cell-periodic-integral`,
+`lem:ee-boundary-integrable` (integrability part), `lem:du-bois-reymond` and
+`lem:normal-field-cutoff-algebra`; `lem:stream-ibp` is reusable for
+`virial_l2`. Then `ee_cutoff_identity` from its pieces. Remaining direct
+even–even inputs: `ee_boundary_regularity`, `ee_gradient_traces`,
+`ee_cutoff_identity`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 
@@ -450,12 +468,12 @@ these admitted analytic results.
   in `Derivatives.lean`.
 - **Validation**: full Lean build and `just web` pass after restating the
   `L²` virial identity; `just graph thm:ee-exclusion` regenerates
-  its graph (141 nodes). All 648 blueprint Lean references resolve without
-  duplicates, and every `\uses` and `\ref` label exists. There are now 46
-  admitted declarations (after proving `annularCutoff_normalField` and
-  `integrableOn_eeBulkDensity` and removing the unused Gagliardo–`H^{1/2}` lemma).
+  its graph (149 nodes). All 658 blueprint Lean references resolve without
+  duplicates, and every `\uses` and `\ref` label exists. There are now 54
+  admitted declarations (nine new admitted pieces replace the admitted
+  annular identity).
   `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
-  warnings; `EvenEven.lean` has only its four admitted-input warnings.
+  warnings; `EvenEven.lean` has only its six admitted-input warnings.
   `inner_virial_exact` and `normalCoeff_le` use only `propext`,
   `Classical.choice`, `Quot.sound`. Axiom checks on the canonical arc identity
   and all five new helpers use only `propext`, `Classical.choice` and

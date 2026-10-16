@@ -118,6 +118,7 @@ motivation, and standard facts cited rather than proved.
   coordinates; `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.
   Then
+  `DuBoisReymond.lean` states the du Bois-Reymond lemma on an interval;
   `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
   `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
   `IntervalZeroExtension.lean` proves jump-free zero extension of zero-trace H¹ data;

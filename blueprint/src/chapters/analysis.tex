@@ -293,6 +293,24 @@ For $a\colon\R\to\C$,
 $[a]^2=\int_\R\int_\R|a(u)-a(w)|^2(u-w)^{-2}\,dw\,du\in[0,\infty]$.
 \end{definition}
 
+\begin{lemma}[du Bois-Reymond]
+\label{lem:du-bois-reymond}
+\lean{NoEmbeddedEigenvalues.exists_null_sub_eq_intervalIntegral}
+\leanok
+Let $m,G$ be integrable on every compact subinterval of $(\alpha,\beta)$, and suppose
+$\int\varphi m=\int\varphi'G$ for every smooth $\varphi$ with compact support in
+$(\alpha,\beta)$. Then there is a null set $N$ such that $G(h)-G(h')=\int_h^{h'}m$ for all
+$\alpha<h<h'<\beta$ outside $N$.
+\end{lemma}
+
+\begin{proof}
+Let $M(h)=\int_c^hm$ for some fixed $c$. Then $\int\varphi'(G+M)=0$ for all test functions,
+by Fubini. Fix a test function $\varphi_0$ with $\int\varphi_0=1$. Every test function
+$\psi$ is $\varphi'+(\int\psi)\varphi_0$ for a test function $\varphi$, so
+$\int\psi(G+M-k)=0$ with $k=\int\varphi_0(G+M)$, and $G+M=k$ almost everywhere by the
+fundamental lemma of the calculus of variations.
+\end{proof}
+
 \begin{lemma}[Basic properties of local Sobolev spaces]
 \label{lem:weak-derivative-basic}
 \uses{def:sobolev-local}
