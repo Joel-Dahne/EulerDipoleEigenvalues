@@ -452,15 +452,20 @@ $\int\cosh^2s\,|g_k'|^2\,ds<\infty$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:arc-trace-ac, lem:traces, lem:local-to-global, lem:elliptic-torus,
-  lem:corner-coordinates, lem:odd-hardy, lem:separatrix-arc}
-On an arc $g'=\rho\,\psi_t$ with $\rho=\sqrt2\sech s$, so $\cosh^2s\,|g'|^2=2|\psi_t|^2$, and the
-claim is $\int_\gamma|\psi_t|^2\,ds<\infty$ in flow time.
-Away from the saddles $ds$ is comparable to arclength and the line trace of $\nabla\psi\in H^1$
-(Lemma~\ref{lem:traces}) is in $L^2$. Near a saddle use the coordinates $u,v$ of
-Lemma~\ref{lem:corner-coordinates}: the arc is $v=0$, $ds$ is comparable to $du/u$, and $\psi$ is
-even in $u$, so the trace $\psi_u(u,0)$ is odd. Its Gagliardo seminorm is finite by
-Lemma~\ref{lem:traces}, and Lemma~\ref{lem:odd-hardy} gives $\int_0^{u_0}|\psi_u(u,0)|^2du/u<\infty$.
+\uses{lem:arc-trace-identification, lem:arc-diagonal, lem:traces, lem:local-to-global,
+  lem:elliptic-torus, lem:local-odd-hardy}
+By the rotation it suffices to take $k=0$ (each $\psi\circ R^k$ is again even under $S_1,S_2$).
+By Lemmas~\ref{lem:arc-trace-identification} and~\ref{lem:arc-diagonal}, with $\psi_a=\partial_a\psi$,
+$g'=-\cos a\,\psi_a(a,\pi/2)$ and $\cosh s=1/\cos a$, so
+\[
+  \int\cosh^2s\,|g'|^2\,ds=\int_{-\pi/2}^{\pi/2}|\psi_a(a,\pi/2)|^2\,\frac{da}{\cos a},
+\]
+in terms of the trace of $\psi_a$ on the line $b=\pi/2$. By Lemma~\ref{lem:traces} applied to
+$\psi_a\in H^1$ (Lemma~\ref{lem:local-to-global}), this trace is in $L^2$ with finite Gagliardo
+seminorm on $(-\pi,\pi)$. Away from $a=\pm\pi/2$ the weight is bounded. Near $a=\pi/2$ put
+$\tau=a-\pi/2$: $\cos a=\sin|\tau|\ge2|\tau|/\pi$, and $\tau\mapsto\psi_a(\pi/2+\tau,\pi/2)$ is odd
+since $\psi$ is even under $S_1\colon a\mapsto\pi-a$; Lemma~\ref{lem:local-odd-hardy} bounds
+$\int|\psi_a|^2d\tau/|\tau|$. The end $a=-\pi/2$ is the same by periodicity.
 \end{proof}
 
 \begin{lemma}[Level traces at the separatrix]
@@ -478,25 +483,82 @@ over the levels $\{\Psi=2h\}$ (manuscript \texttt{(ee:normal-trace-limit)},
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-arc-energy, lem:ee-neumann, lem:hyperbola-estimate, lem:traces,
-  lem:local-to-global, lem:corner-coordinates, lem:odd-hardy, lem:orbit-comparison,
-  lem:orbit-coordinates, lem:level-integral-congr}
-Split each level into a middle part, at distance at least $\delta$ from the saddles, and the
-corner parts. In the middle the levels near an arc are graphs over the line carrying it
-(in diagonal coordinates), and along almost every transverse line
-$|F(a,\beta_h(a))-F(a,b_0)|^2\le|\beta_h(a)-b_0|\int|\partial_bF|^2db$ for the absolutely
-continuous representatives of Lemma~\ref{lem:traces}; so the restrictions of $\nabla\psi$ converge
-to its trace on the arc. The normal trace on the arcs vanishes: $\psi_n$ is odd under the
-reflection across the line of each arc (Lemma~\ref{lem:ee-neumann}). Near a saddle, in the
-coordinates of Lemma~\ref{lem:corner-coordinates}, the level is $uv=h$ and $dt$ is comparable to
-$du/u$. On the half $u\ge v=h/u$ apply Lemma~\ref{lem:hyperbola-estimate} to $F=\psi_u$ and
-$F=\psi_v$, whose axis traces are the odd $\psi_u(u,0)$ (with $\int|\psi_u(u,0)|^2du/u$ finite,
-as in Lemma~\ref{lem:ee-arc-energy}) and $\psi_v(u,0)=0$. The normal and tangential derivatives
-along the hyperbola are bounded combinations of $\psi_u,\psi_v$, so their corner tails are
-bounded by the axis tail on $(0,u_1)$ plus $\int_{(0,u_1)^2}|\nabla\psi_v|^2+|\nabla\psi_u|^2$,
-small for small $u_1$ uniformly in $h$. The half $v\ge u$ is symmetric. Finally the raw
-restrictions agree with those of the absolutely continuous representatives on almost every
-level (Lemma~\ref{lem:level-integral-congr}).
+\uses{lem:ee-arc-energy, lem:arc-trace-identification, lem:ee-corner-tails,
+  lem:quarter-orbit-decomposition, lem:quarter-orbit-diagonal, lem:arc-diagonal,
+  lem:segment-estimate, lem:traces, lem:local-to-global}
+By Lemma~\ref{lem:quarter-orbit-decomposition} the level integrals are sums of four quarter
+integrals; $R$ is an isometry preserving $\Psi$ and the flow, so the $k$-th quarter of $\psi$ is
+the $0$-th quarter of $\psi\circ R^k$, again even under $S_1,S_2$. So consider $k=0$. By
+Lemmas~\ref{lem:quarter-orbit-diagonal} and~\ref{lem:arc-diagonal} the claims become, with
+$N=\sin x\,\psi_x+\sin y\,\psi_y=\rho\psi_n$ and $T=\sin y\,\psi_x-\sin x\,\psi_y=\rho\psi_t$,
+\[
+  \int_{-a_h}^{a_h}\frac{|N|^2}{\rho^2}(a,\beta_h(a))\frac{da}{\sqrt{\cos^2a-h^2}}\to0,\qquad
+  \int_{-a_h}^{a_h}\frac{|T|^2}{\rho^2}(a,\beta_h(a))\frac{da}{\sqrt{\cos^2a-h^2}}
+  \to\int_{-\pi/2}^{\pi/2}\frac{|T|^2}{\rho^2}(a,\tfrac\pi2)\frac{da}{\cos a},
+\]
+and the right side is $\int\tfrac12\cosh^2s\,|g'|^2ds$ (Lemma~\ref{lem:arc-trace-identification}),
+while the trace of $N$ on $b=\pi/2$ vanishes. Fix $\delta>0$. On $|a|\le\pi/2-\delta$ the
+weights converge uniformly, $\rho$ is bounded below, the coefficients are uniformly continuous,
+and $\int_{|a|\le\pi/2-\delta}|G(a,\beta_h(a))-G(a,\pi/2)|^2da\to0$ for $G=\psi_x,\psi_y$ by
+Lemma~\ref{lem:segment-estimate}, since $\sup|\beta_h-\pi/2|\to0$ and $\partial_bG\in L^2$
+(using the absolutely continuous representatives of Lemma~\ref{lem:traces}, and
+Lemma~\ref{lem:local-to-global} for $\psi\in H^2$ near the arc). The parts with
+$|a|>\pi/2-\delta$ are smaller than $\epsilon$ for small $\delta$, uniformly in small $h$
+(Lemma~\ref{lem:ee-corner-tails}). The raw $\psi_x,\psi_y$ agree with these representatives
+on almost every level: the map $(a,h)\mapsto(a,\beta_h(a))$ is a diffeomorphism for fixed $a$,
+so a planar null set meets almost every level in a null set of $a$ (Fubini).
+\end{proof}
+
+\begin{lemma}[Traces on the arc]
+\label{lem:arc-trace-identification}
+\uses{def:sectors, def:stream-lifts, def:normal-tangent, def:separatrix-arc}
+Let $\psi$ be as in Lemma~\ref{lem:ee-arc-energy}, with the absolutely continuous
+representatives of $\psi_x,\psi_y$ along the lines $a=\mathrm{const}$ near $b=\pi/2$. On
+$b=\pi/2$: the trace of $N=\sin x\,\psi_x+\sin y\,\psi_y$ vanishes for almost every $a$; the
+trace of $T=\sin y\,\psi_x-\sin x\,\psi_y$ is $-\cos a\,\psi_a(a,\pi/2)$, where
+$\psi_a(\cdot,\pi/2)$ is the derivative of $a\mapsto\tilde\psi(a,\pi/2)$; and
+$g'(s)=T(\gamma(s))$, $|T|^2/\rho^2=\tfrac12\cosh^2s\,|g'|^2$ on the arc.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-neumann, lem:traces, lem:arc-trace-ac, lem:arc-diagonal}
+With $\psi_a=\psi_x+\psi_y$, $\psi_b=\psi_x-\psi_y$ and $x=a+b$, $y=a-b$:
+$N=\sin a\cos b\,\psi_a+\cos a\sin b\,\psi_b$ and $T=-\cos a\sin b\,\psi_a+\sin a\cos b\,\psi_b$;
+on $b=\pi/2$ these are $N=\cos a\,\psi_b$ and $T=-\cos a\,\psi_a$. Since $\psi$ is even under $S_2\colon b\mapsto\pi-b$ (up to periods),
+$\psi_b$ is odd across $b=\pi/2$ (Lemma~\ref{lem:ee-neumann}); its representative is continuous
+in $b$ on almost every line, so its value at $b=\pi/2$ vanishes. Lemma~\ref{lem:traces} identifies
+the trace of $\psi_a$ with the derivative of the trace of $\tilde\psi$; along the arc
+$\gamma'=Y=(\sin y,-\sin x)$, so $g'=\nabla\psi\cdot Y=T$, and $\rho=\sqrt2\cos a=\sqrt2\sech s$.
+\end{proof}
+
+\begin{lemma}[Corner tails]
+\label{lem:ee-corner-tails}
+\uses{def:sectors, def:stream-lifts, def:normal-tangent}
+Let $\psi$ be as in Lemma~\ref{lem:ee-arc-energy}. For every $\epsilon>0$ there are $\delta>0$
+and $h_0>0$ such that for $0<h<h_0$ the parts of the quarter integrals of
+$|\psi_n|^2+|\psi_t|^2$ (Lemma~\ref{lem:quarter-orbit-diagonal}) over $|a|>\pi/2-\delta$, and
+the part of $\int|\psi_a(a,\pi/2)|^2da/\cos a$ over $|a|>\pi/2-\delta$, are less than $\epsilon$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-orbit-diagonal, lem:corner-coordinates, lem:hyperbola-estimate,
+  lem:local-odd-hardy, lem:traces, lem:local-to-global}
+Near $a=\pi/2$ use $u=\cos a$, $v=\cos b$ (Lemma~\ref{lem:corner-coordinates}). The quarter
+orbit is $v=h/u$, $\sqrt h\le u\le u_1=\sin\delta$, and $dt\le2\,du/u$ (remark after
+Lemma~\ref{lem:arc-diagonal}). Since $\sin x=\sqrt{1-u^2}\,v+u\sqrt{1-v^2}$ and
+$\sin y=\sqrt{1-u^2}\,v-u\sqrt{1-v^2}$,
+\[
+  N=\sqrt{1-u^2}\,v\,\psi_a+u\sqrt{1-v^2}\,\psi_b,\qquad
+  T=-u\sqrt{1-v^2}\,\psi_a+\sqrt{1-u^2}\,v\,\psi_b,\qquad
+  \rho^2=2(u^2+v^2-2u^2v^2)\ge u^2
+\]
+for small $u,v$; so on $v\le u$, $|\psi_n|^2+|\psi_t|^2\le C(|\psi_a|^2+|\psi_b|^2)$. Apply
+Lemma~\ref{lem:hyperbola-estimate} to $F=\psi_a$ and $F=\psi_b$ in the variables $(u,v)$:
+$\int_{\sqrt h}^{u_1}|F(u,h/u)|^2du/u\le2\int_0^{u_1}|F(u,0)|^2du/u+2\int_{(0,u_1)^2}|F_v|^2$.
+Here $\psi_b(u,0)=0$ (Lemma~\ref{lem:arc-trace-identification}), $\int_0^{u_1}|\psi_a(u,0)|^2du/u$
+is the arc tail, finite by Lemma~\ref{lem:local-odd-hardy} as in Lemma~\ref{lem:ee-arc-energy},
+and $F_v\in L^2$ since $\psi\in H^2$. All three terms tend to $0$ as $u_1\to0$, independently
+of $h$. The end $a=-\pi/2$ is symmetric.
 \end{proof}
 
 \begin{lemma}[The first-order trace term]
@@ -550,7 +612,13 @@ with the union of the two null sets.
 \end{proof}
 
 \begin{remark}[Digest note: the gradient traces]
-The manuscript's argument is correct as sketched, but four steps are implicit. (1) Why the
+The manuscript's argument is correct as sketched, but four steps are implicit, and the proof
+can be made more explicit than the manuscript's: in diagonal coordinates each quarter orbit is
+the graph $b=\beta_h(a)$ with $dt=da/\sqrt{\cos^2a-h^2}$ (Lemma~\ref{lem:quarter-orbit-diagonal}),
+so the level traces use neither the orbit-comparison lemmas nor the coarea formula, only the
+line representatives of Lemma~\ref{lem:traces}. The middle convergence and the hyperbola
+estimate are the same segment estimate (Lemma~\ref{lem:segment-estimate}), and a local odd
+Hardy inequality (Lemma~\ref{lem:local-odd-hardy}) replaces the manuscript's even cutoff. (1) Why the
 normal limit is zero: the trace of $\psi_n$ on the arcs vanishes because $\psi_n$ is odd
 under the reflection across each arc's line (Lemma~\ref{lem:ee-neumann}). (2) The first-order
 term needs $\oint\rho^2dt$ bounded although $S(h)\to\infty$; this holds by $\rho\le Cd$ and

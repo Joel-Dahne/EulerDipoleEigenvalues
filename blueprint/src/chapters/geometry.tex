@@ -528,6 +528,60 @@ $L(h)$. The letter $b$ is used both for the diagonal coordinate and for the
 frequency $b(h)$; the paper should rename one of them.
 \end{remark}
 
+\begin{lemma}[Quarter orbits]
+\label{lem:quarter-orbit-decomposition}
+\uses{def:period, def:dipole-flow, def:level-integral}
+Let $0<h<1$ and let $f$ be such that $t\mapsto f(\gamma_h(t))$ is integrable over a period.
+Then $\oint_{\{\Psi=2h\}}f\,dt=\sum_{k=0}^{3}\int_{-L(h)}^{L(h)}f(R^k\gamma_h(t))\,dt$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-orbit}
+By Lemma~\ref{lem:period-orbit}, $\gamma_h(t+2L)=R\gamma_h(t)$ and $\gamma_h$ has period $8L$.
+Split one period into four windows of length $2L$ centered at $2kL$.
+\end{proof}
+
+\begin{lemma}[Quarter orbits in diagonal coordinates]
+\label{lem:quarter-orbit-diagonal}
+\uses{def:period, def:dipole-flow, def:cells}
+Let $0<h<1$, $a_h=\arccos\sqrt h$ and $\beta_h(a)=\arccos(h/\cos a)$ for $|a|\le a_h$. In
+diagonal coordinates the quarter orbit $\gamma_h([-L,L])$ is the graph $b=\beta_h(a)$,
+$|a|\le a_h$, traversed with $\dot a=-\sqrt{\cos^2a-h^2}$. Hence, writing $f$ in diagonal
+coordinates,
+\[
+  \int_{-L}^{L}f(\gamma_h(t))\,dt=\int_{-a_h}^{a_h}f(a,\beta_h(a))\,\frac{da}{\sqrt{\cos^2a-h^2}}
+\]
+whenever one side is defined (for nonnegative measurable or integrable $f$).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-orbit, lem:period-integral}
+On the quarter orbit $\cos a\cos b=h$ and $b>0$ (Lemma~\ref{lem:period-orbit}), so
+$b=\beta_h(a)$ and $\dot a=-\cos a\sin b=-\sqrt{\cos^2a-h^2}$; $a$ runs from $a_h$ to $-a_h$
+(the orbit meets the diagonals $|a|=|b|$ at $t=\pm L$). Substitute $a=a(t)$.
+\end{proof}
+
+\begin{lemma}[The arc in diagonal coordinates]
+\label{lem:arc-diagonal}
+\uses{def:separatrix-arc, def:cells}
+On the arc $\gamma$, $b=\pi/2$, $a=\alpha(s)-\pi/2$ with $\alpha(s)=2\arctan e^{-s}$, and
+$\cos a=\sech s=-\,da/ds$. Hence $\int_\R F(\gamma(s))\,ds=\int_{-\pi/2}^{\pi/2}F(a,\pi/2)\,da/\cos a$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:separatrix-arc}
+$\sin\alpha(s)=\sech s$ and $\alpha'(s)=-\sech s$ (Lemma~\ref{lem:separatrix-arc}); substitute.
+\end{proof}
+
+\begin{remark}
+As $h\to0$, $a_h\to\pi/2$, $\beta_h\to\pi/2$ uniformly on $|a|\le\pi/2-\delta$ (since
+$\pi/2-\beta_h(a)=\arcsin(h/\cos a)$), and the weight $1/\sqrt{\cos^2a-h^2}\to1/\cos a$, the arc
+weight of Lemma~\ref{lem:arc-diagonal}. Near the corner $a=\pi/2$, with $u=\cos a$ and
+$v=\cos b$, the quarter orbit is the half-hyperbola $v=h/u\le u$, $u\ge\sqrt h$, and
+$dt=du/(\sqrt{1-u^2}\sqrt{u^2-h^2})\le du/(u(1-u^2))$ since $h\le u^2$. These explicit formulas
+replace the orbit-comparison lemmas in the even--even trace limits.
+\end{remark}
+
 \begin{definition}[Orbit coordinates]
 \label{def:orbit-coordinates}
 \uses{def:cells, def:period, def:dipole-flow}

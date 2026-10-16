@@ -224,8 +224,23 @@ tangential limits; the least worked out part) and `ee_first_trace_limit`
 `integral_saddleDist_rpow_pos_le` and the coarea formula; `∮ρ² dt` is four
 quarter integrals by the rotation invariance of `ρ`).
 
-**Next:** work out `lem:ee-level-traces` on paper in more detail (middle
-convergence in diagonal coordinates, corner tails), then `ee_arc_energy`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
+**`lem:ee-level-traces` worked out on paper (2026-10-16).** Each quarter orbit
+is explicitly the graph `b = β_h(a) = arccos(h/cos a)`, `|a| ≤ arccos √h`, with
+`dt = da/√(cos²a − h²)`, and the arc is `b = π/2` with `ds = da/cos a`; so the
+level traces need neither the orbit-comparison lemmas nor the coarea formula,
+only the line representatives of `lem:traces`. New blueprint nodes (no Lean
+yet): `lem:quarter-orbit-decomposition`, `lem:quarter-orbit-diagonal`,
+`lem:arc-diagonal` (geometry), `lem:segment-estimate` (the hyperbola
+estimate is a special case), `lem:local-odd-hardy` (replaces the
+manuscript's even cutoff), `lem:arc-trace-identification`,
+`lem:ee-corner-tails`; proofs of `lem:ee-level-traces` and
+`lem:ee-arc-energy` rewritten in these terms.
+
+**Next:** formalize bottom-up: `lem:segment-estimate` and
+`lem:local-odd-hardy` (pure analysis), `lem:quarter-orbit-decomposition`,
+`lem:quarter-orbit-diagonal`, `lem:arc-diagonal` (explicit orbit geometry),
+then `lem:arc-trace-identification`, `lem:ee-arc-energy`,
+`lem:ee-corner-tails` and the assembly of `lem:ee-level-traces`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
 coarea formula itself (`lintegral_cellSquare_eq`, now used by many proved

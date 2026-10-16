@@ -912,6 +912,42 @@ $|F(u,h/u)-F(u,0)|^2/u\le(h/u^2)\int_0^{h/u}|F_v(u,v)|^2dv$. For $u\ge\sqrt h$ b
 and $h/u\le\sqrt h\le u_0$; integrate over $u$.
 \end{proof}
 
+\begin{lemma}[Segment estimate]
+\label{lem:segment-estimate}
+Let $I,J$ be intervals, $b_0\in J$, $\beta\colon I\to J$, $w\ge0$ on $I$, and let $G$ be such that
+for almost every $a\in I$ the function $b\mapsto G(a,b)$ is absolutely continuous on $J$ with
+derivative $\partial_bG(a,\cdot)$. Then
+\[
+  \int_I|G(a,\beta(a))-G(a,b_0)|^2w(a)\,da\le\int_I w(a)\,|\beta(a)-b_0|
+    \int_J|\partial_bG(a,b)|^2\,db\,da .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:hyperbola-estimate}
+Fundamental theorem of calculus and Cauchy--Schwarz on the segment from $b_0$ to $\beta(a)$,
+as in Lemma~\ref{lem:hyperbola-estimate}, which is the case $w(u)=1/u$, $\beta(u)=h/u$, $b_0=0$,
+where $w|\beta-b_0|=h/u^2\le1$.
+\end{proof}
+
+\begin{lemma}[Local odd Hardy inequality]
+\label{lem:local-odd-hardy}
+\uses{def:gagliardo}
+Let $\delta>0$ and let $f$ be measurable and odd on $(-\delta,\delta)$, extended by $0$. Then
+\[
+  \int_0^\delta\frac{|f(u)|^2}{u}\,du\le2[f]^2+\frac1\delta\int_0^\delta|f|^2,
+\]
+where only the part of $[f]^2$ over $(-\delta,\delta)^2$ is used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-hardy}
+As in Lemma~\ref{lem:odd-hardy}: for $u,v\in(0,\delta)$, oddness and the parallelogram law give
+$2(|f(u)|^2+|f(v)|^2)/(u+v)^2\le|f(u)-f(-v)|^2/(u+v)^2+|f(u)-f(v)|^2/(u-v)^2$. Integrate over
+$(0,\delta)^2$ and use $\int_0^\delta dv/(u+v)^2=1/u-1/(u+\delta)\ge1/u-1/\delta$. Unlike the global
+version this needs no cutoff, which the manuscript's ``even cutoff'' would require.
+\end{proof}
+
 \begin{lemma}[Picone identity]
 \label{lem:picone}
 Let $G$ be a symmetric matrix field and $g>0$ smooth. Then pointwise
