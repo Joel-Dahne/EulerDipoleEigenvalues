@@ -208,7 +208,7 @@ these admitted analytic results.
    restated with the Gagliardo seminorm (`def:gagliardo`) and proved
    (`OddHardy.lean`) by a new pointwise argument (parallelogram law, no
    integrability or compact support needed; digest note). The link to
-   `H^{1/2}` is the new stated node `lem:sobolev-fractional-gagliardo`
+   `H^{1/2}` is the new stated node `lem:sobolev-fractional-gagliardo` (since removed)
    (Plancherel), used in `lem:ee-gradient-traces`; whether `lem:traces`
    should give the Gagliardo bound directly is open (notes).
    Stating the remaining even–even lemmas (plan agreed 2026-10-15): level
@@ -218,7 +218,7 @@ these admitted analytic results.
    `lem:period` (asymptotics checked numerically), `lem:good-windows`
    (explicit constant `2 sin(π/12)`), `lem:canonical-profile` (decay rate
    now a hypothesis on `g`, weighted bound with constant 1),
-   `lem:sobolev-embedding`, `lem:sobolev-fractional-gagliardo` (iff only),
+   `lem:sobolev-embedding`, `lem:sobolev-fractional-gagliardo` (since removed) (iff only),
    `lem:transport-pair-eigen` (with `liftL2`), `lem:melnikov` (hypotheses of
    the section made explicit). Batch B definitions are done:
    `def:stream-derivatives` (`∂ⱼΔ⁻¹`, `∂ᵢ∂ⱼΔ⁻¹` as bounded multipliers),
@@ -245,7 +245,7 @@ these admitted analytic results.
    (series expansion checked; `C^{2,1}`, `C^{1,1}` are sharp),
    `lem:local-to-global`, `lem:traces` (restated as absolute continuity on
    lines and line traces in diagonal coordinates, Gagliardo bound included,
-   so `lem:sobolev-fractional-gagliardo` left the even–even graph),
+   so `lem:sobolev-fractional-gagliardo` (since removed) left the even–even graph),
    `lem:virial-l2` (`VirialL2.lean`), and `lem:H-selfadjoint` with
    `def:transport-operator` (`TransportOperator.lean`: `H = -iL₀` as a
    `LinearPMap`, `IsSelfAdjoint`, `HasCore` of smooth functions, the flow
@@ -450,10 +450,10 @@ these admitted analytic results.
   in `Derivatives.lean`.
 - **Validation**: full Lean build and `just web` pass after restating the
   `L²` virial identity; `just graph thm:ee-exclusion` regenerates
-  its graph (141 nodes). All 649 blueprint Lean references resolve without
-  duplicates, and every `\uses` and `\ref` label exists. There are now 47
+  its graph (141 nodes). All 648 blueprint Lean references resolve without
+  duplicates, and every `\uses` and `\ref` label exists. There are now 46
   admitted declarations (after proving `annularCutoff_normalField` and
-  `integrableOn_eeBulkDensity`).
+  `integrableOn_eeBulkDensity` and removing the unused Gagliardo–`H^{1/2}` lemma).
   `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
   warnings; `EvenEven.lean` has only its four admitted-input warnings.
   `inner_virial_exact` and `normalCoeff_le` use only `propext`,

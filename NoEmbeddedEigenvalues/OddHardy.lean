@@ -8,7 +8,7 @@ import Mathlib.Analysis.Distribution.Sobolev
 /-!
 # The critical Hardy inequality for odd functions
 
-Blueprint: `def:gagliardo`, `lem:odd-hardy`; `lem:sobolev-fractional-gagliardo` (stated).
+Blueprint: `def:gagliardo`, `lem:odd-hardy`.
 
 For an odd function `a` on `ℝ`, `∫₀^∞ |a(u)|² du/u ≤ 2 [a]²`, where
 `[a]² = ∫∫ |a(u) - a(w)|² / (u - w)² du dw` is the Gagliardo seminorm of `H^{1/2}`.
@@ -90,12 +90,5 @@ theorem lintegral_sq_div_le_gagliardoSq {a : ℝ → ℂ} (ha : AEMeasurable a)
     _ ≤ ∫⁻ w, (A w + A (-w)) := setLIntegral_le_lintegral _ _
     _ = (∫⁻ w, A w) + ∫⁻ w, A (-w) := lintegral_add_left' hA _
     _ = 2 * ∫⁻ w, A w := by rw [lintegral_neg_eq_self, two_mul]
-
-/-- `H^{1/2}(ℝ)` in Gagliardo form (`lem:sobolev-fractional-gagliardo`, stated): an `L²`
-    function lies in Mathlib's Bessel potential space `H^{1/2, 2}` iff `[a] < ∞`. -/
-theorem memSobolev_half_iff_gagliardoSq_lt_top {a : ℝ → ℂ} (ha : MemLp a 2) :
-    (MeasureTheory.Lp.toTemperedDistribution (ha.toLp a)).MemSobolev (1 / 2) 2 ↔
-      gagliardoSq a < ⊤ := by
-  sorry
 
 end NoEmbeddedEigenvalues

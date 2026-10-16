@@ -293,19 +293,6 @@ For $a\colon\R\to\C$,
 $[a]^2=\int_\R\int_\R|a(u)-a(w)|^2(u-w)^{-2}\,dw\,du\in[0,\infty]$.
 \end{definition}
 
-\begin{lemma}[Gagliardo form of $H^{1/2}$]
-\label{lem:sobolev-fractional-gagliardo}
-\uses{def:sobolev-fractional, def:gagliardo}
-\lean{NoEmbeddedEigenvalues.memSobolev_half_iff_gagliardoSq_lt_top}
-\leanok
-For $a\in L^2(\R)$, $a\in H^{1/2}(\R)$ if and only if $[a]<\infty$.
-\end{lemma}
-
-\begin{proof}
-By Plancherel, $[a]^2=c\int|\xi|\,|\hat a(\xi)|^2\,d\xi$, since
-$\int|e^{ih\xi}-1|^2h^{-2}\,dh=c|\xi|$.
-\end{proof}
-
 \begin{lemma}[Basic properties of local Sobolev spaces]
 \label{lem:weak-derivative-basic}
 \uses{def:sobolev-local}
@@ -617,8 +604,8 @@ $|F(a,\beta(a))-F(a,b_0)|\le\int|\partial_bF|$ along almost every line, and the 
 bound needed by the odd Hardy inequality at the corners; (2) gives that the arc trace
 $\tilde\psi\circ\gamma$ is absolutely continuous with $g'\in L^1(ds)$ (Melnikov) and the
 form of $g'$ used in Lemma~\ref{lem:ee-gradient-traces}. Since the trace bound is in
-Gagliardo form, the $H^{1/2}$ link (Lemma~\ref{lem:sobolev-fractional-gagliardo}) is no
-longer needed in the even--even argument.
+Gagliardo form, no link between the Gagliardo seminorm and $H^{1/2}$ is needed (the former
+lemma stating it was removed, October 2026).
 
 The statement review found two omissions in Lean, now corrected:
 \texttt{absolutelyContinuous\_trace\_of\_H2} now requires transverse local absolute
@@ -871,8 +858,7 @@ this). The pointwise proof above avoids this: all terms are nonnegative, so it n
 neither integrability nor compact support, only oddness and measurability, at the
 cost of the constant $2$ instead of $\tfrac14$. The statement now uses the Gagliardo
 seminorm; the trace input for $\psi_u$ is given directly in Gagliardo form by
-Lemma~\ref{lem:traces}, so the $H^{1/2}$ link (Lemma~\ref{lem:sobolev-fractional-gagliardo})
-is not needed in the even--even argument.
+Lemma~\ref{lem:traces}, so no link between the Gagliardo seminorm and $H^{1/2}$ is needed.
 \end{remark}
 
 \begin{lemma}[Picone identity]
