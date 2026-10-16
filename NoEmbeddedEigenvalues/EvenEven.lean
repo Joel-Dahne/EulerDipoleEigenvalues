@@ -19,9 +19,9 @@ identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`,
 `lem:ee-center-limit` and `lem:ee-boundary-integrable` (from the coarea formula of
-`lem:orbit-coordinates`).
-Inputs:
-`lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
+`lem:orbit-coordinates`), `lem:arc-trace-ac` (from `lem:traces`) and
+`lem:ee-boundary-regularity` (from the arc traces, Melnikov and the weighted profile bound).
+Input: `lem:ee-gradient-traces`. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
@@ -1338,6 +1338,329 @@ theorem ee_gradient_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true tru
         (𝓝[Ioi 0 \ N] 0) (𝓝 0) := by
   sorry
 
+/-! ### The trace of the stream function on the arcs -/
+
+/-- Absolute continuity is preserved by an antitone Lipschitz change of variable: disjoint
+    intervals are mapped to disjoint intervals of at most `K` times the length. -/
+theorem AbsolutelyContinuousOnInterval.comp_antitoneOn {X : Type*} [PseudoMetricSpace X]
+    {f : ℝ → X} {φ : ℝ → ℝ} {α β c d : ℝ} (hf : AbsolutelyContinuousOnInterval f α β)
+    {K : NNReal} (hφL : LipschitzOnWith K φ (uIcc c d)) (hφa : AntitoneOn φ (uIcc c d))
+    (hφm : MapsTo φ (uIcc c d) (uIcc α β)) :
+    AbsolutelyContinuousOnInterval (f ∘ φ) c d := by
+  rw [absolutelyContinuousOnInterval_iff] at hf ⊢
+  intro ε hε
+  obtain ⟨δ, hδ, hfδ⟩ := hf ε hε
+  have hK : (0 : ℝ) ≤ K := K.2
+  refine ⟨δ / (K + 1), by positivity, fun E hE hlen ↦ ?_⟩
+  obtain ⟨n, I⟩ := E
+  set S := uIcc c d
+  have hminS {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : min x y ∈ S := by
+    rcases le_total x y with h | h
+    · rwa [min_eq_left h]
+    · rwa [min_eq_right h]
+  have hmaxS {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : max x y ∈ S := by
+    rcases le_total x y with h | h
+    · rwa [max_eq_right h]
+    · rwa [max_eq_left h]
+  have hmax {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : max (φ x) (φ y) = φ (min x y) := by
+    rcases le_total x y with h | h
+    · rw [min_eq_left h, max_eq_left (hφa hx hy h)]
+    · rw [min_eq_right h, max_eq_right (hφa hy hx h)]
+  have hmin {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : min (φ x) (φ y) = φ (max x y) := by
+    rcases le_total x y with h | h
+    · rw [max_eq_right h, min_eq_right (hφa hx hy h)]
+    · rw [max_eq_left h, min_eq_left (hφa hy hx h)]
+  have hE' : (n, fun i ↦ (φ (I i).1, φ (I i).2)) ∈
+      AbsolutelyContinuousOnInterval.disjWithin α β := by
+    refine ⟨fun i hi ↦ ⟨hφm (hE.1 i hi).1, hφm (hE.1 i hi).2⟩, ?_⟩
+    intro i hi j hj hij
+    have hd := hE.2 hi hj hij
+    obtain ⟨hi1, hi2⟩ := hE.1 i hi
+    obtain ⟨hj1, hj2⟩ := hE.1 j hj
+    simp only [Function.onFun, uIoc, Set.Ioc_disjoint_Ioc] at hd ⊢
+    rw [hmax hi1 hi2, hmax hj1 hj2, hmin hi1 hi2, hmin hj1 hj2,
+      hmin (hminS hi1 hi2) (hminS hj1 hj2), hmax (hmaxS hi1 hi2) (hmaxS hj1 hj2)]
+    exact hφa (hminS (hmaxS hi1 hi2) (hmaxS hj1 hj2)) (hmaxS (hminS hi1 hi2) (hminS hj1 hj2)) hd
+  refine hfδ _ hE' ?_
+  calc ∑ i ∈ Finset.range n, dist (φ (I i).1) (φ (I i).2)
+      ≤ ∑ i ∈ Finset.range n, K * dist (I i).1 (I i).2 :=
+        Finset.sum_le_sum fun i hi ↦ hφL.dist_le_mul _ (hE.1 i hi).1 _ (hE.1 i hi).2
+    _ = K * ∑ i ∈ Finset.range n, dist (I i).1 (I i).2 := (Finset.mul_sum _ _ _).symm
+    _ ≤ K * (δ / (K + 1)) := by gcongr
+    _ < δ := by
+      rw [mul_div_assoc', div_lt_iff₀ (by positivity)]
+      nlinarith
+
+/-- Changing the left function on a null set preserves weak derivatives. -/
+theorem HasWeakPartialOn.congr_left {U : Set (ℝ × ℝ)} {j : Fin 2} {g g' h : ℝ × ℝ → ℂ}
+    (hgh : HasWeakPartialOn U j g h) (hg : g =ᵐ[volume] g') : HasWeakPartialOn U j g' h := by
+  refine ⟨hgh.1.congr (ae_restrict_of_ae hg), hgh.2.1, fun φ hφ ↦ ?_⟩
+  rw [← hgh.2.2 φ hφ]
+  exact integral_congr_ae (hg.mono fun p hp ↦ by simp [hp])
+
+/-- Changing a function on a null set preserves local Sobolev membership. -/
+theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × ℝ → ℂ}
+    (h : MemSobolevOn k U g) (hg : g =ᵐ[volume] g') : MemSobolevOn k U g' := by
+  cases k with
+  | zero => exact MemLp.ae_eq (ae_restrict_of_ae hg) h
+  | succ k =>
+    obtain ⟨hL, hd⟩ := h
+    refine ⟨MemLp.ae_eq (ae_restrict_of_ae hg) hL, fun j ↦ ?_⟩
+    obtain ⟨d, hd1, hd2⟩ := hd j
+    exact ⟨d, hd1.congr_left hg, hd2⟩
+
+/-- The arc angle `2 arctan e^{-s}` lies in `(0, π)`. -/
+theorem arcAngle_mem_Ioo (s : ℝ) : arcAngle s ∈ Ioo 0 Real.pi := by
+  have h1 := Real.arctan_lt_pi_div_two (Real.exp (-s))
+  have h0 := Real.arctan_pos.2 (Real.exp_pos (-s))
+  exact ⟨by unfold arcAngle; linarith, by unfold arcAngle; linarith⟩
+
+theorem antitone_arcAngle : Antitone arcAngle := fun s t hst ↦ by
+  unfold arcAngle
+  have := Real.arctan_strictMono.monotone (Real.exp_le_exp.2 (neg_le_neg hst))
+  linarith
+
+theorem lipschitzWith_arcAngle : LipschitzWith 1 arcAngle := by
+  refine lipschitzWith_of_nnnorm_deriv_le (fun s ↦ (hasDerivAt_arcAngle s).differentiableAt)
+    fun s ↦ ?_
+  rw [(hasDerivAt_arcAngle s).deriv, ← NNReal.coe_le_coe, coe_nnnorm, norm_neg, norm_div,
+    norm_one, Real.norm_of_nonneg (Real.cosh_pos s).le, NNReal.coe_one,
+    div_le_one (Real.cosh_pos s)]
+  exact Real.one_le_cosh s
+
+/-- The trace of `ψ̃` on the separatrix arc `γ₀` is locally absolutely continuous and
+    differentiable almost everywhere (`lem:arc-trace-ac`). The arc is the segment of the line
+    `b = π/2` with `a = arcAngle s - π/2`, and along this line the continuous `H²` function
+    `ψ̃` is absolutely continuous (`lem:traces`); `s ↦ a` is antitone and `1`-Lipschitz. -/
+theorem absolutelyContinuous_contStream_separatrixArc (ω : L2) :
+    (∀ c d, AbsolutelyContinuousOnInterval (contStream ω ∘ separatrixArc) c d) ∧
+    ∀ᵐ s, DifferentiableAt ℝ (contStream ω ∘ separatrixArc) s := by
+  set U : Set (ℝ × ℝ) := diagRect (Ioo (-Real.pi) Real.pi) (Ioo 0 Real.pi) with hU_def
+  have hdc : Continuous diagCoord := by unfold diagCoord; fun_prop
+  have hU : IsOpen U :=
+    (isOpen_Ioo.preimage (continuous_fst.comp hdc)).inter
+      (isOpen_Ioo.preimage (continuous_snd.comp hdc))
+  have hb : Bornology.IsBounded U := by
+    refine (isCompact_Icc (a := ((-2 * Real.pi, -2 * Real.pi) : ℝ × ℝ))
+      (b := (2 * Real.pi, 2 * Real.pi))).isBounded.subset fun p hp ↦ ?_
+    obtain ⟨⟨h1, h2⟩, h3, h4⟩ := hp
+    simp only [diagCoord] at h1 h2 h3 h4
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> simp <;> linarith [Real.pi_pos]
+  have hrep := streamLift_ae_eq_contStream ω
+  have hH2 : MemSobolevOn 2 U (contStream ω) :=
+    (memSobolevOn_liftL2 (memSobolev_two_invLap ω) hU hb).congr_ae hrep
+  have hx := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 0) hU).congr_left hrep
+  have hy := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 1) hU).congr_left hrep
+  obtain ⟨-, -, -, hac, -, -⟩ := absolutelyContinuous_trace_of_H2 hU (a₀ := -Real.pi)
+    (a₁ := Real.pi) (b₁ := 0) (b₂ := Real.pi) (b₀ := Real.pi / 2) (by linarith [Real.pi_pos])
+    subset_rfl ⟨by positivity, by linarith [Real.pi_pos]⟩ (continuous_contStream ω).continuousOn
+    hH2 hx hy
+  set f : ℝ → ℂ := fun a ↦ contStream ω (diagInv (a, Real.pi / 2)) with hf_def
+  set φ : ℝ → ℝ := fun s ↦ arcAngle s - Real.pi / 2 with hφ_def
+  have hcomp : contStream ω ∘ separatrixArc = f ∘ φ := by
+    funext s
+    simp only [Function.comp_apply, hf_def, hφ_def, diagInv_apply, separatrixArc]
+    congr 2 <;> ring
+  have hφa : Antitone φ := fun s t hst ↦ by simpa [hφ_def] using antitone_arcAngle hst
+  have hφL : LipschitzWith 1 φ := LipschitzWith.of_dist_le_mul fun x y ↦ by
+    simpa [hφ_def, Real.dist_eq] using lipschitzWith_arcAngle.dist_le_mul x y
+  have hφr (s : ℝ) : φ s ∈ Ioo (-Real.pi) Real.pi := by
+    have := arcAngle_mem_Ioo s
+    exact ⟨by simp only [hφ_def]; linarith [this.1, Real.pi_pos],
+      by simp only [hφ_def]; linarith [this.2, Real.pi_pos]⟩
+  have hacs (c d : ℝ) : AbsolutelyContinuousOnInterval (contStream ω ∘ separatrixArc) c d := by
+    rw [hcomp]
+    have hle : φ (max c d) ≤ φ (min c d) := hφa (min_le_max)
+    refine AbsolutelyContinuousOnInterval.comp_antitoneOn
+      (hac _ _ (hφr _).1 hle (hφr _).2) hφL.lipschitzOnWith (hφa.antitoneOn _) fun s hs ↦ ?_
+    rw [uIcc_of_le hle]
+    exact ⟨hφa hs.2, hφa hs.1⟩
+  refine ⟨hacs, ?_⟩
+  have hn : ∀ n : ℕ, ∀ᵐ s, s ∈ uIcc (-(n : ℝ)) n →
+      DifferentiableAt ℝ (contStream ω ∘ separatrixArc) s := fun n ↦
+    (hacs _ _).boundedVariationOn.ae_differentiableAt_of_mem_uIcc
+  filter_upwards [ae_all_iff.2 hn] with s hs
+  obtain ⟨n, hn⟩ := exists_nat_ge |s|
+  exact hs n (by rw [uIcc_of_le (by linarith [abs_nonneg s])]; exact abs_le.1 hn)
+
+/-- Absolute continuity is preserved by a monotone Lipschitz change of variable. -/
+theorem AbsolutelyContinuousOnInterval.comp_monotoneOn {X : Type*} [PseudoMetricSpace X]
+    {f : ℝ → X} {φ : ℝ → ℝ} {α β c d : ℝ} (hf : AbsolutelyContinuousOnInterval f α β)
+    {K : NNReal} (hφL : LipschitzOnWith K φ (uIcc c d)) (hφm : MonotoneOn φ (uIcc c d))
+    (hφs : MapsTo φ (uIcc c d) (uIcc α β)) :
+    AbsolutelyContinuousOnInterval (f ∘ φ) c d := by
+  have hnm {a b x : ℝ} (h : x ∈ uIcc a b) : -x ∈ uIcc (-a) (-b) := by
+    rw [mem_uIcc] at h ⊢
+    rcases h with h | h
+    · exact Or.inr ⟨by linarith [h.2], by linarith [h.1]⟩
+    · exact Or.inl ⟨by linarith [h.2], by linarith [h.1]⟩
+  have hneg : AbsolutelyContinuousOnInterval (f ∘ Neg.neg) (-α) (-β) :=
+    AbsolutelyContinuousOnInterval.comp_antitoneOn hf (K := 1) LipschitzWith.id.neg.lipschitzOnWith
+      (fun x _ y _ h ↦ neg_le_neg h) fun x hx ↦ by
+        simpa using hnm hx
+  have h := AbsolutelyContinuousOnInterval.comp_antitoneOn hneg (φ := fun x ↦ -φ x) (K := K) hφL.neg
+    (fun x hx y hy h ↦ neg_le_neg (hφm hx hy h)) fun x hx ↦ by
+      exact hnm (hφs hx)
+  convert h using 1
+  funext x
+  simp
+
+/-! ### Functions of `ξ = tanh s` -/
+
+/-- `artanh' = 1/(1 - ξ²)` on `(-1, 1)`. -/
+theorem hasDerivAt_artanh {x : ℝ} (hx : x ∈ Ioo (-1 : ℝ) 1) :
+    HasDerivAt Real.artanh (1 / boundaryWeight x) x := by
+  have hp : 0 < (1 + x) / (1 - x) := div_pos (by linarith [hx.1]) (by linarith [hx.2])
+  have hq : DifferentiableAt ℝ (fun x : ℝ ↦ (1 + x) / (1 - x)) x :=
+    ((hasDerivAt_const x (1 : ℝ)).add (hasDerivAt_id x)).differentiableAt.div
+      ((hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)).differentiableAt
+      (by linarith [hx.2])
+  have hc : ContinuousAt Real.artanh x := by
+    have hd : DifferentiableAt ℝ (fun x : ℝ ↦ (1 / 2) * Real.log ((1 + x) / (1 - x))) x :=
+      (hq.log hp.ne').const_mul _
+    refine hd.continuousAt.congr ?_
+    filter_upwards [isOpen_Ioo.mem_nhds hx] with y hy
+    rw [Real.artanh_eq_half_log ⟨hy.1.le, hy.2.le⟩]
+  have hw : boundaryWeight x ≠ 0 := by
+    unfold boundaryWeight
+    nlinarith [hx.1, hx.2]
+  have h := (hasDerivAt_tanh (Real.artanh x)).of_local_left_inverse hc
+    (by rw [Real.tanh_artanh hx]; unfold boundaryWeight at hw; exact hw)
+    (by filter_upwards [isOpen_Ioo.mem_nhds hx] with y hy; exact Real.tanh_artanh hy)
+  rw [Real.tanh_artanh hx] at h
+  simpa [boundaryWeight, one_div] using h
+
+/-- Almost-everywhere statements in `s` hold at `artanh ξ` for almost every `ξ ∈ (-1, 1)`. -/
+theorem ae_comp_artanh {P : ℝ → Prop} (hP : ∀ᵐ s, P s) :
+    ∀ᵐ x, x ∈ Ioo (-1 : ℝ) 1 → P (Real.artanh x) := by
+  rw [ae_iff] at hP ⊢
+  have him := addHaar_image_eq_zero_of_differentiableOn_of_addHaar_eq_zero
+    (μ := volume) (f := Real.tanh) (s := {s | ¬P s})
+    (fun s _ ↦ (hasDerivAt_tanh s).differentiableAt.differentiableWithinAt) hP
+  refine measure_mono_null (fun x hx ↦ ?_) him
+  simp only [mem_ofPred_eq, not_imp] at hx
+  exact ⟨Real.artanh x, hx.2, Real.tanh_artanh hx.1⟩
+
+/-- Integrability on `(-1, 1)` in terms of `s = artanh ξ`, `dξ = ds / cosh² s`. -/
+theorem integrableOn_Ioo_iff_tanh {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (f : ℝ → F) :
+    IntegrableOn f (Ioo (-1) 1) ↔ Integrable fun s ↦ (1 / Real.cosh s ^ 2) • f (Real.tanh s) := by
+  have h := integrableOn_image_iff_integrableOn_abs_deriv_smul MeasurableSet.univ
+    (fun x _ ↦ (hasDerivAt_tanh x).hasDerivWithinAt) Real.tanh_injective.injOn f
+  rw [Real.tanh_bijOn.image_eq, integrableOn_univ] at h
+  rw [h]
+  refine integrable_congr (Eventually.of_forall fun s ↦ ?_)
+  simp only
+  rw [one_sub_tanh_sq, abs_of_pos (by have := Real.cosh_pos s; positivity)]
+
+/-- Composition with `artanh` keeps local absolute continuity on `(-1, 1)`. -/
+theorem absolutelyContinuousOnInterval_comp_artanh {X : Type*} [PseudoMetricSpace X]
+    {f : ℝ → X} (hf : ∀ c d, AbsolutelyContinuousOnInterval f c d) {c d : ℝ} (hc : -1 < c)
+    (hcd : c ≤ d) (hd : d < 1) : AbsolutelyContinuousOnInterval (f ∘ Real.artanh) c d := by
+  have hsub : uIcc c d ⊆ Ioo (-1) 1 := by
+    rw [uIcc_of_le hcd]
+    exact fun x hx ↦ ⟨by linarith [hx.1], by linarith [hx.2]⟩
+  -- On `[c, d]`, `1/(1 - x²) ≤ 1/m` with `m = min (1 - c²) (1 - d²) > 0`.
+  set m := min (1 - c ^ 2) (1 - d ^ 2) with hm
+  have hm0 : 0 < m := lt_min (by nlinarith) (by nlinarith)
+  have hbound : ∀ x ∈ uIcc c d, ‖1 / boundaryWeight x‖₊ ≤ Real.toNNReal (1 / m) := by
+    intro x hx
+    rw [uIcc_of_le hcd] at hx
+    have hw : m ≤ boundaryWeight x := by
+      unfold boundaryWeight
+      rcases le_total 0 x with h0 | h0
+      · exact (min_le_right _ _).trans (by nlinarith [hx.2])
+      · exact (min_le_left _ _).trans (by nlinarith [hx.1])
+    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ (by positivity),
+      Real.norm_of_nonneg (by have := hm0.trans_le hw; positivity)]
+    exact one_div_le_one_div_of_le hm0 hw
+  have hL := (convex_uIcc c d).lipschitzOnWith_of_nnnorm_hasDerivWithin_le
+    (fun x hx ↦ (hasDerivAt_artanh (hsub hx)).hasDerivWithinAt) hbound
+  refine AbsolutelyContinuousOnInterval.comp_monotoneOn (hf (Real.artanh c) (Real.artanh d)) hL
+    (fun x hx y hy h ↦ Real.artanh_le_artanh (hsub hx).1 (hsub hy).2 h) fun x hx ↦ ?_
+  rw [uIcc_of_le hcd] at hx
+  rw [uIcc_of_le (Real.artanh_le_artanh hc hd hcd)]
+  exact ⟨Real.artanh_le_artanh hc (hsub (by rw [uIcc_of_le hcd]; exact hx)).2 hx.1,
+    Real.artanh_le_artanh (hsub (by rw [uIcc_of_le hcd]; exact hx)).1 hd hx.2⟩
+
+/-- The primitive of an integrable complex function is absolutely continuous on every
+    interval (real and imaginary parts separately). -/
+theorem absolutelyContinuousOnInterval_primitive {p : ℝ → ℂ} (hp : Integrable p) (c d : ℝ) :
+    AbsolutelyContinuousOnInterval (fun s ↦ ∫ t in (0 : ℝ)..s, p t) c d := by
+  have hR (q : ℝ → ℝ) (hq : Integrable q) :
+      AbsolutelyContinuousOnInterval (fun s ↦ ((∫ t in (0 : ℝ)..s, q t : ℝ) : ℂ)) c d := by
+    have h := IntervalIntegrable.absolutelyContinuousOnInterval_intervalIntegral
+      (hq.intervalIntegrable (a := c) (b := d)) (c := c) left_mem_uIcc
+    have heq : (fun s ↦ ∫ t in (0 : ℝ)..s, q t) =
+        fun s ↦ (∫ t in (0 : ℝ)..c, q t) + ∫ t in c..s, q t := funext fun s ↦
+      (intervalIntegral.integral_add_adjacent_intervals hq.intervalIntegrable
+        hq.intervalIntegrable).symm
+    have hac : AbsolutelyContinuousOnInterval (fun s ↦ ∫ t in (0 : ℝ)..s, q t) c d := by
+      rw [heq]
+      exact ((LipschitzWith.const _).lipschitzOnWith.absolutelyContinuousOnInterval).add h
+    exact Complex.isometry_ofReal.lipschitzWith.comp_absolutelyContinuousOnInterval hac
+  have heq : (fun s ↦ ∫ t in (0 : ℝ)..s, p t) = fun s ↦
+      ((∫ t in (0 : ℝ)..s, (p t).re : ℝ) : ℂ) +
+        Complex.I • ((∫ t in (0 : ℝ)..s, (p t).im : ℝ) : ℂ) := by
+    funext s
+    have hre : IntervalIntegrable (fun t ↦ ((p t).re : ℂ)) volume 0 s :=
+      (hp.re.ofReal (𝕜 := ℂ)).intervalIntegrable
+    have him : IntervalIntegrable (fun t ↦ ((p t).im : ℂ) * Complex.I) volume 0 s :=
+      ((hp.im.ofReal (𝕜 := ℂ)).mul_const _).intervalIntegrable
+    conv_lhs => rw [show p = fun t ↦ ((p t).re : ℂ) + ((p t).im : ℂ) * Complex.I from
+      funext fun t ↦ (Complex.re_add_im _).symm]
+    rw [intervalIntegral.integral_add hre him, intervalIntegral.integral_mul_const,
+      intervalIntegral.integral_ofReal, intervalIntegral.integral_ofReal, smul_eq_mul, mul_comm]
+  rw [heq]
+  exact (hR _ hp.re).add ((hR _ hp.im).const_smul Complex.I)
+
+theorem continuousOn_artanh : ContinuousOn Real.artanh (Ioo (-1) 1) := fun _ hx ↦
+  (hasDerivAt_artanh hx).continuousAt.continuousWithinAt
+
+theorem measurable_artanh : Measurable Real.artanh := by
+  unfold Real.artanh
+  fun_prop
+
+/-- `artanh ξ → ∞` as `ξ → 1⁻`. -/
+theorem tendsto_artanh_nhdsLT_one : Tendsto Real.artanh (𝓝[<] 1) atTop := by
+  refine tendsto_atTop.2 fun b ↦ ?_
+  have hb : Real.tanh b < 1 := Real.tanh_lt_one b
+  filter_upwards [Ioo_mem_nhdsLT hb] with x hx
+  calc b = Real.artanh (Real.tanh b) := (Real.artanh_tanh b).symm
+    _ ≤ Real.artanh x := Real.artanh_le_artanh (Real.neg_one_lt_tanh b) hx.2 hx.1.le
+
+/-- `artanh ξ → -∞` as `ξ → -1⁺`. -/
+theorem tendsto_artanh_nhdsGT_neg_one : Tendsto Real.artanh (𝓝[>] (-1)) atBot := by
+  refine tendsto_atBot.2 fun b ↦ ?_
+  have hb : -1 < Real.tanh b := Real.neg_one_lt_tanh b
+  filter_upwards [Ioo_mem_nhdsGT hb] with x hx
+  calc Real.artanh x ≤ Real.artanh (Real.tanh b) :=
+        Real.artanh_le_artanh hx.1 (Real.tanh_lt_one b) hx.2.le
+    _ = b := Real.artanh_tanh b
+
+/-- `L²` on `(-1, 1)` in terms of `s = artanh ξ`. -/
+theorem memLp_two_Ioo_of_tanh {Φ : ℝ → ℂ}
+    (hm : AEStronglyMeasurable Φ (volume.restrict (Ioo (-1) 1)))
+    (h : Integrable fun s ↦ 1 / Real.cosh s ^ 2 * ‖Φ (Real.tanh s)‖ ^ 2) :
+    MemLp Φ 2 (volume.restrict (Ioo (-1) 1)) :=
+  (memLp_two_iff_integrable_sq_norm hm).2
+    ((integrableOn_Ioo_iff_tanh (fun x ↦ ‖Φ x‖ ^ 2)).2 (by simpa only [smul_eq_mul] using h))
+
+/-- Interval `H¹` data only depend on the values inside the open interval. -/
+theorem HasIntervalH1.congr_Ioo {a b : ℝ} {F G D : ℝ → ℂ} (h : HasIntervalH1 a b F D)
+    (hFG : EqOn F G (Ioo a b)) : HasIntervalH1 a b G D where
+  memLp_value := h.memLp_value.ae_eq ((ae_restrict_iff' measurableSet_Ioo).2
+    (Eventually.of_forall fun x hx ↦ hFG hx))
+  memLp_derivative := h.memLp_derivative
+  locally_absolutelyContinuous c d hc hcd hd := by
+    refine (h.locally_absolutelyContinuous c d hc hcd hd).congr fun x hx ↦ hFG ?_
+    rw [uIcc_of_le hcd] at hx
+    exact ⟨by linarith [hx.1], by linarith [hx.2]⟩
+  hasDerivAt_ae := by
+    filter_upwards [h.hasDerivAt_ae] with x hx hmem
+    exact (hx hmem).congr_of_eventuallyEq
+      (eventually_of_mem (isOpen_Ioo.mem_nhds hmem) fun y hy ↦ (hFG hy).symm)
+
 /-- Regularity of the boundary unknown (`lem:ee-boundary-regularity`). For an even–even
     eigenfunction with rotation character `κ`, on each arc `γ` the canonical transport unknown
     `z` of `g = ψ̃ ∘ γ`, written `F(ξ) = z(artanh ξ)`, lies in the weighted domain, `G =
@@ -1357,7 +1680,326 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         (Real.artanh ξ)) D (-1) = -contStream ω (rotLift^[k] (Real.pi, 0)) / lam ∧
       contStream ω (rotLift^[k] (0, -Real.pi)) =
         paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
-  sorry
+  -- Skeleton. Each `sorry` below names the result it is to come from.
+  set g : ℝ → ℂ := contStream ω ∘ cellArc k with hg_def
+  set cp : ℂ := contStream ω (rotLift^[k] (0, -Real.pi)) with hcp_def
+  set cm : ℂ := contStream ω (rotLift^[k] (Real.pi, 0)) with hcm_def
+  have hl : (lam : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 hlam
+  /- (1) The trace `g = ψ̃ ∘ γ_k` on the arc. -/
+  -- From the transport traces and the weighted gradient traces.
+  have hg1 : Integrable (deriv g) := (ee_melnikov hlam hω hκ k).1
+  have hg2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2 :=
+    (ee_gradient_traces hω.1 hs).1 k hk
+  -- Bounded, since `ψ̃` is a continuous periodic function.
+  have hgb : ∀ s, ‖g s‖ ≤ ‖continuousRep (invLap ω)‖ := fun s ↦
+    (continuousRep (invLap ω)).norm_coe_le_norm _
+  -- Absolute continuity on `γ₀` (`lem:arc-trace-ac`), and `g = κᵏ (ψ̃ ∘ γ₀)`.
+  have hArc : g = fun s ↦ paritySign κ ^ k * (contStream ω ∘ separatrixArc) s :=
+    funext fun s ↦ contStream_iterate_rotLift hκ k (separatrixArc s)
+  obtain ⟨hac0, hd0⟩ := absolutelyContinuous_contStream_separatrixArc ω
+  have hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d := fun c d ↦ by
+    rw [hArc]
+    simpa only [smul_eq_mul] using (hac0 c d).const_smul (paritySign κ ^ k)
+  have hgd : ∀ᵐ s, DifferentiableAt ℝ g s := by
+    filter_upwards [hd0] with s hs
+    rw [hArc]
+    exact hs.const_mul _
+  -- The Melnikov identity (`ee_melnikov`).
+  have hM : ∫ t, profileIntegrand lam g t = 0 := (ee_melnikov hlam hω hκ k).2
+  -- End values: `tendsto_separatrixArc_atTop/atBot`, continuity of `ψ̃` and `rotLift`.
+  have hRc : Continuous fun p ↦ contStream ω (rotLift^[k] p) :=
+    (continuous_contStream ω).comp (Continuous.iterate (by unfold rotLift; fun_prop) k)
+  have hgp : Tendsto g atTop (𝓝 cp) := (hRc.tendsto _).comp tendsto_separatrixArc_atTop
+  have hgm : Tendsto g atBot (𝓝 cm) := (hRc.tendsto _).comp tendsto_separatrixArc_atBot
+  /- (2) The canonical profile `Ω`. -/
+  set Ω : ℝ → ℂ := canonicalProfile lam g with hΩ_def
+  have hΩp : Tendsto Ω atTop (𝓝 0) := tendsto_canonicalProfile_atTop hg1
+  have hΩm : Tendsto Ω atBot (𝓝 0) := (tendsto_canonicalProfile_atBot_iff hg1).2 hM
+  have hΩd : ∀ᵐ s, HasDerivAt Ω (Complex.I * lam * Ω s - deriv g s) s :=
+    ae_hasDerivAt_canonicalProfile hg1
+  have hzd : ∀ᵐ s, HasDerivAt (canonicalUnknown lam g) (Complex.I * -Ω s) s :=
+    ae_hasDerivAt_canonicalUnknown hlam hg1 hgd
+  -- The weighted bound, compared with `cosh` (`cosh ≤ e^{|s|} ≤ 2 cosh`).
+  have hΩw := eLpNorm_exp_mul_canonicalProfile_le (lam := lam) hg1 hM
+  have hexp (s : ℝ) : Real.cosh s ≤ Real.exp |s| ∧ Real.exp |s| ≤ 2 * Real.cosh s := by
+    rw [Real.cosh_eq]
+    have h1 := Real.exp_pos s
+    have h2 := Real.exp_pos (-s)
+    rcases abs_cases s with ⟨hs, h0⟩ | ⟨hs, h0⟩ <;> rw [hs]
+    · have := Real.exp_le_exp.2 (show -s ≤ s by linarith)
+      constructor <;> linarith
+    · have := Real.exp_le_exp.2 (show s ≤ -s by linarith)
+      constructor <;> linarith
+  have hΩc : Continuous Ω := continuous_canonicalProfile hg1
+  have hgm' : Measurable (deriv g) := measurable_deriv g
+  have hRHS : MemLp (fun s ↦ (Real.exp |s| : ℂ) * deriv g s) 2 volume := by
+    refine (memLp_two_iff_integrable_sq_norm (by fun_prop)).2 ((hg2.const_mul 4).mono'
+      (by fun_prop) (Eventually.of_forall fun s ↦ ?_))
+    rw [Real.norm_of_nonneg (by positivity), norm_mul, Complex.norm_real,
+      Real.norm_of_nonneg (Real.exp_pos _).le, mul_pow]
+    have := (hexp s).2
+    have h0 := (Real.exp_pos |s|).le
+    nlinarith [sq_nonneg ‖deriv g s‖, mul_le_mul this this h0 (by linarith)]
+  have hLHS : MemLp (fun s ↦ (Real.exp |s| : ℂ) * Ω s) 2 volume := hΩw.trans_lt hRHS
+  have hΩ2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖Ω s‖ ^ 2 := by
+    refine ((memLp_two_iff_integrable_sq_norm (by fun_prop)).1 hLHS).mono' (by fun_prop)
+      (Eventually.of_forall fun s ↦ ?_)
+    rw [Real.norm_of_nonneg (by positivity), norm_mul, Complex.norm_real,
+      Real.norm_of_nonneg (Real.exp_pos _).le, mul_pow]
+    have := (hexp s).1
+    have h0 := (Real.cosh_pos s).le
+    nlinarith [sq_nonneg ‖Ω s‖, mul_le_mul this this h0 (by linarith [Real.exp_pos |s|])]
+  -- `|Ω(s)| ≤ ‖g'‖_{L¹}`, from the definition.
+  have hΩb : ∀ s, ‖Ω s‖ ≤ ∫ t, ‖deriv g t‖ := by
+    intro s
+    rw [hΩ_def, norm_canonicalProfile]
+    calc ‖∫ t in Ioi s, profileIntegrand lam g t‖
+        ≤ ∫ t in Ioi s, ‖profileIntegrand lam g t‖ := norm_integral_le_integral_norm _
+      _ = ∫ t in Ioi s, ‖deriv g t‖ := by
+          congr 1
+          funext t
+          rw [profileIntegrand, norm_mul, norm_exp_neg_I_mul, mul_one]
+      _ ≤ ∫ t, ‖deriv g t‖ :=
+          setIntegral_le_integral hg1.norm (Eventually.of_forall fun _ ↦ norm_nonneg _)
+  -- `Ω` is an exponential times an indefinite integral of an integrable function.
+  have hΩac : ∀ c d, AbsolutelyContinuousOnInterval Ω c d := by
+    intro c d
+    have heq : Ω = (fun s : ℝ ↦ Complex.exp (Complex.I * lam * s)) •
+        fun s ↦ (∫ t in Ioi 0, profileIntegrand lam g t) -
+          ∫ t in (0 : ℝ)..s, profileIntegrand lam g t := by
+      funext s
+      rw [hΩ_def, canonicalProfile, integral_Ioi_profileIntegrand hg1 s]
+      rfl
+    rw [heq]
+    refine AbsolutelyContinuousOnInterval.smul ?_ ?_
+    · have hexpc : ContDiff ℝ 1 (fun s : ℝ ↦ Complex.exp (Complex.I * lam * s)) :=
+        (contDiff_const.mul Complex.ofRealCLM.contDiff).cexp
+      exact ContDiffOn.absolutelyContinuousOnInterval hexpc.contDiffOn
+    · exact ((LipschitzWith.const _).lipschitzOnWith.absolutelyContinuousOnInterval).sub
+        (absolutelyContinuousOnInterval_primitive (integrable_profileIntegrand hg1) c d)
+  /- (3) The functions in `ξ = tanh s`: `F = z ∘ artanh`, `D = F'`, `E = D'`. With
+     `w = 1 - ξ² = sech² s`: `wF' = z' = -iΩ` and `w²D' = -i((iλ + 2ξ)Ω - g')`. -/
+  set F : ℝ → ℂ := fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ) with hF_def
+  set D : ℝ → ℂ := fun ξ ↦ -Complex.I * Ω (Real.artanh ξ) / boundaryWeight ξ with hD_def
+  set E : ℝ → ℂ := fun ξ ↦ -Complex.I * ((Complex.I * lam + 2 * ξ) * Ω (Real.artanh ξ) -
+    deriv g (Real.artanh ξ)) / (boundaryWeight ξ : ℂ) ^ 2 with hE_def
+  -- Common facts: `w > 0` on `(-1, 1)`, `w(tanh s) = 1/cosh² s`, and `z` is continuous,
+  -- locally absolutely continuous and bounded.
+  have hw (ξ : ℝ) (hξ : ξ ∈ Ioo (-1 : ℝ) 1) : 0 < boundaryWeight ξ := by
+    unfold boundaryWeight
+    nlinarith [hξ.1, hξ.2]
+  have hwt (s : ℝ) : boundaryWeight (Real.tanh s) = 1 / Real.cosh s ^ 2 := boundaryWeight_tanh s
+  have hmemt (s : ℝ) : Real.tanh s ∈ Ioo (-1 : ℝ) 1 := ⟨Real.neg_one_lt_tanh s, Real.tanh_lt_one s⟩
+  have hgc : Continuous g := hRc.comp (continuous_iff_continuousAt.2 fun s ↦
+    (hasDerivAt_separatrixArc s).continuousAt)
+  have hz_eq : canonicalUnknown lam g = fun s ↦ -(lam : ℂ)⁻¹ * (Ω s + g s) := by
+    funext s
+    rw [canonicalUnknown, hΩ_def]
+    field_simp
+  have hzc : Continuous (canonicalUnknown lam g) := by
+    rw [hz_eq]
+    exact continuous_const.mul (hΩc.add hgc)
+  have hzac (c d : ℝ) : AbsolutelyContinuousOnInterval (canonicalUnknown lam g) c d := by
+    rw [hz_eq]
+    convert ((hΩac c d).add (hgac c d)).const_smul (-(lam : ℂ)⁻¹) using 1
+  set B : ℝ := ∫ t, ‖deriv g t‖
+  set M : ℝ := ‖continuousRep (invLap ω)‖
+  have hzb (s : ℝ) : ‖canonicalUnknown lam g s‖ ≤ ‖(lam : ℂ)⁻¹‖ * (B + M) := by
+    rw [hz_eq, norm_mul, norm_neg]
+    gcongr
+    exact (norm_add_le _ _).trans (add_le_add (hΩb s) (hgb s))
+  -- `F` is bounded, `∫|D|² dξ = ∫ cosh² |Ω|² ds`, and the chain rule under `artanh`.
+  have hDt (s : ℝ) : D (Real.tanh s) = -Complex.I * Ω s * (Real.cosh s ^ 2 : ℝ) := by
+    simp only [hD_def, Real.artanh_tanh, hwt]
+    have := (Real.cosh_pos s).ne'
+    push_cast
+    field_simp
+  have hDc : ContinuousOn D (Ioo (-1) 1) := by
+    refine ((continuous_const.mul hΩc).comp_continuousOn continuousOn_artanh).div
+      (Complex.continuous_ofReal.comp (by unfold boundaryWeight; fun_prop)).continuousOn
+      fun ξ hξ ↦ ?_
+    exact Complex.ofReal_ne_zero.2 (hw ξ hξ).ne'
+  have hFH1 : HasIntervalH1 (-1) 1 F D := by
+    refine ⟨?_, ?_, fun c d hc hcd hd ↦ absolutelyContinuousOnInterval_comp_artanh hzac hc hcd hd,
+      ?_⟩
+    · exact MemLp.of_bound ((hzc.comp_continuousOn continuousOn_artanh).aestronglyMeasurable
+        measurableSet_Ioo) _ (Eventually.of_forall fun ξ ↦ hzb _)
+    · refine memLp_two_Ioo_of_tanh (hDc.aestronglyMeasurable measurableSet_Ioo)
+        (hΩ2.congr (Eventually.of_forall fun s ↦ ?_))
+      have hc := (Real.cosh_pos s).ne'
+      beta_reduce
+      rw [hDt, norm_mul, norm_mul, norm_neg, Complex.norm_I, Complex.norm_real,
+        Real.norm_of_nonneg (by positivity)]
+      field_simp
+    · filter_upwards [ae_comp_artanh hzd] with ξ hξ hmem
+      have h := (hξ hmem).scomp ξ (hasDerivAt_artanh hmem)
+      convert h using 1
+      · rfl
+      · simp only [hD_def, Complex.real_smul]
+        push_cast
+        ring
+  -- `D = (1/w) • (-iΩ ∘ artanh)`, with `1/w` smooth on compact subintervals.
+  have hDeq : D = fun ξ ↦ ((1 / boundaryWeight ξ : ℝ) : ℂ) * (-Complex.I * Ω (Real.artanh ξ)) := by
+    funext ξ
+    simp only [hD_def]
+    push_cast
+    ring
+  have hwd (ξ : ℝ) : HasDerivAt boundaryWeight (-2 * ξ) ξ := by
+    unfold boundaryWeight
+    simpa using ((hasDerivAt_id ξ).pow 2).const_sub 1
+  have hDac : ∀ c d, -1 < c → c ≤ d → d < 1 → AbsolutelyContinuousOnInterval D c d := by
+    intro c d hc hcd hd
+    have hsub : uIcc c d ⊆ Ioo (-1) 1 := by
+      rw [uIcc_of_le hcd]
+      exact fun x hx ↦ ⟨by linarith [hx.1], by linarith [hx.2]⟩
+    have h1 : AbsolutelyContinuousOnInterval (fun ξ ↦ -Complex.I * Ω (Real.artanh ξ)) c d := by
+      convert (absolutelyContinuousOnInterval_comp_artanh hΩac hc hcd hd).const_smul
+        (-Complex.I) using 1
+      funext ξ
+      rfl
+    have h2 : AbsolutelyContinuousOnInterval
+        (fun ξ ↦ ((1 / boundaryWeight ξ : ℝ) : ℂ)) c d := by
+      refine ContDiffOn.absolutelyContinuousOnInterval ?_
+      refine Complex.ofRealCLM.contDiff.comp_contDiffOn
+        (contDiffOn_const.div (by unfold boundaryWeight; fun_prop) fun x hx ↦ ?_)
+      exact (hw x (hsub hx)).ne'
+    rw [hDeq]
+    exact h2.smul h1
+  have hDd : ∀ᵐ x, x ∈ Ioo (-1 : ℝ) 1 → HasDerivAt D (E x) x := by
+    filter_upwards [ae_comp_artanh hΩd] with ξ hξ hmem
+    have hw0 := (hw ξ hmem).ne'
+    have hΩ' := ((hξ hmem).scomp ξ (hasDerivAt_artanh hmem)).const_mul (-Complex.I)
+    have hinv := ((hasDerivAt_const ξ (1 : ℝ)).div (hwd ξ) hw0).ofReal_comp
+    have hprod := hinv.mul hΩ'
+    rw [hDeq]
+    convert hprod using 1
+    · rfl
+    · simp only [hE_def, Complex.real_smul, Function.comp_apply, Pi.div_apply]
+      have hw0' : (boundaryWeight ξ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 hw0
+      push_cast
+      field_simp
+      ring_nf
+  -- `|wE(tanh s)|² / cosh² s = cosh² s |(iλ + 2 tanh s)Ω - g'|²`.
+  have hEm : Measurable E := by
+    have := measurable_artanh
+    have := hΩc.measurable
+    simp only [hE_def, boundaryWeight]
+    fun_prop
+  have hwE : MemLp (fun x ↦ (boundaryWeight x : ℂ) * E x) 2 (volume.restrict (Ioo (-1) 1)) := by
+    refine memLp_two_Ioo_of_tanh (by unfold boundaryWeight; fun_prop) ?_
+    have hbound : Integrable fun s ↦ 2 * ((|lam| + 2) ^ 2 * (Real.cosh s ^ 2 * ‖Ω s‖ ^ 2)) +
+        2 * (Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2) :=
+      ((hΩ2.const_mul _).const_mul 2).add (hg2.const_mul 2)
+    have hmeasL : Measurable fun s ↦ 1 / Real.cosh s ^ 2 *
+        ‖(boundaryWeight (Real.tanh s) : ℂ) * E (Real.tanh s)‖ ^ 2 := by
+      have htm : Measurable Real.tanh :=
+        (continuous_iff_continuousAt.2 fun s ↦ (hasDerivAt_tanh s).continuousAt).measurable
+      unfold boundaryWeight
+      fun_prop
+    refine hbound.mono' hmeasL.aestronglyMeasurable (Eventually.of_forall fun s ↦ ?_)
+    have hc := Real.cosh_pos s
+    have hval : (boundaryWeight (Real.tanh s) : ℂ) * E (Real.tanh s) =
+        -Complex.I * ((Complex.I * lam + 2 * Real.tanh s) * Ω s - deriv g s) *
+          (Real.cosh s ^ 2 : ℝ) := by
+      simp only [hE_def, Real.artanh_tanh, hwt]
+      push_cast
+      field_simp
+    have hcoef : ‖Complex.I * lam + 2 * (Real.tanh s : ℂ)‖ ≤ |lam| + 2 := by
+      refine (norm_add_le _ _).trans (add_le_add ?_ ?_)
+      · rw [norm_mul, Complex.norm_I, Complex.norm_real, Real.norm_eq_abs, one_mul]
+      · rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_ofNat]
+        have := abs_lt.2 ⟨Real.neg_one_lt_tanh s, Real.tanh_lt_one s⟩
+        nlinarith [abs_nonneg (Real.tanh s)]
+    rw [Real.norm_of_nonneg (by positivity), hval, norm_mul, norm_mul, norm_neg, Complex.norm_I,
+      one_mul, Complex.norm_real, Real.norm_of_nonneg (by positivity)]
+    set a := ‖(Complex.I * lam + 2 * (Real.tanh s : ℂ)) * Ω s - deriv g s‖
+    have ha : a ≤ (|lam| + 2) * ‖Ω s‖ + ‖deriv g s‖ := by
+      refine (norm_sub_le _ _).trans (add_le_add ?_ le_rfl)
+      rw [norm_mul]
+      exact mul_le_mul_of_nonneg_right hcoef (norm_nonneg _)
+    have ha0 : 0 ≤ a := norm_nonneg _
+    have hsq : a ^ 2 ≤ 2 * ((|lam| + 2) ^ 2 * ‖Ω s‖ ^ 2) + 2 * ‖deriv g s‖ ^ 2 := by
+      nlinarith [sq_nonneg ((|lam| + 2) * ‖Ω s‖ - ‖deriv g s‖), norm_nonneg (Ω s),
+        norm_nonneg (deriv g s), abs_nonneg lam]
+    have hc2 : 0 < Real.cosh s ^ 2 := by positivity
+    calc 1 / Real.cosh s ^ 2 * (a * Real.cosh s ^ 2) ^ 2 = Real.cosh s ^ 2 * a ^ 2 := by
+          field_simp
+      _ ≤ Real.cosh s ^ 2 * (2 * ((|lam| + 2) ^ 2 * ‖Ω s‖ ^ 2) + 2 * ‖deriv g s‖ ^ 2) :=
+          mul_le_mul_of_nonneg_left hsq hc2.le
+      _ = _ := by ring
+  have hW : HasWeightedBoundaryH2 F D E := ⟨hFH1, hDac, hDd, hwE⟩
+  /- (4) `G = -iwD - λF` is the trace `g ∘ artanh` on `(-1, 1)`, and
+     `∫|G'|² dξ = ∫ cosh² |g'|² ds` (`hg2`, `hgac`, `integral_tanh_subst`). -/
+  have hG : MemIntervalH1 (-1) 1 (fun ξ ↦ -Complex.I * boundaryWeight ξ * D ξ - lam * F ξ) := by
+    set Dg : ℝ → ℂ := fun ξ ↦ deriv g (Real.artanh ξ) / boundaryWeight ξ with hDg_def
+    have hgH1 : HasIntervalH1 (-1) 1 (fun ξ ↦ g (Real.artanh ξ)) Dg := by
+      refine ⟨?_, ?_,
+        fun c d hc hcd hd ↦ absolutelyContinuousOnInterval_comp_artanh hgac hc hcd hd, ?_⟩
+      · exact MemLp.of_bound ((hgc.comp_continuousOn continuousOn_artanh).aestronglyMeasurable
+          measurableSet_Ioo) _ (Eventually.of_forall fun ξ ↦ hgb _)
+      · have hDgm : Measurable Dg := by
+          have := measurable_artanh
+          simp only [hDg_def, boundaryWeight]
+          fun_prop
+        refine memLp_two_Ioo_of_tanh hDgm.aestronglyMeasurable
+          (hg2.congr (Eventually.of_forall fun s ↦ ?_))
+        have hc := (Real.cosh_pos s).ne'
+        beta_reduce
+        rw [hDg_def]
+        simp only [Real.artanh_tanh, hwt]
+        rw [norm_div, Complex.norm_real, Real.norm_of_nonneg (by positivity)]
+        field_simp
+      · filter_upwards [ae_comp_artanh hgd] with ξ hξ hmem
+        have h := (hξ hmem).hasDerivAt.scomp ξ (hasDerivAt_artanh hmem)
+        convert h using 1
+        · rfl
+        · simp only [hDg_def, Complex.real_smul]
+          push_cast
+          ring
+    refine ⟨Dg, hgH1.congr_Ioo fun ξ hξ ↦ ?_⟩
+    have hw0' : (boundaryWeight ξ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 (hw ξ hξ).ne'
+    simp only [hD_def, hF_def, hz_eq]
+    field_simp
+    ring_nf
+    simp only [Complex.I_sq]
+    ring
+  /- (5) End values: the extension is continuous up to `±1` (`HasIntervalH1.continuousOn_
+     extension`) and equals `F` inside, while `z(s) → -(0 + c±)/λ` (`hΩp`, `hΩm`, `hgp`, `hgm`). -/
+  have hcont := hFH1.continuousOn_extension (by norm_num : (-1 : ℝ) < 1)
+  have hext := hFH1.extension_eq (by norm_num : (-1 : ℝ) < 1)
+  have hzlim {l : Filter ℝ} {c : ℂ} (hΩl : Tendsto Ω l (𝓝 0)) (hgl : Tendsto g l (𝓝 c)) :
+      Tendsto (canonicalUnknown lam g) l (𝓝 (-c / lam)) := by
+    rw [hz_eq]
+    convert (hΩl.add hgl).const_mul (-(lam : ℂ)⁻¹) using 2
+    field_simp
+    ring
+  have hend1 : intervalH1Extension (-1) 1 F D 1 = -cp / lam := by
+    have hlimF : Tendsto F (𝓝[<] 1) (𝓝 (-cp / lam)) :=
+      (hzlim hΩp hgp).comp tendsto_artanh_nhdsLT_one
+    have hmem : Ioo (-1 : ℝ) 1 ∈ 𝓝[<] 1 := Ioo_mem_nhdsLT (by norm_num)
+    have hlimE : Tendsto (intervalH1Extension (-1) 1 F D) (𝓝[<] 1)
+        (𝓝 (intervalH1Extension (-1) 1 F D 1)) :=
+      (hcont 1 ⟨by norm_num, le_rfl⟩).tendsto.mono_left
+        (nhdsWithin_le_of_mem (mem_of_superset hmem fun x hx ↦ ⟨hx.1.le, hx.2.le⟩))
+    refine tendsto_nhds_unique hlimE (hlimF.congr' ?_)
+    filter_upwards [hmem] with x hx
+    exact (hext hx).symm
+  have hend2 : intervalH1Extension (-1) 1 F D (-1) = -cm / lam := by
+    have hlimF : Tendsto F (𝓝[>] (-1)) (𝓝 (-cm / lam)) :=
+      (hzlim hΩm hgm).comp tendsto_artanh_nhdsGT_neg_one
+    have hmem : Ioo (-1 : ℝ) 1 ∈ 𝓝[>] (-1) := Ioo_mem_nhdsGT (by norm_num)
+    have hlimE : Tendsto (intervalH1Extension (-1) 1 F D) (𝓝[>] (-1))
+        (𝓝 (intervalH1Extension (-1) 1 F D (-1))) :=
+      (hcont (-1) ⟨le_rfl, by norm_num⟩).tendsto.mono_left
+        (nhdsWithin_le_of_mem (mem_of_superset hmem fun x hx ↦ ⟨hx.1.le, hx.2.le⟩))
+    refine tendsto_nhds_unique hlimE (hlimF.congr' ?_)
+    filter_upwards [hmem] with x hx
+    exact (hext hx).symm
+  /- (6) The rotation maps one saddle to the other: `R(π, 0) = (0, -π)`. -/
+  have hκc : cp = paritySign κ * cm := by
+    rw [hcp_def, hcm_def, show ((0 : ℝ), -Real.pi) = rotLift (Real.pi, 0) by simp [rotLift],
+      ← Function.iterate_succ_apply, Function.iterate_succ_apply', contStream_rotLift hκ]
+  exact ⟨D, E, hW, hG, hend1, hend2, hκc⟩
 
 /-- A symmetry/measure bridge: vanishing on a positive-cell lift forces an even vorticity
     to vanish on both torus cells. It needs no eigenvalue or stream-function hypothesis. -/

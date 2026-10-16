@@ -1274,6 +1274,32 @@ needs the endpoint argument in the proof of
 Lemma~\ref{lem:weighted-affine-splitting}.
 \end{proof}
 
+\begin{lemma}[Absolute continuity of the arc traces]
+\label{lem:arc-trace-ac}
+\uses{def:separatrix-arc, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.absolutelyContinuous_contStream_separatrixArc,
+  NoEmbeddedEigenvalues.AbsolutelyContinuousOnInterval.comp_antitoneOn,
+  NoEmbeddedEigenvalues.AbsolutelyContinuousOnInterval.comp_monotoneOn}
+\leanok
+For every $\omega\in L^2$, the trace $\tilde\psi\circ\gamma$ of the continuous stream function
+on the separatrix arc is absolutely continuous on every compact interval and differentiable
+almost everywhere.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:traces, lem:local-to-global, lem:elliptic-torus, lem:lift-representatives,
+  lem:separatrix-arc}
+\leanok
+In diagonal coordinates the arc is the segment $b=\pi/2$, $a=\alpha(s)-\pi/2$ with
+$\alpha(s)=2\arctan e^{-s}$. By Lemmas~\ref{lem:elliptic-torus} and~\ref{lem:local-to-global},
+$\tilde\psi\in H^2$ on a bounded neighbourhood of the line (changing $\psi$ on a null set to
+$\tilde\psi$ does not affect this), so by Lemma~\ref{lem:traces} the continuous function
+$\tilde\psi$ is absolutely continuous along the line. The change of variable $s\mapsto a$ is
+decreasing and $1$-Lipschitz, which preserves absolute continuity: disjoint intervals go to
+disjoint intervals of at most the same total length. Absolutely continuous functions have
+bounded variation and are therefore differentiable almost everywhere.
+\end{proof}
+
 \begin{lemma}[Regularity of the boundary unknown]
 \label{lem:ee-boundary-regularity}
 \uses{def:boundary-form, def:canonical-profile, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints, def:cell-arcs, def:stream-lifts, def:sectors, def:rotation-characters, def:eigen-problem}
@@ -1288,16 +1314,52 @@ the ends of $\gamma_k$, and $c_+=\kappa c_-$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-gradient-traces, lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:separatrix-arc, lem:continuous-representative, lem:traces, lem:local-to-global}
-$G\in H^1$ from the tangential trace bound and the arc speed
-$\sqrt2\sech s$. The weighted bound of Lemma~\ref{lem:canonical-profile} and
-$Pz=-\Omega$ give $F\in H^1$. On every compact interior interval,
-$D=F'=i(G+\lambda F)/w$ has an absolutely continuous representative, since
-$1/w$ is smooth there. Differentiating $G=-iwD-\lambda F$ then gives
-$wE=i(G'+\lambda D)-w'D\in L^2$, because $w'=-2\xi$ is bounded.
-The transport and trace inputs, and this bridge to the weighted domain,
-remain unformalized.
+\uses{lem:ee-gradient-traces, lem:ee-transport-traces, lem:arc-trace-ac,
+  lem:canonical-profile, lem:canonical-profile-ode, lem:separatrix-arc,
+  lem:continuous-representative, lem:boundary-form-xi}
+\leanok
+By the rotation character, $g=\kappa^k\,\tilde\psi\circ\gamma$, so $g$ is locally absolutely
+continuous and differentiable almost everywhere (Lemma~\ref{lem:arc-trace-ac}), with
+$g'\in L^1$, $\int g'e^{-i\lambda t}dt=0$ (Lemma~\ref{lem:ee-transport-traces}) and
+$\int\cosh^2s\,|g'|^2ds<\infty$ (Lemma~\ref{lem:ee-gradient-traces}). Hence
+$\Omega$ is bounded by $\|g'\|_{L^1}$, locally absolutely continuous, satisfies
+$\Omega'=i\lambda\Omega-g'$ and $z'=-i\Omega$ almost everywhere, tends to $0$ at $\pm\infty$,
+and $\int\cosh^2|\Omega|^2<\infty$ by the weighted bound of Lemma~\ref{lem:canonical-profile}
+with $\cosh s\le e^{|s|}\le2\cosh s$.
+
+With $\xi=\tanh s$ and $w=1-\xi^2=\operatorname{sech}^2s$ put
+$D=-i\Omega(\operatorname{artanh}\xi)/w$ and
+$E=-i\bigl((i\lambda+2\xi)\Omega-g'\bigr)/w^2$ at $s=\operatorname{artanh}\xi$. Then $F'=D$ and
+$D'=E$ almost everywhere by the chain rule ($\operatorname{artanh}'=1/w$, $(1/w)'=2\xi/w^2$), and
+$d\xi=ds/\cosh^2s$ turns the $L^2$ norms of $F$, $D$ and $wE$ into $\int|z|^2\operatorname{sech}^2$,
+$\int\cosh^2|\Omega|^2$ and $\int\cosh^2|(i\lambda+2\xi)\Omega-g'|^2$, all finite. Absolute
+continuity on compact subintervals of $(-1,1)$ is preserved by $\operatorname{artanh}$ and by
+products with the smooth $1/w$. Since $wD=-i\Omega$, $G=-iwD-\lambda F=g\circ\operatorname{artanh}$,
+whose derivative has $\int|G'|^2d\xi=\int\cosh^2|g'|^2ds$. The endpoint values follow from
+$z(s)\to-(0+c_\pm)/\lambda$ as $s\to\pm\infty$ and continuity of the $H^1$ extension; finally
+$R(\pi,0)=(0,-\pi)$ and $\tilde\psi\circ R=\kappa\tilde\psi$ give $c_+=\kappa c_-$.
 \end{proof}
+
+\begin{remark}[Digest note: inputs of the boundary regularity]
+The mechanism: with $w=1-\xi^2=\operatorname{sech}^2s$, $wF'=z'=-i\Omega$, so
+$G=-iwF'-\lambda F=-\Omega-\lambda z=g$. Thus $G$ is the trace $g\circ\operatorname{artanh}$
+itself, and $\int|G'|^2d\xi=\int\cosh^2s\,|g'|^2ds$ is the first statement of
+Lemma~\ref{lem:ee-gradient-traces}. Likewise $\int|F'|^2d\xi=\int\cosh^2|\Omega|^2ds$ and
+$\int|wE|^2d\xi=\int\cosh^2|(i\lambda+2\xi)\Omega-g'|^2ds$ are controlled by the weighted
+bound of Lemma~\ref{lem:canonical-profile} (with $\cosh\le e^{|s|}\le2\cosh$), and the end
+values follow from $\Omega\to0$ at $\pm\infty$ and $g\to c_\pm$.
+
+A Lean skeleton of the proof (each step citing its source) showed two interface gaps, both
+resolved: (1) the $H^1$ and weighted domains require local absolute continuity of
+$g=\tilde\psi\circ\gamma_k$, which the trace and transport lemmas did not state; it is now the
+separate Lemma~\ref{lem:arc-trace-ac}, derived from Lemma~\ref{lem:traces} rather than added to
+the less verified Lemma~\ref{lem:ee-gradient-traces}. (2) The Melnikov identity for $g$ was used
+inside Lemma~\ref{lem:ee-transport-traces} but not exported; it is now part of that lemma.
+All other inputs matched as stated. The Lean proof rests on the admitted
+Lemmas~\ref{lem:ee-gradient-traces}, \ref{lem:canonical-profile} (weighted bound),
+\ref{lem:melnikov}, \ref{lem:transport-pair-eigen}, \ref{lem:traces} and
+\ref{lem:local-to-global}.
+\end{remark}
 
 \begin{lemma}[Positivity of the boundary form]
 \label{lem:ee-trace-positivity}
@@ -1446,10 +1508,12 @@ everywhere.
 \label{lem:ee-transport-traces}
 \uses{def:eigen-problem, def:sectors, def:rotation-characters, def:stream-lifts,
   def:cell-arcs, def:level-integral, def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.ee_transport_traces}
+\lean{NoEmbeddedEigenvalues.ee_transport_traces, NoEmbeddedEigenvalues.ee_melnikov,
+  NoEmbeddedEigenvalues.contStream_iterate_rotLift}
 \leanok
 Let $\omega$ be an even--even eigenfunction with $\lambda\ne0$ and rotation character
-$\kappa$. Put $g_k=\tilde\psi\circ\gamma_k$. Then $g_k'\in L^1(\R)$ for $k<4$.
+$\kappa$. Put $g_k=\tilde\psi\circ\gamma_k$. Then $g_k'\in L^1(\R)$ and
+$\int_\R g_k'(t)e^{-i\lambda t}\,dt=0$ (the Melnikov identity) for every $k$.
 For every null set $N$ there are $h_j\in(0,1)\setminus N$, $h_j\to0$, such that
 \[
   \oint_{\{\Psi=2h_j\}}\operatorname{Re}(\omega\bar\psi)\,dt

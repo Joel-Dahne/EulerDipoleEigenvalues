@@ -195,15 +195,29 @@ sequence lemma `exists_seq_one_sub_mul_tendsto_zero` use no admissions.
 level, and the level integral splits since `Ψ = 2h` there. The virial chain
 of the even–even box now rests only on `virial_l2` and the coarea formula.
 
+**`ee_boundary_regularity` is proved (2026-10-16)** (`lem:ee-boundary-regularity`),
+from the admitted `ee_gradient_traces`, `eLpNorm_exp_mul_canonicalProfile_le`,
+`melnikov`, `isTransportPair_of_isEigenSolution`, `absolutelyContinuous_trace_of_H2`,
+`memSobolevOn_liftL2`, `hasWeakPartialOn_liftL2` (checked by a dependency
+script). Key observation: `G = -iwF' - λF` is the arc trace `g ∘ artanh`
+itself. A skeleton first exposed two interface gaps, both resolved: absolute
+continuity of `g = ψ̃ ∘ γ_k` is the new `lem:arc-trace-ac`
+(`absolutelyContinuous_contStream_separatrixArc`, from `lem:traces` on the line
+`b = π/2`), and the Melnikov identity is exported as `ee_melnikov`
+(`lem:ee-transport-traces`). New tools in `EvenEven.lean`: absolute
+continuity under monotone/antitone Lipschitz changes of variable,
+`hasDerivAt_artanh`, `ae_comp_artanh`, `integrableOn_Ioo_iff_tanh`,
+`HasIntervalH1.congr_Ioo`, primitives of integrable complex functions.
+The only `sorry` left in `EvenEven.lean` is `ee_gradient_traces`.
+
 **Next:** `ee_gradient_traces` (`lem:ee-gradient-traces`), digest first: the
 blueprint proof is a sketch (corner coordinates, odd Hardy, traces), and it
-is the least verified remaining even–even input; then
-`ee_boundary_regularity`, which depends on it. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
+is the least verified remaining even–even input. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
 coarea formula itself (`lintegral_cellSquare_eq`, now used by many proved
 nodes) remain admitted. Remaining direct even–even inputs:
-`ee_boundary_regularity`, `ee_gradient_traces`, `virial_l2`, and the transport inputs (`melnikov`, `pairing_limit`,
+`ee_gradient_traces`, `virial_l2`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 

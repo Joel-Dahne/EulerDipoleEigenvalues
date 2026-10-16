@@ -4,7 +4,8 @@ import NoEmbeddedEigenvalues.Sectors
 /-!
 # Transport traces of eigenfunctions
 
-Blueprint: `lem:ee-transport-traces`; also `lem:level-integral-congr` (changing
+Blueprint: `lem:ee-transport-traces` (with the Melnikov identity `ee_melnikov`);
+also `lem:level-integral-congr` (changing
 representatives on levels, a.e. statements on a.e. level, level integrals over `[-2L, 6L)`).
 
 Specialize the abstract Melnikov and pairing statements to eigenfunctions, replacing the
@@ -464,6 +465,48 @@ theorem isTransportPair_contStream {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   filter_upwards [heq] with p hp
   exact congrArg (fun z ↦ liftL2 ω p + z) hp
 
+/-- Iterating the rotation character: `ψ̃(Rᵏ p) = κᵏ ψ̃(p)`. -/
+theorem contStream_iterate_rotLift {ω : L2} {κ : Bool} (hκ : InRotationCharacter κ ω) (k : ℕ)
+    (p : ℝ × ℝ) : contStream ω (rotLift^[k] p) = paritySign κ ^ k * contStream ω p := by
+  induction k generalizing p with
+  | zero => simp
+  | succ k ih =>
+    simp only [Function.iterate_succ_apply, ih, contStream_rotLift hκ, pow_succ]
+    ring
+
+/-- The Melnikov identity on the arcs (`lem:ee-transport-traces`): for an eigenfunction with
+    rotation character `κ`, the arc trace `g = ψ̃ ∘ γ_k` has integrable derivative and
+    `∫ g' e^{-iλt} dt = 0`. From `melnikov` on `γ₀` and `g = κᵏ (ψ̃ ∘ γ₀)`. -/
+theorem ee_melnikov {lam : ℝ} (hlam : lam ≠ 0) {ω : L2} (hω : IsEigenSolution lam ω) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) (k : ℕ) :
+    Integrable (deriv (contStream ω ∘ cellArc k)) ∧
+      ∫ t, profileIntegrand lam (contStream ω ∘ cellArc k) t = 0 := by
+  let c : ℝ := if κ then 1 else -1
+  have hc : c = 1 ∨ c = -1 := by cases κ <;> simp [c]
+  have hcc : (c : ℂ) = paritySign κ := by cases κ <;> simp [c, paritySign]
+  have hU := isOrbitUnion_cellNeighbourhood
+  have hp := isTransportPair_contStream hlam hω hU isBounded_cellNeighbourhood
+  have hfR : ∀ p ∈ cellNeighbourhood, contStream ω (p.2, -p.1) = c * contStream ω p := by
+    intro p _
+    rw [hcc]
+    exact contStream_rotLift hκ p
+  have hvR : ∀ᵐ p ∂(volume.restrict cellNeighbourhood),
+      liftL2 ω (p.2, -p.1) = c * liftL2 ω p := by
+    simpa only [hcc, rotLift] using ae_restrict_of_ae (liftL2_rotLift_ae hκ)
+  have hUR : ∀ p ∈ cellNeighbourhood, (p.2, -p.1) ∈ cellNeighbourhood :=
+    fun _ hp ↦ rotLift_mem_cellNeighbourhood hp
+  obtain ⟨hg, hM⟩ := melnikov hp closure_cellSquare_subset_cellNeighbourhood hc hUR hfR hvR
+    (continuous_contStream ω).continuousOn
+  have hArc : (contStream ω ∘ cellArc k) =
+      fun s ↦ paritySign κ ^ k * (contStream ω ∘ separatrixArc) s := by
+    funext s
+    exact contStream_iterate_rotLift hκ k (separatrixArc s)
+  rw [hArc]
+  refine ⟨by simpa only [deriv_const_mul_field'] using hg.const_mul (paritySign κ ^ k), ?_⟩
+  simp only [profileIntegrand, deriv_const_mul_field', mul_assoc, integral_const_mul]
+  simp only [profileIntegrand, mul_assoc] at hM
+  rw [hM, mul_zero]
+
 /-- Melnikov and pairing traces specialized to raw eigenfunction lifts and continuous arc
     traces. The only analytic admissions used are the existing transport-pair, Melnikov,
     pairing-limit and orbit-coordinate statements. -/
@@ -492,24 +535,7 @@ theorem ee_transport_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     simpa only [hcc, rotLift] using ae_restrict_of_ae (liftL2_rotLift_ae hκ)
   have hUR : ∀ p ∈ cellNeighbourhood, (p.2, -p.1) ∈ cellNeighbourhood :=
     fun _ hp ↦ rotLift_mem_cellNeighbourhood hp
-  obtain ⟨hg, _⟩ := melnikov hp closure_cellSquare_subset_cellNeighbourhood hc hUR hfR hvR
-    (continuous_contStream ω).continuousOn
-  have hiter (k : ℕ) : ∀ p, contStream ω (rotLift^[k] p) =
-      paritySign κ ^ k * contStream ω p := by
-    induction k with
-    | zero => intro p; simp
-    | succ k ih =>
-      intro p
-      simp only [Function.iterate_succ_apply, ih, contStream_rotLift hκ, pow_succ]
-      ring
-  have hArc (k : ℕ) : (contStream ω ∘ cellArc k) =
-      fun s ↦ paritySign κ ^ k * (contStream ω ∘ separatrixArc) s := by
-    funext s
-    exact hiter k (separatrixArc s)
-  refine ⟨?_, ?_⟩
-  · intro k _
-    rw [hArc]
-    simpa only [deriv_const_mul_field'] using hg.const_mul (paritySign κ ^ k)
+  refine ⟨fun k _ ↦ (ee_melnikov hlam hω hκ k).1, ?_⟩
   · intro N hN
     have hvm : Measurable (liftL2 ω) := (Lp.stronglyMeasurable ω).measurable.comp
       isOpenQuotientMap_torusProj.continuous.measurable
