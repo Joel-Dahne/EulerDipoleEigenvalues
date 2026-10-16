@@ -5,8 +5,9 @@ import NoEmbeddedEigenvalues.SeparatrixArc
 /-!
 # Orbit coordinates and integrals over levels
 
-Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates` (stated), `def:level-integral`,
-`def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`, `lem:corner-coordinates`; stated:
+Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates` (stated), `def:action-angle`,
+`def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
+`lem:corner-coordinates`; stated:
 `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
@@ -50,6 +51,17 @@ def orbitDomain : Set (ℝ × ℝ) :=
 
 /-- The open orbit annulus `{h₁ < h < h₂}` in the punctured cell. -/
 def orbitAnnulus (h₁ h₂ : ℝ) : Set (ℝ × ℝ) := {p | p ∈ puncturedCell ∧ levelCoord p ∈ Ioo h₁ h₂}
+
+/-- The angle coordinate `θ = t / S(h)` modulo 1. -/
+def angleCoord (p : ℝ × ℝ) : UnitAddCircle :=
+  ((timeCoord p / orbitPeriod (levelCoord p) : ℝ) : UnitAddCircle)
+
+/-- The action-angle coordinates `(h, θ)` on the punctured cell. -/
+def actionAngle (p : ℝ × ℝ) : ℝ × UnitAddCircle := (levelCoord p, angleCoord p)
+
+/-- The parametrization `(h, θ) ↦ γ_h(θ S(h))`, with `θ` represented in `[0, 1)`. -/
+def actionAngleInv (q : ℝ × UnitAddCircle) : ℝ × ℝ :=
+  AddCircle.liftIco (1 : ℝ) 0 (fun θ ↦ dipoleOrbit q.1 (θ * orbitPeriod q.1)) q.2
 
 /-- The orbit coordinates take values in the orbit domain. -/
 theorem mem_orbitDomain {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :

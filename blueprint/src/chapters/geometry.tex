@@ -773,16 +773,21 @@ periodicity its integral is the level integral over $[0,S)$.
 \begin{definition}[Action-angle coordinates]
 \label{def:action-angle}
 \uses{def:orbit-coordinates, def:period}
+\lean{NoEmbeddedEigenvalues.angleCoord, NoEmbeddedEigenvalues.actionAngle,
+  NoEmbeddedEigenvalues.actionAngleInv}
+\leanok
 On the punctured cell, the action-angle coordinates are $(h,\theta)$ with $h$ the level
 coordinate and $\theta=t/S(h)\in\R/\Z$, where $t$ is the time coordinate of
-Definition~\ref{def:orbit-coordinates}. Their inverse is $(h,\theta)\mapsto\gamma_h(\theta S(h))$.
+Definition~\ref{def:orbit-coordinates}. The parametrization in these coordinates is
+$(h,\theta)\mapsto\gamma_h(\theta S(h))$, with $\theta$ represented in $[0,1)$; that it inverts
+$(h,\theta)$ is part of Lemma~\ref{lem:action-angle-chart}.
 \end{definition}
 
 \begin{lemma}[The action-angle chart on an annulus]
 \label{lem:action-angle-chart}
 \uses{def:action-angle, def:transport-pair}
 Let $0<h_1<h_2<1$. On the annulus $\{2h_1<\Psi<2h_2\}$ of the cell, $(h,\theta)$ is a $C^1$
-diffeomorphism onto $(h_1,h_2)\times\R/\Z$. In these coordinates $dx\,dy=2S(h)\,dh\,d\theta$,
+diffeomorphism onto $(h_1,h_2)\times\R/\Z$, with inverse $(h,\theta)\mapsto\gamma_h(\theta S(h))$. In these coordinates $dx\,dy=2S(h)\,dh\,d\theta$,
 and for $g,k\in L^2$ of the annulus, $L_0g=k$ weakly if and only if
 $\partial_\theta g=S(h)\,k$ weakly.
 \end{lemma}
