@@ -1343,7 +1343,94 @@ theorem lintegral_hyperbola_le {F Fv : ℝ × ℝ → ℂ} (hFv : Measurable Fv)
         ∀ᵐ v ∂(volume.restrict (Ioo 0 u₀)), HasDerivAt (fun v ↦ F (u, v)) (Fv (u, v)) v) :
     ∫⁻ u in Ioo (√h) u₀, ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u) ≤
       ∫⁻ p in Ioo 0 u₀ ×ˢ Ioo 0 u₀, ENNReal.ofReal (‖Fv p‖ ^ 2) := by
-  sorry
+  have hsq : 0 < √h := Real.sqrt_pos.2 hh
+  have hsub : Ioo (√h) u₀ ⊆ Ioo 0 u₀ := Ioo_subset_Ioo_left hsq.le
+  -- The pointwise bound on almost every vertical segment.
+  have hpt : ∀ᵐ u ∂(volume.restrict (Ioo (√h) u₀)),
+      ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u) ≤
+        ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) := by
+    filter_upwards [ae_restrict_of_ae_restrict_of_subset hsub hF,
+      ae_restrict_mem measurableSet_Ioo] with u hFu hum
+    obtain ⟨hac, hder⟩ := hFu
+    have hu0 : 0 < u := hsq.trans hum.1
+    set c := h / u with hc_def
+    have hc0 : 0 < c := div_pos hh hu0
+    have hsh : √h * √h = h := Real.mul_self_sqrt hh.le
+    have hcs : c ≤ √h := by
+      rw [hc_def, div_le_iff₀ hu0]
+      nlinarith [hum.1]
+    have hcu : c ≤ u₀ := hcs.trans hu
+    have hcu1 : c / u ≤ 1 := by
+      rw [div_le_one hu0]
+      exact hcs.trans hum.1.le
+    have hmono : ∫⁻ v in Ioo 0 c, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) ≤
+        ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
+      lintegral_mono_set (Ioo_subset_Ioo_right hcu)
+    by_cases hfin : ∫⁻ v in Ioo 0 c, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) = ⊤
+    · rw [hfin, top_le_iff] at hmono
+      rw [hmono]
+      exact le_top
+    have hmeas : Measurable fun v ↦ Fv (u, v) := hFv.comp (measurable_const.prodMk measurable_id)
+    have hint2 : Integrable (fun v ↦ ‖Fv (u, v)‖ ^ 2) (volume.restrict (Ioo 0 c)) := by
+      refine ⟨(hmeas.norm.pow_const 2).aestronglyMeasurable, ?_⟩
+      rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun v ↦ by positivity)]
+      exact lt_top_iff_ne_top.2 hfin
+    have hL2 : MemLp (fun v ↦ Fv (u, v)) 2 (volume.restrict (Ioo 0 c)) :=
+      (memLp_two_iff_integrable_sq_norm hmeas.aestronglyMeasurable).2 hint2
+    have hL1 : IntegrableOn (fun v ↦ Fv (u, v)) (Ioo 0 c) := hL2.integrable (by norm_num)
+    have hII : IntervalIntegrable (fun v ↦ Fv (u, v)) volume 0 c :=
+      (intervalIntegrable_iff_integrableOn_Ioo_of_le hc0.le).2 hL1
+    -- The fundamental theorem of calculus on `[0, c]`.
+    have hFTC : (∫ v in (0 : ℝ)..c, Fv (u, v)) = F (u, c) - F (u, 0) := by
+      refine complex_integral_eq_sub_of_ac (hac.mono ?_) hII ?_
+      · rw [uIcc_of_le hc0.le, uIcc_of_le (hc0.le.trans hcu)]
+        exact Icc_subset_Icc le_rfl hcu
+      · have h0 : ∀ᵐ v : ℝ, v ≠ 0 := by simp [ae_iff, measure_singleton]
+        have h1 : ∀ᵐ v : ℝ, v ≠ u₀ := by simp [ae_iff, measure_singleton]
+        filter_upwards [(ae_restrict_iff' measurableSet_Ioo).1 hder, h0, h1] with v hv hv0 hv1 hvc
+        rw [uIcc_of_le hc0.le] at hvc
+        exact hv ⟨lt_of_le_of_ne hvc.1 (Ne.symm hv0),
+          lt_of_le_of_ne (hvc.2.trans hcu) hv1⟩
+    -- Cauchy–Schwarz on the segment.
+    have hCS := integral_mul_le_Lp_mul_Lq_of_nonneg (μ := volume.restrict (Ioo 0 c))
+      Real.HolderConjugate.two_two (f := fun _ ↦ (1 : ℝ)) (g := fun v ↦ ‖Fv (u, v)‖)
+      (Eventually.of_forall fun _ ↦ zero_le_one)
+      (Eventually.of_forall fun v ↦ norm_nonneg _)
+      (by rw [ENNReal.ofReal_ofNat]; exact memLp_const 1)
+      (by rw [ENNReal.ofReal_ofNat]
+          exact (memLp_two_iff_integrable_sq hmeas.norm.aestronglyMeasurable).2 hint2)
+    have hvol : (volume.restrict (Ioo 0 c)).real univ = c := by
+      simp [Measure.real, Real.volume_Ioo, hc0.le]
+    simp only [one_mul, Real.rpow_two, ← Real.sqrt_eq_rpow, integral_const,
+      hvol, one_pow, smul_eq_mul, mul_one] at hCS
+    have hnorm : ‖F (u, c) - F (u, 0)‖ ≤ √c * √(∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) := by
+      rw [← hFTC, intervalIntegral.integral_of_le hc0.le, integral_Ioc_eq_integral_Ioo]
+      exact (norm_integral_le_integral_norm _).trans hCS
+    have hI0 : 0 ≤ ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := integral_nonneg fun v ↦ by positivity
+    have hsq' : ‖F (u, c) - F (u, 0)‖ ^ 2 ≤ c * ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := by
+      calc ‖F (u, c) - F (u, 0)‖ ^ 2 ≤ (√c * √(∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2)) ^ 2 :=
+            pow_le_pow_left₀ (norm_nonneg _) hnorm 2
+        _ = c * ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := by
+            rw [mul_pow, Real.sq_sqrt hc0.le, Real.sq_sqrt hI0]
+    have hdiv : ‖F (u, c) - F (u, 0)‖ ^ 2 / u ≤ ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := by
+      rw [div_le_iff₀ hu0]
+      calc ‖F (u, c) - F (u, 0)‖ ^ 2 ≤ c * ∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2 := hsq'
+        _ = (c / u) * (∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) * u := by field_simp
+        _ ≤ 1 * (∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) * u := by gcongr
+        _ = _ := by ring
+    calc ENNReal.ofReal (‖F (u, c) - F (u, 0)‖ ^ 2 / u)
+        ≤ ENNReal.ofReal (∫ v in Ioo 0 c, ‖Fv (u, v)‖ ^ 2) := ENNReal.ofReal_le_ofReal hdiv
+      _ = ∫⁻ v in Ioo 0 c, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
+          ofReal_integral_eq_lintegral_ofReal hint2 (Eventually.of_forall fun v ↦ by positivity)
+      _ ≤ _ := hmono
+  have hFm : Measurable fun p : ℝ × ℝ ↦ ENNReal.ofReal (‖Fv p‖ ^ 2) := by fun_prop
+  calc ∫⁻ u in Ioo (√h) u₀, ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u)
+      ≤ ∫⁻ u in Ioo (√h) u₀, ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
+        lintegral_mono_ae hpt
+    _ ≤ ∫⁻ u in Ioo 0 u₀, ∫⁻ v in Ioo 0 u₀, ENNReal.ofReal (‖Fv (u, v)‖ ^ 2) :=
+        lintegral_mono_set hsub
+    _ = ∫⁻ p in Ioo 0 u₀ ×ˢ Ioo 0 u₀, ENNReal.ofReal (‖Fv p‖ ^ 2) := by
+        rw [Measure.volume_eq_prod, setLIntegral_prod _ hFm.aemeasurable]
 
 /-- Level traces at the separatrix (`lem:ee-level-traces`): for `ψ` even under both
     reflections, along levels `h → 0` outside a null set, `∮ |ψₙ|² dt → 0` and
@@ -1361,6 +1448,145 @@ theorem ee_level_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true true �
           ∫ s, Real.cosh s ^ 2 / 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2)) := by
   sorry
 
+/-- `ρ²` is invariant under the quarter rotation, so its level integral is four quarter
+    integrals: `∮ ρ² dt = 4 ∫_{-L}^{L} ρ²(γ_h(t)) dt`. -/
+theorem levelIntegral_gradNorm_sq {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    levelIntegral h (fun p ↦ gradNorm p ^ 2) =
+      4 * ∫ t in (-eighthPeriod h)..eighthPeriod h, gradNorm (dipoleOrbit h t) ^ 2 := by
+  set f : ℝ → ℝ := fun t ↦ gradNorm (dipoleOrbit h t) ^ 2 with hf
+  have hγ : Continuous fun t ↦ dipoleOrbit h t :=
+    Continuous.comp (g := fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) continuous_dipoleOrbit
+      (f := fun t : ℝ ↦ (h, t)) (by fun_prop)
+  have hfc : Continuous f := by
+    simp only [hf, gradNorm]
+    fun_prop
+  have hper : Function.Periodic f (2 * eighthPeriod h) := fun t ↦ by
+    simp only [hf, dipoleOrbit_add_quarter h0 h1, gradNorm, Real.sin_neg, neg_sq, add_comm]
+  have h4 := hper.intervalIntegral_add_zsmul_eq 4 0 fun t₁ t₂ ↦ hfc.intervalIntegrable t₁ t₂
+  have hshift := hper.intervalIntegral_add_eq 0 (-eighthPeriod h)
+  rw [levelIntegral, orbitPeriod]
+  change ∫ t in (0 : ℝ)..8 * eighthPeriod h, f t =
+    4 * ∫ t in (-eighthPeriod h)..eighthPeriod h, f t
+  rw [show 8 * eighthPeriod h = 0 + (4 : ℤ) • (2 * eighthPeriod h) by simp; ring, h4,
+    zsmul_eq_mul, hshift, show -eighthPeriod h + 2 * eighthPeriod h = eighthPeriod h by ring]
+  push_cast
+  ring
+
+/-- `∮ ρ² dt` stays bounded as the levels approach the separatrix, although the period
+    `S(h) → ∞`: `ρ ≤ C d` and `∫ d² dt ≤ C` on the quarter orbit. -/
+theorem levelIntegral_gradNorm_sq_le : ∃ K h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, h < 1 →
+    levelIntegral h (fun p ↦ gradNorm p ^ 2) ≤ K := by
+  obtain ⟨Cρ, hCρ⟩ := gradNorm_le_saddleDist
+  obtain ⟨Cd, h₀, hh₀, hCd⟩ := integral_saddleDist_rpow_pos_le (p := 2) two_pos
+  refine ⟨4 * (4 * Cρ ^ 2 * Cd), h₀, hh₀, fun h hh h1 ↦ ?_⟩
+  have h0 := hh.1
+  have hL := (eighthPeriod_pos h0 h1).le
+  have hγ : Continuous fun t ↦ dipoleOrbit h t :=
+    Continuous.comp (g := fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) continuous_dipoleOrbit
+      (f := fun t : ℝ ↦ (h, t)) (by fun_prop)
+  rw [levelIntegral_gradNorm_sq h0 h1]
+  gcongr
+  have hd := hCd h hh
+  simp only [Real.rpow_two] at hd
+  calc ∫ t in (-eighthPeriod h)..eighthPeriod h, gradNorm (dipoleOrbit h t) ^ 2
+      ≤ ∫ t in (-eighthPeriod h)..eighthPeriod h,
+          4 * Cρ ^ 2 * saddleDist (dipoleOrbit h t) ^ 2 := by
+        refine intervalIntegral.integral_mono_on (by linarith)
+          ((by simp only [gradNorm]; fun_prop : Continuous fun t ↦
+            gradNorm (dipoleOrbit h t) ^ 2).intervalIntegrable _ _)
+          ((continuous_const.mul ((Metric.continuous_infDist_pt _).comp hγ |>.pow 2)
+            ).intervalIntegrable _ _) fun t _ ↦ ?_
+        have hc := hCρ _ (dipoleOrbit_mem_cellSquare h0 h1 t)
+        have hg0 : 0 ≤ gradNorm (dipoleOrbit h t) := Real.sqrt_nonneg _
+        nlinarith
+    _ = 4 * Cρ ^ 2 * ∫ t in (-eighthPeriod h)..eighthPeriod h, saddleDist (dipoleOrbit h t) ^ 2 :=
+        intervalIntegral.integral_const_mul _ _
+    _ ≤ 4 * Cρ ^ 2 * Cd := by gcongr
+
+/-- The first-order trace term on one level: if `|ψ| ≤ M` along the level and `∮ ρ² dt ≤ K`,
+    then `|∮ Re(ψ ψ̄ₙ) dℓ| ≤ M (K ∮ |ψₙ|² dt)^{1/2}` (Cauchy–Schwarz). -/
+theorem abs_levelIntegral_first_le (ω : L2) {M K h : ℝ} (hM0 : 0 ≤ M) (h0 : 0 < h) (h1 : h < 1)
+    (hK : levelIntegral h (fun p ↦ gradNorm p ^ 2) ≤ K)
+    (hn : IntegrableOn (fun t ↦ ‖streamNormal ω (dipoleOrbit h t)‖ ^ 2)
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)))
+    (hM : ∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
+      ‖streamLift ω (dipoleOrbit h t)‖ ≤ M) :
+    |levelIntegral h fun p ↦
+        gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re| ≤
+      M * √(K * levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2) := by
+  set I := Ico (-2 * eighthPeriod h) (6 * eighthPeriod h) with hI
+  set γ : ℝ → ℝ × ℝ := fun t ↦ dipoleOrbit h t with hγ
+  have hγm : Measurable γ :=
+    (continuous_dipoleOrbit.comp (continuous_const.prodMk continuous_id)).measurable
+  have hρm : Measurable fun t ↦ gradNorm (γ t) := by
+    simp only [gradNorm]
+    fun_prop
+  have hnm : Measurable fun t ↦ streamNormal ω (γ t) := by
+    have hx := ((Lp.stronglyMeasurable (streamPartial 0 ω)).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
+    have hy := ((Lp.stronglyMeasurable (streamPartial 1 ω)).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
+    simp only [streamNormal, normalDeriv, gradNorm, streamLiftX, streamLiftY, liftL2]
+    simp only [Function.comp_def] at hx hy
+    fun_prop
+  have hsm : Measurable fun t ↦ streamLift ω (γ t) :=
+    ((Lp.stronglyMeasurable (invLap ω)).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
+  have hρ0 (t : ℝ) : 0 ≤ gradNorm (γ t) := Real.sqrt_nonneg _
+  have hρle (t : ℝ) : gradNorm (γ t) ^ 2 ≤ 2 := by
+    rw [gradNorm, Real.sq_sqrt (by positivity)]
+    nlinarith [Real.sin_sq_le_one (γ t).1, Real.sin_sq_le_one (γ t).2]
+  have hre (u v : ℂ) : |(u * (starRingEnd ℂ) v).re| ≤ ‖u‖ * ‖v‖ := by
+    refine (Complex.abs_re_le_norm _).trans ?_
+    rw [norm_mul, Complex.norm_conj]
+  have iρ : Integrable (fun t ↦ gradNorm (γ t) ^ 2) (volume.restrict I) :=
+    (integrable_const (2 : ℝ)).mono' (hρm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+        rw [Real.norm_of_nonneg (by positivity)]; exact hρle t)
+  have iN : Integrable (fun t ↦ ‖streamNormal ω (γ t)‖ ^ 2) (volume.restrict I) := hn
+  have iρn : Integrable (fun t ↦ gradNorm (γ t) * ‖streamNormal ω (γ t)‖) (volume.restrict I) :=
+    (iρ.add iN).mono' (hρm.mul hnm.norm).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+        rw [Real.norm_of_nonneg (mul_nonneg (hρ0 t) (norm_nonneg _)), Pi.add_apply]
+        nlinarith [sq_nonneg (gradNorm (γ t) - ‖streamNormal ω (γ t)‖)])
+  have hfm : AEStronglyMeasurable (fun t ↦ gradNorm (γ t) *
+      (streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re) (volume.restrict I) :=
+    (hρm.mul (Complex.measurable_re.comp
+      (hsm.mul (Complex.continuous_conj.measurable.comp hnm)))).aestronglyMeasurable
+  have hbound : ∀ᵐ t ∂(volume.restrict I), ‖gradNorm (γ t) *
+      (streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re‖ ≤
+        M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) := by
+    filter_upwards [hM] with t ht
+    rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hρ0 t)]
+    calc gradNorm (γ t) * |(streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re|
+        ≤ gradNorm (γ t) * (‖streamLift ω (γ t)‖ * ‖streamNormal ω (γ t)‖) :=
+          mul_le_mul_of_nonneg_left (hre _ _) (hρ0 t)
+      _ ≤ gradNorm (γ t) * (M * ‖streamNormal ω (γ t)‖) :=
+          mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right ht (norm_nonneg _)) (hρ0 t)
+      _ = M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) := by ring
+  have iA := (iρn.const_mul M).mono' hfm hbound
+  have hCS := integral_mul_le_Lp_mul_Lq_of_nonneg (μ := volume.restrict I)
+    Real.HolderConjugate.two_two (Eventually.of_forall fun t ↦ hρ0 t)
+    (Eventually.of_forall fun t ↦ norm_nonneg (streamNormal ω (γ t)))
+    (by rw [ENNReal.ofReal_ofNat]
+        exact (memLp_two_iff_integrable_sq hρm.aestronglyMeasurable).2 iρ)
+    (by rw [ENNReal.ofReal_ofNat]
+        exact (memLp_two_iff_integrable_sq hnm.norm.aestronglyMeasurable).2 iN)
+  simp only [Real.rpow_two, ← Real.sqrt_eq_rpow] at hCS
+  rw [levelIntegral_eq_setIntegral h0 h1] at hK ⊢
+  rw [levelIntegral_eq_setIntegral h0 h1]
+  calc _ ≤ ∫ t in I, ‖gradNorm (γ t) *
+        (streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re‖ :=
+        (abs_integral_le_integral_abs).trans_eq rfl
+    _ ≤ ∫ t in I, M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) :=
+        integral_mono_ae iA.norm (iρn.const_mul M) hbound
+    _ = M * ∫ t in I, gradNorm (γ t) * ‖streamNormal ω (γ t)‖ := integral_const_mul _ _
+    _ ≤ M * (√(∫ t in I, gradNorm (γ t) ^ 2) * √(∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2)) := by
+        gcongr
+    _ ≤ M * √(K * ∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2) := by
+        rw [Real.sqrt_mul' _ (integral_nonneg fun t ↦ by positivity)]
+        gcongr
+
 /-- The first-order trace term (`lem:ee-first-trace-limit`): if `∮ |ψₙ|² dt → 0` along levels
     outside `N`, then `∮ Re(ψ ψ̄ₙ) dℓ → 0` outside a larger null set, by Cauchy–Schwarz with
     `|ψ| ≤ ‖ψ̃‖_∞` and `∮ ρ² dt ≤ C` (`ρ ≤ C d` and `lem:orbit-time-integrals`). -/
@@ -1371,7 +1597,76 @@ theorem ee_first_trace_limit (ω : L2) {N : Set ℝ}
       Tendsto (fun h ↦ levelIntegral h fun p ↦
           gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re)
         (𝓝[Ioi 0 \ (N ∪ N')] 0) (𝓝 0) := by
-  sorry
+  have hmeas (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
+  -- `|ψ| ≤ M` and `|ψₙ|²` integrable along almost every level.
+  set M := ‖continuousRep (invLap ω)‖
+  have hM : ∀ᵐ p ∂(volume.restrict cellSquare), ‖streamLift ω p‖ ≤ M := by
+    refine ae_restrict_of_ae ?_
+    filter_upwards [streamLift_ae_eq_contStream ω] with p hp
+    rw [hp, contStream]
+    exact (continuousRep (invLap ω)).norm_coe_le_norm _
+  have hMlev := ae_level_of_ae_cellSquare (P := fun p ↦ ‖streamLift ω p‖ ≤ M)
+    (measurableSet_le (hmeas (invLap ω)).norm measurable_const) hM
+  have hAs : cellSquare ⊆
+      Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro p ⟨ha, hb⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    simp only [mem_prod, mem_Ioc]
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith [Real.pi_pos]
+  have hsq (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) cellSquare :=
+    (integrableOn_norm_liftL2_sq g).mono_set hAs
+  have hnm : Measurable (streamNormal ω) := by
+    have h2 := hmeas (streamPartial 0 ω)
+    have h3 := hmeas (streamPartial 1 ω)
+    change Measurable fun p ↦ normalDeriv (streamLiftX ω) (streamLiftY ω) p
+    simp only [normalDeriv, gradNorm, streamLiftX, streamLiftY]
+    fun_prop
+  have hni : IntegrableOn (fun p ↦ ‖streamNormal ω p‖ ^ 2) cellSquare := by
+    refine (((hsq (streamPartial 0 ω)).add (hsq (streamPartial 1 ω))).const_mul 2).mono'
+      (hnm.norm.pow_const 2).aestronglyMeasurable (Eventually.of_forall fun p ↦ ?_)
+    have := norm_normalDeriv_le (streamLiftX ω) (streamLiftY ω) p
+    have h0 := norm_nonneg (streamNormal ω p)
+    rw [Real.norm_of_nonneg (by positivity), Pi.add_apply]
+    simp only [streamNormal, streamLiftX, streamLiftY] at this h0 ⊢
+    nlinarith [sq_nonneg (‖liftL2 (streamPartial 0 ω) p‖ - ‖liftL2 (streamPartial 1 ω) p‖),
+      norm_nonneg (liftL2 (streamPartial 0 ω) p), norm_nonneg (liftL2 (streamPartial 1 ω) p)]
+  -- The exceptional levels.
+  have hgood := hMlev.and (integral_cellSquare_eq hni).1
+  set N' : Set ℝ := {h | h ∈ Ioo 0 1 ∧ ¬ ((∀ᵐ t ∂(volume.restrict
+    (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))), ‖streamLift ω (dipoleOrbit h t)‖ ≤ M) ∧
+    IntegrableOn (fun t ↦ ‖streamNormal ω (dipoleOrbit h t)‖ ^ 2)
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)))}
+  have hN' : volume N' = 0 := by
+    have := (ae_restrict_iff' measurableSet_Ioo).1 hgood
+    rw [ae_iff] at this
+    refine measure_mono_null (fun h hh ↦ ?_) this
+    exact fun himp ↦ hh.2 (himp hh.1)
+  refine ⟨N', hN', ?_⟩
+  -- The bound `|∮ Re(ψ ψ̄ₙ) dℓ| ≤ M (K ∮ |ψₙ|² dt)^{1/2}` on good levels near the separatrix.
+  obtain ⟨K, h₀, hh₀, hK⟩ := levelIntegral_gradNorm_sq_le
+  have hfilt : 𝓝[Ioi (0 : ℝ) \ (N ∪ N')] 0 ≤ 𝓝[Ioi 0 \ N] 0 :=
+    nhdsWithin_mono _ (sdiff_subset_sdiff_right subset_union_left)
+  have hup : Tendsto (fun h ↦ M * √(K * levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2))
+      (𝓝[Ioi 0 \ (N ∪ N')] 0) (𝓝 0) := by
+    have := ((hn.mono_left hfilt).const_mul K).sqrt.const_mul M
+    simpa using this
+  refine squeeze_zero_norm' ?_ hup
+  have hsmall : ∀ᶠ h in 𝓝[Ioi (0 : ℝ) \ (N ∪ N')] 0, h ∈ Ioo 0 (min h₀ 1) := by
+    have h1 : Ioo (0 : ℝ) (min h₀ 1) ∈ 𝓝[Ioi 0] 0 := Ioo_mem_nhdsGT (lt_min hh₀ one_pos)
+    exact nhdsWithin_mono _ sdiff_subset h1
+  filter_upwards [hsmall, self_mem_nhdsWithin] with h hh hmem
+  have h1 : h < 1 := hh.2.trans_le (min_le_right _ _)
+  have hgh : (∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
+      ‖streamLift ω (dipoleOrbit h t)‖ ≤ M) ∧
+      IntegrableOn (fun t ↦ ‖streamNormal ω (dipoleOrbit h t)‖ ^ 2)
+        (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)) := by
+    by_contra hc
+    exact hmem.2 (Or.inr ⟨⟨hh.1, h1⟩, hc⟩)
+  obtain ⟨hMh, hnh⟩ := hgh
+  rw [Real.norm_eq_abs]
+  exact abs_levelIntegral_first_le ω (norm_nonneg _) hh.1 h1
+    (hK h ⟨hh.1, hh.2.trans_le (min_le_left _ _)⟩ h1) hnh hMh
 
 /-- Weighted gradient traces (`lem:ee-gradient-traces`). For `ψ` even under both reflections,
     along levels `h → 0` outside a null set: `∮ |ψₙ|² dt → 0`,

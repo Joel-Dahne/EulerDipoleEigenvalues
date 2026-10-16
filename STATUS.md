@@ -219,8 +219,12 @@ tangential limits; the least worked out part) and `ee_first_trace_limit`
 (`lem:ee-first-trace-limit`, Cauchy–Schwarz with `∮ρ² dt ≤ C`). The assembly
 `ee_gradient_traces` is proved from them.
 
-**Next:** prove `ee_first_trace_limit` and `lintegral_hyperbola_le` (both
-quick); then work out `lem:ee-level-traces` on paper in more detail (middle
+**Proved (2026-10-16):** `lintegral_hyperbola_le` (no admissions) and
+`ee_first_trace_limit` (from the admitted `gradNorm_le_saddleDist`,
+`integral_saddleDist_rpow_pos_le` and the coarea formula; `∮ρ² dt` is four
+quarter integrals by the rotation invariance of `ρ`).
+
+**Next:** work out `lem:ee-level-traces` on paper in more detail (middle
 convergence in diagonal coordinates, corner tails), then `ee_arc_energy`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
