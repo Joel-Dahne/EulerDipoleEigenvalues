@@ -179,12 +179,22 @@ and for `χ(Ψ)` make their weighted integrals cancel; then
 `EvenEven.lean`: `rePair`, `re_squarePairing_smul`,
 `squareIntegral_weighted_sum`, `normal_tangent_frame`.
 
+**`ee_center_limit` is proved (2026-10-16)** (`lem:ee-center-limit`); its only
+admitted dependency is the coarea formula (`lintegral_cellSquare_eq`,
+`integral_cellSquare_eq` of `lem:orbit-coordinates`). Digest: the series
+expansion `ρ² ~ 2η` is replaced by the exact `ρ² ≤ 2(2 - Ψ)`, the period by
+`L(h) ≤ 1/h` (`eighthPeriod_le_inv`, `lem:period-integral`), and `|ψ| ≤ M`
+along a.e. level comes from the continuous representative
+(`ae_level_of_ae_cellSquare`, `levelIntegral_eq_setIntegral`, in
+`lem:level-integral-congr`). The per-level bound `abs_eeLevelTerm_le` and the
+sequence lemma `exists_seq_one_sub_mul_tendsto_zero` use no admissions.
+
 **Next:** `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the
 level-term half of `lem:ee-boundary-integrable` rest on the admitted
 orbit-coordinate formula. Remaining direct even–even inputs:
-`ee_boundary_regularity`, `ee_gradient_traces`, `virial_l2`, `ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
+`ee_boundary_regularity`, `ee_gradient_traces`, `virial_l2`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 

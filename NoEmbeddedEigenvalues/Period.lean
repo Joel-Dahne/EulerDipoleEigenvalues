@@ -12,7 +12,7 @@ elliptic-integral formula, asymptotics; monotonicity is derived from `L' < 0`).
 For `0 < h < 1` the orbit on the level `{Ψ = 2h}` in the positive cell takes flow time
 `L(h) = ∫₀^{arccos √h} da / √(cos² a - h²)` to go from its point on the axis `a = 0` to
 the diagonal; the full period is `S(h) = 8 L(h)`. The substitution `sin a = √(1 - h) t`
-gives `L(h) = ∫₀¹ dt / (√(1 - (1 - h) t²) √(1 + h - t²))`.
+gives `L(h) = ∫₀¹ dt / (√(1 - (1 - h) t²) √(1 + h - t²))`, and hence `L(h) ≤ 1/h`.
 -/
 
 noncomputable section
@@ -113,6 +113,30 @@ theorem eighthPeriod_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < eighthPeriod 
     (fun t ht ↦ ?_) zero_lt_one
   have ht' := Set.Ioo_subset_Icc_self ht
   exact one_div_pos.2 (mul_pos (sqrt_pos.2 (hA t ht')) (sqrt_pos.2 (hB t ht')))
+
+/-- `L(h) ≤ 1/h`: in the second formula for `L(h)` both square roots are at least `√h`. -/
+theorem eighthPeriod_le_inv {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : eighthPeriod h ≤ 1 / h := by
+  rw [eighthPeriod_eq h0 h1]
+  have hpos : 0 < √h := Real.sqrt_pos.2 h0
+  have hlow : ∀ t ∈ Set.Icc (0 : ℝ) 1, √h ≤ √(1 - (1 - h) * t ^ 2) ∧ √h ≤ √(1 + h - t ^ 2) := by
+    intro t ht
+    have ht2 : t ^ 2 ≤ 1 := by nlinarith [ht.1, ht.2]
+    exact ⟨Real.sqrt_le_sqrt (by nlinarith), Real.sqrt_le_sqrt (by linarith)⟩
+  have hcont : ContinuousOn (fun t : ℝ ↦ 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)))
+      (Set.Icc 0 1) := by
+    refine continuousOn_const.div (by fun_prop) fun t ht ↦ ?_
+    exact (mul_pos (hpos.trans_le (hlow t ht).1) (hpos.trans_le (hlow t ht).2)).ne'
+  have hb : ∀ t ∈ Set.Icc (0 : ℝ) 1, 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)) ≤ 1 / h := by
+    intro t ht
+    obtain ⟨hA, hB⟩ := hlow t ht
+    have hsh : √h * √h = h := Real.mul_self_sqrt h0.le
+    apply one_div_le_one_div_of_le h0
+    nlinarith [mul_le_mul hA hB hpos.le (hpos.le.trans hA)]
+  calc (∫ t in (0 : ℝ)..1, 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)))
+      ≤ ∫ t in (0 : ℝ)..1, 1 / h :=
+        intervalIntegral.integral_mono_on zero_le_one
+          (hcont.intervalIntegrable_of_Icc zero_le_one) intervalIntegrable_const hb
+    _ = 1 / h := by simp
 
 theorem orbitPeriod_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < orbitPeriod h := by
   have := eighthPeriod_pos h0 h1

@@ -17,8 +17,9 @@ Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-cutoff-identity
 the cutoff identity by coarea and du Bois-Reymond), `lem:ee-truncated-virial` (from the annular
 identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
-`lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
-Inputs: the level-term half of `lem:ee-boundary-integrable`, `lem:ee-center-limit`,
+`lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`,
+`lem:ee-center-limit` (from the coarea formula of `lem:orbit-coordinates`).
+Inputs: the level-term half of `lem:ee-boundary-integrable`,
 `lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
@@ -32,6 +33,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Filter Topology Set
+open scoped ENNReal
 
 /-- The normal derivative `ψₙ` of the stream function of `ω` (outward from `{Ψ > 2h}`). -/
 abbrev streamNormal (ω : L2) : ℝ × ℝ → ℂ := normalDeriv (streamLiftX ω) (streamLiftY ω)
@@ -796,14 +798,357 @@ theorem ee_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   rw [hset, hind, intervalIntegral.integral_of_le hh'.le, integral_Ioc_eq_integral_Ioo,
     integral_const_mul]
 
+/-! ### The level terms at the center -/
+
+/-- If `∫₀¹ g < ∞`, then outside every null set there are levels `h_j → 1` with
+    `(1 - h_j) g(h_j) → 0`: otherwise `g ≥ c/(1 - h)` near `1`, which is not integrable. -/
+theorem exists_seq_one_sub_mul_tendsto_zero {g : ℝ → ℝ≥0∞} (hg : ∫⁻ h in Ioo 0 1, g h ≠ ∞)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Ioo 0 1 ∧ hs j ∉ N) ∧ Tendsto hs atTop (𝓝 1) ∧
+      Tendsto (fun j ↦ ENNReal.ofReal (1 - hs j) * g (hs j)) atTop (𝓝 0) := by
+  have key : ∀ δ : ℝ, 0 < δ → δ < 1 → ∃ h, h ∈ Ioo (1 - δ) 1 ∧ h ∉ N ∧
+      ENNReal.ofReal (1 - h) * g h < ENNReal.ofReal δ := by
+    intro δ hδ hδ1
+    by_contra hcon
+    push Not at hcon
+    have hae : ∀ᵐ h ∂(volume.restrict (Ioo (1 - δ) 1)),
+        ENNReal.ofReal δ * ENNReal.ofReal ((1 - h)⁻¹) ≤ g h := by
+      have hNc : ∀ᵐ h ∂(volume.restrict (Ioo (1 - δ) 1)), h ∉ N :=
+        ae_restrict_of_ae (measure_eq_zero_iff_ae_notMem.1 hN)
+      filter_upwards [hNc, ae_restrict_mem measurableSet_Ioo] with h hhN hh
+      have h1 : 0 < 1 - h := by linarith [hh.2]
+      rw [ENNReal.ofReal_inv_of_pos h1]
+      calc ENNReal.ofReal δ * (ENNReal.ofReal (1 - h))⁻¹
+          ≤ ENNReal.ofReal (1 - h) * g h * (ENNReal.ofReal (1 - h))⁻¹ := by
+            gcongr
+            exact hcon h hh hhN
+        _ = g h := by
+          rw [mul_comm (ENNReal.ofReal (1 - h)), mul_assoc,
+            ENNReal.mul_inv_cancel (by simpa using h1) ENNReal.ofReal_ne_top, mul_one]
+    -- `1/(1 - h)` is not integrable near `1`.
+    have hinf : ∫⁻ h in Ioo (1 - δ) 1, ENNReal.ofReal ((1 - h)⁻¹) = ∞ := by
+      by_contra hfin
+      have hint : IntegrableOn (fun h : ℝ ↦ (1 - h)⁻¹) (Ioo (1 - δ) 1) := by
+        refine ⟨(by fun_prop : Measurable fun h : ℝ ↦ (1 - h)⁻¹).aestronglyMeasurable, ?_⟩
+        rw [hasFiniteIntegral_iff_ofReal]
+        · exact lt_top_iff_ne_top.2 hfin
+        · filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
+          exact inv_nonneg.2 (by linarith [hh.2])
+      have hii : IntervalIntegrable (fun x : ℝ ↦ (x - 1)⁻¹) volume (1 - δ) 1 := by
+        rw [intervalIntegrable_iff_integrableOn_Ioo_of_le (by linarith)]
+        refine hint.neg.congr_fun (fun x _ ↦ ?_) measurableSet_Ioo
+        simp only [Pi.neg_apply, ← inv_neg, neg_sub]
+      rcases intervalIntegrable_sub_inv_iff.1 hii with h | h
+      · linarith
+      · exact h (by rw [uIcc_of_le (by linarith)]; exact ⟨by linarith, le_rfl⟩)
+    have hle := lintegral_mono_ae hae
+    rw [lintegral_const_mul _ (by fun_prop), hinf,
+      ENNReal.mul_top (by simpa using hδ)] at hle
+    exact hg (top_le_iff.1 (hle.trans (lintegral_mono_set (Ioo_subset_Ioo_left (by linarith)))))
+  choose hs hmem hNs hlt using fun j : ℕ ↦
+    key (1 / ((j : ℝ) + 2)) (by positivity) (by rw [div_lt_one (by positivity)]; linarith)
+  have hδ : Tendsto (fun j : ℕ ↦ 1 / ((j : ℝ) + 2)) atTop (𝓝 0) := by
+    have := tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ)
+    refine squeeze_zero (fun j ↦ by positivity) (fun j ↦ ?_) this
+    exact one_div_le_one_div_of_le (by positivity) (by linarith)
+  have hδ1 (j : ℕ) : 1 / ((j : ℝ) + 2) < 1 := by
+    rw [div_lt_one (by positivity)]
+    linarith
+  refine ⟨hs, fun j ↦ ⟨⟨by linarith [(hmem j).1, hδ1 j], (hmem j).2⟩, hNs j⟩, ?_, ?_⟩
+  · have hlow : Tendsto (fun j : ℕ ↦ 1 - 1 / ((j : ℝ) + 2)) atTop (𝓝 1) := by
+      simpa using tendsto_const_nhds.sub hδ
+    exact tendsto_of_tendsto_of_tendsto_of_le_of_le hlow tendsto_const_nhds
+      (fun j ↦ (hmem j).1.le) (fun j ↦ (hmem j).2.le)
+  · have hup : Tendsto (fun j : ℕ ↦ ENNReal.ofReal (1 / ((j : ℝ) + 2))) atTop (𝓝 0) := by
+      have := (ENNReal.continuous_ofReal.tendsto 0).comp hδ
+      rwa [ENNReal.ofReal_zero] at this
+    exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hup
+      (fun j ↦ zero_le) (fun j ↦ (hlt j).le)
+
+/-- The level term near the center (`lem:ee-center-limit`): with
+    `g = ∮ (|ψ|² + |ψₓ|² + |ψ_y|² + |ω|²) dt` and `|ψ| ≤ M` along the level `{Ψ = 2h}`,
+    `|G(h)| ≤ M (128 (1 - h) g)^{1/2} + 10 (1 - h) g`. The first term uses Cauchy–Schwarz,
+    `ρ² ≤ 2(2 - Ψ) = 4(1 - h)` and `S(h) = 8L(h) ≤ 8/h`. -/
+theorem abs_eeLevelTerm_le (ω : L2) {M h : ℝ} (hM0 : 0 ≤ M) (hh : 1 / 2 < h) (h1 : h < 1)
+    (hF : IntegrableOn (fun t ↦ ‖streamLift ω (dipoleOrbit h t)‖ ^ 2 +
+      ‖streamLiftX ω (dipoleOrbit h t)‖ ^ 2 + ‖streamLiftY ω (dipoleOrbit h t)‖ ^ 2 +
+      ‖liftL2 ω (dipoleOrbit h t)‖ ^ 2) (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)))
+    (hM : ∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
+      ‖streamLift ω (dipoleOrbit h t)‖ ≤ M) :
+    |eeLevelTerm ω h| ≤
+      M * √(128 * ((1 - h) * ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        (‖streamLift ω (dipoleOrbit h t)‖ ^ 2 + ‖streamLiftX ω (dipoleOrbit h t)‖ ^ 2 +
+          ‖streamLiftY ω (dipoleOrbit h t)‖ ^ 2 + ‖liftL2 ω (dipoleOrbit h t)‖ ^ 2))) +
+      10 * ((1 - h) * ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        (‖streamLift ω (dipoleOrbit h t)‖ ^ 2 + ‖streamLiftX ω (dipoleOrbit h t)‖ ^ 2 +
+          ‖streamLiftY ω (dipoleOrbit h t)‖ ^ 2 + ‖liftL2 ω (dipoleOrbit h t)‖ ^ 2)) := by
+  have h0 : 0 < h := by linarith
+  have hL := eighthPeriod_pos h0 h1
+  have hL2 : eighthPeriod h ≤ 2 :=
+    (eighthPeriod_le_inv h0 h1).trans (by rw [div_le_iff₀ h0]; linarith)
+  set I := Ico (-2 * eighthPeriod h) (6 * eighthPeriod h) with hI
+  set γ : ℝ → ℝ × ℝ := fun t ↦ dipoleOrbit h t with hγ
+  have hγm : Measurable γ :=
+    (continuous_dipoleOrbit.comp (continuous_const.prodMk continuous_id)).measurable
+  have hmeas (g : L2) : Measurable (fun t ↦ liftL2 g (γ t)) :=
+    ((Lp.stronglyMeasurable g).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
+  have hs := hmeas (invLap ω)
+  have hx := hmeas (streamPartial 0 ω)
+  have hy := hmeas (streamPartial 1 ω)
+  have hw := hmeas ω
+  set F : ℝ → ℝ := fun t ↦ ‖streamLift ω (γ t)‖ ^ 2 + ‖streamLiftX ω (γ t)‖ ^ 2 +
+    ‖streamLiftY ω (γ t)‖ ^ 2 + ‖liftL2 ω (γ t)‖ ^ 2 with hFdef
+  -- Pointwise bounds along the level.
+  have hρ2 (t : ℝ) : gradNorm (γ t) ^ 2 ≤ 4 * (1 - h) := by
+    have hΨ := dipoleLift_dipoleOrbit h0 h1 t
+    rw [gradNorm, Real.sq_sqrt (by positivity)]
+    simp only [dipoleLift] at hΨ
+    nlinarith [Real.sin_sq_add_cos_sq (γ t).1, Real.sin_sq_add_cos_sq (γ t).2,
+      sq_nonneg (1 - Real.cos (γ t).1), sq_nonneg (1 - Real.cos (γ t).2)]
+  have hρ0 (t : ℝ) : 0 ≤ gradNorm (γ t) := Real.sqrt_nonneg _
+  have hρle (t : ℝ) : gradNorm (γ t) ≤ 2 := by nlinarith [hρ2 t, hρ0 t]
+  have hn (t : ℝ) : ‖streamNormal ω (γ t)‖ ^ 2 ≤ 2 * F t := by
+    have := norm_normalDeriv_le (streamLiftX ω) (streamLiftY ω) (γ t)
+    have h0' := norm_nonneg (streamNormal ω (γ t))
+    simp only [hFdef]
+    nlinarith [sq_nonneg (‖streamLiftX ω (γ t)‖ - ‖streamLiftY ω (γ t)‖),
+      norm_nonneg (streamLiftX ω (γ t)), norm_nonneg (streamLiftY ω (γ t)),
+      sq_nonneg ‖streamLift ω (γ t)‖, sq_nonneg ‖liftL2 ω (γ t)‖]
+  have htg (t : ℝ) : ‖streamTangent ω (γ t)‖ ^ 2 ≤ 2 * F t := by
+    have := norm_tangentDeriv_le (streamLiftX ω) (streamLiftY ω) (γ t)
+    have h0' := norm_nonneg (streamTangent ω (γ t))
+    simp only [hFdef]
+    nlinarith [sq_nonneg (‖streamLiftX ω (γ t)‖ - ‖streamLiftY ω (γ t)‖),
+      norm_nonneg (streamLiftX ω (γ t)), norm_nonneg (streamLiftY ω (γ t)),
+      sq_nonneg ‖streamLift ω (γ t)‖, sq_nonneg ‖liftL2 ω (γ t)‖]
+  have hre (u v : ℂ) : |(u * (starRingEnd ℂ) v).re| ≤ ‖u‖ * ‖v‖ := by
+    refine (Complex.abs_re_le_norm _).trans ?_
+    rw [norm_mul, Complex.norm_conj]
+  have hws (t : ℝ) : |(liftL2 ω (γ t) * (starRingEnd ℂ) (streamLift ω (γ t))).re| ≤ F t := by
+    refine (hre _ _).trans ?_
+    simp only [hFdef]
+    nlinarith [sq_nonneg (‖liftL2 ω (γ t)‖ - ‖streamLift ω (γ t)‖),
+      sq_nonneg ‖streamLiftX ω (γ t)‖, sq_nonneg ‖streamLiftY ω (γ t)‖]
+  have hA (t : ℝ) : |gradNorm (γ t) * (streamLift ω (γ t) *
+      (starRingEnd ℂ) (streamNormal ω (γ t))).re| ≤ 3 * F t := by
+    rw [abs_mul, abs_of_nonneg (hρ0 t)]
+    have h1' := hre (streamLift ω (γ t)) (streamNormal ω (γ t))
+    have h2' := hn t
+    have h3' : ‖streamLift ω (γ t)‖ ^ 2 ≤ F t := by
+      simp only [hFdef]
+      nlinarith [sq_nonneg ‖streamLiftX ω (γ t)‖, sq_nonneg ‖streamLiftY ω (γ t)‖,
+        sq_nonneg ‖liftL2 ω (γ t)‖]
+    nlinarith [mul_le_mul (hρle t) h1' (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 2),
+      sq_nonneg (‖streamLift ω (γ t)‖ - ‖streamNormal ω (γ t)‖)]
+  -- Measurability along the level.
+  have hρm : Measurable (fun t ↦ gradNorm (γ t)) := by
+    simp only [gradNorm]
+    fun_prop
+  have hnm : Measurable (fun t ↦ streamNormal ω (γ t)) := by
+    simp only [streamNormal, normalDeriv, gradNorm, streamLiftX, streamLiftY]
+    fun_prop
+  have htm : Measurable (fun t ↦ streamTangent ω (γ t)) := by
+    simp only [streamTangent, tangentDeriv, gradNorm, streamLiftX, streamLiftY]
+    fun_prop
+  have hsm : Measurable (fun t ↦ streamLift ω (γ t)) := hs
+  -- Integrability along the level.
+  have iF : Integrable F (volume.restrict I) := hF
+  have iN : Integrable (fun t ↦ ‖streamNormal ω (γ t)‖ ^ 2) (volume.restrict I) :=
+    (iF.const_mul 2).mono' (hnm.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+      rw [Real.norm_of_nonneg (by positivity)]; exact hn t)
+  have iT : Integrable (fun t ↦ ‖streamTangent ω (γ t)‖ ^ 2) (volume.restrict I) :=
+    (iF.const_mul 2).mono' (htm.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+      rw [Real.norm_of_nonneg (by positivity)]; exact htg t)
+  have iW : Integrable (fun t ↦ (liftL2 ω (γ t) * (starRingEnd ℂ) (streamLift ω (γ t))).re)
+      (volume.restrict I) :=
+    iF.mono' (by fun_prop) (Eventually.of_forall fun t ↦ hws t)
+  have iA : Integrable (fun t ↦ gradNorm (γ t) * (streamLift ω (γ t) *
+      (starRingEnd ℂ) (streamNormal ω (γ t))).re) (volume.restrict I) :=
+    (iF.const_mul 3).mono' (by fun_prop) (Eventually.of_forall fun t ↦ hA t)
+  have iρ : Integrable (fun t ↦ gradNorm (γ t) ^ 2) (volume.restrict I) :=
+    (integrable_const (4 * (1 - h))).mono' (hρm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+      rw [Real.norm_of_nonneg (by positivity)]; exact hρ2 t)
+  have iρn : Integrable (fun t ↦ gradNorm (γ t) * ‖streamNormal ω (γ t)‖)
+      (volume.restrict I) :=
+    (iρ.add iN).mono' (hρm.mul hnm.norm).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+      rw [Real.norm_of_nonneg (mul_nonneg (hρ0 t) (norm_nonneg _)), Pi.add_apply]
+      nlinarith [sq_nonneg (gradNorm (γ t) - ‖streamNormal ω (γ t)‖)])
+  -- The level term as integrals over `[-2L, 6L)`.
+  have hG : eeLevelTerm ω h =
+      (∫ t in I, gradNorm (γ t) * (streamLift ω (γ t) *
+        (starRingEnd ℂ) (streamNormal ω (γ t))).re) +
+      (2 - 2 * h) * ((∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2) -
+        (∫ t in I, ‖streamTangent ω (γ t)‖ ^ 2) -
+        ∫ t in I, (liftL2 ω (γ t) * (starRingEnd ℂ) (streamLift ω (γ t))).re) := by
+    simp only [eeLevelTerm, levelIntegral_eq_setIntegral h0 h1, hI, hγ]
+  set g := ∫ t in I, F t with hg
+  have hg0 : 0 ≤ g := integral_nonneg fun t ↦ by positivity
+  -- The three terms with the factor `2 - 2h`.
+  have hB : |∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2| ≤ 2 * g := by
+    rw [abs_of_nonneg (integral_nonneg fun t ↦ by positivity), ← integral_const_mul]
+    exact integral_mono iN (iF.const_mul 2) hn
+  have hC : |∫ t in I, ‖streamTangent ω (γ t)‖ ^ 2| ≤ 2 * g := by
+    rw [abs_of_nonneg (integral_nonneg fun t ↦ by positivity), ← integral_const_mul]
+    exact integral_mono iT (iF.const_mul 2) htg
+  have hD : |∫ t in I, (liftL2 ω (γ t) * (starRingEnd ℂ) (streamLift ω (γ t))).re| ≤ g :=
+    (abs_integral_le_integral_abs).trans (integral_mono iW.abs iF hws)
+  -- The arclength term, by Cauchy–Schwarz.
+  have hρI : ∫ t in I, gradNorm (γ t) ^ 2 ≤ 64 * (1 - h) := by
+    calc ∫ t in I, gradNorm (γ t) ^ 2 ≤ ∫ t in I, 4 * (1 - h) :=
+          integral_mono iρ (integrable_const _) hρ2
+      _ = 8 * eighthPeriod h * (4 * (1 - h)) := by
+          rw [setIntegral_const, hI, Real.volume_real_Ico_of_le (by linarith), smul_eq_mul]
+          ring
+      _ ≤ 64 * (1 - h) := by nlinarith
+  have hCS := integral_mul_le_Lp_mul_Lq_of_nonneg (μ := volume.restrict I)
+    Real.HolderConjugate.two_two (Eventually.of_forall fun t ↦ hρ0 t)
+    (Eventually.of_forall fun t ↦ norm_nonneg (streamNormal ω (γ t)))
+    (by rw [ENNReal.ofReal_ofNat]
+        exact (memLp_two_iff_integrable_sq hρm.aestronglyMeasurable).2 iρ)
+    (by rw [ENNReal.ofReal_ofNat]
+        exact (memLp_two_iff_integrable_sq hnm.norm.aestronglyMeasurable).2 iN)
+  simp only [Real.rpow_two, ← Real.sqrt_eq_rpow] at hCS
+  have hA' : |∫ t in I, gradNorm (γ t) * (streamLift ω (γ t) *
+      (starRingEnd ℂ) (streamNormal ω (γ t))).re| ≤ M * √(128 * ((1 - h) * g)) := by
+    calc _ ≤ ∫ t in I, |gradNorm (γ t) * (streamLift ω (γ t) *
+          (starRingEnd ℂ) (streamNormal ω (γ t))).re| := abs_integral_le_integral_abs
+      _ ≤ ∫ t in I, M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) := by
+          refine integral_mono_ae iA.abs (iρn.const_mul M) ?_
+          filter_upwards [hM] with t ht
+          rw [abs_mul, abs_of_nonneg (hρ0 t)]
+          calc gradNorm (γ t) * |(streamLift ω (γ t) *
+                (starRingEnd ℂ) (streamNormal ω (γ t))).re|
+              ≤ gradNorm (γ t) * (‖streamLift ω (γ t)‖ * ‖streamNormal ω (γ t)‖) :=
+                mul_le_mul_of_nonneg_left (hre _ _) (hρ0 t)
+            _ ≤ gradNorm (γ t) * (M * ‖streamNormal ω (γ t)‖) :=
+                mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right ht (norm_nonneg _)) (hρ0 t)
+            _ = M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) := by ring
+      _ = M * ∫ t in I, gradNorm (γ t) * ‖streamNormal ω (γ t)‖ := integral_const_mul _ _
+      _ ≤ M * (√(∫ t in I, gradNorm (γ t) ^ 2) * √(∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2)) := by
+          gcongr
+      _ ≤ M * (√(64 * (1 - h)) * √(2 * g)) := by
+          gcongr
+          exact (le_abs_self _).trans hB
+      _ = M * √(128 * ((1 - h) * g)) := by
+          rw [← Real.sqrt_mul (by linarith)]
+          congr 2
+          ring
+  rw [hG]
+  calc _ ≤ |∫ t in I, gradNorm (γ t) * (streamLift ω (γ t) *
+        (starRingEnd ℂ) (streamNormal ω (γ t))).re| +
+      (2 - 2 * h) * (|∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2| +
+        |∫ t in I, ‖streamTangent ω (γ t)‖ ^ 2| +
+        |∫ t in I, (liftL2 ω (γ t) * (starRingEnd ℂ) (streamLift ω (γ t))).re|) := by
+        refine (abs_add_le _ _).trans (add_le_add le_rfl ?_)
+        rw [abs_mul, abs_of_nonneg (by linarith : (0 : ℝ) ≤ 2 - 2 * h)]
+        exact mul_le_mul_of_nonneg_left
+          ((abs_sub _ _).trans (add_le_add (abs_sub _ _) le_rfl)) (by linarith)
+    _ ≤ M * √(128 * ((1 - h) * g)) + (2 - 2 * h) * (2 * g + 2 * g + g) := by
+        gcongr
+        · linarith
+    _ = M * √(128 * ((1 - h) * g)) + 10 * ((1 - h) * g) := by ring
+
 /-- The level terms vanish at the center along a sequence (`lem:ee-center-limit`): for every
     null set `N` there are levels `h_j → 1` outside `N` with `G(h_j) → 0`. Both terms of `G`
-    are bounded by `(1 - h)g(h)` or `((1 - h)g(h))^{1/2}` with `∫ g < ∞` by coarea, since
-    `ρ² ~ 2(2 - Ψ)` at the center. Only `ω ∈ L²` and `ψ ∈ H²` are used. -/
+    are bounded by `(1 - h)g(h)` or `((1 - h)g(h))^{1/2}` (`abs_eeLevelTerm_le`), and
+    `∫ g < ∞` by coarea. Only `ω ∈ L²`, `ψ ∈ H²` and the coarea formula are used. -/
 theorem ee_center_limit (ω : L2) {N : Set ℝ} (hN : volume N = 0) :
     ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Ioo 0 1 ∧ hs j ∉ N) ∧ Tendsto hs atTop (𝓝 1) ∧
       Tendsto (fun j ↦ eeLevelTerm ω (hs j)) atTop (𝓝 0) := by
-  sorry
+  have hmeas (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
+  -- `F = |ψ|² + |ψₓ|² + |ψ_y|² + |ω|²` is integrable on the cell.
+  obtain ⟨F, hF⟩ : ∃ F : ℝ × ℝ → ℝ, F = fun p ↦ ‖streamLift ω p‖ ^ 2 +
+      ‖streamLiftX ω p‖ ^ 2 + ‖streamLiftY ω p‖ ^ 2 + ‖liftL2 ω p‖ ^ 2 := ⟨_, rfl⟩
+  have hFm : Measurable F := by
+    have h0 := hmeas (invLap ω)
+    have h1 := hmeas ω
+    have h2 := hmeas (streamPartial 0 ω)
+    have h3 := hmeas (streamPartial 1 ω)
+    rw [hF]
+    simp only [streamLift, streamLiftX, streamLiftY]
+    fun_prop
+  have hAs : cellSquare ⊆
+      Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro p ⟨ha, hb⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    simp only [mem_prod, mem_Ioc]
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith [Real.pi_pos]
+  have hsq (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) cellSquare :=
+    (integrableOn_norm_liftL2_sq g).mono_set hAs
+  have hFi : IntegrableOn F cellSquare := by
+    rw [hF]
+    exact (((hsq _).add (hsq _)).add (hsq _)).add (hsq _)
+  -- `∫₀¹ g < ∞` for `g(h) = ∮ F dt`, by the coarea formula.
+  have hg : ∫⁻ h in Ioo 0 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+      ENNReal.ofReal (F (dipoleOrbit h t)) ≠ ∞ := by
+    intro htop
+    have hc := lintegral_cellSquare_eq (ENNReal.measurable_ofReal.comp hFm)
+    have hlt := hFi.lintegral_lt_top
+    simp only [Function.comp_apply] at hc
+    rw [hc, htop, ENNReal.mul_top (by norm_num)] at hlt
+    exact lt_irrefl _ hlt
+  -- `|ψ| ≤ M` almost everywhere, hence along almost every level.
+  set M := ‖continuousRep (invLap ω)‖
+  have hM : ∀ᵐ p ∂(volume.restrict cellSquare), ‖streamLift ω p‖ ≤ M := by
+    refine ae_restrict_of_ae ?_
+    filter_upwards [streamLift_ae_eq_contStream ω] with p hp
+    rw [hp, contStream]
+    exact (continuousRep (invLap ω)).norm_coe_le_norm _
+  have hMlev := ae_level_of_ae_cellSquare (P := fun p ↦ ‖streamLift ω p‖ ≤ M)
+    (measurableSet_le (hmeas (invLap ω)).norm measurable_const) hM
+  -- The bound on almost every level close to the center.
+  have hgood : ∀ᵐ h ∂(volume.restrict (Ioo 0 1)), 1 / 2 < h → h < 1 →
+      |eeLevelTerm ω h| ≤ M * √(128 * ((1 - h) * (∫⁻ t in Ico (-2 * eighthPeriod h)
+        (6 * eighthPeriod h), ENNReal.ofReal (F (dipoleOrbit h t))).toReal)) +
+      10 * ((1 - h) * (∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        ENNReal.ofReal (F (dipoleOrbit h t))).toReal) := by
+    filter_upwards [hMlev, (integral_cellSquare_eq hFi).1] with h hMh hFh hh h1
+    have hFh' := hFh
+    rw [hF] at hFh'
+    have hb := abs_eeLevelTerm_le ω (norm_nonneg _) hh h1 hFh' hMh
+    have hint : ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), F (dipoleOrbit h t) =
+        (∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+          ENNReal.ofReal (F (dipoleOrbit h t))).toReal :=
+      integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall fun t ↦ by
+        simp only [hF]; positivity) hFh.aestronglyMeasurable
+    rw [← hint]
+    simp only [hF]
+    exact hb
+  -- Choose the levels outside `N` and outside the exceptional set of `hgood`.
+  rw [ae_restrict_iff' measurableSet_Ioo] at hgood
+  obtain ⟨hs, hmem, hlim, hprod⟩ := exists_seq_one_sub_mul_tendsto_zero hg
+    (N := N ∪ {h | ¬(h ∈ Ioo 0 1 → 1 / 2 < h → h < 1 → _)})
+    (measure_union_null hN (ae_iff.1 hgood))
+  refine ⟨hs, fun j ↦ ⟨(hmem j).1, fun h ↦ (hmem j).2 (Or.inl h)⟩, hlim, ?_⟩
+  -- `(1 - h_j) g(h_j) → 0` and the bound give `G(h_j) → 0`.
+  have hpr : Tendsto (fun j ↦ (1 - hs j) * (∫⁻ t in Ico (-2 * eighthPeriod (hs j))
+      (6 * eighthPeriod (hs j)), ENNReal.ofReal (F (dipoleOrbit (hs j) t))).toReal)
+      atTop (𝓝 0) := by
+    have := (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp hprod
+    simp only [ENNReal.toReal_zero] at this
+    refine this.congr fun j ↦ ?_
+    have h1 : (0 : ℝ) ≤ 1 - hs j := by linarith [(hmem j).1.2]
+    simp only [Function.comp_apply, ENNReal.toReal_mul, ENNReal.toReal_ofReal h1]
+  have hup : Tendsto (fun j ↦ M * √(128 * ((1 - hs j) * (∫⁻ t in Ico (-2 * eighthPeriod (hs j))
+      (6 * eighthPeriod (hs j)), ENNReal.ofReal (F (dipoleOrbit (hs j) t))).toReal)) +
+      10 * ((1 - hs j) * (∫⁻ t in Ico (-2 * eighthPeriod (hs j))
+      (6 * eighthPeriod (hs j)), ENNReal.ofReal (F (dipoleOrbit (hs j) t))).toReal))
+      atTop (𝓝 0) := by
+    have := ((hpr.const_mul 128).sqrt.const_mul M).add (hpr.const_mul 10)
+    simpa using this
+  have hev : ∀ᶠ j in atTop, 1 / 2 < hs j :=
+    hlim.eventually (lt_mem_nhds (by norm_num))
+  refine squeeze_zero_norm' ?_ hup
+  filter_upwards [hev] with j hj
+  have hgj := (hmem j).2
+  simp only [mem_union, mem_ofPred_eq, not_or, not_not] at hgj
+  exact hgj.2 (hmem j).1 hj (hmem j).1.2
 
 /-- The truncated virial identity (`lem:ee-truncated-virial`), using `ε = 2h` so its null
     set can be combined with the boundary limits. Integrability of the bulk is explicit;

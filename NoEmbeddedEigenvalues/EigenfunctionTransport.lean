@@ -4,7 +4,8 @@ import NoEmbeddedEigenvalues.Sectors
 /-!
 # Transport traces of eigenfunctions
 
-Blueprint: `lem:ee-transport-traces`.
+Blueprint: `lem:ee-transport-traces`; also `lem:level-integral-congr` (changing
+representatives on levels, a.e. statements on a.e. level, level integrals over `[-2L, 6L)`).
 
 Specialize the abstract Melnikov and pairing statements to eigenfunctions, replacing the
 raw stream lift with its continuous representative. The neighbourhood is the diagonal
@@ -344,6 +345,57 @@ theorem ae_levelIntegral_congr {f g : ℝ × ℝ → ℝ} (hf : Measurable f) (h
   filter_upwards [hn0'] with t ht htI
   rw [uIoc_of_le hS.le] at htI
   exact sub_eq_zero.mp (abs_eq_zero.mp (ht htI))
+
+/-- Level integrals over one period are integrals over `[-2L(h), 6L(h))`, the range of the
+    flow-time coordinate, by periodicity of the orbit. -/
+theorem levelIntegral_eq_setIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (f : ℝ × ℝ → E) :
+    levelIntegral h f =
+      ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), f (dipoleOrbit h t) := by
+  have hL := eighthPeriod_pos h0 h1
+  have hp : Function.Periodic (fun t ↦ f (dipoleOrbit h t)) (orbitPeriod h) := fun t ↦
+    congrArg f (dipoleOrbit_periodic h0 h1 t)
+  have hsum : -2 * eighthPeriod h + orbitPeriod h = 6 * eighthPeriod h := by
+    unfold orbitPeriod
+    ring
+  rw [levelIntegral, ← zero_add (orbitPeriod h), hp.intervalIntegral_add_eq 0 (-2 * eighthPeriod h),
+    hsum, intervalIntegral.integral_of_le (by linarith), integral_Ico_eq_integral_Ioc]
+
+/-- Almost-everywhere statements on the cell hold almost everywhere on almost every level. -/
+theorem ae_level_of_ae_cellSquare {P : ℝ × ℝ → Prop} (hP : MeasurableSet {p | P p})
+    (hae : ∀ᵐ p ∂(volume.restrict cellSquare), P p) :
+    ∀ᵐ h ∂(volume.restrict (Ioo 0 1)), ∀ᵐ t ∂(volume.restrict
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))), P (dipoleOrbit h t) := by
+  let d : ℝ × ℝ → ℝ≥0∞ := {p | P p}ᶜ.indicator 1
+  have hd : Measurable d := measurable_one.indicator hP.compl
+  have hc0 : (∫⁻ p in cellSquare, d p) = 0 := by
+    rw [lintegral_indicator_one hP.compl]
+    exact ae_iff.1 hae
+  have hc := lintegral_cellSquare_eq hd
+  rw [hc0] at hc
+  have hz : (∫⁻ h in Ioo 0 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+      d (dipoleOrbit h t)) = 0 :=
+    (mul_eq_zero.mp hc.symm).resolve_left (by norm_num)
+  let A : Set (ℝ × ℝ) := {q | -2 * eighthPeriod q.1 ≤ q.2 ∧ q.2 < 6 * eighthPeriod q.1}
+  have hA : MeasurableSet A :=
+    (measurableSet_le (measurable_eighthPeriod.comp measurable_fst |>.const_mul (-2))
+      measurable_snd).inter (measurableSet_lt measurable_snd
+        (measurable_eighthPeriod.comp measurable_fst |>.const_mul 6))
+  have hm : Measurable (fun h ↦ ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+      d (dipoleOrbit h t)) := by
+    have hh := ((hd.comp continuous_dipoleOrbit.measurable).indicator hA).lintegral_prod_right'
+      (ν := (volume : Measure ℝ))
+    convert hh using 1
+    funext h
+    rw [← lintegral_indicator measurableSet_Ico]
+    rfl
+  filter_upwards [(lintegral_eq_zero_iff hm).1 hz] with h hh
+  have htime : Measurable (fun t ↦ d (dipoleOrbit h t)) :=
+    hd.comp (continuous_dipoleOrbit.comp (continuous_const.prodMk continuous_id)).measurable
+  filter_upwards [(lintegral_eq_zero_iff htime).1 hh] with t ht
+  by_contra hne
+  have : d (dipoleOrbit h t) = 1 := indicator_of_mem (show dipoleOrbit h t ∈ {p | P p}ᶜ from hne) _
+  simp [this] at ht
 
 /-- The raw stream lift and its continuous representative agree almost everywhere globally. -/
 theorem streamLift_ae_eq_contStream (ω : L2) : streamLift ω =ᵐ[volume] contStream ω :=

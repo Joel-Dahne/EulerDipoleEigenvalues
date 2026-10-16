@@ -446,19 +446,21 @@ integrand is bounded, since $\cos^2a\ge h>h^2$ on the interval of integration.
 \lean{NoEmbeddedEigenvalues.eighthPeriod_eq,
   NoEmbeddedEigenvalues.eighthPeriod_pos,
   NoEmbeddedEigenvalues.orbitPeriod_pos,
-  NoEmbeddedEigenvalues.orbitFrequency_pos}
+  NoEmbeddedEigenvalues.orbitFrequency_pos,
+  NoEmbeddedEigenvalues.eighthPeriod_le_inv}
 \leanok
 For $0<h<1$,
 \[
   L(h)=\int_0^1\frac{dt}{\sqrt{1-(1-h)t^2}\sqrt{1+h-t^2}},
 \]
-and $L(h),S(h),b(h)>0$.
+$L(h),S(h),b(h)>0$, and $L(h)\le1/h$.
 \end{lemma}
 
 \begin{proof}
 \leanok
 Substitute $\sin a=\sqrt{1-h}\,t$: then $\cos^2a=1-(1-h)t^2$,
-$da=\sqrt{1-h}\,dt/\cos a$ and $\cos^2a-h^2=(1-h)(1+h-t^2)$.
+$da=\sqrt{1-h}\,dt/\cos a$ and $\cos^2a-h^2=(1-h)(1+h-t^2)$. For $t\in[0,1]$ both
+$1-(1-h)t^2$ and $1+h-t^2$ are at least $h$, so the integrand is at most $1/h$.
 \end{proof}
 
 \begin{lemma}[Orbits and their period]
@@ -626,10 +628,15 @@ of $L$ is Fubini for the measurable integrand of Definition~\ref{def:period}.
 \begin{lemma}[Changing representatives on levels]
 \label{lem:level-integral-congr}
 \uses{def:level-integral}
-\lean{NoEmbeddedEigenvalues.ae_levelIntegral_congr}
+\lean{NoEmbeddedEigenvalues.ae_levelIntegral_congr,
+  NoEmbeddedEigenvalues.ae_level_of_ae_cellSquare,
+  NoEmbeddedEigenvalues.levelIntegral_eq_setIntegral}
 \leanok
 Let $f,g$ be measurable on $\R^2$ with $f=g$ almost everywhere. Then
-$\oint_{\{\Psi=2h\}}f\,dt=\oint_{\{\Psi=2h\}}g\,dt$ for almost every $h\in(0,1)$.
+$\oint_{\{\Psi=2h\}}f\,dt=\oint_{\{\Psi=2h\}}g\,dt$ for almost every $h\in(0,1)$. More
+generally, a measurable property that holds almost everywhere on $\Cell$ holds, for almost
+every $h\in(0,1)$, at $\gamma_h(t)$ for almost every $t$. For $0<h<1$ the level integral over
+$[0,S(h)]$ equals the integral over $[-2L(h),6L(h))$.
 \end{lemma}
 
 \begin{proof}

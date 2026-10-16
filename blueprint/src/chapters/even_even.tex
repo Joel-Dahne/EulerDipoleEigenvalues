@@ -318,16 +318,39 @@ and $G_\omega(h_j)\to0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:elliptic-torus, lem:continuous-representative}
-Write $\eta=2-2h$ and
-$g(\eta)=\oint_{\{\Psi=2-\eta\}}(|\nabla\psi|^2+|\omega||\psi|)\,dt$. By the change of
-variables $dx\,dy=ds\,dt$, $\int_0^{\eta_0}g\,d\eta=\int_{\{\Psi>2-\eta_0\}}
-(|\nabla\psi|^2+|\omega||\psi|)<\infty$. Hence for every null set $N$ there are
-$\eta_j\to0$ outside the image of $N$ with $\eta_jg(\eta_j)\to0$; otherwise $g\ge c/\eta$
-almost everywhere near $0$. The second term of $G_\omega$ is at most $\eta g(\eta)$. Near the
-center $\rho^2\sim2\eta$ (series expansion) and $\psi$ is bounded, so by Cauchy--Schwarz the
-first is at most $C\sqrt\eta\,(S\,g(\eta))^{1/2}=O\bigl((\eta g(\eta))^{1/2}\bigr)$.
+\uses{lem:orbit-coordinates, lem:continuous-representative, lem:lift-representatives,
+  lem:level-integral-congr, lem:period-integral, lem:period-orbit}
+\leanok
+Let $F=|\psi|^2+|\psi_x|^2+|\psi_y|^2+|\omega|^2$, integrable on the cell, and
+$g(h)=\oint_{\{\Psi=2h\}}F\,dt$. By Lemma~\ref{lem:orbit-coordinates},
+$2\int_0^1g\,dh=\int_\Cell F<\infty$. Hence for every null set $N$ there are $h_j\to1$
+outside $N$ with $(1-h_j)g(h_j)\to0$: otherwise $g\ge c/(1-h)$ almost everywhere near $1$,
+which is not integrable.
+
+It remains to bound $G_\omega(h)$ for almost every $h\in(1/2,1)$. Since $\psi$ agrees almost
+everywhere with its continuous representative (Lemma~\ref{lem:lift-representatives}),
+$|\psi|\le M=\sup|\tilde\psi|$ almost everywhere on almost every level
+(Lemma~\ref{lem:level-integral-congr}). Pointwise $|\psi_n|^2,|\psi_t|^2\le2F$ and
+$|\operatorname{Re}(\omega\bar\psi)|\le F$, so the second term of $G_\omega$ is at most
+$10(1-h)g(h)$. For the first, $\rho^2=(1-\cos x)(1+\cos x)+(1-\cos y)(1+\cos y)
+\le2(2-\Psi)=4(1-h)$ on the level, exactly and not only near the center, and
+$S(h)=8L(h)\le8/h\le16$ (Lemma~\ref{lem:period-integral}). By Cauchy--Schwarz
+\[
+  \Bigl|\oint\operatorname{Re}(\psi\overline{\psi_n})\,\rho\,dt\Bigr|
+  \le M\Bigl(\oint\rho^2dt\Bigr)^{1/2}\Bigl(\oint|\psi_n|^2dt\Bigr)^{1/2}
+  \le M\bigl(128(1-h)g(h)\bigr)^{1/2}.
+\]
+Both bounds tend to $0$ along $h_j$.
 \end{proof}
+
+\begin{remark}[The center limit, checked]
+The manuscript's argument is correct as sketched. Three points were made explicit: the
+series expansion $\rho^2\sim2\eta$ is replaced by the exact inequality $\rho^2\le2(2-\Psi)$;
+the period is bounded by the elementary $L(h)\le1/h$; and the bound $|\psi|\le M$ along the
+level needs the continuous representative, since the level is a null set in the plane.
+Using $F$ with $|\omega|^2+|\psi|^2$ instead of $|\omega||\psi|$ makes all bounds pointwise.
+Only the coarea formula of Lemma~\ref{lem:orbit-coordinates} remains admitted here.
+\end{remark}
 
 \begin{lemma}[Truncated virial identity]
 \label{lem:ee-truncated-virial}
