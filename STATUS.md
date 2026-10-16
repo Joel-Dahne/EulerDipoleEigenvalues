@@ -119,12 +119,17 @@ which gives integrability without a center expansion. New stated
 longer in the even–even graph. `NormalField.lean` now imports `LiftIntegration.lean`, `EvenEven.lean`
 imports `VirialL2.lean`. Odd–odd (weighted analogue) not yet examined.
 
-**Next:** the cheapest new statements are `annularCutoff_normalField` and
-`integrableOn_eeBulkDensity` (no new infrastructure); then the action-angle
-chart, transversal mollifier and `H¹` identity behind `virial_l2`.
-Remaining direct even–even inputs: `ee_boundary_regularity`,
-`ee_gradient_traces`, `ee_annular_virial`, `ee_center_limit`,
-`integrableOn_eeBulkDensity`, and the transport inputs (`melnikov`, `pairing_limit`,
+**Proved (2026-10-15):** `annularCutoff_normalField`
+(`lem:normal-field-annulus`) and `integrableOn_eeBulkDensity`
+(`lem:ee-bulk-integrable`), both without admissions. New helpers:
+`norm_normalDeriv_le`, `norm_tangentDeriv_le` (`|ψₙ|, |ψₜ| ≤ |ψₓ| + |ψ_y|`),
+`measurePreserving_torusProj_square` and `integrableOn_norm_liftL2_sq`
+(in `lem:lift-representatives`; `ae_torusProj` now uses the former).
+
+**Next:** the action-angle chart, transversal mollifier and `H¹` identity
+behind `virial_l2`. Remaining direct even–even inputs:
+`ee_boundary_regularity`, `ee_gradient_traces`, `ee_annular_virial`,
+`ee_center_limit`, and the transport inputs (`melnikov`, `pairing_limit`,
 `isTransportPair_of_isEigenSolution`). The sector exclusion still depends on
 these admitted analytic results.
 
@@ -445,13 +450,12 @@ these admitted analytic results.
   in `Derivatives.lean`.
 - **Validation**: full Lean build and `just web` pass after restating the
   `L²` virial identity; `just graph thm:ee-exclusion` regenerates
-  its graph (141 nodes). All 645 blueprint Lean references resolve without
-  duplicates, and every `\uses` and `\ref` label exists. There are now 49
-  admitted declarations (three new admitted even–even statements replace the
-  admitted truncated identity, plus the stated `annularCutoff_normalField`;
-  the two center lemmas were removed).
+  its graph (141 nodes). All 649 blueprint Lean references resolve without
+  duplicates, and every `\uses` and `\ref` label exists. There are now 47
+  admitted declarations (after proving `annularCutoff_normalField` and
+  `integrableOn_eeBulkDensity`).
   `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
-  warnings; `EvenEven.lean` has only its five admitted-input warnings.
+  warnings; `EvenEven.lean` has only its four admitted-input warnings.
   `inner_virial_exact` and `normalCoeff_le` use only `propext`,
   `Classical.choice`, `Quot.sound`. Axiom checks on the canonical arc identity
   and all five new helpers use only `propext`, `Classical.choice` and

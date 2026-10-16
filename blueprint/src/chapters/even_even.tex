@@ -89,6 +89,7 @@ lift, and $\chi(\Psi)W$ is adapted everywhere with coefficient $\chi(\Psi)f$.
 
 \begin{proof}
 \uses{lem:normal-field-algebra}
+\leanok
 On $\{0<\Psi<2\}$, $\rho^2\ge\Psi(2-\Psi)>0$, so $W$ and $f$ are smooth there; outside the
 closed set $\{\epsilon_1\le\Psi\le\epsilon_2\}$ the products vanish identically near each point.
 Adaptedness: $L_0(\chi(\Psi))=\chi'(\Psi)L_0\Psi=0$, so multiplying an adapted field by
@@ -159,15 +160,21 @@ For $\omega\in L^2$ and $0<h<1$, with $\psi_n$ along $n=-\nabla\Psi/\rho$,
 \begin{lemma}[Integrability of the bulk density]
 \label{lem:ee-bulk-integrable}
 \uses{def:ee-bulk-density}
-\lean{NoEmbeddedEigenvalues.integrableOn_eeBulkDensity}
+\lean{NoEmbeddedEigenvalues.integrableOn_eeBulkDensity,
+  NoEmbeddedEigenvalues.norm_normalDeriv_le,
+  NoEmbeddedEigenvalues.norm_tangentDeriv_le}
 \leanok
 For $\omega\in L^2$ and $h>0$, $\mathcal J_\omega$ is integrable on $\{p\in\Cell:\Psi>2h\}$.
+Pointwise, $|\psi_n|,|\psi_t|\le|\psi_x|+|\psi_y|$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:normal-coeff-bound, lem:normal-field-algebra, lem:elliptic-torus}
-There $0\le f\le1/h$ (Lemma~\ref{lem:normal-coeff-bound}) and $0<c\le1$, so
-$\mathcal J_\omega\le|\omega|^2/h+2|\nabla\psi|^2$, with $|\psi_n|,|\psi_t|\le|\nabla\psi|$.
+\uses{lem:normal-coeff-bound, lem:normal-field-algebra, lem:lift-representatives}
+\leanok
+There $0\le f\le(2-\Psi)/\Psi\le1/h$ (Lemma~\ref{lem:normal-coeff-bound}) and $0<c\le1$; at
+the center $f=c=0$. Since $|\sin x|,|\sin y|\le\rho$, $|\psi_n|,|\psi_t|\le|\psi_x|+|\psi_y|$, so
+$\mathcal J_\omega\le|\omega|^2/h+6(|\psi_x|^2+|\psi_y|^2)$. Each square is integrable on the cell
+by Lemma~\ref{lem:lift-representatives}, since $\omega,\psi_x,\psi_y\in L^2(\T^2)$.
 \end{proof}
 
 \begin{lemma}[Virial identity on an annulus]
@@ -1268,13 +1275,17 @@ continuity, an orbit starting in $U$ stays in $U$. The rotation swaps $a$ and $-
 \begin{lemma}[Representatives of the eigenfunction lifts]
 \label{lem:lift-representatives}
 \uses{def:stream-lifts, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.ae_torusProj,
+\lean{NoEmbeddedEigenvalues.measurePreserving_torusProj_square,
+  NoEmbeddedEigenvalues.integrableOn_norm_liftL2_sq,
+  NoEmbeddedEigenvalues.ae_torusProj,
   NoEmbeddedEigenvalues.streamLift_ae_eq_contStream,
   NoEmbeddedEigenvalues.continuous_contStream,
   NoEmbeddedEigenvalues.contStream_rotLift,
   NoEmbeddedEigenvalues.liftL2_rotLift_ae}
 \leanok
-Almost-everywhere statements on $\T^2$ lift to $\R^2$. For $\omega\in L^2$, $\psi=\tilde\psi$
+The covering map is measure preserving from each translate of $(0,2\pi]^2$ onto $\T^2$, so
+$|g|^2$ is integrable on $(-2\pi,2\pi]^2\supset\overline\Cell$ for $g\in L^2(\T^2)$, and
+almost-everywhere statements on $\T^2$ lift to $\R^2$. For $\omega\in L^2$, $\psi=\tilde\psi$
 almost everywhere on $\R^2$ and $\tilde\psi$ is continuous. If $\omega$ has rotation
 character $\kappa$, then $\tilde\psi(y,-x)=\kappa\tilde\psi(x,y)$ for every $(x,y)$, and
 $\omega(y,-x)=\kappa\omega(x,y)$ almost everywhere.

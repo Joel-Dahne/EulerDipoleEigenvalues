@@ -4,7 +4,7 @@ import NoEmbeddedEigenvalues.LiftIntegration
 # The normal field of the even–even sector
 
 Blueprint: `def:normal-field`, `lem:normal-field-algebra`, `lem:ee-density`;
-`lem:normal-field-annulus` (stated). The center is cut out of the truncated virial
+`lem:normal-field-annulus`, `lem:normal-coeff-bound`. The center is cut out of the truncated virial
 identity, so only cutoffs to an annulus are needed; no regularity at the center is used.
 
 On the positive cell minus its center, `W = (Ψ - 2) ∇Ψ / ρ²` is adapted with
@@ -327,11 +327,65 @@ theorem eeDensity_gradient_pos {p : ℝ × ℝ} (h0 : 0 < dipoleLift p) (h2 : di
   · have := norm_pos_iff.2 h
     positivity
 
-/-! ### Cutoff to an annulus (`lem:normal-field-annulus`, stated) -/
+/-! ### Cutoff to an annulus (`lem:normal-field-annulus`) -/
 
 section Annulus
 
 open scoped ContDiff
+
+private theorem normalCoeff_eq : normalCoeff = fun p ↦
+    (cos p.1 + cos p.2) * (2 - (cos p.1 + cos p.2)) * (cos p.1 - cos p.2) ^ 2 /
+      (sin p.1 ^ 2 + sin p.2 ^ 2) ^ 2 := by
+  funext p
+  simp only [normalCoeff, gradSq_dipoleLift, dipoleLift]
+
+/-- The normal field and its coefficient are smooth wherever `ρ² ≠ 0`. -/
+private theorem contDiffAt_normal {p : ℝ × ℝ} (hp : gradSq dipoleLift p ≠ 0) :
+    ContDiffAt ℝ ∞ normalField₁ p ∧ ContDiffAt ℝ ∞ normalField₂ p ∧
+      ContDiffAt ℝ ∞ normalCoeff p := by
+  rw [gradSq_dipoleLift] at hp
+  refine ⟨?_, ?_, ?_⟩
+  · rw [normalField₁_eq]
+    exact (by fun_prop : ContDiff ℝ ∞ fun p : ℝ × ℝ ↦
+      (cos p.1 + cos p.2 - 2) * (-sin p.1)).contDiffAt.div
+      (by fun_prop : ContDiff ℝ ∞ fun p : ℝ × ℝ ↦ sin p.1 ^ 2 + sin p.2 ^ 2).contDiffAt hp
+  · rw [normalField₂_eq]
+    exact (by fun_prop : ContDiff ℝ ∞ fun p : ℝ × ℝ ↦
+      (cos p.1 + cos p.2 - 2) * (-sin p.2)).contDiffAt.div
+      (by fun_prop : ContDiff ℝ ∞ fun p : ℝ × ℝ ↦ sin p.1 ^ 2 + sin p.2 ^ 2).contDiffAt hp
+  · rw [normalCoeff_eq]
+    exact (by fun_prop : ContDiff ℝ ∞ fun p : ℝ × ℝ ↦
+      (cos p.1 + cos p.2) * (2 - (cos p.1 + cos p.2)) * (cos p.1 - cos p.2) ^ 2).contDiffAt.div
+      (by fun_prop : ContDiff ℝ ∞ fun p : ℝ × ℝ ↦ (sin p.1 ^ 2 + sin p.2 ^ 2) ^ 2).contDiffAt
+      (pow_ne_zero 2 hp)
+
+/-- `L₀(χ(Ψ)) = 0`, since `Ψ` is constant along the flow. -/
+private theorem classicalL0_comp_dipoleLift {χ : ℝ → ℝ} (hχ : Differentiable ℝ χ)
+    (p : ℝ × ℝ) : classicalL0 (fun q ↦ χ (dipoleLift q)) p = 0 := by
+  have hx : partialX (fun q ↦ χ (dipoleLift q)) p = deriv χ (dipoleLift p) * -sin p.1 := by
+    have h := (hχ (dipoleLift p)).hasDerivAt.comp p.1
+      ((hasDerivAt_cos p.1).add_const (cos p.2))
+    exact h.deriv
+  have hy : partialY (fun q ↦ χ (dipoleLift q)) p = deriv χ (dipoleLift p) * -sin p.2 := by
+    have h := (hχ (dipoleLift p)).hasDerivAt.comp p.2
+      ((hasDerivAt_cos p.2).const_add (cos p.1))
+    exact h.deriv
+  simp only [classicalL0, hx, hy, smul_eq_mul]
+  ring
+
+/-- Multiplying a field component by `χ(Ψ)` passes through `L₀`. -/
+private theorem classicalL0_cutoff_mul {χ : ℝ → ℝ} (hχ : Differentiable ℝ χ) {u : ℝ × ℝ → ℝ}
+    {p : ℝ × ℝ} (hu : DifferentiableAt ℝ u p) :
+    classicalL0 (fun q ↦ χ (dipoleLift q) * u q) p =
+      χ (dipoleLift p) * classicalL0 u p := by
+  have hc : DifferentiableAt ℝ (fun q ↦ χ (dipoleLift q)) p :=
+    (hχ _).comp p (by unfold dipoleLift; fun_prop)
+  have h0 := classicalL0_comp_dipoleLift hχ p
+  simp only [classicalL0, smul_eq_mul] at h0 ⊢
+  rw [show (fun q ↦ χ (dipoleLift q) * u q) = fun q ↦ χ (dipoleLift q) • u q from rfl,
+    partialX_smul hc hu, partialY_smul hc hu]
+  simp only [smul_eq_mul]
+  linear_combination u p * h0
 
 /-- The normal field cut off to an annulus: if `χ` is smooth and vanishes outside
     `[ε₁, ε₂] ⊂ (0, 2)`, then `χ(Ψ)W` and `χ(Ψ)f` are smooth and periodic on the lift, and
@@ -348,7 +402,59 @@ theorem annularCutoff_normalField {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
     IsAdaptedOn (fun p ↦ χ (dipoleLift p) * normalField₁ p)
       (fun p ↦ χ (dipoleLift p) * normalField₂ p)
       (fun p ↦ χ (dipoleLift p) * normalCoeff p) Set.univ := by
-  sorry
+  have hΨ : Continuous dipoleLift := by unfold dipoleLift; fun_prop
+  have hcs : ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p)) :=
+    hχ.comp (by unfold dipoleLift; fun_prop)
+  -- Away from the closed set `K = {ε₁ ≤ Ψ ≤ ε₂}` the cutoff vanishes near each point.
+  let K : Set (ℝ × ℝ) := {p | ε₁ ≤ dipoleLift p ∧ dipoleLift p ≤ ε₂}
+  have hK : IsClosed K := (isClosed_le continuous_const hΨ).inter (isClosed_le hΨ continuous_const)
+  have hvan {p : ℝ × ℝ} (hp : p ∉ K) : ∀ᶠ q in nhds p, χ (dipoleLift q) = 0 := by
+    filter_upwards [hK.isOpen_compl.mem_nhds hp] with q hq
+    by_contra hne
+    exact hq (hχ0 _ hne)
+  have hρ {p : ℝ × ℝ} (hp : p ∈ K) : gradSq dipoleLift p ≠ 0 :=
+    (gradSq_dipoleLift_pos (hε₁.trans_le hp.1) (hp.2.trans_lt hε₂)).ne'
+  have hsmooth {F : ℝ × ℝ → ℝ} (hF : ∀ p, gradSq dipoleLift p ≠ 0 → ContDiffAt ℝ ∞ F p) :
+      ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * F p) := by
+    rw [contDiff_iff_contDiffAt]
+    intro p
+    by_cases hp : p ∈ K
+    · exact hcs.contDiffAt.mul (hF p (hρ hp))
+    · apply contDiffAt_const (c := (0 : ℝ)).congr_of_eventuallyEq
+      filter_upwards [hvan hp] with q hq
+      simp [hq]
+  have hper {F : ℝ × ℝ → ℝ} (hF : IsPeriodicLift F) :
+      IsPeriodicLift (fun p ↦ χ (dipoleLift p) * F p) := by
+    intro p
+    simp only [dipoleLift, Real.cos_add_two_pi, (hF p).1, (hF p).2, and_self]
+  have hp₁ : IsPeriodicLift normalField₁ := by
+    intro p; rw [normalField₁_eq]; simp [Real.cos_add_two_pi, Real.sin_add_two_pi]
+  have hp₂ : IsPeriodicLift normalField₂ := by
+    intro p; rw [normalField₂_eq]; simp [Real.cos_add_two_pi, Real.sin_add_two_pi]
+  have hpf : IsPeriodicLift normalCoeff := by
+    intro p; rw [normalCoeff_eq]; simp [Real.cos_add_two_pi, Real.sin_add_two_pi]
+  refine ⟨hsmooth fun p hp ↦ (contDiffAt_normal hp).1,
+    hsmooth fun p hp ↦ (contDiffAt_normal hp).2.1, hsmooth fun p hp ↦ (contDiffAt_normal hp).2.2,
+    hper hp₁, hper hp₂, hper hpf, ?_⟩
+  intro p _
+  have hχd : Differentiable ℝ χ := hχ.differentiable (by simp)
+  by_cases hp : p ∈ K
+  · have hd := contDiffAt_normal (hρ hp)
+    have had := isAdaptedOn_normalField p (hρ hp)
+    rw [classicalL0_cutoff_mul hχd (hd.1.differentiableAt (by simp)),
+      classicalL0_cutoff_mul hχd (hd.2.1.differentiableAt (by simp))]
+    constructor
+    · linear_combination χ (dipoleLift p) * had.1
+    · linear_combination χ (dipoleLift p) * had.2
+  · have hz := hvan hp
+    have hc0 : χ (dipoleLift p) = 0 := hz.self_of_nhds
+    have hL {F : ℝ × ℝ → ℝ} : classicalL0 (fun q ↦ χ (dipoleLift q) * F q) p = 0 := by
+      have hzF : ∀ᶠ q in nhds p, χ (dipoleLift q) * F q = 0 := by
+        filter_upwards [hz] with q hq
+        simp [hq]
+      simp [classicalL0, partialX_eq_zero_of_eventually hzF,
+        partialY_eq_zero_of_eventually hzF]
+    simp [hL, hc0]
 
 end Annulus
 

@@ -11,11 +11,11 @@ The exclusion theorem and its fixed-rotation-character version are proved from n
 analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
 force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
 
-Proved here: `lem:ee-neumann`, `lem:ee-truncated-virial` (from the annular identity and the
-center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
+Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-truncated-virial` (from
+the annular identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
-Inputs: `lem:ee-bulk-integrable`, `lem:ee-annular-virial`, `lem:ee-center-limit`,
+Inputs: `lem:ee-annular-virial`, `lem:ee-center-limit`,
 `lem:ee-gradient-traces` and `lem:ee-boundary-regularity`. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
 `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
@@ -104,12 +104,123 @@ def eeLevelTerm (ω : L2) (h : ℝ) : ℝ :=
       levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2) -
       levelIntegral h (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re))
 
+/-- `|ψₙ| ≤ |ψₓ| + |ψ_y|`, since `|sin x|, |sin y| ≤ ρ` (and `ψₙ = 0` where `ρ = 0`). -/
+theorem norm_normalDeriv_le (ψx ψy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) :
+    ‖normalDeriv ψx ψy p‖ ≤ ‖ψx p‖ + ‖ψy p‖ := by
+  unfold normalDeriv
+  rcases (Real.sqrt_nonneg (Real.sin p.1 ^ 2 + Real.sin p.2 ^ 2)).eq_or_lt with hρ | hρ
+  · rw [gradNorm, ← hρ]; simp only [Complex.ofReal_zero, div_zero, norm_zero]; positivity
+  · have h1 : |Real.sin p.1| ≤ gradNorm p :=
+      Real.abs_le_sqrt (by nlinarith [sq_nonneg (Real.sin p.2)])
+    have h2 : |Real.sin p.2| ≤ gradNorm p :=
+      Real.abs_le_sqrt (by nlinarith [sq_nonneg (Real.sin p.1)])
+    have hg : 0 < gradNorm p := hρ
+    rw [norm_div, Complex.norm_real, Real.norm_of_nonneg hg.le, div_le_iff₀ hg]
+    calc ‖(Real.sin p.1 : ℂ) * ψx p + (Real.sin p.2 : ℂ) * ψy p‖
+        ≤ |Real.sin p.1| * ‖ψx p‖ + |Real.sin p.2| * ‖ψy p‖ := by
+          refine (norm_add_le _ _).trans ?_
+          simp only [norm_mul, Complex.norm_real, Real.norm_eq_abs, le_refl]
+      _ ≤ gradNorm p * ‖ψx p‖ + gradNorm p * ‖ψy p‖ := by gcongr
+      _ = (‖ψx p‖ + ‖ψy p‖) * gradNorm p := by ring
+
+/-- `|ψₜ| ≤ |ψₓ| + |ψ_y|`. -/
+theorem norm_tangentDeriv_le (ψx ψy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) :
+    ‖tangentDeriv ψx ψy p‖ ≤ ‖ψx p‖ + ‖ψy p‖ := by
+  unfold tangentDeriv
+  rcases (Real.sqrt_nonneg (Real.sin p.1 ^ 2 + Real.sin p.2 ^ 2)).eq_or_lt with hρ | hρ
+  · rw [gradNorm, ← hρ]; simp only [Complex.ofReal_zero, div_zero, norm_zero]; positivity
+  · have h1 : |Real.sin p.1| ≤ gradNorm p :=
+      Real.abs_le_sqrt (by nlinarith [sq_nonneg (Real.sin p.2)])
+    have h2 : |Real.sin p.2| ≤ gradNorm p :=
+      Real.abs_le_sqrt (by nlinarith [sq_nonneg (Real.sin p.1)])
+    have hg : 0 < gradNorm p := hρ
+    rw [norm_div, Complex.norm_real, Real.norm_of_nonneg hg.le, div_le_iff₀ hg]
+    calc ‖(Real.sin p.2 : ℂ) * ψx p - (Real.sin p.1 : ℂ) * ψy p‖
+        ≤ |Real.sin p.2| * ‖ψx p‖ + |Real.sin p.1| * ‖ψy p‖ := by
+          refine (norm_sub_le _ _).trans ?_
+          simp only [norm_mul, Complex.norm_real, Real.norm_eq_abs, le_refl]
+      _ ≤ gradNorm p * ‖ψx p‖ + gradNorm p * ‖ψy p‖ := by gcongr
+      _ = (‖ψx p‖ + ‖ψy p‖) * gradNorm p := by ring
+
+/-- The bulk is nonnegative even at the center (where the total definitions set `c = f = 0`). -/
+theorem eeBulkDensity_nonneg {ω : L2} {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
+    0 ≤ eeBulkDensity ω p := by
+  have h0 : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+  have h2 : dipoleLift p ≤ 2 := by simpa [Ψ_torusProj] using Ψ_le_two (torusProj p)
+  rcases lt_or_eq_of_le h2 with h2 | h2
+  · exact eeDensity_nonneg h0 h2 _ _ _
+  · simp only [eeBulkDensity, eeDensity, normalCoeff, normalC, h2]
+    norm_num
+
 /-- The bulk density is integrable on every truncated cell `{Ψ > 2h}`, `h > 0`
     (`lem:ee-bulk-integrable`): there `0 ≤ f ≤ (2 - Ψ)/Ψ ≤ 1/h` and `0 < c ≤ 1`, so
-    `𝒥 ≤ |ω|²/h + 2|∇ψ|²`. No eigenvalue equation is needed. -/
+    `𝒥 ≤ |ω|²/h + 6(|ψₓ|² + |ψ_y|²)`. No eigenvalue equation is needed. -/
 theorem integrableOn_eeBulkDensity (ω : L2) {h : ℝ} (h0 : 0 < h) :
     IntegrableOn (eeBulkDensity ω) {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p} := by
-  sorry
+  set A : Set (ℝ × ℝ) := {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p}
+  have hmeas (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
+  have hA : MeasurableSet A := by
+    change MeasurableSet ({p : ℝ × ℝ | |(diagCoord p).1| < Real.pi / 2} ∩
+      {p | |(diagCoord p).2| < Real.pi / 2} ∩ {p | 2 * h < dipoleLift p})
+    unfold diagCoord dipoleLift
+    exact ((measurableSet_lt (by fun_prop) measurable_const).inter
+      (measurableSet_lt (by fun_prop) measurable_const)).inter
+      (measurableSet_lt measurable_const (by fun_prop))
+  have hAs : A ⊆ Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro p ⟨⟨ha, hb⟩, -⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    simp only [mem_prod, mem_Ioc]
+    refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith [Real.pi_pos]
+  have hsq (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) A :=
+    (integrableOn_norm_liftL2_sq g).mono_set hAs
+  have hg : IntegrableOn (fun p ↦ 1 / h * ‖liftL2 ω p‖ ^ 2 +
+      6 * (‖streamLiftX ω p‖ ^ 2 + ‖streamLiftY ω p‖ ^ 2)) A :=
+    ((hsq ω).const_mul _).add (((hsq _).add (hsq _)).const_mul 6)
+  refine hg.mono' ?_ ?_
+  · have h1 := hmeas ω
+    have h2 := hmeas (streamPartial 0 ω)
+    have h3 := hmeas (streamPartial 1 ω)
+    have hm : Measurable (eeBulkDensity ω) := by
+      change Measurable fun p ↦ eeDensity p (liftL2 ω p) (streamNormal ω p) (streamTangent ω p)
+      simp only [eeDensity, normalCoeff, normalC, gradSq_dipoleLift, dipoleLift,
+        streamNormal, streamTangent, normalDeriv, tangentDeriv, gradNorm, streamLiftX,
+        streamLiftY]
+      fun_prop
+    exact hm.aestronglyMeasurable
+  · refine (ae_restrict_iff' hA).2 (Eventually.of_forall fun p hp ↦ ?_)
+    have hJ0 := eeBulkDensity_nonneg (ω := ω) hp.1
+    rw [Real.norm_of_nonneg hJ0]
+    have hΨ0 : 0 < dipoleLift p := by linarith [hp.2]
+    have hΨ2 : dipoleLift p ≤ 2 := by
+      unfold dipoleLift; linarith [Real.cos_le_one p.1, Real.cos_le_one p.2]
+    have hXY (u : ℂ) (hu : ‖u‖ ≤ ‖streamLiftX ω p‖ + ‖streamLiftY ω p‖) :
+        ‖u‖ ^ 2 ≤ 2 * (‖streamLiftX ω p‖ ^ 2 + ‖streamLiftY ω p‖ ^ 2) := by
+      nlinarith [norm_nonneg u, sq_nonneg (‖streamLiftX ω p‖ - ‖streamLiftY ω p‖)]
+    have hn := hXY _ (norm_normalDeriv_le _ _ p)
+    have ht := hXY _ (norm_tangentDeriv_le _ _ p)
+    have hω2 := sq_nonneg ‖liftL2 ω p‖
+    rcases lt_or_eq_of_le hΨ2 with hlt | heq
+    · obtain ⟨hc0, hc1⟩ := normalC_pos_le_one hΨ0 hlt
+      have hf0 := normalCoeff_nonneg hΨ0 hlt
+      have hf : normalCoeff p ≤ 1 / h := by
+        refine (normalCoeff_le hΨ0 hlt).trans ?_
+        rw [div_le_div_iff₀ hΨ0 h0]
+        nlinarith [hp.2]
+      have e1 : normalCoeff p * ‖liftL2 ω p‖ ^ 2 ≤ 1 / h * ‖liftL2 ω p‖ ^ 2 :=
+        mul_le_mul_of_nonneg_right hf hω2
+      have e2 : (2 - normalC p) * ‖streamNormal ω p‖ ^ 2 ≤ 2 * ‖streamNormal ω p‖ ^ 2 :=
+        mul_le_mul_of_nonneg_right (by linarith) (sq_nonneg _)
+      have e3 : normalC p * ‖streamTangent ω p‖ ^ 2 ≤ ‖streamTangent ω p‖ ^ 2 := by
+        nlinarith [sq_nonneg ‖streamTangent ω p‖]
+      simp only [eeBulkDensity, eeDensity]
+      linarith
+    · have hf : normalCoeff p = 0 := by simp [normalCoeff, heq]
+      have hc : normalC p = 0 := by simp [normalC, heq]
+      simp only [eeBulkDensity, eeDensity, hf, hc]
+      have : 0 ≤ 1 / h * ‖liftL2 ω p‖ ^ 2 := by positivity
+      linarith [sq_nonneg ‖streamTangent ω p‖]
 
 /-- The virial identity on an annulus (`lem:ee-annular-virial`): outside one null set of
     levels, for all `0 < h < h' < 1`, `∫_{2h < Ψ < 2h'} 𝒥 = G(h) - G(h')` with `G` the level
@@ -337,17 +448,6 @@ theorem normalCoeff_pos_of_cos_ne {p : ℝ × ℝ} (h0 : 0 < dipoleLift p)
   unfold normalCoeff
   exact div_pos (mul_pos (mul_pos h0 (by linarith)) (sq_pos_of_ne_zero (sub_ne_zero.mpr hne)))
     (sq_pos_of_pos hρ)
-
-/-- The bulk is nonnegative even at the center (where the total definitions set `c = f = 0`). -/
-theorem eeBulkDensity_nonneg {ω : L2} {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
-    0 ≤ eeBulkDensity ω p := by
-  have h0 : 0 < dipoleLift p := by
-    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
-  have h2 : dipoleLift p ≤ 2 := by simpa [Ψ_torusProj] using Ψ_le_two (torusProj p)
-  rcases lt_or_eq_of_le h2 with h2 | h2
-  · exact eeDensity_nonneg h0 h2 _ _ _
-  · simp only [eeBulkDensity, eeDensity, normalCoeff, normalC, h2]
-    norm_num
 
 /-- Zero bulk density forces the vorticity itself to vanish on the cell. -/
 theorem lift_ae_zero_of_eeBulkDensity_ae_zero {ω : L2}

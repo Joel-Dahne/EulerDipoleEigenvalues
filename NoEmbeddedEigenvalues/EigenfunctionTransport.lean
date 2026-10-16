@@ -138,6 +138,35 @@ theorem rotLift_mem_cellNeighbourhood {p : ℝ × ℝ} (hp : p ∈ cellNeighbour
     dsimp [diagCoord]
     ring
 
+/-- The covering map is measure preserving on each translate of the fundamental square. -/
+theorem measurePreserving_torusProj_square (a b : ℝ) :
+    MeasurePreserving torusProj
+      (volume.restrict (Ioc a (a + 2 * Real.pi) ×ˢ Ioc b (b + 2 * Real.pi))) volume := by
+  change MeasurePreserving
+    (Prod.map (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))
+      (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))) _
+    (volume : Measure (AddCircle (2 * Real.pi) × AddCircle (2 * Real.pi)))
+  have h₁ := AddCircle.measurePreserving_mk (2 * Real.pi) a
+  have h₂ := AddCircle.measurePreserving_mk (2 * Real.pi) b
+  simpa only [Measure.prod_restrict, ← Measure.volume_eq_prod] using h₁.prod h₂
+
+/-- `|g|²` of an `L²` function on the torus is integrable on the square `(-2π, 2π]²` of the
+    lift, which contains the closed cell. -/
+theorem integrableOn_norm_liftL2_sq (g : L2) :
+    IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2)
+      (Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi)) := by
+  have hg : Integrable (fun t ↦ ‖g t‖ ^ 2) := (Lp.memLp g).integrable_norm_pow (by norm_num)
+  have hsq (a b : ℝ) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2)
+      (Ioc a (a + 2 * Real.pi) ×ˢ Ioc b (b + 2 * Real.pi)) :=
+    ((measurePreserving_torusProj_square a b).integrable_comp
+      hg.aestronglyMeasurable).2 hg
+  have hI : Ioc (-2 * Real.pi) (2 * Real.pi) =
+      Ioc (-2 * Real.pi) (-2 * Real.pi + 2 * Real.pi) ∪ Ioc 0 (0 + 2 * Real.pi) := by
+    rw [show -2 * Real.pi + 2 * Real.pi = 0 by ring, zero_add,
+      Ioc_union_Ioc_eq_Ioc (by linarith [Real.pi_pos]) (by linarith [Real.pi_pos])]
+  rw [hI, prod_union, union_prod, union_prod]
+  exact ((hsq _ _).union (hsq _ _)).union ((hsq _ _).union (hsq _ _))
+
 /-- Almost-everywhere statements on the torus lift to the real plane. -/
 theorem ae_torusProj {P : Torus → Prop} (hP : ∀ᵐ t, P t) : ∀ᵐ p : ℝ × ℝ, P (torusProj p) := by
   let I : ℤ → Set ℝ := fun n ↦ Ioc (n * (2 * Real.pi)) (n * (2 * Real.pi) + 2 * Real.pi)
@@ -155,15 +184,7 @@ theorem ae_torusProj {P : Torus → Prop} (hP : ∀ᵐ t, P t) : ∀ᵐ p : ℝ 
     exact ⟨(n, m), hn, hm⟩
   have hall : ∀ n : ℤ × ℤ, ∀ᵐ p ∂(volume.restrict (I n.1 ×ˢ I n.2)), P (torusProj p) := by
     intro n
-    have hm : MeasurePreserving torusProj (volume.restrict (I n.1 ×ˢ I n.2)) volume := by
-      change MeasurePreserving
-        (Prod.map (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))
-          (fun x : ℝ ↦ (x : AddCircle (2 * Real.pi)))) _
-        (volume : Measure (AddCircle (2 * Real.pi) × AddCircle (2 * Real.pi)))
-      have h₁ := AddCircle.measurePreserving_mk (2 * Real.pi) (n.1 * (2 * Real.pi))
-      have h₂ := AddCircle.measurePreserving_mk (2 * Real.pi) (n.2 * (2 * Real.pi))
-      simpa only [I, Measure.prod_restrict, ← Measure.volume_eq_prod] using h₁.prod h₂
-    exact hm.quasiMeasurePreserving.ae hP
+    exact (measurePreserving_torusProj_square _ _).quasiMeasurePreserving.ae hP
   have hh := (ae_restrict_iUnion_iff (fun n : ℤ × ℤ ↦ I n.1 ×ˢ I n.2)
     (fun p ↦ P (torusProj p))).2 hall
   simpa only [hcover2, Measure.restrict_univ] using hh
