@@ -110,6 +110,9 @@ motivation, and standard facts cited rather than proved.
   `CanonicalProfile.lean` defines the canonical transport profile on an arc.
   `CanonicalBoundaryForm.lean` identifies its arc form with the explicit-derivative
   boundary form, using a.e. chain rules under `tanh` on the weighted domain.
+  `EigenfunctionTransport.lean` specializes Melnikov and the pairing limit to
+  eigenfunctions (explicit invariant neighbourhood of the cell, continuity of the
+  flow, changes of representative on levels and in transport pairs).
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.

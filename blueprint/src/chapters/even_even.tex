@@ -1131,6 +1131,75 @@ Substitution into the two total integrals proves the identity, with a plus sign
 in the second term because $Pz=-\Omega$.
 \end{proof}
 
+\begin{lemma}[An invariant neighbourhood of the cell]
+\label{lem:cell-neighbourhood}
+\uses{def:cells, def:transport-pair}
+\lean{NoEmbeddedEigenvalues.cellNeighbourhood,
+  NoEmbeddedEigenvalues.isOrbitUnion_cellNeighbourhood,
+  NoEmbeddedEigenvalues.isBounded_cellNeighbourhood,
+  NoEmbeddedEigenvalues.closure_cellSquare_subset_cellNeighbourhood,
+  NoEmbeddedEigenvalues.rotLift_mem_cellNeighbourhood}
+\leanok
+The square $U=\{|a|<3\pi/2,\ |b|<3\pi/2\}$ in diagonal coordinates is a bounded open
+union of orbits. It contains the closed cell and is invariant under the rotation
+$(x,y)\mapsto(y,-x)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-flow, lem:cell-square}
+\leanok
+In diagonal coordinates $\dot a=-\cos a\sin b$. If $\cos c=0$, the constant $c$ solves
+this scalar equation, whose right side is $1$-Lipschitz in $a$, so by uniqueness an orbit
+with $a\ne c$ at time $0$ never reaches $a=c$. The same holds for $b$, since
+$\dot b=\sin a\cos b$. Hence the lines $a=\pm3\pi/2$, $b=\pm3\pi/2$ are barriers and, by
+continuity, an orbit starting in $U$ stays in $U$. The rotation swaps $a$ and $-b$.
+\end{proof}
+
+\begin{lemma}[Representatives of the eigenfunction lifts]
+\label{lem:lift-representatives}
+\uses{def:stream-lifts, def:rotation-characters}
+\lean{NoEmbeddedEigenvalues.ae_torusProj,
+  NoEmbeddedEigenvalues.streamLift_ae_eq_contStream,
+  NoEmbeddedEigenvalues.continuous_contStream,
+  NoEmbeddedEigenvalues.contStream_rotLift,
+  NoEmbeddedEigenvalues.liftL2_rotLift_ae}
+\leanok
+Almost-everywhere statements on $\T^2$ lift to $\R^2$. For $\omega\in L^2$, $\psi=\tilde\psi$
+almost everywhere on $\R^2$ and $\tilde\psi$ is continuous. If $\omega$ has rotation
+character $\kappa$, then $\tilde\psi(y,-x)=\kappa\tilde\psi(x,y)$ for every $(x,y)$, and
+$\omega(y,-x)=\kappa\omega(x,y)$ almost everywhere.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:continuous-representative, lem:symmetries-commute}
+\leanok
+The covering map is measure preserving on each translate of a fundamental square, and
+$\R^2$ is a countable union of these. Rotation commutes with $\Delta^{-1}$, so $\psi$ has
+the rotation character of $\omega$ almost everywhere. Two continuous functions that agree
+almost everywhere on $\T^2$ agree everywhere, since Haar measure charges open sets.
+\end{proof}
+
+\begin{lemma}[Transport pairs with the continuous stream function]
+\label{lem:transport-pair-continuous}
+\uses{def:transport-pair, def:stream-lifts, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.congr_value,
+  NoEmbeddedEigenvalues.MemSobolevOn.congr_value,
+  NoEmbeddedEigenvalues.HasWeakL0On.congr_value,
+  NoEmbeddedEigenvalues.isTransportPair_contStream}
+\leanok
+Weak derivatives, local Sobolev membership and weak transport are unchanged by an
+almost-everywhere change of representative. Hence for an eigenfunction with $\lambda\ne0$
+and a bounded open union of orbits $U$, $(\omega,\tilde\psi)$ is a transport pair on $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-pair-eigen, lem:lift-representatives}
+\leanok
+All three notions are defined by integrals against test functions. Apply this to the pair
+$(\omega,\psi)$ of Lemma~\ref{lem:transport-pair-eigen} and $\psi=\tilde\psi$ almost
+everywhere.
+\end{proof}
+
 \begin{lemma}[Eigenfunction transport traces]
 \label{lem:ee-transport-traces}
 \uses{def:eigen-problem, def:sectors, def:rotation-characters, def:stream-lifts,
@@ -1150,25 +1219,34 @@ stream representative.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-pair-eigen, lem:melnikov, lem:pairing-limit,
-  lem:continuous-representative, lem:local-to-global}
-This specialization remains admitted. Choose a bounded, rotation-invariant open union
-of orbits containing the closed cell. Replace the raw stream representative by its
-continuous representative in the transport pair; the weak equation is unchanged by
-almost-everywhere equality. Continuous representatives have the rotation character
-pointwise. Apply Melnikov on each rotated arc and Lemma~\ref{lem:pairing-limit}, using
-orbit restrictions to transfer the representatives on almost every level.
+\uses{lem:cell-neighbourhood, lem:transport-pair-continuous, lem:lift-representatives,
+  lem:melnikov, lem:pairing-limit, lem:level-integral-congr}
+\leanok
+Let $U$ be the neighbourhood of Lemma~\ref{lem:cell-neighbourhood}; by
+Lemma~\ref{lem:transport-pair-continuous}, $(\omega,\tilde\psi)$ is a transport pair on $U$.
+By Lemma~\ref{lem:lift-representatives}, $\tilde\psi$ has the rotation character
+$\kappa$ pointwise and $\omega$ almost everywhere, which are the hypotheses of
+Lemmas~\ref{lem:melnikov} and~\ref{lem:pairing-limit}. Melnikov gives
+$(\tilde\psi\circ\gamma)'\in L^1$ on the separatrix arc $\gamma$, and
+$\tilde\psi\circ\gamma_k=\kappa^k\,\tilde\psi\circ\gamma$ transfers this to all four arcs.
+The pairing limit is stated with $\tilde\psi$ in the level integrals, while the
+lemma uses the raw $\psi$. By Lemma~\ref{lem:level-integral-congr} the two level
+integrals agree outside a null set $N'$ of levels; apply the pairing limit with the
+null set $N\cup N'$.
 \end{proof}
 
 \begin{remark}[Digest note: two assembly interfaces were missing]
 The previous list of Lean statements did not by itself connect the raw eigenfunction
 transport pair to continuous arc traces, nor the canonical unknown to the
 explicit-derivative boundary form. Lemmas~\ref{lem:ee-transport-traces}
-and~\ref{lem:canonical-arc-form} expose these bridges separately.
-The scalar bridge, Lemma~\ref{lem:canonical-arc-form}, is now proved in
-\texttt{CanonicalBoundaryForm.lean} without admissions. The transport specialization
-and the earlier analytic inputs still need proofs; the exclusion proof below has no
-admission of its own.
+and~\ref{lem:canonical-arc-form} expose these bridges separately. Both are now proved
+in Lean without new admissions (\texttt{CanonicalBoundaryForm.lean},
+\texttt{EigenfunctionTransport.lean}); the exclusion proof below has no admission of
+its own, and the remaining admissions are the analytic inputs it cites.
+Two observations from the proof of Lemma~\ref{lem:ee-transport-traces}: the even--even
+hypothesis is not used, only the rotation character; and the invariant neighbourhood
+can be taken explicit (Lemma~\ref{lem:cell-neighbourhood}), so no saturation of a
+neighbourhood by the flow is needed.
 \end{remark}
 
 \begin{lemma}[Positivity of the canonical arc contribution]

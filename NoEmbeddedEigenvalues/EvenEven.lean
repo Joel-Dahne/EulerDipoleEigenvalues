@@ -1,7 +1,7 @@
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
-import NoEmbeddedEigenvalues.Transport
+import NoEmbeddedEigenvalues.EigenfunctionTransport
 
 /-!
 # Even–even exclusion
@@ -14,8 +14,9 @@ Proved here: `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
 `lem:ee-canonical-arc-nonneg`, `lem:ee-character-exclusion`, `thm:ee-exclusion`.
 Inputs: `lem:ee-neumann`, `lem:ee-truncated-virial`, `lem:ee-gradient-traces`,
-`lem:ee-boundary-regularity`, and `lem:ee-transport-traces`. The scalar interface
-`lem:canonical-arc-form` is proved in `CanonicalBoundaryForm.lean`. Levels are handled in orbit
+and `lem:ee-boundary-regularity`. The interfaces `lem:canonical-arc-form` and
+`lem:ee-transport-traces` are proved in `CanonicalBoundaryForm.lean` and
+`EigenfunctionTransport.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
 -/
 
@@ -97,22 +98,6 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         (Real.artanh ξ)) D (-1) = -contStream ω (rotLift^[k] (Real.pi, 0)) / lam ∧
       contStream ω (rotLift^[k] (0, -Real.pi)) =
         paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
-  sorry
-
-/-- Specialization of Melnikov and the pairing limit to eigenfunctions, with the continuous
-    stream representative. It isolates the invariant-neighbourhood and a.e.-representative
-    interfaces, rather than assuming that the raw `L²` representative is continuous. -/
-theorem ee_transport_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
-    (hκ : InRotationCharacter κ ω) :
-    (∀ k < 4, Integrable (deriv (contStream ω ∘ cellArc k))) ∧
-    ∀ N : Set ℝ, volume N = 0 → ∃ hs : ℕ → ℝ,
-      (∀ j, hs j ∈ Ioo 0 1 ∧ hs j ∉ N) ∧ Tendsto hs atTop (𝓝 0) ∧
-      Tendsto (fun j ↦ levelIntegral (hs j) fun p ↦
-        (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) atTop
-        (𝓝 (∑ k ∈ Finset.range 4, ∫ s,
-          (canonicalProfile lam (contStream ω ∘ cellArc k) s *
-            (starRingEnd ℂ) (contStream ω (cellArc k s))).re)) := by
   sorry
 
 /-- A symmetry/measure bridge: vanishing on a positive-cell lift forces an even vorticity

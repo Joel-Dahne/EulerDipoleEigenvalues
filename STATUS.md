@@ -66,10 +66,31 @@ to pointwise equality, allowing differentiation once more to identify the
 second jet. The original weighted trace-energy hypothesis is retained in the
 API, although the equality of total integrals does not use it.
 
-**Next backwards target:** `lem:ee-transport-traces` (`ee_transport_traces`),
-the remaining assembly interface specializing Melnikov/pairing to raw
-eigenfunction lifts and continuous arc traces. Then prove the existing
-`ee_boundary_regularity`, `ee_gradient_traces` and `ee_truncated_virial` inputs.
+**The eigenfunction transport interface is now proved.**
+`EigenfunctionTransport.lean` proves `ee_transport_traces`
+(`lem:ee-transport-traces`) with no `sorry` of its own; it rests on the
+admitted `isTransportPair_of_isEigenSolution`, `melnikov`, `pairing_limit`
+and `lintegral_cellSquare_eq`. New blueprint nodes, all `\leanok`:
+`lem:cell-neighbourhood` (the diagonal square `|a|,|b| < 3π/2` is a bounded
+invariant open union of orbits: its edges are barriers by scalar ODE
+uniqueness, so no flow saturation is needed), `lem:lift-representatives`
+(`ψ = ψ̃` a.e. on `ℝ²`, `ψ̃` has the rotation character pointwise),
+`lem:transport-pair-continuous` (`(ω, ψ̃)` is a transport pair),
+`lem:flow-continuity` (joint continuity of the flow from Gronwall, without
+differentiable dependence on data) and `lem:level-integral-congr` (a.e.
+equal measurable functions have equal level integrals on a.e. level).
+`#print axioms`: the new helpers use only `propext`, `Classical.choice`,
+`Quot.sound`, except `ae_levelIntegral_congr` (admitted
+`lintegral_cellSquare_eq`) and `isTransportPair_contStream` (admitted
+`isTransportPair_of_isEigenSolution`). The even–even hypothesis of
+`ee_transport_traces` is unused (only the rotation character is needed).
+The admitted `ee_transport_traces` copy was removed from `EvenEven.lean`,
+which now imports the new module.
+
+**Next backwards targets:** the remaining direct inputs of the even–even
+assembly, `ee_boundary_regularity`, `ee_gradient_traces`,
+`ee_truncated_virial` and `ee_neumann`, and the transport inputs
+(`melnikov`, `pairing_limit`, `isTransportPair_of_isEigenSolution`).
 The sector exclusion still depends on these admitted analytic results.
 
 1. Human sign-off on the Lean statements of the setup, symmetry and sector
@@ -388,12 +409,12 @@ The sector exclusion still depends on these admitted analytic results.
   type instead of `Bool` for sectors; merging the near-duplicate x/y proofs
   in `Derivatives.lean`.
 - **Validation**: full Lean build and `just web` pass after proving the
-  canonical boundary-form interface; `just graph thm:ee-exclusion` regenerates
-  its graph. All 617 blueprint Lean references resolve without duplicates.
-  The 130-node even–even dependency closure has no cycles or missing labels;
-  every cross-reference resolves. There are now 50 admitted declarations.
-  `CanonicalBoundaryForm.lean` has no warnings; `EvenEven.lean` has only its
-  five admitted-input warnings. Axiom checks on the canonical arc identity
+  eigenfunction transport interface; `just graph thm:ee-exclusion` regenerates
+  its graph (135 nodes). All 636 blueprint Lean references resolve without
+  duplicates, and every `\uses` label exists. There are now 49 admitted
+  declarations.
+  `CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean` have no
+  warnings; `EvenEven.lean` has only its four admitted-input warnings. Axiom checks on the canonical arc identity
   and all five new helpers use only `propext`, `Classical.choice` and
   `Quot.sound`. The earlier six endgame foundations have the same axiom
   status. Arc positivity, both exclusion proofs, and `main` still depend

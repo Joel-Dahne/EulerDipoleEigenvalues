@@ -584,6 +584,46 @@ with respect to the orbital frequency are
 $g_k(h)=S(h)^{-1}\int_0^{S(h)}e^{-ikb(h)t}g(\gamma_h(t))\,dt$.
 \end{definition}
 
+\begin{lemma}[Continuity of the flow]
+\label{lem:flow-continuity}
+\uses{def:dipole-flow, def:period}
+\lean{NoEmbeddedEigenvalues.continuous_dipoleFlow,
+  NoEmbeddedEigenvalues.continuous_dipoleOrbit,
+  NoEmbeddedEigenvalues.measurable_eighthPeriod}
+\leanok
+The flow $(x,t)\mapsto\varphi_t(x)$ and the orbit map $(h,t)\mapsto\gamma_h(t)$ are jointly
+continuous, and $h\mapsto L(h)$ is measurable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-flow, lem:dipole-velocity}
+\leanok
+Since $Y$ is $1$-Lipschitz and $|Y|\le1$, Gronwall gives
+$|\varphi_t(x)-\varphi_t(y)|\le e^{|t|}|x-y|$ and $|\varphi_t(x)-\varphi_s(x)|\le|t-s|$.
+Only Lipschitz dependence on initial data is needed, not differentiable dependence.
+The orbit map is the flow composed with $h\mapsto(\arccos h,-\arccos h)$. Measurability
+of $L$ is Fubini for the measurable integrand of Definition~\ref{def:period}.
+\end{proof}
+
+\begin{lemma}[Changing representatives on levels]
+\label{lem:level-integral-congr}
+\uses{def:level-integral}
+\lean{NoEmbeddedEigenvalues.ae_levelIntegral_congr}
+\leanok
+Let $f,g$ be measurable on $\R^2$ with $f=g$ almost everywhere. Then
+$\oint_{\{\Psi=2h\}}f\,dt=\oint_{\{\Psi=2h\}}g\,dt$ for almost every $h\in(0,1)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates, lem:flow-continuity, lem:period-orbit}
+\leanok
+Apply the nonnegative form of Lemma~\ref{lem:orbit-coordinates} to $|f-g|$, which
+vanishes almost everywhere: for almost every $h$, $|f-g|\circ\gamma_h=0$ almost everywhere
+on $[-2L,6L)$. By periodicity (Lemma~\ref{lem:period-orbit}) the same holds on $(0,S]$,
+so the two level integrals agree. Using the nonnegative formula avoids any integrability
+assumption on $f$ or $g$.
+\end{proof}
+
 \begin{definition}[Normal and tangential derivatives]
 \label{def:normal-tangent}
 \uses{def:lift-operators, def:stream-derivatives, def:stream-lifts}
