@@ -249,9 +249,11 @@ proof was already local, so there is no lower-order term),
 Also `pi_div_two_sub_quarterHeight_le(_of_abs_le)` (`lem:quarter-height-limit`):
 `0 ≤ π/2 - β_h(a) ≤ (π/2) h / cos a`, uniform on `|a| ≤ π/2 - δ`.
 
-**Next:** the corner weight bound `1/√(cos²a - h²) ≤ 2/u` (`u = cos a`,
-`h ≤ u²`, small `u`; still in the remark after `lem:arc-diagonal`), then
-`lem:arc-trace-identification`, `lem:ee-arc-energy`,
+Also `one_div_sqrt_cos_sq_sub_le(_corner)` (`lem:quarter-weight`): for
+`0 ≤ h ≤ cos² a`, `1/√(cos²a - h²) ≤ 1/(cos a |sin a|)`, at most `2/cos a` near
+the corners.
+
+**Next:** `lem:arc-trace-identification`, `lem:ee-arc-energy`,
 `lem:ee-corner-tails` and the assembly of `lem:ee-level-traces`. Also `virial_l2` (`lem:virial-l2`, needs `lem:transversal-mollifier`
 and `lem:virial-h1`; the product rule and `L²` integration by parts of
 `lem:l2-product-rule` should help); `lem:coarea-level-cutoff` and the

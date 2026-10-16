@@ -173,6 +173,30 @@ theorem pi_div_two_sub_quarterHeight_le_of_abs_le {h a δ : ℝ} (h0 : 0 ≤ h) 
   refine ⟨hlo, hhi.trans ?_⟩
   gcongr
 
+/-- The flow-time weight on the quarter orbit (`lem:quarter-weight`): for `0 ≤ h ≤ cos² a`
+    (that is, `|a| ≤ arccos √h`), `cos² a - h² ≥ cos² a - cos⁴ a = cos² a sin² a`, so
+    `1/√(cos² a - h²) ≤ 1/(cos a |sin a|)`. -/
+theorem one_div_sqrt_cos_sq_sub_le {h a : ℝ} (h0 : 0 ≤ h) (hc : 0 < cos a) (hh : h ≤ cos a ^ 2)
+    (hs : sin a ≠ 0) : 1 / √(cos a ^ 2 - h ^ 2) ≤ 1 / (cos a * |sin a|) := by
+  have hs' : 0 < |sin a| := abs_pos.2 hs
+  have hprod : 0 < cos a * |sin a| := mul_pos hc hs'
+  have hlow : (cos a * |sin a|) ^ 2 ≤ cos a ^ 2 - h ^ 2 := by
+    rw [mul_pow, sq_abs]
+    have h2 : h ^ 2 ≤ (cos a ^ 2) ^ 2 := pow_le_pow_left₀ h0 hh 2
+    nlinarith [sin_sq_add_cos_sq a]
+  apply one_div_le_one_div_of_le hprod
+  rw [← Real.sqrt_sq hprod.le]
+  exact Real.sqrt_le_sqrt hlow
+
+/-- Near the corners, where `|sin a| ≥ 1/2`, the weight is at most `2 / cos a`: in `u = cos a`,
+    `dt ≤ 2 da / u`. -/
+theorem one_div_sqrt_cos_sq_sub_le_corner {h a : ℝ} (h0 : 0 ≤ h) (hc : 0 < cos a)
+    (hh : h ≤ cos a ^ 2) (hs : 1 / 2 ≤ |sin a|) : 1 / √(cos a ^ 2 - h ^ 2) ≤ 2 / cos a := by
+  have hs0 : sin a ≠ 0 := fun h ↦ by rw [h, abs_zero] at hs; linarith
+  refine (one_div_sqrt_cos_sq_sub_le h0 hc hh hs0).trans ?_
+  rw [div_le_div_iff₀ (mul_pos hc (abs_pos.2 hs0)) hc]
+  nlinarith
+
 theorem orbitB_pos_of_abs_le (h0 : 0 < h) (h1 : h < 1) {t : ℝ} (ht : |t| ≤ eighthPeriod h) :
     0 < orbitB h t := by
   rcases le_total 0 t with h0t | h0t

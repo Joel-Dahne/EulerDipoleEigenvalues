@@ -602,12 +602,29 @@ $\pi/2-\arccos z=\arcsin z$, and $\arcsin z\le\frac\pi2 z$ for $z\in[0,1]$ by Jo
 $\sin x\ge\frac2\pi x$ on $[0,\pi/2]$. On $|a|\le\pi/2-\delta$, $\cos a\ge\cos(\pi/2-\delta)=\sin\delta$.
 \end{proof}
 
+\begin{lemma}[The flow-time weight]
+\label{lem:quarter-weight}
+\uses{lem:quarter-orbit-diagonal}
+\lean{NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le,
+  NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le_corner}
+\leanok
+If $0\le h\le\cos^2a$ (that is, $|a|\le a_h$), $\cos a>0$ and $\sin a\ne0$, then
+$1/\sqrt{\cos^2a-h^2}\le1/(\cos a\,|\sin a|)$. Near the corners, where $|\sin a|\ge\frac12$, this is
+at most $2/\cos a$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+$\cos^2a-h^2\ge\cos^2a-\cos^4a=\cos^2a\sin^2a$.
+\end{proof}
+
 \begin{remark}
 As $h\to0$, $a_h\to\pi/2$, $\beta_h\to\pi/2$ uniformly on $|a|\le\pi/2-\delta$
 (Lemma~\ref{lem:quarter-height-limit}), and the weight $1/\sqrt{\cos^2a-h^2}\to1/\cos a$, the arc
 weight of Lemma~\ref{lem:arc-diagonal}. Near the corner $a=\pi/2$, with $u=\cos a$ and
 $v=\cos b$, the quarter orbit is the half-hyperbola $v=h/u\le u$, $u\ge\sqrt h$, and
-$dt=du/(\sqrt{1-u^2}\sqrt{u^2-h^2})\le du/(u(1-u^2))$ since $h\le u^2$. These explicit formulas
+$dt=du/(\sqrt{1-u^2}\sqrt{u^2-h^2})\le du/(u(1-u^2))$ since $h\le u^2$
+(Lemma~\ref{lem:quarter-weight}). These explicit formulas
 replace the orbit-comparison lemmas in the even--even trace limits.
 \end{remark}
 
