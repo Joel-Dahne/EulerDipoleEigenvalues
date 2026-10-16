@@ -139,7 +139,8 @@ motivation, and standard facts cited rather than proved.
 - `STATUS.md`: current state, decisions and next steps.
 - `justfile`: build recipes (run `just` to list them).
 - `scripts/`: helper scripts. `blueprint_subgraph.py` (behind `just graph`)
-  restricts the web dependency graph to some nodes and their dependencies.
+  restricts the web dependency graph to some nodes and their dependencies,
+  drawn in one box per chapter (`--no-chapters` for the plain layout).
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
 - `.github/workflows/`: the Lean template CI (lean-action, docgen).
 

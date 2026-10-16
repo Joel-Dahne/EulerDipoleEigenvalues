@@ -7,7 +7,13 @@ transitively, through statements and proofs), and writes the result next to it
 as `dep_graph_<labels>.html`. The new page keeps the colours, the legend and
 the statement pop-ups of the full graph.
 
-Usage: python3 scripts/blueprint_subgraph.py [--web DIR] LABEL [LABEL ...]
+Nodes are grouped into one box per blueprint chapter (Graphviz clusters), read
+from `blueprint/src/content.tex` and the chapter files. A node stays inside its
+chapter's box, which keeps the picture more stable when edges change. Use
+`--no-chapters` for the plain layout.
+
+Usage: python3 scripts/blueprint_subgraph.py [--web DIR] [--src DIR] [--no-chapters]
+       LABEL [LABEL ...]
 Example: python3 scripts/blueprint_subgraph.py thm:ee-exclusion
 """
 
@@ -52,6 +58,19 @@ def split_statements(body: str) -> list[str]:
     return [s for s in statements if s]
 
 
+def chapters(src: Path) -> tuple[list[str], dict[str, int]]:
+    """Chapter titles in blueprint order, and the chapter index of every label."""
+    titles, chapter_of = [], {}
+    for name in re.findall(r"^\\input\{(chapters/[^}]*)\}", (src / "content.tex").read_text(
+            encoding="utf-8"), re.M):
+        text = (src / f"{name}.tex").read_text(encoding="utf-8")
+        title = re.search(r"\\chapter\{(.*)\}", text)
+        titles.append((title.group(1) if title else name).replace("--", "\u2013"))
+        for label in re.findall(r"\\label\{([^}]*)\}", text):
+            chapter_of[label] = len(titles) - 1
+    return titles, chapter_of
+
+
 def ancestors(targets: list[str], edges: list[tuple[str, str]]) -> set[str]:
     """The targets and every node with a path to one of them."""
     preds: dict[str, set[str]] = {}
@@ -70,6 +89,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("labels", nargs="+", help="blueprint labels, e.g. thm:ee-exclusion")
     parser.add_argument("--web", default="blueprint/web", help="blueprint website directory")
+    parser.add_argument("--src", default="blueprint/src", help="blueprint source directory")
+    parser.add_argument("--no-chapters", action="store_true",
+                        help="do not group the nodes into one box per chapter")
     args = parser.parse_args()
 
     web = Path(args.web)
@@ -101,17 +123,29 @@ def main() -> int:
         return 1
 
     keep = ancestors(args.labels, edges)
-    kept = []
+    titles, chapter_of = ([], {}) if args.no_chapters else chapters(Path(args.src))
+    defaults, loose, kept_edges = [], [], []
+    boxed: dict[int, list[str]] = {}
     for s in statements:
         if m := EDGE.match(s):
             if m.group(1) in keep and m.group(2) in keep:
-                kept.append(s)
+                kept_edges.append(s)
         elif m := NODE.match(s):
             if m.group(1) in keep:
-                kept.append(s)
+                if m.group(1) in chapter_of:
+                    boxed.setdefault(chapter_of[m.group(1)], []).append(s)
+                else:
+                    loose.append(s)
         else:  # graph, node and edge defaults
-            kept.append(s)
-    new_dot = head + "\t" + ";\t".join(kept) + ";}"
+            defaults.append(s)
+    clusters = []
+    for i in sorted(boxed):
+        attrs = (f'graph [label="{titles[i]}", labeljust=l, fontsize=22, style="rounded,filled", '
+                 'fillcolor="#F3F4F6", color="#C4C8CE", penwidth=1.2]')
+        clusters.append(f'subgraph "cluster_{i}" {{\t' + ";\t".join([attrs] + boxed[i]) + ";}")
+    if clusters:
+        defaults.append("graph [newrank=true]")
+    new_dot = head + "\t" + ";\t".join(defaults + clusters + loose + kept_edges) + ";}"
 
     title = "Dependencies of " + ", ".join(args.labels)
     out_html = html[: match.start(1)] + new_dot + html[match.end(1) :]
