@@ -1321,10 +1321,63 @@ theorem ee_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       exact (Set.indicator_of_mem (show p ∈ {p : ℝ × ℝ | dipoleLift p < 2 * hs j} from hj) _).symm
   exact tendsto_nhds_unique hlim2 hlim1
 
+/-! ### Gradient traces at the separatrix -/
+
+/-- The energy of the arc traces (`lem:ee-arc-energy`): for `ψ` even under both reflections,
+    `∫ cosh² s |g_k'(s)|² ds < ∞` on each arc, with `g_k = ψ̃ ∘ γ_k`. Away from the saddles
+    this is the line trace of `∇ψ ∈ H¹` (`lem:traces`); near a saddle `ds ≈ du/u` in the corner
+    chart and the odd Hardy inequality bounds `∫ |ψ_u(u, 0)|² du/u`, since `ψ_u(·, 0)` is odd. -/
+theorem ee_arc_energy {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω) :
+    ∀ k < 4, Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2 := by
+  sorry
+
+/-- The hyperbola estimate (`lem:hyperbola-estimate`): if `v ↦ F(u, v)` is absolutely
+    continuous on `[0, u₀]` with derivative `F_v` for almost every `u`, then on the
+    half-hyperbola `v = h/u`, `√h ≤ u ≤ u₀`,
+    `∫ |F(u, h/u) - F(u, 0)|² du/u ≤ ∫_{(0,u₀)²} |F_v|²`. Each vertical segment has length
+    `h/u`, and Cauchy–Schwarz gives the factor `h/u² ≤ 1`. -/
+theorem lintegral_hyperbola_le {F Fv : ℝ × ℝ → ℂ} (hFv : Measurable Fv) {u₀ h : ℝ}
+    (hh : 0 < h) (hu : √h ≤ u₀)
+    (hF : ∀ᵐ u ∂(volume.restrict (Ioo 0 u₀)),
+      AbsolutelyContinuousOnInterval (fun v ↦ F (u, v)) 0 u₀ ∧
+        ∀ᵐ v ∂(volume.restrict (Ioo 0 u₀)), HasDerivAt (fun v ↦ F (u, v)) (Fv (u, v)) v) :
+    ∫⁻ u in Ioo (√h) u₀, ENNReal.ofReal (‖F (u, h / u) - F (u, 0)‖ ^ 2 / u) ≤
+      ∫⁻ p in Ioo 0 u₀ ×ˢ Ioo 0 u₀, ENNReal.ofReal (‖Fv p‖ ^ 2) := by
+  sorry
+
+/-- Level traces at the separatrix (`lem:ee-level-traces`): for `ψ` even under both
+    reflections, along levels `h → 0` outside a null set, `∮ |ψₙ|² dt → 0` and
+    `∮ |ψₜ|² dt → ∑_k ∫ ½ cosh² s |g_k'(s)|² ds`. Away from the saddles the restrictions
+    converge by the line traces of `lem:traces`, and the normal trace on the arcs vanishes
+    because `ψₙ` is odd under the reflection across each arc (`lem:ee-neumann`); near the
+    saddles the tails are uniformly small by the hyperbola estimate and the axis tail. On an
+    arc `|ψₜ|² = ½ cosh² s |g'|²`. -/
+theorem ee_level_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω) :
+    ∃ N : Set ℝ, volume N = 0 ∧
+      Tendsto (fun h ↦ levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2)
+        (𝓝[Ioi 0 \ N] 0) (𝓝 0) ∧
+      Tendsto (fun h ↦ levelIntegral h fun p ↦ ‖streamTangent ω p‖ ^ 2) (𝓝[Ioi 0 \ N] 0)
+        (𝓝 (∑ k ∈ Finset.range 4,
+          ∫ s, Real.cosh s ^ 2 / 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2)) := by
+  sorry
+
+/-- The first-order trace term (`lem:ee-first-trace-limit`): if `∮ |ψₙ|² dt → 0` along levels
+    outside `N`, then `∮ Re(ψ ψ̄ₙ) dℓ → 0` outside a larger null set, by Cauchy–Schwarz with
+    `|ψ| ≤ ‖ψ̃‖_∞` and `∮ ρ² dt ≤ C` (`ρ ≤ C d` and `lem:orbit-time-integrals`). -/
+theorem ee_first_trace_limit (ω : L2) {N : Set ℝ}
+    (hn : Tendsto (fun h ↦ levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2)
+      (𝓝[Ioi 0 \ N] 0) (𝓝 0)) :
+    ∃ N' : Set ℝ, volume N' = 0 ∧
+      Tendsto (fun h ↦ levelIntegral h fun p ↦
+          gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re)
+        (𝓝[Ioi 0 \ (N ∪ N')] 0) (𝓝 0) := by
+  sorry
+
 /-- Weighted gradient traces (`lem:ee-gradient-traces`). For `ψ` even under both reflections,
     along levels `h → 0` outside a null set: `∮ |ψₙ|² dt → 0`,
     `∮ |ψₜ|² dt → ∑_γ ∫ ½ cosh² s |g_γ'(s)|² ds` with `g_γ = ψ̃ ∘ γ` the arc traces (on an arc
-    `|ψₜ|² = ½ cosh² s |g'|²`), and `∮ Re(ψ ψ̄ₙ) dℓ → 0`. -/
+    `|ψₜ|² = ½ cosh² s |g'|²`), and `∮ Re(ψ ψ̄ₙ) dℓ → 0`. Assembled from `ee_arc_energy`,
+    `ee_level_traces` and `ee_first_trace_limit`. -/
 theorem ee_gradient_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true true ω) :
     (∀ k < 4, Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv (contStream ω ∘ cellArc k) s‖ ^ 2) ∧
     ∃ N : Set ℝ, volume N = 0 ∧
@@ -1336,7 +1389,12 @@ theorem ee_gradient_traces {ω : L2} (h0 : MeanZero ω) (hω : InSector true tru
       Tendsto (fun h ↦ levelIntegral h fun p ↦
           gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re)
         (𝓝[Ioi 0 \ N] 0) (𝓝 0) := by
-  sorry
+  obtain ⟨N, hN, hn, ht⟩ := ee_level_traces h0 hω
+  obtain ⟨N', hN', hf⟩ := ee_first_trace_limit ω hn
+  have hmono : 𝓝[Ioi (0 : ℝ) \ (N ∪ N')] 0 ≤ 𝓝[Ioi 0 \ N] 0 :=
+    nhdsWithin_mono _ (sdiff_subset_sdiff_right subset_union_left)
+  exact ⟨ee_arc_energy h0 hω, N ∪ N', measure_union_null hN hN', hn.mono_left hmono,
+    ht.mono_left hmono, hf⟩
 
 /-! ### The trace of the stream function on the arcs -/
 
@@ -1689,7 +1747,7 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   -- From the transport traces and the weighted gradient traces.
   have hg1 : Integrable (deriv g) := (ee_melnikov hlam hω hκ k).1
   have hg2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2 :=
-    (ee_gradient_traces hω.1 hs).1 k hk
+    ee_arc_energy hω.1 hs k hk
   -- Bounded, since `ψ̃` is a continuous periodic function.
   have hgb : ∀ s, ‖g s‖ ≤ ‖continuousRep (invLap ω)‖ := fun s ↦
     (continuousRep (invLap ω)).norm_coe_le_norm _

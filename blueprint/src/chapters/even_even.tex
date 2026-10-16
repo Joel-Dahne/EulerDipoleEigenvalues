@@ -441,14 +441,93 @@ $\psi$ is even under $S_j$, so $\nabla\psi\circ S_j=M_j\nabla\psi$ with $M_j$ th
 of $S_j$, which reverses the normal $(\sin x,\sin y)/\rho$ and preserves $Y/\rho$.
 \end{remark}
 
+\begin{lemma}[Energy of the arc traces]
+\label{lem:ee-arc-energy}
+\uses{def:sectors, def:stream-lifts, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.ee_arc_energy}
+\leanok
+Let $\psi=\Delta^{-1}\omega$, $\omega\in X$, be even under $S_1,S_2$, and let
+$g_k=\tilde\psi\circ\gamma_k$ be its traces on the four arcs. Then
+$\int\cosh^2s\,|g_k'|^2\,ds<\infty$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:arc-trace-ac, lem:traces, lem:local-to-global, lem:elliptic-torus,
+  lem:corner-coordinates, lem:odd-hardy, lem:separatrix-arc}
+On an arc $g'=\rho\,\psi_t$ with $\rho=\sqrt2\sech s$, so $\cosh^2s\,|g'|^2=2|\psi_t|^2$, and the
+claim is $\int_\gamma|\psi_t|^2\,ds<\infty$ in flow time.
+Away from the saddles $ds$ is comparable to arclength and the line trace of $\nabla\psi\in H^1$
+(Lemma~\ref{lem:traces}) is in $L^2$. Near a saddle use the coordinates $u,v$ of
+Lemma~\ref{lem:corner-coordinates}: the arc is $v=0$, $ds$ is comparable to $du/u$, and $\psi$ is
+even in $u$, so the trace $\psi_u(u,0)$ is odd. Its Gagliardo seminorm is finite by
+Lemma~\ref{lem:traces}, and Lemma~\ref{lem:odd-hardy} gives $\int_0^{u_0}|\psi_u(u,0)|^2du/u<\infty$.
+\end{proof}
+
+\begin{lemma}[Level traces at the separatrix]
+\label{lem:ee-level-traces}
+\uses{def:sectors, def:normal-tangent, def:stream-lifts, def:level-integral, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.ee_level_traces}
+\leanok
+For $\psi$ as in Lemma~\ref{lem:ee-arc-energy}, as $h\to0$ outside a null set,
+\[
+  \oint|\psi_n|^2\,dt\to0,\qquad
+  \oint|\psi_t|^2\,dt\to\sum_{k=0}^{3}\int_\R\tfrac12\cosh^2s\,|g_k'(s)|^2\,ds
+\]
+over the levels $\{\Psi=2h\}$ (manuscript \texttt{(ee:normal-trace-limit)},
+\texttt{(ee:tangent-trace-limit)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-arc-energy, lem:ee-neumann, lem:hyperbola-estimate, lem:traces,
+  lem:local-to-global, lem:corner-coordinates, lem:odd-hardy, lem:orbit-comparison,
+  lem:orbit-coordinates, lem:level-integral-congr}
+Split each level into a middle part, at distance at least $\delta$ from the saddles, and the
+corner parts. In the middle the levels near an arc are graphs over the line carrying it
+(in diagonal coordinates), and along almost every transverse line
+$|F(a,\beta_h(a))-F(a,b_0)|^2\le|\beta_h(a)-b_0|\int|\partial_bF|^2db$ for the absolutely
+continuous representatives of Lemma~\ref{lem:traces}; so the restrictions of $\nabla\psi$ converge
+to its trace on the arc. The normal trace on the arcs vanishes: $\psi_n$ is odd under the
+reflection across the line of each arc (Lemma~\ref{lem:ee-neumann}). Near a saddle, in the
+coordinates of Lemma~\ref{lem:corner-coordinates}, the level is $uv=h$ and $dt$ is comparable to
+$du/u$. On the half $u\ge v=h/u$ apply Lemma~\ref{lem:hyperbola-estimate} to $F=\psi_u$ and
+$F=\psi_v$, whose axis traces are the odd $\psi_u(u,0)$ (with $\int|\psi_u(u,0)|^2du/u$ finite,
+as in Lemma~\ref{lem:ee-arc-energy}) and $\psi_v(u,0)=0$. The normal and tangential derivatives
+along the hyperbola are bounded combinations of $\psi_u,\psi_v$, so their corner tails are
+bounded by the axis tail on $(0,u_1)$ plus $\int_{(0,u_1)^2}|\nabla\psi_v|^2+|\nabla\psi_u|^2$,
+small for small $u_1$ uniformly in $h$. The half $v\ge u$ is symmetric. Finally the raw
+restrictions agree with those of the absolutely continuous representatives on almost every
+level (Lemma~\ref{lem:level-integral-congr}).
+\end{proof}
+
+\begin{lemma}[The first-order trace term]
+\label{lem:ee-first-trace-limit}
+\uses{def:normal-tangent, def:stream-lifts, def:level-integral}
+\lean{NoEmbeddedEigenvalues.ee_first_trace_limit}
+\leanok
+If $\oint|\psi_n|^2\,dt\to0$ as $h\to0$ outside a null set $N$, then
+$\oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0$ outside a null set containing $N$
+(manuscript \texttt{(ee:first-trace-limit)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:continuous-representative, lem:lift-representatives, lem:level-integral-congr,
+  lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:orbit-coordinates}
+On almost every level $|\psi|\le M=\sup|\tilde\psi|$, and $d\ell=\rho\,dt$, so by
+Cauchy--Schwarz $|\oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell|\le
+M(\oint\rho^2dt)^{1/2}(\oint|\psi_n|^2dt)^{1/2}$. Although the period $S(h)\to\infty$,
+$\oint\rho^2\,dt$ is bounded: $\rho\le Cd$ with $d$ the distance to the saddles, and
+$\int d^2\,dt\le C$ on each quarter orbit (Lemma~\ref{lem:orbit-time-integrals}).
+(Equivalently, $\oint\rho^2dt=\oint\nabla\Psi\cdot n\,d\ell=\int_{\{\Psi>2h\}}\Psi$ by the divergence
+theorem.)
+\end{proof}
+
 \begin{lemma}[Weighted gradient traces]
 \label{lem:ee-gradient-traces}
-\uses{def:sectors, def:normal-tangent, def:stream-lifts, def:level-integral, def:cell-arcs}
+\uses{lem:ee-arc-energy, lem:ee-level-traces}
 \lean{NoEmbeddedEigenvalues.ee_gradient_traces}
 \leanok
-Let $\psi=\Delta^{-1}\omega$, $\omega\in X$, be even under $S_1,S_2$, and let $g_k=\tilde\psi\circ\gamma_k$
-be its traces on the four arcs. Then $\int\cosh^2s\,|g_k'|^2\,ds<\infty$, and as $h\to0$
-outside a null set,
+For $\psi$ as in Lemma~\ref{lem:ee-arc-energy}, $\int\cosh^2s\,|g_k'|^2\,ds<\infty$, and as
+$h\to0$ outside a null set,
 \[
   \oint|\psi_n|^2\,dt\to0,\qquad
   \oint|\psi_t|^2\,dt\to\sum_{k=0}^{3}\int_\R\tfrac12\cosh^2s\,|g_k'(s)|^2\,ds,\qquad
@@ -458,17 +537,29 @@ over the levels $\{\Psi=2h\}$ (manuscript \texttt{(ee:gradient-traces)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-neumann, lem:corner-coordinates, lem:odd-hardy, lem:traces, lem:local-to-global, lem:sobolev-embedding, lem:continuous-representative, lem:orbit-coordinates, lem:elliptic-torus}
-Away from the saddles this is trace continuity. Near a corner use the
-coordinates $u,v$ of Lemma~\ref{lem:corner-coordinates}, in which levels are
-$uv=h$ and $\psi$ is even in each variable. Then $\psi_u(u,0)$ is odd, and
-Lemma~\ref{lem:odd-hardy} gives $\int_0^{u_0}|\psi_u(u,0)|^2du/u<\infty$. On
-the half-hyperbola $u\ge v=h/u$, for $F\in H^1$,
-$\int_{\sqrt h}^{u_0}|F(u,h/u)-F(u,0)|^2du/u\le\int_{(0,u_0)^2}|F_v|^2$.
-Apply this to $F=\psi_u,\psi_v$. Since $dt\sim du/u$, the corner tails are
-uniformly small. The last limit follows from boundedness of $\psi$ and
-Cauchy--Schwarz.
+\uses{lem:ee-arc-energy, lem:ee-level-traces, lem:ee-first-trace-limit}
+\leanok
+Lemmas~\ref{lem:ee-arc-energy}, \ref{lem:ee-level-traces} and~\ref{lem:ee-first-trace-limit},
+with the union of the two null sets.
 \end{proof}
+
+\begin{remark}[Digest note: the gradient traces]
+The manuscript's argument is correct as sketched, but four steps are implicit. (1) Why the
+normal limit is zero: the trace of $\psi_n$ on the arcs vanishes because $\psi_n$ is odd
+under the reflection across each arc's line (Lemma~\ref{lem:ee-neumann}). (2) The first-order
+term needs $\oint\rho^2dt$ bounded although $S(h)\to\infty$; this holds by $\rho\le Cd$ and
+Lemma~\ref{lem:orbit-time-integrals}, or by the divergence theorem. (3) Identifying the
+tangential limit with $\frac12\cosh^2|g'|^2$ needs the trace of $\nabla\psi$ on the arc to be the
+derivative of the trace of $\psi$; Lemma~\ref{lem:traces} gives this because each arc lies on a
+coordinate line of the diagonal coordinates, and the corner lines $u=\mathrm{const}$ are lines
+$a=\mathrm{const}$, so one trace lemma covers both regions. (4) ``By density'' is not needed:
+with the absolutely continuous representatives of Lemma~\ref{lem:traces} the hyperbola
+estimate is the fundamental theorem of calculus on almost every vertical line, and the null
+set of levels comes from comparing representatives (Lemma~\ref{lem:level-integral-congr}).
+The lemma was split into Lemmas~\ref{lem:ee-arc-energy}, \ref{lem:hyperbola-estimate},
+\ref{lem:ee-level-traces} and~\ref{lem:ee-first-trace-limit}; the middle convergence and the
+corner tails in Lemma~\ref{lem:ee-level-traces} are the least worked out.
+\end{remark}
 
 \begin{remark}
 Restated: limits are taken along levels outside a null set rather than over all regular
@@ -1314,14 +1405,14 @@ the ends of $\gamma_k$, and $c_+=\kappa c_-$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-gradient-traces, lem:ee-transport-traces, lem:arc-trace-ac,
+\uses{lem:ee-arc-energy, lem:ee-transport-traces, lem:arc-trace-ac,
   lem:canonical-profile, lem:canonical-profile-ode, lem:separatrix-arc,
   lem:continuous-representative, lem:boundary-form-xi}
 \leanok
 By the rotation character, $g=\kappa^k\,\tilde\psi\circ\gamma$, so $g$ is locally absolutely
 continuous and differentiable almost everywhere (Lemma~\ref{lem:arc-trace-ac}), with
 $g'\in L^1$, $\int g'e^{-i\lambda t}dt=0$ (Lemma~\ref{lem:ee-transport-traces}) and
-$\int\cosh^2s\,|g'|^2ds<\infty$ (Lemma~\ref{lem:ee-gradient-traces}). Hence
+$\int\cosh^2s\,|g'|^2ds<\infty$ (Lemma~\ref{lem:ee-arc-energy}). Hence
 $\Omega$ is bounded by $\|g'\|_{L^1}$, locally absolutely continuous, satisfies
 $\Omega'=i\lambda\Omega-g'$ and $z'=-i\Omega$ almost everywhere, tends to $0$ at $\pm\infty$,
 and $\int\cosh^2|\Omega|^2<\infty$ by the weighted bound of Lemma~\ref{lem:canonical-profile}

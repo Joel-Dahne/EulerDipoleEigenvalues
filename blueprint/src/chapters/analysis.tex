@@ -892,6 +892,25 @@ seminorm; the trace input for $\psi_u$ is given directly in Gagliardo form by
 Lemma~\ref{lem:traces}, so no link between the Gagliardo seminorm and $H^{1/2}$ is needed.
 \end{remark}
 
+\begin{lemma}[Hyperbola estimate]
+\label{lem:hyperbola-estimate}
+\lean{NoEmbeddedEigenvalues.lintegral_hyperbola_le}
+\leanok
+Let $0<h$, $\sqrt h\le u_0$, and let $F,F_v$ be functions on $\R^2$, $F_v$ measurable, such
+that for almost every $u\in(0,u_0)$ the function $v\mapsto F(u,v)$ is absolutely continuous on
+$[0,u_0]$ with derivative $F_v(u,\cdot)$ almost everywhere. Then
+\[
+  \int_{\sqrt h}^{u_0}\frac{|F(u,h/u)-F(u,0)|^2}{u}\,du\le\int_{(0,u_0)^2}|F_v|^2
+\]
+(manuscript \texttt{(ee:hyperbola-estimate)}).
+\end{lemma}
+
+\begin{proof}
+For such $u$, $F(u,h/u)-F(u,0)=\int_0^{h/u}F_v(u,v)\,dv$, so by Cauchy--Schwarz
+$|F(u,h/u)-F(u,0)|^2/u\le(h/u^2)\int_0^{h/u}|F_v(u,v)|^2dv$. For $u\ge\sqrt h$ both $h/u^2\le1$
+and $h/u\le\sqrt h\le u_0$; integrate over $u$.
+\end{proof}
+
 \begin{lemma}[Picone identity]
 \label{lem:picone}
 Let $G$ be a symmetric matrix field and $g>0$ smooth. Then pointwise
