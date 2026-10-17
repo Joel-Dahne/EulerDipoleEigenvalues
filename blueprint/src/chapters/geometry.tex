@@ -702,13 +702,29 @@ nonnegative measurable $f$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-orbit, lem:dipole-flow, lem:period-integral}
-Where $b>0$ the proof of Lemma~\ref{lem:period-orbit} shows that $t$ is the flow time from
-$(0,\arccos h)$; the integral up to $a=-\arccos h$ (where $b=0$) is improper but equals
-$2L(h)$. The rotation $(a,b)\mapsto(-a,-b)$ is the time shift by $4L$. Jacobian: in the
-orthonormal frame $\nabla\Psi/\rho$, $Y/\rho$ one has $\nabla h=\frac\rho2\,\nabla\Psi/\rho$
-and $\nabla t\cdot Y=1$, so $|\det\partial(h,t)/\partial(x,y)|=\frac\rho2\cdot\frac1\rho=\frac12$.
-The cut $\{b=0,a>0\}$ is a null set.
+\uses{lem:period-orbit, lem:dipole-flow, lem:period-integral,
+  lem:quarter-orbit-diagonal}
+The proved quarter-orbit parametrizations and rotations identify the
+explicit integral with elapsed flow time. At the turning point
+$a=-\arccos h$, $b=0$, its improper value is $2L(h)$; the half rotation
+shifts time by $4L$. These identities give the two inverse relations,
+with the cut assigned the lower endpoint $-2L$ of the half-open window.
+
+For local smoothness, first use the fixed-interval formula of
+Lemma~\ref{lem:period-integral}. On compact level intervals inside
+$(0,1)$ its square-root arguments stay uniformly positive, so
+differentiation under the integral gives smoothness of $L$.
+Where $b\ne0$, the incomplete time integral also has a locally regular
+integrand. Near $b=0,a<0$, rotate to a regular patch and add the
+appropriate smooth multiple of $L$. This proves smoothness off the
+cut without assuming differentiable dependence of the flow on $h$.
+
+The inverse relations and the flow equation give $Yt=1$ off the cut.
+Since $\nabla h=\nabla\Psi/2$ and $Y=(-\Psi_y,\Psi_x)$,
+$\det D(h,t)=1/2$. The inverse function theorem and change of variables
+on the cut-open cell give the area formula. The center and the cut
+are null sets; the endpoint graphs in the time domain are also null
+by Fubini. This justifies the half-open window and the iterated formula.
 \end{proof}
 
 \begin{remark}
@@ -800,9 +816,15 @@ $\varphi$ vanishing outside $[a,b]$,
 
 \begin{proof}
 \uses{lem:orbit-coordinates, lem:period-orbit}
-Apply Lemma~\ref{lem:orbit-coordinates} to $\varphi(\Psi/2)F$, which is integrable on the
-cell, and use $\Psi(\gamma_h(t))=2h$. The time window $[-2L,6L)$ is one period, so by
-periodicity its integral is the level integral over $[0,S)$.
+First replace $F$ by its truncation $G$ to the closed level band,
+extended by zero in the rest of the cell. Then $G$ and $|G|$ are
+integrable on the cell. The integrable area formula of
+Lemma~\ref{lem:orbit-coordinates}, together with
+$|\int G\,dt|\le\int|G|\,dt$, gives integrability of the level integral.
+Apply the formula again to $\varphi(\Psi/2)G$ and use
+$\Psi(\gamma_h(t))=2h$. The time window $[-2L,6L)$ is one period, so
+its integral equals the level integral over $[0,S)$.
+On $[a,b]$ the truncation does not change the restrictions to levels.
 \end{proof}
 
 \begin{definition}[Action-angle coordinates]
@@ -846,22 +868,40 @@ for nonnegative measurable $f$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:period-orbit, lem:period, lem:dipole-flow}
-Smoothness of $S$: differentiate under the integral of Lemma~\ref{lem:period}, or use
-$S(h)=4\mathbf K(1-h^2)$. Periodicity, the values and the inverse relations are
-Lemmas~\ref{lem:orbit-coordinates} and~\ref{lem:period-orbit} with $t=\theta S(h)$, which maps
-$[-\frac14,\frac34)$ onto $[-2L,6L)$; $\partial_\theta P=S(h)\,Y(P)$ is the flow equation. The
-area formula is $dx\,dy=2\,dh\,dt$ (Lemma~\ref{lem:orbit-coordinates}) with $t=S(h)\theta$.
+\uses{lem:orbit-coordinates, lem:period-orbit, lem:period-integral, lem:dipole-flow}
+Smoothness of $S$ follows by differentiating the regular fixed-interval
+integral of Lemma~\ref{lem:period-integral} on compact level intervals;
+no elliptic-integral identity or sharp asymptotic expansion is needed.
+Periodicity, the values and the inverse relations follow from
+Lemmas~\ref{lem:orbit-coordinates} and~\ref{lem:period-orbit} with
+$t=\theta S(h)$, which maps $[-\frac14,\frac34)$ onto $[-2L,6L)$.
+The time derivative $\partial_\theta P=S(h)Y(P)$ uses only the flow
+equation. The area formula follows from $dx\,dy=2\,dh\,dt$ with
+$t=S(h)\theta$.
 
 The map $p\mapsto(h,t)$ is smooth off the cut (Lemma~\ref{lem:orbit-coordinates}), and so is
 $\theta=t/S(h)$. Across the cut $\theta$ jumps by $1$; there use the rotation
 $R(x,y)=(y,-x)$, which preserves the levels, maps a neighbourhood of a cut point off the
 cut, and shifts $\theta$ by $\frac14$ modulo $1$, so a $1$-periodic $F$ composed with
-$(h,\theta)$ is smooth there too. The Jacobian determinant of $P$ is
-$\partial_hP\times S(h)Y=S(h)\,\partial_h(\Psi\circ P)=2S(h)\ne0$, since $Y=(-\Psi_y,\Psi_x)$.
-Smoothness of $P$ follows from the inverse function theorem applied to $(h,\theta)$ off the
-cut, and to $(h,\theta)\circ R$ near it.
+$(h,\theta)$ is smooth there too.
+
+Compute the determinant of the already smooth coordinate map first:
+$Yh=0$ and $Y\theta=1/S(h)$ give
+$\det D(h,\theta)=1/(2S(h))\ne0$.
+The inverse function theorem, together with the known inverse identities,
+now gives smoothness of $P$ locally, using a rotated angular window at
+the cut. Only afterwards conclude $\det DP=2S(h)$.
 \end{proof}
+
+\begin{remark}[Digest note: a noncircular regularity route]
+The previous sketch wrote $\partial_hP$ before establishing smoothness
+of $P$. Computing the determinant of the inverse coordinates first
+removes that circularity. Period smoothness must likewise be obtained
+upstream from the regular integral, before differentiating the time
+coordinate. This route does not require a parameter-dependent ODE theorem.
+These are paper-proof clarifications; the analytic chart inputs remain
+admitted in Lean.
+\end{remark}
 
 \begin{lemma}[Classical test functions in action-angle coordinates]
 \label{lem:action-angle-test-chain}
@@ -1038,7 +1078,10 @@ test-function rules and local-integrability equivalences above are now
 proved in Lean. For (1), the compact/periodic test transfer and the angular
 seam are now handled by Lemma~\ref{lem:action-angle-transport}, without a
 partition of unity on the cell. The full weak-gradient rules (2)--(3)
-and their coordinate-window gluing remain admitted.
+and their coordinate-window gluing remain admitted. For the virial
+application, $H^1$ data on compact level bands suffice; a specialized
+version could avoid building the full locally $W^{1,1}$ approximation
+infrastructure needed by the general statements.
 \end{remark}
 
 \begin{definition}[Normal and tangential derivatives]
@@ -1094,12 +1137,39 @@ of $S$ are simple.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-integral}
-Monotonicity: the derivative in $h$ of the squared denominator is
-$t^2(1+h-t^2)+1-t^2+ht^2>0$. The asymptotics follow by substituting $y=1-t^2$
-and splitting at $y=h$; the precise expansion follows from the classical
-expansion of $\mathbf K$ near $m=1$.
+\uses{lem:period-integral, lem:period-orbit}
+On a compact level interval inside $(0,1)$, the fixed-interval
+integrand of Lemma~\ref{lem:period-integral} is smooth and each parameter
+derivative is uniformly bounded. Thus differentiation under the integral
+is legitimate. The derivative in $h$ of the squared denominator is
+$t^2(1+h-t^2)+1-t^2+ht^2>0$, so $L'<0$.
+
+For the elliptic identity, the flow-time quadrature over a quarter gives
+$2L(h)=\int_0^{\arccos h}(\cos^2a-h^2)^{-1/2}\,da$, interpreted
+improperly at the endpoint. Substitute
+$\sin a=\sqrt{1-h^2}\sin\theta$, first short of the endpoint and then
+pass to the limit. This gives $2L=\mathbf K(1-h^2)$, hence $S=4\mathbf K$.
+
+The logarithmic behaviour can be studied by substituting $y=1-t^2$
+in the fixed-interval formula and splitting near $y=h$. The stated sharp remainders invoke the
+classical expansion of $\mathbf K$ near $m=1$, including its derivative.
+A precise reference or a quantified remainder argument is still needed
+for that step.
 \end{proof}
+
+\begin{remark}[Digest note: the period node has different levels of difficulty]
+Local smoothness and strict monotonicity use a regular parameter integral.
+They should not be conflated with the elliptic identity and the sharp
+asymptotic remainders. For orbit comparison and the transport limits, the
+coarser estimate $L(h)=\frac12\log(1/h)+O(1)$, together with strict
+monotonicity, appears sufficient. The corner argument below also gives
+$e^{-L(h)}\asymp\sqrt h$. These are possible routes to the coarse estimates
+without the full elliptic expansion. Splitting the period node would
+make the genuinely needed inputs visible. The derivative remainder
+requires a separate justification; it cannot be obtained by formally
+differentiating an unspecified $O$-term. The numerical checks below
+are sanity checks, not a proof of either remainder estimate.
+\end{remark}
 
 \begin{remark}
 The asymptotics were checked numerically for $h=10^{-1},\dots,10^{-5}$: the
@@ -1120,10 +1190,13 @@ are centered at $a=0$ at time $0$ (manuscript \texttt{(ee:orbit-comparison)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period, lem:period-orbit}
-The velocity field has Lipschitz constant at most one; the midpoint
-displacement is $O(h)$ and grows at most like $e^{|t|}$, while $he^{2L}$ is
-bounded.
+\uses{lem:period, lem:dipole-flow, lem:separatrix-arc}
+The initial displacement between $\gamma_h$ and $\gamma$ is $O(h)$.
+The velocity field is globally $1$-Lipschitz, so Gronwall gives
+$|\gamma_h(t)-\gamma(t)|\le Ch e^{|t|}$ in both time directions.
+For $|t|\le L(h)$, the bound $e^{L(h)}\le C/\sqrt h$ yields the
+claimed $C\sqrt h$. No differentiable dependence on the initial point
+is used.
 \end{proof}
 
 \begin{lemma}[Distance to the saddles along an orbit]
@@ -1136,9 +1209,31 @@ both endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a saddle.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period, lem:period-orbit, lem:corner-coordinates}
-Comparison with the hyperbolic linearization at the saddles; $e^{-L(h)}\sim\sqrt h$ by
-Lemma~\ref{lem:period}.
+\uses{lem:period-orbit, lem:corner-coordinates, lem:quarter-orbit-diagonal}
+On each half-quarter orient time toward the saddle. After labelling
+the corner coordinates suitably, $uv=h$, $u\ge v$, and
+\[
+  \dot u=-Au,\qquad \dot v=Av,\qquad
+  A=\sqrt{1-u^2}\sqrt{1-v^2}.
+\]
+In a fixed small corner square, $A\ge c_0>0$ and
+$0\le1-A\le C(u^2+v^2)$. Changing variables using the two scalar ODEs
+bounds $\int u^2\,dt$ and $\int v^2\,dt$ uniformly, independently of $h$.
+Consequently $\int(1-A)\,dt$ is uniformly bounded. Integrating
+$\dot u/u=-1+(1-A)$ gives $u(t)\asymp e^{-t}$, measured from entry
+into the corner square.
+
+The entry time from the arc midpoint is uniformly bounded by the
+explicit quarter quadrature on the remaining regular segment.
+Within the corner $d\asymp\max\{u,v\}=u$; on that regular segment both
+$d$ and $e^{-|t|}$ are comparable to constants. Reflect to treat the
+other half-quarter. At its endpoint $u=v=\sqrt h$, giving both
+$d\asymp\sqrt h$ and $e^{-L(h)}\asymp\sqrt h$.
+
+Merely bounding $A$ between two positive constants would not yield
+the exact unit exponential rate. The uniform bound for its accumulated
+defect is the needed additional argument; it does not use the
+flow-time integral lemma below.
 \end{proof}
 
 \begin{lemma}[Derivatives in the level]
@@ -1153,8 +1248,12 @@ Lemma~\ref{lem:orbit-saddle-distance} these are $\le C/d$ and $\le C/d^2$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-flow, lem:orbit-saddle-distance}
-Differentiate the flow equation with respect to $h$. Writing
+\uses{lem:dipole-flow, lem:action-angle-chart, lem:orbit-saddle-distance}
+First obtain joint smoothness from
+$\gamma_h(t)=P(h,t/S(h))$, using Lemma~\ref{lem:action-angle-chart}.
+That lemma uses inverse coordinates, not these derivative estimates,
+so this step is noncircular. Now differentiate the flow equation with
+respect to $h$. Writing
 $J=\partial_h\gamma_h$ and $K=\partial_h^2\gamma_h$ gives
 $\dot J=DY(\gamma_h)J$ and
 $\dot K=DY(\gamma_h)K+D^2Y(\gamma_h)[J,J]$.
@@ -1162,8 +1261,11 @@ The derivatives of the initial point $(\arccos h,-\arccos h)$ are bounded for sm
 $\|DY\|\le1$ and $D^2Y$ is bounded. Gronwall gives
 $|J|\le Ce^{|t|}$ and then $|K|\le Ce^{2|t|}$, also for negative time.
 The comparison with $d$ follows from Lemma~\ref{lem:orbit-saddle-distance}.
-Differentiable dependence on the initial data (or a direct equivalent integral argument)
-and these estimates remain to be formalized.
+For the second bound, variation of constants bounds the forcing term by
+$C\int_0^{|t|}e^{|t|-s}e^{2s}\,ds\le Ce^{2|t|}$.
+The joint-smoothness route, differentiation of the variational equations,
+and these estimates remain to be formalized; a general theorem on
+differentiable dependence of ODE flows is not required.
 \end{proof}
 
 \begin{definition}[Recentered quarter-orbit times]
@@ -1188,7 +1290,8 @@ differentiable at $p=R^k\gamma_h(\tau)$ with $|\nabla t_k(p)|\le C/d(p)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:orbit-level-derivatives, lem:orbit-saddle-distance}
+\uses{lem:orbit-coordinates, lem:action-angle-chart,
+  lem:orbit-level-derivatives, lem:orbit-saddle-distance}
 The bound for $\rho$ follows from $|\sin x|\le|x-m\pi|$ and
 $|\sin y|\le|y-n\pi|$ at every saddle $(m\pi,n\pi)$.
 For the base quarter, invert the Jacobian of $(h,\tau)\mapsto\gamma_h(\tau)$:
@@ -1224,7 +1327,11 @@ $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
 
 \begin{proof}
 \uses{lem:orbit-saddle-distance, lem:period}
-Insert $d\sim e^{-|t|}$ and $e^{2L}\sim1/h$.
+The negative-power integrals are bounded by constants times
+$\int_{-L}^Le^{2|t|}\,dt$ and $\int_{-L}^Le^{4|t|}\,dt$.
+Use $e^{2L}\le C/h$ from the coarse period bound.
+For $p>0$, use the upper distance bound and
+$\int_{-L}^Le^{-p|t|}\,dt\le2/p$; the resulting constant may depend on $p$.
 \end{proof}
 
 \begin{remark}

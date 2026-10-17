@@ -45,10 +45,9 @@ not marked Lean-proved: 10 in geometry, 8 in analysis, 4 in virial, and
 6 in transport. All have written blueprint proofs or sketches. Two of
 these, `lem:acl-slicing` and `lem:trace-l2`, have no Lean statement yet;
 the remaining 26 have Lean statements covering their claims. This is
-not a complete mathematical proof audit. Analysis, virial and transport
-have had a first-pass review; geometry remains to be reviewed.
-Some nodes remain partially
-formalized; in particular only the full-gradient parts of
+not a complete mathematical proof audit. All four frontier chapters
+(analysis, virial, transport and geometry) have now had a first-pass
+review. Some nodes remain partially formalized; in particular only the full-gradient parts of
 `lem:action-angle-weak` remain open, not its transport equivalence.
 
 **The analysis blueprint is split into smaller inputs.**
@@ -181,6 +180,60 @@ new tasks. The six transport statements and proof-completion markers
 are unchanged. Only blueprint sketches and dependency metadata were
 clarified; no Lean files changed. This is still a first-pass review,
 not a complete independent derivation of every prerequisite.
+
+**Geometry review (relative difficulty, not timing estimates):**
+- `lem:orbit-coordinates`: high as a bundle. The inverse identities,
+  smooth continuation across the non-cut turning point, and measurable
+  area formula are distinct tasks. Proved quarter parametrizations,
+  rotations and the flow equation already supply much of the orbit work.
+- `lem:coarea-level-cutoff`: low–moderate given the base area formula.
+  Truncate the input to the compact level band before using Fubini and
+  the weighted identity; no general coarea theorem is needed.
+- `lem:action-angle-chart`: moderate once orbit coordinates are supplied.
+  Obtain period smoothness directly from the regular fixed-interval
+  integral. Compute det D(h,θ) = 1/(2S) before invoking the inverse
+  function theorem; the previous sketch differentiated P too early.
+  Its proof no longer depends on the bundled sharp period theorem.
+- `lem:action-angle-weak`: medium–high for the general locally W¹,¹
+  rules and seam gluing. The transport equivalence is already proved;
+  only the two full-gradient rules remain. H¹ specializations suffice
+  for the virial application and may avoid stronger density machinery.
+- `lem:period`: high as a bundle. Local smoothness and monotonicity are
+  moderate regular-parameter-integral work. The elliptic identity has
+  an elementary improper substitution; the sharp value/derivative
+  remainders need a precise reference or quantified proof. A derivative
+  remainder cannot be inferred by differentiating an unspecified O-term.
+  Split regularity, coarse logarithmic bounds and sharp asymptotics;
+  the current even–even route appears to need only the coarser bounds.
+- `lem:orbit-comparison`: low–moderate once e^L ≤ C/√h is known.
+  Initial O(h) displacement grows by at most e^|t| under Gronwall;
+  no differentiable dependence on initial data is needed.
+- `lem:orbit-saddle-distance`: medium–high. The corner ODE has factor
+  A = √(1-u²)√(1-v²). Merely bounding A away from zero does not give
+  the exact unit exponential rate. The strengthened sketch bounds
+  ∫(1-A) dt uniformly using the scalar ODEs, without the downstream
+  time-integral lemma. The bounded entry time comes from the regular
+  quarter quadrature. At the endpoint u=v=√h this also gives the coarse
+  relation e^(-L) ≍ √h independently of sharp elliptic asymptotics.
+- `lem:orbit-level-derivatives`: medium–high once the chart is smooth.
+  Joint orbit smoothness follows from γ_h(t) = P(h,t/S(h)), without a
+  general parameter-dependent ODE theorem. Differentiate the flow
+  equation and use the first/second variational equations and Gronwall.
+  This route is noncircular in the blueprint dependency graph.
+- `lem:orbit-coordinate-gradients`: moderate conditional on those
+  estimates. The ∇h bound is elementary; inverse-time gradients follow
+  by inverting the constant-determinant chart. Retain separately
+  recentered quarter times, not the known-false global bound.
+- `lem:orbit-time-integrals`: low once the distance and coarse period
+  bounds are available; integrate positive/negative exponentials.
+  The positive-power constant may depend on the exponent.
+The geometry sketches now specify these mechanisms and record the chart
+regularity correction and the unverified sharp-period input as digest
+notes. These are paper-proof improvements and conditional effort
+assessments, not a full audit or new Lean proofs. All ten geometry proof
+statuses and all Lean files are unchanged. Natural next structural splits
+are the period bundle and the inverse/regularity/area parts of orbit
+coordinates.
 
 **The line-mollifier lemma is fully proved.** Its quantitative estimates in
 `LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,

@@ -17,10 +17,21 @@ once resolved; record the resolution in the relevant node.
         of'' earlier proofs to new pairs $(v,f)$. The general statements in
         Lemmas~\ref{lem:transport-first-gain}--\ref{lem:transport-h1-gain}
         are a first guess at the right hypotheses.
+  \item \textbf{Period asymptotics} (Lemma~\ref{lem:period}).
+        The sharp value and derivative remainders still need a precise
+        elliptic-integral reference or a quantified proof. Differentiating
+        a value $O$-term is not a proof of the derivative bound. Coarse
+        logarithmic bounds may suffice for the even--even route; split
+        these tasks before investing in the sharp expansion.
   \item \textbf{Orbit geometry} (Lemmas~\ref{lem:orbit-level-derivatives}
         and~\ref{lem:orbit-coordinate-gradients}). Bounds on
         $\partial_h\gamma_h$, $\partial_h^2\gamma_h$ and the inverse
-        coordinates remain unproved. The overly broad global time-gradient
+        coordinates remain unproved in Lean. A paper route now obtains
+        joint orbit smoothness from the inverse action-angle chart before
+        differentiating the variational equations; a general ODE
+        parameter-dependence theorem is not required. The saddle-distance
+        sketch controls the accumulated nonlinear defect to get the exact
+        unit exponential rate, rather than invoking linearization alone. The overly broad global time-gradient
         statement has been corrected to recentered quarter-orbit charts;
         the counterexample and resolution are retained in the digest note after
         Lemma~\ref{lem:orbit-coordinate-gradients}.
