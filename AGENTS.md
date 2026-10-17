@@ -148,17 +148,21 @@ motivation, and standard facts cited rather than proved.
 - `docs/status/{even-even,odd-odd,mixed,shared}.md`: current sector-specific
   and shared-infrastructure blockers, priorities and implementation pointers.
 - `justfile`: build recipes (run `just` to list them).
-- `scripts/`: helper scripts. `blueprint_subgraph.py` (used by `just web`
-  and `just graph`) restricts the web dependency graph to some nodes and
-  their dependencies,
-  drawn in one box per chapter (`--no-chapters` for the plain layout).
+- `scripts/`: helper scripts. `check_blueprint.py` (behind
+  `just check-blueprint`, also run before web/PDF builds) checks source labels,
+  references and dependency cycles without Lean or plasTeX.
+  `blueprint_subgraph.py` (used by `just web` and `just graph`) restricts the
+  web dependency graph to chosen nodes and their dependencies, drawn in one
+  box per chapter (`--no-chapters` for the plain layout).
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
 - `.github/workflows/`: the Lean template CI (lean-action, docgen).
 
 ## Building
 
 ```sh
-just web             # blueprint website + full, even–even, odd–odd and mixed graphs
+just check-blueprint # fast source label/reference/dependency checks
+just test-blueprint  # checker regression tests
+just web             # source checks + website and full/three-sector graphs
 just serve           # serve it at http://localhost:8000 (needs only python3)
 just graph thm:ee-exclusion  # graph of a node and all it depends on (after just web)
 just pdf             # blueprint PDF in blueprint/print
@@ -177,9 +181,9 @@ are for the host.
 
 Gotchas:
 
-- Run `just web`, not `leanblueprint web`: the recipe first makes
-  `blueprint/web` writable, because plasTeX copies read-only files out of the
-  Nix store and a second build would fail on them.
+- Run `just web`, not `leanblueprint web`: the recipe checks source consistency,
+  then makes `blueprint/web` writable, because plasTeX copies read-only files
+  out of the Nix store and a second build would fail on them.
 - Messages that `gs`, `pdflatex`, `dvisvgm` or `pdf2svg` were not found are
   harmless: they come from plasTeX's image converters, which this blueprint
   does not use. `graphviz` is not needed either; the graph is rendered in the

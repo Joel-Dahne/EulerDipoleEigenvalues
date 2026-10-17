@@ -49,6 +49,7 @@ questions and problems found in the manuscript, and collect them in
 - `src/plastex.cfg`: web build configuration
 - `src/sectorgraphs.py`: local plasTeX package adding sector graph links to
   the HTML5 sidebar (loaded only by `web.tex`)
+- `../scripts/check_blueprint.py`: source-only consistency checker
 
 ## Building
 
@@ -57,7 +58,8 @@ Run these recipes from the repository root. The web build needs `just`,
 installation. The dependency graphs are rendered in the browser.
 
 ```sh
-just web             # HTML + full and three sector dependency graphs
+just check-blueprint # source consistency checks (Python 3 only)
+just web             # checks, then HTML + full and three sector dependency graphs
 just serve           # view it at http://localhost:8000
 just pdf             # PDF in blueprint/print
 just graph LABEL     # optional custom dependency view, after just web
@@ -76,6 +78,28 @@ read-only static files on rebuild and regenerates these sector views:
 The index and chapter sidebars list these three views below the full
 Dependency graph link. These entries use plasTeX's native HTML5 navigation
 extension, so they are regenerated with the site rather than patched into HTML.
+
+## Consistency checks
+
+`just check-blueprint` reports duplicate labels, unresolved references and
+metadata targets, and dependency cycles through statement and proof `\uses`.
+It also rejects missing/recursive includes and metadata that cannot be associated
+with a graph node. Errors give source paths and line numbers; cycles include a
+witness chain. `just web` and `just pdf` run this check before rendering.
+
+The checker reads `src/content.tex` and its recursive `\input`/`\include` files,
+not generated HTML or all files in the directory. Comments, `\verb` examples and
+common verbatim environments are ignored. Metadata must use literal braced
+arguments; the checker does not expand macros or evaluate TeX conditionals.
+Ordinary cross-references do not create dependency edges. Proof dependencies
+belong to the preceding node, or the explicit `\proves{label}` target.
+
+This is not a full LaTeX checker, a Lean declaration/axiom audit, or a check of
+`\leanok` annotations or mathematical correctness. Run `just test-blueprint` for
+the checker's regression tests. For another source tree, use
+`python3 scripts/check_blueprint.py --src PATH` from the repository root.
+
+## Publication setup
 
 Not set up yet (it needs Lean declarations and a GitHub remote first):
 - `checkdecls` in the lakefile, so `leanblueprint checkdecls` verifies that

@@ -17,8 +17,16 @@ build:
 manuscript file="manuscript":
     cd Manuscript && latexmk -pvc -pdf -pdflatex=xelatex -output-directory=build {{file}}.tex
 
+# Check blueprint labels, references and dependency cycles (Python 3 only)
+check-blueprint:
+    python3 scripts/check_blueprint.py
+
+# Run regression tests for the blueprint consistency checker
+test-blueprint:
+    python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+
 # Build the blueprint website, including full and three sector dependency graphs
-web:
+web: check-blueprint
     # With a Nix-installed plasTeX, the copied static files are read-only, which
     # makes rebuilds fail when they overwrite them.
     [ ! -d blueprint/web ] || chmod -R u+w blueprint/web
@@ -33,7 +41,7 @@ graph +labels:
     python3 scripts/blueprint_subgraph.py {{labels}}
 
 # Build the blueprint PDF (blueprint/print/print.pdf)
-pdf:
+pdf: check-blueprint
     leanblueprint pdf
 
 # Serve the built website at http://localhost:8000 (needs only python3)
