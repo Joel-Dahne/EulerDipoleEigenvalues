@@ -97,8 +97,13 @@ and the action-angle weak chain rules in `TransversalMollifier.lean`.
 **Validation:** the full Lean project build passes (3281 jobs); full-file
 diagnostics have only the three remaining line weak-derivative admissions.
 `just web` and the even–even subgraph generation pass. Pi setup and the
-sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md);
-no routine benchmarking was added.
+sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
+The runner defaults to `openai-codex/gpt-6-luna` with medium thinking;
+`--model` and `--thinking` remain available as overrides.
+The default delegation workflow is dispatch, wait, review: one coherent task,
+no routine transcript polling or live supervision, then independent validation;
+split or intervene only in response to a concrete blocker. Operational guidance
+is separate from the experiment history. No routine benchmarking was added.
 
 **Backwards even–even assembly is proved.** `even_even_character_exclusion`
 and `even_even_exclusion` now have no `sorry` of their own. The proof combines

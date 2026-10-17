@@ -76,7 +76,7 @@ def terminate_group(proc):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("task", type=Path, help="UTF-8 file containing the bounded proof task")
-    parser.add_argument("--model", default="openai-codex/gpt-5.6-luna")
+    parser.add_argument("--model", default="openai-codex/gpt-6-luna")
     parser.add_argument("--thinking", default="medium",
                         choices=["off", "minimal", "low", "medium", "high", "xhigh", "max"])
     parser.add_argument("--timeout", type=float, default=600, help="Wall-clock limit in seconds")
