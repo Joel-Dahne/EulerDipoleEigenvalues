@@ -118,7 +118,8 @@ $f_k(h_k)=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:coarea, lem:transport-unknown, lem:orbit-coordinates, lem:period}
+\uses{lem:coarea, lem:transport-unknown, lem:orbit-coordinates-area,
+  lem:period-regularity, lem:flow-continuity}
 Apply Lemma~\ref{lem:coarea} to the transport unknown
 (Lemma~\ref{lem:transport-unknown}). On almost every orbit its ACL
 representative solves $(P-\lambda)Z=f\circ\gamma_h$.
@@ -167,7 +168,7 @@ $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison,
+\uses{lem:resonant-vanishing, lem:period-regularity, lem:period-coarse, lem:orbit-comparison,
   lem:sobolev-holder, lem:local-to-global, lem:trace-h2, lem:separatrix-arc,
   lem:period-orbit}
 First Lemma~\ref{lem:trace-h2} gives local absolute continuity of the
@@ -181,8 +182,9 @@ $g_h=f\circ\gamma_h$. At the arc ends,
 $|g(\pm L)-c_\pm|\le C_\alpha e^{-\alpha L}$.
 
 Choose resonances $h_k\to0$ with $kb(h_k)=\lambda$ and
-$e^{i\pi k/2}=\kappa$, possible by the period lemma, with $k$ of the
-sign of $\lambda$. Write $L=L(h_k)$. The character makes the four
+$e^{i\pi k/2}=\kappa$, using
+Lemmas~\ref{lem:period-regularity} and~\ref{lem:period-coarse}, with $k$
+of the sign of $\lambda$. Write $L=L(h_k)$. The character makes the four
 quarter contributions to the resonant mode identical, so resonant
 vanishing gives
 $\int_{-L}^{L}g_{h_k}(t)e^{-i\lambda t}\,dt=0$.
@@ -347,7 +349,7 @@ $|e^{i\lambda S(h)/4}-\kappa|\ge2\sin(\pi/12)$ for $\kappa=\pm1$
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period}
+\uses{lem:period-regularity, lem:period-coarse}
 The continuous, strictly decreasing $S$ tends to $\infty$ at zero.
 Choose an integer phase centre $2\pi(j+\tfrac12)$ sufficiently far in
 the direction of the sign of $\lambda$. The intermediate value theorem
@@ -387,7 +389,7 @@ their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder,
   lem:local-to-global, lem:resonant-vanishing, lem:orbit-comparison,
   lem:coarea, lem:good-windows, lem:separatrix-arc,
-  lem:period, lem:period-orbit, lem:level-integral-congr}
+  lem:period-coarse, lem:period-orbit, lem:level-integral-congr}
 Discard one null set $\mathcal B$ of levels, using a countable exhaustion
 by regular annuli. Transfer exceptional point sets to exceptional levels
 using measurable null covers and Lemma~\ref{lem:level-integral-congr}.
@@ -458,7 +460,8 @@ around $h_j$ one has $h\sim h_j$ and $|D(h)|\ge c_\lambda|h-h_j|/h_j$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period, lem:resonant-vanishing, lem:coarea}
+\uses{lem:period-regularity, lem:period-coarse, lem:period-asymptotics,
+  lem:resonant-vanishing, lem:coarea}
 The endpoint traces of $z_h$ are locally square integrable in $h$, so
 $|N/D|$ cannot blow up like $1/|h-h_j|$; continuity of $N$ forces $N(h_j)=0$.
 Simplicity and spacing follow from $L'(h)\sim-1/(2h)$.

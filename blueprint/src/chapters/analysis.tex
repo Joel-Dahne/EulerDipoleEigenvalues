@@ -1186,7 +1186,8 @@ $(L_0g)(\gamma_h(t))$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:acl-slicing}
+\uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
+  lem:orbit-coordinates-area, lem:acl-slicing}
 Use smooth coordinate charts off the time cut on the compact annulus; a
 second time cut supplies charts across the first one. No uniform estimate
 as $h\to0$ is needed. In orbit coordinates $L_0=\partial_t$ and
@@ -1210,7 +1211,7 @@ estimate and is shared with Lemma~\ref{lem:trace-acl}.
 
 \begin{remark}
 The manuscript's coarea formula is now the change of variables of
-Lemma~\ref{lem:orbit-coordinates}: after cutting each periodic orbit the level and
+Lemma~\ref{lem:orbit-coordinates-area}: after cutting each periodic orbit the level and
 flow time give local smooth charts, with $dx\,dy=2\,dh\,dt$, so no general coarea formula
 is needed. The global time itself has a cut and a level-dependent range, not a global
 diffeomorphism onto a product. This lemma keeps the remaining part, $H^1$ along almost
@@ -1248,7 +1249,7 @@ $s\to0$, and the limit is then $L_0u=iHu$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-l2, lem:orbit-coordinates, lem:dipole-flow, lem:cell-square}
+\uses{lem:transport-l2, lem:orbit-coordinates-area, lem:dipole-flow, lem:cell-square}
 The maximal domain is by definition the adjoint of $H$ restricted to smooth functions,
 since $L_0u$ is defined by testing against characters, and $H$ is symmetric there.
 Self-adjointness is therefore equivalent to smooth functions being a core, which is
@@ -1256,7 +1257,7 @@ Friedrichs' lemma: for a mollifier $J_\epsilon$ and $u$ in the maximal domain,
 $J_\epsilon u\to u$ and $L_0J_\epsilon u\to L_0u$, because the commutator
 $[L_0,J_\epsilon]$ tends to $0$ strongly when the coefficients are Lipschitz. The flow is
 area preserving because in orbit coordinates it is $(h,t)\mapsto(h,t+s)$ and
-$dx\,dy=2\,dh\,dt$ (Lemma~\ref{lem:orbit-coordinates}), on the negative cell by
+$dx\,dy=2\,dh\,dt$ (Lemma~\ref{lem:orbit-coordinates-area}), on the negative cell by
 symmetry, and the separatrix is a null set. The generator is computed on smooth functions
 and extended by the core property.
 \end{proof}

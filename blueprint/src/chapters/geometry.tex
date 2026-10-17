@@ -681,24 +681,17 @@ The orbit domain is $\{(h,t):0<h<1,\ -2L(h)\le t<6L(h)\}$, and the orbit annulus
 $A(h_1,h_2)$ is the set of points of the punctured cell with $h_1<h<h_2$.
 \end{definition}
 
-\begin{lemma}[Orbit coordinates]
-\label{lem:orbit-coordinates}
+\begin{lemma}[Inverse identities for orbit coordinates]
+\label{lem:orbit-coordinates-inverse}
 \uses{def:orbit-coordinates}
 \lean{NoEmbeddedEigenvalues.mem_orbitDomain,
   NoEmbeddedEigenvalues.dipoleOrbit_levelCoord_timeCoord,
   NoEmbeddedEigenvalues.timeCoord_dipoleOrbit,
-  NoEmbeddedEigenvalues.contDiffAt_timeCoord,
-  NoEmbeddedEigenvalues.levelCoord_dipoleOrbit,
-  NoEmbeddedEigenvalues.lintegral_cellSquare_eq,
-  NoEmbeddedEigenvalues.integral_cellSquare_eq}
+  NoEmbeddedEigenvalues.levelCoord_dipoleOrbit}
 \leanok
-The map $p\mapsto(h,t)$ is a bijection from the punctured cell onto the orbit domain,
-with inverse $(h,t)\mapsto\gamma_h(t)$. The time coordinate is smooth off the cut
-$\{b=0,a>0\}$. In these coordinates $dx\,dy=2\,dh\,dt$: for
-integrable $f$ on the cell, $t\mapsto f(\gamma_h(t))$ is integrable over $[-2L,6L)$ for
-almost every $h$, and
-$\int_{\Cell}f\,dx\,dy=2\int_0^1\int_{-2L(h)}^{6L(h)}f(\gamma_h(t))\,dt\,dh$; likewise for
-nonnegative measurable $f$.
+The map $p\mapsto(h(p),t(p))$ is a bijection from the punctured cell
+onto the orbit domain, with inverse $(h,t)\mapsto\gamma_h(t)$.
+In particular $h(\gamma_h(t))=h$ for $0<h<1$ and every $t$.
 \end{lemma}
 
 \begin{proof}
@@ -709,22 +702,58 @@ explicit integral with elapsed flow time. At the turning point
 $a=-\arccos h$, $b=0$, its improper value is $2L(h)$; the half rotation
 shifts time by $4L$. These identities give the two inverse relations,
 with the cut assigned the lower endpoint $-2L$ of the half-open window.
+Conservation of $\Psi$ gives the level identity for all times.
+\end{proof}
 
-For local smoothness, first use the fixed-interval formula of
-Lemma~\ref{lem:period-integral}. On compact level intervals inside
-$(0,1)$ its square-root arguments stay uniformly positive, so
-differentiation under the integral gives smoothness of $L$.
-Where $b\ne0$, the incomplete time integral also has a locally regular
-integrand. Near $b=0,a<0$, rotate to a regular patch and add the
-appropriate smooth multiple of $L$. This proves smoothness off the
-cut without assuming differentiable dependence of the flow on $h$.
+\begin{lemma}[Local smoothness of orbit coordinates]
+\label{lem:orbit-coordinates-smooth}
+\uses{def:orbit-coordinates}
+\lean{NoEmbeddedEigenvalues.contDiffAt_timeCoord}
+\leanok
+The time coordinate is smooth on the punctured cell off the cut
+$\{b=0,a>0\}$. Consequently the pair $(h,t)$ is smooth there.
+\end{lemma}
 
+\begin{proof}
+\uses{lem:orbit-coordinates-inverse, lem:period-regularity,
+  lem:period-integral, lem:period-orbit}
+Period smoothness is supplied independently by
+Lemma~\ref{lem:period-regularity}. Where $b\ne0$, the incomplete time
+integral has a locally regular integrand. Near $b=0,a<0$, rotate to a
+regular patch and add the appropriate smooth multiple of $L$; the
+inverse identities identify this expression with $t$.
+The level coordinate $\Psi/2$ is smooth everywhere.
+No differentiable dependence theorem for ODE flows is needed.
+\end{proof}
+
+\begin{lemma}[Area formula in orbit coordinates]
+\label{lem:orbit-coordinates-area}
+\uses{def:orbit-coordinates}
+\lean{NoEmbeddedEigenvalues.lintegral_cellSquare_eq,
+  NoEmbeddedEigenvalues.integral_cellSquare_eq}
+\leanok
+For integrable $f$ on the cell, the function
+$t\mapsto f(\gamma_h(t))$ is integrable over $[-2L(h),6L(h))$ for
+almost every $h\in(0,1)$, and
+\[
+  \int_{\Cell}f\,dx\,dy
+  =2\int_0^1\int_{-2L(h)}^{6L(h)}f(\gamma_h(t))\,dt\,dh .
+\]
+The same formula holds for nonnegative measurable $f$, allowing
+infinite integrals.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
+  lem:period-regularity, lem:dipole-flow, lem:flow-continuity}
 The inverse relations and the flow equation give $Yt=1$ off the cut.
 Since $\nabla h=\nabla\Psi/2$ and $Y=(-\Psi_y,\Psi_x)$,
 $\det D(h,t)=1/2$. The inverse function theorem and change of variables
 on the cut-open cell give the area formula. The center and the cut
 are null sets; the endpoint graphs in the time domain are also null
-by Fubini. This justifies the half-open window and the iterated formula.
+by Fubini. Joint continuity of the orbit map and smoothness of $L$
+provide the needed measurability. Fubini then gives the integrable
+version and almost-every-level integrability.
 \end{proof}
 
 \begin{remark}
@@ -737,7 +766,7 @@ Definition~\ref{def:quarter-orbit-time}, not this global time. That the time
 coordinate inverts the flow on all of $[-2L,6L)$, and that the improper integral equals
 $2L(h)$, was checked numerically for $h=0.05,0.4,0.85$ (scratch computation,
 October 2026). The area element $2\,dh\,dt$ was item 4 of the manuscript's orbit comparison
-lemma, and with this lemma the manuscript's coarea formula becomes a change of variables
+lemma, and Lemma~\ref{lem:orbit-coordinates-area} turns the manuscript's coarea formula into a change of variables
 (Lemma~\ref{lem:coarea} keeps only $H^1$ along almost every orbit).
 \end{remark}
 
@@ -791,9 +820,9 @@ $[0,S(h)]$ equals the integral over $[-2L(h),6L(h))$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:flow-continuity, lem:period-orbit}
+\uses{lem:orbit-coordinates-area, lem:flow-continuity, lem:period-orbit}
 \leanok
-Apply the nonnegative form of Lemma~\ref{lem:orbit-coordinates} to $|f-g|$, which
+Apply the nonnegative form of Lemma~\ref{lem:orbit-coordinates-area} to $|f-g|$, which
 vanishes almost everywhere: for almost every $h$, $|f-g|\circ\gamma_h=0$ almost everywhere
 on $[-2L,6L)$. By periodicity (Lemma~\ref{lem:period-orbit}) the same holds on $(0,S]$,
 so the two level integrals agree. Using the nonnegative formula avoids any integrability
@@ -815,11 +844,11 @@ $\varphi$ vanishing outside $[a,b]$,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:period-orbit}
+\uses{lem:orbit-coordinates-area, lem:period-orbit}
 First replace $F$ by its truncation $G$ to the closed level band,
 extended by zero in the rest of the cell. Then $G$ and $|G|$ are
 integrable on the cell. The integrable area formula of
-Lemma~\ref{lem:orbit-coordinates}, together with
+Lemma~\ref{lem:orbit-coordinates-area}, together with
 $|\int G\,dt|\le\int|G|\,dt$, gives integrability of the level integral.
 Apply the formula again to $\varphi(\Psi/2)G$ and use
 $\Psi(\gamma_h(t))=2h$. The time window $[-2L,6L)$ is one period, so
@@ -842,8 +871,7 @@ parametrization is $P(h,\theta)=\gamma_h(\theta S(h))$ on the strip $(0,1)\times
 \begin{lemma}[The action-angle chart]
 \label{lem:action-angle-chart}
 \uses{def:action-angle, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.contDiffOn_orbitPeriod,
-  NoEmbeddedEigenvalues.actionAngleInv_mem_puncturedCell,
+\lean{NoEmbeddedEigenvalues.actionAngleInv_mem_puncturedCell,
   NoEmbeddedEigenvalues.levelCoord_actionAngleInv,
   NoEmbeddedEigenvalues.actionAngleInv_add_one,
   NoEmbeddedEigenvalues.actionAngleInv_actionAngle,
@@ -868,18 +896,18 @@ for nonnegative measurable $f$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:period-orbit, lem:period-integral, lem:dipole-flow}
-Smoothness of $S$ follows by differentiating the regular fixed-interval
-integral of Lemma~\ref{lem:period-integral} on compact level intervals;
+\uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
+  lem:orbit-coordinates-area, lem:period-regularity, lem:period-orbit, lem:dipole-flow}
+Smoothness of $S$ is Lemma~\ref{lem:period-regularity};
 no elliptic-integral identity or sharp asymptotic expansion is needed.
 Periodicity, the values and the inverse relations follow from
-Lemmas~\ref{lem:orbit-coordinates} and~\ref{lem:period-orbit} with
+Lemmas~\ref{lem:orbit-coordinates-inverse} and~\ref{lem:period-orbit} with
 $t=\theta S(h)$, which maps $[-\frac14,\frac34)$ onto $[-2L,6L)$.
 The time derivative $\partial_\theta P=S(h)Y(P)$ uses only the flow
-equation. The area formula follows from $dx\,dy=2\,dh\,dt$ with
-$t=S(h)\theta$.
+equation. The area formula follows from Lemma~\ref{lem:orbit-coordinates-area}
+with $t=S(h)\theta$.
 
-The map $p\mapsto(h,t)$ is smooth off the cut (Lemma~\ref{lem:orbit-coordinates}), and so is
+The map $p\mapsto(h,t)$ is smooth off the cut (Lemma~\ref{lem:orbit-coordinates-smooth}), and so is
 $\theta=t/S(h)$. Across the cut $\theta$ jumps by $1$; there use the rotation
 $R(x,y)=(y,-x)$, which preserves the levels, maps a neighbourhood of a cut point off the
 cut, and shifts $\theta$ by $\frac14$ modulo $1$, so a $1$-periodic $F$ composed with
@@ -1116,59 +1144,107 @@ components of $(\psi_x,\psi_y)$ in this frame (with complex values, apply this t
 imaginary parts).
 \end{proof}
 
-\begin{lemma}[The period function]
-\label{lem:period}
+\begin{lemma}[Regularity and monotonicity of the period]
+\label{lem:period-regularity}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.deriv_eighthPeriod_neg,
-  NoEmbeddedEigenvalues.eighthPeriod_strictAntiOn,
-  NoEmbeddedEigenvalues.orbitPeriod_eq_ellipticK,
-  NoEmbeddedEigenvalues.eighthPeriod_asymptotics,
-  NoEmbeddedEigenvalues.exp_eighthPeriod_le}
+\lean{NoEmbeddedEigenvalues.contDiffOn_orbitPeriod,
+  NoEmbeddedEigenvalues.deriv_eighthPeriod_neg,
+  NoEmbeddedEigenvalues.eighthPeriod_strictAntiOn}
 \leanok
-$L$ is differentiable on $(0,1)$ with $L'<0$, hence strictly decreasing, and
-$S(h)=4\mathbf K(1-h^2)$ with
-$\mathbf K(m)=\int_0^{\pi/2}(1-m\sin^2\theta)^{-1/2}d\theta$, and as $h\to0$,
-\[
-  L(h)=\tfrac12\log(4/h)+O(h^2\log(1/h)),\qquad
-  L'(h)=-\frac1{2h}+O(h\log(1/h)).
-\]
-In particular $e^{L(h)}\le Ch^{-1/2}$ on $(0,1)$. Since $S'=8L'<0$, the level sets
-of $S$ are simple.
+The functions $L$ and $S=8L$ are smooth on $(0,1)$, with $L'<0$.
+Thus they are strictly decreasing and $S'=8L'<0$; the level sets of
+$S$ are simple.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-integral, lem:period-orbit}
+\uses{lem:period-integral}
 On a compact level interval inside $(0,1)$, the fixed-interval
 integrand of Lemma~\ref{lem:period-integral} is smooth and each parameter
-derivative is uniformly bounded. Thus differentiation under the integral
-is legitimate. The derivative in $h$ of the squared denominator is
+derivative is uniformly bounded. Differentiating under the integral
+gives smoothness. The derivative in $h$ of the squared denominator is
 $t^2(1+h-t^2)+1-t^2+ht^2>0$, so $L'<0$.
+\end{proof}
 
-For the elliptic identity, the flow-time quadrature over a quarter gives
+\begin{lemma}[Coarse logarithmic bounds for the period]
+\label{lem:period-coarse}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.exp_eighthPeriod_le}
+There are $C\ge0$ and $0<h_0<1$ such that, for $0<h<h_0$,
+\[
+  \left|L(h)-\tfrac12\log(1/h)\right|\le C .
+\]
+In particular $L(h)\to\infty$ as $h\to0^+$ and
+$e^{-L(h)}\asymp\sqrt h$ there. There is also $C_1>0$ such that
+$e^{L(h)}\le C_1/\sqrt h$ for all $0<h<1$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-saddle-distance, lem:period-orbit, lem:period-regularity}
+At a quarter-orbit endpoint the explicit diagonal coordinates give
+$d\asymp\sqrt h$. Lemma~\ref{lem:orbit-saddle-distance}, whose proof
+uses only the corner dynamics and regular quarter quadrature, gives
+$d\asymp e^{-L(h)}$ there. Combining the comparisons and taking
+logarithms proves the two-sided estimate, without sharp elliptic
+asymptotics. For the global upper exponential bound, use this estimate
+at small $h$ and monotonicity on the remaining interval.
+\end{proof}
+
+\begin{remark}[Lean status of the coarse bound]
+The linked Lean statement covers the global upper exponential bound
+only. The full two-sided coarse node is blueprint-only and is not
+marked as stated or proved in Lean.
+\end{remark}
+
+\begin{lemma}[The elliptic-integral identity for the period]
+\label{lem:period-elliptic}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.orbitPeriod_eq_ellipticK}
+\leanok
+For $0<h<1$,
+\[
+  S(h)=4\mathbf K(1-h^2),\qquad
+  \mathbf K(m)=\int_0^{\pi/2}(1-m\sin^2\theta)^{-1/2}\,d\theta .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-orbit, lem:period-integral}
+The flow-time quadrature over a quarter gives
 $2L(h)=\int_0^{\arccos h}(\cos^2a-h^2)^{-1/2}\,da$, interpreted
 improperly at the endpoint. Substitute
 $\sin a=\sqrt{1-h^2}\sin\theta$, first short of the endpoint and then
 pass to the limit. This gives $2L=\mathbf K(1-h^2)$, hence $S=4\mathbf K$.
-
-The logarithmic behaviour can be studied by substituting $y=1-t^2$
-in the fixed-interval formula and splitting near $y=h$. The stated sharp remainders invoke the
-classical expansion of $\mathbf K$ near $m=1$, including its derivative.
-A precise reference or a quantified remainder argument is still needed
-for that step.
 \end{proof}
 
-\begin{remark}[Digest note: the period node has different levels of difficulty]
-Local smoothness and strict monotonicity use a regular parameter integral.
-They should not be conflated with the elliptic identity and the sharp
-asymptotic remainders. For orbit comparison and the transport limits, the
-coarser estimate $L(h)=\frac12\log(1/h)+O(1)$, together with strict
-monotonicity, appears sufficient. The corner argument below also gives
-$e^{-L(h)}\asymp\sqrt h$. These are possible routes to the coarse estimates
-without the full elliptic expansion. Splitting the period node would
-make the genuinely needed inputs visible. The derivative remainder
-requires a separate justification; it cannot be obtained by formally
-differentiating an unspecified $O$-term. The numerical checks below
-are sanity checks, not a proof of either remainder estimate.
+\begin{lemma}[Sharp separatrix asymptotics of the period]
+\label{lem:period-asymptotics}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.eighthPeriod_asymptotics}
+\leanok
+As $h\to0^+$,
+\[
+  L(h)=\tfrac12\log(4/h)+O(h^2\log(1/h)),\qquad
+  L'(h)=-\frac1{2h}+O(h\log(1/h)).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-elliptic, lem:period-regularity}
+Use the classical expansion of $\mathbf K$ near $m=1$, including
+its derivative, and substitute $m=1-h^2$.
+A precise reference or a quantified remainder argument is still needed.
+The derivative remainder requires a separate justification; it cannot
+be obtained by differentiating an unspecified $O$-term.
+\end{proof}
+
+\begin{remark}[Digest note: scope of the period inputs, split]
+The coarse bound is proved from corner dynamics independently of the
+elliptic identity and the sharp remainders. The even--even transport
+arguments use only Lemmas~\ref{lem:period-regularity}
+and~\ref{lem:period-coarse}. The fine nodes are retained for arguments
+that use the elliptic formula or the precise leading constants and
+derivative asymptotics. The numerical checks below remain sanity
+checks, not a proof of either sharp remainder estimate.
 \end{remark}
 
 \begin{remark}
@@ -1190,7 +1266,7 @@ are centered at $a=0$ at time $0$ (manuscript \texttt{(ee:orbit-comparison)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period, lem:dipole-flow, lem:separatrix-arc}
+\uses{lem:period-coarse, lem:dipole-flow, lem:separatrix-arc}
 The initial displacement between $\gamma_h$ and $\gamma$ is $O(h)$.
 The velocity field is globally $1$-Lipschitz, so Gronwall gives
 $|\gamma_h(t)-\gamma(t)|\le Ch e^{|t|}$ in both time directions.
@@ -1290,8 +1366,8 @@ differentiable at $p=R^k\gamma_h(\tau)$ with $|\nabla t_k(p)|\le C/d(p)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:action-angle-chart,
-  lem:orbit-level-derivatives, lem:orbit-saddle-distance}
+\uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
+  lem:action-angle-chart, lem:orbit-level-derivatives, lem:orbit-saddle-distance}
 The bound for $\rho$ follows from $|\sin x|\le|x-m\pi|$ and
 $|\sin y|\le|y-n\pi|$ at every saddle $(m\pi,n\pi)$.
 For the base quarter, invert the Jacobian of $(h,\tau)\mapsto\gamma_h(\tau)$:
@@ -1310,7 +1386,7 @@ Along $p=(b,-b)$, $b<0$, one has $t(p)=4L(\cos b)$ and
 $|\partial_b t|=4|\sin b|\,|L'(\cos b)|\sim2/h$, whereas $d(p_h)$ stays bounded away from zero.
 The blueprint and Lean statements now use the recentered times $t_k$ on their respective
 quarter patches. Local smoothness of the global time off its cut is stated separately
-in Lemma~\ref{lem:orbit-coordinates}; the orbitwise restriction lemma uses only that
+in Lemma~\ref{lem:orbit-coordinates-smooth}; the orbitwise restriction lemma uses only that
 local regularity, not the uniform near-separatrix estimate. These are corrected
 statements, not newly formalized analytic proofs.
 \end{remark}
@@ -1326,7 +1402,7 @@ $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-saddle-distance, lem:period}
+\uses{lem:orbit-saddle-distance, lem:period-coarse}
 The negative-power integrals are bounded by constants times
 $\int_{-L}^Le^{2|t|}\,dt$ and $\int_{-L}^Le^{4|t|}\,dt$.
 Use $e^{2L}\le C/h$ from the coarse period bound.
@@ -1336,7 +1412,7 @@ $\int_{-L}^Le^{-p|t|}\,dt\le2/p$; the resulting constant may depend on $p$.
 
 \begin{remark}
 The manuscript's orbit comparison lemma had five items; it is split into the four
-lemmas above, and its area element is part of Lemma~\ref{lem:orbit-coordinates}. The
+lemmas above, and its area element is Lemma~\ref{lem:orbit-coordinates-area}. The
 closeness (constant $\approx\sqrt2$), $d\,e^{|t|}\in[2.2,4]$, $d(\gamma_h(\pm L))\approx2\sqrt h$
 and the bounds $|\partial_h\gamma_h|\le1.42\,e^{|t|}$,
 $|\partial_h^2\gamma_h|\le0.26\,e^{2|t|}$ were checked numerically for

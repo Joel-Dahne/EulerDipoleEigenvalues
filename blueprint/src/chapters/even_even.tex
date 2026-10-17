@@ -221,14 +221,14 @@ $\oint_{\{\Psi=2h\}}E_\omega\,dt=G_\omega(h)$ for almost every $h\in(0,1)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-bulk-integrable, lem:lift-representatives, lem:orbit-coordinates,
+\uses{lem:ee-bulk-integrable, lem:lift-representatives, lem:orbit-coordinates-area,
   lem:level-integral-congr}
 \leanok
 $|E_\omega|\le2\rho|\psi|(|\psi_x|+|\psi_y|)+2\bigl(2(|\psi_x|+|\psi_y|)^2+|\omega||\psi|\bigr)$, a sum of
 products of functions in $L^2$ of the cell. Each of the four pieces
 $\rho\operatorname{Re}(\psi\overline{\psi_n})$, $|\psi_n|^2$, $|\psi_t|^2$, $\operatorname{Re}(\omega\bar\psi)$
 is dominated by a multiple of $|\psi|^2+|\psi_x|^2+|\psi_y|^2+|\omega|^2$, hence integrable on
-the cell, and by Lemma~\ref{lem:orbit-coordinates} its restriction to almost every level is
+the cell, and by Lemma~\ref{lem:orbit-coordinates-area} its restriction to almost every level is
 integrable in flow time. On the level $\Psi=2h$ the factor $2-\Psi$ is $2-2h$, so the level
 integral splits (Lemma~\ref{lem:level-integral-congr} for the period interval).
 \end{proof}
@@ -323,11 +323,11 @@ and $G_\omega(h_j)\to0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates, lem:continuous-representative, lem:lift-representatives,
+\uses{lem:orbit-coordinates-area, lem:continuous-representative, lem:lift-representatives,
   lem:level-integral-congr, lem:period-integral, lem:period-orbit}
 \leanok
 Let $F=|\psi|^2+|\psi_x|^2+|\psi_y|^2+|\omega|^2$, integrable on the cell, and
-$g(h)=\oint_{\{\Psi=2h\}}F\,dt$. By Lemma~\ref{lem:orbit-coordinates},
+$g(h)=\oint_{\{\Psi=2h\}}F\,dt$. By Lemma~\ref{lem:orbit-coordinates-area},
 $2\int_0^1g\,dh=\int_\Cell F<\infty$. Hence for every null set $N$ there are $h_j\to1$
 outside $N$ with $(1-h_j)g(h_j)\to0$: otherwise $g\ge c/(1-h)$ almost everywhere near $1$,
 which is not integrable.
@@ -354,7 +354,7 @@ series expansion $\rho^2\sim2\eta$ is replaced by the exact inequality $\rho^2\l
 the period is bounded by the elementary $L(h)\le1/h$; and the bound $|\psi|\le M$ along the
 level needs the continuous representative, since the level is a null set in the plane.
 Using $F$ with $|\omega|^2+|\psi|^2$ instead of $|\omega||\psi|$ makes all bounds pointwise.
-Only the coarea formula of Lemma~\ref{lem:orbit-coordinates} remains admitted here.
+Only the area formula of Lemma~\ref{lem:orbit-coordinates-area} remains admitted here.
 \end{remark}
 
 \begin{lemma}[Truncated virial identity]
@@ -684,7 +684,7 @@ $\oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0$ outside a null set co
 
 \begin{proof}
 \uses{lem:continuous-representative, lem:lift-representatives, lem:level-integral-congr,
-  lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:orbit-coordinates,
+  lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:orbit-coordinates-area,
   lem:period-orbit}
 \leanok
 On almost every level $|\psi|\le M=\sup|\tilde\psi|$, and $d\ell=\rho\,dt$, so by

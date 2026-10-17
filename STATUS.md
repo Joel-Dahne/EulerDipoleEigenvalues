@@ -16,7 +16,7 @@ and the blueprint; their analytic proofs remain admitted.
   `norm_fderiv_quarterTimeCoord_le` on the four separately recentered
   quarter-orbit patches, using `quarterTimeCoord k p = timeCoord (R^(3k) p)`.
   The global time's local smoothness off its cut is now the separate
-  `contDiffAt_timeCoord` statement in `lem:orbit-coordinates`.
+  `contDiffAt_timeCoord` statement in `lem:orbit-coordinates-smooth`.
   `lem:coarea` needs only this local regularity, not the near-separatrix
   uniform estimate. The level-derivative proof sketch uses variational
   equations instead of trying to infer second derivatives from a
@@ -40,11 +40,11 @@ and the blueprint; their analytic proofs remain admitted.
 ## Next steps
 
 **Current focus: blueprint review.** The even–even dependency graph has
-197 nodes: 48 definitions and 149 results. Of the result nodes, 28 are
-not marked Lean-proved: 10 in geometry, 8 in analysis, 4 in virial, and
-6 in transport. All have written blueprint proofs or sketches. Two of
-these, `lem:acl-slicing` and `lem:trace-l2`, have no Lean statement yet;
-the remaining 26 have Lean statements covering their claims. This is
+200 nodes: 48 definitions and 152 results. Of the result nodes, 31 are
+not marked Lean-proved: 13 in geometry, 8 in analysis, 4 in virial, and
+6 in transport. All have written blueprint proofs or sketches. Three
+full statements are blueprint-only: `lem:acl-slicing`, `lem:trace-l2`
+and `lem:period-coarse`; the remaining 28 have covering Lean statements. This is
 not a complete mathematical proof audit. All four frontier chapters
 (analysis, virial, transport and geometry) have now had a first-pass
 review. Some nodes remain partially formalized; in particular only the full-gradient parts of
@@ -89,11 +89,12 @@ smooth compact-support Sobolev inequality is an alternative via cut-off
 Fourier approximants. No Lean files were changed in this blueprint split.
 
 **Blueprint validation:** `just web` and `just graph thm:ee-exclusion`
-pass (197 of 311 nodes). Dependency labels and cross-references resolve,
+pass (200 of 316 nodes). Dependency labels and cross-references resolve,
 labels are unique, and the full dependency graph is acyclic. Checks
-confirm that the finite-p embedding is outside the even–even graph and
-that the H² trace has no fractional-trace ancestor. The two new generic
-nodes have no `leanok` markers; no formalization progress is claimed.
+confirm that the finite-p embedding, elliptic period identity and sharp
+period asymptotics are outside the even–even graph; the H² trace has no
+fractional-trace ancestor. The three blueprint-only full statements
+have no statement `leanok` marker; no formalization progress is claimed.
 
 **Virial review (relative difficulty, not timing estimates):**
 - `lem:virial-h1`: moderate overall. Skew-symmetry is a smaller step via
@@ -181,59 +182,54 @@ are unchanged. Only blueprint sketches and dependency metadata were
 clarified; no Lean files changed. This is still a first-pass review,
 not a complete independent derivation of every prerequisite.
 
-**Geometry review (relative difficulty, not timing estimates):**
-- `lem:orbit-coordinates`: high as a bundle. The inverse identities,
-  smooth continuation across the non-cut turning point, and measurable
-  area formula are distinct tasks. Proved quarter parametrizations,
-  rotations and the flow equation already supply much of the orbit work.
-- `lem:coarea-level-cutoff`: low–moderate given the base area formula.
-  Truncate the input to the compact level band before using Fubini and
-  the weighted identity; no general coarea theorem is needed.
-- `lem:action-angle-chart`: moderate once orbit coordinates are supplied.
-  Obtain period smoothness directly from the regular fixed-interval
-  integral. Compute det D(h,θ) = 1/(2S) before invoking the inverse
-  function theorem; the previous sketch differentiated P too early.
-  Its proof no longer depends on the bundled sharp period theorem.
-- `lem:action-angle-weak`: medium–high for the general locally W¹,¹
-  rules and seam gluing. The transport equivalence is already proved;
-  only the two full-gradient rules remain. H¹ specializations suffice
-  for the virial application and may avoid stronger density machinery.
-- `lem:period`: high as a bundle. Local smoothness and monotonicity are
-  moderate regular-parameter-integral work. The elliptic identity has
-  an elementary improper substitution; the sharp value/derivative
-  remainders need a precise reference or quantified proof. A derivative
-  remainder cannot be inferred by differentiating an unspecified O-term.
-  Split regularity, coarse logarithmic bounds and sharp asymptotics;
-  the current even–even route appears to need only the coarser bounds.
-- `lem:orbit-comparison`: low–moderate once e^L ≤ C/√h is known.
-  Initial O(h) displacement grows by at most e^|t| under Gronwall;
-  no differentiable dependence on initial data is needed.
-- `lem:orbit-saddle-distance`: medium–high. The corner ODE has factor
-  A = √(1-u²)√(1-v²). Merely bounding A away from zero does not give
-  the exact unit exponential rate. The strengthened sketch bounds
-  ∫(1-A) dt uniformly using the scalar ODEs, without the downstream
-  time-integral lemma. The bounded entry time comes from the regular
-  quarter quadrature. At the endpoint u=v=√h this also gives the coarse
-  relation e^(-L) ≍ √h independently of sharp elliptic asymptotics.
-- `lem:orbit-level-derivatives`: medium–high once the chart is smooth.
-  Joint orbit smoothness follows from γ_h(t) = P(h,t/S(h)), without a
-  general parameter-dependent ODE theorem. Differentiate the flow
-  equation and use the first/second variational equations and Gronwall.
-  This route is noncircular in the blueprint dependency graph.
-- `lem:orbit-coordinate-gradients`: moderate conditional on those
-  estimates. The ∇h bound is elementary; inverse-time gradients follow
-  by inverting the constant-determinant chart. Retain separately
-  recentered quarter times, not the known-false global bound.
-- `lem:orbit-time-integrals`: low once the distance and coarse period
-  bounds are available; integrate positive/negative exponentials.
-  The positive-power constant may depend on the exponent.
-The geometry sketches now specify these mechanisms and record the chart
-regularity correction and the unverified sharp-period input as digest
-notes. These are paper-proof improvements and conditional effort
-assessments, not a full audit or new Lean proofs. All ten geometry proof
-statuses and all Lean files are unchanged. Natural next structural splits
-are the period bundle and the inverse/regularity/area parts of orbit
-coordinates.
+**The geometry bundles are split; no Lean files changed.**
+- `lem:orbit-coordinates-inverse` contains the bijection and inverse
+  identities, using proved quarters, rotations and flow time.
+- `lem:orbit-coordinates-smooth` contains local smoothness off the cut,
+  using the inverse identities and the independent period-regularity
+  node. It does not depend on the area formula.
+- `lem:orbit-coordinates-area` contains the nonnegative and Bochner
+  area formulas and a.e. level integrability. Its proof uses the first
+  two nodes, det D(h,t) = 1/2, and change of variables/Fubini.
+All three link to the existing admitted/partly proved Lean declarations;
+none has a newly completed Lean proof.
+
+- `lem:period-regularity` contains smoothness and strict monotonicity,
+  derived from the regular fixed-interval integral.
+- `lem:period-coarse` contains L(h) = ½ log(1/h) + O(1), divergence at
+  zero, and the global upper exponential bound. Its independent proof
+  sketch combines the quarter-endpoint distance ≍ √h with the saddle
+  estimate d ≍ exp(-L), then uses monotonicity away from zero. The link
+  to `exp_eighthPeriod_le` covers only the global upper bound; the full
+  two-sided node has no Lean statement-completion marker.
+- `lem:period-elliptic` contains S(h) = 4 K(1-h²).
+- `lem:period-asymptotics` contains the sharp value and derivative
+  remainders. It still needs a precise elliptic-integral reference or a
+  quantified proof, especially for the derivative remainder.
+The latter two nodes are outside the even–even graph. Odd–odd finite
+parts retain them where the elliptic formula and precise constants are
+used; the center argument retains the elliptic identity near h = 1.
+
+**Geometry difficulty (conditional, not timing estimates):** inverse
+identities and local smoothness are moderate, the area formula medium–
+high; collectively these were the former high-cost orbit-coordinate
+bundle. Period regularity and the elliptic substitution are moderate;
+the coarse estimate is a smaller step once the saddle estimate is in
+place; sharp remainders remain high-cost but are not even–even inputs.
+Other assessments are unchanged: level-cutoff coarea and orbit comparison
+are low–moderate given their inputs; weak full-gradient transfer and
+level derivatives are medium–high; coordinate gradients are moderate;
+time integrals are low given the distance/coarse bounds.
+
+The corner proof obtains the exact unit exponential rate by bounding
+∫(1-A) dt, with A = √(1-u²)√(1-v²), rather than merely bounding A away
+from zero. It does not use the downstream time-integral lemma or the
+coarse-period node. Joint orbit smoothness follows from
+γ_h(t) = P(h,t/S(h)); the variational bounds therefore need no general
+parameter-dependent ODE theorem. All these routes remain noncircular.
+The period node and orbit-coordinate bundle have been retired as graph
+nodes, and consumers now cite the particular inputs they use. These are
+blueprint restructuring and paper proof sketches, not new formal proofs.
 
 **The line-mollifier lemma is fully proved.** Its quantitative estimates in
 `LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,
@@ -597,7 +593,7 @@ and for `χ(Ψ)` make their weighted integrals cancel; then
 
 **`ee_center_limit` is proved (2026-10-16)** (`lem:ee-center-limit`); its only
 admitted dependency is the coarea formula (`lintegral_cellSquare_eq`,
-`integral_cellSquare_eq` of `lem:orbit-coordinates`). Digest: the series
+`integral_cellSquare_eq` of `lem:orbit-coordinates-area`). Digest: the series
 expansion `ρ² ~ 2η` is replaced by the exact `ρ² ≤ 2(2 - Ψ)`, the period by
 `L(h) ≤ 1/h` (`eighthPeriod_le_inv`, `lem:period-integral`), and `|ψ| ≤ M`
 along a.e. level comes from the continuous representative
@@ -802,7 +798,7 @@ coarea and the saddle-distance bounds by the explicit quarter-orbit formulas; no
    curves are handled through orbit coordinates `(h, t) ↦ γ_h(t)` and
    restrictions to almost every level (Fubini), not trace operators.
    Batch A (stated with `sorry`, no new infrastructure) is done:
-   `lem:period` (asymptotics checked numerically), `lem:good-windows`
+   `lem:period-asymptotics` (checked numerically, not proved), `lem:good-windows`
    (explicit constant `2 sin(π/12)`), `lem:canonical-profile` (decay rate
    now a hypothesis on `g`, weighted bound with constant 1),
    `lem:sobolev-embedding`, `lem:sobolev-fractional-gagliardo` (since removed) (iff only),
@@ -813,8 +809,9 @@ coarea and the saddle-distance bounds by the explicit quarter-orbit formulas; no
    proved (`H²` Fourier series converge absolutely; `ψ̃` continuous),
    `def:orbit-coordinates` (explicit inverse `h = Ψ/2`, flow time `t` from
    `orbitTime`; avoids smooth dependence of ODE flows, not in Mathlib) with
-   `lem:orbit-coordinates` stated (bijection, `dx dy = 2 dh dt`, a.e. level
-   restrictions; `OrbitCoordinates.lean`), `def:level-integral`,
+   the inverse, smoothness and area orbit-coordinate nodes stated
+   (bijection, `dx dy = 2 dh dt`, a.e. level restrictions;
+   `OrbitCoordinates.lean`), `def:level-integral`,
    `def:normal-tangent`. Batch B statements done (2026-10-15):
    `lem:corner-coordinates` proved (with `def:corner-chart`);
    `lem:orbit-comparison` split into closeness, saddle distance, level
