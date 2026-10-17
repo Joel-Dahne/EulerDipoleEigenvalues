@@ -45,16 +45,39 @@ blue interiors (their own Lean proofs are not marked complete): 10 in
 geometry, 4 in analysis, 4 in virial, and 6 in transport. Every result
 node has a written blueprint proof environment; none is wholly missing
 one. This is a status inventory, not an independent verification that
-all those written arguments are complete. The next blueprint task is to
-distinguish complete paper proofs from incomplete sketches among these
-24 nodes. Some nodes bundle claims with different formalization status;
+all those written arguments are complete. A first-pass review of the four
+analysis nodes is complete; the other chapters still need this review. Some nodes bundle claims with different formalization status;
 in particular `lem:action-angle-weak` still has its two full-gradient rules
 open, while its transport part is proved in `lem:action-angle-transport`.
 
-`lem:sobolev-embedding` has a proof environment, with weighted Fourier
-estimates for the Hölder bound and inverse Hausdorff–Young for the finite-p
-embedding. This is a paper proof sketch, not a Lean proof; both embedding
-theorems remain admitted.
+**Analysis review (relative difficulty, not timing estimates):**
+- `lem:sobolev-embedding`: the Fourier outline is standard. The Hölder
+  part is moderate, building on the proved continuous representative;
+  the finite-p part is medium–high because the sketch invokes inverse
+  Hausdorff–Young, for which no ready torus result was found in a quick
+  search. Mathlib's smooth compact-support Sobolev inequality offers an
+  alternative via cut-off Fourier approximants. The recorded direct
+  even–even use is only the Hölder part, in `lem:pairing-limit`; a digest
+  note recommends splitting the node and checking implicit uses.
+- `lem:local-to-global`: moderate, mainly technical measure/periodization
+  work and the weak/Fourier derivative bridge. The cutoff theorem and
+  torus weak/Fourier equivalence are already proved. The paper sketch
+  should make this weak-data bridge explicit rather than rely only on
+  classical derivative agreement.
+- `lem:traces`: high, the largest infrastructure task here. The standard
+  outline hides rectangle extension/approximation and the fractional
+  trace inequality. Split ACL slicing, the Gagliardo trace bound, and
+  H² trace/derivative compatibility; no statement change is proposed.
+- `lem:coarea`: moderate once geometric chart inputs are supplied. The
+  recent weak transport transfer reduces the directional derivative
+  issue, but slicing and periodic representatives still need proofs.
+  The sketch now correctly chooses a countable dense family of time
+  tests, not level tests, for a common exceptional set, and explains
+  compatibility on overlapping windows. The correction is recorded in
+  a digest note. A shared directional slicing lemma would also serve
+  the ACL part of `lem:traces`.
+These are preliminary assessments from the sketches and existing code,
+not complete independent derivations or formalization attempts.
 
 `lem:virial-h1` is now stated in `VirialL2.lean` as
 `squarePairing_halfDensityGen_h1` and `virial_h1`, with two intentionally
@@ -256,7 +279,7 @@ No global smoothness of the cut angle, second derivative of the input,
 or full weak gradient is assumed. The periodization and zero-extension
 helpers are proved, not substituted analytic assumptions.
 
-**Next:** the transversal transport-commutator estimate
+**Next Lean task (after blueprint review):** the transversal transport-commutator estimate
 `transversalMollifier_hasWeakL0On` (`lem:transversal-mollifier-commutator`).
 Its blueprint proof now depends only on the proved weak transport
 equivalence, not the two stronger full weak-gradient rules. Apply the

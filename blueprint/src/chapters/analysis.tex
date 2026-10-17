@@ -876,6 +876,15 @@ is $g$. This identifies the $L^p$ representative and proves the claimed
 continuous inclusion. Normalization constants are absorbed into $C$.
 \end{proof}
 
+\begin{remark}[Digest note: scope of the embedding node]
+The recorded direct use of this node in the even--even dependency graph is
+Lemma~\ref{lem:pairing-limit}, which uses the H\"older inclusion, not the
+finite-$p$ inclusion. These two embeddings should be separate nodes so that
+the latter's additional formalization work is not imposed on that proof
+path. Check implicit uses before removing the finite-$p$ part from the
+sector's prerequisites.
+\end{remark}
+
 \section{Local Sobolev theory (candidate assumptions)}
 \label{sec:local-sobolev}
 
@@ -1041,12 +1050,25 @@ $(L_0g)(\gamma_h(t))$.
 \uses{lem:orbit-coordinates}
 Use smooth coordinate charts off the time cut on the compact annulus; a second time
 cut supplies charts across the first one. No uniform estimate as $h\to0$ is needed.
-In orbit coordinates $L_0=\partial_t$ and $dx\,dy=2\,dh\,dt$. Testing the weak equation with
-$\alpha(h)\beta(t)$ and letting $\alpha$ run through a countable dense family shows that for
-almost every $h$ the function $t\mapsto g(\gamma_h(t))$ has weak derivative
-$(L_0g)(\gamma_h(t))$, which is locally integrable; a function on an interval with an
-integrable weak derivative has an absolutely continuous representative.
+In orbit coordinates $L_0=\partial_t$ and $dx\,dy=2\,dh\,dt$. For each fixed time test
+$\beta$, test the weak equation against $\alpha(h)\beta(t)$ for all level tests
+$\alpha$. The fundamental lemma gives the sliced weak identity for almost every
+$h$. Choose a countable family of time tests $\beta$, dense in $C^1$ on each
+compact time interval, to obtain a common exceptional null set; local integrability
+then extends the identity to every time test. The one-dimensional weak-derivative
+FTC gives a locally absolutely continuous representative. On overlapping windows
+these representatives agree almost everywhere, hence everywhere by continuity;
+this also gives the required periodicity.
 \end{proof}
+
+\begin{remark}[Digest note: the exceptional set in slicing]
+The earlier sketch placed the countable dense family on the level tests
+$\alpha$. The family needed to obtain one exceptional set for all sliced
+weak identities is instead a family of time tests $\beta$, as made explicit
+above. This corrects the proof sketch, not a Lean proof. The slicing step
+is also useful for the ACL part of Lemma~\ref{lem:traces}; it should be
+separated from the fractional trace estimate.
+\end{remark}
 
 \begin{remark}
 The manuscript's coarea formula is now the change of variables of
