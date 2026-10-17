@@ -39,7 +39,7 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
-**All quantitative line-mollifier estimates are proved.** In
+**The line-mollifier lemma is fully proved.** Its quantitative estimates in
 `LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,
 `tendsto_smul_mollifyFstDeriv` and `eLpNorm_mollifyFst_mul_sub_le` have
 complete proofs, for every s-finite transverse measure `μ`, with no changes
@@ -72,21 +72,32 @@ split the integral. All these proofs handle arbitrary representatives;
 no convolution is assumed integrable on every line and no general Young
 inequality is needed.
 
-Luna implemented bounded prerequisite and assembly tasks; the parent supplied
-the mathematical decomposition, repaired the kernel-helper elaboration,
-removed unused proof fragments and independently reviewed diagnostics and
-axioms. Both newly discharged theorems and the three public kernel helpers
-use only `propext`, `Classical.choice`, `Quot.sound`; earlier contraction and
-convergence checks have the same status. No new admissions were retained.
-The three remaining admissions in `LineMollifier.lean` are
-`hasWeakPartialOn_mollifyFst`, `HasWeakPartialOn.mollify` and
-`mollifyFstDeriv_ae_eq`.
+The remaining weak-derivative statements `hasWeakPartialOn_mollifyFst`,
+`HasWeakPartialOn.mollify` and `mollifyFstDeriv_ae_eq` are now proved with
+unchanged statements. They require only locally integrable input for planar
+Lebesgue measure, not L². `LineMollifier.lean` has no admissions, and
+`lem:line-mollifier` now has a proved blueprint proof. Axiom checks on all
+three new results use only `propext`, `Classical.choice`, `Quot.sound`, as do
+the previously checked quantitative estimates and kernel helpers. This step
+was implemented directly; no proof worker was launched.
+
+The analytic mechanism is compact input localization, not an assumption of
+integrability on every angular line. A compact output set and compact kernel
+sample a compact input set; its zero-extended restriction is globally L¹.
+A measure-preserving shear gives joint integrability and hence local
+integrability of the convolutions. A countable rectangle exhaustion gives
+locally integrable angular sections almost everywhere. Mathlib's classical
+convolution derivative on those sections and one-dimensional integration by
+parts prove the first weak identity. Testing an existing weak derivative
+against translated test functions proves commutation, with Fubini justified
+by the same localization. Mathlib's uniqueness result for locally integrable
+distributions then identifies the two derivative formulas almost everywhere.
 
 **The transversal-mollifier support lemma is proved.**
 `transversalMollifier_eq_zero` in `TransversalMollifier.lean` has no admitted
 dependencies; its axioms are only `propext`, `Classical.choice`, `Quot.sound`.
 The new proved blueprint node is `lem:transversal-mollifier-support`, separated
-from the still-admitted L² node. Private helpers construct a compact closed
+from the basic L² node, which is now also proved. Private helpers construct a compact closed
 level band in the closed diagonal cell square. Positive lower level excludes
 the square boundary and upper level below one excludes the center. The kernel
 support then forces any nonzero integrand into that band. This works for
@@ -108,7 +119,7 @@ the line equality to all levels. A measurable null cover of the bad angles
 has a null planar image: continuity and injectivity of the parametrization
 make the image measurable (Lusin--Souslin), and the area formula makes it
 null. This avoids needing global measurability of the cut angle. The weighted
-measure-transfer and null-image helpers are available for the remaining L²
+measure-transfer and null-image helpers are used in the completed basic L²
 proofs. The theorem still depends on admitted chart/coarea inputs (`sorryAx`);
 it is not an independent proof of that infrastructure.
 
@@ -128,7 +139,7 @@ the translated compact kernel makes the separate convolution products
 integrable on every output level of each good line. Only then is
 `integral_add` used. The angular null-set transfer is factored into
 `ae_of_ae_angle`, shared by additivity and representative invariance.
-These prerequisites are available for the remaining norm/convergence proofs;
+These prerequisites are also used in the completed norm/convergence proofs;
 no new admissions were added.
 
 **Statement corrections:** representative invariance previously omitted
@@ -178,17 +189,18 @@ identity, `eLpNorm_cutoff_actionInput_le`, and
 through `exists_mollify_band` so the same band is available to the norm and
 convergence proofs; the support theorem remains free of admitted dependencies.
 
-**Next:** prove `hasWeakPartialOn_mollifyFst` in `LineMollifier.lean`, then
-commutation with weak derivatives and the derivative-kernel identification.
-These and the action-angle weak chain rules are the remaining inputs for
-`lem:transversal-mollifier-derivatives` and
-`lem:transversal-mollifier-commutator`. Chart regularity and coarea remain
-admitted analytic prerequisites; the completed basic L² lemma does not
-require the remaining line weak-derivative theory.
+**Next:** the action-angle weak chain rules in
+`lem:action-angle-weak` (`TransversalMollifier.lean`), starting with
+`hasWeakL0On_iff_actionAngle` for the transport equation. The line-mollifier input
+is now complete for `lem:transversal-mollifier-derivatives` and
+`lem:transversal-mollifier-commutator`; their coordinate-transfer rules
+remain admitted. Chart regularity and coarea are still admitted analytic
+prerequisites. No stronger transversal statement has been discharged in
+this step.
 
 **Validation:** the full Lean project build passes (3281 jobs); full-file
-diagnostics have only the three remaining line weak-derivative admissions
-and the six remaining admissions in `TransversalMollifier.lean` (three
+diagnostics for `LineMollifier.lean` are completely clean. There remain
+six admissions in `TransversalMollifier.lean` (three
 action-angle weak rules and three derivative/commutator results). Axiom checks
 on both new L² estimates have only the standard axioms plus `sorryAx` through
 the chart/coarea inputs; the refactored support result still has only

@@ -563,17 +563,37 @@ $j=h$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weak-derivative-basic, lem:line-mollifier-kernel,
+\uses{lem:weak-derivative-basic, lem:lift-calculus, lem:line-mollifier-kernel,
   lem:line-mollifier-contraction, lem:line-mollifier-convergence,
   lem:line-mollifier-cancellation, lem:line-mollifier-commutator}
+\leanok
 Part (1) is Lemmas~\ref{lem:line-mollifier-contraction}
 and~\ref{lem:line-mollifier-convergence}; part (2) is
 Lemma~\ref{lem:line-mollifier-cancellation}, and part (3) is
 Lemma~\ref{lem:line-mollifier-commutator}.
-For the derivatives, move $\partial_j$ from the test
-function $\varphi$ to the kernel by Fubini: $\int M_\epsilon F\,\partial_j\varphi=\int F\,\partial_j\check
-M_\epsilon\varphi$ with $\check M_\epsilon$ the mollification by $\rho_\epsilon(-\cdot)=\rho_\epsilon$, again a
-test function.
+
+For the weak statements, compact kernel support means that a compact output
+set samples only a compact part of the input. Restrict $F$ to that compact
+set and extend by zero, obtaining a globally integrable input. The
+measure-preserving shear $(t,h,\theta)\mapsto(t,h-t,\theta)$ and Fubini
+give joint integrability of the kernel times the shifted input. This proves
+local integrability of both $M_\epsilon F$ and $M'_\epsilon F$ and justifies
+the integral exchanges against compactly supported test functions.
+
+By Fubini on a countable exhaustion by rectangles, almost every angular
+line of $F$ is locally integrable. On each good line, the classical
+convolution derivative theorem gives
+$\partial_hM_\epsilon F=M'_\epsilon F$. One-dimensional integration by
+parts against $\varphi(h,\theta)$, followed by Fubini, gives the planar
+weak identity.
+
+For commutation, test the weak identity for $\partial_jF=G$ against
+$\varphi_t(h,\theta)=\varphi(h+t,\theta)$. Translation preserves test
+functions and commutes with $\partial_j$. Integrating this identity against
+$\rho_\epsilon(t)$ gives $\partial_jM_\epsilon F=M_\epsilon G$ weakly.
+For $j=h$, the two candidate derivatives consequently have equal pairings
+against every test function. The fundamental lemma of the calculus of
+variations identifies them almost everywhere.
 \end{proof}
 
 \section{Sobolev spaces on the torus}

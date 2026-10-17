@@ -1,5 +1,7 @@
 import Mathlib.Analysis.Calculus.BumpFunction.Normed
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Calculus.ContDiff.Convolution
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 import NoEmbeddedEigenvalues.SobolevLocal
 
@@ -8,8 +10,8 @@ import NoEmbeddedEigenvalues.SobolevLocal
 
 Blueprint: `def:line-mollifier`, `lem:line-mollifier-kernel`,
 `lem:line-mollifier-contraction`, `lem:line-mollifier-convergence`,
-`lem:line-mollifier-cancellation`, `lem:line-mollifier-commutator`;
-weak-derivative statements remain admitted in `lem:line-mollifier`.
+`lem:line-mollifier-cancellation`, `lem:line-mollifier-commutator` and
+`lem:line-mollifier` (all proved).
 
 Functions `F(h, θ)` on `ℝ²` are mollified in the first variable only,
 `M_ε F(h, θ) = ∫ ρ_ε(h - h') F(h', θ) dh'` with `ρ_ε(h) = ε⁻¹ ρ(h/ε)` for a fixed smooth even
@@ -23,6 +25,14 @@ average of translation differences and tends to zero in `L²`. The Lipschitz com
 is bounded by multiplication with `s(h - t) - s(h)` on the kernel support. This is the
 one-dimensional input of the transversal mollifier (`TransversalMollifier.lean`), where
 `(h, θ)` are action-angle coordinates.
+
+For locally integrable input with planar Lebesgue measure, compact kernel support gives
+local integrability of both convolutions by truncating the input on a compact set and
+using a measure-preserving shear. Almost every angular line is locally integrable;
+Mathlib's classical convolution derivative and one-dimensional integration by parts
+therefore give the first weak derivative. Testing against translated test functions
+proves commutation with existing weak derivatives. Uniqueness of weak derivatives
+identifies the derivative-kernel convolution with mollification of the weak derivative.
 -/
 
 noncomputable section
@@ -1120,21 +1130,251 @@ theorem eLpNorm_mollifyFst_mul_sub_le (hε : 0 < ε) {s : ℝ → ℝ} {L : ℝ�
           mul_le_mul_of_nonneg_right hAnorm bot_le
         _ = ENNReal.ofReal (ε * (L : ℝ)) * eLpNorm F 2 σ := by rw [hGnorm]
 
+/-! ### Local integrability and weak derivatives -/
+
+private def convolveLine (k : ℝ → ℝ) (F : ℝ × ℝ → ℂ) (q : ℝ × ℝ) : ℂ :=
+  ∫ t, k t • F (q.1 - t, q.2)
+
+private theorem convolveLine_eq (k : ℝ → ℝ) (F : ℝ × ℝ → ℂ) (q : ℝ × ℝ) :
+    convolveLine k F q = ∫ t, k (q.1 - t) • F (t, q.2) := by
+  have hmp : MeasurePreserving (MeasurableEquiv.subLeft q.1) volume volume :=
+    volume.measurePreserving_sub_left q.1
+  simpa [convolveLine, MeasurableEquiv.subLeft, Equiv.subLeft, sub_sub_cancel] using
+    hmp.integral_comp' (fun t ↦ k (q.1 - t) • F (t, q.2))
+
+private theorem measurePreserving_lineShift :
+    MeasurePreserving (fun z : ℝ × (ℝ × ℝ) ↦ (z.1, (z.2.1 - z.1, z.2.2)))
+      ((volume : Measure ℝ).prod volume) (volume.prod volume) := by
+  refine (MeasurePreserving.id (volume : Measure ℝ)).skew_product
+    (μc := (volume : Measure (ℝ × ℝ))) (μd := (volume : Measure (ℝ × ℝ)))
+    (g := fun t q ↦ (q.1 - t, q.2)) ?_ ?_
+  · fun_prop
+  · filter_upwards [] with t
+    exact ((measurePreserving_sub_right volume t).prod (MeasurePreserving.id volume)).map_eq
+
+private theorem integrable_lineIntegrand {k : ℝ → ℝ} (hk : Integrable k)
+    (hF : Integrable F) :
+    Integrable (fun z : ℝ × (ℝ × ℝ) ↦ k z.1 • F (z.2.1 - z.1, z.2.2))
+      ((volume : Measure ℝ).prod volume) := by
+  have hi := hk.smul_prod hF
+  exact (measurePreserving_lineShift.integrable_comp hi.aestronglyMeasurable).mpr hi
+
+/-- On compact output sets, only a compact part of the locally integrable input is sampled. -/
+private theorem integrable_lineIntegrand_restrict {k : ℝ → ℝ} (hk : Integrable k)
+    (hks : HasCompactSupport k) (hF : LocallyIntegrable F) {K : Set (ℝ × ℝ)}
+    (hK : IsCompact K) :
+    Integrable (fun z : ℝ × (ℝ × ℝ) ↦ k z.1 • F (z.2.1 - z.1, z.2.2))
+      ((volume : Measure ℝ).prod (volume.restrict K)) := by
+  classical
+  let L := (fun z : ℝ × (ℝ × ℝ) ↦ (z.2.1 - z.1, z.2.2)) '' (tsupport k ×ˢ K)
+  have hL : IsCompact L := (hks.prod hK).image (by fun_prop)
+  have hFL : Integrable (L.indicator F) :=
+    (integrable_indicator_iff hL.measurableSet).mpr (hF.integrableOn_isCompact hL)
+  have hi := (integrable_lineIntegrand hk hFL).mono_measure
+    (Measure.prod_mono le_rfl (Measure.restrict_le_self (s := K)))
+  apply hi.congr
+  have hq : ∀ᵐ z ∂((volume : Measure ℝ).prod (volume.restrict K)), z.2 ∈ K :=
+    Measure.quasiMeasurePreserving_snd.ae (ae_restrict_mem hK.measurableSet)
+  filter_upwards [hq] with z hz
+  by_cases ht : k z.1 = 0
+  · simp [ht]
+  · have hm : (z.2.1 - z.1, z.2.2) ∈ L :=
+      ⟨z, ⟨subset_closure ht, hz⟩, rfl⟩
+    simp [Set.indicator_of_mem hm]
+
+private theorem locallyIntegrable_convolveLine {k : ℝ → ℝ} (hk : Continuous k)
+    (hks : HasCompactSupport k) (hF : LocallyIntegrable F) :
+    LocallyIntegrable (convolveLine k F) := by
+  apply locallyIntegrable_iff.mpr
+  intro K hK
+  exact (integrable_lineIntegrand_restrict (hk.integrable_of_hasCompactSupport hks)
+    hks hF hK).integral_prod_right
+
+/-- Almost every line of a locally integrable planar function is locally integrable. -/
+private theorem ae_locallyIntegrable_line (hF : LocallyIntegrable F) :
+    ∀ᵐ θ ∂(volume : Measure ℝ), LocallyIntegrable (fun h ↦ F (h, θ)) := by
+  have hboxes : ∀ n : ℕ, ∀ᵐ θ ∂(volume : Measure ℝ),
+      θ ∈ Icc (-(n : ℝ)) n → IntegrableOn (fun h ↦ F (h, θ)) (Icc (-(n : ℝ)) n) := by
+    intro n
+    have hi := hF.integrableOn_isCompact
+      ((isCompact_Icc : IsCompact (Icc (-(n : ℝ)) n)).prod
+        (isCompact_Icc : IsCompact (Icc (-(n : ℝ)) n)))
+    rw [IntegrableOn, Measure.volume_eq_prod, ← Measure.prod_restrict] at hi
+    exact (ae_restrict_iff' measurableSet_Icc).mp hi.prod_left_ae
+  filter_upwards [ae_all_iff.mpr hboxes] with θ hθ
+  intro x
+  obtain ⟨n, hn⟩ := exists_nat_gt (max |θ| |x|)
+  have ht : |θ| < n := (le_max_left _ _).trans_lt hn
+  have hx : |x| < n := (le_max_right _ _).trans_lt hn
+  refine ⟨Icc (-(n : ℝ)) n, Icc_mem_nhds (abs_lt.mp hx).1 (abs_lt.mp hx).2, ?_⟩
+  exact hθ n ⟨(abs_lt.mp ht).1.le, (abs_lt.mp ht).2.le⟩
+
+private theorem hasDerivAt_convolveLine {k : ℝ → ℝ} (hk : ContDiff ℝ 1 k)
+    (hks : HasCompactSupport k) {θ : ℝ} (hF : LocallyIntegrable (fun h ↦ F (h, θ)))
+    (x : ℝ) : HasDerivAt (fun h ↦ convolveLine k F (h, θ))
+      (convolveLine (deriv k) F (x, θ)) x := by
+  have hd := HasCompactSupport.hasDerivAt_convolution_right
+    (ContinuousLinearMap.lsmul ℝ ℝ : ℝ →L[ℝ] ℂ →L[ℝ] ℂ).flip hF hks hk x
+  convert hd using 1
+  · funext h
+    exact convolveLine_eq k F (h, θ)
+  · exact convolveLine_eq (deriv k) F (x, θ)
+
+private theorem hasWeakPartialOn_convolveLine {k : ℝ → ℝ} (hk : ContDiff ℝ 1 k)
+    (hks : HasCompactSupport k) (hF : LocallyIntegrable F) :
+    HasWeakPartialOn univ 0 (convolveLine k F) (convolveLine (deriv k) F) := by
+  have hM := locallyIntegrable_convolveLine hk.continuous hks hF
+  have hD := locallyIntegrable_convolveLine (hk.continuous_deriv le_rfl) hks.deriv hF
+  refine ⟨hM.locallyIntegrableOn univ, hD.locallyIntegrableOn univ, fun φ hφ ↦ ?_⟩
+  have i1 : Integrable (fun p ↦ convolveLine k F p * coordPartial 0 φ p)
+      ((volume : Measure ℝ).prod volume) :=
+    integrable_mul_of_tsupport_subset (hM.locallyIntegrableOn univ)
+      (hφ.continuous_coordPartial 0) (hφ.hasCompactSupport_coordPartial 0) (subset_univ _)
+  have i2 : Integrable (fun p ↦ convolveLine (deriv k) F p * φ p)
+      ((volume : Measure ℝ).prod volume) :=
+    integrable_mul_of_tsupport_subset (hD.locallyIntegrableOn univ)
+      hφ.contDiff.continuous hφ.hasCompactSupport (subset_univ _)
+  have i3 : Integrable (fun p ↦ convolveLine k F p * φ p)
+      ((volume : Measure ℝ).prod volume) :=
+    integrable_mul_of_tsupport_subset (hM.locallyIntegrableOn univ)
+      hφ.contDiff.continuous hφ.hasCompactSupport (subset_univ _)
+  calc
+    _ = ∫ θ, ∫ h, convolveLine k F (h, θ) * coordPartial 0 φ (h, θ) :=
+      integral_prod_symm _ i1
+    _ = ∫ θ, -(∫ h, convolveLine (deriv k) F (h, θ) * φ (h, θ)) := by
+      apply integral_congr_ae
+      filter_upwards [ae_locallyIntegrable_line hF, i1.prod_left_ae,
+        i2.prod_left_ae, i3.prod_left_ae] with θ hθ h1 h2 h3
+      apply integral_mul_deriv_eq_deriv_mul_of_integrable
+        (u := fun h ↦ convolveLine k F (h, θ)) (v := fun h ↦ φ (h, θ))
+      · intro x _
+        exact hasDerivAt_convolveLine hk hks hθ x
+      · intro x _
+        simpa [coordPartial] using
+          hasDerivAt_partialX (p := (x, θ))
+            ((hφ.contDiff.of_le (by simp) : ContDiff ℝ 1 φ).differentiable one_ne_zero _)
+      · exact h1
+      · exact h2
+      · exact h3
+    _ = _ := by rw [integral_neg, ← integral_prod_symm _ i2, Measure.volume_eq_prod]
+
+private theorem mollifyFst_eq_convolveLine :
+    mollifyFst ε F = convolveLine (mollifierKernel ε) F :=
+  funext fun q ↦ (convolveLine_eq _ _ q).symm
+
+private theorem mollifyFstDeriv_eq_convolveLine :
+    mollifyFstDeriv ε F = convolveLine (deriv (mollifierKernel ε)) F :=
+  funext fun q ↦ (convolveLine_eq _ _ q).symm
+
 /-- `M_ε' F` is the weak `h`-derivative of `M_ε F`. -/
 theorem hasWeakPartialOn_mollifyFst (hε : 0 < ε) (hF : LocallyIntegrable F) :
     HasWeakPartialOn univ 0 (mollifyFst ε F) (mollifyFstDeriv ε F) := by
-  sorry
+  rw [mollifyFst_eq_convolveLine, mollifyFstDeriv_eq_convolveLine]
+  exact hasWeakPartialOn_convolveLine ((contDiff_mollifierKernel ε).of_le (by simp))
+    (hasCompactSupport_mollifierKernel hε) hF
+
+/-- The test factor makes the double integral globally integrable. -/
+private theorem integrable_lineIntegrand_mul_test {k : ℝ → ℝ} (hk : Continuous k)
+    (hks : HasCompactSupport k) (hF : LocallyIntegrable F) {ψ : ℝ × ℝ → ℂ}
+    (hψ : Continuous ψ) (hψs : HasCompactSupport ψ) :
+    Integrable (fun z : ℝ × (ℝ × ℝ) ↦ (k z.1 • F (z.2.1 - z.1, z.2.2)) * ψ z.2)
+      ((volume : Measure ℝ).prod volume) := by
+  have hi := integrable_lineIntegrand_restrict (hk.integrable_of_hasCompactSupport hks)
+    hks hF hψs
+  obtain ⟨C, hC⟩ := hψs.exists_bound_of_continuous hψ
+  have hm := hi.mul_bdd (hψ.measurable.comp measurable_snd).aestronglyMeasurable
+    (Filter.Eventually.of_forall (fun z ↦ hC z.2))
+  have hlocal : IntegrableOn
+      (fun z : ℝ × (ℝ × ℝ) ↦ (k z.1 • F (z.2.1 - z.1, z.2.2)) * ψ z.2)
+      (univ ×ˢ tsupport ψ) ((volume : Measure ℝ).prod volume) := by
+    simpa only [IntegrableOn, ← Measure.prod_restrict, Measure.restrict_univ,
+      Function.comp_apply] using hm
+  apply hlocal.integrable_of_forall_notMem_eq_zero
+  intro z hz
+  have hq : z.2 ∉ tsupport ψ := fun h ↦ hz ⟨mem_univ _, h⟩
+  rw [image_eq_zero_of_notMem_tsupport hq, mul_zero]
+
+private theorem integral_convolveLine_mul_test {k : ℝ → ℝ} (hk : Continuous k)
+    (hks : HasCompactSupport k) (hF : LocallyIntegrable F) {ψ : ℝ × ℝ → ℂ}
+    (hψ : Continuous ψ) (hψs : HasCompactSupport ψ) :
+    (∫ q, convolveLine k F q * ψ q) =
+      ∫ t, k t • ∫ q, F (q.1 - t, q.2) * ψ q := by
+  have hi := integrable_lineIntegrand_mul_test hk hks hF hψ hψs
+  calc
+    _ = ∫ q, ∫ t, (k t • F (q.1 - t, q.2)) * ψ q := by
+      simp only [convolveLine, integral_mul_const]
+    _ = ∫ t, ∫ q, (k t • F (q.1 - t, q.2)) * ψ q := integral_integral_swap hi.swap
+    _ = _ := by simp only [smul_mul_assoc, integral_smul]
+
+private theorem coordPartial_translate (j : Fin 2) (φ : ℝ × ℝ → ℂ)
+    (v q : ℝ × ℝ) :
+    coordPartial j (fun p ↦ φ (p + v)) q = coordPartial j φ (q + v) := by
+  fin_cases j
+  · change deriv (fun h ↦ φ (h + v.1, q.2 + v.2)) q.1 =
+      deriv (fun h ↦ φ (h, q.2 + v.2)) (q.1 + v.1)
+    exact deriv_comp_add_const (fun h ↦ φ (h, q.2 + v.2)) v.1 q.1
+  · change deriv (fun h ↦ φ (q.1 + v.1, h + v.2)) q.2 =
+      deriv (fun h ↦ φ (q.1 + v.1, h)) (q.2 + v.2)
+    exact deriv_comp_add_const (fun h ↦ φ (q.1 + v.1, h)) v.2 q.2
+
+private theorem integral_translate_mul_coordPartial {j : Fin 2} {G : ℝ × ℝ → ℂ}
+    (hd : HasWeakPartialOn univ j F G) {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn univ φ) (t : ℝ) :
+    (∫ q, F (q.1 - t, q.2) * coordPartial j φ q) =
+      -(∫ q, G (q.1 - t, q.2) * φ q) := by
+  let ψ : ℝ × ℝ → ℂ := fun p ↦ φ (p + (t, 0))
+  have hψ : IsTestFunctionOn univ ψ :=
+    ⟨hφ.contDiff.comp (contDiff_id.add contDiff_const),
+      hφ.hasCompactSupport.comp_homeomorph (Homeomorph.addRight (t, 0)), subset_univ _⟩
+  have hmp : MeasurePreserving (MeasurableEquiv.addRight (t, (0 : ℝ))) volume volume := by
+    rw [Measure.volume_eq_prod]
+    exact (measurePreserving_add_right volume t).prod
+      (measurePreserving_add_right volume (0 : ℝ))
+  calc
+    _ = ∫ p, F p * coordPartial j ψ p := by
+      simpa [ψ, coordPartial_translate] using
+        (hmp.integral_comp' (fun q ↦ F (q.1 - t, q.2) * coordPartial j φ q)).symm
+    _ = -(∫ p, G p * ψ p) := hd.2.2 ψ hψ
+    _ = _ := by
+      congr 1
+      simpa [ψ] using hmp.integral_comp' (fun q ↦ G (q.1 - t, q.2) * φ q)
+
+private theorem weakPartial_convolveLine {k : ℝ → ℝ} (hk : Continuous k)
+    (hks : HasCompactSupport k) {j : Fin 2} {G : ℝ × ℝ → ℂ}
+    (hd : HasWeakPartialOn univ j F G) :
+    HasWeakPartialOn univ j (convolveLine k F) (convolveLine k G) := by
+  have hF := locallyIntegrableOn_univ.mp hd.1
+  have hG := locallyIntegrableOn_univ.mp hd.2.1
+  refine ⟨(locallyIntegrable_convolveLine hk hks hF).locallyIntegrableOn univ,
+    (locallyIntegrable_convolveLine hk hks hG).locallyIntegrableOn univ, fun φ hφ ↦ ?_⟩
+  rw [integral_convolveLine_mul_test hk hks hF
+    (hφ.continuous_coordPartial j) (hφ.hasCompactSupport_coordPartial j),
+    integral_convolveLine_mul_test hk hks hG hφ.contDiff.continuous hφ.hasCompactSupport]
+  simp_rw [integral_translate_mul_coordPartial hd hφ, smul_neg, integral_neg]
 
 /-- `M_ε` commutes with weak derivatives. -/
 theorem HasWeakPartialOn.mollify (hε : 0 < ε) {j : Fin 2} {G : ℝ × ℝ → ℂ}
     (hd : HasWeakPartialOn univ j F G) :
     HasWeakPartialOn univ j (mollifyFst ε F) (mollifyFst ε G) := by
-  sorry
+  rw [mollifyFst_eq_convolveLine, mollifyFst_eq_convolveLine]
+  exact weakPartial_convolveLine (contDiff_mollifierKernel ε).continuous
+    (hasCompactSupport_mollifierKernel hε) hd
 
 /-- If `∂_h F = G` weakly, then `M_ε' F = M_ε G`. -/
 theorem mollifyFstDeriv_ae_eq (hε : 0 < ε) {G : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn univ 0 F G) :
     mollifyFstDeriv ε F =ᵐ[volume] mollifyFst ε G := by
-  sorry
+  have h1 := hasWeakPartialOn_mollifyFst hε (locallyIntegrableOn_univ.mp hd.1)
+  have h2 := hd.mollify hε
+  apply ae_eq_of_integral_contDiff_smul_eq
+    (locallyIntegrableOn_univ.mp h1.2.1) (locallyIntegrableOn_univ.mp h2.2.1)
+  intro ψ hψ hψs
+  let φ : ℝ × ℝ → ℂ := fun p ↦ (ψ p : ℂ)
+  have hφ : IsTestFunctionOn univ φ :=
+    ⟨Complex.ofRealCLM.contDiff.comp hψ,
+      hψs.comp_left (g := Complex.ofReal) (by simp), subset_univ _⟩
+  have he : (∫ p, mollifyFstDeriv ε F p * φ p) = ∫ p, mollifyFst ε G p * φ p :=
+    neg_injective ((h1.2.2 φ hφ).symm.trans (h2.2.2 φ hφ))
+  simpa only [φ, Complex.real_smul, mul_comm] using he
 
 end LineMollifier
 
