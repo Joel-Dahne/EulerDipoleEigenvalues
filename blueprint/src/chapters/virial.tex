@@ -342,16 +342,53 @@ to $|h-c|^{-1}$ on a compact interval inside $(0,1)$, with its value at $c$
 set to zero, and inputs $1$ and $-1+|h-c|$ on the cell. Their separately
 mollified values default to zero near $h=c$, whereas the mollification of
 the sum is positive. This is also a paper counterexample. The corrected
-hypotheses agree with the original blueprint specification; the additivity
-proof is still pending.
+hypotheses agree with the original blueprint specification. The corrected
+additivity statement is proved in Lemma~\ref{lem:transversal-mollifier-linear}.
 \end{remark}
+
+\begin{lemma}[Additivity and scalar multiplication]
+\label{lem:transversal-mollifier-linear}
+\uses{def:transversal-mollifier}
+\lean{NoEmbeddedEigenvalues.transversalMollifier_const_mul,
+  NoEmbeddedEigenvalues.transversalMollifier_add}
+\leanok
+Let $\chi$ be smooth with closed support in $(0,1)$ and $\epsilon>0$.
+For $u,v\in L^2(\Cell)$ and $c\in\C$,
+\[
+  J_\epsilon(u+v)=J_\epsilon u+J_\epsilon v,\qquad
+  J_\epsilon(cu)=cJ_\epsilon u
+\]
+almost everywhere on $\R^2$. This asserts the two identities, not yet an
+$L^2$ bound on the outputs.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:line-mollifier-kernel,
+  lem:transversal-mollifier-congr}
+\leanok
+Scalar multiplication passes through every Bochner integral, even when it
+defaults to zero. For additivity, first pull back $u$ and $v$ in the weighted
+$L^2$ measure $2S(h)\,dh\,d\theta$. On the compact closed support of $\chi$,
+$|\chi(h)|^2/(2S(h))$ is continuous and bounded, since $S>0$. Thus
+\[
+  |\chi(h)|^2\le C\,2S(h),
+\]
+which gives unweighted $L^2$ membership of $\chi U$ and $\chi V$ on the
+fundamental cylinder, extended by zero in $h$.
+
+Fubini gives $L^2$ membership on almost every angular line. The translated
+kernel is smooth and compactly supported, hence $L^2$; H\"older gives
+integrability of each defining kernel product at every output level on a
+good line. Integral additivity now applies. Transfer the exceptional angular
+set back to a planar null set as in
+Lemma~\ref{lem:transversal-mollifier-congr}; outside the punctured cell all
+three outputs vanish.
+\end{proof}
 
 \begin{lemma}[The transversal mollifier on $L^2$]
 \label{lem:transversal-mollifier}
 \uses{def:transversal-mollifier}
-\lean{NoEmbeddedEigenvalues.transversalMollifier_const_mul,
-  NoEmbeddedEigenvalues.transversalMollifier_add,
-  NoEmbeddedEigenvalues.memLp_transversalMollifier,
+\lean{NoEmbeddedEigenvalues.memLp_transversalMollifier,
   NoEmbeddedEigenvalues.tendsto_transversalMollifier}
 \leanok
 $J_\epsilon$ is linear, up to null sets, and $J_\epsilon u$ depends only on $u$ almost everywhere on the
@@ -362,10 +399,11 @@ C\|u\|_{L^2(\Cell)}$. For $u\in L^2(\Cell)$, $J_\epsilon u\to\hat\chi u$ in $L^2
 
 \begin{proof}
 \uses{lem:transversal-mollifier-support, lem:transversal-mollifier-congr,
-  lem:action-angle-chart, lem:line-mollifier-contraction, lem:line-mollifier-convergence}
-The support and representative-invariance statements are
-Lemmas~\ref{lem:transversal-mollifier-support}
-and~\ref{lem:transversal-mollifier-congr}.
+  lem:transversal-mollifier-linear, lem:action-angle-chart,
+  lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+Support, representative invariance and the two linearity identities are
+Lemmas~\ref{lem:transversal-mollifier-support},
+\ref{lem:transversal-mollifier-congr} and~\ref{lem:transversal-mollifier-linear}.
 Enclose $\operatorname{supp}\chi$ in $[a,b]\subset(0,1)$ and choose
 $\epsilon_0>0$ with $[a-\epsilon_0,b+\epsilon_0]\subset(0,1)$. By the
 area formula (Lemma~\ref{lem:action-angle-chart}) and the inverse relations,
@@ -373,8 +411,7 @@ $\|J_\epsilon u\|^2=\int\int|M_\epsilon(\chi U)|^2\,2S\,dh\,d\theta$ over $(0,1)
 and $2S$ is bounded above and below on $[a-\epsilon_0,b+\epsilon_0]$. So the $L^2$ statements follow
 from Lemmas~\ref{lem:line-mollifier-contraction}
 and~\ref{lem:line-mollifier-convergence} with $\mu$ Lebesgue measure on $[-\frac14,\frac34)$, using
-$\hat\chi u=(\chi U)\circ(h,\theta)$. Linearity holds wherever the defining integrals converge,
-which is for almost every $\theta$.
+$\hat\chi u=(\chi U)\circ(h,\theta)$.
 \end{proof}
 
 \begin{lemma}[Derivatives of the transversal mollifier]

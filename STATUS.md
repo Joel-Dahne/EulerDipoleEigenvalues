@@ -112,6 +112,25 @@ measure-transfer and null-image helpers are available for the remaining L²
 proofs. The theorem still depends on admitted chart/coarea inputs (`sorryAx`);
 it is not an independent proof of that infrastructure.
 
+**Additivity is proved from the chart/coarea inputs.**
+`transversalMollifier_add` now has no `sorry` of its own; together with the
+previously proved exact scalar identity it is the proved blueprint node
+`lem:transversal-mollifier-linear`. No statement changes were needed in this
+step. Its axioms still include `sorryAx` through the existing chart/coarea
+inputs, just as representative invariance does.
+
+New private helper `cutoff_sq_le_period` bounds `|χ|²/(2S)` on the compact
+closed cutoff support, using positivity and continuity of the period.
+`memLp_cutoff_actionMeasure` removes the area density after multiplication
+by `χ`; `memLp_cutoff_actionInput` extends this unweighted L² pullback by zero
+to all real levels. Fubini gives a.e. L² angular sections, and Hölder with
+the translated compact kernel makes the separate convolution products
+integrable on every output level of each good line. Only then is
+`integral_add` used. The angular null-set transfer is factored into
+`ae_of_ae_angle`, shared by additivity and representative invariance.
+These prerequisites are available for the remaining norm/convergence proofs;
+no new admissions were added.
+
 **Statement corrections:** representative invariance previously omitted
 `tsupport χ ⊆ Ioo 0 1`; additivity omitted both that support condition and
 `ContDiff ℝ ∞ χ`. They now explicitly carry the cutoff hypotheses already
@@ -122,19 +141,20 @@ Paper counterexamples and the resolution are recorded in the digest note
 next to `lem:transversal-mollifier-congr`. They are not Lean-formalized
 counterexamples. There were no Lean call sites needing adjustment.
 
-One hands-off high-thinking GPT-6 Luna worker attempted representative
-invariance. It returned only a trivial pointwise congruence helper and left
-the chart-transfer step unresolved; that unused helper was removed. The
-parent implemented the chart infrastructure and proof directly. No live
-supervision or repeated worker retries were used for this task. The earlier
-two unsuccessful support-lemma attempts are recorded in the experiment
-history in `docs/tooling/pi.md`; none of these is counted as an autonomous
-proof success.
+One hands-off high-thinking GPT-6 Luna worker attempted additivity and
+returned without edits, blocked on line integrability from weighted L².
+The parent implemented the cutoff pullback estimates and assembly directly.
+No live supervision or repeated retries were used. The earlier congruence
+worker also did not complete its proof (its unused trivial helper was
+removed); the two unsuccessful support-lemma attempts are recorded in
+`docs/tooling/pi.md`. None is counted as an autonomous proof success.
 
 **Next toward the transversal mollifier:** finish its basic L² node
-`lem:transversal-mollifier`: additivity and the norm bound/convergence via
-the `2S(h)`-weighted action-angle area formula. Support and representative
-invariance are now done. This node needs only the proved line contraction
+`lem:transversal-mollifier`: the norm bound and convergence via the
+`2S(h)`-weighted action-angle area formula. Support, representative invariance
+and the linearity identities are now done. The cutoff input already belongs
+to unweighted L²; the next missing step is quantitative norm transfer and
+measurable reconstruction from the cylinder back to the cell. This node needs only the proved line contraction
 and convergence, not the weak-derivative lemmas. The chart's inverse relations
 and `lintegral_cellSquare_actionAngle` are already proved, though the latter
 still rests on the admitted coarea formula. Period smoothness and other
@@ -144,8 +164,8 @@ and the action-angle weak chain rules in `TransversalMollifier.lean`.
 
 **Validation:** the full Lean project build passes (3281 jobs); full-file
 diagnostics have only the three remaining line weak-derivative admissions
-and the nine remaining admissions in `TransversalMollifier.lean` (three basic
-L² properties, three action-angle weak rules, three derivative/commutator results).
+and the eight remaining admissions in `TransversalMollifier.lean` (two basic
+L² estimates, three action-angle weak rules, three derivative/commutator results).
 `just web` and the even–even subgraph generation pass. Pi setup and the
 sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
 The runner defaults to `openai-codex/gpt-6-luna` with medium thinking;
