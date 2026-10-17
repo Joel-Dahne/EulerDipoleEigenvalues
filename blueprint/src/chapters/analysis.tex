@@ -829,16 +829,15 @@ Induction on $k$: $u$, $\partial_xu$, $\partial_yu$ are $C^k$, so in $H^k$, and
 their Fourier relation gives $u\in H^{k+1}$ (Lemma~\ref{lem:elliptic-torus}).
 \end{proof}
 
-\begin{lemma}[Sobolev embeddings on the torus]
-\label{lem:sobolev-embedding}
+\begin{lemma}[The H\"older Sobolev embedding on the torus]
+\label{lem:sobolev-holder}
 \uses{def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.exists_holderWith_of_memSobolev_two,
-  NoEmbeddedEigenvalues.memLp_of_memSobolev_one}
+\lean{NoEmbeddedEigenvalues.exists_holderWith_of_memSobolev_two}
 \leanok
-$H^2(\T^2)\subset C^{0,\alpha}(\T^2)$ for every $\alpha<1$, and
-$H^1(\T^2)\subset L^p(\T^2)$ for every $p<\infty$, with continuous inclusions: every
-$g\in H^2$ has a representative $u$ with $|u|\le C\|g\|_{H^2}$ and
-$|u(s)-u(t)|\le C\|g\|_{H^2}\,d(s,t)^\alpha$, and $\|g\|_{L^p}\le C\|g\|_{H^1}$.
+For every $0\le\alpha<1$ there is a constant $C_\alpha$ such that every
+$g\in H^2(\T^2)$ has a representative $u$ with
+$|u|\le C_\alpha\|g\|_{H^2}$ and
+$|u(s)-u(t)|\le C_\alpha\|g\|_{H^2}d(s,t)^\alpha$.
 \end{lemma}
 
 \begin{proof}
@@ -860,7 +859,21 @@ to the absolutely convergent Fourier series representing $g$
 $\alpha=0$ bounds its supremum norm. This proves the H\"older inclusion
 with a constant depending only on $\alpha$ and the fixed torus.
 
-For $p\le2$, the $L^p$ bound follows from the finite measure of the torus
+\end{proof}
+
+\begin{lemma}[Finite-$p$ Sobolev embeddings on the torus]
+\label{lem:sobolev-lp}
+\uses{def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.memLp_of_memSobolev_one}
+\leanok
+For every $0<p<\infty$ there is a constant $C_p$ such that
+$g\in H^1(\T^2)$ implies $g\in L^p(\T^2)$ and
+$\|g\|_{L^p}\le C_p\|g\|_{H^1}$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:torus-fourier-basis, lem:sobolev-torus-basic}
+Write $a_k=\hat g_k$. For $p\le2$, the $L^p$ bound follows from the finite measure of the torus
 and Parseval. For $2<p<\infty$, put $q=p/(p-1)\in(1,2)$.
 H\"older's inequality for the Fourier coefficients gives
 \[
@@ -876,13 +889,12 @@ is $g$. This identifies the $L^p$ representative and proves the claimed
 continuous inclusion. Normalization constants are absorbed into $C$.
 \end{proof}
 
-\begin{remark}[Digest note: scope of the embedding node]
-The recorded direct use of this node in the even--even dependency graph is
-Lemma~\ref{lem:pairing-limit}, which uses the H\"older inclusion, not the
-finite-$p$ inclusion. These two embeddings should be separate nodes so that
-the latter's additional formalization work is not imposed on that proof
-path. Check implicit uses before removing the finite-$p$ part from the
-sector's prerequisites.
+\begin{remark}[Digest note: scope of the embedding nodes, resolved]
+The former combined embedding node has been split. The even--even
+pairing limit uses Lemma~\ref{lem:sobolev-holder}, not
+Lemma~\ref{lem:sobolev-lp}; its proof only needs the H\"older estimate.
+The two inputs are retained separately in the less settled odd--odd
+quotient argument pending its review.
 \end{remark}
 
 \section{Local Sobolev theory (candidate assumptions)}
@@ -921,55 +933,182 @@ $\|D^3u\|_{L^2(A_r)}\le C(\|\nabla\Delta u\|_{L^2(A_r^*)}
 independent of $r$.
 \end{lemma}
 
-\begin{lemma}[Traces]
-\label{lem:traces}
-\uses{def:sobolev-local, def:gagliardo, def:cells, lem:diagonal-calculus}
-\lean{NoEmbeddedEigenvalues.exists_acl_trace,
-  NoEmbeddedEigenvalues.absolutelyContinuous_trace_of_H2}
-\leanok
-Fix $a_0<a_1$, $b_1<b_0<b_2$, and let $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal
-coordinates. There is a constant $C\ge0$, depending only on these five geometric
-parameters, such that for every open $U\supset Q$ and $F\in H^1(U)$ with weak
-derivatives $F_x,F_y$:
-\begin{enumerate}
-  \item $F$ has a representative that is locally absolutely continuous on almost every
-        line $a=\mathrm{const}$ in $Q$, with derivative $\partial_bF=F_x-F_y$, and its trace on
-        the line $b=b_0$ has Gagliardo seminorm over $(a_0,a_1)$ at most
-        $C^{1/2}\|F\|_{H^1(Q)}$ (equivalently, the squared seminorm is bounded by
-        $C\int_Q(|F|^2+|F_x|^2+|F_y|^2)$).
-  \item If moreover $F\in H^2(U)$ is continuous, then there is a representative
-        $H=F_x+F_y$ almost everywhere on $U$ that is locally absolutely continuous
-        on almost every transverse line $a=\mathrm{const}$ in $Q$.
-        The function $a\mapsto F(a,b_0)$ is locally absolutely continuous with
-        derivative $H(a,b_0)$ almost everywhere, and $H(\cdot,b_0)\in L^2(a_0,a_1)$.
-        Thus the derivative is the ACL trace of $\partial_aF$, not an arbitrary
-        assignment of gradient values on the line.
-\end{enumerate}
+\begin{lemma}[ACL slicing for a single weak partial derivative]
+\label{lem:acl-slicing}
+\uses{def:weak-derivative-local}
+Let $I,J$ be nonempty open intervals, possibly unbounded, and let
+$F,D\in L^1_{\mathrm{loc}}(I\times J)$ satisfy $\partial_tF=D$ weakly.
+There is a measurable representative $\widetilde F=F$ almost everywhere
+on $I\times J$ such that, for almost every $a\in I$,
+$t\mapsto\widetilde F(a,t)$ is absolutely continuous on every compact
+subinterval of $J$, with derivative $D(a,t)$ for almost every $t\in J$.
+Any two representatives with these properties agree for every $t\in J$
+on almost every line $a=\mathrm{const}$. Only the indicated directional
+weak derivative is required, not a full weak gradient.
 \end{lemma}
 
 \begin{proof}
-The standard trace estimate on a rectangle, using a bounded extension and the
-Gagliardo formula, has a constant depending only on the rectangle and the chosen
-line. Fubini and the one-dimensional weak-derivative FTC give the transverse ACL
-representative. For $H^2$ data, approximate in $H^2(Q)$: the traces of $F$ and of its
-first derivatives converge in $L^2$ on the line. Tangential integration by parts
-passes to the limit, giving the weak derivative of the trace as the ACL trace of
-$F_x+F_y$. The one-dimensional FTC and continuity of $F$ identify its locally
-absolutely continuous representative with $F(\cdot,b_0)$. These trace estimates and
-approximation arguments remain to be formalized.
+\uses{lem:du-bois-reymond}
+Fubini on a countable rectangle exhaustion gives locally integrable
+sections for almost every $a$. For each fixed time test $\beta$, test
+the weak identity with $\alpha(a)\beta(t)$ for all level tests $\alpha$.
+The fundamental lemma gives the sliced weak identity outside a null
+set depending on $\beta$. Exhaust $J$ by compact intervals $K_m$ and
+choose, for each $m$, a countable $C^1$-dense family of smooth tests
+supported in $K_m$. Outside one null set the identity holds for their
+union. Every time test is approximated in $C^1$ with supports in one
+fixed $K_m$, so local integrability extends the identity to every test.
+
+Fix $t_*\in J$ and a compact interval $J_0\subset J$ of positive length.
+On each good section put
+$A(a,t)=\int_{t_*}^tD(a,s)\,ds$. Lemma~\ref{lem:du-bois-reymond},
+applied to real and imaginary parts on bounded subintervals, shows that
+$F(a,\cdot)-A(a,\cdot)$ is almost everywhere a constant; overlaps identify
+these constants throughout $J$. Choose the constant as the average of
+$F-A$ over $J_0$. After choosing measurable versions of $F,D$, this
+primitive-and-average formula defines a jointly measurable function
+(use zero when a defining integral does not exist). On good sections it
+is the desired absolutely continuous representative. Finally, Fubini
+makes two representatives equal almost everywhere on almost every
+section; continuity makes them equal everywhere on those sections.
 \end{proof}
 
-\begin{remark}[Digest note: traces]
-Restated. The manuscript's lemma maps $H^1$ to $H^{1/2}$ and $H^2$ to $H^{3/2}$ on curves,
-continuously in families of curves. With levels handled in orbit coordinates only these
-facts on straight lines are used, all on the lines $a,b=\pm\pi/2$ carrying the arcs:
-(1) gives convergence of restrictions to curved levels near an arc, since
-$|F(a,\beta(a))-F(a,b_0)|\le\int|\partial_bF|$ along almost every line, and the Gagliardo
-bound needed by the odd Hardy inequality at the corners; (2) gives that the arc trace
-$\tilde\psi\circ\gamma$ is absolutely continuous with $g'\in L^1(ds)$ (Melnikov) and the
-form of $g'$ used in Lemma~\ref{lem:ee-gradient-traces}. Since the trace bound is in
-Gagliardo form, no link between the Gagliardo seminorm and $H^{1/2}$ is needed (the former
-lemma stating it was removed, October 2026).
+\begin{lemma}[An elementary $L^2$ trace estimate]
+\label{lem:trace-l2}
+\uses{def:weak-derivative-local, lem:acl-slicing}
+Let $I$ be a nonempty open interval, $J=(b_1,b_2)$ with
+$\ell=b_2-b_1>0$, and let $F,D\in L^2(I\times J)$ satisfy
+$\partial_tF=D$ weakly. The ACL representative has finite one-sided
+limits at $b_1,b_2$ on almost every section. Write $T_{t_0}F$ for its
+trace at $t_0\in[b_1,b_2]$, using these limits at the endpoints.
+This trace is independent almost everywhere of the ACL representative,
+belongs to $L^2(I)$, and
+\[
+  \|T_{t_0}F\|_{L^2(I)}^2
+  \le \frac{2}{\ell}\|F\|_{L^2(I\times J)}^2
+       +2\ell\|D\|_{L^2(I\times J)}^2 .
+\]
+Endpoint traces are limits, not assigned values of an arbitrary
+representative on the boundary.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, def:h1-interval, lem:h1-interval-endpoints}
+Almost every section is in bounded-interval $H^1$, so has the endpoint
+limits of Lemma~\ref{lem:h1-interval-endpoints}. The FTC and
+Cauchy--Schwarz give, for $t\in J$ and $t_0\in[b_1,b_2]$,
+\[
+  |\widetilde F(a,t_0)|^2
+  \le 2|\widetilde F(a,t)|^2+2\ell\int_J|D(a,s)|^2\,ds .
+\]
+Average in $t$ and integrate in $a$. Uniqueness in
+Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
+\end{proof}
+
+\begin{lemma}[Transverse ACL representatives in diagonal coordinates]
+\label{lem:trace-acl}
+\uses{def:sobolev-local, def:cells}
+\lean{NoEmbeddedEigenvalues.exists_acl_trace}
+\leanok
+Fix $a_0<a_1$, $b_1<b_2$, and let
+$Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
+For every open $U\supset Q$ and $F\in H^1(U)$ with weak derivatives
+$F_x,F_y$, there is a representative $G=F$ almost everywhere on $U$
+such that, for almost every $a\in(a_0,a_1)$, the function $b\mapsto G(a,b)$
+is locally absolutely continuous on $(b_1,b_2)$ with derivative
+$(F_x-F_y)(a,b)$ almost everywhere.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:diagonal-calculus}
+Change variables in the weak test identities by
+$(a,b)\mapsto(x,y)=(a+b,a-b)$. The constant Jacobian and the classical
+test-function chain rule give the weak derivative
+$\partial_bF=F_x-F_y$ in diagonal coordinates. Apply
+Lemma~\ref{lem:acl-slicing} and extend the representative off $Q$ by
+a measurable version of $F$.
+\end{proof}
+
+\begin{lemma}[The Gagliardo trace bound]
+\label{lem:trace-gagliardo}
+\uses{def:sobolev-local, def:gagliardo, def:cells, lem:trace-acl}
+\lean{NoEmbeddedEigenvalues.exists_acl_trace}
+\leanok
+Fix $a_0<a_1$, $b_1<b_0<b_2$, and let
+$Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
+There is a constant $C\ge0$, depending only on these five geometric
+parameters, such that for every open $U\supset Q$ and $F\in H^1(U)$
+with weak derivatives $F_x,F_y$, there is an ACL representative $G$ as
+in Lemma~\ref{lem:trace-acl} with
+\[
+  \int_{a_0}^{a_1}\int_{a_0}^{a_1}
+    \frac{|G(a,b_0)-G(a',b_0)|^2}{(a-a')^2}\,da'\,da
+  \le C\int_Q (|F|^2+|F_x|^2+|F_y|^2)\,dx\,dy .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-acl, lem:trace-l2, lem:acl-slicing, lem:diagonal-calculus}
+The standard trace estimate on a rectangle, using a bounded $H^1$
+extension and the Gagliardo formula, gives the bound with a constant
+depending only on the rectangle and the chosen line. First prove it for
+smooth data and pass to $H^1$ data by approximation. The elementary
+$L^2$ trace estimate identifies the limiting trace with the ACL trace.
+Uniqueness in Lemma~\ref{lem:acl-slicing} makes the bound independent
+of which transverse ACL representative is chosen. The bounded extension,
+approximation and fractional estimate remain to be formalized.
+\end{proof}
+
+\begin{lemma}[Differentiation of the trace of an $H^2$ function]
+\label{lem:trace-h2}
+\uses{def:sobolev-local, def:cells}
+\lean{NoEmbeddedEigenvalues.absolutelyContinuous_trace_of_H2}
+\leanok
+Fix $a_0<a_1$, $b_1<b_0<b_2$, and let
+$Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
+Let $U\supset Q$ be open and let $F\in H^2(U)$ be continuous, with weak
+derivatives $F_x,F_y$. There is a representative $H=F_x+F_y$ almost
+everywhere on $U$ that is locally absolutely continuous on almost every
+transverse line $a=\mathrm{const}$ in $Q$.
+The function $a\mapsto F(a,b_0)$ is locally absolutely continuous with
+derivative $H(a,b_0)$ almost everywhere, and
+$H(\cdot,b_0)\in L^2(a_0,a_1)$. Thus the derivative is the ACL trace of
+$\partial_aF$, not an arbitrary assignment of gradient values on the line.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-acl, lem:trace-l2, lem:acl-slicing, lem:du-bois-reymond,
+  lem:diagonal-calculus}
+The first weak derivatives are in $H^1$; apply
+Lemma~\ref{lem:trace-acl} to their sum. Approximate $F$ in $H^2(Q)$
+by smooth functions. Lemma~\ref{lem:trace-l2}, in diagonal coordinates,
+gives $L^2$ convergence of their traces and of their first-derivative
+traces. Tangential integration by parts passes to the limit, identifying
+the weak derivative of the trace as the ACL trace of $F_x+F_y$.
+The one-dimensional weak-derivative FTC gives a locally absolutely
+continuous trace. Continuity of $F$ identifies it with $F(\cdot,b_0)$:
+on almost every transverse section its continuous restriction agrees
+almost everywhere, hence everywhere, with the ACL representative.
+This identifies the two line traces almost everywhere in $a$; continuity
+of both the AC trace and $F(\cdot,b_0)$ makes them equal everywhere.
+No fractional trace estimate is needed for this argument.
+\end{proof}
+
+\begin{remark}[Digest note: traces, split into separate inputs]
+The manuscript states trace theorems on families of curves. Only straight
+lines are needed here. Lemma~\ref{lem:trace-acl} supplies transverse
+representatives and the FTC used for restrictions to nearby curves.
+Lemma~\ref{lem:trace-gagliardo} supplies the fractional bound used by odd
+Hardy at the corners. Lemma~\ref{lem:trace-h2} identifies tangential
+derivatives and gives the arc absolute continuity used in Melnikov.
+Its proof needs only the elementary bound of Lemma~\ref{lem:trace-l2},
+not the fractional estimate.
+
+The two $H^1$ nodes currently link to the same combined admitted Lean
+statement, \texttt{exists\_acl\_trace}; separate proofs are not claimed.
+The generic slicing and elementary $L^2$ estimate are new blueprint-only
+statements. Keeping the fractional bound in Gagliardo form avoids any
+need to identify it with a Bessel potential norm.
 \end{remark}
 
 \begin{definition}[Line representatives]
@@ -1005,9 +1144,9 @@ derivative $G_b(a,b)$ for almost every $b$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:traces, lem:local-to-global, lem:diagonal-calculus}
+\uses{lem:trace-acl, lem:local-to-global, lem:diagonal-calculus}
 \leanok
-(1) is Lemma~\ref{lem:traces}(1), with the lift in $H^1$ and its weak derivatives the lifts
+(1) is Lemma~\ref{lem:trace-acl}, with the lift in $H^1$ and its weak derivatives the lifts
 of $g_x,g_y$ (Lemma~\ref{lem:local-to-global}). (2): absolute continuity on compact
 subintervals gives continuity on the open interval, and $dx\,dy=2\,da\,db$
 (Lemma~\ref{lem:diagonal-calculus}). (3): by Fubini in $(a,b)$ the two functions agree for
@@ -1019,7 +1158,7 @@ open interval agree everywhere on it.
 By (3), values of line representatives on a fixed line $b=b_0$ are well defined for almost
 every $a$, independently of the representative. This is how traces on the arcs are used:
 statements are made for every line representative, and the trace of $\partial_aF$ from
-Lemma~\ref{lem:traces}(2) is compared with the sum of the line representatives of $F_x$ and
+Lemma~\ref{lem:trace-h2} is compared with the sum of the line representatives of $F_x$ and
 $F_y$.
 
 The statement review found two omissions in Lean, now corrected:
@@ -1047,27 +1186,26 @@ $(L_0g)(\gamma_h(t))$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates}
-Use smooth coordinate charts off the time cut on the compact annulus; a second time
-cut supplies charts across the first one. No uniform estimate as $h\to0$ is needed.
-In orbit coordinates $L_0=\partial_t$ and $dx\,dy=2\,dh\,dt$. For each fixed time test
-$\beta$, test the weak equation against $\alpha(h)\beta(t)$ for all level tests
-$\alpha$. The fundamental lemma gives the sliced weak identity for almost every
-$h$. Choose a countable family of time tests $\beta$, dense in $C^1$ on each
-compact time interval, to obtain a common exceptional null set; local integrability
-then extends the identity to every time test. The one-dimensional weak-derivative
-FTC gives a locally absolutely continuous representative. On overlapping windows
-these representatives agree almost everywhere, hence everywhere by continuity;
-this also gives the required periodicity.
+\uses{lem:orbit-coordinates, lem:acl-slicing}
+Use smooth coordinate charts off the time cut on the compact annulus; a
+second time cut supplies charts across the first one. No uniform estimate
+as $h\to0$ is needed. In orbit coordinates $L_0=\partial_t$ and
+$dx\,dy=2\,dh\,dt$. Changing variables in the weak test identity therefore
+gives the weak time derivative on each product subwindow.
+Lemma~\ref{lem:acl-slicing} supplies locally absolutely continuous
+sections outside one common null set. Take a countable window cover.
+On overlapping windows the representatives agree almost everywhere,
+hence everywhere by continuity. Together with the periodicity of the
+original orbit restrictions this gives the required periodicity.
 \end{proof}
 
 \begin{remark}[Digest note: the exceptional set in slicing]
 The earlier sketch placed the countable dense family on the level tests
 $\alpha$. The family needed to obtain one exceptional set for all sliced
 weak identities is instead a family of time tests $\beta$, as made explicit
-above. This corrects the proof sketch, not a Lean proof. The slicing step
-is also useful for the ACL part of Lemma~\ref{lem:traces}; it should be
-separated from the fractional trace estimate.
+in Lemma~\ref{lem:acl-slicing}. This corrects the proof sketch, not a Lean
+proof. The common slicing step is now separate from the fractional trace
+estimate and is shared with Lemma~\ref{lem:trace-acl}.
 \end{remark}
 
 \begin{remark}
@@ -1286,7 +1424,7 @@ this). The pointwise proof above avoids this: all terms are nonnegative, so it n
 neither integrability nor compact support, only oddness and measurability, at the
 cost of the constant $2$ instead of $\tfrac14$. The statement now uses the Gagliardo
 seminorm; the trace input for $\psi_u$ is given directly in Gagliardo form by
-Lemma~\ref{lem:traces}, so no link between the Gagliardo seminorm and $H^{1/2}$ is needed.
+Lemma~\ref{lem:trace-gagliardo}, so no link between the Gagliardo seminorm and $H^{1/2}$ is needed.
 \end{remark}
 
 \begin{lemma}[Hyperbola estimate]

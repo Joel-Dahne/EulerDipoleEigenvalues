@@ -131,7 +131,9 @@ $\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:transport-first-gain, lem:hardy-1d, lem:elliptic-local, lem:sobolev-embedding, lem:local-to-global}
+\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:transport-first-gain, lem:hardy-1d,
+  lem:elliptic-local, lem:sobolev-holder, lem:sobolev-lp, lem:local-to-global}
+% Retain both former embedding inputs until this weighted argument is reviewed.
 Strengthen to $\nabla\omega/d\in L^2$ near the saddles using a logarithmic
 weight $\Lambda(h)=1+|\log h|$ in all numerator estimates. The angular Hardy
 inequality then gives $\omega/\Psi\in L^2$. Dyadic elliptic estimates give

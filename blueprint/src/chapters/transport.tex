@@ -140,7 +140,8 @@ $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison, lem:orbit-saddle-distance, lem:traces}
+\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison, lem:orbit-saddle-distance,
+  lem:sobolev-holder, lem:trace-h2}
 There are infinitely many resonant levels $h_k\to0$ with $kb(h_k)=\lambda$ and
 $e^{i\pi k/2}=\kappa$. By the character, the four quarter-orbit integrals of
 $f_k$ coincide, so
@@ -149,8 +150,9 @@ $\int_{-L}^{L}f(\gamma_{h_k}(t))e^{-i\lambda t}\,dt=0$. Integration by parts
 same for the derivative. Compare with $g'$ using
 $\|g_h-g\|_{L^\infty(-L,L)}\le C_\alpha h^{\alpha/2}$ and
 $\|g_h-g\|_{L^1(-L,L)}\le C_\alpha h^{\alpha/2}|\log h|$
-(manuscript \texttt{(ee:forcing-comparison)}). Finally $g'\in L^1(ds)$ since
-the trace of an $H^2$ function on a straight arc is $H^{3/2}$.
+(manuscript \texttt{(ee:forcing-comparison)}). Finally Lemma~\ref{lem:trace-h2} gives an $L^2$ derivative of the
+straight-line trace. Changing from the arc parameter to the line coordinate,
+then using Cauchy--Schwarz on that finite segment, gives $g'\in L^1(ds)$.
 \end{proof}
 
 \begin{definition}[Canonical transport profile]
@@ -245,7 +247,7 @@ Young's inequality applies; similarly for $s\le0$.
 \begin{remark}
 The manuscript states the decay for the arc trace of an $H^2$ function, for every
 $\alpha<1$. Here the rate is a hypothesis on $g$; for an arc trace it comes from
-$H^2\subset C^{0,\alpha}$ (Lemma~\ref{lem:sobolev-embedding}) and the exponential
+$H^2\subset C^{0,\alpha}$ (Lemma~\ref{lem:sobolev-holder}) and the exponential
 approach of the arc to the saddles, which is where the lemma is applied. The constant
 in (3) is $1$: on each half line the bound is a one-sided convolution with a kernel
 of mass $1$, and the two half lines use disjoint parts of $e^{|s|}g'$.
@@ -299,7 +301,7 @@ their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-embedding, lem:resonant-vanishing, lem:orbit-comparison, lem:orbit-saddle-distance, lem:coarea, lem:good-windows}
+\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder, lem:resonant-vanishing, lem:orbit-comparison, lem:orbit-saddle-distance, lem:coarea, lem:good-windows}
 On a good orbit $z_h=-(v_h+g_h)/\lambda$ solves $(P-\lambda)z_h=g_h$ with
 $z_h(L)=\kappa z_h(-L)$. The difference $z_h-z$ solves the same equation with
 forcing $g_h-g$ and boundary mismatch $\kappa z(-L)-z(L)=O(e^{-\alpha L})$
@@ -354,7 +356,7 @@ used.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:numerator-zeros, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:hardy-1d, lem:sobolev-embedding, lem:local-to-global}
+\uses{lem:numerator-zeros, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:hardy-1d, lem:sobolev-holder, lem:local-to-global}
 First assume $f$ vanishes at the saddles. Differentiating $N$ (including the
 moving endpoints) gives
 $|N'(h)|^2\le Ch^{-1}\int_{-L}^{L}|\nabla f(\gamma_h)|^2\,dt+Ch^{\alpha-2}$

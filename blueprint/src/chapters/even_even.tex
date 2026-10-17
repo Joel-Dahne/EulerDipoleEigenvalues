@@ -453,13 +453,13 @@ $\int_{-\pi/2}^{\pi/2}|f'(a)|^2\,da/\cos a<\infty$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:arc-trace-identification, lem:line-representatives, lem:traces, lem:local-to-global,
+\uses{lem:arc-trace-identification, lem:line-representatives, lem:trace-gagliardo, lem:local-to-global,
   lem:continuous-stream-symmetries, lem:local-odd-hardy}
 \leanok
 The arc $\gamma_k$ for $\omega$ is the arc $\gamma_0$ for $\omega\circ R^k$, again even under $S_1,S_2$
 (Lemma~\ref{lem:continuous-stream-symmetries}), so take $k=0$. By
 Lemma~\ref{lem:arc-trace-identification}(4) the energy is $\int|f'|^2da/\cos a$. By
-Lemma~\ref{lem:traces}(1) applied to $\psi_a=\psi_x+\psi_y\in H^1$
+Lemma~\ref{lem:trace-gagliardo} applied to $\psi_a=\psi_x+\psi_y\in H^1$
 (Lemma~\ref{lem:local-to-global}), its line representative has a trace on $b=\pi/2$ with finite
 Gagliardo seminorm on $(-\pi,\pi)$, and this trace is $f'$ almost everywhere
 (Lemmas~\ref{lem:line-representatives}(3) and~\ref{lem:arc-trace-identification}(2)). Since
@@ -548,7 +548,7 @@ $\{|a|<\pi,\ 0<b<\pi\}$. Then:
 \end{lemma}
 
 \begin{proof}
-\uses{lem:stream-derivative-parities, lem:line-representatives, lem:traces,
+\uses{lem:stream-derivative-parities, lem:line-representatives, lem:trace-h2,
   lem:local-to-global, lem:lift-representatives, lem:diagonal-calculus, lem:separatrix-arc,
   lem:arc-diagonal, lem:normal-tangent-frame}
 \leanok
@@ -561,7 +561,7 @@ $D=G_x-G_y$ satisfies $D(a,\pi-b)=-D(a,b)$ for almost every $b$ on almost every 
 gives $D=0$. On $b=\pi/2$, $\sin x=\cos a$ and $\sin y=-\cos a$, so the normal numerator is
 $\cos a\,D=0$.
 
-(2) Lemma~\ref{lem:traces}(2), applied to the continuous $H^2$ function $\tilde\psi$
+(2) Lemma~\ref{lem:trace-h2}, applied to the continuous $H^2$ function $\tilde\psi$
 (Lemmas~\ref{lem:local-to-global} and~\ref{lem:lift-representatives}), gives a representative
 $H$ of $\psi_x+\psi_y$, continuous on almost every line, such that $a\mapsto\tilde\psi(a,\pi/2)$
 has derivative $H(a,\pi/2)$ almost everywhere. By
@@ -586,7 +586,7 @@ Changed in the formalization. The statement is for every pair of line representa
 level-trace argument can use any representatives with the segment estimate, and the traces on
 the arc do not depend on the choice (Lemma~\ref{lem:line-representatives}(3)). The proof uses the
 parity of $\psi_x,\psi_y$ under $S_2$ directly rather than Lemma~\ref{lem:ee-neumann}, and
-Lemma~\ref{lem:traces}(2) directly rather than Lemma~\ref{lem:arc-trace-ac}. Only continuity of
+Lemma~\ref{lem:trace-h2} directly rather than Lemma~\ref{lem:arc-trace-ac}. Only continuity of
 the representatives in $b$ is used, not their absolute continuity.
 \end{remark}
 
@@ -724,7 +724,7 @@ The manuscript's argument is correct as sketched, but four steps are implicit, a
 can be made more explicit than the manuscript's: in diagonal coordinates each quarter orbit is
 the graph $b=\beta_h(a)$ with $dt=da/\sqrt{\cos^2a-h^2}$ (Lemma~\ref{lem:quarter-orbit-diagonal}),
 so the level traces use neither the orbit-comparison lemmas nor the coarea formula, only the
-line representatives of Lemma~\ref{lem:traces}. The middle convergence and the hyperbola
+line representatives of Lemma~\ref{lem:trace-acl}. The middle convergence and the hyperbola
 estimate are the same segment estimate (Lemma~\ref{lem:segment-estimate}), and a local odd
 Hardy inequality (Lemma~\ref{lem:local-odd-hardy}, with no lower-order term) replaces the
 manuscript's even cutoff. (1) Why the
@@ -733,7 +733,7 @@ under the reflection across each arc's line (Lemma~\ref{lem:ee-neumann}). (2) Th
 term needs $\oint\rho^2dt$ bounded although $S(h)\to\infty$; this holds by $\rho\le Cd$ and
 Lemma~\ref{lem:orbit-time-integrals}, or by the divergence theorem. (3) Identifying the
 tangential limit with $\frac12\cosh^2|g'|^2$ needs the trace of $\nabla\psi$ on the arc to be the
-derivative of the trace of $\psi$; Lemma~\ref{lem:traces} gives this because each arc lies on a
+derivative of the trace of $\psi$; Lemma~\ref{lem:trace-h2} gives this because each arc lies on a
 coordinate line of the diagonal coordinates, and the corner lines $u=\mathrm{const}$ are lines
 $a=\mathrm{const}$, so one trace lemma covers both regions. (4) ``By density'' is not needed:
 with the line representatives of Lemma~\ref{lem:line-representatives} the segment
@@ -1563,13 +1563,13 @@ almost everywhere.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:traces, lem:local-to-global, lem:elliptic-torus, lem:lift-representatives,
+\uses{lem:trace-h2, lem:local-to-global, lem:elliptic-torus, lem:lift-representatives,
   lem:separatrix-arc}
 \leanok
 In diagonal coordinates the arc is the segment $b=\pi/2$, $a=\alpha(s)-\pi/2$ with
 $\alpha(s)=2\arctan e^{-s}$. By Lemmas~\ref{lem:elliptic-torus} and~\ref{lem:local-to-global},
 $\tilde\psi\in H^2$ on a bounded neighbourhood of the line (changing $\psi$ on a null set to
-$\tilde\psi$ does not affect this), so by Lemma~\ref{lem:traces} the continuous function
+$\tilde\psi$ does not affect this), so by Lemma~\ref{lem:trace-h2} the continuous function
 $\tilde\psi$ is absolutely continuous along the line. The change of variable $s\mapsto a$ is
 decreasing and $1$-Lipschitz, which preserves absolute continuity: disjoint intervals go to
 disjoint intervals of at most the same total length. Absolutely continuous functions have
@@ -1628,13 +1628,13 @@ values follow from $\Omega\to0$ at $\pm\infty$ and $g\to c_\pm$.
 A Lean skeleton of the proof (each step citing its source) showed two interface gaps, both
 resolved: (1) the $H^1$ and weighted domains require local absolute continuity of
 $g=\tilde\psi\circ\gamma_k$, which the trace and transport lemmas did not state; it is now the
-separate Lemma~\ref{lem:arc-trace-ac}, derived from Lemma~\ref{lem:traces} rather than added to
+separate Lemma~\ref{lem:arc-trace-ac}, derived from Lemma~\ref{lem:trace-h2} rather than added to
 the less verified Lemma~\ref{lem:ee-gradient-traces}. (2) The Melnikov identity for $g$ was used
 inside Lemma~\ref{lem:ee-transport-traces} but not exported; it is now part of that lemma.
-All other inputs matched as stated. The Lean proof rests on the admitted
-Lemmas~\ref{lem:ee-gradient-traces}, \ref{lem:canonical-profile} (weighted bound),
-\ref{lem:melnikov}, \ref{lem:transport-pair-eigen}, \ref{lem:traces} and
-\ref{lem:local-to-global}.
+All other inputs matched as stated. The Lean proof still depends on
+admitted analytic inputs in Lemmas~\ref{lem:canonical-profile} (weighted bound),
+\ref{lem:melnikov}, \ref{lem:transport-pair-eigen}, \ref{lem:trace-acl},
+\ref{lem:trace-gagliardo}, \ref{lem:trace-h2} and \ref{lem:local-to-global}.
 \end{remark}
 
 \begin{lemma}[Positivity of the boundary form]
