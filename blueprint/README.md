@@ -50,14 +50,26 @@ questions and problems found in the manuscript, and collect them in
 
 ## Building
 
-Requirements: `leanblueprint` (Python package), `graphviz`, and for the PDF a
-TeX distribution with `xelatex` and `latexmk`.
+Run these recipes from the repository root. The web build needs `just`,
+`leanblueprint` (Python package) and Python 3; the PDF also needs a TeX
+installation. The dependency graphs are rendered in the browser.
 
 ```sh
-leanblueprint web     # HTML + dependency graph in blueprint/web
-leanblueprint serve   # view it at http://localhost:8000
-leanblueprint pdf     # PDF in blueprint/print
+just web             # HTML + full and three sector dependency graphs
+just serve           # view it at http://localhost:8000
+just pdf             # PDF in blueprint/print
+just graph LABEL     # optional custom dependency view, after just web
 ```
+
+Use `just web`, not `leanblueprint web` directly: the recipe handles
+read-only static files on rebuild and regenerates these sector views:
+
+- [Even–even](http://localhost:8000/dep_graph_thm-ee-exclusion.html)
+  (`thm:ee-exclusion`).
+- [Odd–odd](http://localhost:8000/dep_graph_thm-dd-exclusion.html)
+  (`thm:dd-exclusion`).
+- [Mixed](http://localhost:8000/dep_graph_thm-mixed-exclusion.html)
+  (`thm:mixed-exclusion`); the other mixed sector follows by rotation.
 
 Not set up yet (it needs Lean declarations and a GitHub remote first):
 - `checkdecls` in the lakefile, so `leanblueprint checkdecls` verifies that

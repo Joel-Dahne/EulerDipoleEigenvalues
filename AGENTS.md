@@ -148,8 +148,9 @@ motivation, and standard facts cited rather than proved.
 - `docs/status/{even-even,odd-odd,mixed,shared}.md`: current sector-specific
   and shared-infrastructure blockers, priorities and implementation pointers.
 - `justfile`: build recipes (run `just` to list them).
-- `scripts/`: helper scripts. `blueprint_subgraph.py` (behind `just graph`)
-  restricts the web dependency graph to some nodes and their dependencies,
+- `scripts/`: helper scripts. `blueprint_subgraph.py` (used by `just web`
+  and `just graph`) restricts the web dependency graph to some nodes and
+  their dependencies,
   drawn in one box per chapter (`--no-chapters` for the plain layout).
 - `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
 - `.github/workflows/`: the Lean template CI (lean-action, docgen).
@@ -157,7 +158,7 @@ motivation, and standard facts cited rather than proved.
 ## Building
 
 ```sh
-just web             # blueprint website in blueprint/web (with dependency graph)
+just web             # blueprint website + full, even–even, odd–odd and mixed graphs
 just serve           # serve it at http://localhost:8000 (needs only python3)
 just graph thm:ee-exclusion  # graph of a node and all it depends on (after just web)
 just pdf             # blueprint PDF in blueprint/print
@@ -168,8 +169,10 @@ just manuscript eigenvalues  # same for the original manuscript
 
 Agents usually run in a VM that has `just`, `leanblueprint` and `kpsewhich`
 installed system-wide; there, run `just web` directly. The user runs
-`just serve` on the host to look at the result. The VM has no
-`xelatex`/`latexmk`, so `just pdf` and `just manuscript` are for the host.
+`just serve` on the host to look at the result. `just web` also regenerates
+all three sector subgraphs; a separate `just graph` is needed only for custom
+views. The VM has no `xelatex`/`latexmk`, so `just pdf` and `just manuscript`
+are for the host.
 
 Gotchas:
 

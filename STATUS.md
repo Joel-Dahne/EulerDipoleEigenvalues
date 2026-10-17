@@ -42,4 +42,6 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 ## Validation baseline
 
 The last recorded full Lean build passed, with the admitted inputs described
-above. This documentation-only reorganization did not rerun Lean.
+above. `just web` now rebuilds the full graph and all three sector subgraphs;
+the generated dependency closures and edges were checked. No Lean files changed
+and no new Lean build was run.

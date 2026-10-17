@@ -17,12 +17,15 @@ build:
 manuscript file="manuscript":
     cd Manuscript && latexmk -pvc -pdf -pdflatex=xelatex -output-directory=build {{file}}.tex
 
-# Build the blueprint website (blueprint/web), including the dependency graph
+# Build the blueprint website, including full and three sector dependency graphs
 web:
     # With a Nix-installed plasTeX, the copied static files are read-only, which
     # makes rebuilds fail when they overwrite them.
     [ ! -d blueprint/web ] || chmod -R u+w blueprint/web
     leanblueprint web
+    python3 scripts/blueprint_subgraph.py thm:ee-exclusion
+    python3 scripts/blueprint_subgraph.py thm:dd-exclusion
+    python3 scripts/blueprint_subgraph.py thm:mixed-exclusion
 
 # Needs `just web` first; writes blueprint/web/dep_graph_<labels>.html.
 # Dependency graph restricted to the given nodes and everything they depend on
