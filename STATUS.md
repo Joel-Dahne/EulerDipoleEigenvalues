@@ -93,20 +93,50 @@ support then forces any nonzero integrand into that band. This works for
 arbitrary input functions and needs only closed support of `χ` in `(0,1)`,
 not smoothness of `χ`, coarea or analytic orbit coordinates.
 
-The first hands-off GPT-6 Luna test assigned this support lemma to one
-medium-thinking worker, then retried the same task at high thinking after
-failure. Both returned without edits or a concrete Lean obstruction; neither
-was supervised during execution. The parent then proved the lemma directly.
-These are two failed autonomous attempts, not worker proof successes; the
-runner's normal completion status must not be confused with a solved task.
-Details are in the experiment-history section of `docs/tooling/pi.md`.
+**Representative invariance is proved from the chart/coarea inputs.**
+`transversalMollifier_congr_ae` now has no `sorry` of its own, with its own
+proved blueprint node `lem:transversal-mollifier-congr`. It works for arbitrary
+representatives, arbitrary real `ε`, and cutoffs with closed support in `(0,1)`;
+no integrability or cutoff regularity is assumed. The new targeted import is
+`Mathlib.MeasureTheory.Constructions.Polish.Basic`.
+
+Private helpers realize the area formula as a measure-preserving map from
+the fundamental rectangle with density `2S(h)` to the cell. Positivity of
+the density lets a.e. equality pull back without assuming measurable
+representatives. Fubini gives good angular lines; cutoff support extends
+the line equality to all levels. A measurable null cover of the bad angles
+has a null planar image: continuity and injectivity of the parametrization
+make the image measurable (Lusin--Souslin), and the area formula makes it
+null. This avoids needing global measurability of the cut angle. The weighted
+measure-transfer and null-image helpers are available for the remaining L²
+proofs. The theorem still depends on admitted chart/coarea inputs (`sorryAx`);
+it is not an independent proof of that infrastructure.
+
+**Statement corrections:** representative invariance previously omitted
+`tsupport χ ⊆ Ioo 0 1`; additivity omitted both that support condition and
+`ContDiff ℝ ∞ χ`. They now explicitly carry the cutoff hypotheses already
+fixed in the blueprint. Without support, smoothing can sample arbitrary input
+outside the cell; without cutoff regularity, separate nonintegrable kernel
+integrals can cancel to an integrable sum and break Bochner integral linearity.
+Paper counterexamples and the resolution are recorded in the digest note
+next to `lem:transversal-mollifier-congr`. They are not Lean-formalized
+counterexamples. There were no Lean call sites needing adjustment.
+
+One hands-off high-thinking GPT-6 Luna worker attempted representative
+invariance. It returned only a trivial pointwise congruence helper and left
+the chart-transfer step unresolved; that unused helper was removed. The
+parent implemented the chart infrastructure and proof directly. No live
+supervision or repeated worker retries were used for this task. The earlier
+two unsuccessful support-lemma attempts are recorded in the experiment
+history in `docs/tooling/pi.md`; none of these is counted as an autonomous
+proof success.
 
 **Next toward the transversal mollifier:** finish its basic L² node
-`lem:transversal-mollifier`: a.e. congruence/additivity and the norm
-bound/convergence via the `2S(h)`-weighted action-angle area formula. Its
-pointwise support part is now done. This node needs only the proved line
-contraction and convergence, not the weak-derivative lemmas. The chart's inverse relations and
-`lintegral_cellSquare_actionAngle` are already proved, though the latter
+`lem:transversal-mollifier`: additivity and the norm bound/convergence via
+the `2S(h)`-weighted action-angle area formula. Support and representative
+invariance are now done. This node needs only the proved line contraction
+and convergence, not the weak-derivative lemmas. The chart's inverse relations
+and `lintegral_cellSquare_actionAngle` are already proved, though the latter
 still rests on the admitted coarea formula. Period smoothness and other
 chart regularity inputs remain admitted. For the stronger derivative and
 transport-commutator nodes, finish the three line weak-derivative statements
@@ -114,7 +144,7 @@ and the action-angle weak chain rules in `TransversalMollifier.lean`.
 
 **Validation:** the full Lean project build passes (3281 jobs); full-file
 diagnostics have only the three remaining line weak-derivative admissions
-and the ten remaining admissions in `TransversalMollifier.lean` (four basic
+and the nine remaining admissions in `TransversalMollifier.lean` (three basic
 L² properties, three action-angle weak rules, three derivative/commutator results).
 `just web` and the even–even subgraph generation pass. Pi setup and the
 sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).

@@ -293,12 +293,64 @@ Thus the integrand vanishes pointwise off $K$, without any change of variables
 or analytic orbit-coordinate input.
 \end{proof}
 
+\begin{lemma}[Representative invariance of the transversal mollifier]
+\label{lem:transversal-mollifier-congr}
+\uses{def:transversal-mollifier}
+\lean{NoEmbeddedEigenvalues.transversalMollifier_congr_ae}
+\leanok
+Assume only that the closed support of $\chi:\R\to\R$ lies in $(0,1)$.
+If $u=v$ almost everywhere on the cell, then $J_\epsilon u=J_\epsilon v$
+almost everywhere on $\R^2$, for every real $\epsilon$.
+No measurability or integrability of the representatives, and no regularity
+of $\chi$, is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart}
+\leanok
+The area formula realizes the parametrization $P$ on the fundamental
+rectangle $R=(0,1)\times[-\frac14,\frac34)$ as a measure-preserving map
+from $2S(h)\,dh\,d\theta$ to area measure on the cell. Since $S>0$, weighted
+and unweighted measures have the same null sets. Pull back $u=v$ to $R$;
+Fubini gives equality on almost every angular line. Multiplication by
+$\chi$ extends this line equality by zero to all levels. On each good line,
+a.e. equality of the defining integrands gives equality of their Bochner
+integrals at every output level, even when the integrals default to zero.
+
+Enclose the exceptional angles in a measurable null set and intersect their
+cylinder with $R$. Its image under $P$ is measurable by the Lusin--Souslin
+theorem, using continuity and injectivity on $R$. The area formula and the
+inverse relations show that this image is a planar null set. Every point
+of the punctured cell outside it has a good angular line; outside the
+punctured cell both outputs are zero by definition.
+\end{proof}
+
+\begin{remark}[Digest note: cutoff hypotheses in the Lean interface]
+The initial Lean statements of representative invariance and additivity
+omitted the cutoff hypotheses fixed in Definition~\ref{def:transversal-mollifier}.
+This is not harmless. Take $\chi\equiv1$, $0<\epsilon<1$, $u$ equal to one
+off the lifted cell and zero on it, and $v=0$. The inputs agree on the cell
+but smoothing near $h=0$ samples negative levels. For $0<h<\epsilon/2$ and $-\epsilon/2<h'<0$, the kernel is
+positive and $P(h',\theta)$ lies outside the cell, so the outputs differ.
+This is a counterexample derived on paper, not a Lean-formalized example.
+Representative invariance now explicitly assumes closed support in $(0,1)$.
+
+Additivity now also assumes smoothness of $\chi$, as does the rest of the
+$L^2$ interface. Without local boundedness, separate kernel integrals can
+both be nonintegrable while their sum is integrable: take a cutoff equal
+to $|h-c|^{-1}$ on a compact interval inside $(0,1)$, with its value at $c$
+set to zero, and inputs $1$ and $-1+|h-c|$ on the cell. Their separately
+mollified values default to zero near $h=c$, whereas the mollification of
+the sum is positive. This is also a paper counterexample. The corrected
+hypotheses agree with the original blueprint specification; the additivity
+proof is still pending.
+\end{remark}
+
 \begin{lemma}[The transversal mollifier on $L^2$]
 \label{lem:transversal-mollifier}
 \uses{def:transversal-mollifier}
 \lean{NoEmbeddedEigenvalues.transversalMollifier_const_mul,
   NoEmbeddedEigenvalues.transversalMollifier_add,
-  NoEmbeddedEigenvalues.transversalMollifier_congr_ae,
   NoEmbeddedEigenvalues.memLp_transversalMollifier,
   NoEmbeddedEigenvalues.tendsto_transversalMollifier}
 \leanok
@@ -309,9 +361,11 @@ C\|u\|_{L^2(\Cell)}$. For $u\in L^2(\Cell)$, $J_\epsilon u\to\hat\chi u$ in $L^2
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transversal-mollifier-support, lem:action-angle-chart,
-  lem:line-mollifier-contraction, lem:line-mollifier-convergence}
-The support statement is Lemma~\ref{lem:transversal-mollifier-support}.
+\uses{lem:transversal-mollifier-support, lem:transversal-mollifier-congr,
+  lem:action-angle-chart, lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+The support and representative-invariance statements are
+Lemmas~\ref{lem:transversal-mollifier-support}
+and~\ref{lem:transversal-mollifier-congr}.
 Enclose $\operatorname{supp}\chi$ in $[a,b]\subset(0,1)$ and choose
 $\epsilon_0>0$ with $[a-\epsilon_0,b+\epsilon_0]\subset(0,1)$. By the
 area formula (Lemma~\ref{lem:action-angle-chart}) and the inverse relations,

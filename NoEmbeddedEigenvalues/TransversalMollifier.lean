@@ -1,10 +1,12 @@
+import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import NoEmbeddedEigenvalues.LineMollifier
 import NoEmbeddedEigenvalues.Transport
 
 /-!
 # The transversal mollifier
 
-Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved);
+Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved),
+`lem:transversal-mollifier-congr` (proved from chart/coarea inputs);
 stated: `lem:action-angle-weak`, `lem:transversal-mollifier`,
 `lem:transversal-mollifier-derivatives`, `lem:transversal-mollifier-commutator`.
 
@@ -18,6 +20,8 @@ the virial field.
 
 All statements are on the lift: inputs are functions on the cell square, outputs are
 functions on `ℝ²` supported in a fixed compact subset of the punctured cell.
+Private helpers realize the action-angle area formula as a measure-preserving map
+from a weighted fundamental rectangle, and transfer null sets in both directions.
 -/
 
 noncomputable section
@@ -130,6 +134,131 @@ private theorem closedCellLevelBand_subset {a b : ℝ} (ha : 0 < a) (hb : b < 1)
   have hl : levelCoord p = 1 := by simp [he, levelCoord, dipoleLift]
   linarith [hp.2.2.2]
 
+/-- One fundamental rectangle for the action-angle parametrization. -/
+private def actionRectangle : Set (ℝ × ℝ) :=
+  Ioo 0 1 ×ˢ Ico (-1 / 4 : ℝ) (3 / 4)
+
+private theorem measurableSet_actionRectangle : MeasurableSet actionRectangle :=
+  measurableSet_Ioo.prod measurableSet_Ico
+
+private def actionMeasure : Measure (ℝ × ℝ) := volume.restrict actionRectangle
+
+private theorem actionMeasure_eq_prod : actionMeasure =
+    (volume.restrict (Ioo (0 : ℝ) 1)).prod
+      (volume.restrict (Ico (-1 / 4 : ℝ) (3 / 4))) :=
+  (Measure.prod_restrict _ _).symm
+
+private theorem continuousOn_actionParam : ContinuousOn actionAngleInv actionRectangle :=
+  contDiffOn_actionAngleInv.continuousOn.mono (fun _ hq ↦ ⟨hq.1, mem_univ _⟩)
+
+open scoped Classical in
+private def actionParam : ℝ × ℝ → ℝ × ℝ :=
+  actionRectangle.piecewise actionAngleInv (fun _ ↦ 0)
+
+private theorem measurable_actionParam : Measurable actionParam := by
+  classical
+  exact continuousOn_actionParam.measurable_piecewise continuous_const.continuousOn
+    measurableSet_actionRectangle
+
+open scoped Classical in
+private def actionPeriod : ℝ → ℝ :=
+  (Ioo (0 : ℝ) 1).piecewise orbitPeriod (fun _ ↦ 0)
+
+private theorem measurable_actionPeriod : Measurable actionPeriod := by
+  classical
+  exact contDiffOn_orbitPeriod.continuousOn.measurable_piecewise
+    continuous_const.continuousOn measurableSet_Ioo
+
+private def actionWeight (q : ℝ × ℝ) : ENNReal :=
+  ENNReal.ofReal (2 * actionPeriod q.1)
+
+private theorem measurable_actionWeight : Measurable actionWeight := by
+  exact (measurable_const.mul (measurable_actionPeriod.comp measurable_fst)).ennreal_ofReal
+
+private theorem actionWeight_ne_zero : ∀ᵐ q ∂actionMeasure, actionWeight q ≠ 0 := by
+  filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+  have hS := orbitPeriod_pos hq.1.1 hq.1.2
+  have hw : actionWeight q = ENNReal.ofReal (2 * orbitPeriod q.1) := by
+    simp [actionWeight, actionPeriod, hq.1]
+  rw [hw]
+  exact ne_of_gt (ENNReal.ofReal_pos.mpr (by positivity))
+
+private theorem measurePreserving_actionParam :
+    MeasurePreserving actionParam (actionMeasure.withDensity actionWeight)
+      (volume.restrict cellSquare) := by
+  classical
+  refine ⟨measurable_actionParam, Measure.ext_of_lintegral _ fun f hf ↦ ?_⟩
+  rw [lintegral_map' hf.aemeasurable measurable_actionParam.aemeasurable,
+    lintegral_withDensity_eq_lintegral_mul actionMeasure measurable_actionWeight
+      (g := fun q ↦ f (actionParam q)) (hf.comp measurable_actionParam), actionMeasure_eq_prod]
+  simp only [Pi.mul_apply]
+  rw [lintegral_prod (fun q ↦ actionWeight q * f (actionParam q))
+    (show AEMeasurable (fun q ↦ actionWeight q * f (actionParam q)) _ from
+      (measurable_actionWeight.mul (hf.comp measurable_actionParam)).aemeasurable),
+    lintegral_cellSquare_actionAngle hf]
+  apply lintegral_congr_ae
+  filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
+  apply lintegral_congr_ae
+  filter_upwards [ae_restrict_mem measurableSet_Ico] with θ hθ
+  simp [actionWeight, actionPeriod, actionParam, actionRectangle, Set.piecewise, hh, hθ]
+
+private theorem injOn_actionAngleInv : InjOn actionAngleInv actionRectangle := by
+  intro q hq q' hq' he
+  have h₁ := actionAngle_actionAngleInv hq.1.1 hq.1.2 hq.2
+  have h₂ := actionAngle_actionAngleInv hq'.1.1 hq'.1.2 hq'.2
+  exact h₁.symm.trans ((congrArg actionAngle he).trans h₂)
+
+private theorem actionAngle_mem_rectangle {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    actionAngle p ∈ actionRectangle := by
+  have hd := mem_orbitDomain hp
+  have hS := orbitPeriod_pos hd.1.1 hd.1.2
+  refine ⟨hd.1, ?_, ?_⟩
+  · apply (le_div_iff₀ hS).mpr
+    have h := hd.2.1
+    dsimp [orbitPeriod] at *
+    linarith
+  · apply (div_lt_iff₀ hS).mpr
+    have h := hd.2.2
+    dsimp [orbitPeriod] at *
+    linarith
+
+/-- Pull back arbitrary representatives, not just measurable ones. -/
+private theorem ae_comp_actionParam {u v : ℝ × ℝ → ℂ}
+    (huv : u =ᵐ[volume.restrict cellSquare] v) :
+    (fun q ↦ u (actionParam q)) =ᵐ[actionMeasure] (fun q ↦ v (actionParam q)) := by
+  apply (withDensity_ae_eq measurable_actionWeight.aemeasurable actionWeight_ne_zero).mp
+  exact measurePreserving_actionParam.quasiMeasurePreserving.ae_eq_comp huv
+
+/-- A null set of parameters in the fundamental rectangle has null planar image. -/
+private theorem volume_actionAngleInv_image_eq_zero {B : Set (ℝ × ℝ)}
+    (hB : MeasurableSet B) (hBR : B ⊆ actionRectangle) (hB0 : actionMeasure B = 0) :
+    volume (actionAngleInv '' B) = 0 := by
+  classical
+  have hi : MeasurableSet (actionAngleInv '' B) :=
+    hB.image_of_continuousOn_injOn (continuousOn_actionParam.mono hBR)
+      (injOn_actionAngleInv.mono hBR)
+  let ν := actionMeasure.withDensity actionWeight
+  have hac : ν ≪ actionMeasure := withDensity_absolutelyContinuous _ _
+  have hfull : ∀ᵐ q ∂ν, q ∈ actionRectangle :=
+    hac.ae_le (ae_restrict_mem measurableSet_actionRectangle)
+  have hnot : ∀ᵐ q ∂ν, q ∉ B :=
+    hac.ae_le (measure_eq_zero_iff_ae_notMem.mp hB0)
+  have hpre : ∀ᵐ q ∂ν, q ∉ actionParam ⁻¹' (actionAngleInv '' B) := by
+    filter_upwards [hfull, hnot] with q hq hn
+    rintro ⟨s, hs, he⟩
+    have hparam : actionAngleInv q = actionParam q := by
+      simp [actionParam, Set.piecewise, hq]
+    have heq := injOn_actionAngleInv (hBR hs) hq (he.trans hparam.symm)
+    exact hn (heq ▸ hs)
+  have hnull : ν (actionParam ⁻¹' (actionAngleInv '' B)) = 0 :=
+    measure_eq_zero_iff_ae_notMem.mpr hpre
+  have hcell : (volume.restrict cellSquare) (actionAngleInv '' B) = 0 :=
+    (measurePreserving_actionParam.measure_preimage hi.nullMeasurableSet).symm.trans hnull
+  have hsub : actionAngleInv '' B ⊆ cellSquare := by
+    rintro _ ⟨q, hq, rfl⟩
+    exact (actionAngleInv_mem_puncturedCell (hBR hq).1.1 (hBR hq).1.2 q.2).1
+  rwa [Measure.restrict_apply hi, inter_eq_left.mpr hsub] at hcell
+
 /-! ### Statements -/
 
 section Statements
@@ -210,18 +339,71 @@ theorem transversalMollifier_eq_zero (hχs : tsupport χ ⊆ Ioo 0 1) :
 
 /-! #### `lem:transversal-mollifier` (stated) -/
 
-/-- `J_ε` is additive on `L²` of the cell, up to null sets. -/
-theorem transversalMollifier_add {ε : ℝ} (hε : 0 < ε) {u v : ℝ × ℝ → ℂ}
+/-- `J_ε` is additive on `L²` of the cell, up to null sets. The smooth, cell-supported
+cutoff ensures integrability of the separate convolutions. -/
+theorem transversalMollifier_add (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport χ ⊆ Ioo 0 1)
+    {ε : ℝ} (hε : 0 < ε) {u v : ℝ × ℝ → ℂ}
     (hu : MemLp u 2 (volume.restrict cellSquare)) (hv : MemLp v 2 (volume.restrict cellSquare)) :
     transversalMollifier χ ε (u + v) =ᵐ[volume]
       transversalMollifier χ ε u + transversalMollifier χ ε v := by
   sorry
 
-/-- `J_ε u` depends only on the class of `u` in `L²` of the cell. -/
-theorem transversalMollifier_congr_ae {ε : ℝ} {u v : ℝ × ℝ → ℂ}
-    (huv : u =ᵐ[volume.restrict cellSquare] v) :
+/-! #### `lem:transversal-mollifier-congr` -/
+
+/-- A cell-supported cutoff makes `J_ε u` independent of the representative on the cell.
+Neither integrability of the inputs nor regularity of the cutoff is needed. -/
+theorem transversalMollifier_congr_ae (hχs : tsupport χ ⊆ Ioo 0 1)
+    {ε : ℝ} {u v : ℝ × ℝ → ℂ} (huv : u =ᵐ[volume.restrict cellSquare] v) :
     transversalMollifier χ ε u =ᵐ[volume] transversalMollifier χ ε v := by
-  sorry
+  classical
+  have hpull := ae_comp_actionParam huv
+  rw [actionMeasure_eq_prod] at hpull
+  have hswap := (Measure.measurePreserving_swap
+    (μ := volume.restrict (Ico (-1 / 4 : ℝ) (3 / 4)))
+    (ν := volume.restrict (Ioo (0 : ℝ) 1))).quasiMeasurePreserving.ae hpull
+  have hlines₀ := Measure.ae_ae_of_ae_prod hswap
+  let Good : ℝ → Prop := fun θ ↦ ∀ᵐ h ∂(volume : Measure ℝ),
+    (χ h : ℂ) * u (actionAngleInv (h, θ)) = (χ h : ℂ) * v (actionAngleInv (h, θ))
+  have hlines : ∀ᵐ θ ∂(volume.restrict (Ico (-1 / 4 : ℝ) (3 / 4))), Good θ := by
+    filter_upwards [hlines₀, ae_restrict_mem measurableSet_Ico] with θ hθ hθI
+    have he := (ae_restrict_iff' measurableSet_Ioo).mp hθ
+    filter_upwards [he] with h hh
+    by_cases h01 : h ∈ Ioo (0 : ℝ) 1
+    · have hp : actionParam (h, θ) = actionAngleInv (h, θ) := by
+        simp [actionParam, actionRectangle, Set.piecewise, h01, hθI]
+      have hh' := hh h01
+      change u (actionParam (h, θ)) = v (actionParam (h, θ)) at hh'
+      rw [hp] at hh'
+      exact congrArg (fun z : ℂ ↦ (χ h : ℂ) * z) hh'
+    · have hz : χ h = 0 := image_eq_zero_of_notMem_tsupport (fun ht ↦ h01 (hχs ht))
+      simp [hz]
+  obtain ⟨N, hcover, hN, hN0⟩ := exists_measurable_superset_of_null (ae_iff.mp hlines)
+  let B : Set (ℝ × ℝ) := actionRectangle ∩ Prod.snd ⁻¹' N
+  have hB : MeasurableSet B := measurableSet_actionRectangle.inter (hN.preimage measurable_snd)
+  have hB0 : actionMeasure B = 0 := by
+    have havoid : ∀ᵐ q ∂actionMeasure, q.2 ∉ N := by
+      rw [actionMeasure_eq_prod]
+      exact Measure.quasiMeasurePreserving_snd.ae
+        (measure_eq_zero_iff_ae_notMem.mp hN0)
+    have hpre : actionMeasure (Prod.snd ⁻¹' N) = 0 :=
+      measure_eq_zero_iff_ae_notMem.mpr havoid
+    exact measure_mono_null inter_subset_right hpre
+  have himage := volume_actionAngleInv_image_eq_zero hB (show B ⊆ actionRectangle from
+    inter_subset_left) hB0
+  filter_upwards [measure_eq_zero_iff_ae_notMem.mp himage] with p hp
+  by_cases hc : p ∈ puncturedCell
+  · have hgood : Good (angleCoord p) := by
+      by_contra hg
+      apply hp
+      exact ⟨actionAngle p, ⟨actionAngle_mem_rectangle hc, hcover hg⟩,
+        actionAngleInv_actionAngle hc⟩
+    simp only [transversalMollifier, ite_eq_left hc, mollifyFst]
+    apply integral_congr_ae
+    filter_upwards [hgood] with h hh
+    exact congrArg (fun z : ℂ ↦ mollifierKernel ε ((actionAngle p).1 - h) • z) hh
+  · simp [transversalMollifier, hc]
+
+/-! #### Remaining `lem:transversal-mollifier` estimates (stated) -/
 
 /-- For small `ε`, `J_ε` is bounded from `L²` of the cell to `L²(ℝ²)`, uniformly in `ε`. -/
 theorem memLp_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport χ ⊆ Ioo 0 1) :
