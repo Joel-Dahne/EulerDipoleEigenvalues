@@ -8,6 +8,8 @@ import NoEmbeddedEigenvalues.Transport
 Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved),
 `lem:transversal-mollifier-congr`, `lem:transversal-mollifier-linear` and
 `lem:transversal-mollifier` (proved from chart/coarea inputs);
+`lem:action-angle-test-chain`, `lem:action-angle-local-integrability` (proved from
+chart/coarea inputs; the forward classical chain rule has no admitted dependency);
 stated: `lem:action-angle-weak`, `lem:transversal-mollifier-derivatives`,
 `lem:transversal-mollifier-commutator`.
 
@@ -28,6 +30,12 @@ which justifies integral linearity by Hölder against the compact kernel. A meas
 inverse extension reconstructs cylinder data on the cell. The upper bound for the area
 density on a fixed level band transfers contraction and convergence from the cylinder
 back to the plane, uniformly for small scales.
+
+Local `L¹` transfer is proved in both directions. Positive lower and upper period bounds
+on a closed interior level band compare the weighted and unweighted measures. Integer
+translates of the fundamental window handle all angular seams. The classical transport
+chain rules are also proved, including the reverse rule for smooth periodic strip tests.
+The weak test-integral transfer itself remains admitted.
 -/
 
 noncomputable section
@@ -36,6 +44,22 @@ namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set Filter
 open scoped Topology ContDiff NNReal
+
+/-! ### The classical transport chain rule -/
+
+/-- The angular derivative of a differentiable test function is `S(h) L₀φ`. -/
+theorem partialY_comp_actionAngleInv {φ : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
+    (hφ : DifferentiableAt ℝ φ (actionAngleInv q)) :
+    partialY (φ ∘ actionAngleInv) q =
+      orbitPeriod q.1 • classicalL0 φ (actionAngleInv q) := by
+  have hd := hφ.hasFDerivAt.comp_hasDerivAt q.2 (hasDerivAt_actionAngleInv_snd q.1 q.2)
+  change deriv (φ ∘ fun θ ↦ actionAngleInv (q.1, θ)) q.2 = _
+  rw [hd.deriv, map_smul]
+  congr 1
+  rw [classicalL0, partialX_eq_fderiv hφ, partialY_eq_fderiv hφ,
+    ← map_smul, ← map_smul, ← map_sub]
+  congr 1
+  ext <;> simp [dipoleVelocity]
 
 /-! ### Weak derivatives in action-angle coordinates (`lem:action-angle-weak`, stated) -/
 
@@ -298,6 +322,133 @@ private theorem memLp_actionReconstruct {F : ℝ × ℝ → ℂ}
   rw [actionReconstruct, eLpNorm_indicator_eq_eLpNorm_restrict measurableSet_cellSquare]
   exact eLpNorm_comp_measurePreserving hF.aestronglyMeasurable
     measurePreserving_actionCoordinates
+
+/-! ### Local `L¹` transfer on interior bands -/
+
+private theorem closedCellLevelBand_eq {a b : ℝ} (ha : 0 < a) (hb : b < 1) :
+    closedCellLevelBand a b = {p | p ∈ puncturedCell ∧ levelCoord p ∈ Icc a b} := by
+  ext p
+  constructor
+  · intro hp
+    exact ⟨closedCellLevelBand_subset ha hb hp, hp.2.2⟩
+  · rintro ⟨hp, hlev⟩
+    exact ⟨hp.1.1.le, hp.1.2.le, hlev⟩
+
+/-- Local integrability on the cell transfers to a fundamental angular window on every
+closed interior level band. No global integrability of the input is assumed. -/
+theorem integrableOn_comp_actionAngleInv_levelBand {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    {u : ℝ × ℝ → ℂ} (hu : LocallyIntegrableOn u puncturedCell) :
+    IntegrableOn (u ∘ actionAngleInv) (Icc a b ×ˢ Ico (-1 / 4 : ℝ) (3 / 4)) := by
+  classical
+  let B := closedCellLevelBand a b
+  let R : Set (ℝ × ℝ) := Icc a b ×ˢ Ico (-1 / 4 : ℝ) (3 / 4)
+  let σ : Measure (ℝ × ℝ) := volume.restrict R
+  have hB : IsCompact B := isCompact_closedCellLevelBand a b
+  have hG : Integrable (B.indicator u) := (integrable_indicator_iff hB.measurableSet).mpr
+    (hu.integrableOn_compact_subset (closedCellLevelBand_subset ha hb) hB)
+  have hU := (measurePreserving_actionParam.integrable_comp
+    hG.integrableOn.aestronglyMeasurable).mpr hG.integrableOn
+  have hR : R ⊆ actionRectangle := fun q hq ↦
+    ⟨⟨lt_of_lt_of_le ha hq.1.1, lt_of_le_of_lt hq.1.2 hb⟩, hq.2⟩
+  have hσ : σ ≤ actionMeasure := Measure.restrict_mono hR le_rfl
+  have hac : actionMeasure ≪ actionMeasure.withDensity actionWeight :=
+    withDensity_absolutelyContinuous' measurable_actionWeight.aemeasurable actionWeight_ne_zero
+  have heq : (fun q ↦ B.indicator u (actionParam q)) =ᵐ[σ] u ∘ actionAngleInv := by
+    filter_upwards [ae_restrict_mem (measurableSet_Icc.prod measurableSet_Ico)] with q hq
+    have hqr := hR hq
+    have hP := actionAngleInv_mem_puncturedCell hqr.1.1 hqr.1.2 q.2
+    have hPB : actionAngleInv q ∈ B := by
+      change actionAngleInv q ∈ closedCellLevelBand a b
+      rw [closedCellLevelBand_eq ha hb]
+      exact ⟨hP, by simpa only [levelCoord_actionAngleInv hqr.1.1 hqr.1.2] using hq.1⟩
+    simp [actionParam, Set.piecewise, hqr, Set.indicator_of_mem hPB]
+  have hm := ((hU.aestronglyMeasurable.mono_ac hac).mono_measure hσ).congr heq
+  have hw := (integrable_withDensity_iff_integrable_smul' measurable_actionWeight
+    (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))).mp hU.norm
+  have hw' := (hw.mono_measure hσ)
+  have hc : ContinuousOn (fun h ↦ (2 * orbitPeriod h)⁻¹) (Icc a b) :=
+    (continuousOn_const.mul (contDiffOn_orbitPeriod.continuousOn.mono
+      (fun h hh ↦ ⟨lt_of_lt_of_le ha hh.1, lt_of_le_of_lt hh.2 hb⟩))).inv₀
+      (fun h hh ↦ (mul_pos (by norm_num)
+        (orbitPeriod_pos (lt_of_lt_of_le ha hh.1) (lt_of_le_of_lt hh.2 hb))).ne')
+  obtain ⟨C, hC⟩ := isCompact_Icc.bddAbove_image hc
+  apply (hw'.const_mul (max C 0)).mono' hm
+  filter_upwards [heq, ae_restrict_mem (measurableSet_Icc.prod measurableSet_Ico)] with q he hq
+  have hqr := hR hq
+  have hS := mul_pos (by norm_num : (0 : ℝ) < 2) (orbitPeriod_pos hqr.1.1 hqr.1.2)
+  have hbound : 1 ≤ max C 0 * (2 * orbitPeriod q.1) := by
+    have hi := (hC (mem_image_of_mem _ hq.1)).trans (le_max_left C 0)
+    have hm := mul_le_mul_of_nonneg_right hi hS.le
+    simpa only [inv_mul_cancel₀ hS.ne'] using hm
+  have hwq : (actionWeight q).toReal = 2 * orbitPeriod q.1 := by
+    simp [actionWeight, actionPeriod, hqr.1, (orbitPeriod_pos hqr.1.1 hqr.1.2).le]
+  change ‖(u ∘ actionAngleInv) q‖ ≤
+    max C 0 * ((actionWeight q).toReal • ‖B.indicator u (actionParam q)‖)
+  rw [he, hwq, smul_eq_mul]
+  simpa only [one_mul, mul_assoc] using
+    mul_le_mul_of_nonneg_right hbound (norm_nonneg ((u ∘ actionAngleInv) q))
+
+private theorem integrableOn_comp_actionAngleInv_shift {a b : ℝ} (ha : 0 < a)
+    (hb : b < 1) {u : ℝ × ℝ → ℂ} (hu : LocallyIntegrableOn u puncturedCell) (n : ℤ) :
+    IntegrableOn (u ∘ actionAngleInv)
+      (Icc a b ×ˢ Ico ((n : ℝ) - 1 / 4) ((n : ℝ) + 3 / 4)) := by
+  classical
+  let R : Set (ℝ × ℝ) := Icc a b ×ˢ Ico (-1 / 4 : ℝ) (3 / 4)
+  let T : ℝ × ℝ → ℝ × ℝ := fun q ↦ (q.1, q.2 - (n : ℝ))
+  have hR : MeasurableSet R := measurableSet_Icc.prod measurableSet_Ico
+  have hi := (integrable_indicator_iff hR).mpr
+    (integrableOn_comp_actionAngleInv_levelBand ha hb hu)
+  have hT : MeasurePreserving T volume volume := by
+    rw [Measure.volume_eq_prod]
+    exact (MeasurePreserving.id volume).prod (measurePreserving_sub_right volume (n : ℝ))
+  have ht := (hT.integrable_comp hi.aestronglyMeasurable).mpr hi
+  rw [← integrable_indicator_iff (measurableSet_Icc.prod measurableSet_Ico)]
+  apply ht.congr (Filter.Eventually.of_forall ?_)
+  intro q
+  have hmem : T q ∈ R ↔ q ∈ Icc a b ×ˢ Ico ((n : ℝ) - 1 / 4) ((n : ℝ) + 3 / 4) := by
+    simp only [T, R, mem_prod, mem_Ico]
+    constructor <;> rintro ⟨h, h₁, h₂⟩ <;> exact ⟨h, by linarith, by linarith⟩
+  by_cases hq : T q ∈ R
+  · have hper : Function.Periodic (fun θ ↦ u (actionAngleInv (q.1, θ))) 1 :=
+      fun θ ↦ congrArg u (actionAngleInv_add_one
+        (lt_of_lt_of_le ha hq.1.1) (lt_of_le_of_lt hq.1.2 hb) θ)
+    have he := hper.sub_int_mul_eq (x := q.2) n
+    rw [Function.comp_apply, Set.indicator_of_mem hq, Set.indicator_of_mem (hmem.mp hq)]
+    simpa only [Function.comp_apply, T, mul_one] using he
+  · rw [Function.comp_apply, Set.indicator_of_notMem hq,
+      Set.indicator_of_notMem (mt hmem.mpr hq)]
+
+/-- Local integrability pulls back to the whole strip, including across every angular seam. -/
+theorem locallyIntegrableOn_comp_actionAngleInv {u : ℝ × ℝ → ℂ}
+    (hu : LocallyIntegrableOn u puncturedCell) :
+    LocallyIntegrableOn (u ∘ actionAngleInv) actionStrip := by
+  intro q hq
+  have h0 : 0 < q.1 := hq.1.1
+  have h1 : q.1 < 1 := hq.1.2
+  let a := q.1 / 2
+  let b := (q.1 + 1) / 2
+  let n : ℤ := ⌊q.2 + 1 / 4⌋
+  let R : ℤ → Set (ℝ × ℝ) := fun m ↦
+    Icc a b ×ˢ Ico ((m : ℝ) - 1 / 4) ((m : ℝ) + 3 / 4)
+  have hi : ∀ m, IntegrableOn (u ∘ actionAngleInv) (R m) := fun m ↦
+    integrableOn_comp_actionAngleInv_shift (by dsimp [a]; linarith)
+      (by dsimp [b]; linarith) hu m
+  refine ⟨R n ∪ R (n - 1), ?_, (hi n).union (hi (n - 1))⟩
+  have hnlo := Int.floor_le (q.2 + 1 / 4)
+  have hnhi := Int.lt_floor_add_one (q.2 + 1 / 4)
+  have hmem : Icc a b ×ˢ Ioo ((n : ℝ) - 5 / 4) ((n : ℝ) + 3 / 4) ∈ 𝓝 q := by
+    apply prod_mem_nhds
+    · apply Icc_mem_nhds <;> dsimp [a, b] <;> linarith
+    · apply Ioo_mem_nhds <;> dsimp [n] <;> linarith
+  apply nhdsWithin_le_nhds (Filter.mem_of_superset hmem ?_)
+  intro z hz
+  by_cases hzn : (n : ℝ) - 1 / 4 ≤ z.2
+  · exact Or.inl ⟨hz.1, hzn, hz.2.2⟩
+  · apply Or.inr
+    change z.1 ∈ Icc a b ∧ z.2 ∈ Ico (((n - 1 : ℤ) : ℝ) - 1 / 4)
+      (((n - 1 : ℤ) : ℝ) + 3 / 4)
+    push_cast
+    exact ⟨hz.1, by linarith [hz.2.1], by linarith⟩
 
 /-- Pull back arbitrary representatives, not just measurable ones. -/
 private theorem ae_comp_actionParam {u v : ℝ × ℝ → ℂ}
@@ -661,6 +812,165 @@ private theorem ae_actionReconstruct_input (χ : ℝ → ℝ) (u : ℝ × ℝ �
     simp [cellCutoff, hc, actionAngle]
   · have hpc : p ∉ puncturedCell := fun h ↦ hc h.1
     simp [cellCutoff, hc, hpc]
+
+/-! ### Local `L¹` reconstruction and periodic classical tests -/
+
+/-- Local strip data reconstruct to an integrable planar function on any closed interior band. -/
+theorem integrableOn_levelBand_of_comp_actionAngleInv {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    {u : ℝ × ℝ → ℂ} (hu : LocallyIntegrableOn (u ∘ actionAngleInv) actionStrip) :
+    IntegrableOn u {p | p ∈ puncturedCell ∧ levelCoord p ∈ Icc a b} := by
+  classical
+  let S : Set (ℝ × ℝ) := {q | q.1 ∈ Icc a b}
+  let F : ℝ × ℝ → ℂ := S.indicator (u ∘ actionAngleInv)
+  have hS : MeasurableSet S := measurable_fst measurableSet_Icc
+  have hRS : S ∩ actionRectangle = Icc a b ×ˢ Ico (-1 / 4 : ℝ) (3 / 4) := by
+    ext q
+    constructor
+    · rintro ⟨hh, _, hθ⟩
+      exact ⟨hh, hθ⟩
+    · rintro ⟨hh, hθ⟩
+      exact ⟨hh, ⟨lt_of_lt_of_le ha hh.1, lt_of_le_of_lt hh.2 hb⟩, hθ⟩
+  have hInput := hu.integrableOn_compact_subset
+    (show Icc a b ×ˢ Icc (-1 / 4 : ℝ) (3 / 4) ⊆ actionStrip from fun q hq ↦
+      ⟨⟨lt_of_lt_of_le ha hq.1.1, lt_of_le_of_lt hq.1.2 hb⟩, mem_univ _⟩)
+    (isCompact_Icc.prod isCompact_Icc)
+  have hF : Integrable F actionMeasure := by
+    apply (integrable_indicator_iff hS).mpr
+    rw [IntegrableOn, actionMeasure, Measure.restrict_restrict hS, hRS]
+    exact hInput.mono_set (Set.prod_mono (Subset.refl _) Ico_subset_Icc_self)
+  have hc : ContinuousOn (fun h ↦ 2 * orbitPeriod h) (Icc a b) :=
+    continuousOn_const.mul (contDiffOn_orbitPeriod.continuousOn.mono
+      (fun h hh ↦ ⟨lt_of_lt_of_le ha hh.1, lt_of_le_of_lt hh.2 hb⟩))
+  obtain ⟨D, hD⟩ := isCompact_Icc.bddAbove_image hc
+  have hm : AEStronglyMeasurable (fun q ↦ (actionWeight q).toReal • F q) actionMeasure :=
+    measurable_actionWeight.ennreal_toReal.aestronglyMeasurable.smul hF.aestronglyMeasurable
+  have hw : Integrable (fun q ↦ (actionWeight q).toReal • F q) actionMeasure := by
+    apply (hF.norm.const_mul (max D 0)).mono' hm
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    by_cases hh : q.1 ∈ Icc a b
+    · have hwq : (actionWeight q).toReal = 2 * orbitPeriod q.1 := by
+        simp [actionWeight, actionPeriod, hq.1, (orbitPeriod_pos hq.1.1 hq.1.2).le]
+      rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg, hwq]
+      exact mul_le_mul_of_nonneg_right
+        ((hD (mem_image_of_mem _ hh)).trans (le_max_left _ _)) (norm_nonneg _)
+    · have hz : F q = 0 := Set.indicator_of_notMem (show q ∉ S from hh) _
+      simp only [hz, smul_zero, norm_zero, mul_zero, le_refl]
+  have hFw : Integrable F (actionMeasure.withDensity actionWeight) :=
+    (integrable_withDensity_iff_integrable_smul' measurable_actionWeight
+      (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))).mpr hw
+  have hrec : Integrable (actionReconstruct F) :=
+    (integrable_indicator_iff measurableSet_cellSquare).mpr
+      ((measurePreserving_actionCoordinates.integrable_comp hFw.aestronglyMeasurable).mpr hFw)
+  have hB : MeasurableSet {p | p ∈ puncturedCell ∧ levelCoord p ∈ Icc a b} := by
+    rw [← closedCellLevelBand_eq ha hb]
+    exact (isCompact_closedCellLevelBand a b).measurableSet
+  apply (integrable_indicator_iff hB).mp
+  apply hrec.congr
+  filter_upwards [ae_actionReconstruct F] with p hp
+  rw [hp]
+  by_cases hc : p ∈ puncturedCell
+  · simp only [ite_eq_left hc, F, Set.indicator_apply, Function.comp_apply,
+      actionAngleInv_actionAngle hc]
+    simp only [S, mem_ofPred_eq, actionAngle, hc, true_and]
+    rfl
+  · simp [hc]
+
+/-- Local integrability also descends through the action-angle parametrization. -/
+theorem locallyIntegrableOn_of_comp_actionAngleInv {u : ℝ × ℝ → ℂ}
+    (hu : LocallyIntegrableOn (u ∘ actionAngleInv) actionStrip) :
+    LocallyIntegrableOn u puncturedCell := by
+  intro p hp
+  have hh := (mem_orbitDomain hp).1
+  let a := levelCoord p / 2
+  let b := (levelCoord p + 1) / 2
+  refine ⟨{q | q ∈ puncturedCell ∧ levelCoord q ∈ Icc a b}, ?_,
+    integrableOn_levelBand_of_comp_actionAngleInv (by dsimp [a]; linarith [hh.1])
+      (by dsimp [b]; linarith [hh.2]) hu⟩
+  have hl : Continuous levelCoord := by unfold levelCoord dipoleLift; fun_prop
+  have hn : levelCoord ⁻¹' Icc a b ∈ 𝓝 p := hl.continuousAt.preimage_mem_nhds
+    (Icc_mem_nhds (by dsimp [a]; linarith [hh.1]) (by dsimp [b]; linarith [hh.2]))
+  exact inter_mem self_mem_nhdsWithin (nhdsWithin_le_nhds hn)
+
+/-- The parametrization preserves and reflects local integrability. -/
+theorem locallyIntegrableOn_actionAngleInv_iff {u : ℝ × ℝ → ℂ} :
+    LocallyIntegrableOn (u ∘ actionAngleInv) actionStrip ↔ LocallyIntegrableOn u puncturedCell :=
+  ⟨locallyIntegrableOn_of_comp_actionAngleInv, locallyIntegrableOn_comp_actionAngleInv⟩
+
+/-- Multiplication by the positive period does not change the local-integrability condition. -/
+theorem locallyIntegrableOn_period_mul_actionAngleInv_iff {k : ℝ × ℝ → ℂ} :
+    LocallyIntegrableOn (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q)) actionStrip ↔
+      LocallyIntegrableOn k puncturedCell := by
+  have ho : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  have hs : ContinuousOn (fun q : ℝ × ℝ ↦ (orbitPeriod q.1 : ℂ)) actionStrip :=
+    Complex.continuous_ofReal.comp_continuousOn
+      (contDiffOn_orbitPeriod.continuousOn.comp continuous_fst.continuousOn (fun _ hq ↦ hq.1))
+  have hn : ∀ q ∈ actionStrip, (orbitPeriod q.1 : ℂ) ≠ 0 := fun q hq ↦
+    Complex.ofReal_ne_zero.mpr (orbitPeriod_pos hq.1.1 hq.1.2).ne'
+  constructor
+  · intro hk
+    have hi := hk.continuousOn_mul (hs.inv₀ hn) ho.isLocallyClosed
+    have he : (fun q ↦ (orbitPeriod q.1 : ℂ)⁻¹ *
+        ((orbitPeriod q.1 : ℂ) * k (actionAngleInv q))) =ᵐ[volume.restrict actionStrip]
+        k ∘ actionAngleInv := by
+      filter_upwards [ae_restrict_mem ho.measurableSet] with q hq
+      simp only [← mul_assoc, inv_mul_cancel₀ (hn q hq), one_mul, Function.comp_apply]
+    exact locallyIntegrableOn_of_comp_actionAngleInv (hi.congr he)
+  · intro hk
+    exact (locallyIntegrableOn_comp_actionAngleInv hk).continuousOn_mul hs ho.isLocallyClosed
+
+/-- Periodic strip functions respect the inverse coordinates even outside the chosen window. -/
+theorem comp_actionAngle_actionAngleInv {F : ℝ × ℝ → ℂ}
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) {q : ℝ × ℝ}
+    (hq : q ∈ actionStrip) : (F ∘ actionAngle) (actionAngleInv q) = F q := by
+  let n : ℤ := ⌊q.2 + 1 / 4⌋
+  have hnlo := Int.floor_le (q.2 + 1 / 4)
+  have hnhi := Int.lt_floor_add_one (q.2 + 1 / 4)
+  have hθ : q.2 - (n : ℝ) ∈ Ico (-1 / 4 : ℝ) (3 / 4) := by
+    constructor <;> dsimp [n] <;> linarith
+  have hp : Function.Periodic (fun θ ↦ actionAngleInv (q.1, θ)) 1 :=
+    actionAngleInv_add_one hq.1.1 hq.1.2
+  have hF : Function.Periodic (fun θ ↦ F (q.1, θ)) 1 := fun θ ↦ hper (q.1, θ)
+  have he : actionAngleInv (q.1, q.2 - (n : ℝ)) = actionAngleInv q := by
+    simpa only [mul_one] using hp.sub_int_mul_eq (x := q.2) n
+  change F (actionAngle (actionAngleInv q)) = F q
+  rw [← he, actionAngle_actionAngleInv hq.1.1 hq.1.2 hθ]
+  simpa only [mul_one] using hF.sub_int_mul_eq (x := q.2) n
+
+private theorem isOpen_puncturedCell : IsOpen puncturedCell := by
+  have h₁ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).1|) := by unfold diagCoord; fun_prop
+  have h₂ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).2|) := by unfold diagCoord; fun_prop
+  exact ((isOpen_lt h₁ continuous_const).inter (isOpen_lt h₂ continuous_const)).sdiff
+    isClosed_singleton
+
+/-- The test-function chain rule in the reverse coordinates, with the angle treated modulo one. -/
+theorem classicalL0_comp_actionAngle {F : ℝ × ℝ → ℂ}
+    (hF : ContDiffOn ℝ ∞ F actionStrip)
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) {p : ℝ × ℝ}
+    (hp : p ∈ puncturedCell) :
+    classicalL0 (F ∘ actionAngle) p =
+      (orbitPeriod (levelCoord p) : ℂ)⁻¹ * partialY F (actionAngle p) := by
+  have hh := (mem_orbitDomain hp).1
+  have hd : DifferentiableAt ℝ (F ∘ actionAngle) p :=
+    ((contDiffOn_comp_actionAngle hF hper).contDiffAt
+      (isOpen_puncturedCell.mem_nhds hp)).differentiableAt (by simp)
+  have he := partialY_comp_actionAngleInv (q := actionAngle p)
+    (show DifferentiableAt ℝ (F ∘ actionAngle) (actionAngleInv (actionAngle p)) by
+      rwa [actionAngleInv_actionAngle hp])
+  have hline : (fun θ ↦ (F ∘ actionAngle) (actionAngleInv (levelCoord p, θ))) =
+      (fun θ ↦ F (levelCoord p, θ)) := funext fun θ ↦
+    comp_actionAngle_actionAngleInv hper ⟨hh, mem_univ _⟩
+  have hpartial : partialY ((F ∘ actionAngle) ∘ actionAngleInv) (actionAngle p) =
+      partialY F (actionAngle p) := by
+    change deriv (fun θ ↦ (F ∘ actionAngle) (actionAngleInv (levelCoord p, θ))) (angleCoord p) = _
+    rw [hline]
+    rfl
+  rw [hpartial, actionAngleInv_actionAngle hp, Complex.real_smul] at he
+  change partialY F (actionAngle p) =
+    (orbitPeriod (levelCoord p) : ℂ) * classicalL0 (F ∘ actionAngle) p at he
+  have hS : (orbitPeriod (levelCoord p) : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (orbitPeriod_pos hh.1 hh.2).ne'
+  change _ = (orbitPeriod (levelCoord p) : ℂ)⁻¹ * _
+  rw [he, ← mul_assoc, inv_mul_cancel₀ hS, one_mul]
 
 /-- A fixed level band contains both the cutoff and all sufficiently small mollifications. -/
 private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1) :

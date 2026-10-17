@@ -205,14 +205,43 @@ identity, `eLpNorm_cutoff_actionInput_le`, and
 through `exists_mollify_band` so the same band is available to the norm and
 convergence proofs; the support theorem remains free of admitted dependencies.
 
-**Next:** the action-angle weak chain rules in
-`lem:action-angle-weak` (`TransversalMollifier.lean`), starting with
-`hasWeakL0On_iff_actionAngle` for the transport equation. The line-mollifier input
-is now complete for `lem:transversal-mollifier-derivatives` and
-`lem:transversal-mollifier-commutator`; their coordinate-transfer rules
-remain admitted. Chart regularity and coarea are still admitted analytic
-prerequisites. No stronger transversal statement has been discharged in
-this step.
+**Action-angle weak transfer: prerequisites proved, main equivalence still open.**
+Two new proved blueprint nodes in `TransversalMollifier.lean` are
+`lem:action-angle-test-chain` and `lem:action-angle-local-integrability`.
+`partialY_comp_actionAngleInv` proves `∂θ(φ ∘ P) = S L₀φ ∘ P` and has only
+standard axioms. `comp_actionAngle_actionAngleInv` reduces any angle to the
+fundamental window by an integer shift. `classicalL0_comp_actionAngle`
+proves the reverse rule for smooth periodic strip tests, including the seam,
+from the existing admitted smooth-chart input.
+
+`locallyIntegrableOn_actionAngleInv_iff` proves both directions of local L¹
+transfer for arbitrary representatives. The forward direction restricts the
+input to a compact closed level band, pulls back by the weighted area formula,
+and uses the positive lower bound for `2S` there. Integer translates and two
+adjacent fundamental windows give a neighbourhood of every angular point,
+including seams. The converse uses compact-strip integrability and the upper
+bound for `2S`, followed by measurable reconstruction back to the cell.
+`locallyIntegrableOn_period_mul_actionAngleInv_iff` also handles the factor
+`S` in the transport equation. These local-integrability results still have
+`sorryAx` through the existing chart/coarea inputs; no new admissions were
+introduced, and none of the six existing transversal admissions was removed.
+
+**Next:** finish the test-integral transfer in
+`hasWeakL0On_iff_actionAngle`. Both local-integrability conditions and the
+classical chain rules are now available. What remains is passage between
+compactly supported strip tests and periodic tests, with compact level
+support, and the angular-window gluing in the weak identities. The theorem
+itself is still admitted; do not count the new prerequisites as its proof.
+For the other two action-angle weak chain rules, the blueprint's earlier H¹
+approximation sketch was too strong for its locally L¹ hypotheses: use local
+W¹,¹ approximation for full weak gradients. The correction is recorded as a
+digest note in the geometry chapter and in the notes index. The directional
+transport equation must instead be handled by test-function changes, not by
+assuming a full weak gradient.
+
+The line-mollifier input is complete for the stronger transversal derivative
+and commutator nodes; these and the analytic chart/coarea inputs remain
+admitted. Proof-worker delegation remains paused.
 
 **Validation:** the full Lean project build passes (3281 jobs); full-file
 diagnostics for `LineMollifier.lean` are completely clean. There remain

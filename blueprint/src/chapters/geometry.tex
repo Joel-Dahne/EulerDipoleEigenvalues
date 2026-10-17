@@ -863,6 +863,90 @@ Smoothness of $P$ follows from the inverse function theorem applied to $(h,\thet
 cut, and to $(h,\theta)\circ R$ near it.
 \end{proof}
 
+\begin{lemma}[Classical test functions in action-angle coordinates]
+\label{lem:action-angle-test-chain}
+\uses{def:action-angle, def:lift-operators}
+\lean{NoEmbeddedEigenvalues.partialY_comp_actionAngleInv,
+  NoEmbeddedEigenvalues.comp_actionAngle_actionAngleInv,
+  NoEmbeddedEigenvalues.classicalL0_comp_actionAngle}
+\leanok
+If $\varphi$ is differentiable at $P(q)$, then
+\[
+  \partial_\theta(\varphi\circ P)(q)=S(h)L_0\varphi(P(q)).
+\]
+If $F$ is $1$-periodic in $\theta$, then
+$F((h,\theta)(P(q)))=F(q)$ on the strip, even when $q$ lies outside
+the chosen fundamental window. If moreover $F$ is smooth on the strip,
+then on the punctured cell
+\[
+  L_0\bigl(F\circ(h,\theta)\bigr)
+    =S(h)^{-1}(\partial_\theta F)\circ(h,\theta).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:lift-calculus}
+\leanok
+Apply the classical chain rule to $\partial_\theta P=S(h)Y(P)$.
+To invert the coordinates outside the fundamental window, subtract
+$\lfloor\theta+\frac14\rfloor$ from $\theta$ and use periodicity of both
+$P$ and $F$. The chart lemma makes $F\circ(h,\theta)$ smooth across the
+cut. Apply the forward chain rule to it and cancel the positive period.
+\end{proof}
+
+\begin{lemma}[Local integrability in action-angle coordinates]
+\label{lem:action-angle-local-integrability}
+\uses{def:action-angle}
+\lean{NoEmbeddedEigenvalues.integrableOn_comp_actionAngleInv_levelBand,
+  NoEmbeddedEigenvalues.locallyIntegrableOn_comp_actionAngleInv,
+  NoEmbeddedEigenvalues.integrableOn_levelBand_of_comp_actionAngleInv,
+  NoEmbeddedEigenvalues.locallyIntegrableOn_of_comp_actionAngleInv,
+  NoEmbeddedEigenvalues.locallyIntegrableOn_actionAngleInv_iff,
+  NoEmbeddedEigenvalues.locallyIntegrableOn_period_mul_actionAngleInv_iff}
+\leanok
+For arbitrary representatives $u,k$ on the punctured cell,
+\[
+  u\in L^1_{\mathrm{loc}}(\Cell\setminus\{0\})
+    \quad\Longleftrightarrow\quad
+  u\circ P\in L^1_{\mathrm{loc}}((0,1)\times\R),
+\]
+and $k$ is locally integrable on the punctured cell if and only if
+$S(h)k(P(h,\theta))$ is locally integrable on the strip.
+More precisely, put
+\[
+  B_{a,b}=\{p\in\Cell\setminus\{0\}:a\le h(p)\le b\},\qquad
+  R_{a,b}=[a,b]\times[-\tfrac14,\tfrac34)
+\]
+for $0<a\le b<1$. If $u$ is locally integrable on the punctured cell,
+then $u\circ P$ is integrable on $R_{a,b}$. If $u\circ P$ is locally
+integrable on the strip, then $u$ is integrable on $B_{a,b}$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:separatrix-lines}
+\leanok
+The band $B_{a,b}$ is compact in the punctured cell. Restrict $u$ to this
+band and extend by zero. The weighted area formula pulls this globally
+integrable function back to the fundamental rectangle. Since $2S$ is
+bounded below by a positive constant on $[a,b]$, its restriction to
+$R_{a,b}$ is integrable for unweighted area measure. Integer translations
+of the angle give the same assertion on every translated fundamental
+window. Two adjacent windows contain a neighbourhood of each angular
+point, including points on their seams, so local integrability holds on
+the entire strip.
+
+Conversely, local strip integrability gives integrability on the compact
+rectangle $[a,b]\times[-\frac14,\frac34]$. On this level band $2S$ is
+bounded above, so the level-truncated function is integrable for the
+weighted rectangle measure. Reconstruct it on the cell using the
+measurable inverse extension of $P$ (Lusin--Souslin). The area formula
+makes this reconstruction integrable, and it agrees almost everywhere
+with $u$ restricted to $B_{a,b}$ and extended by zero. These bands contain
+relative neighbourhoods of every point of the punctured cell. Finally,
+$S$ and $S^{-1}$ are continuous and locally bounded on the strip, so
+multiplication by $S$ preserves and reflects local integrability.
+\end{proof}
+
 \begin{lemma}[Weak derivatives in action-angle coordinates]
 \label{lem:action-angle-weak}
 \uses{def:action-angle, def:transport-pair, def:sobolev-local}
@@ -885,7 +969,11 @@ Write $U=u\circ P$ for functions $u$ on the punctured cell.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-chart, lem:weak-derivative-basic, lem:localization-cutoff}
+\uses{lem:action-angle-chart, lem:action-angle-test-chain,
+  lem:action-angle-local-integrability, lem:weak-derivative-basic, lem:localization-cutoff}
+Local integrability of the functions on both sides of (1) is
+Lemma~\ref{lem:action-angle-local-integrability}, and the classical chain
+rule for the test functions is Lemma~\ref{lem:action-angle-test-chain}.
 Weak derivatives are local, so by a partition of unity it suffices to test against test
 functions supported in the image of a window $(0,1)\times(\theta_0,\theta_0+1)$, on which $P$
 is a diffeomorphism (Lemma~\ref{lem:action-angle-chart}); periodicity in $\theta$ makes the
@@ -893,9 +981,25 @@ choice of window irrelevant. Change variables in the test integrals with
 $dx\,dy=2S(h)\,dh\,d\theta$ and use the classical chain rule for the test functions. For (1),
 $L_0\phi=S(h)^{-1}\partial_\theta\Phi$, so the weight $2S$ cancels:
 $\int uL_0\phi\,dx\,dy=2\int U\,\partial_\theta\Phi\,dh\,d\theta$. For (2) and (3) the Jacobian
-factor is not constant; one way is to approximate $u$ by smooth functions locally in $H^1$
-and pass to the limit in the classical chain rule.
+factor is not constant; approximate locally in $W^{1,1}$, with the function
+and its first weak derivatives converging in $L^1$, and pass to the limit
+on compact coordinate windows. The smooth coordinate derivatives and
+Jacobians are bounded there.
 \end{proof}
+
+\begin{remark}[Digest note: the topology in the weak chain rule]
+The statements assume only local integrability, not local square
+integrability. The earlier proof sketch invoked $H^1$ approximation,
+which is not justified under these hypotheses. For the full weak chain
+rules (2)--(3), the appropriate approximation is local $W^{1,1}$.
+For (1) only the transport derivative is known, so use changes of test
+functions directly, not an assumed full Sobolev gradient. The classical
+test-function rules and local-integrability equivalences above are now
+proved in Lean. The passage between compactly supported strip tests and
+periodic tests, and the gluing across coordinate windows in the weak
+identities, are not yet formalized; all three weak statements remain
+admitted.
+\end{remark}
 
 \begin{definition}[Normal and tangential derivatives]
 \label{def:normal-tangent}
