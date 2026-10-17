@@ -39,6 +39,22 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
+**Blueprint readiness bookkeeping:** `lem:sobolev-embedding` now has a
+proof environment, with weighted Fourier estimates for the Hölder bound
+and inverse Hausdorff–Young for the finite-p embedding. This is a paper
+proof sketch, not a Lean proof; both embedding theorems remain admitted.
+
+`lem:virial-h1` is now stated in `VirialL2.lean` as
+`squarePairing_halfDensityGen_h1` and `virial_h1`, with two intentionally
+admitted proofs. The statements use periodic `C²` fields, a periodic `C¹`
+adaptation coefficient for the quadratic identity, and Fourier partial
+derivative witnesses of `H¹` inputs. The displayed `Du` and `Hu` use
+lifts of these L² derivatives, never classical derivatives of arbitrary
+representatives; no second derivative of the H¹ input is assumed. Every
+H¹ input has the required witnesses by `MemSobolev.exists_hasFourierPartial`.
+The blueprint records the statements and expands the density argument;
+no H¹ virial proof or L² virial proof has been discharged in this step.
+
 **The line-mollifier lemma is fully proved.** Its quantitative estimates in
 `LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,
 `tendsto_smul_mollifyFstDeriv` and `eLpNorm_mollifyFst_mul_sub_le` have
@@ -201,7 +217,9 @@ this step.
 **Validation:** the full Lean project build passes (3281 jobs); full-file
 diagnostics for `LineMollifier.lean` are completely clean. There remain
 six admissions in `TransversalMollifier.lean` (three
-action-angle weak rules and three derivative/commutator results). Axiom checks
+action-angle weak rules and three derivative/commutator results).
+`VirialL2.lean` checks with exactly its three intended admissions: the two
+new H¹ statements and `virial_l2`. Axiom checks
 on both new L² estimates have only the standard axioms plus `sorryAx` through
 the chart/coarea inputs; the refactored support result still has only
 `propext`, `Classical.choice`, `Quot.sound`.
@@ -280,7 +298,7 @@ center) is replaced, checked on paper, by: the exact identity
 action-angle coordinates (`def:action-angle`, `lem:action-angle-chart`,
 `lem:transversal-mollifier`, stated in Lean, see below), for which `‖[H,J_ε]a‖ = O(ε)`
 while `‖DJ_ε a‖ = o(1/ε)`; and the smooth identity on `H¹`
-(`lem:virial-h1`, no Lean yet). `virial_l2` now assumes `W ∈ C³`, `f ∈ C²`,
+(`lem:virial-h1`, now stated with Fourier derivative witnesses; proofs admitted). `virial_l2` now assumes `W ∈ C³`, `f ∈ C²`,
 periodic, supported in `{2h₁ ≤ Ψ ≤ 2h₂}`, `0 < h₁`, `h₂ < 1`.
 The center is cut out of the truncated virial identity: `ee_truncated_virial`
 is now **proved** from three new admitted statements,
@@ -467,10 +485,13 @@ periodicity and `∂_θP = S Y` proved; smoothness of `S`, of `P` and of the ang
 admitted) and `lem:action-angle-weak` (weak `L₀ ↔ ∂_θ` and the weak chain rules, admitted).
 `actionAngle`, `angleCoord`, `actionAngleInv` now use a real angle.
 
-**Next:** prove the mollifier lemmas (`lem:line-mollifier` first, it is pure Mathlib-level
-analysis), state `lem:virial-h1` for compactly supported `H¹` functions on `ℝ²` (what the
-mollifier produces), then `virial_l2` (`lem:virial-l2`; the product rule and `L²` integration
-by parts of `lem:l2-product-rule` should help). Remaining admitted inputs of `thm:ee-exclusion`:
+**Remaining virial inputs:** the line-mollifier lemma and basic transversal L²
+lemma are proved. Prove the action-angle weak rules, stronger transversal estimates,
+the now-stated periodic H¹ virial forms, and then `virial_l2` (`lem:virial-l2`).
+The current blueprint periodizes the compactly supported mollifier outputs;
+a separate compactly supported planar H¹ variant is not yet stated. The product
+rule and L² integration by parts of `lem:l2-product-rule` should help.
+Remaining admitted inputs of `thm:ee-exclusion`:
 `virial_l2`; the coarea formula (`lintegral_cellSquare_eq`, `integral_cellSquare_eq`,
 `lem:coarea-level-cutoff`); `lem:traces` and `lem:local-to-global`; the orbit-comparison bounds
 `gradNorm_le_saddleDist`, `integral_saddleDist_rpow_pos_le` (first-order trace term); the

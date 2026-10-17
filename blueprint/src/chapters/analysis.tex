@@ -763,6 +763,41 @@ $g\in H^2$ has a representative $u$ with $|u|\le C\|g\|_{H^2}$ and
 $|u(s)-u(t)|\le C\|g\|_{H^2}\,d(s,t)^\alpha$, and $\|g\|_{L^p}\le C\|g\|_{H^1}$.
 \end{lemma}
 
+\begin{proof}
+\uses{lem:torus-fourier-basis, lem:sobolev-torus-basic,
+  lem:continuous-representative}
+Write $a_k=\hat g_k$. For $0\le\alpha<1$, the character estimate
+\[
+  |e_k(s)-e_k(t)|\le C_\alpha(1+|k|^2)^{\alpha/2}d(s,t)^\alpha
+\]
+and Cauchy--Schwarz give
+\[
+  \sum_k|a_k|(1+|k|^2)^{\alpha/2}
+  \le \|g\|_{H^2}
+      \left(\sum_k(1+|k|^2)^{\alpha-2}\right)^{1/2}.
+\]
+The lattice sum converges because $\alpha<1$. Apply the character estimate
+to the absolutely convergent Fourier series representing $g$
+(Lemma~\ref{lem:continuous-representative}); the same estimate with
+$\alpha=0$ bounds its supremum norm. This proves the H\"older inclusion
+with a constant depending only on $\alpha$ and the fixed torus.
+
+For $p\le2$, the $L^p$ bound follows from the finite measure of the torus
+and Parseval. For $2<p<\infty$, put $q=p/(p-1)\in(1,2)$.
+H\"older's inequality for the Fourier coefficients gives
+\[
+  \|(a_k)\|_{\ell^q}
+  \le \|g\|_{H^1}
+      \left(\sum_k(1+|k|^2)^{-q/(2-q)}\right)^{(2-q)/(2q)}.
+\]
+Here $q/(2-q)>1$, so this lattice sum also converges. The inverse
+Hausdorff--Young inequality bounds the $L^p$ norm of Fourier polynomials
+by their $\ell^q$ coefficient norm. Apply it also to differences of
+Fourier truncations to obtain convergence in $L^p$; their $L^2$ limit
+is $g$. This identifies the $L^p$ representative and proves the claimed
+continuous inclusion. Normalization constants are absorbed into $C$.
+\end{proof}
+
 \section{Local Sobolev theory (candidate assumptions)}
 \label{sec:local-sobolev}
 

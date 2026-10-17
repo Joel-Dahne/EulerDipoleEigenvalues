@@ -202,18 +202,39 @@ extension to constants, nor the boundedness of $[D,A]$ is needed.
 
 \begin{lemma}[The smooth identity for $H^1$ functions]
 \label{lem:virial-h1}
-\uses{def:adapted-field, def:half-density-generator, def:sobolev-torus}
+\uses{def:adapted-field, def:half-density-generator, def:sobolev-torus,
+  def:fourier-derivatives, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.squarePairing_halfDensityGen_h1,
+  NoEmbeddedEigenvalues.virial_h1}
+\leanok
 Let $W\in C^2$ be periodic and adapted with periodic coefficient $f\in C^1$. For every
 $u\in H^1(\T^2)$, $\ip{Du}{v}=-\ip{u}{Dv}$ for $v\in H^1$, and
 $2\operatorname{Re}\ip{Du}{Hu}=\operatorname{Re}\ip{fHu}{u}$.
+Here $D=W\cdot\nabla+\tfrac12\Div W$ and $H=-iL_0$ use the $L^2$
+Fourier partial derivatives of $u,v$. In Lean these derivatives are supplied
+as witnesses to the Fourier relations, and the pairings are integrals of
+their lifts over one period square. No second weak derivatives of $u,v$
+are assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:commutator-pointwise, lem:commutator-algebra, lem:sobolev-torus-basic}
-For smooth $u$, $2\operatorname{Re}\ip{Du}{Hu}=\ip{HDu}{u}-\ip{DHu}{u}=\ip{[H,D]u}{u}
+\uses{lem:commutator-pointwise, lem:commutator-algebra, lem:sobolev-torus-basic,
+  lem:torus-fourier-basis, lem:l2-product-rule, lem:lift-torus}
+Boundedness of the periodic coefficients and their needed derivatives gives
+bounded maps $D,H:H^1\to L^2$. Skew-symmetry on $H^1$ follows from the
+$L^2$ product rule and integration by parts (Lemma~\ref{lem:l2-product-rule}),
+or by approximating both inputs by Fourier truncations in
+Lemma~\ref{lem:commutator-algebra}.
+
+For smooth $u$,
+$2\operatorname{Re}\ip{Du}{Hu}=\ip{HDu}{u}-\ip{DHu}{u}=\ip{[H,D]u}{u}
 =\operatorname{Re}\ip{fHu}{u}$ by skew-symmetry and
-Lemma~\ref{lem:commutator-pointwise}(3). Both sides are continuous in $H^1$, and Fourier
-truncations converge in $H^1$.
+Lemma~\ref{lem:commutator-pointwise}(3). The two expressions
+$\operatorname{Re}\ip{Du}{Hu}$ and $\operatorname{Re}\ip{fHu}{u}$
+are continuous quadratic forms on $H^1$. Apply the smooth identity to
+Fourier truncations and pass to the $H^1$ limit. The expressions $HDu$
+and $DHu$ are used only for the smooth approximants, not for the limiting
+$H^1$ function.
 \end{proof}
 
 \begin{lemma}[Integration by parts for the stream function]

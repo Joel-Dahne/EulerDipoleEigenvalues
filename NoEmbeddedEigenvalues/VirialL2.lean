@@ -4,7 +4,8 @@ import NoEmbeddedEigenvalues.LiftTorus
 /-!
 # The virial identities on the `L²` domain
 
-Blueprint: `lem:virial-exact-identity` and `lem:stream-ibp` (proved), `lem:virial-l2` (stated).
+Blueprint: `lem:virial-exact-identity` and `lem:stream-ibp` (proved),
+`lem:virial-h1` and `lem:virial-l2` (stated).
 
 For a smooth adapted field `W` supported in a compact annulus `{2h₁ ≤ Ψ ≤ 2h₂}` of the
 cells, `0 < h₁`, `h₂ < 1` (away from the separatrix and the centers), the two smooth virial
@@ -15,6 +16,12 @@ Fourier-defined ones and `Δψ = ω`.
 The planned proof (blueprint proof of `lem:virial-l2`) mollifies in the level variable of
 action-angle coordinates (`lem:transversal-mollifier`) and uses the exact identity below with
 `V = J_ε† D J_ε`; it needs no flow of `W`.
+
+The `H¹` statements below take Fourier derivative witnesses explicitly (they exist for
+every `H¹` input by `MemSobolev.exists_hasFourierPartial`). Their displayed generators
+use the lifts of those derivatives, not classical derivatives of arbitrary representatives.
+Only first derivatives occur in the conclusions; no assertion that `HDu` or `DHu` is in
+`L²` is made. The `H¹` proofs remain admitted.
 -/
 
 noncomputable section
@@ -36,6 +43,38 @@ theorem inner_virial_exact {E : Type*} [NormedAddCommGroup E] [InnerProductSpace
   simp only [map_add, map_smul, Submodule.coe_add, inner_add_left, inner_add_right,
     inner_smul_left, inner_smul_right, conj_ofReal]
   ring
+
+/-! ### The virial form on `H¹` (`lem:virial-h1`, stated) -/
+
+/-- Skew-symmetry of the half-density generator on `H¹(𝕋²)`.
+The functions `du j`, `dv j` are Fourier partial derivatives in `L²`. -/
+theorem squarePairing_halfDensityGen_h1 {W₁ W₂ : ℝ × ℝ → ℝ}
+    (hW₁ : ContDiff ℝ 2 W₁) (hW₂ : ContDiff ℝ 2 W₂)
+    (hpW₁ : IsPeriodicLift W₁) (hpW₂ : IsPeriodicLift W₂)
+    {u v : L2} (hu : MemSobolev 1 u) (hv : MemSobolev 1 v)
+    {du dv : Fin 2 → L2} (hdu : ∀ j, HasFourierPartial j u (du j))
+    (hdv : ∀ j, HasFourierPartial j v (dv j)) :
+    let Du : ℝ × ℝ → ℂ := fun p ↦ W₁ p • liftL2 (du 0) p + W₂ p • liftL2 (du 1) p +
+      ((1 / 2 : ℝ) * divergence W₁ W₂ p) • liftL2 u p
+    let Dv : ℝ × ℝ → ℂ := fun p ↦ W₁ p • liftL2 (dv 0) p + W₂ p • liftL2 (dv 1) p +
+      ((1 / 2 : ℝ) * divergence W₁ W₂ p) • liftL2 v p
+    squarePairing Du (liftL2 v) = -squarePairing (liftL2 u) Dv := by
+  sorry
+
+/-- The commutator identity as a continuous quadratic form on `H¹(𝕋²)`.
+`Du` and `Hu = -i L₀u` use the supplied Fourier partial derivatives. -/
+theorem virial_h1 {W₁ W₂ f : ℝ × ℝ → ℝ} (had : IsAdaptedOn W₁ W₂ f Set.univ)
+    (hW₁ : ContDiff ℝ 2 W₁) (hW₂ : ContDiff ℝ 2 W₂) (hf : ContDiff ℝ 1 f)
+    (hpW₁ : IsPeriodicLift W₁) (hpW₂ : IsPeriodicLift W₂) (hpf : IsPeriodicLift f)
+    {u : L2} (hu : MemSobolev 1 u) {du : Fin 2 → L2}
+    (hdu : ∀ j, HasFourierPartial j u (du j)) :
+    let Du : ℝ × ℝ → ℂ := fun p ↦ W₁ p • liftL2 (du 0) p + W₂ p • liftL2 (du 1) p +
+      ((1 / 2 : ℝ) * divergence W₁ W₂ p) • liftL2 u p
+    let Hu : ℝ × ℝ → ℂ := fun p ↦ -I *
+      (Real.sin p.2 • liftL2 (du 0) p - Real.sin p.1 • liftL2 (du 1) p)
+    2 * (squarePairing Du Hu).re =
+      (squarePairing (fun p ↦ f p • Hu p) (liftL2 u)).re := by
+  sorry
 
 open MeasureTheory in
 /-- Integration by parts for the stream function (`lem:stream-ibp`): for `ω ∈ L²` with mean
