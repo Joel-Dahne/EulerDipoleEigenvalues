@@ -195,12 +195,14 @@ the chart/coarea inputs; the refactored support result still has only
 `propext`, `Classical.choice`, `Quot.sound`.
 `just web` and the even–even subgraph generation pass. Pi setup and the
 sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
-The runner defaults to `openai-codex/gpt-6-luna` with medium thinking;
-`--model` and `--thinking` remain available as overrides.
-The default delegation workflow is dispatch, wait, review: one coherent task,
-no routine transcript polling or live supervision, then independent validation;
-split or intervene only in response to a concrete blocker. Operational guidance
-is separate from the experiment history. No routine benchmarking was added.
+**Proof-worker delegation is paused at the user's request.** Continue proof
+work directly; do not launch workers unless the user asks to resume the experiment.
+The runner remains configured for `openai-codex/gpt-6-luna` with medium thinking;
+`--model` and `--thinking` remain available as overrides. If delegation resumes,
+use dispatch, wait, review: one coherent task, no routine transcript polling or
+live supervision, then independent validation; split or intervene only in
+response to a concrete blocker. Operational guidance is separate from the
+experiment history. No routine benchmarking was added.
 
 **Backwards even–even assembly is proved.** `even_even_character_exclusion`
 and `even_even_exclusion` now have no `sorry` of their own. The proof combines
