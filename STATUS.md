@@ -39,10 +39,22 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
-**Blueprint readiness bookkeeping:** `lem:sobolev-embedding` now has a
-proof environment, with weighted Fourier estimates for the Hölder bound
-and inverse Hausdorff–Young for the finite-p embedding. This is a paper
-proof sketch, not a Lean proof; both embedding theorems remain admitted.
+**Current focus: blueprint review.** The even–even dependency graph has
+193 nodes: 48 definitions and 145 results. Of the result nodes, 24 have
+blue interiors (their own Lean proofs are not marked complete): 10 in
+geometry, 4 in analysis, 4 in virial, and 6 in transport. Every result
+node has a written blueprint proof environment; none is wholly missing
+one. This is a status inventory, not an independent verification that
+all those written arguments are complete. The next blueprint task is to
+distinguish complete paper proofs from incomplete sketches among these
+24 nodes. Some nodes bundle claims with different formalization status;
+in particular `lem:action-angle-weak` still has its two full-gradient rules
+open, while its transport part is proved in `lem:action-angle-transport`.
+
+`lem:sobolev-embedding` has a proof environment, with weighted Fourier
+estimates for the Hölder bound and inverse Hausdorff–Young for the finite-p
+embedding. This is a paper proof sketch, not a Lean proof; both embedding
+theorems remain admitted.
 
 `lem:virial-h1` is now stated in `VirialL2.lean` as
 `squarePairing_halfDensityGen_h1` and `virial_h1`, with two intentionally
