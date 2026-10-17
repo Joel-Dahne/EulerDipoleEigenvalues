@@ -1,5 +1,5 @@
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import NoEmbeddedEigenvalues.LineMollifier
+import NoEmbeddedEigenvalues.AnglePeriodization
 import NoEmbeddedEigenvalues.Transport
 
 /-!
@@ -10,8 +10,9 @@ Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (pro
 `lem:transversal-mollifier` (proved from chart/coarea inputs);
 `lem:action-angle-test-chain`, `lem:action-angle-local-integrability` (proved from
 chart/coarea inputs; the forward classical chain rule has no admitted dependency);
-stated: `lem:action-angle-weak`, `lem:transversal-mollifier-derivatives`,
-`lem:transversal-mollifier-commutator`.
+`lem:action-angle-transport` (proved from chart/coarea inputs);
+stated: the full weak-gradient rules in `lem:action-angle-weak`,
+`lem:transversal-mollifier-derivatives`, `lem:transversal-mollifier-commutator`.
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -35,7 +36,9 @@ Local `L¹` transfer is proved in both directions. Positive lower and upper peri
 on a closed interior level band compare the weighted and unweighted measures. Integer
 translates of the fundamental window handle all angular seams. The classical transport
 chain rules are also proved, including the reverse rule for smooth periodic strip tests.
-The weak test-integral transfer itself remains admitted.
+Angular test periodization and a compact angular partition of unity give both directions
+of `hasWeakL0On_iff_actionAngle`. Only the two full weak-gradient chain rules remain
+admitted in the action-angle interface.
 -/
 
 noncomputable section
@@ -61,15 +64,7 @@ theorem partialY_comp_actionAngleInv {φ : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
   congr 1
   ext <;> simp [dipoleVelocity]
 
-/-! ### Weak derivatives in action-angle coordinates (`lem:action-angle-weak`, stated) -/
-
-/-- `L₀ u = k` weakly on the punctured cell if and only if `∂_θ U = S(h) K` weakly on the
-    strip, where `U, K` are `u, k` in action-angle coordinates. -/
-theorem hasWeakL0On_iff_actionAngle {u k : ℝ × ℝ → ℂ} :
-    HasWeakL0On puncturedCell u k ↔
-      HasWeakPartialOn actionStrip 1 (u ∘ actionAngleInv)
-        (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q)) := by
-  sorry
+/-! ### Full weak-gradient chain rules (`lem:action-angle-weak`, stated) -/
 
 /-- The chain rule for weak derivatives from the cell to the strip. -/
 theorem HasWeakPartialOn.comp_actionAngleInv {u : ℝ × ℝ → ℂ} {g : Fin 2 → ℝ × ℝ → ℂ}
@@ -971,6 +966,307 @@ theorem classicalL0_comp_actionAngle {F : ℝ × ℝ → ℂ}
     Complex.ofReal_ne_zero.mpr (orbitPeriod_pos hh.1 hh.2).ne'
   change _ = (orbitPeriod (levelCoord p) : ℂ)⁻¹ * _
   rw [he, ← mul_assoc, inv_mul_cancel₀ hS, one_mul]
+
+/-! ### Periodic test functions and weak transport -/
+
+private theorem continuous_levelCoord : Continuous levelCoord := by
+  unfold levelCoord dipoleLift
+  fun_prop
+
+private theorem exists_test_level_band {φ : ℝ × ℝ → ℂ} (hφ : HasCompactSupport φ)
+    {l : ℝ × ℝ → ℝ} (hl : Continuous l) (hi : ∀ p ∈ tsupport φ, l p ∈ Ioo (0 : ℝ) 1) :
+    ∃ a b : ℝ, 0 < a ∧ b < 1 ∧ ∀ p, φ p ≠ 0 → l p ∈ Icc a b := by
+  obtain ⟨a, ha, hlow⟩ := hφ.exists_forall_le' hl.continuousOn (fun p hp ↦ (hi p hp).1)
+  obtain ⟨d, hd, hgap⟩ := hφ.exists_forall_le' (f := fun p ↦ 1 - l p) (a := (0 : ℝ))
+    (continuous_const.sub hl).continuousOn (fun p hp ↦ by linarith [(hi p hp).2])
+  refine ⟨a, 1 - d, ha, by linarith, fun p hp ↦ ?_⟩
+  exact ⟨hlow p (subset_closure hp), by linarith [hgap p (subset_closure hp)]⟩
+
+private theorem contDiff_of_zero_off_closed {φ : ℝ × ℝ → ℂ} {U K : Set (ℝ × ℝ)}
+    (hU : IsOpen U) (hK : IsClosed K) (hKU : K ⊆ U) (hφ : ContDiffOn ℝ ∞ φ U)
+    (hz : ∀ p ∉ K, φ p = 0) : ContDiff ℝ ∞ φ := by
+  rw [contDiff_iff_contDiffAt]
+  intro p
+  by_cases hp : p ∈ U
+  · exact hφ.contDiffAt (hU.mem_nhds hp)
+  · apply (contDiff_const : ContDiff ℝ ∞ (fun _ : ℝ × ℝ ↦ (0 : ℂ))).contDiffAt.congr_of_eventuallyEq
+    filter_upwards [hK.isOpen_compl.mem_nhds (fun hk ↦ hp (hKU hk))] with q hq
+    exact hz q hq
+
+private theorem classicalL0_congr_of_eventuallyEq {φ ψ : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
+    (he : φ =ᶠ[𝓝 p] ψ) : classicalL0 φ p = classicalL0 ψ p := by
+  have hx := he.comp_tendsto ((continuous_id.prodMk continuous_const).tendsto p.1)
+  have hy := he.comp_tendsto ((continuous_const.prodMk continuous_id).tendsto p.2)
+  simp only [Function.comp_def, id_eq] at hx hy
+  unfold classicalL0 partialX partialY
+  rw [hx.deriv_eq, hy.deriv_eq]
+
+private theorem isTestFunctionOn_classicalL0 {U : Set (ℝ × ℝ)} {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn U φ) : IsTestFunctionOn U (classicalL0 φ) := by
+  have hx : ContDiff ℝ ∞ (partialX φ) := by
+    simpa [coordPartial] using contDiff_coordPartial_top 0 hφ.contDiff
+  have hy : ContDiff ℝ ∞ (partialY φ) := by
+    simpa [coordPartial] using contDiff_coordPartial_top 1 hφ.contDiff
+  have hc : ContDiff ℝ ∞ (classicalL0 φ) := by unfold classicalL0; fun_prop
+  have hz : ∀ p ∉ tsupport φ, classicalL0 φ p = 0 := by
+    intro p hp
+    have hpx : partialX φ p = 0 := image_eq_zero_of_notMem_tsupport
+      (fun h ↦ hp (tsupport_partialX_subset φ h))
+    have hpy : partialY φ p = 0 := image_eq_zero_of_notMem_tsupport
+      (fun h ↦ hp (tsupport_partialY_subset φ h))
+    simp [classicalL0, hpx, hpy]
+  have hs : tsupport (classicalL0 φ) ⊆ tsupport φ :=
+    closure_minimal (fun p hp ↦ by_contra fun hn ↦ hp (hz p hn)) (isClosed_tsupport φ)
+  exact ⟨hc, hφ.hasCompactSupport.of_isClosed_subset (isClosed_tsupport _) hs,
+    hs.trans hφ.tsupport_subset⟩
+
+private theorem integral_cell_supported_actionAngle {G : ℝ × ℝ → ℂ} (hG : Integrable G)
+    (hs : ∀ p ∉ cellSquare, G p = 0) :
+    (∫ p, G p) = ∫ q, (2 * orbitPeriod q.1) • G (actionAngleInv q) ∂actionMeasure := by
+  have hmp := measurePreserving_actionParam
+  have hi := integral_map hmp.measurable.aemeasurable
+    (f := G) (by rw [hmp.map_eq]; exact hG.integrableOn.aestronglyMeasurable)
+  rw [hmp.map_eq] at hi
+  rw [← setIntegral_eq_integral_of_forall_compl_eq_zero hs, hi,
+    integral_withDensity_eq_integral_toReal_smul measurable_actionWeight
+      (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))]
+  apply integral_congr_ae
+  filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+  have hw : (actionWeight q).toReal = 2 * orbitPeriod q.1 := by
+    simp [actionWeight, actionPeriod, hq.1, (orbitPeriod_pos hq.1.1 hq.1.2).le]
+  have hp : actionParam q = actionAngleInv q := by simp [actionParam, Set.piecewise, hq]
+  rw [hw, hp]
+
+open scoped Classical in
+private def periodicCellTest (F : ℝ × ℝ → ℂ) : ℝ × ℝ → ℂ :=
+  puncturedCell.indicator (F ∘ actionAngle)
+
+private theorem isTestFunctionOn_periodicCellTest {F : ℝ × ℝ → ℂ} {a b : ℝ}
+    (ha : 0 < a) (hb : b < 1) (hF : ContDiff ℝ ∞ F)
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q)
+    (hs : ∀ q, q.1 ∉ Icc a b → F q = 0) :
+    IsTestFunctionOn puncturedCell (periodicCellTest F) := by
+  classical
+  let B := closedCellLevelBand a b
+  have hB : IsCompact B := isCompact_closedCellLevelBand a b
+  have hBU : B ⊆ puncturedCell := closedCellLevelBand_subset ha hb
+  have hz : ∀ p ∉ B, periodicCellTest F p = 0 := by
+    intro p hp
+    by_cases hc : p ∈ puncturedCell
+    · have hl : levelCoord p ∉ Icc a b := by
+        intro hl
+        exact hp ⟨hc.1.1.le, hc.1.2.le, hl⟩
+      simp only [periodicCellTest, Set.indicator_of_mem hc, Function.comp_apply]
+      exact hs (actionAngle p) hl
+    · simp [periodicCellTest, hc]
+  have hc : ContDiffOn ℝ ∞ (periodicCellTest F) puncturedCell :=
+    (contDiffOn_comp_actionAngle hF.contDiffOn hper).congr
+      (fun p hp ↦ Set.indicator_of_mem hp _)
+  have ht : tsupport (periodicCellTest F) ⊆ B :=
+    closure_minimal (fun p hp ↦ by_contra fun hn ↦ hp (hz p hn)) hB.isClosed
+  exact ⟨contDiff_of_zero_off_closed isOpen_puncturedCell hB.isClosed hBU hc hz,
+    HasCompactSupport.intro hB hz, ht.trans hBU⟩
+
+private theorem classicalL0_periodicCellTest {F : ℝ × ℝ → ℂ} (hF : ContDiff ℝ ∞ F)
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) {p : ℝ × ℝ}
+    (hp : p ∈ puncturedCell) : classicalL0 (periodicCellTest F) p =
+      (orbitPeriod (levelCoord p) : ℂ)⁻¹ * partialY F (actionAngle p) := by
+  rw [classicalL0_congr_of_eventuallyEq (ψ := F ∘ actionAngle) (by
+    filter_upwards [isOpen_puncturedCell.mem_nhds hp] with q hq
+    exact Set.indicator_of_mem hq _)]
+  exact classicalL0_comp_actionAngle hF.contDiffOn hper hp
+
+open scoped Classical in
+private def stripTestPull (φ : ℝ × ℝ → ℂ) : ℝ × ℝ → ℂ :=
+  actionStrip.indicator (φ ∘ actionAngleInv)
+
+private theorem stripTestPull_properties {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn puncturedCell φ) :
+    ∃ a b : ℝ, 0 < a ∧ b < 1 ∧ ContDiff ℝ ∞ (stripTestPull φ) ∧
+      (∀ q : ℝ × ℝ, stripTestPull φ (q.1, q.2 + 1) = stripTestPull φ q) ∧
+      ∀ q, q.1 ∉ Icc a b → stripTestPull φ q = 0 := by
+  classical
+  obtain ⟨a, b, ha, hb, hs⟩ := exists_test_level_band hφ.hasCompactSupport
+    continuous_levelCoord (fun p hp ↦ (mem_orbitDomain (hφ.tsupport_subset hp)).1)
+  have hz : ∀ q, q.1 ∉ Icc a b → stripTestPull φ q = 0 := by
+    intro q hq
+    by_cases hh : q ∈ actionStrip
+    · have hφz : φ (actionAngleInv q) = 0 := by
+        by_contra hn
+        exact hq (by simpa only [levelCoord_actionAngleInv hh.1.1 hh.1.2] using hs _ hn)
+      simp [stripTestPull, hh, hφz]
+    · simp [stripTestPull, hh]
+  have hc : ContDiffOn ℝ ∞ (stripTestPull φ) actionStrip :=
+    (hφ.contDiff.comp_contDiffOn contDiffOn_actionAngleInv).congr
+      (fun q hq ↦ Set.indicator_of_mem hq _)
+  have hK : IsClosed {q : ℝ × ℝ | q.1 ∈ Icc a b} := isClosed_Icc.preimage continuous_fst
+  have hKU : {q : ℝ × ℝ | q.1 ∈ Icc a b} ⊆ actionStrip := fun q hq ↦
+    ⟨⟨lt_of_lt_of_le ha hq.1, lt_of_le_of_lt hq.2 hb⟩, mem_univ _⟩
+  refine ⟨a, b, ha, hb, contDiff_of_zero_off_closed (isOpen_Ioo.prod isOpen_univ) hK hKU hc hz,
+    ?_, hz⟩
+  intro q
+  by_cases hh : q.1 ∈ Ioo (0 : ℝ) 1
+  · simp [stripTestPull, actionStrip, hh, actionAngleInv_add_one hh.1 hh.2]
+  · simp [stripTestPull, actionStrip, hh]
+
+private theorem partialY_stripTestPull {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn puncturedCell φ) {q : ℝ × ℝ} (hq : q ∈ actionStrip) :
+    partialY (stripTestPull φ) q = orbitPeriod q.1 • classicalL0 φ (actionAngleInv q) := by
+  have he : (fun θ ↦ stripTestPull φ (q.1, θ)) =
+      (fun θ ↦ φ (actionAngleInv (q.1, θ))) := by
+    funext θ
+    exact Set.indicator_of_mem
+      (show (q.1, θ) ∈ actionStrip from ⟨hq.1, mem_univ _⟩) (φ ∘ actionAngleInv)
+  change deriv (fun θ ↦ stripTestPull φ (q.1, θ)) q.2 = _
+  rw [he]
+  exact partialY_comp_actionAngleInv (hφ.contDiff.differentiable (by simp) _)
+
+private theorem isTestFunctionOn_partialY {U : Set (ℝ × ℝ)} {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn U φ) : IsTestFunctionOn U (partialY φ) :=
+  ⟨by simpa [coordPartial] using contDiff_coordPartial_top 1 hφ.contDiff,
+    by simpa [coordPartial] using hφ.hasCompactSupport_coordPartial 1,
+    (tsupport_partialY_subset φ).trans hφ.tsupport_subset⟩
+
+private theorem integral_mul_test_actionAngle {u φ : ℝ × ℝ → ℂ}
+    (hu : LocallyIntegrableOn u puncturedCell) (hφ : IsTestFunctionOn puncturedCell φ) :
+    (∫ p, u p * φ p) =
+      ∫ q, (2 * orbitPeriod q.1) •
+        (u (actionAngleInv q) * φ (actionAngleInv q)) ∂actionMeasure := by
+  apply integral_cell_supported_actionAngle
+    (integrable_mul_of_tsupport_subset hu hφ.contDiff.continuous
+      hφ.hasCompactSupport hφ.tsupport_subset)
+  intro p hp
+  rw [image_eq_zero_of_notMem_tsupport (fun h ↦ hp (hφ.tsupport_subset h).1), mul_zero]
+
+private theorem integral_strip_test_periodize {A φ : ℝ × ℝ → ℂ}
+    (hA : LocallyIntegrableOn A actionStrip)
+    (hper : ∀ q : ℝ × ℝ, q.1 ∈ Ioo (0 : ℝ) 1 → A (q.1, q.2 + 1) = A q)
+    (hφ : IsTestFunctionOn actionStrip φ) :
+    (∫ q, A q * φ q) = ∫ q, A q * periodizeSnd φ q ∂actionMeasure :=
+  integral_mul_periodizeSnd_strip measurableSet_Ioo hper
+    (HasCompactSupport.hasBoundedSndSupport hφ.hasCompactSupport) hφ.tsupport_subset
+    (integrable_mul_of_tsupport_subset hA hφ.contDiff.continuous
+      hφ.hasCompactSupport hφ.tsupport_subset)
+
+/-- Weak transport pulls back to the angular weak derivative. -/
+theorem HasWeakL0On.comp_actionAngleInv {u k : ℝ × ℝ → ℂ}
+    (hd : HasWeakL0On puncturedCell u k) :
+    HasWeakPartialOn actionStrip 1 (u ∘ actionAngleInv)
+      (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q)) := by
+  have hu := locallyIntegrableOn_comp_actionAngleInv hd.1
+  have hk := locallyIntegrableOn_period_mul_actionAngleInv_iff.mpr hd.2.1
+  have hpu : ∀ q : ℝ × ℝ, q.1 ∈ Ioo (0 : ℝ) 1 →
+      (u ∘ actionAngleInv) (q.1, q.2 + 1) = (u ∘ actionAngleInv) q := by
+    intro q hq
+    simp only [Function.comp_apply, actionAngleInv_add_one hq.1 hq.2]
+  have hpk : ∀ q : ℝ × ℝ, q.1 ∈ Ioo (0 : ℝ) 1 →
+      (orbitPeriod q.1 : ℂ) * k (actionAngleInv (q.1, q.2 + 1)) =
+      (orbitPeriod q.1 : ℂ) * k (actionAngleInv q) := by
+    intro q hq
+    rw [actionAngleInv_add_one hq.1 hq.2]
+  refine ⟨hu, hk, fun φ hφ ↦ ?_⟩
+  change (∫ q, (u ∘ actionAngleInv) q * partialY φ q) =
+    -(∫ q, (orbitPeriod q.1 : ℂ) * k (actionAngleInv q) * φ q)
+  obtain ⟨a, b, ha, hb, hs⟩ := exists_test_level_band hφ.hasCompactSupport continuous_fst
+    (fun q hq ↦ (hφ.tsupport_subset hq).1)
+  let F := periodizeSnd φ
+  have hF : ContDiff ℝ ∞ F := contDiff_periodizeSnd hφ.contDiff
+    (HasCompactSupport.hasBoundedSndSupport hφ.hasCompactSupport)
+  have hpF : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q := periodizeSnd_periodic
+  have hzF : ∀ q, q.1 ∉ Icc a b → F q = 0 :=
+    fun q hq ↦ periodizeSnd_eq_zero (fun z hz ↦ by
+      by_contra hn
+      exact hz (hs z hn)) hq
+  have hψ := isTestFunctionOn_periodicCellTest ha hb hF hpF hzF
+  have hDF : partialY F = periodizeSnd (partialY φ) := funext fun q ↦
+    partialY_periodizeSnd (hφ.contDiff.of_le (by simp))
+      (HasCompactSupport.hasBoundedSndSupport hφ.hasCompactSupport) q
+  have hleft : (∫ p, u p * classicalL0 (periodicCellTest F) p) =
+      2 * (∫ q, (u ∘ actionAngleInv) q * partialY φ q) := by
+    rw [integral_strip_test_periodize hu hpu (isTestFunctionOn_partialY hφ),
+      integral_mul_test_actionAngle hd.1 (isTestFunctionOn_classicalL0 hψ), ← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    have hP := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 q.2
+    rw [classicalL0_periodicCellTest hF hpF hP,
+      levelCoord_actionAngleInv hq.1.1 hq.1.2, hDF]
+    have he := comp_actionAngle_actionAngleInv
+      (F := periodizeSnd (partialY φ)) periodizeSnd_periodic (q := q) ⟨hq.1, mem_univ _⟩
+    change periodizeSnd (partialY φ) (actionAngle (actionAngleInv q)) = _ at he
+    rw [he, Complex.real_smul]
+    simp only [Complex.ofReal_mul, Complex.ofReal_ofNat, Function.comp_apply]
+    field_simp [(Complex.ofReal_ne_zero.mpr (orbitPeriod_pos hq.1.1 hq.1.2).ne')]
+  have hright : (∫ p, k p * periodicCellTest F p) =
+      2 * (∫ q, (orbitPeriod q.1 : ℂ) * k (actionAngleInv q) * φ q) := by
+    rw [integral_strip_test_periodize hk hpk hφ,
+      integral_mul_test_actionAngle hd.2.1 hψ, ← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    have hP := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 q.2
+    have he := comp_actionAngle_actionAngleInv hpF (q := q) ⟨hq.1, mem_univ _⟩
+    change F (actionAngle (actionAngleInv q)) = F q at he
+    simp only [periodicCellTest, Set.indicator_of_mem hP, Function.comp_apply, he,
+      Complex.real_smul, Complex.ofReal_mul, Complex.ofReal_ofNat]
+    ring
+  have hid := hd.2.2 (periodicCellTest F) hψ
+  rw [hleft, hright, ← mul_neg] at hid
+  exact mul_left_cancel₀ (by norm_num : (2 : ℂ) ≠ 0) hid
+
+/-- The angular weak derivative descends to weak transport on the punctured cell. -/
+theorem hasWeakL0On_of_actionAngle {u k : ℝ × ℝ → ℂ}
+    (hd : HasWeakPartialOn actionStrip 1 (u ∘ actionAngleInv)
+      (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q))) :
+    HasWeakL0On puncturedCell u k := by
+  have hu := locallyIntegrableOn_actionAngleInv_iff.mp hd.1
+  have hk := locallyIntegrableOn_period_mul_actionAngleInv_iff.mp hd.2.1
+  have hpu : ∀ q : ℝ × ℝ, q.1 ∈ Ioo (0 : ℝ) 1 →
+      (u ∘ actionAngleInv) (q.1, q.2 + 1) = (u ∘ actionAngleInv) q := by
+    intro q hq
+    simp only [Function.comp_apply, actionAngleInv_add_one hq.1 hq.2]
+  have hpk : ∀ q : ℝ × ℝ, q.1 ∈ Ioo (0 : ℝ) 1 →
+      (orbitPeriod q.1 : ℂ) * k (actionAngleInv (q.1, q.2 + 1)) =
+      (orbitPeriod q.1 : ℂ) * k (actionAngleInv q) := by
+    intro q hq
+    rw [actionAngleInv_add_one hq.1 hq.2]
+  refine ⟨hu, hk, fun φ hφ ↦ ?_⟩
+  obtain ⟨a, b, ha, hb, hF, hpF, hzF⟩ := stripTestPull_properties hφ
+  let F := stripTestPull φ
+  let σ := cutoffPeriodicSnd F
+  have hσ : IsTestFunctionOn actionStrip σ := isTestFunctionOn_cutoffPeriodicSnd ha hb hF hzF
+  have hD : ∀ q, periodizeSnd (partialY σ) q = partialY F q :=
+    periodize_partialY_cutoffPeriodicSnd hF hpF
+  have hV : ∀ q, periodizeSnd σ q = F q := periodize_cutoffPeriodicSnd hpF
+  have hleft : (∫ p, u p * classicalL0 φ p) =
+      2 * (∫ q, (u ∘ actionAngleInv) q * partialY σ q) := by
+    rw [integral_strip_test_periodize hd.1 hpu (isTestFunctionOn_partialY hσ),
+      integral_mul_test_actionAngle hu (isTestFunctionOn_classicalL0 hφ), ← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    rw [hD, partialY_stripTestPull hφ ⟨hq.1, mem_univ _⟩]
+    simp only [Complex.real_smul, Complex.ofReal_mul, Complex.ofReal_ofNat, Function.comp_apply]
+    ring
+  have hright : (∫ p, k p * φ p) =
+      2 * (∫ q, (orbitPeriod q.1 : ℂ) * k (actionAngleInv q) * σ q) := by
+    rw [integral_strip_test_periodize hd.2.1 hpk hσ,
+      integral_mul_test_actionAngle hk hφ, ← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    have hv : F q = φ (actionAngleInv q) :=
+      Set.indicator_of_mem (show q ∈ actionStrip from ⟨hq.1, mem_univ _⟩) (φ ∘ actionAngleInv)
+    rw [hV, hv, Complex.real_smul]
+    push_cast
+    ring
+  have hid := hd.2.2 σ hσ
+  change (∫ q, (u ∘ actionAngleInv) q * partialY σ q) =
+    -(∫ q, (orbitPeriod q.1 : ℂ) * k (actionAngleInv q) * σ q) at hid
+  rw [hleft, hid, mul_neg, ← hright]
+
+/-- `L₀ u = k` weakly on the punctured cell if and only if `∂_θ U = S(h) K` weakly on the strip. -/
+theorem hasWeakL0On_iff_actionAngle {u k : ℝ × ℝ → ℂ} :
+    HasWeakL0On puncturedCell u k ↔
+      HasWeakPartialOn actionStrip 1 (u ∘ actionAngleInv)
+        (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q)) :=
+  ⟨HasWeakL0On.comp_actionAngleInv, hasWeakL0On_of_actionAngle⟩
 
 /-- A fixed level band contains both the cutoff and all sufficiently small mollifications. -/
 private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1) :

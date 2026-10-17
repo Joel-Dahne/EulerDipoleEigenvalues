@@ -120,6 +120,8 @@ motivation, and standard facts cited rather than proved.
   line representatives (`IsLineRep`) and proves the even–even separatrix traces (arc traces,
   arc energy, level traces, corner tails); `SegmentEstimates.lean` bounds
   restrictions to curves near a line (segment and hyperbola estimates); `LineMollifier.lean` mollifies functions on `ℝ²` in the first variable;
+  `AnglePeriodization.lean` constructs smooth periodic angular tests, their integral
+  unfolding and a compact angular partition of unity;
   `TransversalMollifier.lean` treats weak derivatives in action-angle coordinates and the
   mollifier in the level variable used for the `L²` virial identity; `OddHardy.lean` proves the critical Hardy inequality for odd
   functions in Gagliardo form.

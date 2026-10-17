@@ -596,6 +596,84 @@ against every test function. The fundamental lemma of the calculus of
 variations identifies them almost everywhere.
 \end{proof}
 
+\begin{definition}[Angular periodization]
+\label{def:angular-periodization}
+\uses{def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.HasBoundedSndSupport,
+  NoEmbeddedEigenvalues.periodizeSnd, NoEmbeddedEigenvalues.angleWindow,
+  NoEmbeddedEigenvalues.anglePartition, NoEmbeddedEigenvalues.cutoffPeriodicSnd}
+\leanok
+A function has bounded angular support if $f(h,\theta)\ne0$ implies
+$|\theta|\le R$ for some fixed $R$. Define
+\[
+  \Pi f(h,\theta)=\sum_{n\in\Z}^{\mathrm{fin}}f(h,\theta+n),\qquad
+  W_n=\R\times[n-\tfrac14,n+\tfrac34),
+\]
+where the finite-support sum is zero if its summand has infinite support.
+With the standard bump $\rho$ of Definition~\ref{def:line-mollifier}, put
+$\beta(h,\theta)=\rho(\theta)$, $\eta=\beta/(\Pi\beta)$, and
+$\mathcal CF=\eta F$.
+\end{definition}
+
+\begin{lemma}[Periodization of angular tests]
+\label{lem:angular-periodization}
+\uses{def:angular-periodization, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.periodizeSnd_periodic,
+  NoEmbeddedEigenvalues.contDiff_periodizeSnd,
+  NoEmbeddedEigenvalues.partialY_periodizeSnd,
+  NoEmbeddedEigenvalues.periodizeSnd_eq_zero,
+  NoEmbeddedEigenvalues.integral_periodizeSnd,
+  NoEmbeddedEigenvalues.integral_mul_periodizeSnd_strip,
+  NoEmbeddedEigenvalues.contDiff_anglePartition,
+  NoEmbeddedEigenvalues.anglePartition_support_le,
+  NoEmbeddedEigenvalues.periodize_anglePartition,
+  NoEmbeddedEigenvalues.isTestFunctionOn_cutoffPeriodicSnd,
+  NoEmbeddedEigenvalues.periodize_cutoffPeriodicSnd,
+  NoEmbeddedEigenvalues.periodize_partialY_cutoffPeriodicSnd}
+\leanok
+For functions with bounded angular support, periodization is locally a
+finite sum, is $1$-periodic, preserves vanishing outside any fixed level
+band, preserves smoothness, and commutes with $\partial_\theta$ for $C^1$
+functions. If $f$ is integrable, then
+\[
+  \int_{\R^2}f=\int_{W_0}\Pi f.
+\]
+More generally, let $J\subset\R$ be measurable, let $A$ be $1$-periodic
+in the angle on $J\times\R$, and let $\varphi$ have bounded angular
+support and closed support in $J\times\R$. If $A\varphi$ is integrable,
+then
+\[
+  \int_{\R^2} A\varphi
+    =\int_{J\times[-1/4,3/4)} A\,\Pi\varphi.
+\]
+The angular cutoff $\eta$ is smooth, vanishes for $|\theta|>1$, and
+$\Pi\eta=1$. If $F$ is smooth, $1$-periodic in the angle, and vanishes
+outside a closed level band $[a,b]\subset(0,1)$, then $\mathcal CF$ is a
+test function on the strip and
+\[
+  \Pi(\mathcal CF)=F,\qquad
+  \Pi\bigl(\partial_\theta(\mathcal CF)\bigr)=\partial_\theta F.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:line-mollifier-kernel}
+\leanok
+On a bounded angular neighbourhood, only finitely many integer translates
+can meet the support. Use that fixed finite sum for smoothness and
+differentiation. Reindexing the sum proves periodicity. The disjoint
+windows $W_n$ partition the plane; translate their integrals back to
+$W_0$ and interchange the resulting finite sum and integral. Periodic
+multipliers may be pulled through the sum, giving the localized formula.
+
+Every angle has an integer translate in $[-\frac14,\frac34)$, where
+$\rho$ is positive. Thus $\Pi\beta>0$ and $\eta$ is smooth. The
+periodicity of the denominator gives $\Pi\eta=1$. Consequently
+$\Pi(\eta F)=F$ for periodic $F$; differentiating gives the second
+identity. The support of $\eta F$ lies in $[a,b]\times[-1,1]$, a compact
+subset of the strip.
+\end{proof}
+
 \section{Sobolev spaces on the torus}
 
 \begin{lemma}[Elliptic regularity on the torus]

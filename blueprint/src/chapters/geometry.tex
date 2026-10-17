@@ -947,6 +947,53 @@ $S$ and $S^{-1}$ are continuous and locally bounded on the strip, so
 multiplication by $S$ preserves and reflects local integrability.
 \end{proof}
 
+\begin{lemma}[Weak transport in action-angle coordinates]
+\label{lem:action-angle-transport}
+\uses{def:action-angle, def:transport-pair, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.comp_actionAngleInv,
+  NoEmbeddedEigenvalues.hasWeakL0On_of_actionAngle,
+  NoEmbeddedEigenvalues.hasWeakL0On_iff_actionAngle}
+\leanok
+For arbitrary functions $u,k$ on the punctured cell, write $U=u\circ P$
+and $K=k\circ P$. Then $L_0u=k$ weakly on the punctured cell if and only if
+$\partial_\theta U=S(h)K$ weakly on the strip. These weak statements
+include local integrability of both the function and its indicated
+transport derivative; no full weak gradient is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:action-angle-test-chain,
+  lem:action-angle-local-integrability, lem:angular-periodization,
+  lem:weak-derivative-basic, lem:separatrix-lines}
+\leanok
+Local integrability is Lemma~\ref{lem:action-angle-local-integrability}.
+Write $R=(0,1)\times[-\frac14,\frac34)$.
+For the forward implication, let $\varphi$ be a strip test function,
+put $F=\Pi\varphi$, and push it to the cell as
+$\psi=F\circ(h,\theta)$, extended by zero. The compact level support
+makes this extension smooth with compact support in the punctured cell;
+periodicity handles the angular seam. The area formula and the classical
+chain rule give
+\[
+  \int uL_0\psi=2\int_R U\,\partial_\theta F,\qquad
+  \int k\psi=2\int_R SK\,F.
+\]
+Unfold both right sides by Lemma~\ref{lem:angular-periodization}, which
+also gives $\partial_\theta\Pi\varphi=\Pi\partial_\theta\varphi$.
+The weak transport identity and cancellation of $2$ yield the strip
+weak identity for the original compact test $\varphi$.
+
+Conversely, pull a cell test $\psi$ back to $F=\psi\circ P$, extending
+by zero off the strip. Its level support lies in a closed interior band,
+so this is a smooth periodic function. Test the strip identity against
+$\sigma=\mathcal CF$. Periodization gives $\Pi\sigma=F$ and
+$\Pi\partial_\theta\sigma=\partial_\theta F$. Unfold the test integrals
+to $R$, use $\partial_\theta F=S(L_0\psi)\circ P$, and change variables
+back to the cell. This is the desired weak transport identity.
+All products used here are integrable because a locally integrable
+function is multiplied by a compactly supported test function.
+\end{proof}
+
 \begin{lemma}[Weak derivatives in action-angle coordinates]
 \label{lem:action-angle-weak}
 \uses{def:action-angle, def:transport-pair, def:sobolev-local}
@@ -969,22 +1016,15 @@ Write $U=u\circ P$ for functions $u$ on the punctured cell.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-chart, lem:action-angle-test-chain,
+\uses{lem:action-angle-transport, lem:action-angle-chart, lem:action-angle-test-chain,
   lem:action-angle-local-integrability, lem:weak-derivative-basic, lem:localization-cutoff}
-Local integrability of the functions on both sides of (1) is
-Lemma~\ref{lem:action-angle-local-integrability}, and the classical chain
-rule for the test functions is Lemma~\ref{lem:action-angle-test-chain}.
-Weak derivatives are local, so by a partition of unity it suffices to test against test
-functions supported in the image of a window $(0,1)\times(\theta_0,\theta_0+1)$, on which $P$
-is a diffeomorphism (Lemma~\ref{lem:action-angle-chart}); periodicity in $\theta$ makes the
-choice of window irrelevant. Change variables in the test integrals with
-$dx\,dy=2S(h)\,dh\,d\theta$ and use the classical chain rule for the test functions. For (1),
-$L_0\phi=S(h)^{-1}\partial_\theta\Phi$, so the weight $2S$ cancels:
-$\int uL_0\phi\,dx\,dy=2\int U\,\partial_\theta\Phi\,dh\,d\theta$. For (2) and (3) the Jacobian
-factor is not constant; approximate locally in $W^{1,1}$, with the function
-and its first weak derivatives converging in $L^1$, and pass to the limit
-on compact coordinate windows. The smooth coordinate derivatives and
-Jacobians are bounded there.
+Part (1) is Lemma~\ref{lem:action-angle-transport}.
+For (2) and (3), weak derivatives are local, so use a partition of unity
+on coordinate windows on which $P$ is a diffeomorphism. Approximate
+locally in $W^{1,1}$, with the function and its first weak derivatives
+converging in $L^1$, and pass to the limit in the classical chain rule.
+The smooth coordinate derivatives and Jacobians are bounded on compact
+windows. Periodicity identifies the results across the angular seams.
 \end{proof}
 
 \begin{remark}[Digest note: the topology in the weak chain rule]
@@ -995,10 +1035,10 @@ rules (2)--(3), the appropriate approximation is local $W^{1,1}$.
 For (1) only the transport derivative is known, so use changes of test
 functions directly, not an assumed full Sobolev gradient. The classical
 test-function rules and local-integrability equivalences above are now
-proved in Lean. The passage between compactly supported strip tests and
-periodic tests, and the gluing across coordinate windows in the weak
-identities, are not yet formalized; all three weak statements remain
-admitted.
+proved in Lean. For (1), the compact/periodic test transfer and the angular
+seam are now handled by Lemma~\ref{lem:action-angle-transport}, without a
+partition of unity on the cell. The full weak-gradient rules (2)--(3)
+and their coordinate-window gluing remain admitted.
 \end{remark}
 
 \begin{definition}[Normal and tangential derivatives]

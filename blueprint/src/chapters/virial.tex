@@ -476,7 +476,7 @@ on $[-\frac14,\frac34)$. No weak-derivative statement is used.
 
 \begin{proof}
 \uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-weak,
-  lem:line-mollifier, lem:localization-cutoff}
+  lem:action-angle-transport, lem:line-mollifier, lem:localization-cutoff}
 In coordinates, $J_\epsilon u$ is $M_\epsilon(\chi U)$, whose weak derivatives are
 $\partial_hM_\epsilon(\chi U)=M'_\epsilon(\chi U)$ and $\partial_\theta M_\epsilon(\chi U)=M_\epsilon(\chi\,\partial_\theta U)$
 whenever $\partial_\theta U$ exists (Lemma~\ref{lem:line-mollifier}). These are $1$-periodic in $\theta$, so
@@ -489,7 +489,7 @@ and $\partial_jh$, $\partial_j\theta$ are bounded on $K$. (1): by
 Lemma~\ref{lem:action-angle-weak}(2), $\chi U$ has weak derivatives in $L^2$, so
 $M'_\epsilon(\chi U)=M_\epsilon(\partial_h(\chi U))\to\partial_h(\chi U)$ and
 $M_\epsilon(\chi\,\partial_\theta U)\to\chi\,\partial_\theta U$; by the chain rule again the limit is
-$\nabla(\hat\chi u)$. (2): $\partial_\theta U=S(h)K$ (Lemma~\ref{lem:action-angle-weak}(1)), so the
+$\nabla(\hat\chi u)$. (2): $\partial_\theta U=S(h)K$ (Lemma~\ref{lem:action-angle-transport}), so the
 $\theta$-term is bounded in $L^2$, and $\epsilon M'_\epsilon(\chi U)\to0$ by
 Lemma~\ref{lem:line-mollifier}(2).
 \end{proof}
@@ -507,15 +507,15 @@ $L_0u=k$ weakly on the cell, $L_0J_\epsilon u$ exists weakly on $\R^2$, lies in 
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-weak,
+\uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-transport,
   lem:line-mollifier}
 In coordinates $L_0=s(h)\partial_\theta$ with $s=1/S$, and $\partial_\theta U=SK$
-(Lemma~\ref{lem:action-angle-weak}(1)). Since $\chi$ depends only on $h$ and $M_\epsilon$ commutes
+(Lemma~\ref{lem:action-angle-transport}). Since $\chi$ depends only on $h$ and $M_\epsilon$ commutes
 with $\partial_\theta$,
 \[
   L_0J_\epsilon u-J_\epsilon k=s\,M_\epsilon(S\chi K)-M_\epsilon(\chi K)=s\bigl(M_\epsilon(S\,\chi K)-S\,M_\epsilon(\chi K)\bigr)
 \]
-in coordinates, and by Lemma~\ref{lem:action-angle-weak}(1) again this is a weak identity on the
+in coordinates, and by Lemma~\ref{lem:action-angle-transport} again this is a weak identity on the
 cell; it extends to $\R^2$ since $J_\epsilon u$ vanishes off $K$. By
 Lemma~\ref{lem:line-mollifier}(3), applied to a Lipschitz function equal to $S$ on
 $[a-\epsilon_0,b+\epsilon_0]$, the bracket is at most $\epsilon\operatorname{Lip}(S)\|\chi K\|$; $s$ is bounded,

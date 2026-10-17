@@ -205,52 +205,64 @@ identity, `eLpNorm_cutoff_actionInput_le`, and
 through `exists_mollify_band` so the same band is available to the norm and
 convergence proofs; the support theorem remains free of admitted dependencies.
 
-**Action-angle weak transfer: prerequisites proved, main equivalence still open.**
-Two new proved blueprint nodes in `TransversalMollifier.lean` are
-`lem:action-angle-test-chain` and `lem:action-angle-local-integrability`.
-`partialY_comp_actionAngleInv` proves `∂θ(φ ∘ P) = S L₀φ ∘ P` and has only
-standard axioms. `comp_actionAngle_actionAngleInv` reduces any angle to the
-fundamental window by an integer shift. `classicalL0_comp_actionAngle`
-proves the reverse rule for smooth periodic strip tests, including the seam,
-from the existing admitted smooth-chart input.
+**The weak transport equivalence in action-angle coordinates is proved.**
+`hasWeakL0On_iff_actionAngle` now has no `sorry` of its own and its statement
+is unchanged. The directional forms are `HasWeakL0On.comp_actionAngleInv`
+and `hasWeakL0On_of_actionAngle`. The new proved node
+`lem:action-angle-transport` separates this from the two still-admitted
+full weak-gradient rules in `lem:action-angle-weak`. The result still has
+`sorryAx` through existing chart/coarea inputs; it does not prove that
+infrastructure. One of the six former transversal admissions is removed,
+without adding new admissions.
 
-`locallyIntegrableOn_actionAngleInv_iff` proves both directions of local L¹
-transfer for arbitrary representatives. The forward direction restricts the
-input to a compact closed level band, pulls back by the weighted area formula,
-and uses the positive lower bound for `2S` there. Integer translates and two
-adjacent fundamental windows give a neighbourhood of every angular point,
-including seams. The converse uses compact-strip integrability and the upper
-bound for `2S`, followed by measurable reconstruction back to the cell.
-`locallyIntegrableOn_period_mul_actionAngleInv_iff` also handles the factor
-`S` in the transport equation. These local-integrability results still have
-`sorryAx` through the existing chart/coarea inputs; no new admissions were
-introduced, and none of the six existing transversal admissions was removed.
+The earlier nodes `lem:action-angle-test-chain` and
+`lem:action-angle-local-integrability` supply the classical test rules and
+both local L¹ conditions, including the period factor and angular seams.
+`partialY_comp_actionAngleInv` has only standard axioms; the reverse
+classical rule and local-integrability transfer use the admitted chart inputs.
 
-**Next:** finish the test-integral transfer in
-`hasWeakL0On_iff_actionAngle`. Both local-integrability conditions and the
-classical chain rules are now available. What remains is passage between
-compactly supported strip tests and periodic tests, with compact level
-support, and the angular-window gluing in the weak identities. The theorem
-itself is still admitted; do not count the new prerequisites as its proof.
-For the other two action-angle weak chain rules, the blueprint's earlier H¹
-approximation sketch was too strong for its locally L¹ hypotheses: use local
-W¹,¹ approximation for full weak gradients. The correction is recorded as a
-digest note in the geometry chapter and in the notes index. The directional
-transport equation must instead be handled by test-function changes, not by
-assuming a full weak gradient.
+The remaining test-transfer mechanism is now in `AnglePeriodization.lean`,
+imported by the library root and `TransversalMollifier.lean`. New blueprint
+nodes are `def:angular-periodization` and `lem:angular-periodization`.
+`periodizeSnd` sums integer angular translates. Bounded angular support makes
+it locally a fixed finite sum, giving smoothness and derivative commutation.
+Disjoint fundamental windows give the integral unfolding, also with
+periodic multipliers and measurable horizontal-strip restrictions.
+A normalized angular bump `η = β / Πβ` has `Πη = 1`; its denominator is
+positive because some integer translate lies where the bump is positive.
+Consequently `cutoffPeriodicSnd F = η F` is a compact strip test for
+periodic smooth data with compact level support, with periodization `F`
+and derivative periodization `∂θ F`. This module has no admissions, and
+its checked unfolding and cutoff results use only standard axioms.
 
-The line-mollifier input is complete for the stronger transversal derivative
-and commutator nodes; these and the analytic chart/coarea inputs remain
-admitted. Proof-worker delegation remains paused.
+For cell-to-strip transport, periodize the arbitrary compact strip test
+and push it to the cell, extending by zero off its compact level band.
+For strip-to-cell transport, pull back the cell test and multiply by `η`.
+The area formula and classical chain rule give a common factor two in
+both test integrals; unfolding and cancellation finish both implications.
+No global smoothness of the cut angle, second derivative of the input,
+or full weak gradient is assumed. The periodization and zero-extension
+helpers are proved, not substituted analytic assumptions.
 
-**Validation:** the full Lean project build passes (3281 jobs); full-file
-diagnostics for `LineMollifier.lean` are completely clean. There remain
-six admissions in `TransversalMollifier.lean` (three
-action-angle weak rules and three derivative/commutator results).
+**Next:** the transversal transport-commutator estimate
+`transversalMollifier_hasWeakL0On` (`lem:transversal-mollifier-commutator`).
+Its blueprint proof now depends only on the proved weak transport
+equivalence, not the two stronger full weak-gradient rules. Apply the
+line-mollifier weak derivative commutation and Lipschitz commutator after
+level cutoff/zero extension, then use the compact-band norm transfer.
+The full weak-gradient rules and stronger transversal derivative estimates
+remain admitted; their blueprint approximation sketch correctly uses local
+W¹,¹, not H¹, for locally L¹ data. Proof-worker delegation remains paused.
+
+**Validation:** the full Lean project build passes (3282 jobs); full-file
+diagnostics for `LineMollifier.lean` and `AnglePeriodization.lean` are clean.
+There remain five admissions in `TransversalMollifier.lean` (two full
+action-angle weak-gradient rules and three derivative/commutator results).
 `VirialL2.lean` checks with exactly its three intended admissions: the two
-new H¹ statements and `virial_l2`. Axiom checks
-on both new L² estimates have only the standard axioms plus `sorryAx` through
-the chart/coarea inputs; the refactored support result still has only
+H¹ statements and `virial_l2`. Axiom checks on the new weak transport
+equivalence and the basic transversal L² estimates have only the standard
+axioms plus `sorryAx` through the chart/coarea inputs. The new angular
+unfolding and cutoff results and the refactored support theorem have only
 `propext`, `Classical.choice`, `Quot.sound`.
 `just web` and the even–even subgraph generation pass. Pi setup and the
 sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
