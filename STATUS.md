@@ -148,24 +148,51 @@ No live supervision or repeated retries were used. The earlier congruence
 worker also did not complete its proof (its unused trivial helper was
 removed); the two unsuccessful support-lemma attempts are recorded in
 `docs/tooling/pi.md`. None is counted as an autonomous proof success.
+The subsequent uniform-bound/convergence step was implemented directly,
+without launching another worker; the configured worker default is unchanged.
 
-**Next toward the transversal mollifier:** finish its basic L² node
-`lem:transversal-mollifier`: the norm bound and convergence via the
-`2S(h)`-weighted action-angle area formula. Support, representative invariance
-and the linearity identities are now done. The cutoff input already belongs
-to unweighted L²; the next missing step is quantitative norm transfer and
-measurable reconstruction from the cylinder back to the cell. This node needs only the proved line contraction
-and convergence, not the weak-derivative lemmas. The chart's inverse relations
-and `lintegral_cellSquare_actionAngle` are already proved, though the latter
-still rests on the admitted coarea formula. Period smoothness and other
-chart regularity inputs remain admitted. For the stronger derivative and
-transport-commutator nodes, finish the three line weak-derivative statements
-and the action-angle weak chain rules in `TransversalMollifier.lean`.
+**The basic L² transversal-mollifier lemma is proved.**
+`memLp_transversalMollifier` and `tendsto_transversalMollifier` now have no
+`sorry` of their own, with unchanged statements. Together with support,
+representative invariance and linearity, they complete
+`lem:transversal-mollifier`, whose blueprint proof is now `\leanok`.
+Both new theorems still depend on the existing admitted chart/coarea inputs
+(`sorryAx`); this does not discharge that infrastructure or the stronger
+transversal derivative and transport-commutator statements.
+
+The quantitative input estimate bounds `|χ|²/(2S)` on the compact cutoff
+support. A measurable inverse extension of the parametrization reconstructs
+cylinder data on the cell. It preserves weighted L² norms exactly; bounding
+`2S` above on a fixed interior level band controls reconstruction by the
+unweighted cylinder norm. These constants are independent of `u` and small
+`ε`. The line-mollifier contraction gives the uniform operator bound.
+For convergence apply the same reconstruction bound to `M_ε F - F`, which
+stays in that fixed band, and use the proved line-mollifier convergence.
+Reconstruction of `F` agrees a.e. with the cell cutoff times `u`; no global
+smoothness of the cut angle or weak-derivative result is used.
+
+New private helpers include `actionCoordinates`, its measurability and
+measure-preserving property, `actionReconstruct` with its weighted norm
+identity, `eLpNorm_cutoff_actionInput_le`, and
+`exists_actionReconstruct_bound`. The elementary support proof was factored
+through `exists_mollify_band` so the same band is available to the norm and
+convergence proofs; the support theorem remains free of admitted dependencies.
+
+**Next:** prove `hasWeakPartialOn_mollifyFst` in `LineMollifier.lean`, then
+commutation with weak derivatives and the derivative-kernel identification.
+These and the action-angle weak chain rules are the remaining inputs for
+`lem:transversal-mollifier-derivatives` and
+`lem:transversal-mollifier-commutator`. Chart regularity and coarea remain
+admitted analytic prerequisites; the completed basic L² lemma does not
+require the remaining line weak-derivative theory.
 
 **Validation:** the full Lean project build passes (3281 jobs); full-file
 diagnostics have only the three remaining line weak-derivative admissions
-and the eight remaining admissions in `TransversalMollifier.lean` (two basic
-L² estimates, three action-angle weak rules, three derivative/commutator results).
+and the six remaining admissions in `TransversalMollifier.lean` (three
+action-angle weak rules and three derivative/commutator results). Axiom checks
+on both new L² estimates have only the standard axioms plus `sorryAx` through
+the chart/coarea inputs; the refactored support result still has only
+`propext`, `Classical.choice`, `Quot.sound`.
 `just web` and the even–even subgraph generation pass. Pi setup and the
 sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
 The runner defaults to `openai-codex/gpt-6-luna` with medium thinking;

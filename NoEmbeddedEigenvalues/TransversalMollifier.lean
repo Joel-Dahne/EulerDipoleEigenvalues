@@ -6,10 +6,10 @@ import NoEmbeddedEigenvalues.Transport
 # The transversal mollifier
 
 Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved),
-`lem:transversal-mollifier-congr` and `lem:transversal-mollifier-linear`
-(proved from chart/coarea inputs);
-stated: `lem:action-angle-weak`, `lem:transversal-mollifier`,
-`lem:transversal-mollifier-derivatives`, `lem:transversal-mollifier-commutator`.
+`lem:transversal-mollifier-congr`, `lem:transversal-mollifier-linear` and
+`lem:transversal-mollifier` (proved from chart/coarea inputs);
+stated: `lem:action-angle-weak`, `lem:transversal-mollifier-derivatives`,
+`lem:transversal-mollifier-commutator`.
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -24,7 +24,10 @@ functions on `ℝ²` supported in a fixed compact subset of the punctured cell.
 Private helpers realize the action-angle area formula as a measure-preserving map
 from a weighted fundamental rectangle, transfer null sets in both directions, and
 place cutoff pullbacks in unweighted `L²`. Almost every angular line is then `L²`,
-which justifies integral linearity by Hölder against the compact kernel.
+which justifies integral linearity by Hölder against the compact kernel. A measurable
+inverse extension reconstructs cylinder data on the cell. The upper bound for the area
+density on a fixed level band transfers contraction and convergence from the cylinder
+back to the plane, uniformly for small scales.
 -/
 
 noncomputable section
@@ -146,10 +149,22 @@ private theorem measurableSet_actionRectangle : MeasurableSet actionRectangle :=
 
 private def actionMeasure : Measure (ℝ × ℝ) := volume.restrict actionRectangle
 
+private def cylinderMeasure : Measure (ℝ × ℝ) :=
+  (volume : Measure ℝ).prod (volume.restrict (Ico (-1 / 4 : ℝ) (3 / 4)))
+
 private theorem actionMeasure_eq_prod : actionMeasure =
     (volume.restrict (Ioo (0 : ℝ) 1)).prod
       (volume.restrict (Ico (-1 / 4 : ℝ) (3 / 4))) :=
   (Measure.prod_restrict _ _).symm
+
+private theorem cylinder_restrict_level :
+    cylinderMeasure.restrict (Ioo (0 : ℝ) 1 ×ˢ univ) = actionMeasure := by
+  simp only [cylinderMeasure, ← Measure.prod_restrict, Measure.restrict_univ,
+    ← actionMeasure_eq_prod]
+
+private theorem actionMeasure_le_cylinder : actionMeasure ≤ cylinderMeasure := by
+  rw [← cylinder_restrict_level]
+  exact Measure.restrict_le_self
 
 private theorem continuousOn_actionParam : ContinuousOn actionAngleInv actionRectangle :=
   contDiffOn_actionAngleInv.continuousOn.mono (fun _ hq ↦ ⟨hq.1, mem_univ _⟩)
@@ -225,6 +240,65 @@ private theorem actionAngle_mem_rectangle {p : ℝ × ℝ} (hp : p ∈ punctured
     dsimp [orbitPeriod] at *
     linarith
 
+/-- Extend the inverse of the parametrization measurably across its complement. -/
+private def actionCoordinates : ℝ × ℝ → ℝ × ℝ :=
+  Function.extend (actionRectangle.domRestrict actionAngleInv) Subtype.val (fun _ ↦ 0)
+
+private theorem measurableEmbedding_actionParam :
+    MeasurableEmbedding (actionRectangle.domRestrict actionAngleInv) :=
+  continuousOn_actionParam.measurableEmbedding measurableSet_actionRectangle injOn_actionAngleInv
+
+private theorem measurable_actionCoordinates : Measurable actionCoordinates :=
+  measurableEmbedding_actionParam.measurable_extend measurable_subtype_coe measurable_const
+
+private theorem actionCoordinates_actionAngleInv {q : ℝ × ℝ} (hq : q ∈ actionRectangle) :
+    actionCoordinates (actionAngleInv q) = q :=
+  measurableEmbedding_actionParam.injective.extend_apply _ _ ⟨q, hq⟩
+
+private theorem actionCoordinates_eq_actionAngle {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    actionCoordinates p = actionAngle p := by
+  have h := actionCoordinates_actionAngleInv (actionAngle_mem_rectangle hp)
+  rwa [actionAngleInv_actionAngle hp] at h
+
+private theorem measurePreserving_actionCoordinates :
+    MeasurePreserving actionCoordinates (volume.restrict cellSquare)
+      (actionMeasure.withDensity actionWeight) := by
+  refine ⟨measurable_actionCoordinates, ?_⟩
+  rw [← measurePreserving_actionParam.map_eq,
+    Measure.map_map measurable_actionCoordinates measurable_actionParam]
+  calc
+    Measure.map (actionCoordinates ∘ actionParam) (actionMeasure.withDensity actionWeight) =
+        Measure.map id (actionMeasure.withDensity actionWeight) := by
+      apply Measure.map_congr
+      have hac := withDensity_absolutelyContinuous actionMeasure actionWeight
+      filter_upwards [hac.ae_le (ae_restrict_mem measurableSet_actionRectangle)] with q hq
+      change actionCoordinates (actionParam q) = q
+      have hp : actionParam q = actionAngleInv q := by simp [actionParam, Set.piecewise, hq]
+      rw [hp]
+      exact actionCoordinates_actionAngleInv hq
+    _ = _ := Measure.map_id
+
+private theorem measurableSet_cellSquare : MeasurableSet cellSquare := by
+  have h₁ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).1|) := by unfold diagCoord; fun_prop
+  have h₂ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).2|) := by unfold diagCoord; fun_prop
+  exact (isOpen_lt h₁ continuous_const).measurableSet.inter
+    (isOpen_lt h₂ continuous_const).measurableSet
+
+open scoped Classical in
+private def actionReconstruct (F : ℝ × ℝ → ℂ) : ℝ × ℝ → ℂ :=
+  cellSquare.indicator (F ∘ actionCoordinates)
+
+private theorem memLp_actionReconstruct {F : ℝ × ℝ → ℂ}
+    (hF : MemLp F 2 (actionMeasure.withDensity actionWeight)) :
+    MemLp (actionReconstruct F) 2 volume ∧
+      eLpNorm (actionReconstruct F) 2 volume =
+        eLpNorm F 2 (actionMeasure.withDensity actionWeight) := by
+  refine ⟨(memLp_indicator_iff_restrict measurableSet_cellSquare).mpr
+    (hF.comp_measurePreserving measurePreserving_actionCoordinates), ?_⟩
+  rw [actionReconstruct, eLpNorm_indicator_eq_eLpNorm_restrict measurableSet_cellSquare]
+  exact eLpNorm_comp_measurePreserving hF.aestronglyMeasurable
+    measurePreserving_actionCoordinates
+
 /-- Pull back arbitrary representatives, not just measurable ones. -/
 private theorem ae_comp_actionParam {u v : ℝ × ℝ → ℂ}
     (huv : u =ᵐ[volume.restrict cellSquare] v) :
@@ -261,6 +335,34 @@ private theorem volume_actionAngleInv_image_eq_zero {B : Set (ℝ × ℝ)}
     rintro _ ⟨q, hq, rfl⟩
     exact (actionAngleInv_mem_puncturedCell (hBR hq).1.1 (hBR hq).1.2 q.2).1
   rwa [Measure.restrict_apply hi, inter_eq_left.mpr hsub] at hcell
+
+/-- Squared `L²` norms expressed by real integrals. -/
+private theorem eLpNorm_two_sq {μ : Measure (ℝ × ℝ)} {f : ℝ × ℝ → ℂ}
+    (hf : MemLp f 2 μ) :
+    eLpNorm f 2 μ ^ (2 : ℝ) = ENNReal.ofReal (∫ q, ‖f q‖ ^ 2 ∂μ) := by
+  calc
+    _ = ∫⁻ q, ‖f q‖ₑ ^ (2 : ℝ) ∂μ :=
+      eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num) hf.aestronglyMeasurable
+    _ = ∫⁻ q, ENNReal.ofReal (‖f q‖ ^ 2) ∂μ := by
+      apply lintegral_congr_ae
+      filter_upwards [] with q
+      simp [ENNReal.ofReal_pow]
+    _ = _ := (ofReal_integral_eq_lintegral_ofReal
+      ((memLp_two_iff_integrable_sq_norm hf.aestronglyMeasurable).mp hf)
+      (Filter.Eventually.of_forall (fun q ↦ sq_nonneg ‖f q‖))).symm
+
+private theorem eLpNorm_two_le_of_integral_sq_le {μ ν : Measure (ℝ × ℝ)}
+    {f g : ℝ × ℝ → ℂ} (hf : MemLp f 2 μ) (hg : MemLp g 2 ν) (C : ℝ≥0)
+    (hI : (∫ q, ‖f q‖ ^ 2 ∂μ) ≤ (C : ℝ) ^ 2 * ∫ q, ‖g q‖ ^ 2 ∂ν) :
+    eLpNorm f 2 μ ≤ C * eLpNorm g 2 ν := by
+  apply (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp
+  calc
+    _ = ENNReal.ofReal (∫ q, ‖f q‖ ^ 2 ∂μ) := eLpNorm_two_sq hf
+    _ ≤ ENNReal.ofReal ((C : ℝ) ^ 2 * ∫ q, ‖g q‖ ^ 2 ∂ν) := ENNReal.ofReal_le_ofReal hI
+    _ = (C : ENNReal) ^ 2 * eLpNorm g 2 ν ^ (2 : ℝ) := by
+      rw [eLpNorm_two_sq hg]
+      simp [ENNReal.ofReal_mul, ENNReal.ofReal_pow]
+    _ = _ := by simp [mul_pow]
 
 /-- Cutoff multiplication compensates for removing the area density. -/
 private theorem cutoff_sq_le_period {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
@@ -341,6 +443,79 @@ private theorem memLp_cutoff_actionInput {χ : ℝ → ℝ} (hχ : ContDiff ℝ 
   have hi := (memLp_indicator_iff_restrict hS).mpr hmem
   rwa [heq] at hi
 
+private theorem eLpNorm_actionInput_eq {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1)
+    (u : ℝ × ℝ → ℂ) :
+    eLpNorm (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ) * u (actionAngleInv q)) 2 cylinderMeasure =
+      eLpNorm (fun q ↦ (χ q.1 : ℂ) * u (actionParam q)) 2 actionMeasure := by
+  classical
+  let F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)
+  let S : Set (ℝ × ℝ) := Ioo (0 : ℝ) 1 ×ˢ univ
+  have hS : MeasurableSet S := measurableSet_Ioo.prod MeasurableSet.univ
+  have heq : S.indicator F = F := by
+    funext q
+    by_cases hq : q ∈ S
+    · simp [hq]
+    · have h01 : q.1 ∉ Ioo (0 : ℝ) 1 := by simpa [S] using hq
+      have hz : χ q.1 = 0 := image_eq_zero_of_notMem_tsupport (fun hs ↦ h01 (hχs hs))
+      simp [hq, F, hz]
+  calc
+    _ = eLpNorm (S.indicator F) 2 cylinderMeasure := by rw [heq]
+    _ = eLpNorm F 2 actionMeasure := by
+      rw [eLpNorm_indicator_eq_eLpNorm_restrict hS, cylinder_restrict_level]
+    _ = _ := by
+      apply eLpNorm_congr_ae
+      filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+      simp [F, actionParam, Set.piecewise, hq]
+
+private theorem eLpNorm_cutoff_actionInput_le {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    (hχs : tsupport χ ⊆ Ioo 0 1) :
+    ∃ C : ℝ≥0, ∀ u, MemLp u 2 (volume.restrict cellSquare) →
+      eLpNorm (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ) * u (actionAngleInv q)) 2 cylinderMeasure ≤
+        C * eLpNorm u 2 (volume.restrict cellSquare) := by
+  obtain ⟨D, hD, hbound⟩ := cutoff_sq_le_period hχ hχs
+  let C : ℝ≥0 := ⟨Real.sqrt D, Real.sqrt_nonneg D⟩
+  have hC : (C : ℝ) ^ 2 = D := Real.sq_sqrt hD
+  refine ⟨C, fun u hu ↦ ?_⟩
+  have hU := hu.comp_measurePreserving measurePreserving_actionParam
+  have hG := memLp_cutoff_actionMeasure hχ hχs hu
+  have hint : Integrable (fun q ↦ (actionWeight q).toReal * ‖u (actionParam q)‖ ^ 2)
+      actionMeasure := by
+    simpa only [smul_eq_mul, Function.comp_apply] using
+      (integrable_withDensity_iff_integrable_smul' measurable_actionWeight
+        (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))).mp
+        ((memLp_two_iff_integrable_sq_norm hU.aestronglyMeasurable).mp hU)
+  have hpoint : ∀ᵐ q ∂actionMeasure, ‖(χ q.1 : ℂ) * u (actionParam q)‖ ^ 2 ≤
+      D * ((actionWeight q).toReal * ‖u (actionParam q)‖ ^ 2) := by
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    by_cases hz : χ q.1 = 0
+    · simp only [hz, Complex.ofReal_zero, zero_mul, norm_zero, ne_eq, OfNat.ofNat_ne_zero,
+        not_false_eq_true, zero_pow]
+      exact mul_nonneg hD (mul_nonneg ENNReal.toReal_nonneg (sq_nonneg _))
+    · have hs : q.1 ∈ tsupport χ := subset_closure hz
+      have hw : (actionWeight q).toReal = 2 * orbitPeriod q.1 := by
+        simp [actionWeight, actionPeriod, hq.1, (orbitPeriod_pos hq.1.1 hq.1.2).le]
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, mul_pow, sq_abs, hw]
+      simpa only [mul_assoc] using
+        mul_le_mul_of_nonneg_right (hbound q.1 hs) (sq_nonneg ‖u (actionParam q)‖)
+  have hI : (∫ q, ‖(χ q.1 : ℂ) * u (actionParam q)‖ ^ 2 ∂actionMeasure) ≤
+      D * ∫ q, ‖u (actionParam q)‖ ^ 2 ∂actionMeasure.withDensity actionWeight := by
+    calc
+      _ ≤ ∫ q, D * ((actionWeight q).toReal * ‖u (actionParam q)‖ ^ 2) ∂actionMeasure :=
+        integral_mono_ae ((memLp_two_iff_integrable_sq_norm hG.aestronglyMeasurable).mp hG)
+          (hint.const_mul D) hpoint
+      _ = _ := by
+        rw [integral_const_mul, integral_withDensity_eq_integral_toReal_smul
+          measurable_actionWeight (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))]
+        rfl
+  rw [eLpNorm_actionInput_eq hχs]
+  calc
+    _ ≤ C * eLpNorm (fun q ↦ u (actionParam q)) 2
+        (actionMeasure.withDensity actionWeight) := by
+      apply eLpNorm_two_le_of_integral_sq_le hG hU C
+      simpa only [hC, Function.comp_apply] using hI
+    _ = _ := congrArg (fun x : ENNReal ↦ (C : ENNReal) * x)
+      (eLpNorm_comp_measurePreserving hu.aestronglyMeasurable measurePreserving_actionParam)
+
 /-- Almost every angular line of an `L²` input is itself `L²`. -/
 private theorem ae_memLp_action_lines {F : ℝ × ℝ → ℂ}
     (hF : MemLp F 2 ((volume : Measure ℝ).prod
@@ -389,6 +564,159 @@ private theorem ae_of_ae_angle {P : ℝ → Prop}
   exact hp ⟨actionAngle p, ⟨actionAngle_mem_rectangle hc, hcover hg⟩,
     actionAngleInv_actionAngle hc⟩
 
+/-- Reconstruction is bounded for cylinder functions supported in a fixed interior level band. -/
+private theorem exists_actionReconstruct_bound {a b : ℝ} (ha : 0 < a) (hb : b < 1) :
+    ∃ C : ℝ≥0, ∀ F : ℝ × ℝ → ℂ, MemLp F 2 cylinderMeasure →
+      (∀ q, q.1 ∉ Icc a b → F q = 0) →
+      MemLp (actionReconstruct F) 2 volume ∧
+        eLpNorm (actionReconstruct F) 2 volume ≤ C * eLpNorm F 2 cylinderMeasure := by
+  have hcont : ContinuousOn (fun h ↦ 2 * orbitPeriod h) (Icc a b) :=
+    continuousOn_const.mul (contDiffOn_orbitPeriod.continuousOn.mono
+      (fun h hh ↦ ⟨lt_of_lt_of_le ha hh.1, lt_of_le_of_lt hh.2 hb⟩))
+  obtain ⟨D, hD⟩ := isCompact_Icc.bddAbove_image hcont
+  let E := max D 0
+  have hE : 0 ≤ E := le_max_right _ _
+  let C : ℝ≥0 := ⟨Real.sqrt E, Real.sqrt_nonneg E⟩
+  have hC : (C : ℝ) ^ 2 = E := Real.sq_sqrt hE
+  refine ⟨C, fun F hF hzero ↦ ?_⟩
+  have hFn := hF.mono_measure actionMeasure_le_cylinder
+  have hmFw := hFn.aestronglyMeasurable.mono_ac
+    (withDensity_absolutelyContinuous actionMeasure actionWeight)
+  have hint := (memLp_two_iff_integrable_sq_norm hFn.aestronglyMeasurable).mp hFn
+  have hpoint : ∀ᵐ q ∂actionMeasure,
+      (actionWeight q).toReal * ‖F q‖ ^ 2 ≤ E * ‖F q‖ ^ 2 := by
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
+    by_cases hband : q.1 ∈ Icc a b
+    · have hw : (actionWeight q).toReal = 2 * orbitPeriod q.1 := by
+        simp [actionWeight, actionPeriod, hq.1, (orbitPeriod_pos hq.1.1 hq.1.2).le]
+      rw [hw]
+      exact mul_le_mul_of_nonneg_right
+        ((hD (mem_image_of_mem _ hband)).trans (le_max_left _ _)) (sq_nonneg _)
+    · simp [hzero q hband]
+  have hmg : AEStronglyMeasurable (fun q ↦ (actionWeight q).toReal * ‖F q‖ ^ 2)
+      actionMeasure := measurable_actionWeight.ennreal_toReal.aestronglyMeasurable.mul
+        (hFn.aestronglyMeasurable.norm.pow 2)
+  have hg : Integrable (fun q ↦ (actionWeight q).toReal * ‖F q‖ ^ 2) actionMeasure := by
+    apply (hint.const_mul E).mono' hmg
+    filter_upwards [hpoint] with q hq
+    simpa only [Real.norm_eq_abs,
+      abs_of_nonneg (mul_nonneg ENNReal.toReal_nonneg (sq_nonneg _))] using hq
+  have hwint : Integrable (fun q ↦ ‖F q‖ ^ 2)
+      (actionMeasure.withDensity actionWeight) := by
+    apply (integrable_withDensity_iff_integrable_smul' measurable_actionWeight
+      (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))).mpr
+    simpa only [smul_eq_mul] using hg
+  have hFw : MemLp F 2 (actionMeasure.withDensity actionWeight) :=
+    (memLp_two_iff_integrable_sq_norm hmFw).mpr hwint
+  have hI : (∫ q, ‖F q‖ ^ 2 ∂actionMeasure.withDensity actionWeight) ≤
+      E * ∫ q, ‖F q‖ ^ 2 ∂actionMeasure := by
+    calc
+      _ = ∫ q, (actionWeight q).toReal * ‖F q‖ ^ 2 ∂actionMeasure := by
+        rw [integral_withDensity_eq_integral_toReal_smul measurable_actionWeight
+          (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))]
+        rfl
+      _ ≤ ∫ q, E * ‖F q‖ ^ 2 ∂actionMeasure := integral_mono_ae hg (hint.const_mul E) hpoint
+      _ = _ := integral_const_mul _ _
+  have hnorm := eLpNorm_two_le_of_integral_sq_le hFw hFn C (by simpa only [hC] using hI)
+  have hrec := memLp_actionReconstruct hFw
+  refine ⟨hrec.1, hrec.2.le.trans (hnorm.trans ?_)⟩
+  exact mul_le_mul_of_nonneg_left (eLpNorm_mono_measure F actionMeasure_le_cylinder) bot_le
+
+private theorem volume_origin_eq_zero : (volume : Measure (ℝ × ℝ)) {(0 : ℝ × ℝ)} = 0 := by
+  change ((volume : Measure ℝ).prod volume) {(0 : ℝ × ℝ)} = 0
+  exact measure_singleton _
+
+open scoped Classical in
+private theorem ae_actionReconstruct (F : ℝ × ℝ → ℂ) :
+    actionReconstruct F =ᵐ[volume]
+      (fun p ↦ if p ∈ puncturedCell then F (actionAngle p) else 0) := by
+  classical
+  have hne : ∀ᵐ p ∂(volume : Measure (ℝ × ℝ)), p ∉ {(0 : ℝ × ℝ)} :=
+    measure_eq_zero_iff_ae_notMem.mp volume_origin_eq_zero
+  filter_upwards [hne] with p hp
+  by_cases hc : p ∈ cellSquare
+  · have hpc : p ∈ puncturedCell := ⟨hc, hp⟩
+    simp [actionReconstruct, hc, hpc, actionCoordinates_eq_actionAngle hpc]
+  · have hpc : p ∉ puncturedCell := fun h ↦ hc h.1
+    simp [actionReconstruct, hc, hpc]
+
+private theorem actionReconstruct_sub (F G : ℝ × ℝ → ℂ) :
+    actionReconstruct (F - G) = actionReconstruct F - actionReconstruct G := by
+  classical
+  funext p
+  by_cases hc : p ∈ cellSquare <;> simp [actionReconstruct, hc]
+
+private theorem ae_actionReconstruct_input (χ : ℝ → ℝ) (u : ℝ × ℝ → ℂ) :
+    actionReconstruct (fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)) =ᵐ[volume]
+      (fun p ↦ (cellCutoff χ p : ℂ) * u p) := by
+  classical
+  have hne : ∀ᵐ p ∂(volume : Measure (ℝ × ℝ)), p ∉ {(0 : ℝ × ℝ)} :=
+    measure_eq_zero_iff_ae_notMem.mp volume_origin_eq_zero
+  filter_upwards [ae_actionReconstruct (fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)), hne]
+    with p hp hn
+  rw [hp]
+  by_cases hc : p ∈ cellSquare
+  · have hpc : p ∈ puncturedCell := ⟨hc, hn⟩
+    rw [ite_eq_left hpc, actionAngleInv_actionAngle hpc]
+    simp [cellCutoff, hc, actionAngle]
+  · have hpc : p ∉ puncturedCell := fun h ↦ hc h.1
+    simp [cellCutoff, hc, hpc]
+
+/-- A fixed level band contains both the cutoff and all sufficiently small mollifications. -/
+private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1) :
+    ∃ a b ε₀ : ℝ, 0 < a ∧ b < 1 ∧ 0 < ε₀ ∧ tsupport χ ⊆ Icc a b ∧
+      ∀ ε ∈ Ioo 0 ε₀, ∀ (u : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
+        mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * u (actionAngleInv z)) q = 0 := by
+  have hs : IsCompact (tsupport χ) :=
+    (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).of_isClosed_subset (isClosed_tsupport χ)
+      (fun t ht ↦ ⟨(hχs ht).1.le, (hχs ht).2.le⟩)
+  obtain ⟨l, hl, hlow⟩ := hs.exists_forall_le' continuous_id.continuousOn
+    (fun t ht ↦ (hχs ht).1)
+  obtain ⟨d, hd, hgap⟩ := hs.exists_forall_le' (f := fun t : ℝ ↦ 1 - t) (a := 0)
+    (continuous_const.sub continuous_id).continuousOn
+    (fun t ht ↦ by linarith [(hχs ht).2])
+  let r : ℝ := 1 - d
+  have hr : r < 1 := by dsimp [r]; linarith
+  have hupp : ∀ t ∈ tsupport χ, t ≤ r := by
+    intro t ht
+    dsimp [r]
+    linarith [hgap t ht]
+  let ε₀ := min l (1 - r) / 2
+  have hε₀ : 0 < ε₀ := div_pos (lt_min hl (by linarith)) (by norm_num)
+  refine ⟨l / 2, (r + 1) / 2, ε₀, by linarith, by linarith, hε₀, ?_, ?_⟩
+  · intro t ht
+    have hlt : l ≤ t := hlow t ht
+    have htr := hupp t ht
+    exact ⟨by linarith, by linarith⟩
+  · intro ε hε u q hq
+    have he₁ : ε < l / 2 := by
+      have h := min_le_left l (1 - r)
+      dsimp [ε₀] at hε
+      linarith [hε.2]
+    have he₂ : ε < (1 - r) / 2 := by
+      have h := min_le_right l (1 - r)
+      dsimp [ε₀] at hε
+      linarith [hε.2]
+    unfold mollifyFst
+    apply integral_eq_zero_of_ae
+    filter_upwards [] with t
+    by_cases hk : mollifierKernel ε (q.1 - t) = 0
+    · simp [hk]
+    by_cases ht : χ t = 0
+    · simp [ht]
+    have hts : t ∈ tsupport χ := subset_closure (show t ∈ Function.support χ from ht)
+    have hlt : l ≤ t := hlow t hts
+    have htr := hupp t hts
+    have hB : stdBump ((q.1 - t) / ε) ≠ 0 := by
+      intro hz
+      apply hk
+      simp [mollifierKernel, hz]
+    have hmem : (q.1 - t) / ε ∈ Function.support stdBump := hB
+    rw [support_stdBump] at hmem
+    have hleft := (lt_div_iff₀ hε.1).mp hmem.1
+    have hright := (div_lt_iff₀ hε.1).mp hmem.2
+    exact False.elim (hq ⟨by linarith, by linarith⟩)
+
 /-! ### Statements -/
 
 section Statements
@@ -414,57 +742,15 @@ theorem transversalMollifier_const_mul (ε : ℝ) (c : ℂ) (u : ℝ × ℝ → 
 theorem transversalMollifier_eq_zero (hχs : tsupport χ ⊆ Ioo 0 1) :
     ∃ K, IsCompact K ∧ K ⊆ puncturedCell ∧ ∃ ε₀ > 0, ∀ ε ∈ Ioo 0 ε₀, ∀ u p, p ∉ K →
       transversalMollifier χ ε u p = 0 := by
-  classical
-  have hs : IsCompact (tsupport χ) :=
-    (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).of_isClosed_subset (isClosed_tsupport χ)
-      (fun t ht ↦ ⟨(hχs ht).1.le, (hχs ht).2.le⟩)
-  obtain ⟨l, hl, hlow⟩ := hs.exists_forall_le' continuous_id.continuousOn
-    (fun t ht ↦ (hχs ht).1)
-  obtain ⟨d, hd, hgap⟩ := hs.exists_forall_le' (f := fun t : ℝ ↦ 1 - t) (a := 0)
-    (continuous_const.sub continuous_id).continuousOn
-    (fun t ht ↦ by linarith [(hχs ht).2])
-  let r : ℝ := 1 - d
-  have hr : r < 1 := by dsimp [r]; linarith
-  have hupp : ∀ t ∈ tsupport χ, t ≤ r := by
-    intro t ht
-    dsimp [r]
-    linarith [hgap t ht]
-  let ε₀ := min l (1 - r) / 2
-  have hε₀ : 0 < ε₀ := div_pos (lt_min hl (by linarith)) (by norm_num)
-  refine ⟨closedCellLevelBand (l / 2) ((r + 1) / 2),
-    isCompact_closedCellLevelBand _ _,
-    closedCellLevelBand_subset (by linarith) (by linarith), ε₀, hε₀, ?_⟩
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, _, hband⟩ := exists_mollify_band hχs
+  refine ⟨closedCellLevelBand a b, isCompact_closedCellLevelBand _ _,
+    closedCellLevelBand_subset ha hb, ε₀, hε₀, ?_⟩
   intro ε hε u p hp
-  have he₁ : ε < l / 2 := by
-    have h := min_le_left l (1 - r)
-    dsimp [ε₀] at hε
-    linarith [hε.2]
-  have he₂ : ε < (1 - r) / 2 := by
-    have h := min_le_right l (1 - r)
-    dsimp [ε₀] at hε
-    linarith [hε.2]
   by_cases hc : p ∈ puncturedCell
-  · rw [transversalMollifier, ite_eq_left hc, mollifyFst]
-    apply integral_eq_zero_of_ae
-    filter_upwards [] with t
-    change mollifierKernel ε (levelCoord p - t) •
-      ((χ t : ℂ) * u (actionAngleInv (t, angleCoord p))) = 0
-    by_cases hk : mollifierKernel ε (levelCoord p - t) = 0
-    · simp [hk]
-    by_cases ht : χ t = 0
-    · simp [ht]
-    have hts : t ∈ tsupport χ := subset_closure (show t ∈ Function.support χ from ht)
-    have hlt : l ≤ t := hlow t hts
-    have htr : t ≤ r := hupp t hts
-    have hB : stdBump ((levelCoord p - t) / ε) ≠ 0 := by
-      intro hz
-      apply hk
-      simp [mollifierKernel, hz]
-    have hmem : (levelCoord p - t) / ε ∈ Function.support stdBump := hB
-    rw [support_stdBump] at hmem
-    have hleft := (lt_div_iff₀ hε.1).mp hmem.1
-    have hright := (div_lt_iff₀ hε.1).mp hmem.2
-    exact False.elim (hp ⟨hc.1.1.le, hc.1.2.le, by linarith, by linarith⟩)
+  · rw [transversalMollifier, ite_eq_left hc]
+    apply hband ε hε u (actionAngle p)
+    intro hh
+    exact hp ⟨hc.1.1.le, hc.1.2.le, hh⟩
   · simp [transversalMollifier, hc]
 
 /-! #### `lem:transversal-mollifier-linear` -/
@@ -536,7 +822,7 @@ theorem transversalMollifier_congr_ae (hχs : tsupport χ ⊆ Ioo 0 1)
     exact congrArg (fun z : ℂ ↦ mollifierKernel ε ((actionAngle p).1 - h) • z) hh
   · simp [transversalMollifier, hc]
 
-/-! #### Remaining `lem:transversal-mollifier` estimates (stated) -/
+/-! #### `lem:transversal-mollifier` -/
 
 /-- For small `ε`, `J_ε` is bounded from `L²` of the cell to `L²(ℝ²)`, uniformly in `ε`. -/
 theorem memLp_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport χ ⊆ Ioo 0 1) :
@@ -544,14 +830,58 @@ theorem memLp_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport 
       MemLp (transversalMollifier χ ε u) 2 volume ∧
         eLpNorm (transversalMollifier χ ε u) 2 volume ≤
           C * eLpNorm u 2 (volume.restrict cellSquare) := by
-  sorry
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, _, hband⟩ := exists_mollify_band hχs
+  obtain ⟨Ci, hCi⟩ := eLpNorm_cutoff_actionInput_le hχ hχs
+  obtain ⟨Co, hCo⟩ := exists_actionReconstruct_bound ha hb
+  refine ⟨ε₀, hε₀, Co * Ci, fun ε hε u hu ↦ ?_⟩
+  let F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)
+  have hM := eLpNorm_mollifyFst_le hε.1 (memLp_cutoff_actionInput hχ hχs hu)
+  have hrec := hCo (mollifyFst ε F) hM.1 (hband ε hε u)
+  have hJ : actionReconstruct (mollifyFst ε F) =ᵐ[volume] transversalMollifier χ ε u :=
+    ae_actionReconstruct _
+  refine ⟨MemLp.ae_eq hJ hrec.1, ?_⟩
+  calc
+    _ = eLpNorm (actionReconstruct (mollifyFst ε F)) 2 volume := eLpNorm_congr_ae hJ.symm
+    _ ≤ Co * eLpNorm (mollifyFst ε F) 2 cylinderMeasure := hrec.2
+    _ ≤ Co * (Ci * eLpNorm u 2 (volume.restrict cellSquare)) :=
+      mul_le_mul_of_nonneg_left (hM.2.trans (hCi u hu)) bot_le
+    _ = _ := by simp [ENNReal.coe_mul, mul_assoc]
 
 /-- `J_ε u → χ(Ψ/2) u` in `L²`. -/
 theorem tendsto_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport χ ⊆ Ioo 0 1)
     {u : ℝ × ℝ → ℂ} (hu : MemLp u 2 (volume.restrict cellSquare)) :
     Tendsto (fun ε ↦ eLpNorm (fun p ↦ transversalMollifier χ ε u p - cellCutoff χ p * u p) 2
       volume) (𝓝[>] 0) (𝓝 0) := by
-  sorry
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, hχband, hband⟩ := exists_mollify_band hχs
+  obtain ⟨Co, hCo⟩ := exists_actionReconstruct_bound ha hb
+  let F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)
+  have hF := memLp_cutoff_actionInput hχ hχs hu
+  have hlim : Tendsto (fun ε ↦ (Co : ENNReal) *
+      eLpNorm (mollifyFst ε F - F) 2 cylinderMeasure) (𝓝[>] 0) (𝓝 0) := by
+    simpa only [mul_zero, F, cylinderMeasure] using
+      ENNReal.Tendsto.const_mul (tendsto_mollifyFst hF)
+      (Or.inr (ENNReal.coe_ne_top : (Co : ENNReal) ≠ ⊤))
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
+    (tendsto_const_nhds : Tendsto (fun _ : ℝ ↦ (0 : ENNReal)) (𝓝[>] 0) (𝓝 0)) hlim
+  · exact Filter.Eventually.of_forall (fun _ ↦ bot_le)
+  · filter_upwards [self_mem_nhdsWithin,
+      (eventually_lt_nhds hε₀).filter_mono nhdsWithin_le_nhds] with ε hε hεlt
+    have hεband : ε ∈ Ioo 0 ε₀ := ⟨hε, hεlt⟩
+    have hM := eLpNorm_mollifyFst_le hε hF
+    have hzero : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → (mollifyFst ε F - F) q = 0 := by
+      intro q hq
+      have hz : χ q.1 = 0 := image_eq_zero_of_notMem_tsupport (fun hs ↦ hq (hχband hs))
+      simp only [Pi.sub_apply]
+      rw [hband ε hεband u q hq]
+      simp [F, hz]
+    have hrec := hCo (mollifyFst ε F - F) (hM.1.sub hF) hzero
+    have hJ : actionReconstruct (mollifyFst ε F) =ᵐ[volume] transversalMollifier χ ε u :=
+      ae_actionReconstruct _
+    have heq : actionReconstruct (mollifyFst ε F - F) =ᵐ[volume]
+        (fun p ↦ transversalMollifier χ ε u p - (cellCutoff χ p : ℂ) * u p) := by
+      rw [actionReconstruct_sub]
+      exact hJ.sub (ae_actionReconstruct_input χ u)
+    exact (eLpNorm_congr_ae heq.symm).le.trans hrec.2
 
 /-! #### `lem:transversal-mollifier-derivatives` (stated) -/
 

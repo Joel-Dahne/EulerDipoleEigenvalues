@@ -401,17 +401,42 @@ C\|u\|_{L^2(\Cell)}$. For $u\in L^2(\Cell)$, $J_\epsilon u\to\hat\chi u$ in $L^2
 \uses{lem:transversal-mollifier-support, lem:transversal-mollifier-congr,
   lem:transversal-mollifier-linear, lem:action-angle-chart,
   lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+\leanok
 Support, representative invariance and the two linearity identities are
 Lemmas~\ref{lem:transversal-mollifier-support},
 \ref{lem:transversal-mollifier-congr} and~\ref{lem:transversal-mollifier-linear}.
-Enclose $\operatorname{supp}\chi$ in $[a,b]\subset(0,1)$ and choose
-$\epsilon_0>0$ with $[a-\epsilon_0,b+\epsilon_0]\subset(0,1)$. By the
-area formula (Lemma~\ref{lem:action-angle-chart}) and the inverse relations,
-$\|J_\epsilon u\|^2=\int\int|M_\epsilon(\chi U)|^2\,2S\,dh\,d\theta$ over $(0,1)\times[-\frac14,\frac34)$,
-and $2S$ is bounded above and below on $[a-\epsilon_0,b+\epsilon_0]$. So the $L^2$ statements follow
-from Lemmas~\ref{lem:line-mollifier-contraction}
-and~\ref{lem:line-mollifier-convergence} with $\mu$ Lebesgue measure on $[-\frac14,\frac34)$, using
-$\hat\chi u=(\chi U)\circ(h,\theta)$.
+Choose a closed interval $I\subset(0,1)$ containing both the cutoff support
+and the level support of $M_\epsilon(\chi U)$ for $0<\epsilon<\epsilon_0$,
+as in the support proof. Write $F=\chi U$ on the fundamental cylinder,
+extended by zero in $h$. The compact-support estimate from the linearity
+proof gives a constant $C_i$ independent of $u$ with
+\[
+  \|F\|_{L^2(dh\,d\theta)}\le C_i\|u\|_{L^2(\Cell)},
+  \qquad |\chi(h)|^2\le C_i^2\,2S(h)\quad(h\in\operatorname{supp}\chi).
+\]
+
+The parametrization restricted to the fundamental rectangle is a measurable
+embedding by Lusin--Souslin. Extend its inverse measurably to the plane and
+reconstruct cylinder data on the cell, setting it to zero elsewhere. The
+area formula makes this reconstruction an isometry from the weighted
+measure $2S(h)\,dh\,d\theta$ to planar area measure; agreement with the
+specified coordinates is needed only off the center, a null set. Since
+$2S\le C_o^2$ on $I$, for data supported in $I$,
+\[
+  \|\mathcal R G\|_{L^2(\R^2)}\le C_o\|G\|_{L^2(dh\,d\theta)}.
+\]
+Apply this to $G=M_\epsilon F$ and use the line-mollifier contraction to
+obtain the uniform bound with $C=C_oC_i$ and $L^2$ membership of the output.
+
+For convergence, $M_\epsilon F-F$ is supported in the same fixed interval
+$I$. Reconstruction commutes with subtraction and reconstructs $F$ as
+$\hat\chi u$ almost everywhere. Hence
+\[
+  \|J_\epsilon u-\hat\chi u\|_2
+    \le C_o\|M_\epsilon F-F\|_{L^2(dh\,d\theta)}\longrightarrow0
+\]
+by Lemma~\ref{lem:line-mollifier-convergence}, with $\mu$ Lebesgue measure
+on $[-\frac14,\frac34)$. No weak-derivative statement is used.
 \end{proof}
 
 \begin{lemma}[Derivatives of the transversal mollifier]
