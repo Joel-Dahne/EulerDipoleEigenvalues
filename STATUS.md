@@ -45,8 +45,8 @@ not marked Lean-proved: 10 in geometry, 8 in analysis, 4 in virial, and
 6 in transport. All have written blueprint proofs or sketches. Two of
 these, `lem:acl-slicing` and `lem:trace-l2`, have no Lean statement yet;
 the remaining 26 have Lean statements covering their claims. This is
-not a complete mathematical proof audit. The other chapters still need
-the first-pass review given to analysis. Some nodes remain partially
+not a complete mathematical proof audit. Analysis and virial have had a
+first-pass review; geometry and transport remain to be reviewed. Some nodes remain partially
 formalized; in particular only the full-gradient parts of
 `lem:action-angle-weak` remain open, not its transport equivalence.
 
@@ -95,16 +95,47 @@ confirm that the finite-p embedding is outside the even–even graph and
 that the H² trace has no fractional-trace ancestor. The two new generic
 nodes have no `leanok` markers; no formalization progress is claimed.
 
-`lem:virial-h1` is now stated in `VirialL2.lean` as
-`squarePairing_halfDensityGen_h1` and `virial_h1`, with two intentionally
-admitted proofs. The statements use periodic `C²` fields, a periodic `C¹`
-adaptation coefficient for the quadratic identity, and Fourier partial
-derivative witnesses of `H¹` inputs. The displayed `Du` and `Hu` use
-lifts of these L² derivatives, never classical derivatives of arbitrary
-representatives; no second derivative of the H¹ input is assumed. Every
-H¹ input has the required witnesses by `MemSobolev.exists_hasFourierPartial`.
-The blueprint records the statements and expands the density argument;
-no H¹ virial proof or L² virial proof has been discharged in this step.
+**Virial review (relative difficulty, not timing estimates):**
+- `lem:virial-h1`: moderate overall. Skew-symmetry is a smaller step via
+  the proved Fourier product rule; the quadratic identity needs smooth
+  Fourier approximation in H¹ and continuity of the first-order forms.
+  The C²/C¹ coefficient regularity is sufficient for the smooth calculation;
+  no second derivatives of the limiting H¹ input are needed. A future split
+  could separate these two statements, which already have separate Lean names.
+- `lem:transversal-mollifier-derivatives`: medium–high, likely the largest
+  remaining virial infrastructure task. H¹ convergence and transport-only
+  regularization are distinct claims. The quantitative line estimates are
+  proved, but the weak full-gradient chart transfer and seam/zero-extension
+  bookkeeping remain. The transport-only claim needs only the reverse full-
+  gradient rule once the coordinate derivatives have been constructed.
+  Specializing those chain rules to H¹ data may suffice for this chapter;
+  it does not need their full locally W¹,¹ generality.
+- `lem:transversal-mollifier-commutator`: moderate, conditional on chart
+  inputs. The identity reduces to the proved Lipschitz line commutator;
+  cutoff/weak derivative transfer, compact-band norms, and zero extension
+  are the remaining assembly work. No full-gradient chain rule is needed.
+- `lem:virial-l2`: medium–high as a formal assembly task, but no new hard
+  analytic estimate once its inputs are available. The decisive error is
+  o(1/ε) times O(ε), not merely an O(1/ε) gradient bound. The final H²
+  integration-by-parts step can be isolated if useful.
+
+The virial paper sketches now explicitly use one-angular-period coordinate
+L² norms and overlapping windows, not a global derivative of the cut angle.
+The final proof periodizes the compact cell outputs before using the torus
+H¹ identity, with periodic cutoff c = χ(Ψ/2). This fixes a former mixture
+of a single-cell cutoff and periodic fields. Applying the exact identity
+to Jεω,Jεψ with V = D avoids Jε† D Jε entirely. The exact lemma now
+explicitly uses an independent vector b = λω, matching its existing Lean
+statement; in the mollified application b = JεHa, not HJεa. No eigenfunction
+relation for the mollified pair is assumed. The cancellation was checked
+by direct algebraic expansion. Convergence HJεa → cHa and c = 1 on supp f
+explain the remaining cutoff cancellation. The eigenfunction-to-weak-
+transport and related stream-IBP dependencies are recorded explicitly.
+Only ψ is approximated in H² in the final integrations by parts, not the
+rough eigenfunction by smooth eigenfunctions. These are paper-proof
+clarifications and preliminary effort assessments, not complete independent
+derivations or new Lean proofs. The two H¹ virial statements and virial_l2
+remain admitted; all use Fourier derivative witnesses as before.
 
 **The line-mollifier lemma is fully proved.** Its quantitative estimates in
 `LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,

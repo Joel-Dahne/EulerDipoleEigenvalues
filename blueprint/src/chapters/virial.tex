@@ -177,23 +177,27 @@ cut out in Lemma~\ref{lem:ee-truncated-virial}).
 
 \begin{lemma}[An exact identity]
 \label{lem:virial-exact-identity}
-\uses{def:eigen-problem}
 \lean{NoEmbeddedEigenvalues.inner_virial_exact}
 \leanok
-Let $a=\omega+\psi$ and $Ha=\lambda\omega$ with $\lambda$ real. For every linear map $V$
-defined on $\omega$ and $\psi$,
+Let $\omega,\psi$ be vectors in a complex inner product space,
+$a=\omega+\psi$ and $b=\lambda\omega$ with $\lambda$ real. For every
+complex-linear map $V$ defined on a subspace containing $\omega,\psi$,
 \[
-  \ip{Va}{Ha}-\ip{VHa}{a}=\lambda\bigl(\ip{V\psi}{\omega}-\ip{V\omega}{\psi}\bigr).
+  \ip{Va}{b}-\ip{Vb}{a}
+    =\lambda\bigl(\ip{V\psi}{\omega}-\ip{V\omega}{\psi}\bigr).
 \]
+There is no operator $H$ in this algebraic statement; in its eigenfunction
+application one takes $b=Ha$.
 \end{lemma}
 
 \begin{proof}
 \leanok
-Substitute $Ha=\lambda\omega$ and expand; the two terms $\lambda\ip{V\omega}{\omega}$ cancel.
+Substitute $a=\omega+\psi$, $b=\lambda\omega$ and expand; the two
+terms $\lambda\ip{V\omega}{\omega}$ cancel.
 \end{proof}
 
 \begin{remark}
-For $V=D$ and smooth functions, the left side is $\ip{[H,D]a}{a}$ and the right side is
+For $b=Ha$, $V=D$ and smooth functions, the left side is $\ip{[H,D]a}{a}$ and the right side is
 $2\lambda\operatorname{Re}\ip{D\psi}{\omega}$, which is the proof of
 Lemma~\ref{lem:virial-smooth}. The lemma replaces the manuscript's identity
 $\ip{[H,U_t]a}{a}=\lambda\ip{[U_t,A]\omega}{\omega}$: neither $A=I+\Delta^{-1}$, nor its
@@ -485,7 +489,11 @@ by Lemma~\ref{lem:action-angle-weak}(3)
   \partial_jJ_\epsilon u=(\partial_jh)\,M'_\epsilon(\chi U)\circ(h,\theta)
     +(\partial_j\theta)\,M_\epsilon(\chi\,\partial_\theta U)\circ(h,\theta),
 \]
-and $\partial_jh$, $\partial_j\theta$ are bounded on $K$. (1): by
+where coordinate derivatives are taken in smooth overlapping angular
+windows. They are uniformly bounded on the fixed compact output band
+$K_0$; no global derivative of the cut angle is asserted. All coordinate
+$L^2$ norms here are over one angular period, with $h$ extended to $\R$,
+not over the infinite periodic strip. (1): by
 Lemma~\ref{lem:action-angle-weak}(2), $\chi U$ has weak derivatives in $L^2$, so
 $M'_\epsilon(\chi U)=M_\epsilon(\partial_h(\chi U))\to\partial_h(\chi U)$ and
 $M_\epsilon(\chi\,\partial_\theta U)\to\chi\,\partial_\theta U$; by the chain rule again the limit is
@@ -515,8 +523,11 @@ with $\partial_\theta$,
 \[
   L_0J_\epsilon u-J_\epsilon k=s\,M_\epsilon(S\chi K)-M_\epsilon(\chi K)=s\bigl(M_\epsilon(S\,\chi K)-S\,M_\epsilon(\chi K)\bigr)
 \]
-in coordinates, and by Lemma~\ref{lem:action-angle-transport} again this is a weak identity on the
-cell; it extends to $\R^2$ since $J_\epsilon u$ vanishes off $K$. By
+in coordinates, with $K=k\circ P$. Lemma~\ref{lem:action-angle-transport}
+makes this a weak identity on the cell. Both the output and its displayed
+transport derivative are supported in a fixed compact band $K_0$ inside
+the punctured cell, so the identity extends by zero to $\R^2$.
+Coordinate norms are taken over one angular period. By
 Lemma~\ref{lem:line-mollifier}(3), applied to a Lipschitz function equal to $S$ on
 $[a-\epsilon_0,b+\epsilon_0]$, the bracket is at most $\epsilon\operatorname{Lip}(S)\|\chi K\|$; $s$ is bounded,
 and the coordinate norms are equivalent to the $L^2$ norms (Lemma~\ref{lem:action-angle-chart}).
@@ -528,8 +539,10 @@ and the commutator, with the analysis moved into a one-dimensional mollifier lem
 (Lemma~\ref{lem:line-mollifier}) and a lemma on weak derivatives in action-angle coordinates
 (Lemma~\ref{lem:action-angle-weak}). Changes to the statement: the mollifier acts on functions
 on the cell and produces functions on $\R^2$ with support in a fixed compact subset of the
-punctured cell, so the virial identity can be applied on $\R^2$ without periodization; the
-commutator bound is $C\epsilon\|L_0u\|$, without the $\|u\|$ term. The chart is used on the whole punctured cell rather than
+punctured cell. The proof below periodizes these compactly supported
+outputs to apply the torus $H^1$ identity; the earlier wording that it
+worked without periodization was inconsistent with that choice.
+The commutator bound is $C\epsilon\|L_0u\|$, without the $\|u\|$ term. The chart is used on the whole punctured cell rather than
 on an annulus, with the angle in $[-\frac14,\frac34)$ and functions in coordinates $1$-periodic in
 $\theta$.
 \end{remark}
@@ -551,35 +564,81 @@ $\Delta\psi=\omega$ (manuscript \texttt{(ee:bounded-virial)}, restricted to such
 \begin{proof}
 \uses{lem:virial-exact-identity, lem:virial-h1, lem:transversal-mollifier,
   lem:transversal-mollifier-derivatives, lem:transversal-mollifier-commutator,
-  lem:virial-smooth-quadratic, lem:elliptic-torus, lem:local-to-global}
-Here $\omega,L_0\omega\in L^2$ (since $L_0\omega=i\lambda\omega-L_0\psi$ and $\psi\in H^2$),
-$\psi\in H^2$, $a=\omega+\psi$ and $Ha=\lambda\omega$. Take $J_\epsilon$ from
-Definition~\ref{def:transversal-mollifier} with $\hat\chi=1$ near the support of $W$, and apply
-Lemma~\ref{lem:virial-exact-identity} with $V=J_\epsilon^\dagger DJ_\epsilon$
-($\dagger$ the $L^2$ adjoint; $J_\epsilon$ is bounded by Lemma~\ref{lem:transversal-mollifier}). The
-functions $J_\epsilon a$, $J_\epsilon\omega$, $J_\epsilon\psi$ are in $H^1$
-(Lemma~\ref{lem:transversal-mollifier-derivatives}(2)); they vanish off a compact subset of the
-cell, so their periodizations lie in $H^1(\T^2)$ (Lemma~\ref{lem:local-to-global}). Right side: by skew-symmetry of $D$ on $H^1$,
-$\ip{V\psi}{\omega}-\ip{V\omega}{\psi}=2\operatorname{Re}\ip{DJ_\epsilon\psi}{J_\epsilon\omega}
-\to2\operatorname{Re}\ip{D\psi}{\omega}$, using $J_\epsilon\psi\to\hat\chi\psi$ in $H^1$
-(Lemma~\ref{lem:transversal-mollifier-derivatives}(1)), $J_\epsilon\omega\to\hat\chi\omega$ in $L^2$
-and $\hat\chi D\psi=D(\hat\chi\psi)=D\psi$. Left side: it equals $\ip{DJ_\epsilon a}{J_\epsilon Ha}-\ip{DJ_\epsilon Ha}{J_\epsilon a}$.
-Write $J_\epsilon Ha=HJ_\epsilon a-[H,J_\epsilon]a$ and use skew-symmetry for the second term
-($Ha=\lambda\omega$ has $L_0Ha\in L^2$, so $J_\epsilon Ha\in H^1$):
+  lem:virial-smooth-quadratic, lem:elliptic-torus, lem:local-to-global,
+  lem:transport-pair-eigen, lem:stream-ibp}
+The weak eigenfunction equation on the cell is supplied by
+Lemma~\ref{lem:transport-pair-eigen}. Here $\omega,L_0\omega\in L^2$
+since $L_0\omega=i\lambda\omega-L_0\psi$ and $\psi\in H^2$.
+Put $a=\omega+\psi$, so $Ha=\lambda\omega$.
+
+Choose $\chi=1$ on a neighbourhood of $[h_1,h_2]$. Apply the cell
+mollifier to the lifts, then periodize its compactly supported outputs.
+In this proof $J_\epsilon$ denotes this resulting torus operator, and
+$c=\chi(\Psi/2)$ is the periodized cutoff. Thus $c=1$ near the supports
+of both $W$ and $f$, and $J_\epsilon u\to cu$ in $L^2$.
+The support and norm estimates transfer to the torus by unfolding.
+The functions $J_\epsilon a,J_\epsilon\omega,J_\epsilon\psi$ and
+$J_\epsilon Ha$ lie in $H^1(\T^2)$ by
+Lemmas~\ref{lem:transversal-mollifier-derivatives}(2)
+and~\ref{lem:local-to-global}; here $L_0Ha=\lambda L_0\omega\in L^2$.
+
+Apply Lemma~\ref{lem:virial-exact-identity} to
+$J_\epsilon\omega,J_\epsilon\psi$ with $V=D$ on $H^1$.
+Its vector $b$ is $J_\epsilon Ha$, not $HJ_\epsilon a$.
+Linearity gives $J_\epsilon a=J_\epsilon\omega+J_\epsilon\psi$ and
+$J_\epsilon Ha=\lambda J_\epsilon\omega$, hence
+\[
+  \ip{DJ_\epsilon a}{J_\epsilon Ha}
+    -\ip{DJ_\epsilon Ha}{J_\epsilon a}
+  =\lambda\bigl(
+    \ip{DJ_\epsilon\psi}{J_\epsilon\omega}
+      -\ip{DJ_\epsilon\omega}{J_\epsilon\psi}\bigr).
+\]
+No adjoint of $J_\epsilon$ is needed. By skew-symmetry of $D$ on $H^1$,
+the parenthesis on the right is
+$2\operatorname{Re}\ip{DJ_\epsilon\psi}{J_\epsilon\omega}
+\to2\operatorname{Re}\ip{D\psi}{\omega}$.
+Indeed $J_\epsilon\psi\to c\psi$ in $H^1$,
+$J_\epsilon\omega\to c\omega$ in $L^2$, and
+$cD\psi=D(c\psi)=D\psi$.
+
+On the left, write $J_\epsilon Ha=HJ_\epsilon a-[H,J_\epsilon]a$
+and use skew-symmetry for the second term:
 \[
   \text{left side}=2\operatorname{Re}\ip{DJ_\epsilon a}{HJ_\epsilon a}
     -2\operatorname{Re}\ip{DJ_\epsilon a}{[H,J_\epsilon]a}
   =\operatorname{Re}\ip{fHJ_\epsilon a}{J_\epsilon a}
     -2\operatorname{Re}\ip{DJ_\epsilon a}{[H,J_\epsilon]a}
 \]
-by Lemma~\ref{lem:virial-h1}. The first term tends to
+by Lemma~\ref{lem:virial-h1}. The commutator estimate gives
+$HJ_\epsilon a\to cHa$ in $L^2$, while $J_\epsilon a\to ca$.
+Since $c=1$ on the support of $f$, the first term tends to
 $\operatorname{Re}\ip{fHa}{a}=\lambda\operatorname{Re}\ip{f\omega}{a}$. The second tends to
 zero: $\|DJ_\epsilon a\|=o(1/\epsilon)$ and $\|[H,J_\epsilon]a\|=O(\epsilon)$ by
 Lemmas~\ref{lem:transversal-mollifier-derivatives}(2)
-and~\ref{lem:transversal-mollifier-commutator}. Divide by $\lambda$. The quadratic form follows by
-the integrations by parts of Lemma~\ref{lem:virial-smooth-quadratic}, extended to
-$\psi\in H^2$ by density as in Lemma~\ref{lem:stream-ibp}.
+and~\ref{lem:transversal-mollifier-commutator}; the zero-order term of
+$D$ is harmless since $J_\epsilon a$ is bounded in $L^2$.
+Divide by $\lambda$. The quadratic form follows from the integrations
+by parts displayed in the proof of Lemma~\ref{lem:virial-smooth-quadratic}.
+Apply those integrations by parts to Fourier truncations of $\psi$ and
+pass to the $H^2$ limit, keeping $W,f$ fixed. Only $\psi$ is approximated;
+one does not need smooth approximants satisfying the eigenfunction
+equation. Lemma~\ref{lem:stream-ibp} is the already proved related
+Fourier-product-rule argument.
 \end{proof}
+
+\begin{remark}[Digest note: the assembly convention and the adjoint]
+The earlier sketch mixed a cutoff supported in a single lifted cell with
+periodic fields on the torus. The proof now explicitly periodizes the
+mollifier outputs and uses the periodic cutoff $c=\chi(\Psi/2)$.
+It also applies the exact algebraic identity directly to the mollified
+pair, rather than constructing $J_\epsilon^\dagger DJ_\epsilon$.
+The identity is now stated with the independent vector $b=\lambda\omega$,
+matching its existing Lean statement: applying it to the mollified pair
+does not assert the false equation $HJ_\epsilon a=\lambda J_\epsilon\omega$.
+These are clarifications and an algebraic simplification of the paper
+proof; the $L^2$ virial theorem remains admitted in Lean.
+\end{remark}
 
 \begin{remark}[Why the mollifier smooths only across the orbits]
 $H$ has no derivative across the orbits, so smoothing in $h$ almost commutes with it: the
