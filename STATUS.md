@@ -39,6 +39,27 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
+**Two delegated proof trials checked.** In `LineMollifier.lean`, Luna proved
+`integral_mollifierKernel` (unit integral for `ε > 0`), then in a single
+unassisted implementation run proved `contDiff_mollifierKernel`,
+`hasCompactSupport_mollifierKernel` and `integral_deriv_mollifierKernel`.
+The derivative has zero integral by compact-support FTC: its two half-line
+boundary contributions cancel. Independent full-file diagnostics and axiom
+checks confirm only `propext`, `Classical.choice`, `Quot.sound` for all four.
+These are new prerequisites; the seven existing mollifier admissions remain.
+The blueprint lists the helpers in `lem:line-mollifier`.
+Runner tests cover normal completion, model error, malformed events and timeout.
+The stale dependency chain through `SobolevLocal` was rebuilt successfully
+before the second trial; a full project rebuild was not run.
+
+Pi's shared-server setup, runner and both trials' usage figures are documented
+in [docs/tooling/pi.md](docs/tooling/pi.md), linked from `AGENTS.md`. OAuth
+access to `openai-codex/gpt-5.6-luna` works. The second trial needed no rescue
+and took 129 seconds; a partial parent-usage snapshot is recorded alongside
+worker usage. No matched parent-only baseline has been measured, so savings
+are not established. Next: split a substantive admitted mollifier estimate
+into bounded tasks and continue measuring delegation overhead.
+
 **Backwards even–even assembly is proved.** `even_even_character_exclusion`
 and `even_even_exclusion` now have no `sorry` of their own. The proof combines
 the a.e. truncated virial identity and boundary limits outside a single null

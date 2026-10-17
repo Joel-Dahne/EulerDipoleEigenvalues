@@ -54,6 +54,57 @@ theorem support_stdBump : Function.support stdBump = Ioo (-1) 1 := by
 theorem integral_stdBump : ∫ h, stdBump h = 1 :=
   ContDiffBump.integral_normed _
 
+/-- Rescaling preserves the unit integral of the mollifier kernel. -/
+theorem integral_mollifierKernel {ε : ℝ} (hε : 0 < ε) :
+    ∫ h, mollifierKernel ε h = 1 := by
+  rw [show (fun h => mollifierKernel ε h) = (fun h => ε⁻¹ * stdBump (ε⁻¹ * h)) by
+    funext h
+    simp [mollifierKernel, div_eq_mul_inv, mul_comm]]
+  rw [MeasureTheory.integral_const_mul,
+    MeasureTheory.Measure.integral_comp_mul_left, integral_stdBump]
+  simp [abs_of_pos hε, hε.ne']
+
+/-- The rescaled mollifier kernel is smooth. -/
+theorem contDiff_mollifierKernel (ε : ℝ) : ContDiff ℝ ∞ (mollifierKernel ε) := by
+  by_cases hε : ε = 0
+  · convert (contDiff_const : ContDiff ℝ ∞ (fun _ : ℝ => (0 : ℝ))) using 1
+    funext h
+    simp [mollifierKernel, hε]
+  · rw [show mollifierKernel ε = (fun h => ε⁻¹ * (stdBump ∘ (fun x => x / ε)) h) by
+      funext h
+      rfl]
+    exact (contDiff_const.mul
+      (contDiff_stdBump.comp (contDiff_id.div_const ε)))
+
+/-- For positive scales the mollifier kernel has compact support. -/
+theorem hasCompactSupport_mollifierKernel {ε : ℝ} (hε : 0 < ε) :
+    HasCompactSupport (mollifierKernel ε) := by
+  have hstd : HasCompactSupport stdBump := by
+    exact ContDiffBump.hasCompactSupport_normed _
+  have hcomp := hstd.comp_smul (G₀ := ℝ) (c := ε⁻¹) (inv_ne_zero hε.ne')
+  have hcomp' : HasCompactSupport (fun h => stdBump (h / ε)) := by
+    simpa [div_eq_mul_inv, smul_eq_mul, mul_comm] using hcomp
+  change HasCompactSupport (fun h => ε⁻¹ * stdBump (h / ε))
+  exact hcomp'.mul_left
+
+/-- The derivative kernel has zero integral, the cancellation behind
+`ε M'_ε F → 0`. -/
+theorem integral_deriv_mollifierKernel {ε : ℝ} (hε : 0 < ε) :
+    ∫ h, deriv (mollifierKernel ε) h = 0 := by
+  have hcont : ContDiff ℝ 1 (mollifierKernel ε) :=
+    (contDiff_mollifierKernel ε).of_le (by norm_num)
+  have hderiv_int : Integrable (deriv (mollifierKernel ε)) :=
+    (hcont.continuous_deriv le_rfl).integrable_of_hasCompactSupport
+      (hasCompactSupport_mollifierKernel hε).deriv
+  have hleft : IntegrableOn (deriv (mollifierKernel ε)) (Iic 0) := hderiv_int.integrableOn
+  have hright : IntegrableOn (deriv (mollifierKernel ε)) (Ioi 0) := hderiv_int.integrableOn
+  rw [← intervalIntegral.integral_Iic_add_Ioi hleft hright]
+  rw [HasCompactSupport.integral_Iic_deriv_eq hcont
+      (hasCompactSupport_mollifierKernel hε) 0,
+    HasCompactSupport.integral_Ioi_deriv_eq hcont
+      (hasCompactSupport_mollifierKernel hε) 0]
+  simp
+
 /-! ### `lem:line-mollifier` (stated) -/
 
 section LineMollifier

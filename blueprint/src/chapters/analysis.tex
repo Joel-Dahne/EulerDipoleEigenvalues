@@ -404,6 +404,10 @@ $\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variab
 \lean{NoEmbeddedEigenvalues.contDiff_stdBump, NoEmbeddedEigenvalues.stdBump_nonneg,
   NoEmbeddedEigenvalues.stdBump_neg, NoEmbeddedEigenvalues.support_stdBump,
   NoEmbeddedEigenvalues.integral_stdBump,
+  NoEmbeddedEigenvalues.integral_mollifierKernel,
+  NoEmbeddedEigenvalues.contDiff_mollifierKernel,
+  NoEmbeddedEigenvalues.hasCompactSupport_mollifierKernel,
+  NoEmbeddedEigenvalues.integral_deriv_mollifierKernel,
   NoEmbeddedEigenvalues.eLpNorm_mollifyFst_le,
   NoEmbeddedEigenvalues.tendsto_mollifyFst,
   NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv,
@@ -412,7 +416,9 @@ $\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variab
   NoEmbeddedEigenvalues.HasWeakPartialOn.mollify,
   NoEmbeddedEigenvalues.mollifyFstDeriv_ae_eq}
 \leanok
-Such a $\rho$ exists. Let $\mu$ be a $\sigma$-finite measure on $\R$ and $F\in L^2(dh\otimes\mu)$,
+Such a $\rho$ exists. For $\epsilon>0$, $\rho_\epsilon$ is smooth and compactly
+supported, with $\int\rho_\epsilon=1$ and $\int\rho_\epsilon'=0$.
+Let $\mu$ be a $\sigma$-finite measure on $\R$ and $F\in L^2(dh\otimes\mu)$,
 $\epsilon>0$. Then
 \begin{enumerate}
   \item $\|M_\epsilon F\|\le\|F\|$ and $M_\epsilon F\to F$ as $\epsilon\to0$;

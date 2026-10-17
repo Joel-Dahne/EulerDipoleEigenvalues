@@ -181,10 +181,13 @@ Gotchas:
 
 ## Working with Lean
 
-Use the `lean-lsp` MCP server (configured in `.mcp.json`, provided by the
-VM's `lean-lsp-mcp`) rather than repeated `lake build` or `lake env lean`.
-It keeps a Lean language server running, so after a file has been opened once
-an edit is rechecked in well under a second.
+Use the `lean-lsp` MCP server (provided by the VM's `lean-lsp-mcp`) rather
+than repeated `lake build` or `lake env lean`. It keeps a Lean language server
+running, so after a file has been opened once an edit is rechecked in well
+under a second.
+
+Tool-specific setup notes live in `docs/tooling/`. When using Pi, read
+[the Pi setup notes](docs/tooling/pi.md) for its shared Lean MCP configuration.
 
 Costs measured in the VM (4 cores, 12 GB):
 
