@@ -398,26 +398,63 @@ $\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variab
 \]
 \end{definition}
 
-\begin{lemma}[Mollification in one variable]
-\label{lem:line-mollifier}
-\uses{def:line-mollifier, def:sobolev-local}
+\begin{lemma}[Kernel properties]
+\label{lem:line-mollifier-kernel}
+\uses{def:line-mollifier}
 \lean{NoEmbeddedEigenvalues.contDiff_stdBump, NoEmbeddedEigenvalues.stdBump_nonneg,
   NoEmbeddedEigenvalues.stdBump_neg, NoEmbeddedEigenvalues.support_stdBump,
   NoEmbeddedEigenvalues.integral_stdBump,
   NoEmbeddedEigenvalues.integral_mollifierKernel,
   NoEmbeddedEigenvalues.contDiff_mollifierKernel,
   NoEmbeddedEigenvalues.hasCompactSupport_mollifierKernel,
-  NoEmbeddedEigenvalues.integral_deriv_mollifierKernel,
-  NoEmbeddedEigenvalues.eLpNorm_mollifyFst_le,
-  NoEmbeddedEigenvalues.tendsto_mollifyFst,
+  NoEmbeddedEigenvalues.integral_deriv_mollifierKernel}
+\leanok
+Such a $\rho$ exists. For $\epsilon>0$, $\rho_\epsilon$ is smooth and compactly
+supported, with $\int\rho_\epsilon=1$ and $\int\rho_\epsilon'=0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use Mathlib's normed \texttt{ContDiffBump} with radii $\frac12$ and $1$.
+Rescaling preserves smoothness and compact support, and the substitution
+$h=\epsilon t$ gives unit integral. The two half-line fundamental-theorem
+identities for $\rho_\epsilon'$ have opposite boundary contributions.
+\end{proof}
+
+\begin{lemma}[$L^2$ contraction in one variable]
+\label{lem:line-mollifier-contraction}
+\uses{def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.eLpNorm_mollifyFst_le}
+\leanok
+Let $\mu$ be an s-finite Borel measure on $\R$, $\epsilon>0$, and
+$F\in L^2(dh\otimes\mu)$. Then $M_\epsilon F\in L^2(dh\otimes\mu)$ and
+$\|M_\epsilon F\|_2\le\|F\|_2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:line-mollifier-kernel}
+\leanok
+Write $d\nu_\epsilon(t)=\rho_\epsilon(t)\,dt$, a probability measure. Then
+$M_\epsilon F(h,\theta)=\int F(h-t,\theta)\,d\nu_\epsilon(t)$.
+Averaging over a probability space contracts $L^2$: apply the scalar
+Cauchy--Schwarz inequality on each averaging fiber, then Tonelli.
+The map $(t,h,\theta)\mapsto(t,h-t,\theta)$ preserves
+$\nu_\epsilon\otimes dh\otimes\mu$, so the joint function
+$F(h-t,\theta)$ has the same $L^2$ norm as $F$. Joint a.e. measurability
+and Fubini also give a.e. measurability of the average; no special
+representative or pointwise integrability on every line is required.
+\end{proof}
+
+\begin{lemma}[Mollification in one variable]
+\label{lem:line-mollifier}
+\uses{def:line-mollifier, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.tendsto_mollifyFst,
   NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv,
   NoEmbeddedEigenvalues.eLpNorm_mollifyFst_mul_sub_le,
   NoEmbeddedEigenvalues.hasWeakPartialOn_mollifyFst,
   NoEmbeddedEigenvalues.HasWeakPartialOn.mollify,
   NoEmbeddedEigenvalues.mollifyFstDeriv_ae_eq}
 \leanok
-Such a $\rho$ exists. For $\epsilon>0$, $\rho_\epsilon$ is smooth and compactly
-supported, with $\int\rho_\epsilon=1$ and $\int\rho_\epsilon'=0$.
 Let $\mu$ be a $\sigma$-finite measure on $\R$ and $F\in L^2(dh\otimes\mu)$,
 $\epsilon>0$. Then
 \begin{enumerate}
@@ -433,10 +470,11 @@ $j=h$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weak-derivative-basic}
-The bump is Mathlib's normed \texttt{ContDiffBump} with radii $\frac12$ and $1$. On each line
-$\theta=\mathrm{const}$, $M_\epsilon$ is convolution with $\rho_\epsilon$, so (1) is Young's inequality
-and the approximate identity property, integrated over $\theta$ by dominated convergence (the
+\uses{lem:weak-derivative-basic, lem:line-mollifier-kernel,
+  lem:line-mollifier-contraction}
+The norm bound in (1) is Lemma~\ref{lem:line-mollifier-contraction}.
+On each line $\theta=\mathrm{const}$, $M_\epsilon$ is convolution with $\rho_\epsilon$.
+Apply the approximate identity property and integrate over $\theta$ by dominated convergence (the
 lines with $F(\cdot,\theta)\in L^2$ have full $\mu$-measure). (2): $\epsilon\rho_\epsilon'$ is the
 rescaling $(\rho')_\epsilon$ of $\rho'$, which has integral $0$, so $\epsilon M'_\epsilon F\to(\int\rho')F=0$
 in the same way. (3): the kernel of the commutator is

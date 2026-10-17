@@ -5,14 +5,16 @@ import NoEmbeddedEigenvalues.SobolevLocal
 /-!
 # Mollification in one variable
 
-Blueprint: `def:line-mollifier`; stated: `lem:line-mollifier`.
+Blueprint: `def:line-mollifier`, `lem:line-mollifier-kernel`,
+`lem:line-mollifier-contraction`; remaining estimates stated in `lem:line-mollifier`.
 
 Functions `F(h, θ)` on `ℝ²` are mollified in the first variable only,
 `M_ε F(h, θ) = ∫ ρ_ε(h - h') F(h', θ) dh'` with `ρ_ε(h) = ε⁻¹ ρ(h/ε)` for a fixed smooth even
 bump `ρ` supported in `[-1, 1]` with integral one. `L²` statements are for the measure
-`dh ⊗ μ` with an arbitrary `σ`-finite `μ` in `θ`, since `M_ε` acts on each line `θ = const`
-separately. This is the one-dimensional input of the transversal mollifier
-(`TransversalMollifier.lean`), where `(h, θ)` are action-angle coordinates.
+`dh ⊗ μ` with an arbitrary s-finite `μ` in `θ`, since `M_ε` acts on each line `θ = const`
+separately. The contraction follows by probability averaging and a measure-preserving
+translation, including joint a.e. measurability. This is the one-dimensional input of the
+transversal mollifier (`TransversalMollifier.lean`), where `(h, θ)` are action-angle coordinates.
 -/
 
 noncomputable section
@@ -105,7 +107,137 @@ theorem integral_deriv_mollifierKernel {ε : ℝ} (hε : 0 < ε) :
       (hasCompactSupport_mollifierKernel hε) 0]
   simp
 
-/-! ### `lem:line-mollifier` (stated) -/
+/-- Averaging over a probability factor is an `L²` contraction. -/
+private theorem eLpNorm_integral_prob_le {α β : Type*}
+    [MeasurableSpace α] [MeasurableSpace β]
+    {ν : Measure α} [IsProbabilityMeasure ν] {σ : Measure β} [SFinite σ]
+    {G : α × β → ℂ} (hG : MemLp G 2 (ν.prod σ)) :
+    MemLp (fun q ↦ ∫ t, G (t, q) ∂ν) 2 σ ∧
+      eLpNorm (fun q ↦ ∫ t, G (t, q) ∂ν) 2 σ ≤ eLpNorm G 2 (ν.prod σ) := by
+  have hmeas : AEStronglyMeasurable (fun q ↦ ∫ t, G (t, q) ∂ν) σ :=
+    hG.aestronglyMeasurable.prod_swap.integral_prod_right'
+  have hsec : ∀ᵐ q ∂σ, AEStronglyMeasurable (fun t ↦ G (t, q)) ν :=
+    hG.aestronglyMeasurable.prodMk_right
+  have hbound : ∀ᵐ q ∂σ,
+      ‖∫ t, G (t, q) ∂ν‖ₑ ^ (2 : ℝ) ≤
+        (eLpNorm (fun t ↦ G (t, q)) 2 ν) ^ (2 : ℝ) := by
+    filter_upwards [hsec] with q hq
+    calc
+      ‖∫ t, G (t, q) ∂ν‖ₑ ^ (2 : ℝ) ≤
+          (eLpNorm (fun t ↦ G (t, q)) 1 ν) ^ (2 : ℝ) := by
+            gcongr
+            exact enorm_integral_le_lintegral_enorm _ |>.trans
+              (lintegral_enorm_le_eLpNorm_one)
+      _ ≤ (eLpNorm (fun t ↦ G (t, q)) 2 ν) ^ (2 : ℝ) := by
+        gcongr
+        exact eLpNorm_le_eLpNorm_of_exponent_le (by norm_num)
+  have hpow : eLpNorm (fun q ↦ ∫ t, G (t, q) ∂ν) 2 σ ^ (2 : ℝ) ≤
+      eLpNorm G 2 (ν.prod σ) ^ (2 : ℝ) := by
+    calc
+      eLpNorm (fun q ↦ ∫ t, G (t, q) ∂ν) 2 σ ^ (2 : ℝ) =
+          ∫⁻ q, ‖∫ t, G (t, q) ∂ν‖ₑ ^ (2 : ℝ) ∂σ :=
+        eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num) hmeas
+      _ ≤
+          ∫⁻ (q : β), (eLpNorm (fun t ↦ G (t, q)) 2 ν) ^ (2 : ℝ) ∂σ :=
+        lintegral_mono_ae hbound
+      _ = ∫⁻ q, ∫⁻ t, ‖G (t, q)‖ₑ ^ (2 : ℝ) ∂ν ∂σ := by
+        apply lintegral_congr_ae
+        filter_upwards [hsec] with q hq
+        exact eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num) hq
+      _ = ∫⁻ z, ‖G z‖ₑ ^ (2 : ℝ) ∂(ν.prod σ) := by
+        symm
+        apply lintegral_prod_symm
+        exact (AEMeasurable.pow_const hG.aestronglyMeasurable.enorm 2)
+      _ = eLpNorm G 2 (ν.prod σ) ^ (2 : ℝ) := by
+        symm
+        exact eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num)
+          hG.aestronglyMeasurable
+  have hnorm : eLpNorm (fun q ↦ ∫ t, G (t, q) ∂ν) 2 σ ≤ eLpNorm G 2 (ν.prod σ) :=
+    (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp hpow
+  exact ⟨lt_of_le_of_lt hnorm hG.eLpNorm_lt_top, hnorm⟩
+
+/-- The kernel regarded as a measure on translation parameters. -/
+private def mollifierMeasure (ε : ℝ) : Measure ℝ :=
+  volume.withDensity (fun t ↦ ENNReal.ofReal (mollifierKernel ε t))
+
+private theorem isProbabilityMeasure_mollifierMeasure {ε : ℝ} (hε : 0 < ε) :
+    IsProbabilityMeasure (mollifierMeasure ε) := by
+  apply IsProbabilityMeasure.mk
+  rw [mollifierMeasure, withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ]
+  have hcont : Continuous (mollifierKernel ε) :=
+    (contDiff_mollifierKernel ε).continuous
+  have hint : Integrable (mollifierKernel ε) :=
+    hcont.integrable_of_hasCompactSupport (hasCompactSupport_mollifierKernel hε)
+  have hnonneg : 0 ≤ᵐ[volume] mollifierKernel ε :=
+    Filter.Eventually.of_forall (fun t ↦ by
+      exact mul_nonneg (inv_nonneg.mpr hε.le) (stdBump_nonneg (t / ε)))
+  rw [← ofReal_integral_eq_lintegral_ofReal hint hnonneg,
+    integral_mollifierKernel hε]
+  simp
+
+/-- The convolution formula is also a probability average of translates. -/
+private theorem mollifyFst_eq_average {ε : ℝ} (hε : 0 < ε)
+    (F : ℝ × ℝ → ℂ) (q : ℝ × ℝ) :
+    mollifyFst ε F q = ∫ t, F (q.1 - t, q.2) ∂mollifierMeasure ε := by
+  change (∫ h', mollifierKernel ε (q.1 - h') • F (h', q.2)) =
+    ∫ t, F (q.1 - t, q.2) ∂volume.withDensity
+      (fun t ↦ ENNReal.ofReal (mollifierKernel ε t))
+  rw [integral_withDensity_eq_integral_toReal_smul]
+  · have hnonneg : ∀ t, 0 ≤ mollifierKernel ε t := fun t ↦
+      mul_nonneg (inv_nonneg.mpr hε.le) (stdBump_nonneg (t / ε))
+    have hkernel : (fun t ↦ (ENNReal.ofReal (mollifierKernel ε t)).toReal •
+        F (q.1 - t, q.2)) = (fun t ↦ mollifierKernel ε t • F (q.1 - t, q.2)) := by
+      funext t
+      rw [ENNReal.toReal_ofReal (hnonneg t)]
+    rw [hkernel]
+    let g : ℝ → ℂ := fun h' ↦ mollifierKernel ε (q.1 - h') • F (h', q.2)
+    have hmp : MeasurePreserving (MeasurableEquiv.subLeft q.1) volume volume :=
+      volume.measurePreserving_sub_left q.1
+    have hchange := hmp.integral_comp' g
+    simpa [g, MeasurableEquiv.subLeft, Equiv.subLeft, sub_sub_cancel] using hchange.symm
+  · exact (contDiff_mollifierKernel ε).continuous.measurable.ennreal_ofReal
+  · exact Filter.Eventually.of_forall (fun t ↦ ENNReal.ofReal_lt_top)
+
+/-- Joint translation preserves the `L²` norm when the translation parameter has
+probability law `ν`. -/
+private theorem memLp_translateFst {μ ν : Measure ℝ} [SFinite μ] [IsProbabilityMeasure ν]
+    {F : ℝ × ℝ → ℂ} (hF : MemLp F 2 ((volume : Measure ℝ).prod μ)) :
+    MemLp (fun p : ℝ × (ℝ × ℝ) ↦ F (p.2.1 - p.1, p.2.2)) 2
+        (ν.prod ((volume : Measure ℝ).prod μ)) ∧
+      eLpNorm (fun p : ℝ × (ℝ × ℝ) ↦ F (p.2.1 - p.1, p.2.2)) 2
+        (ν.prod ((volume : Measure ℝ).prod μ)) =
+        eLpNorm F 2 ((volume : Measure ℝ).prod μ) := by
+  let σ : Measure (ℝ × ℝ) := (volume : Measure ℝ).prod μ
+  have hfiber : ∀ t : ℝ, MeasurePreserving
+      (fun q : ℝ × ℝ ↦ (q.1 - t, q.2)) σ σ := by
+    intro t
+    have hsub : MeasurePreserving (fun x : ℝ ↦ x - t) volume volume := by
+      simpa [Function.comp_def] using
+        (Measure.measurePreserving_neg volume).comp (volume.measurePreserving_sub_left t)
+    exact hsub.prod (MeasurePreserving.id μ)
+  let g : ℝ → (ℝ × ℝ) → (ℝ × ℝ) := fun t q ↦ (q.1 - t, q.2)
+  have hS' : MeasurePreserving
+      (fun p : ℝ × (ℝ × ℝ) ↦ (p.1, g p.1 p.2))
+      (ν.prod σ) (ν.prod σ) := by
+    refine (MeasurePreserving.id ν).skew_product (μc := σ) (μd := σ) ?_ ?_
+    · fun_prop
+    · filter_upwards [] with t
+      exact (hfiber t).map_eq
+  have hS : MeasurePreserving
+      (fun p : ℝ × (ℝ × ℝ) ↦ (p.1, (p.2.1 - p.1, p.2.2)))
+      (ν.prod σ) (ν.prod σ) := by
+    simpa [g] using hS'
+  have hT : MeasurePreserving
+      (fun p : ℝ × (ℝ × ℝ) ↦ (p.2.1 - p.1, p.2.2)) (ν.prod σ) σ :=
+    measurePreserving_snd.comp hS
+  have hmem := hF.comp_measurePreserving hT
+  have hnorm := eLpNorm_comp_measurePreserving (p := (2 : ENNReal))
+    hF.aestronglyMeasurable hT
+  constructor
+  · simpa [σ, Function.comp_def] using hmem
+  · simpa [σ, Function.comp_def] using hnorm
+
+/-! ### `lem:line-mollifier` -/
 
 section LineMollifier
 
@@ -116,7 +248,22 @@ theorem eLpNorm_mollifyFst_le (hε : 0 < ε) (hF : MemLp F 2 ((volume : Measure 
     MemLp (mollifyFst ε F) 2 ((volume : Measure ℝ).prod μ) ∧
       eLpNorm (mollifyFst ε F) 2 ((volume : Measure ℝ).prod μ) ≤
         eLpNorm F 2 ((volume : Measure ℝ).prod μ) := by
-  sorry
+  let _ : IsProbabilityMeasure (mollifierMeasure ε) :=
+    isProbabilityMeasure_mollifierMeasure hε
+  have htranslate := memLp_translateFst (μ := μ) (ν := mollifierMeasure ε) hF
+  have havg : mollifyFst ε F =
+      (fun q : ℝ × ℝ ↦ ∫ t, F (q.1 - t, q.2) ∂mollifierMeasure ε) := by
+    funext q
+    exact mollifyFst_eq_average hε F q
+  rw [havg]
+  refine ⟨(eLpNorm_integral_prob_le htranslate.1).1, ?_⟩
+  calc
+    eLpNorm (fun q : ℝ × ℝ ↦ ∫ t, F (q.1 - t, q.2) ∂mollifierMeasure ε) 2
+        ((volume : Measure ℝ).prod μ) ≤
+        eLpNorm (fun p : ℝ × (ℝ × ℝ) ↦ F (p.2.1 - p.1, p.2.2)) 2
+          ((mollifierMeasure ε).prod ((volume : Measure ℝ).prod μ)) :=
+      (eLpNorm_integral_prob_le htranslate.1).2
+    _ = eLpNorm F 2 ((volume : Measure ℝ).prod μ) := htranslate.2
 
 /-- `M_ε F → F` in `L²(dh ⊗ μ)`. -/
 theorem tendsto_mollifyFst (hF : MemLp F 2 ((volume : Measure ℝ).prod μ)) :

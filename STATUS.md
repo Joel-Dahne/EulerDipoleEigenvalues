@@ -39,26 +39,39 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
-**Two delegated proof trials checked.** In `LineMollifier.lean`, Luna proved
-`integral_mollifierKernel` (unit integral for `ε > 0`), then in a single
-unassisted implementation run proved `contDiff_mollifierKernel`,
-`hasCompactSupport_mollifierKernel` and `integral_deriv_mollifierKernel`.
-The derivative has zero integral by compact-support FTC: its two half-line
-boundary contributions cancel. Independent full-file diagnostics and axiom
-checks confirm only `propext`, `Classical.choice`, `Quot.sound` for all four.
-These are new prerequisites; the seven existing mollifier admissions remain.
-The blueprint lists the helpers in `lem:line-mollifier`.
-Runner tests cover normal completion, model error, malformed events and timeout.
-The stale dependency chain through `SobolevLocal` was rebuilt successfully
-before the second trial; a full project rebuild was not run.
+**The line-mollifier L² contraction is proved.** In `LineMollifier.lean`,
+`eLpNorm_mollifyFst_le` now has a complete proof, for every s-finite `μ`,
+with no statement changes. The parent inspected Mathlib and fixed four private
+helper interfaces: probability averaging contracts L² (fiberwise L¹ ≤ L²,
+then Tonelli); the kernel defines a probability measure; convolution equals
+its average of translates; and joint first-variable translation preserves the
+L² norm. This handles joint a.e. measurability and arbitrary representatives,
+without assuming convolution integrable on every line or invoking an
+unavailable general Young inequality.
 
-Pi's shared-server setup, runner and both trials' usage figures are documented
-in [docs/tooling/pi.md](docs/tooling/pi.md), linked from `AGENTS.md`. OAuth
-access to `openai-codex/gpt-5.6-luna` works. The second trial needed no rescue
-and took 129 seconds; a partial parent-usage snapshot is recorded alongside
-worker usage. No matched parent-only baseline has been measured, so savings
-are not established. Next: split a substantive admitted mollifier estimate
-into bounded tasks and continue measuring delegation overhead.
+Implementation was delegated to Luna in bounded tasks. The first averaging
+attempt stopped incomplete; a refined task using product-swap measurability
+instead of a measurable representative completed it. The kernel-average and
+translation/assembly tasks also completed. Independent full-file diagnostics
+and axiom checks on the contraction and all four private helpers confirm only
+`propext`, `Classical.choice`, `Quot.sound`. Six existing mollifier admissions
+remain; no new admissions were retained. The four earlier kernel prerequisites
+remain proved. The blueprint now separates the proved kernel properties
+(`lem:line-mollifier-kernel`) and contraction
+(`lem:line-mollifier-contraction`) from the remaining estimates.
+
+The shared Lean MCP server was already running for this project; connectivity
+and current imports (no failed dependencies) were checked before delegation.
+`just web` passes; no full project rebuild was run. Pi setup and the sequential
+Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
+Runner tests cover normal completion, model error, malformed events and timeout;
+no routine benchmarking was added.
+
+**Next:** `tendsto_mollifyFst`: inspect Mathlib's translation-continuity and
+approximate-identity infrastructure, then split convergence into bounded tasks.
+The new probability-average and translation helpers are available as private
+lemmas in the same file. Afterwards address the derivative-kernel cancellation,
+Lipschitz commutator and weak-derivative lemmas.
 
 **Backwards even–even assembly is proved.** `even_even_character_exclusion`
 and `even_even_exclusion` now have no `sorry` of their own. The proof combines
