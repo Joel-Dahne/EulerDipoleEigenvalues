@@ -47,6 +47,8 @@ questions and problems found in the manuscript, and collect them in
   both versions
 - `src/web.tex`, `src/print.tex`: preambles for the web and PDF versions
 - `src/plastex.cfg`: web build configuration
+- `src/sectorgraphs.py`: local plasTeX package adding sector graph links to
+  the HTML5 sidebar (loaded only by `web.tex`)
 
 ## Building
 
@@ -70,6 +72,10 @@ read-only static files on rebuild and regenerates these sector views:
   (`thm:dd-exclusion`).
 - [Mixed](http://localhost:8000/dep_graph_thm-mixed-exclusion.html)
   (`thm:mixed-exclusion`); the other mixed sector follows by rotation.
+
+The index and chapter sidebars list these three views below the full
+Dependency graph link. These entries use plasTeX's native HTML5 navigation
+extension, so they are regenerated with the site rather than patched into HTML.
 
 Not set up yet (it needs Lean declarations and a GitHub remote first):
 - `checkdecls` in the lakefile, so `leanblueprint checkdecls` verifies that

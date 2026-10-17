@@ -170,8 +170,9 @@ just manuscript eigenvalues  # same for the original manuscript
 Agents usually run in a VM that has `just`, `leanblueprint` and `kpsewhich`
 installed system-wide; there, run `just web` directly. The user runs
 `just serve` on the host to look at the result. `just web` also regenerates
-all three sector subgraphs; a separate `just graph` is needed only for custom
-views. The VM has no `xelatex`/`latexmk`, so `just pdf` and `just manuscript`
+all three sector subgraphs, linked from the index and chapter sidebars;
+a separate `just graph` is needed only for custom views. The VM has no
+`xelatex`/`latexmk`, so `just pdf` and `just manuscript`
 are for the host.
 
 Gotchas:

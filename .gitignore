@@ -2,5 +2,6 @@
 /blueprint/web/
 /blueprint/print/
 /blueprint/src/web.paux
+__pycache__/
 /blueprint/lean_decls
 /Manuscript/build/
