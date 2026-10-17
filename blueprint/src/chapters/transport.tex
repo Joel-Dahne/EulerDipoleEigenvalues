@@ -79,12 +79,26 @@ transport pair on $U$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:elliptic-torus, lem:lift-torus, lem:local-to-global}
-$\psi\in H^2(\T^2)$, so its lift is in $H^2(U)$ on the bounded set $U$, and the lift
-of $\omega$ is in $L^2(U)$. The torus equation is tested against characters; by
-density it holds against smooth periodic functions, and a test function on $U$
-periodizes to one, which turns the torus equation into the weak equation on $U$.
+\uses{lem:elliptic-torus, lem:lift-torus, lem:local-to-global,
+  lem:sobolev-torus-basic, lem:torus-fourier-basis}
+$\psi\in H^2(\T^2)$, so its lift is in $H^2(U)$ on the bounded set $U$,
+and the lift of $\omega$ is in $L^2(U)$. The equation holds against
+finite Fourier sums. Its test functional is continuous in the $H^1$
+norm: the unknowns are in $L^2$ and the first-order operator on the test
+function has bounded coefficients. Fourier truncations converge in
+$H^1$, so the equation holds against every smooth periodic test.
+Periodize a compactly supported test on $U$ and unfold its integral.
+Periodicity of the coefficients makes $L_0$ commute with this test
+periodization, giving the weak equation on $U$.
 \end{proof}
+
+\begin{remark}[Digest note: the density topology]
+The earlier sketch did not specify the density topology. Density in
+$L^2$ alone is not enough when a derivative falls on the test function;
+convergence in $H^1$ supplies the missing control. This places no $H^1$
+assumption on the eigenfunction. It is a clarification of the paper
+proof, not a new Lean proof.
+\end{remark}
 
 \begin{lemma}[Orbitwise transport and resonant vanishing]
 \label{lem:resonant-vanishing}
@@ -105,10 +119,23 @@ $f_k(h_k)=0$.
 
 \begin{proof}
 \uses{lem:coarea, lem:transport-unknown, lem:orbit-coordinates, lem:period}
-On orbits, $L_0=\partial_t$. The coefficient $f_k$ is continuous in $h$, and
-$v_k$ is locally square integrable in $h$. Since $S'<0$ the denominator
-$kb(h)-\lambda$ has a simple zero at $h_k$, so $f_k(h_k)\ne0$ would make $v_k$
-behave like $1/(h-h_k)$.
+Apply Lemma~\ref{lem:coarea} to the transport unknown
+(Lemma~\ref{lem:transport-unknown}). On almost every orbit its ACL
+representative solves $(P-\lambda)Z=f\circ\gamma_h$.
+Integrate this equation against the periodic exponential over one
+period; the boundary terms cancel by periodicity. Substitute
+$v=-\lambda z-f$ to obtain the mode relation.
+
+On each compact regular level interval, the area formula and
+Cauchy--Schwarz show that $v_k$ is square integrable in $h$.
+When $f$ is continuous, write its mode integral in normalized time on
+$[0,1]$ to see that $f_k$ is continuous in $h$.
+At a resonance $k\ne0$ since $\lambda\ne0$; $S'<0$ makes
+$kb(h)-\lambda$ have a simple zero. If $f_k(h_k)\ne0$, continuity bounds
+the numerator away from zero nearby, so the mode relation forces
+$|v_k(h)|\ge c/|h-h_k|$ for almost every nearby $h$, contradicting local
+square integrability. The argument uses the mode relation near $h_k$,
+not the weak orbit equation at the particular level $h_k$.
 \end{proof}
 
 \begin{remark}
@@ -140,20 +167,52 @@ $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison, lem:orbit-saddle-distance,
-  lem:sobolev-holder, lem:trace-h2}
-There are infinitely many resonant levels $h_k\to0$ with $kb(h_k)=\lambda$ and
-$e^{i\pi k/2}=\kappa$. By the character, the four quarter-orbit integrals of
-$f_k$ coincide, so
-$\int_{-L}^{L}f(\gamma_{h_k}(t))e^{-i\lambda t}\,dt=0$. Integration by parts
-(the endpoint terms cancel because $e^{2i\lambda L(h_k)}=\kappa$) gives the
-same for the derivative. Compare with $g'$ using
-$\|g_h-g\|_{L^\infty(-L,L)}\le C_\alpha h^{\alpha/2}$ and
-$\|g_h-g\|_{L^1(-L,L)}\le C_\alpha h^{\alpha/2}|\log h|$
-(manuscript \texttt{(ee:forcing-comparison)}). Finally Lemma~\ref{lem:trace-h2} gives an $L^2$ derivative of the
-straight-line trace. Changing from the arc parameter to the line coordinate,
-then using Cauchy--Schwarz on that finite segment, gives $g'\in L^1(ds)$.
+\uses{lem:resonant-vanishing, lem:period, lem:orbit-comparison,
+  lem:sobolev-holder, lem:local-to-global, lem:trace-h2, lem:separatrix-arc,
+  lem:period-orbit}
+First Lemma~\ref{lem:trace-h2} gives local absolute continuity of the
+separatrix trace $g$ and an $L^2$ derivative of its straight-line trace.
+Changing to that finite line segment and applying Cauchy--Schwarz gives
+$g'\in L^1(ds)$. Fix $0<\alpha<1$. Localize $f$ on a finite cover of a
+compact neighbourhood of the closed cell and use
+Lemma~\ref{lem:sobolev-holder}. Orbit comparison then gives
+$\|g_h-g\|_{\infty,[-L,L]}\le C_\alpha h^{\alpha/2}$, where
+$g_h=f\circ\gamma_h$. At the arc ends,
+$|g(\pm L)-c_\pm|\le C_\alpha e^{-\alpha L}$.
+
+Choose resonances $h_k\to0$ with $kb(h_k)=\lambda$ and
+$e^{i\pi k/2}=\kappa$, possible by the period lemma, with $k$ of the
+sign of $\lambda$. Write $L=L(h_k)$. The character makes the four
+quarter contributions to the resonant mode identical, so resonant
+vanishing gives
+$\int_{-L}^{L}g_{h_k}(t)e^{-i\lambda t}\,dt=0$.
+Consequently
+$\big|\int_{-L}^{L}g(t)e^{-i\lambda t}\,dt\big|
+ \le 2LC_\alpha h_k^{\alpha/2}$.
+
+Integrate by parts only on the separatrix trace $g$:
+\[
+  \int_{-L}^{L}g'(t)e^{-i\lambda t}\,dt
+  =[g(t)e^{-i\lambda t}]_{-L}^{L}
+     +i\lambda\int_{-L}^{L}g(t)e^{-i\lambda t}\,dt .
+\]
+The constant part of the boundary term vanishes because
+$c_+=\kappa c_-$ and $e^{2i\lambda L}=\kappa$.
+The remainder is $O(e^{-\alpha L})$, while the last integral is
+$O(h_k^{\alpha/2}L)$. Both tend to zero since $L=O(|\log h_k|)$ and
+$L\to\infty$. Finally use $g'\in L^1$ to pass to the full-line integral.
 \end{proof}
+
+\begin{remark}[Digest note: prescribed resonant levels]
+The earlier sketch integrated by parts on the resonant orbit trace
+$g_{h_k}$. The almost-every-orbit restriction lemma does not justify
+that step at a prescribed, countable family of levels. The proof above
+avoids requiring regularity there: it uses the resonant integral of the
+continuous forcing, compares it with $g$, and integrates by parts only
+on the separatrix trace, whose ACL regularity is supplied by the
+straight-line trace theorem. No new curved-orbit trace theorem is needed.
+This repairs the paper sketch; the Lean Melnikov theorem remains admitted.
+\end{remark}
 
 \begin{definition}[Canonical transport profile]
 \label{def:canonical-profile}
@@ -235,13 +294,28 @@ Let $g'\in L^1(\R)$ satisfy the Melnikov condition.
 
 \begin{proof}
 \uses{lem:canonical-profile-ode}
-Existence is Lemma~\ref{lem:canonical-profile-ode}. A difference of two solutions is
-$Ce^{i\lambda s}$ (multiply by $e^{-i\lambda s}$ and use absolute continuity), which
-does not decay. For $s\ge0$ integrate by parts in the right formula:
-$\Omega(s)=-(g(s)-c_+)+i\lambda e^{i\lambda s}\int_s^\infty(g-c_+)e^{-i\lambda t}dt$, so
-$|\Omega(s)|\le C(1+|\lambda|/\alpha)e^{-\alpha s}$; for $s\le0$ use the left formula. For
-(3), $e^{s}|\Omega(s)|\le\int_s^\infty e^{-(t-s)}e^{t}|g'(t)|\,dt$ for $s\ge0$, and
-Young's inequality applies; similarly for $s\le0$.
+The tail-as-primitive formula in Lemma~\ref{lem:canonical-profile-ode}
+also makes $\Omega$ locally absolutely continuous, proving existence in
+the claimed class. A difference of two solutions is $Ce^{i\lambda s}$
+(multiply by $e^{-i\lambda s}$ and use absolute continuity), which does
+not decay. For $s\ge0$ integrate by parts in the right formula:
+$\Omega(s)=-(g(s)-c_+)+i\lambda e^{i\lambda s}\int_s^\infty(g-c_+)e^{-i\lambda t}dt$.
+Thus $|\Omega(s)|\le C(1+|\lambda|/\alpha)e^{-\alpha s}$.
+For $s\le0$ use the left formula supplied by Melnikov.
+
+For (3), the claim is immediate if the right-hand norm is infinite.
+Otherwise put $F(t)=e^t|g'(t)|$ for $t\ge0$. For $s\ge0$,
+\[
+  e^s|\Omega(s)|\le\int_0^\infty e^{-r}F(s+r)\,dr .
+\]
+Since $\int_0^\infty e^{-r}\,dr=1$, weighted Cauchy--Schwarz bounds the
+square by $\int_0^\infty e^{-r}F(s+r)^2\,dr$. Integrate over $s\ge0$
+and use Tonelli: each right translation contracts the half-line
+$L^2$ norm. Hence the positive-half-line squared norm is at most
+$\int_0^\infty e^{2t}|g'(t)|^2\,dt$.
+Use the left-tail formula on the negative half-line in the same way.
+Add the two estimates and take square roots. This proves constant one
+without invoking a general Young inequality.
 \end{proof}
 
 \begin{remark}
@@ -274,8 +348,17 @@ $|e^{i\lambda S(h)/4}-\kappa|\ge2\sin(\pi/12)$ for $\kappa=\pm1$
 
 \begin{proof}
 \uses{lem:period}
-$S$ is continuous, strictly monotone and tends to $\infty$ at $0$. On the
-windows, $\lambda S/4$ lies within $\pi/12$ of an odd multiple of $\pi/4$.
+The continuous, strictly decreasing $S$ tends to $\infty$ at zero.
+Choose an integer phase centre $2\pi(j+\tfrac12)$ sufficiently far in
+the direction of the sign of $\lambda$. The intermediate value theorem
+puts a level with exactly that phase inside $(0,\min\{\eta,1\})$.
+The strict phase window then has a nonempty open preimage there,
+hence positive measure.
+
+On a window, $\lambda S/4$ lies within $\pi/12$ of an odd multiple of
+$\pi/4$, so its angular distance from both $1$ and $-1$ on the circle
+is at least $\pi/6$. The corresponding chord length is at least
+$2\sin(\pi/12)$.
 \end{proof}
 
 \begin{remark}
@@ -301,14 +384,49 @@ their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder, lem:resonant-vanishing, lem:orbit-comparison, lem:orbit-saddle-distance, lem:coarea, lem:good-windows}
-On a good orbit $z_h=-(v_h+g_h)/\lambda$ solves $(P-\lambda)z_h=g_h$ with
-$z_h(L)=\kappa z_h(-L)$. The difference $z_h-z$ solves the same equation with
-forcing $g_h-g$ and boundary mismatch $\kappa z(-L)-z(L)=O(e^{-\alpha L})$
-(using $c_+=\kappa c_-$). Variation of constants and the window lower bound
-give $\|v_h-\Omega\|_{L^\infty(-L,L)}\le C_\alpha h^{\alpha/2}|\log h|$. Since
-$L=O(|\log h|)$, the pairing error is $O(h^{\alpha/2}|\log h|^2)$, and the
-tails of $\Omega\bar g$ vanish by exponential decay.
+\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder,
+  lem:local-to-global, lem:resonant-vanishing, lem:orbit-comparison,
+  lem:coarea, lem:good-windows, lem:separatrix-arc,
+  lem:period, lem:period-orbit, lem:level-integral-congr}
+Discard one null set $\mathcal B$ of levels, using a countable exhaustion
+by regular annuli. Transfer exceptional point sets to exceptional levels
+using measurable null covers and Lemma~\ref{lem:level-integral-congr}.
+Outside $\mathcal B$, choose the orbitwise ACL transport representatives
+and transfer the rotation character to them.
+Equality almost everywhere in time becomes equality everywhere by
+continuity, giving $z_h(L)=\kappa z_h(-L)$.
+The associated $v_h=-\lambda z_h-g_h$ agrees almost everywhere with
+the original orbit restriction, so its pairing is the same.
+
+Localize the H\"older estimate near the closed cell as in the Melnikov
+proof. On the base quarter,
+$\|g_h-g\|_\infty\le C_\alpha h^{\alpha/2}$ and both forcings are
+uniformly bounded. Put $z=-(\Omega+g)/\lambda$ and $w=z_h-z$.
+Then $(P-\lambda)w=g_h-g$ and
+\[
+  w(L)-\kappa w(-L)=\kappa z(-L)-z(L)=O(e^{-\alpha L}),
+\]
+since the constant endpoint values cancel.
+Variation of constants determines $w(-L)$ with denominator
+$e^{2i\lambda L}-\kappa$. On good windows this denominator is bounded
+away from zero. It follows that
+\[
+  \|w\|_\infty
+  \le C\bigl(\|g_h-g\|_{L^1(-L,L)}
+      +|\kappa z(-L)-z(L)|\bigr),\qquad
+  \|v_h-\Omega\|_\infty
+  \le C_\alpha h^{\alpha/2}|\log h|.
+\]
+The interval length is $2L=O(|\log h|)$, so the pairing error is
+$O(h^{\alpha/2}|\log h|^2)$. The tails of $\Omega\bar g$ vanish by
+exponential decay and boundedness of $g$. Rotate this argument to
+the other three quarters, enlarging $\mathcal B$ by only finitely
+many null sets.
+
+Finally the good windows have positive measure arbitrarily near zero.
+Removing $\mathcal B\cup N$ leaves a level in every sufficiently small
+interval $(0,\eta)$. Choose such levels $h_j<1/(j+1)$.
+The preceding error and tail estimates prove the claimed limit.
 \end{proof}
 
 \section{Weighted transport gains near the saddles}

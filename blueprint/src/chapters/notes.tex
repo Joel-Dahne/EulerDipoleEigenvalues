@@ -40,7 +40,16 @@ once resolved; record the resolution in the relevant node.
   \item \textbf{The $L^2$ virial identity} (Lemma~\ref{lem:virial-l2}). The manuscript's
         flow group $U_t$ of $W$ is replaced by a transversal mollifier in action-angle
         coordinates, for fields supported in an annulus; the center is cut out of
-        Lemma~\ref{lem:ee-truncated-virial}. The paper proof now explicitly\n        periodizes the cell outputs and uses $c=\chi(\Psi/2)$ on the torus.\n        Applying the exact identity directly to $J_\epsilon\omega,J_\epsilon\psi$\n        with $V=D$ avoids constructing a mollifier adjoint. These are paper\n        clarifications, not new Lean proofs. The chart
+        Lemma~\ref{lem:ee-truncated-virial}. The paper proof now explicitly
+        periodizes the cell outputs and uses $c=\chi(\Psi/2)$ on the torus.
+        Applying the exact identity directly to $J_\epsilon\omega,J_\epsilon\psi$
+        with $V=D$ avoids constructing a mollifier adjoint. These are paper
+        clarifications, not new Lean proofs. In the transport sketches,
+        test density is now explicitly in $H^1$, and Melnikov integrates
+        by parts only on the separatrix trace, avoiding an unjustified
+        appeal to a.e. orbit regularity at prescribed resonant levels
+        (see the digest notes at Lemmas~\ref{lem:transport-pair-eigen}
+        and~\ref{lem:melnikov}). The chart
         (Lemmas~\ref{lem:action-angle-chart}, \ref{lem:action-angle-weak}), the
         one-dimensional mollifier (Lemma~\ref{lem:line-mollifier}) and the mollifier
         (Lemmas~\ref{lem:transversal-mollifier}--\ref{lem:transversal-mollifier-commutator})

@@ -45,8 +45,9 @@ not marked Lean-proved: 10 in geometry, 8 in analysis, 4 in virial, and
 6 in transport. All have written blueprint proofs or sketches. Two of
 these, `lem:acl-slicing` and `lem:trace-l2`, have no Lean statement yet;
 the remaining 26 have Lean statements covering their claims. This is
-not a complete mathematical proof audit. Analysis and virial have had a
-first-pass review; geometry and transport remain to be reviewed. Some nodes remain partially
+not a complete mathematical proof audit. Analysis, virial and transport
+have had a first-pass review; geometry remains to be reviewed.
+Some nodes remain partially
 formalized; in particular only the full-gradient parts of
 `lem:action-angle-weak` remain open, not its transport equivalence.
 
@@ -136,6 +137,50 @@ rough eigenfunction by smooth eigenfunctions. These are paper-proof
 clarifications and preliminary effort assessments, not complete independent
 derivations or new Lean proofs. The two H¹ virial statements and virial_l2
 remain admitted; all use Fourier derivative witnesses as before.
+
+**Transport review (relative difficulty, not timing estimates):**
+- `lem:transport-pair-eigen`: moderate, principally the weak/Fourier
+  bridge and test periodization. Density must be in the test H¹ norm,
+  not merely L²; no H¹ regularity of the eigenfunction is assumed.
+- `lem:resonant-vanishing`: medium–high overall. Coarea gives the orbit
+  ODE, periodic ACL integration by parts gives the mode relation, and
+  continuity of the forcing mode excludes a non-L² pole at resonance.
+  The pole argument uses the a.e. mode relation near the resonance;
+  it does not require the ODE at the resonant level itself.
+- `lem:melnikov`: medium–high conditional on the geometry and trace
+  inputs. The earlier sketch used integration by parts at selected
+  resonant levels, which the a.e. orbit lemma did not justify. The
+  repaired paper proof compares their continuous forcing integrals
+  with the separatrix trace and integrates by parts only on that trace.
+  Endpoint constants cancel by the character/phase relation; errors
+  O(exp(-αL)) and O(h^(α/2)L) vanish. g' is L¹ by the straight-line
+  H² trace and change of variable. No curved resonant-orbit trace
+  theorem is needed. The correction is recorded in the node and notes.
+- `lem:canonical-profile`: moderate overall, with uniqueness the easiest
+  part. The tail primitive supplies local AC; an integrating factor
+  gives uniqueness, and improper IBP gives exponential decay. The
+  constant-one weighted L² bound now has a Cauchy–Schwarz/Tonelli proof
+  using half-line translation contraction, avoiding general Young.
+  Its three claims are natural candidates for a future node split.
+- `lem:good-windows`: low–moderate, assuming the period facts. IVT gives
+  a level at a half-integer phase; the strict window has a nonempty open
+  preimage, hence positive measure. The divisor bound is elementary
+  angle/chord geometry. Both signs of λ must be handled.
+- `lem:pairing-limit`: high, the largest transport assembly. Variation
+  of constants on a quarter has divisor exp(2iλL)-κ, bounded below on
+  good windows. The error is O(h^(α/2)|log h|²), with exponentially
+  decaying tails. Representatives, the rotation endpoint condition,
+  a common exceptional null set and four-quarter assembly are the
+  main formalization work. Positive-measure windows allow sequence
+  selection after removing that set and any prescribed null set.
+The revised Melnikov and pairing proofs use uniform orbit comparison
+and the explicit arc endpoints, not the saddle-distance estimate;
+the corresponding direct dependencies are removed. Bounded invariant
+neighbourhoods, flow continuity and representative-transfer lemmas already exist; these should not be counted as missing
+new tasks. The six transport statements and proof-completion markers
+are unchanged. Only blueprint sketches and dependency metadata were
+clarified; no Lean files changed. This is still a first-pass review,
+not a complete independent derivation of every prerequisite.
 
 **The line-mollifier lemma is fully proved.** Its quantitative estimates in
 `LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,
