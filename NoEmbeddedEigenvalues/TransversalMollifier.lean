@@ -4,9 +4,9 @@ import NoEmbeddedEigenvalues.Transport
 /-!
 # The transversal mollifier
 
-Blueprint: `def:transversal-mollifier`; stated: `lem:action-angle-weak`,
-`lem:transversal-mollifier`, `lem:transversal-mollifier-derivatives`,
-`lem:transversal-mollifier-commutator`.
+Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved);
+stated: `lem:action-angle-weak`, `lem:transversal-mollifier`,
+`lem:transversal-mollifier-derivatives`, `lem:transversal-mollifier-commutator`.
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -70,6 +70,66 @@ def transversalMollifier (χ : ℝ → ℝ) (ε : ℝ) (u : ℝ × ℝ → ℂ) 
     mollifyFst ε (fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)) (actionAngle p)
   else 0
 
+/-- A closed level band in the closed diagonal cell square. -/
+private def closedCellLevelBand (a b : ℝ) : Set (ℝ × ℝ) :=
+  {p | |(diagCoord p).1| ≤ Real.pi / 2 ∧ |(diagCoord p).2| ≤ Real.pi / 2 ∧
+    a ≤ levelCoord p ∧ levelCoord p ≤ b}
+
+private theorem isCompact_closedCellLevelBand (a b : ℝ) :
+    IsCompact (closedCellLevelBand a b) := by
+  have hd₁ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).1|) := by
+    unfold diagCoord
+    fun_prop
+  have hd₂ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).2|) := by
+    unfold diagCoord
+    fun_prop
+  have hl : Continuous levelCoord := by
+    unfold levelCoord dipoleLift
+    fun_prop
+  have hc : IsClosed (closedCellLevelBand a b) :=
+    (isClosed_le hd₁ continuous_const).inter
+      ((isClosed_le hd₂ continuous_const).inter
+        ((isClosed_le continuous_const hl).inter (isClosed_le hl continuous_const)))
+  apply (isCompact_Icc.prod isCompact_Icc).of_isClosed_subset hc
+    (show closedCellLevelBand a b ⊆
+      Icc (-Real.pi) Real.pi ×ˢ Icc (-Real.pi) Real.pi from ?_)
+  intro p hp
+  obtain ⟨h₁l, h₁u⟩ := abs_le.mp hp.1
+  obtain ⟨h₂l, h₂u⟩ := abs_le.mp hp.2.1
+  have hx : p.1 = (diagCoord p).1 + (diagCoord p).2 := by
+    simp only [diagCoord]
+    ring
+  have hy : p.2 = (diagCoord p).1 - (diagCoord p).2 := by
+    simp only [diagCoord]
+    ring
+  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+
+private theorem closedCellLevelBand_subset {a b : ℝ} (ha : 0 < a) (hb : b < 1) :
+    closedCellLevelBand a b ⊆ puncturedCell := by
+  intro p hp
+  have hprod : levelCoord p = Real.cos (diagCoord p).1 * Real.cos (diagCoord p).2 := by
+    rw [levelCoord, dipoleLift_eq_diag]
+    ring
+  have hstrict : ∀ x : ℝ, |x| ≤ Real.pi / 2 → Real.cos x ≠ 0 → |x| < Real.pi / 2 := by
+    intro x hx hn
+    by_contra h
+    have he : |x| = Real.pi / 2 := le_antisymm hx (le_of_not_gt h)
+    apply hn
+    rw [← Real.cos_abs, he, Real.cos_pi_div_two]
+  have hc : p ∈ cellSquare := by
+    refine ⟨hstrict _ hp.1 ?_, hstrict _ hp.2.1 ?_⟩
+    · intro hz
+      rw [hz, zero_mul] at hprod
+      linarith [hp.2.2.1]
+    · intro hz
+      rw [hz, mul_zero] at hprod
+      linarith [hp.2.2.1]
+  refine ⟨hc, ?_⟩
+  intro hz
+  have he : p = 0 := mem_singleton_iff.mp hz
+  have hl : levelCoord p = 1 := by simp [he, levelCoord, dipoleLift]
+  linarith [hp.2.2.2]
+
 /-! ### Statements -/
 
 section Statements
@@ -89,13 +149,66 @@ theorem transversalMollifier_const_mul (ε : ℝ) (c : ℂ) (u : ℝ × ℝ → 
     ring
   · simp
 
-/-! #### `lem:transversal-mollifier` (stated) -/
+/-! #### `lem:transversal-mollifier-support` -/
 
 /-- For small `ε`, `J_ε u` vanishes off a fixed compact subset of the punctured cell. -/
 theorem transversalMollifier_eq_zero (hχs : tsupport χ ⊆ Ioo 0 1) :
     ∃ K, IsCompact K ∧ K ⊆ puncturedCell ∧ ∃ ε₀ > 0, ∀ ε ∈ Ioo 0 ε₀, ∀ u p, p ∉ K →
       transversalMollifier χ ε u p = 0 := by
-  sorry
+  classical
+  have hs : IsCompact (tsupport χ) :=
+    (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).of_isClosed_subset (isClosed_tsupport χ)
+      (fun t ht ↦ ⟨(hχs ht).1.le, (hχs ht).2.le⟩)
+  obtain ⟨l, hl, hlow⟩ := hs.exists_forall_le' continuous_id.continuousOn
+    (fun t ht ↦ (hχs ht).1)
+  obtain ⟨d, hd, hgap⟩ := hs.exists_forall_le' (f := fun t : ℝ ↦ 1 - t) (a := 0)
+    (continuous_const.sub continuous_id).continuousOn
+    (fun t ht ↦ by linarith [(hχs ht).2])
+  let r : ℝ := 1 - d
+  have hr : r < 1 := by dsimp [r]; linarith
+  have hupp : ∀ t ∈ tsupport χ, t ≤ r := by
+    intro t ht
+    dsimp [r]
+    linarith [hgap t ht]
+  let ε₀ := min l (1 - r) / 2
+  have hε₀ : 0 < ε₀ := div_pos (lt_min hl (by linarith)) (by norm_num)
+  refine ⟨closedCellLevelBand (l / 2) ((r + 1) / 2),
+    isCompact_closedCellLevelBand _ _,
+    closedCellLevelBand_subset (by linarith) (by linarith), ε₀, hε₀, ?_⟩
+  intro ε hε u p hp
+  have he₁ : ε < l / 2 := by
+    have h := min_le_left l (1 - r)
+    dsimp [ε₀] at hε
+    linarith [hε.2]
+  have he₂ : ε < (1 - r) / 2 := by
+    have h := min_le_right l (1 - r)
+    dsimp [ε₀] at hε
+    linarith [hε.2]
+  by_cases hc : p ∈ puncturedCell
+  · rw [transversalMollifier, ite_eq_left hc, mollifyFst]
+    apply integral_eq_zero_of_ae
+    filter_upwards [] with t
+    change mollifierKernel ε (levelCoord p - t) •
+      ((χ t : ℂ) * u (actionAngleInv (t, angleCoord p))) = 0
+    by_cases hk : mollifierKernel ε (levelCoord p - t) = 0
+    · simp [hk]
+    by_cases ht : χ t = 0
+    · simp [ht]
+    have hts : t ∈ tsupport χ := subset_closure (show t ∈ Function.support χ from ht)
+    have hlt : l ≤ t := hlow t hts
+    have htr : t ≤ r := hupp t hts
+    have hB : stdBump ((levelCoord p - t) / ε) ≠ 0 := by
+      intro hz
+      apply hk
+      simp [mollifierKernel, hz]
+    have hmem : (levelCoord p - t) / ε ∈ Function.support stdBump := hB
+    rw [support_stdBump] at hmem
+    have hleft := (lt_div_iff₀ hε.1).mp hmem.1
+    have hright := (div_lt_iff₀ hε.1).mp hmem.2
+    exact False.elim (hp ⟨hc.1.1.le, hc.1.2.le, by linarith, by linarith⟩)
+  · simp [transversalMollifier, hc]
+
+/-! #### `lem:transversal-mollifier` (stated) -/
 
 /-- `J_ε` is additive on `L²` of the cell, up to null sets. -/
 theorem transversalMollifier_add {ε : ℝ} (hε : 0 < ε) {u v : ℝ × ℝ → ℂ}

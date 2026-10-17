@@ -263,11 +263,40 @@ elsewhere, with $M_\epsilon$ the mollification in $h$ at fixed $\theta$
 (Definition~\ref{def:line-mollifier}).
 \end{definition}
 
+\begin{lemma}[Support of the transversal mollifier]
+\label{lem:transversal-mollifier-support}
+\uses{def:transversal-mollifier}
+\lean{NoEmbeddedEigenvalues.transversalMollifier_eq_zero}
+\leanok
+Assume only that the closed support of $\chi:\R\to\R$ lies in $(0,1)$.
+There are a compact $K$ in the punctured cell and $\epsilon_0>0$ such that
+$J_\epsilon u(p)=0$ for every function $u$, every $p\notin K$ and
+$0<\epsilon<\epsilon_0$. No regularity of $\chi$ or integrability of $u$
+is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:separatrix-lines, lem:line-mollifier-kernel}
+\leanok
+Compactness of the closed support gives $0<l$ and $r<1$ with
+$\operatorname{supp}\chi\subset[l,r]$. Set
+$\epsilon_0=\frac12\min\{l,1-r\}$ and take the closed band
+\[
+  K=\{p: |a(p)|,|b(p)|\le\pi/2,\quad l/2\le h(p)\le(r+1)/2\}.
+\]
+This set is closed and bounded. On the boundary of the diagonal square,
+$h=\cos a\cos b=0$, while $h(0)=1$, so $K$ lies in the punctured cell.
+A nonzero integrand in $J_\epsilon u(p)$ requires both
+$h'\in[l,r]$ and $|h(p)-h'|<\epsilon$; these force $p\in K$ whenever
+$p$ is in the punctured cell. Outside that cell $J_\epsilon u=0$ by definition.
+Thus the integrand vanishes pointwise off $K$, without any change of variables
+or analytic orbit-coordinate input.
+\end{proof}
+
 \begin{lemma}[The transversal mollifier on $L^2$]
 \label{lem:transversal-mollifier}
 \uses{def:transversal-mollifier}
 \lean{NoEmbeddedEigenvalues.transversalMollifier_const_mul,
-  NoEmbeddedEigenvalues.transversalMollifier_eq_zero,
   NoEmbeddedEigenvalues.transversalMollifier_add,
   NoEmbeddedEigenvalues.transversalMollifier_congr_ae,
   NoEmbeddedEigenvalues.memLp_transversalMollifier,
@@ -280,10 +309,11 @@ C\|u\|_{L^2(\Cell)}$. For $u\in L^2(\Cell)$, $J_\epsilon u\to\hat\chi u$ in $L^2
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-chart, lem:line-mollifier-contraction,
-  lem:line-mollifier-convergence}
-$\chi U$ vanishes for $h$ outside $\operatorname{supp}\chi=[a,b]\subset(0,1)$, so $M_\epsilon(\chi U)$
-vanishes for $h$ outside $[a-\epsilon,b+\epsilon]$; take $K=\{a-\epsilon_0\le h\le b+\epsilon_0\}$. By the
+\uses{lem:transversal-mollifier-support, lem:action-angle-chart,
+  lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+The support statement is Lemma~\ref{lem:transversal-mollifier-support}.
+Enclose $\operatorname{supp}\chi$ in $[a,b]\subset(0,1)$ and choose
+$\epsilon_0>0$ with $[a-\epsilon_0,b+\epsilon_0]\subset(0,1)$. By the
 area formula (Lemma~\ref{lem:action-angle-chart}) and the inverse relations,
 $\|J_\epsilon u\|^2=\int\int|M_\epsilon(\chi U)|^2\,2S\,dh\,d\theta$ over $(0,1)\times[-\frac14,\frac34)$,
 and $2S$ is bounded above and below on $[a-\epsilon_0,b+\epsilon_0]$. So the $L^2$ statements follow

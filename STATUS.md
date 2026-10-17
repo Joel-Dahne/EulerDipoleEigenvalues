@@ -82,12 +82,30 @@ The three remaining admissions in `LineMollifier.lean` are
 `hasWeakPartialOn_mollifyFst`, `HasWeakPartialOn.mollify` and
 `mollifyFstDeriv_ae_eq`.
 
-**Next toward the transversal mollifier:** prove its basic L² node
-`lem:transversal-mollifier`: first support in a fixed compact annulus, then
-a.e. congruence/additivity and the norm bound/convergence via the
-`2S(h)`-weighted action-angle area formula. This node needs only the proved
-line contraction and convergence, not the weak-derivative lemmas; its
-blueprint proof dependencies now say so. The chart's inverse relations and
+**The transversal-mollifier support lemma is proved.**
+`transversalMollifier_eq_zero` in `TransversalMollifier.lean` has no admitted
+dependencies; its axioms are only `propext`, `Classical.choice`, `Quot.sound`.
+The new proved blueprint node is `lem:transversal-mollifier-support`, separated
+from the still-admitted L² node. Private helpers construct a compact closed
+level band in the closed diagonal cell square. Positive lower level excludes
+the square boundary and upper level below one excludes the center. The kernel
+support then forces any nonzero integrand into that band. This works for
+arbitrary input functions and needs only closed support of `χ` in `(0,1)`,
+not smoothness of `χ`, coarea or analytic orbit coordinates.
+
+The first hands-off GPT-6 Luna test assigned this support lemma to one
+medium-thinking worker, then retried the same task at high thinking after
+failure. Both returned without edits or a concrete Lean obstruction; neither
+was supervised during execution. The parent then proved the lemma directly.
+These are two failed autonomous attempts, not worker proof successes; the
+runner's normal completion status must not be confused with a solved task.
+Details are in the experiment-history section of `docs/tooling/pi.md`.
+
+**Next toward the transversal mollifier:** finish its basic L² node
+`lem:transversal-mollifier`: a.e. congruence/additivity and the norm
+bound/convergence via the `2S(h)`-weighted action-angle area formula. Its
+pointwise support part is now done. This node needs only the proved line
+contraction and convergence, not the weak-derivative lemmas. The chart's inverse relations and
 `lintegral_cellSquare_actionAngle` are already proved, though the latter
 still rests on the admitted coarea formula. Period smoothness and other
 chart regularity inputs remain admitted. For the stronger derivative and
@@ -95,7 +113,9 @@ transport-commutator nodes, finish the three line weak-derivative statements
 and the action-angle weak chain rules in `TransversalMollifier.lean`.
 
 **Validation:** the full Lean project build passes (3281 jobs); full-file
-diagnostics have only the three remaining line weak-derivative admissions.
+diagnostics have only the three remaining line weak-derivative admissions
+and the ten remaining admissions in `TransversalMollifier.lean` (four basic
+L² properties, three action-angle weak rules, three derivative/commutator results).
 `just web` and the even–even subgraph generation pass. Pi setup and the
 sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
 The runner defaults to `openai-codex/gpt-6-luna` with medium thinking;

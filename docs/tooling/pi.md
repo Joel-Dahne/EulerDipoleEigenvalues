@@ -145,8 +145,9 @@ Lean diagnostics and axioms. File restrictions are instructions, not a sandbox.
 
 ## Proof-worker experiment history
 
-These trials used `openai-codex/gpt-5.6-luna`. They record earlier observations,
-not additional steps in the default workflow above.
+The first two trials used `openai-codex/gpt-5.6-luna`; the later hands-off
+trial used GPT-6 Luna. These are observations, not additional steps in the
+default workflow above.
 
 ### First lemma trial
 
@@ -204,3 +205,25 @@ partial coordination/review count, not an end-to-end cost. The parent's
 long conversation and the worker's fresh context also differ substantially.
 No matched parent-only baseline has been measured; these successful trials
 do not yet establish token or cost savings.
+
+### First GPT-6 Luna hands-off trial
+
+The task was `transversalMollifier_eq_zero`: pointwise support of the
+transversal mollifier in a fixed compact subset of the punctured cell.
+Imports were preflighted and a short compact-band/kernel-support outline was
+supplied. Each worker ran in the foreground; the parent waited for the final
+report, without polling transcripts, editing the target or directing the run.
+
+| Thinking | Seconds | Responses | Uncached input | Output | Cache read | Outcome |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| medium | 17.88 | 8 | 16,414 | 691 | 63,488 | No edits; incomplete |
+| high (retry) | 57.22 | 15 | 20,155 | 2,146 | 143,104 | No edits; incomplete |
+
+Both used `openai-codex/gpt-6-luna`. The retry was prompted by the first
+failure, not live supervision. Both returned normally but stopped without
+an implemented proof or a concrete Lean obstruction. Autonomous success was
+0/2; a successful runner exit is not proof success. Recorded worker usage was
+245,998 tokens, including 206,592 cache-read tokens, excluding parent work.
+The parent subsequently proved the lemma directly, without admitted
+dependencies. This small unsuccessful trial does not establish GPT-6 Luna's
+general suitability or any end-to-end savings.
