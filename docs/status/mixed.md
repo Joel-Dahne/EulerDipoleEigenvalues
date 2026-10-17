@@ -1,6 +1,7 @@
 # Mixed-sector status
 
 [Project status](../../STATUS.md) · [Shared infrastructure](shared.md)
+· [Generated sector report](generated.md#mixed)
 
 ## Current position
 

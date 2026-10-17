@@ -21,11 +21,15 @@ manuscript file="manuscript":
 check-blueprint:
     python3 scripts/check_blueprint.py
 
-# Run regression tests for the blueprint consistency checker
+# Run regression tests for the blueprint checker and status report
 test-blueprint:
     python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 
-# Build the blueprint website, including full and three sector dependency graphs
+# Generate the source-only sector status report (no Lean or web build needed)
+status-blueprint:
+    python3 scripts/blueprint_status.py --output docs/status/generated.md
+
+# Build the blueprint website, sector graphs and generated status report
 web: check-blueprint
     # With a Nix-installed plasTeX, the copied static files are read-only, which
     # makes rebuilds fail when they overwrite them.
@@ -34,6 +38,7 @@ web: check-blueprint
     python3 scripts/blueprint_subgraph.py thm:ee-exclusion
     python3 scripts/blueprint_subgraph.py thm:dd-exclusion
     python3 scripts/blueprint_subgraph.py thm:mixed-exclusion
+    python3 scripts/blueprint_status.py --output docs/status/generated.md
 
 # Needs `just web` first; writes blueprint/web/dep_graph_<labels>.html.
 # Dependency graph restricted to the given nodes and everything they depend on
@@ -61,3 +66,4 @@ checkdecls: build web
 # Remove generated blueprint files
 clean:
     rm -rf blueprint/web blueprint/print
+    rm -f docs/status/generated.md

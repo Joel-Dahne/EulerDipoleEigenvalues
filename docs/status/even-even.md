@@ -1,6 +1,7 @@
 # Even–even status
 
 [Project status](../../STATUS.md) · [Shared infrastructure](shared.md)
+· [Generated sector report](generated.md#even-even)
 
 ## Current position
 

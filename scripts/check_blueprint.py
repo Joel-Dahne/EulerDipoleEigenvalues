@@ -39,6 +39,24 @@ class Token:
     location: Location
 
 
+@dataclass(frozen=True, eq=False)
+class Chapter:
+    # A repeated heading input still starts a distinct chapter occurrence.
+    title: str
+    location: Location
+
+
+@dataclass
+class NodeMetadata:
+    kind: str
+    chapter: Chapter | None
+    statement_leanok: bool = False
+    proof_leanok: bool = False
+    mathlibok: bool = False
+    notready: bool = False
+    has_proof: bool = False
+
+
 @dataclass
 class Scope:
     kind: str
@@ -46,6 +64,8 @@ class Scope:
     label: str | None = None
     target: "Scope | str | None" = None
     uses: list[Token] = field(default_factory=list)
+    chapter: Chapter | None = None
+    flags: set[str] = field(default_factory=set)
 
 
 @dataclass
@@ -53,7 +73,10 @@ class Blueprint:
     labels: dict[str, Location] = field(default_factory=dict)
     nodes: dict[str, Location] = field(default_factory=dict)
     dependencies: dict[str, dict[str, Location]] = field(default_factory=dict)
+    chapters: list[Chapter] = field(default_factory=list)
+    metadata: dict[str, NodeMetadata] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
+    source: Path | None = None
 
     def error(self, location, message):
         self.errors.append(f"{location}: error: {message}")
@@ -111,6 +134,12 @@ def tokens(path: Path, result: Blueprint):
         command = match.group(1)
         location = Location(path, text.count("\n", 0, match.start()) + 1)
         if command == "chapter":
+            title_pos = pos + 1 if text[pos:pos + 1] == "*" else pos
+            title = ARGUMENT.match(text, title_pos)
+            # Formatted titles may contain nested braces; grouping still works
+            # with the source filename as a fallback, without interpreting TeX.
+            yield Token(command, title[1] if title else path.stem, location)
+        elif command in {"leanok", "mathlibok", "notready"}:
             yield Token(command, "", location)
         elif command in commands:
             if command in REFERENCES and pos < len(text) and text[pos] == "*":
@@ -149,17 +178,21 @@ def expanded_tokens(src: Path, path: Path, result: Blueprint, active=()):
 
 
 def check_blueprint(src: Path) -> Blueprint:
-    result = Blueprint()
+    result = Blueprint(source=src)
     stack: list[Scope] = []
     scopes = []
     references = []
     previous = None
+    chapter = None
     for token in expanded_tokens(src, src / "content.tex", result):
         command, value, location = token.command, token.value, token.location
         if command == "chapter":
             previous = None
+            chapter = Chapter(value, location)
+            result.chapters.append(chapter)
         elif command == "begin":
-            scope = Scope(value, location, target=previous if value == "proof" else None)
+            scope = Scope(value, location, target=previous if value == "proof" else None,
+                          chapter=chapter)
             stack.append(scope)
             if value in NODE_TYPES | {"proof"}:
                 scopes.append(scope)
@@ -179,6 +212,11 @@ def check_blueprint(src: Path) -> Blueprint:
             if stack and stack[-1].kind in NODE_TYPES and stack[-1].label is None:
                 stack[-1].label = value
                 result.nodes.setdefault(value, location)
+        elif command in {"leanok", "mathlibok", "notready"}:
+            owner = next((s for s in reversed(stack)
+                          if s.kind in NODE_TYPES | {"proof", "remark"}), None)
+            if owner is not None and owner.kind != "remark":
+                owner.flags.add(command)
         else:
             values = value.split(",") if command in LIST_ARGUMENTS else [value]
             for label in values:
@@ -207,6 +245,14 @@ def check_blueprint(src: Path) -> Blueprint:
             result.error(ref.location, f"unknown label {ref.value!r} in \\{ref.command}{hint}")
         elif ref.command in NODE_REFERENCES and ref.value not in result.nodes:
             result.error(ref.location, f"\\{ref.command} target {ref.value!r} is not a graph node")
+    # Register statements first, so explicit forward \proves targets also work.
+    for scope in scopes:
+        if scope.kind in NODE_TYPES and scope.label is not None:
+            result.metadata.setdefault(scope.label, NodeMetadata(
+                kind=scope.kind, chapter=scope.chapter,
+                statement_leanok="leanok" in scope.flags,
+                mathlibok="mathlibok" in scope.flags,
+                notready="notready" in scope.flags))
     for scope in scopes:
         if scope.kind == "proof":
             owner = scope.target.label if isinstance(scope.target, Scope) else scope.target
@@ -217,6 +263,11 @@ def check_blueprint(src: Path) -> Blueprint:
             if owner is None:
                 result.error(scope.location, f"{scope.kind} graph node has no label")
         if owner in result.nodes:
+            if scope.kind == "proof":
+                metadata = result.metadata[owner]
+                metadata.has_proof = True
+                # Like plasTeX, use the last associated proof's completion flag.
+                metadata.proof_leanok = "leanok" in scope.flags
             deps = result.dependencies.setdefault(owner, {})
             for ref in scope.uses:
                 if ref.value in result.nodes:

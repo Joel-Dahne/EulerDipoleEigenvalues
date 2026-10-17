@@ -1,6 +1,7 @@
 # Odd–odd status
 
 [Project status](../../STATUS.md) · [Shared infrastructure](shared.md)
+· [Generated sector report](generated.md#odd-odd)
 
 ## Current position
 

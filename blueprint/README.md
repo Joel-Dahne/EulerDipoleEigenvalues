@@ -49,7 +49,8 @@ questions and problems found in the manuscript, and collect them in
 - `src/plastex.cfg`: web build configuration
 - `src/sectorgraphs.py`: local plasTeX package adding sector graph links to
   the HTML5 sidebar (loaded only by `web.tex`)
-- `../scripts/check_blueprint.py`: source-only consistency checker
+- `../scripts/check_blueprint.py`: source-only consistency checker and metadata reader
+- `../scripts/blueprint_status.py`: generated sector status report
 
 ## Building
 
@@ -59,7 +60,8 @@ installation. The dependency graphs are rendered in the browser.
 
 ```sh
 just check-blueprint # source consistency checks (Python 3 only)
-just web             # checks, then HTML + full and three sector dependency graphs
+just status-blueprint # generate docs/status/generated.md without a web/Lean build
+just web             # checks, website, three sector graphs and status report
 just serve           # view it at http://localhost:8000
 just pdf             # PDF in blueprint/print
 just graph LABEL     # optional custom dependency view, after just web
@@ -98,6 +100,36 @@ This is not a full LaTeX checker, a Lean declaration/axiom audit, or a check of
 `\leanok` annotations or mathematical correctness. Run `just test-blueprint` for
 the checker's regression tests. For another source tree, use
 `python3 scripts/check_blueprint.py --src PATH` from the repository root.
+
+## Generated status report
+
+`just status-blueprint` writes `docs/status/generated.md` from the same checked
+source model as the consistency checker. `just web` also regenerates it.
+The file is ignored by Git; regenerate it after source edits or on a fresh
+checkout rather than editing or committing generated counts. `just clean`
+removes it along with the generated website and PDF.
+
+For each sector, it counts the target and all transitive statement/proof
+prerequisites, separates definitions from results, and reports statement/proof
+completion markers. Unfinished nodes are listed in chapter order with source
+links, missing markers and `\notready` flags. Mathlib markers are counted
+separately; definitions do not need proof markers, and Lean links alone do
+not imply completion. Shared nodes count once per sector, not once globally
+across the sector rows.
+
+The report describes blueprint annotations, not Lean axiom independence or
+mathematical correctness. Counts are nodes, not distinct declarations or gaps;
+a marked proof may still depend on admitted prerequisites. Handwritten status
+pages retain priorities and explanations instead of duplicating these numbers.
+
+For stdout or another source tree:
+
+```sh
+python3 scripts/blueprint_status.py
+python3 scripts/blueprint_status.py --src PATH --output REPORT.md
+```
+
+`just test-blueprint` covers both the checker and report generator.
 
 ## Publication setup
 

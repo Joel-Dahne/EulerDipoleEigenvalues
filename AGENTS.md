@@ -150,7 +150,9 @@ motivation, and standard facts cited rather than proved.
 - `justfile`: build recipes (run `just` to list them).
 - `scripts/`: helper scripts. `check_blueprint.py` (behind
   `just check-blueprint`, also run before web/PDF builds) checks source labels,
-  references and dependency cycles without Lean or plasTeX.
+  references and dependency cycles without Lean or plasTeX. The same source
+  model feeds `blueprint_status.py` (`just status-blueprint`), which writes the
+  Git-ignored `docs/status/generated.md` report and also runs during `just web`.
   `blueprint_subgraph.py` (used by `just web` and `just graph`) restricts the
   web dependency graph to chosen nodes and their dependencies, drawn in one
   box per chapter (`--no-chapters` for the plain layout).
@@ -161,8 +163,9 @@ motivation, and standard facts cited rather than proved.
 
 ```sh
 just check-blueprint # fast source label/reference/dependency checks
-just test-blueprint  # checker regression tests
-just web             # source checks + website and full/three-sector graphs
+just test-blueprint  # checker/report regression tests
+just status-blueprint # regenerate sector counts and unfinished-node report
+just web             # source checks + website, sector graphs and status report
 just serve           # serve it at http://localhost:8000 (needs only python3)
 just graph thm:ee-exclusion  # graph of a node and all it depends on (after just web)
 just pdf             # blueprint PDF in blueprint/print
@@ -299,5 +302,7 @@ Keep these files as short current snapshots, not logs or inventories of complete
 lemmas. Shared infrastructure belongs in `docs/status/shared.md`; sector pages
 should link there rather than duplicate its backlog. Per-node progress belongs
 in the blueprint, mathematical gaps in its digest notes, implementation details
-in module documentation, and history in Git. Do not hand-maintain graph counts.
+in module documentation, and history in Git. Do not hand-maintain graph counts:
+use `just status-blueprint` to refresh `docs/status/generated.md`. Its markers
+are not an audit of Lean declarations or axioms.
 This file is for guidance that stays valid across sessions.
