@@ -280,13 +280,15 @@ C\|u\|_{L^2(\Cell)}$. For $u\in L^2(\Cell)$, $J_\epsilon u\to\hat\chi u$ in $L^2
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-chart, lem:line-mollifier}
+\uses{lem:action-angle-chart, lem:line-mollifier-contraction,
+  lem:line-mollifier-convergence}
 $\chi U$ vanishes for $h$ outside $\operatorname{supp}\chi=[a,b]\subset(0,1)$, so $M_\epsilon(\chi U)$
 vanishes for $h$ outside $[a-\epsilon,b+\epsilon]$; take $K=\{a-\epsilon_0\le h\le b+\epsilon_0\}$. By the
 area formula (Lemma~\ref{lem:action-angle-chart}) and the inverse relations,
 $\|J_\epsilon u\|^2=\int\int|M_\epsilon(\chi U)|^2\,2S\,dh\,d\theta$ over $(0,1)\times[-\frac14,\frac34)$,
 and $2S$ is bounded above and below on $[a-\epsilon_0,b+\epsilon_0]$. So the $L^2$ statements follow
-from Lemma~\ref{lem:line-mollifier}(1) with $\mu$ Lebesgue measure on $[-\frac14,\frac34)$, using
+from Lemmas~\ref{lem:line-mollifier-contraction}
+and~\ref{lem:line-mollifier-convergence} with $\mu$ Lebesgue measure on $[-\frac14,\frac34)$, using
 $\hat\chi u=(\chi U)\circ(h,\theta)$. Linearity holds wherever the defining integrals converge,
 which is for almost every $\theta$.
 \end{proof}

@@ -39,46 +39,66 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
-**The line-mollifier L² contraction and convergence are proved.** In
-`LineMollifier.lean`, `eLpNorm_mollifyFst_le` and `tendsto_mollifyFst` have
-complete proofs, for every s-finite `μ`, with no statement changes. The
-contraction uses probability averaging (fiberwise L¹ ≤ L², then Tonelli),
-the kernel's unit mass and measure-preserving first-variable translations.
-This handles joint a.e. measurability and arbitrary representatives without
-assuming convolution integrable on every line or invoking an unavailable
-Young inequality.
+**All quantitative line-mollifier estimates are proved.** In
+`LineMollifier.lean`, `eLpNorm_mollifyFst_le`, `tendsto_mollifyFst`,
+`tendsto_smul_mollifyFstDeriv` and `eLpNorm_mollifyFst_mul_sub_le` have
+complete proofs, for every s-finite transverse measure `μ`, with no changes
+to their statements. Separate proved blueprint nodes are
+`lem:line-mollifier-kernel`, `lem:line-mollifier-contraction`,
+`lem:line-mollifier-convergence`, `lem:line-mollifier-cancellation` and
+`lem:line-mollifier-commutator`.
 
-For convergence, Mathlib's `compMeasurePreservingLp` gives scalar L²
-translation continuity. Its product-space version cannot be applied directly:
-an arbitrary s-finite transverse measure need not be locally finite. Instead,
-new private lemmas give a.e. L² sections and the squared product-norm formula;
-dominated convergence of the line energies, bounded by four times the original
-line energy, gives first-variable translation continuity. The kernel measure
-is concentrated on `|t| < ε`, so a uniform bound on these small translations
-bounds the mollification error. Subtraction inside the average is justified
-on a.e. fiber by L²-to-L¹ inclusion for a probability measure.
+The contraction is probability averaging and Tonelli. Scalar L² translation
+continuity comes from Mathlib's `compMeasurePreservingLp`; continuity with an
+arbitrary s-finite transverse measure follows fiberwise by dominated
+convergence, without assuming that measure locally finite. The squared
+translation error is bounded by four times the original squared norm.
 
-Luna implemented bounded prerequisite and assembly tasks; the parent fixed
-the mathematical decomposition, corrected the incomplete product-continuity
-candidate and independently reviewed the results. Full-file diagnostics show
-only the five remaining mollifier admissions. Axiom checks on the convergence
-and its six new private helpers (and earlier checks on the contraction and
-its four helpers) use only `propext`, `Classical.choice`, `Quot.sound`.
-No new admissions were retained. The four earlier kernel prerequisites remain
-proved. Separate proved blueprint nodes are `lem:line-mollifier-kernel`,
-`lem:line-mollifier-contraction` and `lem:line-mollifier-convergence`.
+The derivative proof first establishes the exact rescaling
+`ε M'_ε F(h,θ) = ∫ ρ'(t) F(h-εt,θ) dt`. Regard this as an average with
+respect to the fixed uniform probability measure on `[-1,1]`, with bounded
+weight `2ρ'`. Zero mass replaces the translates by translation differences;
+dominated convergence in the translation parameter, bounded multiplication
+and probability averaging give the limit. The same averaging proves L²
+membership of `M'_ε F`. New public helpers are `deriv_mollifierKernel`,
+`hasCompactSupport_deriv_stdBump` and `smul_mollifyFstDeriv_eq_integral`;
+private helpers allow an arbitrary measurable translation parameter and
+prove joint L² continuity of scaled translations.
 
-The existing shared Lean MCP server and current imports were checked before
-delegation, including the new targeted Mathlib continuity import.
-`just web` and the even–even subgraph generation pass; no full project rebuild
-was run. Pi setup and the sequential Luna runner are documented in
-[docs/tooling/pi.md](docs/tooling/pi.md); no routine benchmarking was added.
+For the Lipschitz commutator the weight is `s(h-t)-s(h)`, bounded by `εL`
+on the kernel support. This does not require `sF ∈ L²`: integrability of
+the weighted translate and the constant multiple on a.e. fiber suffices to
+split the integral. All these proofs handle arbitrary representatives;
+no convolution is assumed integrable on every line and no general Young
+inequality is needed.
 
-**Next:** `tendsto_smul_mollifyFstDeriv`: split the derivative-kernel L² bound
-and its zero-mass cancellation limit into bounded tasks. The first-variable
-translation continuity, squared product-norm formula and probability-average
-helpers are available as private lemmas in the same file. Then address the
-Lipschitz commutator and weak-derivative lemmas.
+Luna implemented bounded prerequisite and assembly tasks; the parent supplied
+the mathematical decomposition, repaired the kernel-helper elaboration,
+removed unused proof fragments and independently reviewed diagnostics and
+axioms. Both newly discharged theorems and the three public kernel helpers
+use only `propext`, `Classical.choice`, `Quot.sound`; earlier contraction and
+convergence checks have the same status. No new admissions were retained.
+The three remaining admissions in `LineMollifier.lean` are
+`hasWeakPartialOn_mollifyFst`, `HasWeakPartialOn.mollify` and
+`mollifyFstDeriv_ae_eq`.
+
+**Next toward the transversal mollifier:** prove its basic L² node
+`lem:transversal-mollifier`: first support in a fixed compact annulus, then
+a.e. congruence/additivity and the norm bound/convergence via the
+`2S(h)`-weighted action-angle area formula. This node needs only the proved
+line contraction and convergence, not the weak-derivative lemmas; its
+blueprint proof dependencies now say so. The chart's inverse relations and
+`lintegral_cellSquare_actionAngle` are already proved, though the latter
+still rests on the admitted coarea formula. Period smoothness and other
+chart regularity inputs remain admitted. For the stronger derivative and
+transport-commutator nodes, finish the three line weak-derivative statements
+and the action-angle weak chain rules in `TransversalMollifier.lean`.
+
+**Validation:** the full Lean project build passes (3281 jobs); full-file
+diagnostics have only the three remaining line weak-derivative admissions.
+`just web` and the even–even subgraph generation pass. Pi setup and the
+sequential Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md);
+no routine benchmarking was added.
 
 **Backwards even–even assembly is proved.** `even_even_character_exclusion`
 and `even_even_exclusion` now have no `sorry` of their own. The proof combines

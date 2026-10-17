@@ -407,10 +407,14 @@ $\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variab
   NoEmbeddedEigenvalues.integral_mollifierKernel,
   NoEmbeddedEigenvalues.contDiff_mollifierKernel,
   NoEmbeddedEigenvalues.hasCompactSupport_mollifierKernel,
-  NoEmbeddedEigenvalues.integral_deriv_mollifierKernel}
+  NoEmbeddedEigenvalues.integral_deriv_mollifierKernel,
+  NoEmbeddedEigenvalues.deriv_mollifierKernel,
+  NoEmbeddedEigenvalues.hasCompactSupport_deriv_stdBump}
 \leanok
 Such a $\rho$ exists. For $\epsilon>0$, $\rho_\epsilon$ is smooth and compactly
 supported, with $\int\rho_\epsilon=1$ and $\int\rho_\epsilon'=0$.
+Moreover, $\rho'$ has compact support and
+$\rho_\epsilon'(h)=\epsilon^{-2}\rho'(h/\epsilon)$.
 \end{lemma}
 
 \begin{proof}
@@ -474,12 +478,73 @@ the identity between the average of the differences and $M_\epsilon F-F$
 on almost every line.
 \end{proof}
 
+\begin{lemma}[Derivative-kernel cancellation]
+\label{lem:line-mollifier-cancellation}
+\uses{def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.smul_mollifyFstDeriv_eq_integral,
+  NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv}
+\leanok
+For every s-finite Borel measure $\mu$ on $\R$ and $F\in L^2(dh\otimes\mu)$,
+$M'_\epsilon F\in L^2(dh\otimes\mu)$ for $\epsilon>0$, and
+$\epsilon M'_\epsilon F\to0$ in that space as $\epsilon\downarrow0$.
+For $\epsilon>0$ and any function $F$, rescaling gives the pointwise identity
+\[
+  \epsilon M'_\epsilon F(h,\theta)
+    =\int_\R\rho'(t)F(h-\epsilon t,\theta)\,dt.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:line-mollifier-kernel, lem:line-mollifier-convergence}
+\leanok
+Put $d\nu(t)=\frac12\mathbf1_{[-1,1]}(t)\,dt$ and $a(t)=2\rho'(t)$.
+Then $\nu$ is a probability measure, $a$ is bounded and $\int a\,d\nu=0$.
+Joint translation preserves the $L^2(\nu\otimes dh\otimes\mu)$ norm of $F$;
+bounded multiplication by $a$ and probability averaging therefore give
+$M'_\epsilon F\in L^2$. For convergence, zero mass rewrites the rescaled
+integral as
+\[
+  \int a(t)\bigl(F(h-\epsilon t,\theta)-F(h,\theta)\bigr)\,d\nu(t).
+\]
+For each $t$, the translation difference tends to zero in $L^2(dh\otimes\mu)$.
+Its squared norm is bounded by $4\|F\|_2^2$, so dominated convergence in $t$
+gives convergence in the joint $L^2$ space. Bounded multiplication and
+probability averaging preserve this convergence. Subtraction inside the
+integral is justified on almost every fiber by $L^2(\nu)\subset L^1(\nu)$.
+\end{proof}
+
+\begin{lemma}[Lipschitz commutator in one variable]
+\label{lem:line-mollifier-commutator}
+\uses{def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.eLpNorm_mollifyFst_mul_sub_le}
+\leanok
+Let $\mu$ be an s-finite Borel measure on $\R$, $\epsilon>0$ and
+$F\in L^2(dh\otimes\mu)$. If $s:\R\to\R$ is $L$-Lipschitz, then
+\[
+  \|M_\epsilon(sF)-sM_\epsilon F\|_2\le\epsilon L\|F\|_2.
+\]
+Here $s$ acts by multiplication with $s(h)$; $sF$ need not belong to $L^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:line-mollifier-kernel, lem:line-mollifier-contraction}
+\leanok
+With $d\nu_\epsilon(t)=\rho_\epsilon(t)\,dt$, the commutator is the average of
+\[
+  \bigl(s(h-t)-s(h)\bigr)F(h-t,\theta).
+\]
+The scalar factor has absolute value at most $\epsilon L$ almost everywhere
+for $\nu_\epsilon\otimes dh\otimes\mu$, since $|t|<\epsilon$ on the kernel
+support. Bounded multiplication, the joint translation isometry and
+probability averaging give the bound. Almost every fiber is in
+$L^2(\nu_\epsilon)\subset L^1(\nu_\epsilon)$; splitting off the constant
+$s(h)$ justifies the displayed commutator identity even when $s$ is unbounded.
+\end{proof}
+
 \begin{lemma}[Mollification in one variable]
 \label{lem:line-mollifier}
 \uses{def:line-mollifier, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv,
-  NoEmbeddedEigenvalues.eLpNorm_mollifyFst_mul_sub_le,
-  NoEmbeddedEigenvalues.hasWeakPartialOn_mollifyFst,
+\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_mollifyFst,
   NoEmbeddedEigenvalues.HasWeakPartialOn.mollify,
   NoEmbeddedEigenvalues.mollifyFstDeriv_ae_eq}
 \leanok
@@ -499,14 +564,13 @@ $j=h$.
 
 \begin{proof}
 \uses{lem:weak-derivative-basic, lem:line-mollifier-kernel,
-  lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+  lem:line-mollifier-contraction, lem:line-mollifier-convergence,
+  lem:line-mollifier-cancellation, lem:line-mollifier-commutator}
 Part (1) is Lemmas~\ref{lem:line-mollifier-contraction}
-and~\ref{lem:line-mollifier-convergence}.
-For (2), $\epsilon\rho_\epsilon'$ is the
-rescaling $(\rho')_\epsilon$ of $\rho'$, which has integral $0$, so $\epsilon M'_\epsilon F\to(\int\rho')F=0$
-in the same way. (3): the kernel of the commutator is
-$\rho_\epsilon(h-h')(s(h')-s(h))$, bounded by $L|h-h'|\rho_\epsilon(h-h')$, whose integral is at most
-$\epsilon L$; apply Young's inequality. For the derivatives, move $\partial_j$ from the test
+and~\ref{lem:line-mollifier-convergence}; part (2) is
+Lemma~\ref{lem:line-mollifier-cancellation}, and part (3) is
+Lemma~\ref{lem:line-mollifier-commutator}.
+For the derivatives, move $\partial_j$ from the test
 function $\varphi$ to the kernel by Fubini: $\int M_\epsilon F\,\partial_j\varphi=\int F\,\partial_j\check
 M_\epsilon\varphi$ with $\check M_\epsilon$ the mollification by $\rho_\epsilon(-\cdot)=\rho_\epsilon$, again a
 test function.

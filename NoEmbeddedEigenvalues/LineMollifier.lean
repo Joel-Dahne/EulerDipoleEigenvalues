@@ -7,8 +7,9 @@ import NoEmbeddedEigenvalues.SobolevLocal
 # Mollification in one variable
 
 Blueprint: `def:line-mollifier`, `lem:line-mollifier-kernel`,
-`lem:line-mollifier-contraction`, `lem:line-mollifier-convergence`;
-remaining estimates stated in `lem:line-mollifier`.
+`lem:line-mollifier-contraction`, `lem:line-mollifier-convergence`,
+`lem:line-mollifier-cancellation`, `lem:line-mollifier-commutator`;
+weak-derivative statements remain admitted in `lem:line-mollifier`.
 
 Functions `F(h, θ)` on `ℝ²` are mollified in the first variable only,
 `M_ε F(h, θ) = ∫ ρ_ε(h - h') F(h', θ) dh'` with `ρ_ε(h) = ε⁻¹ ρ(h/ε)` for a fixed smooth even
@@ -17,8 +18,11 @@ bump `ρ` supported in `[-1, 1]` with integral one. `L²` statements are for the
 separately. The contraction follows by probability averaging and a measure-preserving
 translation, including joint a.e. measurability. Strong continuity of translations follows
 fiberwise by dominated convergence, and the shrinking kernel support gives convergence of
-mollification. This is the one-dimensional input of the transversal mollifier
-(`TransversalMollifier.lean`), where `(h, θ)` are action-angle coordinates.
+mollification. The derivative kernel has zero mass, so its rescaled convolution is an
+average of translation differences and tends to zero in `L²`. The Lipschitz commutator
+is bounded by multiplication with `s(h - t) - s(h)` on the kernel support. This is the
+one-dimensional input of the transversal mollifier (`TransversalMollifier.lean`), where
+`(h, θ)` are action-angle coordinates.
 -/
 
 noncomputable section
@@ -110,6 +114,72 @@ theorem integral_deriv_mollifierKernel {ε : ℝ} (hε : 0 < ε) :
     HasCompactSupport.integral_Ioi_deriv_eq hcont
       (hasCompactSupport_mollifierKernel hε) 0]
   simp
+
+/-- Derivative of the rescaled bump. -/
+theorem deriv_mollifierKernel (ε h : ℝ) :
+    deriv (mollifierKernel ε) h = ε⁻¹ * ε⁻¹ * deriv stdBump (h / ε) := by
+  by_cases hε : ε = 0
+  · subst ε
+    rw [show mollifierKernel 0 = (fun _ : ℝ => 0) by
+      funext x
+      simp [mollifierKernel]]
+    simp
+  · change deriv (fun x : ℝ => ε⁻¹ * stdBump (x / ε)) h = _
+    have hdiv : HasDerivAt (fun x : ℝ => x / ε) ε⁻¹ h := by
+      simpa [div_eq_mul_inv] using (hasDerivAt_id h).mul_const ε⁻¹
+    have hstd : HasDerivAt stdBump (deriv stdBump (h / ε)) (h / ε) := by
+      exact (contDiff_stdBump.differentiable (by norm_num)).differentiableAt.hasDerivAt
+    have hcomp := hstd.comp h hdiv
+    have hmul := hcomp.const_mul ε⁻¹
+    simpa only [Function.comp_apply, mul_assoc, mul_comm, mul_left_comm] using hmul.deriv
+
+/-- The derivative of the fixed bump has compact support. -/
+theorem hasCompactSupport_deriv_stdBump : HasCompactSupport (deriv stdBump) := by
+  have hs : HasCompactSupport stdBump := ContDiffBump.hasCompactSupport_normed _
+  exact hs.deriv
+
+/-- Rescaling the derivative kernel inside the mollification integral. -/
+theorem smul_mollifyFstDeriv_eq_integral {ε : ℝ} (hε : 0 < ε)
+    (F : ℝ × ℝ → ℂ) (q : ℝ × ℝ) :
+    ε • mollifyFstDeriv ε F q =
+      ∫ t, deriv stdBump t • F (q.1 - ε * t, q.2) := by
+  rw [mollifyFstDeriv]
+  simp_rw [deriv_mollifierKernel]
+  rw [← MeasureTheory.integral_smul]
+  have hsub : (∫ a, (ε • (ε⁻¹ * ε⁻¹ * deriv stdBump ((q.1 - a) / ε))) •
+        F (a, q.2)) =
+      ∫ s, (ε • (ε⁻¹ * ε⁻¹ * deriv stdBump (s / ε))) •
+        F (q.1 - s, q.2) := by
+    let k : ℝ → ℂ := fun a ↦
+      (ε • (ε⁻¹ * ε⁻¹ * deriv stdBump ((q.1 - a) / ε))) • F (a, q.2)
+    have hmp : MeasurePreserving (MeasurableEquiv.subLeft q.1) volume volume :=
+      volume.measurePreserving_sub_left q.1
+    have hc := hmp.integral_comp' k
+    simpa [k, MeasurableEquiv.subLeft, Equiv.subLeft, sub_sub_cancel] using hc.symm
+  have hsub' : (∫ a, ε • (ε⁻¹ * ε⁻¹ * deriv stdBump ((q.1 - a) / ε)) •
+        F (a, q.2)) =
+      ∫ s, ε • (ε⁻¹ * ε⁻¹ * deriv stdBump (s / ε)) •
+        F (q.1 - s, q.2) := by
+    simpa only [smul_smul, smul_eq_mul] using hsub
+  rw [hsub']
+  let g : ℝ → ℂ := fun s ↦ deriv stdBump (s / ε) • F (q.1 - s, q.2)
+  have hscale := MeasureTheory.Measure.integral_comp_mul_left g ε
+  rw [abs_of_pos (inv_pos.mpr hε)] at hscale
+  rw [MeasureTheory.integral_smul]
+  have hpoint2 (x : ℝ) (z : ℂ) :
+      (ε⁻¹ * ε⁻¹ * x) • z = ε⁻¹ • (ε⁻¹ • (x • z)) := by
+    simp [mul_assoc]
+  simp_rw [hpoint2]
+  rw [MeasureTheory.integral_smul, MeasureTheory.integral_smul]
+  have hdiv (x : ℝ) : ε * x / ε = x := by
+    field_simp [hε.ne']
+  have hfun : (fun x ↦ g (ε * x)) =
+      (fun x ↦ deriv stdBump x • F (q.1 - ε * x, q.2)) := by
+    funext x
+    simp [g, hdiv]
+  rw [hfun] at hscale
+  simpa [g, div_eq_mul_inv, smul_smul, mul_assoc, mul_comm, mul_left_comm,
+    hε.ne'] using hscale.symm
 
 /-- Averaging over a probability factor is an `L²` contraction. -/
 private theorem eLpNorm_integral_prob_le {α β : Type*}
@@ -523,7 +593,203 @@ private theorem eLpNorm_mollifyFst_sub_le_of_translate_bound
     exact (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp hnormsq
   exact havg'.trans (havg_bound.trans hnorm)
 
+/-- Joint translation by a measurable parameter preserves the `L²` norm. -/
+private theorem memLp_translateFst_param {μ ν : Measure ℝ} [SFinite μ] [IsProbabilityMeasure ν]
+    {F : ℝ × ℝ → ℂ} (hF : MemLp F 2 ((volume : Measure ℝ).prod μ)) (τ : ℝ → ℝ)
+    (hτ : Measurable τ) :
+    MemLp (fun p : ℝ × (ℝ × ℝ) ↦ F (p.2.1 - τ p.1, p.2.2)) 2
+        (ν.prod ((volume : Measure ℝ).prod μ)) ∧
+      eLpNorm (fun p : ℝ × (ℝ × ℝ) ↦ F (p.2.1 - τ p.1, p.2.2)) 2
+        (ν.prod ((volume : Measure ℝ).prod μ)) =
+        eLpNorm F 2 ((volume : Measure ℝ).prod μ) := by
+  let σ : Measure (ℝ × ℝ) := (volume : Measure ℝ).prod μ
+  have hfiber : ∀ t : ℝ, MeasurePreserving
+      (fun q : ℝ × ℝ ↦ (q.1 - t, q.2)) σ σ := by
+    intro t
+    have hsub : MeasurePreserving (fun x : ℝ ↦ x - t) volume volume := by
+      simpa [Function.comp_def] using
+        (Measure.measurePreserving_neg volume).comp (volume.measurePreserving_sub_left t)
+    exact hsub.prod (MeasurePreserving.id μ)
+  let g : ℝ → (ℝ × ℝ) → (ℝ × ℝ) := fun t q ↦ (q.1 - t, q.2)
+  have hS' : MeasurePreserving
+      (fun p : ℝ × (ℝ × ℝ) ↦ (p.1, g (τ p.1) p.2))
+      (ν.prod σ) (ν.prod σ) := by
+    refine (MeasurePreserving.id ν).skew_product (g := fun t q ↦ g (τ t) q)
+      (μc := σ) (μd := σ) ?_ ?_
+    · change Measurable (fun p : ℝ × (ℝ × ℝ) ↦
+        (p.2.1 - τ p.1, p.2.2))
+      exact ((measurable_fst.comp measurable_snd).sub
+        (hτ.comp measurable_fst)).prodMk (measurable_snd.comp measurable_snd)
+    · filter_upwards [] with t
+      exact (hfiber (τ t)).map_eq
+  have hS : MeasurePreserving
+      (fun p : ℝ × (ℝ × ℝ) ↦ (p.1, (p.2.1 - τ p.1, p.2.2)))
+      (ν.prod σ) (ν.prod σ) := by
+    simpa [g] using hS'
+  have hT : MeasurePreserving
+      (fun p : ℝ × (ℝ × ℝ) ↦ (p.2.1 - τ p.1, p.2.2)) (ν.prod σ) σ :=
+    measurePreserving_snd.comp hS
+  have hmem := hF.comp_measurePreserving hT
+  have hnorm := eLpNorm_comp_measurePreserving (p := (2 : ENNReal))
+    hF.aestronglyMeasurable hT
+  constructor
+  · simpa [σ, Function.comp_def] using hmem
+  · simpa [σ, Function.comp_def] using hnorm
+
+/-- `L²` continuity of scaled first-variable translations. -/
+private theorem tendsto_eLpNorm_scaled_translateFst_sub
+    {μ ν : Measure ℝ} [SFinite μ] [IsProbabilityMeasure ν]
+    {F : ℝ × ℝ → ℂ} (hF : MemLp F 2 ((volume : Measure ℝ).prod μ)) :
+    Tendsto (fun ε : ℝ ↦ eLpNorm
+      (fun p : ℝ × (ℝ × ℝ) ↦ F (p.2.1 - ε * p.1, p.2.2) - F p.2) 2
+      (ν.prod ((volume : Measure ℝ).prod μ))) (𝓝 0) (𝓝 0) := by
+  let σ : Measure (ℝ × ℝ) := (volume : Measure ℝ).prod μ
+  let D : ℝ → ℝ × (ℝ × ℝ) → ℂ :=
+    fun ε p ↦ F (p.2.1 - ε * p.1, p.2.2) - F p.2
+  have hDmem : ∀ ε : ℝ, MemLp (D ε) 2 (ν.prod σ) := by
+    intro ε
+    have hG := memLp_translateFst_param (μ := μ) (ν := ν) hF (fun t : ℝ ↦ ε * t)
+      (measurable_const.mul measurable_id)
+    have hB := hF.comp_measurePreserving (measurePreserving_snd :
+      MeasurePreserving (fun p : ℝ × (ℝ × ℝ) ↦ p.2) (ν.prod σ) σ)
+    have hsub := hG.1.sub hB
+    convert hsub using 1
+    funext p
+    rfl
+  have hEmeas : ∀ ε : ℝ, AEMeasurable
+      (fun t : ℝ ↦ ∫⁻ q, ‖D ε (t, q)‖ₑ ^ (2 : ℝ) ∂σ) ν := by
+    intro ε
+    exact ((hDmem ε).aestronglyMeasurable.enorm.pow_const 2).lintegral_prod_right'
+  let E : ℝ → ℝ → ENNReal := fun ε t ↦
+    ∫⁻ q, ‖D ε (t, q)‖ₑ ^ (2 : ℝ) ∂σ
+  have hEmeas' : ∀ ε : ℝ, AEMeasurable (E ε) ν := by
+    simpa [E] using hEmeas
+  have hdt : ∀ ε t : ℝ, MemLp (fun q : ℝ × ℝ ↦
+      F (q.1 - ε * t, q.2) - F q) 2 σ := by
+    intro ε t
+    have htr : MeasurePreserving (fun q : ℝ × ℝ ↦
+        (q.1 - ε * t, q.2)) σ σ := by
+      exact (measurePreserving_sub_right volume (ε * t)).prod
+        (MeasurePreserving.id μ)
+    exact (hF.comp_measurePreserving htr).sub hF
+  have hEeq : ∀ ε t : ℝ, E ε t =
+      eLpNorm (fun q : ℝ × ℝ ↦ F (q.1 - ε * t, q.2) - F q) 2 σ ^ (2 : ℝ) := by
+    intro ε t
+    dsimp [E, D]
+    exact (eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num)
+      (hdt ε t).aestronglyMeasurable).symm
+  let C : ENNReal := 4 * eLpNorm F 2 σ ^ (2 : ℝ)
+  have hbound : ∀ ε : ℝ, ∀ᵐ t ∂ν, E ε t ≤ C := by
+    intro ε
+    filter_upwards [] with t
+    rw [hEeq]
+    have htr : MeasurePreserving (fun q : ℝ × ℝ ↦
+        (q.1 - ε * t, q.2)) σ σ := by
+      exact (measurePreserving_sub_right volume (ε * t)).prod
+        (MeasurePreserving.id μ)
+    have hnorm : eLpNorm (fun q : ℝ × ℝ ↦
+        F (q.1 - ε * t, q.2) - F q) 2 σ ≤ 2 * eLpNorm F 2 σ := by
+      calc
+        _ ≤ eLpNorm (fun q : ℝ × ℝ ↦ F (q.1 - ε * t, q.2)) 2 σ +
+            eLpNorm F 2 σ := eLpNorm_sub_le (by norm_num)
+        _ = 2 * eLpNorm F 2 σ := by
+          rw [← eLpNorm_comp_measurePreserving hF.aestronglyMeasurable htr]
+          simp only [Function.comp_def]
+          ring
+    dsimp [C]
+    calc
+      _ ≤ (2 * eLpNorm F 2 σ) ^ (2 : ℝ) := by gcongr
+      _ = 4 * eLpNorm F 2 σ ^ (2 : ℝ) := by
+        norm_num [ENNReal.rpow_two, mul_pow]
+  have hlim : ∀ᵐ t ∂ν, Tendsto (fun ε : ℝ ↦ E ε t) (𝓝 0) (𝓝 0) := by
+    filter_upwards [] with t
+    have hscale : Tendsto (fun ε : ℝ ↦ ε * t) (𝓝 0) (𝓝 0) := by
+      simpa using (tendsto_id.mul_const t : Tendsto (fun ε : ℝ ↦ ε * t)
+        (𝓝 0) (𝓝 (0 * t)))
+    have hs := (tendsto_eLpNorm_translateFst_sub hF).comp hscale
+    have heq : (fun ε : ℝ ↦ E ε t) =
+        (fun ε : ℝ ↦ eLpNorm (fun q : ℝ × ℝ ↦
+          F (q.1 - ε * t, q.2) - F q) 2 σ ^ (2 : ℝ)) := by
+      funext ε
+      exact hEeq ε t
+    rw [heq]
+    simpa only [Function.comp_def, ENNReal.zero_rpow_of_pos (by norm_num : (0 : ℝ) < 2)]
+      using (ENNReal.continuous_rpow_const (y := (2 : ℝ))).continuousAt.tendsto.comp hs
+  have hbfin : (∫⁻ t, C ∂ν) ≠ ⊤ := by
+    have hC : C < ⊤ := by
+      dsimp [C]
+      exact ENNReal.mul_lt_top (by norm_num)
+        (ENNReal.rpow_lt_top_of_nonneg (by norm_num) hF.eLpNorm_lt_top.ne)
+    rw [lintegral_const, measure_univ]
+    simpa only [mul_one] using hC.ne
+  have hint : Tendsto (fun ε : ℝ ↦ ∫⁻ t, E ε t ∂ν) (𝓝 0) (𝓝 0) := by
+    simpa using tendsto_lintegral_filter_of_dominated_convergence'
+      (μ := ν) (F := E) (f := fun _ : ℝ ↦ 0) (l := 𝓝 0) (fun _ : ℝ ↦ C)
+      (Filter.Eventually.of_forall hEmeas') (Filter.Eventually.of_forall hbound) hbfin hlim
+  have hsq : Tendsto (fun ε : ℝ ↦ eLpNorm (D ε) 2 (ν.prod σ) ^ (2 : ℝ))
+      (𝓝 0) (𝓝 0) := by
+    convert hint using 1
+    funext ε
+    have hswap := eLpNorm_two_prod_rpow_eq (ν := σ) (σ := ν)
+      (G := (D ε) ∘ Prod.swap)
+      (hDmem ε).aestronglyMeasurable.prod_swap
+    calc
+      eLpNorm (D ε) 2 (ν.prod σ) ^ (2 : ℝ) =
+          eLpNorm ((D ε) ∘ Prod.swap) 2 (σ.prod ν) ^ (2 : ℝ) := by
+            rw [eLpNorm_comp_measurePreserving (hDmem ε).aestronglyMeasurable
+              (Measure.measurePreserving_swap (μ := σ) (ν := ν))]
+      _ = ∫⁻ t, eLpNorm (fun q : ℝ × ℝ ↦ D ε (t, q)) 2 σ ^ (2 : ℝ) ∂ν := hswap
+      _ = ∫⁻ t, E ε t ∂ν := by
+        apply lintegral_congr_ae
+        filter_upwards [] with t
+        rw [hEeq]
+  have hsqrt := (ENNReal.continuous_rpow_const (y := (1 / 2 : ℝ))).continuousAt.tendsto.comp hsq
+  simp only [Function.comp_def, ← ENNReal.rpow_mul] at hsqrt
+  norm_num at hsqrt
+  simpa [D, σ] using hsqrt
+
 /-! ### `lem:line-mollifier` -/
+
+private def derivativeParamMeasure : Measure ℝ :=
+  (2 : ENNReal)⁻¹ • volume.restrict (Icc (-1 : ℝ) 1)
+
+private instance derivativeParamMeasure_isProbability :
+    IsProbabilityMeasure derivativeParamMeasure := by
+  refine ⟨?_⟩
+  norm_num [derivativeParamMeasure, Measure.smul_apply, Real.volume_Icc,
+    ENNReal.ofReal_ofNat]
+  exact ENNReal.inv_mul_cancel (by norm_num) (by norm_num)
+
+private theorem integral_two_deriv_smul {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] (H : ℝ → E) :
+    (∫ t, ((2 : ℝ) • deriv stdBump t) • H t ∂derivativeParamMeasure) =
+      ∫ t, deriv stdBump t • H t := by
+  have hderiv : ∀ x ∉ Icc (-1 : ℝ) 1, deriv stdBump x • H x = 0 := by
+    intro x hx
+    have h' : x ∉ Function.support (deriv stdBump) := by
+      intro h
+      apply hx
+      have h'' : x ∈ tsupport stdBump := support_deriv_subset h
+      rw [show tsupport stdBump = closure (Ioo (-1 : ℝ) 1) by
+        simp [tsupport, support_stdBump], closure_Ioo (by norm_num)] at h''
+      exact h''
+    simp [Function.mem_support] at h'
+    simp [h']
+  rw [derivativeParamMeasure, MeasureTheory.integral_smul_measure]
+  norm_num
+  calc
+    (1 / 2 : ℝ) • (∫ x in Icc (-1 : ℝ) 1,
+        ((2 : ℝ) • deriv stdBump x) • H x) =
+        (1 / 2 : ℝ) • (∫ x in Icc (-1 : ℝ) 1,
+          (2 : ℝ) • (deriv stdBump x • H x)) := by
+            congr 2
+            funext x
+            simp [smul_smul]
+    _ = ∫ x in Icc (-1 : ℝ) 1, deriv stdBump x • H x := by
+      rw [integral_smul]
+      simp
+    _ = ∫ x, deriv stdBump x • H x :=
+      setIntegral_eq_integral_of_forall_compl_eq_zero hderiv
 
 section LineMollifier
 
@@ -574,7 +840,187 @@ theorem tendsto_smul_mollifyFstDeriv (hF : MemLp F 2 ((volume : Measure ℝ).pro
     (∀ ε > 0, MemLp (mollifyFstDeriv ε F) 2 ((volume : Measure ℝ).prod μ)) ∧
       Tendsto (fun ε ↦ eLpNorm (ε • mollifyFstDeriv ε F) 2 ((volume : Measure ℝ).prod μ))
         (𝓝[>] 0) (𝓝 0) := by
-  sorry
+  let σ : Measure (ℝ × ℝ) := (volume : Measure ℝ).prod μ
+  let a : ℝ → ℝ := fun t ↦ (2 : ℝ) • deriv stdBump t
+  have hda : Continuous (deriv stdBump) :=
+    contDiff_stdBump.continuous_deriv (by norm_num)
+  have ha : Continuous a := by
+    dsimp [a]
+    fun_prop
+  have hsa : HasCompactSupport a := by
+    dsimp [a]
+    convert (hasCompactSupport_deriv_stdBump.smul_left :
+      HasCompactSupport ((fun _ : ℝ ↦ (2 : ℝ)) • deriv stdBump)) using 1
+  obtain ⟨C, hC⟩ := hda.bounded_above_of_compact_support
+    hasCompactSupport_deriv_stdBump
+  have ha_bound : ∀ t, ‖a t‖ ≤ 2 * C := by
+    intro t
+    dsimp [a]
+    calc
+      |2 * deriv stdBump t| = 2 * |deriv stdBump t| := by
+        rw [abs_mul]
+        norm_num
+      _ ≤ 2 * C := by
+        gcongr
+        simpa [Real.norm_eq_abs] using hC t
+  have hAmeas : AEStronglyMeasurable
+      (fun p : ℝ × (ℝ × ℝ) ↦ a p.1)
+      (derivativeParamMeasure.prod σ) := by
+    exact (ha.measurable.comp measurable_fst).aestronglyMeasurable
+  have hAtop : MemLp (fun p : ℝ × (ℝ × ℝ) ↦ a p.1) ⊤
+      (derivativeParamMeasure.prod σ) := by
+    apply memLp_top_of_bound hAmeas (2 * C)
+    filter_upwards [] with p
+    exact ha_bound p.1
+  have ha_int : Integrable a derivativeParamMeasure :=
+    ha.integrable_of_hasCompactSupport hsa
+  have hderiv_zero : (∫ t, deriv stdBump t) = 0 := by
+    simpa [deriv_mollifierKernel] using
+      (integral_deriv_mollifierKernel (ε := (1 : ℝ)) (by norm_num))
+  have ha_zero : (∫ t, a t ∂derivativeParamMeasure) = 0 := by
+    have h := integral_two_deriv_smul (E := ℝ) (fun _ ↦ (1 : ℝ))
+    simp only [smul_eq_mul, mul_one] at h
+    exact h.trans hderiv_zero
+  have hbase : MemLp (fun p : ℝ × (ℝ × ℝ) ↦ F p.2) 2
+      (derivativeParamMeasure.prod σ) := by
+    have h := hF.comp_measurePreserving (measurePreserving_snd :
+      MeasurePreserving (fun p : ℝ × (ℝ × ℝ) ↦ p.2)
+        (derivativeParamMeasure.prod σ) σ)
+    simpa [σ, Function.comp_def] using h
+  have hmem : ∀ ε > 0, MemLp (mollifyFstDeriv ε F) 2 σ := by
+    intro ε hε
+    let G : ℝ × (ℝ × ℝ) → ℂ :=
+      fun p ↦ F (p.2.1 - ε * p.1, p.2.2)
+    let W : ℝ × (ℝ × ℝ) → ℂ := fun p ↦ a p.1 • G p
+    have hG := memLp_translateFst_param (μ := μ) (ν := derivativeParamMeasure)
+      hF (fun t : ℝ ↦ ε * t) (measurable_const.mul measurable_id)
+    have hW : MemLp W 2 (derivativeParamMeasure.prod σ) := by
+      have h := MeasureTheory.MemLp.smul (p := (⊤ : ENNReal))
+        (q := (2 : ENNReal)) (r := (2 : ENNReal)) hAtop hG.1
+      convert h using 1
+    have hWA := (eLpNorm_integral_prob_le hW).1
+    have hWAeq : (fun q ↦ ∫ t, W (t, q) ∂derivativeParamMeasure) =
+        (ε • mollifyFstDeriv ε F) := by
+      funext q
+      calc
+        (∫ t, W (t, q) ∂derivativeParamMeasure) =
+            ∫ t, deriv stdBump t • F (q.1 - ε * t, q.2) := by
+              dsimp [W, G]
+              simpa [a] using (integral_two_deriv_smul
+                (E := ℂ) (fun t ↦ F (q.1 - ε * t, q.2)))
+        _ = ε • mollifyFstDeriv ε F q :=
+          (smul_mollifyFstDeriv_eq_integral hε F q).symm
+    have hsmul : MemLp (ε • mollifyFstDeriv ε F) 2 σ := by
+      rw [← hWAeq]
+      exact hWA
+    simpa [smul_smul, hε.ne'] using hsmul.const_smul (ε⁻¹ : ℝ)
+  let D : ℝ → ℝ × (ℝ × ℝ) → ℂ := fun ε p ↦
+    F (p.2.1 - ε * p.1, p.2.2) - F p.2
+  let WD : ℝ → ℝ × (ℝ × ℝ) → ℂ := fun ε p ↦
+    a p.1 • D ε p
+  have hDmem : ∀ ε, MemLp (D ε) 2 (derivativeParamMeasure.prod σ) := by
+    intro ε
+    have hG := memLp_translateFst_param (μ := μ) (ν := derivativeParamMeasure)
+      hF (fun t : ℝ ↦ ε * t) (measurable_const.mul measurable_id)
+    have h := hG.1.sub hbase
+    convert h using 1
+  have hWDmem : ∀ ε, MemLp (WD ε) 2
+      (derivativeParamMeasure.prod σ) := by
+    intro ε
+    have h := MeasureTheory.MemLp.smul (p := (⊤ : ENNReal))
+      (q := (2 : ENNReal)) (r := (2 : ENNReal)) hAtop (hDmem ε)
+    convert h using 1
+  let K : ENNReal := eLpNorm (fun p : ℝ × (ℝ × ℝ) ↦ a p.1) ⊤
+      (derivativeParamMeasure.prod σ)
+  have hK : K ≠ ⊤ := by
+    dsimp [K]
+    exact (hAtop.eLpNorm_lt_top).ne
+  have hDlim : Tendsto (fun ε : ℝ ↦ eLpNorm (D ε) 2
+      (derivativeParamMeasure.prod σ)) (𝓝 0) (𝓝 0) := by
+    simpa [D] using (tendsto_eLpNorm_scaled_translateFst_sub
+      (μ := μ) (ν := derivativeParamMeasure) hF)
+  have hWDlim : Tendsto (fun ε : ℝ ↦ eLpNorm (WD ε) 2
+      (derivativeParamMeasure.prod σ)) (𝓝 0) (𝓝 0) := by
+    have hprod : Tendsto (fun ε : ℝ ↦ K * eLpNorm (D ε) 2
+        (derivativeParamMeasure.prod σ)) (𝓝 0) (𝓝 0) := by
+      simpa [K] using ENNReal.Tendsto.const_mul hDlim (Or.inr hK)
+    apply tendsto_of_tendsto_of_tendsto_of_le_of_le
+      (tendsto_const_nhds : Tendsto (fun _ : ℝ ↦ (0 : ENNReal))
+        (𝓝 0) (𝓝 0)) hprod
+    · intro ε
+      exact bot_le
+    · intro ε
+      exact eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm 2 hAmeas
+  have hAvgDlim : Tendsto (fun ε : ℝ ↦ eLpNorm
+      (fun q ↦ ∫ t, WD ε (t, q) ∂derivativeParamMeasure) 2 σ)
+      (𝓝 0) (𝓝 0) := by
+    have hprod : ∀ ε, eLpNorm
+        (fun q ↦ ∫ t, WD ε (t, q) ∂derivativeParamMeasure) 2 σ ≤
+        eLpNorm (WD ε) 2 (derivativeParamMeasure.prod σ) := by
+      intro ε
+      exact (eLpNorm_integral_prob_le (hWDmem ε)).2
+    apply tendsto_of_tendsto_of_tendsto_of_le_of_le
+      (tendsto_const_nhds : Tendsto (fun _ : ℝ ↦ (0 : ENNReal))
+        (𝓝 0) (𝓝 0)) hWDlim
+    · intro ε
+      exact bot_le
+    · intro ε
+      exact hprod ε
+  have hcancel : ∀ ε > 0, (fun q ↦ ∫ t, WD ε (t, q) ∂derivativeParamMeasure) =ᵐ[σ]
+      (ε • mollifyFstDeriv ε F) := by
+    intro ε hε
+    let G : ℝ × (ℝ × ℝ) → ℂ :=
+      fun p ↦ F (p.2.1 - ε * p.1, p.2.2)
+    let W : ℝ × (ℝ × ℝ) → ℂ := fun p ↦ a p.1 • G p
+    have hG := memLp_translateFst_param (μ := μ) (ν := derivativeParamMeasure)
+      hF (fun t : ℝ ↦ ε * t) (measurable_const.mul measurable_id)
+    have hW : MemLp W 2 (derivativeParamMeasure.prod σ) := by
+      have h := MeasureTheory.MemLp.smul (p := (⊤ : ENNReal))
+        (q := (2 : ENNReal)) (r := (2 : ENNReal)) hAtop hG.1
+      convert h using 1
+    have hsec := ae_memLp_two_section hW
+    filter_upwards [hsec] with q hq
+    have hi : Integrable (fun t ↦ W (t, q)) derivativeParamMeasure :=
+      hq.integrable (by norm_num)
+    have hi0 : Integrable (fun t : ℝ ↦ a t • F q) derivativeParamMeasure :=
+      ha_int.smul_const (F q)
+    calc
+      (∫ t, WD ε (t, q) ∂derivativeParamMeasure) =
+          ∫ t, W (t, q) - a t • F q ∂derivativeParamMeasure := by
+            apply integral_congr_ae
+            filter_upwards [] with t
+            simp [WD, D, W, G]
+            ring
+      _ = (∫ t, W (t, q) ∂derivativeParamMeasure) -
+          ∫ t, a t • F q ∂derivativeParamMeasure := integral_sub hi hi0
+      _ = (∫ t, W (t, q) ∂derivativeParamMeasure) := by
+        rw [integral_smul_const, ha_zero]
+        simp
+      _ = ε • mollifyFstDeriv ε F q := by
+        dsimp [W, G]
+        calc
+          (∫ t, a t • F (q.1 - ε * t, q.2) ∂derivativeParamMeasure) =
+              ∫ t, deriv stdBump t • F (q.1 - ε * t, q.2) := by
+                simpa [a] using (integral_two_deriv_smul
+                  (E := ℂ) (fun t ↦ F (q.1 - ε * t, q.2)))
+          _ = ε • mollifyFstDeriv ε F q :=
+            (smul_mollifyFstDeriv_eq_integral hε F q).symm
+  have hnorm : Tendsto (fun ε : ℝ ↦ eLpNorm
+      (ε • mollifyFstDeriv ε F) 2 σ) (𝓝[>] 0) (𝓝 0) := by
+    have heq : (fun ε : ℝ ↦ eLpNorm (ε • mollifyFstDeriv ε F) 2 σ) =ᶠ[(𝓝[>] 0)]
+        (fun ε ↦ eLpNorm (fun q ↦ ∫ t, WD ε (t, q) ∂derivativeParamMeasure) 2 σ) := by
+      filter_upwards [self_mem_nhdsWithin] with ε hε
+      rw [eLpNorm_congr_ae (hcancel ε hε)]
+    have hAvgDlim' : Tendsto
+        (fun ε : ℝ ↦ eLpNorm (fun q ↦ ∫ t, WD ε (t, q) ∂derivativeParamMeasure) 2 σ)
+        (𝓝[>] 0) (𝓝 0) := hAvgDlim.mono_left
+          (nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0)
+    exact Filter.Tendsto.congr' (f₁ := fun ε : ℝ ↦
+        eLpNorm (fun q ↦ ∫ t, WD ε (t, q) ∂derivativeParamMeasure) 2 σ)
+      (f₂ := fun ε : ℝ ↦ eLpNorm (ε • mollifyFstDeriv ε F) 2 σ)
+      (l₁ := 𝓝[>] (0 : ℝ)) (l₂ := 𝓝 0) heq.symm hAvgDlim'
+  refine ⟨hmem, ?_⟩
+  exact hnorm
 
 /-- The commutator with an `L`-Lipschitz function of `h` is `O(εL)`. -/
 theorem eLpNorm_mollifyFst_mul_sub_le (hε : 0 < ε) {s : ℝ → ℝ} {L : ℝ≥0}
@@ -582,7 +1028,97 @@ theorem eLpNorm_mollifyFst_mul_sub_le (hε : 0 < ε) {s : ℝ → ℝ} {L : ℝ�
     eLpNorm (fun q ↦ mollifyFst ε (fun q ↦ (s q.1 : ℂ) * F q) q - (s q.1 : ℂ) * mollifyFst ε F q)
         2 ((volume : Measure ℝ).prod μ) ≤
       ENNReal.ofReal (ε * L) * eLpNorm F 2 ((volume : Measure ℝ).prod μ) := by
-  sorry
+  let σ : Measure (ℝ × ℝ) := (volume : Measure ℝ).prod μ
+  let ν := mollifierMeasure ε
+  let _ : IsProbabilityMeasure ν := isProbabilityMeasure_mollifierMeasure hε
+  let G : ℝ × (ℝ × ℝ) → ℂ := fun p ↦ F (p.2.1 - p.1, p.2.2)
+  let A : ℝ × (ℝ × ℝ) → ℝ :=
+    fun p ↦ s (p.2.1 - p.1) - s p.2.1
+  let H : ℝ × (ℝ × ℝ) → ℂ := fun p ↦ A p • G p
+  have hG := memLp_translateFst (μ := μ) (ν := ν) hF
+  have hGmem : MemLp G 2 (ν.prod σ) := by
+    simpa [G, ν, σ] using hG.1
+  have hGnorm : eLpNorm G 2 (ν.prod σ) = eLpNorm F 2 σ := by
+    simpa [G, ν, σ] using hG.2
+  have hAmeas : Measurable A := by
+    have hsc : Continuous s := hs.continuous
+    dsimp [A]
+    fun_prop
+  have hAbound : ∀ᵐ p ∂(ν.prod σ), ‖A p‖ ≤ ε * (L : ℝ) := by
+    have ht := (Measure.quasiMeasurePreserving_fst (μ := ν) (ν := σ)).ae
+      (ae_abs_lt_mollifierMeasure hε)
+    filter_upwards [ht] with p hp
+    have hdist := hs.dist_le_mul (p.2.1 - p.1) p.2.1
+    calc
+      ‖A p‖ = |s (p.2.1 - p.1) - s p.2.1| := by simp [A, Real.norm_eq_abs]
+      _ = dist (s (p.2.1 - p.1)) (s p.2.1) := by rw [Real.dist_eq]
+      _ ≤ (L : ℝ) * dist (p.2.1 - p.1) p.2.1 := hdist
+      _ = (L : ℝ) * |p.1| := by
+        rw [Real.dist_eq]
+        congr 1
+        simp
+      _ ≤ ε * (L : ℝ) := by
+        have hple : |p.1| ≤ ε := le_of_lt hp
+        calc
+          (L : ℝ) * |p.1| ≤ (L : ℝ) * ε :=
+            mul_le_mul_of_nonneg_left hple L.2
+          _ = ε * (L : ℝ) := by ring
+  have hAtop : MemLp A ⊤ (ν.prod σ) :=
+    memLp_top_of_bound hAmeas.aestronglyMeasurable (ε * (L : ℝ)) hAbound
+  have hAnorm : eLpNorm A ⊤ (ν.prod σ) ≤ ENNReal.ofReal (ε * (L : ℝ)) := by
+    rw [eLpNorm_exponent_top hAmeas.aestronglyMeasurable]
+    exact eLpNormEssSup_le_of_ae_bound hAbound
+  have hHmem : MemLp H 2 (ν.prod σ) := by
+    have h := MeasureTheory.MemLp.smul (p := (⊤ : ENNReal))
+      (q := (2 : ENNReal)) (r := (2 : ENNReal)) hAtop hGmem
+    convert h using 1
+  have hcomm : (fun q ↦ mollifyFst ε (fun q ↦ (s q.1 : ℂ) * F q) q -
+      (s q.1 : ℂ) * mollifyFst ε F q) =ᵐ[σ]
+      (fun q ↦ ∫ t, H (t, q) ∂ν) := by
+    filter_upwards [ae_memLp_two_section hGmem, ae_memLp_two_section hHmem] with q hGq hHq
+    have hiG : Integrable (fun t ↦ G (t, q)) ν := hGq.integrable (by norm_num)
+    have hiH : Integrable (fun t ↦ H (t, q)) ν := hHq.integrable (by norm_num)
+    have hiCG : Integrable (fun t ↦ (s q.1 : ℂ) • G (t, q)) ν := by
+      simpa [smul_eq_mul, mul_comm] using hiG.smul_const (s q.1 : ℂ)
+    have hiK : Integrable (fun t ↦ (s (q.1 - t) : ℂ) • G (t, q)) ν := by
+      have hi := hiH.add hiCG
+      convert hi using 1
+      funext t
+      dsimp [H, A]
+      rw [Complex.ofReal_sub]
+      ring
+    calc
+      mollifyFst ε (fun q ↦ (s q.1 : ℂ) * F q) q -
+          (s q.1 : ℂ) * mollifyFst ε F q =
+          (∫ t, (s (q.1 - t) : ℂ) • G (t, q) ∂ν) -
+            (s q.1 : ℂ) * (∫ t, G (t, q) ∂ν) := by
+              rw [mollifyFst_eq_average hε, mollifyFst_eq_average hε]
+              rfl
+      _ = (∫ t, (s (q.1 - t) : ℂ) • G (t, q) ∂ν) -
+          (∫ t, (s q.1 : ℂ) • G (t, q) ∂ν) := by
+            change _ - (s q.1 : ℂ) • (∫ t, G (t, q) ∂ν) = _
+            rw [hiG.integral_smul]
+      _ = ∫ t, (s (q.1 - t) : ℂ) • G (t, q) -
+          (s q.1 : ℂ) • G (t, q) ∂ν := (integral_sub hiK hiCG).symm
+      _ = (∫ t, H (t, q) ∂ν) := by
+        apply integral_congr_ae
+        filter_upwards [] with t
+        dsimp [H, A, G]
+        rw [Complex.ofReal_sub]
+        ring
+  calc
+    eLpNorm (fun q ↦ mollifyFst ε (fun q ↦ (s q.1 : ℂ) * F q) q -
+        (s q.1 : ℂ) * mollifyFst ε F q) 2 σ =
+        eLpNorm (fun q ↦ ∫ t, H (t, q) ∂ν) 2 σ := eLpNorm_congr_ae hcomm
+    _ ≤ eLpNorm H 2 (ν.prod σ) := (eLpNorm_integral_prob_le hHmem).2
+    _ ≤ eLpNorm A ⊤ (ν.prod σ) * eLpNorm G 2 (ν.prod σ) :=
+      eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm 2 hAmeas.aestronglyMeasurable
+    _ ≤ ENNReal.ofReal (ε * (L : ℝ)) * eLpNorm F 2 σ := by
+      calc
+        eLpNorm A ⊤ (ν.prod σ) * eLpNorm G 2 (ν.prod σ) ≤
+            ENNReal.ofReal (ε * (L : ℝ)) * eLpNorm G 2 (ν.prod σ) :=
+          mul_le_mul_of_nonneg_right hAnorm bot_le
+        _ = ENNReal.ofReal (ε * (L : ℝ)) * eLpNorm F 2 σ := by rw [hGnorm]
 
 /-- `M_ε' F` is the weak `h`-derivative of `M_ε F`. -/
 theorem hasWeakPartialOn_mollifyFst (hε : 0 < ε) (hF : LocallyIntegrable F) :
