@@ -144,7 +144,9 @@ motivation, and standard facts cited rather than proved.
   `Mixed.lean` and `Main.lean`. Each module docstring says what it contains and which blueprint
   nodes it covers.
 - `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
-- `STATUS.md`: current state, decisions and next steps.
+- `STATUS.md`: short project-wide status and entry point to `docs/status/`.
+- `docs/status/{even-even,odd-odd,mixed,shared}.md`: current sector-specific
+  and shared-infrastructure blockers, priorities and implementation pointers.
 - `justfile`: build recipes (run `just` to list them).
 - `scripts/`: helper scripts. `blueprint_subgraph.py` (behind `just graph`)
   restricts the web dependency graph to some nodes and their dependencies,
@@ -282,7 +284,12 @@ server has a file open, and keep work in one file at a time where possible.
 
 ## Status
 
-The current state, decisions and next steps are in `STATUS.md`. Read it at
-the start of a work session and update it at the end. It is a snapshot:
-rewrite it rather than append to it. This file is for guidance that stays
-valid across sessions.
+Read `STATUS.md` at the start of a work session, then the relevant pages in
+`docs/status/`. Update the affected topic pages at the end; change the root
+status only when project-wide priorities, constraints or overall state change.
+Keep these files as short current snapshots, not logs or inventories of completed
+lemmas. Shared infrastructure belongs in `docs/status/shared.md`; sector pages
+should link there rather than duplicate its backlog. Per-node progress belongs
+in the blueprint, mathematical gaps in its digest notes, implementation details
+in module documentation, and history in Git. Do not hand-maintain graph counts.
+This file is for guidance that stays valid across sessions.
