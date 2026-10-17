@@ -445,11 +445,39 @@ and Fubini also give a.e. measurability of the average; no special
 representative or pointwise integrability on every line is required.
 \end{proof}
 
+\begin{lemma}[$L^2$ convergence in one variable]
+\label{lem:line-mollifier-convergence}
+\uses{def:line-mollifier}
+\lean{NoEmbeddedEigenvalues.tendsto_mollifyFst}
+\leanok
+For every s-finite Borel measure $\mu$ on $\R$ and
+$F\in L^2(dh\otimes\mu)$, $M_\epsilon F\to F$ in $L^2(dh\otimes\mu)$
+as $\epsilon\downarrow0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:line-mollifier-kernel}
+\leanok
+Translations are strongly continuous on scalar $L^2(\R)$ by Mathlib's
+continuity theorem for composition with measure-preserving maps. Apply this
+on almost every line and use dominated convergence in $\theta$; the squared
+translation error is bounded by four times the line's squared $L^2$ norm.
+This proves continuity of translation in the first variable without any
+local-finiteness assumption on $\mu$.
+
+The probability measure $\rho_\epsilon(t)\,dt$ is concentrated on
+$|t|<\epsilon$. Probability averaging and Tonelli therefore bound
+$\|M_\epsilon F-F\|_2$ by any uniform bound for
+$\|F(h-t,\theta)-F(h,\theta)\|_2$ on $|t|<\epsilon$.
+Translation continuity makes this bound arbitrarily small. Fubini justifies
+the identity between the average of the differences and $M_\epsilon F-F$
+on almost every line.
+\end{proof}
+
 \begin{lemma}[Mollification in one variable]
 \label{lem:line-mollifier}
 \uses{def:line-mollifier, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.tendsto_mollifyFst,
-  NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv,
+\lean{NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv,
   NoEmbeddedEigenvalues.eLpNorm_mollifyFst_mul_sub_le,
   NoEmbeddedEigenvalues.hasWeakPartialOn_mollifyFst,
   NoEmbeddedEigenvalues.HasWeakPartialOn.mollify,
@@ -471,11 +499,10 @@ $j=h$.
 
 \begin{proof}
 \uses{lem:weak-derivative-basic, lem:line-mollifier-kernel,
-  lem:line-mollifier-contraction}
-The norm bound in (1) is Lemma~\ref{lem:line-mollifier-contraction}.
-On each line $\theta=\mathrm{const}$, $M_\epsilon$ is convolution with $\rho_\epsilon$.
-Apply the approximate identity property and integrate over $\theta$ by dominated convergence (the
-lines with $F(\cdot,\theta)\in L^2$ have full $\mu$-measure). (2): $\epsilon\rho_\epsilon'$ is the
+  lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+Part (1) is Lemmas~\ref{lem:line-mollifier-contraction}
+and~\ref{lem:line-mollifier-convergence}.
+For (2), $\epsilon\rho_\epsilon'$ is the
 rescaling $(\rho')_\epsilon$ of $\rho'$, which has integral $0$, so $\epsilon M'_\epsilon F\to(\int\rho')F=0$
 in the same way. (3): the kernel of the commutator is
 $\rho_\epsilon(h-h')(s(h')-s(h))$, bounded by $L|h-h'|\rho_\epsilon(h-h')$, whose integral is at most

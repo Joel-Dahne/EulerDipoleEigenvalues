@@ -39,38 +39,45 @@ and the blueprint; their analytic proofs remain admitted.
 
 ## Next steps
 
-**The line-mollifier L² contraction is proved.** In `LineMollifier.lean`,
-`eLpNorm_mollifyFst_le` now has a complete proof, for every s-finite `μ`,
-with no statement changes. The parent inspected Mathlib and fixed four private
-helper interfaces: probability averaging contracts L² (fiberwise L¹ ≤ L²,
-then Tonelli); the kernel defines a probability measure; convolution equals
-its average of translates; and joint first-variable translation preserves the
-L² norm. This handles joint a.e. measurability and arbitrary representatives,
-without assuming convolution integrable on every line or invoking an
-unavailable general Young inequality.
+**The line-mollifier L² contraction and convergence are proved.** In
+`LineMollifier.lean`, `eLpNorm_mollifyFst_le` and `tendsto_mollifyFst` have
+complete proofs, for every s-finite `μ`, with no statement changes. The
+contraction uses probability averaging (fiberwise L¹ ≤ L², then Tonelli),
+the kernel's unit mass and measure-preserving first-variable translations.
+This handles joint a.e. measurability and arbitrary representatives without
+assuming convolution integrable on every line or invoking an unavailable
+Young inequality.
 
-Implementation was delegated to Luna in bounded tasks. The first averaging
-attempt stopped incomplete; a refined task using product-swap measurability
-instead of a measurable representative completed it. The kernel-average and
-translation/assembly tasks also completed. Independent full-file diagnostics
-and axiom checks on the contraction and all four private helpers confirm only
-`propext`, `Classical.choice`, `Quot.sound`. Six existing mollifier admissions
-remain; no new admissions were retained. The four earlier kernel prerequisites
-remain proved. The blueprint now separates the proved kernel properties
-(`lem:line-mollifier-kernel`) and contraction
-(`lem:line-mollifier-contraction`) from the remaining estimates.
+For convergence, Mathlib's `compMeasurePreservingLp` gives scalar L²
+translation continuity. Its product-space version cannot be applied directly:
+an arbitrary s-finite transverse measure need not be locally finite. Instead,
+new private lemmas give a.e. L² sections and the squared product-norm formula;
+dominated convergence of the line energies, bounded by four times the original
+line energy, gives first-variable translation continuity. The kernel measure
+is concentrated on `|t| < ε`, so a uniform bound on these small translations
+bounds the mollification error. Subtraction inside the average is justified
+on a.e. fiber by L²-to-L¹ inclusion for a probability measure.
 
-The shared Lean MCP server was already running for this project; connectivity
-and current imports (no failed dependencies) were checked before delegation.
-`just web` passes; no full project rebuild was run. Pi setup and the sequential
-Luna runner are documented in [docs/tooling/pi.md](docs/tooling/pi.md).
-Runner tests cover normal completion, model error, malformed events and timeout;
-no routine benchmarking was added.
+Luna implemented bounded prerequisite and assembly tasks; the parent fixed
+the mathematical decomposition, corrected the incomplete product-continuity
+candidate and independently reviewed the results. Full-file diagnostics show
+only the five remaining mollifier admissions. Axiom checks on the convergence
+and its six new private helpers (and earlier checks on the contraction and
+its four helpers) use only `propext`, `Classical.choice`, `Quot.sound`.
+No new admissions were retained. The four earlier kernel prerequisites remain
+proved. Separate proved blueprint nodes are `lem:line-mollifier-kernel`,
+`lem:line-mollifier-contraction` and `lem:line-mollifier-convergence`.
 
-**Next:** `tendsto_mollifyFst`: inspect Mathlib's translation-continuity and
-approximate-identity infrastructure, then split convergence into bounded tasks.
-The new probability-average and translation helpers are available as private
-lemmas in the same file. Afterwards address the derivative-kernel cancellation,
+The existing shared Lean MCP server and current imports were checked before
+delegation, including the new targeted Mathlib continuity import.
+`just web` and the even–even subgraph generation pass; no full project rebuild
+was run. Pi setup and the sequential Luna runner are documented in
+[docs/tooling/pi.md](docs/tooling/pi.md); no routine benchmarking was added.
+
+**Next:** `tendsto_smul_mollifyFstDeriv`: split the derivative-kernel L² bound
+and its zero-mass cancellation limit into bounded tasks. The first-variable
+translation continuity, squared product-norm formula and probability-average
+helpers are available as private lemmas in the same file. Then address the
 Lipschitz commutator and weak-derivative lemmas.
 
 **Backwards even–even assembly is proved.** `even_even_character_exclusion`
