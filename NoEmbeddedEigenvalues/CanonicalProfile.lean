@@ -6,9 +6,13 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 /-!
 # The canonical transport profile
 
-Blueprint: `def:canonical-profile`, `lem:canonical-profile-ode`;
-`lem:canonical-profile-ac`, `lem:canonical-profile-unique`,
+Blueprint: `def:canonical-profile`, `lem:canonical-profile-ode`,
+`lem:canonical-profile-ac`; `lem:canonical-profile-unique`,
 `lem:canonical-profile-decay`, `lem:canonical-profile-weighted` (stated).
+
+Local absolute continuity follows by writing the tail as a constant minus a
+primitive, applying Mathlib's real-valued primitive theorem to the real and imaginary
+parts, and multiplying by the smooth exponential factor.
 
 For a trace `g` on a separatrix arc with `g' ∈ L¹(ℝ)`, the canonical profile is
 `Ω(s) = e^{iλs} ∫_s^∞ g'(t) e^{-iλt} dt` and the canonical transport unknown is
@@ -161,7 +165,7 @@ theorem canonicalProfile_eq_Iic (hg : Integrable (deriv g))
 
 end Profile
 
-/-! ### Local absolute continuity, uniqueness and bounds (stated) -/
+/-! ### Local absolute continuity, uniqueness and bounds -/
 
 section Decay
 
@@ -170,7 +174,32 @@ variable {lam : ℝ} {g : ℝ → ℂ}
 /-- The canonical profile is absolutely continuous on every compact interval. -/
 theorem absolutelyContinuousOnInterval_canonicalProfile (hg : Integrable (deriv g))
     (c d : ℝ) : AbsolutelyContinuousOnInterval (canonicalProfile lam g) c d := by
-  sorry
+  have hq := integrable_profileIntegrand (lam := lam) hg
+  -- Mathlib's absolute continuity of primitives is stated for real-valued functions.
+  have hr := (reCLM.integrable_comp hq).intervalIntegrable
+    |>.absolutelyContinuousOnInterval_intervalIntegral (left_mem_uIcc : c ∈ uIcc c d)
+  have hi := (imCLM.integrable_comp hq).intervalIntegrable
+    |>.absolutelyContinuousOnInterval_intervalIntegral (left_mem_uIcc : c ∈ uIcc c d)
+  have hprimitive : AbsolutelyContinuousOnInterval
+      (fun s ↦ ∫ t in c..s, profileIntegrand lam g t) c d := by
+    have h := (ofRealCLM.lipschitzWith.comp_absolutelyContinuousOnInterval hr).add
+      ((ofRealCLM.lipschitzWith.comp_absolutelyContinuousOnInterval hi).const_smul I)
+    refine h.congr fun s _ ↦ ?_
+    simp only [Pi.add_apply, Function.comp_apply, ofRealCLM_apply, smul_eq_mul]
+    rw [reCLM.intervalIntegral_comp_comm hq.intervalIntegrable,
+      imCLM.intervalIntegral_comp_comm hq.intervalIntegrable]
+    simpa [mul_comm] using re_add_im (∫ t in c..s, profileIntegrand lam g t)
+  have htail : AbsolutelyContinuousOnInterval
+      (fun s ↦ ∫ t in Ioi s, profileIntegrand lam g t) c d := by
+    have hc : AbsolutelyContinuousOnInterval
+        (fun _ : ℝ ↦ ∫ t in Ioi c, profileIntegrand lam g t) c d :=
+      (LipschitzWith.const _).lipschitzOnWith.absolutelyContinuousOnInterval
+    refine (hc.sub hprimitive).congr fun s _ ↦ ?_
+    exact (eq_sub_of_add_eq'
+      (intervalIntegral.integral_interval_add_Ioi hq.integrableOn hq.integrableOn)).symm
+  have hexp : ContDiff ℝ 1 (fun s : ℝ ↦ exp (I * lam * s)) :=
+    (contDiff_const.mul ofRealCLM.contDiff).cexp
+  exact hexp.contDiffOn.absolutelyContinuousOnInterval.smul htail
 
 /-- The canonical profile is the only locally absolutely continuous solution of
     `Ω' = iλΩ - g'` that tends to `0` at `+∞`. Neither Melnikov nor decay at `-∞` is
