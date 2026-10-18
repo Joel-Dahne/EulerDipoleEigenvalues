@@ -19,8 +19,9 @@ the nodes, not reproduced here. This was not a full independent proof audit.
   Positivity and nonnegative exhaustion give `ω = 0` directly, without a
   global bulk-integrability or weak-gradient constant-function argument.
 - The cutoff, annular and center-limit assemblies are proved from their named
-  inputs. The virial branch ultimately needs the L² virial identity and the
-  orbit area formula.
+  inputs. The L² virial identity is assembled from the mollifier, H¹ and
+  transport inputs; the virial branch ultimately needs those and the orbit area
+  formula.
 - Separatrix arc energy and level traces are proved from the trace/local-Sobolev
   inputs using explicit quarter graphs. The first-order trace limit still uses
   the area formula and saddle-distance estimates.

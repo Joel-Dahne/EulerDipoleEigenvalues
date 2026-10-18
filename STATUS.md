@@ -5,9 +5,10 @@ working; update current priorities and blockers rather than appending history.
 
 ## Current phase
 
-The first-pass review of the even–even blueprint is complete. No next proof
-implementation has been selected. Candidate tasks are in the topic pages;
-the review is not a complete independent audit of the mathematics.
+The first-pass review of the even–even blueprint is complete. Proof
+implementation has resumed: the L² virial identity (`virial_l2`) is assembled
+from admitted inputs. Candidate next tasks are in the topic pages; the review
+is not a complete independent audit of the mathematics.
 
 ## Overall state
 
@@ -44,7 +45,5 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 
 ## Validation baseline
 
-The last recorded full Lean build passed; analytic admissions remain.
-Blueprint checker/report tests and the web build pass. Generated graph
-closures, report counts and navigation links were checked. No Lean files
-changed and no new Lean build was run.
+A full Lean build passed after the virial assembly (2026-10-17); analytic
+admissions remain. Blueprint source checks and the web build pass.

@@ -96,9 +96,13 @@ motivation, and standard facts cited rather than proved.
   `ξ = tanh s` form and proves its positivity; `LiftIntegration.lean`
   integrates periodic lifts over `[0, 2π]²` (integration by parts,
   skew-symmetry of `D` and `L₀`); `VirialSmooth.lean` and
-  `VirialQuadratic.lean` prove the two forms of the smooth virial identity, and
-  `VirialL2.lean` states them for `L²` eigenfunctions and fields supported in an annulus
-  (with the exact algebraic identity behind the proof); `TransportOperator.lean`
+  `VirialQuadratic.lean` prove the two forms of the smooth virial identity;
+  `VirialFourier.lean` writes the virial pairings as torus inner products and proves the
+  Fourier integrations by parts (skew-symmetry of `D` on `H¹`, the equivalence of the two
+  forms on `X`); `CellPeriodization.lean` periodizes compactly supported cell functions to
+  the torus (`boxPeriodize`) and proves uniqueness of weak derivatives; `VirialL2.lean`
+  proves the virial identities for `L²` eigenfunctions and fields supported in an annulus
+  from the mollifier lemmas; `TransportOperator.lean`
   defines `H = -iL₀` as an unbounded operator and states its self-adjointness;
   `LiftTorus.lean` relates periodic lifts to functions on the torus (classical
   vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines

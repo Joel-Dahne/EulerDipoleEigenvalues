@@ -10,8 +10,8 @@ belong in the blueprint, not in another status inventory.
 ## Available foundations
 
 Fourier/L² setup, symmetry and rotation decompositions, inverse-Laplacian
-regularity, classical lift calculus, smooth virials and Fourier product/IBP
-rules are formalized. Interval H¹ and weighted boundary calculus are available;
+regularity, classical lift calculus, smooth virials, Fourier product/IBP
+rules and the periodization of compactly supported cell functions are formalized. Interval H¹ and weighted boundary calculus are available;
 full smooth-density theory is not.
 
 `LineMollifier.lean` and `AnglePeriodization.lean` have no admissions.
@@ -71,26 +71,27 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 ### Virial regularization
 
 See the [virial blueprint](../../blueprint/src/chapters/virial.tex),
-[TransversalMollifier.lean](../../NoEmbeddedEigenvalues/TransversalMollifier.lean)
-and [VirialL2.lean](../../NoEmbeddedEigenvalues/VirialL2.lean).
+[TransversalMollifier.lean](../../NoEmbeddedEigenvalues/TransversalMollifier.lean),
+[CellPeriodization.lean](../../NoEmbeddedEigenvalues/CellPeriodization.lean) and
+[VirialL2.lean](../../NoEmbeddedEigenvalues/VirialL2.lean).
 
-Candidate implementation order, not a decision to resume proof work:
+`virial_l2` has no `sorry` of its own. H¹ skew-symmetry, the box periodization
+of compactly supported cell functions, uniqueness of weak derivatives and the
+equivalence of the two virial forms on `X` have no admissions. The periodization
+part of `lem:local-to-global` (`exists_memSobolev_periodize`) is not used.
+Remaining admitted inputs of `virial_l2`, in a candidate order:
 
 1. `transversalMollifier_hasWeakL0On`: moderate conditional on chart inputs.
    Combine the proved weak transport equivalence with line weak derivatives,
    the Lipschitz commutator, and compact-band/zero-extension estimates.
    Full-gradient chain rules are not needed for this commutator.
-2. Full-gradient transfer and stronger transversal derivative estimates:
-   medium–high. H¹ convergence and transport-only H¹ regularization are distinct
-   claims and may be worth splitting.
-3. H¹ skew-symmetry and the quadratic virial form: moderate. Use the proved
-   Fourier product/IBP rules; supply smooth Fourier approximation and continuity
-   of the forms.
-4. `virial_l2`: medium–high assembly once these inputs exist. Follow the current
-   blueprint's periodized mollified-pair proof, not the obsolete flow-of-W or
-   mollifier-adjoint routes. The gradient error must be o(1/ε), not just O(1/ε).
-   H¹ statements use Fourier derivative witnesses, not arbitrary representative
-   derivatives; they do not assert second transport derivatives in L².
+2. `transversalMollifier_hasWeakPartialOn` and
+   `tendsto_transversalMollifier_partial`: medium–high (full-gradient transfer).
+   The gradient error must be o(1/ε), not just O(1/ε).
+3. `virial_h1`: moderate. Fourier truncation, continuity of the two quadratic
+   forms on H¹ and the smooth identity; skew-symmetry is already available.
+4. Shared with other routes: `hasWeakPartialOn_liftL2` (`lem:local-to-global`),
+   `isTransportPair_of_isEigenSolution` and the chart/coarea inputs.
 
 ### Transport and later-sector regularity
 

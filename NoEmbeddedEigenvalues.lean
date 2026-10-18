@@ -42,6 +42,8 @@ import NoEmbeddedEigenvalues.TorusL2
 import NoEmbeddedEigenvalues.TransportOperator
 import NoEmbeddedEigenvalues.TransversalMollifier
 import NoEmbeddedEigenvalues.VirialAlgebra
+import NoEmbeddedEigenvalues.CellPeriodization
+import NoEmbeddedEigenvalues.VirialFourier
 import NoEmbeddedEigenvalues.VirialQuadratic
 import NoEmbeddedEigenvalues.VirialL2
 import NoEmbeddedEigenvalues.VirialSmooth

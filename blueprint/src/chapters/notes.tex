@@ -55,9 +55,12 @@ once resolved; record the resolution in the relevant node.
         coordinates, for fields supported in an annulus; the center is cut out of
         Lemma~\ref{lem:ee-truncated-virial}. The paper proof now explicitly
         periodizes the cell outputs and uses $c=\chi(\Psi/2)$ on the torus.
-        Applying the exact identity directly to $J_\epsilon\omega,J_\epsilon\psi$
-        with $V=D$ avoids constructing a mollifier adjoint. These are paper
-        clarifications, not new Lean proofs. In the transport sketches,
+        No mollifier adjoint is constructed. The $L^2$ passage to the limit is now
+        proved in Lean (no \texttt{sorry} of its own; see the digest note at
+        Lemma~\ref{lem:virial-l2}), together with $H^1$ skew-symmetry
+        (Lemma~\ref{lem:half-density-skew-h1}), the box periodization
+        (Lemma~\ref{lem:box-periodization}) and the equivalence of the two forms
+        (Lemma~\ref{lem:virial-forms}). In the transport sketches,
         test density is now explicitly in $H^1$, and Melnikov integrates
         by parts only on the separatrix trace, avoiding an unjustified
         appeal to a.e. orbit regularity at prescribed resonant levels
@@ -75,9 +78,9 @@ once resolved; record the resolution in the relevant node.
         chart inputs. Open: the full weak-gradient chain rules
         (Lemma~\ref{lem:action-angle-weak}(2)--(3); their earlier $H^1$
         approximation sketch has been corrected to local $W^{1,1}$), the
-        $H^1$ virial proof, the chart's admitted analytic inputs, the stronger
-        transversal derivative and commutator estimates, the $L^2$ passage to
-        the limit, and whether the odd--odd weighted analogue
+        $H^1$ commutator identity (Lemma~\ref{lem:virial-h1}), the chart's admitted
+        analytic inputs, the stronger transversal derivative and commutator estimates,
+        and whether the odd--odd weighted analogue
         (Proposition~\ref{prop:dd-virial}) can be treated the same way.
   \item \textbf{Missing verification scripts}
         (Chapter~\ref{chap:certificates}).
