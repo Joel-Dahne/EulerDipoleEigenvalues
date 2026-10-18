@@ -61,11 +61,17 @@ installation. The dependency graphs are rendered in the browser.
 ```sh
 just check-blueprint # source consistency checks (Python 3 only)
 just status-blueprint # generate docs/status/generated.md without a web/Lean build
-just web             # checks, website, three sector graphs and status report
+just web             # quiet build: checks, website, sector graphs and status report
+just web --verbose   # same build with full output (also accepts -v)
 just serve           # view it at http://localhost:8000
 just pdf             # PDF in blueprint/print
 just graph LABEL     # optional custom dependency view, after just web
 ```
+
+`just web` prints a short success summary and the path to the full build log
+(in the system temporary directory). On failure it prints the last 60 log lines
+and exits unsuccessfully. Use `just web --verbose` to stream the full output;
+that output is also saved to a log.
 
 Use `just web`, not `leanblueprint web` directly: the recipe handles
 read-only static files on rebuild and regenerates these sector views:

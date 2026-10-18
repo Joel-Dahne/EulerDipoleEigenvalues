@@ -27,7 +27,7 @@ manuscript file="manuscript":
 check-blueprint:
     python3 scripts/check_blueprint.py
 
-# Run regression tests for the blueprint checker and status report
+# Run regression tests for blueprint checking, status reporting and web build output
 test-blueprint:
     python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 
@@ -35,8 +35,31 @@ test-blueprint:
 status-blueprint:
     python3 scripts/blueprint_status.py --output docs/status/generated.md
 
-# Build the blueprint website, sector graphs and generated status report
-web: check-blueprint
+# Build the blueprint website quietly (use `just web --verbose` for full output)
+web verbose="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case {{quote(verbose)}} in
+        '') verbose=false ;;
+        --verbose|-v) verbose=true ;;
+        *) echo 'Usage: just web [--verbose|-v]' >&2; exit 2 ;;
+    esac
+    log=$(mktemp "${TMPDIR:-/tmp}/blueprint-web.XXXXXX")
+    status=0
+    if "$verbose"; then
+        just --justfile {{quote(justfile())}} _web 2>&1 | tee "$log" || status=$?
+    else
+        just --justfile {{quote(justfile())}} _web >"$log" 2>&1 || status=$?
+    fi
+    if [ "$status" -ne 0 ]; then
+        if ! "$verbose"; then tail -n 60 "$log" >&2; fi
+        printf 'Web build failed. Full log: %s\n' "$log" >&2
+        exit "$status"
+    fi
+    printf 'Web build passed (website, sector graphs, status report).\nLog: %s\n' "$log"
+
+[private]
+_web: check-blueprint
     # With a Nix-installed plasTeX, the copied static files are read-only, which
     # makes rebuilds fail when they overwrite them.
     [ ! -d blueprint/web ] || chmod -R u+w blueprint/web
