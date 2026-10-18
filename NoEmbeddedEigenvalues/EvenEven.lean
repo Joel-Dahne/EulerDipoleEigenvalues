@@ -7,6 +7,7 @@ import NoEmbeddedEigenvalues.DuBoisReymond
 import NoEmbeddedEigenvalues.SegmentEstimates
 import NoEmbeddedEigenvalues.QuarterOrbits
 import NoEmbeddedEigenvalues.SeparatrixTraces
+import NoEmbeddedEigenvalues.Melnikov
 
 /-!
 # Even–even exclusion
@@ -1566,57 +1567,6 @@ theorem ee_gradient_traces {ω : L2} (hω : InSector true true ω) :
 
 /-! ### The trace of the stream function on the arcs -/
 
-/-- Absolute continuity is preserved by an antitone Lipschitz change of variable: disjoint
-    intervals are mapped to disjoint intervals of at most `K` times the length. -/
-theorem AbsolutelyContinuousOnInterval.comp_antitoneOn {X : Type*} [PseudoMetricSpace X]
-    {f : ℝ → X} {φ : ℝ → ℝ} {α β c d : ℝ} (hf : AbsolutelyContinuousOnInterval f α β)
-    {K : NNReal} (hφL : LipschitzOnWith K φ (uIcc c d)) (hφa : AntitoneOn φ (uIcc c d))
-    (hφm : MapsTo φ (uIcc c d) (uIcc α β)) :
-    AbsolutelyContinuousOnInterval (f ∘ φ) c d := by
-  rw [absolutelyContinuousOnInterval_iff] at hf ⊢
-  intro ε hε
-  obtain ⟨δ, hδ, hfδ⟩ := hf ε hε
-  have hK : (0 : ℝ) ≤ K := K.2
-  refine ⟨δ / (K + 1), by positivity, fun E hE hlen ↦ ?_⟩
-  obtain ⟨n, I⟩ := E
-  set S := uIcc c d
-  have hminS {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : min x y ∈ S := by
-    rcases le_total x y with h | h
-    · rwa [min_eq_left h]
-    · rwa [min_eq_right h]
-  have hmaxS {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : max x y ∈ S := by
-    rcases le_total x y with h | h
-    · rwa [max_eq_right h]
-    · rwa [max_eq_left h]
-  have hmax {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : max (φ x) (φ y) = φ (min x y) := by
-    rcases le_total x y with h | h
-    · rw [min_eq_left h, max_eq_left (hφa hx hy h)]
-    · rw [min_eq_right h, max_eq_right (hφa hy hx h)]
-  have hmin {x y : ℝ} (hx : x ∈ S) (hy : y ∈ S) : min (φ x) (φ y) = φ (max x y) := by
-    rcases le_total x y with h | h
-    · rw [max_eq_right h, min_eq_right (hφa hx hy h)]
-    · rw [max_eq_left h, min_eq_left (hφa hy hx h)]
-  have hE' : (n, fun i ↦ (φ (I i).1, φ (I i).2)) ∈
-      AbsolutelyContinuousOnInterval.disjWithin α β := by
-    refine ⟨fun i hi ↦ ⟨hφm (hE.1 i hi).1, hφm (hE.1 i hi).2⟩, ?_⟩
-    intro i hi j hj hij
-    have hd := hE.2 hi hj hij
-    obtain ⟨hi1, hi2⟩ := hE.1 i hi
-    obtain ⟨hj1, hj2⟩ := hE.1 j hj
-    simp only [Function.onFun, uIoc, Set.Ioc_disjoint_Ioc] at hd ⊢
-    rw [hmax hi1 hi2, hmax hj1 hj2, hmin hi1 hi2, hmin hj1 hj2,
-      hmin (hminS hi1 hi2) (hminS hj1 hj2), hmax (hmaxS hi1 hi2) (hmaxS hj1 hj2)]
-    exact hφa (hminS (hmaxS hi1 hi2) (hmaxS hj1 hj2)) (hmaxS (hminS hi1 hi2) (hminS hj1 hj2)) hd
-  refine hfδ _ hE' ?_
-  calc ∑ i ∈ Finset.range n, dist (φ (I i).1) (φ (I i).2)
-      ≤ ∑ i ∈ Finset.range n, K * dist (I i).1 (I i).2 :=
-        Finset.sum_le_sum fun i hi ↦ hφL.dist_le_mul _ (hE.1 i hi).1 _ (hE.1 i hi).2
-    _ = K * ∑ i ∈ Finset.range n, dist (I i).1 (I i).2 := (Finset.mul_sum _ _ _).symm
-    _ ≤ K * (δ / (K + 1)) := by gcongr
-    _ < δ := by
-      rw [mul_div_assoc', div_lt_iff₀ (by positivity)]
-      nlinarith
-
 /-- The trace of `ψ̃` on the separatrix arc `γ₀` is locally absolutely continuous and
     differentiable almost everywhere (`lem:arc-trace-ac`). The arc is the segment of the line
     `b = π/2` with `a = arcAngle s - π/2`, and along this line the continuous `H²` function
@@ -1671,28 +1621,6 @@ theorem absolutelyContinuous_contStream_separatrixArc (ω : L2) :
   filter_upwards [ae_all_iff.2 hn] with s hs
   obtain ⟨n, hn⟩ := exists_nat_ge |s|
   exact hs n (by rw [uIcc_of_le (by linarith [abs_nonneg s])]; exact abs_le.1 hn)
-
-/-- Absolute continuity is preserved by a monotone Lipschitz change of variable. -/
-theorem AbsolutelyContinuousOnInterval.comp_monotoneOn {X : Type*} [PseudoMetricSpace X]
-    {f : ℝ → X} {φ : ℝ → ℝ} {α β c d : ℝ} (hf : AbsolutelyContinuousOnInterval f α β)
-    {K : NNReal} (hφL : LipschitzOnWith K φ (uIcc c d)) (hφm : MonotoneOn φ (uIcc c d))
-    (hφs : MapsTo φ (uIcc c d) (uIcc α β)) :
-    AbsolutelyContinuousOnInterval (f ∘ φ) c d := by
-  have hnm {a b x : ℝ} (h : x ∈ uIcc a b) : -x ∈ uIcc (-a) (-b) := by
-    rw [mem_uIcc] at h ⊢
-    rcases h with h | h
-    · exact Or.inr ⟨by linarith [h.2], by linarith [h.1]⟩
-    · exact Or.inl ⟨by linarith [h.2], by linarith [h.1]⟩
-  have hneg : AbsolutelyContinuousOnInterval (f ∘ Neg.neg) (-α) (-β) :=
-    AbsolutelyContinuousOnInterval.comp_antitoneOn hf (K := 1) LipschitzWith.id.neg.lipschitzOnWith
-      (fun x _ y _ h ↦ neg_le_neg h) fun x hx ↦ by
-        simpa using hnm hx
-  have h := AbsolutelyContinuousOnInterval.comp_antitoneOn hneg (φ := fun x ↦ -φ x) (K := K) hφL.neg
-    (fun x hx y hy h ↦ neg_le_neg (hφm hx hy h)) fun x hx ↦ by
-      exact hnm (hφs hx)
-  convert h using 1
-  funext x
-  simp
 
 /-! ### Functions of `ξ = tanh s` -/
 

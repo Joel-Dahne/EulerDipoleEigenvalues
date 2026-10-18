@@ -9,8 +9,9 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 # Transport pairs
 
 Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
-`lem:good-windows`; stated: `lem:melnikov`, `lem:coarea`, `lem:pairing-limit`. The proof of
-`lem:resonant-vanishing` is in `ResonantVanishing.lean`.
+`lem:good-windows`; stated: `lem:coarea`, `lem:pairing-limit`. The proofs of
+`lem:resonant-vanishing` and `lem:melnikov` are in `ResonantVanishing.lean` and
+`Melnikov.lean`.
 
 The eigenvalue equation `H(ω + ψ) = λω`, with `H = -i L₀` and `L₀ = Y · ∇`, is a transport
 equation along the orbits of the dipole flow. A transport pair `(v, f)` on an open union of
@@ -122,19 +123,7 @@ theorem isTransportPair_of_isEigenSolution {lam : ℝ} (hlam : lam ≠ 0) {ω : 
   filter_upwards [liftL2_smul_ae (I * lam) ω] with p hp
   rw [hp, mul_assoc]
 
-/-! ### Melnikov (stated) and good windows (`lem:melnikov`, `lem:good-windows`) -/
-
-/-- The Melnikov condition. Let `(v, f)` be a transport pair on a neighbourhood of the closed
-    cell square that transforms with the character `κ = ±1` under the rotation
-    `R(x, y) = (y, -x)`, with `f` continuous. Then the trace `g = f ∘ γ` on the separatrix arc
-    has `g' ∈ L¹` and `∫ g'(s) e^{-iλs} ds = 0`. -/
-theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
-    (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
-    (hvR : ∀ᵐ p ∂(volume.restrict U), v (p.2, -p.1) = κ * v p) (hfc : ContinuousOn f U) :
-    Integrable (deriv (f ∘ separatrixArc)) ∧
-      ∫ s, profileIntegrand lam (f ∘ separatrixArc) s = 0 := by
-  sorry
+/-! ### Good windows (`lem:good-windows`) -/
 
 open Filter Topology in
 /-- The good windows `|λS(h) - 2π(j + ½)| < π/3` have positive measure near `h = 0`. -/

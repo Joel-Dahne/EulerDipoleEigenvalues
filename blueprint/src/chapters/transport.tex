@@ -185,47 +185,50 @@ $c_+=\kappa c_-$.
 \leanok
 Let $(v,f)$ be a transport pair on an open union of orbits $U$ containing the
 closed square $|a|,|b|\le\pi/2$, with $U$ invariant under the rotation
-$R(x,y)=(y,-x)$ and $f\circ R=\kappa f$, $v\circ R=\kappa v$ for $\kappa=\pm1$, and with
+$R(x,y)=(y,-x)$ and $f\circ R=\kappa f$ for $\kappa=\pm1$, and with
 $f$ continuous on $U$. Then the arc trace $g=f\circ\gamma$ has $g'\in L^1(\R)$ and
 $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:resonant-vanishing, lem:period-regularity, lem:period-coarse, lem:orbit-comparison,
+\uses{lem:resonant-vanishing, lem:period-basic, lem:period-coarse, lem:orbit-comparison,
   lem:sobolev-holder, lem:local-to-global, lem:trace-h2, lem:separatrix-arc,
-  lem:period-orbit}
-First Lemma~\ref{lem:trace-h2} gives local absolute continuity of the
-separatrix trace $g$ and an $L^2$ derivative of its straight-line trace.
-Changing to that finite line segment and applying Cauchy--Schwarz gives
-$g'\in L^1(ds)$. Fix $0<\alpha<1$. Localize $f$ on a finite cover of a
-compact neighbourhood of the closed cell and use
-Lemma~\ref{lem:sobolev-holder}. Orbit comparison then gives
-$\|g_h-g\|_{\infty,[-L,L]}\le C_\alpha h^{\alpha/2}$, where
-$g_h=f\circ\gamma_h$. At the arc ends,
-$|g(\pm L)-c_\pm|\le C_\alpha e^{-\alpha L}$.
+  lem:period-orbit, lem:quarter-orbit-decomposition, lem:flow-continuity}
+\leanok
+\emph{The arc trace.} In diagonal coordinates the arc is the segment $b=\pi/2$,
+$a=\alpha(s)-\pi/2$, $\alpha(s)=2\arctan e^{-s}$. Lemma~\ref{lem:trace-h2}, on a
+rectangle around the closed segment inside $U$, makes the line trace $G$ absolutely
+continuous with $G'\in L^2$. So $g=G\circ(\alpha-\pi/2)$ is locally absolutely continuous,
+and $da=ds/\cosh s$ gives $\int_\R|g'|\,ds=\int|G'|\,da<\infty$.
 
-Choose resonances $h_k\to0$ with $kb(h_k)=\lambda$ and
-$e^{i\pi k/2}=\kappa$, using
-Lemmas~\ref{lem:period-regularity} and~\ref{lem:period-coarse}, with $k$
-of the sign of $\lambda$. Write $L=L(h_k)$. The character makes the four
-quarter contributions to the resonant mode identical, so resonant
-vanishing gives
-$\int_{-L}^{L}g_{h_k}(t)e^{-i\lambda t}\,dt=0$.
-Consequently
-$\big|\int_{-L}^{L}g(t)e^{-i\lambda t}\,dt\big|
- \le 2LC_\alpha h_k^{\alpha/2}$.
+\emph{H\"older continuity.} A neighbourhood of the closed segment of width less than
+$\pi$ projects injectively to the torus. Cut $f$ off there and periodize it
+(Lemma~\ref{lem:local-to-global}); Lemma~\ref{lem:sobolev-holder} makes $f$
+$\tfrac12$-H\"older on a smaller neighbourhood $W$ of the segment.
 
-Integrate by parts only on the separatrix trace $g$:
+\emph{Resonant levels.} Since $S$ is continuous and tends to $\infty$
+(Lemma~\ref{lem:period-basic}), the intermediate value theorem gives levels $h\to0$ with
+$kb(h)=\lambda$ and $e^{-2i\lambda L}=\kappa$, $L=L(h)$: take $|k|\equiv0$ or $2\pmod4$
+as $\kappa=1$ or $-1$, of the sign of $\lambda$, so that $2\lambda L=\pi k/2$. At such a
+level, $\gamma_h(t+2L)=R\gamma_h(t)$ and the character make the four quarters of the
+resonant mode equal, so resonant vanishing gives
+$\int_{-L}^{L}e^{-i\lambda t}f(\gamma_h(t))\,dt=0$.
+
+\emph{Comparison.} By orbit comparison $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$ for
+$|t|\le L$, so $\gamma_h(t)\in W$ for small $h$ and
+$\big|\int_{-L}^{L}g(t)e^{-i\lambda t}\,dt\big|\le 2LC h^{1/4}$. By
+Lemma~\ref{lem:period-coarse}, $L\le C+\tfrac12\log(1/h)$, so this tends to zero.
+
+\emph{Integration by parts on $g$ only.}
 \[
   \int_{-L}^{L}g'(t)e^{-i\lambda t}\,dt
   =[g(t)e^{-i\lambda t}]_{-L}^{L}
      +i\lambda\int_{-L}^{L}g(t)e^{-i\lambda t}\,dt .
 \]
-The constant part of the boundary term vanishes because
-$c_+=\kappa c_-$ and $e^{2i\lambda L}=\kappa$.
-The remainder is $O(e^{-\alpha L})$, while the last integral is
-$O(h_k^{\alpha/2}L)$. Both tend to zero since $L=O(|\log h_k|)$ and
-$L\to\infty$. Finally use $g'\in L^1$ to pass to the full-line integral.
+Since $e^{-i\lambda L}=\kappa e^{i\lambda L}$, the boundary term is
+$e^{i\lambda L}(\kappa g(L)-g(-L))\to e^{i\lambda L}(\kappa c_+-c_-)=0$, where
+$c_+=f(R(\pi,0))=\kappa c_-$; only continuity of $f$ at the saddles is used. Finally
+$g'\in L^1$ passes to the full-line integral as $L\to\infty$.
 \end{proof}
 
 \begin{remark}[Digest note: prescribed resonant levels]
@@ -236,7 +239,18 @@ avoids requiring regularity there: it uses the resonant integral of the
 continuous forcing, compares it with $g$, and integrates by parts only
 on the separatrix trace, whose ACL regularity is supplied by the
 straight-line trace theorem. No new curved-orbit trace theorem is needed.
-This repairs the paper sketch; the Lean Melnikov theorem remains admitted.
+
+Resolved (October 2026): the Lean proof follows this argument and has no \texttt{sorry}
+of its own. It also shows: (1) the hypothesis $v\circ R=\kappa v$ of the earlier
+statement is not needed and has been dropped; only the character of $f$ enters. (2) The
+H\"older estimate needs no finite cover of the closed cell, only a neighbourhood of the
+closed separatrix segment, which projects injectively to the torus. (3) The resonant
+levels need only continuity of $S$ and $S\to\infty$, not monotonicity. (4) The boundary
+term needs only continuity of $f$ at the saddles; the H\"older rate is used only for
+the comparison, where it must beat the factor $L\sim\tfrac12\log(1/h)$. The admitted
+inputs are Lemmas~\ref{lem:trace-h2}, \ref{lem:local-to-global},
+\ref{lem:sobolev-holder}, \ref{lem:orbit-comparison}, \ref{lem:period-coarse} (upper
+bound) and those of Lemma~\ref{lem:resonant-vanishing}.
 \end{remark}
 
 \begin{definition}[Canonical transport profile]

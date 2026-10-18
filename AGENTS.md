@@ -118,11 +118,14 @@ motivation, and standard facts cited rather than proved.
   `CanonicalProfile.lean` defines the canonical transport profile on an arc.
   `CanonicalBoundaryForm.lean` identifies its arc form with the explicit-derivative
   boundary form, using a.e. chain rules under `tanh` on the weighted domain.
-  `EigenfunctionTransport.lean` specializes Melnikov and the pairing limit to
+  `EigenfunctionTransport.lean` prepares Melnikov and the pairing limit for
   eigenfunctions (explicit invariant neighbourhood of the cell, continuity of the
   flow, changes of representative on levels and in transport pairs).
   `ResonantVanishing.lean` proves the orbitwise transport equation, the mode relation and
-  resonant vanishing.
+  resonant vanishing. `Melnikov.lean` proves the Melnikov condition (arc trace, Hölder
+  continuity near the separatrix segment, resonant levels, quarter identity) and
+  specializes it and the pairing limit to eigenfunctions (`ee_melnikov`,
+  `ee_transport_traces`).
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
   separatrix arc, as explicit graphs in diagonal coordinates; `SeparatrixTraces.lean` defines

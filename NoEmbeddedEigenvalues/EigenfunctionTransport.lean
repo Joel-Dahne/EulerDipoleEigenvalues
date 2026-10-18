@@ -4,12 +4,12 @@ import NoEmbeddedEigenvalues.Sectors
 /-!
 # Transport traces of eigenfunctions
 
-Blueprint: `lem:ee-transport-traces` (with the Melnikov identity `ee_melnikov`);
-also `lem:level-integral-congr` (changing
+Blueprint: `lem:level-integral-congr` (changing
 representatives on levels, a.e. statements on a.e. level, level integrals over `[-2L, 6L)`).
 
-Specialize the abstract Melnikov and pairing statements to eigenfunctions, replacing the
-raw stream lift with its continuous representative. The neighbourhood is the diagonal
+Prepares the abstract Melnikov and pairing statements for eigenfunctions, replacing the
+raw stream lift with its continuous representative; the specializations `ee_melnikov` and
+`ee_transport_traces` are in `Melnikov.lean`. The neighbourhood is the diagonal
 square `|a|, |b| < 3π/2`, whose boundary lines are invariant under the dipole flow.
 -/
 
@@ -444,101 +444,5 @@ theorem contStream_iterate_rotLift {ω : L2} {κ : Bool} (hκ : InRotationCharac
   | succ k ih =>
     simp only [Function.iterate_succ_apply, ih, contStream_rotLift hκ, pow_succ]
     ring
-
-/-- The Melnikov identity on the arcs (`lem:ee-transport-traces`): for an eigenfunction with
-    rotation character `κ`, the arc trace `g = ψ̃ ∘ γ_k` has integrable derivative and
-    `∫ g' e^{-iλt} dt = 0`. From `melnikov` on `γ₀` and `g = κᵏ (ψ̃ ∘ γ₀)`. -/
-theorem ee_melnikov {lam : ℝ} (hlam : lam ≠ 0) {ω : L2} (hω : IsEigenSolution lam ω) {κ : Bool}
-    (hκ : InRotationCharacter κ ω) (k : ℕ) :
-    Integrable (deriv (contStream ω ∘ cellArc k)) ∧
-      ∫ t, profileIntegrand lam (contStream ω ∘ cellArc k) t = 0 := by
-  let c : ℝ := if κ then 1 else -1
-  have hc : c = 1 ∨ c = -1 := by cases κ <;> simp [c]
-  have hcc : (c : ℂ) = paritySign κ := by cases κ <;> simp [c, paritySign]
-  have hU := isOrbitUnion_cellNeighbourhood
-  have hp := isTransportPair_contStream hlam hω hU isBounded_cellNeighbourhood
-  have hfR : ∀ p ∈ cellNeighbourhood, contStream ω (p.2, -p.1) = c * contStream ω p := by
-    intro p _
-    rw [hcc]
-    exact contStream_rotLift hκ p
-  have hvR : ∀ᵐ p ∂(volume.restrict cellNeighbourhood),
-      liftL2 ω (p.2, -p.1) = c * liftL2 ω p := by
-    simpa only [hcc, rotLift] using ae_restrict_of_ae (liftL2_rotLift_ae hκ)
-  have hUR : ∀ p ∈ cellNeighbourhood, (p.2, -p.1) ∈ cellNeighbourhood :=
-    fun _ hp ↦ rotLift_mem_cellNeighbourhood hp
-  obtain ⟨hg, hM⟩ := melnikov hp closure_cellSquare_subset_cellNeighbourhood hc hUR hfR hvR
-    (continuous_contStream ω).continuousOn
-  have hArc : (contStream ω ∘ cellArc k) =
-      fun s ↦ paritySign κ ^ k * (contStream ω ∘ separatrixArc) s := by
-    funext s
-    exact contStream_iterate_rotLift hκ k (separatrixArc s)
-  rw [hArc]
-  refine ⟨by simpa only [deriv_const_mul_field'] using hg.const_mul (paritySign κ ^ k), ?_⟩
-  simp only [profileIntegrand, deriv_const_mul_field', mul_assoc, integral_const_mul]
-  simp only [profileIntegrand, mul_assoc] at hM
-  rw [hM, mul_zero]
-
-/-- Melnikov and pairing traces specialized to raw eigenfunction lifts and continuous arc
-    traces. The only analytic admissions used are the existing transport-pair, Melnikov,
-    pairing-limit and orbit-coordinate statements. -/
-theorem ee_transport_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (_hs : InSector true true ω) {κ : Bool}
-    (hκ : InRotationCharacter κ ω) :
-    (∀ k < 4, Integrable (deriv (contStream ω ∘ cellArc k))) ∧
-    ∀ N : Set ℝ, volume N = 0 → ∃ hs : ℕ → ℝ,
-      (∀ j, hs j ∈ Ioo 0 1 ∧ hs j ∉ N) ∧ Tendsto hs atTop (𝓝 0) ∧
-      Tendsto (fun j ↦ levelIntegral (hs j) fun p ↦
-        (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) atTop
-        (𝓝 (∑ k ∈ Finset.range 4, ∫ s,
-          (canonicalProfile lam (contStream ω ∘ cellArc k) s *
-            (starRingEnd ℂ) (contStream ω (cellArc k s))).re)) := by
-  let c : ℝ := if κ then 1 else -1
-  have hc : c = 1 ∨ c = -1 := by cases κ <;> simp [c]
-  have hcc : (c : ℂ) = paritySign κ := by cases κ <;> simp [c, paritySign]
-  have hU := isOrbitUnion_cellNeighbourhood
-  have hp := isTransportPair_contStream hlam hω hU isBounded_cellNeighbourhood
-  have hfR : ∀ p ∈ cellNeighbourhood, contStream ω (p.2, -p.1) = c * contStream ω p := by
-    intro p _
-    rw [hcc]
-    exact contStream_rotLift hκ p
-  have hvR : ∀ᵐ p ∂(volume.restrict cellNeighbourhood),
-      liftL2 ω (p.2, -p.1) = c * liftL2 ω p := by
-    simpa only [hcc, rotLift] using ae_restrict_of_ae (liftL2_rotLift_ae hκ)
-  have hUR : ∀ p ∈ cellNeighbourhood, (p.2, -p.1) ∈ cellNeighbourhood :=
-    fun _ hp ↦ rotLift_mem_cellNeighbourhood hp
-  refine ⟨fun k _ ↦ (ee_melnikov hlam hω hκ k).1, ?_⟩
-  · intro N hN
-    have hvm : Measurable (liftL2 ω) := (Lp.stronglyMeasurable ω).measurable.comp
-      isOpenQuotientMap_torusProj.continuous.measurable
-    have hfm : Measurable (streamLift ω) := (Lp.stronglyMeasurable (invLap ω)).measurable.comp
-      isOpenQuotientMap_torusProj.continuous.measurable
-    have hcm := (continuous_contStream ω).measurable
-    have hraw : Measurable (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) := by
-      fun_prop
-    have hcont : Measurable (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (contStream ω p)).re) := by
-      fun_prop
-    have hrep : (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) =ᵐ[volume]
-        (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (contStream ω p)).re) := by
-      filter_upwards [streamLift_ae_eq_contStream ω] with p hp
-      rw [hp]
-    have hlevels := ae_levelIntegral_congr hraw hcont hrep
-    let Nr : Set ℝ := {h | h ∈ Ioo 0 1 ∧ levelIntegral h
-      (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) ≠ levelIntegral h
-      (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (contStream ω p)).re)}
-    have hNr : volume Nr = 0 := by
-      have hh := (ae_restrict_iff' measurableSet_Ioo).1 hlevels
-      simpa only [ae_iff, not_imp] using hh
-    obtain ⟨seq, hseq, hlim, hpair⟩ := pairing_limit hp
-      closure_cellSquare_subset_cellNeighbourhood hc hUR hfR hvR
-      (continuous_contStream ω).continuousOn (hN := measure_union_null hN hNr)
-    refine ⟨seq, fun j ↦ ⟨(hseq j).1, fun hj ↦ (hseq j).2.1 (Or.inl hj)⟩, hlim, ?_⟩
-    apply hpair.congr
-    intro j
-    have heq : levelIntegral (seq j)
-        (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (streamLift ω p)).re) = levelIntegral (seq j)
-        (fun p ↦ (liftL2 ω p * (starRingEnd ℂ) (contStream ω p)).re) := by
-      by_contra hj
-      exact (hseq j).2.1 (Or.inr ⟨(hseq j).1, hj⟩)
-    exact heq.symm
 
 end NoEmbeddedEigenvalues
