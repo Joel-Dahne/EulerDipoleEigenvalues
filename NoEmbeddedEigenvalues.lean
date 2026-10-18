@@ -29,6 +29,7 @@ import NoEmbeddedEigenvalues.LiftTorus
 import NoEmbeddedEigenvalues.LineMollifier
 import NoEmbeddedEigenvalues.Main
 import NoEmbeddedEigenvalues.Melnikov
+import NoEmbeddedEigenvalues.PairingLimit
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.OddOdd

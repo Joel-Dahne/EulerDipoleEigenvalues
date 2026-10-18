@@ -109,13 +109,12 @@ The eigenfunction-to-transport bridge is proved. Resonant vanishing is proved fr
 these and the trace, periodization, torus Hölder, orbit-comparison and coarse period
 inputs (`Melnikov.lean`). The canonical-profile inputs (local absolute continuity,
 uniqueness, exponential decay and the constant-one weighted bound) and good windows
-are proved without admissions. Pairing-limit implementation has started: the
-finite-interval ODE/pairing estimates and good-level selector are admission-free.
-A common set of periodic ACL orbit representatives and its good-sequence selection
-are proved from coarea. Nonresonant periodic uniqueness supplies their quarter
-character, avoiding planar a.e. rotation transfer. The remaining assembly is the
-quantitative Hölder orbit/arc comparison, endpoint/tail estimates and four-quarter
-pairing limit; `pairing_limit` itself is still admitted.
+are proved without admissions. The forcing comparison, quarter pairing limit and
+`pairing_limit` are assembled in `PairingLimit.lean` with no `sorry` of their own,
+from the existing trace, Hölder/periodization, orbit-comparison, period-bound and
+coarea prerequisites. Periodic uniqueness supplies the quarter character, so no
+planar a.e. rotation hypothesis on the vorticity is needed. Only the upper bound
+on `exp L` and `L → ∞` enter the limit; sharp period asymptotics are not needed.
 The revised sketches use test H¹ density and separatrix-only integration by
 parts, not orbit regularity at prescribed resonant levels.
 

@@ -9,11 +9,10 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 # Transport pairs
 
 Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
-`lem:good-windows`, `lem:good-level-selection`; stated: `lem:coarea`, `lem:pairing-limit`.
+`lem:good-windows`, `lem:good-level-selection`; stated: `lem:coarea`.
 The good-level selector preserves any a.e. level property and avoids an arbitrary null set.
-The proofs of
-`lem:resonant-vanishing` and `lem:melnikov` are in `ResonantVanishing.lean` and
-`Melnikov.lean`.
+The proofs of `lem:resonant-vanishing`, `lem:melnikov` and `lem:pairing-limit` are in
+`ResonantVanishing.lean`, `Melnikov.lean` and `PairingLimit.lean`.
 
 The eigenvalue equation `H(ω + ψ) = λω`, with `H = -i L₀` and `L₀ = Y · ∇`, is a transport
 equation along the orbits of the dipole flow. A transport pair `(v, f)` on an open union of
@@ -297,7 +296,7 @@ theorem exp_orbitPeriod_ne_one_of_goodWindow {lam h : ℝ} {j : ℤ}
   · have hle' : (j : ℝ) + 1 ≤ n := by exact_mod_cast hgt
     nlinarith [mul_le_mul_of_nonneg_left hle' Real.pi_pos.le]
 
-/-! ### Restriction to orbits, resonances and the pairing limit (stated) -/
+/-! ### Restriction to orbits (stated) -/
 
 open Filter Topology in
 /-- Restriction to almost every orbit (`lem:coarea`): if `L₀g = h` weakly on an orbit annulus,
@@ -311,23 +310,6 @@ theorem ae_orbit_restriction {U : Set (ℝ × ℝ)} {g Lg : ℝ × ℝ → ℂ} 
       (∀ᵐ t, G t = g (dipoleOrbit h t)) ∧ Function.Periodic G (orbitPeriod h) ∧
       (∀ c d, AbsolutelyContinuousOnInterval G c d) ∧
       ∀ᵐ t, HasDerivAt G (Lg (dipoleOrbit h t)) t := by
-  sorry
-
-open Filter Topology in
-/-- The limit of the vorticity pairing (`lem:pairing-limit`). Under the hypotheses of
-    `melnikov`, for every null set `N` there are good levels `h_j → 0` outside `N` along which
-    `∮ Re(v f̄) dt` tends to `∑_γ ∫ Re(Ω_γ ḡ_γ) ds` over the four arcs of the cell. -/
-theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
-    (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
-    (hvR : ∀ᵐ p ∂(volume.restrict U), v (p.2, -p.1) = κ * v p) (hfc : ContinuousOn f U)
-    {N : Set ℝ} (hN : volume N = 0) :
-    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Set.Ioo 0 1 ∧ hs j ∉ N ∧
-        ∃ m : ℤ, |lam * orbitPeriod (hs j) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3) ∧
-      Tendsto hs atTop (𝓝 0) ∧
-      Tendsto (fun j ↦ levelIntegral (hs j) (fun p ↦ (v p * (starRingEnd ℂ) (f p)).re)) atTop
-        (𝓝 (∑ k ∈ Finset.range 4, ∫ s, (canonicalProfile lam (f ∘ cellArc k) s *
-          (starRingEnd ℂ) (f (cellArc k s))).re)) := by
   sorry
 
 end NoEmbeddedEigenvalues

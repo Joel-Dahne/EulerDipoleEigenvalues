@@ -192,8 +192,8 @@ The equation and the representative on that annulus give the conclusion.
 \section{The canonical transport profile on a separatrix arc}
 
 Throughout this section $(v,f)$ is a transport pair on a neighbourhood of the
-closed positive cell that is invariant under $R$ with character
-$\kappa\in\{1,-1\}$: $R^*f=\kappa f$, $R^*v=\kappa v$. Let
+closed positive cell, with $U$ invariant under $R$ and forcing character
+$\kappa\in\{1,-1\}$: $R^*f=\kappa f$. No rotation character of $v$ is needed below. Let
 $g(s)=f(\gamma(s))$ be the trace of $f$ on the arc of
 Definition~\ref{def:separatrix-arc}, with endpoint limits $c_\pm$. Then
 $c_+=\kappa c_-$.
@@ -617,6 +617,90 @@ $f(\gamma_h(t+2L))=\kappa f(\gamma_h(t))$.
 Full-period nonresonance and periodic uniqueness transfer this character to $Z_j$.
 \end{proof}
 
+\begin{lemma}[Forcing comparison near the separatrix]
+\label{lem:forcing-comparison}
+\uses{def:sobolev-local, def:cells, def:period, def:separatrix-arc}
+\lean{NoEmbeddedEigenvalues.exists_forcing_comparison}
+\leanok
+Let $U$ be open and contain $\overline\Cell$, and let $f\in H^2(U)$ be continuous.
+Put $g=f\circ\gamma$, $g_h=f\circ\gamma_h$, and
+$c_+=f(0,-\pi)$, $c_-=f(\pi,0)$. There are $C,M\ge0$ and $0<h_0\le1$ such that
+$|g(s)|\le M$ for every $s$,
+\[
+ |g(s)-c_+|\le Ce^{-s/2}\quad(s\ge0),\qquad
+ |g(s)-c_-|\le Ce^{s/2}\quad(s\le0),
+\]
+and, for $0<h<h_0$ and $|s|\le L(h)$,
+\[
+ |g_h(s)-g(s)|\le Ch^{1/4},\qquad |g_h(s)|\le M.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sobolev-holder, lem:local-to-global, lem:orbit-comparison, lem:separatrix-arc}
+\leanok
+Localize and periodize near the compact closed separatrix segment, as in the
+Melnikov proof, to obtain a uniform $1/2$-H\"older estimate on a neighbourhood
+of that segment. The orbit comparison is $O(\sqrt h)$ uniformly on the quarter,
+so the forcing comparison is $O(h^{1/4})$. The explicit arc satisfies
+$|\gamma(s)-(0,-\pi)|\le2e^{-s}$ and
+$|\gamma(s)-(\pi,0)|\le2e^s$; apply the same H\"older estimate to its saddle
+endpoints. Compactness bounds $g$, and the comparison bounds $g_h$ after
+shrinking $h_0\le1$.
+\end{proof}
+
+\begin{lemma}[Quarter-orbit pairing limit]
+\label{lem:quarter-pairing-limit}
+\uses{def:transport-pair, def:canonical-profile, def:separatrix-arc, def:period,
+  def:cells, lem:good-windows}
+\lean{NoEmbeddedEigenvalues.quarter_pairing_limit}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:melnikov}, let $h_n\in(0,1)$ be any
+sequence of good levels tending to zero, and put $L_n=L(h_n)$.
+Suppose $Z_n$ is locally absolutely continuous, satisfies
+\[
+ Z_n'=i(\lambda Z_n+g_{h_n})\quad\text{a.e.},\qquad
+ Z_n(L_n)=\kappa Z_n(-L_n).
+\]
+Set $V_n=-\lambda Z_n-g_{h_n}$ and $\Omega=\operatorname{canonicalProfile}(\lambda,g)$.
+Then
+\[
+ \int_{-L_n}^{L_n}\operatorname{Re}(V_n\overline{g_{h_n}})\,dt
+ \longrightarrow\int_\R\operatorname{Re}(\Omega\bar g)\,ds.
+\]
+No agreement of $Z_n$ with a prescribed representative of $z$ is assumed in this lemma.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:forcing-comparison, lem:melnikov, lem:trace-h2, lem:separatrix-arc,
+  lem:canonical-profile-ac, lem:canonical-profile-decay, lem:canonical-profile-ode,
+  lem:transport-boundary-estimate, lem:transport-pairing-error,
+  lem:good-windows, lem:period-basic, lem:period-coarse}
+\leanok
+Put $z=-(\Omega+g)/\lambda$, $w_n=Z_n-z$,
+$\epsilon_n=Ch_n^{1/4}$ and $\beta_n=De^{-L_n/2}$.
+The endpoint values satisfy $c_+=\kappa c_-$, so the exponential bounds on
+$g-c_\pm$ and $\Omega$ give
+$|z(L_n)-\kappa z(-L_n)|\le\beta_n$.
+The difference equation and the good-window divisor bound $\delta=2\sin(\pi/12)>0$
+give, by Lemma~\ref{lem:transport-boundary-estimate},
+\[
+ \|w_n\|_\infty\le
+   \frac{\beta_n+2L_n\epsilon_n}{\delta}+2L_n\epsilon_n.
+\]
+Since $|V_n-\Omega|\le|\lambda||w_n|+\epsilon_n$, boundedness of the forcings
+and Lemma~\ref{lem:transport-pairing-error} bound the finite-interval pairing
+error by a constant times
+\[
+ L_n\beta_n+(L_n^2+L_n)\epsilon_n.
+\]
+Here $L_n\to\infty$ and $L_n\le A+\tfrac12\log(1/h_n)$; only the global upper
+exponential bound from Lemma~\ref{lem:period-coarse} is used, not its two-sided
+asymptotics. Thus $L_ne^{-L_n/2}\to0$ and $L_n^2h_n^{1/4}\to0$.
+Finally $|\Omega g|\le BM e^{-|s|/2}$ is integrable, so the truncated canonical
+pairing tends to the full integral.
+\end{proof}
+
 \begin{lemma}[Limit of the vorticity pairing]
 \label{lem:pairing-limit}
 \uses{def:canonical-profile, def:transport-pair, lem:good-windows, def:cell-arcs, def:level-integral, def:cells}
@@ -633,47 +717,27 @@ their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile-ac, lem:canonical-profile-decay,
-  lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder,
-  lem:local-to-global, lem:orbit-comparison,
-  lem:good-windows, lem:separatrix-arc,
-  lem:period-coarse, lem:period-orbit,
-  lem:good-level-transport, lem:transport-boundary-estimate, lem:transport-pairing-error}
-Use Lemma~\ref{lem:good-level-transport} to choose good levels $h_j\to0$
-outside $N$ carrying periodic ACL representatives $z_h$ with
-$z_h(L)=\kappa z_h(-L)$. This avoids transferring the planar
-almost-everywhere rotation identity for $v$ to individual orbits:
-periodic uniqueness supplies the character from the forcing alone.
-The associated $v_h=-\lambda z_h-g_h$ agrees almost everywhere with
-the original orbit restriction, so its pairing is the same.
+\uses{lem:good-level-transport, lem:quarter-pairing-limit, lem:period-orbit}
+\leanok
+Choose the good sequence and representatives $Z_j$ from
+Lemma~\ref{lem:good-level-transport}. Then
+$V_j=-\lambda Z_j-g_{h_j}$ agrees almost everywhere with the original
+vorticity restriction. Both $V_j$ and $g_{h_j}$ have quarter character
+$\kappa$, so their real pairing is $2L(h_j)$-periodic. Its integral over
+the full period is four times the base-quarter integral.
 
-Localize the H\"older estimate near the closed cell as in the Melnikov
-proof. On the base quarter,
-$\|g_h-g\|_\infty\le C_\alpha h^{\alpha/2}$ and both forcings are
-uniformly bounded. Put $z=-(\Omega+g)/\lambda$ and $w=z_h-z$.
-Then $(P-\lambda)w=g_h-g$ and
-\[
-  w(L)-\kappa w(-L)=\kappa z(-L)-z(L)=O(e^{-\alpha L}),
-\]
-since the constant endpoint values cancel.
-Variation of constants determines $w(-L)$ with denominator
-$e^{2i\lambda L}-\kappa$. On good windows this denominator is bounded
-away from zero. It follows that
-\[
-  \|w\|_\infty
-  \le C\bigl(\|g_h-g\|_{L^1(-L,L)}
-      +|\kappa z(-L)-z(L)|\bigr),\qquad
-  \|v_h-\Omega\|_\infty
-  \le C_\alpha h^{\alpha/2}|\log h|.
-\]
-The interval length is $2L=O(|\log h|)$, so the pairing error is
-$O(h^{\alpha/2}|\log h|^2)$. The tails of $\Omega\bar g$ vanish by
-exponential decay and boundedness of $g$. Apply the same argument to
-the other three rotated quarters and sum the four limits.
-
-The preceding error and tail estimates apply eventually on the selected
-sequence and prove the claimed limit.
+On the arcs, $g_k=\kappa^k g$ and linearity of the canonical profile gives
+$\Omega_k=\kappa^k\Omega$. Since $|\kappa|=1$, all four arc pairings are
+also equal. Multiply the limit of Lemma~\ref{lem:quarter-pairing-limit} by four.
 \end{proof}
+
+\begin{remark}[Digest note: the vorticity rotation hypothesis]
+The former Lean statement additionally assumed $v\circ R=\kappa v$ almost everywhere.
+The completed proof does not need it: on the selected nonresonant levels, periodic
+uniqueness transfers the forcing character to $Z_j$, hence to $V_j$.
+The redundant hypothesis has been removed. No transfer of a planar exceptional
+rotation set to the selected orbits is needed.
+\end{remark}
 
 \section{Weighted transport gains near the saddles}
 

@@ -127,8 +127,9 @@ motivation, and standard facts cited rather than proved.
   `ResonantVanishing.lean` proves the orbitwise transport equation, the mode relation and
   resonant vanishing. `Melnikov.lean` proves the Melnikov condition (arc trace, Hölder
   continuity near the separatrix segment, resonant levels, quarter identity) and
-  specializes it and the pairing limit to eigenfunctions (`ee_melnikov`,
-  `ee_transport_traces`).
+  specializes it to eigenfunctions (`ee_melnikov`). `PairingLimit.lean` proves the
+  uniform Hölder forcing comparison, quarter-orbit pairing limit and full pairing
+  limit, and specializes Melnikov and that limit to eigenfunctions (`ee_transport_traces`).
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
   separatrix arc, as explicit graphs in diagonal coordinates; `SeparatrixTraces.lean` defines

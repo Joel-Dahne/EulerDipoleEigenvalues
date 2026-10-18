@@ -7,7 +7,7 @@ import NoEmbeddedEigenvalues.DuBoisReymond
 import NoEmbeddedEigenvalues.SegmentEstimates
 import NoEmbeddedEigenvalues.QuarterOrbits
 import NoEmbeddedEigenvalues.SeparatrixTraces
-import NoEmbeddedEigenvalues.Melnikov
+import NoEmbeddedEigenvalues.PairingLimit
 
 /-!
 # Even–even exclusion
@@ -28,7 +28,7 @@ identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`
 `lem:ee-gradient-traces` (from `SeparatrixTraces.lean` and `lem:ee-first-trace-limit`). This
 module has no `sorry` of its own. The interfaces
 `lem:canonical-arc-form` and `lem:ee-transport-traces` are proved in
-`CanonicalBoundaryForm.lean` and `EigenfunctionTransport.lean`. Levels are handled in orbit
+`CanonicalBoundaryForm.lean` and `PairingLimit.lean`. Levels are handled in orbit
 coordinates, and one sequence avoids the null sets of both the virial and trace statements.
 The center is cut out of the virial identity, so it is only needed for fields supported in
 an annulus.

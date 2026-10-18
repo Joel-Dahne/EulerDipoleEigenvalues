@@ -26,14 +26,14 @@ the nodes, not reproduced here. This was not a full independent proof audit.
   the area formula and saddle-distance estimates.
 - Weighted boundary positivity and the canonical boundary-form interface are
   proved. Positivity uses interval exhaustion, not smooth density.
-- The eigenfunction transport and boundary-regularity assemblies are proved
-  from the remaining generic transport, trace and geometry inputs.
+- The eigenfunction transport, pairing-limit and boundary-regularity assemblies
+  are proved from the remaining trace, coarea and geometry inputs.
 
 ## Remaining routes
 
 The open analytic work is owned by [shared infrastructure](shared.md):
 Sobolev/trace bridges, orbit charts and bounds, stronger transversal estimates,
-H¹/L² virials, and the generic transport limits.
+H¹/L² virials, and the analytic prerequisites of the generic transport limits.
 
 The current even–even route does **not** require finite-p Sobolev embedding,
 the elliptic-integral period identity, sharp period asymptotics, or transport
@@ -42,12 +42,10 @@ self-adjointness. Keep these out of its prerequisites unless the argument change
 All transversal mollifier lemmas and the eigenfunction transport pair are proved;
 `virial_l2` now rests on the full weak-gradient chain rules and the chart inputs.
 
-The largest reviewed work packages are the fractional trace infrastructure,
-full-gradient/stronger transversal estimates, and pairing-limit assembly.
-Relative difficulty assessments are preliminary, not timing estimates. Pairing-limit
-work now has the finite-interval estimates and a good sequence carrying periodic ACL
-transport representatives; the comparison and tail-limit assembly remains (see
-[shared infrastructure](shared.md)).
+The largest reviewed work packages are the fractional trace infrastructure and
+full-gradient/stronger transversal estimates. Pairing-limit assembly is complete
+from the existing analytic prerequisites; see [shared infrastructure](shared.md).
+Relative difficulty assessments are preliminary, not timing estimates.
 
 ## Deferred possibilities
 
@@ -63,4 +61,5 @@ transport representatives; the comparison and tail-limit assembly remains (see
   [digest notes](../../blueprint/src/chapters/notes.tex).
 - [EvenEven.lean](../../NoEmbeddedEigenvalues/EvenEven.lean),
   [SeparatrixTraces.lean](../../NoEmbeddedEigenvalues/SeparatrixTraces.lean) and
-  [EigenfunctionTransport.lean](../../NoEmbeddedEigenvalues/EigenfunctionTransport.lean).
+  [EigenfunctionTransport.lean](../../NoEmbeddedEigenvalues/EigenfunctionTransport.lean)
+  and [PairingLimit.lean](../../NoEmbeddedEigenvalues/PairingLimit.lean).
