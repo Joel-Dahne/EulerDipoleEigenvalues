@@ -8,8 +8,8 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 /-!
 # Transport pairs
 
-Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`; stated:
-`lem:melnikov`, `lem:good-windows`, `lem:coarea`, `lem:resonant-vanishing`,
+Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
+`lem:good-windows`; stated: `lem:melnikov`, `lem:coarea`, `lem:resonant-vanishing`,
 `lem:pairing-limit`.
 
 The eigenvalue equation `H(ω + ψ) = λω`, with `H = -i L₀` and `L₀ = Y · ∇`, is a transport
@@ -122,7 +122,7 @@ theorem isTransportPair_of_isEigenSolution {lam : ℝ} (hlam : lam ≠ 0) {ω : 
   filter_upwards [liftL2_smul_ae (I * lam) ω] with p hp
   rw [hp, mul_assoc]
 
-/-! ### Statements (`lem:melnikov`, `lem:good-windows`) -/
+/-! ### Melnikov (stated) and good windows (`lem:melnikov`, `lem:good-windows`) -/
 
 /-- The Melnikov condition. Let `(v, f)` be a transport pair on a neighbourhood of the closed
     cell square that transforms with the character `κ = ±1` under the rotation
@@ -136,18 +136,126 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
       ∫ s, profileIntegrand lam (f ∘ separatrixArc) s = 0 := by
   sorry
 
+open Filter Topology in
 /-- The good windows `|λS(h) - 2π(j + ½)| < π/3` have positive measure near `h = 0`. -/
 theorem volume_goodWindows_pos {lam : ℝ} (hlam : lam ≠ 0) {η : ℝ} (hη : 0 < η) :
     0 < volume {h ∈ Set.Ioo 0 η |
       ∃ j : ℤ, |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3} := by
-  sorry
+  have hpi := Real.pi_pos
+  set η' := min η (1 / 2)
+  have hη' : 0 < η' := lt_min hη (by norm_num)
+  have hη'1 : η' < 1 := (min_le_right _ _).trans_lt (by norm_num)
+  have hcont : ContinuousOn orbitPeriod (Set.Ioo 0 1) := continuousOn_orbitPeriod
+  -- A level `hs ∈ (0, η')` where `λS` is exactly a phase centre.
+  obtain ⟨hs, hs0, hsη, j, hj⟩ : ∃ hs, 0 < hs ∧ hs < η' ∧ ∃ j : ℤ,
+      lam * orbitPeriod hs = 2 * Real.pi * (j + 1 / 2) := by
+    set μ := |lam|
+    have hμ : 0 < μ := abs_pos.2 hlam
+    set h₀ := η' / 2
+    have h₀0 : 0 < h₀ := by positivity
+    have h₀η : h₀ < η' := half_lt_self hη'
+    set j₀ : ℤ := ⌈μ * orbitPeriod h₀ / (2 * Real.pi)⌉
+    set c := 2 * Real.pi * (j₀ + 1 / 2)
+    have hc₀ : μ * orbitPeriod h₀ ≤ c := by
+      have h1 : μ * orbitPeriod h₀ / (2 * Real.pi) ≤ j₀ := Int.le_ceil _
+      have h2 := (div_le_iff₀ (by positivity : (0 : ℝ) < 2 * Real.pi)).1 h1
+      simp only [c]
+      linarith
+    have hev : ∀ᶠ h in 𝓝[>] (0 : ℝ), c ≤ μ * orbitPeriod h ∧ h < h₀ :=
+      ((tendsto_orbitPeriod_atTop.const_mul_atTop hμ).eventually_ge_atTop c).and
+        (Filter.eventually_of_mem (Ioo_mem_nhdsGT h₀0) fun h hh ↦ hh.2)
+    obtain ⟨h₁, ⟨hc₁, h₁h₀⟩, h₁0⟩ := (hev.and self_mem_nhdsWithin).exists
+    have hsub : Set.Icc h₁ h₀ ⊆ Set.Ioo 0 1 :=
+      fun h hh ↦ ⟨(show (0 : ℝ) < h₁ from h₁0).trans_le hh.1, by linarith [hh.2]⟩
+    obtain ⟨hs, hsI, hsc⟩ := intermediate_value_Icc' h₁h₀.le
+      ((hcont.mono hsub).const_smul μ) ⟨hc₀, hc₁⟩
+    refine ⟨hs, (show (0 : ℝ) < h₁ from h₁0).trans_le hsI.1, hsI.2.trans_lt h₀η, ?_⟩
+    simp only [Pi.smul_apply, smul_eq_mul] at hsc
+    rcases lt_or_gt_of_ne hlam with hneg | hpos
+    · refine ⟨-j₀ - 1, ?_⟩
+      have : lam = -μ := by simp only [μ, abs_of_neg hneg, neg_neg]
+      rw [this, neg_mul, hsc]
+      push_cast
+      ring
+    · refine ⟨j₀, ?_⟩
+      have : lam = μ := by simp only [μ, abs_of_pos hpos]
+      rw [this, hsc]
+  -- A neighbourhood of `hs` lies in the good windows.
+  have hca : ContinuousAt (fun h ↦ lam * orbitPeriod h) hs :=
+    continuousAt_const.mul (hcont.continuousAt (Ioo_mem_nhds hs0 (hsη.trans hη'1)))
+  obtain ⟨δ, hδ, hδc⟩ := Metric.continuousAt_iff.1 hca (Real.pi / 3) (by positivity)
+  set ε := min δ (min hs (η - hs))
+  have hε : 0 < ε := lt_min hδ (lt_min hs0 (by linarith [min_le_left η (1 / 2)]))
+  have hsubset : Set.Ioo (hs - ε) (hs + ε) ⊆ {h ∈ Set.Ioo 0 η |
+      ∃ j : ℤ, |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3} := by
+    intro h hh
+    have e1 : ε ≤ δ := min_le_left _ _
+    have e2 : ε ≤ hs := (min_le_right _ _).trans (min_le_left _ _)
+    have e3 : ε ≤ η - hs := (min_le_right _ _).trans (min_le_right _ _)
+    refine ⟨⟨by linarith [hh.1], by linarith [hh.2]⟩, j, ?_⟩
+    have hd : dist h hs < δ := by
+      rw [Real.dist_eq, abs_lt]
+      constructor <;> linarith [hh.1, hh.2]
+    have := hδc hd
+    rwa [Real.dist_eq, hj] at this
+  refine lt_of_lt_of_le ?_ (measure_mono hsubset)
+  rw [Real.volume_Ioo]
+  exact ENNReal.ofReal_pos.2 (by linarith)
 
 /-- On a good window `e^{iλS(h)/4}` stays at distance at least `2 sin(π/12)` from `κ = ±1`. -/
 theorem norm_exp_sub_ge_of_goodWindow {lam h : ℝ} {j : ℤ}
     (hj : |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3) {κ : ℂ}
     (hκ : κ = 1 ∨ κ = -1) :
     2 * Real.sin (Real.pi / 12) ≤ ‖exp (I * (lam * orbitPeriod h / 4)) - κ‖ := by
-  sorry
+  set θ : ℝ := lam * orbitPeriod h / 4
+  set ε := lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)
+  have hpi := Real.pi_pos
+  -- `cos 2θ = ∓ sin(ε/2)` is at most `1/2` in absolute value.
+  have h2θ : 2 * θ = (j : ℝ) * Real.pi + Real.pi / 2 + ε / 2 := by simp only [θ, ε]; ring
+  have hsin : |Real.sin (ε / 2)| ≤ 1 / 2 := by
+    rw [abs_lt] at hj
+    have hb : |ε / 2| ≤ Real.pi / 6 := by rw [abs_le]; constructor <;> linarith
+    rw [← Real.sin_pi_div_six, abs_le]
+    constructor
+    · rw [← neg_le_neg_iff, neg_neg, ← Real.sin_neg]
+      exact Real.sin_le_sin_of_le_of_le_pi_div_two (by linarith [(abs_le.1 hb).2])
+        (by linarith) (by linarith [(abs_le.1 hb).2])
+    · exact Real.sin_le_sin_of_le_of_le_pi_div_two (by linarith [(abs_le.1 hb).1])
+        (by linarith) (by linarith [(abs_le.1 hb).2])
+  have hcos2 : |Real.cos (2 * θ)| ≤ 1 / 2 := by
+    rw [h2θ, Real.cos_add, Real.cos_add_pi_div_two, Real.sin_add_pi_div_two,
+      Real.sin_int_mul_pi]
+    simp only [neg_zero, zero_mul, zero_sub, abs_neg, abs_mul, Real.abs_cos_int_mul_pi,
+      one_mul]
+    exact hsin
+  have hcos : Real.cos θ ^ 2 ≤ 3 / 4 := by
+    have := Real.cos_sq θ
+    rw [abs_le] at hcos2
+    linarith [hcos2.2]
+  -- `|e^{iθ} - κ|² = 2 - 2κ cos θ ≥ 2 - √3 = 4 sin²(π/12)`.
+  have hκc : κ = ((κ.re : ℝ) : ℂ) := by rcases hκ with rfl | rfl <;> simp
+  have hκ2 : κ.re ^ 2 = 1 := by rcases hκ with rfl | rfl <;> simp
+  have hexp : exp (I * (lam * orbitPeriod h / 4)) = exp ((θ : ℂ) * I) := by
+    simp only [θ]; push_cast; ring_nf
+  have hnorm : ‖exp (I * (lam * orbitPeriod h / 4)) - κ‖ ^ 2 = 2 - 2 * κ.re * Real.cos θ := by
+    rw [hexp, Complex.sq_norm, Complex.normSq_apply, hκc]
+    simp only [Complex.sub_re, Complex.sub_im, Complex.exp_ofReal_mul_I_re,
+      Complex.exp_ofReal_mul_I_im, Complex.ofReal_re, Complex.ofReal_im, sub_zero]
+    nlinarith [Real.sin_sq_add_cos_sq θ]
+  have hs3 : (2 * Real.sin (Real.pi / 12)) ^ 2 = 2 - √3 := by
+    have h2 := Real.cos_two_mul (Real.pi / 12)
+    rw [show 2 * (Real.pi / 12) = Real.pi / 6 by ring, Real.cos_pi_div_six] at h2
+    rw [mul_pow, Real.sin_sq]
+    linarith
+  have hkc : κ.re * Real.cos θ ≤ √3 / 2 := by
+    have h3 : (κ.re * Real.cos θ) ^ 2 ≤ (√3 / 2) ^ 2 := by
+      rw [mul_pow, hκ2, one_mul, div_pow, Real.sq_sqrt (by norm_num)]
+      linarith
+    exact abs_le_of_sq_le_sq' h3 (by positivity) |>.2
+  have hsq : (2 * Real.sin (Real.pi / 12)) ^ 2 ≤ ‖exp (I * (lam * orbitPeriod h / 4)) - κ‖ ^ 2 := by
+    rw [hs3, hnorm]
+    linarith
+  exact (abs_le_of_sq_le_sq' hsq (norm_nonneg _)).2
 
 /-! ### Restriction to orbits, resonances and the pairing limit (stated) -/
 

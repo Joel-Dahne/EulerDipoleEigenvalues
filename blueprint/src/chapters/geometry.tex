@@ -1195,6 +1195,35 @@ only. The full two-sided coarse node is blueprint-only and is not
 marked as stated or proved in Lean.
 \end{remark}
 
+\begin{lemma}[Continuity and blow-up of the period]
+\label{lem:period-basic}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.continuousOn_eighthPeriod,
+  NoEmbeddedEigenvalues.continuousOn_orbitPeriod,
+  NoEmbeddedEigenvalues.log_le_eighthPeriod,
+  NoEmbeddedEigenvalues.tendsto_orbitPeriod_atTop}
+\leanok
+$L$ and $S$ are continuous on $(0,1)$, and $L(h)\ge\tfrac12\log(1/h)$ there. In particular
+$S(h)\to\infty$ as $h\to0^+$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-integral}
+\leanok
+Use the second formula of Lemma~\ref{lem:period-integral},
+$L(h)=\int_0^1dt/\bigl(\sqrt{1-(1-h)t^2}\sqrt{1+h-t^2}\bigr)$. Both square roots are at least
+$\sqrt h$, so near any $h_0\in(0,1)$ the integrand is bounded by $2/h_0$, and dominated
+convergence gives continuity. Both square roots are also at most $\sqrt{1-t^2+h}$, and
+$1-t^2+h\le2(1-t)+h$ on $[0,1]$, so
+$L(h)\ge\int_0^1dt/(2(1-t)+h)=\tfrac12\log((2+h)/h)\ge\tfrac12\log(1/h)$.
+\end{proof}
+
+\begin{remark}
+This is the elementary half of Lemma~\ref{lem:period-coarse}: continuity needs no
+differentiation under the integral, and the lower bound needs no corner dynamics. It is
+what the good windows (Lemma~\ref{lem:good-windows}) use.
+\end{remark}
+
 \begin{lemma}[The elliptic-integral identity for the period]
 \label{lem:period-elliptic}
 \uses{def:period}

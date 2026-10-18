@@ -6,8 +6,8 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 /-!
 # The period function of the dipole orbits
 
-Blueprint: `def:period`, `lem:period-integral`; `lem:period` (stated: `L' < 0`, the
-elliptic-integral formula, asymptotics; monotonicity is derived from `L' < 0`).
+Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`; `lem:period` (stated:
+`L' < 0`, the elliptic-integral formula, asymptotics; monotonicity is derived from `L' < 0`).
 
 For `0 < h < 1` the orbit on the level `{Ψ = 2h}` in the positive cell takes flow time
 `L(h) = ∫₀^{arccos √h} da / √(cos² a - h²)` to go from its point on the axis `a = 0` to
@@ -137,6 +137,111 @@ theorem eighthPeriod_le_inv {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : eighthPeriod h
         intervalIntegral.integral_mono_on zero_le_one
           (hcont.intervalIntegrable_of_Icc zero_le_one) intervalIntegrable_const hb
     _ = 1 / h := by simp
+
+/-- `L(h) ≥ ½ log(1/h)`. In the second formula for `L(h)` both square roots are at most
+`√(1 - t² + h)`, and `1 - t² + h ≤ 2(1 - t) + h` on `[0, 1]`, so
+`L(h) ≥ ∫₀¹ dt / (2(1 - t) + h) = ½ log((2 + h)/h)`. -/
+theorem log_le_eighthPeriod {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    log (1 / h) / 2 ≤ eighthPeriod h := by
+  rw [eighthPeriod_eq h0 h1]
+  have hA : ∀ t ∈ Set.Icc (0 : ℝ) 1, 0 < 1 - (1 - h) * t ^ 2 := fun t ht ↦ by
+    have ht2 : t ^ 2 ≤ 1 := by nlinarith [ht.1, ht.2]
+    nlinarith [mul_le_mul_of_nonneg_left ht2 (by linarith : (0 : ℝ) ≤ 1 - h)]
+  have hB : ∀ t ∈ Set.Icc (0 : ℝ) 1, 0 < 1 + h - t ^ 2 := fun t ht ↦ by
+    nlinarith [ht.1, ht.2]
+  have hcont : ContinuousOn (fun t : ℝ ↦ 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)))
+      (Set.Icc 0 1) := by
+    apply ContinuousOn.div continuousOn_const (by fun_prop)
+    intro t ht
+    exact (mul_pos (sqrt_pos.2 (hA t ht)) (sqrt_pos.2 (hB t ht))).ne'
+  have hD : ∀ t ∈ Set.Icc (0 : ℝ) 1, 0 < -2 * t + (2 + h) := fun t ht ↦ by linarith [ht.2]
+  have hcont' : ContinuousOn (fun t : ℝ ↦ 1 / (-2 * t + (2 + h))) (Set.Icc 0 1) :=
+    continuousOn_const.div (by fun_prop) fun t ht ↦ (hD t ht).ne'
+  have hval : ∫ t in (0 : ℝ)..1, 1 / (-2 * t + (2 + h)) = log ((2 + h) / h) / 2 := by
+    rw [intervalIntegral.integral_comp_mul_add (f := fun x ↦ 1 / x) (by norm_num : (-2 : ℝ) ≠ 0),
+      integral_one_div_of_pos (by linarith) (by linarith)]
+    rw [smul_eq_mul, mul_zero, zero_add, mul_one, show -2 + (2 + h) = h by ring,
+      show h / (2 + h) = ((2 + h) / h)⁻¹ by field_simp, log_inv]
+    ring
+  calc log (1 / h) / 2 ≤ log ((2 + h) / h) / 2 := by
+        refine div_le_div_of_nonneg_right (log_le_log (by positivity) ?_) (by norm_num)
+        exact div_le_div_of_nonneg_right (by linarith) h0.le
+    _ = ∫ t in (0 : ℝ)..1, 1 / (-2 * t + (2 + h)) := hval.symm
+    _ ≤ ∫ t in (0 : ℝ)..1, 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)) := by
+      refine intervalIntegral.integral_mono_on zero_le_one
+        (hcont'.intervalIntegrable_of_Icc zero_le_one)
+        (hcont.intervalIntegrable_of_Icc zero_le_one) fun t ht ↦ ?_
+      have hc : 0 ≤ 1 - t ^ 2 + h := by nlinarith [ht.1, ht.2]
+      have hle : √(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2) ≤ -2 * t + (2 + h) := by
+        have h1' : √(1 - (1 - h) * t ^ 2) ≤ √(1 - t ^ 2 + h) :=
+          sqrt_le_sqrt (by
+            nlinarith [mul_le_mul_of_nonneg_left (show t ^ 2 ≤ 1 by nlinarith [ht.1, ht.2]) h0.le])
+        have h2' : √(1 + h - t ^ 2) = √(1 - t ^ 2 + h) := by ring_nf
+        rw [h2']
+        calc √(1 - (1 - h) * t ^ 2) * √(1 - t ^ 2 + h) ≤ √(1 - t ^ 2 + h) * √(1 - t ^ 2 + h) :=
+              mul_le_mul_of_nonneg_right h1' (sqrt_nonneg _)
+          _ = 1 - t ^ 2 + h := mul_self_sqrt hc
+          _ ≤ -2 * t + (2 + h) := by nlinarith [ht.1, ht.2]
+      exact one_div_le_one_div_of_le (mul_pos (sqrt_pos.2 (hA t ht)) (sqrt_pos.2 (hB t ht))) hle
+
+open Filter Topology in
+/-- `L` is continuous on `(0, 1)`: dominated convergence in the second formula, whose integrand
+is at most `1/h`. -/
+theorem continuousOn_eighthPeriod : ContinuousOn eighthPeriod (Set.Ioo 0 1) := by
+  intro h₀ hh₀
+  apply ContinuousAt.continuousWithinAt
+  set F : ℝ → ℝ → ℝ := fun h t ↦ 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2))
+  have he : eighthPeriod =ᶠ[𝓝 h₀] fun h ↦ ∫ t in (0 : ℝ)..1, F h t := by
+    filter_upwards [Ioo_mem_nhds hh₀.1 hh₀.2] with h hh using eighthPeriod_eq hh.1 hh.2
+  refine ContinuousAt.congr ?_ he.symm
+  have hnear : ∀ᶠ h in 𝓝 h₀, h ∈ Set.Ioo (h₀ / 2) 1 :=
+    Ioo_mem_nhds (by linarith [hh₀.1]) hh₀.2
+  refine intervalIntegral.continuousAt_of_dominated_interval (bound := fun _ ↦ 2 / h₀)
+    (Eventually.of_forall fun h ↦ (by fun_prop : Measurable (F h)).aestronglyMeasurable)
+    ?_ intervalIntegrable_const ?_
+  · filter_upwards [hnear] with h hh
+    refine Eventually.of_forall fun t ht ↦ ?_
+    rw [Set.uIoc_of_le zero_le_one] at ht
+    have h0 : 0 < h := by linarith [hh.1, hh₀.1]
+    have ht2 : t ^ 2 ≤ 1 := by nlinarith [ht.1, ht.2]
+    have hA : √h ≤ √(1 - (1 - h) * t ^ 2) := sqrt_le_sqrt (by
+      nlinarith [mul_le_mul_of_nonneg_left ht2 (by linarith [hh.2] : (0 : ℝ) ≤ 1 - h)])
+    have hB : √h ≤ √(1 + h - t ^ 2) := sqrt_le_sqrt (by linarith)
+    have hpos : 0 < √h := sqrt_pos.2 h0
+    have hprod : h ≤ √(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2) := by
+      calc h = √h * √h := (mul_self_sqrt h0.le).symm
+        _ ≤ _ := mul_le_mul hA hB hpos.le (hpos.le.trans hA)
+    have hF : 0 ≤ F h t := by simp only [F]; positivity
+    rw [Real.norm_eq_abs, abs_of_nonneg hF]
+    calc F h t ≤ 1 / h := one_div_le_one_div_of_le h0 hprod
+      _ ≤ 2 / h₀ := by
+        rw [div_le_div_iff₀ h0 (by linarith [hh₀.1])]
+        linarith [hh.1]
+  · refine Eventually.of_forall fun t ht ↦ ?_
+    rw [Set.uIoc_of_le zero_le_one] at ht
+    have ht2 : t ^ 2 ≤ 1 := by nlinarith [ht.1, ht.2]
+    have hA : 0 < 1 - (1 - h₀) * t ^ 2 := by
+      nlinarith [mul_le_mul_of_nonneg_left ht2 (by linarith [hh₀.2] : (0 : ℝ) ≤ 1 - h₀),
+        hh₀.1]
+    have hB : 0 < 1 + h₀ - t ^ 2 := by linarith [hh₀.1]
+    exact continuousAt_const.div (by fun_prop)
+      (mul_pos (sqrt_pos.2 hA) (sqrt_pos.2 hB)).ne'
+
+/-- The period is continuous on `(0, 1)`. -/
+theorem continuousOn_orbitPeriod : ContinuousOn orbitPeriod (Set.Ioo 0 1) :=
+  continuousOn_eighthPeriod.const_smul (8 : ℝ)
+
+open Filter Topology in
+/-- The period tends to infinity at the separatrix. -/
+theorem tendsto_orbitPeriod_atTop : Tendsto orbitPeriod (𝓝[>] 0) atTop := by
+  have hl : Tendsto (fun h : ℝ ↦ 4 * log (1 / h)) (𝓝[>] 0) atTop := by
+    simp only [one_div]
+    exact (tendsto_log_atTop.comp tendsto_inv_nhdsGT_zero).const_mul_atTop (by norm_num)
+  refine tendsto_atTop_mono' _ ?_ hl
+  filter_upwards [Ioo_mem_nhdsGT (show (0 : ℝ) < 1 by norm_num)] with h hh
+  have := log_le_eighthPeriod hh.1 hh.2
+  unfold orbitPeriod
+  linarith
 
 theorem orbitPeriod_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < orbitPeriod h := by
   have := eighthPeriod_pos h0 h1

@@ -61,7 +61,8 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 - Period regularity comes from the regular fixed-interval integral. Coarse
   logarithmic bounds come independently from corner dynamics and endpoint
   distance. The full `lem:period-coarse` statement is blueprint-only; its Lean
-  link covers just the global upper exponential bound.
+  link covers just the global upper exponential bound. Continuity of `S` and the
+  elementary lower bound `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) are proved.
 - The smooth action-angle chart is moderate conditional on these inputs;
   full weak-gradient transfer is medium–high. General chain rules use local
   W¹,¹ approximation; compact-band H¹ specializations may suffice for virials.
@@ -105,7 +106,7 @@ See the [transport blueprint](../../blueprint/src/chapters/transport.tex) and
 
 The eigenfunction-to-transport bridge is proved; resonant vanishing and
 Melnikov are medium–high. Canonical-profile uniqueness/decay/weighted bounds
-are moderate; good windows are low–moderate. Pairing-limit assembly is high,
+are moderate; good windows are proved without admissions. Pairing-limit assembly is high,
 with representative compatibility and common exceptional sets the main work.
 The revised sketches use test H¹ density and separatrix-only integration by
 parts, not orbit regularity at prescribed resonant levels.

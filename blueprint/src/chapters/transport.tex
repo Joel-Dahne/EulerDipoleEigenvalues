@@ -356,18 +356,22 @@ $|e^{i\lambda S(h)/4}-\kappa|\ge2\sin(\pi/12)$ for $\kappa=\pm1$
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-regularity, lem:period-coarse}
-The continuous, strictly decreasing $S$ tends to $\infty$ at zero.
-Choose an integer phase centre $2\pi(j+\tfrac12)$ sufficiently far in
-the direction of the sign of $\lambda$. The intermediate value theorem
-puts a level with exactly that phase inside $(0,\min\{\eta,1\})$.
-The strict phase window then has a nonempty open preimage there,
-hence positive measure.
+\uses{lem:period-basic}
+\leanok
+$S$ is continuous on $(0,1)$ and tends to $\infty$ at zero (Lemma~\ref{lem:period-basic});
+monotonicity is not needed. Fix $h_0\in(0,\min\{\eta,1\})$ and choose a phase centre
+$c=2\pi(j+\tfrac12)\ge|\lambda|S(h_0)$. Since $|\lambda|S\to\infty$, some $h_1<h_0$ has
+$|\lambda|S(h_1)\ge c$, and the intermediate value theorem gives a level in $[h_1,h_0]$
+with $|\lambda|S=c$; for $\lambda<0$ the phase is $-c=2\pi(-j-1+\tfrac12)$. By continuity
+the strict window contains an interval around this level, hence has positive measure.
 
-On a window, $\lambda S/4$ lies within $\pi/12$ of an odd multiple of
+On a window, $\theta=\lambda S/4$ lies within $\pi/12$ of an odd multiple of
 $\pi/4$, so its angular distance from both $1$ and $-1$ on the circle
 is at least $\pi/6$. The corresponding chord length is at least
-$2\sin(\pi/12)$.
+$2\sin(\pi/12)$. In the Lean proof this reads
+$|e^{i\theta}-\kappa|^2=2-2\kappa\cos\theta$ and
+$\cos^2\theta=\tfrac12(1+\cos2\theta)\le\tfrac34$, since $\cos2\theta=\pm\sin(\epsilon/2)$
+with $|\epsilon|<\pi/3$ the distance of $\lambda S$ from the phase centre.
 \end{proof}
 
 \begin{remark}
