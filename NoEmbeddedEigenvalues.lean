@@ -31,6 +31,7 @@ import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.Period
+import NoEmbeddedEigenvalues.ResonantVanishing
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup

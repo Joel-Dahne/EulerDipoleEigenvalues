@@ -125,26 +125,42 @@ $f_k(h_k)=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:coarea, lem:transport-unknown, lem:orbit-coordinates-area,
-  lem:period-regularity, lem:flow-continuity}
+\uses{lem:coarea, lem:transport-unknown, lem:orbit-coordinates-area, lem:action-angle-chart,
+  lem:period-regularity, lem:period-basic, lem:flow-continuity}
+\leanok
 Apply Lemma~\ref{lem:coarea} to the transport unknown
 (Lemma~\ref{lem:transport-unknown}). On almost every orbit its ACL
-representative solves $(P-\lambda)Z=f\circ\gamma_h$.
-Integrate this equation against the periodic exponential over one
-period; the boundary terms cancel by periodicity. Substitute
-$v=-\lambda z-f$ to obtain the mode relation.
+representative $Z$ solves $Z'=i(\lambda Z+F)$ with $F=f\circ\gamma_h$; then $F$ is
+automatically integrable over a period, being almost everywhere $-iZ'-\lambda Z$.
+Integrate $(e^{-ikbt}Z)'$ over one period; the boundary terms cancel since $Z$ and
+$e^{-ikbt}$ are $S(h)$-periodic. This gives $(kb-\lambda)Z_k=F_k$, and substituting
+$v=-\lambda z-f$ gives the mode relation.
 
-On each compact regular level interval, the area formula and
-Cauchy--Schwarz show that $v_k$ is square integrable in $h$.
-When $f$ is continuous, write its mode integral in normalized time on
-$[0,1]$ to see that $f_k$ is continuous in $h$.
-At a resonance $k\ne0$ since $\lambda\ne0$; $S'<0$ makes
-$kb(h)-\lambda$ have a simple zero. If $f_k(h_k)\ne0$, continuity bounds
-the numerator away from zero nearby, so the mode relation forces
-$|v_k(h)|\ge c/|h-h_k|$ for almost every nearby $h$, contradicting local
-square integrability. The argument uses the mode relation near $h_k$,
-not the weak orbit equation at the particular level $h_k$.
+On a regular annulus the modes are integrable in $h$: $|v_k(h)|\le\int|v(\gamma_h(\theta S))|\,d\theta$,
+and $dx\,dy=2S(h)\,dh\,d\theta$ with $S\ge4\log(1/h_2)$ there (Lemma~\ref{lem:period-basic})
+gives $\int_{h_1}^{h_2}|v_k|\,dh\le C\|v\|_{L^1(A)}<\infty$. Here $v$ is first changed on a
+null set to a measurable function; by the area formula this changes almost every orbit
+restriction only on a null set of times.
+When $f$ is continuous, $f_k(h)=\int_0^1e^{-2\pi ik\theta}f(\gamma_h(\theta S(h)))\,d\theta$
+is continuous in $h$. At a resonance $k\ne0$ since $\lambda\ne0$. Since $S$ is
+differentiable at $h_k$, $|kb(h)-\lambda|\le C|h-h_k|$ nearby. If $f_k(h_k)\ne0$, then
+$|kb(h)f_k(h)|$ is bounded below near $h_k$, so the mode relation forces
+$|v_k(h)|\ge c/|h-h_k|$ for almost every nearby $h$, which is not integrable.
+The argument uses the mode relation near $h_k$, not the weak orbit equation at the
+particular level $h_k$.
 \end{proof}
+
+\begin{remark}[Digest note: what the resonance argument needs]
+The Lean proof (October 2026) uses less than the earlier sketch. (1) The sign $S'<0$ and
+the simplicity of the zero of $kb-\lambda$ are not used: only the upper bound
+$|kb(h)-\lambda|\le C|h-h_k|$, that is, differentiability of $S$ at $h_k$. (2) Square
+integrability of $v_k$ and Cauchy--Schwarz are not needed: $1/|h-h_k|$ is already not
+integrable, so the $L^1$ bound $\int|v_k|\,dh<\infty$ suffices. (3) Integrability of
+$f\circ\gamma_h$ along the orbit is a consequence of the orbit equation, not an
+assumption. The remaining admitted inputs are Lemma~\ref{lem:coarea}, the area formula
+(Lemma~\ref{lem:orbit-coordinates-area}) and the differentiability of $L$
+(Lemma~\ref{lem:period-regularity}).
+\end{remark}
 
 \begin{remark}
 Restated: the manuscript works on a compact regular orbit annulus and gets the

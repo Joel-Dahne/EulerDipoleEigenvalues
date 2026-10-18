@@ -104,8 +104,8 @@ Remaining admitted inputs of `virial_l2`, in a candidate order:
 See the [transport blueprint](../../blueprint/src/chapters/transport.tex) and
 [regularity blueprint](../../blueprint/src/chapters/regularity.tex).
 
-The eigenfunction-to-transport bridge is proved; resonant vanishing and
-Melnikov are medium–high. Canonical-profile uniqueness/decay/weighted bounds
+The eigenfunction-to-transport bridge is proved. Resonant vanishing is proved from
+`lem:coarea`, the area formula and differentiability of `L`; Melnikov is medium–high. Canonical-profile uniqueness/decay/weighted bounds
 are moderate; good windows are proved without admissions. Pairing-limit assembly is high,
 with representative compatibility and common exceptional sets the main work.
 The revised sketches use test H¹ density and separatrix-only integration by

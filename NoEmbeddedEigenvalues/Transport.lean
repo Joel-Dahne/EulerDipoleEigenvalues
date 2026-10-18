@@ -9,8 +9,8 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 # Transport pairs
 
 Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
-`lem:good-windows`; stated: `lem:melnikov`, `lem:coarea`, `lem:resonant-vanishing`,
-`lem:pairing-limit`.
+`lem:good-windows`; stated: `lem:melnikov`, `lem:coarea`, `lem:pairing-limit`. The proof of
+`lem:resonant-vanishing` is in `ResonantVanishing.lean`.
 
 The eigenvalue equation `H(ω + ψ) = λω`, with `H = -i L₀` and `L₀ = Y · ∇`, is a transport
 equation along the orbits of the dipole flow. A transport pair `(v, f)` on an open union of
@@ -271,24 +271,6 @@ theorem ae_orbit_restriction {U : Set (ℝ × ℝ)} {g Lg : ℝ × ℝ → ℂ} 
       (∀ᵐ t, G t = g (dipoleOrbit h t)) ∧ Function.Periodic G (orbitPeriod h) ∧
       (∀ c d, AbsolutelyContinuousOnInterval G c d) ∧
       ∀ᵐ t, HasDerivAt G (Lg (dipoleOrbit h t)) t := by
-  sorry
-
-/-- Orbitwise transport and resonant vanishing (`lem:resonant-vanishing`). On almost every orbit
-    of an annulus the transport unknown solves `(-i∂ₜ - λ)z = f`, the angular modes satisfy
-    `(k b(h) - λ) v_k = -k b(h) f_k`, and if `f` is continuous then `f_k` vanishes at every
-    resonant level `k b(h_k) = λ`. -/
-theorem resonant_vanishing {lam : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) {h₁ h₂ : ℝ} (h₁0 : 0 < h₁) (h₁₂ : h₁ < h₂) (h₂1 : h₂ < 1)
-    (hA : orbitAnnulus h₁ h₂ ⊆ U) :
-    (∀ᵐ h ∂(volume.restrict (Set.Ioo h₁ h₂)), ∃ Z : ℝ → ℂ,
-      (∀ᵐ t, Z t = transportUnknown lam v f (dipoleOrbit h t)) ∧
-      Function.Periodic Z (orbitPeriod h) ∧ (∀ c d, AbsolutelyContinuousOnInterval Z c d) ∧
-      ∀ᵐ t, HasDerivAt Z (I * (lam * Z t + f (dipoleOrbit h t))) t) ∧
-    (∀ᵐ h ∂(volume.restrict (Set.Ioo h₁ h₂)), ∀ k : ℤ,
-      (k * orbitFrequency h - lam) * angularMode h k v =
-        -(k * orbitFrequency h) * angularMode h k f) ∧
-    (ContinuousOn f U → ∀ k : ℤ, ∀ hk ∈ Set.Ioo h₁ h₂, k * orbitFrequency hk = lam →
-      angularMode hk k f = 0) := by
   sorry
 
 open Filter Topology in

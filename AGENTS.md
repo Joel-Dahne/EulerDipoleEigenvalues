@@ -121,6 +121,8 @@ motivation, and standard facts cited rather than proved.
   `EigenfunctionTransport.lean` specializes Melnikov and the pairing limit to
   eigenfunctions (explicit invariant neighbourhood of the cell, continuity of the
   flow, changes of representative on levels and in transport pairs).
+  `ResonantVanishing.lean` proves the orbitwise transport equation, the mode relation and
+  resonant vanishing.
   `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
   coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
   separatrix arc, as explicit graphs in diagonal coordinates; `SeparatrixTraces.lean` defines
