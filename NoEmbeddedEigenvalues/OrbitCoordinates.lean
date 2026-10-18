@@ -7,8 +7,8 @@ import NoEmbeddedEigenvalues.SeparatrixArc
 
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
-`lem:corner-coordinates`; stated: `lem:orbit-coordinates-smooth`,
-`lem:orbit-coordinates-area`, `lem:action-angle-chart`,
+`lem:corner-coordinates`, `lem:orbit-coordinates-smooth`;
+stated: `lem:orbit-coordinates-area`, `lem:action-angle-chart`,
 `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
@@ -24,6 +24,9 @@ The inverse identities are proved, including the turning points: monotone change
 along the closed upper half-orbit pulls the singular quadrature back to the constant `-1`
 away from the endpoints. The intermediate value theorem in `a`, together with conservation of
 `cos a cos b`, gives surjectivity there; a half-period rotation treats the lower half.
+The time coordinate is smooth off the cut: scale the regular incomplete integral to `[0, 1]`
+and use `SmoothIntervalIntegral.lean`. Near the left turning point, a backward quarter rotation
+gives the regular expression `2 L(h(p)) + timeCoord (backQuarter p)`.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 The normal and tangential derivatives use the outward normal `n = -∇Ψ/ρ` of `{Ψ > 2h}` and
@@ -311,12 +314,157 @@ theorem bijOn_orbitCoordinates :
       linarith [hq.1.2]
     exact ⟨_, hp, Prod.ext (levelCoord_dipoleOrbit hq.1.1 hq.1.2 _) (timeCoord_dipoleOrbit hq)⟩
 
+/-! #### Local smoothness -/
+
+open Filter Topology in
+private theorem contDiffAt_orbitTime {h a : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (ha : |a| < arccos h) : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ orbitTime q.1 q.2) (h, a) := by
+  let Q : (ℝ × ℝ) × ℝ → ℝ := fun r ↦ cos (r.1.2 * r.2) ^ 2 - r.1.1 ^ 2
+  let F : (ℝ × ℝ) × ℝ → ℝ := fun r ↦ 1 / √(Q r)
+  have hQ : ContDiff ℝ ∞ Q := by dsimp [Q]; fun_prop
+  have hU : IsOpen {r | 0 < Q r} := isOpen_lt continuous_const hQ.continuous
+  have hF : ContDiffOn ℝ ∞ F {r | 0 < Q r} :=
+    contDiffOn_const.div (hQ.contDiffOn.sqrt (fun r hr ↦ ne_of_gt hr))
+      (fun r hr ↦ (sqrt_pos.2 hr).ne')
+  have hi : ContDiffAt ℝ ∞ (fun q ↦ ∫ t in (0 : ℝ)..1, F (q, t)) (h, a) := by
+    apply contDiffAt_integral_unitInterval hU hF
+    rintro ⟨q, t⟩ ⟨hq, ht⟩
+    rcases mem_singleton_iff.1 hq with rfl
+    have hat : |a * t| < arccos h := by
+      rw [abs_mul, abs_of_nonneg ht.1]
+      exact (mul_le_of_le_one_right (abs_nonneg a) ht.2).trans_lt ha
+    have hc := lt_cos_of_abs_lt_arccos hh.1 hh.2 hat
+    change 0 < cos (a * t) ^ 2 - h ^ 2
+    nlinarith [hh.1]
+  have hm : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ -q.2 * ∫ t in (0 : ℝ)..1, F (q, t)) (h, a) :=
+    (contDiffAt_snd.neg).mul hi
+  apply hm.congr_of_eventuallyEq
+  apply Filter.Eventually.of_forall
+  intro q
+  have he := intervalIntegral.smul_integral_comp_mul_left
+    (a := (0 : ℝ)) (b := 1) (fun x ↦ 1 / √(cos x ^ 2 - q.1 ^ 2)) q.2
+  simp only [smul_eq_mul, mul_zero, mul_one] at he
+  change orbitTime q.1 q.2 = -q.2 * ∫ t in (0 : ℝ)..1, F (q, t)
+  rw [orbitTime, intervalIntegral.integral_symm, ← he]
+  dsimp [F, Q]; ring
+
+private theorem contDiffAt_levelCoord (p : ℝ × ℝ) : ContDiffAt ℝ ∞ levelCoord p := by
+  unfold levelCoord dipoleLift; fun_prop
+
+private theorem contDiffAt_levelEighthPeriod {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    ContDiffAt ℝ ∞ (fun q ↦ eighthPeriod (levelCoord q)) p :=
+  (contDiffOn_eighthPeriod.contDiffAt
+    (Ioo_mem_nhds (levelCoord_mem_Ioo hp).1 (levelCoord_mem_Ioo hp).2)).comp p
+      (contDiffAt_levelCoord p)
+
+/-- Away from `b = 0`, the endpoint of the incomplete quadrature stays regular. -/
+private theorem contDiffAt_timeCoord_of_ne {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hb : (diagCoord p).2 ≠ 0) : ContDiffAt ℝ ∞ timeCoord p := by
+  have hh := levelCoord_mem_Ioo hp
+  have he := dipoleOrbit_levelCoord_timeCoord hp
+  have ha := orbitA_mem_of_ne hh.1 hh.2 (t := timeCoord p) (by
+    simpa only [orbitB, he] using hb)
+  simp only [orbitA, he] at ha
+  have hdc : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ (diagCoord q).1) p := by
+    unfold diagCoord; fun_prop
+  have hr : ContDiffAt ℝ ∞ (fun q ↦ orbitTime (levelCoord q) (diagCoord q).1) p :=
+    (contDiffAt_orbitTime hh (abs_lt.2 ha)).comp
+      (g := fun q : ℝ × ℝ ↦ orbitTime q.1 q.2)
+      (f := fun q ↦ (levelCoord q, (diagCoord q).1)) p
+      ((contDiffAt_levelCoord p).prodMk hdc)
+  have hbc : Continuous (fun q : ℝ × ℝ ↦ (diagCoord q).2) := by unfold diagCoord; fun_prop
+  rcases hb.lt_or_gt with hb | hb
+  · have hs := ((contDiffAt_const (c := (4 : ℝ))).mul
+      (contDiffAt_levelEighthPeriod hp)).sub hr
+    apply hs.congr_of_eventuallyEq
+    filter_upwards [hbc.continuousAt.eventually (gt_mem_nhds hb)] with q hq
+    exact ite_eq_right (not_le.mpr hq)
+  · apply hr.congr_of_eventuallyEq
+    filter_upwards [hbc.continuousAt.eventually (lt_mem_nhds hb)] with q hq
+    exact ite_eq_left hq.le
+
+private def backQuarter (p : ℝ × ℝ) : ℝ × ℝ := (-p.2, p.1)
+
+private theorem diagCoord_backQuarter (p : ℝ × ℝ) :
+    diagCoord (backQuarter p) = ((diagCoord p).2, -(diagCoord p).1) := by
+  ext <;> dsimp [backQuarter, diagCoord] <;> ring
+
+private theorem backQuarter_mem {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    backQuarter p ∈ puncturedCell := by
+  refine ⟨?_, ?_⟩
+  · simpa only [cellSquare, mem_ofPred_eq, diagCoord_backQuarter, abs_neg] using hp.1.symm
+  · intro hz
+    apply hp.2
+    have hz : backQuarter p = 0 := hz
+    have h1 : p.1 = 0 := by simpa [backQuarter] using congrArg Prod.snd hz
+    have h2 : p.2 = 0 := by simpa [backQuarter] using congrArg Prod.fst hz
+    exact Prod.ext h1 h2
+
+private theorem levelCoord_backQuarter (p : ℝ × ℝ) : levelCoord (backQuarter p) = levelCoord p := by
+  simp only [levelCoord, backQuarter, dipoleLift, cos_neg]; ring
+
+/-- On the left half of the cell, shifting back a quarter puts the point in the
+regular upper patch. No angular wrap occurs in this identity. -/
+private theorem timeCoord_eq_backQuarter {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (ha : (diagCoord p).1 < 0) :
+    timeCoord p = 2 * eighthPeriod (levelCoord p) + timeCoord (backQuarter p) := by
+  have hh := levelCoord_mem_Ioo hp
+  have hL := eighthPeriod_pos hh.1 hh.2
+  have hq := backQuarter_mem hp
+  obtain ⟨s, hs, he⟩ := exists_dipoleOrbit_eq_upper hq.1 (levelCoord_mem_Ioo hq) (by
+    rw [diagCoord_backQuarter]; exact (neg_pos.2 ha).le)
+  rw [levelCoord_backQuarter] at hs he
+  have hsq : (levelCoord p, s) ∈ orbitDomain := ⟨hh, hs.1, by linarith [hs.2]⟩
+  have hts := timeCoord_dipoleOrbit hsq
+  rw [he] at hts
+  have hshift : dipoleOrbit (levelCoord p) (s + 2 * eighthPeriod (levelCoord p)) = p := by
+    rw [dipoleOrbit_add_quarter hh.1 hh.2, he]
+    simp [backQuarter]
+  have hshiftq : (levelCoord p, s + 2 * eighthPeriod (levelCoord p)) ∈ orbitDomain :=
+    ⟨hh, by linarith [hs.1], by linarith [hs.2]⟩
+  have htp := timeCoord_dipoleOrbit hshiftq
+  rw [hshift] at htp
+  rw [htp, hts]; ring
+
 /-- The global time coordinate is smooth off its cut. There is no uniform
     `C / saddleDist` bound for its derivative on the whole cell as the level tends to zero. -/
 theorem contDiffAt_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
     (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) :
     ContDiffAt ℝ ∞ timeCoord p := by
-  sorry
+  by_cases hb : (diagCoord p).2 = 0
+  · have ha : (diagCoord p).1 < 0 := by
+      have hnot : ¬0 < (diagCoord p).1 := fun ha ↦ hcut ⟨hb, ha⟩
+      have hne : (diagCoord p).1 ≠ 0 := by
+        intro ha
+        apply hp.2
+        rw [← diagInv_diagCoord p, show diagCoord p = 0 from Prod.ext ha hb]
+        exact map_zero diagInv
+      exact lt_of_le_of_ne (not_lt.1 hnot) hne
+    have hq := backQuarter_mem hp
+    have hqb : (diagCoord (backQuarter p)).2 ≠ 0 := by
+      rw [diagCoord_backQuarter]; exact (neg_pos.2 ha).ne'
+    have hr : ContDiffAt ℝ ∞ (fun q ↦ timeCoord (backQuarter q)) p :=
+      (contDiffAt_timeCoord_of_ne hq hqb).comp (f := backQuarter) p (by
+        unfold backQuarter; fun_prop)
+    have hs : ContDiffAt ℝ ∞
+        (fun q ↦ 2 * eighthPeriod (levelCoord q) + timeCoord (backQuarter q)) p :=
+      ((contDiffAt_const (c := (2 : ℝ))).mul (contDiffAt_levelEighthPeriod hp)).add hr
+    apply hs.congr_of_eventuallyEq
+    have hpc : IsOpen puncturedCell := by
+      have h₁ : Continuous (fun q : ℝ × ℝ ↦ |(diagCoord q).1|) := by unfold diagCoord; fun_prop
+      have h₂ : Continuous (fun q : ℝ × ℝ ↦ |(diagCoord q).2|) := by unfold diagCoord; fun_prop
+      exact ((isOpen_lt h₁ continuous_const).inter (isOpen_lt h₂ continuous_const)).sdiff
+        isClosed_singleton
+    have hac : Continuous (fun q : ℝ × ℝ ↦ (diagCoord q).1) := by unfold diagCoord; fun_prop
+    filter_upwards [hpc.mem_nhds hp, hac.continuousAt.eventually (gt_mem_nhds ha)] with q hq hqa
+    exact timeCoord_eq_backQuarter hq hqa
+  · exact contDiffAt_timeCoord_of_ne hp hb
+
+/-- The pair of orbit coordinates is smooth off the time cut. -/
+theorem contDiffAt_orbitCoordinates {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) :
+    ContDiffAt ℝ ∞ (fun q ↦ (levelCoord q, timeCoord q)) p :=
+  (contDiffAt_levelCoord p).prodMk (contDiffAt_timeCoord hp hcut)
 
 /-- `dx dy = 2 dh dt`: integrals over the cell in orbit coordinates. -/
 theorem lintegral_cellSquare_eq {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :

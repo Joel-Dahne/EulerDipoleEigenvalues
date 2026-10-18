@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import NoEmbeddedEigenvalues.SmoothIntervalIntegral
 import Mathlib.Analysis.Calculus.ContDiff.Deriv
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 
@@ -263,86 +263,22 @@ theorem orbitFrequency_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < orbitFreque
 open Filter Topology Set Metric
 open scoped ContDiff
 
-/-- A continuous function is uniformly bounded on a tube around a compact vertical segment. -/
-private theorem bounded_tube {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
-    (hU : IsOpen U) (hF : ContinuousOn F U) {h : ℝ}
-    (hh : {h} ×ˢ Icc (0 : ℝ) 1 ⊆ U) :
-    ∃ ε C : ℝ, 0 < ε ∧ ∀ x ∈ ball h ε, ∀ t ∈ Icc (0 : ℝ) 1,
-      (x, t) ∈ U ∧ ‖F (x, t)‖ ≤ C := by
-  have hK : IsCompact ({h} ×ˢ Icc (0 : ℝ) 1) := isCompact_singleton.prod isCompact_Icc
-  obtain ⟨V, hKV, hV, hb⟩ :=
-    exists_isOpen_isBounded_image_of_isCompact_of_continuousOn hK hU hh hF
-  obtain ⟨ε, hε, htube⟩ := hK.exists_thickening_subset_open (hV.inter hU)
-    (subset_inter hKV hh)
-  obtain ⟨C, hC⟩ := hb.exists_norm_le
-  refine ⟨ε, C, hε, fun x hx t ht ↦ ?_⟩
-  have hxt : (x, t) ∈ V ∩ U := by
-    apply htube
-    refine mem_thickening_iff.2 ⟨(h, t), ⟨by simp, ht⟩, ?_⟩
-    simpa [Prod.dist_eq, hε] using hx
-  exact ⟨hxt.2, hC _ (mem_image_of_mem F hxt.1)⟩
-
-/-- Differentiation under a compact interval integral for a jointly smooth integrand. -/
+/-- Scalar version of the shared differentiation rule. -/
 private theorem hasDerivAt_integral_smooth {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
     (hU : IsOpen U) (hF : ContDiffOn ℝ ∞ F U) {h : ℝ}
     (hh : {h} ×ˢ Icc (0 : ℝ) 1 ⊆ U) :
     HasDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t))
       (∫ t in (0 : ℝ)..1, fderiv ℝ F (h, t) (1, 0)) h := by
-  let G : ℝ × ℝ → ℝ := fun q ↦ fderiv ℝ F q (1, 0)
+  let G : ℝ × ℝ → ℝ →L[ℝ] ℝ :=
+    fun q ↦ (fderiv ℝ F q).comp (ContinuousLinearMap.inl ℝ ℝ ℝ)
   have hG : ContDiffOn ℝ ∞ G U :=
-    (hF.fderiv_of_isOpen hU (by simp)).clm_apply contDiffOn_const
-  obtain ⟨ε, C, hε, hb⟩ := bounded_tube hU hG.continuousOn hh
-  have hslice (x : ℝ) (hx : x ∈ ball h ε) :
-      ContinuousOn (fun t ↦ F (x, t)) (Icc 0 1) :=
-    hF.continuousOn.comp (by fun_prop) (fun t ht ↦ (hb x hx t ht).1)
-  have hsliceG : ContinuousOn (fun t ↦ G (h, t)) (Icc 0 1) :=
-    hG.continuousOn.comp (by fun_prop) (fun t ht ↦ hh ⟨by simp, ht⟩)
-  refine (intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
-    (F := fun x t ↦ F (x, t)) (F' := fun x t ↦ G (x, t))
-    (bound := fun _ ↦ C) (ball_mem_nhds h hε) ?_
-    ((hslice h (mem_ball_self hε)).intervalIntegrable_of_Icc zero_le_one)
-    ?_ ?_ intervalIntegrable_const ?_).2
-  · filter_upwards [ball_mem_nhds h hε] with x hx
-    exact ((hslice x hx).aestronglyMeasurable measurableSet_Icc).mono_set (by
-      rw [uIoc_of_le zero_le_one]; exact Ioc_subset_Icc_self)
-  · exact (hsliceG.aestronglyMeasurable measurableSet_Icc).mono_set (by
-      rw [uIoc_of_le zero_le_one]; exact Ioc_subset_Icc_self)
-  · refine Eventually.of_forall fun t ht x hx ↦ ?_
-    rw [uIoc_of_le zero_le_one] at ht
-    exact (hb x hx t (Ioc_subset_Icc_self ht)).2
-  · refine Eventually.of_forall fun t ht x hx ↦ ?_
-    rw [uIoc_of_le zero_le_one] at ht
-    have hxt := (hb x hx t (Ioc_subset_Icc_self ht)).1
-    exact ((hF.contDiffAt (hU.mem_nhds hxt)).differentiableAt (by simp)).hasFDerivAt
-      |>.comp_hasDerivAt x ((hasDerivAt_id x).prodMk (hasDerivAt_const x t))
-
-/-- Smoothness under the fixed-interval integral, by iterating the preceding rule. -/
-private theorem contDiffOn_integral_smooth {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
-    {s : Set ℝ} (hU : IsOpen U) (hs : IsOpen s) (hsub : s ×ˢ Icc (0 : ℝ) 1 ⊆ U)
-    (hF : ContDiffOn ℝ ∞ F U) :
-    ContDiffOn ℝ ∞ (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t)) s := by
-  rw [contDiffOn_infty]
-  intro n
-  induction n generalizing F with
-  | zero =>
-    rw [Nat.cast_zero, contDiffOn_zero]
-    intro h hh
-    exact (hasDerivAt_integral_smooth hU hF (by
-      rintro ⟨x, t⟩ ⟨hx, ht⟩; rcases mem_singleton_iff.1 hx with rfl
-      exact hsub ⟨hh, ht⟩)).continuousAt.continuousWithinAt
-  | succ n ih =>
-    let G : ℝ × ℝ → ℝ := fun q ↦ fderiv ℝ F q (1, 0)
-    have hG : ContDiffOn ℝ ∞ G U :=
-      (hF.fderiv_of_isOpen hU (by simp)).clm_apply contDiffOn_const
-    have hd : ∀ h ∈ s, HasDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t))
-        (∫ t in (0 : ℝ)..1, G (h, t)) h := by
-      intro h hh
-      apply hasDerivAt_integral_smooth hU hF
-      rintro ⟨x, t⟩ ⟨hx, ht⟩; rcases mem_singleton_iff.1 hx with rfl
-      exact hsub ⟨hh, ht⟩
-    rw [Nat.cast_succ, contDiffOn_succ_iff_deriv_of_isOpen hs]
-    exact ⟨fun h hh ↦ (hd h hh).differentiableAt.differentiableWithinAt,
-      by simp, (ih hG).congr (fun h hh ↦ (hd h hh).deriv)⟩
+    (hF.fderiv_of_isOpen hU (by simp)).clm_comp contDiffOn_const
+  have hi : IntervalIntegrable (fun t ↦ G (h, t)) MeasureTheory.volume 0 1 :=
+    (hG.continuousOn.comp (by fun_prop)
+      (fun t ht ↦ hh ⟨by simp, ht⟩)).intervalIntegrable_of_Icc zero_le_one
+  have hd := (hasFDerivAt_integral_unitInterval hU hF hh).hasDerivAt
+  rw [ContinuousLinearMap.intervalIntegral_apply hi] at hd
+  exact hd
 
 /-- The squared denominator in the regular quadrature. -/
 private def periodDenom (q : ℝ × ℝ) : ℝ :=
@@ -381,7 +317,7 @@ theorem contDiffOn_eighthPeriod : ContDiffOn ℝ ∞ eighthPeriod (Ioo 0 1) := b
   have hU : IsOpen {q | 0 < periodDenom q} := by
     apply isOpen_lt continuous_const
     unfold periodDenom; fun_prop
-  exact (contDiffOn_integral_smooth hU isOpen_Ioo
+  exact (contDiffOn_integral_unitInterval hU isOpen_Ioo
     (fun q hq ↦ periodDenom_pos hq.1 hq.2) contDiffOn_periodIntegrand).congr
       (fun h hh ↦ eighthPeriod_eq_regular hh)
 

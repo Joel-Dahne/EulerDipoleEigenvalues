@@ -724,7 +724,8 @@ gives the level identity for every time.
 \begin{lemma}[Local smoothness of orbit coordinates]
 \label{lem:orbit-coordinates-smooth}
 \uses{def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.contDiffAt_timeCoord}
+\lean{NoEmbeddedEigenvalues.contDiffAt_timeCoord,
+  NoEmbeddedEigenvalues.contDiffAt_orbitCoordinates}
 \leanok
 The time coordinate is smooth on the punctured cell off the cut
 $\{b=0,a>0\}$. Consequently the pair $(h,t)$ is smooth there.
@@ -733,12 +734,26 @@ $\{b=0,a>0\}$. Consequently the pair $(h,t)$ is smooth there.
 \begin{proof}
 \uses{lem:orbit-coordinates-inverse, lem:period-regularity,
   lem:period-integral, lem:period-orbit}
-Period smoothness is supplied independently by
-Lemma~\ref{lem:period-regularity}. Where $b\ne0$, the incomplete time
-integral has a locally regular integrand. Near $b=0,a<0$, rotate to a
-regular patch and add the appropriate smooth multiple of $L$; the
-inverse identities identify this expression with $t$.
-The level coordinate $\Psi/2$ is smooth everywhere.
+\leanok
+Where $b\ne0$, the inverse identities give $|a|<\arccos h$. Scale
+$\alpha=au$ to write the incomplete time integral as
+\[
+  -a\int_0^1\frac{du}{\sqrt{\cos^2(au)-h^2}}.
+\]
+The radicand stays positive for $0\le u\le1$ in a neighbourhood of the
+parameter pair $(h,a)$. Repeated dominated differentiation gives joint
+smoothness in $(h,a)$. The sign of $b$ is locally constant, and $L$ is
+smooth by Lemma~\ref{lem:period-regularity}.
+
+For $a<0$, the backward quarter rotation $R^{-1}(x,y)=(-y,x)$ puts
+$(a,b)$ at $(b,-a)$, where the new second coordinate is positive.
+The inverse identities and the quarter-period rotation give, without
+wrapping the chosen time window,
+\[
+  t(p)=2L(h(p))+t(R^{-1}p).
+\]
+This is a smooth expression near the remaining turning point
+$b=0,a<0$. The level coordinate $\Psi/2$ is smooth everywhere.
 No differentiable dependence theorem for ODE flows is needed.
 \end{proof}
 

@@ -111,7 +111,8 @@ motivation, and standard facts cited rather than proved.
   torus, unfolds integrals against lifts, proves `L₀` against `H¹` tests on the torus,
   and transfers torus Sobolev regularity and the weak `L₀` relation to lifts;
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
-  square in diagonal coordinates; `Period.lean` defines the period function;
+  square in diagonal coordinates; `SmoothIntervalIntegral.lean` proves smoothness
+  of fixed-interval parameter integrals; `Period.lean` treats the period function;
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
   period lemma. `OrbitCoordinates.lean` defines the orbit coordinates `(h, t)`,
   flow-time level integrals and normal/tangential derivatives. `Transport.lean` defines transport pairs on open unions of orbits.

@@ -55,10 +55,11 @@ in the current statements.
 
 See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 
-- The orbit-coordinate inverse identities (`lem:orbit-coordinates-inverse`)
-  are proved without admissions in `OrbitCoordinates.lean`, including the turning
-  points and half-open time window. Next: local smoothness (moderate), then the
-  area formula (medium–high). Local smoothness does not depend on the area formula.
+- The orbit-coordinate inverse identities and local smoothness off the time cut
+  (`lem:orbit-coordinates-inverse`, `lem:orbit-coordinates-smooth`) are proved
+  without admissions in `OrbitCoordinates.lean`, including the turning points.
+  Next: smoothness of the inverse parametrization and angular seam handling
+  (moderate), then the area formula (medium–high).
 - Period regularity (`lem:period-regularity`) is proved without admissions in
   `Period.lean`: the regular fixed-interval integral gives smoothness and
   `L' < 0`, hence strict decrease of `L` and `S`. Coarse logarithmic bounds
@@ -99,8 +100,9 @@ Remaining admitted inputs of `virial_l2`, in a candidate order:
    medium–high. Weak gradients under the smooth chart (local W^{1,1}
    approximation), with the angle cut handled by θ-periodicity.
 2. Shared with other routes: the orbit-coordinate chart inputs
-   (`OrbitCoordinates.lean`: local smoothness and the area formula).
-   The inverse identities and period regularity are proved.
+   (`OrbitCoordinates.lean`: smooth inverse parametrization, angular seams and
+   the area formula). The inverse identities, local smoothness off the cut and
+   period regularity are proved.
 
 ### Transport and later-sector regularity
 
