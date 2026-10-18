@@ -6,13 +6,14 @@ import NoEmbeddedEigenvalues.Transport
 # The transversal mollifier
 
 Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved),
-`lem:transversal-mollifier-congr`, `lem:transversal-mollifier-linear` and
-`lem:transversal-mollifier` (proved from chart/coarea inputs);
+`lem:transversal-mollifier-congr`, `lem:transversal-mollifier-linear`,
+`lem:transversal-mollifier` and `lem:transversal-mollifier-commutator` (proved from
+chart/coarea inputs);
 `lem:action-angle-test-chain`, `lem:action-angle-local-integrability` (proved from
 chart/coarea inputs; the forward classical chain rule has no admitted dependency);
 `lem:action-angle-transport` (proved from chart/coarea inputs);
-stated: the full weak-gradient rules in `lem:action-angle-weak`,
-`lem:transversal-mollifier-derivatives`, `lem:transversal-mollifier-commutator`.
+stated: the full weak-gradient rules in `lem:action-angle-weak` and
+`lem:transversal-mollifier-derivatives`.
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -39,6 +40,13 @@ chain rules are also proved, including the reverse rule for smooth periodic stri
 Angular test periodization and a compact angular partition of unity give both directions
 of `hasWeakL0On_iff_actionAngle`. Only the two full weak-gradient chain rules remain
 admitted in the action-angle interface.
+
+The commutator `transversalMollifier_hasWeakL0On` uses only the transport chain rule: the
+level cutoff carries `∂_θ U = S K` from the strip to the plane, `∂_θ` commutes with `M_ε`,
+the reverse chain rule gives `L₀ J_ε u = σ⁻¹ M_ε(σχK)` on the punctured cell with `σ` a
+Lipschitz extension of `S` off the band, and the identity extends by zero to the plane. The
+error is `σ⁻¹ (M_ε(σχK) - σ M_ε(χK))`, bounded by the Lipschitz commutator of
+`LineMollifier.lean`.
 -/
 
 noncomputable section
@@ -1271,8 +1279,8 @@ theorem hasWeakL0On_iff_actionAngle {u k : ℝ × ℝ → ℂ} :
 /-- A fixed level band contains both the cutoff and all sufficiently small mollifications. -/
 private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1) :
     ∃ a b ε₀ : ℝ, 0 < a ∧ b < 1 ∧ 0 < ε₀ ∧ tsupport χ ⊆ Icc a b ∧
-      ∀ ε ∈ Ioo 0 ε₀, ∀ (u : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
-        mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * u (actionAngleInv z)) q = 0 := by
+      ∀ ε ∈ Ioo 0 ε₀, ∀ (G : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
+        mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * G z) q = 0 := by
   have hs : IsCompact (tsupport χ) :=
     (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).of_isClosed_subset (isClosed_tsupport χ)
       (fun t ht ↦ ⟨(hχs ht).1.le, (hχs ht).2.le⟩)
@@ -1323,6 +1331,153 @@ private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ I
     have hright := (div_lt_iff₀ hε.1).mp hmem.2
     exact False.elim (hq ⟨by linarith, by linarith⟩)
 
+/-! ### Helpers for the commutator -/
+
+private theorem tsupport_levelCutoff_subset {χ : ℝ → ℝ} :
+    tsupport (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ)) ⊆ Prod.fst ⁻¹' tsupport χ :=
+  closure_minimal (fun q hq ↦ subset_closure (show q.1 ∈ Function.support χ from
+    fun h ↦ hq (by simp [h]))) ((isClosed_tsupport χ).preimage continuous_fst)
+
+/-- Weak derivatives on a measurable set only see the functions on that set. -/
+private theorem HasWeakPartialOn.congr_on {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
+    {j : Fin 2} {g g' h h' : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn U j g h) (hg : EqOn g g' U)
+    (hh : EqOn h h' U) : HasWeakPartialOn U j g' h' := by
+  refine ⟨hd.1.congr ((ae_restrict_iff' hU).mpr (Eventually.of_forall hg)),
+    hd.2.1.congr ((ae_restrict_iff' hU).mpr (Eventually.of_forall hh)), fun φ hφ ↦ ?_⟩
+  have e1 : (fun p ↦ g' p * coordPartial j φ p) = fun p ↦ g p * coordPartial j φ p := by
+    funext p
+    by_cases hp : p ∈ U
+    · rw [hg hp]
+    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hp (hφ.tsupport_subset
+        (tsupport_coordPartial_subset j φ ht))), mul_zero, mul_zero]
+  have e2 : (fun p ↦ h' p * φ p) = fun p ↦ h p * φ p := by
+    funext p
+    by_cases hp : p ∈ U
+    · rw [hh hp]
+    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hp (hφ.tsupport_subset ht)), mul_zero,
+        mul_zero]
+  rw [e1, e2]
+  exact hd.2.2 φ hφ
+
+/-- A level cutoff `χ(h)` with support in `(0, 1)` carries an angular weak derivative on the
+strip to one on the plane. -/
+private theorem HasWeakPartialOn.levelCutoff {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    (hχs : tsupport χ ⊆ Ioo 0 1) {U G : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn actionStrip 1 U G) :
+    HasWeakPartialOn univ 1 (fun q ↦ (χ q.1 : ℂ) * U q) (fun q ↦ (χ q.1 : ℂ) * G q) := by
+  set C : Set (ℝ × ℝ) := Prod.fst ⁻¹' tsupport χ
+  have hC : IsClosed C := (isClosed_tsupport χ).preimage continuous_fst
+  have hCs : C ⊆ actionStrip := fun q hq ↦ ⟨hχs hq, mem_univ _⟩
+  have hcd : ContDiff ℝ ∞ (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ)) :=
+    Complex.ofRealCLM.contDiff.comp (hχ.comp contDiff_fst)
+  have hz : ∀ q ∉ C, (χ q.1 : ℂ) = 0 := fun q hq ↦ by
+    rw [image_eq_zero_of_notMem_tsupport hq, Complex.ofReal_zero]
+  have hloc {V : ℝ × ℝ → ℂ} (hV : LocallyIntegrableOn V actionStrip) :
+      LocallyIntegrableOn (fun q ↦ (χ q.1 : ℂ) * V q) univ := by
+    rw [locallyIntegrableOn_univ, locallyIntegrable_iff]
+    intro K hK
+    have hKC : IsCompact (K ∩ C) := hK.inter_right hC
+    have hi : IntegrableOn (fun q ↦ (χ q.1 : ℂ) * V q) (K ∩ C) :=
+      (hV.integrableOn_compact_subset (inter_subset_right.trans hCs) hKC).continuousOn_mul
+        hcd.continuous.continuousOn hKC
+    exact hi.of_forall_sdiff_eq_zero hK.measurableSet fun q hq ↦ by
+      rw [hz q (fun h ↦ hq.2 ⟨hq.1, h⟩), zero_mul]
+  refine ⟨hloc hd.1, hloc hd.2.1, fun φ hφ ↦ ?_⟩
+  set ψ : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * φ q with hψ_def
+  have hψ : IsTestFunctionOn actionStrip ψ :=
+    ⟨hcd.mul hφ.contDiff, hφ.hasCompactSupport.mul_left,
+      tsupport_mul_subset_left.trans (tsupport_levelCutoff_subset.trans hCs)⟩
+  have hψd : coordPartial 1 ψ = fun q ↦ (χ q.1 : ℂ) * coordPartial 1 φ q := by
+    funext q
+    have hdφ : DifferentiableAt ℝ (fun t ↦ φ (q.1, t)) q.2 :=
+      (hφ.contDiff.differentiable (by simp) _).comp q.2
+        ((differentiableAt_const q.1).prodMk differentiableAt_id)
+    simp only [coordPartial, one_ne_zero, ite_false, partialY, hψ_def]
+    exact deriv_const_mul _ hdφ
+  have hw := hd.2.2 ψ hψ
+  rw [hψd] at hw
+  calc (∫ p, (χ p.1 : ℂ) * U p * coordPartial 1 φ p)
+      = ∫ p, U p * ((χ p.1 : ℂ) * coordPartial 1 φ p) := by
+        congr 1; funext p; ring
+    _ = -∫ p, G p * ψ p := hw
+    _ = -∫ p, (χ p.1 : ℂ) * G p * φ p := by
+        congr 2; funext p; simp only [hψ_def]; ring
+
+/-- Mollification in `h` preserves `1`-periodicity in `θ`. -/
+private theorem mollifyFst_periodic {ε : ℝ} {F : ℝ × ℝ → ℂ}
+    (hF : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) (q : ℝ × ℝ) :
+    mollifyFst ε F (q.1, q.2 + 1) = mollifyFst ε F q := by
+  simp only [mollifyFst]
+  congr 1
+  funext t
+  rw [hF (t, q.2)]
+
+/-- Strip data cut off in `h` are `1`-periodic in `θ`. -/
+private theorem levelCutoff_actionInput_periodic {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1)
+    (s : ℝ → ℂ) (u : ℝ × ℝ → ℂ) (q : ℝ × ℝ) :
+    (χ q.1 : ℂ) * (s q.1 * u (actionAngleInv (q.1, q.2 + 1))) =
+      (χ q.1 : ℂ) * (s q.1 * u (actionAngleInv q)) := by
+  by_cases hq : q.1 ∈ Ioo (0 : ℝ) 1
+  · rw [actionAngleInv_add_one hq.1 hq.2]
+  · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hq (hχs ht))]
+    simp
+
+/-- Weak transport on the punctured cell extends to the plane for functions vanishing off a
+closed interior level band. -/
+private theorem HasWeakL0On.univ_of_band {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    {f g : ℝ × ℝ → ℂ} (hd : HasWeakL0On puncturedCell f g)
+    (hf : ∀ p ∉ closedCellLevelBand a b, f p = 0)
+    (hg : ∀ p ∉ closedCellLevelBand a b, g p = 0) : HasWeakL0On univ f g := by
+  set B := closedCellLevelBand a b
+  have hB : IsCompact B := isCompact_closedCellLevelBand a b
+  have hBU : B ⊆ puncturedCell := closedCellLevelBand_subset ha hb
+  have hint {v : ℝ × ℝ → ℂ} (hv : LocallyIntegrableOn v puncturedCell)
+      (hz : ∀ p ∉ B, v p = 0) : LocallyIntegrableOn v univ :=
+    ((hv.integrableOn_compact_subset hBU hB).integrable_of_forall_notMem_eq_zero
+      hz).locallyIntegrable.locallyIntegrableOn univ
+  refine ⟨hint hd.1 hf, hint hd.2.1 hg, fun φ hφ ↦ ?_⟩
+  obtain ⟨V₂, hV₂o, hBV₂, hV₂c, hV₂k⟩ :=
+    exists_open_between_and_isCompact_closure hB isOpen_puncturedCell hBU
+  obtain ⟨V₁, hV₁o, hBV₁, hV₁c, -⟩ := exists_open_between_and_isCompact_closure hB hV₂o hBV₂
+  obtain ⟨η, hη, -, hηs, hη1⟩ :=
+    exists_contDiff_support_eq_eq_one_iff (n := ⊤) hV₂o isClosed_closure hV₁c
+  have hηt : tsupport η = closure V₂ := by rw [tsupport, hηs]
+  set ψ : ℝ × ℝ → ℂ := fun p ↦ (η p : ℂ) * φ p with hψ_def
+  have hψ : IsTestFunctionOn puncturedCell ψ :=
+    ⟨(Complex.ofRealCLM.contDiff.comp hη).mul hφ.contDiff, by
+      refine HasCompactSupport.mul_right ?_
+      refine hV₂k.of_isClosed_subset (isClosed_tsupport _) ?_
+      rw [← hηt]
+      exact closure_mono (fun p hp ↦ by simpa using hp), by
+      refine tsupport_mul_subset_left.trans ?_
+      refine (closure_mono (fun p hp ↦ ?_)).trans (hηt ▸ hV₂c)
+      simpa using hp⟩
+  have hnear (p : ℝ × ℝ) (hp : p ∈ B) : ψ =ᶠ[𝓝 p] φ := by
+    filter_upwards [hV₁o.mem_nhds (hBV₁ hp)] with q hq
+    simp [hψ_def, (hη1 q).1 (subset_closure hq)]
+  have e1 : (fun p ↦ f p * classicalL0 ψ p) = fun p ↦ f p * classicalL0 φ p := by
+    funext p
+    by_cases hp : p ∈ B
+    · rw [classicalL0_congr_of_eventuallyEq (hnear p hp)]
+    · rw [hf p hp, zero_mul, zero_mul]
+  have e2 : (fun p ↦ g p * ψ p) = fun p ↦ g p * φ p := by
+    funext p
+    by_cases hp : p ∈ B
+    · rw [(hnear p hp).eq_of_nhds]
+    · rw [hg p hp, zero_mul, zero_mul]
+  have hw := hd.2.2 ψ hψ
+  rwa [e1, e2] at hw
+
+/-- Multiplication by a bounded continuous function of the level preserves `L²`. -/
+private theorem memLp_levelMul {μ : Measure (ℝ × ℝ)} {F : ℝ × ℝ → ℂ} (hF : MemLp F 2 μ)
+    {s : ℝ → ℝ} (hs : Continuous s) {M : ℝ} (hM : ∀ h, |s h| ≤ M) :
+    MemLp (fun q ↦ (s q.1 : ℂ) * F q) 2 μ :=
+  hF.of_le_mul
+    (((Complex.continuous_ofReal.comp (hs.comp continuous_fst)).aestronglyMeasurable).mul
+      hF.aestronglyMeasurable)
+    (Eventually.of_forall fun q ↦ by
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs]
+      exact mul_le_mul_of_nonneg_right (hM q.1) (norm_nonneg _))
+
 /-! ### Statements -/
 
 section Statements
@@ -1354,7 +1509,7 @@ theorem transversalMollifier_eq_zero (hχs : tsupport χ ⊆ Ioo 0 1) :
   intro ε hε u p hp
   by_cases hc : p ∈ puncturedCell
   · rw [transversalMollifier, ite_eq_left hc]
-    apply hband ε hε u (actionAngle p)
+    apply hband ε hε (fun z ↦ u (actionAngleInv z)) (actionAngle p)
     intro hh
     exact hp ⟨hc.1.1.le, hc.1.2.le, hh⟩
   · simp [transversalMollifier, hc]
@@ -1442,7 +1597,7 @@ theorem memLp_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport 
   refine ⟨ε₀, hε₀, Co * Ci, fun ε hε u hu ↦ ?_⟩
   let F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)
   have hM := eLpNorm_mollifyFst_le hε.1 (memLp_cutoff_actionInput hχ hχs hu)
-  have hrec := hCo (mollifyFst ε F) hM.1 (hband ε hε u)
+  have hrec := hCo (mollifyFst ε F) hM.1 (hband ε hε (fun z ↦ u (actionAngleInv z)))
   have hJ : actionReconstruct (mollifyFst ε F) =ᵐ[volume] transversalMollifier χ ε u :=
     ae_actionReconstruct _
   refine ⟨MemLp.ae_eq hJ hrec.1, ?_⟩
@@ -1478,7 +1633,7 @@ theorem tendsto_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsuppor
       intro q hq
       have hz : χ q.1 = 0 := image_eq_zero_of_notMem_tsupport (fun hs ↦ hq (hχband hs))
       simp only [Pi.sub_apply]
-      rw [hband ε hεband u q hq]
+      rw [hband ε hεband (fun z ↦ u (actionAngleInv z)) q hq]
       simp [F, hz]
     have hrec := hCo (mollifyFst ε F - F) (hM.1.sub hF) hzero
     have hJ : actionReconstruct (mollifyFst ε F) =ᵐ[volume] transversalMollifier χ ε u :=
@@ -1516,7 +1671,7 @@ theorem transversalMollifier_hasWeakPartialOn (hχ : ContDiff ℝ ∞ χ)
       ∀ j, Tendsto (fun ε ↦ ENNReal.ofReal ε * eLpNorm (d j ε) 2 volume) (𝓝[>] 0) (𝓝 0) := by
   sorry
 
-/-! #### `lem:transversal-mollifier-commutator` (stated) -/
+/-! #### `lem:transversal-mollifier-commutator` -/
 
 /-- `[L₀, J_ε] u = O(ε ‖L₀ u‖)`, uniformly in `u`. -/
 theorem transversalMollifier_hasWeakL0On (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport χ ⊆ Ioo 0 1) :
@@ -1526,7 +1681,188 @@ theorem transversalMollifier_hasWeakL0On (hχ : ContDiff ℝ ∞ χ) (hχs : tsu
       ∃ kε, HasWeakL0On univ (transversalMollifier χ ε u) kε ∧ MemLp kε 2 volume ∧
         eLpNorm (kε - transversalMollifier χ ε k) 2 volume ≤
           ENNReal.ofReal (C * ε) * eLpNorm k 2 (volume.restrict cellSquare) := by
-  sorry
+  classical
+  obtain ⟨a₀, b₀, ε₀, ha₀, hb₀, hε₀, hχband₀, hband₀⟩ := exists_mollify_band hχs
+  -- Enlarge the band to a nonempty interval `[a, b] ⊂ (0, 1)`.
+  set a := min a₀ (1 / 2)
+  set b := max b₀ (1 / 2)
+  have ha : 0 < a := lt_min ha₀ (by norm_num)
+  have hb : b < 1 := max_lt hb₀ (by norm_num)
+  have hab : a ≤ b := (min_le_right _ _).trans (le_max_right _ _)
+  have hsub : Icc a₀ b₀ ⊆ Icc a b := Icc_subset_Icc (min_le_left _ _) (le_max_left _ _)
+  have hχband : tsupport χ ⊆ Icc a b := hχband₀.trans hsub
+  have hband : ∀ ε ∈ Ioo 0 ε₀, ∀ (G : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
+      mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * G z) q = 0 :=
+    fun ε hε G q hq ↦ hband₀ ε hε G q (fun h ↦ hq (hsub h))
+  have hIcc : Icc a b ⊆ Ioo 0 1 := fun h hh ↦ ⟨ha.trans_le hh.1, hh.2.trans_lt hb⟩
+  -- `σ`: a Lipschitz function equal to the period `S` on `[a, b]`, bounded above and below.
+  have hSon : ContDiffOn ℝ ∞ orbitPeriod (Icc a b) := contDiffOn_orbitPeriod.mono hIcc
+  obtain ⟨L, hL⟩ := hSon.exists_lipschitzOnWith (by simp) (convex_Icc a b) isCompact_Icc
+  set σ : ℝ → ℝ := fun h ↦ orbitPeriod (projIcc a b hab h) with hσ_def
+  have hσL : LipschitzWith L σ := by
+    have h := hL.to_restrict.comp (LipschitzWith.projIcc hab)
+    rw [mul_one] at h
+    exact h
+  have hσS (h : ℝ) (hh : h ∈ Icc a b) : σ h = orbitPeriod h := by
+    simp only [hσ_def, projIcc_of_mem hab hh]
+  obtain ⟨h₁, hh₁, hmin⟩ := isCompact_Icc.exists_isMinOn (nonempty_Icc.mpr hab)
+    hSon.continuousOn
+  obtain ⟨h₂, hh₂, hmax⟩ := isCompact_Icc.exists_isMaxOn (nonempty_Icc.mpr hab)
+    hSon.continuousOn
+  set m := orbitPeriod h₁
+  set M := orbitPeriod h₂
+  have hm : 0 < m := orbitPeriod_pos (hIcc hh₁).1 (hIcc hh₁).2
+  have hσm (h : ℝ) : m ≤ σ h := hmin (projIcc a b hab h).2
+  have hσM (h : ℝ) : σ h ≤ M := hmax (projIcc a b hab h).2
+  have hσc : Continuous σ := hσL.continuous
+  have hσ0 (h : ℝ) : σ h ≠ 0 := (hm.trans_le (hσm h)).ne'
+  have hσabs (h : ℝ) : |σ h| ≤ M := by rw [abs_of_pos (hm.trans_le (hσm h))]; exact hσM h
+  have hσinv (h : ℝ) : |(σ h)⁻¹| ≤ m⁻¹ := by
+    rw [abs_inv, abs_of_pos (hm.trans_le (hσm h))]
+    exact inv_anti₀ hm (hσm h)
+  -- Constants.
+  obtain ⟨Ci, hCi⟩ := eLpNorm_cutoff_actionInput_le hχ hχs
+  obtain ⟨Co, hCo⟩ := exists_actionReconstruct_bound ha hb
+  refine ⟨ε₀, hε₀, Co * m⁻¹ * L * Ci, fun ε hε u k hu hk hLk ↦ ?_⟩
+  -- Coordinates: `F = χU`, `Kc = χK`, `Gm = σχK`.
+  set F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q) with hF_def
+  set Kc : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * k (actionAngleInv q) with hKc_def
+  set Gm : ℝ × ℝ → ℂ := fun q ↦ (σ q.1 : ℂ) * Kc q with hGm_def
+  set kε : ℝ × ℝ → ℂ := fun p ↦ if p ∈ puncturedCell then
+    (σ (levelCoord p) : ℂ)⁻¹ * mollifyFst ε Gm (actionAngle p) else 0 with hkε_def
+  have hpF : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q := fun q ↦ by
+    have h := levelCutoff_actionInput_periodic hχs (fun _ ↦ 1) u q
+    simp only [one_mul] at h
+    exact h
+  have hpG : ∀ q : ℝ × ℝ, Gm (q.1, q.2 + 1) = Gm q := fun q ↦ by
+    have h := levelCutoff_actionInput_periodic hχs (fun h ↦ (σ h : ℂ)) k q
+    simp only [hGm_def, hKc_def]
+    linear_combination h
+  -- Both outputs vanish off the band.
+  have hzero_mem {p : ℝ × ℝ} (hp : p ∉ closedCellLevelBand a b) (hc : p ∈ puncturedCell) :
+      levelCoord p ∉ Icc a b := fun hl ↦ hp (by
+    rw [closedCellLevelBand_eq ha hb]
+    exact ⟨hc, hl⟩)
+  have hGm' : Gm = fun z ↦ (χ z.1 : ℂ) * ((σ z.1 : ℂ) * k (actionAngleInv z)) := by
+    funext z
+    simp only [hGm_def, hKc_def]
+    ring
+  have hGband : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFst ε Gm q = 0 := fun q hq ↦ by
+    rw [hGm']
+    exact hband ε hε _ q hq
+  have hKband : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFst ε Kc q = 0 :=
+    fun q hq ↦ hband ε hε (fun z ↦ k (actionAngleInv z)) q hq
+  -- The weak transport derivative.
+  have hL1 : HasWeakL0On puncturedCell u k :=
+    ⟨hLk.1.mono_set sdiff_subset, hLk.2.1.mono_set sdiff_subset,
+      fun φ hφ ↦ hLk.2.2 φ (hφ.mono sdiff_subset)⟩
+  have h2 := hL1.comp_actionAngleInv.levelCutoff hχ hχs
+  have hG : (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ) *
+      ((orbitPeriod q.1 : ℂ) * k (actionAngleInv q))) = Gm := by
+    funext q
+    by_cases hq : χ q.1 = 0
+    · simp [hGm_def, hKc_def, hq]
+    · have hm : q.1 ∈ Icc a b := hχband (subset_closure hq)
+      simp only [hGm_def, hKc_def, hσS q.1 hm]
+      ring
+  rw [hG] at h2
+  have h3 := h2.mollify hε.1
+  have h4 : HasWeakPartialOn actionStrip 1 (transversalMollifier χ ε u ∘ actionAngleInv)
+      (fun q ↦ (orbitPeriod q.1 : ℂ) * kε (actionAngleInv q)) := by
+    refine (h3.mono (subset_univ _)).congr_on (measurableSet_Ioo.prod MeasurableSet.univ)
+      (fun q hq ↦ ?_) (fun q hq ↦ ?_)
+    · have hP := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 q.2
+      have he := comp_actionAngle_actionAngleInv (F := mollifyFst ε F)
+        (mollifyFst_periodic hpF) hq
+      simp only [Function.comp_apply, transversalMollifier, ite_eq_left hP] at he ⊢
+      exact he.symm
+    · have hP := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 q.2
+      have he := comp_actionAngle_actionAngleInv (F := mollifyFst ε Gm)
+        (mollifyFst_periodic hpG) hq
+      simp only [Function.comp_apply] at he
+      simp only [hkε_def, ite_eq_left hP, levelCoord_actionAngleInv hq.1.1 hq.1.2, he]
+      by_cases hm : q.1 ∈ Icc a b
+      · rw [hσS q.1 hm, ← mul_assoc, mul_inv_cancel₀ (by
+          exact_mod_cast (orbitPeriod_pos hq.1.1 hq.1.2).ne'), one_mul]
+      · rw [hGband q hm, mul_zero, mul_zero]
+  have h5 : HasWeakL0On univ (transversalMollifier χ ε u) kε := by
+    refine (hasWeakL0On_of_actionAngle h4).univ_of_band ha hb (fun p hp ↦ ?_) (fun p hp ↦ ?_)
+    · by_cases hc : p ∈ puncturedCell
+      · simp only [transversalMollifier, ite_eq_left hc]
+        exact hband ε hε _ _ (hzero_mem hp hc)
+      · simp [transversalMollifier, hc]
+    · by_cases hc : p ∈ puncturedCell
+      · simp only [hkε_def, ite_eq_left hc]
+        rw [hGband (actionAngle p) (hzero_mem hp hc), mul_zero]
+      · simp [hkε_def, hc]
+  -- `L²` bounds in coordinates.
+  have hKcL : MemLp Kc 2 cylinderMeasure := memLp_cutoff_actionInput hχ hχs hk
+  have hKcn : eLpNorm Kc 2 cylinderMeasure ≤ Ci * eLpNorm k 2 (volume.restrict cellSquare) :=
+    hCi k hk
+  have hGmL : MemLp Gm 2 cylinderMeasure := memLp_levelMul hKcL hσc hσabs
+  have hMG : MemLp (mollifyFst ε Gm) 2 cylinderMeasure := (eLpNorm_mollifyFst_le hε.1 hGmL).1
+  have hMK : MemLp (mollifyFst ε Kc) 2 cylinderMeasure := (eLpNorm_mollifyFst_le hε.1 hKcL).1
+  have hσi : Continuous fun h ↦ (σ h)⁻¹ := hσc.inv₀ hσ0
+  have hinvmul {V : ℝ × ℝ → ℂ} (hV : MemLp V 2 cylinderMeasure) :
+      MemLp (fun q ↦ (σ q.1 : ℂ)⁻¹ * V q) 2 cylinderMeasure ∧
+        eLpNorm (fun q ↦ (σ q.1 : ℂ)⁻¹ * V q) 2 cylinderMeasure ≤
+          ENNReal.ofReal m⁻¹ * eLpNorm V 2 cylinderMeasure := by
+    have hm := memLp_levelMul hV hσi hσinv
+    have he : (fun q ↦ (((σ q.1)⁻¹ : ℝ) : ℂ) * V q) = fun q ↦ (σ q.1 : ℂ)⁻¹ * V q := by
+      funext q
+      rw [Complex.ofReal_inv]
+    rw [he] at hm
+    refine ⟨hm, eLpNorm_le_mul_eLpNorm_of_ae_le_mul hm.aestronglyMeasurable
+      (Eventually.of_forall fun q ↦ ?_) 2⟩
+    rw [norm_mul, norm_inv, Complex.norm_real, Real.norm_eq_abs, ← abs_inv]
+    exact mul_le_mul_of_nonneg_right (hσinv q.1) (norm_nonneg _)
+  -- `k_ε` reconstructs `Ψ = σ⁻¹ M_ε(σχK)`.
+  set Ψ : ℝ × ℝ → ℂ := fun q ↦ (σ q.1 : ℂ)⁻¹ * mollifyFst ε Gm q with hΨ_def
+  have hΨz : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → Ψ q = 0 := fun q hq ↦ by
+    simp only [hΨ_def, hGband q hq, mul_zero]
+  have hrecΨ := hCo Ψ (hinvmul hMG).1 hΨz
+  have hkΨ : actionReconstruct Ψ =ᵐ[volume] kε := ae_actionReconstruct Ψ
+  -- The commutator `Φ = σ⁻¹ (M_ε(σχK) - σ M_ε(χK))`.
+  set B : ℝ × ℝ → ℂ := fun q ↦ mollifyFst ε Gm q - (σ q.1 : ℂ) * mollifyFst ε Kc q with hB_def
+  have hBL : MemLp B 2 cylinderMeasure := hMG.sub (memLp_levelMul hMK hσc hσabs)
+  have hBn : eLpNorm B 2 cylinderMeasure ≤
+      ENNReal.ofReal (ε * L) * eLpNorm Kc 2 cylinderMeasure :=
+    eLpNorm_mollifyFst_mul_sub_le hε.1 hσL hKcL
+  set Φ : ℝ × ℝ → ℂ := fun q ↦ (σ q.1 : ℂ)⁻¹ * B q with hΦ_def
+  have hΦz : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → Φ q = 0 := fun q hq ↦ by
+    simp only [hΦ_def, hB_def, hGband q hq, hKband q hq, mul_zero, sub_zero]
+  have hrecΦ := hCo Φ (hinvmul hBL).1 hΦz
+  have heq : actionReconstruct Φ =ᵐ[volume] kε - transversalMollifier χ ε k := by
+    filter_upwards [ae_actionReconstruct Φ] with p hp
+    rw [hp]
+    by_cases hc : p ∈ puncturedCell
+    · simp only [Pi.sub_apply, hkε_def, transversalMollifier, ite_eq_left hc, hΦ_def, hB_def]
+      rw [mul_sub, ← mul_assoc, inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr (hσ0 _)), one_mul]
+      rfl
+    · simp [hkε_def, transversalMollifier, hc]
+  refine ⟨kε, h5, MemLp.ae_eq hkΨ hrecΨ.1, ?_⟩
+  have hC : ENNReal.ofReal ((Co : ℝ) * m⁻¹ * L * Ci * ε) =
+      (Co : ENNReal) * (ENNReal.ofReal m⁻¹ * (ENNReal.ofReal (ε * L) * Ci)) := by
+    have h₁ : 0 ≤ (Co : ℝ) * m⁻¹ := mul_nonneg Co.coe_nonneg (inv_nonneg.mpr hm.le)
+    have h₂ : 0 ≤ (Co : ℝ) * m⁻¹ * L := mul_nonneg h₁ L.coe_nonneg
+    rw [ENNReal.ofReal_mul (mul_nonneg h₂ Ci.coe_nonneg), ENNReal.ofReal_mul h₂,
+      ENNReal.ofReal_mul h₁, ENNReal.ofReal_mul Co.coe_nonneg,
+      ENNReal.ofReal_mul hε.1.le, ENNReal.ofReal_coe_nnreal, ENNReal.ofReal_coe_nnreal,
+      ENNReal.ofReal_coe_nnreal]
+    ring
+  calc eLpNorm (kε - transversalMollifier χ ε k) 2 volume
+      = eLpNorm (actionReconstruct Φ) 2 volume := eLpNorm_congr_ae heq.symm
+    _ ≤ Co * eLpNorm Φ 2 cylinderMeasure := hrecΦ.2
+    _ ≤ Co * (ENNReal.ofReal m⁻¹ * eLpNorm B 2 cylinderMeasure) := by
+        gcongr
+        exact (hinvmul hBL).2
+    _ ≤ Co * (ENNReal.ofReal m⁻¹ * (ENNReal.ofReal (ε * L) *
+          (Ci * eLpNorm k 2 (volume.restrict cellSquare)))) := by
+        gcongr
+        exact hBn.trans (by gcongr)
+    _ = _ := by
+        rw [hC]
+        ring
 
 end Statements
 

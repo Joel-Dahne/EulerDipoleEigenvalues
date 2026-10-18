@@ -593,6 +593,7 @@ $L_0u=k$ weakly on the cell, $L_0J_\epsilon u$ exists weakly on $\R^2$, lies in 
 \begin{proof}
 \uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-transport,
   lem:line-mollifier}
+\leanok
 In coordinates $L_0=s(h)\partial_\theta$ with $s=1/S$, and $\partial_\theta U=SK$
 (Lemma~\ref{lem:action-angle-transport}). Since $\chi$ depends only on $h$ and $M_\epsilon$ commutes
 with $\partial_\theta$,
@@ -607,6 +608,16 @@ Coordinate norms are taken over one angular period. By
 Lemma~\ref{lem:line-mollifier}(3), applied to a Lipschitz function equal to $S$ on
 $[a-\epsilon_0,b+\epsilon_0]$, the bracket is at most $\epsilon\operatorname{Lip}(S)\|\chi K\|$; $s$ is bounded,
 and the coordinate norms are equivalent to the $L^2$ norms (Lemma~\ref{lem:action-angle-chart}).
+
+In Lean, with $\sigma=S\circ\operatorname{proj}_{[a,b]}$ (Lipschitz, bounded below, equal to
+$S$ on the band): $\chi(h)$ carries $\partial_\theta U=SK$ from the strip to $\R^2$ as
+$\partial_\theta(\chi U)=\sigma\chi K$; mollifying gives
+$\partial_\theta M_\epsilon(\chi U)=M_\epsilon(\sigma\chi K)$; the reverse direction of
+Lemma~\ref{lem:action-angle-transport} gives $L_0J_\epsilon u=k_\epsilon$ on the punctured cell
+with $k_\epsilon=\sigma^{-1}M_\epsilon(\sigma\chi K)\circ(h,\theta)$; and since $J_\epsilon u$
+and $k_\epsilon$ vanish off a compact band, testing against $\eta\varphi$ with $\eta=1$ near
+the band extends the identity to $\R^2$. Only the transport chain rule is used, not the
+full weak-gradient rules of Lemma~\ref{lem:action-angle-weak}.
 \end{proof}
 
 \begin{remark}[Digest note: the transversal mollifier, restated]

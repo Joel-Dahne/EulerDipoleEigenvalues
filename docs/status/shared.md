@@ -78,18 +78,18 @@ See the [virial blueprint](../../blueprint/src/chapters/virial.tex),
 `virial_l2` has no `sorry` of its own. The H¹ commutator identity `virial_h1`
 (proved directly on H¹, no truncation), H¹ skew-symmetry, the box periodization
 of compactly supported cell functions, uniqueness of weak derivatives and the
-equivalence of the two virial forms on `X` have no admissions. The periodization
+equivalence of the two virial forms on `X` have no admissions. The commutator
+`transversalMollifier_hasWeakL0On` is proved from the chart inputs, using only the
+transport chain rule (no full-gradient rules). The periodization
 part of `lem:local-to-global` (`exists_memSobolev_periodize`) is not used.
 Remaining admitted inputs of `virial_l2`, in a candidate order:
 
-1. `transversalMollifier_hasWeakL0On`: moderate conditional on chart inputs.
-   Combine the proved weak transport equivalence with line weak derivatives,
-   the Lipschitz commutator, and compact-band/zero-extension estimates.
-   Full-gradient chain rules are not needed for this commutator.
-2. `transversalMollifier_hasWeakPartialOn` and
+1. `transversalMollifier_hasWeakPartialOn` and
    `tendsto_transversalMollifier_partial`: medium–high (full-gradient transfer).
-   The gradient error must be o(1/ε), not just O(1/ε).
-3. Shared with other routes: `hasWeakPartialOn_liftL2` (`lem:local-to-global`),
+   The gradient error must be o(1/ε), not just O(1/ε). The private helpers of the
+   commutator proof (level cutoff from strip to plane, θ-periodicity of `M_ε`,
+   extension by zero off a band) apply here too.
+2. Shared with other routes: `hasWeakPartialOn_liftL2` (`lem:local-to-global`),
    `isTransportPair_of_isEigenSolution` and the chart/coarea inputs.
 
 ### Transport and later-sector regularity
