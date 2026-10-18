@@ -75,7 +75,8 @@ See the [virial blueprint](../../blueprint/src/chapters/virial.tex),
 [CellPeriodization.lean](../../NoEmbeddedEigenvalues/CellPeriodization.lean) and
 [VirialL2.lean](../../NoEmbeddedEigenvalues/VirialL2.lean).
 
-`virial_l2` has no `sorry` of its own. H¹ skew-symmetry, the box periodization
+`virial_l2` has no `sorry` of its own. The H¹ commutator identity `virial_h1`
+(proved directly on H¹, no truncation), H¹ skew-symmetry, the box periodization
 of compactly supported cell functions, uniqueness of weak derivatives and the
 equivalence of the two virial forms on `X` have no admissions. The periodization
 part of `lem:local-to-global` (`exists_memSobolev_periodize`) is not used.
@@ -88,9 +89,7 @@ Remaining admitted inputs of `virial_l2`, in a candidate order:
 2. `transversalMollifier_hasWeakPartialOn` and
    `tendsto_transversalMollifier_partial`: medium–high (full-gradient transfer).
    The gradient error must be o(1/ε), not just O(1/ε).
-3. `virial_h1`: moderate. Fourier truncation, continuity of the two quadratic
-   forms on H¹ and the smooth identity; skew-symmetry is already available.
-4. Shared with other routes: `hasWeakPartialOn_liftL2` (`lem:local-to-global`),
+3. Shared with other routes: `hasWeakPartialOn_liftL2` (`lem:local-to-global`),
    `isTransportPair_of_isEigenSolution` and the chart/coarea inputs.
 
 ### Transport and later-sector regularity

@@ -234,7 +234,7 @@ needed, and $W\in C^1$ would suffice.
 \label{lem:virial-h1}
 \uses{def:adapted-field, def:half-density-generator, def:sobolev-torus,
   def:fourier-derivatives, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.virial_h1}
+\lean{NoEmbeddedEigenvalues.virial_h1, NoEmbeddedEigenvalues.virial_h1_torus}
 \leanok
 Let $W\in C^2$ be periodic and adapted with periodic coefficient $f\in C^1$. For every
 $u\in H^1(\T^2)$, $2\operatorname{Re}\ip{Du}{Hu}=\operatorname{Re}\ip{fHu}{u}$.
@@ -244,20 +244,48 @@ derivatives of $u$ are assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:half-density-skew-h1, lem:commutator-pointwise, lem:commutator-algebra,
-  lem:sobolev-torus-basic, lem:torus-fourier-basis, lem:lift-torus}
-Boundedness of the periodic coefficients and their needed derivatives gives
-bounded maps $D,H:H^1\to L^2$.
+\uses{lem:l2-product-rule, lem:torus-fourier-basis, lem:lift-torus}
+\leanok
+Write $v=(\sin y,-\sin x)$, so that $Hu=-iv\cdot\nabla u$, and $g=v_1W_2-v_2W_1
+=\sin y\,W_2+\sin x\,W_1$. Since $\operatorname{Re}(iz)=-\operatorname{Im}z$,
+\[
+  2\operatorname{Re}\ip{Du}{Hu}
+  =-2\operatorname{Im}\ip{W\cdot\nabla u}{v\cdot\nabla u}
+   -\operatorname{Im}\ip{\Div W\,u}{v\cdot\nabla u}.
+\]
+In $\ip{W\cdot\nabla u}{v\cdot\nabla u}=\sum_{j,k}\int W_jv_k\,\partial_ju\,\overline{\partial_ku}$
+the terms with $j=k$ are real, and the two mixed terms give
+$\operatorname{Im}\ip{W\cdot\nabla u}{v\cdot\nabla u}
+=-\operatorname{Im}\int g\,\partial_xu\,\overline{\partial_yu}$.
 
-For smooth $u$,
-$2\operatorname{Re}\ip{Du}{Hu}=\ip{HDu}{u}-\ip{DHu}{u}=\ip{[H,D]u}{u}
-=\operatorname{Re}\ip{fHu}{u}$ by skew-symmetry
-(Lemma~\ref{lem:half-density-skew-h1}) and Lemma~\ref{lem:commutator-pointwise}(3). The two expressions
-$\operatorname{Re}\ip{Du}{Hu}$ and $\operatorname{Re}\ip{fHu}{u}$
-are continuous quadratic forms on $H^1$. Apply the smooth identity to
-Fourier truncations and pass to the $H^1$ limit. The expressions $HDu$
-and $DHu$ are used only for the smooth approximants, not for the limiting
-$H^1$ function.
+\emph{The mixed term.} For real $g\in C^1$ and $u\in H^1$,
+\[
+  2\operatorname{Im}\int g\,\partial_xu\,\overline{\partial_yu}
+  =\operatorname{Im}\int(\partial_xg\,\partial_yu-\partial_yg\,\partial_xu)\,\bar u .
+\]
+Indeed $\ip{\partial_xa}{\partial_yb}=\ip{\partial_ya}{\partial_xb}$ for $a,b\in H^1$, since
+both sides are $(2\pi)^2\sum_kk_1k_2\,\hat a_k\overline{\hat b_k}$ by Parseval
+(Lemma~\ref{lem:torus-fourier-basis}). For $a=u$ and $b=gu$, with the product rule
+(Lemma~\ref{lem:l2-product-rule}), this reads
+$\int g(\partial_xu\,\overline{\partial_yu}-\partial_yu\,\overline{\partial_xu})
+=\int(\partial_xg\,\partial_yu-\partial_yg\,\partial_xu)\bar u$, and the left side is
+$2i\operatorname{Im}\int g\,\partial_xu\,\overline{\partial_yu}$.
+
+\emph{Adaptedness.} Hence
+\[
+  2\operatorname{Re}\ip{Du}{Hu}
+  =\operatorname{Im}\int\bigl((\sin y\Div W-\partial_yg)\,\partial_xu
+    +(\partial_xg-\sin x\Div W)\,\partial_yu\bigr)\bar u .
+\]
+Expanding the derivatives of $g$, the two adaptedness equations of
+Definition~\ref{def:adapted-field} are exactly
+$\partial_yg-\sin y\Div W=-f\sin y$ and $\partial_xg-\sin x\Div W=-f\sin x$. So the right
+side is $\operatorname{Im}\int f\,(v\cdot\nabla u)\,\bar u
+=\operatorname{Re}\ip{fHu}{u}$.
+
+No approximation is used: the only second-order part of $[H,D]$ is the mixed term, and
+$\operatorname{Im}(\partial_xu\,\overline{\partial_yu})$ is a divergence (a null
+Lagrangian), so the identity is continuous on $H^1$ term by term.
 \end{proof}
 
 \begin{lemma}[Integration by parts for the stream function]
@@ -722,7 +750,7 @@ mollifier outputs and uses the periodic cutoff $c=\chi(\Psi/2)$.
 It does not construct $J_\epsilon^\dagger DJ_\epsilon$.
 The Lean proof (October 2026) follows the argument above and has no
 \texttt{sorry} of its own; it depends on the admitted
-Lemmas~\ref{lem:virial-h1}, \ref{lem:transversal-mollifier-derivatives},
+Lemmas~\ref{lem:transversal-mollifier-derivatives},
 \ref{lem:transversal-mollifier-commutator}, \ref{lem:local-to-global},
 \ref{lem:transport-pair-eigen} and on the chart inputs of the mollifier. Compared with
 the previous sketch: (i) the periodization is the explicit box periodization

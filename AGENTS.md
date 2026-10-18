@@ -101,8 +101,8 @@ motivation, and standard facts cited rather than proved.
   Fourier integrations by parts (skew-symmetry of `D` on `H¹`, the equivalence of the two
   forms on `X`); `CellPeriodization.lean` periodizes compactly supported cell functions to
   the torus (`boxPeriodize`) and proves uniqueness of weak derivatives; `VirialL2.lean`
-  proves the virial identities for `L²` eigenfunctions and fields supported in an annulus
-  from the mollifier lemmas; `TransportOperator.lean`
+  proves the `H¹` commutator identity and the virial identities for `L²` eigenfunctions and
+  fields supported in an annulus from the mollifier lemmas; `TransportOperator.lean`
   defines `H = -iL₀` as an unbounded operator and states its self-adjointness;
   `LiftTorus.lean` relates periodic lifts to functions on the torus (classical
   vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines

@@ -3,8 +3,8 @@ import NoEmbeddedEigenvalues.CellPeriodization
 /-!
 # The virial identities on the `L²` domain
 
-Blueprint: `lem:virial-exact-identity`, `lem:stream-ibp`, `lem:half-density-skew-h1` and
-`lem:virial-l2` (proved, the last from admitted inputs); `lem:virial-h1` (stated).
+Blueprint: `lem:virial-exact-identity`, `lem:stream-ibp`, `lem:half-density-skew-h1`,
+`lem:virial-h1` and `lem:virial-l2` (all proved, the last from admitted inputs).
 
 For a smooth adapted field `W` supported in a compact annulus `{2h₁ ≤ Ψ ≤ 2h₂}` of the
 cells, `0 < h₁`, `h₂ < 1` (away from the separatrix and the centers), the two smooth virial
@@ -23,7 +23,11 @@ The `H¹` statements take Fourier derivative witnesses explicitly (they exist fo
 input by `MemSobolev.exists_hasFourierPartial`). Their displayed generators use the lifts
 of those derivatives, not classical derivatives of arbitrary representatives. Only first
 derivatives occur in the conclusions; no assertion that `HDu` or `DHu` is in `L²` is made.
-Skew-symmetry on `H¹` is proved; the commutator identity `virial_h1` remains admitted.
+Both are proved without approximation. For the commutator identity `virial_h1` the only
+second-order part of `[H, D]` is a mixed term `Im ∫ g ∂ₓu ∂_y ū`, which
+`two_im_inner_partial_mulL2` reduces to first-order terms by the symmetry of mixed
+derivatives in Fourier variables (`inner_partial_swap`); adaptedness then cancels the rest
+pointwise.
 -/
 noncomputable section
 
@@ -90,22 +94,78 @@ theorem squarePairing_halfDensityGen_h1 {W₁ W₂ : ℝ × ℝ → ℝ}
       (hpd.const_mul (1 / 2)), ehalf, mulL2_smul_left, mulL2_smul_left, ← inner_add_right,
     ← inner_add_right, ← inner_add_right, ← inner_add_right, inner_conj_symm, h]
 
-/-- The commutator identity as a continuous quadratic form on `H¹(𝕋²)`.
-`Du` and `Hu = -i L₀u` use the supplied Fourier partial derivatives. -/
-theorem virial_h1 {W₁ W₂ f : ℝ × ℝ → ℝ} (had : IsAdaptedOn W₁ W₂ f Set.univ)
-    (hW₁ : ContDiff ℝ 2 W₁) (hW₂ : ContDiff ℝ 2 W₂) (hf : ContDiff ℝ 1 f)
-    (hpW₁ : IsPeriodicLift W₁) (hpW₂ : IsPeriodicLift W₂) (hpf : IsPeriodicLift f)
-    {u : L2} (hu : MemSobolev 1 u) {du : Fin 2 → L2}
-    (hdu : ∀ j, HasFourierPartial j u (du j)) :
-    let Du : ℝ × ℝ → ℂ := fun p ↦ W₁ p • liftL2 (du 0) p + W₂ p • liftL2 (du 1) p +
-      ((1 / 2 : ℝ) * divergence W₁ W₂ p) • liftL2 u p
-    let Hu : ℝ × ℝ → ℂ := fun p ↦ -I *
-      (Real.sin p.2 • liftL2 (du 0) p - Real.sin p.1 • liftL2 (du 1) p)
-    2 * (squarePairing Du Hu).re =
-      (squarePairing (fun p ↦ f p • Hu p) (liftL2 u)).re := by
-  sorry
+/-! ### The commutator identity on `H¹` (`lem:virial-h1`) -/
 
-/-! ### The `H¹` identity on the torus -/
+/-- Symmetry of mixed derivatives in the weak sense: `⟪∂ₓu, ∂_y v⟫ = ⟪∂_y u, ∂ₓv⟫` for `u, v`
+with Fourier partial derivatives, from Parseval. -/
+theorem inner_partial_swap {u u₀ u₁ v v₀ v₁ : L2} (hu₀ : HasFourierPartial 0 u u₀)
+    (hu₁ : HasFourierPartial 1 u u₁) (hv₀ : HasFourierPartial 0 v v₀)
+    (hv₁ : HasFourierPartial 1 v v₁) : ⟪u₀, v₁⟫_ℂ = ⟪u₁, v₀⟫_ℂ := by
+  have hs := torusFourierBasis.hasSum_inner_mul_inner u₀ v₁
+  have ht := torusFourierBasis.hasSum_inner_mul_inner u₁ v₀
+  refine hs.unique (ht.congr_fun fun k ↦ ?_)
+  rw [← inner_conj_symm (𝕜 := ℂ) u₀ (torusFourierBasis k),
+    ← inner_conj_symm (𝕜 := ℂ) u₁ (torusFourierBasis k)]
+  simp only [← HilbertBasis.repr_apply_apply, torusFourierBasis_repr, hu₀ k, hu₁ k, hv₀ k,
+    hv₁ k, map_mul, Complex.conj_I, map_intCast, map_ofNat, Complex.conj_ofReal,
+    frequencyComponent]
+  simp
+  ring
+
+/-- For real `c`, `Im ⟪v, c w⟫ = -Im ⟪w, c v⟫`. -/
+theorem im_inner_mulL2_swap {c : C(Torus, ℂ)} (hr : ∀ t, conj (c t) = c t) (v w : L2) :
+    (⟪v, mulL2 c w⟫_ℂ).im = -(⟪w, mulL2 c v⟫_ℂ).im := by
+  rw [inner_mulL2_right hr, ← inner_conj_symm, conj_im]
+
+theorem conj_mul_of_real {a b : C(Torus, ℂ)} (ha : ∀ t, conj (a t) = a t)
+    (hb : ∀ t, conj (b t) = b t) (t : Torus) : conj ((a * b) t) = (a * b) t := by
+  rw [ContinuousMap.mul_apply, map_mul, ha, hb]
+
+/-- The null-Lagrangian identity: for real `c`,
+`2 Im ⟪∂ₓu, c ∂_y u⟫ = Im ⟪∂_y u, (∂ₓc) u⟫ - Im ⟪∂ₓu, (∂_y c) u⟫`. Only first derivatives
+of `u` occur; the proof applies `inner_partial_swap` to `u` and `cu`. -/
+theorem two_im_inner_partial_mulL2 {c cx cy : C(Torus, ℂ)} (hr : ∀ t, conj (c t) = c t)
+    (hx : HasClassicalPartial 0 c cx) (hy : HasClassicalPartial 1 c cy) {u u₀ u₁ : L2}
+    (hu₀ : HasFourierPartial 0 u u₀) (hu₁ : HasFourierPartial 1 u u₁) :
+    2 * (⟪u₀, mulL2 c u₁⟫_ℂ).im = (⟪u₁, mulL2 cx u⟫_ℂ).im - (⟪u₀, mulL2 cy u⟫_ℂ).im := by
+  have h := inner_partial_swap hu₀ hu₁ (hasFourierPartial_mulL2 hx hu₀)
+    (hasFourierPartial_mulL2 hy hu₁)
+  rw [inner_add_right, inner_add_right] at h
+  have h2 := im_inner_mulL2_swap hr u₁ u₀
+  have := congrArg im h
+  simp only [add_im] at this
+  linarith
+
+/-- The commutator identity for torus coefficients: with `Hu = -i(s u₀ - t u₁)`,
+`Du = c₁u₀ + c₂u₁ + ch u`, `G = s c₂ + t c₁`, `∂ₓG = 2t ch - f t` and `∂_y G = 2s ch - f s`,
+`2 Re ⟪Hu, Du⟫ = Re ⟪u, f Hu⟫`. The `u₀u₁` terms of `⟪Hu, Du⟫` form `Im ⟪u₀, G u₁⟫`, which
+`two_im_inner_partial_mulL2` turns into lower-order terms. -/
+theorem re_inner_transport_mulL2 {s t c₁ c₂ ch f G Gx Gy : C(Torus, ℂ)}
+    (hrs : ∀ x, conj (s x) = s x) (hrt : ∀ x, conj (t x) = t x)
+    (hr₁ : ∀ x, conj (c₁ x) = c₁ x) (hr₂ : ∀ x, conj (c₂ x) = c₂ x)
+    (hrf : ∀ x, conj (f x) = f x) (hrG : ∀ x, conj (G x) = G x)
+    (hGx : HasClassicalPartial 0 G Gx) (hGy : HasClassicalPartial 1 G Gy)
+    (hG : G = s * c₂ + t * c₁) (eGx : Gx = (2 : ℂ) • (t * ch) - f * t)
+    (eGy : Gy = (2 : ℂ) • (s * ch) - f * s) {u u₀ u₁ : L2}
+    (hu₀ : HasFourierPartial 0 u u₀) (hu₁ : HasFourierPartial 1 u u₁) :
+    2 * (⟪-I • (mulL2 s u₀ - mulL2 t u₁), mulL2 c₁ u₀ + mulL2 c₂ u₁ + mulL2 ch u⟫_ℂ).re =
+      (⟪u, mulL2 f (-I • (mulL2 s u₀ - mulL2 t u₁))⟫_ℂ).re := by
+  have key := two_im_inner_partial_mulL2 hrG hGx hGy hu₀ hu₁
+  rw [hG, eGx, eGy] at key
+  simp only [mulL2_add_left, mulL2_sub_left, mulL2_smul_left, inner_add_right,
+    inner_sub_right, inner_smul_right, add_im, sub_im, mul_im, re_ofNat, im_ofNat, zero_mul,
+    add_zero] at key
+  have a1 := im_inner_mulL2_swap (conj_mul_of_real hrs hr₁) u₀ u₀
+  have a2 := im_inner_mulL2_swap (conj_mul_of_real hrt hr₂) u₁ u₁
+  have a3 := im_inner_mulL2_swap (conj_mul_of_real hrt hr₁) u₁ u₀
+  have a4 := im_inner_mulL2_swap (conj_mul_of_real hrf hrs) u u₀
+  have a5 := im_inner_mulL2_swap (conj_mul_of_real hrf hrt) u u₁
+  rw [inner_smul_left, inner_sub_left, ← inner_mulL2_right hrs, ← inner_mulL2_right hrt,
+    mulL2_smul_right, mulL2_sub_right, mulL2_mulL2, mulL2_mulL2, inner_smul_right,
+    inner_sub_right]
+  simp only [mulL2_add_right, mulL2_mulL2, inner_add_right, map_neg, Complex.conj_I, neg_neg,
+    mul_re, I_re, I_im, neg_re, neg_im, add_im, sub_im, sub_re, zero_mul, one_mul, zero_sub]
+  linarith
 
 /-- `sin y` on the torus. -/
 def sinYTorus : C(Torus, ℂ) :=
@@ -115,39 +175,106 @@ def sinYTorus : C(Torus, ℂ) :=
 def sinXTorus : C(Torus, ℂ) :=
   torusFunR (Real.continuous_sin.comp continuous_fst) isPeriodicLift_sin_fst
 
-/-- `virial_h1` as an identity of torus inner products: with `Du = W₁u₀ + W₂u₁ + ½ div W u`
-and `Hu = -i(sin y u₀ - sin x u₁)`, `2 Re ⟪Hu, Du⟫ = Re ⟪u, f Hu⟫`. -/
+/-- The commutator identity as an identity of torus inner products: with
+`Du = W₁u₀ + W₂u₁ + ½ div W u` and `Hu = -i(sin y u₀ - sin x u₁)`,
+`2 Re ⟪Hu, Du⟫ = Re ⟪u, f Hu⟫`. Adaptedness enters only through the derivatives of
+`G = sin y W₂ + sin x W₁`. -/
 theorem virial_h1_torus {W₁ W₂ f : ℝ × ℝ → ℝ} (had : IsAdaptedOn W₁ W₂ f Set.univ)
     (hW₁ : ContDiff ℝ 2 W₁) (hW₂ : ContDiff ℝ 2 W₂) (hf : ContDiff ℝ 1 f)
     (hpW₁ : IsPeriodicLift W₁) (hpW₂ : IsPeriodicLift W₂) (hpf : IsPeriodicLift f)
     (hhalf : Continuous fun p ↦ (1 / 2 : ℝ) * divergence W₁ W₂ p)
     (hphalf : IsPeriodicLift fun p ↦ (1 / 2 : ℝ) * divergence W₁ W₂ p)
-    {u : L2} (hu : MemSobolev 1 u) {du : Fin 2 → L2}
-    (hdu : ∀ j, HasFourierPartial j u (du j)) :
+    {u : L2} {du : Fin 2 → L2} (hdu : ∀ j, HasFourierPartial j u (du j)) :
     2 * (⟪-I • (mulL2 sinYTorus (du 0) - mulL2 sinXTorus (du 1)),
         mulL2 (torusFunR hW₁.continuous hpW₁) (du 0) +
           mulL2 (torusFunR hW₂.continuous hpW₂) (du 1) +
           mulL2 (torusFunR hhalf hphalf) u⟫_ℂ).re =
       (⟪u, mulL2 (torusFunR hf.continuous hpf)
         (-I • (mulL2 sinYTorus (du 0) - mulL2 sinXTorus (du 1)))⟫_ℂ).re := by
-  have V := virial_h1 had hW₁ hW₂ hf hpW₁ hpW₂ hpf hu hdu
-  dsimp only at V
-  set Hu := -I • (mulL2 sinYTorus (du 0) - mulL2 sinXTorus (du 1))
-  have hH : (fun p ↦ -I * (Real.sin p.2 • liftL2 (du 0) p - Real.sin p.1 • liftL2 (du 1) p))
-      =ᵐ[volume] liftL2 Hu := by
+  have hW₁1 : ContDiff ℝ 1 W₁ := hW₁.of_le (by norm_num)
+  have hW₂1 : ContDiff ℝ 1 W₂ := hW₂.of_le (by norm_num)
+  set g : ℝ × ℝ → ℝ := fun q ↦ Real.sin q.2 * W₂ q + Real.sin q.1 * W₁ q with hg_def
+  have hg : ContDiff ℝ 1 g :=
+    ((Real.contDiff_sin.comp contDiff_snd).mul hW₂1).add
+      ((Real.contDiff_sin.comp contDiff_fst).mul hW₁1)
+  have hpg : IsPeriodicLift g := fun q ↦ by
+    simp only [hg_def, (hpW₁ q).1, (hpW₁ q).2, (hpW₂ q).1, (hpW₂ q).2, Real.sin_add_two_pi,
+      and_self]
+  have d₁ (q : ℝ × ℝ) : DifferentiableAt ℝ W₁ q := hW₁1.differentiable one_ne_zero q
+  have d₂ (q : ℝ × ℝ) : DifferentiableAt ℝ W₂ q := hW₂1.differentiable one_ne_zero q
+  have gx (q : ℝ × ℝ) : partialX g q =
+      Real.sin q.2 * partialX W₂ q + (Real.cos q.1 * W₁ q + Real.sin q.1 * partialX W₁ q) := by
+    have h := ((hasDerivAt_partialX (d₂ q)).const_mul (Real.sin q.2)).add
+      ((Real.hasDerivAt_sin q.1).mul (hasDerivAt_partialX (d₁ q)))
+    exact h.deriv
+  have gy (q : ℝ × ℝ) : partialY g q =
+      (Real.cos q.2 * W₂ q + Real.sin q.2 * partialY W₂ q) + Real.sin q.1 * partialY W₁ q := by
+    have h := ((Real.hasDerivAt_sin q.2).mul (hasDerivAt_partialY (d₂ q))).add
+      ((hasDerivAt_partialY (d₁ q)).const_mul (Real.sin q.1))
+    exact h.deriv
+  have r {g : ℝ × ℝ → ℝ} (hc : Continuous g) (hp : IsPeriodicLift g) := conj_torusFunR hc hp
+  refine re_inner_transport_mulL2 (r _ _) (r _ _) (r _ _) (r _ _) (r _ _) (r hg.continuous hpg)
+    (hasClassicalPartial_torusFunR_x hg hpg) (hasClassicalPartial_torusFunR_y hg hpg)
+    ?_ ?_ ?_ (hdu 0) (hdu 1)
+  · refine torusMap_ext fun q ↦ ?_
+    simp only [ContinuousMap.add_apply, ContinuousMap.mul_apply, torusFunR_torusProj,
+      Function.comp_apply, hg_def]
+    push_cast
+    ring
+  · refine torusMap_ext fun q ↦ ?_
+    obtain ⟨-, h2⟩ := had q (Set.mem_univ q)
+    simp only [classicalL0, smul_eq_mul] at h2
+    have h2' := congrArg (fun x : ℝ ↦ (x : ℂ)) h2
+    push_cast at h2'
+    simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply, ContinuousMap.mul_apply,
+      torusFunR_torusProj, Function.comp_apply, smul_eq_mul, gx, divergence]
+    push_cast
+    linear_combination h2'
+  · refine torusMap_ext fun q ↦ ?_
+    obtain ⟨h1, -⟩ := had q (Set.mem_univ q)
+    simp only [classicalL0, smul_eq_mul] at h1
+    have h1' := congrArg (fun x : ℝ ↦ (x : ℂ)) h1
+    push_cast at h1'
+    simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply, ContinuousMap.mul_apply,
+      torusFunR_torusProj, Function.comp_apply, smul_eq_mul, gy, divergence]
+    push_cast
+    linear_combination -h1'
+
+/-- The commutator identity as a continuous quadratic form on `H¹(𝕋²)`.
+`Du` and `Hu = -i L₀u` use the supplied Fourier partial derivatives; no second derivatives
+of `u` occur. -/
+theorem virial_h1 {W₁ W₂ f : ℝ × ℝ → ℝ} (had : IsAdaptedOn W₁ W₂ f Set.univ)
+    (hW₁ : ContDiff ℝ 2 W₁) (hW₂ : ContDiff ℝ 2 W₂) (hf : ContDiff ℝ 1 f)
+    (hpW₁ : IsPeriodicLift W₁) (hpW₂ : IsPeriodicLift W₂) (hpf : IsPeriodicLift f)
+    {u : L2} {du : Fin 2 → L2} (hdu : ∀ j, HasFourierPartial j u (du j)) :
+    let Du : ℝ × ℝ → ℂ := fun p ↦ W₁ p • liftL2 (du 0) p + W₂ p • liftL2 (du 1) p +
+      ((1 / 2 : ℝ) * divergence W₁ W₂ p) • liftL2 u p
+    let Hu : ℝ × ℝ → ℂ := fun p ↦ -I *
+      (Real.sin p.2 • liftL2 (du 0) p - Real.sin p.1 • liftL2 (du 1) p)
+    2 * (squarePairing Du Hu).re =
+      (squarePairing (fun p ↦ f p • Hu p) (liftL2 u)).re := by
+  intro Du Hu
+  have hW₁1 : ContDiff ℝ 1 W₁ := hW₁.of_le (by norm_num)
+  have hW₂1 : ContDiff ℝ 1 W₂ := hW₂.of_le (by norm_num)
+  have hpd : IsPeriodicLift (divergence W₁ W₂) := hpW₁.partialX.add hpW₂.partialY
+  have hhalf : Continuous fun p ↦ (1 / 2 : ℝ) * divergence W₁ W₂ p :=
+    continuous_const.mul ((continuous_partialX_real hW₁1).add (continuous_partialY_real hW₂1))
+  have V := virial_h1_torus had hW₁ hW₂ hf hpW₁ hpW₂ hpf hhalf (hpd.const_mul (1 / 2)) hdu
+  set Hu' := -I • (mulL2 sinYTorus (du 0) - mulL2 sinXTorus (du 1))
+  have hH : Hu =ᵐ[volume] liftL2 Hu' := by
     filter_upwards [liftL2_smul_ae (-I) (mulL2 sinYTorus (du 0) - mulL2 sinXTorus (du 1)),
       liftL2_sub_ae (mulL2 sinYTorus (du 0)) (mulL2 sinXTorus (du 1)),
       liftL2_mulL2_ae sinYTorus (du 0), liftL2_mulL2_ae sinXTorus (du 1)] with p h1 h2 h3 h4
     rw [h1, h2, h3, h4]
-    simp only [sinYTorus, sinXTorus, torusFunR_torusProj, real_smul, Function.comp_apply]
-  have hfH : (fun p ↦ f p • (-I * (Real.sin p.2 • liftL2 (du 0) p -
-      Real.sin p.1 • liftL2 (du 1) p))) =ᵐ[volume] fun p ↦ f p • liftL2 Hu p := by
+    simp only [Hu, sinYTorus, sinXTorus, torusFunR_torusProj, real_smul, Function.comp_apply]
+  have hfH : (fun p ↦ f p • Hu p) =ᵐ[volume] fun p ↦ f p • liftL2 Hu' p := by
     filter_upwards [hH] with p hp
     rw [hp]
   rw [squarePairing_congr_ae EventuallyEq.rfl hH, squarePairing_congr_ae hfH EventuallyEq.rfl,
-    squarePairing_smul_liftL2_add₃ hW₁.continuous hpW₁ hW₂.continuous hpW₂ hhalf hphalf,
-    squarePairing_smul_liftL2 hf.continuous hpf] at V
-  rw [inner_add_right, inner_add_right]
+    squarePairing_smul_liftL2_add₃ hW₁.continuous hpW₁ hW₂.continuous hpW₂ hhalf
+      (hpd.const_mul (1 / 2)),
+    squarePairing_smul_liftL2 hf.continuous hpf]
+  rw [inner_add_right, inner_add_right] at V
   exact V
 
 /-- The virial identity for a pair `ω', ψ'` with Fourier derivatives, when the transport
@@ -172,11 +299,7 @@ theorem virial_eps_identity {W₁ W₂ f : ℝ × ℝ → ℝ} (had : IsAdaptedO
           mulL2 (torusFunR hW₂.continuous hpW₂) (dω 1 + dψ 1) +
           mulL2 (torusFunR hhalf hphalf) (ω' + ψ')⟫_ℂ).re := by
   have hda (j : Fin 2) : HasFourierPartial j (ω' + ψ') (dω j + dψ j) := (hdω j).add (hdψ j)
-  have ha1 : MemSobolev 1 (ω' + ψ') := by
-    have := memSobolev_add_one_of_hasFourierPartial (memSobolev_zero _) (hda 0) (hda 1)
-      (memSobolev_zero _) (memSobolev_zero _)
-    simpa using this
-  have V := virial_h1_torus had hW₁ hW₂ hf hpW₁ hpW₂ hpf hhalf hphalf ha1 hda
+  have V := virial_h1_torus had hW₁ hW₂ hf hpW₁ hpW₂ hpf hhalf hphalf hda
   rw [hr] at V
   -- `Re ⟪ω', Dω'⟫ = 0`.
   have hW₁1 : ContDiff ℝ 1 W₁ := hW₁.of_le (by norm_num)
