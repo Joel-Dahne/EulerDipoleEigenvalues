@@ -12,6 +12,12 @@ lean-mcp:
 build:
     lake build
 
+# Names may omit the `NoEmbeddedEigenvalues.` prefix; `--all` lists every admission.
+# List the declarations with `sorry` (and project axioms) that Lean declarations depend on
+sorries +args="main":
+    lake -q build --log-level=error
+    lake env lean --run scripts/SorryDeps.lean {{args}}
+
 # Output in Manuscript/build. `just manuscript eigenvalues` builds the original manuscript.
 # Build the reworked manuscript PDF and rebuild it whenever the source changes
 manuscript file="manuscript":
