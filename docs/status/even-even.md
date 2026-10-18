@@ -44,7 +44,10 @@ All transversal mollifier lemmas and the eigenfunction transport pair are proved
 
 The largest reviewed work packages are the fractional trace infrastructure,
 full-gradient/stronger transversal estimates, and pairing-limit assembly.
-Relative difficulty assessments are preliminary, not timing estimates.
+Relative difficulty assessments are preliminary, not timing estimates. Pairing-limit
+work now has the finite-interval estimates and a good sequence carrying periodic ACL
+transport representatives; the comparison and tail-limit assembly remains (see
+[shared infrastructure](shared.md)).
 
 ## Deferred possibilities
 

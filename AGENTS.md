@@ -115,6 +115,9 @@ motivation, and standard facts cited rather than proved.
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
   period lemma. `OrbitCoordinates.lean` defines the orbit coordinates `(h, t)`,
   flow-time level integrals and normal/tangential derivatives. `Transport.lean` defines transport pairs on open unions of orbits.
+  `TransportODE.lean` gives finite-interval transport/pairing estimates and nonresonant
+  periodic uniqueness with inherited translation characters, together with the shared
+  monotone/antitone AC composition lemmas.
   `CanonicalProfile.lean` defines the canonical transport profile on an arc.
   `CanonicalBoundaryForm.lean` identifies its arc form with the explicit-derivative
   boundary form, using a.e. chain rules under `tanh` on the weighted domain.

@@ -1,10 +1,12 @@
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.IntervalH1
+import NoEmbeddedEigenvalues.TransportODE
 
 /-!
 # Orbitwise transport and resonant vanishing
 
-Blueprint: `lem:resonant-vanishing`.
+Blueprint: `lem:resonant-vanishing`, `lem:cell-orbit-transport`,
+`lem:good-level-transport`.
 
 On almost every orbit `γ_h` of an annulus, the transport unknown `z` of a transport pair is a
 periodic absolutely continuous solution of `(-i∂ₜ - λ)z = f`. Integrating
@@ -13,6 +15,12 @@ At a resonance `kb(h_k) = λ` the right side must vanish: otherwise `|v_k(h)| �
 which is not square integrable in `h`, while the area formula and Cauchy–Schwarz bound
 `∫ |v_k|² dh` by `‖v‖²_{L²}`. Only the local Lipschitz bound `|kb(h) - λ| ≤ C|h - h_k|`
 enters, not the sign of `S'`.
+
+Rational annuli give one common full-measure set of cell levels carrying transport
+representatives. Good levels avoiding any prescribed null set can be selected there.
+At those levels periodic uniqueness transfers the forcing's quarter-period character
+to the representatives; no planar a.e. character hypothesis on `v` is needed. These
+preparatory results still use the admitted orbit-restriction theorem `lem:coarea`.
 -/
 
 noncomputable section
@@ -156,6 +164,69 @@ theorem IsTransportPair.ae_orbit_transport (hp : IsTransportPair lam U v f) {h�
   refine ⟨G, hG, hper, hac, ?_⟩
   filter_upwards [hd, hG] with t ht hGt
   rwa [← hGt] at ht
+
+/-- A single full-measure set of levels carries periodic ACL transport representatives
+    throughout the cell. Countably many rational annuli suffice, so no uncountable union
+    of exceptional sets is taken. -/
+theorem IsTransportPair.ae_orbit_transport_cell (hp : IsTransportPair lam U v f)
+    (hU : cellSquare ⊆ U) :
+    ∀ᵐ h ∂(volume.restrict (Set.Ioo (0 : ℝ) 1)), ∃ Z : ℝ → ℂ,
+      (∀ᵐ t, Z t = transportUnknown lam v f (dipoleOrbit h t)) ∧
+      Function.Periodic Z (orbitPeriod h) ∧ (∀ c d, AbsolutelyContinuousOnInterval Z c d) ∧
+      ∀ᵐ t, HasDerivAt Z (I * (lam * Z t + f (dipoleOrbit h t))) t := by
+  let P : ℝ → Prop := fun h ↦ ∃ Z : ℝ → ℂ,
+    (∀ᵐ t, Z t = transportUnknown lam v f (dipoleOrbit h t)) ∧
+    Function.Periodic Z (orbitPeriod h) ∧ (∀ c d, AbsolutelyContinuousOnInterval Z c d) ∧
+    ∀ᵐ t, HasDerivAt Z (I * (lam * Z t + f (dipoleOrbit h t))) t
+  have hq (a b : ℚ) : ∀ᵐ h : ℝ, 0 < (a : ℝ) → (a : ℝ) < b → (b : ℝ) < 1 →
+      h ∈ Set.Ioo (a : ℝ) b → P h := by
+    by_cases ha : 0 < (a : ℝ)
+    · by_cases hab : (a : ℝ) < b
+      · by_cases hb : (b : ℝ) < 1
+        · have hA : orbitAnnulus a b ⊆ U := fun p hp ↦ hU hp.1.1
+          filter_upwards [(ae_restrict_iff' measurableSet_Ioo).1
+            (hp.ae_orbit_transport ha hab hb hA)] with h hh _ _ _ hmem
+          exact hh hmem
+        · exact ae_of_all _ fun _ _ _ hb' ↦ (hb hb').elim
+      · exact ae_of_all _ fun _ _ hab' ↦ (hab hab').elim
+    · exact ae_of_all _ fun _ ha' ↦ (ha ha').elim
+  have hall : ∀ᵐ h : ℝ, ∀ a b : ℚ, 0 < (a : ℝ) → (a : ℝ) < b → (b : ℝ) < 1 →
+      h ∈ Set.Ioo (a : ℝ) b → P h :=
+    ae_all_iff.2 fun a ↦ ae_all_iff.2 fun b ↦ hq a b
+  filter_upwards [ae_restrict_of_ae hall, ae_restrict_mem measurableSet_Ioo] with h hh hh01
+  obtain ⟨a, ha0, hah⟩ := exists_rat_btwn hh01.1
+  obtain ⟨b, hhb, hb1⟩ := exists_rat_btwn hh01.2
+  exact hh a b ha0 (hah.trans hhb) hb1 ⟨hah, hhb⟩
+
+/-- Good levels avoiding a prescribed null set carry periodic ACL representatives of
+    the transport unknown with the forcing's quarter-period character. The character
+    follows from nonresonant periodic uniqueness, not an a.e. rotation identity for `v`. -/
+theorem IsTransportPair.exists_goodLevels_transport (hp : IsTransportPair lam U v f)
+    (hU : cellSquare ⊆ U) {κ : ℂ} (hfR : ∀ p ∈ U, f (rotLift p) = κ * f p)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ (hs : ℕ → ℝ) (Z : ℕ → ℝ → ℂ),
+      (∀ j, hs j ∈ Set.Ioo 0 1 ∧ hs j ∉ N ∧
+        ∃ m : ℤ, |lam * orbitPeriod (hs j) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3) ∧
+      Tendsto hs atTop (𝓝 0) ∧
+      ∀ j, (∀ᵐ t, Z j t = transportUnknown lam v f (dipoleOrbit (hs j) t)) ∧
+        Function.Periodic (Z j) (orbitPeriod (hs j)) ∧
+        (∀ c d, AbsolutelyContinuousOnInterval (Z j) c d) ∧
+        (∀ᵐ t, HasDerivAt (Z j) (I * (lam * Z j t + f (dipoleOrbit (hs j) t))) t) ∧
+        ∀ t, Z j (t + 2 * eighthPeriod (hs j)) = κ * Z j t := by
+  obtain ⟨hs, hhs, hlim⟩ := exists_goodLevels_avoiding hp.ne_zero
+    (hp.ae_orbit_transport_cell hU) hN
+  have hZ (j : ℕ) := (hhs j).2.2.2.1
+  choose Z hrep hper hac hd using hZ
+  refine ⟨hs, Z, fun j ↦ ⟨(hhs j).1, (hhs j).2.2.1, (hhs j).2.2.2.2⟩, hlim, ?_⟩
+  intro j
+  refine ⟨hrep j, hper j, hac j, hd j, ?_⟩
+  obtain ⟨m, hm⟩ := (hhs j).2.2.2.2
+  refine transport_character_of_periodic
+    (orbitPeriod_pos (hhs j).1.1 (hhs j).1.2)
+    (exp_orbitPeriod_ne_one_of_goodWindow hm) (hper j) (hac j) (hd j) ?_
+  intro t
+  rw [dipoleOrbit_add_quarter (hhs j).1.1 (hhs j).1.2]
+  exact hfR _ (hU (dipoleOrbit_mem_cellSquare (hhs j).1.1 (hhs j).1.2 t))
 
 /-- The mode relation `(kb - λ) v_k = -kb f_k` on almost every orbit, for all `k`. -/
 theorem IsTransportPair.ae_mode_relation (hp : IsTransportPair lam U v f) {h₁ h₂ : ℝ}

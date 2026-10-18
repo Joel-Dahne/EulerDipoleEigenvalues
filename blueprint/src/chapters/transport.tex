@@ -169,6 +169,26 @@ relation follows from $(H-\lambda)z=f$ (Lemma~\ref{lem:transport-unknown}) and
 $z=-(v+f)/\lambda$.
 \end{remark}
 
+\begin{lemma}[One exceptional set for transport in the cell]
+\label{lem:cell-orbit-transport}
+\uses{def:transport-pair, def:cells, def:period}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.ae_orbit_transport_cell}
+\leanok
+If $(v,f)$ is a transport pair on $U\supset\Cell$, there is a single null set
+of levels outside which $z\circ\gamma_h$ agrees almost everywhere in time
+with an $S(h)$-periodic, locally absolutely continuous $Z_h$ satisfying
+$Z_h'=i(\lambda Z_h+f\circ\gamma_h)$ almost everywhere on $\R$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea, lem:transport-unknown}
+\leanok
+Apply orbit restriction to $z$ on every annulus with rational endpoints
+$0<a<b<1$, and discard the union of the resulting null sets. There are only
+countably many such annuli, and every $h\in(0,1)$ belongs to one of them.
+The equation and the representative on that annulus give the conclusion.
+\end{proof}
+
 \section{The canonical transport profile on a separatrix arc}
 
 Throughout this section $(v,f)$ is a transport pair on a neighbourhood of the
@@ -436,16 +456,91 @@ integrals, including the case of an infinite right-hand norm. Local absolute
 continuity supplies measurability of the profile.
 \end{proof}
 
+\section{Comparing periodic transport with the separatrix profile}
+
+\begin{lemma}[Finite-interval transport estimate]
+\label{lem:transport-boundary-estimate}
+\lean{NoEmbeddedEigenvalues.transport_integratingFactor,
+  NoEmbeddedEigenvalues.norm_transport_le_of_boundary}
+\leanok
+Let $a\le b$, $\lambda\in\R$, $\kappa\in\C$, and let $W$ be absolutely
+continuous on $[a,b]$, with $W'=i(\lambda W+F)$ almost everywhere and
+$F\in L^1(a,b)$. Then
+\[
+ e^{-i\lambda b}W(b)-e^{-i\lambda a}W(a)
+   =i\int_a^b e^{-i\lambda t}F(t)\,dt.
+\]
+If $|F|\le\epsilon$ on $[a,b]$, $\epsilon\ge0$, and
+$|e^{i\lambda(b-a)}-\kappa|\ge\delta>0$, then for every $x\in[a,b]$,
+\[
+ |W(x)|\le
+ \frac{|W(b)-\kappa W(a)|+\epsilon(b-a)}{\delta}+\epsilon(b-a).
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+The product $e^{-i\lambda t}W(t)$ is absolutely continuous with derivative
+$i e^{-i\lambda t}F(t)$. Integrating gives the identity. Its right-hand side
+has norm at most $\epsilon(b-a)$. Writing the endpoint difference as the
+sum of the boundary defect and the phase divisor times $W(a)$ gives
+$\delta|W(a)|\le |W(b)-\kappa W(a)|+\epsilon(b-a)$. Apply the same identity
+on $[a,x]$ and use $x-a\le b-a$.
+\end{proof}
+
+\begin{lemma}[Periodic uniqueness and inherited characters]
+\label{lem:periodic-transport-character}
+\lean{NoEmbeddedEigenvalues.eq_of_periodic_transport,
+  NoEmbeddedEigenvalues.transport_character_of_periodic}
+\leanok
+Let $S>0$ and $e^{i\lambda S}\ne1$. The equation
+$Z'=i(\lambda Z+F)$ has at most one $S$-periodic, locally absolutely
+continuous solution. If $F(t+T)=\kappa F(t)$ for every $t$, that solution
+satisfies $Z(t+T)=\kappa Z(t)$. Here $T\in\R$, $\kappa\in\C$, and no
+regularity assumption on $F$ is needed for uniqueness.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-boundary-estimate}
+\leanok
+The difference of two solutions has zero forcing and zero periodic boundary
+defect. The finite-interval estimate on $[t,t+S]$ makes it zero at every $t$.
+The translated solution $Z(\cdot+T)$ and $\kappa Z$ are periodic solutions
+with the same forcing $\kappa F$, so uniqueness identifies them. Translation
+preserves local absolute continuity and the almost-everywhere derivative equation.
+\end{proof}
+
+\begin{lemma}[Finite-interval pairing error]
+\label{lem:transport-pairing-error}
+\lean{NoEmbeddedEigenvalues.abs_integral_pairing_sub_le}
+\leanok
+Let $a\le b$ and suppose the two real pairings below are integrable on $[a,b]$.
+If $|V-\Omega|\le A$, $|\Omega|\le B$, $|G|\le M$ and $|G-H|\le\epsilon$
+on that interval, with $A,B\ge0$, then
+\[
+ \left|\int_a^b\operatorname{Re}(V\bar G)\,dt
+       -\int_a^b\operatorname{Re}(\Omega\bar H)\,dt\right|
+ \le (AM+B\epsilon)(b-a).
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Expand $V\bar G-\Omega\bar H=(V-\Omega)\bar G+\Omega\overline{G-H}$.
+Take real parts, bound by the complex norm, and integrate the constant bound.
+\end{proof}
+
 \begin{lemma}[Good windows]
 \label{lem:good-windows}
 \uses{def:period}
 \lean{NoEmbeddedEigenvalues.volume_goodWindows_pos,
-  NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow}
+  NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow,
+  NoEmbeddedEigenvalues.exp_orbitPeriod_ne_one_of_goodWindow}
 \leanok
 Let $\lambda\ne0$. The set of levels $h$ with $|\lambda S(h)-2\pi(j+\tfrac12)|<\pi/3$
 for some integer $j$ has positive measure in every interval $(0,\eta)$, and on it
 $|e^{i\lambda S(h)/4}-\kappa|\ge2\sin(\pi/12)$ for $\kappa=\pm1$
-(manuscript \texttt{(ee:good-windows)}).
+(manuscript \texttt{(ee:good-windows)}). Also $e^{i\lambda S(h)}\ne1$ on these windows.
 \end{lemma}
 
 \begin{proof}
@@ -465,6 +560,9 @@ $2\sin(\pi/12)$. In the Lean proof this reads
 $|e^{i\theta}-\kappa|^2=2-2\kappa\cos\theta$ and
 $\cos^2\theta=\tfrac12(1+\cos2\theta)\le\tfrac34$, since $\cos2\theta=\pm\sin(\epsilon/2)$
 with $|\epsilon|<\pi/3$ the distance of $\lambda S$ from the phase centre.
+For full-period nonresonance, $e^{i\lambda S}=1$ would imply
+$\lambda S=2\pi n$ for an integer $n$, whose distance from
+$2\pi(j+\tfrac12)$ is at least $\pi$.
 \end{proof}
 
 \begin{remark}
@@ -473,6 +571,51 @@ since $S(h)\to\infty$, so it is dropped. The constant is explicit: $\lambda S/4$
 within $\pi/12$ of an odd multiple of $\pi/4$, which is at angle at least $\pi/4$ from
 $\pm1$.
 \end{remark}
+
+\begin{lemma}[Selecting good levels]
+\label{lem:good-level-selection}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.exists_goodLevels_avoiding}
+\leanok
+Let $\lambda\ne0$, let $N$ be null, and let $P(h)$ hold for almost every
+$h\in(0,1)$. There are good levels $h_j\in(0,1)\setminus N$ with
+$P(h_j)$, $h_j<1/(j+1)$ and $h_j\to0$. No measurability of the predicate
+$P$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:good-windows}
+\leanok
+The bad levels for $P$ form a null set. Remove their union with $N$ from
+the positive-measure good windows in $(0,\min\{1,1/(j+1)\})$, and choose a
+remaining level. The displayed bound implies convergence to zero.
+\end{proof}
+
+\begin{lemma}[Transport representatives on a good sequence]
+\label{lem:good-level-transport}
+\uses{def:transport-pair, def:cells, def:period, def:rotation-characters}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.exists_goodLevels_transport}
+\leanok
+Let $(v,f)$ be a transport pair on $U\supset\Cell$, and suppose
+$f(Rp)=\kappa f(p)$ for $p\in U$, with $\kappa\in\C$. For any null set $N$
+there are good levels $h_j\in(0,1)\setminus N$ tending to zero and periodic,
+locally absolutely continuous representatives $Z_j$ of $z\circ\gamma_{h_j}$
+solving the transport equation almost everywhere and satisfying
+\[
+ Z_j(t+2L(h_j))=\kappa Z_j(t)\qquad(t\in\R).
+\]
+No rotation hypothesis on $v$ is required for this conclusion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-orbit-transport, lem:good-level-selection,
+  lem:good-windows, lem:periodic-transport-character, lem:period-orbit}
+\leanok
+Choose good levels in the full-measure set of cell transport representatives.
+The orbit quarter-shift identity gives
+$f(\gamma_h(t+2L))=\kappa f(\gamma_h(t))$.
+Full-period nonresonance and periodic uniqueness transfer this character to $Z_j$.
+\end{proof}
 
 \begin{lemma}[Limit of the vorticity pairing]
 \label{lem:pairing-limit}
@@ -492,16 +635,15 @@ their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \begin{proof}
 \uses{lem:canonical-profile-ac, lem:canonical-profile-decay,
   lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder,
-  lem:local-to-global, lem:resonant-vanishing, lem:orbit-comparison,
-  lem:coarea, lem:good-windows, lem:separatrix-arc,
-  lem:period-coarse, lem:period-orbit, lem:level-integral-congr}
-Discard one null set $\mathcal B$ of levels, using a countable exhaustion
-by regular annuli. Transfer exceptional point sets to exceptional levels
-using measurable null covers and Lemma~\ref{lem:level-integral-congr}.
-Outside $\mathcal B$, choose the orbitwise ACL transport representatives
-and transfer the rotation character to them.
-Equality almost everywhere in time becomes equality everywhere by
-continuity, giving $z_h(L)=\kappa z_h(-L)$.
+  lem:local-to-global, lem:orbit-comparison,
+  lem:good-windows, lem:separatrix-arc,
+  lem:period-coarse, lem:period-orbit,
+  lem:good-level-transport, lem:transport-boundary-estimate, lem:transport-pairing-error}
+Use Lemma~\ref{lem:good-level-transport} to choose good levels $h_j\to0$
+outside $N$ carrying periodic ACL representatives $z_h$ with
+$z_h(L)=\kappa z_h(-L)$. This avoids transferring the planar
+almost-everywhere rotation identity for $v$ to individual orbits:
+periodic uniqueness supplies the character from the forcing alone.
 The associated $v_h=-\lambda z_h-g_h$ agrees almost everywhere with
 the original orbit restriction, so its pairing is the same.
 
@@ -526,14 +668,11 @@ away from zero. It follows that
 \]
 The interval length is $2L=O(|\log h|)$, so the pairing error is
 $O(h^{\alpha/2}|\log h|^2)$. The tails of $\Omega\bar g$ vanish by
-exponential decay and boundedness of $g$. Rotate this argument to
-the other three quarters, enlarging $\mathcal B$ by only finitely
-many null sets.
+exponential decay and boundedness of $g$. Apply the same argument to
+the other three rotated quarters and sum the four limits.
 
-Finally the good windows have positive measure arbitrarily near zero.
-Removing $\mathcal B\cup N$ leaves a level in every sufficiently small
-interval $(0,\eta)$. Choose such levels $h_j<1/(j+1)$.
-The preceding error and tail estimates prove the claimed limit.
+The preceding error and tail estimates apply eventually on the selected
+sequence and prove the claimed limit.
 \end{proof}
 
 \section{Weighted transport gains near the saddles}

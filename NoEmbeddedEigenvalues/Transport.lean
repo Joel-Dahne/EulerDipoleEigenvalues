@@ -9,7 +9,9 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 # Transport pairs
 
 Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
-`lem:good-windows`; stated: `lem:coarea`, `lem:pairing-limit`. The proofs of
+`lem:good-windows`, `lem:good-level-selection`; stated: `lem:coarea`, `lem:pairing-limit`.
+The good-level selector preserves any a.e. level property and avoids an arbitrary null set.
+The proofs of
 `lem:resonant-vanishing` and `lem:melnikov` are in `ResonantVanishing.lean` and
 `Melnikov.lean`.
 
@@ -191,6 +193,39 @@ theorem volume_goodWindows_pos {lam : ℝ} (hlam : lam ≠ 0) {η : ℝ} (hη : 
   rw [Real.volume_Ioo]
   exact ENNReal.ofReal_pos.2 (by linarith)
 
+open Filter Topology in
+/-- Good levels approaching zero can avoid any null set and satisfy an arbitrary
+    almost-everywhere level property. No measurability of that property is required. -/
+theorem exists_goodLevels_avoiding {lam : ℝ} (hlam : lam ≠ 0) {P : ℝ → Prop}
+    (hP : ∀ᵐ h ∂(volume.restrict (Set.Ioo (0 : ℝ) 1)), P h)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Set.Ioo 0 1 ∧ hs j < 1 / ((j : ℝ) + 1) ∧
+        hs j ∉ N ∧ P (hs j) ∧
+        ∃ m : ℤ, |lam * orbitPeriod (hs j) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3) ∧
+      Tendsto hs atTop (𝓝 0) := by
+  have hbad : volume {h | h ∈ Set.Ioo (0 : ℝ) 1 ∧ ¬P h} = 0 := by
+    simpa only [ae_iff, not_imp] using (ae_restrict_iff' measurableSet_Ioo).1 hP
+  let B := N ∪ {h | h ∈ Set.Ioo (0 : ℝ) 1 ∧ ¬P h}
+  have hB : volume B = 0 := measure_union_null hN hbad
+  have heach (j : ℕ) : ∃ h : ℝ, h ∈ Set.Ioo 0 1 ∧ h < 1 / ((j : ℝ) + 1) ∧
+      h ∉ N ∧ P h ∧
+      ∃ m : ℤ, |lam * orbitPeriod h - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3 := by
+    let η : ℝ := min (1 / ((j : ℝ) + 1)) 1
+    have hη : 0 < η := lt_min (by positivity) zero_lt_one
+    have hpos : 0 < volume ({h ∈ Set.Ioo 0 η |
+        ∃ m : ℤ, |lam * orbitPeriod h - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3} \ B) := by
+      rw [measure_sdiff_null hB]
+      exact volume_goodWindows_pos hlam hη
+    obtain ⟨h, ⟨hh, hw⟩, hnB⟩ := nonempty_of_measure_ne_zero hpos.ne'
+    have h1 : h < 1 := hh.2.trans_le (min_le_right _ _)
+    refine ⟨h, ⟨hh.1, h1⟩, hh.2.trans_le (min_le_left _ _),
+      fun hn ↦ hnB (Or.inl hn), ?_, hw⟩
+    by_contra hnP
+    exact hnB (Or.inr ⟨⟨hh.1, h1⟩, hnP⟩)
+  choose hs hhs using heach
+  refine ⟨hs, hhs, squeeze_zero (fun j ↦ (hhs j).1.1.le)
+    (fun j ↦ (hhs j).2.1.le) tendsto_one_div_add_atTop_nhds_zero_nat⟩
+
 /-- On a good window `e^{iλS(h)/4}` stays at distance at least `2 sin(π/12)` from `κ = ±1`. -/
 theorem norm_exp_sub_ge_of_goodWindow {lam h : ℝ} {j : ℤ}
     (hj : |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3) {κ : ℂ}
@@ -245,6 +280,22 @@ theorem norm_exp_sub_ge_of_goodWindow {lam h : ℝ} {j : ℤ}
     rw [hs3, hnorm]
     linarith
   exact (abs_le_of_sq_le_sq' hsq (norm_nonneg _)).2
+
+open Filter Topology in
+/-- A good window is also nonresonant for the full period. -/
+theorem exp_orbitPeriod_ne_one_of_goodWindow {lam h : ℝ} {j : ℤ}
+    (hj : |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3) :
+    exp (I * lam * orbitPeriod h) ≠ 1 := by
+  intro he
+  obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 he
+  have ht : lam * orbitPeriod h = (n : ℝ) * (2 * Real.pi) := by
+    simpa using congrArg Complex.im hn
+  rw [ht, abs_lt] at hj
+  rcases le_or_gt n j with hle | hgt
+  · have hle' : (n : ℝ) ≤ j := by exact_mod_cast hle
+    nlinarith [mul_le_mul_of_nonneg_left hle' Real.pi_pos.le]
+  · have hle' : (j : ℝ) + 1 ≤ n := by exact_mod_cast hgt
+    nlinarith [mul_le_mul_of_nonneg_left hle' Real.pi_pos.le]
 
 /-! ### Restriction to orbits, resonances and the pairing limit (stated) -/
 
