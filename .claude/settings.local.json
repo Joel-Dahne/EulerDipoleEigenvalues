@@ -1,5 +1,18 @@
 {
   "enabledMcpjsonServers": [
     "lean-lsp"
-  ]
+  ],
+  "skillOverrides": {
+    "anthropic-skills:morning": "off",
+    "anthropic-skills:pptx": "off",
+    "anthropic-skills:xlsx": "off",
+    "anthropic-skills:docx": "off",
+    "anthropic-skills:google-workspace": "off",
+    "anthropic-skills:import-memory": "off",
+    "anthropic-skills:docs": "user-invocable-only",
+    "claude-in-chrome": "off",
+    "claude-api": "off",
+    "init": "off",
+    "security-review": "off"
+  }
 }
