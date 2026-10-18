@@ -684,10 +684,12 @@ $A(h_1,h_2)$ is the set of points of the punctured cell with $h_1<h<h_2$.
 \begin{lemma}[Inverse identities for orbit coordinates]
 \label{lem:orbit-coordinates-inverse}
 \uses{def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.mem_orbitDomain,
+\lean{NoEmbeddedEigenvalues.bijOn_orbitCoordinates,
+  NoEmbeddedEigenvalues.mem_orbitDomain,
   NoEmbeddedEigenvalues.dipoleOrbit_levelCoord_timeCoord,
   NoEmbeddedEigenvalues.timeCoord_dipoleOrbit,
-  NoEmbeddedEigenvalues.levelCoord_dipoleOrbit}
+  NoEmbeddedEigenvalues.levelCoord_dipoleOrbit,
+  NoEmbeddedEigenvalues.levelCoord_mem_Ioo}
 \leanok
 The map $p\mapsto(h(p),t(p))$ is a bijection from the punctured cell
 onto the orbit domain, with inverse $(h,t)\mapsto\gamma_h(t)$.
@@ -696,13 +698,27 @@ In particular $h(\gamma_h(t))=h$ for $0<h<1$ and every $t$.
 
 \begin{proof}
 \uses{lem:period-orbit, lem:dipole-flow, lem:period-integral,
-  lem:quarter-orbit-diagonal}
-The proved quarter-orbit parametrizations and rotations identify the
-explicit integral with elapsed flow time. At the turning point
-$a=-\arccos h$, $b=0$, its improper value is $2L(h)$; the half rotation
-shifts time by $4L$. These identities give the two inverse relations,
-with the cut assigned the lower endpoint $-2L$ of the half-open window.
-Conservation of $\Psi$ gives the level identity for all times.
+  lem:diagonal-calculus}
+\leanok
+On the upper half-orbit $-2L\le t\le2L$, $b\ge0$ and
+$\dot a=-\sqrt{\cos^2a-h^2}$. Monotone change of variables therefore gives
+\[
+  \int_{a(t)}^0\frac{d\alpha}{\sqrt{\cos^2\alpha-h^2}}=t.
+\]
+The change-of-variables theorem also applies at the turning points:
+the pulled-back integrand is $-1$ on the open time interval, and the
+endpoint values do not affect the integral. In particular the value at
+$a=-\arccos h$, $b=0$ is $2L(h)$. The half rotation negates $(a,b)$ and
+shifts time by $4L$, giving the time identity on the lower half as well.
+
+For surjectivity, $a(t)$ is continuous on $[-2L,2L]$ with endpoint values
+$\arccos h$ and $-\arccos h$. Every upper-half point of the level has
+$|a|\le\arccos h$, so the intermediate value theorem supplies its first
+coordinate; $\cos a\cos b=h$ and $b\ge0$ then determine its second.
+Negation and the half rotation give all lower-half points. The time
+identity now gives both inverse relations, with the cut assigned the
+lower endpoint $-2L$ of the half-open window. Conservation of $\Psi$
+gives the level identity for every time.
 \end{proof}
 
 \begin{lemma}[Local smoothness of orbit coordinates]

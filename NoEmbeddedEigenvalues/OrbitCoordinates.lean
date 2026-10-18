@@ -5,9 +5,10 @@ import NoEmbeddedEigenvalues.SeparatrixArc
 /-!
 # Orbit coordinates and integrals over levels
 
-Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates` (stated), `def:action-angle`,
+Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
-`lem:corner-coordinates`; stated: `lem:action-angle-chart`,
+`lem:corner-coordinates`; stated: `lem:orbit-coordinates-smooth`,
+`lem:orbit-coordinates-area`, `lem:action-angle-chart`,
 `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
@@ -18,6 +19,11 @@ time coordinate is explicit: where `b ≥ 0` it is the flow time `∫_a^0 dα / 
 `4L(h) - ∫_a^0 …`. It takes values in `[-2L(h), 6L(h))`, with a cut along `b = 0, a > 0`.
 Working with this explicit inverse avoids smooth dependence of the flow on its initial
 point, which Mathlib does not provide.
+
+The inverse identities are proved, including the turning points: monotone change of variables
+along the closed upper half-orbit pulls the singular quadrature back to the constant `-1`
+away from the endpoints. The intermediate value theorem in `a`, together with conservation of
+`cos a cos b`, gives surjectivity there; a half-period rotation treats the lower half.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 The normal and tangential derivatives use the outward normal `n = -∇Ψ/ρ` of `{Ψ > 2h}` and
@@ -70,20 +76,240 @@ def actionAngleInv (q : ℝ × ℝ) : ℝ × ℝ := dipoleOrbit q.1 (q.2 * orbit
 /-- The strip `0 < h < 1` of action-angle coordinates. -/
 def actionStrip : Set (ℝ × ℝ) := Ioo 0 1 ×ˢ univ
 
-/-- The orbit coordinates take values in the orbit domain. -/
-theorem mem_orbitDomain {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
-    (levelCoord p, timeCoord p) ∈ orbitDomain := by
-  sorry
+theorem levelCoord_dipoleOrbit {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (t : ℝ) :
+    levelCoord (dipoleOrbit h t) = h := by
+  rw [levelCoord, dipoleLift_dipoleOrbit h0 h1]
+  ring
 
-/-- The orbit coordinates invert the orbit map: `γ_{h(p)}(t(p)) = p`. -/
-theorem dipoleOrbit_levelCoord_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
-    dipoleOrbit (levelCoord p) (timeCoord p) = p := by
-  sorry
+/-- The punctured positive cell has levels strictly between zero and one. -/
+theorem levelCoord_mem_Ioo {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    levelCoord p ∈ Ioo (0 : ℝ) 1 := by
+  have ha := abs_lt.1 hp.1.1
+  have hb := abs_lt.1 hp.1.2
+  have hca := cos_pos_of_mem_Ioo ha
+  have hcb := cos_pos_of_mem_Ioo hb
+  have hlevel : levelCoord p = cos (diagCoord p).1 * cos (diagCoord p).2 := by
+    rw [levelCoord, dipoleLift_eq_diag]; ring
+  rw [hlevel]
+  refine ⟨mul_pos hca hcb, lt_of_le_of_ne ?_ ?_⟩
+  · nlinarith [cos_le_one (diagCoord p).1, cos_le_one (diagCoord p).2]
+  · intro he
+    have hca1 : cos (diagCoord p).1 = 1 := by
+      nlinarith [cos_le_one (diagCoord p).1, cos_le_one (diagCoord p).2]
+    have hcb1 : cos (diagCoord p).2 = 1 := by nlinarith
+    have ha0 : (diagCoord p).1 = 0 :=
+      (cos_eq_one_iff_of_lt_of_lt (by linarith [pi_pos]) (by linarith [pi_pos])).1 hca1
+    have hb0 : (diagCoord p).2 = 0 :=
+      (cos_eq_one_iff_of_lt_of_lt (by linarith [pi_pos]) (by linarith [pi_pos])).1 hcb1
+    apply hp.2
+    rw [← diagInv_diagCoord p, show diagCoord p = 0 from Prod.ext ha0 hb0]
+    exact map_zero diagInv
+
+/-! #### The closed upper half-orbit, including the turning points -/
+
+private theorem orbitA_two_eighthPeriod {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    orbitA h (2 * eighthPeriod h) = -arccos h := by
+  simpa [orbitA_zero, orbitB_zero] using orbitA_add_quarter h0 h1 0
+
+private theorem orbitB_two_eighthPeriod {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    orbitB h (2 * eighthPeriod h) = 0 := by
+  simpa [orbitA_zero] using orbitB_add_quarter h0 h1 0
+
+private theorem orbitB_pos_half {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Ioo (-2 * eighthPeriod h) (2 * eighthPeriod h)) : 0 < orbitB h t := by
+  by_cases ht0 : 0 ≤ t
+  · exact orbitB_pos_of_mem h0 h1 ⟨ht0, ht.2⟩
+  · rw [← neg_neg t, orbitB_neg']
+    exact orbitB_pos_of_mem h0 h1 ⟨by linarith, by linarith [ht.1]⟩
+
+private theorem orbitB_nonneg_half {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Icc (-2 * eighthPeriod h) (2 * eighthPeriod h)) : 0 ≤ orbitB h t := by
+  rcases eq_or_lt_of_le ht.1 with he | he
+  · rw [← he, show -2 * eighthPeriod h = -(2 * eighthPeriod h) by ring,
+      orbitB_neg', orbitB_two_eighthPeriod h0 h1]
+  rcases eq_or_lt_of_le ht.2 with he' | he'
+  · rw [he', orbitB_two_eighthPeriod h0 h1]
+  · exact (orbitB_pos_half h0 h1 ⟨he, he'⟩).le
+
+private theorem orbitTime_neg (h a : ℝ) : orbitTime h (-a) = -orbitTime h a := by
+  have he := intervalIntegral.integral_comp_neg (a := -a) (b := 0)
+    (fun x ↦ 1 / √(cos x ^ 2 - h ^ 2))
+  calc orbitTime h (-a) = ∫ x in (0 : ℝ)..a, 1 / √(cos x ^ 2 - h ^ 2) := by
+        simpa only [orbitTime, cos_neg, neg_zero, neg_neg] using he
+    _ = -orbitTime h a := intervalIntegral.integral_symm _ _
+
+/-- Monotone substitution remains valid at the turning point, where the integrand is
+singular. The pulled-back integrand is `-1` on the open time interval. -/
+private theorem orbitTime_orbitA_closed {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Icc 0 (2 * eighthPeriod h)) : orbitTime h (orbitA h t) = t := by
+  have hb : ∀ s ∈ Ioo 0 t, 0 < orbitB h s := fun s hs ↦
+    orbitB_pos_of_mem h0 h1 ⟨hs.1.le, hs.2.trans_le ht.2⟩
+  have hcov := intervalIntegral.integral_comp_mul_deriv_of_deriv_nonpos
+    (a := 0) (b := t) (f := orbitA h)
+    (f' := fun s ↦ -cos (orbitA h s) * sin (orbitB h s))
+    (g := fun a ↦ 1 / √(cos a ^ 2 - h ^ 2))
+    (continuous_orbitA h).continuousOn
+    (fun s _ ↦ hasDerivAt_orbitA h s) (by
+      simp only [min_eq_left ht.1, max_eq_right ht.1]
+      intro s hs
+      rw [neg_mul, cos_orbitA_mul_sin_orbitB h0 h1 (hb s hs).le]
+      exact neg_nonpos.2 (sqrt_nonneg _))
+  have hint : ∫ s in (0 : ℝ)..t, ((fun a ↦ 1 / √(cos a ^ 2 - h ^ 2)) ∘ orbitA h) s *
+      (-cos (orbitA h s) * sin (orbitB h s)) = ∫ _ in (0 : ℝ)..t, (-1 : ℝ) := by
+    apply intervalIntegral.integral_congr_Ioo_of_le ht.1
+    intro s hs
+    have hc := lt_cos_orbitA h0 h1 (hb s hs).ne'
+    have hpos : 0 < √(cos (orbitA h s) ^ 2 - h ^ 2) := sqrt_pos.2 (by nlinarith)
+    simp only [Function.comp_apply, neg_mul]
+    rw [cos_orbitA_mul_sin_orbitB h0 h1 (hb s hs).le]
+    field_simp
+  rw [orbitA_zero, hint, intervalIntegral.integral_symm (orbitA h t) 0] at hcov
+  simp only [intervalIntegral.integral_const, sub_zero, smul_eq_mul, mul_neg, mul_one,
+    neg_inj] at hcov
+  exact hcov.symm
+
+private theorem orbitTime_orbitA_half {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Icc (-2 * eighthPeriod h) (2 * eighthPeriod h)) :
+    orbitTime h (orbitA h t) = t := by
+  by_cases ht0 : 0 ≤ t
+  · exact orbitTime_orbitA_closed h0 h1 ⟨ht0, ht.2⟩
+  · rw [← neg_neg t, orbitA_neg', orbitTime_neg,
+      orbitTime_orbitA_closed h0 h1 ⟨by linarith, by linarith [ht.1]⟩]
+
+private theorem dipoleOrbit_add_half {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (t : ℝ) :
+    dipoleOrbit h (t + 4 * eighthPeriod h) = -dipoleOrbit h t := by
+  rw [show t + 4 * eighthPeriod h = t + 2 * eighthPeriod h + 2 * eighthPeriod h by ring]
+  simp only [dipoleOrbit_add_quarter h0 h1]
+  rfl
 
 /-- The orbit map inverts the orbit coordinates: `t(γ_h(t)) = t` on the orbit domain. -/
 theorem timeCoord_dipoleOrbit {h t : ℝ} (hq : (h, t) ∈ orbitDomain) :
     timeCoord (dipoleOrbit h t) = t := by
-  sorry
+  obtain ⟨hh, ht⟩ := hq
+  by_cases hu : t ≤ 2 * eighthPeriod h
+  · have hb := orbitB_nonneg_half hh.1 hh.2 ⟨ht.1, hu⟩
+    change (if 0 ≤ orbitB h t then _ else _) = t
+    rw [ite_eq_left hb, levelCoord_dipoleOrbit hh.1 hh.2]
+    exact orbitTime_orbitA_half hh.1 hh.2 ⟨ht.1, hu⟩
+  · let s := t - 4 * eighthPeriod h
+    have hs : s ∈ Ioo (-2 * eighthPeriod h) (2 * eighthPeriod h) := by
+      dsimp [s]; constructor <;> linarith [ht.2]
+    have he : dipoleOrbit h t = -dipoleOrbit h s := by
+      rw [show t = s + 4 * eighthPeriod h by dsimp [s]; ring]
+      exact dipoleOrbit_add_half hh.1 hh.2 s
+    have hA : orbitA h t = -orbitA h s := by
+      simp only [orbitA, he, diagCoord, Prod.fst_neg, Prod.snd_neg]; ring
+    have hB : orbitB h t = -orbitB h s := by
+      simp only [orbitB, he, diagCoord, Prod.fst_neg, Prod.snd_neg]; ring
+    have hb : ¬0 ≤ orbitB h t := by rw [hB]; linarith [orbitB_pos_half hh.1 hh.2 hs]
+    change (if 0 ≤ orbitB h t then _ else _) = t
+    rw [ite_eq_right hb, levelCoord_dipoleOrbit hh.1 hh.2]
+    change 4 * eighthPeriod h - orbitTime h (orbitA h t) = t
+    rw [hA, orbitTime_neg, orbitTime_orbitA_half hh.1 hh.2 (Ioo_subset_Icc_self hs)]
+    dsimp [s]; ring
+
+private theorem diagCoord_neg (p : ℝ × ℝ) : diagCoord (-p) = -diagCoord p := by
+  ext <;> simp only [diagCoord, Prod.fst_neg, Prod.snd_neg] <;> ring
+
+/-- The first diagonal coordinate traverses its whole level interval on the upper half. -/
+private theorem exists_dipoleOrbit_eq_upper {p : ℝ × ℝ} (hp : p ∈ cellSquare)
+    (hh : levelCoord p ∈ Ioo (0 : ℝ) 1) (hb : 0 ≤ (diagCoord p).2) :
+    ∃ t ∈ Icc (-2 * eighthPeriod (levelCoord p)) (2 * eighthPeriod (levelCoord p)),
+      dipoleOrbit (levelCoord p) t = p := by
+  let h := levelCoord p
+  have hL := eighthPeriod_pos hh.1 hh.2
+  have ha := abs_lt.1 hp.1
+  have hbb := abs_lt.1 hp.2
+  have hca : 0 < cos (diagCoord p).1 := cos_pos_of_mem_Ioo ha
+  have hprod : cos (diagCoord p).1 * cos (diagCoord p).2 = h := by
+    dsimp [h, levelCoord]; rw [dipoleLift_eq_diag]; ring
+  have hcos : h ≤ cos (diagCoord p).1 := by
+    nlinarith [mul_le_mul_of_nonneg_left (cos_le_one (diagCoord p).2) hca.le]
+  have haabs : |(diagCoord p).1| ≤ arccos h := by
+    have he := arccos_le_arccos hcos
+    rw [← cos_abs, arccos_cos (abs_nonneg _) (by linarith [hp.1, pi_pos])] at he
+    exact he
+  have hend : orbitA h (-2 * eighthPeriod h) = arccos h := by
+    rw [show -2 * eighthPeriod h = -(2 * eighthPeriod h) by ring,
+      orbitA_neg', orbitA_two_eighthPeriod hh.1 hh.2, neg_neg]
+  obtain ⟨t, ht, hAt⟩ := intermediate_value_Icc'
+    (show -2 * eighthPeriod h ≤ 2 * eighthPeriod h by linarith)
+    (continuous_orbitA h).continuousOn
+    (show (diagCoord p).1 ∈ Icc (orbitA h (2 * eighthPeriod h))
+      (orbitA h (-2 * eighthPeriod h)) by
+      rw [orbitA_two_eighthPeriod hh.1 hh.2, hend]
+      exact abs_le.1 haabs)
+  have hBt : orbitB h t = (diagCoord p).2 := by
+    apply injOn_cos ⟨orbitB_nonneg_half hh.1 hh.2 ht, by
+      linarith [abs_lt.1 (abs_orbitB_lt hh.1 hh.2 t), pi_pos]⟩ ⟨hb, by linarith [pi_pos]⟩
+    apply mul_left_cancel₀ hca.ne'
+    rw [← hAt, cos_orbitA_mul_cos_orbitB hh.1 hh.2, hAt, hprod]
+  refine ⟨t, ht, ?_⟩
+  have hd : diagCoord (dipoleOrbit h t) = diagCoord p := Prod.ext hAt hBt
+  simpa only [diagInv_diagCoord] using congrArg diagInv hd
+
+/-- Every point of a positive level is reached in the chosen half-open time window. -/
+private theorem exists_dipoleOrbit_eq {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    ∃ t ∈ Ico (-2 * eighthPeriod (levelCoord p)) (6 * eighthPeriod (levelCoord p)),
+      dipoleOrbit (levelCoord p) t = p := by
+  have hh := levelCoord_mem_Ioo hp
+  have hL := eighthPeriod_pos hh.1 hh.2
+  by_cases hb : 0 ≤ (diagCoord p).2
+  · obtain ⟨t, ht, he⟩ := exists_dipoleOrbit_eq_upper hp.1 hh hb
+    exact ⟨t, ⟨ht.1, by linarith [ht.2]⟩, he⟩
+  · have hq : -p ∈ cellSquare := by
+      simpa only [cellSquare, mem_ofPred_eq, diagCoord_neg, Prod.fst_neg, Prod.snd_neg,
+        abs_neg] using hp.1
+    have hl : levelCoord (-p) = levelCoord p := by
+      simp [levelCoord, dipoleLift, cos_neg]
+    obtain ⟨s, hs, he⟩ := exists_dipoleOrbit_eq_upper hq (by rwa [hl]) (by
+      rw [diagCoord_neg, Prod.snd_neg]; linarith)
+    rw [hl] at hs he
+    have hBs : 0 < orbitB (levelCoord p) s := by
+      rw [orbitB, he, diagCoord_neg, Prod.snd_neg]; linarith
+    have hslt : s < 2 * eighthPeriod (levelCoord p) := by
+      refine lt_of_le_of_ne hs.2 ?_
+      intro hsEq
+      rw [hsEq, orbitB_two_eighthPeriod hh.1 hh.2] at hBs
+      exact lt_irrefl _ hBs
+    refine ⟨s + 4 * eighthPeriod (levelCoord p), ⟨by linarith [hs.1], by linarith⟩, ?_⟩
+    rw [dipoleOrbit_add_half hh.1 hh.2, he, neg_neg]
+
+/-- The orbit coordinates take values in the orbit domain. -/
+theorem mem_orbitDomain {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    (levelCoord p, timeCoord p) ∈ orbitDomain := by
+  obtain ⟨t, ht, he⟩ := exists_dipoleOrbit_eq hp
+  have hh := levelCoord_mem_Ioo hp
+  have htime := timeCoord_dipoleOrbit (show (levelCoord p, t) ∈ orbitDomain from ⟨hh, ht⟩)
+  rw [he] at htime
+  exact ⟨hh, htime ▸ ht⟩
+
+/-- The orbit coordinates invert the orbit map: `γ_{h(p)}(t(p)) = p`. -/
+theorem dipoleOrbit_levelCoord_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    dipoleOrbit (levelCoord p) (timeCoord p) = p := by
+  obtain ⟨t, ht, he⟩ := exists_dipoleOrbit_eq hp
+  have htime := timeCoord_dipoleOrbit
+    (show (levelCoord p, t) ∈ orbitDomain from ⟨levelCoord_mem_Ioo hp, ht⟩)
+  rw [he] at htime
+  rw [htime, he]
+
+/-- The orbit coordinates are a bijection onto their half-open time domain. -/
+theorem bijOn_orbitCoordinates :
+    BijOn (fun p ↦ (levelCoord p, timeCoord p)) puncturedCell orbitDomain := by
+  refine ⟨fun p hp ↦ mem_orbitDomain hp, ?_, ?_⟩
+  · intro p hp q hq he
+    exact (dipoleOrbit_levelCoord_timeCoord hp).symm.trans
+      ((congrArg (fun r : ℝ × ℝ ↦ dipoleOrbit r.1 r.2) he).trans
+        (dipoleOrbit_levelCoord_timeCoord hq))
+  · intro q hq
+    have hp : dipoleOrbit q.1 q.2 ∈ puncturedCell := by
+      refine ⟨dipoleOrbit_mem_cellSquare hq.1.1 hq.1.2 _, ?_⟩
+      intro he
+      have hl := levelCoord_dipoleOrbit hq.1.1 hq.1.2 q.2
+      rw [show dipoleOrbit q.1 q.2 = 0 from he] at hl
+      norm_num [levelCoord, dipoleLift] at hl
+      linarith [hq.1.2]
+    exact ⟨_, hp, Prod.ext (levelCoord_dipoleOrbit hq.1.1 hq.1.2 _) (timeCoord_dipoleOrbit hq)⟩
 
 /-- The global time coordinate is smooth off its cut. There is no uniform
     `C / saddleDist` bound for its derivative on the whole cell as the level tends to zero. -/
@@ -91,11 +317,6 @@ theorem contDiffAt_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
     (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) :
     ContDiffAt ℝ ∞ timeCoord p := by
   sorry
-
-theorem levelCoord_dipoleOrbit {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (t : ℝ) :
-    levelCoord (dipoleOrbit h t) = h := by
-  rw [levelCoord, dipoleLift_dipoleOrbit h0 h1]
-  ring
 
 /-- `dx dy = 2 dh dt`: integrals over the cell in orbit coordinates. -/
 theorem lintegral_cellSquare_eq {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :
