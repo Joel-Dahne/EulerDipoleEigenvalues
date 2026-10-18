@@ -40,8 +40,8 @@ The current even–even route does **not** require finite-p Sobolev embedding,
 the elliptic-integral period identity, sharp period asymptotics, or transport
 self-adjointness. Keep these out of its prerequisites unless the argument changes.
 
-The mollifier commutator `transversalMollifier_hasWeakL0On` is proved from the
-chart inputs; the transversal derivative lemmas are the next virial inputs.
+All transversal mollifier lemmas are proved; `virial_l2` now rests on the full
+weak-gradient chain rules, the chart inputs and the shared transport/lift inputs.
 
 The largest reviewed work packages are the fractional trace infrastructure,
 full-gradient/stronger transversal estimates, and pairing-limit assembly.

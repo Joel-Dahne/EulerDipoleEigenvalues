@@ -7,13 +7,13 @@ import NoEmbeddedEigenvalues.Transport
 
 Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (proved),
 `lem:transversal-mollifier-congr`, `lem:transversal-mollifier-linear`,
-`lem:transversal-mollifier` and `lem:transversal-mollifier-commutator` (proved from
-chart/coarea inputs);
+`lem:transversal-mollifier`, `lem:transversal-mollifier-derivatives` and
+`lem:transversal-mollifier-commutator` (proved from chart/coarea inputs, the derivatives
+also from the full weak-gradient chain rules);
 `lem:action-angle-test-chain`, `lem:action-angle-local-integrability` (proved from
 chart/coarea inputs; the forward classical chain rule has no admitted dependency);
 `lem:action-angle-transport` (proved from chart/coarea inputs);
-stated: the full weak-gradient rules in `lem:action-angle-weak` and
-`lem:transversal-mollifier-derivatives`.
+stated: the full weak-gradient rules in `lem:action-angle-weak`.
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -47,6 +47,13 @@ the reverse chain rule gives `L₀ J_ε u = σ⁻¹ M_ε(σχK)` on the puncture
 Lipschitz extension of `S` off the band, and the identity extends by zero to the plane. The
 error is `σ⁻¹ (M_ε(σχK) - σ M_ε(χK))`, bounded by the Lipschitz commutator of
 `LineMollifier.lean`.
+
+The derivatives of `J_ε u` are `coordGrad`: `∂ⱼh · M_ε'(χU) + ∂ⱼθ · M_ε(∂_θ(χU))` pulled
+back to the cell. Since the angle jumps across its cut, `∂ⱼθ` is replaced by `angleGrad`,
+`conj(E) ∂ⱼE / (2πi)` with `E = e^{2πiθ}` smooth on the punctured cell; it agrees with
+`∂ⱼθ` off the cut, a null line. `exists_coordGrad_bound` bounds `coordGrad` in `L²` for
+band-supported cylinder data. For the `H¹` convergence the limit is identified with
+`∇(χ(Ψ/2) u)` pointwise off the cut by the classical chain rule `chainRule_actionAngle`.
 -/
 
 noncomputable section
@@ -1276,11 +1283,14 @@ theorem hasWeakL0On_iff_actionAngle {u k : ℝ × ℝ → ℂ} :
         (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q)) :=
   ⟨HasWeakL0On.comp_actionAngleInv, hasWeakL0On_of_actionAngle⟩
 
-/-- A fixed level band contains both the cutoff and all sufficiently small mollifications. -/
+/-- A fixed nonempty level band contains the cutoff and all sufficiently small mollifications
+and their `h`-derivatives. -/
 private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1) :
     ∃ a b ε₀ : ℝ, 0 < a ∧ b < 1 ∧ 0 < ε₀ ∧ tsupport χ ⊆ Icc a b ∧
+      (∀ ε ∈ Ioo 0 ε₀, ∀ (G : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
+        mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * G z) q = 0) ∧ a ≤ b ∧
       ∀ ε ∈ Ioo 0 ε₀, ∀ (G : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
-        mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * G z) q = 0 := by
+        mollifyFstDeriv ε (fun z ↦ (χ z.1 : ℂ) * G z) q = 0 := by
   have hs : IsCompact (tsupport χ) :=
     (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).of_isClosed_subset (isClosed_tsupport χ)
       (fun t ht ↦ ⟨(hχs ht).1.le, (hχs ht).2.le⟩)
@@ -1297,12 +1307,9 @@ private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ I
     linarith [hgap t ht]
   let ε₀ := min l (1 - r) / 2
   have hε₀ : 0 < ε₀ := div_pos (lt_min hl (by linarith)) (by norm_num)
-  refine ⟨l / 2, (r + 1) / 2, ε₀, by linarith, by linarith, hε₀, ?_, ?_⟩
-  · intro t ht
-    have hlt : l ≤ t := hlow t ht
-    have htr := hupp t ht
-    exact ⟨by linarith, by linarith⟩
-  · intro ε hε u q hq
+  have hmargin : ∀ ε ∈ Ioo 0 ε₀, ∀ q : ℝ × ℝ, q.1 ∉ Icc (min (l / 2) (1 / 2))
+      (max ((r + 1) / 2) (1 / 2)) → ∀ t ∈ tsupport χ, ε < |q.1 - t| := by
+    intro ε hε q hq t ht
     have he₁ : ε < l / 2 := by
       have h := min_le_left l (1 - r)
       dsimp [ε₀] at hε
@@ -1311,6 +1318,24 @@ private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ I
       have h := min_le_right l (1 - r)
       dsimp [ε₀] at hε
       linarith [hε.2]
+    have hlt : l ≤ t := hlow t ht
+    have htr := hupp t ht
+    rcases not_and_or.mp hq with h | h
+    · have h' : q.1 < l / 2 := lt_of_lt_of_le (not_le.mp h) (min_le_left _ _)
+      rw [abs_of_neg (by linarith)]
+      linarith
+    · have h' : (r + 1) / 2 < q.1 := lt_of_le_of_lt (le_max_left _ _) (not_le.mp h)
+      rw [abs_of_pos (by linarith)]
+      linarith
+  refine ⟨min (l / 2) (1 / 2), max ((r + 1) / 2) (1 / 2), ε₀, lt_min (by linarith)
+    (by norm_num), max_lt (by linarith) (by norm_num), hε₀, ?_, ?_,
+    (min_le_right _ _).trans (le_max_right _ _), ?_⟩
+  · intro t ht
+    have hlt : l ≤ t := hlow t ht
+    have htr := hupp t ht
+    exact ⟨(min_le_left _ _).trans (by linarith), (by linarith : t ≤ (r + 1) / 2).trans
+      (le_max_left _ _)⟩
+  · intro ε hε u q hq
     unfold mollifyFst
     apply integral_eq_zero_of_ae
     filter_upwards [] with t
@@ -1319,8 +1344,7 @@ private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ I
     by_cases ht : χ t = 0
     · simp [ht]
     have hts : t ∈ tsupport χ := subset_closure (show t ∈ Function.support χ from ht)
-    have hlt : l ≤ t := hlow t hts
-    have htr := hupp t hts
+    have hgap := hmargin ε hε q hq t hts
     have hB : stdBump ((q.1 - t) / ε) ≠ 0 := by
       intro hz
       apply hk
@@ -1329,7 +1353,27 @@ private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ I
     rw [support_stdBump] at hmem
     have hleft := (lt_div_iff₀ hε.1).mp hmem.1
     have hright := (div_lt_iff₀ hε.1).mp hmem.2
-    exact False.elim (hq ⟨by linarith, by linarith⟩)
+    rcases lt_abs.mp hgap with h | h <;> linarith
+  · intro ε hε u q hq
+    unfold mollifyFstDeriv
+    apply integral_eq_zero_of_ae
+    filter_upwards [] with t
+    by_cases ht : χ t = 0
+    · simp [ht]
+    have hts : t ∈ tsupport χ := subset_closure (show t ∈ Function.support χ from ht)
+    have hgap := hmargin ε hε q hq t hts
+    have hout : (q.1 - t) / ε ∉ tsupport stdBump := by
+      have hcl : tsupport stdBump = Icc (-1) 1 := by
+        rw [tsupport, support_stdBump, closure_Ioo (by norm_num)]
+      rw [hcl]
+      intro hm
+      have h1 := (le_div_iff₀ hε.1).mp hm.1
+      have h2 := (div_le_iff₀ hε.1).mp hm.2
+      have := lt_abs.mp hgap
+      rcases this with h | h <;> linarith
+    have hz : deriv stdBump ((q.1 - t) / ε) = 0 :=
+      image_eq_zero_of_notMem_tsupport (fun hm ↦ hout (tsupport_deriv_subset hm))
+    simp [deriv_mollifierKernel, hz]
 
 /-! ### Helpers for the commutator -/
 
@@ -1359,29 +1403,34 @@ private theorem HasWeakPartialOn.congr_on {U : Set (ℝ × ℝ)} (hU : Measurabl
   rw [e1, e2]
   exact hd.2.2 φ hφ
 
+private theorem locallyIntegrable_levelCutoff {c : ℝ → ℝ} (hc : Continuous c)
+    (hcs : tsupport c ⊆ Ioo 0 1) {V : ℝ × ℝ → ℂ} (hV : LocallyIntegrableOn V actionStrip) :
+    LocallyIntegrableOn (fun q ↦ (c q.1 : ℂ) * V q) univ := by
+  set C : Set (ℝ × ℝ) := Prod.fst ⁻¹' tsupport c
+  have hC : IsClosed C := (isClosed_tsupport c).preimage continuous_fst
+  have hCs : C ⊆ actionStrip := fun q hq ↦ ⟨hcs hq, mem_univ _⟩
+  have hcc : Continuous (fun q : ℝ × ℝ ↦ (c q.1 : ℂ)) :=
+    Complex.continuous_ofReal.comp (hc.comp continuous_fst)
+  rw [locallyIntegrableOn_univ, locallyIntegrable_iff]
+  intro K hK
+  have hKC : IsCompact (K ∩ C) := hK.inter_right hC
+  have hi : IntegrableOn (fun q ↦ (c q.1 : ℂ) * V q) (K ∩ C) :=
+    (hV.integrableOn_compact_subset (inter_subset_right.trans hCs) hKC).continuousOn_mul
+      hcc.continuousOn hKC
+  exact hi.of_forall_sdiff_eq_zero hK.measurableSet fun q hq ↦ by
+    rw [image_eq_zero_of_notMem_tsupport (fun h ↦ hq.2 ⟨hq.1, h⟩), Complex.ofReal_zero,
+      zero_mul]
+
 /-- A level cutoff `χ(h)` with support in `(0, 1)` carries an angular weak derivative on the
 strip to one on the plane. -/
 private theorem HasWeakPartialOn.levelCutoff {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
     (hχs : tsupport χ ⊆ Ioo 0 1) {U G : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn actionStrip 1 U G) :
     HasWeakPartialOn univ 1 (fun q ↦ (χ q.1 : ℂ) * U q) (fun q ↦ (χ q.1 : ℂ) * G q) := by
-  set C : Set (ℝ × ℝ) := Prod.fst ⁻¹' tsupport χ
-  have hC : IsClosed C := (isClosed_tsupport χ).preimage continuous_fst
-  have hCs : C ⊆ actionStrip := fun q hq ↦ ⟨hχs hq, mem_univ _⟩
+  have hCs : Prod.fst ⁻¹' tsupport χ ⊆ actionStrip := fun q hq ↦ ⟨hχs hq, mem_univ _⟩
   have hcd : ContDiff ℝ ∞ (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ)) :=
     Complex.ofRealCLM.contDiff.comp (hχ.comp contDiff_fst)
-  have hz : ∀ q ∉ C, (χ q.1 : ℂ) = 0 := fun q hq ↦ by
-    rw [image_eq_zero_of_notMem_tsupport hq, Complex.ofReal_zero]
-  have hloc {V : ℝ × ℝ → ℂ} (hV : LocallyIntegrableOn V actionStrip) :
-      LocallyIntegrableOn (fun q ↦ (χ q.1 : ℂ) * V q) univ := by
-    rw [locallyIntegrableOn_univ, locallyIntegrable_iff]
-    intro K hK
-    have hKC : IsCompact (K ∩ C) := hK.inter_right hC
-    have hi : IntegrableOn (fun q ↦ (χ q.1 : ℂ) * V q) (K ∩ C) :=
-      (hV.integrableOn_compact_subset (inter_subset_right.trans hCs) hKC).continuousOn_mul
-        hcd.continuous.continuousOn hKC
-    exact hi.of_forall_sdiff_eq_zero hK.measurableSet fun q hq ↦ by
-      rw [hz q (fun h ↦ hq.2 ⟨hq.1, h⟩), zero_mul]
-  refine ⟨hloc hd.1, hloc hd.2.1, fun φ hφ ↦ ?_⟩
+  refine ⟨locallyIntegrable_levelCutoff hχ.continuous hχs hd.1,
+    locallyIntegrable_levelCutoff hχ.continuous hχs hd.2.1, fun φ hφ ↦ ?_⟩
   set ψ : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * φ q with hψ_def
   have hψ : IsTestFunctionOn actionStrip ψ :=
     ⟨hcd.mul hφ.contDiff, hφ.hasCompactSupport.mul_left,
@@ -1478,6 +1527,481 @@ private theorem memLp_levelMul {μ : Measure (ℝ × ℝ)} {F : ℝ × ℝ → �
       rw [norm_mul, Complex.norm_real, Real.norm_eq_abs]
       exact mul_le_mul_of_nonneg_right (hM q.1) (norm_nonneg _))
 
+/-- A Lipschitz function equal to the period on a band `[a, b] ⊂ (0, 1)`, with positive
+lower and finite upper bounds: `S ∘ proj_[a,b]`. -/
+private theorem exists_periodExtension {a b : ℝ} (ha : 0 < a) (hb : b < 1) (hab : a ≤ b) :
+    ∃ σ : ℝ → ℝ, ∃ L : ℝ≥0, ∃ m M : ℝ, LipschitzWith L σ ∧
+      (∀ h ∈ Icc a b, σ h = orbitPeriod h) ∧ 0 < m ∧ (∀ h, m ≤ σ h) ∧ ∀ h, σ h ≤ M := by
+  have hIcc : Icc a b ⊆ Ioo 0 1 := fun h hh ↦ ⟨ha.trans_le hh.1, hh.2.trans_lt hb⟩
+  have hSon : ContDiffOn ℝ ∞ orbitPeriod (Icc a b) := contDiffOn_orbitPeriod.mono hIcc
+  obtain ⟨L, hL⟩ := hSon.exists_lipschitzOnWith (by simp) (convex_Icc a b) isCompact_Icc
+  obtain ⟨h₁, hh₁, hmin⟩ := isCompact_Icc.exists_isMinOn (nonempty_Icc.mpr hab)
+    hSon.continuousOn
+  obtain ⟨h₂, -, hmax⟩ := isCompact_Icc.exists_isMaxOn (nonempty_Icc.mpr hab)
+    hSon.continuousOn
+  refine ⟨fun h ↦ orbitPeriod (projIcc a b hab h), L, orbitPeriod h₁, orbitPeriod h₂, ?_,
+    fun h hh ↦ by simp only [projIcc_of_mem hab hh], orbitPeriod_pos (hIcc hh₁).1 (hIcc hh₁).2,
+    fun h ↦ hmin (projIcc a b hab h).2, fun h ↦ hmax (projIcc a b hab h).2⟩
+  have h := hL.to_restrict.comp (LipschitzWith.projIcc hab)
+  rw [mul_one] at h
+  exact h
+
+/-- The angular weak derivative of the cut-off input on the plane: `∂_θ (χU) = σ χ K`
+when `L₀ u = k` on the cell and `σ = S` on a band containing the support of `χ`. -/
+private theorem hasWeakPartialOn_levelCutoff_actionInput {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    (hχs : tsupport χ ⊆ Ioo 0 1) {a b : ℝ} (hχband : tsupport χ ⊆ Icc a b) {σ : ℝ → ℝ}
+    (hσS : ∀ h ∈ Icc a b, σ h = orbitPeriod h) {u k : ℝ × ℝ → ℂ}
+    (hLk : HasWeakL0On cellSquare u k) :
+    HasWeakPartialOn univ 1 (fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q))
+      (fun q ↦ (σ q.1 : ℂ) * ((χ q.1 : ℂ) * k (actionAngleInv q))) := by
+  have hL1 : HasWeakL0On puncturedCell u k :=
+    ⟨hLk.1.mono_set sdiff_subset, hLk.2.1.mono_set sdiff_subset,
+      fun φ hφ ↦ hLk.2.2 φ (hφ.mono sdiff_subset)⟩
+  have h2 := hL1.comp_actionAngleInv.levelCutoff hχ hχs
+  have hG : (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ) *
+      ((orbitPeriod q.1 : ℂ) * k (actionAngleInv q))) =
+      fun q ↦ (σ q.1 : ℂ) * ((χ q.1 : ℂ) * k (actionAngleInv q)) := by
+    funext q
+    by_cases hq : χ q.1 = 0
+    · simp [hq]
+    · rw [hσS q.1 (hχband (subset_closure hq))]
+      ring
+  rw [hG] at h2
+  exact h2
+
+/-! ### Helpers for the derivatives -/
+
+/-- The diagonal `x = y`, which contains the cut of the angle, is a null set. -/
+private theorem volume_diagCoord_snd_eq_zero :
+    (volume : Measure (ℝ × ℝ)) {p | (diagCoord p).2 = 0} = 0 := by
+  have hc : IsClosed {p : ℝ × ℝ | (diagCoord p).2 = 0} :=
+    isClosed_eq (by unfold diagCoord; fun_prop) continuous_const
+  rw [Measure.volume_eq_prod, Measure.measure_prod_null hc.measurableSet]
+  refine Eventually.of_forall fun x ↦ ?_
+  have : Prod.mk x ⁻¹' {p : ℝ × ℝ | (diagCoord p).2 = 0} = {x} := by
+    ext y
+    simp only [mem_preimage, mem_ofPred_eq, diagCoord, mem_singleton_iff]
+    constructor <;> intro h <;> linarith
+  simp [this]
+
+/-- `e^{2πiθ}` on the plane. -/
+private def angleExp (p : ℝ × ℝ) : ℂ := Complex.exp (↑(2 * Real.pi * angleCoord p) * Complex.I)
+
+private theorem contDiffOn_angleExp : ContDiffOn ℝ ∞ angleExp puncturedCell := by
+  have hF : ContDiff ℝ ∞ (fun q : ℝ × ℝ ↦ Complex.exp (↑(2 * Real.pi * q.2) * Complex.I)) := by
+    have h : ContDiff ℝ ∞ (fun q : ℝ × ℝ ↦ ((2 * Real.pi * q.2 : ℝ) : ℂ)) :=
+      Complex.ofRealCLM.contDiff.comp (contDiff_const.mul contDiff_snd)
+    exact Complex.contDiff_exp.comp (h.mul contDiff_const)
+  have hper : ∀ q : ℝ × ℝ, Complex.exp (↑(2 * Real.pi * (q.1, q.2 + 1).2) * Complex.I) =
+      Complex.exp (↑(2 * Real.pi * q.2) * Complex.I) := fun q ↦ by
+    have : (↑(2 * Real.pi * (q.2 + 1)) * Complex.I : ℂ) =
+        ↑(2 * Real.pi * q.2) * Complex.I + 2 * Real.pi * Complex.I := by push_cast; ring
+    simp only [this, Complex.exp_add, Complex.exp_two_pi_mul_I, mul_one]
+  exact contDiffOn_comp_actionAngle hF.contDiffOn hper
+
+/-- A smooth replacement for `∂ⱼθ`: `conj(E) ∂ⱼE / (2πi)` with `E = e^{2πiθ}`. -/
+private def angleGrad (j : Fin 2) (p : ℝ × ℝ) : ℂ :=
+  starRingEnd ℂ (angleExp p) * coordPartial j angleExp p / (2 * Real.pi * Complex.I)
+
+private theorem continuousOn_coordPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {f : ℝ × ℝ → E} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    (hf : ContDiffOn ℝ ∞ f U) (j : Fin 2) : ContinuousOn (coordPartial j f) U := by
+  have hd := (hf.continuousOn_fderiv_of_isOpen hU (by simp)).clm_apply
+    (continuousOn_const (c := if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)))
+  refine hd.congr fun p hp ↦ ?_
+  have hdiff : DifferentiableAt ℝ f p :=
+    (hf.contDiffAt (hU.mem_nhds hp)).differentiableAt (by simp)
+  unfold coordPartial
+  split_ifs
+  · exact partialX_eq_fderiv hdiff
+  · exact partialY_eq_fderiv hdiff
+
+private theorem continuousOn_angleGrad (j : Fin 2) : ContinuousOn (angleGrad j) puncturedCell :=
+  ((Complex.continuous_conj.comp_continuousOn contDiffOn_angleExp.continuousOn).mul
+    (continuousOn_coordPartial isOpen_puncturedCell contDiffOn_angleExp j)).div_const _
+
+/-- Off the cut, `angleGrad` is the partial derivative of the angle. -/
+private theorem angleGrad_eq {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) (j : Fin 2) :
+    angleGrad j p = ((coordPartial j angleCoord p : ℝ) : ℂ) := by
+  have hθ : DifferentiableAt ℝ angleCoord p :=
+    (contDiffAt_angleCoord hp hcut).differentiableAt (by simp)
+  have hline {g : ℝ → ℝ × ℝ} {t₀ : ℝ} (hg : g t₀ = p) {θ' : ℝ}
+      (hθ' : HasDerivAt (fun t ↦ angleCoord (g t)) θ' t₀) :
+      HasDerivAt (fun t ↦ angleExp (g t)) (angleExp p * (↑(2 * Real.pi * θ') * Complex.I))
+        t₀ := by
+    have h := ((hθ'.const_mul (2 * Real.pi)).ofReal_comp.mul_const Complex.I).cexp
+    simpa only [angleExp, hg] using h
+  have hE : coordPartial j angleExp p =
+      angleExp p * (↑(2 * Real.pi * coordPartial j angleCoord p) * Complex.I) := by
+    unfold coordPartial
+    split_ifs
+    · exact (hline rfl (hasDerivAt_partialX hθ)).deriv
+    · exact (hline rfl (hasDerivAt_partialY hθ)).deriv
+  have hn : starRingEnd ℂ (angleExp p) * angleExp p = 1 := by
+    rw [Complex.conj_mul', angleExp, Complex.norm_exp_ofReal_mul_I]
+    simp
+  have hpi : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := by
+    simp [Real.pi_ne_zero, Complex.I_ne_zero]
+  rw [angleGrad, hE, ← mul_assoc, hn, one_mul]
+  field_simp
+  push_cast
+  ring
+
+/-- Weak derivatives on a measurable set are unchanged by a.e. changes on that set. -/
+private theorem HasWeakPartialOn.congr_ae_on {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
+    {j : Fin 2} {g g' h h' : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn U j g h)
+    (hg : ∀ᵐ p, p ∈ U → g p = g' p) (hh : ∀ᵐ p, p ∈ U → h p = h' p) :
+    HasWeakPartialOn U j g' h' := by
+  refine ⟨hd.1.congr ((ae_restrict_iff' hU).mpr hg),
+    hd.2.1.congr ((ae_restrict_iff' hU).mpr hh), fun φ hφ ↦ ?_⟩
+  have e1 : (∫ p, g' p * coordPartial j φ p) = ∫ p, g p * coordPartial j φ p := by
+    refine integral_congr_ae ?_
+    filter_upwards [hg] with p hp
+    by_cases hpU : p ∈ U
+    · rw [hp hpU]
+    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hpU (hφ.tsupport_subset
+        (tsupport_coordPartial_subset j φ ht))), mul_zero, mul_zero]
+  have e2 : (∫ p, h' p * φ p) = ∫ p, h p * φ p := by
+    refine integral_congr_ae ?_
+    filter_upwards [hh] with p hp
+    by_cases hpU : p ∈ U
+    · rw [hp hpU]
+    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hpU (hφ.tsupport_subset ht)), mul_zero,
+        mul_zero]
+  rw [e1, e2]
+  exact hd.2.2 φ hφ
+
+private theorem coordPartial_congr_nhds {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {φ ψ : ℝ × ℝ → E} {p : ℝ × ℝ} (he : φ =ᶠ[𝓝 p] ψ)
+    (j : Fin 2) : coordPartial j φ p = coordPartial j ψ p := by
+  have hx := he.comp_tendsto ((continuous_id.prodMk continuous_const).tendsto p.1)
+  have hy := he.comp_tendsto ((continuous_const.prodMk continuous_id).tendsto p.2)
+  simp only [Function.comp_def, id_eq] at hx hy
+  unfold coordPartial partialX partialY
+  split_ifs
+  · exact hx.deriv_eq
+  · exact hy.deriv_eq
+
+/-- Weak derivatives on the punctured cell extend to the plane for functions vanishing off a
+closed interior level band. -/
+private theorem HasWeakPartialOn.univ_of_band {a b : ℝ} (ha : 0 < a) (hb : b < 1) {j : Fin 2}
+    {f g : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn puncturedCell j f g)
+    (hf : ∀ p ∉ closedCellLevelBand a b, f p = 0)
+    (hg : ∀ p ∉ closedCellLevelBand a b, g p = 0) : HasWeakPartialOn univ j f g := by
+  set B := closedCellLevelBand a b
+  have hB : IsCompact B := isCompact_closedCellLevelBand a b
+  have hBU : B ⊆ puncturedCell := closedCellLevelBand_subset ha hb
+  have hint {v : ℝ × ℝ → ℂ} (hv : LocallyIntegrableOn v puncturedCell)
+      (hz : ∀ p ∉ B, v p = 0) : LocallyIntegrableOn v univ :=
+    ((hv.integrableOn_compact_subset hBU hB).integrable_of_forall_notMem_eq_zero
+      hz).locallyIntegrable.locallyIntegrableOn univ
+  refine ⟨hint hd.1 hf, hint hd.2.1 hg, fun φ hφ ↦ ?_⟩
+  obtain ⟨V₂, hV₂o, hBV₂, hV₂c, hV₂k⟩ :=
+    exists_open_between_and_isCompact_closure hB isOpen_puncturedCell hBU
+  obtain ⟨V₁, hV₁o, hBV₁, hV₁c, -⟩ := exists_open_between_and_isCompact_closure hB hV₂o hBV₂
+  obtain ⟨η, hη, -, hηs, hη1⟩ :=
+    exists_contDiff_support_eq_eq_one_iff (n := ⊤) hV₂o isClosed_closure hV₁c
+  have hηt : tsupport η = closure V₂ := by rw [tsupport, hηs]
+  set ψ : ℝ × ℝ → ℂ := fun p ↦ (η p : ℂ) * φ p with hψ_def
+  have hψ : IsTestFunctionOn puncturedCell ψ :=
+    ⟨(Complex.ofRealCLM.contDiff.comp hη).mul hφ.contDiff, by
+      refine HasCompactSupport.mul_right ?_
+      refine hV₂k.of_isClosed_subset (isClosed_tsupport _) ?_
+      rw [← hηt]
+      exact closure_mono (fun p hp ↦ by simpa using hp), by
+      refine tsupport_mul_subset_left.trans ?_
+      refine (closure_mono (fun p hp ↦ ?_)).trans (hηt ▸ hV₂c)
+      simpa using hp⟩
+  have hnear (p : ℝ × ℝ) (hp : p ∈ B) : ψ =ᶠ[𝓝 p] φ := by
+    filter_upwards [hV₁o.mem_nhds (hBV₁ hp)] with q hq
+    simp [hψ_def, (hη1 q).1 (subset_closure hq)]
+  have e1 : (fun p ↦ f p * coordPartial j ψ p) = fun p ↦ f p * coordPartial j φ p := by
+    funext p
+    by_cases hp : p ∈ B
+    · rw [coordPartial_congr_nhds (hnear p hp)]
+    · rw [hf p hp, zero_mul, zero_mul]
+  have e2 : (fun p ↦ g p * ψ p) = fun p ↦ g p * φ p := by
+    funext p
+    by_cases hp : p ∈ B
+    · rw [(hnear p hp).eq_of_nhds]
+    · rw [hg p hp, zero_mul, zero_mul]
+  have hw := hd.2.2 ψ hψ
+  rwa [e1, e2] at hw
+
+open scoped Classical in
+/-- The chain rule in coordinates: `∂ⱼh · X + ∂ⱼθ · Y` on the punctured cell, with `angleGrad`
+for `∂ⱼθ`, and zero elsewhere. -/
+private def coordGrad (j : Fin 2) (X Y : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℂ :=
+  if p ∈ puncturedCell then
+    ((coordPartial j levelCoord p : ℝ) : ℂ) * X (actionAngle p) + angleGrad j p * Y (actionAngle p)
+  else 0
+
+private theorem coordGrad_sub (j : Fin 2) (X Y X' Y' : ℝ × ℝ → ℂ) :
+    coordGrad j X Y - coordGrad j X' Y' = coordGrad j (X - X') (Y - Y') := by
+  funext p
+  by_cases hc : p ∈ puncturedCell
+  · simp only [Pi.sub_apply, coordGrad, ite_eq_left hc]
+    ring
+  · simp [coordGrad, hc]
+
+/-- Coordinate gradients of band-supported cylinder data are in `L²` of the plane. -/
+private theorem exists_coordGrad_bound {a b : ℝ} (ha : 0 < a) (hb : b < 1) :
+    ∃ C : ENNReal, C ≠ ⊤ ∧ ∀ (j : Fin 2) (X Y : ℝ × ℝ → ℂ), MemLp X 2 cylinderMeasure →
+      MemLp Y 2 cylinderMeasure → (∀ q : ℝ × ℝ, q.1 ∉ Icc a b → X q = 0) →
+      (∀ q : ℝ × ℝ, q.1 ∉ Icc a b → Y q = 0) →
+      MemLp (coordGrad j X Y) 2 volume ∧ eLpNorm (coordGrad j X Y) 2 volume ≤
+        C * (eLpNorm X 2 cylinderMeasure + eLpNorm Y 2 cylinderMeasure) := by
+  classical
+  obtain ⟨Co, hCo⟩ := exists_actionReconstruct_bound ha hb
+  set B := closedCellLevelBand a b with hB_def
+  have hB : IsCompact B := isCompact_closedCellLevelBand a b
+  have hBU : B ⊆ puncturedCell := closedCellLevelBand_subset ha hb
+  have hmemB {p : ℝ × ℝ} (hc : p ∈ puncturedCell) (hl : levelCoord p ∈ Icc a b) : p ∈ B := by
+    rw [hB_def, closedCellLevelBand_eq ha hb]
+    exact ⟨hc, hl⟩
+  have hlev : ContDiff ℝ ∞ levelCoord := by
+    unfold levelCoord dipoleLift
+    fun_prop
+  have hAc (j : Fin 2) : Continuous (coordPartial j levelCoord) :=
+    continuousOn_univ.mp (continuousOn_coordPartial isOpen_univ hlev.contDiffOn j)
+  choose CA hCA using fun j ↦ hB.exists_bound_of_continuousOn (hAc j).continuousOn
+  choose CB hCB using fun j ↦
+    hB.exists_bound_of_continuousOn ((continuousOn_angleGrad j).mono hBU)
+  set K : ℝ := max (max (CA 0) (CA 1)) (max (CB 0) (CB 1))
+  have hKA (j : Fin 2) : CA j ≤ K := by
+    fin_cases j
+    · exact (le_max_left _ _).trans (le_max_left _ _)
+    · exact (le_max_right _ _).trans (le_max_left _ _)
+  have hKB (j : Fin 2) : CB j ≤ K := by
+    fin_cases j
+    · exact (le_max_left _ _).trans (le_max_right _ _)
+    · exact (le_max_right _ _).trans (le_max_right _ _)
+  refine ⟨ENNReal.ofReal K * Co, ENNReal.mul_ne_top ENNReal.ofReal_ne_top ENNReal.coe_ne_top,
+    fun j X Y hX hY hXz hYz ↦ ?_⟩
+  set RX : ℝ × ℝ → ℂ := fun p ↦
+    if p ∈ puncturedCell then X (actionAngle p) else 0 with hRX_def
+  set RY : ℝ × ℝ → ℂ := fun p ↦
+    if p ∈ puncturedCell then Y (actionAngle p) else 0 with hRY_def
+  have hrecX := hCo X hX hXz
+  have hrecY := hCo Y hY hYz
+  have hRX : MemLp RX 2 volume := MemLp.ae_eq (ae_actionReconstruct _) hrecX.1
+  have hRY : MemLp RY 2 volume := MemLp.ae_eq (ae_actionReconstruct _) hrecY.1
+  have hRXn : eLpNorm RX 2 volume ≤ Co * eLpNorm X 2 cylinderMeasure :=
+    (eLpNorm_congr_ae (ae_actionReconstruct _)).symm.le.trans hrecX.2
+  have hRYn : eLpNorm RY 2 volume ≤ Co * eLpNorm Y 2 cylinderMeasure :=
+    (eLpNorm_congr_ae (ae_actionReconstruct _)).symm.le.trans hrecY.2
+  have hRXz : ∀ p, RX p ≠ 0 → p ∈ B := by
+    intro p hp
+    by_cases hc : p ∈ puncturedCell
+    · refine hmemB hc ?_
+      by_contra hl
+      exact hp (by simp only [hRX_def, ite_eq_left hc]; exact hXz (actionAngle p) hl)
+    · simp [hRX_def, hc] at hp
+  have hRYz : ∀ p, RY p ≠ 0 → p ∈ B := by
+    intro p hp
+    by_cases hc : p ∈ puncturedCell
+    · refine hmemB hc ?_
+      by_contra hl
+      exact hp (by simp only [hRY_def, ite_eq_left hc]; exact hYz (actionAngle p) hl)
+    · simp [hRY_def, hc] at hp
+  set P1 : ℝ × ℝ → ℂ := fun p ↦ ((coordPartial j levelCoord p : ℝ) : ℂ) * RX p with hP1_def
+  set P2 : ℝ × ℝ → ℂ := fun p ↦
+    puncturedCell.piecewise (angleGrad j) (fun _ ↦ (0 : ℂ)) p * RY p with hP2_def
+  have hdP : coordGrad j X Y = P1 + P2 := by
+    funext p
+    by_cases hc : p ∈ puncturedCell <;> simp [coordGrad, hP1_def, hP2_def, hRX_def, hRY_def, hc]
+  have hP1 : ∀ p, ‖P1 p‖ ≤ K * ‖RX p‖ := by
+    intro p
+    by_cases h0 : RX p = 0
+    · simp [hP1_def, h0]
+    · rw [hP1_def, norm_mul, Complex.norm_real]
+      exact mul_le_mul_of_nonneg_right ((hCA j p (hRXz p h0)).trans (hKA j)) (norm_nonneg _)
+  have hP2 : ∀ p, ‖P2 p‖ ≤ K * ‖RY p‖ := by
+    intro p
+    by_cases h0 : RY p = 0
+    · simp [hP2_def, h0]
+    · have hpB := hRYz p h0
+      rw [hP2_def, norm_mul, Set.piecewise_eq_of_mem _ _ _ (hBU hpB)]
+      exact mul_le_mul_of_nonneg_right ((hCB j p hpB).trans (hKB j)) (norm_nonneg _)
+  have hP1m : AEStronglyMeasurable P1 volume :=
+    (Complex.continuous_ofReal.comp (hAc j)).aestronglyMeasurable.mul hRX.aestronglyMeasurable
+  have hP2m : AEStronglyMeasurable P2 volume :=
+    (ContinuousOn.measurable_piecewise (continuousOn_angleGrad j) continuousOn_const
+      isOpen_puncturedCell.measurableSet).aestronglyMeasurable.mul hRY.aestronglyMeasurable
+  have hP1n := eLpNorm_le_mul_eLpNorm_of_ae_le_mul hP1m (Eventually.of_forall hP1) 2
+  have hP2n := eLpNorm_le_mul_eLpNorm_of_ae_le_mul hP2m (Eventually.of_forall hP2) 2
+  rw [hdP]
+  refine ⟨(hRX.of_le_mul hP1m (Eventually.of_forall hP1)).add
+    (hRY.of_le_mul hP2m (Eventually.of_forall hP2)), ?_⟩
+  calc eLpNorm (P1 + P2) 2 volume ≤ eLpNorm P1 2 volume + eLpNorm P2 2 volume :=
+        eLpNorm_add_le (by norm_num)
+    _ ≤ ENNReal.ofReal K * (Co * eLpNorm X 2 cylinderMeasure) +
+          ENNReal.ofReal K * (Co * eLpNorm Y 2 cylinderMeasure) :=
+        add_le_add (hP1n.trans (by gcongr)) (hP2n.trans (by gcongr))
+    _ = _ := by ring
+
+/-! ### Helpers for the `H¹` convergence -/
+
+/-- The level cutoff in the `h` direction: `∂_h (χU) = χ' U + χ ∂_h U`. -/
+private theorem HasWeakPartialOn.levelCutoff₀ {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    (hχs : tsupport χ ⊆ Ioo 0 1) {U G : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn actionStrip 0 U G) :
+    HasWeakPartialOn univ 0 (fun q ↦ (χ q.1 : ℂ) * U q)
+      (fun q ↦ ((deriv χ q.1 : ℝ) : ℂ) * U q + (χ q.1 : ℂ) * G q) := by
+  have hχ' : Continuous (deriv χ) := hχ.continuous_deriv (by simp)
+  have hχ's : tsupport (deriv χ) ⊆ Ioo 0 1 := tsupport_deriv_subset.trans hχs
+  have hCs : Prod.fst ⁻¹' tsupport χ ⊆ actionStrip := fun q hq ↦ ⟨hχs hq, mem_univ _⟩
+  have hC's : Prod.fst ⁻¹' tsupport (deriv χ) ⊆ actionStrip := fun q hq ↦ ⟨hχ's hq, mem_univ _⟩
+  refine ⟨locallyIntegrable_levelCutoff hχ.continuous hχs hd.1,
+    (locallyIntegrable_levelCutoff hχ' hχ's hd.1).add
+      (locallyIntegrable_levelCutoff hχ.continuous hχs hd.2.1), fun φ hφ ↦ ?_⟩
+  have hcd : ContDiff ℝ ∞ (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ)) :=
+    Complex.ofRealCLM.contDiff.comp (hχ.comp contDiff_fst)
+  have hcd' : Continuous (fun q : ℝ × ℝ ↦ ((deriv χ q.1 : ℝ) : ℂ)) :=
+    Complex.continuous_ofReal.comp (hχ'.comp continuous_fst)
+  set ψ : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * φ q with hψ_def
+  have hψ : IsTestFunctionOn actionStrip ψ :=
+    ⟨hcd.mul hφ.contDiff, hφ.hasCompactSupport.mul_left,
+      tsupport_mul_subset_left.trans (tsupport_levelCutoff_subset.trans hCs)⟩
+  have hψd : coordPartial 0 ψ =
+      fun q ↦ ((deriv χ q.1 : ℝ) : ℂ) * φ q + (χ q.1 : ℂ) * coordPartial 0 φ q := by
+    funext q
+    have hdφ : DifferentiableAt ℝ (fun t ↦ φ (t, q.2)) q.1 :=
+      (hφ.contDiff.differentiable (by simp) _).comp q.1
+        (differentiableAt_id.prodMk (differentiableAt_const q.2))
+    have hdχ : HasDerivAt (fun t ↦ (χ t : ℂ)) ((deriv χ q.1 : ℝ) : ℂ) q.1 :=
+      ((hχ.differentiable (by simp) q.1).hasDerivAt).ofReal_comp
+    simp only [coordPartial, ite_true, partialX, hψ_def]
+    exact (hdχ.mul hdφ.hasDerivAt).deriv
+  have hw := hd.2.2 ψ hψ
+  rw [hψd] at hw
+  have i1 : Integrable fun p ↦ U p * (((deriv χ p.1 : ℝ) : ℂ) * φ p) :=
+    integrable_mul_of_tsupport_subset hd.1 (hcd'.mul hφ.contDiff.continuous)
+      hφ.hasCompactSupport.mul_left
+      (tsupport_mul_subset_left.trans (tsupport_levelCutoff_subset.trans hC's))
+  have i2 : Integrable fun p ↦ U p * ((χ p.1 : ℂ) * coordPartial 0 φ p) :=
+    integrable_mul_of_tsupport_subset hd.1 (hcd.continuous.mul (hφ.continuous_coordPartial 0))
+      (hφ.hasCompactSupport_coordPartial 0).mul_left
+      (tsupport_mul_subset_left.trans (tsupport_levelCutoff_subset.trans hCs))
+  have i3 : Integrable fun p ↦ G p * ψ p :=
+    integrable_mul_of_tsupport_subset hd.2.1 (hcd.continuous.mul hφ.contDiff.continuous)
+      hφ.hasCompactSupport.mul_left
+      (tsupport_mul_subset_left.trans (tsupport_levelCutoff_subset.trans hCs))
+  have e1 : (∫ p, U p * (((deriv χ p.1 : ℝ) : ℂ) * φ p + (χ p.1 : ℂ) * coordPartial 0 φ p)) =
+      (∫ p, U p * (((deriv χ p.1 : ℝ) : ℂ) * φ p)) +
+        ∫ p, U p * ((χ p.1 : ℂ) * coordPartial 0 φ p) := by
+    rw [← integral_add i1 i2]
+    congr 1; funext p; ring
+  have e2 : (∫ p, (((deriv χ p.1 : ℝ) : ℂ) * U p + (χ p.1 : ℂ) * G p) * φ p) =
+      (∫ p, U p * (((deriv χ p.1 : ℝ) : ℂ) * φ p)) + ∫ p, G p * ψ p := by
+    rw [← integral_add i1 i3]
+    congr 1; funext p; simp only [hψ_def]; ring
+  have e3 : (∫ p, (χ p.1 : ℂ) * U p * coordPartial 0 φ p) =
+      ∫ p, U p * ((χ p.1 : ℂ) * coordPartial 0 φ p) := by
+    congr 1; funext p; ring
+  rw [e1] at hw
+  rw [e3, e2]
+  linear_combination hw
+
+private theorem coordPartial_eq_fderiv {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {f : ℝ × ℝ → E} {p : ℝ × ℝ} (hf : DifferentiableAt ℝ f p) (j : Fin 2) :
+    coordPartial j f p = fderiv ℝ f p (if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)) := by
+  unfold coordPartial
+  split_ifs
+  · exact partialX_eq_fderiv hf
+  · exact partialY_eq_fderiv hf
+
+/-- The classical chain rule for `(h, θ)⁻¹ ∘ (h, θ) = id` off the cut: for a linear form `ℓ`,
+`∂ⱼh · ∂_h(ℓ ∘ P) + ∂ⱼθ · ∂_θ(ℓ ∘ P) = ℓ(eⱼ)`. -/
+private theorem chainRule_actionAngle {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) (ℓ : ℝ × ℝ →L[ℝ] ℝ) (j : Fin 2) :
+    coordPartial j levelCoord p * coordPartial 0 (fun q ↦ ℓ (actionAngleInv q)) (actionAngle p) +
+      coordPartial j angleCoord p * coordPartial 1 (fun q ↦ ℓ (actionAngleInv q))
+        (actionAngle p) = ℓ (if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)) := by
+  have hlev : ContDiff ℝ ∞ levelCoord := by
+    unfold levelCoord dipoleLift
+    fun_prop
+  have hld : DifferentiableAt ℝ levelCoord p := hlev.differentiable (by simp) p
+  have hθd : DifferentiableAt ℝ angleCoord p :=
+    (contDiffAt_angleCoord hp hcut).differentiableAt (by simp)
+  have hA : HasFDerivAt actionAngle ((fderiv ℝ levelCoord p).prod (fderiv ℝ angleCoord p)) p :=
+    hld.hasFDerivAt.prodMk hθd.hasFDerivAt
+  have hstrip : actionAngle p ∈ actionStrip := ⟨(mem_orbitDomain hp).1, mem_univ _⟩
+  have hPd : DifferentiableAt ℝ actionAngleInv (actionAngle p) :=
+    (contDiffOn_actionAngleInv.contDiffAt
+      ((isOpen_Ioo.prod isOpen_univ).mem_nhds hstrip)).differentiableAt (by simp)
+  set D := fderiv ℝ actionAngleInv (actionAngle p)
+  set A := (fderiv ℝ levelCoord p).prod (fderiv ℝ angleCoord p)
+  have hcomp : HasFDerivAt (actionAngleInv ∘ actionAngle) (D.comp A) p :=
+    hPd.hasFDerivAt.comp p hA
+  have hid : HasFDerivAt (actionAngleInv ∘ actionAngle) (ContinuousLinearMap.id ℝ (ℝ × ℝ)) p := by
+    refine (hasFDerivAt_id p).congr_of_eventuallyEq ?_
+    filter_upwards [isOpen_puncturedCell.mem_nhds hp] with q hq
+    exact actionAngleInv_actionAngle hq
+  have hDA : D.comp A = ContinuousLinearMap.id ℝ (ℝ × ℝ) := hcomp.unique hid
+  have hℓ : HasFDerivAt (fun q ↦ ℓ (actionAngleInv q)) (ℓ.comp D) (actionAngle p) :=
+    ℓ.hasFDerivAt.comp _ hPd.hasFDerivAt
+  set e : ℝ × ℝ := if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)
+  have he := congrArg (fun T : ℝ × ℝ →L[ℝ] ℝ × ℝ ↦ ℓ (T e)) hDA
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply] at he
+  have hsplit : ((fderiv ℝ levelCoord p e, fderiv ℝ angleCoord p e) : ℝ × ℝ) =
+      fderiv ℝ levelCoord p e • ((1 : ℝ), (0 : ℝ)) +
+        fderiv ℝ angleCoord p e • ((0 : ℝ), (1 : ℝ)) := by
+    ext <;> simp
+  have hAe : A e = (fderiv ℝ levelCoord p e, fderiv ℝ angleCoord p e) := rfl
+  rw [hAe, hsplit, map_add, map_smul, map_smul, map_add, map_smul, map_smul, smul_eq_mul,
+    smul_eq_mul] at he
+  rw [coordPartial_eq_fderiv hld, coordPartial_eq_fderiv hθd,
+    coordPartial_eq_fderiv hℓ.differentiableAt, coordPartial_eq_fderiv hℓ.differentiableAt,
+    hℓ.fderiv]
+  simpa using he
+
+/-- `χ(Ψ/2)` vanishes near every point off the cell square. -/
+private theorem cellCutoff_eventuallyEq_zero {χ : ℝ → ℝ} {a b : ℝ} (ha : 0 < a)
+    (hχband : tsupport χ ⊆ Icc a b) {p : ℝ × ℝ} (hp : p ∉ cellSquare) :
+    cellCutoff χ =ᶠ[𝓝 p] fun _ ↦ 0 := by
+  classical
+  have hd₁ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).1|) := by unfold diagCoord; fun_prop
+  have hd₂ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).2|) := by unfold diagCoord; fun_prop
+  set S : Set (ℝ × ℝ) := {q | |(diagCoord q).1| ≤ Real.pi / 2 ∧ |(diagCoord q).2| ≤ Real.pi / 2}
+  have hS : IsClosed S :=
+    (isClosed_le hd₁ continuous_const).inter (isClosed_le hd₂ continuous_const)
+  have hcl : closure cellSquare ⊆ S :=
+    closure_minimal (fun q hq ↦ ⟨hq.1.le, hq.2.le⟩) hS
+  have hprod (q : ℝ × ℝ) :
+      levelCoord q = Real.cos (diagCoord q).1 * Real.cos (diagCoord q).2 := by
+    rw [levelCoord, dipoleLift_eq_diag]
+    ring
+  have hV : IsOpen ({q | levelCoord q < a} ∪ (closure cellSquare)ᶜ) :=
+    (isOpen_lt continuous_levelCoord continuous_const).union isClosed_closure.isOpen_compl
+  have hpV : p ∈ {q | levelCoord q < a} ∪ (closure cellSquare)ᶜ := by
+    by_cases hpc : p ∈ closure cellSquare
+    · left
+      have hpS := hcl hpc
+      have hz : levelCoord p = 0 := by
+        rw [hprod]
+        have hne : ¬(|(diagCoord p).1| < Real.pi / 2 ∧ |(diagCoord p).2| < Real.pi / 2) := hp
+        rcases not_and_or.mp hne with h | h
+        · have he : |(diagCoord p).1| = Real.pi / 2 := le_antisymm hpS.1 (not_lt.mp h)
+          rw [← Real.cos_abs, he, Real.cos_pi_div_two, zero_mul]
+        · have he : |(diagCoord p).2| = Real.pi / 2 := le_antisymm hpS.2 (not_lt.mp h)
+          rw [← Real.cos_abs (diagCoord p).2, he, Real.cos_pi_div_two, mul_zero]
+      change levelCoord p < a
+      rw [hz]
+      exact ha
+    · right
+      exact hpc
+  filter_upwards [hV.mem_nhds hpV] with q hq
+  by_cases hqc : q ∈ cellSquare
+  · have hl : levelCoord q < a := by
+      rcases hq with h | h
+      · exact h
+      · exact absurd (subset_closure hqc) h
+    have hz : χ (levelCoord q) = 0 :=
+      image_eq_zero_of_notMem_tsupport fun ht ↦ (not_le.mpr hl) (hχband ht).1
+    simp [cellCutoff, hqc, hz]
+  · simp [cellCutoff, hqc]
+
 /-! ### Statements -/
 
 section Statements
@@ -1503,7 +2027,7 @@ theorem transversalMollifier_const_mul (ε : ℝ) (c : ℂ) (u : ℝ × ℝ → 
 theorem transversalMollifier_eq_zero (hχs : tsupport χ ⊆ Ioo 0 1) :
     ∃ K, IsCompact K ∧ K ⊆ puncturedCell ∧ ∃ ε₀ > 0, ∀ ε ∈ Ioo 0 ε₀, ∀ u p, p ∉ K →
       transversalMollifier χ ε u p = 0 := by
-  obtain ⟨a, b, ε₀, ha, hb, hε₀, _, hband⟩ := exists_mollify_band hχs
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, _, hband, -, -⟩ := exists_mollify_band hχs
   refine ⟨closedCellLevelBand a b, isCompact_closedCellLevelBand _ _,
     closedCellLevelBand_subset ha hb, ε₀, hε₀, ?_⟩
   intro ε hε u p hp
@@ -1591,7 +2115,7 @@ theorem memLp_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport 
       MemLp (transversalMollifier χ ε u) 2 volume ∧
         eLpNorm (transversalMollifier χ ε u) 2 volume ≤
           C * eLpNorm u 2 (volume.restrict cellSquare) := by
-  obtain ⟨a, b, ε₀, ha, hb, hε₀, _, hband⟩ := exists_mollify_band hχs
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, _, hband, -, -⟩ := exists_mollify_band hχs
   obtain ⟨Ci, hCi⟩ := eLpNorm_cutoff_actionInput_le hχ hχs
   obtain ⟨Co, hCo⟩ := exists_actionReconstruct_bound ha hb
   refine ⟨ε₀, hε₀, Co * Ci, fun ε hε u hu ↦ ?_⟩
@@ -1613,7 +2137,7 @@ theorem tendsto_transversalMollifier (hχ : ContDiff ℝ ∞ χ) (hχs : tsuppor
     {u : ℝ × ℝ → ℂ} (hu : MemLp u 2 (volume.restrict cellSquare)) :
     Tendsto (fun ε ↦ eLpNorm (fun p ↦ transversalMollifier χ ε u p - cellCutoff χ p * u p) 2
       volume) (𝓝[>] 0) (𝓝 0) := by
-  obtain ⟨a, b, ε₀, ha, hb, hε₀, hχband, hband⟩ := exists_mollify_band hχs
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, hχband, hband, -, -⟩ := exists_mollify_band hχs
   obtain ⟨Co, hCo⟩ := exists_actionReconstruct_bound ha hb
   let F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q)
   have hF := memLp_cutoff_actionInput hχ hχs hu
@@ -1658,7 +2182,221 @@ theorem tendsto_transversalMollifier_partial (hχ : ContDiff ℝ ∞ χ)
       ∀ j, Tendsto (fun ε ↦ eLpNorm (fun p ↦ d j ε p -
           (((coordPartial j (cellCutoff χ) p : ℝ) : ℂ) * u p + cellCutoff χ p * g j p)) 2 volume)
         (𝓝[>] 0) (𝓝 0) := by
-  sorry
+  classical
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, hχband, hband, hab, hdband⟩ := exists_mollify_band hχs
+  obtain ⟨C, hC, hCb⟩ := exists_coordGrad_bound ha hb
+  have hmemB {p : ℝ × ℝ} (hc : p ∈ puncturedCell) (hl : levelCoord p ∈ Icc a b) :
+      p ∈ closedCellLevelBand a b := by
+    rw [closedCellLevelBand_eq ha hb]
+    exact ⟨hc, hl⟩
+  have hχ'd : ContDiff ℝ ∞ (deriv χ) := by simpa using hχ.iterate_deriv 1
+  have hχ's : tsupport (deriv χ) ⊆ Ioo 0 1 := tsupport_deriv_subset.trans hχs
+  have hχz {h : ℝ} (hh : h ∉ Icc a b) : χ h = 0 :=
+    image_eq_zero_of_notMem_tsupport fun ht ↦ hh (hχband ht)
+  have hχ'z {h : ℝ} (hh : h ∉ Icc a b) : deriv χ h = 0 :=
+    image_eq_zero_of_notMem_tsupport fun ht ↦ hh (hχband (tsupport_deriv_subset ht))
+  -- The coordinate derivatives of the input, from the chain rule into the strip.
+  set c0 : Fin 2 → ℝ × ℝ → ℝ := fun i ↦ coordPartial i (fun q ↦ (actionAngleInv q).1)
+  set c1 : Fin 2 → ℝ × ℝ → ℝ := fun i ↦ coordPartial i (fun q ↦ (actionAngleInv q).2)
+  have hstripO : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  have hc0 (i : Fin 2) : ContinuousOn (c0 i) actionStrip :=
+    continuousOn_coordPartial hstripO (contDiff_fst.comp_contDiffOn contDiffOn_actionAngleInv) i
+  have hc1 (i : Fin 2) : ContinuousOn (c1 i) actionStrip :=
+    continuousOn_coordPartial hstripO (contDiff_snd.comp_contDiffOn contDiffOn_actionAngleInv) i
+  set DU : Fin 2 → ℝ × ℝ → ℂ := fun i q ↦
+    (c0 i q : ℂ) * g 0 (actionAngleInv q) + (c1 i q : ℂ) * g 1 (actionAngleInv q) with hDU_def
+  have hU (i : Fin 2) : HasWeakPartialOn actionStrip i (u ∘ actionAngleInv) (DU i) :=
+    HasWeakPartialOn.comp_actionAngleInv (fun i ↦ (hg i).mono sdiff_subset) i
+  set F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q) with hF_def
+  set Fh : ℝ × ℝ → ℂ := fun q ↦
+    ((deriv χ q.1 : ℝ) : ℂ) * (u ∘ actionAngleInv) q + (χ q.1 : ℂ) * DU 0 q with hFh_def
+  set Fθ : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * DU 1 q with hFθ_def
+  have hF0 : HasWeakPartialOn univ 0 F Fh := (hU 0).levelCutoff₀ hχ hχs
+  have hF1 : HasWeakPartialOn univ 1 F Fθ := (hU 1).levelCutoff hχ hχs
+  have hpF : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q := fun q ↦ by
+    have h := levelCutoff_actionInput_periodic hχs (fun _ ↦ 1) u q
+    simp only [one_mul] at h
+    exact h
+  -- `L²` bounds in coordinates.
+  have hK : IsCompact (Icc a b ×ˢ Icc (-1 / 4 : ℝ) (3 / 4)) := isCompact_Icc.prod isCompact_Icc
+  have hKs : Icc a b ×ˢ Icc (-1 / 4 : ℝ) (3 / 4) ⊆ actionStrip :=
+    fun q hq ↦ ⟨⟨ha.trans_le hq.1.1, hq.1.2.trans_lt hb⟩, mem_univ _⟩
+  have hsnd : ∀ᵐ q ∂cylinderMeasure, q.2 ∈ Ico (-1 / 4 : ℝ) (3 / 4) :=
+    Measure.quasiMeasurePreserving_snd.ae (ae_restrict_mem measurableSet_Ico)
+  have hcoefL {f : ℝ × ℝ → ℝ} (hf : ContinuousOn f actionStrip) {w : ℝ × ℝ → ℂ}
+      (hw : MemLp w 2 (volume.restrict cellSquare)) :
+      MemLp (fun q ↦ (f q : ℂ) * ((χ q.1 : ℂ) * w (actionAngleInv q))) 2 cylinderMeasure := by
+    obtain ⟨Cf, hCf⟩ := hK.exists_bound_of_continuousOn (hf.mono hKs)
+    have hX := memLp_cutoff_actionInput hχ hχs hw
+    have he : (fun q ↦ (f q : ℂ) * ((χ q.1 : ℂ) * w (actionAngleInv q))) =
+        fun q ↦ ((actionStrip.piecewise f (fun _ ↦ 0) q : ℝ) : ℂ) *
+          ((χ q.1 : ℂ) * w (actionAngleInv q)) := by
+      funext q
+      by_cases hq : q ∈ actionStrip
+      · rw [Set.piecewise_eq_of_mem _ _ _ hq]
+      · have hq1 : q.1 ∉ Icc a b := fun h ↦ hq ⟨⟨ha.trans_le h.1, h.2.trans_lt hb⟩, mem_univ _⟩
+        simp [hχz hq1]
+    refine hX.of_le_mul (c := Cf) ?_ ?_
+    · rw [he]
+      exact (Complex.continuous_ofReal.measurable.comp (ContinuousOn.measurable_piecewise hf
+        continuousOn_const hstripO.measurableSet)).aestronglyMeasurable.mul hX.aestronglyMeasurable
+    · filter_upwards [hsnd] with q hq
+      by_cases hχq : χ q.1 = 0
+      · simp [hχq]
+      · have hqK : q ∈ Icc a b ×ˢ Icc (-1 / 4 : ℝ) (3 / 4) :=
+          ⟨hχband (subset_closure hχq), Ico_subset_Icc_self hq⟩
+        rw [norm_mul, Complex.norm_real]
+        exact mul_le_mul_of_nonneg_right (hCf q hqK) (norm_nonneg _)
+  have hFhL : MemLp Fh 2 cylinderMeasure := by
+    have he : Fh = fun q ↦ ((deriv χ q.1 : ℝ) : ℂ) * u (actionAngleInv q) +
+        ((c0 0 q : ℂ) * ((χ q.1 : ℂ) * g 0 (actionAngleInv q)) +
+          (c1 0 q : ℂ) * ((χ q.1 : ℂ) * g 1 (actionAngleInv q))) := by
+      funext q
+      simp only [hFh_def, hDU_def, Function.comp_apply]
+      ring
+    rw [he]
+    exact (memLp_cutoff_actionInput hχ'd hχ's hu).add
+      ((hcoefL (hc0 0) (hg2 0)).add (hcoefL (hc1 0) (hg2 1)))
+  have hFθL : MemLp Fθ 2 cylinderMeasure := by
+    have he : Fθ = fun q ↦ (c0 1 q : ℂ) * ((χ q.1 : ℂ) * g 0 (actionAngleInv q)) +
+        (c1 1 q : ℂ) * ((χ q.1 : ℂ) * g 1 (actionAngleInv q)) := by
+      funext q
+      simp only [hFθ_def, hDU_def]
+      ring
+    rw [he]
+    exact (hcoefL (hc0 1) (hg2 0)).add (hcoefL (hc1 1) (hg2 1))
+  have hFhz : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → Fh q = 0 := fun q hq ↦ by
+    simp [hFh_def, hχz hq, hχ'z hq]
+  have hFθz : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → Fθ q = 0 := fun q hq ↦ by
+    simp [hFθ_def, hχz hq]
+  have hFloc : LocallyIntegrable F := locallyIntegrableOn_univ.mp hF1.1
+  have hFcyl : MemLp F 2 cylinderMeasure := memLp_cutoff_actionInput hχ hχs hu
+  have hMX := (tendsto_smul_mollifyFstDeriv hFcyl).1
+  -- The derivatives.
+  set d : Fin 2 → ℝ → ℝ × ℝ → ℂ := fun j ε ↦
+    coordGrad j (mollifyFstDeriv ε F) (mollifyFst ε Fθ) with hd_def
+  have hXband (ε : ℝ) (hε : ε ∈ Ioo 0 ε₀) :
+      ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFstDeriv ε F q = 0 :=
+    fun q hq ↦ hdband ε hε (fun z ↦ u (actionAngleInv z)) q hq
+  have hYband (ε : ℝ) (hε : ε ∈ Ioo 0 ε₀) :
+      ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFst ε Fθ q = 0 :=
+    fun q hq ↦ hband ε hε (DU 1) q hq
+  have hweak : ∀ ε ∈ Ioo 0 ε₀, ∀ j,
+      HasWeakPartialOn univ j (transversalMollifier χ ε u) (d j ε) := by
+    intro ε hε j
+    have hX := hasWeakPartialOn_mollifyFst hε.1 hFloc
+    have hY := hF1.mollify hε.1
+    set G : Fin 2 → ℝ × ℝ → ℂ := fun i ↦ if i = 0 then mollifyFstDeriv ε F else mollifyFst ε Fθ
+      with hG_def
+    have hG : ∀ i, HasWeakPartialOn actionStrip i (mollifyFst ε F) (G i) := by
+      intro i
+      fin_cases i
+      · simpa [hG_def] using hX.mono (subset_univ _)
+      · simpa [hG_def] using hY.mono (subset_univ _)
+    have hc := HasWeakPartialOn.comp_actionAngle (mollifyFst_periodic hpF) hG j
+    have hcell : HasWeakPartialOn puncturedCell j (transversalMollifier χ ε u) (d j ε) := by
+      refine hc.congr_ae_on isOpen_puncturedCell.measurableSet
+        (Eventually.of_forall fun p hp ↦ ?_) ?_
+      · simp only [Function.comp_apply, transversalMollifier, ite_eq_left hp, hF_def]
+      · filter_upwards [measure_eq_zero_iff_ae_notMem.mp volume_diagCoord_snd_eq_zero]
+          with p hp hcp
+        have hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1) := fun h ↦ hp h.1
+        simp [hd_def, coordGrad, hcp, hG_def, angleGrad_eq hcp hcut j]
+    refine hcell.univ_of_band ha hb (fun p hp ↦ ?_) (fun p hp ↦ ?_)
+    · by_cases hc : p ∈ puncturedCell
+      · simp only [transversalMollifier, ite_eq_left hc]
+        exact hband ε hε _ _ fun hl ↦ hp (hmemB hc hl)
+      · simp [transversalMollifier, hc]
+    · by_cases hc : p ∈ puncturedCell
+      · have hl : levelCoord p ∉ Icc a b := fun hl ↦ hp (hmemB hc hl)
+        simp only [hd_def, coordGrad, ite_eq_left hc]
+        rw [hXband ε hε (actionAngle p) hl, hYband ε hε (actionAngle p) hl, mul_zero, mul_zero,
+          add_zero]
+      · simp [hd_def, coordGrad, hc]
+  -- The limit is the gradient of `χ(Ψ/2) u`.
+  have hlimit (j : Fin 2) : coordGrad j Fh Fθ =ᵐ[volume] fun p ↦
+      ((coordPartial j (cellCutoff χ) p : ℝ) : ℂ) * u p + cellCutoff χ p * g j p := by
+    filter_upwards [measure_eq_zero_iff_ae_notMem.mp volume_diagCoord_snd_eq_zero,
+      measure_eq_zero_iff_ae_notMem.mp volume_origin_eq_zero] with p hp hp0
+    by_cases hc : p ∈ puncturedCell
+    · have hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1) := fun h ↦ hp h.1
+      have hlev : ContDiff ℝ ∞ levelCoord := by
+        unfold levelCoord dipoleLift
+        fun_prop
+      have hld : DifferentiableAt ℝ levelCoord p := hlev.differentiable (by simp) p
+      have hcomp : HasFDerivAt (fun q ↦ χ (levelCoord q))
+          (deriv χ (levelCoord p) • fderiv ℝ levelCoord p) p :=
+        ((hχ.differentiable (by simp) _).hasDerivAt).comp_hasFDerivAt p hld.hasFDerivAt
+      have hnear : cellCutoff χ =ᶠ[𝓝 p] fun q ↦ χ (levelCoord q) := by
+        filter_upwards [isOpen_puncturedCell.mem_nhds hc] with q hq
+        simp [cellCutoff, hq.1]
+      have hcc : coordPartial j (cellCutoff χ) p =
+          deriv χ (levelCoord p) * coordPartial j levelCoord p := by
+        rw [coordPartial_congr_nhds hnear, coordPartial_eq_fderiv hcomp.differentiableAt,
+          hcomp.fderiv, coordPartial_eq_fderiv hld]
+        simp
+      have hcp : cellCutoff χ p = χ (levelCoord p) := by simp [cellCutoff, hc.1]
+      have hk0 := chainRule_actionAngle hc hcut (ContinuousLinearMap.fst ℝ ℝ ℝ) j
+      have hk1 := chainRule_actionAngle hc hcut (ContinuousLinearMap.snd ℝ ℝ ℝ) j
+      simp only [ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd'] at hk0 hk1
+      set e : ℝ × ℝ := if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1) with he_def
+      have hgj : g j p = (e.1 : ℂ) * g 0 p + (e.2 : ℂ) * g 1 p := by
+        fin_cases j <;> simp [he_def]
+      have hk0' := congrArg (fun x : ℝ ↦ (x : ℂ)) hk0
+      have hk1' := congrArg (fun x : ℝ ↦ (x : ℂ)) hk1
+      push_cast at hk0' hk1'
+      have hP := actionAngleInv_actionAngle hc
+      have haa : (actionAngle p).1 = levelCoord p := rfl
+      simp only [coordGrad, ite_eq_left hc, hFh_def, hFθ_def, hDU_def, Function.comp_apply, hP,
+        angleGrad_eq hc hcut j, hcc, hcp, haa]
+      change _ = _ * u p + (χ (levelCoord p) : ℂ) * g j p
+      rw [hgj]
+      push_cast
+      linear_combination ((χ (levelCoord p) : ℂ) * g 0 p) * hk0' +
+        ((χ (levelCoord p) : ℂ) * g 1 p) * hk1'
+    · have hpc : p ∉ cellSquare := fun h ↦ hc ⟨h, hp0⟩
+      have hz := cellCutoff_eventuallyEq_zero ha hχband hpc
+      have hd0 : coordPartial j (cellCutoff χ) p = 0 := by
+        rw [coordPartial_congr_nhds hz]
+        unfold coordPartial
+        split_ifs <;> simp [partialX, partialY]
+      simp [coordGrad, hc, hd0, hz.eq_of_nhds]
+  -- Convergence.
+  have hac : cylinderMeasure ≪ (volume : Measure (ℝ × ℝ)) := by
+    rw [Measure.volume_eq_prod]
+    exact Measure.AbsolutelyContinuous.rfl.prod
+      (Measure.absolutelyContinuous_of_le Measure.restrict_le_self)
+  have hbound : ∀ j, ∀ ε ∈ Ioo 0 ε₀, eLpNorm (fun p ↦ d j ε p -
+      (((coordPartial j (cellCutoff χ) p : ℝ) : ℂ) * u p + cellCutoff χ p * g j p)) 2 volume ≤
+        C * (eLpNorm (mollifyFst ε Fh - Fh) 2 cylinderMeasure +
+          eLpNorm (mollifyFst ε Fθ - Fθ) 2 cylinderMeasure) := by
+    intro j ε hε
+    have he : (fun p ↦ d j ε p -
+        (((coordPartial j (cellCutoff χ) p : ℝ) : ℂ) * u p + cellCutoff χ p * g j p)) =ᵐ[volume]
+        coordGrad j (mollifyFstDeriv ε F - Fh) (mollifyFst ε Fθ - Fθ) := by
+      filter_upwards [hlimit j] with p hp
+      rw [← hp, ← coordGrad_sub]
+      rfl
+    have hXe : mollifyFstDeriv ε F - Fh =ᵐ[cylinderMeasure] mollifyFst ε Fh - Fh :=
+      hac.ae_eq ((mollifyFstDeriv_ae_eq hε.1 hF0).sub EventuallyEq.rfl)
+    obtain ⟨-, hn⟩ := hCb j _ _ ((hMX ε hε.1).sub hFhL)
+      ((eLpNorm_mollifyFst_le hε.1 hFθL).1.sub hFθL)
+      (fun q hq ↦ by simp [hXband ε hε q hq, hFhz q hq])
+      (fun q hq ↦ by simp [hYband ε hε q hq, hFθz q hq])
+    rw [eLpNorm_congr_ae he]
+    exact hn.trans_eq (by rw [eLpNorm_congr_ae hXe])
+  refine ⟨d, ?_, fun j ↦ ?_⟩
+  · filter_upwards [Ioo_mem_nhdsGT hε₀] with ε hε j
+    refine ⟨hweak ε hε j, ?_⟩
+    exact (hCb j _ _ (hMX ε hε.1) (eLpNorm_mollifyFst_le hε.1 hFθL).1 (hXband ε hε)
+      (hYband ε hε)).1
+  · have hlim := ENNReal.Tendsto.const_mul (a := C)
+      ((tendsto_mollifyFst hFhL).add (tendsto_mollifyFst hFθL)) (Or.inr hC)
+    simp only [add_zero, mul_zero] at hlim
+    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hlim
+      (Eventually.of_forall fun _ ↦ zero_le) ?_
+    filter_upwards [Ioo_mem_nhdsGT hε₀] with ε hε
+    exact hbound j ε hε
 
 /-- For `u, L₀ u ∈ L²` of the cell, `J_ε u ∈ H¹(ℝ²)` with `ε ‖∇J_ε u‖ → 0`. -/
 theorem transversalMollifier_hasWeakPartialOn (hχ : ContDiff ℝ ∞ χ)
@@ -1669,7 +2407,105 @@ theorem transversalMollifier_hasWeakPartialOn (hχ : ContDiff ℝ ∞ χ)
       (∀ᶠ ε in 𝓝[>] 0, ∀ j, HasWeakPartialOn univ j (transversalMollifier χ ε u) (d j ε) ∧
         MemLp (d j ε) 2 volume) ∧
       ∀ j, Tendsto (fun ε ↦ ENNReal.ofReal ε * eLpNorm (d j ε) 2 volume) (𝓝[>] 0) (𝓝 0) := by
-  sorry
+  classical
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, hχband, hband, hab, hdband⟩ := exists_mollify_band hχs
+  obtain ⟨σ, L, m, M, hσL, hσS, hm, hσm, hσM⟩ := exists_periodExtension ha hb hab
+  have hσabs (h : ℝ) : |σ h| ≤ M := by rw [abs_of_pos (hm.trans_le (hσm h))]; exact hσM h
+  obtain ⟨C, hC, hCb⟩ := exists_coordGrad_bound ha hb
+  have hmemB {p : ℝ × ℝ} (hc : p ∈ puncturedCell) (hl : levelCoord p ∈ Icc a b) :
+      p ∈ closedCellLevelBand a b := by
+    rw [closedCellLevelBand_eq ha hb]
+    exact ⟨hc, hl⟩
+  -- Coordinates: `F = χU`, `Kc = χK`, `Gm = σχK`.
+  set F : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * u (actionAngleInv q) with hF_def
+  set Kc : ℝ × ℝ → ℂ := fun q ↦ (χ q.1 : ℂ) * k (actionAngleInv q) with hKc_def
+  set Gm : ℝ × ℝ → ℂ := fun q ↦ (σ q.1 : ℂ) * Kc q with hGm_def
+  have hpF : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q := fun q ↦ by
+    have h := levelCutoff_actionInput_periodic hχs (fun _ ↦ 1) u q
+    simp only [one_mul] at h
+    exact h
+  have h2 : HasWeakPartialOn univ 1 F Gm :=
+    hasWeakPartialOn_levelCutoff_actionInput hχ hχs hχband hσS hL
+  have hFloc : LocallyIntegrable F := locallyIntegrableOn_univ.mp h2.1
+  have hFcyl : MemLp F 2 cylinderMeasure := memLp_cutoff_actionInput hχ hχs hu
+  have hKcL : MemLp Kc 2 cylinderMeasure := memLp_cutoff_actionInput hχ hχs hk
+  have hGmL : MemLp Gm 2 cylinderMeasure := memLp_levelMul hKcL hσL.continuous hσabs
+  obtain ⟨hMX, hlimX⟩ := tendsto_smul_mollifyFstDeriv hFcyl
+  have hGm' : Gm = fun z ↦ (χ z.1 : ℂ) * ((σ z.1 : ℂ) * k (actionAngleInv z)) := by
+    funext z
+    simp only [hGm_def, hKc_def]
+    ring
+  -- The derivatives: the chain rule in coordinates, with `angleGrad` for `∂ⱼθ`.
+  set d : Fin 2 → ℝ → ℝ × ℝ → ℂ := fun j ε ↦
+    coordGrad j (mollifyFstDeriv ε F) (mollifyFst ε Gm) with hd_def
+  have key : ∀ ε ∈ Ioo 0 ε₀, ∀ j, HasWeakPartialOn univ j (transversalMollifier χ ε u) (d j ε) ∧
+      MemLp (d j ε) 2 volume ∧ eLpNorm (d j ε) 2 volume ≤
+        C * (eLpNorm (mollifyFstDeriv ε F) 2 cylinderMeasure + eLpNorm Gm 2 cylinderMeasure) := by
+    intro ε hε j
+    have hXband : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFstDeriv ε F q = 0 :=
+      fun q hq ↦ hdband ε hε (fun z ↦ u (actionAngleInv z)) q hq
+    have hGband : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFst ε Gm q = 0 := fun q hq ↦ by
+      rw [hGm']
+      exact hband ε hε _ q hq
+    -- The weak derivative on the punctured cell, then on the plane.
+    have hX := hasWeakPartialOn_mollifyFst hε.1 hFloc
+    have hY := h2.mollify hε.1
+    set G : Fin 2 → ℝ × ℝ → ℂ := fun i ↦ if i = 0 then mollifyFstDeriv ε F else mollifyFst ε Gm
+      with hG_def
+    have hG : ∀ i, HasWeakPartialOn actionStrip i (mollifyFst ε F) (G i) := by
+      intro i
+      fin_cases i
+      · simpa [hG_def] using hX.mono (subset_univ _)
+      · simpa [hG_def] using hY.mono (subset_univ _)
+    have hc := HasWeakPartialOn.comp_actionAngle (mollifyFst_periodic hpF) hG j
+    have hcell : HasWeakPartialOn puncturedCell j (transversalMollifier χ ε u) (d j ε) := by
+      refine hc.congr_ae_on isOpen_puncturedCell.measurableSet
+        (Eventually.of_forall fun p hp ↦ ?_) ?_
+      · simp only [Function.comp_apply, transversalMollifier, ite_eq_left hp, hF_def]
+      · filter_upwards [measure_eq_zero_iff_ae_notMem.mp volume_diagCoord_snd_eq_zero]
+          with p hp hcp
+        have hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1) := fun h ↦ hp h.1
+        simp [hd_def, coordGrad, hcp, hG_def, angleGrad_eq hcp hcut j]
+    have hweak := hcell.univ_of_band ha hb (fun p hp ↦ by
+      by_cases hc : p ∈ puncturedCell
+      · simp only [transversalMollifier, ite_eq_left hc]
+        exact hband ε hε _ _ fun hl ↦ hp (hmemB hc hl)
+      · simp [transversalMollifier, hc]) (fun p hp ↦ by
+      by_cases hc : p ∈ puncturedCell
+      · have hl : levelCoord p ∉ Icc a b := fun hl ↦ hp (hmemB hc hl)
+        simp only [hd_def, coordGrad, ite_eq_left hc]
+        rw [hXband (actionAngle p) hl, hGband (actionAngle p) hl, mul_zero, mul_zero, add_zero]
+      · simp [hd_def, coordGrad, hc])
+    have hMG := eLpNorm_mollifyFst_le hε.1 hGmL
+    obtain ⟨hdL, hdn⟩ := hCb j _ _ (hMX ε hε.1) hMG.1 hXband hGband
+    exact ⟨hweak, hdL, hdn.trans (by gcongr; exact hMG.2)⟩
+  refine ⟨d, ?_, fun j ↦ ?_⟩
+  · filter_upwards [Ioo_mem_nhdsGT hε₀] with ε hε j
+    exact ⟨(key ε hε j).1, (key ε hε j).2.1⟩
+  · have hlim1 : Tendsto (fun ε ↦ C * eLpNorm (ε • mollifyFstDeriv ε F) 2 cylinderMeasure)
+        (𝓝[>] 0) (𝓝 0) := by
+      have h := ENNReal.Tendsto.const_mul (a := C) hlimX (Or.inr hC)
+      simp only [mul_zero] at h
+      exact h
+    have hlim2 : Tendsto (fun ε : ℝ ↦ ENNReal.ofReal ε * (C * eLpNorm Gm 2 cylinderMeasure))
+        (𝓝[>] 0) (𝓝 0) := by
+      have h0 : Tendsto (fun ε : ℝ ↦ ENNReal.ofReal ε) (𝓝[>] 0) (𝓝 0) := by
+        simpa using (ENNReal.continuous_ofReal.tendsto 0).mono_left nhdsWithin_le_nhds
+      have h := ENNReal.Tendsto.mul_const h0
+        (Or.inr (ENNReal.mul_ne_top hC hGmL.eLpNorm_ne_top))
+        (b := C * eLpNorm Gm 2 cylinderMeasure)
+      simpa using h
+    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds
+      (by simpa using hlim1.add hlim2) (Eventually.of_forall fun _ ↦ zero_le) ?_
+    filter_upwards [Ioo_mem_nhdsGT hε₀] with ε hε
+    calc ENNReal.ofReal ε * eLpNorm (d j ε) 2 volume
+        ≤ ENNReal.ofReal ε * (C * (eLpNorm (mollifyFstDeriv ε F) 2 cylinderMeasure +
+            eLpNorm Gm 2 cylinderMeasure)) := by
+          gcongr
+          exact (key ε hε j).2.2
+      _ = _ := by
+          rw [eLpNorm_const_smul, Real.enorm_eq_ofReal hε.1.le]
+          ring
 
 /-! #### `lem:transversal-mollifier-commutator` -/
 
@@ -1682,38 +2518,8 @@ theorem transversalMollifier_hasWeakL0On (hχ : ContDiff ℝ ∞ χ) (hχs : tsu
         eLpNorm (kε - transversalMollifier χ ε k) 2 volume ≤
           ENNReal.ofReal (C * ε) * eLpNorm k 2 (volume.restrict cellSquare) := by
   classical
-  obtain ⟨a₀, b₀, ε₀, ha₀, hb₀, hε₀, hχband₀, hband₀⟩ := exists_mollify_band hχs
-  -- Enlarge the band to a nonempty interval `[a, b] ⊂ (0, 1)`.
-  set a := min a₀ (1 / 2)
-  set b := max b₀ (1 / 2)
-  have ha : 0 < a := lt_min ha₀ (by norm_num)
-  have hb : b < 1 := max_lt hb₀ (by norm_num)
-  have hab : a ≤ b := (min_le_right _ _).trans (le_max_right _ _)
-  have hsub : Icc a₀ b₀ ⊆ Icc a b := Icc_subset_Icc (min_le_left _ _) (le_max_left _ _)
-  have hχband : tsupport χ ⊆ Icc a b := hχband₀.trans hsub
-  have hband : ∀ ε ∈ Ioo 0 ε₀, ∀ (G : ℝ × ℝ → ℂ) (q : ℝ × ℝ), q.1 ∉ Icc a b →
-      mollifyFst ε (fun z ↦ (χ z.1 : ℂ) * G z) q = 0 :=
-    fun ε hε G q hq ↦ hband₀ ε hε G q (fun h ↦ hq (hsub h))
-  have hIcc : Icc a b ⊆ Ioo 0 1 := fun h hh ↦ ⟨ha.trans_le hh.1, hh.2.trans_lt hb⟩
-  -- `σ`: a Lipschitz function equal to the period `S` on `[a, b]`, bounded above and below.
-  have hSon : ContDiffOn ℝ ∞ orbitPeriod (Icc a b) := contDiffOn_orbitPeriod.mono hIcc
-  obtain ⟨L, hL⟩ := hSon.exists_lipschitzOnWith (by simp) (convex_Icc a b) isCompact_Icc
-  set σ : ℝ → ℝ := fun h ↦ orbitPeriod (projIcc a b hab h) with hσ_def
-  have hσL : LipschitzWith L σ := by
-    have h := hL.to_restrict.comp (LipschitzWith.projIcc hab)
-    rw [mul_one] at h
-    exact h
-  have hσS (h : ℝ) (hh : h ∈ Icc a b) : σ h = orbitPeriod h := by
-    simp only [hσ_def, projIcc_of_mem hab hh]
-  obtain ⟨h₁, hh₁, hmin⟩ := isCompact_Icc.exists_isMinOn (nonempty_Icc.mpr hab)
-    hSon.continuousOn
-  obtain ⟨h₂, hh₂, hmax⟩ := isCompact_Icc.exists_isMaxOn (nonempty_Icc.mpr hab)
-    hSon.continuousOn
-  set m := orbitPeriod h₁
-  set M := orbitPeriod h₂
-  have hm : 0 < m := orbitPeriod_pos (hIcc hh₁).1 (hIcc hh₁).2
-  have hσm (h : ℝ) : m ≤ σ h := hmin (projIcc a b hab h).2
-  have hσM (h : ℝ) : σ h ≤ M := hmax (projIcc a b hab h).2
+  obtain ⟨a, b, ε₀, ha, hb, hε₀, hχband, hband, hab, -⟩ := exists_mollify_band hχs
+  obtain ⟨σ, L, m, M, hσL, hσS, hm, hσm, hσM⟩ := exists_periodExtension ha hb hab
   have hσc : Continuous σ := hσL.continuous
   have hσ0 (h : ℝ) : σ h ≠ 0 := (hm.trans_le (hσm h)).ne'
   have hσabs (h : ℝ) : |σ h| ≤ M := by rw [abs_of_pos (hm.trans_le (hσm h))]; exact hσM h
@@ -1753,19 +2559,8 @@ theorem transversalMollifier_hasWeakL0On (hχ : ContDiff ℝ ∞ χ) (hχs : tsu
   have hKband : ∀ q : ℝ × ℝ, q.1 ∉ Icc a b → mollifyFst ε Kc q = 0 :=
     fun q hq ↦ hband ε hε (fun z ↦ k (actionAngleInv z)) q hq
   -- The weak transport derivative.
-  have hL1 : HasWeakL0On puncturedCell u k :=
-    ⟨hLk.1.mono_set sdiff_subset, hLk.2.1.mono_set sdiff_subset,
-      fun φ hφ ↦ hLk.2.2 φ (hφ.mono sdiff_subset)⟩
-  have h2 := hL1.comp_actionAngleInv.levelCutoff hχ hχs
-  have hG : (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ) *
-      ((orbitPeriod q.1 : ℂ) * k (actionAngleInv q))) = Gm := by
-    funext q
-    by_cases hq : χ q.1 = 0
-    · simp [hGm_def, hKc_def, hq]
-    · have hm : q.1 ∈ Icc a b := hχband (subset_closure hq)
-      simp only [hGm_def, hKc_def, hσS q.1 hm]
-      ring
-  rw [hG] at h2
+  have h2 : HasWeakPartialOn univ 1 F Gm :=
+    hasWeakPartialOn_levelCutoff_actionInput hχ hχs hχband hσS hLk
   have h3 := h2.mollify hε.1
   have h4 : HasWeakPartialOn actionStrip 1 (transversalMollifier χ ε u ∘ actionAngleInv)
       (fun q ↦ (orbitPeriod q.1 : ℂ) * kε (actionAngleInv q)) := by

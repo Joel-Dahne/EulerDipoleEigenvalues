@@ -556,7 +556,8 @@ on $[-\frac14,\frac34)$. No weak-derivative statement is used.
 
 \begin{proof}
 \uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-weak,
-  lem:action-angle-transport, lem:line-mollifier, lem:localization-cutoff}
+  lem:action-angle-transport, lem:line-mollifier}
+\leanok
 In coordinates, $J_\epsilon u$ is $M_\epsilon(\chi U)$, whose weak derivatives are
 $\partial_hM_\epsilon(\chi U)=M'_\epsilon(\chi U)$ and $\partial_\theta M_\epsilon(\chi U)=M_\epsilon(\chi\,\partial_\theta U)$
 whenever $\partial_\theta U$ exists (Lemma~\ref{lem:line-mollifier}). These are $1$-periodic in $\theta$, so
@@ -576,6 +577,19 @@ $M_\epsilon(\chi\,\partial_\theta U)\to\chi\,\partial_\theta U$; by the chain ru
 $\nabla(\hat\chi u)$. (2): $\partial_\theta U=S(h)K$ (Lemma~\ref{lem:action-angle-transport}), so the
 $\theta$-term is bounded in $L^2$, and $\epsilon M'_\epsilon(\chi U)\to0$ by
 Lemma~\ref{lem:line-mollifier}(2).
+
+In Lean the angular windows are replaced by one global formula. With $E=e^{2\pi i\theta}$,
+which is smooth on the whole punctured cell (Lemma~\ref{lem:action-angle-chart}), the
+function $\overline E\,\partial_jE/(2\pi i)$ is continuous there, hence bounded on the
+band, and equals $\partial_j\theta$ off the cut, a null line. The weak identity is first
+obtained on the punctured cell and then extended by zero, since both sides vanish off a
+compact band (as for Lemma~\ref{lem:transversal-mollifier-commutator}). In (1) the limit
+$\partial_jh\,\partial_h(\chi U)+\partial_j\theta\,\chi\,\partial_\theta U$ is identified
+with $\partial_j(\hat\chi u)$ pointwise off the cut, by the classical chain rule for
+$(h,\theta)^{-1}\circ(h,\theta)=\mathrm{id}$, not by a second weak chain rule. In (2)
+$\partial_\theta(\chi U)=\sigma\chi K$ with $\sigma$ the Lipschitz extension of $S$ used for the
+commutator, so only the chain rule from the strip to the cell
+(Lemma~\ref{lem:action-angle-weak}(3)) is needed there.
 \end{proof}
 
 \begin{lemma}[The commutator with the transport operator]

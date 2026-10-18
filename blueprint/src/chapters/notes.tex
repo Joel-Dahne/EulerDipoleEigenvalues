@@ -70,9 +70,10 @@ once resolved; record the resolution in the relevant node.
         one-dimensional mollifier (Lemma~\ref{lem:line-mollifier}) and the mollifier
         (Lemmas~\ref{lem:transversal-mollifier}--\ref{lem:transversal-mollifier-commutator})
         are stated in Lean. The line-mollifier lemma is proved, and the basic
-        transversal $L^2$ lemma and the commutator estimate
-        (Lemma~\ref{lem:transversal-mollifier-commutator}) are proved from the
-        chart/coarea inputs.
+        transversal $L^2$ lemma, the derivative estimates and the commutator estimate
+        (Lemmas~\ref{lem:transversal-mollifier-derivatives}
+        and~\ref{lem:transversal-mollifier-commutator}) are proved from the
+        chart/coarea inputs and the full weak-gradient chain rules.
         Lemma~\ref{lem:virial-h1} is proved directly on $H^1$, without Fourier
         truncation.
         The classical test-function chain rules, local-integrability
@@ -81,8 +82,7 @@ once resolved; record the resolution in the relevant node.
         chart inputs. Open: the full weak-gradient chain rules
         (Lemma~\ref{lem:action-angle-weak}(2)--(3); their earlier $H^1$
         approximation sketch has been corrected to local $W^{1,1}$), the chart's admitted
-        analytic inputs, the transversal derivative estimates
-        (Lemma~\ref{lem:transversal-mollifier-derivatives}),
+        analytic inputs,
         and whether the odd--odd weighted analogue
         (Proposition~\ref{prop:dd-virial}) can be treated the same way.
   \item \textbf{Missing verification scripts}
