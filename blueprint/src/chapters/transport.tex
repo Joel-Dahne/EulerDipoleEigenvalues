@@ -79,25 +79,32 @@ transport pair on $U$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:elliptic-torus, lem:lift-torus, lem:local-to-global,
-  lem:sobolev-torus-basic, lem:torus-fourier-basis}
+\uses{lem:elliptic-torus, lem:lift-sobolev-local, lem:sobolev-torus-basic,
+  lem:L0-h1-tests, lem:lift-periodization, lem:lift-torus}
+\leanok
 $\psi\in H^2(\T^2)$, so its lift is in $H^2(U)$ on the bounded set $U$,
-and the lift of $\omega$ is in $L^2(U)$. The equation holds against
-finite Fourier sums. Its test functional is continuous in the $H^1$
-norm: the unknowns are in $L^2$ and the first-order operator on the test
-function has bounded coefficients. Fourier truncations converge in
-$H^1$, so the equation holds against every smooth periodic test.
-Periodize a compactly supported test on $U$ and unfold its integral.
-Periodicity of the coefficients makes $L_0$ commute with this test
-periodization, giving the weak equation on $U$.
+and the lift of $\omega$ is in $L^2(U)$ (Lemma~\ref{lem:lift-sobolev-local}).
+For the equation, let $\varphi$ be a test function on $U$ and $P\varphi$ its periodization,
+a smooth function on the torus with $L_0P\varphi=PL_0\varphi$
+(Lemma~\ref{lem:lift-periodization}). Unfolding,
+\[
+ \int_U(\omega+\psi)\,L_0\varphi=\int_{\T^2}(\omega+\psi)\,L_0P\varphi
+ =-\int_{\T^2}i\lambda\omega\,P\varphi=-\int_U i\lambda\omega\,\varphi,
+\]
+where the middle step is the eigenvalue equation against the $C^1$ test $P\varphi$
+(Lemma~\ref{lem:L0-h1-tests}). Neither $U$ being an orbit union nor its boundedness is
+used for the equation; boundedness is needed only for $\omega\in L^2(U)$.
 \end{proof}
 
 \begin{remark}[Digest note: the density topology]
 The earlier sketch did not specify the density topology. Density in
 $L^2$ alone is not enough when a derivative falls on the test function;
 convergence in $H^1$ supplies the missing control. This places no $H^1$
-assumption on the eigenfunction. It is a clarification of the paper
-proof, not a new Lean proof.
+assumption on the eigenfunction.
+Resolved (October 2026): the Lean proof has no admitted inputs. The density step is
+Lemma~\ref{lem:L0-h1-tests}, where Parseval does the work: the Fourier series of an $H^1$
+test converges in $H^1$ and $L_0:H^1\to L^2$ is bounded, so no truncation argument is
+written out.
 \end{remark}
 
 \begin{lemma}[Orbitwise transport and resonant vanishing]

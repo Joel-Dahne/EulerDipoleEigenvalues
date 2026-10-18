@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.SobolevLocal
+import NoEmbeddedEigenvalues.LiftPeriodization
 import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.CanonicalProfile
 import NoEmbeddedEigenvalues.SeparatrixArc
@@ -7,7 +8,7 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 /-!
 # Transport pairs
 
-Blueprint: `def:transport-pair`, `lem:transport-unknown`; stated: `lem:transport-pair-eigen`,
+Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`; stated:
 `lem:melnikov`, `lem:good-windows`, `lem:coarea`, `lem:resonant-vanishing`,
 `lem:pairing-limit`.
 
@@ -61,6 +62,28 @@ theorem HasWeakL0On.const_mul {U : Set (ℝ × ℝ)} {g h : ℝ × ℝ → ℂ} 
   rw [integral_const_mul, integral_const_mul, hd.2.2 φ hφ]
   ring
 
+/-- Weak transport is unchanged by a global a.e. change of its value representative. -/
+theorem HasWeakL0On.congr_value {U : Set (ℝ × ℝ)} {f g d : ℝ × ℝ → ℂ}
+    (h : HasWeakL0On U f d) (hfg : f =ᵐ[volume] g) : HasWeakL0On U g d := by
+  refine ⟨h.1.congr hfg.restrict, h.2.1, fun φ hφ ↦ ?_⟩
+  rw [← h.2.2 φ hφ]
+  exact integral_congr_ae (hfg.mono fun p hp ↦ congrArg (· * classicalL0 φ p) hp.symm)
+
+/-- Weak transport is unchanged by a global a.e. change of its derivative representative. -/
+theorem HasWeakL0On.congr_deriv {U : Set (ℝ × ℝ)} {f d d' : ℝ × ℝ → ℂ}
+    (h : HasWeakL0On U f d) (hd : d =ᵐ[volume] d') : HasWeakL0On U f d' := by
+  refine ⟨h.1, h.2.1.congr hd.restrict, fun φ hφ ↦ ?_⟩
+  rw [h.2.2 φ hφ]
+  exact congrArg Neg.neg (integral_congr_ae (hd.mono fun p hp ↦ congrArg (· * φ p) hp))
+
+/-- Lifts of a torus transport relation `L₀g = h`, tested against the characters, satisfy
+    `L₀g = h` weakly on every set (`hasWeakL0On_liftL2`). -/
+theorem hasWeakL0On_liftL2 {g h : L2} (hgh : HasL0 g h) (U : Set (ℝ × ℝ)) :
+    HasWeakL0On U (liftL2 g) (liftL2 h) :=
+  ⟨(locallyIntegrable_liftL2 g).locallyIntegrableOn U,
+    (locallyIntegrable_liftL2 h).locallyIntegrableOn U,
+    fun _ hφ ↦ integral_liftL2_mul_classicalL0 hgh (hφ.mono (Set.subset_univ U))⟩
+
 /-- `Hz = -v`, that is `L₀ z = -iv`. -/
 theorem IsTransportPair.hasWeakL0On_transportUnknown {lam : ℝ} {U : Set (ℝ × ℝ)}
     {v f : ℝ × ℝ → ℂ} (hp : IsTransportPair lam U v f) :
@@ -85,7 +108,7 @@ theorem IsTransportPair.hasWeakL0On_transportUnknown_sub {lam : ℝ} {U : Set (�
   field_simp
   ring
 
-/-! ### Statements (`lem:transport-pair-eigen`, `lem:melnikov`, `lem:good-windows`) -/
+/-! ### Eigenfunctions (`lem:transport-pair-eigen`) -/
 
 /-- The lifts of an eigenfunction and its stream function form a transport pair on every
     bounded open union of orbits. -/
@@ -93,7 +116,13 @@ theorem isTransportPair_of_isEigenSolution {lam : ℝ} (hlam : lam ≠ 0) {ω : 
     (hω : IsEigenSolution lam ω) {U : Set (ℝ × ℝ)} (hU : IsOrbitUnion U)
     (hb : Bornology.IsBounded U) :
     IsTransportPair lam U (liftL2 ω) (liftL2 (invLap ω)) := by
-  sorry
+  refine ⟨hlam, hU, memSobolevOn_liftL2 (k := 0) (by exact_mod_cast memSobolev_zero ω) hb,
+    memSobolevOn_liftL2 (memSobolev_two_invLap ω) hb, ?_⟩
+  refine ((hasWeakL0On_liftL2 hω.2 U).congr_value (liftL2_add_ae ω (invLap ω))).congr_deriv ?_
+  filter_upwards [liftL2_smul_ae (I * lam) ω] with p hp
+  rw [hp, mul_assoc]
+
+/-! ### Statements (`lem:melnikov`, `lem:good-windows`) -/
 
 /-- The Melnikov condition. Let `(v, f)` be a transport pair on a neighbourhood of the closed
     cell square that transforms with the character `κ = ±1` under the rotation

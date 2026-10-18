@@ -107,6 +107,9 @@ motivation, and standard facts cited rather than proved.
   `LiftTorus.lean` relates periodic lifts to functions on the torus (classical
   vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines
   weak derivatives and `Hᵏ(U)`, `Hᵏ_loc(U)`, weighted `Hᵏ` on open `U ⊆ ℝ²`;
+  `LiftPeriodization.lean` periodizes compactly supported functions on `ℝ²` to the
+  torus, unfolds integrals against lifts, proves `L₀` against `H¹` tests on the torus,
+  and transfers torus Sobolev regularity and the weak `L₀` relation to lifts;
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
   square in diagonal coordinates; `Period.lean` defines the period function;
   `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and

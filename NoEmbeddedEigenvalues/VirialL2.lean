@@ -167,14 +167,6 @@ theorem re_inner_transport_mulL2 {s t c₁ c₂ ch f G Gx Gy : C(Torus, ℂ)}
     mul_re, I_re, I_im, neg_re, neg_im, add_im, sub_im, sub_re, zero_mul, one_mul, zero_sub]
   linarith
 
-/-- `sin y` on the torus. -/
-def sinYTorus : C(Torus, ℂ) :=
-  torusFunR (Real.continuous_sin.comp continuous_snd) isPeriodicLift_sin_snd
-
-/-- `sin x` on the torus. -/
-def sinXTorus : C(Torus, ℂ) :=
-  torusFunR (Real.continuous_sin.comp continuous_fst) isPeriodicLift_sin_fst
-
 /-- The commutator identity as an identity of torus inner products: with
 `Du = W₁u₀ + W₂u₁ + ½ div W u` and `Hu = -i(sin y u₀ - sin x u₁)`,
 `2 Re ⟪Hu, Du⟫ = Re ⟪u, f Hu⟫`. Adaptedness enters only through the derivatives of
@@ -646,7 +638,7 @@ theorem virial_l2_first {W₁ W₂ f : ℝ × ℝ → ℝ} (had : IsAdaptedOn W�
       isBounded_cellNeighbourhood).hasWeakL0On.mono
       (subset_closure.trans closure_cellSquare_subset_cellNeighbourhood)
   have hgv (j : Fin 2) : HasWeakPartialOn cellSquare j v (g j) :=
-    hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω j) isOpen_cellSquare
+    hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω j) cellSquare
   set kω : ℝ × ℝ → ℂ := fun p ↦ I * (lam * u p) -
     ((Real.sin p.2 : ℂ) * g 0 p - (Real.sin p.1 : ℂ) * g 1 p)
   have hL0u : HasWeakL0On cellSquare u kω :=

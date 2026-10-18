@@ -157,11 +157,11 @@ theorem exists_isLineRep_liftL2 {g g₀ g₁ : L2} (h₀ : HasFourierPartial 0 g
   have hUb : Bornology.IsBounded U := isBounded_diagRect (Metric.isBounded_Ioo _ _)
     (Metric.isBounded_Ioo _ _)
   have hL2 (f : L2) : MemLp (liftL2 f) 2 (volume.restrict U) :=
-    memSobolevOn_liftL2 (k := 0) (by exact_mod_cast memSobolev_zero f) hU hUb
+    memSobolevOn_liftL2 (k := 0) (by exact_mod_cast memSobolev_zero f) hUb
   obtain ⟨C, -, hC⟩ := exists_acl_trace (b₁ := b₁) (b₂ := b₂) (b₀ := (b₁ + b₂) / 2) ha
     ⟨by linarith, by linarith⟩
   obtain ⟨G, hGF, hline, -⟩ := hC U (liftL2 g) (liftL2 g₀) (liftL2 g₁) hU subset_rfl (hL2 g)
-    (hL2 g₀) (hL2 g₁) (hasWeakPartialOn_liftL2 h₀ hU) (hasWeakPartialOn_liftL2 h₁ hU)
+    (hL2 g₀) (hL2 g₁) (hasWeakPartialOn_liftL2 h₀ U) (hasWeakPartialOn_liftL2 h₁ U)
   exact ⟨G, hGF, (measurable_liftL2 g₀).sub (measurable_liftL2 g₁), (hL2 g₀).sub (hL2 g₁),
     hline⟩
 
@@ -335,9 +335,9 @@ theorem ee_arc_trace_identification {ω : L2} (hω : InSector true true ω)
     isBounded_diagRect (Metric.isBounded_Ioo _ _) (Metric.isBounded_Ioo _ _)
   have hrep := streamLift_ae_eq_contStream ω
   have hH2 : MemSobolevOn 2 Q (contStream ω) :=
-    (memSobolevOn_liftL2 (memSobolev_two_invLap ω) hU hb).congr_ae hrep
-  have hwx := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 0) hU).congr_left hrep
-  have hwy := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 1) hU).congr_left hrep
+    (memSobolevOn_liftL2 (memSobolev_two_invLap ω) hb).congr_ae hrep
+  have hwx := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 0) Q).congr_left hrep
+  have hwy := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 1) Q).congr_left hrep
   obtain ⟨H, hHae, hHac, -, hHder, -⟩ := absolutelyContinuous_trace_of_H2 hU (a₀ := -π)
     (a₁ := π) (b₁ := 0) (b₂ := π) (b₀ := π / 2) (by linarith) subset_rfl hJ2
     (continuous_contStream ω).continuousOn hH2 hwx hwy
@@ -709,15 +709,15 @@ theorem lintegral_arcTrace_lt_top {ω : L2} (hω : InSector true true ω) :
   have hUb : Bornology.IsBounded Q :=
     isBounded_diagRect (Metric.isBounded_Ioo _ _) (Metric.isBounded_Ioo _ _)
   have hL2 (g : L2) : MemLp (liftL2 g) 2 (volume.restrict Q) :=
-    memSobolevOn_liftL2 (k := 0) (by exact_mod_cast memSobolev_zero g) hU hUb
+    memSobolevOn_liftL2 (k := 0) (by exact_mod_cast memSobolev_zero g) hUb
   obtain ⟨C, -, hC⟩ := exists_acl_trace (a₀ := -π) (a₁ := π) (b₁ := 0) (b₂ := π)
     (b₀ := π / 2) (by linarith) hJ2
   have hwx := (hasWeakPartialOn_liftL2
-    (hasFourierPartial_streamPartial_streamSecondPartial ω 0 0) hU).add
-    (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial_streamSecondPartial ω 0 1) hU)
+    (hasFourierPartial_streamPartial_streamSecondPartial ω 0 0) Q).add
+    (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial_streamSecondPartial ω 0 1) Q)
   have hwy := (hasWeakPartialOn_liftL2
-    (hasFourierPartial_streamPartial_streamSecondPartial ω 1 0) hU).add
-    (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial_streamSecondPartial ω 1 1) hU)
+    (hasFourierPartial_streamPartial_streamSecondPartial ω 1 0) Q).add
+    (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial_streamSecondPartial ω 1 1) Q)
   obtain ⟨G, hGF, hGline, hGag⟩ := hC Q _ _ _ hU subset_rfl ((hL2 _).add (hL2 _))
     ((hL2 _).add (hL2 _)) ((hL2 _).add (hL2 _)) hwx hwy
   have hcG : ∀ᵐ a ∂(volume.restrict I), ContinuousOn (fun b ↦ G (diagInv (a, b))) (Ioo 0 π) := by

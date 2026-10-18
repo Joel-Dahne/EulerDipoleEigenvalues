@@ -453,14 +453,14 @@ $\int_{-\pi/2}^{\pi/2}|f'(a)|^2\,da/\cos a<\infty$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:arc-trace-identification, lem:line-representatives, lem:trace-gagliardo, lem:local-to-global,
+\uses{lem:arc-trace-identification, lem:line-representatives, lem:trace-gagliardo, lem:lift-sobolev-local,
   lem:continuous-stream-symmetries, lem:local-odd-hardy}
 \leanok
 The arc $\gamma_k$ for $\omega$ is the arc $\gamma_0$ for $\omega\circ R^k$, again even under $S_1,S_2$
 (Lemma~\ref{lem:continuous-stream-symmetries}), so take $k=0$. By
 Lemma~\ref{lem:arc-trace-identification}(4) the energy is $\int|f'|^2da/\cos a$. By
 Lemma~\ref{lem:trace-gagliardo} applied to $\psi_a=\psi_x+\psi_y\in H^1$
-(Lemma~\ref{lem:local-to-global}), its line representative has a trace on $b=\pi/2$ with finite
+(Lemma~\ref{lem:lift-sobolev-local}), its line representative has a trace on $b=\pi/2$ with finite
 Gagliardo seminorm on $(-\pi,\pi)$, and this trace is $f'$ almost everywhere
 (Lemmas~\ref{lem:line-representatives}(3) and~\ref{lem:arc-trace-identification}(2)). Since
 $\tilde\psi$ is even under $S_1$ and periodic, $f(\pi-a)=f(a)=f(-\pi-a)$ for every $a$, so
@@ -549,7 +549,7 @@ $\{|a|<\pi,\ 0<b<\pi\}$. Then:
 
 \begin{proof}
 \uses{lem:stream-derivative-parities, lem:line-representatives, lem:trace-h2,
-  lem:local-to-global, lem:lift-representatives, lem:diagonal-calculus, lem:separatrix-arc,
+  lem:lift-sobolev-local, lem:lift-representatives, lem:diagonal-calculus, lem:separatrix-arc,
   lem:arc-diagonal, lem:normal-tangent-frame}
 \leanok
 (1) Combined with a period, $S_2$ is the reflection $\sigma(x,y)=(y+\pi,x-\pi)$, which is
@@ -562,7 +562,7 @@ gives $D=0$. On $b=\pi/2$, $\sin x=\cos a$ and $\sin y=-\cos a$, so the normal n
 $\cos a\,D=0$.
 
 (2) Lemma~\ref{lem:trace-h2}, applied to the continuous $H^2$ function $\tilde\psi$
-(Lemmas~\ref{lem:local-to-global} and~\ref{lem:lift-representatives}), gives a representative
+(Lemmas~\ref{lem:lift-sobolev-local} and~\ref{lem:lift-representatives}), gives a representative
 $H$ of $\psi_x+\psi_y$, continuous on almost every line, such that $a\mapsto\tilde\psi(a,\pi/2)$
 has derivative $H(a,\pi/2)$ almost everywhere. By
 Lemma~\ref{lem:line-representatives}(3), $H=G_x+G_y$ on almost every whole line, in particular
@@ -1563,11 +1563,11 @@ almost everywhere.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-h2, lem:local-to-global, lem:elliptic-torus, lem:lift-representatives,
+\uses{lem:trace-h2, lem:lift-sobolev-local, lem:elliptic-torus, lem:lift-representatives,
   lem:separatrix-arc}
 \leanok
 In diagonal coordinates the arc is the segment $b=\pi/2$, $a=\alpha(s)-\pi/2$ with
-$\alpha(s)=2\arctan e^{-s}$. By Lemmas~\ref{lem:elliptic-torus} and~\ref{lem:local-to-global},
+$\alpha(s)=2\arctan e^{-s}$. By Lemmas~\ref{lem:elliptic-torus} and~\ref{lem:lift-sobolev-local},
 $\tilde\psi\in H^2$ on a bounded neighbourhood of the line (changing $\psi$ on a null set to
 $\tilde\psi$ does not affect this), so by Lemma~\ref{lem:trace-h2} the continuous function
 $\tilde\psi$ is absolutely continuous along the line. The change of variable $s\mapsto a$ is
@@ -1633,8 +1633,8 @@ the less verified Lemma~\ref{lem:ee-gradient-traces}. (2) The Melnikov identity 
 inside Lemma~\ref{lem:ee-transport-traces} but not exported; it is now part of that lemma.
 All other inputs matched as stated. The Lean proof still depends on
 admitted analytic inputs in Lemmas~\ref{lem:canonical-profile} (weighted bound),
-\ref{lem:melnikov}, \ref{lem:transport-pair-eigen}, \ref{lem:trace-acl},
-\ref{lem:trace-gagliardo}, \ref{lem:trace-h2} and \ref{lem:local-to-global}.
+\ref{lem:melnikov}, \ref{lem:trace-acl},
+\ref{lem:trace-gagliardo} and \ref{lem:trace-h2}.
 \end{remark}
 
 \begin{lemma}[Positivity of the boundary form]

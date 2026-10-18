@@ -157,28 +157,6 @@ theorem integrableOn_norm_liftL2_sq (g : L2) :
   rw [hI, prod_union, union_prod, union_prod]
   exact ((hsq _ _).union (hsq _ _)).union ((hsq _ _).union (hsq _ _))
 
-/-- Almost-everywhere statements on the torus lift to the real plane. -/
-theorem ae_torusProj {P : Torus → Prop} (hP : ∀ᵐ t, P t) : ∀ᵐ p : ℝ × ℝ, P (torusProj p) := by
-  let I : ℤ → Set ℝ := fun n ↦ Ioc (n * (2 * Real.pi)) (n * (2 * Real.pi) + 2 * Real.pi)
-  have hcover : ⋃ n, I n = univ := by
-    convert iUnion_Ioc_zsmul (show 0 < 2 * Real.pi by positivity) using 1
-    ext x
-    simp only [I, mem_iUnion, mem_Ioc, zsmul_eq_mul, Int.cast_add, Int.cast_one, add_mul, one_mul]
-  have hcover2 : ⋃ n : ℤ × ℤ, I n.1 ×ˢ I n.2 = univ := by
-    ext p
-    simp only [mem_iUnion, mem_prod, mem_univ, iff_true]
-    have hx : p.1 ∈ ⋃ n, I n := hcover.symm ▸ mem_univ _
-    have hy : p.2 ∈ ⋃ n, I n := hcover.symm ▸ mem_univ _
-    obtain ⟨n, hn⟩ := mem_iUnion.mp hx
-    obtain ⟨m, hm⟩ := mem_iUnion.mp hy
-    exact ⟨(n, m), hn, hm⟩
-  have hall : ∀ n : ℤ × ℤ, ∀ᵐ p ∂(volume.restrict (I n.1 ×ˢ I n.2)), P (torusProj p) := by
-    intro n
-    exact (measurePreserving_torusProj_square _ _).quasiMeasurePreserving.ae hP
-  have hh := (ae_restrict_iUnion_iff (fun n : ℤ × ℤ ↦ I n.1 ×ˢ I n.2)
-    (fun p ↦ P (torusProj p))).2 hall
-  simpa only [hcover2, Measure.restrict_univ] using hh
-
 /-- Weak partial derivatives are unchanged by a global a.e. change of representative. -/
 theorem HasWeakPartialOn.congr_value {U : Set (ℝ × ℝ)} {j : Fin 2}
     {f g d : ℝ × ℝ → ℂ} (h : HasWeakPartialOn U j f d) (hfg : f =ᵐ[volume] g) :
@@ -196,13 +174,6 @@ theorem MemSobolevOn.congr_value {k : ℕ} {U : Set (ℝ × ℝ)} {f g : ℝ × 
     refine ⟨MemLp.ae_eq hfg.restrict h.1, fun j ↦ ?_⟩
     obtain ⟨d, hd, hk⟩ := h.2 j
     exact ⟨d, hd.congr_value hfg, hk⟩
-
-/-- Weak transport is unchanged by a global a.e. change of its value representative. -/
-theorem HasWeakL0On.congr_value {U : Set (ℝ × ℝ)} {f g d : ℝ × ℝ → ℂ}
-    (h : HasWeakL0On U f d) (hfg : f =ᵐ[volume] g) : HasWeakL0On U g d := by
-  refine ⟨h.1.congr hfg.restrict, h.2.1, fun φ hφ ↦ ?_⟩
-  rw [← h.2.2 φ hφ]
-  exact integral_congr_ae (hfg.mono fun p hp ↦ congrArg (· * classicalL0 φ p) hp.symm)
 
 private theorem dist_dipoleFlow_le (p q : ℝ × ℝ) (t : ℝ) :
     dist (dipoleFlow p t) (dipoleFlow q t) ≤ dist p q * Real.exp |t| := by

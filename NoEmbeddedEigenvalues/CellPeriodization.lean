@@ -484,26 +484,6 @@ theorem hasFourierPartial_boxPeriodize {j : Fin 2} {F d : ℝ × ℝ → ℂ} {K
 
 section Lifts
 
-theorem liftL2_ae_eq {u : L2} {G : Torus → ℂ} (h : u =ᵐ[volume] G) :
-    liftL2 u =ᵐ[volume] fun p ↦ G (torusProj p) :=
-  ae_torusProj h
-
-theorem liftL2_mulL2_ae (c : C(Torus, ℂ)) (u : L2) :
-    liftL2 (mulL2 c u) =ᵐ[volume] fun p ↦ c (torusProj p) * liftL2 u p :=
-  liftL2_ae_eq (mulL2_ae c u)
-
-theorem liftL2_add_ae (u v : L2) :
-    liftL2 (u + v) =ᵐ[volume] fun p ↦ liftL2 u p + liftL2 v p :=
-  liftL2_ae_eq (Lp.coeFn_add u v)
-
-theorem liftL2_sub_ae (u v : L2) :
-    liftL2 (u - v) =ᵐ[volume] fun p ↦ liftL2 u p - liftL2 v p :=
-  liftL2_ae_eq (Lp.coeFn_sub u v)
-
-theorem liftL2_smul_ae (r : ℂ) (u : L2) :
-    liftL2 (r • u) =ᵐ[volume] fun p ↦ r * liftL2 u p :=
-  liftL2_ae_eq (Lp.coeFn_smul r u)
-
 theorem squarePairing_congr_ae {A A' B B' : ℝ × ℝ → ℂ} (hA : A =ᵐ[volume] A')
     (hB : B =ᵐ[volume] B') : squarePairing A B = squarePairing A' B' := by
   unfold squarePairing squareIntegral
@@ -511,28 +491,6 @@ theorem squarePairing_congr_ae {A A' B B' : ℝ × ℝ → ℂ} (hA : A =ᵐ[vol
   refine ae_restrict_of_ae ?_
   filter_upwards [hA, hB] with p h1 h2
   rw [h1, h2]
-
-theorem mulL2_add_right (c : C(Torus, ℂ)) (u v : L2) :
-    mulL2 c (u + v) = mulL2 c u + mulL2 c v := by
-  apply Lp.ext
-  filter_upwards [mulL2_ae c (u + v), mulL2_ae c u, mulL2_ae c v, Lp.coeFn_add u v,
-    Lp.coeFn_add (mulL2 c u) (mulL2 c v)] with t h h₁ h₂ h₃ h₄
-  rw [h, h₄, Pi.add_apply, h₁, h₂, h₃, Pi.add_apply, mul_add]
-
-theorem mulL2_sub_right (c : C(Torus, ℂ)) (u v : L2) :
-    mulL2 c (u - v) = mulL2 c u - mulL2 c v := by
-  apply Lp.ext
-  filter_upwards [mulL2_ae c (u - v), mulL2_ae c u, mulL2_ae c v, Lp.coeFn_sub u v,
-    Lp.coeFn_sub (mulL2 c u) (mulL2 c v)] with t h h₁ h₂ h₃ h₄
-  rw [h, h₄, Pi.sub_apply, h₁, h₂, h₃, Pi.sub_apply, mul_sub]
-
-theorem mulL2_smul_right (c : C(Torus, ℂ)) (r : ℂ) (u : L2) :
-    mulL2 c (r • u) = r • mulL2 c u := by
-  apply Lp.ext
-  filter_upwards [mulL2_ae c (r • u), mulL2_ae c u, Lp.coeFn_smul r u,
-    Lp.coeFn_smul r (mulL2 c u)] with t h h₁ h₂ h₃
-  rw [h, h₃, Pi.smul_apply, h₁, h₂, Pi.smul_apply, smul_eq_mul, smul_eq_mul]
-  ring
 
 theorem mulL2_mulL2 (a b : C(Torus, ℂ)) (u : L2) :
     mulL2 a (mulL2 b u) = mulL2 (a * b) u := by
@@ -544,12 +502,6 @@ theorem mulL2_zero_left (u : L2) : mulL2 0 u = 0 := by
   apply Lp.ext
   filter_upwards [mulL2_ae 0 u, Lp.coeFn_zero ℂ 2 (volume : Measure Torus)] with t h h₁
   rw [h, h₁, ContinuousMap.zero_apply, zero_mul, Pi.zero_apply]
-
-theorem norm_mulL2_le (c : C(Torus, ℂ)) (u : L2) : ‖mulL2 c u‖ ≤ ‖c‖ * ‖u‖ := by
-  refine Lp.norm_le_mul_norm_of_ae_le_mul ?_
-  filter_upwards [mulL2_ae c u] with t h
-  rw [h, norm_mul]
-  exact mul_le_mul_of_nonneg_right (c.norm_coe_le_norm t) (norm_nonneg _)
 
 end Lifts
 

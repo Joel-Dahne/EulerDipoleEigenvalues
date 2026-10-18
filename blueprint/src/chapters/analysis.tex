@@ -829,6 +829,76 @@ Induction on $k$: $u$, $\partial_xu$, $\partial_yu$ are $C^k$, so in $H^k$, and
 their Fourier relation gives $u\in H^{k+1}$ (Lemma~\ref{lem:elliptic-torus}).
 \end{proof}
 
+\begin{definition}[Periodization of compactly supported functions]
+\label{def:lift-periodization}
+\uses{def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.liftShift, NoEmbeddedEigenvalues.liftPeriodize}
+\leanok
+For $\varphi:\R^2\to\C$ with compact support, $P\varphi(p)=\sum_{n\in\Z^2}\varphi(p+2\pi n)$.
+\end{definition}
+
+\begin{lemma}[Periodization and unfolding]
+\label{lem:lift-periodization}
+\uses{def:lift-periodization, def:torus-of-lift, def:lift-operators}
+\lean{NoEmbeddedEigenvalues.liftPeriodize_eq_sum,
+  NoEmbeddedEigenvalues.isPeriodicLift_liftPeriodize,
+  NoEmbeddedEigenvalues.contDiff_liftPeriodize,
+  NoEmbeddedEigenvalues.partialX_liftPeriodize,
+  NoEmbeddedEigenvalues.partialY_liftPeriodize,
+  NoEmbeddedEigenvalues.liftPeriodize_classicalL0,
+  NoEmbeddedEigenvalues.integral_liftPeriodize,
+  NoEmbeddedEigenvalues.locallyIntegrable_comp_torusProj,
+  NoEmbeddedEigenvalues.integral_liftL2_mul_eq}
+\leanok
+Let $\varphi$ have compact support. Near each point the sum $P\varphi$ has finitely many
+nonzero terms. $P\varphi$ is periodic; if $\varphi$ is $C^k$, so is $P\varphi$, with
+$\partial_jP\varphi=P\partial_j\varphi$ and $L_0P\varphi=PL_0\varphi$. Lifts of integrable
+functions on $\T^2$ are locally integrable on $\R^2$, and for $g\in L^2(\T^2)$ and continuous
+$\varphi$,
+\[
+ \int_{\R^2}(g\circ\pi)\,\varphi=\int_{\T^2}g\,P\varphi.
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+If $\varphi$ vanishes outside $\{|p|\le R\}$, only the $n$ with $|n_j|\le R+r$ contribute
+on $\{|p|\le r\}$, so locally $P\varphi$ is a finite sum of translates. Translating the
+summation index gives periodicity, and the coefficients of $L_0$ are periodic. For the
+integrals, $\R^2$ is the disjoint union of the squares $Q_n=2\pi n+(0,2\pi]^2$; translate
+each piece back to $Q_0$, sum the finitely many nonzero terms under the integral, and use
+that $\pi$ maps the measure on $Q_0$ to the torus measure (Lemma~\ref{lem:lift-torus}).
+A compact set meets finitely many $Q_n$, which gives local integrability.
+\end{proof}
+
+\begin{lemma}[Lifts of torus Sobolev functions]
+\label{lem:lift-sobolev-local}
+\uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.memLp_liftL2,
+  NoEmbeddedEigenvalues.integral_liftL2_mul_coordPartial,
+  NoEmbeddedEigenvalues.hasWeakPartialOn_liftL2,
+  NoEmbeddedEigenvalues.memSobolevOn_liftL2}
+\leanok
+The lift of $g\in L^2(\T^2)$ lies in $L^2(U)$ for every bounded $U\subset\R^2$. On every
+$U$, the weak derivatives of a lift are the lifts of the Fourier derivatives of
+Definition~\ref{def:fourier-derivatives}. Hence the lift of an $H^k(\T^2)$ function lies in
+$H^k(U)$ for every bounded $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-periodization, lem:lift-torus, lem:partial-weak-equivalence,
+  lem:elliptic-torus}
+\leanok
+$|g\circ\pi|^2$ is the lift of an integrable function, so it is integrable on the compact
+closure of $U$ (Lemma~\ref{lem:lift-periodization}). For a test function $\varphi$, unfold
+$\int(g\circ\pi)\partial_j\varphi=\int_{\T^2}g\,P\partial_j\varphi
+=\int_{\T^2}g\,\partial_jP\varphi$, where $P\varphi$ is a smooth function on the torus
+(Lemmas~\ref{lem:lift-periodization} and~\ref{lem:lift-torus}). The Fourier relation
+$\partial_jg=h$ gives $-\int_{\T^2}h\,P\varphi$ (Lemma~\ref{lem:partial-weak-equivalence}),
+which unfolds to $-\int(h\circ\pi)\varphi$. For $H^k$ induct on $k$, using that
+$g\in H^{k+1}$ has Fourier derivatives in $H^k$ (Lemma~\ref{lem:elliptic-torus}).
+\end{proof}
+
 \begin{lemma}[The H\"older Sobolev embedding on the torus]
 \label{lem:sobolev-holder}
 \uses{def:sobolev-torus}
@@ -903,24 +973,20 @@ quotient argument pending its review.
 \begin{lemma}[Localization]
 \label{lem:local-to-global}
 \uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.exists_memSobolev_periodize,
-  NoEmbeddedEigenvalues.memSobolevOn_liftL2,
-  NoEmbeddedEigenvalues.hasWeakPartialOn_liftL2}
+\lean{NoEmbeddedEigenvalues.exists_memSobolev_periodize}
 \leanok
 If $u\in H^k_{\mathrm{loc}}(U)$ and $\chi$ is a test function on $U$, where $U\subset\R^2$ is
 open and projects injectively to $\T^2$, then $\chi u$ (periodized) lies in $H^k(\T^2)$: there
 is $g\in H^k(\T^2)$ whose lift is $\chi u$ on $U$ and vanishes off the translates of the
-support of $\chi$. Conversely the lift of an $H^k(\T^2)$ function lies in $H^k(U)$ for every
-bounded open $U$, and on every open $U$ the weak derivatives of a lift are the lifts of the
-Fourier derivatives of Definition~\ref{def:fourier-derivatives}.
+support of $\chi$. The converse direction is Lemma~\ref{lem:lift-sobolev-local}.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:localization-cutoff, lem:lift-torus, lem:elliptic-torus}
+\uses{lem:localization-cutoff, lem:lift-periodization, lem:lift-torus, lem:elliptic-torus}
 The $\R^2$ statement is Lemma~\ref{lem:localization-cutoff}. What remains is the
 passage between $\R^2$ and $\T^2$: periodize test functions and unfold integrals
-over the translates of a fundamental square, then use that classical and Fourier
-derivatives agree on the torus (Lemma~\ref{lem:lift-torus}).
+over the translates of a fundamental square (Lemma~\ref{lem:lift-periodization}), then use
+that classical and Fourier derivatives agree on the torus (Lemma~\ref{lem:lift-torus}).
 \end{proof}
 
 \begin{lemma}[Local elliptic regularity]
@@ -1144,10 +1210,10 @@ derivative $G_b(a,b)$ for almost every $b$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-acl, lem:local-to-global, lem:diagonal-calculus}
+\uses{lem:trace-acl, lem:lift-sobolev-local, lem:diagonal-calculus}
 \leanok
 (1) is Lemma~\ref{lem:trace-acl}, with the lift in $H^1$ and its weak derivatives the lifts
-of $g_x,g_y$ (Lemma~\ref{lem:local-to-global}). (2): absolute continuity on compact
+of $g_x,g_y$ (Lemma~\ref{lem:lift-sobolev-local}). (2): absolute continuity on compact
 subintervals gives continuity on the open interval, and $dx\,dy=2\,da\,db$
 (Lemma~\ref{lem:diagonal-calculus}). (3): by Fubini in $(a,b)$ the two functions agree for
 almost every $b$ on almost every line; continuous functions that agree almost everywhere on an

@@ -14,7 +14,11 @@ regularity, classical lift calculus, smooth virials, Fourier product/IBP
 rules and the periodization of compactly supported cell functions are formalized. Interval H¹ and weighted boundary calculus are available;
 full smooth-density theory is not.
 
-`LineMollifier.lean` and `AnglePeriodization.lean` have no admissions.
+`LineMollifier.lean`, `AnglePeriodization.lean` and `LiftPeriodization.lean` have no
+admissions. The last gives the `2π`-periodization of compactly supported tests, unfolding,
+the lift direction of the torus/local-Sobolev bridge (`lem:lift-sobolev-local`) and
+`L₀` against `H¹` tests (`lem:L0-h1-tests`); with it `isTransportPair_of_isEigenSolution`
+has no admissions.
 The basic transversal L² estimates and weak action-angle transport equivalence
 have no `sorry` of their own, but still depend on admitted chart/coarea inputs.
 Transversal support is proved without those admitted dependencies.
@@ -28,7 +32,8 @@ proof audit or timing estimate.
 
 See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
-- Hölder embedding and the torus/local-Sobolev bridge: moderate.
+- Hölder embedding and the periodization direction of the torus/local-Sobolev bridge
+  (`exists_memSobolev_periodize`): moderate. The lift direction is proved.
 - Directional ACL slicing: moderate; diagonal representatives and elementary
   L²/endpoint trace estimates should be smaller steps once slicing is available.
 - H² trace differentiation: medium–high, including smooth approximation.
@@ -89,15 +94,16 @@ Remaining admitted inputs of `virial_l2`, in a candidate order:
    `HasWeakPartialOn.comp_actionAngleInv` (`lem:action-angle-weak`(2)–(3)):
    medium–high. Weak gradients under the smooth chart (local W^{1,1}
    approximation), with the angle cut handled by θ-periodicity.
-2. Shared with other routes: `hasWeakPartialOn_liftL2` (`lem:local-to-global`),
-   `isTransportPair_of_isEigenSolution` and the chart/coarea inputs.
+2. Shared with other routes: the orbit-coordinate chart inputs
+   (`OrbitCoordinates.lean`: inverse identities, smoothness, area formula,
+   period regularity).
 
 ### Transport and later-sector regularity
 
 See the [transport blueprint](../../blueprint/src/chapters/transport.tex) and
 [regularity blueprint](../../blueprint/src/chapters/regularity.tex).
 
-The eigenfunction-to-transport bridge is moderate; resonant vanishing and
+The eigenfunction-to-transport bridge is proved; resonant vanishing and
 Melnikov are medium–high. Canonical-profile uniqueness/decay/weighted bounds
 are moderate; good windows are low–moderate. Pairing-limit assembly is high,
 with representative compatibility and common exceptional sets the main work.

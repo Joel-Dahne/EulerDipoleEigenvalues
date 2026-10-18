@@ -491,6 +491,40 @@ function. In Mathlib's convention the unknown lies in the second
 inner-product argument, so complex scalars are not conjugated.
 \end{proof}
 
+\begin{lemma}[Weak transport against $H^1$ tests]
+\label{lem:L0-h1-tests}
+\uses{def:dipole, def:fourier-derivatives, def:classical-tests}
+\lean{NoEmbeddedEigenvalues.L0charLp_eq_mulL2, NoEmbeddedEigenvalues.HasL0.inner_eq,
+  NoEmbeddedEigenvalues.HasL0.integral_mul_eq}
+\leanok
+Let $L_0g=h$ in the character-tested sense. If $u\in L^2$ has Fourier partial derivatives
+$u_x,u_y\in L^2$, then
+\[
+ \ip{h}{u}=-\ip{g}{\sin y\,u_x-\sin x\,u_y}.
+\]
+In particular $\int h\varphi=-\int g\,(\sin y\,\partial_x\varphi-\sin x\,\partial_y\varphi)$
+for every $\varphi$ with continuous classical partial derivatives on $\T^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:torus-fourier-basis, lem:classical-partial-fourier}
+\leanok
+$L_0e_k=\sin y\,\partial_xe_k-\sin x\,\partial_ye_k$, and multiplication by $\sin$ is
+bounded on $L^2$. Applied to the Fourier series of $u_x$ and $u_y$, this shows that
+$\sum_k\hat u_k\,L_0e_k$ converges in $L^2$ to $\sin y\,u_x-\sin x\,u_y$. By
+Parseval, $\ip{h}{u}$ is a multiple of $\sum_k\ip{h}{e_k}\overline{\hat u_k}$, and the
+character-tested identity replaces each $\ip{h}{e_k}$ by $-\ip{g}{L_0e_k}$; summing gives
+the claim. For a $C^1$ test apply this to $\bar\varphi$, whose classical partial derivatives
+are its Fourier derivatives (Lemma~\ref{lem:classical-partial-fourier}).
+\end{proof}
+
+\begin{remark}
+No density argument is needed beyond Parseval: the Fourier series of an $H^1$ function
+converges in $H^1$, and $L_0:H^1\to L^2$ is bounded. The hypothesis $u\in H^1$ is on the
+test, not on $g$. Without it the identity would be a statement about the maximal domain of
+$L_0$, which is the self-adjointness question of Lemma~\ref{lem:H-selfadjoint}.
+\end{remark}
+
 \begin{definition}[Operator domain]
 \label{def:domain}
 \uses{def:dipole, def:torus}
@@ -645,7 +679,7 @@ definition tested against characters (Definition~\ref{def:dipole}); its
 equivalence with the Fourier formula is
 \texttt{hasL0\_iff\_fourierCoeff} (Lemma~\ref{lem:transport-fourier}).
 That smooth test functions give the same
-notion is a density argument, deferred until a later chapter needs it;
+notion is Lemma~\ref{lem:L0-h1-tests};
 (ii) $\Delta^{-1}\omega$ is the Fourier series
 $\sum_{k\ne0}(-\hat\omega_k/|k|^2)e_k$ in $L^2$, defined on all of $L^2$
 (it ignores $\hat\omega_0$);
@@ -658,5 +692,5 @@ unit-torus monomials are transported along the scaling map, at the level of
 continuous-function density and orthogonality; no separate $L^2$ scaling
 equivalence is needed. First-partial differentiation agrees with smooth-test
 integration by parts (Lemma~\ref{lem:partial-weak-equivalence}); the
-analogous bridge for $L_0$ is deferred.
+analogous bridge for $L_0$ is Lemma~\ref{lem:L0-h1-tests}.
 \end{remark}

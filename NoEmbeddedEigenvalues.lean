@@ -35,6 +35,7 @@ import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.SobolevLocal
+import NoEmbeddedEigenvalues.LiftPeriodization
 import NoEmbeddedEigenvalues.SobolevTorus
 import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2

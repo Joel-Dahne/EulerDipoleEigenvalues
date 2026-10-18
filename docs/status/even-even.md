@@ -19,9 +19,8 @@ the nodes, not reproduced here. This was not a full independent proof audit.
   Positivity and nonnegative exhaustion give `ω = 0` directly, without a
   global bulk-integrability or weak-gradient constant-function argument.
 - The cutoff, annular and center-limit assemblies are proved from their named
-  inputs. The L² virial identity is assembled from the mollifier, H¹ and
-  transport inputs; the virial branch ultimately needs those and the orbit area
-  formula.
+  inputs. The L² virial identity is assembled; it rests only on the chart
+  inputs (weak-gradient chain rules, orbit coordinates, area formula).
 - Separatrix arc energy and level traces are proved from the trace/local-Sobolev
   inputs using explicit quarter graphs. The first-order trace limit still uses
   the area formula and saddle-distance estimates.
@@ -40,8 +39,8 @@ The current even–even route does **not** require finite-p Sobolev embedding,
 the elliptic-integral period identity, sharp period asymptotics, or transport
 self-adjointness. Keep these out of its prerequisites unless the argument changes.
 
-All transversal mollifier lemmas are proved; `virial_l2` now rests on the full
-weak-gradient chain rules, the chart inputs and the shared transport/lift inputs.
+All transversal mollifier lemmas and the eigenfunction transport pair are proved;
+`virial_l2` now rests on the full weak-gradient chain rules and the chart inputs.
 
 The largest reviewed work packages are the fractional trace infrastructure,
 full-gradient/stronger transversal estimates, and pairing-limit assembly.

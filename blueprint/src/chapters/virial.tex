@@ -703,7 +703,7 @@ $\Delta\psi=\omega$ (manuscript \texttt{(ee:bounded-virial)}, restricted to such
 \uses{lem:virial-forms, lem:virial-h1, lem:half-density-skew-h1, lem:box-periodization,
   lem:transversal-mollifier-support, lem:transversal-mollifier-linear,
   lem:transversal-mollifier, lem:transversal-mollifier-derivatives,
-  lem:transversal-mollifier-commutator, lem:local-to-global, lem:transport-pair-eigen,
+  lem:transversal-mollifier-commutator, lem:lift-sobolev-local, lem:transport-pair-eigen,
   lem:inverse-laplacian-derivatives}
 \leanok
 By Lemma~\ref{lem:virial-forms} it suffices to prove
@@ -711,7 +711,7 @@ $\operatorname{Re}\ip{f\omega}{\omega+\psi}=2\operatorname{Re}\ip{D\psi}{\omega}
 
 The weak equation $L_0(\omega+\psi)=i\lambda\omega$ on the cell square is
 Lemma~\ref{lem:transport-pair-eigen}. Since $\psi\in H^2$,
-Lemma~\ref{lem:local-to-global} gives $L_0\psi=\sin y\,\psi_x-\sin x\,\psi_y\in L^2$
+Lemma~\ref{lem:lift-sobolev-local} gives $L_0\psi=\sin y\,\psi_x-\sin x\,\psi_y\in L^2$
 weakly on the cell, so $L_0\omega\in L^2$ there as well.
 
 Choose $\chi$ smooth with support in $(0,1)$, vanishing on $(-\infty,h_1/2]$ and equal to
@@ -774,10 +774,11 @@ periodic fields on the torus. The proof now explicitly periodizes the
 mollifier outputs and uses the periodic cutoff $c=\chi(\Psi/2)$.
 It does not construct $J_\epsilon^\dagger DJ_\epsilon$.
 The Lean proof (October 2026) follows the argument above and has no
-\texttt{sorry} of its own; it depends on the admitted
-Lemmas~\ref{lem:transversal-mollifier-derivatives},
-\ref{lem:transversal-mollifier-commutator}, \ref{lem:local-to-global},
-\ref{lem:transport-pair-eigen} and on the chart inputs of the mollifier. Compared with
+\texttt{sorry} of its own. Its remaining admitted inputs are the chart inputs of the
+mollifier: Lemmas~\ref{lem:action-angle-weak}, \ref{lem:action-angle-chart},
+\ref{lem:orbit-coordinates-smooth}, \ref{lem:orbit-coordinates-inverse},
+\ref{lem:orbit-coordinates-area} and~\ref{lem:period-regularity} (checked with
+\texttt{just sorries virial\_l2}). Compared with
 the previous sketch: (i) the periodization is the explicit box periodization
 (Lemma~\ref{lem:box-periodization}), proved directly by testing against characters, rather
 than the periodization part of Lemma~\ref{lem:local-to-global}; (ii) instead of applying

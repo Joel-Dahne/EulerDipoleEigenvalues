@@ -497,20 +497,11 @@ theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × �
     obtain ⟨d, hd1, hd2⟩ := hd j
     exact ⟨d, hd1.congr_left hg, hd2⟩
 
-/-! ### From the lift to the torus and back (`lem:local-to-global`, stated) -/
+/-! ### From the lift to the torus (`lem:local-to-global`, stated)
+
+The converse direction, lifts of torus Sobolev functions, is in `LiftPeriodization.lean`. -/
 
 section LocalToGlobal
-
-/-- Lifts of torus Sobolev functions: on a bounded open set the lift of `g ∈ Hᵏ(𝕋²)` lies in
-    `Hᵏ(U)`. -/
-theorem memSobolevOn_liftL2 {k : ℕ} {g : L2} (hg : MemSobolev k g) {U : Set (ℝ × ℝ)}
-    (hU : IsOpen U) (hb : Bornology.IsBounded U) : MemSobolevOn k U (liftL2 g) := by
-  sorry
-
-/-- The weak derivatives of the lift are the lifts of the Fourier derivatives. -/
-theorem hasWeakPartialOn_liftL2 {j : Fin 2} {g h : L2} (hgh : HasFourierPartial j g h)
-    {U : Set (ℝ × ℝ)} (hU : IsOpen U) : HasWeakPartialOn U j (liftL2 g) (liftL2 h) := by
-  sorry
 
 /-- Periodization of cut-off local functions: if `U` projects injectively to the torus,
     `u ∈ Hᵏ_loc(U)` and `χ` is a test function on `U`, then there is `g ∈ Hᵏ(𝕋²)` whose lift is

@@ -1637,9 +1637,9 @@ theorem absolutelyContinuous_contStream_separatrixArc (ω : L2) :
     refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> simp <;> linarith [Real.pi_pos]
   have hrep := streamLift_ae_eq_contStream ω
   have hH2 : MemSobolevOn 2 U (contStream ω) :=
-    (memSobolevOn_liftL2 (memSobolev_two_invLap ω) hU hb).congr_ae hrep
-  have hx := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 0) hU).congr_left hrep
-  have hy := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 1) hU).congr_left hrep
+    (memSobolevOn_liftL2 (memSobolev_two_invLap ω) hb).congr_ae hrep
+  have hx := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 0) U).congr_left hrep
+  have hy := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω 1) U).congr_left hrep
   obtain ⟨-, -, -, hac, -, -⟩ := absolutelyContinuous_trace_of_H2 hU (a₀ := -Real.pi)
     (a₁ := Real.pi) (b₁ := 0) (b₂ := Real.pi) (b₀ := Real.pi / 2) (by linarith [Real.pi_pos])
     subset_rfl ⟨by positivity, by linarith [Real.pi_pos]⟩ (continuous_contStream ω).continuousOn

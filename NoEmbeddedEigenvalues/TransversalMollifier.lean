@@ -1016,25 +1016,6 @@ private theorem classicalL0_congr_of_eventuallyEq {φ ψ : ℝ × ℝ → ℂ} {
   unfold classicalL0 partialX partialY
   rw [hx.deriv_eq, hy.deriv_eq]
 
-private theorem isTestFunctionOn_classicalL0 {U : Set (ℝ × ℝ)} {φ : ℝ × ℝ → ℂ}
-    (hφ : IsTestFunctionOn U φ) : IsTestFunctionOn U (classicalL0 φ) := by
-  have hx : ContDiff ℝ ∞ (partialX φ) := by
-    simpa [coordPartial] using contDiff_coordPartial_top 0 hφ.contDiff
-  have hy : ContDiff ℝ ∞ (partialY φ) := by
-    simpa [coordPartial] using contDiff_coordPartial_top 1 hφ.contDiff
-  have hc : ContDiff ℝ ∞ (classicalL0 φ) := by unfold classicalL0; fun_prop
-  have hz : ∀ p ∉ tsupport φ, classicalL0 φ p = 0 := by
-    intro p hp
-    have hpx : partialX φ p = 0 := image_eq_zero_of_notMem_tsupport
-      (fun h ↦ hp (tsupport_partialX_subset φ h))
-    have hpy : partialY φ p = 0 := image_eq_zero_of_notMem_tsupport
-      (fun h ↦ hp (tsupport_partialY_subset φ h))
-    simp [classicalL0, hpx, hpy]
-  have hs : tsupport (classicalL0 φ) ⊆ tsupport φ :=
-    closure_minimal (fun p hp ↦ by_contra fun hn ↦ hp (hz p hn)) (isClosed_tsupport φ)
-  exact ⟨hc, hφ.hasCompactSupport.of_isClosed_subset (isClosed_tsupport _) hs,
-    hs.trans hφ.tsupport_subset⟩
-
 private theorem integral_cell_supported_actionAngle {G : ℝ × ℝ → ℂ} (hG : Integrable G)
     (hs : ∀ p ∉ cellSquare, G p = 0) :
     (∫ p, G p) = ∫ q, (2 * orbitPeriod q.1) • G (actionAngleInv q) ∂actionMeasure := by
