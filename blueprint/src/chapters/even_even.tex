@@ -1591,7 +1591,8 @@ the ends of $\gamma_k$, and $c_+=\kappa c_-$.
 
 \begin{proof}
 \uses{lem:ee-arc-energy, lem:ee-transport-traces, lem:arc-trace-ac,
-  lem:canonical-profile, lem:canonical-profile-ode, lem:separatrix-arc,
+  lem:canonical-profile-ac, lem:canonical-profile-weighted,
+  lem:canonical-profile-ode, lem:separatrix-arc,
   lem:continuous-representative, lem:boundary-form-xi}
 \leanok
 By the rotation character, $g=\kappa^k\,\tilde\psi\circ\gamma$, so $g$ is locally absolutely
@@ -1600,7 +1601,7 @@ $g'\in L^1$, $\int g'e^{-i\lambda t}dt=0$ (Lemma~\ref{lem:ee-transport-traces}) 
 $\int\cosh^2s\,|g'|^2ds<\infty$ (Lemma~\ref{lem:ee-arc-energy}). Hence
 $\Omega$ is bounded by $\|g'\|_{L^1}$, locally absolutely continuous, satisfies
 $\Omega'=i\lambda\Omega-g'$ and $z'=-i\Omega$ almost everywhere, tends to $0$ at $\pm\infty$,
-and $\int\cosh^2|\Omega|^2<\infty$ by the weighted bound of Lemma~\ref{lem:canonical-profile}
+and $\int\cosh^2|\Omega|^2<\infty$ by Lemma~\ref{lem:canonical-profile-weighted}
 with $\cosh s\le e^{|s|}\le2\cosh s$.
 
 With $\xi=\tanh s$ and $w=1-\xi^2=\operatorname{sech}^2s$ put
@@ -1622,7 +1623,7 @@ $G=-iwF'-\lambda F=-\Omega-\lambda z=g$. Thus $G$ is the trace $g\circ\operatorn
 itself, and $\int|G'|^2d\xi=\int\cosh^2s\,|g'|^2ds$ is the first statement of
 Lemma~\ref{lem:ee-gradient-traces}. Likewise $\int|F'|^2d\xi=\int\cosh^2|\Omega|^2ds$ and
 $\int|wE|^2d\xi=\int\cosh^2|(i\lambda+2\xi)\Omega-g'|^2ds$ are controlled by the weighted
-bound of Lemma~\ref{lem:canonical-profile} (with $\cosh\le e^{|s|}\le2\cosh$), and the end
+bound of Lemma~\ref{lem:canonical-profile-weighted} (with $\cosh\le e^{|s|}\le2\cosh$), and the end
 values follow from $\Omega\to0$ at $\pm\infty$ and $g\to c_\pm$.
 
 A Lean skeleton of the proof (each step citing its source) showed two interface gaps, both
@@ -1632,7 +1633,7 @@ separate Lemma~\ref{lem:arc-trace-ac}, derived from Lemma~\ref{lem:trace-h2} rat
 the less verified Lemma~\ref{lem:ee-gradient-traces}. (2) The Melnikov identity for $g$ was used
 inside Lemma~\ref{lem:ee-transport-traces} but not exported; it is now part of that lemma.
 All other inputs matched as stated. The Lean proof still depends on
-admitted analytic inputs in Lemmas~\ref{lem:canonical-profile} (weighted bound),
+admitted analytic inputs in Lemmas~\ref{lem:canonical-profile-weighted},
 \ref{lem:melnikov}, \ref{lem:trace-acl},
 \ref{lem:trace-gagliardo} and \ref{lem:trace-h2}.
 \end{remark}

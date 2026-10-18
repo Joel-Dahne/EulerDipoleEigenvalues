@@ -6,8 +6,9 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 /-!
 # The canonical transport profile
 
-Blueprint: `def:canonical-profile`, `lem:canonical-profile-ode`; `lem:canonical-profile`
-(stated, uniqueness and decay).
+Blueprint: `def:canonical-profile`, `lem:canonical-profile-ode`;
+`lem:canonical-profile-ac`, `lem:canonical-profile-unique`,
+`lem:canonical-profile-decay`, `lem:canonical-profile-weighted` (stated).
 
 For a trace `g` on a separatrix arc with `g' ∈ L¹(ℝ)`, the canonical profile is
 `Ω(s) = e^{iλs} ∫_s^∞ g'(t) e^{-iλt} dt` and the canonical transport unknown is
@@ -160,23 +161,29 @@ theorem canonicalProfile_eq_Iic (hg : Integrable (deriv g))
 
 end Profile
 
-/-! ### Uniqueness and decay (`lem:canonical-profile`, stated) -/
+/-! ### Local absolute continuity, uniqueness and bounds (stated) -/
 
 section Decay
 
 variable {lam : ℝ} {g : ℝ → ℂ}
 
-/-- Under the Melnikov condition, `Ω` is the only locally absolutely continuous solution of
-    `Ω' = iλΩ - g'` that tends to `0` at both ends. -/
-theorem canonicalProfile_unique (hg : Integrable (deriv g))
-    (hM : ∫ t, profileIntegrand lam g t = 0) {Ω : ℝ → ℂ}
+/-- The canonical profile is absolutely continuous on every compact interval. -/
+theorem absolutelyContinuousOnInterval_canonicalProfile (hg : Integrable (deriv g))
+    (c d : ℝ) : AbsolutelyContinuousOnInterval (canonicalProfile lam g) c d := by
+  sorry
+
+/-- The canonical profile is the only locally absolutely continuous solution of
+    `Ω' = iλΩ - g'` that tends to `0` at `+∞`. Neither Melnikov nor decay at `-∞` is
+    needed for uniqueness. -/
+theorem canonicalProfile_unique (hg : Integrable (deriv g)) {Ω : ℝ → ℂ}
     (hac : ∀ c d, AbsolutelyContinuousOnInterval Ω c d)
     (hode : ∀ᵐ s, HasDerivAt Ω (I * lam * Ω s - deriv g s) s)
-    (htop : Tendsto Ω atTop (𝓝 0)) (hbot : Tendsto Ω atBot (𝓝 0)) :
+    (htop : Tendsto Ω atTop (𝓝 0)) :
     Ω = canonicalProfile lam g := by
   sorry
 
-/-- If `g` approaches its end values `c±` at rate `e^{-α|s|}`, so does `Ω` approach `0`. -/
+/-- Under Melnikov, if `g` approaches its end values `c±` at rate `e^{-α|s|}`, then
+    the canonical profile approaches `0` at the same rate. -/
 theorem norm_canonicalProfile_le_exp (hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d)
     (hg : Integrable (deriv g)) (hM : ∫ t, profileIntegrand lam g t = 0) {α C : ℝ} {cp cm : ℂ}
     (hα : 0 < α) (hp : ∀ s, 0 ≤ s → ‖g s - cp‖ ≤ C * Real.exp (-α * s))

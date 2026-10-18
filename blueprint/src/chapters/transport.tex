@@ -314,35 +314,103 @@ and $J(s)\to\int_\R q$ as $s\to-\infty$. Finally
 $\int_{-\infty}^sq+\int_s^\infty q=\int_\R q$.
 \end{proof}
 
-\begin{lemma}[Uniqueness and decay of the canonical profile]
-\label{lem:canonical-profile}
+\begin{lemma}[Local absolute continuity of the canonical profile]
+\label{lem:canonical-profile-ac}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.canonicalProfile_unique,
-  NoEmbeddedEigenvalues.norm_canonicalProfile_le_exp,
-  NoEmbeddedEigenvalues.eLpNorm_exp_mul_canonicalProfile_le}
+\lean{NoEmbeddedEigenvalues.absolutelyContinuousOnInterval_canonicalProfile}
 \leanok
-Let $g'\in L^1(\R)$ satisfy the Melnikov condition.
-\begin{enumerate}
-  \item $\Omega$ is the unique locally absolutely continuous solution of
-        $(\partial_s-i\lambda)\Omega=-g'$ with $\Omega(s)\to0$ as $s\to\pm\infty$.
-  \item If $g$ is locally absolutely continuous and $|g(s)-c_\pm|\le Ce^{-\alpha|s|}$
-        for $\pm s\ge0$, with $\alpha>0$, then $|\Omega(s)|\le C'e^{-\alpha|s|}$.
-  \item $\|e^{|s|}\Omega\|_{L^2(ds)}\le\|e^{|s|}g'\|_{L^2(ds)}$.
-\end{enumerate}
+Let $g'\in L^1(\R)$. Then $\Omega$ is absolutely continuous on every compact
+interval. No absolute-continuity hypothesis on $g$ or Melnikov condition is needed.
 \end{lemma}
 
 \begin{proof}
 \uses{lem:canonical-profile-ode}
-The tail-as-primitive formula in Lemma~\ref{lem:canonical-profile-ode}
-also makes $\Omega$ locally absolutely continuous, proving existence in
-the claimed class. A difference of two solutions is $Ce^{i\lambda s}$
-(multiply by $e^{-i\lambda s}$ and use absolute continuity), which does
-not decay. For $s\ge0$ integrate by parts in the right formula:
-$\Omega(s)=-(g(s)-c_+)+i\lambda e^{i\lambda s}\int_s^\infty(g-c_+)e^{-i\lambda t}dt$.
-Thus $|\Omega(s)|\le C(1+|\lambda|/\alpha)e^{-\alpha s}$.
-For $s\le0$ use the left formula supplied by Melnikov.
+Write $q(t)=g'(t)e^{-i\lambda t}\in L^1$ and
+$J(s)=J(0)-\int_0^s q$. Indefinite integrals of integrable functions are
+absolutely continuous on compact intervals. Multiplication by the smooth
+factor $e^{i\lambda s}$ preserves this property, so $\Omega=e^{i\lambda s}J$
+is locally absolutely continuous.
+\end{proof}
 
-For (3), the claim is immediate if the right-hand norm is infinite.
+\begin{lemma}[Uniqueness of the canonical profile]
+\label{lem:canonical-profile-unique}
+\uses{def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.canonicalProfile_unique}
+\leanok
+Let $g'\in L^1(\R)$. If $U\colon\R\to\C$ is locally absolutely continuous,
+$U'=i\lambda U-g'$ almost everywhere, and $U(s)\to0$ as $s\to+\infty$,
+then $U=\Omega$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile-ac, lem:canonical-profile-ode}
+The difference $U-\Omega$ is locally absolutely continuous and satisfies the
+homogeneous equation. Multiplication by $e^{-i\lambda s}$ gives a locally
+absolutely continuous function with derivative zero almost everywhere, hence a
+constant. Thus $U-\Omega=Ce^{i\lambda s}$, and decay at $+\infty$ forces $C=0$.
+\end{proof}
+
+\begin{remark}[The two-ended solution]
+Lemma~\ref{lem:canonical-profile-ac} and the profile equation give existence in
+the locally absolutely continuous class. Decay at $+\infty$ alone gives uniqueness;
+under Melnikov, Lemma~\ref{lem:canonical-profile-ode} also gives decay at $-\infty$.
+Thus the two-ended uniqueness assertion needs no separate theorem.
+\end{remark}
+
+\begin{lemma}[Exponential decay of the canonical profile]
+\label{lem:canonical-profile-decay}
+\uses{def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.norm_canonicalProfile_le_exp}
+\leanok
+Let $g$ be locally absolutely continuous, with $g'\in L^1(\R)$ satisfying the
+Melnikov condition. Suppose $c_+,c_-\in\C$, $\alpha>0$, and
+$|g(s)-c_\pm|\le Ce^{-\alpha|s|}$ for $\pm s\ge0$.
+Then there exists $C'$ such that $|\Omega(s)|\le C'e^{-\alpha|s|}$ for every $s\in\R$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile-ode}
+For $s\ge0$ integrate by parts in the right-tail formula:
+\[
+  \Omega(s)=-(g(s)-c_+)
+    +i\lambda e^{i\lambda s}\int_s^\infty(g(t)-c_+)e^{-i\lambda t}\,dt.
+\]
+The endpoint term at infinity vanishes by the assumed decay. Thus
+$|\Omega(s)|\le C(1+|\lambda|/\alpha)e^{-\alpha s}$.
+For $s\le0$ use the left-tail formula supplied by Melnikov and integrate by
+parts with $g-c_-$ to obtain the same bound with $e^{\alpha s}$.
+\end{proof}
+
+\begin{remark}
+The manuscript states the decay for the arc trace of an $H^2$ function, for every
+$\alpha<1$. Here the rate is a hypothesis on $g$; for an arc trace it comes from
+$H^2\subset C^{0,\alpha}$ (Lemma~\ref{lem:sobolev-holder}) and the exponential
+approach of the arc to the saddles, which is where the lemma is applied.
+\end{remark}
+
+\begin{remark}[Digest note: complex endpoint values in Lean]
+The statement review found that \texttt{norm\_canonicalProfile\_le\_exp} restricted
+$c_+,c_-$ to real numbers. Its parameters are now complex, with $\alpha,C$ still real,
+matching the arc traces and their complex saddle values. The integration-by-parts
+proof above is unchanged. This corrects the statement; the decay proof remains admitted.
+\end{remark}
+
+\begin{lemma}[Weighted $L^2$ bound for the canonical profile]
+\label{lem:canonical-profile-weighted}
+\uses{def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.eLpNorm_exp_mul_canonicalProfile_le}
+\leanok
+Let $g'\in L^1(\R)$ satisfy the Melnikov condition. Then
+\[
+  \|e^{|s|}\Omega\|_{L^2(ds)}\le\|e^{|s|}g'\|_{L^2(ds)}.
+\]
+The norms may take the value $+\infty$. No absolute-continuity hypothesis on $g$
+or exponential approach to endpoint values is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile-ode}
+The claim is immediate if the right-hand norm is infinite.
 Otherwise put $F(t)=e^t|g'(t)|$ for $t\ge0$. For $s\ge0$,
 \[
   e^s|\Omega(s)|\le\int_0^\infty e^{-r}F(s+r)\,dr .
@@ -353,25 +421,10 @@ and use Tonelli: each right translation contracts the half-line
 $L^2$ norm. Hence the positive-half-line squared norm is at most
 $\int_0^\infty e^{2t}|g'(t)|^2\,dt$.
 Use the left-tail formula on the negative half-line in the same way.
-Add the two estimates and take square roots. This proves constant one
-without invoking a general Young inequality.
+Add the two estimates and take square roots. The constant is $1$: on each
+half line the kernel has mass $1$, and the two half lines use disjoint parts
+of $e^{|s|}g'$. No general Young inequality is needed.
 \end{proof}
-
-\begin{remark}
-The manuscript states the decay for the arc trace of an $H^2$ function, for every
-$\alpha<1$. Here the rate is a hypothesis on $g$; for an arc trace it comes from
-$H^2\subset C^{0,\alpha}$ (Lemma~\ref{lem:sobolev-holder}) and the exponential
-approach of the arc to the saddles, which is where the lemma is applied. The constant
-in (3) is $1$: on each half line the bound is a one-sided convolution with a kernel
-of mass $1$, and the two half lines use disjoint parts of $e^{|s|}g'$.
-\end{remark}
-
-\begin{remark}[Digest note: complex endpoint values in Lean]
-The statement review found that \texttt{norm\_canonicalProfile\_le\_exp} restricted
-$c_+,c_-$ to real numbers. Its parameters are now complex, with $\alpha,C$ still real,
-matching the arc traces and their complex saddle values. The integration-by-parts
-proof above is unchanged. This corrects the statement; the decay proof remains admitted.
-\end{remark}
 
 \begin{lemma}[Good windows]
 \label{lem:good-windows}
@@ -427,7 +480,8 @@ their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile, lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder,
+\uses{lem:canonical-profile-ac, lem:canonical-profile-decay,
+  lem:canonical-profile-ode, lem:melnikov, lem:sobolev-holder,
   lem:local-to-global, lem:resonant-vanishing, lem:orbit-comparison,
   lem:coarea, lem:good-windows, lem:separatrix-arc,
   lem:period-coarse, lem:period-orbit, lem:level-integral-congr}
