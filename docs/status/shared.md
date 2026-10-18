@@ -58,11 +58,13 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 - Inverse identities → local smoothness → area formula are separate tasks.
   The first two are moderate; measure/change-of-variables assembly is
   medium–high. Local smoothness does not depend on the area formula.
-- Period regularity comes from the regular fixed-interval integral. Coarse
-  logarithmic bounds come independently from corner dynamics and endpoint
-  distance. The full `lem:period-coarse` statement is blueprint-only; its Lean
-  link covers just the global upper exponential bound. Continuity of `S` and the
-  elementary lower bound `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) are proved.
+- Period regularity (`lem:period-regularity`) is proved without admissions in
+  `Period.lean`: the regular fixed-interval integral gives smoothness and
+  `L' < 0`, hence strict decrease of `L` and `S`. Coarse logarithmic bounds
+  remain open and come independently from corner dynamics and endpoint distance.
+  The full `lem:period-coarse` statement is blueprint-only; its Lean link covers
+  just the global upper exponential bound. The elementary lower bound
+  `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) is proved.
 - The smooth action-angle chart is moderate conditional on these inputs;
   full weak-gradient transfer is medium–high. General chain rules use local
   W¹,¹ approximation; compact-band H¹ specializations may suffice for virials.
@@ -96,8 +98,8 @@ Remaining admitted inputs of `virial_l2`, in a candidate order:
    medium–high. Weak gradients under the smooth chart (local W^{1,1}
    approximation), with the angle cut handled by θ-periodicity.
 2. Shared with other routes: the orbit-coordinate chart inputs
-   (`OrbitCoordinates.lean`: inverse identities, smoothness, area formula,
-   period regularity).
+   (`OrbitCoordinates.lean`: inverse identities, smoothness, area formula).
+   Period regularity is now proved in `Period.lean`.
 
 ### Transport and later-sector regularity
 

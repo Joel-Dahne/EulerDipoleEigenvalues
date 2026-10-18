@@ -1147,9 +1147,12 @@ imaginary parts).
 \begin{lemma}[Regularity and monotonicity of the period]
 \label{lem:period-regularity}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.contDiffOn_orbitPeriod,
+\lean{NoEmbeddedEigenvalues.contDiffOn_eighthPeriod,
+  NoEmbeddedEigenvalues.contDiffOn_orbitPeriod,
   NoEmbeddedEigenvalues.deriv_eighthPeriod_neg,
-  NoEmbeddedEigenvalues.eighthPeriod_strictAntiOn}
+  NoEmbeddedEigenvalues.eighthPeriod_strictAntiOn,
+  NoEmbeddedEigenvalues.deriv_orbitPeriod_neg,
+  NoEmbeddedEigenvalues.orbitPeriod_strictAntiOn}
 \leanok
 The functions $L$ and $S=8L$ are smooth on $(0,1)$, with $L'<0$.
 Thus they are strictly decreasing and $S'=8L'<0$; the level sets of
@@ -1158,11 +1161,19 @@ $S$ are simple.
 
 \begin{proof}
 \uses{lem:period-integral}
-On a compact level interval inside $(0,1)$, the fixed-interval
-integrand of Lemma~\ref{lem:period-integral} is smooth and each parameter
-derivative is uniformly bounded. Differentiating under the integral
-gives smoothness. The derivative in $h$ of the squared denominator is
-$t^2(1+h-t^2)+1-t^2+ht^2>0$, so $L'<0$.
+\leanok
+Set $A=1-(1-h)t^2$, $B=1+h-t^2$ and $Q=AB$. On $0<h<1$,
+$0\le t\le1$, both $A$ and $B$ are at least $h>0$.
+The regular quadrature is $L(h)=\int_0^1 Q(h,t)^{-1/2}\,dt$.
+On compact level intervals, the integrand is smooth and each parameter
+derivative is uniformly bounded, so repeated differentiation under the
+integral proves smoothness. Moreover,
+\[
+  \partial_hQ=t^2B+A>0,\qquad
+  \partial_h(Q^{-1/2})=-\frac{\partial_hQ}{2Q^{3/2}}<0.
+\]
+Integrating gives $L'<0$. Multiplication by $8$ gives the assertions
+for $S$, and the mean value theorem gives strict decrease.
 \end{proof}
 
 \begin{lemma}[Coarse logarithmic bounds for the period]

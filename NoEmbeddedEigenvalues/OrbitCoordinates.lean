@@ -117,10 +117,6 @@ theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace �
 
 /-! ### The action-angle chart (`lem:action-angle-chart`) -/
 
-/-- The period function is smooth on `(0, 1)`. -/
-theorem contDiffOn_orbitPeriod : ContDiffOn ℝ ∞ orbitPeriod (Ioo 0 1) := by
-  sorry
-
 theorem actionAngleInv_mem_puncturedCell {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (θ : ℝ) :
     actionAngleInv (h, θ) ∈ puncturedCell := by
   refine ⟨dipoleOrbit_mem_cellSquare h0 h1 _, fun h0' ↦ ?_⟩

@@ -2,17 +2,22 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # The period function of the dipole orbits
 
-Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`; `lem:period` (stated:
-`L' < 0`, the elliptic-integral formula, asymptotics; monotonicity is derived from `L' < 0`).
+Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`, `lem:period-regularity`.
+The elliptic-integral formula, sharp asymptotics and upper exponential bound remain stated.
 
 For `0 < h < 1` the orbit on the level `{Ψ = 2h}` in the positive cell takes flow time
 `L(h) = ∫₀^{arccos √h} da / √(cos² a - h²)` to go from its point on the axis `a = 0` to
 the diagonal; the full period is `S(h) = 8 L(h)`. The substitution `sin a = √(1 - h) t`
 gives `L(h) = ∫₀¹ dt / (√(1 - (1 - h) t²) √(1 + h - t²))`, and hence `L(h) ≤ 1/h`.
+This regular quadrature also proves smoothness and strict negativity of the derivative:
+its squared denominator has strictly positive `h` derivative on `[0, 1]`.
 -/
 
 noncomputable section
@@ -253,12 +258,187 @@ theorem orbitFrequency_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < orbitFreque
   unfold orbitFrequency
   positivity
 
-/-! ### The period function (`lem:period`, stated) -/
+/-! ### Differentiation of the regular fixed-interval quadrature -/
+
+open Filter Topology Set Metric
+open scoped ContDiff
+
+/-- A continuous function is uniformly bounded on a tube around a compact vertical segment. -/
+private theorem bounded_tube {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
+    (hU : IsOpen U) (hF : ContinuousOn F U) {h : ℝ}
+    (hh : {h} ×ˢ Icc (0 : ℝ) 1 ⊆ U) :
+    ∃ ε C : ℝ, 0 < ε ∧ ∀ x ∈ ball h ε, ∀ t ∈ Icc (0 : ℝ) 1,
+      (x, t) ∈ U ∧ ‖F (x, t)‖ ≤ C := by
+  have hK : IsCompact ({h} ×ˢ Icc (0 : ℝ) 1) := isCompact_singleton.prod isCompact_Icc
+  obtain ⟨V, hKV, hV, hb⟩ :=
+    exists_isOpen_isBounded_image_of_isCompact_of_continuousOn hK hU hh hF
+  obtain ⟨ε, hε, htube⟩ := hK.exists_thickening_subset_open (hV.inter hU)
+    (subset_inter hKV hh)
+  obtain ⟨C, hC⟩ := hb.exists_norm_le
+  refine ⟨ε, C, hε, fun x hx t ht ↦ ?_⟩
+  have hxt : (x, t) ∈ V ∩ U := by
+    apply htube
+    refine mem_thickening_iff.2 ⟨(h, t), ⟨by simp, ht⟩, ?_⟩
+    simpa [Prod.dist_eq, hε] using hx
+  exact ⟨hxt.2, hC _ (mem_image_of_mem F hxt.1)⟩
+
+/-- Differentiation under a compact interval integral for a jointly smooth integrand. -/
+private theorem hasDerivAt_integral_smooth {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
+    (hU : IsOpen U) (hF : ContDiffOn ℝ ∞ F U) {h : ℝ}
+    (hh : {h} ×ˢ Icc (0 : ℝ) 1 ⊆ U) :
+    HasDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t))
+      (∫ t in (0 : ℝ)..1, fderiv ℝ F (h, t) (1, 0)) h := by
+  let G : ℝ × ℝ → ℝ := fun q ↦ fderiv ℝ F q (1, 0)
+  have hG : ContDiffOn ℝ ∞ G U :=
+    (hF.fderiv_of_isOpen hU (by simp)).clm_apply contDiffOn_const
+  obtain ⟨ε, C, hε, hb⟩ := bounded_tube hU hG.continuousOn hh
+  have hslice (x : ℝ) (hx : x ∈ ball h ε) :
+      ContinuousOn (fun t ↦ F (x, t)) (Icc 0 1) :=
+    hF.continuousOn.comp (by fun_prop) (fun t ht ↦ (hb x hx t ht).1)
+  have hsliceG : ContinuousOn (fun t ↦ G (h, t)) (Icc 0 1) :=
+    hG.continuousOn.comp (by fun_prop) (fun t ht ↦ hh ⟨by simp, ht⟩)
+  refine (intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
+    (F := fun x t ↦ F (x, t)) (F' := fun x t ↦ G (x, t))
+    (bound := fun _ ↦ C) (ball_mem_nhds h hε) ?_
+    ((hslice h (mem_ball_self hε)).intervalIntegrable_of_Icc zero_le_one)
+    ?_ ?_ intervalIntegrable_const ?_).2
+  · filter_upwards [ball_mem_nhds h hε] with x hx
+    exact ((hslice x hx).aestronglyMeasurable measurableSet_Icc).mono_set (by
+      rw [uIoc_of_le zero_le_one]; exact Ioc_subset_Icc_self)
+  · exact (hsliceG.aestronglyMeasurable measurableSet_Icc).mono_set (by
+      rw [uIoc_of_le zero_le_one]; exact Ioc_subset_Icc_self)
+  · refine Eventually.of_forall fun t ht x hx ↦ ?_
+    rw [uIoc_of_le zero_le_one] at ht
+    exact (hb x hx t (Ioc_subset_Icc_self ht)).2
+  · refine Eventually.of_forall fun t ht x hx ↦ ?_
+    rw [uIoc_of_le zero_le_one] at ht
+    have hxt := (hb x hx t (Ioc_subset_Icc_self ht)).1
+    exact ((hF.contDiffAt (hU.mem_nhds hxt)).differentiableAt (by simp)).hasFDerivAt
+      |>.comp_hasDerivAt x ((hasDerivAt_id x).prodMk (hasDerivAt_const x t))
+
+/-- Smoothness under the fixed-interval integral, by iterating the preceding rule. -/
+private theorem contDiffOn_integral_smooth {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
+    {s : Set ℝ} (hU : IsOpen U) (hs : IsOpen s) (hsub : s ×ˢ Icc (0 : ℝ) 1 ⊆ U)
+    (hF : ContDiffOn ℝ ∞ F U) :
+    ContDiffOn ℝ ∞ (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t)) s := by
+  rw [contDiffOn_infty]
+  intro n
+  induction n generalizing F with
+  | zero =>
+    rw [Nat.cast_zero, contDiffOn_zero]
+    intro h hh
+    exact (hasDerivAt_integral_smooth hU hF (by
+      rintro ⟨x, t⟩ ⟨hx, ht⟩; rcases mem_singleton_iff.1 hx with rfl
+      exact hsub ⟨hh, ht⟩)).continuousAt.continuousWithinAt
+  | succ n ih =>
+    let G : ℝ × ℝ → ℝ := fun q ↦ fderiv ℝ F q (1, 0)
+    have hG : ContDiffOn ℝ ∞ G U :=
+      (hF.fderiv_of_isOpen hU (by simp)).clm_apply contDiffOn_const
+    have hd : ∀ h ∈ s, HasDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t))
+        (∫ t in (0 : ℝ)..1, G (h, t)) h := by
+      intro h hh
+      apply hasDerivAt_integral_smooth hU hF
+      rintro ⟨x, t⟩ ⟨hx, ht⟩; rcases mem_singleton_iff.1 hx with rfl
+      exact hsub ⟨hh, ht⟩
+    rw [Nat.cast_succ, contDiffOn_succ_iff_deriv_of_isOpen hs]
+    exact ⟨fun h hh ↦ (hd h hh).differentiableAt.differentiableWithinAt,
+      by simp, (ih hG).congr (fun h hh ↦ (hd h hh).deriv)⟩
+
+/-- The squared denominator in the regular quadrature. -/
+private def periodDenom (q : ℝ × ℝ) : ℝ :=
+  (1 - (1 - q.1) * q.2 ^ 2) * (1 + q.1 - q.2 ^ 2)
+
+private theorem period_radicands_pos {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (ht : t ∈ Icc (0 : ℝ) 1) :
+    0 < 1 - (1 - h) * t ^ 2 ∧ 0 < 1 + h - t ^ 2 := by
+  have ht2 : t ^ 2 ≤ 1 := by nlinarith [ht.1, ht.2]
+  constructor
+  · nlinarith [mul_le_mul_of_nonneg_left ht2 (by linarith [hh.2] : (0 : ℝ) ≤ 1 - h), hh.1]
+  · linarith [hh.1]
+
+private theorem periodDenom_pos {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (ht : t ∈ Icc (0 : ℝ) 1) : 0 < periodDenom (h, t) := by
+  obtain ⟨hA, hB⟩ := period_radicands_pos hh ht
+  exact mul_pos hA hB
+
+private theorem contDiffOn_periodIntegrand :
+    ContDiffOn ℝ ∞ (fun q ↦ 1 / √(periodDenom q)) {q | 0 < periodDenom q} := by
+  have hQ : ContDiff ℝ ∞ periodDenom := by unfold periodDenom; fun_prop
+  exact contDiffOn_const.div (hQ.contDiffOn.sqrt (fun q hq ↦ ne_of_gt hq))
+    (fun q hq ↦ (sqrt_pos.2 hq).ne')
+
+private theorem eighthPeriod_eq_regular {h : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    eighthPeriod h = ∫ t in (0 : ℝ)..1, 1 / √(periodDenom (h, t)) := by
+  rw [eighthPeriod_eq hh.1 hh.2]
+  apply integral_congr
+  intro t ht
+  rw [uIcc_of_le zero_le_one] at ht
+  dsimp only [periodDenom]
+  rw [sqrt_mul (period_radicands_pos hh ht).1.le]
+
+/-- `L` is smooth on `(0, 1)`, by its regular fixed-interval quadrature. -/
+theorem contDiffOn_eighthPeriod : ContDiffOn ℝ ∞ eighthPeriod (Ioo 0 1) := by
+  have hU : IsOpen {q | 0 < periodDenom q} := by
+    apply isOpen_lt continuous_const
+    unfold periodDenom; fun_prop
+  exact (contDiffOn_integral_smooth hU isOpen_Ioo
+    (fun q hq ↦ periodDenom_pos hq.1 hq.2) contDiffOn_periodIntegrand).congr
+      (fun h hh ↦ eighthPeriod_eq_regular hh)
+
+/-- The period function is smooth on `(0, 1)`. -/
+theorem contDiffOn_orbitPeriod : ContDiffOn ℝ ∞ orbitPeriod (Ioo 0 1) :=
+  contDiffOn_eighthPeriod.const_smul (8 : ℝ)
 
 /-- `L` is differentiable on `(0, 1)` with `L' < 0`; in particular `S` has simple level sets. -/
 theorem deriv_eighthPeriod_neg {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
     DifferentiableAt ℝ eighthPeriod h ∧ deriv eighthPeriod h < 0 := by
-  sorry
+  let F : ℝ × ℝ → ℝ := fun q ↦ 1 / √(periodDenom q)
+  let G : ℝ → ℝ := fun t ↦ fderiv ℝ F (h, t) (1, 0)
+  have hF : ContDiffOn ℝ ∞ F {q | 0 < periodDenom q} := contDiffOn_periodIntegrand
+  have hU : IsOpen {q | 0 < periodDenom q} := by
+    apply isOpen_lt continuous_const
+    unfold periodDenom; fun_prop
+  have hd : HasDerivAt eighthPeriod (∫ t in (0 : ℝ)..1, G t) h := by
+    have hd := hasDerivAt_integral_smooth hU hF (h := h) (by
+      rintro ⟨x, t⟩ ⟨hx, ht⟩; rcases mem_singleton_iff.1 hx with rfl
+      exact periodDenom_pos ⟨h0, h1⟩ ht)
+    apply hd.congr_of_eventuallyEq
+    filter_upwards [Ioo_mem_nhds h0 h1] with x hx
+    exact eighthPeriod_eq_regular hx
+  have hGc : ContinuousOn G (Icc 0 1) :=
+    ((hF.fderiv_of_isOpen (m := ∞) hU (by simp)).clm_apply contDiffOn_const).continuousOn.comp
+      (by fun_prop) (fun t ht ↦ periodDenom_pos ⟨h0, h1⟩ ht)
+  have hGn : ∀ t ∈ Icc (0 : ℝ) 1, G t < 0 := by
+    intro t ht
+    obtain ⟨hA, hB⟩ := period_radicands_pos ⟨h0, h1⟩ ht
+    have hQpos := periodDenom_pos ⟨h0, h1⟩ ht
+    have hroot : 0 < √(periodDenom (h, t)) := sqrt_pos.2 hQpos
+    have hdA : HasDerivAt (fun x : ℝ ↦ 1 - (1 - x) * t ^ 2) (t ^ 2) h := by
+      convert! (hasDerivAt_const h (1 : ℝ)).sub
+        (((hasDerivAt_const h (1 : ℝ)).sub (hasDerivAt_id h)).mul_const (t ^ 2)) using 1
+      ring
+    have hdB : HasDerivAt (fun x : ℝ ↦ 1 + x - t ^ 2) 1 h := by
+      simpa using! ((hasDerivAt_const h (1 : ℝ)).add (hasDerivAt_id h)).sub_const (t ^ 2)
+    have hdQ : HasDerivAt (fun x ↦ periodDenom (x, t))
+        (t ^ 2 * (1 + h - t ^ 2) + (1 - (1 - h) * t ^ 2)) h := by
+      simpa [periodDenom] using! hdA.mul hdB
+    have hdF := (hdQ.sqrt hQpos.ne').inv hroot.ne'
+    have hdG : HasDerivAt (fun x ↦ F (x, t)) (G t) h := by
+      have hder : HasFDerivAt F (fderiv ℝ F (h, t)) (h, t) :=
+        ((hF.contDiffAt (hU.mem_nhds hQpos)).differentiableAt (by simp)).hasFDerivAt
+      exact hder.comp_hasDerivAt h ((hasDerivAt_id h).prodMk (hasDerivAt_const h t))
+    have he := hdG.unique (by simpa only [F, one_div] using! hdF)
+    rw [he]
+    have hN : 0 < t ^ 2 * (1 + h - t ^ 2) + (1 - (1 - h) * t ^ 2) :=
+      add_pos_of_nonneg_of_pos (mul_nonneg (sq_nonneg t) hB.le) hA
+    exact div_neg_of_neg_of_pos (neg_neg_of_pos (div_pos hN (by positivity))) (by positivity)
+  refine ⟨hd.differentiableAt, ?_⟩
+  rw [hd.deriv]
+  have hlt := integral_lt_integral_of_continuousOn_of_le_of_exists_lt zero_lt_one hGc
+    (continuousOn_const : ContinuousOn (fun _ : ℝ ↦ (0 : ℝ)) (Icc 0 1))
+    (fun t ht ↦ (hGn t (Ioc_subset_Icc_self ht)).le)
+    ⟨0, ⟨le_rfl, zero_le_one⟩, hGn 0 ⟨le_rfl, zero_le_one⟩⟩
+  simpa using hlt
 
 /-- `L` is strictly decreasing on `(0, 1)`. -/
 theorem eighthPeriod_strictAntiOn : StrictAntiOn eighthPeriod (Set.Ioo 0 1) := by
@@ -267,6 +447,21 @@ theorem eighthPeriod_strictAntiOn : StrictAntiOn eighthPeriod (Set.Ioo 0 1) := b
   · intro h hh
     rw [interior_Ioo] at hh
     exact (deriv_eighthPeriod_neg hh.1 hh.2).2
+
+/-- `S' = 8L' < 0` on `(0, 1)`. -/
+theorem deriv_orbitPeriod_neg {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    DifferentiableAt ℝ orbitPeriod h ∧ deriv orbitPeriod h < 0 := by
+  obtain ⟨hd, hneg⟩ := deriv_eighthPeriod_neg h0 h1
+  have hS : HasDerivAt orbitPeriod (8 * deriv eighthPeriod h) h :=
+    hd.hasDerivAt.const_mul 8
+  exact ⟨hS.differentiableAt, hS.deriv ▸ mul_neg_of_pos_of_neg (by norm_num) hneg⟩
+
+/-- The full period is strictly decreasing on `(0, 1)`. -/
+theorem orbitPeriod_strictAntiOn : StrictAntiOn orbitPeriod (Ioo 0 1) := by
+  intro h hh k hk hhk
+  exact mul_lt_mul_of_pos_left (eighthPeriod_strictAntiOn hh hk hhk) (by norm_num)
+
+/-! ### Further period estimates (stated) -/
 
 /-- `S(h) = 4 K(1 - h²)` with `K(m) = ∫₀^{π/2} (1 - m sin² θ)^{-1/2} dθ`. -/
 theorem orbitPeriod_eq_ellipticK {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
