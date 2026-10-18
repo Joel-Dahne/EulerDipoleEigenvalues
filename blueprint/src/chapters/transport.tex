@@ -345,6 +345,7 @@ then $U=\Omega$.
 
 \begin{proof}
 \uses{lem:canonical-profile-ac, lem:canonical-profile-ode}
+\leanok
 The difference $U-\Omega$ is locally absolutely continuous and satisfies the
 homogeneous equation. Multiplication by $e^{-i\lambda s}$ gives a locally
 absolutely continuous function with derivative zero almost everywhere, hence a
@@ -371,6 +372,7 @@ Then there exists $C'$ such that $|\Omega(s)|\le C'e^{-\alpha|s|}$ for every $s\
 
 \begin{proof}
 \uses{lem:canonical-profile-ode}
+\leanok
 For $s\ge0$ integrate by parts in the right-tail formula:
 \[
   \Omega(s)=-(g(s)-c_+)
@@ -393,7 +395,7 @@ approach of the arc to the saddles, which is where the lemma is applied.
 The statement review found that \texttt{norm\_canonicalProfile\_le\_exp} restricted
 $c_+,c_-$ to real numbers. Its parameters are now complex, with $\alpha,C$ still real,
 matching the arc traces and their complex saddle values. The integration-by-parts
-proof above is unchanged. This corrects the statement; the decay proof remains admitted.
+proof above is unchanged. The corrected statement and its decay proof are now formalized.
 \end{remark}
 
 \begin{lemma}[Weighted $L^2$ bound for the canonical profile]
@@ -410,7 +412,8 @@ or exponential approach to endpoint values is needed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:canonical-profile-ode}
+\uses{lem:canonical-profile-ac, lem:canonical-profile-ode}
+\leanok
 The claim is immediate if the right-hand norm is infinite.
 Otherwise put $F(t)=e^t|g'(t)|$ for $t\ge0$. For $s\ge0$,
 \[
@@ -425,6 +428,12 @@ Use the left-tail formula on the negative half-line in the same way.
 Add the two estimates and take square roots. The constant is $1$: on each
 half line the kernel has mass $1$, and the two half lines use disjoint parts
 of $e^{|s|}g'$. No general Young inequality is needed.
+In Lean the two half lines are combined into a positive kernel $K(s,t)$,
+zero between opposite half lines. Its row integrals are $1$ and its column
+integrals are at most $1$. Cauchy--Schwarz for the measure $K(s,t)\,dt$ and
+Tonelli give the squared-norm estimate directly in nonnegative extended
+integrals, including the case of an infinite right-hand norm. Local absolute
+continuity supplies measurability of the profile.
 \end{proof}
 
 \begin{lemma}[Good windows]

@@ -107,11 +107,9 @@ See the [transport blueprint](../../blueprint/src/chapters/transport.tex) and
 The eigenfunction-to-transport bridge is proved. Resonant vanishing is proved from
 `lem:coarea`, the area formula and differentiability of `L`. Melnikov is proved from
 these and the trace, periodization, torus Hölder, orbit-comparison and coarse period
-inputs (`Melnikov.lean`). Canonical-profile local absolute continuity is proved
-without admissions. Uniqueness, exponential decay and the weighted bound remain
-separate moderate tasks with admitted Lean statements. Uniqueness requires only
-decay at +∞; the weighted bound requires neither uniqueness nor exponential decay.
-Good windows are proved without admissions. Pairing-limit assembly is high,
+inputs (`Melnikov.lean`). The canonical-profile inputs (local absolute continuity,
+uniqueness, exponential decay and the constant-one weighted bound) and good windows
+are proved without admissions. Pairing-limit assembly is high,
 with representative compatibility and common exceptional sets the main work.
 The revised sketches use test H¹ density and separatrix-only integration by
 parts, not orbit regularity at prescribed resonant levels.
