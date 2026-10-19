@@ -25,19 +25,16 @@ once resolved; record the resolution in the relevant node.
         from the independently proved saddle-distance estimate. Neither the
         elliptic identity nor the sharp remainders are in the even--even
         dependency graph.
-  \item \textbf{Orbit geometry} (Lemmas~\ref{lem:orbit-level-derivatives}
-        and~\ref{lem:orbit-coordinate-gradients}). Bounds on
-        $\partial_h\gamma_h$, $\partial_h^2\gamma_h$ and the inverse
-        coordinates remain unproved in Lean. Smoothness of the inverse
-        action-angle parametrization is now proved by scalar implicit inversion
-        of the regular time quadrature, before differentiating any variational
-        equations; a general ODE parameter-dependence theorem is not required.
-        The saddle-distance estimate is now proved in Lean without admissions,
-        using a bounded integrating factor to get the exact unit exponential
-        rate. The overly broad global time-gradient
-        statement has been corrected to recentered quarter-orbit charts;
-        the counterexample and resolution are retained in the digest note after
-        Lemma~\ref{lem:orbit-coordinate-gradients}.
+  \item \textbf{Orbit-coordinate gradients}
+        (Lemma~\ref{lem:orbit-coordinate-gradients}). The recentered inverse
+        time-coordinate bounds remain unproved in Lean. Their smoothness,
+        saddle-distance and level-derivative inputs are now proved without
+        admissions; the latter use the smooth orbit chart, symmetry of mixed
+        derivatives and Gronwall, not a general ODE parameter-dependence theorem
+        (Lemma~\ref{lem:orbit-level-derivatives}). The overly broad global
+        time-gradient statement has been corrected to recentered quarter-orbit
+        charts; the counterexample and resolution are retained in the digest
+        note after Lemma~\ref{lem:orbit-coordinate-gradients}.
   \item \textbf{Weighted Poincar\'e inequality} (Lemma~\ref{lem:zonal-poincare}).
         The identification with zonal $S^3$ Laplacians is sketched only.
   \item \textbf{Constants in the $\kappa=-1$ boundary estimate}

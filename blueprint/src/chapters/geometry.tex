@@ -1659,7 +1659,9 @@ comparison are proved in Lean without admitted dependencies.
 \begin{lemma}[Derivatives in the level]
 \label{lem:orbit-level-derivatives}
 \uses{def:period, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le}
+\lean{NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le_all_time,
+  NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le,
+  NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le_saddleDist}
 \leanok
 For small $h$ and $|t|\le L(h)$, $h\mapsto\gamma_h(t)$ is twice differentiable with
 $|\partial_h\gamma_h(t)|\le Ce^{|t|}$ and $|\partial_h^2\gamma_h(t)|\le Ce^{2|t|}$
@@ -1668,24 +1670,40 @@ Lemma~\ref{lem:orbit-saddle-distance} these are $\le C/d$ and $\le C/d^2$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-flow, lem:action-angle-chart, lem:orbit-saddle-distance}
+\uses{lem:dipole-flow, lem:action-angle-chart, lem:period-regularity,
+  lem:orbit-saddle-distance}
+\leanok
 First obtain joint smoothness from
 $\gamma_h(t)=P(h,t/S(h))$, using Lemma~\ref{lem:action-angle-chart}.
 That lemma uses inverse coordinates, not these derivative estimates,
-so this step is noncircular. Now differentiate the flow equation with
-respect to $h$. Writing
+so this step is noncircular. Symmetry of second derivatives, applied
+first to $\gamma_h$ and then to its level derivative, justifies
+interchanging level and time differentiation. Writing
 $J=\partial_h\gamma_h$ and $K=\partial_h^2\gamma_h$ gives
-$\dot J=DY(\gamma_h)J$ and
-$\dot K=DY(\gamma_h)K+D^2Y(\gamma_h)[J,J]$.
-The derivatives of the initial point $(\arccos h,-\arccos h)$ are bounded for small $h$,
-$\|DY\|\le1$ and $D^2Y$ is bounded. Gronwall gives
-$|J|\le Ce^{|t|}$ and then $|K|\le Ce^{2|t|}$, also for negative time.
-The comparison with $d$ follows from Lemma~\ref{lem:orbit-saddle-distance}.
-For the second bound, variation of constants bounds the forcing term by
-$C\int_0^{|t|}e^{|t|-s}e^{2s}\,ds\le Ce^{2|t|}$.
-The joint-smoothness route, differentiation of the variational equations,
-and these estimates remain to be formalized; a general theorem on
-differentiable dependence of ODE flows is not required.
+\[
+  \dot J=DY(\gamma_h)J,\qquad
+  \dot K=DY(\gamma_h)K+D^2Y(\gamma_h)[J,J].
+\]
+The initial curve $(\arccos h,-\arccos h)$ is smooth near $[0,1/2]$,
+so there is $A\ge1$ bounding both initial derivatives there.
+Also $\|DY\|\le1$ and $|D^2Y[J,J]|\le|J|^2$.
+For fixed $t\in\R$, rescale time by $s\mapsto st$, $0\le s\le1$.
+Gronwall gives $|J(h,st)|\le Ae^{|t|s}$.
+
+For the second variation put $E(s)=A^2e^{2|t|s}$ and use the product
+norm on $Z(s)=(K(h,st),E(s))$. Then
+\[
+  |\partial_s K|\le|t|(|K|+E),\qquad E'=2|t|E,
+\]
+so $|Z'|\le2|t|\,|Z|$ and $|Z(0)|\le A^2$.
+A second homogeneous Gronwall estimate yields
+$|K(h,t)|\le A^2e^{2|t|}$. This avoids variation of constants and
+handles both time directions without dividing by $|t|$.
+In fact both exponential estimates hold for every real $t$ when
+$0<h<1/2$. On the quarter orbit the comparisons with $d$ follow from
+Lemma~\ref{lem:orbit-saddle-distance}. The variational equations and
+all these estimates are proved in Lean without admitted dependencies;
+a general ODE parameter-dependence theorem is not required.
 \end{proof}
 
 \begin{definition}[Recentered quarter-orbit times]
@@ -1764,9 +1782,11 @@ $h=10^{-2},\dots,10^{-6}$ (scratch computation, October 2026).
 \end{remark}
 
 \begin{remark}[Digest note]
-The derivative and gradient bounds are used throughout Chapter~\ref{chap:regularity} but
-are only asserted in the manuscript. A cleaner route may be the exact corner coordinates
-of Lemma~\ref{lem:corner-coordinates}, in which level sets are exact hyperbolas.
+The derivative and gradient bounds used throughout Chapter~\ref{chap:regularity}
+are only asserted in the manuscript. The level-derivative bounds are now proved
+in Lemma~\ref{lem:orbit-level-derivatives}, via the smooth orbit chart and
+variational equations. The inverse-time gradient bound still needs the
+Jacobian-inversion argument of Lemma~\ref{lem:orbit-coordinate-gradients}.
 \end{remark}
 
 \begin{definition}[Corner chart]

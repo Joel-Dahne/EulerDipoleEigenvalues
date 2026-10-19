@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.SeparatrixArc
 import Mathlib.Analysis.Calculus.ImplicitContDiff
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 import Mathlib.MeasureTheory.Function.Jacobian
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
@@ -12,9 +13,9 @@ Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
 `lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
 `lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`,
-`lem:orbit-saddle-distance`, `lem:period-coarse`, `lem:orbit-comparison`;
-stated: `lem:orbit-level-derivatives`,
-`lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
+`lem:orbit-saddle-distance`, `lem:period-coarse`, `lem:orbit-comparison`,
+`lem:orbit-level-derivatives`;
+stated: `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
 flow time `t` along the orbit `γ_h`, measured from its point `(a, b) = (0, arccos h)`. The
@@ -54,6 +55,16 @@ Grönwall compares the orbit with the separatrix at all real times. Applying it 
 The initial product-norm displacement is `arcsin h ≤ π * h / 2`; hence the
 all-time error is at most `(π * h / 2) * exp |t|`. The global period bound then gives
 `orbit_close_arc`, with constant `π * exp 2 / 2` on all levels `0 < h < 1`.
+
+The joint smoothness also justifies the first and second level variational equations:
+symmetry of the second Fréchet derivative interchanges level and time differentiation.
+Their initial values are uniformly bounded by compactness of the smooth initial curve
+`h ↦ (arccos h, -arccos h)` on `[0, 1/2]`. First Grönwall bounds `J` by `A * exp |t|`.
+For `K`, augment the variation by `E(s) = A² * exp (2 * |t| * s)` in the product norm;
+the forcing is bounded by `E`, and the augmented derivative is at most
+`2 * |t|` times the augmented norm. A second homogeneous Grönwall estimate gives the
+rate `exp (2 * |t|)` without variation of constants, including negative times.
+These estimates hold at all real times; saddle-distance comparisons restrict to a quarter.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 Periodicity identifies this integral with the half-open orbit window, without any
@@ -1680,6 +1691,280 @@ theorem orbit_close_arc : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, �
     _ ≤ (π / 2 * √h) * exp 2 := by gcongr
     _ = (π / 2 * exp 2) * √h := by ring
 
+/-! ### Level variations and their time equations -/
+
+private def orbitFirstVariation (q : ℝ × ℝ) : ℝ × ℝ :=
+  fderiv ℝ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) q (1, 0)
+
+private def orbitSecondVariation (q : ℝ × ℝ) : ℝ × ℝ :=
+  fderiv ℝ orbitFirstVariation q (1, 0)
+
+private theorem contDiffAt_orbitFirstVariation {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    ContDiffAt ℝ ∞ orbitFirstVariation (h, t) := by
+  exact ((contDiffAt_orbitMap hh).fderiv_right (m := ∞) (by simp)).clm_apply contDiffAt_const
+
+private theorem hasDerivAt_orbit_level {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    HasDerivAt (fun x ↦ dipoleOrbit x t) (orbitFirstVariation (h, t)) h :=
+  ((contDiffAt_orbitMap (t := t) hh).differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt h
+    (f := fun x ↦ (x, t)) ((hasDerivAt_id h).prodMk (hasDerivAt_const h t))
+
+private theorem hasDerivAt_orbitFirstVariation_level {h t : ℝ}
+    (hh : h ∈ Ioo (0 : ℝ) 1) :
+    HasDerivAt (fun x ↦ orbitFirstVariation (x, t)) (orbitSecondVariation (h, t)) h :=
+  ((contDiffAt_orbitFirstVariation (t := t) hh).differentiableAt
+    (by simp)).hasFDerivAt.comp_hasDerivAt h
+    (f := fun x ↦ (x, t)) ((hasDerivAt_id h).prodMk (hasDerivAt_const h t))
+
+/-- Symmetry of the second derivative interchanges the two scalar partial derivatives. -/
+private theorem hasDerivAt_partial_swap {F : ℝ × ℝ → ℝ × ℝ} {h t : ℝ}
+    (hF : ContDiffAt ℝ ∞ F (h, t)) :
+    HasDerivAt (fun s ↦ fderiv ℝ F (h, s) (1, 0))
+      (deriv (fun x ↦ fderiv ℝ F (x, t) (0, 1)) h) t := by
+  have hd := ((hF.fderiv_right (m := ∞) (by simp)).differentiableAt (by simp)).hasFDerivAt
+  have ht := (hd.comp_hasDerivAt t
+    ((hasDerivAt_const t h).prodMk (hasDerivAt_id t))).clm_apply
+      (hasDerivAt_const t ((1, 0) : ℝ × ℝ))
+  have hh := (hd.comp_hasDerivAt h
+    ((hasDerivAt_id h).prodMk (hasDerivAt_const h t))).clm_apply
+      (hasDerivAt_const h ((0, 1) : ℝ × ℝ))
+  simp only [map_zero, add_zero, Function.comp_def, id_eq] at ht hh
+  rw [hh.deriv]
+  rw [(hF.isSymmSndFDerivAt (by simp)) (1, 0) (0, 1)]
+  exact ht
+
+private theorem timeColumn_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    fderiv ℝ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) (h, t) (0, 1) =
+      dipoleVelocity (dipoleOrbit h t) := by
+  have hd := ((contDiffAt_orbitMap (t := t) hh).differentiableAt (by simp)).hasFDerivAt
+  exact (hd.comp_hasDerivAt t ((hasDerivAt_const t h).prodMk (hasDerivAt_id t))).unique
+    (hasDerivAt_dipoleFlow (arccos h, -arccos h) t)
+
+private theorem hasDerivAt_orbitFirstVariation_time {h t : ℝ}
+    (hh : h ∈ Ioo (0 : ℝ) 1) :
+    HasDerivAt (fun s ↦ orbitFirstVariation (h, s))
+      (cos (dipoleOrbit h t).2 * (orbitFirstVariation (h, t)).2,
+        -cos (dipoleOrbit h t).1 * (orbitFirstVariation (h, t)).1) t := by
+  have hd := hasDerivAt_partial_swap (contDiffAt_orbitMap (t := t) hh)
+  have he : (fun x ↦ fderiv ℝ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) (x, t) (0, 1))
+      =ᶠ[nhds h] (fun x ↦ dipoleVelocity (dipoleOrbit x t)) := by
+    filter_upwards [Ioo_mem_nhds hh.1 hh.2] with x hx
+    exact timeColumn_orbitMap hx
+  rw [he.deriv_eq] at hd
+  have hg := hasDerivAt_orbit_level (t := t) hh
+  have hx := hasFDerivAt_fst.comp_hasDerivAt h hg
+  have hy := hasFDerivAt_snd.comp_hasDerivAt h hg
+  have hv := hy.sin.prodMk hx.sin.neg
+  change HasDerivAt (fun x ↦ dipoleVelocity (dipoleOrbit x t)) _ h at hv
+  rw [hv.deriv] at hd
+  simpa [orbitFirstVariation, Function.comp_def, neg_mul] using hd
+
+private theorem hasDerivAt_orbitSecondVariation_time {h t : ℝ}
+    (hh : h ∈ Ioo (0 : ℝ) 1) :
+    HasDerivAt (fun s ↦ orbitSecondVariation (h, s))
+      (cos (dipoleOrbit h t).2 * (orbitSecondVariation (h, t)).2 -
+          sin (dipoleOrbit h t).2 * (orbitFirstVariation (h, t)).2 ^ 2,
+        -cos (dipoleOrbit h t).1 * (orbitSecondVariation (h, t)).1 +
+          sin (dipoleOrbit h t).1 * (orbitFirstVariation (h, t)).1 ^ 2) t := by
+  let B : ℝ × ℝ → ℝ × ℝ := fun q ↦
+    (cos (dipoleOrbit q.1 q.2).2 * (orbitFirstVariation q).2,
+      -cos (dipoleOrbit q.1 q.2).1 * (orbitFirstVariation q).1)
+  have hd := hasDerivAt_partial_swap (contDiffAt_orbitFirstVariation (t := t) hh)
+  have he : (fun x ↦ fderiv ℝ orbitFirstVariation (x, t) (0, 1))
+      =ᶠ[nhds h] (fun x ↦ B (x, t)) := by
+    filter_upwards [Ioo_mem_nhds hh.1 hh.2] with x hx
+    have hdx := ((contDiffAt_orbitFirstVariation (t := t) hx).differentiableAt
+      (by simp)).hasFDerivAt
+    exact (hdx.comp_hasDerivAt t
+      ((hasDerivAt_const t x).prodMk (hasDerivAt_id t))).unique
+        (hasDerivAt_orbitFirstVariation_time hx)
+  rw [he.deriv_eq] at hd
+  have hg := hasDerivAt_orbit_level (t := t) hh
+  have hj := hasDerivAt_orbitFirstVariation_level (t := t) hh
+  have hx := hasFDerivAt_fst.comp_hasDerivAt h hg
+  have hy := hasFDerivAt_snd.comp_hasDerivAt h hg
+  have hjx := hasFDerivAt_fst.comp_hasDerivAt h hj
+  have hjy := hasFDerivAt_snd.comp_hasDerivAt h hj
+  have hB := (hy.cos.mul hjy).prodMk (hx.cos.neg.mul hjx)
+  change HasDerivAt (fun x ↦ B (x, t)) _ h at hB
+  rw [hB.deriv] at hd
+  convert hd using 1 <;> ext <;> simp [orbitSecondVariation] <;> ring
+
+private theorem exists_initial_variation_bound : ∃ A : ℝ, 1 ≤ A ∧
+    ∀ h ∈ Ioo (0 : ℝ) (1 / 2),
+      ‖orbitFirstVariation (h, 0)‖ ≤ A ∧ ‖orbitSecondVariation (h, 0)‖ ≤ A := by
+  let g : ℝ → ℝ × ℝ := fun h ↦ (arccos h, -arccos h)
+  have hg : ContDiffOn ℝ ∞ g (Ioo (-1) 1) := by
+    intro h hh
+    have hc : ContDiffAt ℝ ∞ arccos h :=
+      contDiffAt_arccos (by linarith [hh.1]) (by linarith [hh.2])
+    exact (hc.prodMk hc.neg).contDiffWithinAt
+  have hg' := hg.deriv_of_isOpen isOpen_Ioo (m := ∞) (by simp)
+  have hg'' := hg'.deriv_of_isOpen isOpen_Ioo (m := ∞) (by simp)
+  have hsub : Icc (0 : ℝ) (1 / 2) ⊆ Ioo (-1) 1 := by
+    intro h hh; constructor <;> linarith [hh.1, hh.2]
+  obtain ⟨M, hM⟩ := isCompact_Icc.exists_bound_of_continuousOn
+    ((hg'.continuousOn.prodMk hg''.continuousOn).mono hsub)
+  refine ⟨max 1 M, le_max_left _ _, ?_⟩
+  intro h hh
+  have hh' : h ∈ Ioo (0 : ℝ) 1 := ⟨hh.1, by linarith [hh.2]⟩
+  have hJ : ∀ x ∈ Ioo (0 : ℝ) 1, orbitFirstVariation (x, 0) = deriv g x := by
+    intro x hx
+    have hd := hasDerivAt_orbit_level (t := 0) hx
+    simpa only [dipoleOrbit, dipoleFlow_zero, g] using hd.deriv.symm
+  have hK : orbitSecondVariation (h, 0) = deriv (deriv g) h := by
+    rw [← (hasDerivAt_orbitFirstVariation_level (t := 0) hh').deriv]
+    apply Filter.EventuallyEq.deriv_eq
+    filter_upwards [Ioo_mem_nhds hh'.1 hh'.2] with x hx
+    exact hJ x hx
+  have hb := hM h ⟨hh.1.le, hh.2.le⟩
+  rw [Prod.norm_def] at hb
+  rw [hJ h hh', hK]
+  exact ⟨(le_max_left _ _).trans (hb.trans (le_max_right _ _)),
+    (le_max_right _ _).trans (hb.trans (le_max_right _ _))⟩
+
+private theorem norm_variation_linear_le (p v : ℝ × ℝ) :
+    ‖(cos p.2 * v.2, -cos p.1 * v.1)‖ ≤ ‖v‖ := by
+  simp only [Prod.norm_def, Real.norm_eq_abs, abs_mul, abs_neg]
+  apply max_le
+  · exact (mul_le_mul_of_nonneg_right (abs_cos_le_one _) (abs_nonneg _)).trans
+      (by simp)
+  · exact (mul_le_mul_of_nonneg_right (abs_cos_le_one _) (abs_nonneg _)).trans
+      (by simp)
+
+private theorem norm_orbitFirstVariation_le {h : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) (t : ℝ) :
+    ‖orbitFirstVariation (h, t)‖ ≤ ‖orbitFirstVariation (h, 0)‖ * exp |t| := by
+  let f : ℝ → ℝ × ℝ := fun s ↦ orbitFirstVariation (h, s * t)
+  let f' : ℝ → ℝ × ℝ := fun s ↦ t •
+    (cos (dipoleOrbit h (s * t)).2 * (orbitFirstVariation (h, s * t)).2,
+      -cos (dipoleOrbit h (s * t)).1 * (orbitFirstVariation (h, s * t)).1)
+  have hd : ∀ s, HasDerivAt f (f' s) s := by
+    intro s
+    simpa only [f, f', one_mul, Function.comp_def, id_eq] using
+      (hasDerivAt_orbitFirstVariation_time (t := s * t) hh).scomp s
+        ((hasDerivAt_id s).mul_const t)
+  have hb : ∀ s, ‖f' s‖ ≤ |t| * ‖f s‖ + 0 := by
+    intro s
+    simpa only [f', f, norm_smul, Real.norm_eq_abs, add_zero] using
+      mul_le_mul_of_nonneg_left
+        (norm_variation_linear_le (dipoleOrbit h (s * t)) (orbitFirstVariation (h, s * t)))
+        (abs_nonneg t)
+  have hg := norm_le_gronwallBound_of_norm_deriv_right_le
+    (f := f) (f' := f') (δ := ‖orbitFirstVariation (h, 0)‖) (K := |t|) (ε := 0)
+    (show ContinuousOn f (Icc 0 1) from fun s _ ↦ (hd s).continuousAt.continuousWithinAt)
+    (fun s _ ↦ (hd s).hasDerivWithinAt) (by simp [f]) (fun s _ ↦ hb s)
+    1 (by norm_num)
+  simpa only [f, one_mul, gronwallBound_ε0, sub_zero, mul_one] using hg
+
+private theorem norm_variation_second_rhs_le (p v w : ℝ × ℝ) :
+    ‖(cos p.2 * w.2 - sin p.2 * v.2 ^ 2,
+        -cos p.1 * w.1 + sin p.1 * v.1 ^ 2)‖ ≤ ‖w‖ + ‖v‖ ^ 2 := by
+  have hforce : ‖(-sin p.2 * v.2 ^ 2, sin p.1 * v.1 ^ 2)‖ ≤ ‖v‖ ^ 2 := by
+    have hv1 : |v.1| ≤ ‖v‖ := by rw [Prod.norm_def, Real.norm_eq_abs]; exact le_max_left _ _
+    have hv2 : |v.2| ≤ ‖v‖ := by rw [Prod.norm_def, Real.norm_eq_abs]; exact le_max_right _ _
+    simp only [Prod.norm_def, Real.norm_eq_abs, abs_mul, abs_neg, abs_pow, sq_abs]
+    apply max_le
+    · calc |sin p.2| * v.2 ^ 2 ≤ 1 * v.2 ^ 2 :=
+            mul_le_mul_of_nonneg_right (abs_sin_le_one _) (sq_nonneg _)
+           _ ≤ ‖v‖ ^ 2 := by nlinarith [sq_abs v.2, mul_self_le_mul_self (abs_nonneg _) hv2]
+    · calc |sin p.1| * v.1 ^ 2 ≤ 1 * v.1 ^ 2 :=
+            mul_le_mul_of_nonneg_right (abs_sin_le_one _) (sq_nonneg _)
+           _ ≤ ‖v‖ ^ 2 := by nlinarith [sq_abs v.1, mul_self_le_mul_self (abs_nonneg _) hv1]
+  have he : (cos p.2 * w.2 - sin p.2 * v.2 ^ 2, -cos p.1 * w.1 + sin p.1 * v.1 ^ 2) =
+      (cos p.2 * w.2, -cos p.1 * w.1) + (-sin p.2 * v.2 ^ 2, sin p.1 * v.1 ^ 2) := by
+    ext <;> dsimp
+    ring
+  rw [he]
+  exact (norm_add_le _ _).trans (add_le_add (norm_variation_linear_le p w) hforce)
+
+/-- Augmenting the second variation by its exponential forcing gives a homogeneous
+Grönwall inequality with rate two in the product norm. -/
+private theorem norm_orbitSecondVariation_le {h A : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (hA : 1 ≤ A) (hJ0 : ‖orbitFirstVariation (h, 0)‖ ≤ A)
+    (hK0 : ‖orbitSecondVariation (h, 0)‖ ≤ A) (t : ℝ) :
+    ‖orbitSecondVariation (h, t)‖ ≤ A ^ 2 * exp (2 * |t|) := by
+  let E : ℝ → ℝ := fun s ↦ A ^ 2 * exp (2 * |t| * s)
+  let R : ℝ → ℝ × ℝ := fun s ↦
+    (cos (dipoleOrbit h (s * t)).2 * (orbitSecondVariation (h, s * t)).2 -
+        sin (dipoleOrbit h (s * t)).2 * (orbitFirstVariation (h, s * t)).2 ^ 2,
+      -cos (dipoleOrbit h (s * t)).1 * (orbitSecondVariation (h, s * t)).1 +
+        sin (dipoleOrbit h (s * t)).1 * (orbitFirstVariation (h, s * t)).1 ^ 2)
+  let f : ℝ → (ℝ × ℝ) × ℝ := fun s ↦ (orbitSecondVariation (h, s * t), E s)
+  let f' : ℝ → (ℝ × ℝ) × ℝ := fun s ↦ (t • R s, 2 * |t| * E s)
+  have hE : ∀ s, 0 ≤ E s := fun s ↦ mul_nonneg (sq_nonneg _) (exp_pos _).le
+  have hd : ∀ s, HasDerivAt f (f' s) s := by
+    intro s
+    have hdK : HasDerivAt (fun s ↦ orbitSecondVariation (h, s * t)) (t • R s) s := by
+      simpa only [R, one_mul, Function.comp_def, id_eq] using
+        (hasDerivAt_orbitSecondVariation_time (t := s * t) hh).scomp s
+          ((hasDerivAt_id s).mul_const t)
+    have hdE : HasDerivAt E (2 * |t| * E s) s := by
+      convert (((hasDerivAt_id s).const_mul (2 * |t|)).exp.const_mul (A ^ 2)) using 1 <;>
+        dsimp [E]
+      ring
+    exact hdK.prodMk hdE
+  have hJ2 : ∀ s, 0 ≤ s → ‖orbitFirstVariation (h, s * t)‖ ^ 2 ≤ E s := by
+    intro s hs
+    have hJ := (norm_orbitFirstVariation_le hh (s * t)).trans
+      (mul_le_mul_of_nonneg_right hJ0 (exp_pos _).le)
+    rw [pow_two]
+    apply (mul_self_le_mul_self (norm_nonneg _) hJ).trans_eq
+    calc (A * exp |s * t|) * (A * exp |s * t|) =
+        A ^ 2 * exp (|s * t| + |s * t|) := by rw [exp_add]; ring
+      _ = E s := by rw [abs_mul, abs_of_nonneg hs]; dsimp [E]; congr 2; ring
+  have hb : ∀ s ∈ Ico (0 : ℝ) 1, ‖f' s‖ ≤ (2 * |t|) * ‖f s‖ + 0 := by
+    intro s hs
+    have hKle : ‖orbitSecondVariation (h, s * t)‖ ≤ ‖f s‖ := by
+      exact le_max_left _ _
+    have hEle : E s ≤ ‖f s‖ := by
+      exact (le_abs_self _).trans (le_max_right _ _)
+    have hR : ‖R s‖ ≤ ‖orbitSecondVariation (h, s * t)‖ + E s :=
+      (norm_variation_second_rhs_le _ _ _).trans (add_le_add le_rfl (hJ2 s hs.1))
+    change max ‖t • R s‖ ‖2 * |t| * E s‖ ≤ (2 * |t|) * ‖f s‖ + 0
+    rw [add_zero]
+    apply max_le
+    · rw [norm_smul, Real.norm_eq_abs]
+      apply (mul_le_mul_of_nonneg_left hR (abs_nonneg t)).trans
+      nlinarith [mul_le_mul_of_nonneg_left (add_le_add hKle hEle) (abs_nonneg t)]
+    · rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+      exact mul_le_mul_of_nonneg_left hEle (by positivity)
+  have hA2 : A ≤ A ^ 2 := by nlinarith
+  have hi : ‖f 0‖ ≤ A ^ 2 := by
+    change max ‖orbitSecondVariation (h, 0 * t)‖ |E 0| ≤ A ^ 2
+    simp only [zero_mul, E, mul_zero, exp_zero, mul_one, abs_of_nonneg (sq_nonneg A)]
+    exact max_le (hK0.trans hA2) le_rfl
+  have hg := norm_le_gronwallBound_of_norm_deriv_right_le
+    (f := f) (f' := f') (δ := A ^ 2) (K := 2 * |t|) (ε := 0)
+    (show ContinuousOn f (Icc 0 1) from fun s _ ↦ (hd s).continuousAt.continuousWithinAt)
+    (fun s _ ↦ (hd s).hasDerivWithinAt) hi hb 1 (by norm_num)
+  have hKle : ‖orbitSecondVariation (h, t)‖ ≤ ‖f 1‖ := by
+    simpa only [f, one_mul, Prod.norm_def] using
+      le_max_left ‖orbitSecondVariation (h, 1 * t)‖ ‖E 1‖
+  exact hKle.trans (by simpa only [gronwallBound_ε0, sub_zero, mul_one] using hg)
+
+/-- Both level-derivative estimates hold at every real time, uniformly on `0 < h < 1/2`. -/
+theorem deriv_dipoleOrbit_level_le_all_time : ∃ C : ℝ, ∀ h ∈ Ioo (0 : ℝ) (1 / 2), ∀ t,
+    DifferentiableAt ℝ (fun h' ↦ dipoleOrbit h' t) h ∧
+    ‖deriv (fun h' ↦ dipoleOrbit h' t) h‖ ≤ C * exp |t| ∧
+    DifferentiableAt ℝ (fun h' ↦ deriv (fun h'' ↦ dipoleOrbit h'' t) h') h ∧
+    ‖deriv (fun h' ↦ deriv (fun h'' ↦ dipoleOrbit h'' t) h') h‖ ≤ C * exp (2 * |t|) := by
+  obtain ⟨A, hA, hinit⟩ := exists_initial_variation_bound
+  refine ⟨A ^ 2, ?_⟩
+  intro h hh t
+  have hh' : h ∈ Ioo (0 : ℝ) 1 := ⟨hh.1, by linarith [hh.2]⟩
+  obtain ⟨hJ0, hK0⟩ := hinit h hh
+  have hg := hasDerivAt_orbit_level (t := t) hh'
+  have hd2 : HasDerivAt (fun x ↦ deriv (fun y ↦ dipoleOrbit y t) x)
+      (orbitSecondVariation (h, t)) h := by
+    apply (hasDerivAt_orbitFirstVariation_level (t := t) hh').congr_of_eventuallyEq
+    filter_upwards [Ioo_mem_nhds hh'.1 hh'.2] with x hx
+    exact (hasDerivAt_orbit_level (t := t) hx).deriv
+  refine ⟨hg.differentiableAt, ?_, hd2.differentiableAt, ?_⟩
+  · rw [hg.deriv]
+    exact (norm_orbitFirstVariation_le hh' t).trans
+      (mul_le_mul_of_nonneg_right (hJ0.trans (by nlinarith : A ≤ A ^ 2)) (exp_pos _).le)
+  · rw [hd2.deriv]
+    exact norm_orbitSecondVariation_le hh' hA hJ0 hK0 t
+
 /-- `|∂_h γ_h(t)| ≤ C e^{|t|}` and `|∂_h² γ_h(t)| ≤ C e^{2|t|}` on the quarter orbit. -/
 theorem deriv_dipoleOrbit_level_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t,
     |t| ≤ eighthPeriod h →
@@ -1687,7 +1972,49 @@ theorem deriv_dipoleOrbit_level_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Io
       ‖deriv (fun h' ↦ dipoleOrbit h' t) h‖ ≤ C * exp |t| ∧
       DifferentiableAt ℝ (fun h' ↦ deriv (fun h'' ↦ dipoleOrbit h'' t) h') h ∧
       ‖deriv (fun h' ↦ deriv (fun h'' ↦ dipoleOrbit h'' t) h') h‖ ≤ C * exp (2 * |t|) := by
-  sorry
+  obtain ⟨C, hC⟩ := deriv_dipoleOrbit_level_le_all_time
+  exact ⟨C, 1 / 2, by norm_num, fun h hh t _ ↦ hC h hh t⟩
+
+/-- On a quarter orbit the level-derivative bounds can be expressed as `C/d` and `C/d²`. -/
+theorem deriv_dipoleOrbit_level_le_saddleDist : ∃ C h₀ : ℝ, 0 < h₀ ∧ h₀ < 1 ∧
+    ∀ h ∈ Ioo 0 h₀, ∀ t, |t| ≤ eighthPeriod h →
+      ‖deriv (fun x ↦ dipoleOrbit x t) h‖ ≤ C / saddleDist (dipoleOrbit h t) ∧
+      ‖deriv (fun x ↦ deriv (fun y ↦ dipoleOrbit y t) x) h‖ ≤
+        C / saddleDist (dipoleOrbit h t) ^ 2 := by
+  obtain ⟨C₀, hC₀⟩ := deriv_dipoleOrbit_level_le_all_time
+  obtain ⟨c, B, h₁, hc, hh₁, hB⟩ := saddleDist_dipoleOrbit
+  let D := max 0 C₀
+  let M := max 0 B
+  have hD : 0 ≤ D := le_max_left _ _
+  refine ⟨max (D * M) (D * M ^ 2), min (1 / 2) h₁,
+    lt_min (by norm_num) hh₁, lt_of_le_of_lt (min_le_left _ _) (by norm_num), ?_⟩
+  intro h hh t ht
+  have hhsmall : h ∈ Ioo (0 : ℝ) (1 / 2) := ⟨hh.1, hh.2.trans_le (min_le_left _ _)⟩
+  obtain ⟨_, hJ, _, hK⟩ := hC₀ h hhsmall t
+  obtain ⟨hlo, hhi⟩ := hB h ⟨hh.1, hh.2.trans_le (min_le_right _ _)⟩ t ht
+  let d := saddleDist (dipoleOrbit h t)
+  have hd : 0 < d := (mul_pos hc (exp_pos _)).trans_le hlo
+  have he : exp |t| ≤ M / d := by
+    apply (le_div_iff₀ hd).2
+    calc exp |t| * d ≤ exp |t| * (B * exp (-|t|)) :=
+          mul_le_mul_of_nonneg_left hhi (exp_pos _).le
+      _ = B := by rw [mul_left_comm, ← exp_add, add_neg_cancel, exp_zero, mul_one]
+      _ ≤ M := le_max_right _ _
+  constructor
+  · calc ‖deriv (fun x ↦ dipoleOrbit x t) h‖ ≤ D * exp |t| :=
+          hJ.trans (mul_le_mul_of_nonneg_right (le_max_right _ _) (exp_pos _).le)
+      _ ≤ D * (M / d) := mul_le_mul_of_nonneg_left he hD
+      _ = (D * M) / d := (mul_div_assoc _ _ _).symm
+      _ ≤ max (D * M) (D * M ^ 2) / d :=
+          div_le_div_of_nonneg_right (le_max_left _ _) hd.le
+  · calc ‖deriv (fun x ↦ deriv (fun y ↦ dipoleOrbit y t) x) h‖ ≤ D * exp (2 * |t|) :=
+          hK.trans (mul_le_mul_of_nonneg_right (le_max_right _ _) (exp_pos _).le)
+      _ = D * (exp |t|) ^ 2 := by rw [pow_two, ← exp_add]; congr 1; congr 1; ring
+      _ ≤ D * (M / d) ^ 2 := mul_le_mul_of_nonneg_left
+          (by nlinarith [mul_self_le_mul_self (exp_pos |t|).le he]) hD
+      _ = (D * M ^ 2) / d ^ 2 := by rw [div_pow, mul_div_assoc]
+      _ ≤ max (D * M) (D * M ^ 2) / d ^ 2 :=
+          div_le_div_of_nonneg_right (le_max_right _ _) (sq_nonneg _)
 
 /-- `|∇h| ≤ C d` on the cell. -/
 theorem gradNorm_le_saddleDist :
