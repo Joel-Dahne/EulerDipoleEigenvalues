@@ -876,7 +876,8 @@ assumption on $f$ or $g$.
 \label{lem:coarea-level-cutoff}
 \uses{def:level-integral, def:cells}
 \lean{NoEmbeddedEigenvalues.integrableOn_levelIntegral,
-  NoEmbeddedEigenvalues.integral_cellSquare_level_mul}
+  NoEmbeddedEigenvalues.integral_cellSquare_level_mul,
+  NoEmbeddedEigenvalues.levelIntegral_eq_integral_orbitWindow}
 \leanok
 Let $0<a\le b<1$ and let $F$ be integrable on $\{2a\le\Psi\le2b\}\cap\Cell$. Then
 $h\mapsto\oint_{\{\Psi=2h\}}F\,dt$ is integrable on $[a,b]$, and for every bounded measurable
@@ -888,15 +889,22 @@ $\varphi$ vanishing outside $[a,b]$,
 
 \begin{proof}
 \uses{lem:orbit-coordinates-area, lem:period-orbit}
+\leanok
 First replace $F$ by its truncation $G$ to the closed level band,
-extended by zero in the rest of the cell. Then $G$ and $|G|$ are
-integrable on the cell. The integrable area formula of
-Lemma~\ref{lem:orbit-coordinates-area}, together with
-$|\int G\,dt|\le\int|G|\,dt$, gives integrability of the level integral.
-Apply the formula again to $\varphi(\Psi/2)G$ and use
-$\Psi(\gamma_h(t))=2h$. The time window $[-2L,6L)$ is one period, so
-its integral equals the level integral over $[0,S)$.
-On $[a,b]$ the truncation does not change the restrictions to levels.
+extended by zero in the rest of the cell. The area change of variables
+transfers integrability to the orbit domain. Extend this pullback by zero
+outside that domain and apply Fubini: its time integral is integrable in
+$h\in(0,1)$. Periodicity identifies the integral over $[-2L,6L)$ with
+that over $[0,S)$; this identity itself needs no integrability hypothesis.
+On $[a,b]$ the truncation does not change the restriction to a level,
+so the claimed level integral is integrable there.
+
+The bounded measurable multiplier makes $\varphi(\Psi/2)G$ integrable
+on the cell, and the support assumption identifies it with
+$\varphi(\Psi/2)F$. Apply the area formula to this product and use
+$\Psi(\gamma_h(t))=2h$ to pull out $\varphi(h)$. Periodicity changes
+the time window as above, and the support of $\varphi$ restricts the
+outer integral to $[a,b]$.
 \end{proof}
 
 \begin{definition}[Action-angle coordinates]
@@ -1039,7 +1047,8 @@ cut. Apply the forward chain rule to it and cancel the positive period.
   NoEmbeddedEigenvalues.integrableOn_levelBand_of_comp_actionAngleInv,
   NoEmbeddedEigenvalues.locallyIntegrableOn_of_comp_actionAngleInv,
   NoEmbeddedEigenvalues.locallyIntegrableOn_actionAngleInv_iff,
-  NoEmbeddedEigenvalues.locallyIntegrableOn_period_mul_actionAngleInv_iff}
+  NoEmbeddedEigenvalues.locallyIntegrableOn_period_mul_actionAngleInv_iff,
+  NoEmbeddedEigenvalues.locallyIntegrableOn_comp_actionAngle}
 \leanok
 For arbitrary representatives $u,k$ on the punctured cell,
 \[
@@ -1049,6 +1058,8 @@ For arbitrary representatives $u,k$ on the punctured cell,
 \]
 and $k$ is locally integrable on the punctured cell if and only if
 $S(h)k(P(h,\theta))$ is locally integrable on the strip.
+Conversely, any locally integrable $1$-periodic strip function $F$
+descends to a locally integrable $F\circ(h,\theta)$ on the punctured cell.
 More precisely, put
 \[
   B_{a,b}=\{p\in\Cell\setminus\{0\}:a\le h(p)\le b\},\qquad
@@ -1131,54 +1142,161 @@ All products used here are integrable because a locally integrable
 function is multiplied by a compactly supported test function.
 \end{proof}
 
-\begin{lemma}[Weak derivatives in action-angle coordinates]
-\label{lem:action-angle-weak}
-\uses{def:action-angle, def:transport-pair, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.hasWeakL0On_iff_actionAngle,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngle}
+\begin{lemma}[Local integrability of the pulled-back gradient]
+\label{lem:action-angle-gradient-local-integrability}
+\uses{def:action-angle}
+\lean{NoEmbeddedEigenvalues.locallyIntegrableOn_actionAngleInv_gradient}
 \leanok
-Write $U=u\circ P$ for functions $u$ on the punctured cell.
-\begin{enumerate}
-  \item $L_0u=k$ weakly on the punctured cell if and only if $\partial_\theta U=S(h)\,K$
-    weakly on the strip.
-  \item If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then
-    $\partial_jU=(\partial_jP_1)\,g_x\circ P+(\partial_jP_2)\,g_y\circ P$ weakly on the strip
-    ($j=h,\theta$).
-  \item If $F$ on the strip is $1$-periodic in $\theta$ with weak derivatives $F_h,F_\theta$, then
-    $\partial_j\bigl(F(h,\theta)\bigr)=(\partial_jh)\,F_h(h,\theta)+(\partial_j\theta)\,F_\theta(h,\theta)$
-    weakly on the punctured cell ($j=x,y$), where $\partial_j\theta$ is the classical derivative
-    off the cut.
-\end{enumerate}
+If $g_x,g_y$ are locally integrable on the punctured cell, then, for
+$j=h,\theta$,
+\[
+  (\partial_jP_1)\,g_x\circ P+(\partial_jP_2)\,g_y\circ P
+    \in L^1_{\mathrm{loc}}((0,1)\times\R).
+\]
+No weak derivative hypothesis is needed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-transport, lem:action-angle-chart, lem:action-angle-test-chain,
-  lem:action-angle-local-integrability, lem:weak-derivative-basic, lem:localization-cutoff}
-Part (1) is Lemma~\ref{lem:action-angle-transport}.
-For (2) and (3), weak derivatives are local, so use a partition of unity
-on coordinate windows on which $P$ is a diffeomorphism. Approximate
-locally in $W^{1,1}$, with the function and its first weak derivatives
-converging in $L^1$, and pass to the limit in the classical chain rule.
-The smooth coordinate derivatives and Jacobians are bounded on compact
-windows. Periodicity identifies the results across the angular seams.
+\uses{lem:action-angle-regularity, lem:action-angle-local-integrability}
+\leanok
+Pull back each $g_i$ using the local-integrability equivalence. The
+coordinate derivatives of $P$ are continuous on the strip, hence
+bounded on compact subsets. Multiplication by these coefficients and
+addition preserve local integrability.
 \end{proof}
 
-\begin{remark}[Digest note: the topology in the weak chain rule]
-The statements assume only local integrability, not local square
-integrability. The earlier proof sketch invoked $H^1$ approximation,
-which is not justified under these hypotheses. For the full weak chain
-rules (2)--(3), the appropriate approximation is local $W^{1,1}$.
-For (1) only the transport derivative is known, so use changes of test
-functions directly, not an assumed full Sobolev gradient. The classical
-test-function rules and local-integrability equivalences above are now
-proved in Lean. For (1), the compact/periodic test transfer and the angular
-seam are now handled by Lemma~\ref{lem:action-angle-transport}, without a
-partition of unity on the cell. The full weak-gradient rules (2)--(3)
-and their coordinate-window gluing remain admitted. For the virial
-application, $H^1$ data on compact level bands suffice; a specialized
-version could avoid building the full locally $W^{1,1}$ approximation
-infrastructure needed by the general statements.
+\begin{lemma}[The angular weak chain rule]
+\label{lem:action-angle-weak-angular}
+\uses{def:action-angle, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv_snd}
+\leanok
+If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then
+\[
+  \partial_\theta(u\circ P)
+    =(\partial_\theta P_1)\,g_x\circ P
+      +(\partial_\theta P_2)\,g_y\circ P
+\]
+weakly on the strip.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-gradient-transport, lem:action-angle-transport, lem:action-angle-chart}
+\leanok
+The weak partial derivatives give
+$L_0u=\sin y\,g_x-\sin x\,g_y$ weakly. Apply
+Lemma~\ref{lem:action-angle-transport} and use
+$\partial_\theta P=S(h)Y(P)$. This proves the rule without approximation
+or an assumption of local square integrability.
+\end{proof}
+
+\begin{lemma}[The level weak chain rule]
+\label{lem:action-angle-weak-level}
+\uses{def:action-angle, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv_fst}
+\leanok
+If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then
+\[
+  \partial_h(u\circ P)=(\partial_hP_1)\,g_x\circ P
+    +(\partial_hP_2)\,g_y\circ P
+\]
+weakly on the strip.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-gradient-local-integrability,
+  lem:action-angle-local-integrability, lem:action-angle-chart,
+  lem:weak-derivative-basic, lem:lift-calculus, lem:angular-periodization}
+The function and proposed derivative are locally integrable by the
+preceding lemmas; these parts are proved in Lean. The test identity
+remains to be formalized.
+
+A direct test-function route is available. Write $\rho(h)=2S(h)$ and
+define the periodic coordinate field
+\[
+  B(P(h,\theta))=\rho(h)^{-1}\partial_hP(h,\theta).
+\]
+In a smooth local lift of the angle, inversion of the coordinate
+Jacobian gives $B=(\partial_y\theta,-\partial_x\theta)$, so
+$\operatorname{div}B=0$ by symmetry of mixed derivatives. These local
+expressions agree across seams because the angle lifts differ by
+constants. Periodize a compact strip test $\varphi$ in $\theta$ and
+pull the result back to a cell test $\psi$. Test the two weak partial
+identities with $B_1\psi$ and $B_2\psi$, extended by zero off their
+compact band. Summing cancels the divergence term:
+\[
+  \int u\,B\cdot\nabla\psi=-\int (B_1g_x+B_2g_y)\psi.
+\]
+Change variables using $dx\,dy=\rho\,dh\,d\theta$; the factor
+$\rho^{-1}$ cancels. Unfolding the angular periodization gives the
+desired strip test identity. Construction of this field and the
+test-function transfer are not yet implemented in Lean.
+\end{proof}
+
+\begin{lemma}[Weak derivatives pulled back to action-angle coordinates]
+\label{lem:action-angle-weak}
+\uses{def:action-angle, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv}
+\leanok
+If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then, for
+$j=h,\theta$,
+\[
+  \partial_j(u\circ P)=(\partial_jP_1)\,g_x\circ P
+    +(\partial_jP_2)\,g_y\circ P
+\]
+weakly on the strip.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-weak-angular, lem:action-angle-weak-level}
+\leanok
+These are the two preceding directional rules. The Lean assembly has
+no admission of its own; the level-direction rule is still admitted.
+\end{proof}
+
+\begin{lemma}[Weak derivatives descending to the cell]
+\label{lem:action-angle-weak-cell}
+\uses{def:action-angle, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngle}
+\leanok
+If $F$ on the strip is $1$-periodic in $\theta$, with weak derivatives
+$G_h,G_\theta$, then, for $j=x,y$,
+\[
+  \partial_j(F\circ(h,\theta))
+    =(\partial_jh)\,G_h\circ(h,\theta)
+      +(\partial_j\theta)\,G_\theta\circ(h,\theta)
+\]
+weakly on the punctured cell. The classical derivatives of $\theta$
+are taken off its cut; values on the cut are irrelevant.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:action-angle-local-integrability,
+  lem:weak-derivative-basic, lem:localization-cutoff}
+The pullback of $F$ is locally integrable; this part is proved in Lean.
+For the full weak identity, one route is to work on coordinate windows
+and approximate locally in $W^{1,1}$, passing to the limit in the
+classical chain rule. Coordinate derivatives and Jacobians are bounded
+on compact windows. Periodicity supplies seam compatibility. The
+derivative integrability, test identity and gluing remain unformalized.
+\end{proof}
+
+\begin{remark}[Digest note: the topology and scope of the weak chain rules]
+The statements assume only local integrability. The earlier sketch
+invoked $H^1$ approximation, which is not justified; an approximation
+proof would need local $W^{1,1}$. This does not mean approximation is
+necessary. The angular rule is now proved directly from weak transport,
+independently of either remaining admission. The level rule has the
+direct divergence-free test route described above, which may avoid
+density machinery altogether.
+
+The old node bundled the already proved transport equivalence with
+both full-gradient directions. These are now separate: transport is
+Lemma~\ref{lem:action-angle-transport}, the forward angular and level
+rules are Lemmas~\ref{lem:action-angle-weak-angular}
+and~\ref{lem:action-angle-weak-level}, and descent to the cell is
+Lemma~\ref{lem:action-angle-weak-cell}. Only the last two are still
+admitted. The level-field construction and the reverse seam gluing
+remain implementation tasks, not completed Lean proofs.
 \end{remark}
 
 \begin{definition}[Normal and tangential derivatives]

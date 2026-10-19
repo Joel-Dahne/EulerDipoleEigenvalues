@@ -12,8 +12,10 @@ Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (pro
 also from the full weak-gradient chain rules);
 `lem:action-angle-test-chain`, `lem:action-angle-local-integrability` (proved from
 chart/coarea inputs; the forward classical chain rule has no admitted dependency);
-`lem:action-angle-transport` (proved from chart/coarea inputs);
-stated: the full weak-gradient rules in `lem:action-angle-weak`.
+`lem:action-angle-transport`, `lem:action-angle-gradient-local-integrability` and
+`lem:action-angle-weak-angular` (proved without admissions);
+`lem:action-angle-weak` is assembled from the angular rule and the admitted
+`lem:action-angle-weak-level`; `lem:action-angle-weak-cell` remains admitted.
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -38,8 +40,12 @@ on a closed interior level band compare the weighted and unweighted measures. In
 translates of the fundamental window handle all angular seams. The classical transport
 chain rules are also proved, including the reverse rule for smooth periodic strip tests.
 Angular test periodization and a compact angular partition of unity give both directions
-of `hasWeakL0On_iff_actionAngle`. Only the two full weak-gradient chain rules remain
-admitted in the action-angle interface.
+of `hasWeakL0On_iff_actionAngle`. The angular full-gradient chain rule is then a
+consequence of `HasWeakPartialOn.hasWeakL0On` (in `Transport.lean`) and that transport
+rule, using `∂_θ P = S Y`. Local integrability of the candidate pullback gradient follows
+separately from smoothness of `P` and local `L¹` transfer. The remaining forward gap is
+only the level-direction test identity; the reverse weak-gradient rule also remains
+admitted. No local `W¹,¹` approximation theorem is assumed proved.
 
 The commutator `transversalMollifier_hasWeakL0On` uses only the transport chain rule: the
 level cutoff carries `∂_θ U = S K` from the strip to the plane, `∂_θ` commutes with `M_ε`,
@@ -78,27 +84,6 @@ theorem partialY_comp_actionAngleInv {φ : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
     ← map_smul, ← map_smul, ← map_sub]
   congr 1
   ext <;> simp [dipoleVelocity]
-
-/-! ### Full weak-gradient chain rules (`lem:action-angle-weak`, stated) -/
-
-/-- The chain rule for weak derivatives from the cell to the strip. -/
-theorem HasWeakPartialOn.comp_actionAngleInv {u : ℝ × ℝ → ℂ} {g : Fin 2 → ℝ × ℝ → ℂ}
-    (hg : ∀ i, HasWeakPartialOn puncturedCell i u (g i)) (j : Fin 2) :
-    HasWeakPartialOn actionStrip j (u ∘ actionAngleInv) (fun q ↦
-      ((coordPartial j (fun q ↦ (actionAngleInv q).1) q : ℝ) : ℂ) * g 0 (actionAngleInv q) +
-        ((coordPartial j (fun q ↦ (actionAngleInv q).2) q : ℝ) : ℂ) * g 1 (actionAngleInv q)) := by
-  sorry
-
-/-- The chain rule for weak derivatives from the strip to the cell, for functions that are
-    `1`-periodic in `θ`. The angle jumps across its cut, a null set, where its partial
-    derivatives are irrelevant. -/
-theorem HasWeakPartialOn.comp_actionAngle {F : ℝ × ℝ → ℂ} {G : Fin 2 → ℝ × ℝ → ℂ}
-    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q)
-    (hG : ∀ i, HasWeakPartialOn actionStrip i F (G i)) (j : Fin 2) :
-    HasWeakPartialOn puncturedCell j (F ∘ actionAngle) (fun p ↦
-      ((coordPartial j levelCoord p : ℝ) : ℂ) * G 0 (actionAngle p) +
-        ((coordPartial j angleCoord p : ℝ) : ℂ) * G 1 (actionAngle p)) := by
-  sorry
 
 /-! ### The mollifier (`def:transversal-mollifier`) -/
 
@@ -1264,6 +1249,115 @@ theorem hasWeakL0On_iff_actionAngle {u k : ℝ × ℝ → ℂ} :
         (fun q ↦ (orbitPeriod q.1 : ℂ) * k (actionAngleInv q)) :=
   ⟨HasWeakL0On.comp_actionAngleInv, hasWeakL0On_of_actionAngle⟩
 
+/-! ### Full weak-gradient chain rules -/
+
+private theorem continuousOn_coordPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {f : ℝ × ℝ → E} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    (hf : ContDiffOn ℝ ∞ f U) (j : Fin 2) : ContinuousOn (coordPartial j f) U := by
+  have hd := (hf.continuousOn_fderiv_of_isOpen hU (by simp)).clm_apply
+    (continuousOn_const (c := if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)))
+  refine hd.congr fun p hp ↦ ?_
+  have hdiff : DifferentiableAt ℝ f p :=
+    (hf.contDiffAt (hU.mem_nhds hp)).differentiableAt (by simp)
+  unfold coordPartial
+  split_ifs
+  · exact partialX_eq_fderiv hdiff
+  · exact partialY_eq_fderiv hdiff
+
+/-- The candidate gradient of the pullback is locally integrable on the strip.
+This requires only local integrability of the input gradient, not a weak identity. -/
+theorem locallyIntegrableOn_actionAngleInv_gradient {g : Fin 2 → ℝ × ℝ → ℂ}
+    (hg : ∀ i, LocallyIntegrableOn (g i) puncturedCell) (j : Fin 2) :
+    LocallyIntegrableOn (fun q ↦
+      ((coordPartial j (fun q ↦ (actionAngleInv q).1) q : ℝ) : ℂ) * g 0 (actionAngleInv q) +
+        ((coordPartial j (fun q ↦ (actionAngleInv q).2) q : ℝ) : ℂ) * g 1 (actionAngleInv q))
+      actionStrip := by
+  have ho : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  have hc₀ := Complex.continuous_ofReal.comp_continuousOn
+    (continuousOn_coordPartial ho (contDiff_fst.comp_contDiffOn contDiffOn_actionAngleInv) j)
+  have hc₁ := Complex.continuous_ofReal.comp_continuousOn
+    (continuousOn_coordPartial ho (contDiff_snd.comp_contDiffOn contDiffOn_actionAngleInv) j)
+  exact ((locallyIntegrableOn_comp_actionAngleInv (hg 0)).continuousOn_mul hc₀
+    ho.isLocallyClosed).add ((locallyIntegrableOn_comp_actionAngleInv (hg 1)).continuousOn_mul
+      hc₁ ho.isLocallyClosed)
+
+/-- A periodic locally integrable strip function descends to a locally integrable cell function. -/
+theorem locallyIntegrableOn_comp_actionAngle {F : ℝ × ℝ → ℂ}
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q)
+    (hF : LocallyIntegrableOn F actionStrip) :
+    LocallyIntegrableOn (F ∘ actionAngle) puncturedCell := by
+  apply locallyIntegrableOn_of_comp_actionAngleInv
+  apply hF.congr
+  have ho : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  filter_upwards [ae_restrict_mem ho.measurableSet] with q hq
+  exact (comp_actionAngle_actionAngleInv hper hq).symm
+
+/-- The full-gradient chain rule in the angular variable follows from weak transport. -/
+theorem HasWeakPartialOn.comp_actionAngleInv_snd {u : ℝ × ℝ → ℂ}
+    {g : Fin 2 → ℝ × ℝ → ℂ} (hg : ∀ i, HasWeakPartialOn puncturedCell i u (g i)) :
+    HasWeakPartialOn actionStrip 1 (u ∘ actionAngleInv) (fun q ↦
+      ((coordPartial 1 (fun q ↦ (actionAngleInv q).1) q : ℝ) : ℂ) * g 0 (actionAngleInv q) +
+        ((coordPartial 1 (fun q ↦ (actionAngleInv q).2) q : ℝ) : ℂ) * g 1 (actionAngleInv q)) := by
+  have hx (q : ℝ × ℝ) :
+      coordPartial 1 (fun q ↦ (actionAngleInv q).1) q =
+        orbitPeriod q.1 * Real.sin (actionAngleInv q).2 := by
+    simpa [coordPartial, partialY, dipoleVelocity, smul_eq_mul, Function.comp_def] using
+      ((ContinuousLinearMap.fst ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt q.2
+        (hasDerivAt_actionAngleInv_snd q.1 q.2)).deriv
+  have hy (q : ℝ × ℝ) :
+      coordPartial 1 (fun q ↦ (actionAngleInv q).2) q =
+        orbitPeriod q.1 * (-Real.sin (actionAngleInv q).1) := by
+    simpa [coordPartial, partialY, dipoleVelocity, smul_eq_mul, Function.comp_def] using
+      ((ContinuousLinearMap.snd ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt q.2
+        (hasDerivAt_actionAngleInv_snd q.1 q.2)).deriv
+  have he : (fun q ↦
+      ((coordPartial 1 (fun q ↦ (actionAngleInv q).1) q : ℝ) : ℂ) * g 0 (actionAngleInv q) +
+        ((coordPartial 1 (fun q ↦ (actionAngleInv q).2) q : ℝ) : ℂ) * g 1 (actionAngleInv q)) =
+      (fun q ↦ (orbitPeriod q.1 : ℂ) *
+        ((Real.sin (actionAngleInv q).2 : ℂ) * g 0 (actionAngleInv q) -
+          (Real.sin (actionAngleInv q).1 : ℂ) * g 1 (actionAngleInv q))) := by
+    funext q
+    rw [hx, hy]
+    push_cast
+    ring
+  rw [he]
+  exact (HasWeakPartialOn.hasWeakL0On isOpen_puncturedCell (hg 0) (hg 1)).comp_actionAngleInv
+
+/-- The chain rule for weak derivatives in the level variable, from the cell to the strip. -/
+theorem HasWeakPartialOn.comp_actionAngleInv_fst {u : ℝ × ℝ → ℂ} {g : Fin 2 → ℝ × ℝ → ℂ}
+    (hg : ∀ i, HasWeakPartialOn puncturedCell i u (g i)) :
+    HasWeakPartialOn actionStrip 0 (u ∘ actionAngleInv) (fun q ↦
+      ((coordPartial 0 (fun q ↦ (actionAngleInv q).1) q : ℝ) : ℂ) * g 0 (actionAngleInv q) +
+        ((coordPartial 0 (fun q ↦ (actionAngleInv q).2) q : ℝ) : ℂ) * g 1 (actionAngleInv q)) := by
+  refine ⟨locallyIntegrableOn_comp_actionAngleInv (hg 0).1,
+    locallyIntegrableOn_actionAngleInv_gradient (fun i ↦ (hg i).2.1) 0, ?_⟩
+  intro φ hφ
+  -- Remaining: transfer tests using the divergence-free field `P_h / (2S)`.
+  sorry
+
+/-- The full chain rule from the cell to the strip, assembled from the two
+    coordinate derivatives. -/
+theorem HasWeakPartialOn.comp_actionAngleInv {u : ℝ × ℝ → ℂ} {g : Fin 2 → ℝ × ℝ → ℂ}
+    (hg : ∀ i, HasWeakPartialOn puncturedCell i u (g i)) (j : Fin 2) :
+    HasWeakPartialOn actionStrip j (u ∘ actionAngleInv) (fun q ↦
+      ((coordPartial j (fun q ↦ (actionAngleInv q).1) q : ℝ) : ℂ) * g 0 (actionAngleInv q) +
+        ((coordPartial j (fun q ↦ (actionAngleInv q).2) q : ℝ) : ℂ) * g 1 (actionAngleInv q)) := by
+  fin_cases j
+  · exact HasWeakPartialOn.comp_actionAngleInv_fst hg
+  · exact HasWeakPartialOn.comp_actionAngleInv_snd hg
+
+/-- The chain rule for weak derivatives from the strip to the cell, for functions that are
+    `1`-periodic in `θ`. The angle jumps across its cut, a null set, where its partial
+    derivatives are irrelevant. -/
+theorem HasWeakPartialOn.comp_actionAngle {F : ℝ × ℝ → ℂ} {G : Fin 2 → ℝ × ℝ → ℂ}
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q)
+    (hG : ∀ i, HasWeakPartialOn actionStrip i F (G i)) (j : Fin 2) :
+    HasWeakPartialOn puncturedCell j (F ∘ actionAngle) (fun p ↦
+      ((coordPartial j levelCoord p : ℝ) : ℂ) * G 0 (actionAngle p) +
+        ((coordPartial j angleCoord p : ℝ) : ℂ) * G 1 (actionAngle p)) := by
+  refine ⟨locallyIntegrableOn_comp_actionAngle hper (hG 0).1, ?_⟩
+  sorry
+
 /-- A fixed nonempty level band contains the cutoff and all sufficiently small mollifications
 and their `h`-derivatives. -/
 private theorem exists_mollify_band {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1) :
@@ -1583,19 +1677,6 @@ private theorem contDiffOn_angleExp : ContDiffOn ℝ ∞ angleExp puncturedCell 
 /-- A smooth replacement for `∂ⱼθ`: `conj(E) ∂ⱼE / (2πi)` with `E = e^{2πiθ}`. -/
 private def angleGrad (j : Fin 2) (p : ℝ × ℝ) : ℂ :=
   starRingEnd ℂ (angleExp p) * coordPartial j angleExp p / (2 * Real.pi * Complex.I)
-
-private theorem continuousOn_coordPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    {f : ℝ × ℝ → E} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    (hf : ContDiffOn ℝ ∞ f U) (j : Fin 2) : ContinuousOn (coordPartial j f) U := by
-  have hd := (hf.continuousOn_fderiv_of_isOpen hU (by simp)).clm_apply
-    (continuousOn_const (c := if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)))
-  refine hd.congr fun p hp ↦ ?_
-  have hdiff : DifferentiableAt ℝ f p :=
-    (hf.contDiffAt (hU.mem_nhds hp)).differentiableAt (by simp)
-  unfold coordPartial
-  split_ifs
-  · exact partialX_eq_fderiv hdiff
-  · exact partialY_eq_fderiv hdiff
 
 private theorem continuousOn_angleGrad (j : Fin 2) : ContinuousOn (angleGrad j) puncturedCell :=
   ((Complex.continuous_conj.comp_continuousOn contDiffOn_angleExp.continuousOn).mul

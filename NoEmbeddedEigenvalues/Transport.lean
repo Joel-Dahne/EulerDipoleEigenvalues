@@ -9,8 +9,11 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 # Transport pairs
 
 Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
-`lem:good-windows`, `lem:good-level-selection`; stated: `lem:coarea`.
+`lem:good-windows`, `lem:good-level-selection`, `lem:weak-gradient-transport`;
+stated: `lem:coarea`.
 The good-level selector preserves any a.e. level property and avoids an arbitrary null set.
+Also proves that weak partial derivatives give the weak transport derivative, using the
+separated coefficients of the dipole field and no approximation argument.
 The proofs of `lem:resonant-vanishing`, `lem:melnikov` and `lem:pairing-limit` are in
 `ResonantVanishing.lean`, `Melnikov.lean` and `PairingLimit.lean`.
 
@@ -41,6 +44,65 @@ def IsOrbitUnion (U : Set (ℝ × ℝ)) : Prop :=
 def HasWeakL0On (U : Set (ℝ × ℝ)) (g h : ℝ × ℝ → ℂ) : Prop :=
   LocallyIntegrableOn g U ∧ LocallyIntegrableOn h U ∧
     ∀ φ, IsTestFunctionOn U φ → ∫ p, g p * classicalL0 φ p = -∫ p, h p * φ p
+
+open Set Filter in
+open scoped ContDiff in
+/-- A function with weak partial derivatives has the weak transport derivative
+`L₀F = sin y ∂ₓF - sin x ∂_yF`. -/
+theorem HasWeakPartialOn.hasWeakL0On {U : Set (ℝ × ℝ)} (hU : IsOpen U) {F d₀ d₁ : ℝ × ℝ → ℂ}
+    (h₀ : HasWeakPartialOn U 0 F d₀) (h₁ : HasWeakPartialOn U 1 F d₁) :
+    HasWeakL0On U F (fun p ↦ (Real.sin p.2 : ℂ) * d₀ p - (Real.sin p.1 : ℂ) * d₁ p) := by
+  have hsy : Continuous (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
+  have hsx : Continuous (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
+  refine ⟨h₀.1, (h₀.2.1.continuousOn_mul hsy.continuousOn hU.isLocallyClosed).sub
+    (h₁.2.1.continuousOn_mul hsx.continuousOn hU.isLocallyClosed), fun φ hφ ↦ ?_⟩
+  have hsyd : Differentiable ℝ (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
+  have hsxd : Differentiable ℝ (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
+  have hφd : Differentiable ℝ φ := hφ.contDiff.differentiable (by simp)
+  have ty : IsTestFunctionOn U (fun p ↦ (Real.sin p.2 : ℂ) * φ p) :=
+    ⟨(ofRealCLM.contDiff.comp (Real.contDiff_sin.comp contDiff_snd)).mul hφ.contDiff,
+      hφ.hasCompactSupport.mul_left, (tsupport_mul_subset_right).trans hφ.tsupport_subset⟩
+  have tx : IsTestFunctionOn U (fun p ↦ (Real.sin p.1 : ℂ) * φ p) :=
+    ⟨(ofRealCLM.contDiff.comp (Real.contDiff_sin.comp contDiff_fst)).mul hφ.contDiff,
+      hφ.hasCompactSupport.mul_left, (tsupport_mul_subset_right).trans hφ.tsupport_subset⟩
+  have ey : coordPartial 0 (fun p ↦ (Real.sin p.2 : ℂ) * φ p) =
+      fun p ↦ (Real.sin p.2 : ℂ) * partialX φ p := by
+    rw [coordPartial_mul 0 hsyd hφd]
+    funext p
+    simp [coordPartial, partialX]
+  have ex : coordPartial 1 (fun p ↦ (Real.sin p.1 : ℂ) * φ p) =
+      fun p ↦ (Real.sin p.1 : ℂ) * partialY φ p := by
+    rw [coordPartial_mul 1 hsxd hφd]
+    funext p
+    simp [coordPartial, partialY]
+  have wy := h₀.2.2 _ ty
+  have wx := h₁.2.2 _ tx
+  rw [ey] at wy
+  rw [ex] at wx
+  have i1 := integrable_mul_of_tsupport_subset h₀.1 (ty.continuous_coordPartial 0)
+    (ty.hasCompactSupport_coordPartial 0)
+    ((tsupport_coordPartial_subset 0 _).trans ty.tsupport_subset)
+  have i2 := integrable_mul_of_tsupport_subset h₁.1 (tx.continuous_coordPartial 1)
+    (tx.hasCompactSupport_coordPartial 1)
+    ((tsupport_coordPartial_subset 1 _).trans tx.tsupport_subset)
+  have i3 := integrable_mul_of_tsupport_subset h₀.2.1 ty.contDiff.continuous
+    ty.hasCompactSupport ty.tsupport_subset
+  have i4 := integrable_mul_of_tsupport_subset h₁.2.1 tx.contDiff.continuous
+    tx.hasCompactSupport tx.tsupport_subset
+  rw [ey] at i1
+  rw [ex] at i2
+  have e1 : (fun p ↦ F p * classicalL0 φ p) = fun p ↦
+      F p * ((Real.sin p.2 : ℂ) * partialX φ p) - F p * ((Real.sin p.1 : ℂ) * partialY φ p) := by
+    funext p
+    simp only [classicalL0, real_smul]
+    ring
+  have e2 : (fun p ↦ ((Real.sin p.2 : ℂ) * d₀ p - (Real.sin p.1 : ℂ) * d₁ p) * φ p) = fun p ↦
+      d₀ p * ((Real.sin p.2 : ℂ) * φ p) - d₁ p * ((Real.sin p.1 : ℂ) * φ p) := by
+    funext p
+    ring
+  rw [e1, e2, integral_sub i1 i2, integral_sub i3 i4, wy, wx]
+  ring
+
 
 /-- A transport pair `(v, f)` on `U` with parameter `λ ≠ 0`: `v ∈ L²(U)`, `f ∈ H²(U)` and
     `H(v + f) = λv` weakly on `U`, that is `L₀(v + f) = iλv`. -/

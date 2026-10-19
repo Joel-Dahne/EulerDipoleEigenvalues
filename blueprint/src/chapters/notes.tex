@@ -67,7 +67,8 @@ once resolved; record the resolution in the relevant node.
         appeal to a.e. orbit regularity at prescribed resonant levels
         (see the digest notes at Lemmas~\ref{lem:transport-pair-eigen}
         and~\ref{lem:melnikov}). The chart
-        (Lemmas~\ref{lem:action-angle-chart}, \ref{lem:action-angle-weak}), the
+        (Lemmas~\ref{lem:action-angle-chart}, \ref{lem:action-angle-weak},
+        \ref{lem:action-angle-weak-cell}), the
         one-dimensional mollifier (Lemma~\ref{lem:line-mollifier}) and the mollifier
         (Lemmas~\ref{lem:transversal-mollifier}--\ref{lem:transversal-mollifier-commutator})
         are stated in Lean. The line-mollifier lemma is proved, and the basic
@@ -81,9 +82,12 @@ once resolved; record the resolution in the relevant node.
         equivalences, and weak transport equivalence
         (Lemma~\ref{lem:action-angle-transport}) are now proved from the
         chart inputs, whose regularity and area formulas are now proved in Lean.
-        Open: the full weak-gradient chain rules
-        (Lemma~\ref{lem:action-angle-weak}(2)--(3); their earlier $H^1$
-        approximation sketch has been corrected to local $W^{1,1}$),
+        The angular weak-gradient rule and local integrability of the pulled-back
+        gradient are now proved independently. Open: the level weak chain rule
+        (Lemma~\ref{lem:action-angle-weak-level}) and reverse weak chain rule
+        (Lemma~\ref{lem:action-angle-weak-cell}). Their earlier $H^1$
+        approximation sketch would require local $W^{1,1}$; a direct
+        divergence-free test-field route for the level rule is described in its proof,
         and whether the odd--odd weighted analogue
         (Proposition~\ref{prop:dd-virial}) can be treated the same way.
   \item \textbf{Missing verification scripts}

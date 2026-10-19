@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.SeparatrixArc
 import Mathlib.Analysis.Calculus.ImplicitContDiff
 import Mathlib.MeasureTheory.Function.Jacobian
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # Orbit coordinates and integrals over levels
@@ -10,7 +11,7 @@ import Mathlib.MeasureTheory.Function.Jacobian
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
 `lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
-`lem:orbit-coordinates-area`, `lem:action-angle-chart`;
+`lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`;
 stated: `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
@@ -38,6 +39,10 @@ variables on the measurable half-open orbit domain, and Tonelli/Fubini. Only the
 removed, not the cut or the time-window endpoint graphs.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
+Periodicity identifies this integral with the half-open orbit window, without any
+integrability assumption. For coarea with a level cutoff, first truncate to the closed band;
+the area formula and Fubini give integrability of the level integral, and conservation of the
+level pulls the bounded measurable cutoff out of the inner time integral.
 The normal and tangential derivatives use the outward normal `n = -∇Ψ/ρ` of `{Ψ > 2h}` and
 the unit tangent `Y/ρ`.
 
@@ -932,12 +937,14 @@ private theorem integral_orbitDomain {E : Type*} [NormedAddCommGroup E] [NormedS
     {g : ℝ × ℝ → E} (hg : IntegrableOn g orbitDomain) :
     (∀ᵐ h ∂(volume.restrict (Ioo (0 : ℝ) 1)),
       IntegrableOn (fun t ↦ g (h, t)) (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))) ∧
+    IntegrableOn (fun h ↦ ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), g (h, t))
+      (Ioo (0 : ℝ) 1) ∧
     ∫ q in orbitDomain, g q =
       ∫ h in Ioo (0 : ℝ) 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), g (h, t) := by
   have hi : Integrable (orbitDomain.indicator g) (volume.prod volume) := by
     rw [← Measure.volume_eq_prod]
     exact hg.integrable_indicator measurableSet_orbitDomain
-  constructor
+  refine ⟨?_, ?_, ?_⟩
   · filter_upwards [ae_restrict_of_ae hi.prod_right_ae,
       ae_restrict_mem measurableSet_Ioo] with h hh hlevel
     have he : (fun t ↦ orbitDomain.indicator g (h, t)) =
@@ -949,6 +956,17 @@ private theorem integral_orbitDomain {E : Type*} [NormedAddCommGroup E] [NormedS
           indicator_of_notMem ht]
     rw [he] at hh
     exact (integrable_indicator_iff measurableSet_Ico).mp hh
+  · apply hi.integral_prod_left.integrableOn.congr
+    filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
+    rw [← integral_indicator measurableSet_Ico]
+    apply integral_congr_ae
+    apply Filter.Eventually.of_forall
+    intro t
+    dsimp only
+    by_cases ht : t ∈ Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)
+    · rw [indicator_of_mem (show (h, t) ∈ orbitDomain from ⟨hh, ht⟩), indicator_of_mem ht]
+    · rw [indicator_of_notMem (show (h, t) ∉ orbitDomain from fun hq ↦ ht hq.2),
+        indicator_of_notMem ht]
   · rw [← integral_indicator measurableSet_orbitDomain, Measure.volume_eq_prod,
       integral_prod _ hi, ← integral_indicator measurableSet_Ioo]
     apply integral_congr_ae
@@ -972,15 +990,9 @@ private theorem integral_orbitDomain {E : Type*} [NormedAddCommGroup E] [NormedS
       rw [hz]
       exact integral_zero _ _
 
-/-- `dx dy = 2 dh dt` for integrable functions; the restriction to almost every level is
-    integrable in flow time. -/
-theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+private theorem integrableOn_comp_orbitMap {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : ℝ × ℝ → E} (hf : IntegrableOn f cellSquare) :
-    (∀ᵐ h ∂(volume.restrict (Ioo 0 1)), IntegrableOn (fun t ↦ f (dipoleOrbit h t))
-      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))) ∧
-    ∫ p in cellSquare, f p =
-      (2 : ℝ) • ∫ h in Ioo 0 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
-        f (dipoleOrbit h t) := by
+    IntegrableOn (fun q : ℝ × ℝ ↦ f (dipoleOrbit q.1 q.2)) orbitDomain := by
   let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
   let : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]; infer_instance
@@ -996,9 +1008,21 @@ theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace �
       det_fderiv_orbitMap (h := q.1) (t := q.2) hq.1
     rw [hdet]
     norm_num
-  have hG : IntegrableOn (fun q ↦ f (G q)) orbitDomain :=
-    (integrable_smul_iff (by norm_num : (2 : ℝ) ≠ 0) (fun q ↦ f (G q))).mp hJ'
-  obtain ⟨hAE, hFubini⟩ := integral_orbitDomain hG
+  exact (integrable_smul_iff (by norm_num : (2 : ℝ) ≠ 0) (fun q ↦ f (G q))).mp hJ'
+
+/-- `dx dy = 2 dh dt` for integrable functions; the restriction to almost every level is
+    integrable in flow time. -/
+theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {f : ℝ × ℝ → E} (hf : IntegrableOn f cellSquare) :
+    (∀ᵐ h ∂(volume.restrict (Ioo 0 1)), IntegrableOn (fun t ↦ f (dipoleOrbit h t))
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))) ∧
+    ∫ p in cellSquare, f p =
+      (2 : ℝ) • ∫ h in Ioo 0 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        f (dipoleOrbit h t) := by
+  let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
+  let : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+    rw [Measure.volume_eq_prod]; infer_instance
+  obtain ⟨hAE, _, hFubini⟩ := integral_orbitDomain (integrableOn_comp_orbitMap hf)
   refine ⟨hAE, ?_⟩
   calc (∫ p in cellSquare, f p) = ∫ p in puncturedCell, f p :=
         (setIntegral_congr_set puncturedCell_ae_eq).symm
@@ -1048,6 +1072,24 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 def levelIntegral (h : ℝ) (g : ℝ × ℝ → E) : E :=
   ∫ t in (0 : ℝ)..orbitPeriod h, g (dipoleOrbit h t)
 
+/-- Integrating a level over the half-open orbit window gives the same value as
+    integrating from zero to the period. No integrability hypothesis is needed. -/
+theorem levelIntegral_eq_integral_orbitWindow {h : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (g : ℝ × ℝ → E) :
+    levelIntegral h g =
+      ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), g (dipoleOrbit h t) := by
+  have hp : Function.Periodic (fun t ↦ g (dipoleOrbit h t)) (orbitPeriod h) :=
+    (dipoleOrbit_periodic h0 h1).comp g
+  have hend : -2 * eighthPeriod h + orbitPeriod h = 6 * eighthPeriod h := by
+    rw [orbitPeriod]; ring
+  have hle : -2 * eighthPeriod h ≤ 6 * eighthPeriod h := by
+    have hS := orbitPeriod_pos h0 h1
+    rw [orbitPeriod] at hS
+    linarith
+  rw [integral_Ico_eq_integral_Ioc, ← intervalIntegral.integral_of_le hle, ← hend]
+  simpa only [levelIntegral, zero_add] using
+    (hp.intervalIntegral_add_eq (-2 * eighthPeriod h) 0).symm
+
 /-- The flow-time integral `∫_{-L}^{L} g(γ_h(t)) dt` over the quarter orbit `γ_h([-L, L])`. -/
 def quarterIntegral (h : ℝ) (g : ℝ × ℝ → E) : E :=
   ∫ t in (-eighthPeriod h)..eighthPeriod h, g (dipoleOrbit h t)
@@ -1061,14 +1103,68 @@ def angularMode (h : ℝ) (k : ℤ) (g : ℝ × ℝ → ℂ) : ℂ :=
 
 end Level
 
-/-! ### Coarea with a cutoff in the level (`lem:coarea-level-cutoff`, stated) -/
+/-! ### Coarea with a cutoff in the level (`lem:coarea-level-cutoff`) -/
+
+private theorem measurableSet_levelBand (a b : ℝ) :
+    MeasurableSet {p : ℝ × ℝ | levelCoord p ∈ Icc a b} :=
+  measurableSet_Icc.preimage (by unfold levelCoord dipoleLift; fun_prop)
+
+private theorem integrableOn_levelIndicator {F : ℝ × ℝ → ℝ} {a b : ℝ}
+    (hF : IntegrableOn F {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b}) :
+    IntegrableOn ({p | levelCoord p ∈ Icc a b}.indicator F) cellSquare := by
+  rw [integrableOn_indicator_iff (measurableSet_levelBand a b)]
+  have hset : {p | levelCoord p ∈ Icc a b} ∩ cellSquare =
+      {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b} := by
+    ext p
+    simp only [mem_inter_iff, mem_ofPred_eq, mem_Icc, levelCoord]
+    constructor
+    · rintro ⟨⟨hlo, hhi⟩, hp⟩
+      exact ⟨hp, by linarith, by linarith⟩
+    · rintro ⟨hp, hlo, hhi⟩
+      exact ⟨⟨by linarith, by linarith⟩, hp⟩
+  rw [hset]
+  exact hF
+
+private theorem levelIntegral_indicator_levelBand {h a b : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (F : ℝ × ℝ → ℝ) :
+    levelIntegral h ({p | levelCoord p ∈ Icc a b}.indicator F) =
+      (Icc a b).indicator (fun h ↦ levelIntegral h F) h := by
+  by_cases hb : h ∈ Icc a b
+  · rw [indicator_of_mem hb]
+    unfold levelIntegral
+    apply intervalIntegral.integral_congr
+    intro t _
+    exact indicator_of_mem (by simpa only [mem_ofPred_eq, levelCoord_dipoleOrbit hh.1 hh.2]
+      using hb) F
+  · rw [indicator_of_notMem hb]
+    have hz : (fun t ↦ {p | levelCoord p ∈ Icc a b}.indicator F (dipoleOrbit h t)) = 0 := by
+      ext t
+      exact indicator_of_notMem (by
+        simpa only [mem_ofPred_eq, levelCoord_dipoleOrbit hh.1 hh.2] using hb) F
+    change (∫ t in (0 : ℝ)..orbitPeriod h,
+      {p | levelCoord p ∈ Icc a b}.indicator F (dipoleOrbit h t)) = 0
+    rw [hz]
+    exact intervalIntegral.integral_zero
+
+private theorem integrableOn_levelIntegral_cellSquare {F : ℝ × ℝ → ℝ}
+    (hF : IntegrableOn F cellSquare) :
+    IntegrableOn (fun h ↦ levelIntegral h F) (Ioo (0 : ℝ) 1) := by
+  obtain ⟨_, hI, _⟩ := integral_orbitDomain (integrableOn_comp_orbitMap hF)
+  apply hI.congr
+  filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
+  exact (levelIntegral_eq_integral_orbitWindow hh.1 hh.2 F).symm
 
 /-- On a closed annulus `{2a ≤ Ψ ≤ 2b}` of the cell, the level integrals of an integrable
     function are integrable in `h ∈ [a, b]`. -/
 theorem integrableOn_levelIntegral {F : ℝ × ℝ → ℝ} {a b : ℝ} (ha : 0 < a) (hb : b < 1)
     (hF : IntegrableOn F {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b}) :
     IntegrableOn (fun h ↦ levelIntegral h F) (Icc a b) := by
-  sorry
+  have hI := integrableOn_levelIntegral_cellSquare (integrableOn_levelIndicator hF)
+  have hsub : Icc a b ⊆ Ioo (0 : ℝ) 1 := fun h hh ↦
+    ⟨ha.trans_le hh.1, hh.2.trans_lt hb⟩
+  apply (hI.mono_set hsub).congr
+  filter_upwards [ae_restrict_mem measurableSet_Icc] with h hh
+  rw [levelIntegral_indicator_levelBand (hsub hh), indicator_of_mem hh]
 
 /-- Coarea with a cutoff in the level: if `φ` is bounded, measurable and vanishes outside
     `[a, b] ⊂ (0, 1)`, then `∫_cell φ(Ψ/2) F = 2 ∫_a^b φ(h) ∮_{Ψ = 2h} F dt dh`. -/
@@ -1078,7 +1174,46 @@ theorem integral_cellSquare_level_mul {F : ℝ × ℝ → ℝ} {φ : ℝ → ℝ
     (hF : IntegrableOn F {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b}) :
     ∫ p in cellSquare, φ (dipoleLift p / 2) * F p =
       2 * ∫ h in Icc a b, φ h * levelIntegral h F := by
-  sorry
+  classical
+  have hm : Measurable levelCoord := by unfold levelCoord dipoleLift; fun_prop
+  have hw : IntegrableOn (fun p ↦ φ (levelCoord p) * F p) cellSquare := by
+    have hG := (integrableOn_levelIndicator hF).bdd_mul
+      (hφ.comp hm).aestronglyMeasurable
+      (Filter.Eventually.of_forall fun p ↦ by
+        simpa only [Real.norm_eq_abs, Function.comp_apply] using hC (levelCoord p))
+    apply hG.congr
+    apply Filter.Eventually.of_forall
+    intro p
+    dsimp only [Function.comp_apply]
+    by_cases hp : φ (levelCoord p) = 0
+    · simp [hp]
+    · rw [indicator_of_mem (show p ∈ {p | levelCoord p ∈ Icc a b} from hsupp _ hp)]
+  change (∫ p in cellSquare, φ (levelCoord p) * F p) = _
+  rw [(integral_cellSquare_eq hw).2]
+  simp only [smul_eq_mul]
+  congr 1
+  calc
+    (∫ h in Ioo (0 : ℝ) 1,
+        ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+          φ (levelCoord (dipoleOrbit h t)) * F (dipoleOrbit h t)) =
+        ∫ h in Ioo (0 : ℝ) 1, φ h * levelIntegral h F := by
+      apply setIntegral_congr_fun measurableSet_Ioo
+      intro h hh
+      simp_rw [levelCoord_dipoleOrbit hh.1 hh.2]
+      rw [integral_const_mul, ← levelIntegral_eq_integral_orbitWindow hh.1 hh.2 F]
+    _ = ∫ h in Ioo (0 : ℝ) 1,
+        (Icc a b).indicator (fun h ↦ φ h * levelIntegral h F) h := by
+      apply setIntegral_congr_fun measurableSet_Ioo
+      intro h _
+      by_cases hh : h ∈ Icc a b
+      · rw [indicator_of_mem hh]
+      · rw [indicator_of_notMem hh]
+        have hz : φ h = 0 := not_ne_iff.mp (fun hn ↦ hh (hsupp h hn))
+        simp only [hz, zero_mul]
+    _ = ∫ h in Icc a b, φ h * levelIntegral h F := by
+      rw [integral_indicator measurableSet_Icc, Measure.restrict_restrict measurableSet_Icc,
+        inter_eq_left.mpr (show Icc a b ⊆ Ioo (0 : ℝ) 1 from
+          fun h hh ↦ ⟨ha.trans_le hh.1, hh.2.trans_lt hb⟩)]
 
 /-! ### Normal and tangential derivatives -/
 

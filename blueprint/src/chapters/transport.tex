@@ -51,6 +51,24 @@ for instance the closed positive cell together with thin annuli of orbits inside
 the neighbouring cells is a bounded open union of orbits.
 \end{remark}
 
+\begin{lemma}[Weak partial derivatives give weak transport]
+\label{lem:weak-gradient-transport}
+\uses{def:transport-pair, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.hasWeakL0On}
+\leanok
+On any open $U\subset\R^2$, if $u$ has weak partial derivatives
+$g_x,g_y$, then $L_0u=\sin y\,g_x-\sin x\,g_y$ weakly on $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic, lem:localization-cutoff, lem:lift-calculus}
+\leanok
+Test the $x$-derivative identity with $\sin y\,\varphi$ and the
+$y$-derivative identity with $\sin x\,\varphi$, then subtract.
+The crossed coefficients have zero derivative in their respective
+directions, so there is no zeroth-order term.
+\end{proof}
+
 \begin{lemma}[The transport unknown]
 \label{lem:transport-unknown}
 \uses{def:transport-pair}

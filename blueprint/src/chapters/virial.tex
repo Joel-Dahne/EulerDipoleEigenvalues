@@ -556,12 +556,12 @@ on $[-\frac14,\frac34)$. No weak-derivative statement is used.
 
 \begin{proof}
 \uses{lem:transversal-mollifier, lem:action-angle-chart, lem:action-angle-weak,
-  lem:action-angle-transport, lem:line-mollifier}
+  lem:action-angle-weak-cell, lem:action-angle-transport, lem:line-mollifier}
 \leanok
 In coordinates, $J_\epsilon u$ is $M_\epsilon(\chi U)$, whose weak derivatives are
 $\partial_hM_\epsilon(\chi U)=M'_\epsilon(\chi U)$ and $\partial_\theta M_\epsilon(\chi U)=M_\epsilon(\chi\,\partial_\theta U)$
 whenever $\partial_\theta U$ exists (Lemma~\ref{lem:line-mollifier}). These are $1$-periodic in $\theta$, so
-by Lemma~\ref{lem:action-angle-weak}(3)
+by Lemma~\ref{lem:action-angle-weak-cell}
 \[
   \partial_jJ_\epsilon u=(\partial_jh)\,M'_\epsilon(\chi U)\circ(h,\theta)
     +(\partial_j\theta)\,M_\epsilon(\chi\,\partial_\theta U)\circ(h,\theta),
@@ -571,7 +571,7 @@ windows. They are uniformly bounded on the fixed compact output band
 $K_0$; no global derivative of the cut angle is asserted. All coordinate
 $L^2$ norms here are over one angular period, with $h$ extended to $\R$,
 not over the infinite periodic strip. (1): by
-Lemma~\ref{lem:action-angle-weak}(2), $\chi U$ has weak derivatives in $L^2$, so
+Lemma~\ref{lem:action-angle-weak}, $\chi U$ has weak derivatives in $L^2$, so
 $M'_\epsilon(\chi U)=M_\epsilon(\partial_h(\chi U))\to\partial_h(\chi U)$ and
 $M_\epsilon(\chi\,\partial_\theta U)\to\chi\,\partial_\theta U$; by the chain rule again the limit is
 $\nabla(\hat\chi u)$. (2): $\partial_\theta U=S(h)K$ (Lemma~\ref{lem:action-angle-transport}), so the
@@ -589,7 +589,7 @@ with $\partial_j(\hat\chi u)$ pointwise off the cut, by the classical chain rule
 $(h,\theta)^{-1}\circ(h,\theta)=\mathrm{id}$, not by a second weak chain rule. In (2)
 $\partial_\theta(\chi U)=\sigma\chi K$ with $\sigma$ the Lipschitz extension of $S$ used for the
 commutator, so only the chain rule from the strip to the cell
-(Lemma~\ref{lem:action-angle-weak}(3)) is needed there.
+(Lemma~\ref{lem:action-angle-weak-cell}) is needed there.
 \end{proof}
 
 \begin{lemma}[The commutator with the transport operator]
@@ -631,14 +631,15 @@ Lemma~\ref{lem:action-angle-transport} gives $L_0J_\epsilon u=k_\epsilon$ on the
 with $k_\epsilon=\sigma^{-1}M_\epsilon(\sigma\chi K)\circ(h,\theta)$; and since $J_\epsilon u$
 and $k_\epsilon$ vanish off a compact band, testing against $\eta\varphi$ with $\eta=1$ near
 the band extends the identity to $\R^2$. Only the transport chain rule is used, not the
-full weak-gradient rules of Lemma~\ref{lem:action-angle-weak}.
+full weak-gradient rules of Lemmas~\ref{lem:action-angle-weak}
+and~\ref{lem:action-angle-weak-cell}.
 \end{proof}
 
 \begin{remark}[Digest note: the transversal mollifier, restated]
 The single mollifier lemma of the first digest is split into the $L^2$ part, the derivatives
 and the commutator, with the analysis moved into a one-dimensional mollifier lemma
-(Lemma~\ref{lem:line-mollifier}) and a lemma on weak derivatives in action-angle coordinates
-(Lemma~\ref{lem:action-angle-weak}). Changes to the statement: the mollifier acts on functions
+(Lemma~\ref{lem:line-mollifier}) and the weak coordinate chain rules
+(Lemmas~\ref{lem:action-angle-weak} and~\ref{lem:action-angle-weak-cell}). Changes to the statement: the mollifier acts on functions
 on the cell and produces functions on $\R^2$ with support in a fixed compact subset of the
 punctured cell. The proof below periodizes these compactly supported
 outputs to apply the torus $H^1$ identity; the earlier wording that it
@@ -774,11 +775,11 @@ periodic fields on the torus. The proof now explicitly periodizes the
 mollifier outputs and uses the periodic cutoff $c=\chi(\Psi/2)$.
 It does not construct $J_\epsilon^\dagger DJ_\epsilon$.
 The Lean proof (October 2026) follows the argument above and has no
-\texttt{sorry} of its own. Its remaining admitted inputs are the chart inputs of the
-mollifier: Lemmas~\ref{lem:action-angle-weak}, \ref{lem:action-angle-chart},
-\ref{lem:orbit-coordinates-smooth}, \ref{lem:orbit-coordinates-inverse},
-\ref{lem:orbit-coordinates-area} and~\ref{lem:period-regularity} (checked with
-\texttt{just sorries virial\_l2}). Compared with
+\texttt{sorry} of its own. Its remaining admitted inputs are the level weak chain
+rule (Lemma~\ref{lem:action-angle-weak-level}) and the reverse weak chain rule
+(Lemma~\ref{lem:action-angle-weak-cell}), checked with
+\texttt{just sorries virial\_l2}. The angular rule and the coordinate regularity,
+inverse and area formulas are proved. Compared with
 the previous sketch: (i) the periodization is the explicit box periodization
 (Lemma~\ref{lem:box-periodization}), proved directly by testing against characters, rather
 than the periodization part of Lemma~\ref{lem:local-to-global}; (ii) instead of applying

@@ -9,8 +9,8 @@ Used by the proof of `lem:virial-l2`: the transversal mollifier produces functio
 supported in a fixed compact subset of the cell square, while the `H¹` virial identities are
 on the torus.
 
-* Uniqueness of weak derivatives on open sets, and the weak transport derivative of a function
-  with weak partial derivatives.
+* Uniqueness of weak derivatives on open sets. The weak transport derivative of a function
+  with weak partial derivatives is supplied upstream by `Transport.lean`.
 * `boxPeriodize F`: the element of `L²(𝕋²)` with values `F` on the fundamental box
   `(-π, π]²`, which contains the cell square. It is linear, does not increase `L²` norms, turns
   multiplication by periodic functions into `mulL2`, and maps weak derivatives of functions
@@ -123,62 +123,6 @@ theorem HasWeakL0On.sub {F G k l : ℝ × ℝ → ℂ} (hk : HasWeakL0On U F k)
     hφ.hasCompactSupport hφ.tsupport_subset
   simp only [sub_mul]
   rw [integral_sub i1 i2, integral_sub i3 i4, hk.2.2 φ hφ, hl.2.2 φ hφ]
-  ring
-
-/-- A function with weak partial derivatives has the weak transport derivative
-`L₀F = sin y ∂ₓF - sin x ∂_yF`. -/
-theorem HasWeakPartialOn.hasWeakL0On (hU : IsOpen U) {F d₀ d₁ : ℝ × ℝ → ℂ}
-    (h₀ : HasWeakPartialOn U 0 F d₀) (h₁ : HasWeakPartialOn U 1 F d₁) :
-    HasWeakL0On U F (fun p ↦ (Real.sin p.2 : ℂ) * d₀ p - (Real.sin p.1 : ℂ) * d₁ p) := by
-  have hsy : Continuous (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
-  have hsx : Continuous (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
-  refine ⟨h₀.1, (h₀.2.1.continuousOn_mul hsy.continuousOn hU.isLocallyClosed).sub
-    (h₁.2.1.continuousOn_mul hsx.continuousOn hU.isLocallyClosed), fun φ hφ ↦ ?_⟩
-  have hsyd : Differentiable ℝ (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
-  have hsxd : Differentiable ℝ (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
-  have hφd : Differentiable ℝ φ := hφ.contDiff.differentiable (by simp)
-  have ty : IsTestFunctionOn U (fun p ↦ (Real.sin p.2 : ℂ) * φ p) :=
-    ⟨(ofRealCLM.contDiff.comp (Real.contDiff_sin.comp contDiff_snd)).mul hφ.contDiff,
-      hφ.hasCompactSupport.mul_left, (tsupport_mul_subset_right).trans hφ.tsupport_subset⟩
-  have tx : IsTestFunctionOn U (fun p ↦ (Real.sin p.1 : ℂ) * φ p) :=
-    ⟨(ofRealCLM.contDiff.comp (Real.contDiff_sin.comp contDiff_fst)).mul hφ.contDiff,
-      hφ.hasCompactSupport.mul_left, (tsupport_mul_subset_right).trans hφ.tsupport_subset⟩
-  have ey : coordPartial 0 (fun p ↦ (Real.sin p.2 : ℂ) * φ p) =
-      fun p ↦ (Real.sin p.2 : ℂ) * partialX φ p := by
-    rw [coordPartial_mul 0 hsyd hφd]
-    funext p
-    simp [coordPartial, partialX]
-  have ex : coordPartial 1 (fun p ↦ (Real.sin p.1 : ℂ) * φ p) =
-      fun p ↦ (Real.sin p.1 : ℂ) * partialY φ p := by
-    rw [coordPartial_mul 1 hsxd hφd]
-    funext p
-    simp [coordPartial, partialY]
-  have wy := h₀.2.2 _ ty
-  have wx := h₁.2.2 _ tx
-  rw [ey] at wy
-  rw [ex] at wx
-  have i1 := integrable_mul_of_tsupport_subset h₀.1 (ty.continuous_coordPartial 0)
-    (ty.hasCompactSupport_coordPartial 0)
-    ((tsupport_coordPartial_subset 0 _).trans ty.tsupport_subset)
-  have i2 := integrable_mul_of_tsupport_subset h₁.1 (tx.continuous_coordPartial 1)
-    (tx.hasCompactSupport_coordPartial 1)
-    ((tsupport_coordPartial_subset 1 _).trans tx.tsupport_subset)
-  have i3 := integrable_mul_of_tsupport_subset h₀.2.1 ty.contDiff.continuous
-    ty.hasCompactSupport ty.tsupport_subset
-  have i4 := integrable_mul_of_tsupport_subset h₁.2.1 tx.contDiff.continuous
-    tx.hasCompactSupport tx.tsupport_subset
-  rw [ey] at i1
-  rw [ex] at i2
-  have e1 : (fun p ↦ F p * classicalL0 φ p) = fun p ↦
-      F p * ((Real.sin p.2 : ℂ) * partialX φ p) - F p * ((Real.sin p.1 : ℂ) * partialY φ p) := by
-    funext p
-    simp only [classicalL0, real_smul]
-    ring
-  have e2 : (fun p ↦ ((Real.sin p.2 : ℂ) * d₀ p - (Real.sin p.1 : ℂ) * d₁ p) * φ p) = fun p ↦
-      d₀ p * ((Real.sin p.2 : ℂ) * φ p) - d₁ p * ((Real.sin p.1 : ℂ) * φ p) := by
-    funext p
-    ring
-  rw [e1, e2, integral_sub i1 i2, integral_sub i3 i4, wy, wx]
   ring
 
 end Unique
