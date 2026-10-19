@@ -12,7 +12,7 @@ Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
 `lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
 `lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`,
-`lem:orbit-saddle-distance`;
+`lem:orbit-saddle-distance`, `lem:period-coarse`;
 stated: `lem:orbit-comparison`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
@@ -45,6 +45,10 @@ Thus `exp t * cos a` increases, whereas `exp t * cos a * exp (2 sin a)` decrease
 This gives `exp (-t) ≤ cos a ≤ exp 2 * exp (-t)`; the saddle distance is between
 `cos a` and `π * cos a` in the product norm. Reflection handles negative times.
 At the endpoints `cos a = √h`. No coarse period estimate or other admission is used.
+Conversely these endpoint cosine estimates prove `0 ≤ L(h) - log(1/h)/2 ≤ 2` for
+`0 < h < 1/2`, and the exponential comparison with `√h`. The elementary bound `L ≤ 1/h`
+handles the remaining levels, giving `exp L * √h ≤ exp 2` globally. The theorem
+`exp_eighthPeriod_le` lives here (not in `Period.lean`) to avoid an import cycle.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 Periodicity identifies this integral with the half-open orbit window, without any
@@ -1545,6 +1549,80 @@ theorem saddleDist_dipoleOrbit_endpoints {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
   · simpa only [hc] using saddleDist_le_cos_orbitA h0 h1
       (show eighthPeriod h ∈ Icc 0 (eighthPeriod h) from
         ⟨(eighthPeriod_pos h0 h1).le, le_rfl⟩)
+
+/-! ### Coarse period bounds from the half-quarter endpoint -/
+
+/-- A quantified coarse logarithmic bound, independent of elliptic-integral asymptotics. -/
+theorem eighthPeriod_sub_log_bounds {h : ℝ} (h0 : 0 < h) (h1 : h < 1 / 2) :
+    0 ≤ eighthPeriod h - log (1 / h) / 2 ∧
+      eighthPeriod h - log (1 / h) / 2 ≤ 2 := by
+  have h1' : h < 1 := by linarith
+  have hL : eighthPeriod h ∈ Icc 0 (eighthPeriod h) :=
+    ⟨(eighthPeriod_pos h0 h1').le, le_rfl⟩
+  have hu := (cos_orbitA_exp_bounds h0 h1 hL).2
+  rw [orbitA_eighthPeriod h0 h1', cos_neg, cos_arccos_sqrt h0 h1', ← exp_add] at hu
+  have hlog := (log_le_iff_le_exp (sqrt_pos.2 h0)).2 hu
+  rw [log_sqrt h0.le] at hlog
+  simp only [one_div, log_inv]
+  constructor
+  · have := log_le_eighthPeriod h0 h1'
+    simpa only [one_div, log_inv, sub_nonneg] using this
+  · linarith
+
+/-- The full coarse logarithmic statement with explicit constants available above. -/
+theorem eighthPeriod_coarse : ∃ C h₀ : ℝ, 0 ≤ C ∧ 0 < h₀ ∧ h₀ < 1 ∧
+    ∀ h ∈ Ioo 0 h₀, |eighthPeriod h - log (1 / h) / 2| ≤ C := by
+  refine ⟨2, 1 / 2, by norm_num, by norm_num, by norm_num, ?_⟩
+  intro h hh
+  obtain ⟨hlo, hhi⟩ := eighthPeriod_sub_log_bounds hh.1 hh.2
+  rwa [abs_of_nonneg hlo]
+
+open Filter Topology in
+/-- `L(h) → ∞` at the separatrix. -/
+theorem tendsto_eighthPeriod_atTop : Tendsto eighthPeriod (𝓝[>] 0) atTop := by
+  simpa [orbitPeriod] using
+    tendsto_orbitPeriod_atTop.atTop_div_const (by norm_num : (0 : ℝ) < 8)
+
+/-- The exponential form of the two-sided coarse bound. -/
+theorem exp_neg_eighthPeriod_bounds {h : ℝ} (h0 : 0 < h) (h1 : h < 1 / 2) :
+    exp (-2) * √h ≤ exp (-eighthPeriod h) ∧ exp (-eighthPeriod h) ≤ √h := by
+  obtain ⟨hlo, hhi⟩ := eighthPeriod_sub_log_bounds h0 h1
+  simp only [one_div, log_inv] at hlo hhi
+  have hroot := sqrt_pos.2 h0
+  constructor
+  · calc exp (-2) * √h = exp (-2 + log (√h)) := by rw [exp_add, exp_log hroot]
+         _ ≤ exp (-eighthPeriod h) := by
+           apply exp_le_exp.2
+           rw [log_sqrt h0.le]
+           linarith
+  · apply (le_log_iff_exp_le hroot).1
+    rw [log_sqrt h0.le]
+    linarith
+
+/-- A global upper exponential bound, with the explicit constant `e²`. -/
+theorem exp_eighthPeriod_mul_sqrt_le {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    exp (eighthPeriod h) * √h ≤ exp 2 := by
+  by_cases hh : h < 1 / 2
+  · have hu := (cos_orbitA_exp_bounds h0 hh
+      ⟨(eighthPeriod_pos h0 h1).le, le_rfl⟩).2
+    rw [orbitA_eighthPeriod h0 h1, cos_neg, cos_arccos_sqrt h0 h1] at hu
+    have := mul_le_mul_of_nonneg_left hu (exp_pos (eighthPeriod h)).le
+    simpa only [← mul_assoc, mul_left_comm (exp (eighthPeriod h)),
+      ← exp_add, add_neg_cancel, exp_zero, mul_one,
+      show eighthPeriod h + (2 + -eighthPeriod h) = 2 by ring] using this
+  · have hL : eighthPeriod h ≤ 2 := by
+      apply (eighthPeriod_le_inv h0 h1).trans
+      apply (div_le_iff₀ h0).2
+      linarith
+    calc exp (eighthPeriod h) * √h ≤ exp 2 * 1 :=
+          mul_le_mul (exp_le_exp.2 hL) (sqrt_le_one.2 h1.le) (sqrt_nonneg _) (exp_pos _).le
+       _ = exp 2 := mul_one _
+
+/-- `e^{L(h)} ≤ C h^{-1/2}` on `(0, 1)`, proved from the orbit geometry. -/
+theorem exp_eighthPeriod_le : ∃ C : ℝ, ∀ h ∈ Ioo (0 : ℝ) 1,
+    exp (eighthPeriod h) ≤ C / √h := by
+  exact ⟨exp 2, fun h hh ↦ (le_div_iff₀ (sqrt_pos.2 hh.1)).2
+    (exp_eighthPeriod_mul_sqrt_le hh.1 hh.2)⟩
 
 /-- `|∂_h γ_h(t)| ≤ C e^{|t|}` and `|∂_h² γ_h(t)| ≤ C e^{2|t|}` on the quarter orbit. -/
 theorem deriv_dipoleOrbit_level_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t,

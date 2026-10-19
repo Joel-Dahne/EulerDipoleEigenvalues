@@ -1439,7 +1439,13 @@ for $S$, and the mean value theorem gives strict decrease.
 \begin{lemma}[Coarse logarithmic bounds for the period]
 \label{lem:period-coarse}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.exp_eighthPeriod_le}
+\lean{NoEmbeddedEigenvalues.eighthPeriod_sub_log_bounds,
+  NoEmbeddedEigenvalues.eighthPeriod_coarse,
+  NoEmbeddedEigenvalues.tendsto_eighthPeriod_atTop,
+  NoEmbeddedEigenvalues.exp_neg_eighthPeriod_bounds,
+  NoEmbeddedEigenvalues.exp_eighthPeriod_mul_sqrt_le,
+  NoEmbeddedEigenvalues.exp_eighthPeriod_le}
+\leanok
 There are $C\ge0$ and $0<h_0<1$ such that, for $0<h<h_0$,
 \[
   \left|L(h)-\tfrac12\log(1/h)\right|\le C .
@@ -1450,21 +1456,28 @@ $e^{L(h)}\le C_1/\sqrt h$ for all $0<h<1$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-saddle-distance, lem:period-orbit, lem:period-regularity}
-At a quarter-orbit endpoint the explicit diagonal coordinates give
-$d\asymp\sqrt h$. Lemma~\ref{lem:orbit-saddle-distance}, whose bounded
-integrating-factor proof uses no period estimate, gives
-$d\asymp e^{-L(h)}$ there. Combining the comparisons and taking
-logarithms proves the two-sided estimate, without sharp elliptic
-asymptotics. For the global upper exponential bound, use this estimate
-at small $h$ and monotonicity on the remaining interval.
+\uses{lem:orbit-saddle-distance, lem:period-orbit, lem:period-integral,
+  lem:period-basic}
+\leanok
+The integrating-factor estimate in the proof of
+Lemma~\ref{lem:orbit-saddle-distance}, evaluated at $t=L(h)$, gives
+\[
+  e^{-L(h)}\le\sqrt h\le e^2 e^{-L(h)}\qquad(0<h<1/2).
+\]
+Taking logarithms yields the stronger quantified bound
+\[
+  0\le L(h)-\tfrac12\log(1/h)\le2,
+\]
+and exponentiating gives
+$e^{-2}\sqrt h\le e^{-L(h)}\le\sqrt h$.
+Blow-up also follows from Lemma~\ref{lem:period-basic}.
+For the global upper exponential bound, the endpoint estimate gives
+$e^{L(h)}\sqrt h\le e^2$ for $h<1/2$. For $1/2\le h<1$,
+Lemma~\ref{lem:period-integral} gives $L(h)\le1/h\le2$ and
+$\sqrt h\le1$, so the same bound holds. Thus one may take
+$C=2$, $h_0=1/2$ and $C_1=e^2$.
+No sharp elliptic asymptotics or period monotonicity is needed.
 \end{proof}
-
-\begin{remark}[Lean status of the coarse bound]
-The linked Lean statement covers the global upper exponential bound
-only. The full two-sided coarse node is blueprint-only and is not
-marked as stated or proved in Lean.
-\end{remark}
 
 \begin{lemma}[Continuity and blow-up of the period]
 \label{lem:period-basic}

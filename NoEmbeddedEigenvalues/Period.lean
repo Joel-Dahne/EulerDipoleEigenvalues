@@ -10,7 +10,9 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 # The period function of the dipole orbits
 
 Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`, `lem:period-regularity`.
-The elliptic-integral formula, sharp asymptotics and upper exponential bound remain stated.
+The elliptic-integral formula and sharp asymptotics remain stated.
+Coarse logarithmic and exponential bounds are proved in `OrbitCoordinates.lean`, after
+constructing the flow and proving the half-quarter endpoint estimates.
 
 For `0 < h < 1` the orbit on the level `{Ψ = 2h}` in the positive cell takes flow time
 `L(h) = ∫₀^{arccos √h} da / √(cos² a - h²)` to go from its point on the axis `a = 0` to
@@ -408,11 +410,6 @@ theorem orbitPeriod_eq_ellipticK {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
 theorem eighthPeriod_asymptotics : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Set.Ioo 0 h₀,
     |eighthPeriod h - log (4 / h) / 2| ≤ C * h ^ 2 * log (1 / h) ∧
       |deriv eighthPeriod h + 1 / (2 * h)| ≤ C * h * log (1 / h) := by
-  sorry
-
-/-- `e^{L(h)} ≤ C h^{-1/2}` on `(0, 1)`. -/
-theorem exp_eighthPeriod_le : ∃ C : ℝ, ∀ h ∈ Set.Ioo (0 : ℝ) 1,
-    exp (eighthPeriod h) ≤ C / √h := by
   sorry
 
 end NoEmbeddedEigenvalues

@@ -64,12 +64,11 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
   periodicity give integrability of the level integral on closed level bands.
 - Period regularity (`lem:period-regularity`) is proved without admissions in
   `Period.lean`: the regular fixed-interval integral gives smoothness and
-  `L' < 0`, hence strict decrease of `L` and `S`. Coarse logarithmic bounds
-  remain open in Lean but now follow from the independently proved
-  saddle-distance and endpoint estimates.
-  The full `lem:period-coarse` statement is blueprint-only; its Lean link covers
-  just the global upper exponential bound. The elementary lower bound
-  `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) is proved.
+  `L' < 0`, hence strict decrease of `L` and `S`. The full coarse period
+  bounds (`lem:period-coarse`) are proved without admissions in
+  `OrbitCoordinates.lean`, using the endpoint cosine estimates; the global
+  upper exponential bound `exp_eighthPeriod_le` has moved there from
+  `Period.lean` to avoid an import cycle. Sharp asymptotics remain open.
 - Full forward weak-gradient transfer is proved. Reverse transfer remains open;
   see the virial regularization section below.
 - Saddle-distance and endpoint bounds are proved without admissions in
