@@ -232,20 +232,6 @@ theorem continuous_dipoleOrbit : Continuous (fun q : ℝ × ℝ ↦ dipoleOrbit 
   exact continuous_dipoleFlow.comp
     (by fun_prop : Continuous fun q : ℝ × ℝ ↦ ((Real.arccos q.1, -Real.arccos q.1), q.2))
 
-/-- Measurability of the period, including the total integral values outside `(0,1)`. -/
-theorem measurable_eighthPeriod : Measurable eighthPeriod := by
-  let A : Set (ℝ × ℝ) := {q | 0 < q.2 ∧ q.2 ≤ Real.arccos (√q.1)}
-  have hA : MeasurableSet A :=
-    (measurableSet_lt measurable_const measurable_snd).inter
-      (measurableSet_le measurable_snd (by fun_prop))
-  have hm : Measurable (fun q : ℝ × ℝ ↦ 1 / √(cos q.2 ^ 2 - q.1 ^ 2)) := by fun_prop
-  have hh := (hm.indicator hA).stronglyMeasurable.integral_prod_right' (ν := (volume : Measure ℝ))
-  convert hh.measurable using 1
-  funext h
-  rw [eighthPeriod, intervalIntegral.integral_of_le (Real.arccos_nonneg _)]
-  rw [← integral_indicator measurableSet_Ioc]
-  rfl
-
 /-- Changing a measurable representative on a planar null set changes its level integral
     only on a null set of levels. The proof uses the nonnegative orbit-coordinate formula,
     not a possibly undefined Bochner integral. -/

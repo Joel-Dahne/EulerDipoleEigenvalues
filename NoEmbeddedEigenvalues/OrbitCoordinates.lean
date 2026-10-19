@@ -2,15 +2,16 @@ import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.SeparatrixArc
 import Mathlib.Analysis.Calculus.ImplicitContDiff
+import Mathlib.MeasureTheory.Function.Jacobian
 
 /-!
 # Orbit coordinates and integrals over levels
 
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
-`lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-chart`
-(the measure identity uses the admitted area formula);
-stated: `lem:orbit-coordinates-area`, `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
+`lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
+`lem:orbit-coordinates-area`, `lem:action-angle-chart`;
+stated: `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
@@ -32,6 +33,9 @@ Smoothness of the inverse parametrization follows from scalar implicit inversion
 quadrature, then quarter rotations. Periodic functions of the angle are smooth across the cut:
 negation moves the cut to a regular point and shifts the angle by `1/2` modulo an integer.
 These regularity proofs do not use the area formula or parameter-dependent ODE regularity.
+The area formula then follows from the smooth orbit map's constant Jacobian `2`, change of
+variables on the measurable half-open orbit domain, and Tonelli/Fubini. Only the center is
+removed, not the cut or the time-window endpoint graphs.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 The normal and tangential derivatives use the outward normal `n = -∇Ψ/ρ` of `{Ψ > 2h}` and
@@ -48,7 +52,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Real MeasureTheory Set
-open scoped ContDiff
+open scoped ContDiff ENNReal
 
 /-! ### Orbit coordinates -/
 
@@ -473,24 +477,6 @@ theorem contDiffAt_orbitCoordinates {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
     ContDiffAt ℝ ∞ (fun q ↦ (levelCoord q, timeCoord q)) p :=
   (contDiffAt_levelCoord p).prodMk (contDiffAt_timeCoord hp hcut)
 
-/-- `dx dy = 2 dh dt`: integrals over the cell in orbit coordinates. -/
-theorem lintegral_cellSquare_eq {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :
-    ∫⁻ p in cellSquare, f p =
-      2 * ∫⁻ h in Ioo 0 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
-        f (dipoleOrbit h t) := by
-  sorry
-
-/-- `dx dy = 2 dh dt` for integrable functions; the restriction to almost every level is
-    integrable in flow time. -/
-theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    {f : ℝ × ℝ → E} (hf : IntegrableOn f cellSquare) :
-    (∀ᵐ h ∂(volume.restrict (Ioo 0 1)), IntegrableOn (fun t ↦ f (dipoleOrbit h t))
-      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))) ∧
-    ∫ p in cellSquare, f p =
-      (2 : ℝ) • ∫ h in Ioo 0 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
-        f (dipoleOrbit h t) := by
-  sorry
-
 /-! ### The action-angle chart (`lem:action-angle-chart`) -/
 
 theorem actionAngleInv_mem_puncturedCell {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (θ : ℝ) :
@@ -786,6 +772,251 @@ theorem contDiffOn_comp_actionAngle {F : ℝ × ℝ → ℂ} (hF : ContDiffOn �
     exact periodic_comp_actionAngle_neg hper hq
   · exact (hF.contDiffAt (hstrip.mem_nhds ⟨hh, mem_univ _⟩)).comp
       (f := actionAngle) p ((contDiffAt_levelCoord p).prodMk (contDiffAt_angleCoord hp hcut))
+
+/-! ### The area formula -/
+
+private theorem contDiffAt_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) (h, t) := by
+  have hS := contDiffOn_orbitPeriod.contDiffAt (Ioo_mem_nhds hh.1 hh.2)
+  have hSp : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ orbitPeriod q.1) (h, t) :=
+    hS.comp (f := Prod.fst) (h, t) contDiffAt_fst
+  have hmap : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ (q.1, q.2 / orbitPeriod q.1)) (h, t) :=
+    contDiffAt_fst.prodMk (contDiffAt_snd.div hSp (orbitPeriod_pos hh.1 hh.2).ne')
+  have hP := contDiffOn_actionAngleInv.contDiffAt
+    ((isOpen_Ioo.prod isOpen_univ).mem_nhds
+      (show (h, t / orbitPeriod h) ∈ actionStrip from ⟨hh, mem_univ _⟩))
+  have hc := hP.comp (f := fun q : ℝ × ℝ ↦ (q.1, q.2 / orbitPeriod q.1)) (h, t) hmap
+  apply hc.congr_of_eventuallyEq
+  filter_upwards [continuous_fst.continuousAt.eventually (Ioo_mem_nhds hh.1 hh.2)] with q hq
+  change dipoleOrbit q.1 q.2 = dipoleOrbit q.1 ((q.2 / orbitPeriod q.1) * orbitPeriod q.1)
+  rw [div_mul_cancel₀ _ (orbitPeriod_pos hq.1 hq.2).ne']
+
+/-- Conservation of the level fixes the normal column, and the flow fixes the time column. -/
+private theorem det_fderiv_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    (fderiv ℝ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) (h, t)).det = 2 := by
+  let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
+  let A := fderiv ℝ G (h, t)
+  have hd : HasFDerivAt G A (h, t) :=
+    ((contDiffAt_orbitMap hh).differentiableAt (by simp)).hasFDerivAt
+  have htime : A (0, 1) = dipoleVelocity (G (h, t)) := by
+    have hc := hd.comp_hasDerivAt t ((hasDerivAt_const t h).prodMk (hasDerivAt_id t))
+    exact hc.unique (hasDerivAt_dipoleFlow (arccos h, -arccos h) t)
+  have hcol := hd.comp_hasDerivAt h ((hasDerivAt_id h).prodMk (hasDerivAt_const h t))
+  have hdx : HasDerivAt (fun s ↦ (G (s, t)).1) (A (1, 0)).1 h :=
+    (ContinuousLinearMap.fst ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt h hcol
+  have hdy : HasDerivAt (fun s ↦ (G (s, t)).2) (A (1, 0)).2 h :=
+    (ContinuousLinearMap.snd ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt h hcol
+  have hlevel := (hdx.cos.add hdy.cos).div_const 2
+  have he : (fun s ↦ (cos (G (s, t)).1 + cos (G (s, t)).2) / 2) =ᶠ[nhds h] id := by
+    filter_upwards [Ioo_mem_nhds hh.1 hh.2] with s hs
+    exact levelCoord_dipoleOrbit hs.1 hs.2 t
+  have hnormal := (hlevel.congr_of_eventuallyEq he.symm).unique (hasDerivAt_id h)
+  change LinearMap.det (A : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) = 2
+  rw [← LinearMap.det_toMatrix (Module.Basis.finTwoProd ℝ), Matrix.det_fin_two]
+  simp only [LinearMap.toMatrix_apply, Module.Basis.finTwoProd_zero, Module.Basis.finTwoProd_one,
+    Module.Basis.coe_finTwoProd_repr, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.cons_val_fin_one]
+  change (A (1, 0)).1 * (A (0, 1)).2 - (A (0, 1)).1 * (A (1, 0)).2 = 2
+  rw [htime]
+  dsimp [dipoleVelocity] at *
+  linarith
+
+/-- Measurability of the period, including the total integral values outside `(0,1)`. -/
+theorem measurable_eighthPeriod : Measurable eighthPeriod := by
+  let A : Set (ℝ × ℝ) := {q | 0 < q.2 ∧ q.2 ≤ Real.arccos (√q.1)}
+  have hA : MeasurableSet A :=
+    (measurableSet_lt measurable_const measurable_snd).inter
+      (measurableSet_le measurable_snd (by fun_prop))
+  have hm : Measurable (fun q : ℝ × ℝ ↦ 1 / √(cos q.2 ^ 2 - q.1 ^ 2)) := by fun_prop
+  have hh := (hm.indicator hA).stronglyMeasurable.integral_prod_right' (ν := (volume : Measure ℝ))
+  convert hh.measurable using 1
+  funext h
+  rw [eighthPeriod, intervalIntegral.integral_of_le (Real.arccos_nonneg _)]
+  rw [← integral_indicator measurableSet_Ioc]
+  rfl
+
+private theorem measurableSet_orbitDomain : MeasurableSet orbitDomain := by
+  exact (measurableSet_Ioo.preimage measurable_fst).inter
+    ((measurableSet_le (measurable_const.mul (measurable_eighthPeriod.comp measurable_fst))
+      measurable_snd).inter
+      (measurableSet_lt measurable_snd
+        (measurable_const.mul (measurable_eighthPeriod.comp measurable_fst))))
+
+private theorem orbitMap_hasFDerivWithin (q : ℝ × ℝ) (hq : q ∈ orbitDomain) :
+    HasFDerivWithinAt (fun r : ℝ × ℝ ↦ dipoleOrbit r.1 r.2)
+      (fderiv ℝ (fun r : ℝ × ℝ ↦ dipoleOrbit r.1 r.2) q) orbitDomain q :=
+  ((contDiffAt_orbitMap hq.1).differentiableAt (by simp)).hasFDerivAt.hasFDerivWithinAt
+
+private theorem injOn_orbitMap : InjOn (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) orbitDomain := by
+  intro q hq r hr he
+  have ht := congrArg timeCoord he
+  rw [timeCoord_dipoleOrbit hq, timeCoord_dipoleOrbit hr] at ht
+  have hl := congrArg levelCoord he
+  rw [levelCoord_dipoleOrbit hq.1.1 hq.1.2, levelCoord_dipoleOrbit hr.1.1 hr.1.2] at hl
+  exact Prod.ext hl ht
+
+private theorem image_orbitMap :
+    (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) '' orbitDomain = puncturedCell := by
+  ext p
+  constructor
+  · rintro ⟨q, hq, rfl⟩
+    have hp := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 (q.2 / orbitPeriod q.1)
+    simpa only [actionAngleInv, div_mul_cancel₀ _ (orbitPeriod_pos hq.1.1 hq.1.2).ne'] using hp
+  · intro hp
+    exact ⟨(levelCoord p, timeCoord p), mem_orbitDomain hp, dipoleOrbit_levelCoord_timeCoord hp⟩
+
+private theorem puncturedCell_ae_eq : puncturedCell =ᵐ[volume] cellSquare := by
+  have h0 : (volume : Measure (ℝ × ℝ)) {(0 : ℝ × ℝ)} = 0 := by
+    rw [Measure.volume_eq_prod]; simp
+  exact sdiff_null_ae_eq_self h0
+
+private theorem lintegral_orbitDomain {g : ℝ × ℝ → ℝ≥0∞}
+    (hg : Measurable (orbitDomain.indicator g)) :
+    ∫⁻ q in orbitDomain, g q =
+      ∫⁻ h in Ioo (0 : ℝ) 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), g (h, t) := by
+  rw [← lintegral_indicator measurableSet_orbitDomain, Measure.volume_eq_prod,
+    lintegral_prod _ hg.aemeasurable, ← lintegral_indicator measurableSet_Ioo]
+  apply lintegral_congr
+  intro h
+  by_cases hh : h ∈ Ioo (0 : ℝ) 1
+  · rw [indicator_of_mem hh, ← lintegral_indicator measurableSet_Ico]
+    apply lintegral_congr
+    intro t
+    by_cases ht : t ∈ Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)
+    · rw [indicator_of_mem (show (h, t) ∈ orbitDomain from ⟨hh, ht⟩), indicator_of_mem ht]
+    · rw [indicator_of_notMem (show (h, t) ∉ orbitDomain from fun hq ↦ ht hq.2),
+        indicator_of_notMem ht]
+  · rw [indicator_of_notMem hh]
+    have hz : (fun t ↦ orbitDomain.indicator g (h, t)) = 0 := by
+      ext t
+      exact indicator_of_notMem (show (h, t) ∉ orbitDomain from fun hq ↦ hh hq.1) g
+    rw [hz]
+    exact lintegral_zero
+
+/-- `dx dy = 2 dh dt`: integrals over the cell in orbit coordinates. -/
+theorem lintegral_cellSquare_eq {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :
+    ∫⁻ p in cellSquare, f p =
+      2 * ∫⁻ h in Ioo 0 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        f (dipoleOrbit h t) := by
+  classical
+  let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
+  let : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+    rw [Measure.volume_eq_prod]; infer_instance
+  have hGc : ContinuousOn G orbitDomain := fun q hq ↦
+    (contDiffAt_orbitMap hq.1).continuousAt.continuousWithinAt
+  have hGm : Measurable (orbitDomain.piecewise G (fun _ ↦ 0)) :=
+    hGc.measurable_piecewise continuousOn_const measurableSet_orbitDomain
+  have hm : Measurable (orbitDomain.indicator (fun q ↦ f (G q))) := by
+    convert (hf.comp hGm).indicator measurableSet_orbitDomain using 1
+    ext q
+    by_cases hq : q ∈ orbitDomain <;> simp [indicator, piecewise, hq]
+  calc (∫⁻ p in cellSquare, f p) = ∫⁻ p in puncturedCell, f p :=
+        (setLIntegral_congr puncturedCell_ae_eq).symm
+    _ = ∫⁻ q in orbitDomain, ENNReal.ofReal |(fderiv ℝ G q).det| * f (G q) := by
+      rw [← image_orbitMap]
+      exact lintegral_image_eq_lintegral_abs_det_fderiv_mul volume measurableSet_orbitDomain
+        orbitMap_hasFDerivWithin injOn_orbitMap f
+    _ = 2 * ∫⁻ q in orbitDomain, f (G q) := by
+      rw [← lintegral_const_mul' _ _ (by simp)]
+      apply setLIntegral_congr_fun measurableSet_orbitDomain
+      intro q hq
+      have hdet : (fderiv ℝ G q).det = 2 :=
+        det_fderiv_orbitMap (h := q.1) (t := q.2) hq.1
+      change ENNReal.ofReal |(fderiv ℝ G q).det| * f (G q) = 2 * f (G q)
+      rw [hdet]
+      norm_num
+    _ = 2 * ∫⁻ h in Ioo 0 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        f (dipoleOrbit h t) := congrArg (2 * ·) (lintegral_orbitDomain hm)
+
+private theorem integral_orbitDomain {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {g : ℝ × ℝ → E} (hg : IntegrableOn g orbitDomain) :
+    (∀ᵐ h ∂(volume.restrict (Ioo (0 : ℝ) 1)),
+      IntegrableOn (fun t ↦ g (h, t)) (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))) ∧
+    ∫ q in orbitDomain, g q =
+      ∫ h in Ioo (0 : ℝ) 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), g (h, t) := by
+  have hi : Integrable (orbitDomain.indicator g) (volume.prod volume) := by
+    rw [← Measure.volume_eq_prod]
+    exact hg.integrable_indicator measurableSet_orbitDomain
+  constructor
+  · filter_upwards [ae_restrict_of_ae hi.prod_right_ae,
+      ae_restrict_mem measurableSet_Ioo] with h hh hlevel
+    have he : (fun t ↦ orbitDomain.indicator g (h, t)) =
+        (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)).indicator (fun t ↦ g (h, t)) := by
+      ext t
+      by_cases ht : t ∈ Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)
+      · rw [indicator_of_mem (show (h, t) ∈ orbitDomain from ⟨hlevel, ht⟩), indicator_of_mem ht]
+      · rw [indicator_of_notMem (show (h, t) ∉ orbitDomain from fun hq ↦ ht hq.2),
+          indicator_of_notMem ht]
+    rw [he] at hh
+    exact (integrable_indicator_iff measurableSet_Ico).mp hh
+  · rw [← integral_indicator measurableSet_orbitDomain, Measure.volume_eq_prod,
+      integral_prod _ hi, ← integral_indicator measurableSet_Ioo]
+    apply integral_congr_ae
+    apply Filter.Eventually.of_forall
+    intro h
+    by_cases hh : h ∈ Ioo (0 : ℝ) 1
+    · rw [indicator_of_mem hh, ← integral_indicator measurableSet_Ico]
+      apply integral_congr_ae
+      apply Filter.Eventually.of_forall
+      intro t
+      dsimp only
+      by_cases ht : t ∈ Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)
+      · rw [indicator_of_mem (show (h, t) ∈ orbitDomain from ⟨hh, ht⟩), indicator_of_mem ht]
+      · rw [indicator_of_notMem (show (h, t) ∉ orbitDomain from fun hq ↦ ht hq.2),
+          indicator_of_notMem ht]
+    · rw [indicator_of_notMem hh]
+      change (∫ t, orbitDomain.indicator g (h, t)) = 0
+      have hz : (fun t ↦ orbitDomain.indicator g (h, t)) = 0 := by
+        ext t
+        exact indicator_of_notMem (show (h, t) ∉ orbitDomain from fun hq ↦ hh hq.1) g
+      rw [hz]
+      exact integral_zero _ _
+
+/-- `dx dy = 2 dh dt` for integrable functions; the restriction to almost every level is
+    integrable in flow time. -/
+theorem integral_cellSquare_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {f : ℝ × ℝ → E} (hf : IntegrableOn f cellSquare) :
+    (∀ᵐ h ∂(volume.restrict (Ioo 0 1)), IntegrableOn (fun t ↦ f (dipoleOrbit h t))
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))) ∧
+    ∫ p in cellSquare, f p =
+      (2 : ℝ) • ∫ h in Ioo 0 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        f (dipoleOrbit h t) := by
+  let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
+  let : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+    rw [Measure.volume_eq_prod]; infer_instance
+  have hJ : IntegrableOn (fun q ↦ |(fderiv ℝ G q).det| • f (G q)) orbitDomain := by
+    apply (integrableOn_image_iff_integrableOn_abs_det_fderiv_smul volume
+      measurableSet_orbitDomain orbitMap_hasFDerivWithin injOn_orbitMap f).mp
+    rw [image_orbitMap]
+    exact hf.mono_set sdiff_subset
+  have hJ' : IntegrableOn (fun q ↦ (2 : ℝ) • f (G q)) orbitDomain := by
+    apply hJ.congr
+    filter_upwards [ae_restrict_mem measurableSet_orbitDomain] with q hq
+    have hdet : (fderiv ℝ G q).det = 2 :=
+      det_fderiv_orbitMap (h := q.1) (t := q.2) hq.1
+    rw [hdet]
+    norm_num
+  have hG : IntegrableOn (fun q ↦ f (G q)) orbitDomain :=
+    (integrable_smul_iff (by norm_num : (2 : ℝ) ≠ 0) (fun q ↦ f (G q))).mp hJ'
+  obtain ⟨hAE, hFubini⟩ := integral_orbitDomain hG
+  refine ⟨hAE, ?_⟩
+  calc (∫ p in cellSquare, f p) = ∫ p in puncturedCell, f p :=
+        (setIntegral_congr_set puncturedCell_ae_eq).symm
+    _ = ∫ q in orbitDomain, |(fderiv ℝ G q).det| • f (G q) := by
+      rw [← image_orbitMap]
+      exact integral_image_eq_integral_abs_det_fderiv_smul volume measurableSet_orbitDomain
+        orbitMap_hasFDerivWithin injOn_orbitMap f
+    _ = (2 : ℝ) • ∫ q in orbitDomain, f (G q) := by
+      rw [← integral_smul]
+      apply setIntegral_congr_fun measurableSet_orbitDomain
+      intro q hq
+      have hdet : (fderiv ℝ G q).det = 2 :=
+        det_fderiv_orbitMap (h := q.1) (t := q.2) hq.1
+      change |(fderiv ℝ G q).det| • f (G q) = (2 : ℝ) • f (G q)
+      rw [hdet]
+      norm_num
+    _ = (2 : ℝ) • ∫ h in Ioo 0 1, ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        f (dipoleOrbit h t) := congrArg ((2 : ℝ) • ·) hFubini
 
 /-- `dx dy = 2 S(h) dh dθ`. -/
 theorem lintegral_cellSquare_actionAngle {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :

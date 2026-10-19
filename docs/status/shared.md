@@ -19,9 +19,9 @@ admissions. The last gives the `2π`-periodization of compactly supported tests,
 the lift direction of the torus/local-Sobolev bridge (`lem:lift-sobolev-local`) and
 `L₀` against `H¹` tests (`lem:L0-h1-tests`); with it `isTransportPair_of_isEigenSolution`
 has no admissions.
-The basic transversal L² estimates and weak action-angle transport equivalence
-have no `sorry` of their own, but still depend on admitted area/coarea inputs.
-Transversal support is proved without those admitted dependencies.
+The orbit-coordinate regularity and area inputs of the transversal L² estimates
+and weak action-angle transport equivalence are proved. The full weak-gradient
+chain rules remain admitted.
 
 ## Analytic backlog
 
@@ -55,10 +55,10 @@ in the current statements.
 
 See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 
-- The inverse identities, local smoothness off the time cut, smoothness of the
-  inverse parametrization and periodic composition across the angular seam are
-  proved without admissions in `OrbitCoordinates.lean`. Next: the orbit-coordinate
-  area formula (medium–high). The chart's measure identity still uses that admission.
+- The orbit-coordinate inverse identities, regularity, angular seams and area
+  formula are proved without admissions in `OrbitCoordinates.lean`. The area
+  argument uses the smooth orbit map's constant Jacobian `2` directly on the
+  half-open time domain; Fubini supplies almost-every-level integrability.
 - Period regularity (`lem:period-regularity`) is proved without admissions in
   `Period.lean`: the regular fixed-interval integral gives smoothness and
   `L' < 0`, hence strict decrease of `L` and `S`. Coarse logarithmic bounds
@@ -91,15 +91,11 @@ mollifier lemmas are proved: the commutator from the chart inputs and the transp
 chain rule only, the derivative lemmas also from the two admitted full weak-gradient
 chain rules. The periodization
 part of `lem:local-to-global` (`exists_memSobolev_periodize`) is not used.
-Remaining admitted inputs of `virial_l2`, in a candidate order:
-
-1. The full weak-gradient chain rules `HasWeakPartialOn.comp_actionAngle` and
-   `HasWeakPartialOn.comp_actionAngleInv` (`lem:action-angle-weak`(2)–(3)):
-   medium–high. Weak gradients under the smooth chart (local W^{1,1}
-   approximation), with the angle cut handled by θ-periodicity.
-2. Shared with other routes: the orbit-coordinate chart inputs
-   (`OrbitCoordinates.lean`: the area formula). The coordinate regularity,
-   angular seam handling and period regularity are proved.
+Remaining admitted inputs of `virial_l2`: the full weak-gradient chain rules
+`HasWeakPartialOn.comp_actionAngle` and `HasWeakPartialOn.comp_actionAngleInv`
+(`lem:action-angle-weak`(2)–(3)), medium–high. These need weak gradients under
+the smooth chart (local W¹,¹ approximation), with the angle cut handled by
+θ-periodicity. The coordinate regularity and area formula are proved.
 
 ### Transport and later-sector regularity
 
