@@ -620,6 +620,7 @@ $\mathcal CF=\eta F$.
 \uses{def:angular-periodization, def:weak-derivative-local}
 \lean{NoEmbeddedEigenvalues.periodizeSnd_periodic,
   NoEmbeddedEigenvalues.contDiff_periodizeSnd,
+  NoEmbeddedEigenvalues.partialX_periodizeSnd,
   NoEmbeddedEigenvalues.partialY_periodizeSnd,
   NoEmbeddedEigenvalues.periodizeSnd_eq_zero,
   NoEmbeddedEigenvalues.integral_periodizeSnd,
@@ -633,8 +634,8 @@ $\mathcal CF=\eta F$.
 \leanok
 For functions with bounded angular support, periodization is locally a
 finite sum, is $1$-periodic, preserves vanishing outside any fixed level
-band, preserves smoothness, and commutes with $\partial_\theta$ for $C^1$
-functions. If $f$ is integrable, then
+band, preserves smoothness, and commutes with both $\partial_h$ and
+$\partial_\theta$ for $C^1$ functions. If $f$ is integrable, then
 \[
   \int_{\R^2}f=\int_{W_0}\Pi f.
 \]

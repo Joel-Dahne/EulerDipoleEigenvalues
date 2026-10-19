@@ -20,9 +20,10 @@ the lift direction of the torus/local-Sobolev bridge (`lem:lift-sobolev-local`) 
 `L₀` against `H¹` tests (`lem:L0-h1-tests`); with it `isTransportPair_of_isEigenSolution`
 has no admissions.
 The orbit-coordinate regularity and area inputs of the transversal L² estimates
-and weak action-angle transport equivalence are proved. The angular weak-gradient
-rule and local integrability of the candidate pullback gradient are also proved;
-the level-direction and reverse weak-gradient rules remain admitted.
+and weak action-angle transport equivalence are proved. The full forward
+weak-gradient chain rule is also proved without admissions, using direct test
+functions rather than Sobolev approximation. Only reverse weak-gradient transfer
+remains admitted in the action-angle interface.
 
 ## Analytic backlog
 
@@ -68,9 +69,8 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
   The full `lem:period-coarse` statement is blueprint-only; its Lean link covers
   just the global upper exponential bound. The elementary lower bound
   `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) is proved.
-- Full weak-gradient transfer remains partial: the angular direction and
-  pullback-gradient local integrability are proved. The level test identity and
-  reverse rule remain open; see the virial regularization section below.
+- Full forward weak-gradient transfer is proved. Reverse transfer remains open;
+  see the virial regularization section below.
 - Saddle-distance and level-derivative bounds are medium–high; inverse-coordinate
   gradients are moderate and time integrals smaller once those bounds exist.
   Keep recentered quarter times: the former global time-gradient estimate
@@ -91,20 +91,16 @@ See the [virial blueprint](../../blueprint/src/chapters/virial.tex),
 of compactly supported cell functions, uniqueness of weak derivatives and the
 equivalence of the two virial forms on `X` have no admissions. All transversal
 mollifier lemmas are proved: the commutator from the chart inputs and the transport
-chain rule only, the derivative lemmas also from the remaining level-direction
-and reverse weak-gradient rules. The periodization
+chain rule only, the derivative lemmas also from the remaining reverse
+weak-gradient rule. The periodization
 part of `lem:local-to-global` (`exists_memSobolev_periodize`) is not used.
-Remaining admitted inputs of `virial_l2`, both in `TransversalMollifier.lean`:
-- `HasWeakPartialOn.comp_actionAngleInv_fst` (`lem:action-angle-weak-level`):
-  local integrability is proved; the level-direction test identity remains.
-  A direct route tests against the divergence-free field `P_h / (2S)`;
-  its construction and test transfer are not yet implemented.
-- `HasWeakPartialOn.comp_actionAngle` (`lem:action-angle-weak-cell`):
-  reverse weak-gradient transfer and seam gluing remain. Local W¹,¹
-  approximation is one route, not an available infrastructure result.
-
-The angular rule `comp_actionAngleInv_snd` has no admissions. The full forward
-rule `comp_actionAngleInv` is an assembly from it and the admitted level rule.
+The only remaining admission of `virial_l2` is
+`HasWeakPartialOn.comp_actionAngle` (`lem:action-angle-weak-cell`) in
+`TransversalMollifier.lean`: reverse weak-gradient transfer and seam gluing.
+Local W¹,¹ approximation is one route, not an available infrastructure result;
+the direct test method used for the forward rule is another approach to explore.
+The full forward rule `comp_actionAngleInv`, including both coordinate directions,
+has no admitted dependencies.
 
 ### Transport and later-sector regularity
 

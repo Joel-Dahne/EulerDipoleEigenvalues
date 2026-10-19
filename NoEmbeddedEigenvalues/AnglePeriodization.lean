@@ -5,7 +5,8 @@ import NoEmbeddedEigenvalues.LineMollifier
 
 Finite angular support makes the integer periodization locally a finite sum.
 Blueprint: `def:angular-periodization`, `lem:angular-periodization` (proved).
-This supplies the periodic tests used by the weak action-angle transport identity.
+This supplies the periodic tests used by the weak action-angle transport and full forward
+chain rules. Periodization commutes with both coordinate derivatives.
 The periodization, integral unfolding, and normalized angular partition have no
 admitted dependencies.
 -/
@@ -74,6 +75,20 @@ theorem HasBoundedSndSupport.partialY (hf : HasBoundedSndSupport f) :
   have hd : q.2 ∈ tsupport (fun θ ↦ f (q.1, θ)) := support_deriv_subset hq
   exact abs_le.mpr (closure_minimal hs isClosed_Icc hd)
 
+theorem HasBoundedSndSupport.partialX (hf : HasBoundedSndSupport f) :
+    HasBoundedSndSupport (partialX f) := by
+  obtain ⟨R, hR⟩ := hf
+  refine ⟨R, fun q hq ↦ ?_⟩
+  by_contra hn
+  have hz : (fun x ↦ f (x, q.2)) = 0 := by
+    funext x
+    by_contra hx
+    exact hn (hR (x, q.2) hx)
+  apply hq
+  change deriv (fun x ↦ f (x, q.2)) q.1 = 0
+  rw [hz]
+  exact (hasDerivAt_const q.1 (0 : E)).deriv
+
 theorem contDiff_periodizeSnd {n : ℕ∞ω} (hf : ContDiff ℝ n f)
     (hs : HasBoundedSndSupport f) : ContDiff ℝ n (periodizeSnd f) := by
   obtain ⟨R, hR⟩ := hs
@@ -88,6 +103,25 @@ theorem contDiff_periodizeSnd {n : ℕ∞ω} (hf : ContDiff ℝ n f)
   filter_upwards [(continuous_abs.comp continuous_snd).continuousAt.eventually
     (eventually_lt_nhds (show |q.2| < r by dsimp [r]; linarith))] with z hz
   exact periodizeSnd_eq_sum hR hN.le hz.le
+
+theorem partialX_periodizeSnd (hf : ContDiff ℝ 1 f) (hs : HasBoundedSndSupport f)
+    (q : ℝ × ℝ) : partialX (periodizeSnd f) q = periodizeSnd (partialX f) q := by
+  obtain ⟨R, hR⟩ := hs
+  obtain ⟨D, hD⟩ := (show HasBoundedSndSupport f from ⟨R, hR⟩).partialX
+  obtain ⟨N, hN⟩ := exists_nat_gt (max R D + |q.2|)
+  have hNR : R + |q.2| ≤ N := by linarith [le_max_left R D]
+  have hND : D + |q.2| ≤ N := by linarith [le_max_right R D]
+  have hd : HasDerivAt (fun x ↦ ∑ m ∈ Finset.Icc (-(N : ℤ)) N,
+      f (x, q.2 + m)) (∑ m ∈ Finset.Icc (-(N : ℤ)) N, partialX f (q.1, q.2 + m)) q.1 := by
+    apply HasDerivAt.fun_sum
+    intro m _
+    exact hasDerivAt_partialX (hf.differentiable one_ne_zero (q.1, q.2 + m))
+  have he : (fun x ↦ periodizeSnd f (x, q.2)) =
+      (fun x ↦ ∑ m ∈ Finset.Icc (-(N : ℤ)) N, f (x, q.2 + m)) :=
+    funext fun x ↦ periodizeSnd_eq_sum hR hNR le_rfl
+  change deriv (fun x ↦ periodizeSnd f (x, q.2)) q.1 = _
+  rw [he, hd.deriv]
+  exact (periodizeSnd_eq_sum hD hND le_rfl).symm
 
 theorem partialY_periodizeSnd (hf : ContDiff ℝ 1 f) (hs : HasBoundedSndSupport f)
     (q : ℝ × ℝ) : partialY (periodizeSnd f) q = periodizeSnd (partialY f) q := by

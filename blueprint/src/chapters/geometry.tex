@@ -1189,6 +1189,78 @@ $\partial_\theta P=S(h)Y(P)$. This proves the rule without approximation
 or an assumption of local square integrability.
 \end{proof}
 
+\begin{definition}[The dual level field]
+\label{def:level-dual-field}
+\uses{def:action-angle}
+\lean{NoEmbeddedEigenvalues.levelDualCoeff}
+\leanok
+On the plane put $E(p)=e^{2\pi i\theta(p)}$ and
+\[
+  A_j=\frac{\overline E\,\partial_jE}{2\pi i},\qquad
+  B=(A_y,-A_x).
+\]
+We use complex coefficients for compatibility with the weak derivative
+pairings. Off the angle cut these are the real coefficients of
+$(\partial_y\theta,-\partial_x\theta)$.
+\end{definition}
+
+\begin{lemma}[Regularity and normalization of the dual level field]
+\label{lem:level-dual-field}
+\uses{def:level-dual-field}
+\lean{NoEmbeddedEigenvalues.contDiffOn_levelDualCoeff,
+  NoEmbeddedEigenvalues.levelDualCoeff_eq,
+  NoEmbeddedEigenvalues.levelDualCoeff_divergence_ae,
+  NoEmbeddedEigenvalues.levelDualCoeff_normalized}
+\leanok
+The coefficients of $B$ are smooth on the whole punctured cell and
+$\operatorname{div}B=0$ almost everywhere there. Off the angle cut,
+\[
+  B=(\partial_y\theta,-\partial_x\theta),\qquad
+  2S(h(p))B(p)=\partial_hP(h(p),\theta(p)).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:lift-calculus}
+\leanok
+The phase $E$ is smooth across the cut by periodic composition.
+Differentiating the exponential identifies $A_j=\partial_j\theta$
+off the cut. In any such neighbourhood the divergence of $B$ vanishes
+by symmetry of mixed derivatives. The diagonal containing the cut
+is null, by Fubini.
+
+For normalization, let $P_h=(X,Y)$ and $P_\theta=(T,V)$.
+Conservation of $h=(\cos x+\cos y)/2$ gives
+$-\sin x\,X-\sin y\,Y=2$, while the flow equation gives
+$(T,V)=S(h)(\sin y,-\sin x)$. Hence $XV-TY=2S(h)$.
+Differentiate $P\circ(h,\theta)=\mathrm{id}$ off the cut.
+The two-by-two cofactor identities then give
+$2S\,\theta_y=X$ and $2S\,\theta_x=-Y$.
+\end{proof}
+
+\begin{lemma}[Weak integration by parts for the dual level field]
+\label{lem:level-dual-weak}
+\uses{def:level-dual-field, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.integral_mul_levelDualCoeff}
+\leanok
+If $u$ has weak derivatives $g_x,g_y$ on the punctured cell and $\psi$
+is a test function there, then
+\[
+  \int u\,B\cdot\nabla\psi=-\int(B_1g_x+B_2g_y)\psi .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:level-dual-field, lem:weak-derivative-basic, lem:localization-cutoff}
+\leanok
+Each $B_j\psi$ is a smooth compactly supported test function after
+zero extension outside the cell. Test the two weak partial identities
+with these products and add. The product rule gives the stated
+identity plus $u\psi\,\operatorname{div}B$, which vanishes almost
+everywhere. All terms are integrable because their smooth factors
+are supported in a compact subset of the punctured cell.
+\end{proof}
+
 \begin{lemma}[The level weak chain rule]
 \label{lem:action-angle-weak-level}
 \uses{def:action-angle, def:sobolev-local}
@@ -1205,31 +1277,32 @@ weakly on the strip.
 \begin{proof}
 \uses{lem:action-angle-gradient-local-integrability,
   lem:action-angle-local-integrability, lem:action-angle-chart,
-  lem:weak-derivative-basic, lem:lift-calculus, lem:angular-periodization}
+  lem:level-dual-field, lem:level-dual-weak, lem:angular-periodization}
+\leanok
 The function and proposed derivative are locally integrable by the
-preceding lemmas; these parts are proved in Lean. The test identity
-remains to be formalized.
+preceding lemmas. For a compact strip test $\varphi$, let
+$F=\Pi\varphi$ and $\psi=F\circ(h,\theta)$, extended by zero off the
+cell. This is a smooth cell test supported in a compact level band.
+Apply Lemma~\ref{lem:level-dual-weak}.
 
-A direct test-function route is available. Write $\rho(h)=2S(h)$ and
-define the periodic coordinate field
+Write $\rho=2S(h)$. Off the cut, normalization gives
+$\rho B(P)=P_h$, and differentiating $\psi(P)=F$ gives
+$\rho\,B(P)\cdot\nabla\psi(P)=\partial_hF$.
+Change variables in the weak identity using $dx\,dy=\rho\,dh\,d\theta$.
+The factors $\rho$ cancel, leaving, over one angular period,
 \[
-  B(P(h,\theta))=\rho(h)^{-1}\partial_hP(h,\theta).
+  \int U\,\partial_hF
+    =-\int\bigl((\partial_hP_1)g_x\circ P
+                 +(\partial_hP_2)g_y\circ P\bigr)F .
 \]
-In a smooth local lift of the angle, inversion of the coordinate
-Jacobian gives $B=(\partial_y\theta,-\partial_x\theta)$, so
-$\operatorname{div}B=0$ by symmetry of mixed derivatives. These local
-expressions agree across seams because the angle lifts differ by
-constants. Periodize a compact strip test $\varphi$ in $\theta$ and
-pull the result back to a cell test $\psi$. Test the two weak partial
-identities with $B_1\psi$ and $B_2\psi$, extended by zero off their
-compact band. Summing cancels the divergence term:
-\[
-  \int u\,B\cdot\nabla\psi=-\int (B_1g_x+B_2g_y)\psi.
-\]
-Change variables using $dx\,dy=\rho\,dh\,d\theta$; the factor
-$\rho^{-1}$ cancels. Unfolding the angular periodization gives the
-desired strip test identity. Construction of this field and the
-test-function transfer are not yet implemented in Lean.
+The parameter preimage of the null diagonal is null by the area map
+and positivity of its density. Thus the off-cut calculations suffice.
+
+Both $U$ and the proposed level derivative are periodic in $\theta$;
+for the latter, differentiate $P(h,\theta+1)=P(h,\theta)$ in $h$.
+Since $\partial_h\Pi\varphi=\Pi(\partial_h\varphi)$,
+Lemma~\ref{lem:angular-periodization} unfolds the displayed identity
+to the required strip test identity. No density theorem is used.
 \end{proof}
 
 \begin{lemma}[Weak derivatives pulled back to action-angle coordinates]
@@ -1249,8 +1322,8 @@ weakly on the strip.
 \begin{proof}
 \uses{lem:action-angle-weak-angular, lem:action-angle-weak-level}
 \leanok
-These are the two preceding directional rules. The Lean assembly has
-no admission of its own; the level-direction rule is still admitted.
+These are the two preceding directional rules. Both are proved in Lean
+without admitted dependencies.
 \end{proof}
 
 \begin{lemma}[Weak derivatives descending to the cell]
@@ -1284,19 +1357,19 @@ derivative integrability, test identity and gluing remain unformalized.
 The statements assume only local integrability. The earlier sketch
 invoked $H^1$ approximation, which is not justified; an approximation
 proof would need local $W^{1,1}$. This does not mean approximation is
-necessary. The angular rule is now proved directly from weak transport,
-independently of either remaining admission. The level rule has the
-direct divergence-free test route described above, which may avoid
-density machinery altogether.
+necessary. Both forward rules are now proved in Lean directly: the
+angular rule uses weak transport and the level rule uses the smooth
+divergence-free dual field. Neither requires density machinery or
+local square integrability.
 
 The old node bundled the already proved transport equivalence with
 both full-gradient directions. These are now separate: transport is
 Lemma~\ref{lem:action-angle-transport}, the forward angular and level
 rules are Lemmas~\ref{lem:action-angle-weak-angular}
 and~\ref{lem:action-angle-weak-level}, and descent to the cell is
-Lemma~\ref{lem:action-angle-weak-cell}. Only the last two are still
-admitted. The level-field construction and the reverse seam gluing
-remain implementation tasks, not completed Lean proofs.
+Lemma~\ref{lem:action-angle-weak-cell}. Only descent to the cell remains
+admitted; in particular, its weak test transfer and seam gluing must
+still be implemented.
 \end{remark}
 
 \begin{definition}[Normal and tangential derivatives]
