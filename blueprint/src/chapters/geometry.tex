@@ -1452,8 +1452,8 @@ $e^{L(h)}\le C_1/\sqrt h$ for all $0<h<1$.
 \begin{proof}
 \uses{lem:orbit-saddle-distance, lem:period-orbit, lem:period-regularity}
 At a quarter-orbit endpoint the explicit diagonal coordinates give
-$d\asymp\sqrt h$. Lemma~\ref{lem:orbit-saddle-distance}, whose proof
-uses only the corner dynamics and regular quarter quadrature, gives
+$d\asymp\sqrt h$. Lemma~\ref{lem:orbit-saddle-distance}, whose bounded
+integrating-factor proof uses no period estimate, gives
 $d\asymp e^{-L(h)}$ there. Combining the comparisons and taking
 logarithms proves the two-sided estimate, without sharp elliptic
 asymptotics. For the global upper exponential bound, use this estimate
@@ -1538,8 +1538,8 @@ be obtained by differentiating an unspecified $O$-term.
 \end{proof}
 
 \begin{remark}[Digest note: scope of the period inputs, split]
-The coarse bound is proved from corner dynamics independently of the
-elliptic identity and the sharp remainders. The even--even transport
+The coarse bound follows from the saddle-distance estimate independently
+of the elliptic identity and the sharp remainders. The even--even transport
 arguments use only Lemmas~\ref{lem:period-regularity}
 and~\ref{lem:period-coarse}. The fine nodes are retained for arguments
 that use the elliptic formula or the precise leading constants and
@@ -1578,39 +1578,62 @@ is used.
 \begin{lemma}[Distance to the saddles along an orbit]
 \label{lem:orbit-saddle-distance}
 \uses{def:period, def:dipole-flow, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.saddleDist_dipoleOrbit}
+\lean{NoEmbeddedEigenvalues.saddleDist_dipoleOrbit,
+  NoEmbeddedEigenvalues.saddleDist_dipoleOrbit_endpoints}
 \leanok
 For small $h$ and $|t|\le L(h)$, $ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$; in particular
 both endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a saddle.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-orbit, lem:corner-coordinates, lem:quarter-orbit-diagonal}
-On each half-quarter orient time toward the saddle. After labelling
-the corner coordinates suitably, $uv=h$, $u\ge v$, and
+\uses{lem:period-orbit, lem:dipole-flow}
+\leanok
+Take $0<h<1/2$ and $0\le t\le L(h)$. The diagonal equations and the
+endpoint identities give
 \[
-  \dot u=-Au,\qquad \dot v=Av,\qquad
-  A=\sqrt{1-u^2}\sqrt{1-v^2}.
+  -\arccos\sqrt h\le a(t)\le0,\qquad
+  \arccos\sqrt h\le b(t)<\pi/2.
 \]
-In a fixed small corner square, $A\ge c_0>0$ and
-$0\le1-A\le C(u^2+v^2)$. Changing variables using the two scalar ODEs
-bounds $\int u^2\,dt$ and $\int v^2\,dt$ uniformly, independently of $h$.
-Consequently $\int(1-A)\,dt$ is uniformly bounded. Integrating
-$\dot u/u=-1+(1-A)$ gives $u(t)\asymp e^{-t}$, measured from entry
-into the corner square.
+Indeed, while $b>0$, both $a$ and then $b$ decrease on this
+half-quarter. In particular $b\ge-a$. Put
+$u=\cos a$, $p=-\sin a$ and $r=\sin b$. Then
+\[
+  0\le p\le r\le1,\qquad r\ge\sqrt{1-h}>1/2,\qquad
+  \dot u=-pru,\qquad \dot p=u^2r.
+\]
+For $F=e^t u$ and $G=F e^{-2p}$,
+\[
+  \frac{\dot F}{F}=1-pr\ge0,\qquad
+  \frac{\dot G}{G}=1-pr-2u^2r
+    \le u^2(1-2r)\le0,
+\]
+since $pr\ge p^2=1-u^2$. As $F(0)=G(0)=1$, this yields
+\[
+  1\le e^t\cos a(t)\le e^{2p(t)}\le e^2.
+\]
 
-The entry time from the arc midpoint is uniformly bounded by the
-explicit quarter quadrature on the remaining regular segment.
-Within the corner $d\asymp\max\{u,v\}=u$; on that regular segment both
-$d$ and $e^{-|t|}$ are comparable to constants. Reflect to treat the
-other half-quarter. At its endpoint $u=v=\sqrt h$, giving both
-$d\asymp\sqrt h$ and $e^{-L(h)}\asymp\sqrt h$.
-
-Merely bounding $A$ between two positive constants would not yield
-the exact unit exponential rate. The uniform bound for its accumulated
-defect is the needed additional argument; it does not use the
-flow-time integral lemma below.
+To compare $d$ with $\cos a$, note that
+$q\mapsto\cos((q_1+q_2)/2)$ is $1$-Lipschitz and vanishes at every
+saddle, so $\cos a\le d$. Conversely, let
+$\alpha=\pi/2+a$ and $\beta=\pi/2-b$; then
+$0\le\beta\le\alpha\le\pi/2$. The distance to the saddle $(0,-\pi)$
+is at most $2\alpha\le\pi\sin\alpha=\pi\cos a$.
+Thus $e^{-t}\le d(\gamma_h(t))\le\pi e^2e^{-t}$.
+Reflection $(x,y)\mapsto(-y,-x)$ preserves the saddle set and reverses
+time, giving the negative half-quarter. At $t=\pm L(h)$,
+$\cos a=\sqrt h$, so $\sqrt h\le d\le\pi\sqrt h$; this endpoint
+comparison holds for every $0<h<1$.
 \end{proof}
+
+\begin{remark}[Digest note: exact rate without corner entry times]
+The proved bounded integrating factor $e^{-2p}$ replaces the earlier
+corner-entry and accumulated-defect sketch. Bounding the linearized
+rate between positive constants alone would not give the exact unit
+exponent. The integrating factor supplies that exponent directly on
+the whole half-quarter, without a coarse period bound or the flow-time
+integral lemma below. Both the exponential comparison and the endpoint
+comparison are proved in Lean without admitted dependencies.
+\end{remark}
 
 \begin{lemma}[Derivatives in the level]
 \label{lem:orbit-level-derivatives}

@@ -11,8 +11,9 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
 `lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
-`lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`;
-stated: `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
+`lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`,
+`lem:orbit-saddle-distance`;
+stated: `lem:orbit-comparison`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
@@ -37,6 +38,13 @@ These regularity proofs do not use the area formula or parameter-dependent ODE r
 The area formula then follows from the smooth orbit map's constant Jacobian `2`, change of
 variables on the measurable half-open orbit domain, and Tonelli/Fubini. Only the center is
 removed, not the cut or the time-window endpoint graphs.
+
+The saddle-distance estimate uses a bounded integrating factor rather than corner entry times.
+On a positive half-quarter, `a ≤ 0`, `b ≥ -a` and (for `h < 1/2`) `sin b ≥ 1/2`.
+Thus `exp t * cos a` increases, whereas `exp t * cos a * exp (2 sin a)` decreases.
+This gives `exp (-t) ≤ cos a ≤ exp 2 * exp (-t)`; the saddle distance is between
+`cos a` and `π * cos a` in the product norm. Reflection handles negative times.
+At the endpoints `cos a = √h`. No coarse period estimate or other admission is used.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 Periodicity identifies this integral with the half-open orbit window, without any
@@ -1318,13 +1326,225 @@ theorem orbit_close_arc : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, �
     ‖dipoleOrbit h t - separatrixArc t‖ ≤ C * √h := by
   sorry
 
+/-- A saddle has vanishing cosine of its first diagonal coordinate. -/
+private theorem cos_diag_fst_of_mem_saddleSet {p : ℝ × ℝ} (hp : p ∈ saddleSet) :
+    cos (diagCoord p).1 = 0 := by
+  obtain ⟨m, n, ⟨k, hk⟩, rfl⟩ := hp
+  have he : ((m : ℝ) * π + n * π) / 2 = (k : ℝ) * π + π / 2 := by
+    have hk' : (m : ℝ) + n = 2 * k + 1 := by exact_mod_cast hk
+    nlinarith [congrArg (fun x : ℝ ↦ x * π) hk']
+  simp only [diagCoord, he, cos_add, cos_pi_div_two, sin_pi_div_two,
+    sin_int_mul_pi, mul_zero, zero_sub, zero_mul, neg_zero]
+
+/-- The diagonal cosine is a one-Lipschitz function vanishing at every saddle. -/
+private theorem cos_diag_fst_le_saddleDist (p : ℝ × ℝ) :
+    cos (diagCoord p).1 ≤ saddleDist p := by
+  have hne : saddleSet.Nonempty := ⟨(0, -π), 0, -1, by decide, by simp⟩
+  apply (Metric.le_infDist hne).2
+  intro q hq
+  have hc := abs_cos_sub_cos_le (diagCoord p).1 (diagCoord q).1
+  rw [cos_diag_fst_of_mem_saddleSet hq, sub_zero] at hc
+  apply (le_abs_self _).trans (hc.trans ?_)
+  have hx : |p.1 - q.1| ≤ dist p q := by
+    simp only [Prod.dist_eq, Real.dist_eq]; exact le_max_left _ _
+  have hy : |p.2 - q.2| ≤ dist p q := by
+    simp only [Prod.dist_eq, Real.dist_eq]; exact le_max_right _ _
+  calc |(diagCoord p).1 - (diagCoord q).1| =
+      |(p.1 - q.1) + (p.2 - q.2)| / 2 := by
+        rw [show (diagCoord p).1 - (diagCoord q).1 =
+          ((p.1 - q.1) + (p.2 - q.2)) / 2 by simp [diagCoord]; ring,
+          abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
+    _ ≤ (|p.1 - q.1| + |p.2 - q.2|) / 2 := by gcongr; exact abs_add_le _ _
+    _ ≤ dist p q := by linarith
+
+/-- Bounds from the two ends of a half-quarter. -/
+private theorem orbit_half_quarter_bounds {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Icc 0 (eighthPeriod h)) :
+    -arccos √h ≤ orbitA h t ∧ orbitA h t ≤ 0 ∧
+      arccos √h ≤ orbitB h t ∧ orbitB h t < π / 2 := by
+  have ha : ∀ s ∈ Icc 0 (eighthPeriod h), orbitA h s ≤ 0 := by
+    intro s hs
+    rcases eq_or_lt_of_le hs.1 with rfl | hs0
+    · simp [orbitA_zero]
+    · exact (orbitA_neg h0 h1 ⟨hs0, hs.2⟩).le
+  have hb : ∀ s ∈ Icc 0 (eighthPeriod h), 0 ≤ sin (orbitB h s) := by
+    intro s hs
+    exact sin_nonneg_of_nonneg_of_le_pi (orbitB_pos h0 h1 hs).le
+      (by linarith [abs_lt.1 (abs_orbitB_lt h0 h1 s), pi_pos])
+  have hantiA : AntitoneOn (orbitA h) (Icc 0 (eighthPeriod h)) :=
+    antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc _ _) (continuous_orbitA h).continuousOn
+      (fun s _ ↦ (hasDerivAt_orbitA h s).hasDerivWithinAt) (fun s hs ↦ by
+        exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.2 (cos_orbitA_pos h0 h1 s).le)
+          (hb s (interior_subset hs)))
+  have hantiB : AntitoneOn (orbitB h) (Icc 0 (eighthPeriod h)) :=
+    antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc _ _) (continuous_orbitB h).continuousOn
+      (fun s _ ↦ (hasDerivAt_orbitB h s).hasDerivWithinAt) (fun s hs ↦ by
+        have hs' := interior_subset hs
+        exact mul_nonpos_of_nonpos_of_nonneg
+          (sin_nonpos_of_nonpos_of_neg_pi_le (ha s hs')
+            (by linarith [abs_lt.1 (abs_orbitA_lt h0 h1 s), pi_pos]))
+          (cos_orbitB_pos h0 h1 s).le)
+  have hL : eighthPeriod h ∈ Icc 0 (eighthPeriod h) :=
+    ⟨(eighthPeriod_pos h0 h1).le, le_rfl⟩
+  refine ⟨?_, ha t ht, ?_, (abs_lt.1 (abs_orbitB_lt h0 h1 t)).2⟩
+  · simpa only [orbitA_eighthPeriod h0 h1] using hantiA ht hL ht.2
+  · simpa only [orbitB_eighthPeriod h0 h1] using hantiB ht hL ht.2
+
+/-- The geometric comparison on the positive half-quarter, in the product norm. -/
+private theorem saddleDist_le_cos_orbitA {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Icc 0 (eighthPeriod h)) :
+    saddleDist (dipoleOrbit h t) ≤ π * cos (orbitA h t) := by
+  obtain ⟨ha0, ha, hb, hb1⟩ := orbit_half_quarter_bounds h0 h1 ht
+  have ha1 := (abs_lt.1 (abs_orbitA_lt h0 h1 t)).1
+  have hab : -orbitA h t ≤ orbitB h t := by linarith
+  have hc := one_add_mul_le_cos (x := orbitA h t) ha1.le ha
+  have hw : π + 2 * orbitA h t ≤ π * cos (orbitA h t) := by
+    have := (mul_le_mul_of_nonneg_left hc pi_pos.le)
+    field_simp at this
+    nlinarith
+  apply (Metric.infDist_le_dist_of_mem
+    (show (0, -π) ∈ saddleSet from ⟨0, -1, by decide, by simp⟩)).trans
+  rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
+  have hx : (dipoleOrbit h t).1 = orbitA h t + orbitB h t := dipoleOrbit_fst h t
+  have hy : (dipoleOrbit h t).2 = orbitA h t - orbitB h t := by
+    simp [orbitA, orbitB, diagCoord]; ring
+  rw [hx, hy]
+  apply max_le <;> rw [abs_le] <;> constructor <;> linarith
+
+/-- A bounded exponential correction gives the exact unit decay rate, without a period bound. -/
+private theorem cos_orbitA_exp_bounds {h t : ℝ} (h0 : 0 < h) (h1 : h < 1 / 2)
+    (ht : t ∈ Icc 0 (eighthPeriod h)) :
+    exp (-t) ≤ cos (orbitA h t) ∧ cos (orbitA h t) ≤ exp 2 * exp (-t) := by
+  have h1' : h < 1 := by linarith
+  have hs : ∀ s ∈ Icc 0 (eighthPeriod h),
+      1 / 2 ≤ sin (orbitB h s) ∧ -sin (orbitA h s) ≤ sin (orbitB h s) := by
+    intro s hs
+    obtain ⟨ha0, ha, hb, hb1⟩ := orbit_half_quarter_bounds h0 h1' hs
+    have hb0 := (orbitB_pos h0 h1' hs).le
+    have hr := sin_nonneg_of_nonneg_of_le_pi hb0 (by linarith [pi_pos])
+    have hc : cos (orbitB h s) ≤ √h := by
+      rw [← cos_arccos_sqrt h0 h1']
+      exact cos_le_cos_of_nonneg_of_le_pi (arccos_nonneg _) (by linarith [pi_pos]) hb
+    have hcs := cos_orbitB_pos h0 h1' s
+    constructor
+    · nlinarith [sin_sq_add_cos_sq (orbitB h s), sq_sqrt h0.le,
+        mul_self_le_mul_self hcs.le hc]
+    · rw [← sin_neg]
+      exact sin_le_sin_of_le_of_le_pi_div_two (by linarith [pi_pos]) hb1.le (by linarith)
+  have hd (s : ℝ) : HasDerivAt (fun s ↦ exp s * cos (orbitA h s))
+      (exp s * cos (orbitA h s) * (1 + sin (orbitA h s) * sin (orbitB h s))) s := by
+    convert (hasDerivAt_exp s).mul (hasDerivAt_orbitA h s).cos using 1; ring
+  have hdw (s : ℝ) : HasDerivAt
+      (fun s ↦ exp s * cos (orbitA h s) * exp (2 * sin (orbitA h s)))
+      (exp s * cos (orbitA h s) * exp (2 * sin (orbitA h s)) *
+        (1 + sin (orbitA h s) * sin (orbitB h s) -
+          2 * cos (orbitA h s) ^ 2 * sin (orbitB h s))) s := by
+    convert (hd s).mul (((hasDerivAt_orbitA h s).sin.const_mul 2).exp) using 1; ring
+  have hmono : MonotoneOn (fun s ↦ exp s * cos (orbitA h s))
+      (Icc 0 (eighthPeriod h)) :=
+    monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc _ _)
+      (by have := continuous_orbitA h; fun_prop) (fun s _ ↦ (hd s).hasDerivWithinAt) (fun s _ ↦ by
+        have hprod : -1 ≤ sin (orbitA h s) * sin (orbitB h s) := by
+          have := mul_le_mul (abs_sin_le_one (orbitA h s)) (abs_sin_le_one (orbitB h s))
+            (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)
+          rw [← abs_mul] at this
+          linarith [(abs_le.1 this).1]
+        exact mul_nonneg (mul_nonneg (exp_pos _).le (cos_orbitA_pos h0 h1' s).le)
+          (by linarith))
+  have hanti : AntitoneOn
+      (fun s ↦ exp s * cos (orbitA h s) * exp (2 * sin (orbitA h s)))
+      (Icc 0 (eighthPeriod h)) :=
+    antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc _ _)
+      (by have := continuous_orbitA h; fun_prop)
+      (fun s _ ↦ (hdw s).hasDerivWithinAt) (fun s hs' ↦ by
+        have hs' := interior_subset hs'
+        obtain ⟨hr, hsr⟩ := hs s hs'
+        have ha := (orbit_half_quarter_bounds h0 h1' hs').2.1
+        have hsa : sin (orbitA h s) ≤ 0 :=
+          sin_nonpos_of_nonpos_of_neg_pi_le ha
+            (by linarith [abs_lt.1 (abs_orbitA_lt h0 h1' s), pi_pos])
+        have hdef : 1 + sin (orbitA h s) * sin (orbitB h s) ≤ cos (orbitA h s) ^ 2 := by
+          nlinarith [mul_le_mul_of_nonpos_left hsr hsa, sin_sq_add_cos_sq (orbitA h s)]
+        apply mul_nonpos_of_nonneg_of_nonpos
+          (mul_nonneg (mul_nonneg (exp_pos _).le (cos_orbitA_pos h0 h1' s).le) (exp_pos _).le)
+        nlinarith [mul_nonneg (sq_nonneg (cos (orbitA h s)))
+          (show 0 ≤ 2 * sin (orbitB h s) - 1 by linarith)])
+  have ht0 : (0 : ℝ) ∈ Icc 0 (eighthPeriod h) := ⟨le_rfl, ht.1.trans ht.2⟩
+  have hlo := hmono ht0 ht ht.1
+  have hhi := hanti ht0 ht ht.1
+  simp only [orbitA_zero, sin_zero, cos_zero, exp_zero, mul_one, mul_zero] at hlo hhi
+  have hweight : exp (-2) ≤ exp (2 * sin (orbitA h t)) :=
+    exp_le_exp.2 (by linarith [neg_one_le_sin (orbitA h t)])
+  have hupper : exp t * cos (orbitA h t) * exp (-2) ≤ 1 :=
+    (mul_le_mul_of_nonneg_left hweight
+      (mul_nonneg (exp_pos _).le (cos_orbitA_pos h0 h1' t).le)).trans hhi
+  constructor
+  · have := mul_le_mul_of_nonneg_left hlo (exp_pos (-t)).le
+    simpa only [← mul_assoc, ← exp_add, neg_add_cancel, exp_zero, one_mul, mul_one] using this
+  · have := mul_le_mul_of_nonneg_right hupper (exp_pos (2 - t)).le
+    have he : exp t * exp (-2) * exp (2 - t) = 1 := by
+      rw [← exp_add, ← exp_add, show t + -2 + (2 - t) = 0 by ring, exp_zero]
+    have he' : exp (2 - t) = exp 2 * exp (-t) := by rw [← exp_add]; rfl
+    rw [show exp t * cos (orbitA h t) * exp (-2) * exp (2 - t) =
+      cos (orbitA h t) * (exp t * exp (-2) * exp (2 - t)) by ring, he, mul_one,
+      one_mul, he'] at this
+    exact this
+
+/-- Reflection in the arc midpoint preserves the saddle lattice and its distance. -/
+private theorem saddleDist_reflA (p : ℝ × ℝ) : saddleDist (reflA p) = saddleDist p := by
+  have hmem : ∀ q ∈ saddleSet, reflA q ∈ saddleSet := by
+    rintro q ⟨m, n, ho, rfl⟩
+    refine ⟨-n, -m, ?_, ?_⟩
+    · simpa [add_comm] using ho.neg
+    · simp [reflA_apply]
+  have himage : reflA '' saddleSet = saddleSet := by
+    apply Subset.antisymm
+    · rintro _ ⟨q, hq, rfl⟩; exact hmem q hq
+    · intro q hq
+      exact ⟨reflA q, hmem q hq, by simp⟩
+  have hiso : Isometry reflA := Isometry.of_dist_eq fun p q ↦ by
+    simp [reflA_apply, Prod.dist_eq, max_comm]
+  unfold saddleDist
+  simpa only [himage] using (Metric.infDist_image hiso (x := p) (t := saddleSet))
+
 /-- On the quarter orbit the distance to the saddles is `d(γ_h(t)) ∼ e^{-|t|}`; at the endpoints
     `t = ±L(h)` it is `∼ √h`. -/
 theorem saddleDist_dipoleOrbit : ∃ c C h₀ : ℝ, 0 < c ∧ 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t,
     |t| ≤ eighthPeriod h →
       c * exp (-|t|) ≤ saddleDist (dipoleOrbit h t) ∧
         saddleDist (dipoleOrbit h t) ≤ C * exp (-|t|) := by
-  sorry
+  refine ⟨1, π * exp 2, 1 / 2, by norm_num, by norm_num, ?_⟩
+  intro h hh t ht
+  have h1 : h < 1 := by linarith [hh.2]
+  have ht' : |t| ∈ Icc 0 (eighthPeriod h) := ⟨abs_nonneg t, ht⟩
+  obtain ⟨hlo, hhi⟩ := cos_orbitA_exp_bounds hh.1 hh.2 ht'
+  have hd : saddleDist (dipoleOrbit h t) = saddleDist (dipoleOrbit h |t|) := by
+    rcases le_total 0 t with ht0 | ht0
+    · rw [abs_of_nonneg ht0]
+    · rw [abs_of_nonpos ht0, dipoleOrbit_neg, saddleDist_reflA]
+  rw [hd, one_mul]
+  refine ⟨hlo.trans (cos_diag_fst_le_saddleDist _), ?_⟩
+  exact (saddleDist_le_cos_orbitA hh.1 h1 ht').trans
+    (by nlinarith [mul_le_mul_of_nonneg_left hhi pi_pos.le])
+
+/-- The quarter-orbit endpoints have saddle distance comparable to `√h`, on all levels. -/
+theorem saddleDist_dipoleOrbit_endpoints {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : |t| = eighthPeriod h) :
+    √h ≤ saddleDist (dipoleOrbit h t) ∧ saddleDist (dipoleOrbit h t) ≤ π * √h := by
+  have hd : saddleDist (dipoleOrbit h t) = saddleDist (dipoleOrbit h (eighthPeriod h)) := by
+    rw [← ht]
+    rcases le_total 0 t with ht0 | ht0
+    · rw [abs_of_nonneg ht0]
+    · rw [abs_of_nonpos ht0, dipoleOrbit_neg, saddleDist_reflA]
+  have hc : cos (orbitA h (eighthPeriod h)) = √h := by
+    rw [orbitA_eighthPeriod h0 h1, cos_neg, cos_arccos_sqrt h0 h1]
+  rw [hd]
+  constructor
+  · simpa only [orbitA, ← hc] using cos_diag_fst_le_saddleDist
+      (dipoleOrbit h (eighthPeriod h))
+  · simpa only [hc] using saddleDist_le_cos_orbitA h0 h1
+      (show eighthPeriod h ∈ Icc 0 (eighthPeriod h) from
+        ⟨(eighthPeriod_pos h0 h1).le, le_rfl⟩)
 
 /-- `|∂_h γ_h(t)| ≤ C e^{|t|}` and `|∂_h² γ_h(t)| ≤ C e^{2|t|}` on the quarter orbit. -/
 theorem deriv_dipoleOrbit_level_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t,

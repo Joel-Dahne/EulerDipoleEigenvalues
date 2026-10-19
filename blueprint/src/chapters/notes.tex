@@ -22,7 +22,7 @@ once resolved; record the resolution in the relevant node.
         elliptic-integral reference or a quantified proof. Differentiating
         a value $O$-term is not a proof of the derivative bound.
         The coarse bounds are now separate in Lemma~\ref{lem:period-coarse},
-        with an independent corner-dynamics proof sketch. Neither the
+        from the independently proved saddle-distance estimate. Neither the
         elliptic identity nor the sharp remainders are in the even--even
         dependency graph.
   \item \textbf{Orbit geometry} (Lemmas~\ref{lem:orbit-level-derivatives}
@@ -31,9 +31,10 @@ once resolved; record the resolution in the relevant node.
         coordinates remain unproved in Lean. Smoothness of the inverse
         action-angle parametrization is now proved by scalar implicit inversion
         of the regular time quadrature, before differentiating any variational
-        equations; a general ODE parameter-dependence theorem is not required. The saddle-distance
-        sketch controls the accumulated nonlinear defect to get the exact
-        unit exponential rate, rather than invoking linearization alone. The overly broad global time-gradient
+        equations; a general ODE parameter-dependence theorem is not required.
+        The saddle-distance estimate is now proved in Lean without admissions,
+        using a bounded integrating factor to get the exact unit exponential
+        rate. The overly broad global time-gradient
         statement has been corrected to recentered quarter-orbit charts;
         the counterexample and resolution are retained in the digest note after
         Lemma~\ref{lem:orbit-coordinate-gradients}.

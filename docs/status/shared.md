@@ -65,14 +65,18 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 - Period regularity (`lem:period-regularity`) is proved without admissions in
   `Period.lean`: the regular fixed-interval integral gives smoothness and
   `L' < 0`, hence strict decrease of `L` and `S`. Coarse logarithmic bounds
-  remain open and come independently from corner dynamics and endpoint distance.
+  remain open in Lean but now follow from the independently proved
+  saddle-distance and endpoint estimates.
   The full `lem:period-coarse` statement is blueprint-only; its Lean link covers
   just the global upper exponential bound. The elementary lower bound
   `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) is proved.
 - Full forward weak-gradient transfer is proved. Reverse transfer remains open;
   see the virial regularization section below.
-- Saddle-distance and level-derivative bounds are medium–high; inverse-coordinate
-  gradients are moderate and time integrals smaller once those bounds exist.
+- Saddle-distance and endpoint bounds are proved without admissions in
+  `OrbitCoordinates.lean`, via a bounded integrating factor, independently of
+  coarse period bounds. Level-derivative bounds remain medium–high;
+  inverse-coordinate gradients are moderate and time integrals smaller once
+  those bounds exist.
   Keep recentered quarter times: the former global time-gradient estimate
   was false.
 - The elliptic identity and sharp value/derivative asymptotics are outside the
