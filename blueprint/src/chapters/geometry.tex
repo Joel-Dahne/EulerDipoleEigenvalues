@@ -757,6 +757,29 @@ $b=0,a<0$. The level coordinate $\Psi/2$ is smooth everywhere.
 No differentiable dependence theorem for ODE flows is needed.
 \end{proof}
 
+\begin{lemma}[Jacobian of the orbit map]
+\label{lem:orbit-jacobian}
+\uses{def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.det_fderiv_orbitMap}
+\leanok
+For $0<h<1$ and $t\in\R$, the Jacobian determinant of the orbit map
+$G(h,t)=\gamma_h(t)$ is $\det DG(h,t)=2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-regularity, lem:period-regularity,
+  lem:period-orbit, lem:dipole-flow}
+\leanok
+The identity $G(h,t)=P(h,t/S(h))$ gives smoothness.
+Write $u=\partial_hG=(u_x,u_y)$ and $G=(x,y)$. The flow equation gives
+$\partial_tG=(\sin y,-\sin x)$. Differentiating
+$h(G(h,t))=h$, with $h(x,y)=(\cos x+\cos y)/2$, gives
+\[
+  -\sin x\,u_x-\sin y\,u_y=2.
+\]
+Consequently $\det DG=2$.
+\end{proof}
+
 \begin{lemma}[Area formula in orbit coordinates]
 \label{lem:orbit-coordinates-area}
 \uses{def:orbit-coordinates}
@@ -776,18 +799,11 @@ infinite integrals.
 
 \begin{proof}
 \uses{lem:orbit-coordinates-inverse, lem:action-angle-regularity,
-  lem:period-regularity, lem:dipole-flow, lem:flow-continuity}
+  lem:period-regularity, lem:orbit-jacobian, lem:flow-continuity}
 \leanok
 Let $G(h,t)=\gamma_h(t)=P(h,t/S(h))$, smooth for $0<h<1$ by
-Lemma~\ref{lem:action-angle-regularity}. Write
-$u=\partial_hG=(u_x,u_y)$ and $G=(x,y)$. The flow equation gives
-$\partial_tG=(\sin y,-\sin x)$. Differentiating
-$h(G(h,t))=h$, with $h(x,y)=(\cos x+\cos y)/2$, gives
-\[
-  -\sin x\,u_x-\sin y\,u_y=2.
-\]
-Consequently $\det DG=2$.
-
+Lemma~\ref{lem:action-angle-regularity}, with $\det DG=2$ by
+Lemma~\ref{lem:orbit-jacobian}.
 The inverse identities make $G$ injective on the measurable half-open
 orbit domain, with image the punctured cell. Apply the differentiable
 change-of-variables theorem on this measurable set, using $|\det DG|=2$.
@@ -1729,13 +1745,28 @@ differentiable at $p=R^k\gamma_h(\tau)$ with $|\nabla t_k(p)|\le C/d(p)$.
 
 \begin{proof}
 \uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
-  lem:action-angle-chart, lem:orbit-level-derivatives, lem:orbit-saddle-distance}
-The bound for $\rho$ follows from $|\sin x|\le|x-m\pi|$ and
-$|\sin y|\le|y-n\pi|$ at every saddle $(m\pi,n\pi)$.
-For the base quarter, invert the Jacobian of $(h,\tau)\mapsto\gamma_h(\tau)$:
-its determinant has absolute value $2$, so
-$|\nabla t|\le C|\partial_h\gamma_h|\le Ce^{|\tau|}\le C/d$.
-Rotation is an isometry preserving $d$, which gives the same bound for each $t_k$.
+  lem:orbit-jacobian, lem:orbit-level-derivatives}
+\leanok
+At every saddle $(m\pi,n\pi)$, the $1$-Lipschitz property of sine gives
+$|\sin x|\le|x-m\pi|$ and $|\sin y|\le|y-n\pi|$.
+Taking the infimum gives $\rho/2\le d$.
+For the base quarter, write $A=D_{(h,\tau)}\gamma_h(\tau)$ and
+$B=D_p(h,t)$ at $p=\gamma_h(\tau)$. Here $b(p)>0$, so the global time
+is smooth. Differentiating $\gamma_{h(p)}(t(p))=p$ gives $AB=I$,
+and the orbit Jacobian satisfies $\det A=2$.
+If $J=\partial_h\gamma_h(\tau)$ is its first column, elimination of
+the level row gives, for every vector $v$,
+\[
+  2\,dt(v)=J_1v_2-J_2v_1.
+\]
+Thus $\|dt\|\le|J|\le C/d$ by
+Lemma~\ref{lem:orbit-level-derivatives}. This norm inequality holds
+also for the product norm used in Lean.
+The rotation preserves the saddle lattice and is an isometry.
+Since $R^{3k}R^k=R^{4k}=I$, the chain rule for
+$t_k=t\circ R^{3k}$ gives the same bound at $R^k p$.
+Both gradient estimates are proved in Lean without admitted dependencies.
+Only the Jacobian identity is used, not the measure-theoretic area formula.
 \end{proof}
 
 \begin{remark}[Digest note: correction of the global time-gradient bound]
@@ -1749,8 +1780,10 @@ $|\partial_b t|=4|\sin b|\,|L'(\cos b)|\sim2/h$, whereas $d(p_h)$ stays bounded 
 The blueprint and Lean statements now use the recentered times $t_k$ on their respective
 quarter patches. Local smoothness of the global time off its cut is stated separately
 in Lemma~\ref{lem:orbit-coordinates-smooth}; the orbitwise restriction lemma uses only that
-local regularity, not the uniform near-separatrix estimate. These are corrected
-statements, not newly formalized analytic proofs.
+local regularity, not the uniform near-separatrix estimate. The corrected
+recentered bounds are now proved in Lean by inverse-Jacobian algebra and
+rotation invariance, without admitted dependencies; the former global
+statement remains false.
 \end{remark}
 
 \begin{lemma}[Flow-time integrals of the saddle distance]
@@ -1785,8 +1818,9 @@ $h=10^{-2},\dots,10^{-6}$ (scratch computation, October 2026).
 The derivative and gradient bounds used throughout Chapter~\ref{chap:regularity}
 are only asserted in the manuscript. The level-derivative bounds are now proved
 in Lemma~\ref{lem:orbit-level-derivatives}, via the smooth orbit chart and
-variational equations. The inverse-time gradient bound still needs the
-Jacobian-inversion argument of Lemma~\ref{lem:orbit-coordinate-gradients}.
+variational equations. The coordinate-gradient bounds are now proved by
+Jacobian inversion and rotation invariance in
+Lemma~\ref{lem:orbit-coordinate-gradients}.
 \end{remark}
 
 \begin{definition}[Corner chart]

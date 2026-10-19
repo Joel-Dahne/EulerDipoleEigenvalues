@@ -12,10 +12,11 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
 `lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
-`lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`,
+`lem:orbit-jacobian`, `lem:orbit-coordinates-area`, `lem:action-angle-chart`,
+`lem:coarea-level-cutoff`,
 `lem:orbit-saddle-distance`, `lem:period-coarse`, `lem:orbit-comparison`,
-`lem:orbit-level-derivatives`;
-stated: `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
+`lem:orbit-level-derivatives`, `lem:orbit-coordinate-gradients`;
+stated: `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
 flow time `t` along the orbit `γ_h`, measured from its point `(a, b) = (0, arccos h)`. The
@@ -65,6 +66,15 @@ the forcing is bounded by `E`, and the augmented derivative is at most
 `2 * |t|` times the augmented norm. A second homogeneous Grönwall estimate gives the
 rate `exp (2 * |t|)` without variation of constants, including negative times.
 These estimates hold at all real times; saddle-distance comparisons restrict to a quarter.
+
+For coordinate gradients, the sine functions vanish at every saddle and are one-Lipschitz,
+which gives `gradNorm / 2 ≤ saddleDist`. On the base quarter the inverse-coordinate identity
+has derivative `A ∘ B = id`, where `A` is the orbit Jacobian and `B` the coordinate Jacobian.
+Since `det A = 2`, its inverse time row satisfies `2 dt(v) = J₁ v₂ - J₂ v₁`, so its
+operator norm is bounded by the first level variation. The proved `C / d` bound on that
+variation transfers to all recentered quarters: rotations preserve the saddle lattice and
+are isometries, and `R^(3k) ∘ R^k = id`. No estimate for the global unwrapped time on the
+whole cell is used.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 Periodicity identifies this integral with the half-open orbit window, without any
@@ -825,7 +835,7 @@ private theorem contDiffAt_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
   rw [div_mul_cancel₀ _ (orbitPeriod_pos hq.1 hq.2).ne']
 
 /-- Conservation of the level fixes the normal column, and the flow fixes the time column. -/
-private theorem det_fderiv_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+theorem det_fderiv_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
     (fderiv ℝ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) (h, t)).det = 2 := by
   let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
   let A := fderiv ℝ G (h, t)
@@ -2019,7 +2029,151 @@ theorem deriv_dipoleOrbit_level_le_saddleDist : ∃ C h₀ : ℝ, 0 < h₀ ∧ h
 /-- `|∇h| ≤ C d` on the cell. -/
 theorem gradNorm_le_saddleDist :
     ∃ C : ℝ, ∀ p ∈ cellSquare, gradNorm p / 2 ≤ C * saddleDist p := by
-  sorry
+  refine ⟨1, fun p _ ↦ ?_⟩
+  rw [one_mul]
+  have hne : saddleSet.Nonempty := ⟨(0, -π), 0, -1, by decide, by simp⟩
+  apply (Metric.le_infDist hne).2
+  rintro q ⟨m, n, _, rfl⟩
+  have hx : |sin p.1| ≤ dist p ((m : ℝ) * π, (n : ℝ) * π) := by
+    have h := abs_sin_sub_sin_le p.1 (m * π)
+    rw [sin_int_mul_pi, sub_zero] at h
+    exact h.trans (le_max_left _ _)
+  have hy : |sin p.2| ≤ dist p ((m : ℝ) * π, (n : ℝ) * π) := by
+    have h := abs_sin_sub_sin_le p.2 (n * π)
+    rw [sin_int_mul_pi, sub_zero] at h
+    exact h.trans (le_max_right _ _)
+  apply (div_le_iff₀ (by norm_num : (0 : ℝ) < 2)).2
+  unfold gradNorm
+  apply sqrt_le_iff.2
+  refine ⟨by positivity, ?_⟩
+  nlinarith [mul_self_le_mul_self (abs_nonneg _) hx,
+    mul_self_le_mul_self (abs_nonneg _) hy, sq_abs (sin p.1), sq_abs (sin p.2)]
+
+/-- In dimension two the last row of the inverse Jacobian is controlled by the
+first column of the forward Jacobian when its determinant is two. -/
+private theorem norm_snd_inverse_le (A B : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ))
+    (hAB : A.comp B = ContinuousLinearMap.id ℝ (ℝ × ℝ)) (hdet : A.det = 2) :
+    ‖(ContinuousLinearMap.snd ℝ ℝ ℝ).comp B‖ ≤ ‖A (1, 0)‖ := by
+  have hdet' : (A (1, 0)).1 * (A (0, 1)).2 - (A (0, 1)).1 * (A (1, 0)).2 = 2 := by
+    change LinearMap.det (A : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) = 2 at hdet
+    rw [← LinearMap.det_toMatrix (Module.Basis.finTwoProd ℝ), Matrix.det_fin_two] at hdet
+    simpa only [LinearMap.toMatrix_apply, Module.Basis.finTwoProd_zero,
+      Module.Basis.finTwoProd_one, Module.Basis.coe_finTwoProd_repr,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one,
+      ContinuousLinearMap.coe_coe] using hdet
+  have hA (u : ℝ × ℝ) : A u = u.1 • A (1, 0) + u.2 • A (0, 1) := by
+    rw [← map_smul, ← map_smul, ← map_add]
+    congr 1
+    ext <;> simp
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
+  intro v
+  have hv := congrArg (fun L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ) ↦ L v) hAB
+  change A (B v) = v at hv
+  rw [hA] at hv
+  have hx := congrArg Prod.fst hv
+  have hy := congrArg Prod.snd hv
+  simp only [Prod.fst_add, Prod.snd_add, Prod.smul_fst, Prod.smul_snd, smul_eq_mul] at hx hy
+  have ht : 2 * (B v).2 = (A (1, 0)).1 * v.2 - (A (1, 0)).2 * v.1 := by
+    linear_combination (A (1, 0)).1 * hy - (A (1, 0)).2 * hx - (B v).2 * hdet'
+  have hj1 : |(A (1, 0)).1| ≤ ‖A (1, 0)‖ := le_max_left _ _
+  have hj2 : |(A (1, 0)).2| ≤ ‖A (1, 0)‖ := le_max_right _ _
+  have hv1 : |v.1| ≤ ‖v‖ := le_max_left _ _
+  have hv2 : |v.2| ≤ ‖v‖ := le_max_right _ _
+  have hb : |(A (1, 0)).1 * v.2 - (A (1, 0)).2 * v.1| ≤ 2 * (‖A (1, 0)‖ * ‖v‖) := by
+    apply (abs_sub _ _).trans
+    rw [abs_mul, abs_mul]
+    nlinarith [mul_le_mul hj1 hv2 (abs_nonneg _) (norm_nonneg _),
+      mul_le_mul hj2 hv1 (abs_nonneg _) (norm_nonneg _)]
+  rw [← ht, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)] at hb
+  change |(B v).2| ≤ ‖A (1, 0)‖ * ‖v‖
+  linarith
+
+/-- The base-quarter time derivative is controlled by the forward level derivative. -/
+private theorem norm_fderiv_timeCoord_dipoleOrbit_le {h t : ℝ}
+    (hh : h ∈ Ioo (0 : ℝ) 1) (ht : |t| ≤ eighthPeriod h) :
+    DifferentiableAt ℝ timeCoord (dipoleOrbit h t) ∧
+      ‖fderiv ℝ timeCoord (dipoleOrbit h t)‖ ≤ ‖orbitFirstVariation (h, t)‖ := by
+  let p := dipoleOrbit h t
+  let F : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2
+  let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ (levelCoord q, timeCoord q)
+  have hL := eighthPeriod_pos hh.1 hh.2
+  have hq : (h, t) ∈ orbitDomain := ⟨hh, by
+    constructor <;> linarith [neg_le_abs t, le_abs_self t]⟩
+  have hp : p ∈ puncturedCell := by
+    refine ⟨dipoleOrbit_mem_cellSquare hh.1 hh.2 t, ?_⟩
+    intro hz
+    have hl := levelCoord_dipoleOrbit hh.1 hh.2 t
+    change dipoleOrbit h t = 0 at hz
+    rw [hz] at hl
+    norm_num [levelCoord, dipoleLift] at hl
+    linarith [hh.2]
+  have hb : (diagCoord p).2 ≠ 0 := (orbitB_pos_half hh.1 hh.2
+    ⟨by linarith [neg_le_abs t], by linarith [le_abs_self t]⟩).ne'
+  have hG := contDiffAt_orbitCoordinates hp (fun hcut ↦ hb hcut.1)
+  have hGp : G p = (h, t) :=
+    Prod.ext (levelCoord_dipoleOrbit hh.1 hh.2 t) (timeCoord_dipoleOrbit hq)
+  let A := fderiv ℝ F (h, t)
+  let B := fderiv ℝ G p
+  have hdF : HasFDerivAt F A (G p) := by
+    rw [hGp]
+    exact ((contDiffAt_orbitMap hh).differentiableAt (by simp)).hasFDerivAt
+  have hdG : HasFDerivAt G B p := (hG.differentiableAt (by simp)).hasFDerivAt
+  have he : (fun q ↦ F (G q)) =ᶠ[nhds p] id := by
+    filter_upwards [isOpen_puncturedCell.mem_nhds hp] with q hq
+    exact dipoleOrbit_levelCoord_timeCoord hq
+  have hAB : A.comp B = ContinuousLinearMap.id ℝ (ℝ × ℝ) := by
+    have hd := (hdF.comp p hdG).fderiv
+    change fderiv ℝ (fun q ↦ F (G q)) p = A.comp B at hd
+    rw [he.fderiv_eq, fderiv_id] at hd
+    exact hd.symm
+  have hT : (ContinuousLinearMap.snd ℝ ℝ ℝ).comp B = fderiv ℝ timeCoord p := by
+    exact (hasFDerivAt_snd.comp p hdG).fderiv.symm
+  refine ⟨(contDiffAt_timeCoord hp (fun hcut ↦ hb hcut.1)).differentiableAt (by simp), ?_⟩
+  rw [← hT]
+  exact norm_snd_inverse_le A B hAB (det_fderiv_orbitMap hh)
+
+private theorem isometry_rotLift : Isometry rotLift := Isometry.of_dist_eq fun p q ↦ by
+  simp [rotLift, Prod.dist_eq, max_comm]
+
+private theorem isometry_rotLift_iterate (k : ℕ) : Isometry (rotLift^[k]) := by
+  induction k with
+  | zero => exact isometry_id
+  | succ k ih => exact ih.comp isometry_rotLift
+
+private theorem differentiable_rotLift_iterate (k : ℕ) : Differentiable ℝ (rotLift^[k]) := by
+  induction k with
+  | zero => exact differentiable_id
+  | succ k ih =>
+      exact ih.comp (show Differentiable ℝ rotLift from by unfold rotLift; fun_prop)
+
+private theorem rotLift_iterate_inverse (k : ℕ) (p : ℝ × ℝ) :
+    rotLift^[3 * k] (rotLift^[k] p) = p := by
+  have hfour : rotLift^[4] = id := by
+    funext q
+    simp [Function.iterate_succ_apply, rotLift]
+  rw [← Function.iterate_add_apply, show 3 * k + k = 4 * k by omega,
+    Function.iterate_mul, hfour, Function.iterate_id]
+  rfl
+
+private theorem saddleDist_rotLift (p : ℝ × ℝ) : saddleDist (rotLift p) = saddleDist p := by
+  have hmem : ∀ q ∈ saddleSet, rotLift q ∈ saddleSet := by
+    rintro q ⟨m, n, ⟨j, hj⟩, rfl⟩
+    refine ⟨n, -m, ⟨j - m, by omega⟩, ?_⟩
+    simp [rotLift]
+  have himage : rotLift '' saddleSet = saddleSet := by
+    apply Subset.antisymm
+    · rintro _ ⟨q, hq, rfl⟩; exact hmem q hq
+    · intro q hq
+      exact ⟨rotLift (rotLift (rotLift q)),
+        hmem _ (hmem _ (hmem _ hq)), by simp [rotLift]⟩
+  unfold saddleDist
+  simpa only [himage] using (Metric.infDist_image isometry_rotLift (x := p) (t := saddleSet))
+
+private theorem saddleDist_rotLift_iterate (k : ℕ) (p : ℝ × ℝ) :
+    saddleDist (rotLift^[k] p) = saddleDist p := by
+  induction k generalizing p with
+  | zero => rfl
+  | succ k ih => rw [Function.iterate_succ_apply, ih, saddleDist_rotLift]
 
 /-- The inverse-time gradient bound holds on each separately recentered quarter-orbit
     patch, not for the single global unwrapped time coordinate on the entire cell. -/
@@ -2028,7 +2182,31 @@ theorem norm_fderiv_quarterTimeCoord_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ h₀ < 
       DifferentiableAt ℝ (quarterTimeCoord k) (rotLift^[k] (dipoleOrbit h t)) ∧
         ‖fderiv ℝ (quarterTimeCoord k) (rotLift^[k] (dipoleOrbit h t))‖ ≤
           C / saddleDist (rotLift^[k] (dipoleOrbit h t)) := by
-  sorry
+  obtain ⟨C, h₀, hh₀, hh₁, hC⟩ := deriv_dipoleOrbit_level_le_saddleDist
+  refine ⟨C, h₀, hh₀, hh₁, ?_⟩
+  intro k _ h hh t ht
+  have hh' : h ∈ Ioo (0 : ℝ) 1 := ⟨hh.1, hh.2.trans hh₁⟩
+  obtain ⟨hd, hnorm⟩ := norm_fderiv_timeCoord_dipoleOrbit_le hh' ht
+  have hJ := (hC h hh t ht).1
+  rw [(hasDerivAt_orbit_level (t := t) hh').deriv] at hJ
+  have hbase := hnorm.trans hJ
+  let p := dipoleOrbit h t
+  let q := rotLift^[k] p
+  let M := rotLift^[3 * k]
+  have hi : M q = p := rotLift_iterate_inverse k p
+  have hM : DifferentiableAt ℝ M q := differentiable_rotLift_iterate (3 * k) q
+  have htime : DifferentiableAt ℝ timeCoord (M q) := by rwa [hi]
+  have hdiff : DifferentiableAt ℝ (quarterTimeCoord k) q := htime.comp q hM
+  refine ⟨hdiff, ?_⟩
+  change ‖fderiv ℝ (timeCoord ∘ M) q‖ ≤ C / saddleDist q
+  rw [fderiv_comp q htime hM]
+  have hMnorm : ‖fderiv ℝ M q‖ ≤ 1 :=
+    norm_fderiv_le_of_lipschitz ℝ (isometry_rotLift_iterate (3 * k)).lipschitzWith
+  calc ‖(fderiv ℝ timeCoord (M q)).comp (fderiv ℝ M q)‖ ≤
+        ‖fderiv ℝ timeCoord (M q)‖ * ‖fderiv ℝ M q‖ := ContinuousLinearMap.opNorm_comp_le _ _
+    _ ≤ ‖fderiv ℝ timeCoord p‖ * 1 := by rw [hi]; gcongr
+    _ ≤ C / saddleDist p := by simpa only [mul_one] using hbase
+    _ = C / saddleDist q := by rw [saddleDist_rotLift_iterate]
 
 /-- Flow-time integrals of powers of `d` over the quarter orbit. -/
 theorem integral_saddleDist_rpow_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀,
