@@ -1572,20 +1572,28 @@ in Lean from $L'<0$.
 \begin{lemma}[Orbit comparison]
 \label{lem:orbit-comparison}
 \uses{def:period, def:dipole-flow, def:separatrix-arc}
-\lean{NoEmbeddedEigenvalues.orbit_close_arc}
+\lean{NoEmbeddedEigenvalues.norm_dipoleOrbit_sub_arc_le,
+  NoEmbeddedEigenvalues.orbit_close_arc}
 \leanok
 For small $h$ and $|t|\le L(h)$, $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$, where both orbits
 are centered at $a=0$ at time $0$ (manuscript \texttt{(ee:orbit-comparison)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-coarse, lem:dipole-flow, lem:separatrix-arc}
-The initial displacement between $\gamma_h$ and $\gamma$ is $O(h)$.
-The velocity field is globally $1$-Lipschitz, so Gronwall gives
-$|\gamma_h(t)-\gamma(t)|\le Ch e^{|t|}$ in both time directions.
-For $|t|\le L(h)$, the bound $e^{L(h)}\le C/\sqrt h$ yields the
-claimed $C\sqrt h$. No differentiable dependence on the initial point
-is used.
+\uses{lem:period-coarse, lem:dipole-flow, lem:dipole-velocity, lem:separatrix-arc}
+\leanok
+The initial displacement is
+$\gamma_h(0)-\gamma(0)=(-\arcsin h,\arcsin h)$.
+Jordan's inequality gives $\arcsin h\le\pi h/2$ for $0\le h\le1$,
+so its norm is $O(h)$.
+For fixed $t\in\R$, apply Gronwall on $0\le s\le1$ to
+$F(s)=\gamma_h(st)-\gamma(st)$. The globally $1$-Lipschitz velocity
+field gives $|F'(s)|\le|t|\,|F(s)|$, hence
+$|\gamma_h(t)-\gamma(t)|\le Ch e^{|t|}$ in both time directions
+at once. For $|t|\le L(h)$, the proved bound
+$e^{L(h)}\le e^2/\sqrt h$ yields the claimed $C\sqrt h$.
+In fact the estimate holds for every $0<h<1$.
+No differentiable dependence on the initial point is used.
 \end{proof}
 
 \begin{lemma}[Distance to the saddles along an orbit]

@@ -71,9 +71,11 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
   `Period.lean` to avoid an import cycle. Sharp asymptotics remain open.
 - Full forward weak-gradient transfer is proved. Reverse transfer remains open;
   see the virial regularization section below.
-- Saddle-distance and endpoint bounds are proved without admissions in
-  `OrbitCoordinates.lean`, via a bounded integrating factor, independently of
-  coarse period bounds. Level-derivative bounds remain medium–high;
+- Saddle-distance, endpoint and orbit-comparison bounds are proved without
+  admissions in `OrbitCoordinates.lean`. A bounded integrating factor gives
+  saddle distance independently of period bounds; Grönwall and the proved
+  coarse period bound give orbit comparison in both time directions.
+  Level-derivative bounds remain medium–high;
   inverse-coordinate gradients are moderate and time integrals smaller once
   those bounds exist.
   Keep recentered quarter times: the former global time-gradient estimate

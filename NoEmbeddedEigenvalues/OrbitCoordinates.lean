@@ -12,8 +12,8 @@ Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
 `lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-regularity`,
 `lem:orbit-coordinates-area`, `lem:action-angle-chart`, `lem:coarea-level-cutoff`,
-`lem:orbit-saddle-distance`, `lem:period-coarse`;
-stated: `lem:orbit-comparison`, `lem:orbit-level-derivatives`,
+`lem:orbit-saddle-distance`, `lem:period-coarse`, `lem:orbit-comparison`;
+stated: `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
@@ -49,6 +49,11 @@ Conversely these endpoint cosine estimates prove `0 ≤ L(h) - log(1/h)/2 ≤ 2`
 `0 < h < 1/2`, and the exponential comparison with `√h`. The elementary bound `L ≤ 1/h`
 handles the remaining levels, giving `exp L * √h ≤ exp 2` globally. The theorem
 `exp_eighthPeriod_le` lives here (not in `Period.lean`) to avoid an import cycle.
+Grönwall compares the orbit with the separatrix at all real times. Applying it to
+`s ↦ γ_h(s * t) - γ(s * t)` on `[0, 1]` handles both time directions at once.
+The initial product-norm displacement is `arcsin h ≤ π * h / 2`; hence the
+all-time error is at most `(π * h / 2) * exp |t|`. The global period bound then gives
+`orbit_close_arc`, with constant `π * exp 2 / 2` on all levels `0 < h < 1`.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 Periodicity identifies this integral with the half-open orbit window, without any
@@ -1322,13 +1327,7 @@ theorem sin_mul_sin_mem_of_corner {a b : ℝ} (ha : a ∈ Icc 0 π) (hb : b ∈ 
   · nlinarith [sq_nonneg (sin a * sin b + 3 / 4)]
   · nlinarith [sin_le_one a, sin_le_one b]
 
-/-! ### Orbits near the separatrix (`lem:orbit-comparison`, split; stated) -/
-
-/-- On the quarter orbit, `γ_h` stays within `C√h` of the separatrix arc `γ`, both centered at
-    `a = 0` at time `0`. -/
-theorem orbit_close_arc : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t, |t| ≤ eighthPeriod h →
-    ‖dipoleOrbit h t - separatrixArc t‖ ≤ C * √h := by
-  sorry
+/-! ### Orbits near the separatrix -/
 
 /-- A saddle has vanishing cosine of its first diagonal coordinate. -/
 private theorem cos_diag_fst_of_mem_saddleSet {p : ℝ × ℝ} (hp : p ∈ saddleSet) :
@@ -1623,6 +1622,63 @@ theorem exp_eighthPeriod_le : ∃ C : ℝ, ∀ h ∈ Ioo (0 : ℝ) 1,
     exp (eighthPeriod h) ≤ C / √h := by
   exact ⟨exp 2, fun h hh ↦ (le_div_iff₀ (sqrt_pos.2 hh.1)).2
     (exp_eighthPeriod_mul_sqrt_le hh.1 hh.2)⟩
+
+/-! ### Comparison with the separatrix arc -/
+
+/-- Grönwall bounds the displacement from the arc at arbitrary positive or negative time. -/
+theorem norm_dipoleOrbit_sub_arc_le {h : ℝ} (h0 : 0 ≤ h) (h1 : h ≤ 1) (t : ℝ) :
+    ‖dipoleOrbit h t - separatrixArc t‖ ≤ (π / 2 * h) * exp |t| := by
+  let f : ℝ → ℝ × ℝ := fun s ↦ dipoleOrbit h (s * t) - separatrixArc (s * t)
+  let f' : ℝ → ℝ × ℝ := fun s ↦
+    t • (dipoleVelocity (dipoleOrbit h (s * t)) - dipoleVelocity (separatrixArc (s * t)))
+  have hd : ∀ s, HasDerivAt f (f' s) s := by
+    intro s
+    simpa only [f, f', dipoleOrbit, dipoleVelocity, Function.comp_def, one_mul, id_eq,
+      Pi.sub_apply] using
+      ((hasDerivAt_dipoleFlow (arccos h, -arccos h) (s * t)).sub
+        (hasDerivAt_separatrixArc (s * t))).scomp s ((hasDerivAt_id s).mul_const t)
+  have hinit : ‖f 0‖ ≤ π / 2 * h := by
+    have harc : separatrixArc 0 = (π / 2, -π / 2) := by
+      simp only [separatrixArc, arcAngle, neg_zero, exp_zero, arctan_one]
+      congr 1 <;> ring
+    have he : (π / 2 - arcsin h, -(π / 2 - arcsin h)) - (π / 2, -π / 2) =
+        (-arcsin h, arcsin h) := by apply Prod.ext <;> dsimp <;> ring
+    have ha : 0 ≤ arcsin h := arcsin_nonneg.2 h0
+    simp only [f, zero_mul, dipoleOrbit, dipoleFlow_zero, harc,
+      arccos_eq_pi_div_two_sub_arcsin, he, Prod.norm_def,
+      Real.norm_eq_abs, abs_neg, abs_of_nonneg ha, max_self]
+    have hj := mul_le_sin ha (arcsin_le_pi_div_two h)
+    rw [sin_arcsin (by linarith) h1] at hj
+    calc arcsin h = π / 2 * (2 / π * arcsin h) := by field_simp
+         _ ≤ π / 2 * h := mul_le_mul_of_nonneg_left hj pi_div_two_pos.le
+  have hbound : ∀ s, ‖f' s‖ ≤ |t| * ‖f s‖ + 0 := by
+    intro s
+    have hl := lipschitzWith_dipoleVelocity.dist_le_mul
+      (dipoleOrbit h (s * t)) (separatrixArc (s * t))
+    simp only [dist_eq_norm, NNReal.coe_one, one_mul] at hl
+    simpa only [f', norm_smul, Real.norm_eq_abs, f, add_zero] using
+      mul_le_mul_of_nonneg_left hl (abs_nonneg t)
+  have hg := norm_le_gronwallBound_of_norm_deriv_right_le
+    (f := f) (f' := f') (δ := π / 2 * h) (K := |t|) (ε := 0)
+    (show ContinuousOn f (Icc 0 1) from fun s _ ↦ (hd s).continuousAt.continuousWithinAt)
+    (fun s _ ↦ (hd s).hasDerivWithinAt) hinit (fun s _ ↦ hbound s)
+    1 (by norm_num)
+  simpa only [f, one_mul, gronwallBound_ε0, sub_zero, mul_one] using hg
+
+/-- On the quarter orbit, `γ_h` stays within `C√h` of the separatrix arc `γ`, both centered at
+    `a = 0` at time `0`. -/
+theorem orbit_close_arc : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t, |t| ≤ eighthPeriod h →
+    ‖dipoleOrbit h t - separatrixArc t‖ ≤ C * √h := by
+  refine ⟨π / 2 * exp 2, 1, by norm_num, ?_⟩
+  intro h hh t ht
+  apply (norm_dipoleOrbit_sub_arc_le hh.1.le hh.2.le t).trans
+  have he := exp_eighthPeriod_mul_sqrt_le hh.1 hh.2
+  calc (π / 2 * h) * exp |t| ≤ (π / 2 * h) * exp (eighthPeriod h) :=
+        mul_le_mul_of_nonneg_left (exp_le_exp.2 ht) (mul_nonneg pi_div_two_pos.le hh.1.le)
+    _ = (π / 2 * √h) * (exp (eighthPeriod h) * √h) := by
+        linear_combination -(π / 2 * exp (eighthPeriod h)) * (sq_sqrt hh.1.le)
+    _ ≤ (π / 2 * √h) * exp 2 := by gcongr
+    _ = (π / 2 * exp 2) * √h := by ring
 
 /-- `|∂_h γ_h(t)| ≤ C e^{|t|}` and `|∂_h² γ_h(t)| ≤ C e^{2|t|}` on the quarter orbit. -/
 theorem deriv_dipoleOrbit_level_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀, ∀ t,
