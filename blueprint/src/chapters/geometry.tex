@@ -929,37 +929,51 @@ for nonnegative measurable $f$.
 \begin{proof}
 \uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
   lem:orbit-coordinates-area, lem:period-regularity, lem:period-orbit, lem:dipole-flow}
+\leanok
 Smoothness of $S$ is Lemma~\ref{lem:period-regularity};
 no elliptic-integral identity or sharp asymptotic expansion is needed.
 Periodicity, the values and the inverse relations follow from
 Lemmas~\ref{lem:orbit-coordinates-inverse} and~\ref{lem:period-orbit} with
 $t=\theta S(h)$, which maps $[-\frac14,\frac34)$ onto $[-2L,6L)$.
 The time derivative $\partial_\theta P=S(h)Y(P)$ uses only the flow
-equation. The area formula follows from Lemma~\ref{lem:orbit-coordinates-area}
-with $t=S(h)\theta$.
+equation.
 
-The map $p\mapsto(h,t)$ is smooth off the cut (Lemma~\ref{lem:orbit-coordinates-smooth}), and so is
-$\theta=t/S(h)$. Across the cut $\theta$ jumps by $1$; there use the rotation
-$R(x,y)=(y,-x)$, which preserves the levels, maps a neighbourhood of a cut point off the
-cut, and shifts $\theta$ by $\frac14$ modulo $1$, so a $1$-periodic $F$ composed with
-$(h,\theta)$ is smooth there too.
+For smoothness of $P$, first work on $-\frac14<\theta<\frac14$, where
+$b>0$ and $|a|<\arccos h$. The incomplete quadrature $C(h,a)=t$ is jointly
+smooth by Lemma~\ref{lem:orbit-coordinates-smooth}, with
+\[
+  \partial_a C(h,a)=-\frac1{\sqrt{\cos^2a-h^2}}\ne0.
+\]
+The scalar implicit function theorem applied to $C(h,a)=\theta S(h)$
+gives a smooth $a(h,\theta)$. Then
+$b=\arccos(h/\cos a)$ is smooth, since $0<h/\cos a<1$ on this patch.
+The inverse identities identify the resulting point with $P(h,\theta)$.
+The quarter rotation shifts $\theta$ by $\frac14$ and transports
+smoothness to the whole strip.
 
-Compute the determinant of the already smooth coordinate map first:
-$Yh=0$ and $Y\theta=1/S(h)$ give
-$\det D(h,\theta)=1/(2S(h))\ne0$.
-The inverse function theorem, together with the known inverse identities,
-now gives smoothness of $P$ locally, using a rotated angular window at
-the cut. Only afterwards conclude $\det DP=2S(h)$.
+The angle $\theta=t/S(h)$ is smooth off the cut by
+Lemma~\ref{lem:orbit-coordinates-smooth}. At a cut point, $-p$ lies off
+the cut. The half-period rotation and periodicity give
+\[
+  F(h(p),\theta(p))=F\bigl(h(p),\theta(-p)+\tfrac12\bigr),
+\]
+a smooth expression near that point. To justify this equality for any
+lifted angle, subtract $\lfloor\theta+\frac14\rfloor$ to put it in the
+fundamental window and use the inverse identities and $1$-periodicity.
+
+Finally the area formula follows from Lemma~\ref{lem:orbit-coordinates-area}
+with $t=S(h)\theta$. This is a separate input, not used for regularity.
 \end{proof}
 
 \begin{remark}[Digest note: a noncircular regularity route]
 The previous sketch wrote $\partial_hP$ before establishing smoothness
-of $P$. Computing the determinant of the inverse coordinates first
-removes that circularity. Period smoothness must likewise be obtained
-upstream from the regular integral, before differentiating the time
-coordinate. This route does not require a parameter-dependent ODE theorem.
-These are paper-proof clarifications; the analytic chart inputs remain
-admitted in Lean.
+of $P$. This is now resolved in Lean by scalar implicit inversion of the
+regular time quadrature, followed by quarter rotations. Period smoothness
+is obtained upstream from its regular fixed-interval integral. Both
+smoothness of $P$ and the periodic composition rule are proved without
+admissions, without a parameter-dependent ODE theorem or an area formula.
+Only the measure identity in this node still depends on the admitted
+orbit-coordinate area formula.
 \end{remark}
 
 \begin{lemma}[Classical test functions in action-angle coordinates]

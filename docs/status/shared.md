@@ -20,7 +20,7 @@ the lift direction of the torus/local-Sobolev bridge (`lem:lift-sobolev-local`) 
 `L₀` against `H¹` tests (`lem:L0-h1-tests`); with it `isTransportPair_of_isEigenSolution`
 has no admissions.
 The basic transversal L² estimates and weak action-angle transport equivalence
-have no `sorry` of their own, but still depend on admitted chart/coarea inputs.
+have no `sorry` of their own, but still depend on admitted area/coarea inputs.
 Transversal support is proved without those admitted dependencies.
 
 ## Analytic backlog
@@ -55,11 +55,10 @@ in the current statements.
 
 See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
 
-- The orbit-coordinate inverse identities and local smoothness off the time cut
-  (`lem:orbit-coordinates-inverse`, `lem:orbit-coordinates-smooth`) are proved
-  without admissions in `OrbitCoordinates.lean`, including the turning points.
-  Next: smoothness of the inverse parametrization and angular seam handling
-  (moderate), then the area formula (medium–high).
+- The inverse identities, local smoothness off the time cut, smoothness of the
+  inverse parametrization and periodic composition across the angular seam are
+  proved without admissions in `OrbitCoordinates.lean`. Next: the orbit-coordinate
+  area formula (medium–high). The chart's measure identity still uses that admission.
 - Period regularity (`lem:period-regularity`) is proved without admissions in
   `Period.lean`: the regular fixed-interval integral gives smoothness and
   `L' < 0`, hence strict decrease of `L` and `S`. Coarse logarithmic bounds
@@ -67,8 +66,7 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
   The full `lem:period-coarse` statement is blueprint-only; its Lean link covers
   just the global upper exponential bound. The elementary lower bound
   `L(h) ≥ ½ log(1/h)` (`lem:period-basic`) is proved.
-- The smooth action-angle chart is moderate conditional on these inputs;
-  full weak-gradient transfer is medium–high. General chain rules use local
+- Full weak-gradient transfer under the smooth action-angle chart is medium–high. General chain rules use local
   W¹,¹ approximation; compact-band H¹ specializations may suffice for virials.
 - Saddle-distance and level-derivative bounds are medium–high; inverse-coordinate
   gradients are moderate and time integrals smaller once those bounds exist.
@@ -100,9 +98,8 @@ Remaining admitted inputs of `virial_l2`, in a candidate order:
    medium–high. Weak gradients under the smooth chart (local W^{1,1}
    approximation), with the angle cut handled by θ-periodicity.
 2. Shared with other routes: the orbit-coordinate chart inputs
-   (`OrbitCoordinates.lean`: smooth inverse parametrization, angular seams and
-   the area formula). The inverse identities, local smoothness off the cut and
-   period regularity are proved.
+   (`OrbitCoordinates.lean`: the area formula). The coordinate regularity,
+   angular seam handling and period regularity are proved.
 
 ### Transport and later-sector regularity
 

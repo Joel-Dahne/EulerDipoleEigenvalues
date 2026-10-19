@@ -1,15 +1,16 @@
 import NoEmbeddedEigenvalues.DipoleFlow
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.SeparatrixArc
+import Mathlib.Analysis.Calculus.ImplicitContDiff
 
 /-!
 # Orbit coordinates and integrals over levels
 
 Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action-angle`,
 `def:level-integral`, `def:normal-tangent`, `def:cell-arcs`, `def:corner-chart`,
-`lem:corner-coordinates`, `lem:orbit-coordinates-smooth`;
-stated: `lem:orbit-coordinates-area`, `lem:action-angle-chart`,
-`lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
+`lem:corner-coordinates`, `lem:orbit-coordinates-smooth`, `lem:action-angle-chart`
+(the measure identity uses the admitted area formula);
+stated: `lem:orbit-coordinates-area`, `lem:orbit-comparison`, `lem:orbit-saddle-distance`, `lem:orbit-level-derivatives`,
 `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
@@ -27,6 +28,10 @@ away from the endpoints. The intermediate value theorem in `a`, together with co
 The time coordinate is smooth off the cut: scale the regular incomplete integral to `[0, 1]`
 and use `SmoothIntervalIntegral.lean`. Near the left turning point, a backward quarter rotation
 gives the regular expression `2 L(h(p)) + timeCoord (backQuarter p)`.
+Smoothness of the inverse parametrization follows from scalar implicit inversion of the regular
+quadrature, then quarter rotations. Periodic functions of the angle are smooth across the cut:
+negation moves the cut to a regular point and shifts the angle by `1/2` modulo an integer.
+These regularity proofs do not use the area formula or parameter-dependent ODE regularity.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 The normal and tangential derivatives use the outward normal `n = -∇Ψ/ρ` of `{Ψ > 2h}` and
@@ -348,6 +353,12 @@ private theorem contDiffAt_orbitTime {h a : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
   rw [orbitTime, intervalIntegral.integral_symm, ← he]
   dsimp [F, Q]; ring
 
+private theorem isOpen_puncturedCell : IsOpen puncturedCell := by
+  have h₁ : Continuous (fun q : ℝ × ℝ ↦ |(diagCoord q).1|) := by unfold diagCoord; fun_prop
+  have h₂ : Continuous (fun q : ℝ × ℝ ↦ |(diagCoord q).2|) := by unfold diagCoord; fun_prop
+  exact ((isOpen_lt h₁ continuous_const).inter (isOpen_lt h₂ continuous_const)).sdiff
+    isClosed_singleton
+
 private theorem contDiffAt_levelCoord (p : ℝ × ℝ) : ContDiffAt ℝ ∞ levelCoord p := by
   unfold levelCoord dipoleLift; fun_prop
 
@@ -450,13 +461,9 @@ theorem contDiffAt_timeCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
         (fun q ↦ 2 * eighthPeriod (levelCoord q) + timeCoord (backQuarter q)) p :=
       ((contDiffAt_const (c := (2 : ℝ))).mul (contDiffAt_levelEighthPeriod hp)).add hr
     apply hs.congr_of_eventuallyEq
-    have hpc : IsOpen puncturedCell := by
-      have h₁ : Continuous (fun q : ℝ × ℝ ↦ |(diagCoord q).1|) := by unfold diagCoord; fun_prop
-      have h₂ : Continuous (fun q : ℝ × ℝ ↦ |(diagCoord q).2|) := by unfold diagCoord; fun_prop
-      exact ((isOpen_lt h₁ continuous_const).inter (isOpen_lt h₂ continuous_const)).sdiff
-        isClosed_singleton
     have hac : Continuous (fun q : ℝ × ℝ ↦ (diagCoord q).1) := by unfold diagCoord; fun_prop
-    filter_upwards [hpc.mem_nhds hp, hac.continuousAt.eventually (gt_mem_nhds ha)] with q hq hqa
+    filter_upwards [isOpen_puncturedCell.mem_nhds hp,
+      hac.continuousAt.eventually (gt_mem_nhds ha)] with q hq hqa
     exact timeCoord_eq_backQuarter hq hqa
   · exact contDiffAt_timeCoord_of_ne hp hb
 
@@ -529,9 +536,164 @@ theorem hasDerivAt_actionAngleInv_snd (h θ : ℝ) :
   exact (hasDerivAt_dipoleFlow (arccos h, -arccos h) (θ * orbitPeriod h)).scomp θ
     (hasDerivAt_mul_const (orbitPeriod h))
 
+/-! #### Smooth inversion on a regular upper-half patch -/
+
+private theorem hasDerivAt_orbitTime_snd {h a : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (ha : |a| < arccos h) :
+    HasDerivAt (orbitTime h) (-(1 / √(cos a ^ 2 - h ^ 2))) a := by
+  have h0 : (0 : ℝ) ∈ Ioo (-arccos h) (arccos h) := by
+    have hc := arccos_pos.2 hh.2
+    constructor <;> linarith
+  have hc := continuousOn_orbitTime_integrand hh.1 hh.2
+  exact intervalIntegral.integral_hasDerivAt_left
+    ((hc.mono (ordConnected_Ioo.uIcc_subset (abs_lt.1 ha) h0)).intervalIntegrable)
+    ((by fun_prop : Measurable (fun x : ℝ ↦ 1 / √(cos x ^ 2 - h ^ 2))).stronglyMeasurable
+      |>.stronglyMeasurableAtFilter)
+    (hc.continuousAt (Ioo_mem_nhds (abs_lt.1 ha).1 (abs_lt.1 ha).2))
+
+/-- Scalar implicit inversion needs only a nonzero derivative in the last variable. -/
+private theorem exists_smooth_implicit_scalar {P : Type} [NormedAddCommGroup P]
+    [NormedSpace ℝ P] [CompleteSpace P] {f : P × ℝ → ℝ} {p : P} {a d : ℝ}
+    (hf : ContDiffAt ℝ ∞ f (p, a)) (hd : HasDerivAt (fun y ↦ f (p, y)) d a) (hne : d ≠ 0) :
+    ∃ φ : P → ℝ, ContDiffAt ℝ ∞ φ p ∧ φ p = a ∧
+      ∀ᶠ x in nhds p, f (x, φ x) = f (p, a) := by
+  let L := (fderiv ℝ f (p, a)).comp (ContinuousLinearMap.inr ℝ P ℝ)
+  have hL1 : L 1 = d := by
+    have hdf := ((hf.differentiableAt (by simp)).hasFDerivAt).comp_hasDerivAt a
+      ((hasDerivAt_const a p).prodMk (hasDerivAt_id a))
+    exact hdf.unique hd
+  have hLe : L = d • ContinuousLinearMap.id ℝ ℝ := by
+    apply ContinuousLinearMap.ext_ring
+    simpa using hL1
+  have hLi : L.IsInvertible := by
+    apply ContinuousLinearMap.IsInvertible.of_inverse
+      (g := d⁻¹ • ContinuousLinearMap.id ℝ ℝ)
+    · apply ContinuousLinearMap.ext_ring; simp [hLe, hne]
+    · apply ContinuousLinearMap.ext_ring; simp [hLe, hne]
+  exact ⟨hf.implicitFunction (by simp) hLi,
+    hf.contDiffAt_implicitFunction (by simp) hLi,
+    hf.implicitFunction_apply_self (by simp) hLi,
+    hf.eventually_apply_implicitFunction (by simp) hLi⟩
+
+private theorem contDiffAt_actionAngleInv_upper {h θ : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (hθ : θ ∈ Ioo (-1 / 4 : ℝ) (1 / 4)) : ContDiffAt ℝ ∞ actionAngleInv (h, θ) := by
+  let t := θ * orbitPeriod h
+  let a := orbitA h t
+  have hL := eighthPeriod_pos hh.1 hh.2
+  have ht : t ∈ Ioo (-2 * eighthPeriod h) (2 * eighthPeriod h) := by
+    dsimp [t, orbitPeriod]; constructor <;> nlinarith [hθ.1, hθ.2]
+  have hb := orbitB_pos_half hh.1 hh.2 ht
+  have ha : |a| < arccos h := abs_lt.2 (orbitA_mem_of_ne hh.1 hh.2 hb.ne')
+  have hca : 0 < cos a := cos_orbitA_pos hh.1 hh.2 t
+  have htime : orbitTime h a = t := orbitTime_orbitA_half hh.1 hh.2 (Ioo_subset_Icc_self ht)
+  let f : (ℝ × ℝ) × ℝ → ℝ := fun r ↦ orbitTime r.1.1 r.2 - r.1.2 * orbitPeriod r.1.1
+  have hS : ContDiffAt ℝ ∞ orbitPeriod h :=
+    contDiffOn_orbitPeriod.contDiffAt (Ioo_mem_nhds hh.1 hh.2)
+  have hf : ContDiffAt ℝ ∞ f ((h, θ), a) := by
+    have hT := (contDiffAt_orbitTime hh ha).comp
+      (g := fun q : ℝ × ℝ ↦ orbitTime q.1 q.2)
+      (f := fun r : (ℝ × ℝ) × ℝ ↦ (r.1.1, r.2)) ((h, θ), a) (by fun_prop)
+    have hSp := hS.comp (f := fun r : (ℝ × ℝ) × ℝ ↦ r.1.1) ((h, θ), a) (by fun_prop)
+    exact hT.sub ((by fun_prop : ContDiffAt ℝ ∞
+      (fun r : (ℝ × ℝ) × ℝ ↦ r.1.2) ((h, θ), a)).mul hSp)
+  have hdf : HasDerivAt (fun y ↦ f ((h, θ), y)) (-(1 / √(cos a ^ 2 - h ^ 2))) a :=
+    (hasDerivAt_orbitTime_snd hh ha).sub_const (θ * orbitPeriod h)
+  have hpos : 0 < √(cos a ^ 2 - h ^ 2) := by
+    have hc := lt_cos_of_abs_lt_arccos hh.1 hh.2 ha
+    exact sqrt_pos.2 (by nlinarith [hh.1])
+  obtain ⟨φ, hφ, hφ0, hφeq⟩ := exists_smooth_implicit_scalar hf hdf
+    (neg_ne_zero.mpr (one_div_ne_zero hpos.ne'))
+  have hf0 : f ((h, θ), a) = 0 := by dsimp [f]; rw [htime]; simp [t]
+  let c : ℝ × ℝ → ℝ := fun q ↦ q.1 / cos (φ q)
+  have hc0 : c (h, θ) ∈ Ioo (0 : ℝ) 1 := by
+    dsimp [c]; rw [hφ0]
+    exact ⟨div_pos hh.1 hca, (div_lt_one hca).2 (lt_cos_orbitA hh.1 hh.2 hb.ne')⟩
+  have hc : ContDiffAt ℝ ∞ c (h, θ) :=
+    contDiffAt_fst.div hφ.cos (by rw [hφ0]; exact hca.ne')
+  have hβ : ContDiffAt ℝ ∞ (fun q ↦ arccos (c q)) (h, θ) :=
+    (contDiffAt_arccos (by linarith [hc0.1]) (ne_of_lt hc0.2)).comp (f := c) (h, θ) hc
+  let R : ℝ × ℝ → ℝ × ℝ := fun q ↦ diagInv (φ q, arccos (c q))
+  have hR : ContDiffAt ℝ ∞ R (h, θ) :=
+    diagInv.contDiff.contDiffAt.comp (f := fun q ↦ (φ q, arccos (c q))) (h, θ) (hφ.prodMk hβ)
+  have hcB : c (h, θ) = cos (orbitB h t) := by
+    dsimp [c]; rw [hφ0]
+    apply (div_eq_iff hca.ne').2
+    nlinarith [cos_orbitA_mul_cos_orbitB hh.1 hh.2 t]
+  have hR0 : R (h, θ) = actionAngleInv (h, θ) := by
+    dsimp only [R]
+    rw [hφ0, hcB, arccos_cos hb.le (by linarith [abs_lt.1 (abs_orbitB_lt hh.1 hh.2 t), pi_pos])]
+    exact diagInv_diagCoord _
+  have hnear : ∀ᶠ q in nhds (h, θ), R q ∈ puncturedCell := by
+    apply hR.continuousAt.eventually
+    rw [hR0]
+    exact isOpen_puncturedCell.mem_nhds (actionAngleInv_mem_puncturedCell hh.1 hh.2 θ)
+  apply hR.congr_of_eventuallyEq
+  filter_upwards [hnear, hc.continuousAt.eventually (Ioo_mem_nhds hc0.1 hc0.2), hφeq]
+    with q hRq hcq hEq
+  have hdiag : diagCoord (R q) = (φ q, arccos (c q)) := diagCoord_diagInv _
+  have hcaq : cos (φ q) ≠ 0 := by
+    have ha := hRq.1.1
+    rw [hdiag] at ha
+    exact (cos_pos_of_mem_Ioo (abs_lt.1 ha)).ne'
+  have hlevel : levelCoord (R q) = q.1 := by
+    rw [levelCoord, dipoleLift_eq_diag, hdiag]
+    change 2 * cos (φ q) * cos (arccos (c q)) / 2 = q.1
+    rw [cos_arccos (by linarith [hcq.1]) hcq.2.le]
+    dsimp [c]; field_simp
+  have hTime : timeCoord (R q) = q.2 * orbitPeriod q.1 := by
+    rw [timeCoord, hdiag, ite_eq_left (arccos_nonneg (c q)), hlevel]
+    have hEq' : orbitTime q.1 (φ q) - q.2 * orbitPeriod q.1 = 0 := by
+      simpa only [f, hf0] using hEq
+    linarith
+  have hinv := dipoleOrbit_levelCoord_timeCoord hRq
+  rw [hlevel, hTime] at hinv
+  exact hinv
+
+private theorem actionAngleInv_add_quarter {h : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) (θ : ℝ) :
+    actionAngleInv (h, θ + 1 / 4) =
+      ((actionAngleInv (h, θ)).2, -(actionAngleInv (h, θ)).1) := by
+  change dipoleOrbit h ((θ + 1 / 4) * orbitPeriod h) = _
+  rw [show (θ + 1 / 4) * orbitPeriod h = θ * orbitPeriod h + 2 * eighthPeriod h by
+    unfold orbitPeriod; ring]
+  exact dipoleOrbit_add_quarter hh.1 hh.2 _
+
+/-- Rotation transports local smoothness between consecutive quarter patches. -/
+private theorem contDiffAt_actionAngleInv_add_quarter_iff {h θ : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    ContDiffAt ℝ ∞ actionAngleInv (h, θ + 1 / 4) ↔ ContDiffAt ℝ ∞ actionAngleInv (h, θ) := by
+  have hnear (α : ℝ) : ∀ᶠ q : ℝ × ℝ in nhds (h, α), q.1 ∈ Ioo (0 : ℝ) 1 :=
+    continuous_fst.continuousAt.eventually (Ioo_mem_nhds hh.1 hh.2)
+  constructor
+  · intro hs
+    have hi : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ actionAngleInv (q.1, q.2 + 1 / 4)) (h, θ) :=
+      hs.comp (f := fun q : ℝ × ℝ ↦ (q.1, q.2 + 1 / 4)) (h, θ) (by fun_prop)
+    apply (hi.snd.neg.prodMk hi.fst).congr_of_eventuallyEq
+    filter_upwards [hnear θ] with q hq
+    simp only [actionAngleInv_add_quarter hq, neg_neg, Prod.eta]
+  · intro hs
+    have hs' : ContDiffAt ℝ ∞ actionAngleInv (h, (θ + 1 / 4) - 1 / 4) := by
+      simpa only [add_sub_cancel_right] using hs
+    have hi : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ actionAngleInv (q.1, q.2 - 1 / 4))
+        (h, θ + 1 / 4) :=
+      hs'.comp (f := fun q : ℝ × ℝ ↦ (q.1, q.2 - 1 / 4)) (h, θ + 1 / 4) (by fun_prop)
+    apply (hi.snd.prodMk hi.fst.neg).congr_of_eventuallyEq
+    filter_upwards [hnear (θ + 1 / 4)] with q hq
+    simpa only [sub_add_cancel] using actionAngleInv_add_quarter hq (q.2 - 1 / 4)
+
 /-- The parametrization is smooth on the strip. -/
 theorem contDiffOn_actionAngleInv : ContDiffOn ℝ ∞ actionAngleInv actionStrip := by
-  sorry
+  rintro ⟨h, θ⟩ hq
+  apply ContDiffAt.contDiffWithinAt
+  have hh : h ∈ Ioo (0 : ℝ) 1 := hq.1
+  have hp : Function.Periodic (fun α : ℝ ↦ ContDiffAt ℝ ∞ actionAngleInv (h, α)) (1 / 4) := by
+    intro α
+    exact propext (contDiffAt_actionAngleInv_add_quarter_iff hh)
+  let n : ℤ := ⌊4 * θ⌋
+  have hs : ContDiffAt ℝ ∞ actionAngleInv (h, θ - (n : ℝ) * (1 / 4)) := by
+    apply contDiffAt_actionAngleInv_upper hh
+    have hlo := Int.floor_le (4 * θ)
+    have hhi := Int.lt_floor_add_one (4 * θ)
+    dsimp [n]; constructor <;> linarith
+  exact hp.sub_int_mul_eq (x := θ) n ▸ hs
 
 /-- The angle is smooth off the cut. -/
 theorem contDiffAt_angleCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
@@ -545,12 +707,85 @@ theorem contDiffAt_angleCoord {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
       hl.contDiffAt
   exact (contDiffAt_timeCoord hp hcut).div hS (orbitPeriod_pos hd.1 hd.2).ne'
 
+private theorem periodic_comp_actionAngleInv {F : ℝ × ℝ → ℂ}
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) {q : ℝ × ℝ}
+    (hq : q ∈ actionStrip) : F (actionAngle (actionAngleInv q)) = F q := by
+  let n : ℤ := ⌊q.2 + 1 / 4⌋
+  have hnlo := Int.floor_le (q.2 + 1 / 4)
+  have hnhi := Int.lt_floor_add_one (q.2 + 1 / 4)
+  have hθ : q.2 - (n : ℝ) ∈ Ico (-1 / 4 : ℝ) (3 / 4) := by
+    constructor <;> dsimp [n] <;> linarith
+  have hp : Function.Periodic (fun θ ↦ actionAngleInv (q.1, θ)) 1 :=
+    actionAngleInv_add_one hq.1.1 hq.1.2
+  have hF : Function.Periodic (fun θ ↦ F (q.1, θ)) 1 := fun θ ↦ hper (q.1, θ)
+  have he : actionAngleInv (q.1, q.2 - (n : ℝ)) = actionAngleInv q := by
+    simpa only [mul_one] using hp.sub_int_mul_eq (x := q.2) n
+  rw [← he, actionAngle_actionAngleInv hq.1.1 hq.1.2 hθ]
+  simpa only [mul_one] using hF.sub_int_mul_eq (x := q.2) n
+
+private theorem neg_mem_puncturedCell {p : ℝ × ℝ} (hp : p ∈ puncturedCell) :
+    -p ∈ puncturedCell := by
+  refine ⟨?_, ?_⟩
+  · simpa only [cellSquare, mem_ofPred_eq, diagCoord_neg, Prod.fst_neg, Prod.snd_neg,
+      abs_neg] using hp.1
+  · intro hz
+    apply hp.2
+    exact neg_eq_zero.mp (show -p = 0 from hz)
+
+/-- Half-period rotation changes the lifted angle by one half modulo an integer. -/
+private theorem periodic_comp_actionAngle_neg {F : ℝ × ℝ → ℂ}
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) {p : ℝ × ℝ}
+    (hp : p ∈ puncturedCell) :
+    F (actionAngle p) = F (levelCoord p, angleCoord (-p) + 1 / 2) := by
+  have hh := levelCoord_mem_Ioo hp
+  have hn := neg_mem_puncturedCell hp
+  have hl : levelCoord (-p) = levelCoord p := by simp [levelCoord, dipoleLift, cos_neg]
+  have he : actionAngleInv (levelCoord p, angleCoord (-p) + 1 / 2) = p := by
+    have hi := actionAngleInv_actionAngle hn
+    change dipoleOrbit (levelCoord (-p))
+      (angleCoord (-p) * orbitPeriod (levelCoord (-p))) = -p at hi
+    rw [hl] at hi
+    change dipoleOrbit (levelCoord p)
+      ((angleCoord (-p) + 1 / 2) * orbitPeriod (levelCoord p)) = p
+    rw [show (angleCoord (-p) + 1 / 2) * orbitPeriod (levelCoord p) =
+        angleCoord (-p) * orbitPeriod (levelCoord p) + 4 * eighthPeriod (levelCoord p) by
+      unfold orbitPeriod; ring]
+    rw [dipoleOrbit_add_half hh.1 hh.2, hi, neg_neg]
+  have hEq := periodic_comp_actionAngleInv hper
+    (show (levelCoord p, angleCoord (-p) + 1 / 2) ∈ actionStrip from ⟨hh, mem_univ _⟩)
+  rwa [he] at hEq
+
 /-- The angle is smooth modulo 1 on the whole punctured cell: a smooth function on the strip
     that is `1`-periodic in `θ` is smooth in the original coordinates. -/
 theorem contDiffOn_comp_actionAngle {F : ℝ × ℝ → ℂ} (hF : ContDiffOn ℝ ∞ F actionStrip)
     (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) :
     ContDiffOn ℝ ∞ (F ∘ actionAngle) puncturedCell := by
-  sorry
+  intro p hp
+  apply ContDiffAt.contDiffWithinAt
+  have hh := levelCoord_mem_Ioo hp
+  have hstrip : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  by_cases hcut : (diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1
+  · have hn := neg_mem_puncturedCell hp
+    have hncut : ¬((diagCoord (-p)).2 = 0 ∧ 0 < (diagCoord (-p)).1) := by
+      rw [diagCoord_neg]
+      simp only [Prod.fst_neg, Prod.snd_neg]
+      intro hc
+      linarith [hcut.2]
+    have hθ : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ angleCoord (-q) + 1 / 2) p :=
+      ((contDiffAt_angleCoord hn hncut).comp (f := fun q : ℝ × ℝ ↦ -q) p
+        (by fun_prop)).add (contDiffAt_const (c := (1 / 2 : ℝ)))
+    have hmap : ContDiffAt ℝ ∞
+        (fun q ↦ (levelCoord q, angleCoord (-q) + 1 / 2)) p :=
+      (contDiffAt_levelCoord p).prodMk hθ
+    have hs : ContDiffAt ℝ ∞
+        (fun q ↦ F (levelCoord q, angleCoord (-q) + 1 / 2)) p :=
+      (hF.contDiffAt (hstrip.mem_nhds ⟨hh, mem_univ _⟩)).comp
+        (f := fun q ↦ (levelCoord q, angleCoord (-q) + 1 / 2)) p hmap
+    apply hs.congr_of_eventuallyEq
+    filter_upwards [isOpen_puncturedCell.mem_nhds hp] with q hq
+    exact periodic_comp_actionAngle_neg hper hq
+  · exact (hF.contDiffAt (hstrip.mem_nhds ⟨hh, mem_univ _⟩)).comp
+      (f := actionAngle) p ((contDiffAt_levelCoord p).prodMk (contDiffAt_angleCoord hp hcut))
 
 /-- `dx dy = 2 S(h) dh dθ`. -/
 theorem lintegral_cellSquare_actionAngle {f : ℝ × ℝ → ENNReal} (hf : Measurable f) :

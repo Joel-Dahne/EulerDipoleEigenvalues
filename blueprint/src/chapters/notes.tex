@@ -28,10 +28,10 @@ once resolved; record the resolution in the relevant node.
   \item \textbf{Orbit geometry} (Lemmas~\ref{lem:orbit-level-derivatives}
         and~\ref{lem:orbit-coordinate-gradients}). Bounds on
         $\partial_h\gamma_h$, $\partial_h^2\gamma_h$ and the inverse
-        coordinates remain unproved in Lean. A paper route now obtains
-        joint orbit smoothness from the inverse action-angle chart before
-        differentiating the variational equations; a general ODE
-        parameter-dependence theorem is not required. The saddle-distance
+        coordinates remain unproved in Lean. Smoothness of the inverse
+        action-angle parametrization is now proved by scalar implicit inversion
+        of the regular time quadrature, before differentiating any variational
+        equations; a general ODE parameter-dependence theorem is not required. The saddle-distance
         sketch controls the accumulated nonlinear defect to get the exact
         unit exponential rate, rather than invoking linearization alone. The overly broad global time-gradient
         statement has been corrected to recentered quarter-orbit charts;
@@ -83,7 +83,7 @@ once resolved; record the resolution in the relevant node.
         chart inputs. Open: the full weak-gradient chain rules
         (Lemma~\ref{lem:action-angle-weak}(2)--(3); their earlier $H^1$
         approximation sketch has been corrected to local $W^{1,1}$), the chart's admitted
-        analytic inputs,
+        area/coarea inputs,
         and whether the odd--odd weighted analogue
         (Proposition~\ref{prop:dd-virial}) can be treated the same way.
   \item \textbf{Missing verification scripts}
