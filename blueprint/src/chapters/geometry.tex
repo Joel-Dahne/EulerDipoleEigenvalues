@@ -1360,32 +1360,77 @@ are taken off its cut; values on the cut are irrelevant.
 
 \begin{proof}
 \uses{lem:action-angle-chart, lem:action-angle-local-integrability,
+  lem:level-dual-field, lem:angular-periodization, lem:weak-derivative-unique,
   lem:weak-derivative-basic, lem:localization-cutoff}
-The pullback of $F$ is locally integrable; this part is proved in Lean.
-For the full weak identity, one route is to work on coordinate windows
-and approximate locally in $W^{1,1}$, passing to the limit in the
-classical chain rule. Coordinate derivatives and Jacobians are bounded
-on compact windows. Periodicity supplies seam compatibility. The
-derivative integrability, test identity and gluing remain unformalized.
+\leanok
+First obtain periodic representatives of the weak derivatives.
+Translating the weak identity by an integer in $\theta$ gives another weak
+derivative of the same periodic $F$. Uniqueness gives
+$G_i(h,\theta+n)=G_i(h,\theta)$ almost everywhere, simultaneously for all
+$n\in\Z$. If $\rho$ is the compact angular partition with
+$\sum_n\rho(\theta+n)=1$, then
+\[
+  \widehat G_i(h,\theta)=\sum_n\rho(\theta+n)G_i(h,\theta+n)
+\]
+is exactly periodic and equals $G_i$ almost everywhere. We work first with
+these representatives.
+
+Write $P=(P_x,P_y)$ and $J=2S(h)$. The cofactor columns for the two
+planar derivatives are
+\[
+  A_x=(\partial_\theta P_y,-\partial_hP_y),\qquad
+  A_y=(-\partial_\theta P_x,\partial_hP_x).
+\]
+They are smooth and periodic, and $\operatorname{div}_{h,\theta}A_j=0$
+by equality of mixed derivatives. The inverse-coordinate identities and
+Lemma~\ref{lem:level-dual-field} give, off the cut,
+\[
+  A_j=J\bigl((\partial_jh)\circ P,(\partial_j\theta)\circ P\bigr),
+  \qquad A_j\cdot\nabla_{h,\theta}(\varphi\circ P)
+    =J(\partial_j\varphi)\circ P.
+\]
+For a cell test $\varphi$, put $H_i=(A_j)_i(\varphi\circ P)$,
+extending by zero outside a closed interior level band. These functions
+are smooth and periodic. Test $\partial_iF=\widehat G_i$ against
+$\rho H_i$ and add the two identities. Angular periodization commutes
+with both derivatives and removes the cutoff, yielding on the fundamental
+rectangle $Q=(0,1)\times[-1/4,3/4)$
+\[
+  \int_Q F(\partial_hH_0+\partial_\theta H_1)
+    =-\int_Q(\widehat G_0H_0+\widehat G_1H_1).
+\]
+The divergence cancellation and the area formula now give the asserted
+planar weak identity, including tests crossing the seam.
+
+Local integrability follows from the local $L^1$ transfer and the smooth
+level and angular gradients; the latter is represented by the smooth phase
+across the cut. Finally, the measure-preserving coordinate map transfers
+$\widehat G_i=G_i$ almost everywhere back to the cell. The raw angle
+partials agree with the smooth angular gradient off the null cut.
+The Lean proof has no admitted dependencies and uses no Sobolev approximation.
 \end{proof}
 
 \begin{remark}[Digest note: the topology and scope of the weak chain rules]
 The statements assume only local integrability. The earlier sketch
 invoked $H^1$ approximation, which is not justified; an approximation
 proof would need local $W^{1,1}$. This does not mean approximation is
-necessary. Both forward rules are now proved in Lean directly: the
-angular rule uses weak transport and the level rule uses the smooth
-divergence-free dual field. Neither requires density machinery or
-local square integrability.
+necessary. All three rules are now proved in Lean directly: the forward
+angular rule uses weak transport, the forward level rule uses the smooth
+divergence-free dual field, and descent uses the divergence-free cofactor
+columns. None requires density machinery or local square integrability.
 
 The old node bundled the already proved transport equivalence with
 both full-gradient directions. These are now separate: transport is
 Lemma~\ref{lem:action-angle-transport}, the forward angular and level
 rules are Lemmas~\ref{lem:action-angle-weak-angular}
 and~\ref{lem:action-angle-weak-level}, and descent to the cell is
-Lemma~\ref{lem:action-angle-weak-cell}. Only descent to the cell remains
-admitted; in particular, its weak test transfer and seam gluing must
-still be implemented.
+Lemma~\ref{lem:action-angle-weak-cell}. All are now proved without
+admitted dependencies. At the seam, periodicity of $F$ does not make an
+arbitrary supplied representative $G_i$ pointwise periodic. The descent
+proof derives a.e. periodicity by uniqueness, constructs periodic
+representatives with the angular partition, and transfers their a.e.
+equality back to the cell. Thus no extra periodicity hypothesis on the
+$G_i$ or separate seam-gluing input is needed.
 \end{remark}
 
 \begin{definition}[Normal and tangential derivatives]

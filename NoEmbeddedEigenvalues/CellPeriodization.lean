@@ -9,7 +9,8 @@ Used by the proof of `lem:virial-l2`: the transversal mollifier produces functio
 supported in a fixed compact subset of the cell square, while the `H¹` virial identities are
 on the torus.
 
-* Uniqueness of weak derivatives on open sets. The weak transport derivative of a function
+* Uniqueness of weak transport derivatives on open sets (weak partial uniqueness is
+  supplied upstream by `SobolevLocal.lean`). The weak transport derivative of a function
   with weak partial derivatives is supplied upstream by `Transport.lean`.
 * `boxPeriodize F`: the element of `L²(𝕋²)` with values `F` on the fundamental box
   `(-π, π]²`, which contains the cell square. It is linear, does not increase `L²` norms, turns
@@ -31,35 +32,6 @@ open scoped Topology ContDiff InnerProductSpace Real
 section Unique
 
 variable {U : Set (ℝ × ℝ)}
-
-/-- A locally integrable function on an open set with zero integral against every test
-function vanishes almost everywhere there. -/
-theorem ae_eq_zero_of_forall_test (hU : IsOpen U) {h : ℝ × ℝ → ℂ}
-    (hh : LocallyIntegrableOn h U) (h0 : ∀ φ, IsTestFunctionOn U φ → ∫ p, h p * φ p = 0) :
-    ∀ᵐ p, p ∈ U → h p = 0 := by
-  refine hU.ae_eq_zero_of_integral_contDiff_smul_eq_zero hh fun g hg hgc hgU ↦ ?_
-  have ht : IsTestFunctionOn U (fun p ↦ (g p : ℂ)) :=
-    ⟨ofRealCLM.contDiff.comp hg, hgc.comp_left ofReal_zero,
-      (tsupport_comp_subset ofReal_zero g).trans hgU⟩
-  rw [← h0 _ ht]
-  congr 1
-  funext p
-  rw [real_smul, mul_comm]
-
-/-- Weak partial derivatives are unique almost everywhere. -/
-theorem HasWeakPartialOn.ae_eq (hU : IsOpen U) {j : Fin 2} {F d d' : ℝ × ℝ → ℂ}
-    (hd : HasWeakPartialOn U j F d) (hd' : HasWeakPartialOn U j F d') :
-    ∀ᵐ p, p ∈ U → d p = d' p := by
-  have h := ae_eq_zero_of_forall_test hU (hd.2.1.sub hd'.2.1) fun φ hφ ↦ by
-    have i := integrable_mul_of_tsupport_subset hd.2.1 hφ.contDiff.continuous
-      hφ.hasCompactSupport hφ.tsupport_subset
-    have i' := integrable_mul_of_tsupport_subset hd'.2.1 hφ.contDiff.continuous
-      hφ.hasCompactSupport hφ.tsupport_subset
-    simp only [Pi.sub_apply, sub_mul]
-    rw [integral_sub i i', ← neg_neg (∫ p, d p * φ p), ← neg_neg (∫ p, d' p * φ p),
-      ← hd.2.2 φ hφ, ← hd'.2.2 φ hφ, sub_self]
-  filter_upwards [h] with p hp hpU
-  exact sub_eq_zero.1 (hp hpU)
 
 /-- Weak transport derivatives are unique almost everywhere. -/
 theorem HasWeakL0On.ae_eq (hU : IsOpen U) {F k k' : ℝ × ℝ → ℂ}

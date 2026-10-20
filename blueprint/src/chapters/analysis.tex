@@ -339,6 +339,25 @@ A locally integrable function times a continuous function with compact support
 in $U$ is integrable, so the defining integrals split.
 \end{proof}
 
+\begin{lemma}[Uniqueness of weak partial derivatives]
+\label{lem:weak-derivative-unique}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.ae_eq_zero_of_forall_test,
+  NoEmbeddedEigenvalues.HasWeakPartialOn.ae_eq}
+\leanok
+Let $U\subset\R^2$ be open. A locally integrable function whose integral
+against every test function on $U$ vanishes is zero almost everywhere on $U$.
+Consequently weak partial derivatives on $U$ are unique almost everywhere.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+The first assertion is the fundamental lemma for distributions, supplied by
+Mathlib. Apply it to the difference of two weak derivatives; their weak test
+identities give zero pairing against every test function.
+\end{proof}
+
 \begin{lemma}[Classical derivatives are weak derivatives]
 \label{lem:weak-derivative-classical}
 \uses{def:sobolev-local, lem:lift-calculus}

@@ -1306,7 +1306,8 @@ private theorem integral_convolveLine_mul_test {k : ℝ → ℝ} (hk : Continuou
     _ = ∫ t, ∫ q, (k t • F (q.1 - t, q.2)) * ψ q := integral_integral_swap hi.swap
     _ = _ := by simp only [smul_mul_assoc, integral_smul]
 
-private theorem coordPartial_translate (j : Fin 2) (φ : ℝ × ℝ → ℂ)
+/-- Coordinate partial derivatives commute with translations. -/
+theorem coordPartial_translate (j : Fin 2) (φ : ℝ × ℝ → ℂ)
     (v q : ℝ × ℝ) :
     coordPartial j (fun p ↦ φ (p + v)) q = coordPartial j φ (q + v) := by
   fin_cases j

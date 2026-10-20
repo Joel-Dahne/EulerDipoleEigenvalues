@@ -14,8 +14,8 @@ also from the full weak-gradient chain rules);
 chart/coarea inputs; the forward classical chain rule has no admitted dependency);
 `lem:action-angle-transport`, `lem:action-angle-gradient-local-integrability` and
 `lem:action-angle-weak-angular`, `def:level-dual-field`, `lem:level-dual-field`,
-`lem:level-dual-weak`, `lem:action-angle-weak-level` and `lem:action-angle-weak`
-(proved without admissions); `lem:action-angle-weak-cell` remains admitted.
+`lem:level-dual-weak`, `lem:action-angle-weak-level`, `lem:action-angle-weak` and
+`lem:action-angle-weak-cell` (proved without admissions).
 
 In action-angle coordinates `(h, θ)` on the punctured cell (`OrbitCoordinates.lean`), `L₀`
 is `S(h)⁻¹ ∂_θ`. The transversal mollifier cuts off with `χ(h)` and mollifies in `h` at fixed
@@ -49,8 +49,22 @@ Its divergence vanishes a.e. by local symmetry of mixed derivatives. Inverse-coo
 identities and the flow column give `2 S B = ∂_h P` off the cut. Testing the two weak
 partials against `Bⱼ ψ` cancels the divergence; the area density cancels the normalization.
 Angular periodization, including commutation with `∂_h`, transfers the identity to every
-compact strip test. Neither forward rule needs Sobolev approximation. Only the reverse
-weak-gradient rule remains admitted.
+compact strip test. Neither forward rule needs Sobolev approximation.
+
+The reverse full-gradient rule is also proved by direct tests. On the strip write the
+cofactor column for `∂_j` as `A_j = (∂_θ Q_j, -∂_h Q_j)`, with `Q_0 = P₂`, `Q_1 = -P₁`.
+Its divergence is zero by symmetry of mixed derivatives, and its entries are the area
+density `2 S` times the two inverse-coordinate derivatives. Multiplying the pullback of
+a cell test by these entries, extending by zero in the level direction and cutting off
+with the angular partition gives genuine compact strip tests. Periodization removes the
+angular cutoff, the Piola cancellation removes the zeroth-order terms, and the area
+formula transfers the resulting weak identity to the whole punctured cell, across the seam.
+Only `F` is assumed pointwise periodic: uniqueness of weak derivatives applied to integer
+angular translates first gives a.e. periodicity of each supplied `G_i`. Averaging with the
+angular partition provides exactly periodic representatives. The measure-preserving
+coordinate map transfers their a.e. equality back to the cell. The smooth `angleGrad` handles
+local integrability across the cut; it agrees with the raw angle partial off a null line.
+No local Sobolev approximation or independent seam-gluing theorem is needed.
 
 The commutator `transversalMollifier_hasWeakL0On` uses only the transport chain rule: the
 level cutoff carries `∂_θ U = S K` from the strip to the plane, `∂_θ` commutes with `M_ε`,
@@ -2106,10 +2120,11 @@ private theorem coordPartial_eq_fderiv {E : Type*} [NormedAddCommGroup E] [Norme
 
 /-- The classical chain rule for `(h, θ)⁻¹ ∘ (h, θ) = id` off the cut: for a linear form `ℓ`,
 `∂ⱼh · ∂_h(ℓ ∘ P) + ∂ⱼθ · ∂_θ(ℓ ∘ P) = ℓ(eⱼ)`. -/
-private theorem chainRule_actionAngle {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
-    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) (ℓ : ℝ × ℝ →L[ℝ] ℝ) (j : Fin 2) :
-    coordPartial j levelCoord p * coordPartial 0 (fun q ↦ ℓ (actionAngleInv q)) (actionAngle p) +
-      coordPartial j angleCoord p * coordPartial 1 (fun q ↦ ℓ (actionAngleInv q))
+private theorem chainRule_actionAngle {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) (ℓ : ℝ × ℝ →L[ℝ] E) (j : Fin 2) :
+    coordPartial j levelCoord p • coordPartial 0 (fun q ↦ ℓ (actionAngleInv q)) (actionAngle p) +
+      coordPartial j angleCoord p • coordPartial 1 (fun q ↦ ℓ (actionAngleInv q))
         (actionAngle p) = ℓ (if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)) := by
   have hlev : ContDiff ℝ ∞ levelCoord := by
     unfold levelCoord dipoleLift
@@ -2142,8 +2157,7 @@ private theorem chainRule_actionAngle {p : ℝ × ℝ} (hp : p ∈ puncturedCell
         fderiv ℝ angleCoord p e • ((0 : ℝ), (1 : ℝ)) := by
     ext <;> simp
   have hAe : A e = (fderiv ℝ levelCoord p e, fderiv ℝ angleCoord p e) := rfl
-  rw [hAe, hsplit, map_add, map_smul, map_smul, map_add, map_smul, map_smul, smul_eq_mul,
-    smul_eq_mul] at he
+  rw [hAe, hsplit, map_add, map_smul, map_smul, map_add, map_smul, map_smul] at he
   rw [coordPartial_eq_fderiv hld, coordPartial_eq_fderiv hθd,
     coordPartial_eq_fderiv hℓ.differentiableAt, coordPartial_eq_fderiv hℓ.differentiableAt,
     hℓ.fderiv]
@@ -2413,6 +2427,471 @@ theorem HasWeakPartialOn.comp_actionAngleInv {u : ℝ × ℝ → ℂ} {g : Fin 2
   · exact HasWeakPartialOn.comp_actionAngleInv_fst hg
   · exact HasWeakPartialOn.comp_actionAngleInv_snd hg
 
+/-! ### Cofactors for the reverse weak-gradient rule -/
+
+private theorem add_snd_eq (q : ℝ × ℝ) (r : ℝ) : q + (0, r) = (q.1, q.2 + r) := by
+  ext <;> simp
+
+private def stripDualPotential (j : Fin 2) (q : ℝ × ℝ) : ℂ :=
+  if j = 0 then ((actionAngleInv q).2 : ℂ) else -((actionAngleInv q).1 : ℂ)
+
+private def stripCofactor (j i : Fin 2) (q : ℝ × ℝ) : ℂ :=
+  if i = 0 then partialY (stripDualPotential j) q else -partialX (stripDualPotential j) q
+
+private theorem contDiffOn_stripDualPotential (j : Fin 2) :
+    ContDiffOn ℝ ∞ (stripDualPotential j) actionStrip := by
+  have hx := Complex.ofRealCLM.contDiff.comp_contDiffOn
+    (contDiff_fst.comp_contDiffOn contDiffOn_actionAngleInv)
+  have hy := Complex.ofRealCLM.contDiff.comp_contDiffOn
+    (contDiff_snd.comp_contDiffOn contDiffOn_actionAngleInv)
+  fin_cases j
+  · change ContDiffOn ℝ ∞ (fun q ↦ ((actionAngleInv q).2 : ℂ)) actionStrip
+    exact hy
+  · change ContDiffOn ℝ ∞ (fun q ↦ -((actionAngleInv q).1 : ℂ)) actionStrip
+    exact hx.neg
+
+private theorem contDiffOn_stripCofactor (j i : Fin 2) :
+    ContDiffOn ℝ ∞ (stripCofactor j i) actionStrip := by
+  have ho : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  fin_cases i
+  · change ContDiffOn ℝ ∞ (partialY (stripDualPotential j)) actionStrip
+    exact contDiffOn_coordPartial ho (contDiffOn_stripDualPotential j) 1
+  · change ContDiffOn ℝ ∞ (fun q ↦ -partialX (stripDualPotential j) q) actionStrip
+    exact (contDiffOn_coordPartial ho (contDiffOn_stripDualPotential j) 0).neg
+
+private theorem stripCofactor_periodic (j i : Fin 2) {q : ℝ × ℝ} (hq : q ∈ actionStrip) :
+    stripCofactor j i (q.1, q.2 + 1) = stripCofactor j i q := by
+  have he : (fun r : ℝ × ℝ ↦ stripDualPotential j (r + (0, 1))) =ᶠ[𝓝 q]
+      stripDualPotential j := by
+    filter_upwards [(isOpen_Ioo.prod isOpen_univ).mem_nhds hq] with r hr
+    simp [add_snd_eq, stripDualPotential, actionAngleInv_add_one hr.1.1 hr.1.2]
+  have hx := coordPartial_congr_nhds he 0
+  have hy := coordPartial_congr_nhds he 1
+  simp only [coordPartial_translate] at hx hy
+  have hx' : partialX (stripDualPotential j) (q.1, q.2 + 1) =
+      partialX (stripDualPotential j) q := by simpa [coordPartial, add_snd_eq] using hx
+  have hy' : partialY (stripDualPotential j) (q.1, q.2 + 1) =
+      partialY (stripDualPotential j) q := by simpa [coordPartial, add_snd_eq] using hy
+  fin_cases i <;> simp [stripCofactor, hx', hy']
+
+/-- The Piola cancellation for a two-dimensional cofactor column. -/
+private theorem stripCofactor_divergence (j : Fin 2) {q : ℝ × ℝ} (hq : q ∈ actionStrip) :
+    coordPartial 0 (stripCofactor j 0) q + coordPartial 1 (stripCofactor j 1) q = 0 := by
+  have ho : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  have hf := (contDiffOn_stripDualPotential j).contDiffAt (ho.mem_nhds hq)
+  have hx : DifferentiableAt ℝ (partialX (stripDualPotential j)) q := by
+    simpa [coordPartial] using
+      ((contDiffOn_coordPartial ho (contDiffOn_stripDualPotential j) 0).contDiffAt
+        (ho.mem_nhds hq)).differentiableAt (by simp)
+  have hn := (hasDerivAt_partialY hx).neg.deriv
+  change partialY (fun r ↦ -partialX (stripDualPotential j) r) q =
+    -partialY (partialX (stripDualPotential j)) q at hn
+  change partialX (partialY (stripDualPotential j)) q +
+    partialY (fun r ↦ -partialX (stripDualPotential j) r) q = 0
+  rw [hn, partialY_partialX_at hf]
+  ring
+
+private theorem coordPartial_ofReal {f : ℝ × ℝ → ℝ} {q : ℝ × ℝ}
+    (hf : DifferentiableAt ℝ f q) (i : Fin 2) :
+    coordPartial i (fun r ↦ (f r : ℂ)) q = ((coordPartial i f q : ℝ) : ℂ) := by
+  fin_cases i
+  · exact (hasDerivAt_partialX hf).ofReal_comp.deriv
+  · exact (hasDerivAt_partialY hf).ofReal_comp.deriv
+
+private theorem coordPartial_neg {f : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
+    (hf : DifferentiableAt ℝ f q) (i : Fin 2) :
+    coordPartial i (fun r ↦ -f r) q = -coordPartial i f q := by
+  fin_cases i
+  · exact (hasDerivAt_partialX hf).neg.deriv
+  · exact (hasDerivAt_partialY hf).neg.deriv
+
+private theorem stripCofactor_eq (j i : Fin 2) {q : ℝ × ℝ} (hq : q ∈ actionStrip) :
+    stripCofactor j i q = if j = 0 then
+      (if i = 0 then ((coordPartial 1 (fun r ↦ (actionAngleInv r).2) q : ℝ) : ℂ)
+        else -((coordPartial 0 (fun r ↦ (actionAngleInv r).2) q : ℝ) : ℂ))
+      else (if i = 0 then -((coordPartial 1 (fun r ↦ (actionAngleInv r).1) q : ℝ) : ℂ)
+        else ((coordPartial 0 (fun r ↦ (actionAngleInv r).1) q : ℝ) : ℂ)) := by
+  have hd := (contDiffOn_actionAngleInv.contDiffAt
+    ((isOpen_Ioo.prod isOpen_univ).mem_nhds hq)).differentiableAt (by simp)
+  have hx := (ContinuousLinearMap.fst ℝ ℝ ℝ).differentiableAt.comp q hd
+  have hy := (ContinuousLinearMap.snd ℝ ℝ ℝ).differentiableAt.comp q hd
+  have hxc := Complex.ofRealCLM.differentiableAt.comp q hx
+  fin_cases j <;> fin_cases i
+  · change partialY (fun r ↦ ((actionAngleInv r).2 : ℂ)) q =
+      ((partialY (fun r ↦ (actionAngleInv r).2) q : ℝ) : ℂ)
+    exact coordPartial_ofReal hy 1
+  · change -partialX (fun r ↦ ((actionAngleInv r).2 : ℂ)) q =
+      -((partialX (fun r ↦ (actionAngleInv r).2) q : ℝ) : ℂ)
+    exact congrArg Neg.neg (coordPartial_ofReal hy 0)
+  · change partialY (fun r ↦ -((actionAngleInv r).1 : ℂ)) q =
+      -((partialY (fun r ↦ (actionAngleInv r).1) q : ℝ) : ℂ)
+    exact (coordPartial_neg hxc 1).trans (congrArg Neg.neg (coordPartial_ofReal hx 1))
+  · change -partialX (fun r ↦ -((actionAngleInv r).1 : ℂ)) q =
+      ((partialX (fun r ↦ (actionAngleInv r).1) q : ℝ) : ℂ)
+    have he := (coordPartial_neg hxc 0).trans (congrArg Neg.neg (coordPartial_ofReal hx 0))
+    change partialX (fun r ↦ -((actionAngleInv r).1 : ℂ)) q = _ at he
+    rw [he, neg_neg]
+    rfl
+
+/-- The strip cofactor column equals the area density times the inverse coordinate row. -/
+private theorem stripCofactor_normalized {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
+    (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1)) (j : Fin 2) :
+    stripCofactor j 0 (actionAngle p) =
+        ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * ((coordPartial j levelCoord p : ℝ) : ℂ) ∧
+      stripCofactor j 1 (actionAngle p) =
+        ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * angleGrad j p := by
+  let q := actionAngle p
+  have hq : q ∈ actionStrip := ⟨(mem_orbitDomain hp).1, mem_univ _⟩
+  have hP : actionAngleInv q = p := actionAngleInv_actionAngle hp
+  have hA00 := stripCofactor_eq 0 0 hq
+  have hA01 := stripCofactor_eq 0 1 hq
+  have hA10 := stripCofactor_eq 1 0 hq
+  have hA11 := stripCofactor_eq 1 1 hq
+  norm_num at hA00 hA01 hA10 hA11
+  have ht : coordPartial 1 (fun r ↦ (actionAngleInv r).1) q =
+      orbitPeriod (levelCoord p) * Real.sin p.2 := by
+    change coordPartial 1 (fun r ↦ (actionAngleInv r).1) q = orbitPeriod q.1 * Real.sin p.2
+    simpa [coordPartial, partialY, dipoleVelocity, smul_eq_mul, Function.comp_def, hP] using
+      ((ContinuousLinearMap.fst ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt q.2
+        (hasDerivAt_actionAngleInv_snd q.1 q.2)).deriv
+  have hv : coordPartial 1 (fun r ↦ (actionAngleInv r).2) q =
+      orbitPeriod (levelCoord p) * (-Real.sin p.1) := by
+    change coordPartial 1 (fun r ↦ (actionAngleInv r).2) q = orbitPeriod q.1 * (-Real.sin p.1)
+    simpa [coordPartial, partialY, dipoleVelocity, smul_eq_mul, Function.comp_def, hP] using
+      ((ContinuousLinearMap.snd ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt q.2
+        (hasDerivAt_actionAngleInv_snd q.1 q.2)).deriv
+  have hlx : coordPartial 0 levelCoord p = -Real.sin p.1 / 2 := by
+    simp [coordPartial, levelCoord, dipoleLift, partialX]
+  have hly : coordPartial 1 levelCoord p = -Real.sin p.2 / 2 := by
+    simp [coordPartial, levelCoord, dipoleLift, partialY]
+  obtain ⟨hnx, hny⟩ := levelDualCoeff_normalized hp hcut
+  change ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * angleGrad 1 p = _ at hnx
+  change ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * (-angleGrad 0 p) = _ at hny
+  fin_cases j
+  · constructor
+    · change stripCofactor 0 0 q =
+        ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * ((coordPartial 0 levelCoord p : ℝ) : ℂ)
+      rw [hA00, hv, hlx]
+      push_cast
+      ring
+    · change stripCofactor 0 1 q =
+        ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * angleGrad 0 p
+      change ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * (-angleGrad 0 p) =
+        ((coordPartial 0 (fun r ↦ (actionAngleInv r).2) q : ℝ) : ℂ) at hny
+      rw [hA01, ← hny]
+      ring
+  · constructor
+    · change stripCofactor 1 0 q =
+        ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * ((coordPartial 1 levelCoord p : ℝ) : ℂ)
+      rw [hA10, ht, hly]
+      push_cast
+      ring
+    · exact hA11.trans hnx.symm
+
+private theorem stripCofactor_chain {φ : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
+    (hp : p ∈ puncturedCell) (hcut : ¬((diagCoord p).2 = 0 ∧ 0 < (diagCoord p).1))
+    (hφ : DifferentiableAt ℝ φ p) (j : Fin 2) :
+    stripCofactor j 0 (actionAngle p) * coordPartial 0 (φ ∘ actionAngleInv) (actionAngle p) +
+      stripCofactor j 1 (actionAngle p) * coordPartial 1 (φ ∘ actionAngleInv) (actionAngle p) =
+        ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * coordPartial j φ p := by
+  let q := actionAngle p
+  let ℓ := fderiv ℝ φ p
+  have hq : q ∈ actionStrip := ⟨(mem_orbitDomain hp).1, mem_univ _⟩
+  have hP : actionAngleInv q = p := actionAngleInv_actionAngle hp
+  have hd := (contDiffOn_actionAngleInv.contDiffAt
+    ((isOpen_Ioo.prod isOpen_univ).mem_nhds hq)).differentiableAt (by simp)
+  have hφ' : DifferentiableAt ℝ φ (actionAngleInv q) := by rwa [hP]
+  have hcomp := hφ'.hasFDerivAt.comp q hd.hasFDerivAt
+  have hlin := ℓ.hasFDerivAt.comp q hd.hasFDerivAt
+  have he (i : Fin 2) : coordPartial i (fun r ↦ ℓ (actionAngleInv r)) q =
+      coordPartial i (φ ∘ actionAngleInv) q := by
+    change coordPartial i (⇑ℓ ∘ actionAngleInv) q = _
+    rw [coordPartial_eq_fderiv hlin.differentiableAt,
+      coordPartial_eq_fderiv hcomp.differentiableAt, hlin.fderiv, hcomp.fderiv, hP]
+  have hchain := chainRule_actionAngle hp hcut ℓ j
+  rw [Complex.real_smul, Complex.real_smul, he 0, he 1] at hchain
+  have hlast : ℓ (if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1)) = coordPartial j φ p :=
+    (coordPartial_eq_fderiv hφ j).symm
+  rw [hlast] at hchain
+  obtain ⟨hN₀, hN₁⟩ := stripCofactor_normalized hp hcut j
+  rw [hN₀, hN₁, angleGrad_eq hp hcut j]
+  linear_combination ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * hchain
+
+private theorem coordPartial_mul_at {f g : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
+    (hf : DifferentiableAt ℝ f q) (hg : DifferentiableAt ℝ g q) (i : Fin 2) :
+    coordPartial i (fun r ↦ f r * g r) q =
+      coordPartial i f q * g q + f q * coordPartial i g q := by
+  fin_cases i
+  · exact partialX_mul hf hg
+  · exact partialY_mul hf hg
+
+private def cofactorTest (j i : Fin 2) (φ : ℝ × ℝ → ℂ) (q : ℝ × ℝ) : ℂ :=
+  stripCofactor j i q * stripTestPull φ q
+
+private theorem cofactorTest_properties (j i : Fin 2) {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn puncturedCell φ) :
+    ∃ a b : ℝ, 0 < a ∧ b < 1 ∧ ContDiff ℝ ∞ (cofactorTest j i φ) ∧
+      (∀ q : ℝ × ℝ, cofactorTest j i φ (q.1, q.2 + 1) = cofactorTest j i φ q) ∧
+      ∀ q, q.1 ∉ Icc a b → cofactorTest j i φ q = 0 := by
+  obtain ⟨a, b, ha, hb, hT, hpT, hzT⟩ := stripTestPull_properties hφ
+  have hz : ∀ q, q.1 ∉ Icc a b → cofactorTest j i φ q = 0 := by
+    intro q hq
+    simp only [cofactorTest, hzT q hq, mul_zero]
+  have hK : IsClosed {q : ℝ × ℝ | q.1 ∈ Icc a b} := isClosed_Icc.preimage continuous_fst
+  have hKU : {q : ℝ × ℝ | q.1 ∈ Icc a b} ⊆ actionStrip := fun q hq ↦
+    ⟨⟨lt_of_lt_of_le ha hq.1, lt_of_le_of_lt hq.2 hb⟩, mem_univ _⟩
+  refine ⟨a, b, ha, hb, contDiff_of_zero_off_closed (isOpen_Ioo.prod isOpen_univ)
+    hK hKU ((contDiffOn_stripCofactor j i).mul hT.contDiffOn) hz, ?_, hz⟩
+  intro q
+  by_cases hq : q.1 ∈ Ioo (0 : ℝ) 1
+  · simp only [cofactorTest, stripCofactor_periodic j i ⟨hq, mem_univ _⟩, hpT q]
+  · simp [cofactorTest, stripTestPull, actionStrip, hq]
+
+private theorem cofactorTest_deriv (j i : Fin 2) {φ : ℝ × ℝ → ℂ}
+    (hφ : IsTestFunctionOn puncturedCell φ) {q : ℝ × ℝ} (hq : q ∈ actionStrip) :
+    coordPartial i (cofactorTest j i φ) q =
+      coordPartial i (stripCofactor j i) q * φ (actionAngleInv q) +
+        stripCofactor j i q * coordPartial i (φ ∘ actionAngleInv) q := by
+  have ho : IsOpen actionStrip := isOpen_Ioo.prod isOpen_univ
+  have he : stripTestPull φ =ᶠ[𝓝 q] φ ∘ actionAngleInv := by
+    filter_upwards [ho.mem_nhds hq] with r hr
+    exact Set.indicator_of_mem hr _
+  have hT := (stripTestPull_properties hφ).choose_spec.choose_spec.2.2.1
+  change coordPartial i (fun r ↦ stripCofactor j i r * stripTestPull φ r) q = _
+  rw [coordPartial_mul_at
+    (((contDiffOn_stripCofactor j i).contDiffAt (ho.mem_nhds hq)).differentiableAt (by simp))
+    (hT.differentiable (by simp) q) i, coordPartial_congr_nhds he i,
+    show stripTestPull φ q = φ (actionAngleInv q) from he.eq_of_nhds]
+
+private theorem periodize_coordPartial_cutoff {H : ℝ × ℝ → ℂ}
+    (hH : ContDiff ℝ ∞ H) (hpH : ∀ q : ℝ × ℝ, H (q.1, q.2 + 1) = H q)
+    (i : Fin 2) (q : ℝ × ℝ) :
+    periodizeSnd (coordPartial i (cutoffPeriodicSnd H)) q = coordPartial i H q := by
+  have hσ : ContDiff ℝ ∞ (cutoffPeriodicSnd H) :=
+    (Complex.ofRealCLM.contDiff.comp contDiff_anglePartition).mul hH
+  have he : periodizeSnd (cutoffPeriodicSnd H) = H := funext (periodize_cutoffPeriodicSnd hpH)
+  fin_cases i
+  · have hd := partialX_periodizeSnd (hσ.of_le (by simp)) (bounded_cutoffPeriodicSnd H) q
+    rw [he] at hd
+    exact hd.symm
+  · exact periodize_partialY_cutoffPeriodicSnd hH hpH q
+
+private theorem integrable_actionMeasure_mul_band {A H : ℝ × ℝ → ℂ} {a b : ℝ}
+    (hA : LocallyIntegrableOn A actionStrip) (ha : 0 < a) (hb : b < 1)
+    (hH : Continuous H) (hz : ∀ q, q.1 ∉ Icc a b → H q = 0) :
+    Integrable (fun q ↦ A q * H q) actionMeasure := by
+  let K := Icc a b ×ˢ Icc (-1 / 4 : ℝ) (3 / 4)
+  have hK : IsCompact K := isCompact_Icc.prod isCompact_Icc
+  have hKU : K ⊆ actionStrip := fun q hq ↦
+    ⟨⟨lt_of_lt_of_le ha hq.1.1, lt_of_le_of_lt hq.1.2 hb⟩, mem_univ _⟩
+  have hi := (hA.integrableOn_compact_subset hKU hK).mul_continuousOn hH.continuousOn hK
+  have hi' : IntegrableOn (fun q ↦ A q * H q) K actionMeasure :=
+    hi.mono_measure Measure.restrict_le_self
+  apply hi'.integrable_of_ae_notMem_eq_zero
+  filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq hqK
+  have hn : q.1 ∉ Icc a b := fun hh ↦ hqK ⟨hh, hq.2.1, hq.2.2.le⟩
+  rw [hz q hn, mul_zero]
+
+private theorem band_coordPartial_zero {H : ℝ × ℝ → ℂ} {a b : ℝ}
+    (hz : ∀ q, q.1 ∉ Icc a b → H q = 0) (i : Fin 2) :
+    ∀ q, q.1 ∉ Icc a b → coordPartial i H q = 0 := by
+  have hs : tsupport H ⊆ {q : ℝ × ℝ | q.1 ∈ Icc a b} :=
+    closure_minimal (fun q hq ↦ by_contra fun hn ↦ hq (hz q hn))
+      (isClosed_Icc.preimage continuous_fst)
+  exact fun q hq ↦ image_eq_zero_of_notMem_tsupport
+    (fun ht ↦ hq (hs (tsupport_coordPartial_subset i H ht)))
+
+/-! ### Periodic representatives of weak strip derivatives -/
+
+private theorem measurePreserving_sndShift (r : ℝ) :
+    MeasurePreserving (MeasurableEquiv.addRight ((0 : ℝ), r)) volume volume := by
+  rw [Measure.volume_eq_prod]
+  exact (measurePreserving_add_right volume (0 : ℝ)).prod
+    (measurePreserving_add_right volume r)
+
+private theorem locallyIntegrableOn_sndShift {A : ℝ × ℝ → ℂ}
+    (hA : LocallyIntegrableOn A actionStrip) (r : ℝ) :
+    LocallyIntegrableOn (fun q ↦ A (q.1, q.2 + r)) actionStrip := by
+  apply (locallyIntegrableOn_iff (isOpen_Ioo.prod isOpen_univ).isLocallyClosed).2
+  intro K hKU hK
+  have hi := hA.integrableOn_compact_subset
+    (show (fun q : ℝ × ℝ ↦ q + (0, r)) '' K ⊆ actionStrip from by
+      rintro _ ⟨q, hq, rfl⟩
+      simpa [actionStrip] using hKU hq)
+    (hK.image (continuous_id.add continuous_const))
+  have h := (measurePreserving_sndShift r).integrableOn_image
+    (MeasurableEquiv.addRight ((0 : ℝ), r)).measurableEmbedding |>.mp hi
+  change IntegrableOn (fun q ↦ A (q + (0, r))) K volume at h
+  convert h using 1
+  funext q
+  congr 1
+  ext <;> simp
+
+/-- Periodicity of a weakly differentiable function forces periodicity of each
+weak derivative a.e.; no pointwise periodicity of the supplied representative is assumed. -/
+private theorem HasWeakPartialOn.sndShift_ae {F G : ℝ × ℝ → ℂ} {j : Fin 2}
+    (hd : HasWeakPartialOn actionStrip j F G)
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) (n : ℤ) :
+    ∀ᵐ q, q ∈ actionStrip → G (q.1, q.2 + n) = G q := by
+  have hpF (q : ℝ × ℝ) : F (q.1, q.2 + n) = F q := by
+    have hp : Function.Periodic (fun θ ↦ F (q.1, θ)) 1 := fun θ ↦ hper (q.1, θ)
+    simpa only [mul_one] using (hp.int_mul n) q.2
+  have hs : HasWeakPartialOn actionStrip j F (fun q ↦ G (q.1, q.2 + n)) := by
+    refine ⟨hd.1, locallyIntegrableOn_sndShift hd.2.1 n, fun φ hφ ↦ ?_⟩
+    let v : ℝ × ℝ := (0, -(n : ℝ))
+    let ψ : ℝ × ℝ → ℂ := fun p ↦ φ (p + v)
+    have hψs : tsupport ψ ⊆ (fun p ↦ p + v) ⁻¹' tsupport φ :=
+      closure_minimal (fun p hp ↦ subset_closure hp)
+        ((isClosed_tsupport φ).preimage (continuous_id.add continuous_const))
+    have hψ : IsTestFunctionOn actionStrip ψ :=
+      ⟨hφ.contDiff.comp (contDiff_id.add contDiff_const),
+        hφ.hasCompactSupport.comp_homeomorph (Homeomorph.addRight v), fun p hp ↦ by
+          have h := hφ.tsupport_subset (hψs hp)
+          simpa [actionStrip, v] using h⟩
+    have hm := measurePreserving_sndShift (-(n : ℝ))
+    calc (∫ q, F q * coordPartial j φ q) =
+          ∫ q, F (q.1, q.2 + n) * coordPartial j φ q := by simp only [hpF]
+         _ = ∫ p, F p * coordPartial j ψ p := by
+          simpa [ψ, v, coordPartial_translate] using
+            (hm.integral_comp' (fun q ↦ F (q.1, q.2 + n) * coordPartial j φ q)).symm
+         _ = -∫ p, G p * ψ p := hd.2.2 ψ hψ
+         _ = -∫ q, G (q.1, q.2 + n) * φ q := by
+          congr 1
+          simpa [ψ, v] using hm.integral_comp' (fun q ↦ G (q.1, q.2 + n) * φ q)
+  exact hs.ae_eq (isOpen_Ioo.prod isOpen_univ) hd
+
+/-- Averaging a weak derivative with the angular partition gives an exactly
+periodic representative, equal to the supplied derivative a.e. on the strip. -/
+private theorem HasWeakPartialOn.periodize_cutoff_ae {F G : ℝ × ℝ → ℂ} {j : Fin 2}
+    (hd : HasWeakPartialOn actionStrip j F G)
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q) :
+    ∀ᵐ q, q ∈ actionStrip → periodizeSnd (cutoffPeriodicSnd G) q = G q := by
+  have hall : ∀ᵐ q, ∀ n : ℤ, q ∈ actionStrip → G (q.1, q.2 + n) = G q :=
+    ae_all_iff.2 (fun n ↦ hd.sndShift_ae hper n)
+  filter_upwards [hall] with q hq hqS
+  have hρ : ∀ q, anglePartition q ≠ 0 → |q.2| ≤ 1 := anglePartition_support_le
+  have hσ : ∀ q, cutoffPeriodicSnd G q ≠ 0 → |q.2| ≤ 1 := by
+    intro q hq
+    apply anglePartition_support_le q
+    intro hz
+    exact hq (by simp [cutoffPeriodicSnd, hz])
+  obtain ⟨N, hN⟩ := exists_nat_gt (1 + |q.2|)
+  rw [periodizeSnd_eq_sum hσ hN.le (le_refl |q.2|)]
+  simp_rw [cutoffPeriodicSnd, fun n ↦ hq n hqS]
+  rw [← Finset.sum_mul, ← Complex.ofReal_sum,
+    ← periodizeSnd_eq_sum hρ hN.le (le_refl |q.2|), periodize_anglePartition]
+  simp
+
+private def reverseCoordGrad (j : Fin 2) (G : Fin 2 → ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℂ :=
+  ((coordPartial j levelCoord p : ℝ) : ℂ) * G 0 (actionAngle p) +
+    angleGrad j p * G 1 (actionAngle p)
+
+private theorem locallyIntegrableOn_reverseCoordGrad {G : Fin 2 → ℝ × ℝ → ℂ}
+    (hper : ∀ i, ∀ q : ℝ × ℝ, G i (q.1, q.2 + 1) = G i q)
+    (hG : ∀ i, LocallyIntegrableOn (G i) actionStrip) (j : Fin 2) :
+    LocallyIntegrableOn (reverseCoordGrad j G) puncturedCell := by
+  have hlev : ContDiff ℝ ∞ levelCoord := by unfold levelCoord dipoleLift; fun_prop
+  have hh := Complex.continuous_ofReal.comp_continuousOn
+    (continuousOn_coordPartial isOpen_puncturedCell hlev.contDiffOn j)
+  exact ((locallyIntegrableOn_comp_actionAngle (hper 0) (hG 0)).continuousOn_mul hh
+    isOpen_puncturedCell.isLocallyClosed).add
+      ((locallyIntegrableOn_comp_actionAngle (hper 1) (hG 1)).continuousOn_mul
+        (continuousOn_angleGrad j) isOpen_puncturedCell.isLocallyClosed)
+
+/-- The reverse weak rule for exactly periodic representatives. Cofactor-weighted
+periodic tests make the Piola cancellation remove the zeroth-order terms. -/
+private theorem HasWeakPartialOn.comp_actionAngle_periodic {F : ℝ × ℝ → ℂ}
+    {G : Fin 2 → ℝ × ℝ → ℂ}
+    (hper : ∀ q : ℝ × ℝ, F (q.1, q.2 + 1) = F q)
+    (hpG : ∀ i, ∀ q : ℝ × ℝ, G i (q.1, q.2 + 1) = G i q)
+    (hG : ∀ i, HasWeakPartialOn actionStrip i F (G i)) (j : Fin 2) :
+    HasWeakPartialOn puncturedCell j (F ∘ actionAngle) (reverseCoordGrad j G) := by
+  have hu := locallyIntegrableOn_comp_actionAngle hper (hG 0).1
+  have hk := locallyIntegrableOn_reverseCoordGrad hpG (fun i ↦ (hG i).2.1) j
+  refine ⟨hu, hk, fun φ hφ ↦ ?_⟩
+  let H := fun i ↦ cofactorTest j i φ
+  let σ := fun i ↦ cutoffPeriodicSnd (H i)
+  choose a b ha hb hH hpH hzH using (fun i ↦ cofactorTest_properties j i hφ)
+  have hσ (i : Fin 2) : IsTestFunctionOn actionStrip (σ i) :=
+    isTestFunctionOn_cutoffPeriodicSnd (ha i) (hb i) (hH i) (hzH i)
+  have hDσ (i : Fin 2) : IsTestFunctionOn actionStrip (coordPartial i (σ i)) :=
+    ⟨contDiff_coordPartial_top i (hσ i).contDiff, (hσ i).hasCompactSupport_coordPartial i,
+      (tsupport_coordPartial_subset i (σ i)).trans (hσ i).tsupport_subset⟩
+  have hD (i : Fin 2) : ∀ q, periodizeSnd (coordPartial i (σ i)) q = coordPartial i (H i) q :=
+    periodize_coordPartial_cutoff (hH i) (hpH i) i
+  have hV (i : Fin 2) : ∀ q, periodizeSnd (σ i) q = H i q :=
+    periodize_cutoffPeriodicSnd (hpH i)
+  have il (i : Fin 2) : Integrable (fun q ↦ F q * coordPartial i (H i) q) actionMeasure :=
+    integrable_actionMeasure_mul_band (hG 0).1 (ha i) (hb i)
+      (contDiff_coordPartial_top i (hH i)).continuous (band_coordPartial_zero (hzH i) i)
+  have ir (i : Fin 2) : Integrable (fun q ↦ G i q * H i q) actionMeasure :=
+    integrable_actionMeasure_mul_band (hG i).2.1 (ha i) (hb i) (hH i).continuous (hzH i)
+  have hleft_i (i : Fin 2) : (∫ q, F q * coordPartial i (σ i) q) =
+      ∫ q, F q * coordPartial i (H i) q ∂actionMeasure := by
+    rw [integral_strip_test_periodize (hG 0).1 (fun q _ ↦ hper q) (hDσ i)]
+    simp_rw [hD i]
+  have hright_i (i : Fin 2) : (∫ q, G i q * σ i q) =
+      ∫ q, G i q * H i q ∂actionMeasure := by
+    rw [integral_strip_test_periodize (hG i).2.1 (fun q _ ↦ hpG i q) (hσ i)]
+    simp_rw [hV i]
+  have hφj : IsTestFunctionOn puncturedCell (coordPartial j φ) :=
+    ⟨contDiff_coordPartial_top j hφ.contDiff, hφ.hasCompactSupport_coordPartial j,
+      (tsupport_coordPartial_subset j φ).trans hφ.tsupport_subset⟩
+  have hleft : (∫ p, (F ∘ actionAngle) p * coordPartial j φ p) =
+      (∫ q, F q * coordPartial 0 (σ 0) q) + ∫ q, F q * coordPartial 1 (σ 1) q := by
+    rw [integral_mul_test_actionAngle hu hφj, hleft_i 0, hleft_i 1,
+      ← integral_add (il 0) (il 1)]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle,
+      ae_actionAngleInv_off_diagonal] with q hq hn
+    have hqS : q ∈ actionStrip := ⟨hq.1, mem_univ _⟩
+    have hp := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 q.2
+    have hcut : ¬((diagCoord (actionAngleInv q)).2 = 0 ∧
+        0 < (diagCoord (actionAngleInv q)).1) := fun h ↦ hn h.1
+    have hAP := actionAngle_actionAngleInv hq.1.1 hq.1.2 hq.2
+    have hc := stripCofactor_chain hp hcut (hφ.contDiff.differentiable (by simp) _) j
+    rw [hAP, levelCoord_actionAngleInv hq.1.1 hq.1.2] at hc
+    have hdiv := stripCofactor_divergence j hqS
+    rw [comp_actionAngle_actionAngleInv hper hqS, Complex.real_smul]
+    change _ = F q * coordPartial 0 (cofactorTest j 0 φ) q +
+      F q * coordPartial 1 (cofactorTest j 1 φ) q
+    rw [cofactorTest_deriv j 0 hφ hqS, cofactorTest_deriv j 1 hφ hqS]
+    linear_combination -(F q) * hc - (F q * φ (actionAngleInv q)) * hdiv
+  have hright : (∫ p, reverseCoordGrad j G p * φ p) =
+      (∫ q, G 0 q * σ 0 q) + ∫ q, G 1 q * σ 1 q := by
+    rw [integral_mul_test_actionAngle hk hφ, hright_i 0, hright_i 1,
+      ← integral_add (ir 0) (ir 1)]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_actionRectangle,
+      ae_actionAngleInv_off_diagonal] with q hq hn
+    have hqS : q ∈ actionStrip := ⟨hq.1, mem_univ _⟩
+    have hp := actionAngleInv_mem_puncturedCell hq.1.1 hq.1.2 q.2
+    have hcut : ¬((diagCoord (actionAngleInv q)).2 = 0 ∧
+        0 < (diagCoord (actionAngleInv q)).1) := fun h ↦ hn h.1
+    have hAP := actionAngle_actionAngleInv hq.1.1 hq.1.2 hq.2
+    have hN := stripCofactor_normalized hp hcut j
+    rw [hAP, levelCoord_actionAngleInv hq.1.1 hq.1.2] at hN
+    have hT : stripTestPull φ q = φ (actionAngleInv q) := Set.indicator_of_mem hqS _
+    simp only [Complex.real_smul, reverseCoordGrad, H, cofactorTest, hT, hAP, hN.1, hN.2]
+    ring
+  rw [hleft, hright, (hG 0).2.2 (σ 0) (hσ 0), (hG 1).2.2 (σ 1) (hσ 1)]
+  ring
+
+/-- Strip null sets remain null after evaluation at the chosen inverse coordinates. -/
+private theorem ae_comp_actionAngle {A B : ℝ × ℝ → ℂ}
+    (he : ∀ᵐ q, q ∈ actionStrip → A q = B q) :
+    ∀ᵐ p, p ∈ puncturedCell → A (actionAngle p) = B (actionAngle p) := by
+  have hrect : A =ᵐ[actionMeasure] B := by
+    filter_upwards [ae_restrict_of_ae he, ae_restrict_mem measurableSet_actionRectangle]
+      with q hq hr
+    exact hq ⟨hr.1, mem_univ _⟩
+  have hw := (withDensity_absolutelyContinuous actionMeasure actionWeight).ae_le hrect
+  have hp := measurePreserving_actionCoordinates.quasiMeasurePreserving.ae hw
+  have hg := (ae_restrict_iff' measurableSet_cellSquare).mp hp
+  filter_upwards [hg] with p hp hpC
+  rw [← actionCoordinates_eq_actionAngle hpC]
+  exact hp hpC.1
+
 /-- The chain rule for weak derivatives from the strip to the cell, for functions that are
     `1`-periodic in `θ`. The angle jumps across its cut, a null set, where its partial
     derivatives are irrelevant. -/
@@ -2422,8 +2901,23 @@ theorem HasWeakPartialOn.comp_actionAngle {F : ℝ × ℝ → ℂ} {G : Fin 2 �
     HasWeakPartialOn puncturedCell j (F ∘ actionAngle) (fun p ↦
       ((coordPartial j levelCoord p : ℝ) : ℂ) * G 0 (actionAngle p) +
         ((coordPartial j angleCoord p : ℝ) : ℂ) * G 1 (actionAngle p)) := by
-  refine ⟨locallyIntegrableOn_comp_actionAngle hper (hG 0).1, ?_⟩
-  sorry
+  let Gp : Fin 2 → ℝ × ℝ → ℂ := fun i ↦ periodizeSnd (cutoffPeriodicSnd (G i))
+  have hpG : ∀ i, ∀ q : ℝ × ℝ, Gp i (q.1, q.2 + 1) = Gp i q :=
+    fun _ ↦ periodizeSnd_periodic
+  have heG (i : Fin 2) : ∀ᵐ q, q ∈ actionStrip → Gp i q = G i q :=
+    (hG i).periodize_cutoff_ae hper
+  have hGp (i : Fin 2) : HasWeakPartialOn actionStrip i F (Gp i) :=
+    (hG i).congr_ae_on (isOpen_Ioo.prod isOpen_univ).measurableSet
+      (Eventually.of_forall (fun _ _ ↦ rfl)) (by
+        filter_upwards [heG i] with q hq hqS
+        exact (hq hqS).symm)
+  have hd := HasWeakPartialOn.comp_actionAngle_periodic hper hpG hGp j
+  apply hd.congr_ae_on isOpen_puncturedCell.measurableSet
+    (Eventually.of_forall (fun _ _ ↦ rfl))
+  filter_upwards [ae_comp_actionAngle (heG 0), ae_comp_actionAngle (heG 1),
+    measure_eq_zero_iff_ae_notMem.mp volume_diagCoord_snd_eq_zero] with p h0 h1 hn hp
+  unfold reverseCoordGrad
+  rw [h0 hp, h1 hp, angleGrad_eq hp (fun h ↦ hn h.1) j]
 
 /-- `χ(Ψ/2)` vanishes near every point off the cell square. -/
 private theorem cellCutoff_eventuallyEq_zero {χ : ℝ → ℝ} {a b : ℝ} (ha : 0 < a)
@@ -2807,7 +3301,7 @@ theorem tendsto_transversalMollifier_partial (hχ : ContDiff ℝ ∞ χ)
       have hcp : cellCutoff χ p = χ (levelCoord p) := by simp [cellCutoff, hc.1]
       have hk0 := chainRule_actionAngle hc hcut (ContinuousLinearMap.fst ℝ ℝ ℝ) j
       have hk1 := chainRule_actionAngle hc hcut (ContinuousLinearMap.snd ℝ ℝ ℝ) j
-      simp only [ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd'] at hk0 hk1
+      simp only [ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd', smul_eq_mul] at hk0 hk1
       set e : ℝ × ℝ := if j = 0 then ((1 : ℝ), (0 : ℝ)) else (0, 1) with he_def
       have hgj : g j p = (e.1 : ℂ) * g 0 p + (e.2 : ℂ) * g 1 p := by
         fin_cases j <;> simp [he_def]

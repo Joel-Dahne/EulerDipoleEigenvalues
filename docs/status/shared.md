@@ -20,10 +20,10 @@ the lift direction of the torus/local-Sobolev bridge (`lem:lift-sobolev-local`) 
 `L₀` against `H¹` tests (`lem:L0-h1-tests`); with it `isTransportPair_of_isEigenSolution`
 has no admissions.
 The orbit-coordinate regularity and area inputs of the transversal L² estimates
-and weak action-angle transport equivalence are proved. The full forward
-weak-gradient chain rule is also proved without admissions, using direct test
-functions rather than Sobolev approximation. Only reverse weak-gradient transfer
-remains admitted in the action-angle interface.
+and weak action-angle transport equivalence are proved. Both full weak-gradient
+chain rules are proved without admissions, using direct test functions rather
+than Sobolev approximation. The reverse rule handles the angular seam through
+periodic representatives of the weak derivatives and cofactor cancellation.
 
 ## Analytic backlog
 
@@ -69,8 +69,8 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
   `OrbitCoordinates.lean`, using the endpoint cosine estimates; the global
   upper exponential bound `exp_eighthPeriod_le` has moved there from
   `Period.lean` to avoid an import cycle. Sharp asymptotics remain open.
-- Full forward weak-gradient transfer is proved. Reverse transfer remains open;
-  see the virial regularization section below.
+- Full weak-gradient transfer is proved in both directions, including the
+  angular seam; see the virial regularization section below.
 - Saddle-distance, endpoint and orbit-comparison bounds are proved without
   admissions in `OrbitCoordinates.lean`. A bounded integrating factor gives
   saddle distance independently of period bounds; Grönwall and the proved
@@ -95,21 +95,17 @@ See the [virial blueprint](../../blueprint/src/chapters/virial.tex),
 [CellPeriodization.lean](../../NoEmbeddedEigenvalues/CellPeriodization.lean) and
 [VirialL2.lean](../../NoEmbeddedEigenvalues/VirialL2.lean).
 
-`virial_l2` has no `sorry` of its own. The H¹ commutator identity `virial_h1`
-(proved directly on H¹, no truncation), H¹ skew-symmetry, the box periodization
-of compactly supported cell functions, uniqueness of weak derivatives and the
-equivalence of the two virial forms on `X` have no admissions. All transversal
-mollifier lemmas are proved: the commutator from the chart inputs and the transport
-chain rule only, the derivative lemmas also from the remaining reverse
-weak-gradient rule. The periodization
-part of `lem:local-to-global` (`exists_memSobolev_periodize`) is not used.
-The only remaining admission of `virial_l2` is
-`HasWeakPartialOn.comp_actionAngle` (`lem:action-angle-weak-cell`) in
-`TransversalMollifier.lean`: reverse weak-gradient transfer and seam gluing.
-Local W¹,¹ approximation is one route, not an available infrastructure result;
-the direct test method used for the forward rule is another approach to explore.
-The full forward rule `comp_actionAngleInv`, including both coordinate directions,
-has no admitted dependencies.
+`virial_l2` is proved without admitted dependencies (verified by the transitive
+admission audit). Its H¹ commutator, skew-symmetry, cell periodization,
+transversal mollifier and chart prerequisites have no admissions.
+The reverse rule `HasWeakPartialOn.comp_actionAngle`
+(`lem:action-angle-weak-cell`) uses direct cofactor-weighted tests: symmetry of
+mixed derivatives gives the Piola cancellation. Weak-derivative uniqueness gives
+a.e. angular periodicity; the angular partition produces periodic representatives,
+and the area formula transfers their a.e. equality back to the cell. This handles
+the seam without local W¹,¹ approximation or a separate gluing theorem.
+The periodization part of `lem:local-to-global` (`exists_memSobolev_periodize`)
+is not used. The virial regularization route has no remaining blockers.
 
 ### Transport and later-sector regularity
 

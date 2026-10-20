@@ -19,8 +19,8 @@ the nodes, not reproduced here. This was not a full independent proof audit.
   Positivity and nonnegative exhaustion give `ω = 0` directly, without a
   global bulk-integrability or weak-gradient constant-function argument.
 - The cutoff, annular and center-limit assemblies are proved from their named
-  inputs. The L² virial identity is assembled; it rests only on the chart
-  inputs (weak-gradient chain rules, orbit coordinates, area formula).
+  inputs. The L² virial identity is proved without admitted dependencies,
+  including its weak-gradient chain rules, orbit coordinates and area formula.
 - Separatrix arc energy and level traces are proved from the trace/local-Sobolev
   inputs using explicit quarter graphs. The first-order trace limit still uses
   the area formula and saddle-distance estimates.
@@ -32,19 +32,20 @@ the nodes, not reproduced here. This was not a full independent proof audit.
 ## Remaining routes
 
 The open analytic work is owned by [shared infrastructure](shared.md):
-Sobolev/trace bridges, orbit charts and bounds, stronger transversal estimates,
-H¹/L² virials, and the analytic prerequisites of the generic transport limits.
+Sobolev/trace bridges and the remaining analytic prerequisites of the transport
+and boundary limits. The orbit chart, quarter-orbit bounds, transversal estimates
+and H¹/L² virial route are proved without admitted dependencies.
 
 The current even–even route does **not** require finite-p Sobolev embedding,
 the elliptic-integral period identity, sharp period asymptotics, or transport
 self-adjointness. Keep these out of its prerequisites unless the argument changes.
 
 All transversal mollifier lemmas and the eigenfunction transport pair are proved;
-`virial_l2` now rests on the full weak-gradient chain rules and the chart inputs.
+the transitive admission audit reports zero admissions for `virial_l2`.
 
-The largest reviewed work packages are the fractional trace infrastructure and
-full-gradient/stronger transversal estimates. Pairing-limit assembly is complete
-from the existing analytic prerequisites; see [shared infrastructure](shared.md).
+Fractional trace infrastructure remains a large reviewed work package.
+Pairing-limit assembly is complete from its analytic prerequisites;
+see [shared infrastructure](shared.md).
 Relative difficulty assessments are preliminary, not timing estimates.
 
 ## Deferred possibilities

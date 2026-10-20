@@ -1,5 +1,6 @@
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 import Mathlib.MeasureTheory.Function.LocallyIntegrable
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 import NoEmbeddedEigenvalues.LiftTorus
 import NoEmbeddedEigenvalues.DiagonalCalculus
@@ -16,6 +17,8 @@ weak derivatives tested against smooth functions with compact support in `U`. Th
 weighted spaces replace Lebesgue measure on `U` by a weighted measure. Only the
 definitions and the first layer of facts are here: linearity and restriction, classical
 derivatives are weak derivatives, and multiplication by a smooth cutoff.
+The test-annihilator criterion and a.e. uniqueness of weak partial derivatives live here
+so the action-angle chain rules can use them without importing `CellPeriodization.lean`.
 -/
 
 noncomputable section
@@ -78,6 +81,35 @@ theorem integrable_mul_of_tsupport_subset (hg : LocallyIntegrableOn g U)
     (hg.integrableOn_compact_subset hsub hK).mul_continuousOn hψ.continuousOn hK
   refine hi.integrable_of_forall_notMem_eq_zero fun p hp ↦ ?_
   rw [image_eq_zero_of_notMem_tsupport hp, mul_zero]
+
+/-- A locally integrable function on an open set with zero integral against every test
+function vanishes almost everywhere there. -/
+theorem ae_eq_zero_of_forall_test (hU : IsOpen U) {h : ℝ × ℝ → ℂ}
+    (hh : LocallyIntegrableOn h U) (h0 : ∀ φ, IsTestFunctionOn U φ → ∫ p, h p * φ p = 0) :
+    ∀ᵐ p, p ∈ U → h p = 0 := by
+  refine hU.ae_eq_zero_of_integral_contDiff_smul_eq_zero hh fun g hg hgc hgU ↦ ?_
+  have ht : IsTestFunctionOn U (fun p ↦ (g p : ℂ)) :=
+    ⟨Complex.ofRealCLM.contDiff.comp hg, hgc.comp_left Complex.ofReal_zero,
+      (tsupport_comp_subset Complex.ofReal_zero g).trans hgU⟩
+  rw [← h0 _ ht]
+  congr 1
+  funext p
+  rw [Complex.real_smul, mul_comm]
+
+/-- Weak partial derivatives are unique almost everywhere. -/
+theorem HasWeakPartialOn.ae_eq (hU : IsOpen U) {j : Fin 2} {F d d' : ℝ × ℝ → ℂ}
+    (hd : HasWeakPartialOn U j F d) (hd' : HasWeakPartialOn U j F d') :
+    ∀ᵐ p, p ∈ U → d p = d' p := by
+  have h := ae_eq_zero_of_forall_test hU (hd.2.1.sub hd'.2.1) fun φ hφ ↦ by
+    have i := integrable_mul_of_tsupport_subset hd.2.1 hφ.contDiff.continuous
+      hφ.hasCompactSupport hφ.tsupport_subset
+    have i' := integrable_mul_of_tsupport_subset hd'.2.1 hφ.contDiff.continuous
+      hφ.hasCompactSupport hφ.tsupport_subset
+    simp only [Pi.sub_apply, sub_mul]
+    rw [integral_sub i i', ← neg_neg (∫ p, d p * φ p), ← neg_neg (∫ p, d' p * φ p),
+      ← hd.2.2 φ hφ, ← hd'.2.2 φ hφ, sub_self]
+  filter_upwards [h] with p hp hpU
+  exact sub_eq_zero.1 (hp hpU)
 
 theorem tsupport_partialX_subset (φ : ℝ × ℝ → ℂ) : tsupport (partialX φ) ⊆ tsupport φ := by
   apply closure_minimal _ (isClosed_tsupport φ)
