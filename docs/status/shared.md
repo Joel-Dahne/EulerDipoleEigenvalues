@@ -36,9 +36,6 @@ See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
 - Hölder embedding and the periodization direction of the torus/local-Sobolev bridge
   (`exists_memSobolev_periodize`): moderate. The lift direction is proved.
-- Diagonal ACL representatives and elementary L²/endpoint trace estimates:
-  next smaller steps, now that directional slicing is available. Separate the
-  diagonal ACL result from the combined fractional-trace admission.
 - H² trace differentiation: medium–high, including smooth approximation.
 - Fractional trace control: the largest analysis task; rectangle extension and
   density are still infrastructure gaps.
@@ -49,9 +46,13 @@ See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
 `lem:acl-slicing` is proved without admitted dependencies in `ACLSlicing.lean`,
 including a jointly measurable representative, unbounded intervals and whole-section
-uniqueness. `lem:trace-l2` still has no Lean statement.
-`lem:trace-acl` and `lem:trace-gagliardo` still share the admitted
-`exists_acl_trace`; the split did not create independent Lean proofs.
+uniqueness. `lem:trace-l2` is proved without admitted dependencies in
+`TraceL2.lean`: the exact elementary bound, canonical endpoint limits and
+independence of ACL representatives are available.
+`lem:trace-acl` is proved without admitted dependencies in `DiagonalACL.lean`,
+using the linear weak chain rule and directional slicing. The line-representative
+construction for torus lifts now uses this independent ACL theorem.
+`lem:trace-gagliardo` still uses the combined admitted `exists_acl_trace` interface.
 H² trace differentiation needs elementary L² trace control, not the fractional
 bound. Preserve the ACL representative compatibility and uniform trace constants
 in the current statements.

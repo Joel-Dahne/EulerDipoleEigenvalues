@@ -4,6 +4,7 @@ import NoEmbeddedEigenvalues.BoundaryCutoff
 import NoEmbeddedEigenvalues.BoundaryCutoffConstruction
 import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.Cells
+import NoEmbeddedEigenvalues.DiagonalACL
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.DuBoisReymond
@@ -46,6 +47,7 @@ import NoEmbeddedEigenvalues.SobolevTorus
 import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
+import NoEmbeddedEigenvalues.TraceL2
 import NoEmbeddedEigenvalues.TransportOperator
 import NoEmbeddedEigenvalues.TransversalMollifier
 import NoEmbeddedEigenvalues.VirialAlgebra

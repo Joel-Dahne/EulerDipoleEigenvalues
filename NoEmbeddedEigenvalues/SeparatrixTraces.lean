@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.SobolevLocal
+import NoEmbeddedEigenvalues.DiagonalACL
 import NoEmbeddedEigenvalues.SegmentEstimates
 import NoEmbeddedEigenvalues.QuarterOrbits
 import NoEmbeddedEigenvalues.OddHardy
@@ -158,10 +159,8 @@ theorem exists_isLineRep_liftL2 {g g₀ g₁ : L2} (h₀ : HasFourierPartial 0 g
     (Metric.isBounded_Ioo _ _)
   have hL2 (f : L2) : MemLp (liftL2 f) 2 (volume.restrict U) :=
     memSobolevOn_liftL2 (k := 0) (by exact_mod_cast memSobolev_zero f) hUb
-  obtain ⟨C, -, hC⟩ := exists_acl_trace (b₁ := b₁) (b₂ := b₂) (b₀ := (b₁ + b₂) / 2) ha
-    ⟨by linarith, by linarith⟩
-  obtain ⟨G, hGF, hline, -⟩ := hC U (liftL2 g) (liftL2 g₀) (liftL2 g₁) hU subset_rfl (hL2 g)
-    (hL2 g₀) (hL2 g₁) (hasWeakPartialOn_liftL2 h₀ U) (hasWeakPartialOn_liftL2 h₁ U)
+  obtain ⟨G, -, hGF, hline⟩ := exists_diagonal_acl_rep hU ha hb subset_rfl
+    (hasWeakPartialOn_liftL2 h₀ U) (hasWeakPartialOn_liftL2 h₁ U)
   exact ⟨G, hGF, (measurable_liftL2 g₀).sub (measurable_liftL2 g₁), (hL2 g₀).sub (hL2 g₁),
     hline⟩
 

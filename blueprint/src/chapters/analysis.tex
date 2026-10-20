@@ -1066,6 +1066,11 @@ section; continuity makes them equal everywhere on those sections.
 \begin{lemma}[An elementary $L^2$ trace estimate]
 \label{lem:trace-l2}
 \uses{def:weak-derivative-local, lem:acl-slicing}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_l2_trace,
+  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_trace_eq,
+  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_tendsto_trace,
+  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_trace_independent}
+\leanok
 Let $I$ be a nonempty open interval, $J=(b_1,b_2)$ with
 $\ell=b_2-b_1>0$, and let $F,D\in L^2(I\times J)$ satisfy
 $\partial_tF=D$ weakly. The ACL representative has finite one-sided
@@ -1084,6 +1089,7 @@ representative on the boundary.
 
 \begin{proof}
 \uses{lem:acl-slicing, def:h1-interval, lem:h1-interval-endpoints}
+\leanok
 Almost every section is in bounded-interval $H^1$, so has the endpoint
 limits of Lemma~\ref{lem:h1-interval-endpoints}. The FTC and
 Cauchy--Schwarz give, for $t\in J$ and $t_0\in[b_1,b_2]$,
@@ -1091,19 +1097,22 @@ Cauchy--Schwarz give, for $t\in J$ and $t_0\in[b_1,b_2]$,
   |\widetilde F(a,t_0)|^2
   \le 2|\widetilde F(a,t)|^2+2\ell\int_J|D(a,s)|^2\,ds .
 \]
-Average in $t$ and integrate in $a$. Uniqueness in
+Average in $t$ and integrate in $a$. The trace is measurable: use the
+measurable ACL representative at a fixed interior anchor plus the
+parameter integral of $D$ from that anchor to $t_0$. The pointwise bound
+then proves its square integrability. Uniqueness in
 Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
 \end{proof}
 
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]
 \label{lem:trace-acl}
 \uses{def:sobolev-local, def:cells}
-\lean{NoEmbeddedEigenvalues.exists_acl_trace}
+\lean{NoEmbeddedEigenvalues.exists_diagonal_acl_rep}
 \leanok
 Fix $a_0<a_1$, $b_1<b_2$, and let
 $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
 For every open $U\supset Q$ and $F\in H^1(U)$ with weak derivatives
-$F_x,F_y$, there is a representative $G=F$ almost everywhere on $U$
+$F_x,F_y$, there is a jointly measurable representative $G=F$ almost everywhere on $U$
 such that, for almost every $a\in(a_0,a_1)$, the function $b\mapsto G(a,b)$
 is locally absolutely continuous on $(b_1,b_2)$ with derivative
 $(F_x-F_y)(a,b)$ almost everywhere.
@@ -1111,12 +1120,14 @@ $(F_x-F_y)(a,b)$ almost everywhere.
 
 \begin{proof}
 \uses{lem:acl-slicing, lem:diagonal-calculus}
+\leanok
 Change variables in the weak test identities by
 $(a,b)\mapsto(x,y)=(a+b,a-b)$. The constant Jacobian and the classical
 test-function chain rule give the weak derivative
 $\partial_bF=F_x-F_y$ in diagonal coordinates. Apply
 Lemma~\ref{lem:acl-slicing} and extend the representative off $Q$ by
-a measurable version of $F$.
+a measurable version of $F$. The Lean proof only needs local integrability
+of $F,F_x,F_y$, not square integrability.
 \end{proof}
 
 \begin{lemma}[The Gagliardo trace bound]
@@ -1194,13 +1205,14 @@ derivatives and gives the arc absolute continuity used in Melnikov.
 Its proof needs only the elementary bound of Lemma~\ref{lem:trace-l2},
 not the fractional estimate.
 
-The two $H^1$ nodes currently link to the same combined admitted Lean
-statement, \texttt{exists\_acl\_trace}; separate proofs are not claimed.
-Generic directional slicing, including joint measurability, unbounded
-intervals and whole-section uniqueness, is now proved without admissions
-in \texttt{ACLSlicing.lean}. The elementary $L^2$ estimate is still
-blueprint-only. The diagonal ACL and fractional trace statements have not
-yet been separated in Lean. Keeping the fractional bound in Gagliardo form avoids any
+The diagonal ACL result is proved without admissions in
+\texttt{DiagonalACL.lean}, independently of the fractional estimate, using
+the directional slicing theorem in \texttt{ACLSlicing.lean}. The latter
+includes joint measurability, unbounded intervals and whole-section uniqueness.
+The elementary $L^2$ estimate, finite endpoint limits and independence of
+ACL representatives are proved without admissions in \texttt{TraceL2.lean}.
+The fractional bound still uses the combined admitted interface
+\texttt{exists\_acl\_trace}. Keeping the fractional bound in Gagliardo form avoids any
 need to identify it with a Bessel potential norm.
 \end{remark}
 
