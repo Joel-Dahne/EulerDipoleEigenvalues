@@ -15,8 +15,7 @@ Blueprint: `def:orbit-coordinates`, `lem:orbit-coordinates-inverse`, `def:action
 `lem:orbit-jacobian`, `lem:orbit-coordinates-area`, `lem:action-angle-chart`,
 `lem:coarea-level-cutoff`,
 `lem:orbit-saddle-distance`, `lem:period-coarse`, `lem:orbit-comparison`,
-`lem:orbit-level-derivatives`, `lem:orbit-coordinate-gradients`;
-stated: `lem:orbit-time-integrals`.
+`lem:orbit-level-derivatives`, `lem:orbit-coordinate-gradients`, `lem:orbit-time-integrals`.
 
 On the positive cell minus its center, the orbit coordinates are the level `h = Ψ/2` and the
 flow time `t` along the orbit `γ_h`, measured from its point `(a, b) = (0, arccos h)`. The
@@ -75,6 +74,15 @@ operator norm is bounded by the first level variation. The proved `C / d` bound 
 variation transfers to all recentered quarters: rotations preserve the saddle lattice and
 are isometries, and `R^(3k) ∘ R^k = id`. No estimate for the global unwrapped time on the
 whole cell is used.
+
+Flow-time power bounds use the exact integral
+`∫_{-L}^L exp (a * |t|) dt = 2 * (exp (a * L) - 1) / a` for `a ≠ 0` and `L ≥ 0`.
+The lower distance bound gives strict positivity and controls negative powers;
+continuity justifies integral comparison on the closed quarter. The coarse period
+bound gives `exp (2L) ≤ exp 4 / h` and `exp (4L) ≤ exp 8 / h²`.
+For positive powers `p`, the upper distance bound instead gives the integrable
+majorant `|B|^p * exp (-p * |t|)` and a uniform bound `2 * |B|^p / p`.
+No extra factor of the growing quarter length is introduced.
 
 Integrals over a level are in flow time, `∫_0^{S(h)} g(γ_h(t)) dt`; arclength is `ρ dt`.
 Periodicity identifies this integral with the half-open orbit window, without any
@@ -2208,16 +2216,145 @@ theorem norm_fderiv_quarterTimeCoord_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ h₀ < 
     _ ≤ C / saddleDist p := by simpa only [mul_one] using hbase
     _ = C / saddleDist q := by rw [saddleDist_rotLift_iterate]
 
+/-! ### Flow-time integrals of powers of the saddle distance -/
+
+private theorem integral_exp_mul_abs {a L : ℝ} (ha : a ≠ 0) (hL : 0 ≤ L) :
+    ∫ t in (-L)..L, exp (a * |t|) = 2 * (exp (a * L) - 1) / a := by
+  have hc : Continuous (fun t : ℝ ↦ exp (a * |t|)) := by fun_prop
+  have hsplit := intervalIntegral.integral_add_adjacent_intervals (μ := volume)
+    (hc.intervalIntegrable (-L) 0) (hc.intervalIntegrable 0 L)
+  have hneg : (∫ t in (-L)..0, exp (a * |t|)) = ∫ t in 0..L, exp (a * |t|) := by
+    simpa only [abs_neg, neg_zero] using
+      (intervalIntegral.integral_comp_neg (fun t ↦ exp (a * |t|)) (a := 0) (b := L)).symm
+  have hpos : (∫ t in 0..L, exp (a * |t|)) = (exp (a * L) - 1) / a := by
+    calc (∫ t in 0..L, exp (a * |t|)) = ∫ t in 0..L, exp (a * t) := by
+          apply intervalIntegral.integral_congr
+          intro t ht
+          rw [uIcc_of_le hL] at ht
+          simp only [abs_of_nonneg ht.1]
+         _ = (exp (a * L) - 1) / a := by
+          rw [intervalIntegral.integral_comp_mul_left exp ha, integral_exp]
+          simp [smul_eq_mul, div_eq_mul_inv, mul_comm]
+  rw [← hsplit, hneg, hpos]
+  ring
+
+private theorem continuous_saddleDist_dipoleOrbit (h : ℝ) :
+    Continuous (fun t ↦ saddleDist (dipoleOrbit h t)) := by
+  apply (Metric.continuous_infDist_pt saddleSet).comp
+  exact continuous_iff_continuousAt.2 fun t ↦
+    (hasDerivAt_dipoleFlow (arccos h, -arccos h) t).continuousAt
+
+/-- Integrating the lower exponential distance bound reverses the inequality for
+negative powers. Continuity and strict positivity justify the integral comparison. -/
+private theorem integral_saddleDist_rpow_neg_le_exp {c h L q : ℝ}
+    (hc : 0 < c) (hL : 0 ≤ L) (hq : 0 < q)
+    (hd : ∀ t, |t| ≤ L → c * exp (-|t|) ≤ saddleDist (dipoleOrbit h t)) :
+    ∫ t in (-L)..L, saddleDist (dipoleOrbit h t) ^ (-q) ≤
+      c ^ (-q) * (2 / q) * exp (q * L) := by
+  have hab : -L ≤ L := by linarith
+  have hi : IntervalIntegrable (fun t ↦ saddleDist (dipoleOrbit h t) ^ (-q)) volume (-L) L := by
+    apply ContinuousOn.intervalIntegrable_of_Icc hab
+    apply (continuous_saddleDist_dipoleOrbit h).continuousOn.rpow_const
+    intro t ht
+    exact Or.inl (ne_of_gt ((mul_pos hc (exp_pos _)).trans_le (hd t (abs_le.2 ht))))
+  have hmajor : Continuous (fun t : ℝ ↦ c ^ (-q) * exp (q * |t|)) := by fun_prop
+  calc (∫ t in (-L)..L, saddleDist (dipoleOrbit h t) ^ (-q)) ≤
+        ∫ t in (-L)..L, c ^ (-q) * exp (q * |t|) := by
+          apply intervalIntegral.integral_mono_on hab hi (hmajor.intervalIntegrable _ _)
+          intro t ht
+          calc saddleDist (dipoleOrbit h t) ^ (-q) ≤ (c * exp (-|t|)) ^ (-q) :=
+                rpow_le_rpow_of_nonpos (mul_pos hc (exp_pos _)) (hd t (abs_le.2 ht))
+                  (neg_nonpos.2 hq.le)
+               _ = c ^ (-q) * exp (q * |t|) := by
+                rw [mul_rpow hc.le (exp_pos _).le, ← exp_mul]
+                congr 2
+                ring
+       _ = c ^ (-q) * (2 * (exp (q * L) - 1) / q) := by
+          rw [intervalIntegral.integral_const_mul, integral_exp_mul_abs hq.ne' hL]
+       _ ≤ c ^ (-q) * (2 / q) * exp (q * L) := by
+          have hcq : 0 ≤ c ^ (-q) := (rpow_pos_of_pos hc _).le
+          have hdiv : 0 ≤ 2 / q := by positivity
+          calc c ^ (-q) * (2 * (exp (q * L) - 1) / q) =
+                (c ^ (-q) * (2 / q)) * (exp (q * L) - 1) := by ring
+               _ ≤ (c ^ (-q) * (2 / q)) * exp (q * L) :=
+                mul_le_mul_of_nonneg_left (by linarith) (mul_nonneg hcq hdiv)
+
 /-- Flow-time integrals of powers of `d` over the quarter orbit. -/
 theorem integral_saddleDist_rpow_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Ioo 0 h₀,
     ∫ t in (-eighthPeriod h)..eighthPeriod h, saddleDist (dipoleOrbit h t) ^ (-2 : ℝ) ≤ C / h ∧
     ∫ t in (-eighthPeriod h)..eighthPeriod h, saddleDist (dipoleOrbit h t) ^ (-4 : ℝ) ≤
       C / h ^ 2 := by
-  sorry
+  obtain ⟨c, B, h₁, hc, hh₁, hd⟩ := saddleDist_dipoleOrbit
+  let C := max (c ^ (-2 : ℝ) * exp 4) (c ^ (-4 : ℝ) * exp 8)
+  refine ⟨C, min h₁ 1, lt_min hh₁ zero_lt_one, ?_⟩
+  intro h hh
+  have hh' : h ∈ Ioo (0 : ℝ) 1 := ⟨hh.1, hh.2.trans_le (min_le_right _ _)⟩
+  have hh'' : h ∈ Ioo (0 : ℝ) h₁ := ⟨hh.1, hh.2.trans_le (min_le_left _ _)⟩
+  have hL := (eighthPeriod_pos hh'.1 hh'.2).le
+  have hd' : ∀ t, |t| ≤ eighthPeriod h →
+      c * exp (-|t|) ≤ saddleDist (dipoleOrbit h t) := fun t ht ↦ (hd h hh'' t ht).1
+  have he : exp (eighthPeriod h) ≤ exp 2 / √h :=
+    (le_div_iff₀ (sqrt_pos.2 hh.1)).2 (exp_eighthPeriod_mul_sqrt_le hh'.1 hh'.2)
+  have he2 : exp (2 * eighthPeriod h) ≤ exp 4 / h := by
+    have hs := pow_le_pow_left₀ (exp_pos _).le he 2
+    norm_num [div_pow, sq_sqrt hh.1.le, ← exp_nat_mul] at hs
+    exact hs
+  have he4 : exp (4 * eighthPeriod h) ≤ exp 8 / h ^ 2 := by
+    have hs := pow_le_pow_left₀ (exp_pos _).le he2 2
+    norm_num [div_pow, ← exp_nat_mul, ← mul_assoc] at hs
+    exact hs
+  have hc2 := (rpow_pos_of_pos hc (-2 : ℝ)).le
+  have hc4 := (rpow_pos_of_pos hc (-4 : ℝ)).le
+  constructor
+  · calc (∫ t in (-eighthPeriod h)..eighthPeriod h,
+          saddleDist (dipoleOrbit h t) ^ (-2 : ℝ)) ≤
+          c ^ (-2 : ℝ) * exp (2 * eighthPeriod h) := by
+            simpa using integral_saddleDist_rpow_neg_le_exp hc hL (by norm_num : (0 : ℝ) < 2) hd'
+         _ ≤ c ^ (-2 : ℝ) * (exp 4 / h) := mul_le_mul_of_nonneg_left he2 hc2
+         _ = (c ^ (-2 : ℝ) * exp 4) / h := by ring
+         _ ≤ C / h := div_le_div_of_nonneg_right (le_max_left _ _) hh.1.le
+  · calc (∫ t in (-eighthPeriod h)..eighthPeriod h,
+          saddleDist (dipoleOrbit h t) ^ (-4 : ℝ)) ≤
+          c ^ (-4 : ℝ) * (2 / 4) * exp (4 * eighthPeriod h) :=
+            integral_saddleDist_rpow_neg_le_exp hc hL (by norm_num : (0 : ℝ) < 4) hd'
+         _ ≤ c ^ (-4 : ℝ) * exp (4 * eighthPeriod h) := by
+            nlinarith [mul_nonneg hc4 (exp_pos (4 * eighthPeriod h)).le]
+         _ ≤ c ^ (-4 : ℝ) * (exp 8 / h ^ 2) := mul_le_mul_of_nonneg_left he4 hc4
+         _ = (c ^ (-4 : ℝ) * exp 8) / h ^ 2 := by ring
+         _ ≤ C / h ^ 2 := div_le_div_of_nonneg_right (le_max_right _ _) (sq_nonneg h)
 
 theorem integral_saddleDist_rpow_pos_le {p : ℝ} (hp : 0 < p) : ∃ C h₀ : ℝ, 0 < h₀ ∧
     ∀ h ∈ Ioo 0 h₀,
       ∫ t in (-eighthPeriod h)..eighthPeriod h, saddleDist (dipoleOrbit h t) ^ p ≤ C := by
-  sorry
+  obtain ⟨c, B, h₁, hc, hh₁, hd⟩ := saddleDist_dipoleOrbit
+  refine ⟨|B| ^ p * (2 / p), min h₁ 1, lt_min hh₁ zero_lt_one, ?_⟩
+  intro h hh
+  have hh' : h ∈ Ioo (0 : ℝ) 1 := ⟨hh.1, hh.2.trans_le (min_le_right _ _)⟩
+  have hh'' : h ∈ Ioo (0 : ℝ) h₁ := ⟨hh.1, hh.2.trans_le (min_le_left _ _)⟩
+  have hL := (eighthPeriod_pos hh'.1 hh'.2).le
+  have hi : Continuous (fun t ↦ saddleDist (dipoleOrbit h t) ^ p) :=
+    (continuous_saddleDist_dipoleOrbit h).rpow_const (fun _ ↦ Or.inr hp.le)
+  have hmajor : Continuous (fun t : ℝ ↦ |B| ^ p * exp ((-p) * |t|)) := by fun_prop
+  have hBp : 0 ≤ |B| ^ p := rpow_nonneg (abs_nonneg B) _
+  calc (∫ t in (-eighthPeriod h)..eighthPeriod h, saddleDist (dipoleOrbit h t) ^ p) ≤
+        ∫ t in (-eighthPeriod h)..eighthPeriod h, |B| ^ p * exp ((-p) * |t|) := by
+          apply intervalIntegral.integral_mono_on (by linarith) (hi.intervalIntegrable _ _)
+            (hmajor.intervalIntegrable _ _)
+          intro t ht
+          have hbound := (hd h hh'' t (abs_le.2 ht)).2
+          calc saddleDist (dipoleOrbit h t) ^ p ≤ (|B| * exp (-|t|)) ^ p := by
+                apply rpow_le_rpow Metric.infDist_nonneg _ hp.le
+                exact hbound.trans (mul_le_mul_of_nonneg_right (le_abs_self B) (exp_pos _).le)
+               _ = |B| ^ p * exp ((-p) * |t|) := by
+                rw [mul_rpow (abs_nonneg B) (exp_pos _).le, ← exp_mul]
+                congr 2
+                ring
+       _ = |B| ^ p * (2 * (exp ((-p) * eighthPeriod h) - 1) / (-p)) := by
+          rw [intervalIntegral.integral_const_mul, integral_exp_mul_abs (neg_ne_zero.2 hp.ne') hL]
+       _ ≤ |B| ^ p * (2 / p) := by
+          apply mul_le_mul_of_nonneg_left _ hBp
+          rw [div_neg, ← neg_div]
+          apply div_le_div_of_nonneg_right _ hp.le
+          nlinarith [exp_pos ((-p) * eighthPeriod h)]
 
 end NoEmbeddedEigenvalues

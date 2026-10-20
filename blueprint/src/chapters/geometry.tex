@@ -1798,11 +1798,31 @@ $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
 
 \begin{proof}
 \uses{lem:orbit-saddle-distance, lem:period-coarse}
-The negative-power integrals are bounded by constants times
-$\int_{-L}^Le^{2|t|}\,dt$ and $\int_{-L}^Le^{4|t|}\,dt$.
-Use $e^{2L}\le C/h$ from the coarse period bound.
-For $p>0$, use the upper distance bound and
-$\int_{-L}^Le^{-p|t|}\,dt\le2/p$; the resulting constant may depend on $p$.
+\leanok
+Write $c e^{-|t|}\le d(\gamma_h(t))\le B e^{-|t|}$ on the quarter.
+The distance is continuous and strictly positive there, so all the powers
+under consideration are integrable. Splitting at zero and reflecting gives,
+for $a\ne0$ and $L\ge0$,
+\[
+  \int_{-L}^L e^{a|t|}\,dt=\frac{2(e^{aL}-1)}a.
+\]
+For $q>0$, monotonicity of negative powers therefore gives
+\[
+  \int_{-L}^L d^{-q}\,dt
+  \le \frac{2c^{-q}}q(e^{qL}-1)
+  \le \frac{2c^{-q}}q e^{qL}.
+\]
+The coarse bound $e^L\sqrt h\le e^2$ implies
+$e^{2L}\le e^4/h$ and $e^{4L}\le e^8/h^2$.
+Taking $q=2,4$ gives the first two estimates with a common constant.
+For $p>0$, the upper distance bound gives
+\[
+  \int_{-L}^L d^p\,dt
+  \le |B|^p\frac{2(1-e^{-pL})}p
+  \le \frac{2|B|^p}p.
+\]
+This constant may depend on $p$, but not on the level or quarter length.
+Both Lean theorems have no admitted dependencies.
 \end{proof}
 
 \begin{remark}

@@ -78,9 +78,10 @@ See the [geometry blueprint](../../blueprint/src/chapters/geometry.tex).
   First and second level-derivative bounds, including their saddle-distance
   form, are also proved without admissions, using mixed-derivative symmetry
   and homogeneous Grönwall estimates for the variations.
-  Coordinate-gradient bounds are proved without admissions as well, using
-  the inverse Jacobian's determinant `2` and rotation invariance.
-  Flow-time integrals are the next smaller geometry task.
+  Coordinate-gradient and flow-time power-integral bounds are also proved
+  without admissions: inverse-Jacobian algebra and rotation invariance give
+  the gradients, and exact exponential integration gives the power bounds.
+  There are no remaining admissions in `OrbitCoordinates.lean`.
   Keep recentered quarter times: the former global time-gradient estimate
   was false.
 - The elliptic identity and sharp value/derivative asymptotics are outside the
