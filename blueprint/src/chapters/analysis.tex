@@ -1022,6 +1022,9 @@ independent of $r$.
 \begin{lemma}[ACL slicing for a single weak partial derivative]
 \label{lem:acl-slicing}
 \uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_acl_sections,
+  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_eqOn}
+\leanok
 Let $I,J$ be nonempty open intervals, possibly unbounded, and let
 $F,D\in L^1_{\mathrm{loc}}(I\times J)$ satisfy $\partial_tF=D$ weakly.
 There is a measurable representative $\widetilde F=F$ almost everywhere
@@ -1035,6 +1038,7 @@ weak derivative is required, not a full weak gradient.
 
 \begin{proof}
 \uses{lem:du-bois-reymond}
+\leanok
 Fubini on a countable rectangle exhaustion gives locally integrable
 sections for almost every $a$. For each fixed time test $\beta$, test
 the weak identity with $\alpha(a)\beta(t)$ for all level tests $\alpha$.
@@ -1192,8 +1196,11 @@ not the fractional estimate.
 
 The two $H^1$ nodes currently link to the same combined admitted Lean
 statement, \texttt{exists\_acl\_trace}; separate proofs are not claimed.
-The generic slicing and elementary $L^2$ estimate are new blueprint-only
-statements. Keeping the fractional bound in Gagliardo form avoids any
+Generic directional slicing, including joint measurability, unbounded
+intervals and whole-section uniqueness, is now proved without admissions
+in \texttt{ACLSlicing.lean}. The elementary $L^2$ estimate is still
+blueprint-only. The diagonal ACL and fractional trace statements have not
+yet been separated in Lean. Keeping the fractional bound in Gagliardo form avoids any
 need to identify it with a Bessel potential norm.
 \end{remark}
 

@@ -36,8 +36,9 @@ See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
 - Hölder embedding and the periodization direction of the torus/local-Sobolev bridge
   (`exists_memSobolev_periodize`): moderate. The lift direction is proved.
-- Directional ACL slicing: moderate; diagonal representatives and elementary
-  L²/endpoint trace estimates should be smaller steps once slicing is available.
+- Diagonal ACL representatives and elementary L²/endpoint trace estimates:
+  next smaller steps, now that directional slicing is available. Separate the
+  diagonal ACL result from the combined fractional-trace admission.
 - H² trace differentiation: medium–high, including smooth approximation.
 - Fractional trace control: the largest analysis task; rectangle extension and
   density are still infrastructure gaps.
@@ -46,7 +47,9 @@ See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
   Hausdorff–Young or Mathlib's compact-support Sobolev inequality are candidate
   approaches, not completed implementations.
 
-`lem:acl-slicing` and `lem:trace-l2` have no Lean statements yet.
+`lem:acl-slicing` is proved without admitted dependencies in `ACLSlicing.lean`,
+including a jointly measurable representative, unbounded intervals and whole-section
+uniqueness. `lem:trace-l2` still has no Lean statement.
 `lem:trace-acl` and `lem:trace-gagliardo` still share the admitted
 `exists_acl_trace`; the split did not create independent Lean proofs.
 H² trace differentiation needs elementary L² trace control, not the fractional
