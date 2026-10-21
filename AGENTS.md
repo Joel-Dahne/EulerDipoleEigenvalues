@@ -79,6 +79,12 @@ motivation, and standard facts cited rather than proved.
   both builds (`\T \R \Z \N \C`, `\Div`, `\Dom`, `\Cell`, `\ip{}{}`, ...).
   `macros/print.tex` defines no-op versions of the blueprint macros for the PDF.
 - `NoEmbeddedEigenvalues.lean`: Lean library root, importing every module.
+- `Challenge.lean`: the main theorem and sanity checks of its definitions, stated with
+  Mathlib only and `sorry` proofs; the file a reader audits. `Solution.lean` repeats its
+  definitions verbatim and proves its theorems from the library through bridge lemmas.
+  `comparator.json` lists the compared theorems and permitted axioms. Changing a definition
+  in `Challenge.lean` changes what is claimed: do it only with the authors' agreement, and
+  copy it to `Solution.lean`.
 - `NoEmbeddedEigenvalues/*.lean`: the Lean modules, following the blueprint
   chapters; a chapter may be split over several modules. Setup chapter:
   `TorusL2.lean` (measure, `L²`, characters, coefficients), `Fourier.lean`
@@ -176,6 +182,8 @@ motivation, and standard facts cited rather than proved.
   `blueprint_subgraph.py` (used by `just web` and `just graph`) restricts the
   web dependency graph to chosen nodes and their dependencies, drawn in one
   box per chapter (`--no-chapters` for the plain layout).
+  `CheckChallenge.lean` (behind `just challenge`) compares the `Challenge` and `Solution`
+  environments as the comparator would, without its sandbox or kernel replay.
   `SorryDeps.lean` (behind `just sorries`) loads the built library and lists the
   declarations with `sorry` (and project axioms) that given Lean declarations
   depend on, transitively, with source locations.
@@ -194,6 +202,7 @@ just graph thm:ee-exclusion  # graph of a node and all it depends on (after just
 just pdf             # blueprint PDF in blueprint/print
 just build           # lake build
 just sorries virial_l2  # admitted declarations it depends on (default: main; ~50 s)
+just challenge       # Solution.lean proves Challenge.lean: statements, axioms (~2 min)
 just manuscript      # reworked manuscript PDF, rebuilt on change (needs xelatex, latexmk)
 just manuscript eigenvalues  # same for the original manuscript
 ```

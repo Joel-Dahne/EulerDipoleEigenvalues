@@ -1,7 +1,7 @@
 name = "NoEmbeddedEigenvalues"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["NoEmbeddedEigenvalues"]
+defaultTargets = ["NoEmbeddedEigenvalues", "Challenge", "Solution"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -17,3 +17,11 @@ rev = "v4.34.1"
 
 [[lean_lib]]
 name = "NoEmbeddedEigenvalues"
+
+# The trusted statement (`Challenge.lean`, Mathlib only) and its proof (`Solution.lean`),
+# compared by the comparator, see `comparator.json`.
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "Solution"

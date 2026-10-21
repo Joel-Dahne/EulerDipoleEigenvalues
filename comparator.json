@@ -1,0 +1,15 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "EulerDipole.no_embedded_eigenvalues",
+    "EulerDipole.char_coe",
+    "EulerDipole.L0char_coe",
+    "EulerDipole.existsUnique_isInvLap",
+    "EulerDipole.hasL0_char",
+    "EulerDipole.zero_eigenvalue"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": false
+}
