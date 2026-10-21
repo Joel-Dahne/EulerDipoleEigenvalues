@@ -21,9 +21,9 @@ the nodes, not reproduced here. This was not a full independent proof audit.
 - The cutoff, annular and center-limit assemblies are proved from their named
   inputs. The L² virial identity is proved without admitted dependencies,
   including its weak-gradient chain rules, orbit coordinates and area formula.
-- Separatrix arc energy and level traces are proved from the trace/local-Sobolev
-  inputs using explicit quarter graphs. The first-order trace limit still uses
-  the area formula and saddle-distance estimates.
+- Separatrix arc energy and level traces have no admitted dependencies (axiom
+  audits passed), using the rectangle trace proofs and explicit quarter graphs.
+  The first-order trace limit still uses the area formula and saddle-distance estimates.
 - Weighted boundary positivity and the canonical boundary-form interface are
   proved. Positivity uses interval exhaustion, not smooth density.
 - The eigenfunction transport, pairing-limit and boundary-regularity assemblies
@@ -32,7 +32,7 @@ the nodes, not reproduced here. This was not a full independent proof audit.
 ## Remaining routes
 
 The open analytic work is owned by [shared infrastructure](shared.md):
-Sobolev/trace bridges and the remaining analytic prerequisites of the transport
+Sobolev bridges and the remaining analytic prerequisites of the transport
 and boundary limits. The orbit chart, quarter-orbit bounds, transversal estimates
 and H¹/L² virial route are proved without admitted dependencies.
 
@@ -43,7 +43,7 @@ self-adjointness. Keep these out of its prerequisites unless the argument change
 All transversal mollifier lemmas and the eigenfunction transport pair are proved;
 the transitive admission audit reports zero admissions for `virial_l2`.
 
-Fractional trace infrastructure remains a large reviewed work package.
+The rectangle trace inputs are proved without admissions.
 Pairing-limit assembly is complete from its analytic prerequisites;
 see [shared infrastructure](shared.md).
 Relative difficulty assessments are preliminary, not timing estimates.

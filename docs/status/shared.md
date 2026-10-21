@@ -34,14 +34,16 @@ proof audit or timing estimate.
 
 See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
-- Hölder embedding and the periodization direction of the torus/local-Sobolev bridge
+- The compact-periodization direction of the torus/local-Sobolev bridge
   (`exists_memSobolev_periodize`): moderate. The lift direction is proved.
-- Fractional trace control: the largest analysis task; rectangle extension and
-  density are still infrastructure gaps.
 - Orbitwise restriction: moderate once the coordinate inputs exist.
 - Finite-p embedding: medium–high and outside the even–even route; inverse
   Hausdorff–Young or Mathlib's compact-support Sobolev inequality are candidate
   approaches, not completed implementations.
+
+`lem:sobolev-holder` is proved without admitted dependencies in `SobolevHolder.lean`,
+using the continuous Fourier representative, fractional character increments and
+weighted Cauchy–Schwarz, uniformly for each exponent `0 ≤ α < 1`.
 
 `lem:acl-slicing` is proved without admitted dependencies in `ACLSlicing.lean`,
 including a jointly measurable representative, unbounded intervals and whole-section
@@ -51,11 +53,13 @@ independence of ACL representatives are available.
 `lem:trace-acl` is proved without admitted dependencies in `DiagonalACL.lean`,
 using the linear weak chain rule and directional slicing. The line-representative
 construction for torus lifts now uses this independent ACL theorem.
-`lem:trace-gagliardo` still uses the combined admitted `exists_acl_trace` interface.
 `lem:trace-h2` is proved without admitted dependencies in `TraceH2.lean`.
-Horizontal FTC and transverse dominated convergence replace smooth approximation;
-the ACL representative compatibility is unchanged. Fractional trace control remains
-open; preserve the uniform geometric constants in its current statement.
+Horizontal FTC and transverse dominated convergence replace smooth approximation.
+`lem:trace-gagliardo` is proved without admitted dependencies in `TraceGagliardo.lean`,
+retaining `exists_acl_trace`'s uniform constant and ACL representative guarantees.
+Averaged rectangular paths and the constant-four Hardy inequality (`HardyAverage.lean`)
+avoid rectangle extension and density. The rectangle trace package has no remaining
+blockers; extension/density infrastructure is not needed for these results.
 
 ### Orbit geometry
 

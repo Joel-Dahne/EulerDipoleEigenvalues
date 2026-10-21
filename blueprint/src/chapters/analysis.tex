@@ -919,6 +919,31 @@ which unfolds to $-\int(h\circ\pi)\varphi$. For $H^k$ induct on $k$, using that
 $g\in H^{k+1}$ has Fourier derivatives in $H^k$ (Lemma~\ref{lem:elliptic-torus}).
 \end{proof}
 
+\begin{lemma}[Summability of lattice Sobolev weights]
+\label{lem:sobolev-weight-summable}
+\uses{def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.summable_one_add_int_sq_rpow,
+  NoEmbeddedEigenvalues.summable_sobolevWeight_of_lt_neg_one}
+\leanok
+If $s<-1$, then
+\[
+  \sum_{n\in\Z}(1+n^2)^{s/2}<\infty,\qquad
+  \sum_{k\in\Z^2}(1+|k|^2)^s<\infty .
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+The one-dimensional summand is bounded by $|n|^s$ for $n\ne0$,
+so the first sum is a convergent $p$-series. Since
+\[
+  (1+k_1^2+k_2^2)^2\ge(1+k_1^2)(1+k_2^2),
+\]
+the negative power $s/2$ bounds the two-dimensional summand by
+$(1+k_1^2)^{s/2}(1+k_2^2)^{s/2}$. Its sum is a product of two
+convergent one-dimensional sums.
+\end{proof}
+
 \begin{lemma}[The H\"older Sobolev embedding on the torus]
 \label{lem:sobolev-holder}
 \uses{def:sobolev-torus}
@@ -932,8 +957,16 @@ $|u(s)-u(t)|\le C_\alpha\|g\|_{H^2}d(s,t)^\alpha$.
 
 \begin{proof}
 \uses{lem:torus-fourier-basis, lem:sobolev-torus-basic,
-  lem:continuous-representative}
-Write $a_k=\hat g_k$. For $0\le\alpha<1$, the character estimate
+  lem:continuous-representative, lem:sobolev-weight-summable}
+\leanok
+Write $a_k=\hat g_k$. Circle characters satisfy
+$|e_n(x)-1|\le |n|\,\|x\|$: the real exponential bound descends
+through the quotient norm. On the product torus this gives
+\[
+ |e_k(s)-e_k(t)|\le
+ \min\{2,\,2\sqrt{1+|k|^2}\,d(s,t)\}.
+\]
+Interpolating the two bounds, including at $\alpha=0$, yields the character estimate
 \[
   |e_k(s)-e_k(t)|\le C_\alpha(1+|k|^2)^{\alpha/2}d(s,t)^\alpha
 \]
@@ -943,12 +976,16 @@ and Cauchy--Schwarz give
   \le \|g\|_{H^2}
       \left(\sum_k(1+|k|^2)^{\alpha-2}\right)^{1/2}.
 \]
-The lattice sum converges because $\alpha<1$. Apply the character estimate
+Lemma~\ref{lem:sobolev-weight-summable} gives convergence because
+$\alpha-2<-1$. Apply the character estimate
 to the absolutely convergent Fourier series representing $g$
-(Lemma~\ref{lem:continuous-representative}); the same estimate with
-$\alpha=0$ bounds its supremum norm. This proves the H\"older inclusion
-with a constant depending only on $\alpha$ and the fixed torus.
-
+(Lemma~\ref{lem:continuous-representative}). Since
+$(1+|k|^2)^{\alpha/2}\ge1$, the weighted coefficient bound also controls
+$\sum_k|a_k|$ and hence the supremum norm. This proves the H\"older inclusion
+with a constant depending only on $\alpha$ and the fixed torus. The proof
+uses the existing continuous Fourier sum and chooses
+$C_\alpha=2\bigl(\sum_k(1+|k|^2)^{\alpha-2}\bigr)^{1/2}$;
+no local Sobolev embedding or density theorem is invoked.
 \end{proof}
 
 \begin{lemma}[Finite-$p$ Sobolev embeddings on the torus]
@@ -962,7 +999,7 @@ $\|g\|_{L^p}\le C_p\|g\|_{H^1}$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:torus-fourier-basis, lem:sobolev-torus-basic}
+\uses{lem:torus-fourier-basis, lem:sobolev-torus-basic, lem:sobolev-weight-summable}
 Write $a_k=\hat g_k$. For $p\le2$, the $L^p$ bound follows from the finite measure of the torus
 and Parseval. For $2<p<\infty$, put $q=p/(p-1)\in(1,2)$.
 H\"older's inequality for the Fourier coefficients gives
@@ -980,6 +1017,9 @@ continuous inclusion. Normalization constants are absorbed into $C$.
 \end{proof}
 
 \begin{remark}[Digest note: scope of the embedding nodes, resolved]
+The H\"older node is now proved without admissions in
+\texttt{SobolevHolder.lean}, with a uniform constant, the existing continuous
+Fourier representative and the exponent-zero case included.
 The former combined embedding node has been split. The even--even
 pairing limit uses Lemma~\ref{lem:sobolev-holder}, not
 Lemma~\ref{lem:sobolev-lp}; its proof only needs the H\"older estimate.
@@ -1130,6 +1170,39 @@ a measurable version of $F$. The Lean proof only needs local integrability
 of $F,F_x,F_y$, not square integrability.
 \end{proof}
 
+\begin{lemma}[Hardy inequality for integral averages]
+\label{lem:hardy-average}
+\lean{NoEmbeddedEigenvalues.lintegral_hardy_average_sq_le,
+  NoEmbeddedEigenvalues.lintegral_sq_primitive_div_sq_le_of_integrable}
+\leanok
+For every measurable $f:\R\to[0,\infty]$,
+\[
+  \int_0^\infty\left(\int_0^1 f(ts)\,ds\right)^2dt
+  \le 4\int_0^\infty f(t)^2\,dt .
+\]
+In particular, if $D:\R\to\C$ is integrable and
+$P(t)=\int_0^tD(s)\,ds$, then
+\[
+  \int_0^\infty \frac{|P(t)|^2}{t^2}\,dt
+  \le 4\int_0^\infty |D(t)|^2\,dt .
+\]
+These are inequalities between nonnegative, possibly infinite integrals.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Weighted Cauchy--Schwarz on $(0,1)$ gives
+\[
+  \left(\int_0^1 f(ts)\,ds\right)^2
+  \le 2\int_0^1 \sqrt{s}\,f(ts)^2\,ds ,
+\]
+since $\int_0^1s^{-1/2}\,ds=2$. Integrate in $t$, apply Tonelli,
+and substitute $u=ts$. The remaining weight is again $s^{-1/2}$,
+giving the constant four. For the primitive use
+$|P(t)|/t\le\int_0^1|D(ts)|\,ds$; measurable representatives
+handle null-set changes of $D$.
+\end{proof}
+
 \begin{lemma}[The Gagliardo trace bound]
 \label{lem:trace-gagliardo}
 \uses{def:sobolev-local, def:gagliardo, def:cells, lem:trace-acl}
@@ -1149,15 +1222,56 @@ in Lemma~\ref{lem:trace-acl} with
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-acl, lem:trace-l2, lem:acl-slicing, lem:diagonal-calculus}
-The standard trace estimate on a rectangle, using a bounded $H^1$
-extension and the Gagliardo formula, gives the bound with a constant
-depending only on the rectangle and the chosen line. First prove it for
-smooth data and pass to $H^1$ data by approximation. The elementary
-$L^2$ trace estimate identifies the limiting trace with the ACL trace.
-Uniqueness in Lemma~\ref{lem:acl-slicing} makes the bound independent
-of which transverse ACL representative is chosen. The bounded extension,
-approximation and fractional estimate remain to be formalized.
+\uses{lem:trace-acl, lem:acl-slicing, lem:h1-interval-endpoints,
+  lem:interval-zero-extension-l2, lem:hardy-average, lem:diagonal-calculus}
+\leanok
+Work in diagonal coordinates, writing $u=G$,
+$A=F_x+F_y=\partial_aF$, $B=F_x-F_y=\partial_bF$,
+$I=(a_0,a_1)$, $\tau(a)=u(a,b_0)$, $L=a_1-a_0$,
+$H=b_2-b_0$ and $c=H/(2L)$. For $0<t<H$ put
+\[
+ V(t)=\int_I|u(a,b_0+t)-\tau(a)|^2\,da,\qquad
+ E(t)=\int_I|A(a,b_0+t)|^2\,da ,
+\]
+and extend both by zero outside $(0,H)$.
+
+On almost every horizontal line, the ACL fundamental theorem and
+Cauchy--Schwarz give
+\[
+ \int_{a_0}^{a_1-r}|u(a+r,b)-u(a,b)|^2\,da
+ \le r^2\int_I|A(a,b)|^2\,da \qquad(r>0).
+\]
+Indeed, integrate $r\int_a^{a+r}|A(z,b)|^2\,dz$ in $a$;
+each $z$ is covered by an interval of starting points of length at most $r$.
+On almost every vertical section, apply Lemma~\ref{lem:hardy-average}
+to the zero extension of $B$ from $(b_0,b_2)$. The FTC then gives
+\[
+ \int_0^H \frac{V(t)}{t^2}\,dt\le
+ 4\int_{I\times(b_0,b_2)}|B|^2 .
+\]
+Splitting the difference of two trace values along a three-side
+rectangular path therefore gives, for almost every $t\in(0,H)$,
+\[
+ S(r):=\int_{a_0}^{a_1-r}|\tau(a+r)-\tau(a)|^2\,da
+ \le 6V(t)+3r^2E(t).
+\]
+Average at $t=crs$, $1<s<2$, and integrate in $r$ with weight $r^{-2}$.
+For $r<L$ these heights lie in $(0,H)$; for $r\ge L$, $S(r)=0$.
+Tonelli and dilation give
+\[
+ [\tau]^2_{1/2,I}=2\int_0^\infty\frac{S(r)}{r^2}\,dr
+ \le 18c\int_0^H\frac{V(t)}{t^2}\,dt
+       +6c^{-1}\int_0^H E(t)\,dt
+ \le 72c\int_{I\times(b_1,b_2)}|B|^2
+       +6c^{-1}\int_{I\times(b_1,b_2)}|A|^2 .
+\]
+The parallelogram identity and $dx\,dy=2\,da\,db$ identify
+the sum of the two diagonal derivative energies with
+$\int_Q(|F_x|^2+|F_y|^2)\,dx\,dy$. Thus
+$C=72c+6c^{-1}=36H/L+12L/H$ works, even without the $|F|^2$ term.
+No two-dimensional extension or smooth approximation is used. The
+representative is the transverse ACL representative from
+Lemma~\ref{lem:trace-acl}, so no line values are reassigned.
 \end{proof}
 
 \begin{lemma}[Differentiation of the trace of an $H^2$ function]
@@ -1224,9 +1338,13 @@ The elementary $L^2$ estimate, finite endpoint limits and independence of
 ACL representatives are proved without admissions in \texttt{TraceL2.lean}.
 The $H^2$ trace differentiation theorem is proved without admissions in
 \texttt{TraceH2.lean}, with the same representative-compatibility statement.
-The fractional bound still uses the combined admitted interface
-\texttt{exists\_acl\_trace}. Keeping the fractional bound in Gagliardo form avoids any
-need to identify it with a Bessel potential norm.
+The fractional bound is now proved without admissions in
+\texttt{TraceGagliardo.lean}, with the original uniform interface
+\texttt{exists\_acl\_trace}. Its former rectangle-extension and density sketch
+is replaced by averaged rectangular paths and the Hardy estimate proved in
+\texttt{HardyAverage.lean}. This resolves the rectangle trace infrastructure
+gap without constructing a two-dimensional extension operator. Keeping the
+bound in Gagliardo form avoids identifying it with a Bessel potential norm.
 \end{remark}
 
 \begin{definition}[Line representatives]
@@ -1286,8 +1404,8 @@ $U,F,F_x,F_y$. The former pins down the trace: two transverse ACL representative
 equal almost everywhere in two dimensions agree along almost every entire transverse
 line, by Fubini and continuity, hence also at $b=b_0$. The latter makes the estimate
 uniform in the function, with the rectangle and trace line fixed. The strengthened
-$H^2$ statement is now proved by the density-free argument above; the fractional
-estimate remains admitted.
+$H^2$ and fractional statements are now both proved by the density-free
+arguments above.
 \end{remark}
 
 \section{Measure theory and operator theory}

@@ -9,8 +9,8 @@ import NoEmbeddedEigenvalues.DiagonalCalculus
 # Sobolev spaces on open subsets of the plane
 
 Blueprint: `def:weak-derivative-local`, `def:sobolev-local`, `lem:weak-derivative-basic`,
-`lem:weak-derivative-classical`; stated: `lem:local-to-global`, `lem:trace-gagliardo`.
-The independent ACL, L² and H² trace proofs live in the trace modules.
+`lem:weak-derivative-classical`; stated: `lem:local-to-global`.
+The ACL, L², H² and fractional trace proofs live in the trace modules.
 
 Local Sobolev spaces are defined on open sets `U ⊆ ℝ²`, the lift of the torus, through
 weak derivatives tested against smooth functions with compact support in `U`. The
@@ -549,40 +549,15 @@ end LocalToGlobal
 
 /-! ### Traces on lines in diagonal coordinates
 
-The fractional trace bound remains stated here. Independent ACL representatives,
-elementary L² traces and H² trace differentiation are proved in `DiagonalACL.lean`,
-`TraceL2.lean` and `TraceH2.lean`, respectively. -/
+ACL representatives, elementary L² traces, H² trace differentiation and the fractional
+trace bound are proved in `DiagonalACL.lean`, `TraceL2.lean`, `TraceH2.lean` and
+`TraceGagliardo.lean`, respectively. -/
 
 section Traces
 
 /-- The diagonal rectangle `{a ∈ I, b ∈ J}` in diagonal coordinates `a = (x+y)/2`,
     `b = (x-y)/2`. -/
 def diagRect (I J : Set ℝ) : Set (ℝ × ℝ) := {p | (diagCoord p).1 ∈ I ∧ (diagCoord p).2 ∈ J}
-
-/-- Absolute continuity on lines, and the trace on a line `b = b₀`. Let `F ∈ H¹` on a
-    neighbourhood of the diagonal rectangle `Q = {a₀ < a < a₁, b₁ < b < b₂}` with weak
-    derivatives `Fx, Fy`. Then `F` has a representative `G` that is locally absolutely
-    continuous on almost every line `a = const` in `Q`, with derivative `∂_b = ∂ₓ - ∂_y`, and
-    whose trace on the line `b = b₀` (`b₁ < b₀ < b₂`) has finite Gagliardo seminorm, bounded by
-    the `H¹(Q)` norm. The constant depends only on the rectangle and the trace line, not
-    on `U`, the function, or its weak derivatives. -/
-theorem exists_acl_trace {a₀ a₁ b₁ b₂ b₀ : ℝ} (ha : a₀ < a₁)
-    (hb₀ : b₀ ∈ Set.Ioo b₁ b₂) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : Set (ℝ × ℝ)) (F Fx Fy : ℝ × ℝ → ℂ),
-      IsOpen U → diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U →
-      MemLp F 2 (volume.restrict U) → MemLp Fx 2 (volume.restrict U) →
-      MemLp Fy 2 (volume.restrict U) → HasWeakPartialOn U 0 F Fx → HasWeakPartialOn U 1 F Fy →
-    ∃ G : ℝ × ℝ → ℂ, (∀ᵐ p ∂(volume.restrict U), G p = F p) ∧
-      (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)),
-        (∀ c d, b₁ < c → c ≤ d → d < b₂ →
-          AbsolutelyContinuousOnInterval (fun b ↦ G (diagInv (a, b))) c d) ∧
-        ∀ᵐ b ∂(volume.restrict (Set.Ioo b₁ b₂)),
-          HasDerivAt (fun b ↦ G (diagInv (a, b))) (Fx (diagInv (a, b)) - Fy (diagInv (a, b))) b) ∧
-      (∫⁻ a in Set.Ioo a₀ a₁, ∫⁻ a' in Set.Ioo a₀ a₁,
-          ENNReal.ofReal (‖G (diagInv (a, b₀)) - G (diagInv (a', b₀))‖ ^ 2 / (a - a') ^ 2) ≤
-        ENNReal.ofReal (C * ∫ p in diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂),
-          ‖F p‖ ^ 2 + ‖Fx p‖ ^ 2 + ‖Fy p‖ ^ 2)) := by
-  sorry
 
 end Traces
 

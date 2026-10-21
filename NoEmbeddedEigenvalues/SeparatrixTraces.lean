@@ -1,7 +1,7 @@
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.SobolevLocal
 import NoEmbeddedEigenvalues.DiagonalACL
-import NoEmbeddedEigenvalues.TraceH2
+import NoEmbeddedEigenvalues.TraceGagliardo
 import NoEmbeddedEigenvalues.SegmentEstimates
 import NoEmbeddedEigenvalues.QuarterOrbits
 import NoEmbeddedEigenvalues.OddHardy
@@ -12,12 +12,13 @@ import NoEmbeddedEigenvalues.OddHardy
 Blueprint: `def:line-representative`, `lem:line-representatives`, `lem:normal-tangent-frame`,
 `lem:continuous-stream-symmetries`, `lem:normal-tangent-rotation`, `lem:quarter-null-sets`,
 `lem:arc-trace-identification`, `lem:ee-arc-energy`, `lem:ee-quarter-bound`,
-`lem:ee-corner-tails`, `lem:ee-level-traces`. All proved; the only admitted inputs are
-`lem:traces` and `lem:local-to-global`.
+`lem:ee-corner-tails`, `lem:ee-level-traces`. All proved. The arc-energy and
+level-trace theorems have no admitted dependencies, including their rectangle trace
+and lift-to-local-Sobolev inputs.
 
 Near the arc `b = π/2` the first derivatives `ψₓ, ψ_y` are handled through representatives that
 are locally absolutely continuous on almost every line `a = const` (`IsLineRep`, provided by
-`lem:traces`). Any two such representatives agree on almost every whole line, so their values on
+`lem:trace-acl`). Any two such representatives agree on almost every whole line, so their values on
 `b = π/2` are well defined almost everywhere. Since `ψ` is even under the reflection
 `b ↦ π - b`, `ψ_b = ψₓ - ψ_y` vanishes there, and `ψ_a = ψₓ + ψ_y` is the derivative of the trace
 of `ψ̃`.
@@ -46,21 +47,6 @@ open scoped ENNReal
 theorem measurable_liftL2 (g : L2) : Measurable (liftL2 g) :=
   (Lp.stronglyMeasurable g).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
 
-theorem continuous_diagCoord : Continuous diagCoord := by unfold diagCoord; fun_prop
-
-theorem isOpen_diagRect {I J : Set ℝ} (hI : IsOpen I) (hJ : IsOpen J) : IsOpen (diagRect I J) :=
-  (hI.preimage (continuous_fst.comp continuous_diagCoord)).inter
-    (hJ.preimage (continuous_snd.comp continuous_diagCoord))
-
-theorem measurableSet_diagRect {I J : Set ℝ} (hI : MeasurableSet I) (hJ : MeasurableSet J) :
-    MeasurableSet (diagRect I J) :=
-  (hI.preimage (continuous_fst.comp continuous_diagCoord).measurable).inter
-    (hJ.preimage (continuous_snd.comp continuous_diagCoord).measurable)
-
-theorem mem_diagRect_diagInv {I J : Set ℝ} {q : ℝ × ℝ} :
-    diagInv q ∈ diagRect I J ↔ q ∈ I ×ˢ J := by
-  simp only [diagRect, mem_ofPred_eq, diagCoord_diagInv, mem_prod]
-
 theorem isBounded_diagRect {I J : Set ℝ} (hI : Bornology.IsBounded I)
     (hJ : Bornology.IsBounded J) : Bornology.IsBounded (diagRect I J) := by
   have h : diagRect I J = diagInv '' (I ×ˢ J) := by
@@ -73,20 +59,6 @@ theorem isBounded_diagRect {I J : Set ℝ} (hI : Bornology.IsBounded I)
       exact mem_diagRect_diagInv.2 hq
   rw [h]
   exact (diagInv : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)).lipschitzWith.isBounded_image (hI.prod hJ)
-
-/-- `dx dy = 2 da db` for nonnegative functions: `∫⁻ F ∘ diagInv = ½ ∫⁻ F`. -/
-theorem lintegral_comp_diagInv (F : ℝ × ℝ → ℝ≥0∞) :
-    ∫⁻ q, F (diagInv q) = ENNReal.ofReal (1 / 2) * ∫⁻ p, F p := by
-  have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
-    rw [Measure.volume_eq_prod]; infer_instance
-  have hmap : Measure.map (diagInvLinear : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) volume =
-      ENNReal.ofReal |(LinearMap.det (diagInvLinear : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)))⁻¹| • volume :=
-    Measure.map_linearMap_addHaar_eq_smul_addHaar volume (by rw [det_diagInvLinear]; norm_num)
-  have key : ∫⁻ q, F (diagInv q) =
-      ∫⁻ y, F y ∂Measure.map (diagInvLinear : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) volume :=
-    (diagInv.toHomeomorph.measurableEmbedding.lintegral_map F).symm
-  rw [key, hmap, lintegral_smul_measure, det_diagInvLinear, smul_eq_mul]
-  norm_num
 
 /-- Almost-everywhere statements in `(x, y)` hold on almost every line `a = const`. -/
 theorem ae_ae_diagInv {P : ℝ × ℝ → Prop} (hP : ∀ᵐ p, P p) : ∀ᵐ a, ∀ᵐ b, P (diagInv (a, b)) := by
@@ -704,7 +676,7 @@ theorem lintegral_arcTrace_lt_top {ω : L2} (hω : InSector true true ω) :
     (hasFourierPartial_streamPartial_streamSecondPartial ω 1 1)
     (a₀ := -π) (a₁ := π) (b₁ := 0) (b₂ := π) (by linarith) hπ
   obtain ⟨-, hder, -⟩ := ee_arc_trace_identification hω hx hy
-  -- The Gagliardo bound for the trace of `ψ_a = ψₓ + ψ_y` (`lem:traces`).
+  -- The Gagliardo bound for the trace of `ψ_a = ψₓ + ψ_y` (`lem:trace-gagliardo`).
   have hU : IsOpen Q := isOpen_diagRect isOpen_Ioo isOpen_Ioo
   have hUb : Bornology.IsBounded Q :=
     isBounded_diagRect (Metric.isBounded_Ioo _ _) (Metric.isBounded_Ioo _ _)

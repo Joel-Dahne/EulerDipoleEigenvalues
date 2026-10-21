@@ -43,10 +43,13 @@ import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.SmoothIntervalIntegral
 import NoEmbeddedEigenvalues.SobolevLocal
 import NoEmbeddedEigenvalues.LiftPeriodization
+import NoEmbeddedEigenvalues.SobolevHolder
 import NoEmbeddedEigenvalues.SobolevTorus
 import NoEmbeddedEigenvalues.Symmetry
 import NoEmbeddedEigenvalues.SymmetryL2
 import NoEmbeddedEigenvalues.TorusL2
+import NoEmbeddedEigenvalues.HardyAverage
+import NoEmbeddedEigenvalues.TraceGagliardo
 import NoEmbeddedEigenvalues.TraceH2
 import NoEmbeddedEigenvalues.TraceL2
 import NoEmbeddedEigenvalues.TransportOperator

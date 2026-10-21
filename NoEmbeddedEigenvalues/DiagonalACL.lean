@@ -6,7 +6,8 @@ import NoEmbeddedEigenvalues.ACLSlicing
 Blueprint: `lem:trace-acl`.
 
 The linear change of variables transfers the two weak partial derivatives to
-`∂_a = ∂ₓ + ∂_y` and `∂_b = ∂ₓ - ∂_y`, and preserves L² membership. Directional slicing then supplies a jointly measurable
+`∂_a = ∂ₓ + ∂_y` and `∂_b = ∂ₓ - ∂_y`, and preserves L² membership.
+The area formula is also recorded on rectangles. Directional slicing supplies a jointly measurable
 representative, without a fractional trace estimate or Sobolev approximation.
 -/
 
@@ -15,7 +16,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set Filter
-open scoped Topology ContDiff
+open scoped Topology ContDiff ENNReal
 
 /-- The diagonal inverse sends Lebesgue measure to one half of Lebesgue measure. -/
 theorem map_diagInv_volume :
@@ -27,6 +28,44 @@ theorem map_diagInv_volume :
     (show LinearMap.det (diagInvLinear : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) ≠ 0 by
       rw [det_diagInvLinear]; norm_num)
   simpa only [det_diagInvLinear, show |(-2 : ℝ)⁻¹| = 1 / 2 by norm_num] using h
+
+theorem continuous_diagCoord : Continuous diagCoord := by unfold diagCoord; fun_prop
+
+theorem isOpen_diagRect {I J : Set ℝ} (hI : IsOpen I) (hJ : IsOpen J) : IsOpen (diagRect I J) :=
+  (hI.preimage (continuous_fst.comp continuous_diagCoord)).inter
+    (hJ.preimage (continuous_snd.comp continuous_diagCoord))
+
+theorem measurableSet_diagRect {I J : Set ℝ} (hI : MeasurableSet I) (hJ : MeasurableSet J) :
+    MeasurableSet (diagRect I J) :=
+  (hI.preimage (continuous_fst.comp continuous_diagCoord).measurable).inter
+    (hJ.preimage (continuous_snd.comp continuous_diagCoord).measurable)
+
+theorem mem_diagRect_diagInv {I J : Set ℝ} {q : ℝ × ℝ} :
+    diagInv q ∈ diagRect I J ↔ q ∈ I ×ˢ J := by
+  simp only [diagRect, mem_ofPred_eq, diagCoord_diagInv, mem_prod]
+
+/-- The diagonal area formula for arbitrary nonnegative functions. -/
+theorem lintegral_comp_diagInv (f : ℝ × ℝ → ℝ≥0∞) :
+    (∫⁻ q, f (diagInv q)) = ENNReal.ofReal (1 / 2) * ∫⁻ p, f p := by
+  calc
+    _ = ∫⁻ p, f p ∂Measure.map diagInv volume :=
+      (diagInv.toHomeomorph.measurableEmbedding.lintegral_map f).symm
+    _ = _ := by rw [map_diagInv_volume, lintegral_smul_measure]; rfl
+
+/-- The diagonal area formula restricted to a rectangle. -/
+theorem setLIntegral_comp_diagInv {I J : Set ℝ} (hI : MeasurableSet I)
+    (hJ : MeasurableSet J) (f : ℝ × ℝ → ℝ≥0∞) :
+    (∫⁻ q in I ×ˢ J, f (diagInv q)) =
+      ENNReal.ofReal (1 / 2) * ∫⁻ p in diagRect I J, f p := by
+  have he : (I ×ˢ J).indicator (fun q ↦ f (diagInv q)) =
+      fun q ↦ (diagRect I J).indicator f (diagInv q) := by
+    funext q
+    by_cases hq : q ∈ I ×ˢ J
+    · rw [indicator_of_mem hq, indicator_of_mem (mem_diagRect_diagInv.2 hq)]
+    · rw [indicator_of_notMem hq,
+        indicator_of_notMem (fun h ↦ hq (mem_diagRect_diagInv.1 h))]
+  rw [← lintegral_indicator (hI.prod hJ), he, lintegral_comp_diagInv,
+    lintegral_indicator (measurableSet_diagRect hI hJ)]
 
 /-- Local integrability is preserved by the diagonal linear change of variables. -/
 theorem locallyIntegrableOn_comp_diagInv {U : Set (ℝ × ℝ)} {F : ℝ × ℝ → ℂ}
