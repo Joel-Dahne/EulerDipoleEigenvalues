@@ -6,7 +6,7 @@ import NoEmbeddedEigenvalues.ACLSlicing
 Blueprint: `lem:trace-acl`.
 
 The linear change of variables transfers the two weak partial derivatives to
-`∂_b = ∂ₓ - ∂_y`. Directional slicing then supplies a jointly measurable
+`∂_a = ∂ₓ + ∂_y` and `∂_b = ∂ₓ - ∂_y`, and preserves L² membership. Directional slicing then supplies a jointly measurable
 representative, without a fractional trace estimate or Sobolev approximation.
 -/
 
@@ -17,7 +17,8 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 open scoped Topology ContDiff
 
-private theorem map_diagInv_volume :
+/-- The diagonal inverse sends Lebesgue measure to one half of Lebesgue measure. -/
+theorem map_diagInv_volume :
     Measure.map diagInv volume = ENNReal.ofReal (1 / 2) • volume := by
   have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]; infer_instance
@@ -87,6 +88,66 @@ theorem HasWeakPartialOn.comp_diagInv_snd {U : Set (ℝ × ℝ)} {F Fx Fy : ℝ 
     ring
   rw [integral_eq_two_smul_integral_diagInv (fun p ↦ F p * (partialX ψ p - partialY ψ p)),
     integral_eq_two_smul_integral_diagInv (fun p ↦ (Fx p - Fy p) * ψ p)] at hw
+  simp only [hchain, ψ, Function.comp_apply, diagInv.symm_apply_apply] at hw
+  have hh := congrArg (fun z : ℂ ↦ (1 / 2 : ℝ) • z) hw
+  simpa only [smul_neg, smul_smul, show (1 / 2 : ℝ) * 2 = 1 by norm_num, one_smul,
+    coordPartial, show (1 : Fin 2) ≠ 0 by decide, ↓reduceIte, Function.comp_apply] using hh
+
+/-- Square integrability is preserved by the diagonal coordinate change. -/
+theorem memLp_comp_diagInv {U : Set (ℝ × ℝ)} (hU : MeasurableSet U) {F : ℝ × ℝ → ℂ}
+    (hF : MemLp F 2 (volume.restrict U)) :
+    MemLp (F ∘ diagInv) 2 (volume.restrict (diagInv ⁻¹' U)) := by
+  apply diagInv.toHomeomorph.measurableEmbedding.memLp_map_measure_iff.1
+  change MemLp F 2 (Measure.map diagInv (volume.restrict (diagInv ⁻¹' U)))
+  rw [← Measure.restrict_map diagInv.continuous.measurable hU, map_diagInv_volume,
+    Measure.restrict_smul]
+  exact hF.smul_measure (by finiteness)
+
+/-- The tangential weak derivative in diagonal coordinates is `Fₓ + Fᵧ`. -/
+theorem HasWeakPartialOn.comp_diagInv_fst {U : Set (ℝ × ℝ)} {F Fx Fy : ℝ × ℝ → ℂ}
+    (hU : IsOpen U) (hx : HasWeakPartialOn U 0 F Fx) (hy : HasWeakPartialOn U 1 F Fy) :
+    HasWeakPartialOn (diagInv ⁻¹' U) 0 (F ∘ diagInv) ((fun p ↦ Fx p + Fy p) ∘ diagInv) := by
+  refine ⟨locallyIntegrableOn_comp_diagInv hx.1 hU,
+    locallyIntegrableOn_comp_diagInv (hx.2.1.add hy.2.1) hU, ?_⟩
+  intro φ hφ
+  let ψ := φ ∘ diagInv.symm
+  have hψ : IsTestFunctionOn U ψ := by
+    refine ⟨hφ.contDiff.comp diagInv.symm.contDiff,
+      hφ.hasCompactSupport.comp_homeomorph diagInv.symm.toHomeomorph, ?_⟩
+    intro p hp
+    have ht : diagInv.symm p ∈ tsupport φ := by
+      change p ∈ tsupport (φ ∘ diagInv.symm.toHomeomorph) at hp
+      rwa [tsupport_comp_eq_preimage] at hp
+    simpa only [mem_preimage, diagInv.apply_symm_apply] using hφ.tsupport_subset ht
+  have hchain : ∀ q, partialX ψ (diagInv q) + partialY ψ (diagInv q) = partialX φ q := by
+    intro q
+    have he := congrFun (partialX_comp_diagInv (hψ.contDiff.differentiable (by simp))) q
+    have hc : ψ ∘ diagInv = φ := by
+      funext p
+      exact congrArg φ (diagInv.symm_apply_apply p)
+    simpa only [hc, Function.comp_apply] using he.symm
+  have ix := integrable_mul_of_tsupport_subset hx.1 (hψ.continuous_coordPartial 0)
+    (hψ.hasCompactSupport_coordPartial 0)
+    ((tsupport_coordPartial_subset 0 ψ).trans hψ.tsupport_subset)
+  have iy := integrable_mul_of_tsupport_subset hy.1 (hψ.continuous_coordPartial 1)
+    (hψ.hasCompactSupport_coordPartial 1)
+    ((tsupport_coordPartial_subset 1 ψ).trans hψ.tsupport_subset)
+  have iFx := integrable_mul_of_tsupport_subset hx.2.1 hψ.contDiff.continuous
+    hψ.hasCompactSupport hψ.tsupport_subset
+  have iFy := integrable_mul_of_tsupport_subset hy.2.1 hψ.contDiff.continuous
+    hψ.hasCompactSupport hψ.tsupport_subset
+  have hw : (∫ p, F p * (partialX ψ p + partialY ψ p)) =
+      -(∫ p, (Fx p + Fy p) * ψ p) := by
+    simp only [mul_add, add_mul]
+    rw [integral_add (by simpa [coordPartial] using ix) (by simpa [coordPartial] using iy),
+      integral_add iFx iFy]
+    have hxx := hx.2.2 ψ hψ
+    have hyy := hy.2.2 ψ hψ
+    simp only [coordPartial, show (1 : Fin 2) ≠ 0 by decide, ↓reduceIte] at hxx hyy
+    rw [hxx, hyy]
+    ring
+  rw [integral_eq_two_smul_integral_diagInv (fun p ↦ F p * (partialX ψ p + partialY ψ p)),
+    integral_eq_two_smul_integral_diagInv (fun p ↦ (Fx p + Fy p) * ψ p)] at hw
   simp only [hchain, ψ, Function.comp_apply, diagInv.symm_apply_apply] at hw
   have hh := congrArg (fun z : ℂ ↦ (1 / 2 : ℝ) • z) hw
   simpa only [smul_neg, smul_smul, show (1 / 2 : ℝ) * 2 = 1 by norm_num, one_smul,

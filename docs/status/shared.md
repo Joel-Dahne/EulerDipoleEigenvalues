@@ -36,7 +36,6 @@ See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
 - Hölder embedding and the periodization direction of the torus/local-Sobolev bridge
   (`exists_memSobolev_periodize`): moderate. The lift direction is proved.
-- H² trace differentiation: medium–high, including smooth approximation.
 - Fractional trace control: the largest analysis task; rectangle extension and
   density are still infrastructure gaps.
 - Orbitwise restriction: moderate once the coordinate inputs exist.
@@ -53,9 +52,10 @@ independence of ACL representatives are available.
 using the linear weak chain rule and directional slicing. The line-representative
 construction for torus lifts now uses this independent ACL theorem.
 `lem:trace-gagliardo` still uses the combined admitted `exists_acl_trace` interface.
-H² trace differentiation needs elementary L² trace control, not the fractional
-bound. Preserve the ACL representative compatibility and uniform trace constants
-in the current statements.
+`lem:trace-h2` is proved without admitted dependencies in `TraceH2.lean`.
+Horizontal FTC and transverse dominated convergence replace smooth approximation;
+the ACL representative compatibility is unchanged. Fractional trace control remains
+open; preserve the uniform geometric constants in its current statement.
 
 ### Orbit geometry
 

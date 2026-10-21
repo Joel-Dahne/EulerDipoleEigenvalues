@@ -13,8 +13,10 @@ zero-extended derivative, hence absolutely continuous on every bounded interval.
 This is first-order infrastructure; no second-order extension or mollification
 is asserted here.
 
-Not used by the main argument: positivity of the boundary form on the weighted
-domain is proved directly in `WeightedBoundaryForm.lean`. Kept as infrastructure
+The zero-trace extension theorem is not used by the main argument: positivity
+on the weighted domain is proved directly in `WeightedBoundaryForm.lean`.
+The complex primitive and elementary zero-extension helpers are reused by
+`TraceH2.lean`; the zero-trace route is retained as infrastructure
 (decision of 2026-10-15).
 -/
 

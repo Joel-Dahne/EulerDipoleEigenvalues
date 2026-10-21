@@ -1178,21 +1178,30 @@ $\partial_aF$, not an arbitrary assignment of gradient values on the line.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-acl, lem:trace-l2, lem:acl-slicing, lem:du-bois-reymond,
-  lem:diagonal-calculus}
-The first weak derivatives are in $H^1$; apply
-Lemma~\ref{lem:trace-acl} to their sum. Approximate $F$ in $H^2(Q)$
-by smooth functions. Lemma~\ref{lem:trace-l2}, in diagonal coordinates,
-gives $L^2$ convergence of their traces and of their first-derivative
-traces. Tangential integration by parts passes to the limit, identifying
-the weak derivative of the trace as the ACL trace of $F_x+F_y$.
-The one-dimensional weak-derivative FTC gives a locally absolutely
-continuous trace. Continuity of $F$ identifies it with $F(\cdot,b_0)$:
-on almost every transverse section its continuous restriction agrees
-almost everywhere, hence everywhere, with the ACL representative.
-This identifies the two line traces almost everywhere in $a$; continuity
-of both the AC trace and $F(\cdot,b_0)$ makes them equal everywhere.
-No fractional trace estimate is needed for this argument.
+\uses{lem:trace-acl, lem:trace-l2, lem:acl-slicing, lem:diagonal-calculus}
+\leanok
+Put $A=F_x+F_y\in H^1(U)$ and choose a measurable transverse ACL
+representative $H$ of $A$ by Lemma~\ref{lem:trace-acl}. Write $B=\partial_bA$
+for its $L^2$ transverse derivative. Lemma~\ref{lem:trace-l2} gives
+$H(\cdot,b)\in L^2(a_0,a_1)$ for every interior $b$.
+
+Fix $c,d\in(a_0,a_1)$ and an interior anchor $b_*$. On almost every
+transverse section, the FTC gives the uniform bound
+\[
+  |H(a,b)|\le |H(a,b_*)|+\int_{b_1}^{b_2}|B(a,t)|\,dt .
+\]
+The right-hand side is integrable on the compact interval between $c,d$,
+by the $L^2$ trace bound and Fubini. Dominated convergence therefore makes
+$b\mapsto\int_c^d H(a,b)\,da$ continuous. Horizontal ACL slicing and
+continuity of $F$ give, for almost every $b$,
+\[
+  F(d,b)-F(c,b)=\int_c^d H(a,b)\,da .
+\]
+Both sides are continuous in $b$, so the identity holds at $b_0$.
+With $c$ fixed this expresses $F(\cdot,b_0)$ as a constant plus the
+primitive of $H(\cdot,b_0)\in L^2$, proving local absolute continuity and
+the claimed a.e. derivative. No smooth approximation or fractional
+trace estimate is needed.
 \end{proof}
 
 \begin{remark}[Digest note: traces, split into separate inputs]
@@ -1203,7 +1212,9 @@ Lemma~\ref{lem:trace-gagliardo} supplies the fractional bound used by odd
 Hardy at the corners. Lemma~\ref{lem:trace-h2} identifies tangential
 derivatives and gives the arc absolute continuity used in Melnikov.
 Its proof needs only the elementary bound of Lemma~\ref{lem:trace-l2},
-not the fractional estimate.
+not the fractional estimate. The former smooth-approximation sketch has
+been replaced by the horizontal FTC and transverse dominated convergence:
+this removes the density prerequisite rather than assuming it.
 
 The diagonal ACL result is proved without admissions in
 \texttt{DiagonalACL.lean}, independently of the fractional estimate, using
@@ -1211,6 +1222,8 @@ the directional slicing theorem in \texttt{ACLSlicing.lean}. The latter
 includes joint measurability, unbounded intervals and whole-section uniqueness.
 The elementary $L^2$ estimate, finite endpoint limits and independence of
 ACL representatives are proved without admissions in \texttt{TraceL2.lean}.
+The $H^2$ trace differentiation theorem is proved without admissions in
+\texttt{TraceH2.lean}, with the same representative-compatibility statement.
 The fractional bound still uses the combined admitted interface
 \texttt{exists\_acl\_trace}. Keeping the fractional bound in Gagliardo form avoids any
 need to identify it with a Bessel potential norm.
@@ -1272,8 +1285,9 @@ continuity of its returned $H$, and \texttt{exists\_acl\_trace} quantifies $C$ b
 $U,F,F_x,F_y$. The former pins down the trace: two transverse ACL representatives
 equal almost everywhere in two dimensions agree along almost every entire transverse
 line, by Fubini and continuity, hence also at $b=b_0$. The latter makes the estimate
-uniform in the function, with the rectangle and trace line fixed. These strengthened
-statements remain admitted.
+uniform in the function, with the rectangle and trace line fixed. The strengthened
+$H^2$ statement is now proved by the density-free argument above; the fractional
+estimate remains admitted.
 \end{remark}
 
 \section{Measure theory and operator theory}

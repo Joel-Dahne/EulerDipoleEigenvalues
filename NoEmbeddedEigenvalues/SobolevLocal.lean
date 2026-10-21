@@ -9,8 +9,8 @@ import NoEmbeddedEigenvalues.DiagonalCalculus
 # Sobolev spaces on open subsets of the plane
 
 Blueprint: `def:weak-derivative-local`, `def:sobolev-local`, `lem:weak-derivative-basic`,
-`lem:weak-derivative-classical`; stated: `lem:local-to-global`, `lem:traces` (absolute
-continuity on lines and traces on lines in diagonal coordinates).
+`lem:weak-derivative-classical`; stated: `lem:local-to-global`, `lem:trace-gagliardo`.
+The independent ACL, L² and H² trace proofs live in the trace modules.
 
 Local Sobolev spaces are defined on open sets `U ⊆ ℝ²`, the lift of the torus, through
 weak derivatives tested against smooth functions with compact support in `U`. The
@@ -547,7 +547,11 @@ theorem exists_memSobolev_periodize {k : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpe
 
 end LocalToGlobal
 
-/-! ### Traces on lines in diagonal coordinates (`lem:traces`, stated) -/
+/-! ### Traces on lines in diagonal coordinates
+
+The fractional trace bound remains stated here. Independent ACL representatives,
+elementary L² traces and H² trace differentiation are proved in `DiagonalACL.lean`,
+`TraceL2.lean` and `TraceH2.lean`, respectively. -/
 
 section Traces
 
@@ -578,26 +582,6 @@ theorem exists_acl_trace {a₀ a₁ b₁ b₂ b₀ : ℝ} (ha : a₀ < a₁)
           ENNReal.ofReal (‖G (diagInv (a, b₀)) - G (diagInv (a', b₀))‖ ^ 2 / (a - a') ^ 2) ≤
         ENNReal.ofReal (C * ∫ p in diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂),
           ‖F p‖ ^ 2 + ‖Fx p‖ ^ 2 + ‖Fy p‖ ^ 2)) := by
-  sorry
-
-/-- Traces of continuous `H²` functions on a line `b = b₀` are absolutely continuous, with
-    derivative the trace of `∂_a F = ∂ₓF + ∂_yF`, which is square integrable. The returned
-    representative of `Fx + Fy` is also locally absolutely continuous on almost every
-    transverse line, so its values on `b = b₀` are genuine ACL trace values. -/
-theorem absolutelyContinuous_trace_of_H2 {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    {F Fx Fy : ℝ × ℝ → ℂ} {a₀ a₁ b₁ b₂ b₀ : ℝ} (ha : a₀ < a₁)
-    (hQ : diagRect (Set.Ioo a₀ a₁) (Set.Ioo b₁ b₂) ⊆ U) (hb₀ : b₀ ∈ Set.Ioo b₁ b₂)
-    (hFc : ContinuousOn F U) (hF : MemSobolevOn 2 U F) (hx : HasWeakPartialOn U 0 F Fx)
-    (hy : HasWeakPartialOn U 1 F Fy) :
-    ∃ H : ℝ × ℝ → ℂ, (∀ᵐ p ∂(volume.restrict U), H p = Fx p + Fy p) ∧
-      (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)), ∀ c d,
-        b₁ < c → c ≤ d → d < b₂ →
-          AbsolutelyContinuousOnInterval (fun b ↦ H (diagInv (a, b))) c d) ∧
-      (∀ c d, a₀ < c → c ≤ d → d < a₁ →
-        AbsolutelyContinuousOnInterval (fun a ↦ F (diagInv (a, b₀))) c d) ∧
-      (∀ᵐ a ∂(volume.restrict (Set.Ioo a₀ a₁)),
-        HasDerivAt (fun a ↦ F (diagInv (a, b₀))) (H (diagInv (a, b₀))) a) ∧
-      MemLp (fun a ↦ H (diagInv (a, b₀))) 2 (volume.restrict (Set.Ioo a₀ a₁)) := by
   sorry
 
 end Traces
