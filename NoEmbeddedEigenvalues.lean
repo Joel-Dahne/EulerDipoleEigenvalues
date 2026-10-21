@@ -54,6 +54,7 @@ import NoEmbeddedEigenvalues.TraceH2
 import NoEmbeddedEigenvalues.TraceL2
 import NoEmbeddedEigenvalues.TransportOperator
 import NoEmbeddedEigenvalues.TransversalMollifier
+import NoEmbeddedEigenvalues.OrbitRestriction
 import NoEmbeddedEigenvalues.VirialAlgebra
 import NoEmbeddedEigenvalues.CellPeriodization
 import NoEmbeddedEigenvalues.LocalToGlobal

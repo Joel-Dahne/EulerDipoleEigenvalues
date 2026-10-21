@@ -5,49 +5,27 @@
 
 ## Current position
 
-The assembly proofs `even_even_character_exclusion` and `even_even_exclusion`
-have no `sorry` of their own. The transitive admission audit of
-`even_even_exclusion` reports a single admission: `ae_orbit_restriction`
-(`lem:coarea`, H¹ along almost every orbit).
+The even–even exclusion is formalized without admissions: the transitive
+admission audit (`just sorries`) reports zero admissions for both
+`even_even_exclusion` and `even_even_character_exclusion`. The last inputs were
+`lem:local-to-global` (`LocalToGlobal.lean`) and `lem:coarea`
+(`OrbitRestriction.lean`).
 
 The analysis, geometry, virial and transport prerequisites have had a first-pass
 blueprint review. Proof sketches and dependency corrections are recorded at
 the nodes, not reproduced here. This was not a full independent proof audit.
 
-## What is already assembled
+## Remaining work
 
-- The truncated virial and boundary limits combine outside a common null set.
-  Positivity and nonnegative exhaustion give `ω = 0` directly, without a
-  global bulk-integrability or weak-gradient constant-function argument.
-- The cutoff, annular and center-limit assemblies are proved from their named
-  inputs. The L² virial identity is proved without admitted dependencies,
-  including its weak-gradient chain rules, orbit coordinates and area formula.
-- Separatrix arc energy and level traces have no admitted dependencies (axiom
-  audits passed), using the rectangle trace proofs and explicit quarter graphs.
-  The first-order trace limit still uses the area formula and saddle-distance estimates.
-- Weighted boundary positivity and the canonical boundary-form interface are
-  proved. Positivity uses interval exhaustion, not smooth density.
-- The eigenfunction transport, pairing-limit and boundary-regularity assemblies
-  are proved from the remaining trace, coarea and geometry inputs.
+- Human review of the Lean statements on the route, in particular the setup,
+  the eigenvalue problem, sector reduction, interval representatives and the
+  weighted boundary domain. Lean cannot check that they say the right thing.
+- Bring the settled even–even argument into the reworked manuscript, once the
+  authors agree on its structure.
 
-## Remaining routes
-
-The open analytic work is owned by [shared infrastructure](shared.md):
-Sobolev bridges and the remaining analytic prerequisites of the transport
-and boundary limits. The orbit chart, quarter-orbit bounds, transversal estimates
-and H¹/L² virial route are proved without admitted dependencies.
-
-The current even–even route does **not** require finite-p Sobolev embedding,
-the elliptic-integral period identity, sharp period asymptotics, or transport
-self-adjointness. Keep these out of its prerequisites unless the argument changes.
-
-All transversal mollifier lemmas and the eigenfunction transport pair are proved;
-the transitive admission audit reports zero admissions for `virial_l2`.
-
-The rectangle trace inputs are proved without admissions.
-Pairing-limit assembly is complete from its analytic prerequisites;
-see [shared infrastructure](shared.md).
-Relative difficulty assessments are preliminary, not timing estimates.
+The even–even route does **not** use finite-p Sobolev embedding, the
+elliptic-integral period identity, sharp period asymptotics, or transport
+self-adjointness.
 
 ## Deferred possibilities
 

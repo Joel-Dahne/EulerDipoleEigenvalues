@@ -121,7 +121,9 @@ See the [transport blueprint](../../blueprint/src/chapters/transport.tex) and
 [regularity blueprint](../../blueprint/src/chapters/regularity.tex).
 
 The eigenfunction-to-transport bridge is proved. Resonant vanishing is proved from
-`lem:coarea`, the area formula and differentiability of `L`. Melnikov is proved from
+`lem:coarea`, the area formula and differentiability of `L`. `lem:coarea` is proved in
+`OrbitRestriction.lean` from the weak action-angle transport equivalence and ACL slicing,
+after a level cutoff; it needs only local integrability, not `L²`. Melnikov is proved from
 these and the trace, periodization, torus Hölder, orbit-comparison and coarse period
 inputs (`Melnikov.lean`). The canonical-profile inputs (local absolute continuity,
 uniqueness, exponential decay and the constant-one weighted bound) and good windows

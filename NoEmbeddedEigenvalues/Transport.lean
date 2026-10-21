@@ -9,8 +9,8 @@ import NoEmbeddedEigenvalues.OrbitCoordinates
 # Transport pairs
 
 Blueprint: `def:transport-pair`, `lem:transport-unknown`, `lem:transport-pair-eigen`,
-`lem:good-windows`, `lem:good-level-selection`, `lem:weak-gradient-transport`;
-stated: `lem:coarea`.
+`lem:good-windows`, `lem:good-level-selection`, `lem:weak-gradient-transport`.
+`lem:coarea` is proved in `OrbitRestriction.lean`.
 The good-level selector preserves any a.e. level property and avoids an arbitrary null set.
 Also proves that weak partial derivatives give the weak transport derivative, using the
 separated coefficients of the dipole field and no approximation argument.
@@ -357,21 +357,5 @@ theorem exp_orbitPeriod_ne_one_of_goodWindow {lam h : ℝ} {j : ℤ}
     nlinarith [mul_le_mul_of_nonneg_left hle' Real.pi_pos.le]
   · have hle' : (j : ℝ) + 1 ≤ n := by exact_mod_cast hgt
     nlinarith [mul_le_mul_of_nonneg_left hle' Real.pi_pos.le]
-
-/-! ### Restriction to orbits (stated) -/
-
-open Filter Topology in
-/-- Restriction to almost every orbit (`lem:coarea`): if `L₀g = h` weakly on an orbit annulus,
-    then on almost every orbit `g ∘ γ_h` agrees a.e. with a periodic, locally absolutely
-    continuous function whose derivative in flow time is `h ∘ γ_h`. -/
-theorem ae_orbit_restriction {U : Set (ℝ × ℝ)} {g Lg : ℝ × ℝ → ℂ} {h₁ h₂ : ℝ}
-    (h₁0 : 0 < h₁) (h₁₂ : h₁ < h₂) (h₂1 : h₂ < 1) (hA : orbitAnnulus h₁ h₂ ⊆ U)
-    (hg : MemLp g 2 (volume.restrict U)) (hLg : MemLp Lg 2 (volume.restrict U))
-    (hd : HasWeakL0On U g Lg) :
-    ∀ᵐ h ∂(volume.restrict (Set.Ioo h₁ h₂)), ∃ G : ℝ → ℂ,
-      (∀ᵐ t, G t = g (dipoleOrbit h t)) ∧ Function.Periodic G (orbitPeriod h) ∧
-      (∀ c d, AbsolutelyContinuousOnInterval G c d) ∧
-      ∀ᵐ t, HasDerivAt G (Lg (dipoleOrbit h t)) t := by
-  sorry
 
 end NoEmbeddedEigenvalues

@@ -127,6 +127,7 @@ motivation, and standard facts cited rather than proved.
   `EigenfunctionTransport.lean` prepares Melnikov and the pairing limit for
   eigenfunctions (explicit invariant neighbourhood of the cell, continuity of the
   flow, changes of representative on levels and in transport pairs).
+  `OrbitRestriction.lean` proves restriction to almost every orbit (`lem:coarea`).
   `ResonantVanishing.lean` proves the orbitwise transport equation, the mode relation and
   resonant vanishing. `Melnikov.lean` proves the Melnikov condition (arc trace, Hölder
   continuity near the separatrix segment, resonant levels, quarter identity) and

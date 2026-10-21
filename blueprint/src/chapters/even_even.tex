@@ -354,7 +354,7 @@ series expansion $\rho^2\sim2\eta$ is replaced by the exact inequality $\rho^2\l
 the period is bounded by the elementary $L(h)\le1/h$; and the bound $|\psi|\le M$ along the
 level needs the continuous representative, since the level is a null set in the plane.
 Using $F$ with $|\omega|^2+|\psi|^2$ instead of $|\omega||\psi|$ makes all bounds pointwise.
-Only the area formula of Lemma~\ref{lem:orbit-coordinates-area} remains admitted here.
+The area formula of Lemma~\ref{lem:orbit-coordinates-area} used here is proved in Lean.
 \end{remark}
 
 \begin{lemma}[Truncated virial identity]
@@ -1632,9 +1632,9 @@ $g=\tilde\psi\circ\gamma_k$, which the trace and transport lemmas did not state;
 separate Lemma~\ref{lem:arc-trace-ac}, derived from Lemma~\ref{lem:trace-h2} rather than added to
 the less verified Lemma~\ref{lem:ee-gradient-traces}. (2) The Melnikov identity for $g$ was used
 inside Lemma~\ref{lem:ee-transport-traces} but not exported; it is now part of that lemma.
-All other inputs matched as stated. The Lean proof still depends on
-admitted analytic prerequisites of Lemma~\ref{lem:melnikov}; the trace
-bounds are now proved independently.
+All other inputs matched as stated. The Lean proof, including the analytic
+prerequisites of Lemma~\ref{lem:melnikov} and the trace bounds, has no admitted
+dependencies.
 \end{remark}
 
 \begin{lemma}[Positivity of the boundary form]
@@ -1865,8 +1865,8 @@ transport pair to continuous arc traces, nor the canonical unknown to the
 explicit-derivative boundary form. Lemmas~\ref{lem:ee-transport-traces}
 and~\ref{lem:canonical-arc-form} expose these bridges separately. Both are now proved
 in Lean without new admissions (\texttt{CanonicalBoundaryForm.lean},
-\texttt{EigenfunctionTransport.lean}); the exclusion proof below has no admission of
-its own, and the remaining admissions are the analytic inputs it cites.
+\texttt{EigenfunctionTransport.lean}); the exclusion proof below and all the analytic
+inputs it cites are proved without admissions.
 Two observations from the proof of Lemma~\ref{lem:ee-transport-traces}: the even--even
 hypothesis is not used, only the rotation character; and the invariant neighbourhood
 can be taken explicit (Lemma~\ref{lem:cell-neighbourhood}), so no saturation of a

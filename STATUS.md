@@ -6,16 +6,16 @@ working; update current priorities and blockers rather than appending history.
 ## Current phase
 
 The first-pass review of the even–even blueprint is complete. Proof
-implementation has reached an admission-free L² virial identity (`virial_l2`).
-The sector exclusions still have admitted analytic inputs. Candidate next tasks
-are in the topic pages; the review is not a complete independent audit of the
+implementation has reached an admission-free even–even exclusion
+(`even_even_exclusion`); the odd–odd and mixed exclusions remain admitted.
+Candidate next tasks are in the topic pages; the review is not a complete independent audit of the
 mathematics.
 
 ## Overall state
 
 - The Fourier/L² foundations and algebraic symmetry/sector reductions are
   formalized.
-- The even–even exclusion has an assembly proof from admitted analytic inputs.
+- The even–even exclusion is proved without admissions (transitive audit).
   Odd–odd and mixed exclusion proofs remain admitted.
 - The main theorem is assembled from the sector exclusions; it is not yet an
   admission-free proof. A completed blueprint proof may still cite admissions.
@@ -46,6 +46,8 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 
 ## Validation baseline
 
-A full Lean build passed after the reverse action-angle weak chain rule.
-The transitive admission audit reports zero admissions for `virial_l2`;
-other analytic admissions remain. Blueprint source checks and the web build pass.
+A full Lean build passed after the orbit-restriction proof (`lem:coarea`).
+The transitive admission audit reports zero admissions for `even_even_exclusion`.
+Admissions remain off that route: odd–odd, mixed, transport self-adjointness,
+finite-p embedding, the elliptic period identity and sharp period asymptotics.
+Blueprint source checks and the web build pass.

@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.TransportODE
+import NoEmbeddedEigenvalues.OrbitRestriction
 
 /-!
 # Orbitwise transport and resonant vanishing
@@ -148,18 +149,7 @@ theorem IsTransportPair.ae_orbit_transport (hp : IsTransportPair lam U v f) {h�
       (∀ᵐ t, Z t = transportUnknown lam v f (dipoleOrbit h t)) ∧
       Function.Periodic Z (orbitPeriod h) ∧ (∀ c d, AbsolutelyContinuousOnInterval Z c d) ∧
       ∀ᵐ t, HasDerivAt Z (I * (lam * Z t + f (dipoleOrbit h t))) t := by
-  have hl : (lam : ℂ) ≠ 0 := ofReal_ne_zero.2 hp.ne_zero
-  have hf2 : MemLp f 2 (volume.restrict U) := hp.memSobolevOn.1
-  have hz : MemLp (transportUnknown lam v f) 2 (volume.restrict U) := by
-    have := (hp.memLp.add hf2).const_mul (-1 / (lam : ℂ))
-    convert this using 1
-    funext p
-    simp only [transportUnknown, Pi.add_apply]
-    field_simp
-  have hLz : MemLp (fun p ↦ I * (lam * transportUnknown lam v f p + f p)) 2
-      (volume.restrict U) :=
-    ((hz.const_mul (lam : ℂ)).add hf2).const_mul I
-  filter_upwards [ae_orbit_restriction h₁0 h₁₂ h₂1 hA hz hLz
+  filter_upwards [ae_orbit_restriction h₁0 h₁₂ h₂1 hA
     hp.hasWeakL0On_transportUnknown_sub] with h ⟨G, hG, hper, hac, hd⟩
   refine ⟨G, hG, hper, hac, ?_⟩
   filter_upwards [hd, hG] with t ht hGt

@@ -1430,30 +1430,47 @@ arguments above.
 
 \begin{lemma}[Restriction to almost every orbit]
 \label{lem:coarea}
-\uses{def:orbit-coordinates, def:transport-pair, def:sobolev-local}
+\uses{def:orbit-coordinates, def:transport-pair}
 \lean{NoEmbeddedEigenvalues.ae_orbit_restriction}
 \leanok
-Let $U$ be an open set containing the orbit annulus $A(h_1,h_2)$, $0<h_1<h_2<1$, and let
-$g,\ L_0g\in L^2(U)$, with $L_0g$ in the weak sense of Definition~\ref{def:transport-pair}.
-Then for almost every $h\in(h_1,h_2)$, $t\mapsto g(\gamma_h(t))$ agrees almost everywhere with
-an $S(h)$-periodic, locally absolutely continuous function whose derivative is
-$(L_0g)(\gamma_h(t))$.
+Let $U\subset\R^2$ contain the orbit annulus $A(h_1,h_2)$, $0<h_1<h_2<1$, and let
+$L_0g=k$ on $U$ in the weak sense of Definition~\ref{def:transport-pair} (which includes local
+integrability of $g$ and $k$ on $U$). Then for almost every $h\in(h_1,h_2)$,
+$t\mapsto g(\gamma_h(t))$ agrees almost everywhere with an $S(h)$-periodic, locally
+absolutely continuous function whose derivative is $k(\gamma_h(t))$ almost everywhere.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
-  lem:orbit-coordinates-area, lem:acl-slicing}
-Use smooth coordinate charts off the time cut on the compact annulus; a
-second time cut supplies charts across the first one. No uniform estimate
-as $h\to0$ is needed. In orbit coordinates $L_0=\partial_t$ and
-$dx\,dy=2\,dh\,dt$. Changing variables in the weak test identity therefore
-gives the weak time derivative on each product subwindow.
-Lemma~\ref{lem:acl-slicing} supplies locally absolutely continuous
-sections outside one common null set. Take a countable window cover.
-On overlapping windows the representatives agree almost everywhere,
-hence everywhere by continuity. Together with the periodicity of the
-original orbit restrictions this gives the required periodicity.
+\uses{lem:action-angle-transport, lem:acl-slicing, lem:localization-cutoff, lem:period-basic,
+  lem:orbit-coordinates-inverse}
+\leanok
+Fix $h_1<a<b<h_2$ and a smooth $\chi$ with $\chi=1$ on $[a,b]$ and
+$\operatorname{supp}\chi\subset(h_1,h_2)$. Since $\Psi$ is constant along the flow,
+$L_0(\chi(\Psi/2)\varphi)=\chi(\Psi/2)L_0\varphi$, and $\chi(\Psi/2)\varphi$ is a test function
+on $A(h_1,h_2)\subset U$ for every test function $\varphi$ on the punctured cell. Hence
+$L_0(\chi g)=\chi k$ weakly on the whole punctured cell. By
+Lemma~\ref{lem:action-angle-transport}, $\partial_\theta(\chi g\circ P)=S(h)\,(\chi k)\circ P$
+weakly on the strip, and on $(a,b)\times\R$ the cutoff equals $1$.
+
+Lemma~\ref{lem:acl-slicing} gives a representative $G$ that, for almost every
+$h\in(a,b)$, is locally absolutely continuous in $\theta$ with derivative
+$S(h)\,k(P(h,\theta))$, and (Fubini) equals $g(P(h,\theta))$ for almost every $\theta$.
+These sections are $1$-periodic: $G(h,\theta+1)$ and $G(h,\theta)$ are continuous in $\theta$ and both
+agree almost everywhere with the pointwise periodic $g(P(h,\theta))$. Put
+$Z(t)=G(h,t/S(h))$; then $P(h,t/S(h))=\gamma_h(t)$, $Z$ is $S(h)$-periodic, locally absolutely
+continuous, and $Z'(t)=k(\gamma_h(t))$ almost everywhere. Countably many bands $(a,b)$ exhaust
+$(h_1,h_2)$.
 \end{proof}
+
+\begin{remark}[Digest note: orbit restriction, resolved]
+The Lean proof (\texttt{OrbitRestriction.lean}) uses neither a coarea formula nor local
+charts on windows: the global action-angle transport equivalence
+(Lemma~\ref{lem:action-angle-transport}) already handles the angular cut through angular
+periodization, so one application of ACL slicing on the strip suffices. The earlier
+hypotheses $g,L_0g\in L^2(U)$ were never needed; local integrability, part of the weak
+relation, suffices, and $U$ need not be open. The statement now omits them, which shortens
+the transport-unknown application in Lemma~\ref{lem:resonant-vanishing}.
+\end{remark}
 
 \begin{remark}[Digest note: the exceptional set in slicing]
 The earlier sketch placed the countable dense family on the level tests
