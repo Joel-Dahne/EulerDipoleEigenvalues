@@ -34,8 +34,6 @@ proof audit or timing estimate.
 
 See the [analysis blueprint](../../blueprint/src/chapters/analysis.tex).
 
-- The compact-periodization direction of the torus/local-Sobolev bridge
-  (`exists_memSobolev_periodize`): moderate. The lift direction is proved.
 - Orbitwise restriction: moderate once the coordinate inputs exist.
 - Finite-p embedding: medium–high and outside the even–even route; inverse
   Hausdorff–Young or Mathlib's compact-support Sobolev inequality are candidate
@@ -47,7 +45,10 @@ weighted Cauchy–Schwarz, uniformly for each exponent `0 ≤ α < 1`.
 
 `lem:acl-slicing` is proved without admitted dependencies in `ACLSlicing.lean`,
 including a jointly measurable representative, unbounded intervals and whole-section
-uniqueness. `lem:trace-l2` is proved without admitted dependencies in
+uniqueness. `lem:local-to-global` is proved without admitted dependencies in `LocalToGlobal.lean`:
+both directions of the torus/local-Sobolev bridge are now available. Weak derivatives of
+compactly supported functions are tested against cut-off characters, as for box periodization.
+`lem:trace-l2` is proved without admitted dependencies in
 `TraceL2.lean`: the exact elementary bound, canonical endpoint limits and
 independence of ACL representatives are available.
 `lem:trace-acl` is proved without admitted dependencies in `DiagonalACL.lean`,
@@ -112,8 +113,7 @@ mixed derivatives gives the Piola cancellation. Weak-derivative uniqueness gives
 a.e. angular periodicity; the angular partition produces periodic representatives,
 and the area formula transfers their a.e. equality back to the cell. This handles
 the seam without local W¹,¹ approximation or a separate gluing theorem.
-The periodization part of `lem:local-to-global` (`exists_memSobolev_periodize`)
-is not used. The virial regularization route has no remaining blockers.
+The periodization part of `lem:local-to-global` is not used. The virial regularization route has no remaining blockers.
 
 ### Transport and later-sector regularity
 

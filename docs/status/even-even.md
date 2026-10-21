@@ -6,8 +6,9 @@
 ## Current position
 
 The assembly proofs `even_even_character_exclusion` and `even_even_exclusion`
-have no `sorry` of their own. They still depend on admitted analytic inputs;
-the sector is not yet proved independently of admissions.
+have no `sorry` of their own. The transitive admission audit of
+`even_even_exclusion` reports a single admission: `ae_orbit_restriction`
+(`lem:coarea`, H¹ along almost every orbit).
 
 The analysis, geometry, virial and transport prerequisites have had a first-pass
 blueprint review. Proof sketches and dependency corrections are recorded at

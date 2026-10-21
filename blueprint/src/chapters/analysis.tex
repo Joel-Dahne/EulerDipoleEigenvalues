@@ -1042,11 +1042,29 @@ support of $\chi$. The converse direction is Lemma~\ref{lem:lift-sobolev-local}.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:localization-cutoff, lem:lift-periodization, lem:lift-torus, lem:elliptic-torus}
-The $\R^2$ statement is Lemma~\ref{lem:localization-cutoff}. What remains is the
-passage between $\R^2$ and $\T^2$: periodize test functions and unfold integrals
-over the translates of a fundamental square (Lemma~\ref{lem:lift-periodization}), then use
-that classical and Fourier derivatives agree on the torus (Lemma~\ref{lem:lift-torus}).
+\uses{lem:localization-cutoff, lem:lift-periodization, lem:box-periodization,
+  lem:fourier-integral, lem:weak-derivative-basic, lem:elliptic-torus}
+\leanok
+By Lemma~\ref{lem:localization-cutoff}, $F=\chi u\in H^k(\R^2)$, and $F$ vanishes off the
+compact set $K=\operatorname{supp}\chi$. Let $g\in L^2(\T^2)$ be the function whose lift is
+$PF=\sum_n F(\cdot+2\pi n)$ (Definition~\ref{def:lift-periodization}), read off on the box
+$(-\pi,\pi]^2$; on bounded sets $PF$ is a finite sum of translates of $F$, so it is square
+integrable there. Unfolding (Lemma~\ref{lem:lift-periodization}, after translating the box to
+$(0,2\pi]^2$) gives
+$(2\pi)^2\hat g_k=\int_{\R^2}F\,\overline{e_k}$, where $\overline{e_k}$ is the conjugate character
+on $\R^2$.
+
+If $\partial_jF$ is the weak derivative on $\R^2$, it vanishes almost everywhere off $K$, and
+may be redefined to vanish everywhere there. As in Lemma~\ref{lem:box-periodization}, test
+it against $\theta\overline{e_k}$ with $\theta$ smooth, compactly supported, and equal to $1$
+near $K$: this gives $\int\partial_jF\,\overline{e_k}=ik_j\int F\,\overline{e_k}$, so
+$P\partial_jF$ is the Fourier derivative of $PF$. No support condition beyond compactness
+is needed. Induction on $k$ and Lemma~\ref{lem:elliptic-torus} ($g\in H^{s+1}$ if $g$ and
+both Fourier derivatives are in $H^s$) give $g\in H^k(\T^2)$.
+
+For the lift: if $F(p+2\pi n)\ne0$ then $p+2\pi n\in K\subset U$, so off the translates of
+$\pi(K)$ every term vanishes. For $p\in U$ and $n\ne0$, injectivity of $\pi$ on $U$ rules out
+$p+2\pi n\in U$, so the sum reduces to $F(p)$. Injectivity is used only here.
 \end{proof}
 
 \begin{lemma}[Local elliptic regularity]

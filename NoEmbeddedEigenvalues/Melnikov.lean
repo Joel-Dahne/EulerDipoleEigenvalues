@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.ResonantVanishing
 import NoEmbeddedEigenvalues.SeparatrixTraces
 import NoEmbeddedEigenvalues.TransportODE
 import NoEmbeddedEigenvalues.SobolevHolder
+import NoEmbeddedEigenvalues.LocalToGlobal
 
 /-!
 # The Melnikov condition

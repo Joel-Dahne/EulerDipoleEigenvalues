@@ -56,6 +56,7 @@ import NoEmbeddedEigenvalues.TransportOperator
 import NoEmbeddedEigenvalues.TransversalMollifier
 import NoEmbeddedEigenvalues.VirialAlgebra
 import NoEmbeddedEigenvalues.CellPeriodization
+import NoEmbeddedEigenvalues.LocalToGlobal
 import NoEmbeddedEigenvalues.VirialFourier
 import NoEmbeddedEigenvalues.VirialQuadratic
 import NoEmbeddedEigenvalues.VirialL2

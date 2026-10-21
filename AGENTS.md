@@ -110,6 +110,8 @@ motivation, and standard facts cited rather than proved.
   `LiftPeriodization.lean` periodizes compactly supported functions on `ℝ²` to the
   torus, unfolds integrals against lifts, proves `L₀` against `H¹` tests on the torus,
   and transfers torus Sobolev regularity and the weak `L₀` relation to lifts;
+  `LocalToGlobal.lean` periodizes compactly supported `Hᵏ(ℝ²)` functions to `Hᵏ(𝕋²)`
+  (`lem:local-to-global`);
   `Cells.lean` treats the cells, separatrix, critical points and the cell as a
   square in diagonal coordinates; `SmoothIntervalIntegral.lean` proves smoothness
   of fixed-interval parameter integrals; `Period.lean` treats the period function;

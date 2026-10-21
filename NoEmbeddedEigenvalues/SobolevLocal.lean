@@ -9,7 +9,7 @@ import NoEmbeddedEigenvalues.DiagonalCalculus
 # Sobolev spaces on open subsets of the plane
 
 Blueprint: `def:weak-derivative-local`, `def:sobolev-local`, `lem:weak-derivative-basic`,
-`lem:weak-derivative-classical`; stated: `lem:local-to-global`.
+`lem:weak-derivative-classical`. `lem:local-to-global` is in `LocalToGlobal.lean`.
 The ACL, L², H² and fractional trace proofs live in the trace modules.
 
 Local Sobolev spaces are defined on open sets `U ⊆ ℝ²`, the lift of the torus, through
@@ -529,23 +529,11 @@ theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × �
     obtain ⟨d, hd1, hd2⟩ := hd j
     exact ⟨d, hd1.congr_left hg, hd2⟩
 
-/-! ### From the lift to the torus (`lem:local-to-global`, stated)
+/-! ### From the lift to the torus
 
-The converse direction, lifts of torus Sobolev functions, is in `LiftPeriodization.lean`. -/
-
-section LocalToGlobal
-
-/-- Periodization of cut-off local functions: if `U` projects injectively to the torus,
-    `u ∈ Hᵏ_loc(U)` and `χ` is a test function on `U`, then there is `g ∈ Hᵏ(𝕋²)` whose lift is
-    `χu` on `U` and vanishes off the translates of the support of `χ`. -/
-theorem exists_memSobolev_periodize {k : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    (hinj : Set.InjOn torusProj U) {u χ : ℝ × ℝ → ℂ} (hu : MemSobolevLocOn k U u)
-    (hχ : IsTestFunctionOn U χ) :
-    ∃ g : L2, MemSobolev k g ∧ (∀ᵐ p ∂(volume.restrict U), liftL2 g p = χ p * u p) ∧
-      ∀ᵐ p, torusProj p ∉ torusProj '' tsupport χ → liftL2 g p = 0 := by
-  sorry
-
-end LocalToGlobal
+The periodization of cut-off local functions (`lem:local-to-global`) is in
+`LocalToGlobal.lean`; the converse direction, lifts of torus Sobolev functions, is in
+`LiftPeriodization.lean`. -/
 
 /-! ### Traces on lines in diagonal coordinates
 
