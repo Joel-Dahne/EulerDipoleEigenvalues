@@ -20,31 +20,17 @@ The project has three goals of equal weight, pursued together:
 3. **Improve the manuscript**, which is currently very rough, into a
    well-presented paper (`Manuscript/manuscript.tex`).
 
-The blueprint links all three: breaking the argument into small nodes for Lean
-is also how we digest it, and the resulting structure is what should go back
-into the paper. This way of working is an experiment; expect to adjust it.
+The blueprint links all three: small nodes make the argument easier to digest
+and formalize, and the settled structure feeds back into the paper.
 
-There are three layers, plus the reworked paper:
-
-1. `Manuscript/eigenvalues.tex`: the original manuscript, kept unchanged as
-   the reference. In this repository "the manuscript" means this file. It is
-   the origin of the argument but **not** a trusted source: treat its claims
-   as unverified until they are checked, either by an independent derivation
-   or in Lean.
-2. `blueprint/`: a [leanblueprint](https://github.com/PatrickMassot/leanblueprint)
-   that restructures the manuscript into small nodes (definitions and lemmas)
-   with a dependency graph. It is the to-do list for the formalization, the
-   place to digest the manuscript, and a staging area for changes that should
-   go back into the paper. See `blueprint/README.md` and
-   `blueprint/src/chapters/intro.tex`.
-3. `NoEmbeddedEigenvalues/`: the Lean code.
-
-The reworked manuscript `Manuscript/manuscript.tex` is the paper being
-written. It is written as we go and should always represent our current
-understanding: a section is filled in once the corresponding part of the
-argument is understood, otherwise it is a placeholder. Its content comes from
-the blueprint, but it is written as a paper: fewer and larger results,
-motivation, and standard facts cited rather than proved.
+- `Manuscript/eigenvalues.tex` is the unchanged original reference. In this
+  repository "the manuscript" means this file. It is **not** a trusted source.
+- `blueprint/` is the dependency graph, formalization plan and staging area
+  for corrections. See `blueprint/README.md` and `blueprint/src/chapters/intro.tex`.
+- `NoEmbeddedEigenvalues/` is the Lean library.
+- `Manuscript/manuscript.tex` is the reworked paper: current understanding,
+  written as a paper rather than a blueprint, with placeholders for unsettled
+  sections. Update it only with the authors' agreement.
 
 ## Working on the mathematics
 
@@ -66,129 +52,23 @@ motivation, and standard facts cited rather than proved.
   initiative: changes go into the blueprint first and are brought into the
   reworked manuscript once a chapter has settled and the authors agree.
 
-## Layout
+## Navigation and audit boundary
 
-- `Manuscript/eigenvalues.tex`: the original manuscript (unchanged reference).
-- `Manuscript/manuscript.tex`: the reworked manuscript. Both build into
-  `Manuscript/build`.
-- `blueprint/src/content.tex`: list of chapters, in order.
-- `blueprint/src/chapters/*.tex`: one file per chapter: `intro`, `setup`,
-  `symmetry`, `geometry`, `analysis`, `virial`, `transport`, `even_even`,
-  `regularity`, `odd_odd`, `mixed`, `certificates`, `notes`.
-- `blueprint/src/macros/common.tex`: theorem environments and math macros for
-  both builds (`\T \R \Z \N \C`, `\Div`, `\Dom`, `\Cell`, `\ip{}{}`, ...).
-  `macros/print.tex` defines no-op versions of the blueprint macros for the PDF.
-- `NoEmbeddedEigenvalues.lean`: Lean library root, importing every module.
-- `Challenge.lean`: the main theorem and sanity checks of its definitions, stated with
-  Mathlib only and `sorry` proofs; the file a reader audits. `Solution.lean` repeats its
-  definitions verbatim and proves its theorems from the library through bridge lemmas.
-  `comparator.json` lists the compared theorems and permitted axioms. Changing a definition
-  in `Challenge.lean` changes what is claimed: do it only with the authors' agreement, and
-  copy it to `Solution.lean`.
-- `NoEmbeddedEigenvalues/*.lean`: the Lean modules, following the blueprint
-  chapters; a chapter may be split over several modules. Setup chapter:
-  `TorusL2.lean` (measure, `L²`, characters, coefficients), `Fourier.lean`
-  (Hilbert basis, Parseval, bounded Fourier multipliers), `Setup.lean`
-  (`Δ⁻¹`, `L₀`, domain, eigenvalue problem), `Derivatives.lean`
-  (Fourier-defined and weak derivatives), `SobolevTorus.lean` (`Hˢ(𝕋²)` via
-  Fourier coefficients, elliptic regularity of `Δ⁻¹`). Symmetry chapter: `Symmetry.lean`
-  (pointwise maps), `SymmetryL2.lean` (action on `L²`), `Sectors.lean`.
-  `DipoleCalculus.lean` defines classical partial derivatives, `L₀` and
-  adapted fields on the real lift `ℝ²` and proves the dipole identities;
-  `NormalField.lean` proves the even–even normal field algebra;
-  `VirialAlgebra.lean` proves the pointwise commutator identities;
-  `SeparatrixArc.lean` treats the explicit heteroclinic arc;
-  `FlowBoundaryForm.lean` transforms the flow-time boundary form to the
-  `ξ = tanh s` form and proves its positivity; `LiftIntegration.lean`
-  integrates periodic lifts over `[0, 2π]²` (integration by parts,
-  skew-symmetry of `D` and `L₀`); `VirialSmooth.lean` and
-  `VirialQuadratic.lean` prove the two forms of the smooth virial identity;
-  `VirialFourier.lean` writes the virial pairings as torus inner products and proves the
-  Fourier integrations by parts (skew-symmetry of `D` on `H¹`, the equivalence of the two
-  forms on `X`); `CellPeriodization.lean` periodizes compactly supported cell functions to
-  the torus (`boxPeriodize`) and proves uniqueness of weak derivatives; `VirialL2.lean`
-  proves the `H¹` commutator identity and the virial identities for `L²` eigenfunctions and
-  fields supported in an annulus from the mollifier lemmas; `TransportOperator.lean`
-  defines `H = -iL₀` as an unbounded operator and states its self-adjointness;
-  `LiftTorus.lean` relates periodic lifts to functions on the torus (classical
-  vs Fourier derivatives, `Cᵏ ⊂ Hᵏ`, integrals); `SobolevLocal.lean` defines
-  weak derivatives and `Hᵏ(U)`, `Hᵏ_loc(U)`, weighted `Hᵏ` on open `U ⊆ ℝ²`;
-  `LiftPeriodization.lean` periodizes compactly supported functions on `ℝ²` to the
-  torus, unfolds integrals against lifts, proves `L₀` against `H¹` tests on the torus,
-  and transfers torus Sobolev regularity and the weak `L₀` relation to lifts;
-  `LocalToGlobal.lean` periodizes compactly supported `Hᵏ(ℝ²)` functions to `Hᵏ(𝕋²)`
-  (`lem:local-to-global`);
-  `Cells.lean` treats the cells, separatrix, critical points and the cell as a
-  square in diagonal coordinates; `SmoothIntervalIntegral.lean` proves smoothness
-  of fixed-interval parameter integrals; `Period.lean` treats the period function;
-  `DipoleFlow.lean` constructs the global dipole flow and proves the orbit and
-  period lemma. `OrbitCoordinates.lean` defines the orbit coordinates `(h, t)`,
-  flow-time level integrals and normal/tangential derivatives. `Transport.lean` defines transport pairs on open unions of orbits.
-  `TransportODE.lean` gives finite-interval transport/pairing estimates and nonresonant
-  periodic uniqueness with inherited translation characters, together with the shared
-  monotone/antitone AC composition lemmas.
-  `CanonicalProfile.lean` defines the canonical transport profile on an arc.
-  `CanonicalBoundaryForm.lean` identifies its arc form with the explicit-derivative
-  boundary form, using a.e. chain rules under `tanh` on the weighted domain.
-  `EigenfunctionTransport.lean` prepares Melnikov and the pairing limit for
-  eigenfunctions (explicit invariant neighbourhood of the cell, continuity of the
-  flow, changes of representative on levels and in transport pairs).
-  `OrbitRestriction.lean` proves restriction to almost every orbit (`lem:coarea`).
-  `ResonantVanishing.lean` proves the orbitwise transport equation, the mode relation and
-  resonant vanishing. `Melnikov.lean` proves the Melnikov condition (arc trace, Hölder
-  continuity near the separatrix segment, resonant levels, quarter identity) and
-  specializes it to eigenfunctions (`ee_melnikov`). `PairingLimit.lean` proves the
-  uniform Hölder forcing comparison, quarter-orbit pairing limit and full pairing
-  limit, and specializes Melnikov and that limit to eigenfunctions (`ee_transport_traces`).
-  `DiagonalCalculus.lean` treats integrals and derivatives in diagonal
-  coordinates; `QuarterOrbits.lean` writes levels as four quarter orbits and these, and the
-  separatrix arc, as explicit graphs in diagonal coordinates; `SeparatrixTraces.lean` defines
-  line representatives (`IsLineRep`) and proves the even–even separatrix traces (arc traces,
-  arc energy, level traces, corner tails); `SegmentEstimates.lean` bounds
-  restrictions to curves near a line (segment and hyperbola estimates); `LineMollifier.lean` mollifies functions on `ℝ²` in the first variable;
-  `AnglePeriodization.lean` constructs smooth periodic angular tests, their integral
-  unfolding and a compact angular partition of unity;
-  `TransversalMollifier.lean` treats weak derivatives in action-angle coordinates and the
-  mollifier in the level variable used for the `L²` virial identity; `OddHardy.lean` proves the critical Hardy inequality for odd
-  functions in Gagliardo form.
-  Then
-  `DuBoisReymond.lean` proves the du Bois-Reymond lemma on an interval;
-  `IntervalH1.lean` supplies bounded-interval H¹ and endpoint traces;
-  `IntervalH1Estimates.lean` proves endpoint estimates and vanishing rescaled layers;
-  `IntervalZeroExtension.lean` proves jump-free zero extension of zero-trace H¹ data;
-  `BoundaryForm.lean` proves the classical boundary positivity argument;
-  `WeightedBoundary.lean` defines its weighted second-order domain and proves
-  classical inclusion, local regularity and affine stability.
-  `WeightedBoundaryForm.lean` extends the completion of squares, affine
-  splitting and positivity of the boundary form to that domain by exhausting
-  the interval. `BoundaryCutoff.lean` proves multiplier stability and
-  convergence for uniformly controlled cutoff families, and
-  `BoundaryCutoffConstruction.lean` constructs a smooth such family (an
-  approximation route the main argument no longer uses).
-  Sector exclusions are in `EvenEven.lean` (the even–even assembly proof, direct
-  vorticity endgame, and named admitted analytic inputs), `OddOdd.lean`,
-  `Mixed.lean` and `Main.lean`. Each module docstring says what it contains and which blueprint
-  nodes it covers.
-- `lakefile.toml`, `lean-toolchain`: Lean `v4.34.1`, Mathlib `v4.34.1`.
-- `STATUS.md`: short project-wide status and entry point to `docs/status/`.
-- `docs/status/{even-even,odd-odd,mixed,shared}.md`: current sector-specific
-  and shared-infrastructure blockers, priorities and implementation pointers.
-- `justfile`: build recipes (run `just` to list them).
-- `scripts/`: helper scripts. `check_blueprint.py` (behind
-  `just check-blueprint`, also run before web/PDF builds) checks source labels,
-  references and dependency cycles without Lean or plasTeX. The same source
-  model feeds `blueprint_status.py` (`just status-blueprint`), which writes the
-  Git-ignored `docs/status/generated.md` report and also runs during `just web`.
-  `blueprint_subgraph.py` (used by `just web` and `just graph`) restricts the
-  web dependency graph to chosen nodes and their dependencies, drawn in one
-  box per chapter (`--no-chapters` for the plain layout).
-  `CheckChallenge.lean` (behind `just challenge`) compares the `Challenge` and `Solution`
-  environments as the comparator would, without its sandbox or kernel replay.
-  `SorryDeps.lean` (behind `just sorries`) loads the built library and lists the
-  declarations with `sorry` (and project axioms) that given Lean declarations
-  depend on, transitively, with source locations.
-- `.mcp.json`: registers the `lean-lsp` MCP server for Claude Code.
-- `.github/workflows/`: the Lean template CI (lean-action, docgen).
+Read `STATUS.md` and the relevant topic page at the start of a session.
+Use [the architecture guide](docs/architecture.md) on demand for the module
+map, blueprint layout and verification tools; do not load the full map for
+unrelated work. Module docstrings describe implementation details.
+
+- `NoEmbeddedEigenvalues.lean` imports every library module. Add new modules
+  there; declarations belong to namespace `NoEmbeddedEigenvalues`.
+- `Challenge.lean` states the main theorem and definition sanity checks with
+  Mathlib only and `sorry` proofs; it is the reader's audit target.
+  `Solution.lean` repeats its definitions verbatim and proves the theorems
+  through library bridges. `comparator.json` lists compared theorems and
+  permitted axioms. Change Challenge definitions only with the authors'
+  agreement, and copy changes to Solution.
+- `lakefile.toml` and `lean-toolchain`: Lean and Mathlib `v4.34.1`.
+- `justfile`: build recipes; run `just` to list them.
 
 ## Building
 
@@ -287,8 +167,6 @@ server has a file open, and keep work in one file at a time where possible.
   results that are still admitted, which the graph shows through their status.
 - A `definition` node contains only definitions; claims about them (that a
   series converges, that a family is a basis) are separate `lemma` nodes.
-- New Lean modules must be imported in `NoEmbeddedEigenvalues.lean`. Lean
-  names are in the namespace `NoEmbeddedEigenvalues`.
 - Manuscript cross-references are written as `(manuscript \texttt{(label)})`,
   quoting the `\label` in the original `eigenvalues.tex`, so they can be
   found by text search.
@@ -308,10 +186,9 @@ server has a file open, and keep work in one file at a time where possible.
   This keeps visible in the graph where Sobolev theory enters. The setup and
   symmetry chapters intentionally use none of them: `Δ^{-1}` and `L_0` are
   defined through Fourier coefficients.
-- Algebraic identities are separated from their analytic justification; the
-  algebraic nodes and `certificates.tex` (Bernstein-coefficient positivity,
-  meant to be checked by `decide`/`native_decide`) are the first formalization
-  targets.
+- Separate algebraic identities from their analytic justification. Certificates
+  use exact arithmetic (e.g. verified Bernstein-coefficient positivity), not
+  numerical sanity checks.
 - Style: short, precise statements and short proofs; plain prose, no
   marketing language.
 
@@ -338,4 +215,10 @@ in the blueprint, mathematical gaps in its digest notes, implementation details
 in module documentation, and history in Git. Do not hand-maintain graph counts:
 use `just status-blueprint` to refresh `docs/status/generated.md`. Its markers
 are not an audit of Lean declarations or axioms.
+Keep docstrings and blueprint prose focused on stable mathematical content,
+not temporary progress claims such as “still admitted” or lists of remaining
+prerequisites. Use blueprint status markers, generated reports and topic status
+pages for progress. When closing a gap, remove obsolete warnings and retain
+only the mathematical explanation of the resolution.
+
 This file is for guidance that stays valid across sessions.

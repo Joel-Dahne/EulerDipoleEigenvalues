@@ -775,11 +775,9 @@ The earlier sketch mixed a cutoff supported in a single lifted cell with
 periodic fields on the torus. The proof now explicitly periodizes the
 mollifier outputs and uses the periodic cutoff $c=\chi(\Psi/2)$.
 It does not construct $J_\epsilon^\dagger DJ_\epsilon$.
-The Lean proof (October 2026) follows the argument above and has no
-\texttt{sorry} of its own. Its only remaining admission is the reverse weak
-chain rule (Lemma~\ref{lem:action-angle-weak-cell}), checked with
-\texttt{just sorries virial\_l2}. Both forward weak chain rules and the
-coordinate regularity, inverse and area formulas are proved. Compared with
+The Lean proof and all its transitive prerequisites are proved without
+admissions, checked with \texttt{just sorries virial\_l2}. This includes both
+weak chain rules and the coordinate regularity, inverse and area formulas. Compared with
 the previous sketch: (i) the periodization is the explicit box periodization
 (Lemma~\ref{lem:box-periodization}), proved directly by testing against characters, rather
 than the periodization part of Lemma~\ref{lem:local-to-global}; (ii) instead of applying

@@ -24,7 +24,7 @@ mathematics.
 
 ## Topic pages
 
-- [Even–even](docs/status/even-even.md): assembly, remaining routes and priorities.
+- [Even–even](docs/status/even-even.md): completion, review and manuscript work.
 - [Odd–odd](docs/status/odd-odd.md): unresolved weighted argument.
 - [Mixed](docs/status/mixed.md): regularity, flux and coercivity route.
 - [Shared infrastructure](docs/status/shared.md): analytic backlog, reusable
@@ -39,7 +39,8 @@ Generated counts and unfinished nodes: [blueprint report](docs/status/generated.
 workers unless the user asks to resume the experiment.** Operational details
 are in [the tooling notes](docs/tooling/pi.md).
 
-[AGENTS.md](AGENTS.md) gives the workflow and module layout. Node-by-node
+[AGENTS.md](AGENTS.md) gives the workflow;
+[architecture](docs/architecture.md) maps modules and verification tools. Node-by-node
 formalization status belongs in the blueprint; mathematical gaps and corrections
 belong in its [digest notes](blueprint/src/chapters/notes.tex). History is in Git.
 Graph counts are deliberately not duplicated in these hand-maintained summaries.

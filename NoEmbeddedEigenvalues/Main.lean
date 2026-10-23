@@ -7,7 +7,8 @@ import NoEmbeddedEigenvalues.Mixed
 
 The main theorem is assembled from the three sector exclusions and the proved
 sector decomposition. There is no local `sorry` here, but the theorem depends
-on the three admitted exclusions. It is not yet an unconditional formal proof.
+on the admitted odd–odd and mixed exclusions. The even–even exclusion has no admitted
+dependencies; the main theorem is not yet an admission-free proof.
 -/
 
 namespace NoEmbeddedEigenvalues
@@ -15,7 +16,7 @@ namespace NoEmbeddedEigenvalues
 open Complex
 
 /-- **Main theorem.** The linearized operator has no nonzero purely imaginary eigenvalues
-`iλ`, `λ ≠ 0` (blueprint: `thm:main`). Conditional on the three sector exclusions. -/
+`iλ`, `λ ≠ 0` (blueprint: `thm:main`). The odd–odd and mixed exclusions remain admitted. -/
 theorem main (lam : ℝ) (hlam : lam ≠ 0) (ω : L2)
     (h : HasL ω ((I * lam) • ω)) : ω = 0 := by
   have hω := (hasL_iff_isEigenSolution lam ω).mp h

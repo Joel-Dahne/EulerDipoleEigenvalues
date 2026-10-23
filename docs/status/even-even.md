@@ -7,13 +7,10 @@
 
 The even–even exclusion is formalized without admissions: the transitive
 admission audit (`just sorries`) reports zero admissions for both
-`even_even_exclusion` and `even_even_character_exclusion`. The last inputs were
-`lem:local-to-global` (`LocalToGlobal.lean`) and `lem:coarea`
-(`OrbitRestriction.lean`).
+`even_even_exclusion` and `even_even_character_exclusion`.
 
-The analysis, geometry, virial and transport prerequisites have had a first-pass
-blueprint review. Proof sketches and dependency corrections are recorded at
-the nodes, not reproduced here. This was not a full independent proof audit.
+The prerequisites have had a first-pass blueprint review, not a full
+independent mathematical audit. Proof details are at the nodes.
 
 ## Remaining work
 
@@ -27,19 +24,15 @@ The even–even route does **not** use finite-p Sobolev embedding, the
 elliptic-integral period identity, sharp period asymptotics, or transport
 self-adjointness.
 
-## Deferred possibilities
+## Optional routes
 
-- Check whether `ee_first_trace_limit` can also use explicit quarter formulas,
-  avoiding its saddle-distance/coarea route. This has not been worked out.
-- The old boundary cutoff/zero-extension approximation route is retained as
-  infrastructure but is not needed for positivity. Do not prioritize completing
-  its density theory on that account.
+Explicit quarter formulas might simplify `ee_first_trace_limit`; this is
+unworked. The retained boundary-cutoff/zero-extension route is not needed for
+positivity and does not justify prioritizing density theory.
 
 ## Where to work
 
 - [Blueprint](../../blueprint/src/chapters/even_even.tex) and
   [digest notes](../../blueprint/src/chapters/notes.tex).
-- [EvenEven.lean](../../NoEmbeddedEigenvalues/EvenEven.lean),
-  [SeparatrixTraces.lean](../../NoEmbeddedEigenvalues/SeparatrixTraces.lean) and
-  [EigenfunctionTransport.lean](../../NoEmbeddedEigenvalues/EigenfunctionTransport.lean)
-  and [PairingLimit.lean](../../NoEmbeddedEigenvalues/PairingLimit.lean).
+- [EvenEven.lean](../../NoEmbeddedEigenvalues/EvenEven.lean) for assembly;
+  [architecture guide](../architecture.md) for the supporting modules.

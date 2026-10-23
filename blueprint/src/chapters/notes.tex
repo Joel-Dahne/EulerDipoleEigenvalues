@@ -29,47 +29,6 @@ once resolved; record the resolution in the relevant node.
         The identification with zonal $S^3$ Laplacians is sketched only.
   \item \textbf{Constants in the $\kappa=-1$ boundary estimate}
         (Proposition~\ref{prop:corrected-trace}). These need to be re-derived.
-  \item \textbf{The $L^2$ virial identity} (Lemma~\ref{lem:virial-l2}). The manuscript's
-        flow group $U_t$ of $W$ is replaced by a transversal mollifier in action-angle
-        coordinates, for fields supported in an annulus; the center is cut out of
-        Lemma~\ref{lem:ee-truncated-virial}. The paper proof now explicitly
-        periodizes the cell outputs and uses $c=\chi(\Psi/2)$ on the torus.
-        No mollifier adjoint is constructed. The $L^2$ passage to the limit is now
-        proved in Lean (no \texttt{sorry} of its own; see the digest note at
-        Lemma~\ref{lem:virial-l2}), together with $H^1$ skew-symmetry
-        (Lemma~\ref{lem:half-density-skew-h1}), the box periodization
-        (Lemma~\ref{lem:box-periodization}) and the equivalence of the two forms
-        (Lemma~\ref{lem:virial-forms}). In the transport sketches,
-        test density is now explicitly in $H^1$ (for eigenfunctions proved in Lean
-        through Lemma~\ref{lem:L0-h1-tests}), and Melnikov integrates
-        by parts only on the separatrix trace, avoiding an unjustified
-        appeal to a.e. orbit regularity at prescribed resonant levels
-        (see the digest notes at Lemmas~\ref{lem:transport-pair-eigen}
-        and~\ref{lem:melnikov}). The chart
-        (Lemmas~\ref{lem:action-angle-chart}, \ref{lem:action-angle-weak},
-        \ref{lem:action-angle-weak-cell}), the
-        one-dimensional mollifier (Lemma~\ref{lem:line-mollifier}) and the mollifier
-        (Lemmas~\ref{lem:transversal-mollifier}--\ref{lem:transversal-mollifier-commutator})
-        are stated in Lean. The line-mollifier lemma is proved, and the basic
-        transversal $L^2$ lemma, the derivative estimates and the commutator estimate
-        (Lemmas~\ref{lem:transversal-mollifier-derivatives}
-        and~\ref{lem:transversal-mollifier-commutator}) are proved from the
-        chart/coarea inputs and the full weak-gradient chain rules.
-        Lemma~\ref{lem:virial-h1} is proved directly on $H^1$, without Fourier
-        truncation.
-        The classical test-function chain rules, local-integrability
-        equivalences, and weak transport equivalence
-        (Lemma~\ref{lem:action-angle-transport}) are now proved from the
-        chart inputs, whose regularity and area formulas are now proved in Lean.
-        Both forward weak-gradient rules are now proved independently of
-        any reverse rule: the angular rule uses weak transport, and the level
-        rule uses the divergence-free dual field (Lemma~\ref{lem:action-angle-weak-level}).
-        The reverse rule (Lemma~\ref{lem:action-angle-weak-cell}) is now
-        proved directly with divergence-free cofactor columns and periodic
-        representatives of the weak derivatives, so its earlier approximation
-        sketch is superseded. The resolution is recorded at that node.
-        Open: whether the odd--odd weighted analogue
-        (Proposition~\ref{prop:dd-virial}) can be treated the same way.
   \item \textbf{Missing verification scripts}
         (Chapter~\ref{chap:certificates}).
 \end{enumerate}

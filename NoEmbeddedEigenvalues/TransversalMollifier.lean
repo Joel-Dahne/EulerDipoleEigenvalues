@@ -11,7 +11,7 @@ Blueprint: `def:transversal-mollifier`, `lem:transversal-mollifier-support` (pro
 `lem:transversal-mollifier-commutator` (proved from chart/coarea inputs, the derivatives
 also from the full weak-gradient chain rules);
 `lem:action-angle-test-chain`, `lem:action-angle-local-integrability` (proved from
-chart/coarea inputs; the forward classical chain rule has no admitted dependency);
+chart/coarea inputs, all without admitted dependencies);
 `lem:action-angle-transport`, `lem:action-angle-gradient-local-integrability` and
 `lem:action-angle-weak-angular`, `def:level-dual-field`, `lem:level-dual-field`,
 `lem:level-dual-weak`, `lem:action-angle-weak-level`, `lem:action-angle-weak` and

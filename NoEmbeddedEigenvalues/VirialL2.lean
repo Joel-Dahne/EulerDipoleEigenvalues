@@ -4,7 +4,7 @@ import NoEmbeddedEigenvalues.CellPeriodization
 # The virial identities on the `L²` domain
 
 Blueprint: `lem:virial-exact-identity`, `lem:stream-ibp`, `lem:half-density-skew-h1`,
-`lem:virial-h1` and `lem:virial-l2` (all proved, the last from admitted inputs).
+`lem:virial-h1` and `lem:virial-l2` (all proved without admitted dependencies).
 
 For a smooth adapted field `W` supported in a compact annulus `{2h₁ ≤ Ψ ≤ 2h₂}` of the
 cells, `0 < h₁`, `h₂ < 1` (away from the separatrix and the centers), the two smooth virial

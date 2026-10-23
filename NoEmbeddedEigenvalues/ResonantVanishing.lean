@@ -13,15 +13,15 @@ On almost every orbit `γ_h` of an annulus, the transport unknown `z` of a trans
 periodic absolutely continuous solution of `(-i∂ₜ - λ)z = f`. Integrating
 `(e^{-ikbt} z)'` over one period gives the mode relation `(kb - λ) v_k = -kb f_k`.
 At a resonance `kb(h_k) = λ` the right side must vanish: otherwise `|v_k(h)| ≳ 1/|h - h_k|`,
-which is not square integrable in `h`, while the area formula and Cauchy–Schwarz bound
-`∫ |v_k|² dh` by `‖v‖²_{L²}`. Only the local Lipschitz bound `|kb(h) - λ| ≤ C|h - h_k|`
-enters, not the sign of `S'`.
+which is not locally integrable in `h`, contradicting the local L¹ bound from the area
+formula. Only the local Lipschitz bound `|kb(h) - λ| ≤ C|h - h_k|` enters, not the sign of
+`S'` or square integrability of `v`.
 
 Rational annuli give one common full-measure set of cell levels carrying transport
 representatives. Good levels avoiding any prescribed null set can be selected there.
 At those levels periodic uniqueness transfers the forcing's quarter-period character
-to the representatives; no planar a.e. character hypothesis on `v` is needed. These
-preparatory results still use the admitted orbit-restriction theorem `lem:coarea`.
+to the representatives; no planar a.e. character hypothesis on `v` is needed. The results,
+including the orbit-restriction prerequisite `lem:coarea`, have no admitted dependencies.
 -/
 
 noncomputable section

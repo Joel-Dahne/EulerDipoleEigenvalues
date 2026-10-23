@@ -18,8 +18,8 @@ supplies the vorticity character on the selected orbits; no planar a.e. rotation
 hypothesis on `v` is needed. The final eigenfunction specialization changes back to
 the raw stream representative outside one additional null set of levels.
 
-There are no admissions in this module. Existing trace, chart/coarea, Hölder,
-periodization, orbit-comparison and period-bound admissions remain prerequisites.
+The pairing-limit results and their trace, chart/coarea, Hölder, periodization,
+orbit-comparison and period-bound prerequisites are proved without admissions.
 -/
 
 noncomputable section
@@ -517,8 +517,7 @@ theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ �
 
 
 /-- Melnikov and pairing traces specialized to raw eigenfunction lifts and continuous arc
-    traces. Remaining analytic admissions are the prerequisites of the generic Melnikov,
-    orbit restriction and pairing-limit proofs, not new eigenfunction inputs. -/
+    traces, with no admitted dependencies. -/
 theorem ee_transport_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (_hs : InSector true true ω) {κ : Bool}
     (hκ : InRotationCharacter κ ω) :

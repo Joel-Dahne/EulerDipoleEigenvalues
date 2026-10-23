@@ -12,12 +12,12 @@ import NoEmbeddedEigenvalues.PairingLimit
 /-!
 # Even–even exclusion
 
-The exclusion theorem and its fixed-rotation-character version are proved from named
-analytic inputs, which remain admitted. The endgame uses `f > 0` almost everywhere to
+The exclusion theorem and its fixed-rotation-character version are proved without
+admitted dependencies. The endgame uses `f > 0` almost everywhere to
 force the vorticity itself to vanish, rather than a weak-gradient constant-function theorem.
 
 Proved here: `lem:ee-neumann`, `lem:ee-bulk-integrable`, `lem:ee-cutoff-identity` (from
-`lem:virial-l2`, which is still admitted, and `lem:stream-ibp`), `lem:ee-annular-virial` (from
+`lem:virial-l2` and `lem:stream-ibp`), `lem:ee-annular-virial` (from
 the cutoff identity by coarea and du Bois-Reymond), `lem:ee-truncated-virial` (from the annular
 identity and the center limit), `lem:ee-cell-vanishing`, `lem:cos-diagonal-null`,
 `lem:ee-vorticity-from-density`, `lem:nonnegative-exhaustion`,
@@ -2355,7 +2355,7 @@ theorem even_even_character_exclusion {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   exact hlimB.congr fun j ↦ (hP j).2.symm
 
 /-- An eigenfunction even under both separatrix reflections vanishes at every nonzero
-    real spectral parameter. The remaining admissions are in its named analytic inputs. -/
+    real spectral parameter, with no admitted dependencies. -/
 theorem even_even_exclusion (lam : ℝ) (hlam : lam ≠ 0) (ω : L2)
     (hω : IsEigenSolution lam ω) (hsector : InSector true true ω) : ω = 0 := by
   obtain ⟨ωp, ωm, heq, hsp, hsm, hkp, hkm, hep, hem⟩ := hω.rotation_decomposition hsector
