@@ -8,10 +8,8 @@ import Mathlib.Tactic.Ring
 Blueprint: `lem:h1-endpoint-estimates` and `lem:h1-endpoint-layers`.
 
 The estimates use the canonical extension, not the unrestricted raw endpoint
-values. They control endpoint cutoff errors using only first-order data; no
-Hardy inequality or second derivative is needed. The layer estimates serve only
-the endpoint cutoffs of `BoundaryCutoff.lean`, which the main argument no longer
-uses.
+values. Cauchy–Schwarz bounds endpoint values and rescaled zero-trace layers
+using only first-order data; no Hardy inequality or second derivative is needed.
 -/
 
 noncomputable section

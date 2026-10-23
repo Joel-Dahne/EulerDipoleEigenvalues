@@ -1629,14 +1629,6 @@ every point, not an a.e.\ class; the argument only uses a pointwise lower
 bound, so no regularity of $g$ is needed.
 \end{proof}
 
-\begin{remark}[Digest note: Hardy is not needed for endpoint cutoffs]
-The rescaled layer estimate is weaker than the endpoint Hardy inequality
-below but suffices for the endpoint cutoff errors in
-Lemma~\ref{lem:boundary-cutoff-convergence}. The cutoff route itself is no
-longer used for the boundary positivity: Lemma~\ref{lem:l2-endpoint-liminf}
-controls the endpoint flux directly (Lemma~\ref{lem:weighted-completion}).
-\end{remark}
-
 \begin{lemma}[Endpoint Hardy inequality]
 \label{lem:hardy-endpoint}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
@@ -1647,9 +1639,9 @@ If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then
 \end{lemma}
 
 \begin{remark}
-The endpoint case is separated from the $H^2$ collection below. Its Lean
-proof is still pending; the boundary-form cutoff step instead uses the
-proved layer estimate of Lemma~\ref{lem:h1-endpoint-layers}.
+The endpoint case is separated from the $H^2$ collection below.
+The weighted boundary completion uses Lemma~\ref{lem:l2-endpoint-liminf}
+instead of Hardy's inequality to control its endpoint flux.
 \end{remark}
 
 \begin{lemma}[One-dimensional Hardy inequalities]

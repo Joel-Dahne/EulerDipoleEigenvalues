@@ -1,7 +1,5 @@
 import NoEmbeddedEigenvalues.ACLSlicing
 import NoEmbeddedEigenvalues.AnglePeriodization
-import NoEmbeddedEigenvalues.BoundaryCutoff
-import NoEmbeddedEigenvalues.BoundaryCutoffConstruction
 import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalACL

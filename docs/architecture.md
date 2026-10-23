@@ -97,9 +97,8 @@ proof mechanisms. Module names below are relative to
   affine splitting and positivity by interval exhaustion.
 - `FlowBoundaryForm.lean`, `CanonicalBoundaryForm.lean`: flow-time to
   `ξ = tanh s` transformation and identification of the canonical arc form.
-- `IntervalZeroExtension.lean`, `BoundaryCutoff.lean`,
-  `BoundaryCutoffConstruction.lean`: auxiliary zero-extension/cutoff
-  approximation route; not needed for the current boundary positivity proof.
+- `IntervalZeroExtension.lean`: jump-free zero extension of zero-trace H¹
+  data, and complex primitive/zero-extension helpers used by `TraceH2.lean`.
 - `EvenEven.lean`: truncated virial, boundary regularity and exclusion assembly,
   ending directly with vanishing of the vorticity.
 - `OddOdd.lean`, `Mixed.lean`, `Main.lean`: remaining sector interfaces,

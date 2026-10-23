@@ -27,8 +27,7 @@ self-adjointness.
 ## Optional routes
 
 Explicit quarter formulas might simplify `ee_first_trace_limit`; this is
-unworked. The retained boundary-cutoff/zero-extension route is not needed for
-positivity and does not justify prioritizing density theory.
+unworked. Boundary positivity uses direct interval exhaustion, not density theory.
 
 ## Where to work
 
