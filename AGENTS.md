@@ -115,7 +115,7 @@ running, so after a file has been opened once an edit is rechecked in well
 under a second.
 
 Tool-specific setup notes live in `docs/tooling/`. When using Pi, read
-[the Pi setup notes](docs/tooling/pi.md) for its shared Lean MCP configuration.
+[the Pi setup notes](docs/tooling/pi.md) for its stdio Lean MCP configuration.
 
 Costs measured in the VM (4 cores, 12 GB):
 

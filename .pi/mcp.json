@@ -1,7 +1,9 @@
 {
   "mcpServers": {
     "lean-lsp": {
-      "url": "http://127.0.0.1:8765/mcp",
+      "type": "stdio",
+      "command": "lean-lsp-mcp",
+      "args": ["--lean-project-path", "."],
       "timeout": 120
     }
   }

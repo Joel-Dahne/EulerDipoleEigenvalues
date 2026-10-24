@@ -4,10 +4,6 @@
 default:
     @just --list
 
-# Start shared Lean MCP server for Pi sessions/workers (keep running; localhost only).
-lean-mcp:
-    lean-lsp-mcp --transport streamable-http --host 127.0.0.1 --port 8765 --lean-project-path "$PWD"
-
 # Build the Lean project
 build:
     lake build
