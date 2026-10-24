@@ -1162,6 +1162,33 @@ then proves its square integrability. Uniqueness in
 Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
 \end{proof}
 
+\begin{lemma}[Weighted trace at a corner]
+\label{lem:weighted-corner-trace}
+\uses{def:sobolev-local}
+Let $Q=\{0<r<r_0,\ 0<\theta<\pi/2\}$ be a quadrant of a disk, with
+$r_0>0$. If $u\in H^1(Q)$ and $u/r\in L^2(Q)$, its traces on the two
+straight sides satisfy
+\[
+ \sum_{\theta_0\in\{0,\pi/2\}}\int_0^{r_0}
+       |u(r,\theta_0)|^2\,\frac{dr}{r}
+ \le C\int_Q\left(\frac{|u|^2}{r^2}+|\nabla u|^2\right)\,dx\,dy ,
+\]
+where $C$ is independent of $r_0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2}
+Put $U(\tau,\theta)=u(r_0e^{-\tau},\theta)$. Change variables on finite
+cylinder strips and then exhaust the cylinder:
+\[
+ \int |U|^2\,d\tau\,d\theta=\int_Q|u|^2/r^2,\qquad
+ \int (|U_\tau|^2+|U_\theta|^2)\,d\tau\,d\theta=\int_Q|\nabla u|^2.
+\]
+Apply Lemma~\ref{lem:trace-l2} in the angular variable on
+$(0,\infty)\times(0,\pi/2)$. Since $d\tau=-dr/r$, its endpoint traces
+give exactly the two asserted side integrals.
+\end{proof}
+
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]
 \label{lem:trace-acl}
 \uses{def:sobolev-local, def:cells}
@@ -1334,6 +1361,32 @@ With $c$ fixed this expresses $F(\cdot,b_0)$ as a constant plus the
 primitive of $H(\cdot,b_0)\in L^2$, proving local absolute continuity and
 the claimed a.e. derivative. No smooth approximation or fractional
 trace estimate is needed.
+\end{proof}
+
+\begin{lemma}[Tangential derivative of an $H^2$ boundary trace]
+\label{lem:trace-h2-boundary}
+\uses{def:sobolev-local}
+Let $I,J$ be nonempty bounded open intervals, $Q=I\times J$, and
+$u\in H^2(Q)$.
+On each side, the $L^2$ trace of $u$ has an absolutely continuous
+representative on the closed side. Its tangential derivative is the
+$L^2$ trace of the corresponding weak partial derivative of $u$.
+In particular, this representative is bounded and has finite endpoint
+limits.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:acl-slicing, lem:du-bois-reymond, lem:h1-interval-endpoints}
+For a horizontal side, apply the normal trace estimate to $u$ and
+$u_a$. The sections $u(\cdot,b)$ and $u_a(\cdot,b)$ tend in $L^2(I)$
+to their traces as $b$ approaches the side: the FTC in $b$ bounds the
+squared difference by the distance to the side times the integral of
+$|u_b|^2$ or $|u_{ab}|^2$ in the intervening strip.
+Pass to the limit in the horizontal weak derivative identity.
+Thus the trace of $u_a$ is the weak derivative of the trace of $u$.
+Du Bois-Reymond identifies the latter with a primitive plus a constant;
+the interval endpoint theorem gives absolute continuity on the closed
+side and boundedness. The vertical sides are identical.
 \end{proof}
 
 \begin{remark}[Digest note: traces, split into separate inputs]

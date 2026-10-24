@@ -71,6 +71,14 @@ normal and tangential logarithms. The remainder is controlled by the weighted
 jet estimate.
 \end{proof}
 
+\begin{remark}[Digest note: pairing reuse needs complex characters]
+The truncated normal-field virial has no reflection-parity hypothesis.
+The cited pairing limit, however, assumes $R^*f=\pm f$. Mixed functions have $(R^*)^2f=-f$, so the argument needs
+the $\pm i$ character extension, or a separate half-orbit proof.
+This is not supplied by the even--even gradient trace theorem either:
+mixed linear saddle jets can make the individual edge energies divergent.
+\end{remark}
+
 \begin{proposition}[Mixed virial identity]
 \label{prop:mixed-virial}
 \uses{def:mixed-field}
@@ -125,23 +133,100 @@ Checked symbolically for a test polynomial with nonzero endpoint values
 (scratch sympy computation).
 \end{remark}
 
-\begin{lemma}[Boundary square for eigenfunction traces]
-\label{lem:mixed-boundary-square-traces}
-\uses{lem:mixed-boundary-square}
-\notready
-On a Neumann edge, write the canonical transport pair as $z=\sqrt wF$,
-$\psi=\sqrt wG$. Then $G$ is bounded, $\int w|G'|^2<\infty$, $F$ and $wF'$ are
-bounded, and the identity of Lemma~\ref{lem:mixed-boundary-square} holds.
+\begin{lemma}[Mixed boundary square on the weighted domain]
+\label{lem:mixed-boundary-square-weighted}
+\uses{lem:mixed-boundary-square, def:h1-interval}
+Let $\lambda\in\R$, $w=1-x^2$, and let $F,G$ be locally absolutely
+continuous on $(-1,1)$. Suppose $G=T_\lambda F$ almost everywhere,
+$F,G$ are bounded, and $\int_{-1}^1w|G'|^2<\infty$.
+Then $F'$ has a locally absolutely continuous representative, $wF'$ is
+bounded, all integrals in Lemma~\ref{lem:mixed-boundary-square} are finite,
+and that identity holds. No endpoint values of $F$ are required.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, cor:global-h1, prop:saddle-first-gain}
-$G$ comes from the $H^2$ quotient trace. $\omega\in H^1$ and $\omega/r\in L^2$
-put $\omega$ in $H^1$ of the logarithmic corner strip, so $z\in L^2(dt)$; the
-equation $(-i\partial_t-\lambda)z=hG$ excludes the non-decaying homogeneous
-solution, giving $|z|\le Ch\|G\|_\infty$. The complete boundary current
-$[xw|F|^2-2w^2\operatorname{Re}(F'\bar F)]_{-1}^1$ vanishes.
+The equation gives $wF'=(x+i\lambda)F+iG$, proving the regularity of
+$F'$ and the bound for $wF'$. Set
+$A=wF''-3xF'-i\lambda F'$. Differentiating the equation gives
+$A=iG'+F$, so $\sqrt w A\in L^2$; also $T_0F=G+\lambda F$ is bounded.
+The expansion in the smooth proof is valid almost everywhere on compact
+subintervals. It identifies the difference of the integrands with
+\[
+ \frac{d}{dx}\left[xw|F|^2-2w^2\operatorname{Re}(F'\bar F)\right].
+\]
+The current is $O(w)$ at both ends, since $F$ and $wF'$ are bounded.
+Integrate on compact subintervals and exhaust $(-1,1)$.
 \end{proof}
+
+\begin{lemma}[Boundary square for eigenfunction traces]
+\label{lem:mixed-boundary-square-traces}
+\uses{def:eigen-problem, def:sectors, def:canonical-profile,
+  lem:mixed-boundary-square-weighted, def:h1-interval}
+Let $\omega$ be a mixed-sector eigenfunction with $\lambda\ne0$.
+On a Neumann edge, use directed flow time $t$, put $x=\tanh t$ and
+$w=1-x^2$, and write the canonical transport pair as
+$z=\sqrt wF$, $\psi|_N=\sqrt wG$.
+Then $F,G$ are locally absolutely continuous, $G$ is bounded,
+$\int w|G'|^2<\infty$, $F$ and $wF'$ are bounded, and the identity of
+Lemma~\ref{lem:mixed-boundary-square} holds. The physical vorticity
+trace on the edge agrees with the canonical profile.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:mixed-quotient-domain, lem:weighted-corner-trace,
+  lem:trace-h2-boundary, lem:trace-l2, lem:transport-pair-eigen,
+  lem:transport-unknown, lem:separatrix-arc}
+Write $h=\cos a$. The quotient-domain proposition gives
+$\phi=\psi/h\in H^2(\Cell)$ and $\omega/h\in L^2(\Cell)$, as well as
+$\omega\in H^1$ near the separatrix. The boundary trace theorem gives
+$\phi|_N\in H^1(da)$. Along either directed Neumann edge $h=\sech t$
+and $|dx|=h\,|da|$, so
+\[
+ G=\phi|_N,\qquad
+ \int_{-1}^1w|G'|^2\,dx=\int_N h|\phi_a|^2\,da<\infty.
+\]
+In particular $G$ is bounded and has endpoint limits.
+
+Near a corner, $h\le Cr$, hence $\omega/r\in L^2$ follows already from
+$\omega/h\in L^2$. Lemma~\ref{lem:weighted-corner-trace} gives the edge
+trace $q=\omega|_N\in L^2(dt)$, since $|dt|\asymp dr/r$ at the ends;
+on compact arcs use the ordinary trace estimate.
+Thus the physical unknown $z=-(q+\psi|_N)/\lambda$ is in $L^2(dt)$.
+
+The weak transport equation restricts to each compact regular arc.
+Indeed, in a smooth flow box it reads
+$\partial_tz=i(\lambda z+\psi)$; the local $H^1$ bounds give $L^2$
+convergence of sections to the edge traces. Passing to the limit in
+the distributional identity in $t$ gives the same equation on the
+edge, and hence a locally absolutely continuous representative.
+No normal derivative trace of $\omega$ is used.
+
+Since $hG\in L^1(dt)$, the integrating factor $e^{-i\lambda t}z(t)$
+has a limit at each end. Square integrability forces both limits
+to be zero. For $t\ge0$,
+\[
+ z(t)=-i e^{i\lambda t}\int_t^\infty
+               \sech s\,G(\tanh s)e^{-i\lambda s}\,ds ,
+ \qquad |z(t)|\le2\sech t\,\|G\|_\infty .
+\]
+The integral from $-\infty$ gives the same bound for $t\le0$.
+Consequently $F=z/h$ is bounded and satisfies $G=T_\lambda F$.
+Moreover $g=\psi|_N=hG$ has $g'\in L^1(dt)$: its derivative is
+$-xhG+hwG'$, and
+$\int |hwG'|\,dt=\int_{-1}^1\sqrt w\,|G'|\,dx<\infty$
+by Cauchy--Schwarz. The equation
+$q'=i\lambda q-g'$ and $q=-\lambda z-g=O(h)$ identify $q$ with the
+canonical profile. Apply Lemma~\ref{lem:mixed-boundary-square-weighted}.
+\end{proof}
+
+\begin{remark}[Digest note: no elliptic-center input]
+The manuscript invokes global $H^1$ regularity here. The weighted corner
+trace uses only $H^1$ near the separatrix and $\omega/r\in L^2$; both
+follow from Proposition~\ref{prop:mixed-quotient-domain}.
+Thus neither Corollary~\ref{cor:global-h1} nor the elliptic-center
+analysis is needed for this step. This removes that dependency, not
+the unverified transport gains in the quotient-domain proposition.
+\end{remark}
 
 \begin{definition}[Trace mass and static form]
 \label{def:mixed-K}

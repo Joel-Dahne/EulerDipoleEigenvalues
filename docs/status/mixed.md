@@ -10,21 +10,25 @@
 conditional on the admitted exclusion. No separate analytic proof is needed
 for the second mixed sector.
 
-This sector has not had the recent even–even prerequisite review. Several
-regularity and virial statements remain marked `notready` in the blueprint.
+The boundary-square argument has a local regularity derivation in the
+blueprint; the quotient-domain and paired-flux inputs remain unverified.
+No new part of the exclusion is proved in Lean.
 
 ## Priorities when work resumes
 
-- Digest the mixed quotient/regularity domain and saddle jets.
-- Justify the paired flux and mixed virial identities, including cancellation
-  of adjacent divergent edge energies.
-- Extend the smooth boundary-square identity to eigenfunction traces.
-- Verify the comparison/coercivity route and its exact certificates.
+- Pin down the transport gains for the jet-subtracted pair and the mixed
+  quotient domain. The quotient by `cos a` is not itself a transport pair.
+- Extend Melnikov/pairing reuse to rotation characters ±i (the implemented
+  results accept only ±1), or derive a half-orbit alternative.
+- Justify the paired flux and mixed virial, including cancellation of
+  adjacent divergent edge energies; even–even gradient limits do not apply.
+- Formalize the local corner trace, one-sided H² trace and weighted
+  boundary-square extension; then verify coercivity and its certificates.
 
-Before investing in elliptic-center regularity, check whether the boundary
-trace argument can use only local separatrix regularity. The blueprint records
-this possible simplification: the global H¹ corollary is currently used only
-at `lem:mixed-boundary-square-traces`.
+Global H¹ and elliptic-center regularity are no longer prerequisites in the
+blueprint route. The mixed quotient domain already supplies local H¹ and
+`ω/r ∈ L²`, which give the `L²(dt)` corner trace. This is a mathematical
+derivation conditional on that domain, not a Lean proof of mixed regularity.
 
 Algebraic or numerical sanity checks are not proofs of the analytic identities
 or certificate inequalities.

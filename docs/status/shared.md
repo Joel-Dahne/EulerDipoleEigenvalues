@@ -30,10 +30,14 @@ weights and local versus global regularity.
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
-  transport gains, weighted saddle/quotient domains and elliptic-center
-  regularity need digestion. Local elliptic regularity and interval Hardy
-  inputs remain open. The [transport blueprint](../../blueprint/src/chapters/transport.tex)
-  records tentative gain hypotheses.
+  transport gains and weighted saddle/quotient domains need digestion.
+  The gains must cover all four rotation characters; implemented Melnikov
+  and pairing limits only cover ±1. Local elliptic regularity, weighted
+  corner traces and interval Hardy inputs remain open. The
+  [transport blueprint](../../blueprint/src/chapters/transport.tex) records
+  tentative gain hypotheses. Its zero-edge conclusion needs both zero
+  midpoint value and zero forcing trace. Elliptic-center regularity is
+  separate and no longer a prerequisite of either remaining sector exclusion.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   outside the even–even route; inverse Hausdorff–Young or a compact-support
   Sobolev inequality are candidate approaches.

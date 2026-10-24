@@ -18,7 +18,9 @@ Do not assume the even–even mollifier argument transfers unchanged.
 
 Other inputs needing review include the quotient domain and saddle regularity,
 the Picone/current argument, the weighted Poincaré inequality, and constants in
-the corrected boundary estimate. Exact certificate verification is also pending.
+the corrected boundary estimate. The shared transport gains remain tentative;
+unlike mixed, this sector uses only the existing ±1 rotation characters.
+See [shared infrastructure](shared.md). Exact certificate verification is also pending.
 The detailed questions live in the blueprint's digest notes.
 
 The finite-part calculation retains the elliptic period formula and sharp

@@ -3,11 +3,12 @@
 
 The odd--odd and mixed arguments need regularity well beyond
 $\omega\in L^2$: weighted bounds at the saddles, $H^1$ regularity across the
-separatrix, $H^2$ regularity of quotients $\psi/\Psi$ or $\psi/\cos a$, and
-$H^1$ regularity at the elliptic centers. This chapter is the most
-analysis-heavy part of the proof, and the manuscript's arguments here are the
-most compressed. Most nodes are therefore marked \verb|\notready|. In this
-chapter $d$ is distance to the saddle set and $r$ distance to a fixed saddle.
+separatrix and $H^2$ regularity of quotients $\psi/\Psi$ or $\psi/\cos a$.
+The transport gains must apply to jet-subtracted pairs, not only to
+eigenfunctions satisfying an elliptic relation. The final section records
+the separate elliptic-center argument; neither sector exclusion needs it
+once the mixed boundary trace is handled locally.
+In this chapter $d$ is distance to the saddle set and $r$ distance to a fixed saddle.
 
 \section{Weighted elliptic estimates at a saddle}
 
@@ -49,9 +50,13 @@ Every eigenfunction satisfies $\omega/d\in L^2$ (manuscript
 \end{proposition}
 
 \begin{proof}
-\uses{lem:transport-first-gain, lem:transport-pair-eigen, lem:rotation-characters}
-Apply Lemma~\ref{lem:transport-first-gain} to the transport pair
-$(\omega,\psi)$, in each rotation character.
+\uses{lem:transport-first-gain, lem:transport-pair-eigen,
+  lem:reflection-algebra, lem:symmetries-commute}
+Apply Lemma~\ref{lem:transport-first-gain} to $(\omega,\psi)$ after the
+four-character decomposition
+$P_\kappa=\frac14\sum_{j=0}^3\kappa^{-j}(R^*)^j$,
+$\kappa\in\{1,-1,i,-i\}$. The two-character decomposition of
+Lemma~\ref{lem:rotation-characters} alone does not cover mixed sectors.
 \end{proof}
 
 \begin{proposition}[Odd--odd saddle estimates]
@@ -172,6 +177,17 @@ equals $ce^{i\lambda t}$, and the angular trace inequality forces $c=0$.
 Division by the normal coordinate gives the quotients.
 \end{proof}
 
+\begin{remark}[The mixed quotient is not a transport pair]
+Unlike $\Psi$, the divisor $h=\cos a$ is not invariant under the flow:
+$L_0h=uvh$, where $u=\sin a$ and $v=\sin b$.
+Consequently the mixed quotients satisfy
+\[
+ H(\nu+\phi)=\lambda\nu+iuv(\nu+\phi),
+\]
+not the transport-pair equation. The gains above are applied to the
+jet-subtracted pair before division, not directly to $(\nu,\phi)$.
+\end{remark}
+
 \section{Elliptic centers}
 
 \begin{proposition}[Regularity at the elliptic centers]
@@ -210,12 +226,14 @@ resonant level, and division gives an $H^1$ quotient. The other modes have
 uniformly bounded multipliers.
 \end{proof}
 
-\begin{remark}[Digest note]
-Corollary~\ref{cor:global-h1} is used only in the mixed sector, to show that the
-angular trace of $\omega$ at a corner is in $L^2(dt)$
-(Lemma~\ref{lem:mixed-boundary-square-traces}). It would be worth checking
-whether the local statements suffice there, so that the elliptic-center
-analysis can be dropped entirely. If so, Proposition~\ref{prop:center-regularity}
-(including the delicate resonant case $\lambda\in\Z$) disappears from the
-proof.
+\begin{remark}[Digest note: elliptic centers are not a sector prerequisite]
+The manuscript's only use of Corollary~\ref{cor:global-h1} in a sector
+exclusion is the mixed corner trace. Lemma~\ref{lem:weighted-corner-trace}
+supplies that trace using local $H^1$ and $\omega/r\in L^2$, both already
+in Proposition~\ref{prop:mixed-quotient-domain}; see
+Lemma~\ref{lem:mixed-boundary-square-traces}.
+Thus the global corollary and Proposition~\ref{prop:center-regularity},
+including its resonant case $\lambda\in\Z$, are separate assertions rather
+than prerequisites of either remaining exclusion. Their sketches here
+are retained as unverified arguments, not used to justify the local route.
 \end{remark}
