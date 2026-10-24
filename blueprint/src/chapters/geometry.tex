@@ -1497,6 +1497,33 @@ Integrating gives $L'<0$. Multiplication by $8$ gives the assertions
 for $S$, and the mean value theorem gives strict decrease.
 \end{proof}
 
+\begin{lemma}[Coarse bounds for period derivatives]
+\label{lem:period-derivative-bounds}
+\uses{def:period}
+There are $c,C>0$ and $0<h_0<1$ such that
+\[
+ c\le-hL'(h)\le C,\qquad h^2|L''(h)|\le C
+ \quad(0<h<h_0).
+\]
+No elliptic-integral identity or sharp remainder estimate is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-integral, lem:period-regularity}
+Use $L=\int_0^1Q^{-1/2}\,dt$, where
+$Q=AB$, $A=1-(1-h)t^2$, $B=1+h-t^2$.
+For $0<h<1/2$, $B/2\le A\le B$, $B/2\le Q_h=t^2B+A\le2B$,
+and $Q_{hh}=2t^2$. Thus
+\[
+ -\partial_h(Q^{-1/2})\asymp B^{-2},\qquad
+ |\partial_h^2(Q^{-1/2})|\le C B^{-3}.
+\]
+Since $h+1-t\le B\le2(h+1-t)$,
+$\int_0^1B^{-2}\,dt\asymp h^{-1}$ and
+$\int_0^1B^{-3}\,dt\le C h^{-2}$.
+Differentiate under the integral as in the period-regularity proof.
+\end{proof}
+
 \begin{lemma}[Coarse logarithmic bounds for the period]
 \label{lem:period-coarse}
 \uses{def:period}

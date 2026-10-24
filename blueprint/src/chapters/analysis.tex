@@ -1173,7 +1173,9 @@ straight sides satisfy
        |u(r,\theta_0)|^2\,\frac{dr}{r}
  \le C\int_Q\left(\frac{|u|^2}{r^2}+|\nabla u|^2\right)\,dx\,dy ,
 \]
-where $C$ is independent of $r_0$.
+where $C$ is independent of $r_0$. The same bound holds for the
+single-ray integral at any fixed $\theta_0\in[0,\pi/2]$, with a
+constant independent of $\theta_0$.
 \end{lemma}
 
 \begin{proof}
@@ -1185,8 +1187,8 @@ cylinder strips and then exhaust the cylinder:
  \int (|U_\tau|^2+|U_\theta|^2)\,d\tau\,d\theta=\int_Q|\nabla u|^2.
 \]
 Apply Lemma~\ref{lem:trace-l2} in the angular variable on
-$(0,\infty)\times(0,\pi/2)$. Since $d\tau=-dr/r$, its endpoint traces
-give exactly the two asserted side integrals.
+$(0,\infty)\times(0,\pi/2)$. Since $d\tau=-dr/r$, its traces at the
+endpoints, or at any fixed angular value, give the asserted integrals.
 \end{proof}
 
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]

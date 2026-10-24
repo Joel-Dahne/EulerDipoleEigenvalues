@@ -804,16 +804,49 @@ Variation of constants gives $|z_h(-L)|=|C(h)|$ and $z_h(L)=\kappa z_h(-L)$
 \label{lem:numerator-zeros}
 \uses{def:numerator, def:h1-interval}
 $N\in H^1_{\mathrm{loc}}(0,h_0)$ and $N(h_j)=0$ at every zero $h_j$ of $D$.
-The zeros are simple and form a geometric sequence. On the phase cell $I_j$
+The zeros are simple and, enumerated decreasingly, satisfy
+$0<q_-\le h_{j+1}/h_j\le q_+<1$. On the phase cell $I_j$
 around $h_j$ one has $h\sim h_j$ and $|D(h)|\ge c_\lambda|h-h_j|/h_j$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-regularity, lem:period-coarse, lem:period-asymptotics,
+\uses{lem:period-regularity, lem:period-coarse, lem:period-derivative-bounds,
   lem:resonant-vanishing, lem:coarea}
 The endpoint traces of $z_h$ are locally square integrable in $h$, so
 $|N/D|$ cannot blow up like $1/|h-h_j|$; continuity of $N$ forces $N(h_j)=0$.
-Simplicity and spacing follow from $L'(h)\sim-1/(2h)$.
+Simplicity and geometric spacing follow by integrating
+$c/h\le-L'(h)\le C/h$. Only ratio bounds between consecutive zeros,
+not an exact geometric progression, are asserted.
+\end{proof}
+
+\begin{lemma}[Phase-cell division]
+\label{lem:phase-cell-division}
+\uses{def:numerator, def:h1-interval, def:h2-interval, lem:h1-interval-endpoints}
+Suppose $N\in H^2_{\mathrm{loc}}(0,h_0)$, $N(h_j)=0$ at every zero
+of $D$, and $N',hN''\in L^2(0,h_0)$. After decreasing $h_0$ to a
+phase-cell endpoint, $C=N/D$ extends across its removable singularities,
+$C/h,C'\in L^2(0,h_0)$, and $C$ has trace zero at $h=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-derivative-bounds, lem:hardy-1d}
+Let $I_j$ be the cell where the phase $2\lambda L$ lies between the
+half-phase values adjacent to its value at $h_j$.
+The derivative bounds give $h\asymp h_j$ on $I_j$ and
+\[
+ D(h)=\frac{h-h_j}{h_j}d_j(h),\qquad
+ |d_j|\ge c_\lambda,\qquad |d_j'|\le C_\lambda/h_j .
+\]
+Indeed $|D|\asymp|h-h_j|/h_j$ by the sine bound on a half phase,
+and $|D''|\le C_\lambda/h_j^2$ bounds the derivative of the divided
+difference. First and second Hardy, on each side of $h_j$, give
+\[
+ \int_{I_j}|C/h|^2\le C_\lambda\int_{I_j}|N'|^2,\qquad
+ \int_{I_j}|C'|^2\le C_\lambda\int_{I_j}
+                  (|N'|^2+h_j^2|N''|^2).
+\]
+Sum over the cells. Thus $C\in H^1(0,h_0)$, and its continuous
+endpoint trace must be zero because $C/h\in L^2$.
 \end{proof}
 
 \begin{lemma}[First transport gain]
@@ -905,8 +938,149 @@ Lemmas~\ref{lem:transport-first-gain}--\ref{lem:transport-h1-gain} are
 extracted from the proofs of the manuscript's
 Propositions~\texttt{prop:saddle-gains}, \texttt{prop:separatrix-h1},
 \texttt{prop:dd-quotient-domain} and \texttt{prop:mixed-quotient-domain}. The
-hypotheses above are a first guess at what those proofs actually use and must
-be pinned down before formalization; hence \verb|\notready|. Getting these
-statements right is probably the single most useful restructuring for the
-paper as well.
+generic weighted hypotheses above are a first guess at what those proofs
+actually use and must be pinned down before formalization; hence
+\verb|\notready|. The mixed zero-jet remainder satisfies the stronger
+forcing hypotheses of Lemma~\ref{lem:weighted-transport-h1}, treated
+separately below.
+\end{remark}
+
+\section{Transport with weighted forcing}
+
+\begin{lemma}[Weighted numerator estimates]
+\label{lem:weighted-numerator-estimates}
+\uses{def:transport-pair, def:numerator, def:sobolev-local}
+For a transport pair near the separatrix, suppose
+$f/d^2,\nabla f/d^2\in L^2$ near the saddles.
+For a fixed quarter character, put
+$B(h)=\int_{-L(h)}^0f(\gamma_h(t))e^{-i\lambda t}\,dt$.
+Then $N,B$ are locally absolutely continuous, $N'$ is locally absolutely
+continuous, and
+\[
+ N',\ B',\ hN''\in L^2(0,h_0)
+\]
+for sufficiently small $h_0>0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-corner-trace, lem:trace-h2, lem:trace-l2,
+  lem:period-derivative-bounds, lem:period-orbit, lem:coarea,
+  lem:orbit-level-derivatives, lem:orbit-time-integrals}
+Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
+spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.
+On compact level intervals the Sobolev chain rule and the traces on the
+endpoint curves justify two weak differentiations. In the formulas below,
+gradient values at $p_\pm$ mean Sobolev traces, not arbitrary point values.
+
+The endpoint curves are fixed rays from their saddles, with
+$r=2\arcsin\sqrt h$, hence $h=\sin^2(r/2)$ and $dh\asymp r\,dr$.
+Apply Lemma~\ref{lem:weighted-corner-trace} to $f/r$ and to each
+component of $\nabla f$. The hypotheses and $f\in H^2$ give
+\[
+ \int_{\rm ray}\left(\frac{|f|^2}{r^3}
+                    +\frac{|\nabla f|^2}{r}\right)\,dr<\infty .
+\]
+Thus $|f(p_\pm)|^2/h^2$ and $|\nabla f(p_\pm)|^2/h$ are integrable in $h$.
+
+For any subinterval $J\subset[-L,L]$, Cauchy--Schwarz and
+$|\partial_h\gamma_h|\le C/d$ give
+\[
+ \left|\int_J\partial_hf_h\,e^{-i\lambda t}\,dt\right|^2
+ \le C\left(\int_{-L}^L\frac{|\nabla f_h|^2}{d^4}\,dt\right)
+        \left(\int_{-L}^Ld^2\,dt\right)
+ \le C\int_{-L}^L\frac{|\nabla f_h|^2}{d^4}\,dt .
+\]
+The moving-endpoint terms in $N'$ and $B'$ are bounded by
+$C|f(p_\pm)|/h$. Coarea therefore gives $N',B'\in L^2$.
+
+For the second derivative, put $g(h,t)=f_h(t)e^{-i\lambda t}$ and
+write superscripts $\pm$ for evaluation at $t=\pm L(h)$. Leibniz gives
+\[
+ N''=\int_{-L}^L g_{hh}\,dt+2L'(g_h^++g_h^-)
+                  +(L')^2(g_t^+-g_t^-)+L''(g^++g^-).
+\]
+Here $|\partial_h^2f_h|\le C(|D^2f_h|+|\nabla f_h|)/d^2$.
+Using $\int d^{-4}\,dt\le C/h^2$ and
+$|L'|\le C/h$, $|L''|\le C/h^2$ yields
+\[
+ h^2|N''|^2\le C\int_{-L}^L(|D^2f_h|^2+|\nabla f_h|^2)\,dt
+       +C\sum_\pm\left(\frac{|\nabla f(p_\pm)|^2}{h}
+                      +\frac{|f(p_\pm)|^2}{h^2}\right).
+\]
+The interior term is integrable by $H^2$ and coarea; the ray traces
+control both endpoint terms.
+\end{proof}
+
+\begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
+\label{lem:weighted-transport-h1}
+\uses{def:transport-pair, def:sobolev-local}
+If a transport pair near the separatrix satisfies
+$f/d^2,\nabla f/d^2\in L^2$ near the saddles, then $v/d^2\in L^2$
+near the saddles and $v\in H^1$ on each cell's separatrix neighbourhood.
+No elliptic relation $\Delta f=v$, reflection parity, zero forcing
+trace or zero midpoint value is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
+  lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
+  lem:reflection-algebra, lem:symmetries-commute,
+  lem:orbit-saddle-distance, lem:orbit-time-integrals,
+  lem:orbit-coordinate-gradients, lem:orbit-level-derivatives, lem:coarea}
+Decompose into the four quarter characters. Rotations preserve the
+weighted hypotheses. Numerator vanishing and phase-cell division give
+$C/h,C'\in L^2$. With $B$ from the preceding lemma,
+\[
+ A(h)=z_h(0)=ie^{2i\lambda L(h)}C(h)+iB(h)
+\]
+has $A'\in L^2$, since $L'C$ is controlled by $C/h$. Also $A\in L^2$:
+$B'$ is square integrable on a bounded interval, so $B$ is bounded
+once its value at one interior level is fixed.
+
+For the weighted vorticity estimate reconstruct from the nearer endpoint.
+Weighted Cauchy--Schwarz followed by Fubini gives
+\[
+ \int_{-L}^0 e^{-4t}\left|\int_{-L}^t
+          e^{i\lambda(t-u)}f_h(u)\,du\right|^2dt
+ \le\frac14\int_{-L}^0 e^{-4t}|f_h(t)|^2dt .
+\]
+The positive half has the analogous estimate with integration from $L$.
+Since $d\asymp e^{-|t|}$ and both endpoint values of $z_h$ have
+modulus $|C|$, variation of constants and $v_h=-\lambda z_h-f_h$ give
+\[
+ \int_{-L}^L\frac{|v_h|^2}{d^4}\,dt
+ \le C_\lambda\left(\frac{|C(h)|^2}{h^2}
+                   +\int_{-L}^L\frac{|f_h|^2}{d^4}\,dt\right).
+\]
+Integrate in $h$. This proves $v/d^2\in L^2$ without a pointwise
+forcing bound or a subcritical exponent.
+
+For the level derivative use midpoint reconstruction:
+\[
+ \partial_hz_h(t)=e^{i\lambda t}A'(h)
+       +i\int_0^t e^{i\lambda(t-u)}\partial_hf_h(u)\,du .
+\]
+The preceding lemma's subinterval estimate and $\int d^2\,dt\le C$
+control $d\,\partial_hz_h$ in $L^2(dh\,dt)$.
+Since $d|\partial_hf_h|\le C|\nabla f_h|$, the same holds for
+$d\,\partial_hv_h$.
+Finally $\partial_tv_h=i\lambda v_h-\partial_tf_h$ and
+$|\partial_tf_h|\le Cd|\nabla f_h|$ give
+$d^{-1}\partial_tv_h\in L^2$.
+The inverse-coordinate bounds give the physical weak gradient in $L^2$.
+At adjacent quarter boundaries the traces match by orbitwise absolute
+continuity of $z$ and $v=-\lambda z-f$; thus the quarters glue in $H^1$.
+Treat the other cells in the same coordinates and sum the character
+components. No assertion of zero edge trace is made.
+\end{proof}
+
+\begin{remark}[Digest note: the zero-jet specialization]
+The mixed remainder obeys the stronger estimates
+$f/d^3,\nabla f/d^2,D^2f/d\in L^2$ from the saddle jet.
+Thus Lemma~\ref{lem:weighted-transport-h1} applies directly; neither a
+global elliptic equation for the remainder nor the tentative general
+$H^1$ gain is needed. The twice-differentiated numerator also needs
+$L''=O(h^{-2})$, which does not follow by differentiating the stated
+first-derivative asymptotic remainder. Lemma~\ref{lem:period-derivative-bounds}
+supplies it directly from the regular period integral.
 \end{remark}

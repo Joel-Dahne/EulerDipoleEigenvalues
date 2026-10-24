@@ -30,21 +30,23 @@ weights and local versus global regularity.
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
-  transport gains and weighted saddle/quotient domains need digestion.
-  The gains must cover all four rotation characters; implemented Melnikov
-  and pairing limits only cover ±1. Local elliptic regularity, weighted
-  corner traces and interval Hardy inputs remain open. The
-  [transport blueprint](../../blueprint/src/chapters/transport.tex) records
-  tentative gain hypotheses. Its zero-edge conclusion needs both zero
-  midpoint value and zero forcing trace. Elliptic-center regularity is
-  separate and no longer a prerequisite of either remaining sector exclusion.
+  first saddle gain, cylinder inverse and odd–odd weighted quotient work
+  need review. The mixed zero-jet case has a separate weighted-forcing H¹
+  derivation, with numerator and phase-cell estimates, not yet in Lean.
+  Generic gains remain tentative; zero-edge trace requires zero forcing
+  as well as zero midpoint value. All four rotation characters are needed;
+  implemented Melnikov/pairing results only accept ±1.
+  Local elliptic regularity, corner traces and interval Hardy inputs remain
+  open. Elliptic-center regularity is not a sector prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   outside the even–even route; inverse Hausdorff–Young or a compact-support
   Sobolev inequality are candidate approaches.
-- [Elliptic period identity and sharp asymptotics](../../blueprint/src/chapters/geometry.tex):
-  outside the even–even route. Sharp value/derivative remainders need a
-  quantified proof or precise reference; differentiating a value O-term is
-  not sufficient.
+- [Period estimates](../../blueprint/src/chapters/geometry.tex): coarse
+  derivative bounds from the regular integral suffice for the transport
+  gains; they still need Lean proofs. The elliptic identity and sharp
+  asymptotics remain in the odd–odd finite-part route, not mixed or even–even.
+  Sharp remainders need a quantified proof or precise reference;
+  differentiating a value O-term is not sufficient.
 - `TransportOperator.lean`: self-adjointness/core/group results remain
   admitted and are not prerequisites of the even–even proof.
 - [Certificates](../../blueprint/src/chapters/certificates.tex): odd–odd/mixed

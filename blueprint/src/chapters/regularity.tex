@@ -165,16 +165,33 @@ including the corners (manuscript \texttt{(prop:mixed-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{cor:mixed-saddle-jet, lem:saddle-normal-form, lem:transport-second-gain, lem:transport-h1-gain, lem:elliptic-local, lem:hardy-1d}
+\uses{cor:mixed-saddle-jet, lem:saddle-normal-form,
+  lem:weighted-transport-h1, lem:elliptic-local, lem:hardy-1d,
+  lem:weighted-corner-trace}
 Choose a smooth $z_0$, affine near each saddle, whose linear term solves
 $(H_s-\lambda)z_0=\ell$ (possible since $H_s$ has eigenvalues $\pm i$ on linear
-functions). Then $(\omega_0,\psi_0)=(-Hz_0,(H-\lambda)z_0)$ is a transport pair,
-and $\Delta\psi_0=\omega_0$ where $z_0$ is affine (the coefficients of $L_0$
-are first Laplace eigenfunctions). The remainder pair $(v,f)=(\omega-\omega_0,
-\psi-\psi_0)$ has zero jet. Apply the transport gains to $(v,f)$. On an odd
-edge the boundary trace satisfies $-i\partial_t\omega=\lambda\omega$, hence
-equals $ce^{i\lambda t}$, and the angular trace inequality forces $c=0$.
-Division by the normal coordinate gives the quotients.
+functions). Then $(\omega_0,\psi_0)=(-Hz_0,(H-\lambda)z_0)$ is a transport pair.
+The cubic Taylor remainder of the dipole field gives
+$\psi_0=\ell+O(r^3)$ with the corresponding derivative bounds.
+The remainder pair $(v,f)=(\omega-\omega_0,\psi-\psi_0)$ therefore has zero jet:
+$f/d^3,\nabla f/d^2,D^2f/d\in L^2$ near the saddles.
+In particular $f/d^2,\nabla f/d^2\in L^2$.
+Lemma~\ref{lem:weighted-transport-h1} gives $v/d^2\in L^2$ and
+cellwise $H^1$, hence cellwise $\omega\in H^1$.
+On an odd edge the boundary trace satisfies
+$-i\partial_t\omega=\lambda\omega$, hence equals $ce^{i\lambda t}$.
+Since $\omega_0=O(d)$ and $v/d^2\in L^2$, one has $\omega/d\in L^2$;
+Lemma~\ref{lem:weighted-corner-trace} forces $c=0$.
+The odd traces are zero and the even traces agree by reflection, so
+gluing and removability of the saddle points give $H^1$ across the separatrix.
+Local elliptic regularity gives $\psi\in H^3$ near the separatrix.
+Normal Hardy division of the zero-trace $H^1$ vorticity gives $\nu\in L^2$.
+For the odd $H^3$ stream function, differentiate
+$\psi(u,v)/u=\int_0^1\psi_u(tu,v)\,dt$ through order two;
+Minkowski uses only the integrable dilation factor $t^{-1/2}$.
+The smooth factor between $u$ and $\cos a$ gives the $H^2$ quotient.
+Away from the odd edges, the original $\psi\in H^2$ suffices,
+including at the elliptic center.
 \end{proof}
 
 \begin{remark}[The mixed quotient is not a transport pair]
