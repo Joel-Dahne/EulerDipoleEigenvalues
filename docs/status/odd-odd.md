@@ -7,13 +7,17 @@
 
 `odd_odd_exclusion` is stated with an admitted proof. The blueprint now
 derives the weighted virial through its renormalized separatrix limit,
-conditional on the quotient-domain conclusions. These derivations are not
+conditional on the quotient-domain conclusions. The first two transport
+gains and cylinder inverse now also have explicit blueprint derivations,
+giving the odd–odd quadratic saddle jet. None of these new derivations is
 in Lean. The quotient regularity and the rest of the exclusion remain
 unverified.
 
 ## Main priority when work resumes
 
-Audit `prop:dd-quotient-domain` and its transport/saddle prerequisites.
+Continue with `prop:dd-separatrix-h1`, then the logarithmically weighted
+vorticity-gradient and division steps in `prop:dd-quotient-domain`.
+The saddle bootstrap does not yet give these H¹/quotient estimates.
 For the virial limit, the additional regularity needed is even global H²
 for `φ`, `ν/d ∈ L²`, and the quotient transport equation; the separate
 weighted corner remainder estimates are not needed there.
@@ -26,10 +30,12 @@ canonical pairing only along good levels. The scalar finite part fixes
 the edge endpoint constant `log 8 / 2`. See `prop:dd-virial`.
 
 Other inputs needing review include the Picone/current argument, the weighted
-Poincaré inequality, and constants in the corrected boundary estimate. The shared transport gains remain tentative;
-unlike mixed, this sector uses only the existing ±1 rotation characters.
-See [shared infrastructure](shared.md). Exact certificate verification is also pending.
-The detailed questions live in the blueprint's digest notes.
+Poincaré inequality, and constants in the corrected boundary estimate. The
+generic H¹ transport gain remains tentative. The first two transport gains
+handle all four characters through local endpoint formulas; the quotient's
+Melnikov/pairing application needs only the implemented ±1 characters.
+See [shared infrastructure](shared.md). Exact certificate verification is also
+pending. The detailed questions live in the blueprint's digest notes.
 
 The finite parts now use only the leading period value asymptotic, derived
 directly from the defining integral in `lem:period-leading-asymptotic`;

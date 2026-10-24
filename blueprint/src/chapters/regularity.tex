@@ -15,29 +15,56 @@ In this chapter $d$ is distance to the saddle set and $r$ distance to a fixed sa
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
 \uses{def:sobolev-local}
-\notready
-Let $u\in H^2$ near a saddle with a prescribed reflection parity in the two
-separatrix directions, and $\Delta u=F$. Let $a>1$ avoid the indicial roots
-allowed by the parity (the angular frequencies $m$ of the parity class). If
-$r^{1-a}F\in L^2(r\,dr\,d\theta)$ (that is, $r^{2-a}F\in L^2$ on the
-logarithmic cylinder), then $u=u_0+\mathfrak h$, where $\mathfrak h$ is
-harmonic near the saddle with Taylor series containing only the allowed
-degrees, and
+Let $u\in H^2$ on a disk about a saddle, with a prescribed reflection parity
+in two orthonormal separatrix coordinates, and $\Delta u=F$. Let $a>1$
+avoid the nonnegative angular frequencies allowed by the parity. If
+$r^{1-a}F\in L^2(r\,dr\,d\theta)$, equivalently
+$r^{2-a}F\in L^2(dr/r\,d\theta)$, then on a smaller disk
+$u=u_0+\mathfrak h$, where $\mathfrak h$ is harmonic with Taylor series
+containing only the allowed degrees, and
 \[
   \int\Big(\frac{|u_0|^2}{r^{2a+2}}+\frac{|\nabla u_0|^2}{r^{2a}}
-           +\frac{|D^2u_0|^2}{r^{2a-2}}\Big)\,dx\,dy<\infty
+           +\frac{|D^2u_0|^2}{r^{2a-2}}\Big)\,dx\,dy<\infty .
 \]
+Moreover $u_0$ has a continuous representative with $|u_0|\le Cr^a$
 (manuscript \texttt{(eq:subcritical-elliptic-norm)}).
 \end{lemma}
 
 \begin{proof}
-With $u=r^aV(-\log r,\theta)$, $\Delta(r^aV)=r^{a-2}((\partial_t-a)^2+\partial_\theta^2)V$.
-On the allowed angular modes the multiplier has squared modulus
-$(\xi^2+(m-a)^2)(\xi^2+(m+a)^2)$, bounded below, so the operator has a bounded
-inverse $L^2\to H^2$ on the full cylinder. Invert on the cut-off right side;
-cutting the output off inside radius $\epsilon$ produces Laplacian errors
-$O(\epsilon^{a-1})$ in $L^2$, so no distribution at the saddle appears and the
-difference from $u$ is harmonic.
+Choose a radial cutoff $\chi$ supported in the original disk and equal to
+one on a smaller disk. With $t=-\log r$, extend
+$G=r^{2-a}\chi F$ by zero to the full cylinder $\R\times S^1$.
+It is in $L^2(dt\,d\theta)$ by the hypothesis. For
+$\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
+in $t$ and angular mode $m$ give
+\[
+ |(i\xi-a)^2-m^2|^2
+ =\bigl(\xi^2+(m-a)^2\bigr)\bigl(\xi^2+(m+a)^2\bigr)
+ \ge c_a(1+\xi^2+m^2)^2
+\]
+on the allowed modes. The positive constant exists because those modes
+are discrete and none has $|m|=a$; for large $|m|+|\xi|$ the ratio is
+bounded below directly. Thus inversion gives $V\in H^2$ on the full
+cylinder, with $\mathcal P_aV=G$, preserving the reflection parity.
+The Fourier Cauchy--Schwarz estimate gives $\|V\|_\infty\le C\|V\|_{H^2}$,
+since $\sum_m\int_\R(1+\xi^2+m^2)^{-2}d\xi<\infty$.
+
+Set $u_0=r^aV(-\log r,\theta)$. Polar differentiation gives the displayed
+weighted norms and $|u_0|\le Cr^a$, while
+$\Delta u_0=\chi F$ off the origin. It remains to exclude a distribution
+at the origin. Let $\eta_\epsilon$ vanish on $r<\epsilon$ and equal one on
+$r>2\epsilon$. On the intervening annulus $A_\epsilon$,
+\[
+ \|[\Delta,\eta_\epsilon]u_0\|_2
+ \le C\epsilon^{a-1}\left(
+   \|\nabla u_0/r^a\|_{L^2(A_\epsilon)}
+  +\|u_0/r^{a+1}\|_{L^2(A_\epsilon)}\right)\longrightarrow0.
+\]
+The same estimates on the first and second derivatives show
+$\eta_\epsilon u_0\to u_0$ in physical $H^2$ on the smaller disk; here
+$a>1$ is essential. Hence $\Delta u_0=F$ distributionally there.
+The difference $u-u_0$ is weakly harmonic, so Weyl's lemma makes it smooth
+and harmonic across the origin. Its parity restricts the Taylor degrees.
 \end{proof}
 
 \section{Saddle estimates}
@@ -51,18 +78,19 @@ Every eigenfunction satisfies $\omega/d\in L^2$ (manuscript
 
 \begin{proof}
 \uses{lem:transport-first-gain, lem:transport-pair-eigen,
-  lem:reflection-algebra, lem:symmetries-commute}
-Apply Lemma~\ref{lem:transport-first-gain} to $(\omega,\psi)$ after the
-four-character decomposition
-$P_\kappa=\frac14\sum_{j=0}^3\kappa^{-j}(R^*)^j$,
-$\kappa\in\{1,-1,i,-i\}$. The two-character decomposition of
-Lemma~\ref{lem:rotation-characters} alone does not cover mixed sectors.
+ lem:symmetries-commute}
+Lift $(\omega,\psi)$ to bounded orbit neighbourhoods of the closed cells
+and apply Lemma~\ref{lem:transport-first-gain}. For the negative cell use a
+separatrix reflection, which preserves the eigenvalue equation and the
+saddle distance. These estimates cover all torus saddle neighbourhoods;
+away from them the conclusion follows from $\omega\in L^2$.
+The four-character decomposition needed for arbitrary parity is included
+in the transport lemma.
 \end{proof}
 
 \begin{proposition}[Odd--odd saddle estimates]
 \label{prop:saddle-dd}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local}
-\notready
 In the odd--odd sector, $\omega/d^2\in L^2$, and at each saddle there is a
 unique homogeneous harmonic quadratic $q=a\,uv$ (in the coordinates of
 Lemma~\ref{lem:saddle-normal-form}) such that
@@ -74,15 +102,46 @@ Lemma~\ref{lem:saddle-normal-form}) such that
 \end{proposition}
 
 \begin{proof}
-\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain, lem:transport-pair-eigen, lem:saddle-normal-form}
-Apply Lemma~\ref{lem:cylinder-inverse} with $a=2-\delta$: the first gain makes
-$r^\delta\omega$ square integrable on the cylinder, so $\psi$ satisfies the
-subcritical weighted estimate and $|\psi|\le Cr^{2-\delta}$. Then
-Lemma~\ref{lem:transport-second-gain} gives $\omega/d^2\in L^2$. Finally apply
-Lemma~\ref{lem:cylinder-inverse} with $a=3$ to $r^{-1}\omega$ and subtract the
-degree-two term of the harmonic remainder. Uniqueness: a nonzero quadratic has
-infinite norm in the first term.
+\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain,
+ lem:transport-pair-eigen, lem:saddle-normal-form, lem:stream-sector}
+Fix $0<\delta<1$ and apply Lemma~\ref{lem:cylinder-inverse} with
+$a=2-\delta$. Its physical forcing hypothesis is
+$r^{\delta-1}\omega\in L^2$, supplied by the first gain. Odd--odd reflection
+parity permits only angular degrees $2,4,\ldots$, all strictly larger than
+$a$. Every term of the harmonic remainder therefore has the same finite
+weighted norm as $u_0$. Consequently
+\[
+ |\psi|\le Cr^{2-\delta},\qquad
+ \nabla\psi/r^{2-\delta}\in L^2
+\]
+near each saddle. The pointwise bound uses the cylinder inverse's bound
+on $u_0$ and the harmonic remainder's quadratic vanishing.
+Apply Lemma~\ref{lem:transport-second-gain} to $(\omega,\psi)$ on the cells;
+away from the saddles its weighted forcing hypotheses follow from ordinary
+$H^2$ regularity. This gives $\omega/d^2\in L^2$.
+
+Now apply the cylinder inverse with $a=3$. Its physical hypothesis is
+$\omega/r^2\in L^2$, equivalently $r^{-1}\omega\in L^2(dr/r\,d\theta)$,
+and $3$ avoids all permitted angular degrees. Subtract the degree-two term
+$q$ of the harmonic remainder. The remaining harmonic terms have degree
+at least four, so they have finite weighted norm for $a=3$. The permitted
+quadratic is $q=a_Puv$. If two quadratics worked, their difference would
+have finite $\int|q|^2r^{-8}dx\,dy$, impossible for a nonzero homogeneous
+quadratic. This proves uniqueness.
 \end{proof}
+
+\begin{remark}[Digest note: the saddle bootstrap and its weights]
+The first transport gain, the subcritical cylinder inverse, and the second
+transport gain establish the saddle jet without any $H^1$ regularity of
+$\omega$. The two cylinder steps use different physical weights:
+$r^{\delta-1}\omega$ for $a=2-\delta$, and $r^{-2}\omega$ for $a=3$.
+The expression $r^{-1}\omega$ in the manuscript's last step is a cylinder
+$L^2$ input, not a physical-area $L^2$ input.
+The subsequent $H^1$ and logarithmically weighted transport arguments in
+Propositions~\ref{prop:dd-separatrix-h1} and
+\ref{prop:dd-quotient-domain} are separate steps; the saddle bootstrap
+does not supply them.
+\end{remark}
 
 \begin{corollary}[Mixed saddle jet]
 \label{cor:mixed-saddle-jet}

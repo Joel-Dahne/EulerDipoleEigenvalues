@@ -29,12 +29,13 @@ weights and local versus global regularity.
 
 ## Next session
 
-1. **Mathematical review first:** audit the first saddle gain
-   (`lem:transport-first-gain`, `prop:saddle-first-gain`) and cylinder inverse
-   (`lem:cylinder-inverse`) in the [transport](../../blueprint/src/chapters/transport.tex)
-   and [regularity](../../blueprint/src/chapters/regularity.tex) chapters.
-   Review the new weighted-forcing statements before translating them to Lean;
-   their blueprint derivations are not formal proofs.
+1. **Mathematical review first:** continue the odd–odd H¹ separatrix gain
+   and logarithmically weighted quotient estimates in the
+   [transport](../../blueprint/src/chapters/transport.tex) and
+   [regularity](../../blueprint/src/chapters/regularity.tex) chapters.
+   The first two transport gains and cylinder inverse now have explicit
+   blueprint derivations, not Lean proofs. Review the weighted-forcing
+   statements before translating them to Lean as well.
 2. **Bounded shared formalization:** coarse period derivative bounds
    (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
    Hardy division (`lem:phase-cell-division`) are reusable first targets.
@@ -46,12 +47,14 @@ weights and local versus global regularity.
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
-  first saddle gain, cylinder inverse and odd–odd weighted quotient work
-  need review. The mixed zero-jet case has a separate weighted-forcing H¹
-  derivation, with numerator and phase-cell estimates, not yet in Lean.
-  Generic gains remain tentative; zero-edge trace requires zero forcing
-  as well as zero midpoint value. All four rotation characters are needed;
-  implemented Melnikov/pairing results only accept ±1.
+  odd–odd H¹ and weighted quotient work still need review. The first two
+  gains now use a local endpoint formula, phase-cell Hardy, and smooth
+  transport-pair subtraction for nonzero saddle values. The cylinder inverse
+  includes its physical H² removal argument. These derivations, and the
+  mixed zero-jet weighted-forcing H¹ route, are not yet in Lean.
+  The generic H¹ gain remains tentative; zero-edge trace requires zero forcing
+  as well as zero midpoint value. The first gains cover all four characters
+  without Melnikov; implemented Melnikov/pairing results still only accept ±1.
   Local elliptic regularity, corner traces and interval Hardy inputs remain
   open. Elliptic-center regularity is not a sector prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):

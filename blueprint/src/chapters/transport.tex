@@ -796,9 +796,41 @@ Definition~\ref{def:period}, let
   N(h)=\int_{-L(h)}^{L(h)}f(\gamma_h(t))e^{-i\lambda t}\,dt,\qquad
   D(h)=\kappa-e^{2i\lambda L(h)},\qquad C(h)=N(h)/D(h).
 \]
-Variation of constants gives $|z_h(-L)|=|C(h)|$ and $z_h(L)=\kappa z_h(-L)$
-(manuscript \texttt{(eq:quarter-transport-divisor)}).
 \end{definition}
+
+\begin{lemma}[Quarter-orbit endpoint formula]
+\label{lem:quarter-endpoint-formula}
+\uses{def:numerator}
+On a level interval $(0,h_0)$ whose orbit annulus lies in the pair's
+domain, for almost every $h$ the transport unknown has a locally absolutely
+continuous orbit representative $Z_h$, with
+\[
+ Z_h(L)=\kappa Z_h(-L),\qquad
+ D(h)Z_h(-L)=ie^{i\lambda L(h)}N(h).
+\]
+In particular $|Z_h(-L)|=|C(h)|$ when $D(h)\ne0$. The endpoint values
+$Z_h(\pm L(h))$ are locally square integrable in $h\in(0,h_0)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea, lem:transport-unknown,
+ lem:period-orbit, lem:orbit-coordinates-area}
+Orbit restriction on a countable exhaustion by compact level annuli gives
+$Z_h'=i(\lambda Z_h+f_h)=-iv_h$ almost everywhere.
+Coarea transfers the quarter character of $z=-(v+f)/\lambda$ to almost
+every orbit. Its absolutely continuous representative therefore satisfies
+the character relation at every time. Integrating
+$(e^{-i\lambda t}Z_h)'=if_he^{-i\lambda t}$ on $[-L,L]$ gives the formula.
+
+On any compact level interval the lengths $2L(h)$ have positive lower and
+finite upper bounds. The one-dimensional trace estimate gives
+\[
+ |Z_h(-L)|^2+|Z_h(L)|^2
+ \le C\int_{-L}^L(|Z_h|^2+|v_h|^2)dt.
+\]
+The right side is integrable in $h$ by coarea, since $z,v\in L^2$.
+No spatial trace of $v$ on an endpoint ray is assumed.
+\end{proof}
 
 \begin{lemma}[Numerator vanishes at divisor zeros]
 \label{lem:numerator-zeros}
@@ -810,13 +842,19 @@ around $h_j$ one has $h\sim h_j$ and $|D(h)|\ge c_\lambda|h-h_j|/h_j$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-regularity, lem:period-coarse, lem:period-derivative-bounds,
-  lem:resonant-vanishing, lem:coarea}
-The endpoint traces of $z_h$ are locally square integrable in $h$, so
-$|N/D|$ cannot blow up like $1/|h-h_j|$; continuity of $N$ forces $N(h_j)=0$.
+\uses{lem:quarter-endpoint-formula, lem:period-regularity,
+ lem:period-coarse, lem:period-derivative-bounds, lem:coarea,
+ lem:lift-sobolev-local}
+On compact level intervals the Sobolev chain rule and the moving-endpoint
+formula give $N\in H^1$; here $f\in H^2$ and the endpoint values of $f$
+are those of its continuous representative. If $N(h_j)\ne0$ at a zero of
+$D$, continuity of $N$ and $|D(h)|\le C|h-h_j|$ would force
+$|Z_h(-L)|\ge c/|h-h_j|$ almost everywhere nearby, contradicting
+Lemma~\ref{lem:quarter-endpoint-formula}.
 Simplicity and geometric spacing follow by integrating
-$c/h\le-L'(h)\le C/h$. Only ratio bounds between consecutive zeros,
-not an exact geometric progression, are asserted.
+$c/h\le-L'(h)\le C/h$. On a phase cell, the sine bound gives
+$|D(h)|\ge c_\lambda|h-h_j|/h_j$. Only ratio bounds between consecutive
+zeros, not an exact geometric progression, are asserted.
 \end{proof}
 
 \begin{lemma}[Phase-cell division]
@@ -849,46 +887,138 @@ Sum over the cells. Thus $C\in H^1(0,h_0)$, and its continuous
 endpoint trace must be zero because $C/h\in L^2$.
 \end{proof}
 
-\begin{lemma}[First transport gain]
-\label{lem:transport-first-gain}
-\uses{def:transport-pair}
-\notready
-If $(v,f)$ is a transport pair near the separatrix with $f\in H^2$, then
-$v/d\in L^2$ near the saddles. No elliptic relation between $v$ and $f$ is
-used.
+\begin{lemma}[First transport gain with zero saddle values]
+\label{lem:transport-first-gain-zero}
+\uses{def:transport-pair, def:cell-arcs}
+Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
+the closed cell square. If the continuous representative of $f$ vanishes
+at its four corners, then $v/d\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:numerator-zeros, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:hardy-1d, lem:sobolev-holder, lem:local-to-global}
-First assume $f$ vanishes at the saddles. Differentiating $N$ (including the
-moving endpoints) gives
-$|N'(h)|^2\le Ch^{-1}\int_{-L}^{L}|\nabla f(\gamma_h)|^2\,dt+Ch^{\alpha-2}$
-(manuscript \texttt{(eq:first-numerator-estimate)}). Hardy's inequality on
-each side of $h_j$ in each phase cell gives
-$\int_{I_j}|N/D|^2\,dh/h\le C\int_{I_j}\!\int|\nabla f_h|^2\,dt\,dh+Ch_j^\alpha$,
-which is summable. Reconstruction of $v_h$ from the endpoint value
-gives $|v_h(t)|\le C|N/D|+Ce^{-\alpha|t|}$, and
-$\int_{-L}^Ld^{-2}dt\le C/h$ completes the estimate. For nonzero saddle values
-subtract a smooth function $a(t)$ with the same tail values (these satisfy
-$a_+=\kappa a_-$); the same estimates apply to the difference.
+\uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
+ lem:orbit-saddle-distance, lem:orbit-level-derivatives,
+ lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
+ lem:hardy-endpoint, lem:sobolev-holder, lem:local-to-global,
+ lem:orbit-coordinates-area, lem:reflection-algebra, lem:symmetries-commute}
+Intersect the four rotated neighbourhoods and decompose into quarter
+characters $\kappa\in\{1,-1,i,-i\}$. The projected forcings still vanish
+at the corners. Work with one character and the base quarter; rotations
+supply the other quarters.
+
+Localizing the $H^2$ forcing near the closed square gives a uniform
+$1/2$-H\"older bound. Thus, with $p_\pm=\gamma_h(\pm L(h))$,
+\[
+ |f_h(t)|\le Ce^{-|t|/2},\qquad |f(p_\pm)|\le Ch^{1/4}.
+\]
+The weak moving-endpoint derivative is
+\[
+ N'=\int_{-L}^L\nabla f(\gamma_h)\cdot\partial_h\gamma_h\,e^{-i\lambda t}dt
+       +L'\bigl(f(p_+)e^{-i\lambda L}+f(p_-)e^{i\lambda L}\bigr).
+\]
+Cauchy--Schwarz, $|\partial_h\gamma_h|\le C/d$,
+$\int d^{-2}dt\le C/h$ and $|L'|\le C/h$ give
+\[
+ |N'(h)|^2\le\frac Ch E(h)+Ch^{-3/2},\qquad
+ E(h)=\int_{-L}^L|\nabla f(\gamma_h(t))|^2dt.
+\]
+Choose $h_0$ at a phase-cell endpoint. On $I_j$, the divisor lower bound
+and endpoint Hardy on either side of $h_j$ give
+\[
+ \int_{I_j}\frac{|C(h)|^2}{h}dh
+ \le C_\lambda h_j\int_{I_j}|N'|^2dh
+ \le C_\lambda\int_{I_j}E(h)dh+C_\lambda h_j^{1/2}.
+\]
+Coarea makes $E$ integrable, and geometric spacing makes
+$\sum_jh_j^{1/2}<\infty$. Thus $C/\sqrt h\in L^2(0,h_0)$.
+
+Reconstruct $z_h$ from $-L$ for $t\le0$ and from $L$ for $t\ge0$.
+The endpoint formula and the exponential forcing bound give
+$|v_h(t)|\le C_\lambda|C(h)|+Ce^{-|t|/2}$. Consequently
+\[
+ \int_{-L}^L\frac{|v_h|^2}{d^2}dt
+ \le C_\lambda\frac{|C(h)|^2}{h}+Ch^{-1/2}.
+\]
+For the last term use $d\asymp e^{-|t|}$ and $e^L\le C/\sqrt h$.
+Both terms are integrable in $h$; coarea gives the conclusion near the
+cell's corners. Away from them $d$ is bounded below and $v\in L^2$.
 \end{proof}
+
+\begin{lemma}[First transport gain]
+\label{lem:transport-first-gain}
+\uses{def:transport-pair, def:cell-arcs}
+Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
+the closed cell square. Then $v/d\in L^2(\Cell)$. No elliptic relation
+between $v$ and $f$, or vanishing saddle value of $f$, is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-first-gain-zero, lem:transport-unknown}
+Choose disjoint smooth cutoffs $\rho_P$ supported near the four corners
+inside the given neighbourhood, with $\rho_P=1$ on smaller neighbourhoods.
+For the continuous saddle values $c_P=f(P)$ put
+\[
+ z_*=-\lambda^{-1}\sum_Pc_P\rho_P,\qquad
+ v_*=-Hz_*,\qquad f_*=(H-\lambda)z_*.
+\]
+These are smooth with compact support. Where $\rho_P=1$, $z_*$ is constant,
+so $v_*=0$ and $f_*=c_P$. Moreover
+$H(v_*+f_*)=H(-\lambda z_*)=\lambda v_*$.
+Thus $(v-v_*,f-f_*)$ is a transport pair whose forcing vanishes at every
+corner. Lemma~\ref{lem:transport-first-gain-zero} applies, and
+$v_*/d\in L^2$ because $v_*$ vanishes near the corners.
+\end{proof}
+
+\begin{remark}[Digest note: removing nonzero saddle values]
+The manuscript subtracts a time profile with constant tails. The spatial
+construction above instead subtracts an actual smooth transport pair on
+the original neighbourhood. It preserves the $H^2$ forcing and $L^2$
+unknown hypotheses explicitly and avoids any assumption that an arbitrary
+time-profile subtraction extends smoothly through a saddle.
+Neither argument needs an elliptic relation or a Melnikov statement for
+the $\pm i$ characters; the resonant-zero input here is the local endpoint
+formula, not the separatrix Melnikov limit.
+\end{remark}
 
 \begin{lemma}[Second transport gain]
 \label{lem:transport-second-gain}
-\uses{def:transport-pair}
-\notready
-Let $0<\delta<1$. If in addition $|f|\le Cd^{2-\delta}$ near the saddles and
-$\int_0^{h_0}\!\int_{-L}^{L}|\nabla f(\gamma_h(t))|^2d^{-(4-2\delta)}\,dt\,dh<\infty$,
-then $v/d^2\in L^2$ near the saddles.
+\uses{def:transport-pair, def:cell-arcs}
+Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
+the closed cell square, and let $0<\delta<1$. If
+$|f|\le Cd^{2-\delta}$ near the corners and
+$\nabla f/d^{2-\delta}\in L^2(\Cell)$, then
+$v/d^2\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-first-gain, lem:numerator-zeros, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals, lem:hardy-1d}
-Now $|N'|^2\le C\int|\nabla f_h|^2d^{-(4-2\delta)}\,dt+Ch^{-\delta}$, so
-$N'\in L^2$, and the phase-cell Hardy inequality with weight $h^{-2}$ gives
-$\int_{I_j}|N/D|^2\,dh/h^2\le C\int_{I_j}|N'|^2$. Reconstruction has forcing
-tail $Ce^{-(2-\delta)|t|}$, whose squared $d^{-4}$ integral is $O(h^{-\delta})$,
-while $\int d^{-4}dt=O(h^{-2})$.
+\uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
+ lem:orbit-saddle-distance, lem:orbit-level-derivatives,
+ lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
+ lem:hardy-endpoint, lem:orbit-coordinates-area,
+ lem:reflection-algebra, lem:symmetries-commute}
+Decompose into quarter characters as above; the weighted hypotheses are
+preserved by rotation. In the differentiated numerator, Cauchy--Schwarz
+with complementary weight $d^{2-2\delta}$ gives
+\[
+ |N'(h)|^2\le CE_\delta(h)+Ch^{-\delta},\qquad
+ E_\delta(h)=\int_{-L}^L\frac{|\nabla f(\gamma_h(t))|^2}{d^{4-2\delta}}dt.
+\]
+Here $\int d^{2-2\delta}dt$ is bounded since $\delta<1$; the endpoint term
+uses $|f(p_\pm)|\le Ch^{1-\delta/2}$. By coarea and $\delta<1$,
+$N'\in L^2(0,h_0)$. On a phase cell the divisor bound and Hardy give
+\[
+ \int_{I_j}\frac{|C(h)|^2}{h^2}dh
+ \le C_\lambda\int_{I_j}|N'|^2dh.
+\]
+The pointwise forcing bound gives tails $Ce^{-(2-\delta)|t|}$.
+Reconstruction from the nearer endpoint therefore yields
+\[
+ \int_{-L}^L\frac{|v_h|^2}{d^4}dt
+ \le C_\lambda\frac{|C(h)|^2}{h^2}+Ch^{-\delta}.
+\]
+Indeed the squared tail times $d^{-4}$ is bounded by $Ce^{2\delta|t|}$,
+whose integral is $O(h^{-\delta})$. Sum over the phase cells and use
+coarea. Both terms are integrable because $0<\delta<1$.
 \end{proof}
 
 \begin{lemma}[$H^1$ transport gain]
@@ -934,15 +1064,14 @@ only cellwise $H^1$ and proves odd-edge vanishing separately.
 \end{remark}
 
 \begin{remark}[Digest note]
-Lemmas~\ref{lem:transport-first-gain}--\ref{lem:transport-h1-gain} are
-extracted from the proofs of the manuscript's
-Propositions~\texttt{prop:saddle-gains}, \texttt{prop:separatrix-h1},
-\texttt{prop:dd-quotient-domain} and \texttt{prop:mixed-quotient-domain}. The
-generic weighted hypotheses above are a first guess at what those proofs
-actually use and must be pinned down before formalization; hence
-\verb|\notready|. The mixed zero-jet remainder satisfies the stronger
-forcing hypotheses of Lemma~\ref{lem:weighted-transport-h1}, treated
-separately below.
+The first two gains above have explicit phase-cell proofs for transport
+pairs on a neighbourhood of the closed cell. The generic $H^1$ gain in
+Lemma~\ref{lem:transport-h1-gain}, extracted from the manuscript's
+Propositions~\texttt{prop:separatrix-h1} and
+\texttt{prop:dd-quotient-domain}, still needs its precise weighted
+hypotheses and boundary arguments pinned down; hence \verb|\notready|.
+The mixed zero-jet remainder satisfies the stronger forcing hypotheses
+of Lemma~\ref{lem:weighted-transport-h1}, treated separately below.
 \end{remark}
 
 \section{Transport with weighted forcing}

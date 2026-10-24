@@ -12,13 +12,14 @@ for the second mixed sector.
 
 The blueprint has local boundary-square and weighted-forcing H¹ derivations.
 The latter applies to the jet-subtracted mixed remainder without an elliptic
-relation. First saddle gain, the cylinder inverse, and paired flux remain
-unverified inputs. No new part of the exclusion is proved in Lean.
+relation. The shared first saddle gain and cylinder inverse now have explicit
+blueprint derivations, not Lean proofs. Paired flux remains unverified.
+No new part of the exclusion is proved in Lean.
 
 ## Priorities when work resumes
 
-- Review the first saddle gain and cylinder inverse that supply the linear
-  jet; formalize the weighted-forcing H¹ lemma, numerator estimates and
+- Reuse the shared saddle bootstrap for the linear jet; formalize its
+  inputs and the weighted-forcing H¹ lemma, numerator estimates and
   phase-cell division. The quotient by `cos a` is not a transport pair.
 - Extend Melnikov/pairing reuse to rotation characters ±i (the implemented
   results accept only ±1), or derive a half-orbit alternative.
