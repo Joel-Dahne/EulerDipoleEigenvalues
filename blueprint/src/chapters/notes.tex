@@ -7,14 +7,12 @@ once resolved; record the resolution in the relevant node.
 
 \section*{Gaps and unverified steps}
 \begin{enumerate}
-  \item \textbf{Odd--odd renormalized virial identity}
-        (Proposition~\ref{prop:dd-virial}). Annular conjugation and the local
-        Green calculation now give the truncated boundary integral
-        (Lemmas~\ref{lem:dd-weighted-first}--\ref{lem:dd-truncated-virial}).
-        The remaining gap is its separatrix limit: weighted quotient traces,
-        corner-tail control and matching the finite parts to
-        $-\tfrac83\sum Q_\lambda$. The quotient regularity used for this limit
-        also needs review.
+  \item \textbf{Odd--odd quotient regularity}
+        (Proposition~\ref{prop:dd-quotient-domain}). The weighted transport,
+        elliptic and division estimates establishing the global $H^2$
+        quotient and $\nu/d\in L^2$ still need review. The renormalized virial
+        limit is derived conditional on these conclusions in
+        Proposition~\ref{prop:dd-virial}; it does not prove them.
   \item \textbf{Transport lemmas used through proofs}
         (Chapter~\ref{chap:transport}). Several results apply ``the argument
         of'' earlier proofs to new pairs $(v,f)$. The general statements in
@@ -35,8 +33,10 @@ once resolved; record the resolution in the relevant node.
         from the independently proved saddle-distance estimate.
         Lemma~\ref{lem:period-derivative-bounds} gives the coarse derivative
         estimates needed for transport gains directly from the regular
-        integral. The elliptic identity and sharp remainders remain in
-        the odd--odd finite-part route, not the mixed or even--even graph.
+        integral. The odd--odd finite parts use only the leading value
+        asymptotic of Lemma~\ref{lem:period-leading-asymptotic}, also derived
+        from the defining integral. The elliptic identity and sharp
+        remainders are no longer sector prerequisites.
   \item \textbf{Weighted Poincar\'e inequality} (Lemma~\ref{lem:zonal-poincare}).
         The identification with zonal $S^3$ Laplacians is sketched only.
   \item \textbf{Constants in the $\kappa=-1$ boundary estimate}

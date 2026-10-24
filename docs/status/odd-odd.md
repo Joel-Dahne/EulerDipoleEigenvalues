@@ -5,37 +5,37 @@
 
 ## Current position
 
-`odd_odd_exclusion` is stated with an admitted proof. The blueprint review
-has derived the weighted annular/truncated virial and its boundary signs;
-these derivations are not yet in Lean. The full sector argument and its
-regularity prerequisites have not been verified.
+`odd_odd_exclusion` is stated with an admitted proof. The blueprint now
+derives the weighted virial through its renormalized separatrix limit,
+conditional on the quotient-domain conclusions. These derivations are not
+in Lean. The quotient regularity and the rest of the exclusion remain
+unverified.
 
 ## Main priority when work resumes
 
-Continue with the separatrix limit in `prop:dd-virial`: prove the weighted
-quotient gradient traces and corner-tail estimates, then match the cutoff
-finite parts to the edge forms. Review the quotient-domain hypotheses before
-using them for this limit.
+Audit `prop:dd-quotient-domain` and its transport/saddle prerequisites.
+For the virial limit, the additional regularity needed is even global H²
+for `φ`, `ν/d ∈ L²`, and the quotient transport equation; the separate
+weighted corner remainder estimates are not needed there.
 
-The annular L² identity transfers directly from the established unweighted
-virial by multiplication by `s = Ψ`; no new weighted mollifier or global
-quotient-domain theorem is needed there. The local Green identity yields
-the manuscript's boundary integral, with `n = ∇s/√r` pointing inward.
-The center boundary vanishes along a coarea-selected sequence using only
-the original inverse-Laplacian regularity. See `lem:dd-weighted-first`
-through `lem:dd-truncated-virial`.
+The even–even gradient traces apply to `φ` via the auxiliary vorticity
+`Δφ`. Hardy division controls the singular bulk gradient coefficient,
+and Hölder continuity controls the renormalized potential. This proves
+existence of a full bulk limit, which can then be identified using the
+canonical pairing only along good levels. The scalar finite part fixes
+the edge endpoint constant `log 8 / 2`. See `prop:dd-virial`.
 
-Other inputs needing review include the quotient domain and saddle regularity,
-the Picone/current argument, the weighted Poincaré inequality, and constants in
-the corrected boundary estimate. The shared transport gains remain tentative;
+Other inputs needing review include the Picone/current argument, the weighted
+Poincaré inequality, and constants in the corrected boundary estimate. The shared transport gains remain tentative;
 unlike mixed, this sector uses only the existing ±1 rotation characters.
 See [shared infrastructure](shared.md). Exact certificate verification is also pending.
 The detailed questions live in the blueprint's digest notes.
 
-The finite-part calculation retains the elliptic period formula and sharp
-asymptotics. Both Hölder and finite-p embeddings remain dependencies of the
-less-settled quotient argument pending review; do not remove them merely
-because even–even does not need both.
+The finite parts now use only the leading period value asymptotic, derived
+directly from the defining integral in `lem:period-leading-asymptotic`;
+they no longer depend on the elliptic identity or sharp derivative remainders.
+Both Hölder and finite-p embeddings remain dependencies of the less-settled
+quotient argument pending review.
 
 ## Where to work
 

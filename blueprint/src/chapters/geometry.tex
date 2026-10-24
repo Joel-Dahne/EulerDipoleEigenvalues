@@ -1617,6 +1617,35 @@ $\sin a=\sqrt{1-h^2}\sin\theta$, first short of the endpoint and then
 pass to the limit. This gives $2L=\mathbf K(1-h^2)$, hence $S=4\mathbf K$.
 \end{proof}
 
+\begin{lemma}[Leading separatrix asymptotic of the period]
+\label{lem:period-leading-asymptotic}
+\uses{def:period}
+As $h\to0^+$,
+\[
+ L(h)=\tfrac12\log(4/h)+o(1),\qquad S(h)=4\log(4/h)+o(1).
+\]
+\end{lemma}
+
+\begin{proof}
+In the defining integral for $L$, substitute $t=\cos a$ and put
+$A(t)=(1-t^2)^{-1/2}-1$. Then
+\[
+ L(h)=\tfrac12\log(1/h)
+ +\int_{\sqrt h}^1\frac{A(t)}{\sqrt{t^2-h^2}}\,dt+R(h),\qquad
+ R(h)=\int_{\sqrt h}^1\left(\frac1{\sqrt{t^2-h^2}}-\frac1t\right)dt.
+\]
+For $h\le1/2$ and $t\ge\sqrt h$, the integrand of $R$ lies between $0$
+and $Ch^2/t^3$, so $R(h)=O(h)$. The other integrand, extended by zero
+below $\sqrt h$, is bounded by $\sqrt2 A(t)/t$. This is integrable, and
+\[
+ \int_0^1\frac{A(t)}t\,dt
+ =\int_0^{\pi/2}\frac{1-\cos\theta}{\sin\theta}\,d\theta=\log2.
+\]
+Dominated convergence gives $L(h)-\tfrac12\log(1/h)\to\log2$.
+This uses neither the elliptic-integral identity nor a differentiated
+asymptotic remainder.
+\end{proof}
+
 \begin{lemma}[Sharp separatrix asymptotics of the period]
 \label{lem:period-asymptotics}
 \uses{def:period}
@@ -1642,10 +1671,11 @@ be obtained by differentiating an unspecified $O$-term.
 The coarse bound follows from the saddle-distance estimate independently
 of the elliptic identity and the sharp remainders. The even--even transport
 arguments use only Lemmas~\ref{lem:period-regularity}
-and~\ref{lem:period-coarse}. The fine nodes are retained for arguments
-that use the elliptic formula or the precise leading constants and
-derivative asymptotics. The numerical checks below remain sanity
-checks, not a proof of either sharp remainder estimate.
+and~\ref{lem:period-coarse}. The odd--odd finite parts need only
+Lemma~\ref{lem:period-leading-asymptotic}, derived directly from the defining
+integral. The elliptic identity and sharp remainder estimates are separate
+results, not prerequisites of these finite parts. The numerical checks
+below remain sanity checks, not a proof of either sharp remainder estimate.
 \end{remark}
 
 \begin{remark}

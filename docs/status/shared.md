@@ -59,10 +59,12 @@ weights and local versus global regularity.
   Sobolev inequality are candidate approaches.
 - [Period estimates](../../blueprint/src/chapters/geometry.tex): coarse
   derivative bounds from the regular integral suffice for the transport
-  gains; they still need Lean proofs. The elliptic identity and sharp
-  asymptotics remain in the odd–odd finite-part route, not mixed or even–even.
-  Sharp remainders need a quantified proof or precise reference;
-  differentiating a value O-term is not sufficient.
+  gains; they still need Lean proofs. The odd–odd finite parts now use only
+  the leading value asymptotic, with a direct blueprint derivation from the
+  defining integral. The elliptic identity and sharp remainders are off all
+  sector routes; they remain unproved in Lean. Sharp remainders also need a
+  quantified mathematical proof or precise reference; differentiating a
+  value O-term is not sufficient.
 - `TransportOperator.lean`: self-adjointness/core/group results remain
   admitted and are not prerequisites of the even–even proof.
 - [Certificates](../../blueprint/src/chapters/certificates.tex): odd–odd/mixed

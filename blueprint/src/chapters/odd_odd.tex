@@ -264,10 +264,51 @@ dominated convergence. No smooth extension of $W$ through the center and
 no higher eigenfunction regularity there are required.
 \end{proof}
 
+\section{The separatrix limit}
+
+\begin{lemma}[Gradient traces for even $H^2$ functions]
+\label{lem:dd-quotient-gradient-traces}
+\uses{def:sobolev-torus, def:reflections, def:cell-arcs, def:dd-virial-field}
+Let $u\in H^2(\T^2)$ be even under both separatrix reflections, with
+continuous representative and arc traces $g_k=u\circ\gamma_k$. Then
+$\int_\R|g_k'|^2/(2\sech^2t)\,dt<\infty$, and as $\epsilon\to0$ outside
+a null set,
+\[
+ \oint_{s=\epsilon}|\partial_nu|^2dt\to0,\qquad
+ \oint_{s=\epsilon}|\partial_\tau u|^2dt
+ \to\sum_{k=0}^3\int_\R\frac{|g_k'|^2}{2\sech^2t}\,dt,\qquad
+ \oint_{s=\epsilon}\operatorname{Re}(\bar u\partial_nu)d\ell\to0.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-gradient-traces, lem:inverse-laplacian-fourier,
+ lem:elliptic-torus, lem:symmetries-commute, lem:ee-first-trace-limit}
+Put $\eta=\Delta u\in X$. Since the reflections are affine isometries,
+$\eta$ is even under both. Fourier coefficients give
+$\Delta^{-1}\eta=u-\langle u\rangle$, where $\langle u\rangle$ is the torus
+mean. Apply Lemma~\ref{lem:ee-gradient-traces} to this auxiliary vorticity
+$\eta$; that lemma assumes no eigenfunction equation. Constants do not
+change the gradient or $g_k'$, so its quadratic limits apply to $u$.
+For the first-order term use boundedness of $u$, the vanishing normal
+energy, and the boundedness of $\oint r\,dt$, exactly as in
+Lemma~\ref{lem:ee-first-trace-limit}.
+\end{proof}
+
+\begin{remark}[Digest note: reuse of the even--even traces]
+The quotient has even--even parity even though the original eigenfunction
+has odd--odd parity. Passing through the auxiliary vorticity $\Delta\phi$
+therefore supplies the full corner-tail control of the existing trace
+argument. No new weighted gradient trace theorem is needed once
+$\phi\in H^2(\T^2)$ is established. This does not establish that quotient
+regularity, which remains an input from
+Proposition~\ref{prop:dd-quotient-domain}.
+\end{remark}
+
 \begin{lemma}[Finite part of the bulk weight]
 \label{lem:dd-finite-part}
-\uses{def:dd-virial-field, def:period, lem:period-orbit, lem:period-elliptic}
-With $T(s)=4\mathbf K(1-s^2/4)$ the period on the level $\{\Psi=s\}$,
+\uses{def:dd-virial-field, def:period}
+With $T(s)=S(s/2)$ the period on the level $\{\Psi=s\}$,
 \[
   \int_{\{s>\epsilon\}}F=\frac{8-\epsilon^3}3T(\epsilon)-\int_{\{s>\epsilon\}}s^2,
   \qquad
@@ -278,15 +319,113 @@ $\tfrac83$ per corner.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-coordinates-area, lem:period-regularity, lem:period-asymptotics}
-Coarea and integration by parts; $\int_\Cell\Psi^2=2\pi^2$ and
-$T(\epsilon)=4\log8+4\log(1/\epsilon)+o(1)$.
+\uses{lem:dd-virial-algebra, lem:period-orbit, lem:period-integral,
+ lem:period-leading-asymptotic}
+The constant defect gives $F=\Div(\mu W)-\mu$. Integrate over
+$\{\epsilon<s<b\}$ and use the outward normal $-n$ on its lower boundary:
+\[
+ \int_{\{\epsilon<s<b\}}F
+ =\frac{8-\epsilon^3}3T(\epsilon)-\frac{8-b^3}3T(b)
+   -\int_{\{\epsilon<s<b\}}s^2.
+\]
+As $b\to2$, $T(b)$ is bounded and the upper boundary term vanishes.
+Finally $\int_\Cell s^2=2\pi^2$ (half the torus integral by reflection), and
+Lemma~\ref{lem:period-leading-asymptotic} gives
+$T(\epsilon)=4\log(8/\epsilon)+o(1)$. Rotation symmetry distributes the
+logarithmic coefficient equally among the four corners.
+\end{proof}
+
+\begin{lemma}[Finite part of the level values]
+\label{lem:dd-value-finite-part}
+\uses{def:sobolev-torus, def:cell-arcs, def:period}
+Let $u\in H^2(\T^2)$ have its continuous representative, let
+$g_k=u\circ\gamma_k$, and write $c_{k,\pm}=g_k(\pm\infty)$. Put
+$A_u=\sum_P|u(P)|^2$, summing over the four corners of the cell square.
+Then
+\[
+ \lim_{\epsilon\to0}\left(\oint_{s=\epsilon}|u|^2dt
+                                -A_u\log(1/\epsilon)\right)
+ =\sum_{k=0}^3\int_\R\left(|g_k|^2-|c_{k,-}|^2\mathbf1_{t<0}
+                                  -|c_{k,+}|^2\mathbf1_{t>0}\right)dt
+   +A_u\log8.
+\]
+The four integrals on the right are absolutely convergent.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:forcing-comparison, lem:period-coarse, lem:period-leading-asymptotic,
+ lem:period-orbit, lem:lift-sobolev-local}
+For the base quarter put $h=\epsilon/2$, $L=L(h)$ and
+$g_h=u\circ\gamma_h$. Lemma~\ref{lem:forcing-comparison} bounds $g_h,g$ by
+$M$, their difference by $Ch^{1/4}$ on $[-L,L]$, and $g-c_\pm$ by
+$Ce^{-|t|/2}$ on the two half-lines. Hence
+\[
+ \left|\int_{-L}^L(|g_h|^2-|g|^2)dt\right|\le4MCLh^{1/4}\to0.
+\]
+The exponential tails show that
+$\int_{-L}^L|g|^2dt-L(|c_-|^2+|c_+|^2)$ tends to the stated renormalized
+arc integral. Apply this argument to each rotated quarter.
+Every corner is an endpoint of two arcs, so their subtracted constants
+sum to $2LA_u$. Finally
+$2L(\epsilon/2)=\log(8/\epsilon)+o(1)$.
+\end{proof}
+
+\begin{lemma}[Existence of the renormalized bulk limit]
+\label{lem:dd-renormalized-bulk}
+\uses{def:dd-virial-densities, def:sobolev-torus, def:reflections, def:cell-arcs}
+Let $u\in H^2(\T^2)$ be even under both separatrix reflections and suppose
+$(Eu)/d\in L^2(\Cell)$. Then $F|Eu|^2$ and
+$\ip{M\nabla u}{\nabla u}$ are absolutely integrable on $\Cell$, and the
+finite limit
+\[
+ \lim_{\epsilon\to0}\left(J_{\{s>\epsilon\}}[u]
+            +\tfrac83\sum_P|u(P)|^2\log(1/\epsilon)\right)
+\]
+exists along all positive $\epsilon\to0$, not only along good levels.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-finite-part, lem:normal-field-algebra, lem:normal-coeff-bound,
+ lem:hardy-endpoint, lem:diagonal-calculus, lem:trace-h2, lem:lift-sobolev-local,
+ lem:sobolev-holder, lem:dipole-identities}
+Near the saddles $r$ is comparable to $d^2$, while
+$r\ge s(2-s)$ implies $s\le r$ when $s\le1$. Hence $F\le C/d^2$ there.
+Away from the saddles $F$ is bounded, including at the center by
+Lemma~\ref{lem:normal-coeff-bound}. Thus $0\le F\le C(1+d^{-2})$ on the
+cell, and the assumption makes $F|Eu|^2$ integrable.
+
+For the gradient term the only unbounded coefficient is $A_0=O(s^{-1})$
+as $s\to0$; $C_0\le4$ everywhere. In diagonal coordinates,
+\[
+ \nabla s\cdot\nabla u=-\tfrac s2(\tan a\,u_a+\tan b\,u_b),\qquad
+ \frac{|\partial_nu|^2}{s}
+ \le C\left(\frac{|u_a|^2}{\cos^2a}+\frac{|u_b|^2}{\cos^2b}\right)
+ \quad(s\le1).
+\]
+Even reflection gives zero trace of $u_a$ on $a=\pm\pi/2$ and of $u_b$ on
+$b=\pm\pi/2$. The endpoint Hardy inequality on almost every coordinate
+line, followed by Fubini, makes the right side integrable, bounded by a
+constant times the squared $H^2$ norm. Away from $s=0$, $M$ is bounded,
+including at the center, so its gradient form is absolutely integrable.
+
+Partition the diagonal square into its four quadrants $Q_P$, each containing
+one corner $P$, and put $A=\sum_P|u(P)|^2\mathbf1_{Q_P}$.
+The $1/2$-H\"older estimate gives
+$\big||u|^2-|u(P)|^2\big|\le Cd^{1/2}$ near $P$. Consequently
+$F(|u|^2-A)$ is absolutely integrable, since $d^{-3/2}$ is locally
+integrable in two dimensions. The field $F$ and the truncation $s>\epsilon$
+are invariant under quarter rotation, which permutes the quadrants, so
+\[
+ \int_{\{s>\epsilon\}}FA
+ =\tfrac14\left(\sum_P|u(P)|^2\right)\int_{\{s>\epsilon\}}F.
+\]
+Lemma~\ref{lem:dd-finite-part} supplies the finite part of the last integral.
+All remaining terms converge by absolute integrability.
 \end{proof}
 
 \begin{proposition}[Renormalized virial identity]
 \label{prop:dd-virial}
-\uses{def:dd-virial-densities, lem:dd-quotient-equations}
-\notready
+\uses{def:dd-virial-densities, lem:dd-quotient-equations, def:canonical-profile}
 For an odd--odd eigenfunction with $\lambda\ne0$, with the bulk form
 $J_\Omega[\phi]=\int_\Omega j[\phi]$ and
 \[
@@ -294,7 +433,8 @@ $J_\Omega[\phi]=\int_\Omega j[\phi]$ and
   +\tfrac83\sum_P|\phi(P)|^2\log(1/\epsilon)\Big\},
 \]
 one has $J_{\FP}[\phi]=-\tfrac83\sum_{\text{edges}}Q_\lambda$, where on each edge
-$g=\phi|_{\text{edge}}=(P_t-\lambda)z$, $\nu=-P_tz$ and
+$g=\phi|_{\text{edge}}=(P_t-\lambda)z$, $\Omega=-P_tz$ is its canonical
+transport profile, and
 \[
   Q_\lambda=\int\frac{|g'|^2}{2\sech^2t}-\operatorname{Re}\int P_tz\,\bar g
   +\int\big(|g|^2-|g_-|^2\mathbf1_{t<0}-|g_+|^2\mathbf1_{t>0}\big)
@@ -303,18 +443,47 @@ $g=\phi|_{\text{edge}}=(P_t-\lambda)z$, $\nu=-P_tz$ and
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-truncated-virial, lem:dd-finite-part, prop:dd-quotient-domain,
- lem:pairing-limit, lem:ee-gradient-traces}
-Lemma~\ref{lem:dd-truncated-virial} supplies the exact boundary integral
-$J_{C_\epsilon}[\phi]=G_\phi(\epsilon)$ for almost every $\epsilon$.
-The remaining step is to pass to its renormalized limit: the proposed route
-uses the even reflection of $\phi$ to eliminate the normal derivative,
-canonical transport for $(\nu,\phi)$ to identify the pairing, and the
-saddle values of $\phi$ to subtract the corner logarithms. The required
-weighted convergence and finite-part matching remain to be justified.
+\uses{lem:dd-truncated-virial, prop:dd-quotient-domain,
+ lem:dd-quotient-gradient-traces, lem:dd-value-finite-part,
+ lem:dd-renormalized-bulk, lem:pairing-limit, lem:melnikov,
+ lem:canonical-profile-ode, lem:rotation-characters, lem:lift-sobolev-local}
+First take a rotation character $\kappa\in\{1,-1\}$.
+Proposition~\ref{prop:dd-quotient-domain} supplies an even $H^2$ quotient,
+$(E\phi)/d=-\nu/d\in L^2$, and a transport pair $(\nu,\phi)$ on a bounded
+rotation-invariant neighbourhood of the closed cell. Thus
+Lemma~\ref{lem:dd-renormalized-bulk} gives existence of $J_{\FP}[\phi]$
+as a full limit.
+
+Use Lemma~\ref{lem:pairing-limit} to select good levels outside the null
+sets of Lemmas~\ref{lem:dd-truncated-virial} and
+\ref{lem:dd-quotient-gradient-traces}. On these levels write
+$c_\epsilon=(8-\epsilon^3)/3$ and $A=\sum_P|\phi(P)|^2$. The truncated
+identity is
+\[
+ J_{\{s>\epsilon\}}[\phi]
+ =c_\epsilon\oint\left(|p|^2-|\partial_\tau\phi|^2-|\phi|^2
+                         -\operatorname{Re}(\nu\bar\phi)\right)dt
+   -\epsilon^2\oint\operatorname{Re}(\bar\phi p)d\ell.
+\]
+The gradient and first-order terms converge by
+Lemma~\ref{lem:dd-quotient-gradient-traces}. The pairing tends to
+$\sum_k\operatorname{Re}\int\Omega_k\bar g_k$.
+Lemma~\ref{lem:dd-value-finite-part} gives the value term after subtracting
+$A\log(1/\epsilon)$. Since
+$(c_\epsilon-8/3)\log(1/\epsilon)\to0$, the resulting limit is
+$-\tfrac83\sum_kQ_\lambda$; indeed
+$\sum_k(|g_{k,-}|^2+|g_{k,+}|^2)=2A$ accounts for the $\log8/2$ constant.
+The canonical profile equations follow from Melnikov and
+Lemma~\ref{lem:canonical-profile-ode}.
+
+For a general odd--odd eigenfunction, decompose into the two rotation
+characters. All bulk forms and the sums over edges and corners are
+rotation-invariant quadratic forms, so their cross terms between the
+$+1$ and $-1$ characters vanish. Adding the two identities proves the
+statement. No all-level limit of the vorticity pairing is asserted.
 \end{proof}
 
-\begin{remark}[Digest note: weighted identity versus separatrix limit]
+\begin{remark}[Digest note: resolution of the virial limit]
 The manuscript's ``same finite-difference argument'' is unnecessary for
 annular fields: Lemma~\ref{lem:dd-weighted-first} transfers the established
 unweighted identity directly by multiplication by $s$.
@@ -324,12 +493,22 @@ Here $n=\nabla s/\sqrt r$ is the inward normal of $C_\epsilon$, not its
 outward normal; this fixes the sign of the term
 $-\epsilon^2\operatorname{Re}(\bar\phi\partial_n\phi)$.
 
-The unresolved part is the passage $G_\phi(\epsilon)\to-\tfrac83\sum Q_\lambda$
-after renormalization. The quoted even--even gradient traces apply to a
-different sector and do not by themselves prove the required weighted
-quotient limits. In particular, even reflection gives zero normal trace
-on a regular edge, but a uniform corner-tail estimate is also needed.
-The quotient-domain argument itself remains subject to review.
+The separatrix limit separates into three inputs: the existing even--even
+gradient traces applied to the even quotient, the scalar finite part of
+Lemma~\ref{lem:dd-value-finite-part}, and the canonical pairing along good
+levels. The full bulk limit exists independently by
+Lemma~\ref{lem:dd-renormalized-bulk}; this is why convergence of the pairing
+only on a selected sequence suffices. The notation $\Omega$ denotes the
+canonical profile, not a claimed pointwise trace of $\nu$.
+Only the leading period constant is used, not the elliptic identity or
+sharp derivative asymptotics.
+
+This resolves the virial limit conditional on the quotient-domain
+conclusions. Beyond the quotient transport equation, its proof uses neither
+$(\phi-a)/d^2\in L^2$ nor $\nabla\phi/d\in L^2$ separately: even $H^2$
+regularity and $\nu/d\in L^2$ suffice. Proposition~\ref{prop:dd-quotient-domain}
+itself, including the
+transport gains that establish these hypotheses, remains subject to review.
 \end{remark}
 
 \section{The Picone decomposition}
