@@ -74,14 +74,195 @@ $\mu(2\sym DW-fI)=M$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-identities}
-Direct differentiation; $f-\Div_\mu W=-q'-2q/s=-1$.
+\uses{lem:normal-field-algebra}
+Write $W=\alpha(s)W_{\rm ee}$, where
+$\alpha(s)=(s^2+2s+4)/(3s^2)$ and
+$W_{\rm ee}=(s-2)\nabla s/r$. Since $L_0s=0$, the adapted coefficient is
+$f=\alpha f_{\rm ee}=F/\mu$. Also
+\[
+ f-\Div_\mu W=-\alpha-(s-2)\alpha'-2q/s=-q'-2q/s=-1.
+\]
+In the normal--tangent frame, Lemma~\ref{lem:normal-field-algebra} gives
+\[
+ \mu(2\sym DW-fI)
+ =\operatorname{diag}\bigl(2s^2q'-C_0,C_0\bigr),\qquad
+ C_0=s^2\alpha\frac{s(2-s)}r.
+\]
+Now $q'=1/3+16/(3s^3)$, giving the asserted $A_0$.
 \end{proof}
 
-\begin{remark}
-Lemma~\ref{lem:dd-virial-algebra} has been checked numerically at sample
-points (scratch computation).
-\end{remark}
+\begin{definition}[Weighted generator, bulk density and level term]
+\label{def:dd-virial-densities}
+\uses{def:dd-virial-field}
+On the punctured positive cell put
+\[
+ L_\mu=\mu^{-1}\Div(\mu\nabla),\qquad
+ d_\mu=\Div_\mu W,\qquad D_\mu=W\cdot\nabla+\tfrac12d_\mu.
+\]
+For a function $u$, wherever the expressions are defined, set
+\[
+ j[u]=F(|Eu|^2-|u|^2)+\ip{M\nabla u}{\nabla u},\qquad
+ J_\Omega[u]=\int_\Omega j[u].
+\]
+With $p=\partial_nu$ and $n=\nabla s/\sqrt r$ pointing toward increasing $s$,
+let the level term be
+\[
+ G_u(\sigma)=\int_{s=\sigma}\left[
+ \frac{8-\sigma^3}{3\sqrt r}
+ \bigl(|p|^2-|\partial_\tau u|^2-|u|^2+
+             \operatorname{Re}(Eu\,\bar u)\bigr)
+ -\sigma^2\operatorname{Re}(\bar u p)\right]d\ell.
+\]
+Here $d\ell=\sqrt r\,dt$ and $\tau$ is either unit tangent.
+\end{definition}
+
+\begin{lemma}[The weighted first identity on an annulus]
+\label{lem:dd-weighted-first}
+\uses{def:dd-virial-densities, def:eigen-problem}
+For an odd--odd eigenfunction with $\lambda\ne0$ and real
+$\chi\in C_c^\infty(0,2)$, put
+$W_\chi=\chi(s)W$, $f_\chi=\chi(s)f$ and
+$D_{\mu,\chi}=W_\chi\cdot\nabla+\tfrac12\Div_\mu W_\chi$. Then
+\[
+ \operatorname{Re}\int_\Cell\mu f_\chi\nu\overline{\nu+\phi}
+ =2\operatorname{Re}\int_\Cell\mu D_{\mu,\chi}\phi\,\bar\nu.
+\]
+Only the original eigenfunction domain is required, not
+Proposition~\ref{prop:dd-quotient-domain}.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:virial-l2, lem:dd-virial-algebra, lem:dd-quotient-equations}
+Extend $W_\chi,f_\chi$ periodically and by zero outside the positive cell.
+They are smooth, supported away from $s=0,2$, and adapted because $L_0s=0$.
+For the ordinary half-density generator $D_\chi$ one has
+\[
+ \Div_\mu W_\chi=\Div W_\chi+2W_\chi\cdot\nabla\log s,
+ \qquad sD_{\mu,\chi}\phi=D_\chi(s\phi)=D_\chi\psi.
+\]
+Substitute $\omega=s\nu$ and $\psi=s\phi$ in the first identity of
+Lemma~\ref{lem:virial-l2}. All integrands have annular support, where division
+by $s$ is smooth and bounded. No weighted mollifier or inverse of $E$ is
+needed. The argument does not use reflection parity.
+\end{proof}
+
+\begin{lemma}[Local weighted Green identity]
+\label{lem:dd-green}
+\uses{def:dd-virial-densities}
+For every complex $C^3$ function $u$ on the punctured cell,
+\[
+ \mu f\bigl(|Eu|^2-\operatorname{Re}(Eu\,\bar u)\bigr)
+ +2\mu\operatorname{Re}(D_\mu u\,\overline{Eu})
+ =j[u]+\Div\mathcal V[u],
+\]
+where the real vector field on the right is
+\[
+ \mathcal V[u]=\mu\left[-\operatorname{Re}(\bar u\nabla u)
+ -2\operatorname{Re}\bigl((W\cdot\nabla u)\overline{\nabla u}\bigr)
+ +W(|\nabla u|^2+|u|^2)\right].
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-virial-algebra}
+Expand $E=1-L_\mu$. The product rule gives
+\[
+ \mu f\operatorname{Re}(L_\mu u\,\bar u)
+ =-\mu f|\nabla u|^2+\tfrac12\mu L_\mu f|u|^2
+ +\Div\left(\mu f\operatorname{Re}(\bar u\nabla u)
+                  -\tfrac12\mu\nabla f|u|^2\right)
+\]
+and
+\begin{align*}
+ -2\mu\operatorname{Re}(D_\mu u\,\overline{L_\mu u})
+ ={}&2\mu\ip{\sym DW\nabla u}{\nabla u}
+       -\tfrac12\mu L_\mu d_\mu|u|^2\\
+ &+\Div\left[-2\mu\operatorname{Re}
+                (D_\mu u\,\overline{\nabla u})
+       +\mu W|\nabla u|^2+\tfrac12\mu\nabla d_\mu|u|^2\right].
+\end{align*}
+Finally $2\mu\operatorname{Re}(D_\mu u\,\bar u)=\Div(\mu W|u|^2)$.
+The bulk zeroth-order term is
+$\mu[\tfrac12L_\mu(f-d_\mu)-f]|u|^2=-F|u|^2$.
+In the flux, $f-d_\mu=-1$ leaves exactly $\mathcal V[u]$.
+\end{proof}
+
+\begin{lemma}[Odd--odd annular virial]
+\label{lem:dd-annular-virial}
+\uses{def:dd-virial-densities, def:eigen-problem}
+For an odd--odd eigenfunction with $\lambda\ne0$, $j[\phi]$ is integrable
+on every compact level annulus. There is a null set $N\subset(0,2)$ such
+that for all $0<a<b<2$ outside $N$,
+\[
+ J_{\{a<s<b\}}[\phi]=G_\phi(a)-G_\phi(b).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-weighted-first, lem:dd-green, lem:dd-quotient-equations,
+ lem:inverse-laplacian-derivatives, lem:lift-sobolev-local,
+ lem:coarea-level-cutoff, lem:du-bois-reymond}
+On every compact annulus, $\phi=\psi/s$ has local $H^2$ regularity and
+$E\phi=-\nu\in L^2$, by the original inverse-Laplacian regularity.
+The Green identity holds distributionally there: its product rules involve
+only products of $L^2$ functions and their first weak derivatives, with
+at most two derivatives of $\phi$. In particular its flux and bulk terms
+are locally integrable; no derivative of $\nu$ is used.
+
+Since $D_{\mu,\chi}=\chi D_\mu+\tfrac12\chi'q$, substituting $\nu=-E\phi$
+in Lemma~\ref{lem:dd-weighted-first} and then using
+Lemma~\ref{lem:dd-green} gives
+\[
+ \int_\Cell\chi(s)j[\phi]
+ =\int_\Cell\chi'(s)
+    \left(\nabla s\cdot\mathcal V[\phi]
+                   -\mu q\operatorname{Re}(E\phi\,\bar\phi)\right).
+\]
+The quantity in parentheses divided by $\sqrt r$ is precisely the
+$d\ell$ integrand of $G_\phi(s)$: use
+$W\cdot\nabla\phi=qp/\sqrt r$ and $\mu q=(s^3-8)/3$.
+Coarea therefore gives
+$\int\chi(s)m(s)\,ds=\int\chi'(s)G_\phi(s)\,ds$, where
+$m(s)=\int_{\{\Psi=s\}}j[\phi]dt$; both functions are locally integrable.
+The one-dimensional weak derivative identity is $G_\phi'=-m$.
+Lemma~\ref{lem:du-bois-reymond} and coarea give the assertion outside a
+single null set.
+\end{proof}
+
+\begin{lemma}[Odd--odd truncated virial]
+\label{lem:dd-truncated-virial}
+\uses{def:dd-virial-densities, def:eigen-problem}
+For an odd--odd eigenfunction with $\lambda\ne0$ and almost every
+$\epsilon\in(0,2)$, the density $j[\phi]$ is integrable on $\{s>\epsilon\}$
+and
+\[
+ J_{\{s>\epsilon\}}[\phi]=G_\phi(\epsilon).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-annular-virial, lem:dd-virial-algebra, lem:normal-field-algebra,
+ lem:normal-coeff-bound, lem:inverse-laplacian-derivatives,
+ lem:continuous-representative, lem:orbit-coordinates-area, lem:period-integral}
+On $\{s>\epsilon\}$ division by $s$ preserves $H^2$ regularity and $\phi$
+is bounded. The representation $W=\alpha W_{\rm ee}$ in
+Lemma~\ref{lem:dd-virial-algebra} shows that $F$ and $M$ are bounded there,
+including as $s\to2$. Thus $j[\phi]$ is integrable.
+
+Put $H(s)=\int_{\{\Psi=s\}}(|\phi|^2+|\nabla\phi|^2+|E\phi|^2)dt$ near
+$s=2$. Coarea gives $H\in L^1$ near $2$. The period is bounded there,
+$r\le2(2-s)$, and $0\le(8-s^3)/3\le4(2-s)$. In the flow-time expression
+for $G_\phi$, Cauchy--Schwarz and the boundedness of $\phi$ give
+\[
+ |G_\phi(s)|\le C\left(\sqrt{(2-s)H(s)}+(2-s)H(s)\right)
+\]
+for almost every $s$ near $2$. Outside any prescribed null set there are
+$b_j\to2$ with $(2-b_j)H(b_j)\to0$, since otherwise $H(s)$ would dominate
+a positive multiple of $(2-s)^{-1}$. Hence $G_\phi(b_j)\to0$.
+Apply Lemma~\ref{lem:dd-annular-virial} with upper level $b_j$ and use
+dominated convergence. No smooth extension of $W$ through the center and
+no higher eigenfunction regularity there are required.
+\end{proof}
 
 \begin{lemma}[Finite part of the bulk weight]
 \label{lem:dd-finite-part}
@@ -104,10 +285,10 @@ $T(\epsilon)=4\log8+4\log(1/\epsilon)+o(1)$.
 
 \begin{proposition}[Renormalized virial identity]
 \label{prop:dd-virial}
-\uses{def:dd-virial-field, lem:dd-quotient-equations}
+\uses{def:dd-virial-densities, lem:dd-quotient-equations}
 \notready
-For an odd--odd eigenfunction, with the bulk form
-$J[\phi]=\int F(|E\phi|^2-|\phi|^2)+\ip{M\nabla\phi}{\nabla\phi}$ and
+For an odd--odd eigenfunction with $\lambda\ne0$, with the bulk form
+$J_\Omega[\phi]=\int_\Omega j[\phi]$ and
 \[
   J_{\FP}[\phi]=\lim_{\epsilon\to0}\Big\{J_{\{s>\epsilon\}}[\phi]
   +\tfrac83\sum_P|\phi(P)|^2\log(1/\epsilon)\Big\},
@@ -122,28 +303,33 @@ $g=\phi|_{\text{edge}}=(P_t-\lambda)z$, $\nu=-P_tz$ and
 \end{proposition}
 
 \begin{proof}
-\uses{lem:virial-l2, lem:dd-virial-algebra, lem:dd-finite-part, prop:dd-quotient-domain, lem:pairing-limit, lem:ee-gradient-traces}
-Apply the virial argument in the weighted space (conjugating by $s$, with
-$A=I-E^{-1}$) for fields cut off near $s=0$. On $C_\epsilon=\{s>\epsilon\}$,
-Green's formula for $E$ gives the boundary integral
-\[
-  J_{C_\epsilon}=\int_{s=\epsilon}\Big[\frac{8-\epsilon^3}{3\sqrt r}
-  \big(|p|^2-|\partial_\tau\phi|^2-|\phi|^2+\operatorname{Re}(E\phi\,\bar\phi)\big)
-  -\epsilon^2\operatorname{Re}(\bar\phi p)\Big]d\ell,\qquad p=\partial_n\phi.
-\]
-The normal derivative tends to zero by even reflection, the pairing converges
-by the canonical transport argument applied to $(\nu,\phi)$, and the corner
-logarithms depend only on $\phi(P)$.
+\uses{lem:dd-truncated-virial, lem:dd-finite-part, prop:dd-quotient-domain,
+ lem:pairing-limit, lem:ee-gradient-traces}
+Lemma~\ref{lem:dd-truncated-virial} supplies the exact boundary integral
+$J_{C_\epsilon}[\phi]=G_\phi(\epsilon)$ for almost every $\epsilon$.
+The remaining step is to pass to its renormalized limit: the proposed route
+uses the even reflection of $\phi$ to eliminate the normal derivative,
+canonical transport for $(\nu,\phi)$ to identify the pairing, and the
+saddle values of $\phi$ to subtract the corner logarithms. The required
+weighted convergence and finite-part matching remain to be justified.
 \end{proof}
 
-\begin{remark}[Digest note: gap]
-This is the least detailed step of the manuscript. Three points need to be
-written out: (i) the weighted analogue of Lemma~\ref{lem:virial-l2} (the
-manuscript says ``the same finite-difference argument applies with
-$A=I-E^{-1}$''); (ii) the derivation of the boundary integral for
-$J_{C_\epsilon}$; (iii) the passage from that boundary integral to
-$-\tfrac83\sum Q_\lambda$, including the corner finite parts. Only the final
-formula is stated.
+\begin{remark}[Digest note: weighted identity versus separatrix limit]
+The manuscript's ``same finite-difference argument'' is unnecessary for
+annular fields: Lemma~\ref{lem:dd-weighted-first} transfers the established
+unweighted identity directly by multiplication by $s$.
+Lemmas~\ref{lem:dd-green}--\ref{lem:dd-truncated-virial} derive its boundary
+integral, including the center limit, without the quotient-domain theorem.
+Here $n=\nabla s/\sqrt r$ is the inward normal of $C_\epsilon$, not its
+outward normal; this fixes the sign of the term
+$-\epsilon^2\operatorname{Re}(\bar\phi\partial_n\phi)$.
+
+The unresolved part is the passage $G_\phi(\epsilon)\to-\tfrac83\sum Q_\lambda$
+after renormalization. The quoted even--even gradient traces apply to a
+different sector and do not by themselves prove the required weighted
+quotient limits. In particular, even reflection gives zero normal trace
+on a regular edge, but a uniform corner-tail estimate is also needed.
+The quotient-domain argument itself remains subject to review.
 \end{remark}
 
 \section{The Picone decomposition}

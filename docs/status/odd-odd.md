@@ -5,16 +5,25 @@
 
 ## Current position
 
-`odd_odd_exclusion` is stated with an admitted proof. Unlike even–even, this
-sector has not had the recent prerequisite-by-prerequisite first-pass review.
-The blueprint is a proposed argument, not a verified analytic proof.
+`odd_odd_exclusion` is stated with an admitted proof. The blueprint review
+has derived the weighted annular/truncated virial and its boundary signs;
+these derivations are not yet in Lean. The full sector argument and its
+regularity prerequisites have not been verified.
 
 ## Main priority when work resumes
 
-Digest `prop:dd-virial`, the renormalized weighted virial identity. The blueprint
-identifies this as the largest mathematical gap. Its weighted L² justification,
-boundary integral and corner finite-part limit still need to be derived.
-Do not assume the even–even mollifier argument transfers unchanged.
+Continue with the separatrix limit in `prop:dd-virial`: prove the weighted
+quotient gradient traces and corner-tail estimates, then match the cutoff
+finite parts to the edge forms. Review the quotient-domain hypotheses before
+using them for this limit.
+
+The annular L² identity transfers directly from the established unweighted
+virial by multiplication by `s = Ψ`; no new weighted mollifier or global
+quotient-domain theorem is needed there. The local Green identity yields
+the manuscript's boundary integral, with `n = ∇s/√r` pointing inward.
+The center boundary vanishes along a coarea-selected sequence using only
+the original inverse-Laplacian regularity. See `lem:dd-weighted-first`
+through `lem:dd-truncated-virial`.
 
 Other inputs needing review include the quotient domain and saddle regularity,
 the Picone/current argument, the weighted Poincaré inequality, and constants in
