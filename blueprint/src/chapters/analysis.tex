@@ -1191,6 +1191,36 @@ $(0,\infty)\times(0,\pi/2)$. Since $d\tau=-dr/r$, its traces at the
 endpoints, or at any fixed angular value, give the asserted integrals.
 \end{proof}
 
+\begin{lemma}[$H^1$ gluing at crossing edges]
+\label{lem:h1-crossing-gluing}
+\uses{def:sobolev-local}
+Let $D$ be a disk centred at the origin, split into four quadrants by two
+orthogonal axes, and let $u\in L^2(D)$. Suppose its restrictions to the
+quadrants are in $H^1$, their traces match on each open half-axis, and
+$u/r\in L^2(D)$, where $r$ is distance to the origin. Then $u\in H^1(D)$,
+with weak gradient given by the quadrant gradients.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2}
+Away from the origin, ordinary trace gluing follows by ACL slicing:
+the one-dimensional absolutely continuous sections on either side of
+an axis have the same endpoint value, so their concatenation has no jump.
+Fubini gives the piecewise weak derivatives on the punctured disk.
+
+Choose a smooth radial cutoff $\eta_\epsilon$, zero for $r<\epsilon$ and
+one for $r>2\epsilon$, with $|\nabla\eta_\epsilon|\le C/\epsilon$.
+Then $\eta_\epsilon u\in H^1(D)$ and
+\[
+ \|u\nabla\eta_\epsilon\|_2
+ \le C\|u/r\|_{L^2(\{\epsilon<r<2\epsilon\})}\longrightarrow0.
+\]
+The $L^2$ tails of $u$ and its quadrant gradients also vanish.
+Thus $\eta_\epsilon u$ converges in $H^1$ to $u$ with the asserted gradient.
+This excludes a distribution supported at the crossing point without
+assuming a pointwise value of $u$ there.
+\end{proof}
+
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]
 \label{lem:trace-acl}
 \uses{def:sobolev-local, def:cells}

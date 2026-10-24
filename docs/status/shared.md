@@ -29,13 +29,13 @@ weights and local versus global regularity.
 
 ## Next session
 
-1. **Mathematical review first:** continue the odd–odd H¹ separatrix gain
-   and logarithmically weighted quotient estimates in the
+1. **Mathematical review first:** continue the odd–odd logarithmically
+   weighted quotient estimates and double division in the
    [transport](../../blueprint/src/chapters/transport.tex) and
    [regularity](../../blueprint/src/chapters/regularity.tex) chapters.
-   The first two transport gains and cylinder inverse now have explicit
-   blueprint derivations, not Lean proofs. Review the weighted-forcing
-   statements before translating them to Lean as well.
+   The first two transport gains, cylinder inverse and ordinary H¹
+   separatrix gain now have explicit blueprint derivations, not Lean proofs.
+   Review these arguments before translating them to Lean.
 2. **Bounded shared formalization:** coarse period derivative bounds
    (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
    Hardy division (`lem:phase-cell-division`) are reusable first targets.
@@ -47,16 +47,17 @@ weights and local versus global regularity.
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
-  odd–odd H¹ and weighted quotient work still need review. The first two
-  gains now use a local endpoint formula, phase-cell Hardy, and smooth
-  transport-pair subtraction for nonzero saddle values. The cylinder inverse
-  includes its physical H² removal argument. These derivations, and the
-  mixed zero-jet weighted-forcing H¹ route, are not yet in Lean.
-  The generic H¹ gain remains tentative; zero-edge trace requires zero forcing
-  as well as zero midpoint value. The first gains cover all four characters
-  without Melnikov; implemented Melnikov/pairing results still only accept ±1.
-  Local elliptic regularity, corner traces and interval Hardy inputs remain
-  open. Elliptic-center regularity is not a sector prerequisite.
+  odd–odd logarithmically weighted gradient and quotient division work still
+  need review. The weighted-forcing H¹ route only needs
+  `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
+  zero-jet remainder. Zero forcing on an edge and a weighted corner trace
+  force zero vorticity trace, without a midpoint condition. Crossing-edge
+  H¹ gluing has an explicit cutoff proof. These derivations, the first two
+  transport gains and cylinder inverse are not yet in Lean.
+  The transport gains cover all four characters without Melnikov;
+  implemented Melnikov/pairing results still only accept ±1.
+  Local elliptic regularity, corner traces/gluing and interval Hardy inputs
+  still need Lean proofs. Elliptic-center regularity is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   outside the even–even route; inverse Hausdorff–Young or a compact-support
   Sobolev inequality are candidate approaches.

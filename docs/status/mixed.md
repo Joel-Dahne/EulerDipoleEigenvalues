@@ -32,9 +32,11 @@ Global H¹ and elliptic-center regularity are no longer prerequisites in the
 blueprint route. The mixed quotient domain already supplies local H¹ and
 `ω/r ∈ L²`, which give the `L²(dt)` corner trace. This is a mathematical
 derivation conditional on that domain, not a Lean proof of mixed regularity.
-The mixed route also avoids the tentative generic second/H¹ gains and the
-elliptic period identity/sharp asymptotics: coarse first/second period
-derivative bounds from the regular integral suffice.
+The mixed route uses the weighted-forcing H¹ lemma rather than the
+pointwise second-gain hypotheses. The same H¹ lemma now covers odd–odd
+with weaker forcing weights. Neither route needs the elliptic period
+identity/sharp asymptotics: coarse first/second period derivative bounds
+from the regular integral suffice.
 
 Algebraic or numerical sanity checks are not proofs of the analytic identities
 or certificate inequalities.

@@ -5,19 +5,17 @@
 
 ## Current position
 
-`odd_odd_exclusion` is stated with an admitted proof. The blueprint now
-derives the weighted virial through its renormalized separatrix limit,
-conditional on the quotient-domain conclusions. The first two transport
-gains and cylinder inverse now also have explicit blueprint derivations,
-giving the odd–odd quadratic saddle jet. None of these new derivations is
-in Lean. The quotient regularity and the rest of the exclusion remain
-unverified.
+`odd_odd_exclusion` is stated with an admitted proof. The blueprint derives
+the renormalized weighted virial conditional on the quotient domain, and
+saddle/H¹ separatrix regularity including zero edge traces and local H³
+regularity of `ψ`. These analytic derivations are not in Lean.
+The quotient regularity and the rest of the exclusion remain unverified.
 
 ## Main priority when work resumes
 
-Continue with `prop:dd-separatrix-h1`, then the logarithmically weighted
-vorticity-gradient and division steps in `prop:dd-quotient-domain`.
-The saddle bootstrap does not yet give these H¹/quotient estimates.
+Continue with the logarithmically weighted vorticity-gradient and division
+steps in `prop:dd-quotient-domain`. The ordinary H¹ gain is now derived;
+it does not yet establish the stronger quotient estimates.
 For the virial limit, the additional regularity needed is even global H²
 for `φ`, `ν/d ∈ L²`, and the quotient transport equation; the separate
 weighted corner remainder estimates are not needed there.
@@ -31,9 +29,11 @@ the edge endpoint constant `log 8 / 2`. See `prop:dd-virial`.
 
 Other inputs needing review include the Picone/current argument, the weighted
 Poincaré inequality, and constants in the corrected boundary estimate. The
-generic H¹ transport gain remains tentative. The first two transport gains
-handle all four characters through local endpoint formulas; the quotient's
-Melnikov/pairing application needs only the implemented ±1 characters.
+weighted-forcing H¹ route now covers both odd–odd and mixed, replacing the
+tentative generic H¹ sketch. Zero forcing on an edge and the weighted corner
+trace force zero vorticity trace there; no midpoint condition is needed.
+The transport gains handle all four characters through local endpoint
+formulas; the quotient's pairing application needs only the implemented ±1.
 See [shared infrastructure](shared.md). Exact certificate verification is also
 pending. The detailed questions live in the blueprint's digest notes.
 

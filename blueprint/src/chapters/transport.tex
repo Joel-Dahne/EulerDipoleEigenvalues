@@ -1021,66 +1021,13 @@ whose integral is $O(h^{-\delta})$. Sum over the phase cells and use
 coarea. Both terms are integrable because $0<\delta<1$.
 \end{proof}
 
-\begin{lemma}[$H^1$ transport gain]
-\label{lem:transport-h1-gain}
-\uses{def:transport-pair}
-\notready
-Suppose in addition that $hN''\in L^2(0,h_0)$, $C/h\in L^2(0,h_0)$, and
-$\int_0^{h_0}\!\int_{-L}^L|\nabla f_h|^2d^{-(4-2\delta)}\,dt\,dh<\infty$. Then
-$d\,\partial_hv$ and $d^{-1}\partial_tv$ are square integrable in the orbit
-coordinates on each separately recentered quarter-orbit patch, and hence $v\in H^1$
-on each cell's separatrix neighbourhood.
-If moreover $f$ has zero trace on the regular edges and the midpoint
-value $A(h)=z_h(0)$ satisfies $A(0)=0$, the trace of $v$ on those edges
-is zero.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:numerator-zeros, lem:hardy-1d, lem:orbit-comparison, lem:orbit-saddle-distance, lem:orbit-level-derivatives, lem:orbit-coordinate-gradients, lem:orbit-time-integrals}
-Factor $D=(h-h_j)d_j(h)/h_j$ on each phase cell. The second Hardy inequality
-gives $C'\in L^2$. The midpoint formula
-$A(h)=ie^{2i\lambda L}C+i\int_{-L}^0f_he^{-i\lambda t}dt$ is then in $H^1$,
-and $z_h(t)=e^{i\lambda t}A(h)+i\int_0^te^{i\lambda(t-u)}f_h(u)\,du$
-controls $\partial_hz$. Finally $\partial_tv=i\lambda v-\partial_tf$, and the
-inverse coordinate bounds $|\nabla h|\le Cd$, $|\nabla t_k|\le C/d$ on each rotated
-quarter-orbit patch convert to physical derivatives.
-For the final assertion, the edge equation is
-$z_0'=i(\lambda z_0+f_0)$. If $f_0=0$ and $z_0(0)=A(0)=0$,
-then $z_0=0$ and $v_0=-\lambda z_0-f_0=0$.
-\end{proof}
-
-\begin{remark}[Digest note: zero trace requires zero forcing]
-The midpoint condition alone does not imply zero vorticity trace.
-In a regular flow box choose $z(h,t)=\chi(h)a(t)$ with $\chi(0)=1$
-and smooth $a$ supported away from the midpoint and both ends.
-Set $v=-Hz$ and $f=(H-\lambda)z$, and use rotated copies to impose a
-quarter character. This is a smooth transport pair, zero near the saddles.
-For small $h$ its numerator is
-$N=-i[e^{-i\lambda t}z]_{-L}^{L}=0$, so $C=0$, $hN''=0$ and $A=0$,
-but its edge trace is $v(0,t)=ia'(t)$, which need not vanish.
-The corrected assertion therefore requires $f_0=0$ as well.
-This holds for the odd--odd forcing $\psi$. The mixed argument first uses
-only cellwise $H^1$ and proves odd-edge vanishing separately.
-\end{remark}
-
-\begin{remark}[Digest note]
-The first two gains above have explicit phase-cell proofs for transport
-pairs on a neighbourhood of the closed cell. The generic $H^1$ gain in
-Lemma~\ref{lem:transport-h1-gain}, extracted from the manuscript's
-Propositions~\texttt{prop:separatrix-h1} and
-\texttt{prop:dd-quotient-domain}, still needs its precise weighted
-hypotheses and boundary arguments pinned down; hence \verb|\notready|.
-The mixed zero-jet remainder satisfies the stronger forcing hypotheses
-of Lemma~\ref{lem:weighted-transport-h1}, treated separately below.
-\end{remark}
-
 \section{Transport with weighted forcing}
 
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local}
-For a transport pair near the separatrix, suppose
-$f/d^2,\nabla f/d^2\in L^2$ near the saddles.
+For a transport pair on a bounded open union of orbits containing the
+closed cell square, suppose $f/d^2,\nabla f/d^{3/2}\in L^2$ near its corners.
 For a fixed quarter character, put
 $B(h)=\int_{-L(h)}^0f(\gamma_h(t))e^{-i\lambda t}\,dt$.
 Then $N,B$ are locally absolutely continuous, $N'$ is locally absolutely
@@ -1103,8 +1050,10 @@ gradient values at $p_\pm$ mean Sobolev traces, not arbitrary point values.
 
 The endpoint curves are fixed rays from their saddles, with
 $r=2\arcsin\sqrt h$, hence $h=\sin^2(r/2)$ and $dh\asymp r\,dr$.
-Apply Lemma~\ref{lem:weighted-corner-trace} to $f/r$ and to each
-component of $\nabla f$. The hypotheses and $f\in H^2$ give
+The hypotheses imply $f/r^2,\nabla f/r\in L^2$ there, so $f/r\in H^1$
+and $(f/r)/r\in L^2$. Also each component of $\nabla f$ is in $H^1$
+and its quotient by $r$ is in $L^2$. Apply
+Lemma~\ref{lem:weighted-corner-trace} to $f/r$ and these components to get
 \[
  \int_{\rm ray}\left(\frac{|f|^2}{r^3}
                     +\frac{|\nabla f|^2}{r}\right)\,dr<\infty .
@@ -1115,9 +1064,9 @@ For any subinterval $J\subset[-L,L]$, Cauchy--Schwarz and
 $|\partial_h\gamma_h|\le C/d$ give
 \[
  \left|\int_J\partial_hf_h\,e^{-i\lambda t}\,dt\right|^2
- \le C\left(\int_{-L}^L\frac{|\nabla f_h|^2}{d^4}\,dt\right)
-        \left(\int_{-L}^Ld^2\,dt\right)
- \le C\int_{-L}^L\frac{|\nabla f_h|^2}{d^4}\,dt .
+ \le C\left(\int_{-L}^L\frac{|\nabla f_h|^2}{d^3}\,dt\right)
+        \left(\int_{-L}^Ld\,dt\right)
+ \le C\int_{-L}^L\frac{|\nabla f_h|^2}{d^3}\,dt .
 \]
 The moving-endpoint terms in $N'$ and $B'$ are bounded by
 $C|f(p_\pm)|/h$. Coarea therefore gives $N',B'\in L^2$.
@@ -1142,10 +1091,13 @@ control both endpoint terms.
 
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
-\uses{def:transport-pair, def:sobolev-local}
-If a transport pair near the separatrix satisfies
-$f/d^2,\nabla f/d^2\in L^2$ near the saddles, then $v/d^2\in L^2$
-near the saddles and $v\in H^1$ on each cell's separatrix neighbourhood.
+\uses{def:transport-pair, def:cell-arcs, def:sobolev-local}
+Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
+the closed cell square. If $f/d^2,\nabla f/d^{3/2}\in L^2$ near its corners,
+then $v/d^2\in L^2(\Cell)$ and, for some $\epsilon_0>0$,
+$v\in H^1(\{p\in\Cell:0<\Psi(p)<\epsilon_0\})$.
+On each recentered quarter patch over a sufficiently small level interval,
+$d\,\partial_hv$ and $d^{-1}\partial_tv$ belong to $L^2(dh\,dt)$.
 No elliptic relation $\Delta f=v$, reflection parity, zero forcing
 trace or zero midpoint value is required.
 \end{lemma}
@@ -1199,17 +1151,74 @@ $d^{-1}\partial_tv_h\in L^2$.
 The inverse-coordinate bounds give the physical weak gradient in $L^2$.
 At adjacent quarter boundaries the traces match by orbitwise absolute
 continuity of $z$ and $v=-\lambda z-f$; thus the quarters glue in $H^1$.
-Treat the other cells in the same coordinates and sum the character
-components. No assertion of zero edge trace is made.
+Sum the four character components. No assertion of zero edge trace is made.
 \end{proof}
 
-\begin{remark}[Digest note: the zero-jet specialization]
-The mixed remainder obeys the stronger estimates
-$f/d^3,\nabla f/d^2,D^2f/d\in L^2$ from the saddle jet.
-Thus Lemma~\ref{lem:weighted-transport-h1} applies directly; neither a
-global elliptic equation for the remainder nor the tentative general
-$H^1$ gain is needed. The twice-differentiated numerator also needs
-$L''=O(h^{-2})$, which does not follow by differentiating the stated
-first-derivative asymptotic remainder. Lemma~\ref{lem:period-derivative-bounds}
-supplies it directly from the regular period integral.
+\begin{lemma}[Zero edge trace from zero forcing]
+\label{lem:transport-zero-edge-trace}
+\uses{def:transport-pair, def:cell-arcs, def:sobolev-local}
+Suppose a transport pair is defined near the closed cell, with
+$v\in H^1$ on a cellwise separatrix neighbourhood and $v/d\in L^2$ there.
+If the continuous forcing $f$ vanishes on a regular edge, the cellwise
+Sobolev trace of $v$ on that edge is zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-unknown, lem:weighted-corner-trace, lem:trace-l2,
+ lem:dipole-identities, lem:separatrix-lines, lem:separatrix-arc}
+The transport unknown $z=-(v+f)/\lambda$ is cellwise $H^1$.
+Choose orthonormal coordinates $(\xi,\eta)$ on a regular edge segment,
+with the cell on $\eta>0$ and the edge at $\eta=0$. Write $Y_\xi,Y_\eta$
+for the transport field components. Since $Y_\eta(\xi,0)=0$ and
+$\Div Y=0$, the equation is
+\[
+ \partial_\xi(Y_\xi z)+\partial_\eta(Y_\eta z)=-iv.
+\]
+Average over $0<\eta<\epsilon$ and let $\epsilon\to0$ outside the slicing
+null set. The $H^1$ trace estimate gives local $L^2(d\xi)$ convergence
+of the averages and the sections. The averaged normal flux
+$Y_\eta(\xi,\epsilon)z(\xi,\epsilon)/\epsilon$ tends to
+$(\partial_\eta Y_\eta)(\xi,0)Tz$, since
+$Y_\eta(\xi,\epsilon)/\epsilon\to\partial_\eta Y_\eta(\xi,0)$.
+Thus
+\[
+ \partial_\xi(Y_\xi(\xi,0)Tz)
+       +(\partial_\eta Y_\eta)(\xi,0)Tz=-iTv.
+\]
+The zeroth-order terms cancel by $\Div Y=0$, giving
+$Y_\xi(\xi,0)\partial_\xi(Tz)=-iTv$.
+Parametrizing the edge by flow time yields
+$(Tz)'=-iTv$ and $Tv=-\lambda Tz-Tf=-\lambda Tz$.
+Consequently $Tz$ is locally absolutely continuous and
+$Tv(t)=ce^{i\lambda t}$ along the whole edge.
+
+Near an endpoint, apply Lemma~\ref{lem:weighted-corner-trace} to $v$ in the
+adjacent saddle quadrant. Since $v/r\in L^2$, its edge trace satisfies
+$\int|Tv|^2dr/r<\infty$. The explicit separatrix flow has
+$dt\asymp dr/r$ near that endpoint, so $Tv$ is square integrable on an
+infinite time half-line. Because $\lambda$ is real, the modulus of
+$ce^{i\lambda t}$ is constant; hence $c=0$.
+\end{proof}
+
+\begin{remark}[Digest note: weighted forcing replaces the generic $H^1$ gain]
+The subinterval Cauchy--Schwarz estimate uses $\int d\,dt<\infty$, so the
+numerator argument only needs $\nabla f/d^{3/2}\in L^2$, not
+$\nabla f/d^2\in L^2$. This weaker hypothesis accommodates a quadratic
+saddle term and makes Lemma~\ref{lem:weighted-transport-h1} apply directly
+to the odd--odd forcing. The mixed remainder already obeys the stronger
+$f/d^3,\nabla f/d^2,D^2f/d\in L^2$. Thus neither sector needs the former
+tentative generic $H^1$ gain.
+
+Zero edge trace is a separate assertion, not a consequence of the
+regularity estimate alone. It uses zero forcing on that edge and the
+weighted corner trace, not a prescribed midpoint value. To see why the
+forcing hypothesis matters, choose a smooth $z(h,t)=\chi(h)a(t)$ in a
+regular flow box, with $\chi(0)=1$ and $a$ supported away from the midpoint
+and the ends, and set $v=-Hz$, $f=(H-\lambda)z$. Rotated copies give a
+quarter character. This pair is zero near the saddles and has $N=C=A=0$
+for small $h$, but its edge trace $v(0,t)=ia'(t)$ need not vanish.
+
+The twice-differentiated numerator still needs $L''=O(h^{-2})$.
+Lemma~\ref{lem:period-derivative-bounds} derives this from the regular
+period integral, without differentiating an asymptotic remainder.
 \end{remark}

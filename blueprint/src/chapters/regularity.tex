@@ -160,24 +160,72 @@ angular frequencies to odd integers, so the multiplier has no zero.
 
 \section{Odd--odd sector: regularity across the separatrix}
 
+\begin{lemma}[Weighted forcing supplied by the quadratic saddle jet]
+\label{lem:dd-weighted-forcing}
+\uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
+For an odd--odd eigenfunction,
+\[
+ \psi/d^2,\qquad \nabla\psi/d^{3/2}\in L^2
+\]
+near the saddles. The continuous representative of $\psi$ vanishes on
+every separatrix edge.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:saddle-dd, lem:stream-sector, lem:continuous-representative,
+ lem:separatrix-lines}
+Write $\psi=q+R$ near a saddle. The homogeneous quadratic satisfies
+$q/r^2=O(1)$ and $\nabla q/r^{3/2}=O(r^{-1/2})$, both square integrable
+in physical dimension two. The remainder estimates
+$R/r^4,\nabla R/r^3\in L^2$ imply the required weaker weights by
+multiplication by bounded powers of $r$.
+Finally the stream function has odd parity under both reflections.
+Its continuous representative has the same parity everywhere, since the
+continuous parity identities hold almost everywhere. It therefore vanishes
+on the fixed lines, which are exactly the separatrix.
+\end{proof}
+
 \begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
 \label{prop:dd-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local}
-\notready
 In the odd--odd sector, $\omega\in H^1$ on a neighbourhood of the separatrix
 (including the saddles), with zero trace on each regular edge, and $\psi\in H^3$
 on a possibly smaller neighbourhood (manuscript \texttt{(prop:separatrix-h1)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:transport-h1-gain, lem:transport-pair-eigen, prop:saddle-dd, lem:elliptic-local}
-Show $hN''\in L^2$ from the second variation bound
-$|\partial_h^2\gamma_h|\le C/d^2$ and the quadratic jet (for the endpoint
-terms), then apply Lemma~\ref{lem:transport-h1-gain}. $A(0)=0$ follows from
-$C/h\in L^2$ and the Dirichlet trace of $\psi$. The zero edge trace glues the
-reflected cells in $H^1$; the saddles are removable. Local elliptic regularity
-gives $\psi\in H^3$.
+\uses{lem:dd-weighted-forcing, lem:weighted-transport-h1,
+ lem:transport-zero-edge-trace, lem:transport-pair-eigen,
+ lem:h1-crossing-gluing, lem:elliptic-local, lem:symmetries-commute}
+Apply Lemma~\ref{lem:weighted-transport-h1} to $(\omega,\psi)$.
+Lemma~\ref{lem:dd-weighted-forcing} supplies its weighted hypotheses; away
+from the saddles these are ordinary $H^2$ bounds. Thus $\omega$ is $H^1$
+on the cellwise separatrix strips, with $\omega/d^2\in L^2$.
+The same argument on adjacent cells follows by reflection.
+
+The forcing $\psi$ is zero on every regular edge. By
+Lemma~\ref{lem:transport-zero-edge-trace}, both one-sided traces of
+$\omega$ are zero. ACL trace gluing therefore gives $H^1$ across the
+regular edges. At a saddle, $\omega/r\in L^2$ follows from the stronger
+$\omega/d^2$ bound, and Lemma~\ref{lem:h1-crossing-gluing} glues the four
+quadrants including their common endpoint. Finitely many such patches
+give an open neighbourhood of the whole separatrix.
+Finally $\Delta\psi=\omega\in H^1$ there and $\psi\in H^2$ globally;
+Lemma~\ref{lem:elliptic-local} gives $\psi\in H^3$ on a smaller neighbourhood.
 \end{proof}
+
+\begin{remark}[Digest note: the $H^1$ gain without a midpoint condition]
+The quadratic saddle jet supplies the weaker weighted-forcing hypotheses
+of Lemma~\ref{lem:weighted-transport-h1}, so the former generic $H^1$
+transport sketch is unnecessary. The endpoint ray terms are controlled by
+Lemma~\ref{lem:weighted-corner-trace}; numerator differentiation uses only
+$H^2$ regularity of $\psi$, not a prior $H^1$ bound for $\omega$.
+Zero edge trace then follows from the boundary transport equation and
+weighted corner integrability, with no separate assumption about the
+midpoint value $A(0)$. The saddle extension is the explicit cutoff argument
+of Lemma~\ref{lem:h1-crossing-gluing}, rather than an unspecified
+removability assertion.
+\end{remark}
 
 \begin{proposition}[Quotient domain, odd--odd]
 \label{prop:dd-quotient-domain}
