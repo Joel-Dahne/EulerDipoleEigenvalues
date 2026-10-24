@@ -27,6 +27,22 @@ The even–even route is admission-free, including:
 Reuse requires checking the hypotheses, especially parity/rotation characters,
 weights and local versus global regularity.
 
+## Next session
+
+1. **Mathematical review first:** audit the first saddle gain
+   (`lem:transport-first-gain`, `prop:saddle-first-gain`) and cylinder inverse
+   (`lem:cylinder-inverse`) in the [transport](../../blueprint/src/chapters/transport.tex)
+   and [regularity](../../blueprint/src/chapters/regularity.tex) chapters.
+   Review the new weighted-forcing statements before translating them to Lean;
+   their blueprint derivations are not formal proofs.
+2. **Bounded shared formalization:** coarse period derivative bounds
+   (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
+   Hardy division (`lem:phase-cell-division`) are reusable first targets.
+3. **Character API:** plan the ±i extension of `Melnikov.lean` and
+   `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE
+   character helpers already allow complex characters; check resonant phases
+   and conjugation rather than assuming the existing proofs transfer unchanged.
+
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):

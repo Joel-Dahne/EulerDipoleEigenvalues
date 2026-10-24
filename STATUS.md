@@ -5,11 +5,10 @@ working; update current priorities and blockers rather than appending history.
 
 ## Current phase
 
-The first-pass review of the even–even blueprint is complete. Proof
-implementation has reached an admission-free even–even exclusion
-(`even_even_exclusion`); the odd–odd and mixed exclusions remain admitted.
-Candidate next tasks are in the topic pages; the review is not a complete independent audit of the
-mathematics.
+The even–even exclusion is admission-free (`even_even_exclusion`);
+the odd–odd and mixed exclusions remain admitted.
+Resume mathematical review and shared analytic infrastructure with the
+[next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
 
