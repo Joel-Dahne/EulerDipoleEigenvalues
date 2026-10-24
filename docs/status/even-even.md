@@ -33,5 +33,8 @@ unworked. Boundary positivity uses direct interval exhaustion, not density theor
 
 - [Blueprint](../../blueprint/src/chapters/even_even.tex) and
   [digest notes](../../blueprint/src/chapters/notes.tex).
-- [EvenEven.lean](../../NoEmbeddedEigenvalues/EvenEven.lean) for assembly;
-  [architecture guide](../architecture.md) for the supporting modules.
+- [EvenEven.lean](../../NoEmbeddedEigenvalues/EvenEven.lean) for assembly,
+  [NormalVirial.lean](../../NoEmbeddedEigenvalues/NormalVirial.lean) for the truncated
+  virial, and [EvenEvenBoundary.lean](../../NoEmbeddedEigenvalues/EvenEvenBoundary.lean)
+  for the boundary inputs. See the [architecture guide](../architecture.md) for
+  the supporting modules.

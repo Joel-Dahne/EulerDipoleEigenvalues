@@ -81,6 +81,8 @@ proof mechanisms. Module names below are relative to
 
 - `NormalField.lean`, `VirialAlgebra.lean`: normal-field algebra and pointwise
   commutator identities.
+- `NormalVirial.lean`: bulk/level densities, annular virial, center limit and
+  truncated normal-field virial, without reflection-sector assumptions.
 - `VirialSmooth.lean`, `VirialQuadratic.lean`, `VirialFourier.lean`: smooth
   identities, torus inner-product forms and Fourier integration by parts.
 - `LineMollifier.lean`, `AnglePeriodization.lean`: one-variable mollification,
@@ -99,8 +101,10 @@ proof mechanisms. Module names below are relative to
   `ξ = tanh s` transformation and identification of the canonical arc form.
 - `IntervalZeroExtension.lean`: jump-free zero extension of zero-trace H¹
   data, and complex primitive/zero-extension helpers used by `TraceH2.lean`.
-- `EvenEven.lean`: truncated virial, boundary regularity and exclusion assembly,
-  ending directly with vanishing of the vorticity.
+- `EvenEvenBoundary.lean`: even–even gradient traces, arc absolute continuity,
+  weighted boundary regularity and canonical arc positivity.
+- `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
+  assembly, ending directly with vanishing of the vorticity.
 - `OddOdd.lean`, `Mixed.lean`, `Main.lean`: remaining sector interfaces,
   rotation between mixed sectors, and main theorem assembly.
   Consult [sector status](../STATUS.md#topic-pages) for proof completion.

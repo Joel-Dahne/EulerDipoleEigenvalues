@@ -19,6 +19,7 @@ import NoEmbeddedEigenvalues.OddHardy
 import NoEmbeddedEigenvalues.DipoleCalculus
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.EvenEven
+import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.FlowBoundaryForm
 import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
@@ -32,6 +33,7 @@ import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.PairingLimit
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.NormalField
+import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.Period
 import NoEmbeddedEigenvalues.ResonantVanishing
