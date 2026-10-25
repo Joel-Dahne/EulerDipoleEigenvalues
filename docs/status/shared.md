@@ -12,7 +12,8 @@ and proof mechanisms belong in the blueprint and module documentation.
 The even–even route is admission-free, including:
 
 - Fourier/L² setup, symmetry/rotation decompositions and inverse-Laplacian
-  regularity.
+  regularity. Weak dipole testing and odd cell-pairing identities need
+  neither self-adjointness nor Sobolev regularity.
 - Torus/local Sobolev bridges, continuous Hölder representatives, ACL slicing,
   rectangle traces and even–even separatrix traces.
 - Orbit coordinates, area/coarea, orbit restriction, coarse period bounds,
@@ -31,9 +32,9 @@ weights and local versus global regularity.
 
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
-   exclusion is now assembled. Expand the bulk coercivity and corrected
-   boundary inputs into smaller statements before returning to the H²
-   quotient bootstrap. See [odd–odd status](odd-odd.md). The earlier saddle,
+   exclusion is now assembled. Next review/prove the canonical quotient
+   boundary bridge, then expand corrected boundary nonnegativity. Bulk
+   coercivity and its certificate remain deferred. See [odd–odd status](odd-odd.md). The earlier saddle,
    H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
 2. **Bounded shared formalization:** coarse period derivative bounds
@@ -73,7 +74,8 @@ weights and local versus global regularity.
   quantified mathematical proof or precise reference; differentiating a
   value O-term is not sufficient.
 - `TransportOperator.lean`: self-adjointness/core/group results remain
-  admitted and are not prerequisites of the even–even proof.
+  admitted and are not prerequisites of either the even–even or odd–odd
+  route.
 - [Certificates](../../blueprint/src/chapters/certificates.tex): odd–odd/mixed
   verification scripts and data are missing. A sound exact checker must
   connect coefficient data to the defining expressions, not merely check tables.

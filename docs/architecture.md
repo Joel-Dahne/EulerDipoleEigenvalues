@@ -34,6 +34,8 @@ proof mechanisms. Module names below are relative to
   Fourier-defined Sobolev spaces and elliptic regularity of the inverse Laplacian.
 - `Symmetry.lean`, `SymmetryL2.lean`, `Sectors.lean`: pointwise symmetries,
   their L² action, reflection sectors and rotation characters.
+- `DipoleOrthogonality.lean`: four-mode weak dipole testing, inverse-Laplacian
+  pairings and reflection/cell integral identities.
 - `SobolevHolder.lean`: continuous Fourier representative and Hölder embedding.
 
 ### Local Sobolev spaces, lifts and traces

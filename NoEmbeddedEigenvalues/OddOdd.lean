@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.EvenEven
+import NoEmbeddedEigenvalues.DipoleOrthogonality
 
 /-!
 # Odd–odd exclusion: the final analytic interfaces
@@ -108,7 +109,23 @@ theorem dd_orthogonality {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (q : DDQuotientData lam ω) :
     (∫ p in cellSquare, (ddWeight p : ℂ) * liftL2 q.phi p) = 0 ∧
       centralInversion q.phi = q.phi := by
-  sorry
+  constructor
+  · have hv := hω.integral_dipole_mul_eq_zero hlam
+    have hψ : (∫ t, (Ψ t : ℂ) * invLap ω t) = 0 := by
+      rw [integral_dipole_mul_invLap, hv, neg_zero]
+    have hsψ := hs.invLap
+    have hodd : reflect₁ (invLap ω) = -invLap ω := by simpa [paritySign] using hsψ.1
+    have hcell := (integral_dipole_mul_eq_two_cell (invLap ω) hodd).symm.trans hψ
+    have hz : (∫ p in cellSquare, (dipoleLift p : ℂ) * liftL2 (invLap ω) p) = 0 :=
+      (mul_eq_zero.mp hcell).resolve_left (by norm_num)
+    rw [← hz]
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_of_ae (ae_torusProj q.stream_eq)] with p hp
+    dsimp only [liftL2] at hp ⊢
+    rw [hp, Ψ_torusProj]
+    simp only [ddWeight, Complex.ofReal_pow]
+    ring
+  · exact (rotate_rotate q.phi).symm.trans q.even.rotate_rotate
 
 /-- The transformed edge trace `g = -iwf' - λf`. -/
 def correctedBoundaryTrace (lam : ℝ) (F D : ℝ → ℂ) (x : ℝ) : ℂ :=

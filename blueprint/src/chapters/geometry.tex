@@ -128,6 +128,27 @@ $\Psi=2\cos a\cos b>0$ exactly on the cell square: both $|a|,|b|>\pi/2$ would ne
 $|x+y|,|x-y|>\pi$, impossible since $|x+y|+|x-y|=2\max(|x|,|y|)\le2\pi$.
 \end{proof}
 
+\begin{lemma}[Torus and lifted positive-cell integrals]
+\label{lem:cell-lift-integral}
+\uses{def:cells, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.setIntegral_lift_cellSquare}
+\leanok
+For every almost-everywhere strongly measurable $F:\T^2\to\C$,
+\[
+ \int_{\text{cell square}}F\circ\pi=\int_\Cell F.
+\]
+This is an identity of ordinary integrals; no integrability or Sobolev
+hypothesis is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:lift-torus}
+\leanok
+The covering map sends Lebesgue measure on $(-\pi,\pi]^2$ to torus measure.
+Within this box its positive-dipole region is exactly the open cell square.
+Apply the measure identity to $\mathbf1_\Cell F$ and remove the indicator.
+\end{proof}
+
 \begin{lemma}[Calculus in diagonal coordinates]
 \label{lem:diagonal-calculus}
 \uses{def:cells, def:lift-operators}

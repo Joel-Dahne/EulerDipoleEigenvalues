@@ -70,6 +70,88 @@ $\Delta(s\phi)=s\Delta\phi+2\nabla s\cdot\nabla\phi-s\phi
 conjugation is the same computation.
 \end{proof}
 
+\begin{lemma}[Fourier pairing with the dipole]
+\label{lem:dipole-fourier-pairing}
+\uses{def:dipole, def:torus}
+\lean{NoEmbeddedEigenvalues.dipole_eq_char_sum,
+ NoEmbeddedEigenvalues.integral_dipole_mul_eq_fourier}
+\leanok
+The dipole is $\Psi=(e_{e_1}+e_{-e_1}+e_{e_2}+e_{-e_2})/2$.
+For every $g\in L^2(\T^2)$,
+\[
+ \int_{\T^2}\Psi g=\frac{(2\pi)^2}{2}
+       (\hat g_{e_1}+\hat g_{-e_1}+\hat g_{e_2}+\hat g_{-e_2}).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fourier-integral}
+\leanok
+Expand each cosine as the sum of its two complex exponentials. Each
+character pairing is integrable, and the Fourier integral formula gives
+the displayed normalization.
+\end{proof}
+
+\begin{lemma}[Dipole orthogonality from weak transport]
+\label{lem:dipole-transport-orthogonality}
+\uses{def:dipole, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.HasL0.integral_dipole_mul_eq_zero,
+ NoEmbeddedEigenvalues.IsEigenSolution.integral_dipole_mul_eq_zero}
+\leanok
+If $g,h\in L^2(\T^2)$ satisfy $L_0g=h$ in the weak character-tested sense,
+then $\int\Psi h=0$. Consequently every eigenfunction at a real
+$\lambda\ne0$, in any sector, satisfies $\int\Psi\omega=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-fourier-pairing, lem:transport-fourier}
+\leanok
+Sum the four transport coefficient identities at $\pm e_1,\pm e_2$.
+Their right sides cancel pairwise, so the four coefficients of $h$ sum
+to zero. Apply the preceding pairing formula. For an eigenfunction use
+$g=\omega+\psi$ and $h=i\lambda\omega$, and cancel $i\lambda\ne0$.
+No self-adjointness theorem is used.
+\end{proof}
+
+\begin{lemma}[Dipole pairing through the inverse Laplacian]
+\label{lem:dipole-invlap-pairing}
+\uses{def:dipole, def:inverse-laplacian}
+\lean{NoEmbeddedEigenvalues.integral_dipole_mul_invLap}
+\leanok
+For every $g\in L^2(\T^2)$,
+$\int\Psi\Delta^{-1}g=-\int\Psi g$; no mean-zero hypothesis is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-fourier-pairing, lem:inverse-laplacian-fourier}
+\leanok
+Each of the four frequencies in the dipole has squared length one, so
+its inverse-Laplacian multiplier is $-1$.
+\end{proof}
+
+\begin{lemma}[Dipole pairing on one cell]
+\label{lem:odd-dipole-cell-pairing}
+\uses{def:dipole, def:cells, def:reflections, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.integral_dipole_mul_eq_two_cell}
+\leanok
+If $g\in L^2(\T^2)$ is odd under $S_1^*$, then
+\[
+ \int_{\T^2}\Psi g=2\int_{\text{cell square}}\Psi\,\operatorname{lift}(g).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-lift-integral, lem:reflection-algebra, lem:symmetries-commute}
+\leanok
+The integrable product $F=\Psi g$ is reflection-invariant almost everywhere,
+since both factors change sign. Put $P=\mathbf1_{\Cell}F$.
+Then $P+P\circ S_1=F$ almost everywhere, including on the separatrix
+because $F=0$ there. Measure preservation gives $\int P\circ S_1=\int P$.
+Transfer the positive-cell integral to the lifted square using
+Lemma~\ref{lem:cell-lift-integral}. No separatrix trace or null-set lemma is
+needed for this decomposition.
+\end{proof}
+
 \begin{lemma}[Orthogonality and parity of the quotient]
 \label{lem:dd-orthogonality}
 \uses{def:dd-quotient, def:dd-exclusion-domain, def:eigen-problem, def:sectors}
@@ -81,12 +163,25 @@ $\phi$ is even under central inversion.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:H-selfadjoint, lem:dipole-identities, lem:stream-sector}
-$H\Psi=0$, so pairing the eigenvalue equation with $\Psi$ gives
-$\omega\perp\Psi$; then $\Delta\Psi=-\Psi$ gives $\psi\perp\Psi$. The product
-$\psi\Psi$ is invariant under the reflections exchanging the cells, so
-$\int_\Cell\Psi\psi=0$. Both $\psi$ and $\Psi$ are centrally even.
+\uses{lem:dipole-transport-orthogonality, lem:dipole-invlap-pairing,
+ lem:odd-dipole-cell-pairing, lem:stream-sector, lem:rotation-characters,
+ lem:lift-representatives}
+\leanok
+Weak dipole testing gives $\int\Psi\omega=0$, and inverse-Laplacian pairing
+then gives $\int\Psi\psi=0$. The stream function is odd under $S_1^*$,
+so its lifted positive-cell pairing is half the torus pairing and is zero.
+Use $\psi=\Psi\phi$ almost everywhere to obtain $\int_\Cell\Psi^2\phi=0$.
+Finally the two even reflection parities of $\phi$ give central evenness.
 \end{proof}
+
+\begin{remark}[Digest note: testing the dipole needs no self-adjointness]
+The manuscript's orthogonality argument can be implemented directly in the
+weak character-tested equation: the dipole has only four Fourier modes,
+and their transport coefficients cancel. This replaces the previous
+self-adjointness dependency. Given quotient data, the final step uses only
+the multiplication identity and even parity, not the other regularity or
+transport fields of those data.
+\end{remark}
 
 \section{The weighted virial identity}
 

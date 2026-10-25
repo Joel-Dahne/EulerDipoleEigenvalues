@@ -17,6 +17,7 @@ import NoEmbeddedEigenvalues.CanonicalProfile
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.OddHardy
 import NoEmbeddedEigenvalues.DipoleCalculus
+import NoEmbeddedEigenvalues.DipoleOrthogonality
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.EvenEvenBoundary
