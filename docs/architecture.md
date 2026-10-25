@@ -41,6 +41,9 @@ proof mechanisms. Module names below are relative to
 ### Local Sobolev spaces, lifts and traces
 
 - `SobolevLocal.lean`: weak derivatives, local Sobolev spaces and weighted norms.
+- `QuotientLocal.lean`: specified weak jets and Euclidean radial energies;
+  division/removal, coordinate Hardy, local/dyadic elliptic, invariant division
+  and first/second transport-gain interfaces.
 - `LiftTorus.lean`, `LiftIntegration.lean`: classical/Fourier derivative
   correspondence, smooth lifts and integration by parts over `[0, 2π]²`.
 - `LiftPeriodization.lean`: compact-test periodization, integral unfolding,
@@ -51,6 +54,9 @@ proof mechanisms. Module names below are relative to
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.
 - `TraceL2.lean`, `TraceH2.lean`, `TraceGagliardo.lean`: rectangle trace package.
   `HardyAverage.lean` and `OddHardy.lean`: averaging and odd-function Hardy estimates.
+- `ScalarDivision.lean`: canonical-trace endpoint/second Hardy, coarse period
+  derivative and uniform complete-cell/global quotient interfaces, for all four
+  quarter characters.
 - `DiagonalCalculus.lean`, `SegmentEstimates.lean`: diagonal calculus and
   restrictions to segments/hyperbolas near a line.
 - `SeparatrixTraces.lean`: line representatives, even–even arc/level traces,
@@ -60,6 +66,8 @@ proof mechanisms. Module names below are relative to
 
 - `DipoleCalculus.lean`, `Cells.lean`, `SeparatrixArc.lean`: dipole identities,
   cells/critical sets, diagonal square and explicit heteroclinic arc.
+- `SaddleNormalForm.lean`: explicit orthonormal saddle charts and sinc factor;
+  parity, differentiated Taylor bounds and Cartesian-quadratic compatibility.
 - `SmoothIntervalIntegral.lean`, `Period.lean`: smooth parameter integrals and
   period function.
 - `DipoleFlow.lean`, `OrbitCoordinates.lean`: global flow, orbit/period relation,
@@ -111,6 +119,8 @@ proof mechanisms. Module names below are relative to
   profile interval regularity, and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
+- `OddOddRegularity.lean`: normalized saddle quadratics and canonical transverse
+  zero traces; eigenfunction saddle, separatrix and weighted-gradient interfaces.
 - `OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
   invariant division/periodic gain interfaces, the generic continuous-forcing
   transport-pair bridge, and quotient-existence assembly.

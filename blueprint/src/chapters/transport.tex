@@ -806,10 +806,25 @@ the endpoint cancellation with $\kappa^{-1}=\bar\kappa$, rather than
 using $\kappa^2=1$.
 \end{remark}
 
+\begin{definition}[Scalar phase and complete-cell endpoints]
+\label{def:phase-cell-scalars}
+\uses{def:period}
+\lean{NoEmbeddedEigenvalues.quarterPhase, NoEmbeddedEigenvalues.IsPhaseCellEndpoint}
+\leanok
+For real $\lambda$ put $\Phi_\lambda(h)=2\lambda L(h)$.
+A complete-cell endpoint for the quarter character $\kappa$ satisfies
+$e^{i\Phi_\lambda(h)}=-\kappa$: it lies halfway between resonances,
+not at a zero of the divisor.
+\end{definition}
+
 \begin{definition}[Quarter-orbit numerator and divisor]
 \label{def:numerator}
-\uses{def:transport-pair, def:period, def:reflections, lem:period-orbit}
-For a transport pair satisfying $R^*v=\kappa v$ and $R^*f=\kappa f$,
+\uses{def:transport-pair, def:period, def:reflections, lem:period-orbit,
+ def:phase-cell-scalars}
+\lean{NoEmbeddedEigenvalues.quarterNumerator, NoEmbeddedEigenvalues.quarterDivisor,
+ NoEmbeddedEigenvalues.quarterQuotient}
+\leanok
+For a transport pair, using the continuous forcing representative, satisfying $R^*v=\kappa v$ and $R^*f=\kappa f$,
 $\kappa\in\{1,-1,i,-i\}$, and the quarter orbits of
 Definition~\ref{def:period}, let
 \[
@@ -817,6 +832,14 @@ Definition~\ref{def:period}, let
   D(h)=\kappa-e^{2i\lambda L(h)},\qquad C(h)=N(h)/D(h).
 \]
 \end{definition}
+
+\begin{remark}[Digest note: the numerator uses continuous forcing]
+Changing a raw forcing representative on one orbit can change its pointwise
+numerator at that level. The numerator here uses the continuous $H^2$
+forcing representative. When working only with a.e. orbit data, values
+at divisor zeros must instead be those of the locally $H^1$ numerator
+extension. Raw values on an exceptional orbit are not resonance data.
+\end{remark}
 
 \begin{lemma}[Quarter-orbit endpoint formula]
 \label{lem:quarter-endpoint-formula}
@@ -877,9 +900,40 @@ $|D(h)|\ge c_\lambda|h-h_j|/h_j$. Only ratio bounds between consecutive
 zeros, not an exact geometric progression, are asserted.
 \end{proof}
 
+\begin{lemma}[Uniform complete-cell division estimates]
+\label{lem:phase-cell-estimates}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval}
+\lean{NoEmbeddedEigenvalues.phase_cell_estimates}
+\leanok
+For every real $\lambda\ne0$ there are $K>0$ and $0<h_*<1$, uniform over
+the four quarter characters, with the following property.
+Let $0<a<z<b<h_*$, $\kappa^4=1$, $D(z)=0$ and
+\[
+ |\Phi_\lambda(a)-\Phi_\lambda(z)|
+ =|\Phi_\lambda(b)-\Phi_\lambda(z)|=\pi .
+\]
+If $N\in H^2(a,b)$ and $N(z)=0$, then there is $C\in H^1(a,b)$ with
+$D C=N$ throughout $(a,b)$, $C/h\in L^2(a,b)$, and
+\[
+ \int_a^b|C/h|^2\le K\int_a^b|N'|^2,\qquad
+ \int_a^b|C'|^2\le K\int_a^b(|N'|^2+h^2|N''|^2).
+\]
+The constants are independent of the cell and numerator.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-derivative-bounds, lem:hardy-endpoint, lem:hardy-second}
+The period bounds give $h\asymp z$ and
+$D(h)=(h-z)d(h)/z$, with $|d|\ge c_\lambda$ and
+$|d'|\le C_\lambda/z$. Apply the two Hardy inequalities and the product rule.
+\end{proof}
+
 \begin{lemma}[Phase-cell division]
 \label{lem:phase-cell-division}
-\uses{def:numerator, def:h1-interval, def:h2-interval, lem:h1-interval-endpoints}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval,
+ def:h2-interval, def:h2-local-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.phase_cell_division}
+\leanok
 Suppose $N\in H^2_{\mathrm{loc}}(0,h_0)$, $N(h_j)=0$ at every zero
 of $D$, and $N',hN''\in L^2(0,h_0)$. After decreasing $h_0$ to a
 phase-cell endpoint, $C=N/D$ extends across its removable singularities,
@@ -887,24 +941,15 @@ $C/h,C'\in L^2(0,h_0)$, and $C$ has trace zero at $h=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-derivative-bounds, lem:hardy-1d}
-Let $I_j$ be the cell where the phase $2\lambda L$ lies between the
-half-phase values adjacent to its value at $h_j$.
-The derivative bounds give $h\asymp h_j$ on $I_j$ and
-\[
- D(h)=\frac{h-h_j}{h_j}d_j(h),\qquad
- |d_j|\ge c_\lambda,\qquad |d_j'|\le C_\lambda/h_j .
-\]
-Indeed $|D|\asymp|h-h_j|/h_j$ by the sine bound on a half phase,
-and $|D''|\le C_\lambda/h_j^2$ bounds the derivative of the divided
-difference. First and second Hardy, on each side of $h_j$, give
-\[
- \int_{I_j}|C/h|^2\le C_\lambda\int_{I_j}|N'|^2,\qquad
- \int_{I_j}|C'|^2\le C_\lambda\int_{I_j}
-                  (|N'|^2+h_j^2|N''|^2).
-\]
-Sum over the cells. Thus $C\in H^1(0,h_0)$, and its continuous
-endpoint trace must be zero because $C/h\in L^2$.
+\uses{lem:phase-cell-estimates, lem:period-regularity, lem:period-coarse}
+Choose the upper cutoff at a complete-cell endpoint below the cutoff of
+Lemma~\ref{lem:phase-cell-estimates}; monotonicity and $L(h)\to\infty$
+give arbitrarily small such endpoints. Sum the two uniform cell estimates.
+The quotient extensions agree at common boundaries, where $D\ne0$,
+so their weak derivatives have no jumps. Thus $C/h,C'\in L^2$, and
+$C\in L^2$ follows from $h$ being bounded above.
+Consequently $C\in H^1$, and its canonical endpoint trace is zero because
+$C/h\in L^2$.
 \end{proof}
 
 \begin{lemma}[Logarithmically weighted phase-cell division]
@@ -923,12 +968,12 @@ After decreasing $h_0<1$ to a phase-cell endpoint, $C=N/D$ satisfies
 \end{lemma}
 
 \begin{proof}
-\uses{lem:phase-cell-division, lem:numerator-zeros}
+\uses{lem:phase-cell-division, lem:phase-cell-estimates, lem:numerator-zeros}
 On $I_j$, $h\asymp h_j$, so
 $|\Lambda(h)-\Lambda(h_j)|\le C$ and
 $\Lambda(h)\asymp\Lambda(h_j)$ uniformly, since $\Lambda\ge1$.
-Multiply the two cell estimates in the proof of
-Lemma~\ref{lem:phase-cell-division} by $\Lambda(h_j)$, replace this constant
+Multiply the two uniform cell estimates of
+Lemma~\ref{lem:phase-cell-estimates} by $\Lambda(h_j)$, replace this constant
 weight by $\Lambda(h)$ on both sides, and sum. No derivative of $\Lambda$
 and no new weighted Hardy inequality are required.
 \end{proof}
@@ -993,6 +1038,8 @@ cell's corners. Away from them $d$ is bounded below and $v\in L^2$.
 \begin{lemma}[First transport gain]
 \label{lem:transport-first-gain}
 \uses{def:transport-pair, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.transport_first_gain}
+\leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square. Then $v/d\in L^2(\Cell)$. No elliptic relation
 between $v$ and $f$, or vanishing saddle value of $f$, is required.
@@ -1055,6 +1102,8 @@ neighbourhood is not the hypothesis of this corollary.
 \begin{lemma}[Second transport gain]
 \label{lem:transport-second-gain}
 \uses{def:transport-pair, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.transport_second_gain}
+\leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square, and let $0<\delta<1$. If
 $|f|\le Cd^{2-\delta}$ near the corners and

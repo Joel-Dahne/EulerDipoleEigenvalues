@@ -69,10 +69,26 @@ and harmonic across the origin. Its parity restricts the Taylor degrees.
 
 \section{Saddle estimates}
 
+\begin{definition}[Normalized saddle quadratic]
+\label{def:saddle-quadratic}
+\uses{def:dipole, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.saddleQuadratic}
+\leanok
+For a saddle $P$ and $a\in\C$ put
+\[
+ Q_{P,a}(p)=\frac{a\cos P_x}{2}
+              \bigl((p_y-P_y)^2-(p_x-P_x)^2\bigr).
+\]
+The remainders are $R_0=\psi-Q_{P,a}$ and $R=\psi-a\Psi$.
+\end{definition}
+
 \begin{proposition}[First weighted vorticity estimate]
 \label{prop:saddle-first-gain}
-\uses{def:eigen-problem}
-Every eigenfunction satisfies $\omega/d\in L^2$ (manuscript
+\uses{def:eigen-problem, lem:cell-neighbourhood}
+\lean{NoEmbeddedEigenvalues.saddle_first_gain}
+\leanok
+Every eigenfunction satisfies $\widetilde\omega/d\in L^2(U_*)$, where
+$U_*$ is the fixed bounded cell neighbourhood (manuscript
 \texttt{(prop:saddle-gains)}, first assertion).
 \end{proposition}
 
@@ -90,10 +106,13 @@ in the transport lemma.
 
 \begin{proposition}[Odd--odd saddle estimates]
 \label{prop:saddle-dd}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local}
-In the odd--odd sector, $\omega/d^2\in L^2$, and at each saddle there is a
-unique homogeneous harmonic quadratic $q=a\,uv$ (in the coordinates of
-Lemma~\ref{lem:saddle-normal-form}) such that
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:local-weak-jets, def:saddle-quadratic, lem:cell-neighbourhood}
+\lean{NoEmbeddedEigenvalues.saddle_dd}
+\leanok
+In the odd--odd sector, $\widetilde\omega/d^2\in L^2(U_*)$ on the fixed
+bounded cell neighbourhood, and at each lifted saddle $P$ there is a
+unique coefficient $a$ for the normalized quadratic $q=Q_{P,a}$ such that
 \[
   \int_{r<r_0}\Big(\frac{|\psi-q|^2}{r^8}+\frac{|\nabla(\psi-q)|^2}{r^6}
   +\frac{|D^2(\psi-q)|^2}{r^4}\Big)<\infty
@@ -103,7 +122,9 @@ Lemma~\ref{lem:saddle-normal-form}) such that
 
 \begin{proof}
 \uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain,
- lem:transport-pair-eigen, lem:saddle-normal-form, lem:stream-sector}
+ lem:transport-pair-eigen, lem:saddle-normal-form, lem:saddle-chart-parity,
+ lem:saddle-quadratic-chart,
+ lem:stream-sector}
 Fix $0<\delta<1$ and apply Lemma~\ref{lem:cylinder-inverse} with
 $a=2-\delta$. Its physical forcing hypothesis is
 $r^{\delta-1}\omega\in L^2$, supplied by the first gain. Odd--odd reflection
@@ -125,7 +146,9 @@ $\omega/r^2\in L^2$, equivalently $r^{-1}\omega\in L^2(dr/r\,d\theta)$,
 and $3$ avoids all permitted angular degrees. Subtract the degree-two term
 $q$ of the harmonic remainder. The remaining harmonic terms have degree
 at least four, so they have finite weighted norm for $a=3$. The permitted
-quadratic is $q=a_Puv$. If two quadratics worked, their difference would
+quadratic is a multiple of $uv$, equivalently $Q_{P,a}$: the factor
+$\cos P_x=\pm1$ makes this normalization nondegenerate.
+If two quadratics worked, their difference would
 have finite $\int|q|^2r^{-8}dx\,dy$, impossible for a nonzero homogeneous
 quadratic. This proves uniqueness.
 \end{proof}
@@ -162,13 +185,17 @@ angular frequencies to odd integers, so the multiplier has no zero.
 
 \begin{lemma}[Weighted forcing supplied by the quadratic saddle jet]
 \label{lem:dd-weighted-forcing}
-\uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
+\uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local,
+ lem:cell-neighbourhood}
+\lean{NoEmbeddedEigenvalues.dd_weighted_forcing}
+\leanok
 For an odd--odd eigenfunction,
 \[
  \psi/d^2,\qquad \nabla\psi/d^{3/2}\in L^2
 \]
-near the saddles. The continuous representative of $\psi$ vanishes on
-every separatrix edge.
+near the saddles, and hence on the fixed bounded cell neighbourhood by
+ordinary $H^2$ away from the saddles. The continuous representative of $\psi$
+vanishes on every separatrix edge.
 \end{lemma}
 
 \begin{proof}
@@ -185,12 +212,32 @@ continuous parity identities hold almost everywhere. It therefore vanishes
 on the fixed lines, which are exactly the separatrix.
 \end{proof}
 
+\begin{definition}[Zero canonical trace on separatrix lines]
+\label{def:zero-separatrix-trace}
+\uses{def:h1-interval, def:cells, lem:trace-acl, lem:trace-l2}
+\lean{NoEmbeddedEigenvalues.diagonalTraceChart,
+ NoEmbeddedEigenvalues.HasZeroSeparatrixTraceOn}
+\leanok
+Use a diagonal chart whose first coordinate is tangential and second
+coordinate normal. For every compact chart rectangle inside $U$ and every
+normal coordinate $t$ in its closed normal interval with $\cos t=0$,
+require existence of transverse ACL data $G,D$, both $L^2$ on the rectangle,
+with $G$ representing $F$ and
+$\operatorname{Tr}_tG=0$ a.e. in the tangential coordinate.
+Here $\operatorname{Tr}_t$ is the canonical interval $H^1$ extension,
+including endpoints. The property asserts existence of such ACL data on
+each rectangle, not any value of a raw $L^2$ representative on a line.
+\end{definition}
+
 \begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
 \label{prop:dd-separatrix-h1}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local}
-In the odd--odd sector, $\omega\in H^1$ on a neighbourhood of the separatrix
-(including the saddles), with zero trace on each regular edge, and $\psi\in H^3$
-on a possibly smaller neighbourhood (manuscript \texttt{(prop:separatrix-h1)}).
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:zero-separatrix-trace}
+\lean{NoEmbeddedEigenvalues.dd_separatrix_h1}
+\leanok
+In the odd--odd sector there is an open lifted neighbourhood $U$ of
+$\{\Psi=0\}$ such that $\omega\in H^1_{\rm loc}(U)$ has zero canonical
+separatrix traces and $\psi\in H^3_{\rm loc}(U)$
+(manuscript \texttt{(prop:separatrix-h1)}).
 \end{proposition}
 
 \begin{proof}
@@ -213,6 +260,16 @@ give an open neighbourhood of the whole separatrix.
 Finally $\Delta\psi=\omega\in H^1$ there and $\psi\in H^2$ globally;
 Lemma~\ref{lem:elliptic-local} gives $\psi\in H^3$ on a smaller neighbourhood.
 \end{proof}
+
+\begin{remark}[Digest note: norms and traces of periodic lifts]
+The formal statements use local Sobolev spaces on the full lifted
+separatrix neighbourhood, not global $L^2(\R^2)$ norms of periodic lifts.
+On compact representatives a finite cover recovers the corresponding
+torus neighbourhood statements. The saddle estimates instead use the
+fixed bounded lift neighbourhood. Weak Cartesian jets specify the
+derivatives, Euclidean radius specifies the radial weights, and transverse
+interval $H^1$ extensions specify the zero traces.
+\end{remark}
 
 \begin{remark}[Digest note: the $H^1$ gain without a midpoint condition]
 The quadratic saddle jet supplies the weaker weighted-forcing hypotheses
@@ -328,8 +385,11 @@ both endpoint terms. This proves the asserted weighted integrability.
 \begin{proposition}[Weighted vorticity gradient, odd--odd]
 \label{prop:dd-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
-For an odd--odd eigenfunction, $\nabla\omega/d\in L^2$ on a sufficiently
-small neighbourhood of the separatrix.
+\lean{NoEmbeddedEigenvalues.dd_weighted_gradient}
+\leanok
+For an odd--odd eigenfunction there is an open lifted neighbourhood $U$
+of $\{\Psi=0\}$ and a weak gradient $G$ of $\omega$ on $U$ such that
+$G/d\in L^2_{\rm loc}(U)$.
 \end{proposition}
 
 \begin{proof}
@@ -399,17 +459,23 @@ by itself an $H^2$ division argument.
 
 \begin{lemma}[The weighted third derivative needed for division]
 \label{lem:dd-weighted-third-stream}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local}
-Let $q$ be the quadratic saddle jet and $R_0=\psi-q$ in orthonormal
-saddle coordinates. Then $D^3R_0/r\in L^2$ on a smaller saddle disk.
-If $a$ is chosen so that $a\Psi$ has quadratic part $q$, the same bound,
-and the existing bounds $R/r^4,\nabla R/r^3,D^2R/r^2\in L^2$,
-hold for $R=\psi-a\Psi$.
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:local-weak-jets, def:saddle-quadratic}
+\lean{NoEmbeddedEigenvalues.dd_weighted_third_stream}
+\leanok
+At each saddle there is a disk and a coefficient $a$ such that both
+$R_0=\psi-Q_{P,a}$ and $R=\psi-a\Psi$ have specified third weak jets with
+\[
+ R_0/r^4,\ \nabla R_0/r^3,\ D^2R_0/r^2,\ D^3R_0/r\in L^2,
+ \qquad
+ R/r^4,\ \nabla R/r^3,\ D^2R/r^2,\ D^3R/r\in L^2.
+\]
 \end{lemma}
 
 \begin{proof}
 \uses{prop:saddle-dd, prop:dd-separatrix-h1, prop:dd-weighted-gradient,
- lem:elliptic-local, lem:saddle-normal-form}
+ lem:elliptic-local, lem:elliptic-dyadic, lem:saddle-normal-form,
+ lem:saddle-normal-form-derivatives, lem:saddle-quadratic-chart}
 Because $q$ is harmonic, $\Delta R_0=\omega$.
 On dyadic annuli of radius $\rho$, the local elliptic estimate gives
 \[
@@ -485,6 +551,8 @@ after stream $H^2$ is established.
 \begin{lemma}[Weak transport survives division by the invariant dipole]
 \label{lem:dd-quotient-transport}
 \uses{def:transport-pair, def:dd-quotient, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.dd_quotient_transport_local}
+\leanok
 Let the original weak relation
 $L_0(\omega+\psi)=i\lambda\omega$ hold on an open set $U$.
 Suppose $\omega=\Psi\nu$, $\psi=\Psi\phi$ a.e. and
@@ -592,7 +660,7 @@ including the corners (manuscript \texttt{(prop:mixed-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{cor:mixed-saddle-jet, lem:saddle-normal-form,
+\uses{cor:mixed-saddle-jet, lem:saddle-normal-form, cor:saddle-linearization,
   lem:weighted-transport-h1, lem:elliptic-local, lem:hardy-1d,
   lem:weighted-corner-trace}
 Choose a smooth $z_0$, affine near each saddle, whose linear term solves

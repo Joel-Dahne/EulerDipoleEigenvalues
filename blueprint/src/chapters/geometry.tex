@@ -1521,6 +1521,8 @@ for $S$, and the mean value theorem gives strict decrease.
 \begin{lemma}[Coarse bounds for period derivatives]
 \label{lem:period-derivative-bounds}
 \uses{def:period}
+\lean{NoEmbeddedEigenvalues.eighthPeriod_derivative_bounds}
+\leanok
 There are $c,C>0$ and $0<h_0<1$ such that
 \[
  c\le-hL'(h)\le C,\qquad h^2|L''(h)|\le C
@@ -2004,28 +2006,124 @@ orthogonal. The flow equations follow from $\dot a=-\cos a\sin b$, $\dot b=\sin 
 \end{proof}
 
 
+\begin{definition}[Local Euclidean disk and axis notation]
+\label{def:local-plane-geometry}
+\uses{def:lift-operators}
+\lean{NoEmbeddedEigenvalues.localRadius, NoEmbeddedEigenvalues.localDisk,
+ NoEmbeddedEigenvalues.axisCoord, NoEmbeddedEigenvalues.axisReflect,
+ NoEmbeddedEigenvalues.axisRectangle, NoEmbeddedEigenvalues.classicalRealJet}
+\leanok
+Write $r_c(p)=\sqrt{(p_x-c_x)^2+(p_y-c_y)^2}$ and
+$D_\rho(c)=\{r_c<\rho\}$. The axis reflection negates the selected
+coordinate, and its symmetric rectangle has that coordinate in $(-a,a)$.
+For an explicit smooth real function, its classical jet is obtained by
+iterating the selected coordinate partials. These are Euclidean and
+classical-calculus definitions, independent of Sobolev spaces.
+\end{definition}
+
+\begin{definition}[Normalized orthonormal saddle chart]
+\label{def:saddle-ortho-chart}
+\uses{def:cells, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.saddleOrthoChart, NoEmbeddedEigenvalues.saddleOrthoCoord,
+ NoEmbeddedEigenvalues.saddleFactor}
+\leanok
+For a saddle $P$, set $s=\cos P_x$ and
+\[
+ \Xi_P(u,v)=P+\left(\frac{u-sv}{\sqrt2},\frac{u+sv}{\sqrt2}\right),\qquad
+ m(u,v)=\operatorname{sinc}(u/\sqrt2)\operatorname{sinc}(v/\sqrt2).
+\]
+The inverse-coordinate formula is
+$((X+Y)/\sqrt2,\ s(Y-X)/\sqrt2)$ for $(X,Y)=p-P$.
+The sinc factors use their value $1$ at zero.
+\end{definition}
+
 \begin{lemma}[Saddle normal form]
 \label{lem:saddle-normal-form}
-\uses{def:cells, lem:dipole-critical-points, lem:separatrix-lines}
-Near each saddle there are orthonormal coordinates $(u,v)$, in which the two
-separatrix rays are the coordinate axes, such that
-$\Psi=uv\,m(u,v)$ for a smooth nonvanishing $m$ with $m(0,0)=1$.
-In particular $\Psi=uv+O(r^4)$ and
-$|\nabla\Psi|^2=u^2+v^2+O(r^4)$, $r=(u^2+v^2)^{1/2}$.
-The linearization $H_s$ of $H$ at the saddle has eigenvalues $\pm i$ on linear
-polynomials.
+\uses{def:saddle-ortho-chart, lem:dipole-critical-points, lem:separatrix-lines}
+\lean{NoEmbeddedEigenvalues.saddleFactor_regular,
+ NoEmbeddedEigenvalues.saddleOrthoChart_orthogonal,
+ NoEmbeddedEigenvalues.saddle_dipole_factorization,
+ NoEmbeddedEigenvalues.saddle_normal_form_derivatives}
+\leanok
+The chart and inverse-coordinate formulas are mutually inverse and
+$r_P(\Xi_P(q))=r_0(q)$. Near each saddle its coordinate axes are exactly
+the separatrix. In these orthonormal coordinates,
+$\Psi\circ\Xi_P=uv\,m(u,v)$, with $m$ smooth, even in both variables,
+positive near zero and $m(0,0)=1$.
+In particular $\Psi\circ\Xi_P=uv+O(r^4)$ and
+$|\nabla\Psi|^2\circ\Xi_P=u^2+v^2+O(r^4)$.
 \end{lemma}
 
 \begin{proof}
-At $(\pi,0)$ choose $x=\pi+(u+v)/\sqrt2$, $y=(u-v)/\sqrt2$. Then
-\[
- \Psi=2\sin(u/\sqrt2)\sin(v/\sqrt2)=uv\,m(u,v),\qquad
- m=\frac{\sin(u/\sqrt2)}{u/\sqrt2}
-    \frac{\sin(v/\sqrt2)}{v/\sqrt2},
-\]
-with both ratios smoothly extended at zero. They are even and equal to
-$1+O(r^2)$, giving the stated Taylor estimates. Translations and a choice
-of signs give the other saddles. The linearized flow is
-$u\partial_u-v\partial_v$ up to exchanging the axes, so $H_s=-iL_s$ has
-eigenvalues $\pm i$ on the linear polynomials.
+Since $s=\pm1$, the affine chart matrix is orthogonal.
+The cosine identities at the saddle give
+$\Psi\circ\Xi_P=2\sin(u/\sqrt2)\sin(v/\sqrt2)=uv\,m$.
+The extended sine ratios are smooth, even and $1+O(r^2)$.
+The same explicit formulas give the gradient-square expansion.
 \end{proof}
+
+\begin{lemma}[Compatibility of the normalized saddle quadratic]
+\label{lem:saddle-quadratic-chart}
+\uses{def:saddle-ortho-chart, def:saddle-quadratic}
+\lean{NoEmbeddedEigenvalues.saddleQuadratic_comp_chart}
+\leanok
+For a lifted saddle $P$, $Q_{P,a}(\Xi_P(u,v))=a\,uv$.
+The Cartesian and orthonormal versions therefore use the same coefficient.
+\end{lemma}
+
+\begin{lemma}[Differentiated saddle Taylor estimates]
+\label{lem:saddle-normal-form-derivatives}
+\uses{def:saddle-ortho-chart, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.saddle_normal_form_derivatives}
+\leanok
+For each saddle there are $\rho,C>0$ such that on $D_\rho(0)$, for all
+ordered coordinate derivatives of orders $0\le k\le3$,
+\[
+ |\partial^k(\Psi\circ\Xi_P-uv)|\le Cr^{4-k},\qquad
+ \bigl||\nabla\Psi|^2\circ\Xi_P-r^2\bigr|\le Cr^4.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-normal-form}
+Taylor expansion of the explicit smooth sine factors gives the derivative
+bounds, including their vanishing jets at zero. A value-only big-O bound
+is not being differentiated.
+\end{proof}
+
+\begin{lemma}[Odd--odd parity in saddle coordinates]
+\label{lem:saddle-chart-parity}
+\uses{def:saddle-ortho-chart, def:sectors, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.saddle_chart_parity}
+\leanok
+If $f$ is odd under both torus separatrix reflections, then
+$\widetilde f\circ\Xi_P$ is odd in both coordinate axes a.e.
+for every lifted saddle $P$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:reflection-algebra, lem:lift-torus}
+The two axis reflections conjugate to the two separatrix reflections,
+up to period translations. Transfer the torus a.e. identities through
+the invertible affine chart.
+\end{proof}
+
+\begin{corollary}[Linearized saddle Hamiltonian]
+\label{cor:saddle-linearization}
+\uses{lem:saddle-normal-form}
+The linearization $H_s$ of $H$ at the saddle has eigenvalues $\pm i$
+on linear polynomials.
+\end{corollary}
+
+\begin{proof}
+With $s=\cos P_x=\pm1$, the linearized flow in the normalized chart is
+$-s u\partial_u+s v\partial_v$. Hence $H_s=-iL_s$ acts on $u,v$
+with eigenvalues $is,-is$.
+\end{proof}
+
+\begin{remark}[Digest note: factorization and linearization have different roles]
+The odd--odd quotient construction uses the chart, parity and differentiated
+Taylor bounds. The Hamiltonian eigenvalue calculation is a separate
+mixed-sector jet-subtraction input; it is not a prerequisite for those
+geometric facts.
+\end{remark}

@@ -53,7 +53,7 @@ and closing rational margins are proved. The cutoff is the rational 1/7;
 the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
-## Next work: prove the quotient inputs
+## Current work: recursive statement pass
 
 `dd_exclusion_domain` now follows in Lean from four explicit inputs:
 `dd_stream_quotient_h2`, `even_h2_dipole_laplacian`,
@@ -66,11 +66,34 @@ cone division and H² point removal. The separate angular-Hardy vorticity
 division argument is no longer needed. Invariant cutoff testing supplies quotient
 transport without closedness of the global transport operator.
 
-Next prove weak invariant division and the Hardy/Poisson input, then expand
-the stream H² input into the division/removal and weighted elliptic lemmas.
+The first recursive layer is now stated, not proved, in
+[QuotientLocal.lean](../../NoEmbeddedEigenvalues/QuotientLocal.lean) and
+[OddOddRegularity.lean](../../NoEmbeddedEigenvalues/OddOddRegularity.lean).
+It supplies specified weak jets/radial energies, local division and removal,
+coordinate Hardy, elliptic regularity/dyadic bounds, local invariant division,
+the first two transport gains, and the sector saddle/separatrix/gradient inputs.
+Canonical transverse interval H¹ extensions encode zero traces.
+
+The shared scalar/geometry batch is stated in
+[ScalarDivision.lean](../../NoEmbeddedEigenvalues/ScalarDivision.lean) and
+[SaddleNormalForm.lean](../../NoEmbeddedEigenvalues/SaddleNormalForm.lean):
+endpoint/second Hardy, coarse period derivatives, uniform complete-cell estimates
+and global division, plus explicit orthonormal charts, parity and differentiated
+Taylor bounds. The chart quadratic has the same coefficient as the Cartesian
+normalization. Angular Hardy and linearized-Hamiltonian claims are separated
+from this route; existing primitive Hardy and period smoothness are reused.
+
+Next is the weighted regularity batch: cylinder inversion, corner traces,
+zero-edge transport and H¹ gluing. Then state logarithmic forcing/numerators
+and logarithmically weighted phase-cell division. Keep these batches separate
+and do not start proofs during the statement pass. Human review
+of the new hypotheses and derivative/trace packaging is still needed.
 The periodic first gain includes cell covering on the full fixed neighbourhood;
 it assumes a global torus relation, not merely a pair on that neighbourhood.
-The earlier transport gains also still need Lean proofs.
+
+Parent admissions have not been replaced by assemblies: the blueprint records
+the intended recursive dependencies, whereas the Lean sorry audit still stops
+at the four existing quotient inputs (sixteen for the full exclusion).
 The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
 and negative affine tail) remain a separate backlog. Bulk coercivity and its
 certificate remain deferred.
@@ -90,8 +113,8 @@ included in the Lean interface; it is a separate optional blueprint node.
 
 ## Analytic review boundary
 
-The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³,
-`∇ω/d ∈ L²`. Double division for the H² stream quotient, the subsequent
+The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³ and
+`∇ω/d ∈ L²`; their principal interfaces are now stated in Lean with `sorry`. Double division for the H² stream quotient, the subsequent
 Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the minimal quotient data; its Lean

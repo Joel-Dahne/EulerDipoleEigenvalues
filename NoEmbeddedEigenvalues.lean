@@ -38,6 +38,10 @@ import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddQuotient
+import NoEmbeddedEigenvalues.OddOddRegularity
+import NoEmbeddedEigenvalues.QuotientLocal
+import NoEmbeddedEigenvalues.ScalarDivision
+import NoEmbeddedEigenvalues.SaddleNormalForm
 import NoEmbeddedEigenvalues.Period
 import NoEmbeddedEigenvalues.ResonantVanishing
 import NoEmbeddedEigenvalues.Sectors

@@ -44,17 +44,23 @@ weights and local versus global regularity.
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
    exclusion is now assembled. Quotient existence is assembled in
-   `OddOddQuotient.lean` from four admitted inputs. Prioritize weak invariant
-   division and Hardy/Poisson division; then expand stream H² into
-   one-coordinate/weighted double division and H² point removal. The three corrected-boundary estimates and
+   `OddOddQuotient.lean` from four admitted inputs. The current pass is
+   statements only: `QuotientLocal.lean` and `OddOddRegularity.lean` state the
+   next local/sector layer with `sorry`. The scalar/geometry batch is now
+   stated in `ScalarDivision.lean` and `SaddleNormalForm.lean`. Next take
+   cylinder inversion and weighted transport/gluing as one batch, then the
+   logarithmic phase-cell and numerator estimates, before attempting proofs. The three corrected-boundary estimates and
    eight Picone inputs remain separate work.
    Bulk coercivity and its certificate remain deferred.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
-2. **Bounded shared formalization:** coarse period derivative bounds
-   (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
-   Hardy division (`lem:phase-cell-division`) are reusable first targets.
+2. **Shared interface review:** check the uniform complete-cell estimates
+   needed for logarithmic summation, canonical interval traces and compatibility
+   of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the
+   continuous forcing representative, not raw values on exceptional orbits.
+   Angular Hardy and the mixed-sector
+   saddle linearization are not prerequisites of the odd–odd quotient route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and
    `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE
    character helpers already allow complex characters; check resonant phases
@@ -77,8 +83,12 @@ weights and local versus global regularity.
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
-  H¹ gluing has an explicit cutoff proof. These derivations, the first two
-  transport gains and cylinder inverse are not yet in Lean.
+  H¹ gluing has an explicit cutoff proof. The first two transport gains and
+  the sector saddle/separatrix/gradient interfaces are now stated with `sorry`.
+  Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
+  Cylinder inversion, the weighted H¹/gluing layer and logarithmic numerator
+  infrastructure still need complete statement links. No new analytic proofs
+  were supplied in the recursive statement pass.
   The transport gains cover all four characters without Melnikov;
   implemented Melnikov/pairing results still only accept ±1.
   Local elliptic regularity, corner traces/gluing and interval Hardy inputs
@@ -90,7 +100,9 @@ weights and local versus global regularity.
   candidate approaches.
 - [Period estimates](../../blueprint/src/chapters/geometry.tex): coarse
   derivative bounds from the regular integral suffice for the transport
-  gains; they still need Lean proofs. The odd–odd finite parts now use only
+  gains; they are stated in `ScalarDivision.lean` and still need Lean proofs.
+  Smoothness and strict decrease were already proved in `Period.lean`.
+  The odd–odd finite parts now use only
   the leading value asymptotic, with a direct blueprint derivation from the
   defining integral. The elliptic identity and sharp remainders are off all
   sector routes; they remain unproved in Lean. Sharp remainders also need a

@@ -1090,26 +1090,76 @@ $\pi(K)$ every term vanishes. For $p\in U$ and $n\ne0$, injectivity of $\pi$ on 
 $p+2\pi n\in U$, so the sum reduces to $F(p)$. Injectivity is used only here.
 \end{proof}
 
+\begin{definition}[Specified local weak jets and radial energies]
+\label{def:local-weak-jets}
+\uses{def:sobolev-local, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn, NoEmbeddedEigenvalues.RadialJetLp,
+ NoEmbeddedEigenvalues.radialJetEnergy, NoEmbeddedEigenvalues.weakJetEnergy}
+\leanok
+Use the Euclidean disks and axis notation of
+Definition~\ref{def:local-plane-geometry}.
+A specified weak jet $D$ of order $n$ has $D_\varnothing=f$ and
+$\partial_jD_w=D_{jw}$ weakly whenever $|w|<n$.
+Write $\mathcal R_{k,s}(D)$ for the assertion
+$D_w/r_c^s\in L^2(U)$ for every word of length $k$, and set
+\[
+ E_{k,s}(D;U,c)=\sum_{|w|=k}\int_U|D_w/r_c^s|^2,\qquad
+ H_n(D;U)=\sum_{k=0}^n E_{k,0}(D;U,0).
+\]
+Every use of an energy below includes its square-integrability hypothesis.
+The axis reflection and symmetric rectangle exchange the roles of the
+coordinates when the normal index is $1$ instead of $0$.
+\end{definition}
+
+\begin{lemma}[Sobolev membership via specified jets]
+\label{lem:sobolev-weak-jets}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.memSobolevOn_iff_exists_weakJet}
+\leanok
+$f\in H^n(U)$ if and only if it has a specified weak jet of order $n$
+whose entries of orders $0,\ldots,n$ all belong to $L^2(U)$.
+\end{lemma}
+
 \begin{lemma}[Local elliptic regularity]
 \label{lem:elliptic-local}
-\uses{def:sobolev-local}
-If $u\in H^2$ near a point and $\Delta u\in H^1$ there, then $u\in H^3$ there.
-Dyadic annular estimates of the form
-$\|D^3u\|_{L^2(A_r)}\le C(\|\nabla\Delta u\|_{L^2(A_r^*)}
-+r^{-1}\|\Delta u\|_{L^2(A_r^*)}+r^{-3}\|u\|_{L^2(A_r^*)})$ hold, with constants
-independent of $r$.
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.elliptic_local_h3}
+\leanok
+On an open $U$, let $u\in H^2_{\rm loc}(U)$ and $F\in H^1_{\rm loc}(U)$.
+If a specified second weak jet of $u$ has trace $F$, then
+$u\in H^3_{\rm loc}(U)$.
+\end{lemma}
+
+\begin{lemma}[Uniform dyadic elliptic estimate]
+\label{lem:elliptic-dyadic}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.elliptic_dyadic}
+\leanok
+Let $A_r=\{r<|p-c|<2r\}$ and $A_r^*=\{r/2<|p-c|<4r\}$.
+Suppose $u\in H^2(A_r^*)$, $F\in H^1(A_r^*)$, with specified weak jets
+of orders three and one, respectively, and $\Delta u=F$.
+Then $D^3u\in L^2(A_r)$ and
+\[
+ \|D^3u\|_{2,A_r}^2\le C\bigl(\|\nabla F\|_{2,A_r^*}^2+
+ r^{-2}\|F\|_{2,A_r^*}^2+r^{-6}\|u\|_{2,A_r^*}^2\bigr),
+\]
+with one constant for all $c,r,u,F$. Existence of the local third jet
+is supplied separately by Lemma~\ref{lem:elliptic-local}.
 \end{lemma}
 
 \begin{lemma}[One-coordinate division of an odd H3 function]
 \label{lem:odd-h3-division}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.odd_h3_division}
+\leanok
 Let $R\in H^3(I\times(-b,b))$ be odd in $v$, where $I$ is a bounded
 interval and $b>0$. Then $R/v$ has an even $H^2$ extension across $v=0$,
-with $\|R/v\|_{H^2}\le C\|R\|_{H^3}$.
+with $\|R/v\|_{H^2}^2\le C\|R\|_{H^3}^2$, expressed by the squared
+jet energies of Definition~\ref{def:local-weak-jets}.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:acl-slicing}
+\uses{lem:acl-slicing, lem:sobolev-weak-jets}
 The zero trace and ACL give
 \[
  R(u,v)/v=\int_0^1R_v(u,tv)\,dt,\qquad
@@ -1126,21 +1176,23 @@ no separate matching of normal derivative traces is needed.
 
 \begin{lemma}[Weighted double division near crossing axes]
 \label{lem:weighted-double-division}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.weighted_double_division}
+\leanok
 Let $R\in H^3(D)$ on a disk $D$ centered at the origin be odd under both
 axis reflections, and put $r=(u^2+v^2)^{1/2}$. Suppose
 $\nabla R/r^3$, $D^2R/r^2$ and $D^3R/r$ belong to $L^2(D)$.
 Then $V=R/(uv)$ is $H^2_{\mathrm{loc}}$ on the punctured disk, including
 across its open half-axes, and
 \[
- \|V/r^2\|_2+\|\nabla V/r\|_2+\|D^2V\|_2
- \le C\bigl(\|\nabla R/r^3\|_2+\|D^2R/r^2\|_2+\|D^3R/r\|_2\bigr).
+ \|V/r^2\|_2^2+\|\nabla V/r\|_2^2+\|D^2V\|_2^2
+ \le C\bigl(\|\nabla R/r^3\|_2^2+\|D^2R/r^2\|_2^2+\|D^3R/r\|_2^2\bigr).
 \]
 Values on the axes do not affect these integrals.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:odd-h3-division, lem:acl-slicing}
+\uses{lem:odd-h3-division, lem:acl-slicing, lem:sobolev-weak-jets}
 On $0<v<u$, $r\asymp u$ and
 \[
  V=u^{-1}\int_0^1R_v(u,tv)\,dt.
@@ -1169,7 +1221,9 @@ The one-coordinate lemma also supplies $H^2$ across each open axis.
 
 \begin{lemma}[Weighted removal of a point in H2]
 \label{lem:weighted-h2-point-removal}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.weighted_h2_point_removal}
+\leanok
 If $V\in H^2_{\mathrm{loc}}(D\setminus\{0\})$ and
 $V/r^2$, $\nabla V/r$ and $D^2V$ are in $L^2(D)$, then $V$ extends
 to $H^2(D)$. Its continuous representative has value zero at the origin.
@@ -1194,7 +1248,9 @@ $H^2$ representative. A nonzero value at zero would contradict $V/r^2\in L^2$.
 
 \begin{lemma}[Coordinate Hardy bounds for even H2 functions]
 \label{lem:even-h2-axis-hardy}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.even_h2_axis_hardy}
+\leanok
 Let $F\in H^2((-a,a)\times I)$ be even in $u$, with $a>0$ and $I$ a
 bounded interval. Then
 \[
@@ -1970,10 +2026,23 @@ every point, not an a.e.\ class; the argument only uses a pointwise lower
 bound, so no regularity of $g$ is needed.
 \end{proof}
 
+\begin{definition}[Local interval H2 with specified derivatives]
+\label{def:h2-local-interval}
+\uses{def:h1-interval, def:h2-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH2Loc}
+\leanok
+$\operatorname{HasIntervalH2Loc}(a,b;N,N_1,N_2)$ means
+$\operatorname{HasIntervalH2}(c,d;N,N_1,N_2)$ for every
+$a<c<d<b$. The same first and second derivatives are used on all
+subintervals.
+\end{definition}
+
 \begin{lemma}[Endpoint Hardy inequality]
 \label{lem:hardy-endpoint}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_endpoint}
+\leanok
+If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then $F/x\in L^2(0,\eta)$ and
 \[
   \int_0^\eta|F/x|^2\,dx\le4\int_0^\eta|F'|^2\,dx.
 \]
@@ -1985,19 +2054,54 @@ The weighted boundary completion uses Lemma~\ref{lem:l2-endpoint-liminf}
 instead of Hardy's inequality to control its endpoint flux.
 \end{remark}
 
-\begin{lemma}[One-dimensional Hardy inequalities]
-\label{lem:hardy-1d}
-\uses{def:h1-interval, def:h2-interval, lem:h1-interval-endpoints, lem:hardy-endpoint}
-\begin{enumerate}
-  \item The endpoint inequality of Lemma~\ref{lem:hardy-endpoint}.
-  \item If $N\in H^2$ on an interval containing $x_0$ and $N(x_0)=0$, then
-        $\|(N/(x-x_0))'\|_{L^2}\le C\|N''\|_{L^2}$; this follows from
-        $N(x)/(x-x_0)=\int_0^1N'(x_0+t(x-x_0))\,dt$.
-  \item (Angular Hardy) If $g\in H^1(0,\pi/2)$ vanishes at both endpoints, then
-        $\int_0^{\pi/2}|g|^2/(\sin^2\theta\cos^2\theta)\,d\theta\le
-        C\int_0^{\pi/2}|g'|^2\,d\theta$.
-\end{enumerate}
+\begin{lemma}[Second Hardy division]
+\label{lem:hardy-second}
+\uses{def:h1-interval, def:h2-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.interval_h2_div_sub}
+\leanok
+There is a universal $K>0$ such that, whenever $a<b$, $x_0\in[a,b]$,
+$N\in H^2(a,b)$ and its canonical trace at $x_0$ is zero, the quotient
+$N/(x-x_0)$ extends to $Q\in H^1(a,b)$ with
+$N(x)=(x-x_0)Q(x)$ on $(a,b)$ and
+\[
+ \int_a^b|Q'|^2\le K\int_a^b|N''|^2.
+\]
+Endpoint values of $N$ mean its $H^1$ extension, not a raw assignment.
 \end{lemma}
+
+\begin{proof}
+\uses{lem:hardy-average, lem:h1-interval-endpoints}
+The averaging identity
+$N(x)/(x-x_0)=\int_0^1N'(x_0+t(x-x_0))\,dt$ gives the quotient.
+For its derivative the extra factor $t$ offsets the $t^{-1/2}$ dilation
+cost in $L^2$. The constants are independent of the interval and $x_0$.
+\end{proof}
+
+\begin{lemma}[Angular Hardy]
+\label{lem:hardy-angular}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+If $g\in H^1(0,\pi/2)$ has zero canonical traces at both endpoints, then
+\[
+ \int_0^{\pi/2}\frac{|g|^2}{\sin^2\theta\cos^2\theta}\,d\theta
+ \le C\int_0^{\pi/2}|g'|^2\,d\theta .
+\]
+\end{lemma}
+
+\begin{lemma}[One-dimensional Hardy collection]
+\label{lem:hardy-1d}
+\uses{lem:hardy-endpoint, lem:hardy-second, lem:hardy-angular}
+The endpoint, second-order and angular Hardy inequalities above hold.
+This collection retains the original references; phase-cell division
+uses only the first two inequalities.
+\end{lemma}
+
+\begin{remark}[Digest note: do not bundle angular Hardy into phase division]
+The unweighted and logarithmic phase-cell arguments need endpoint Hardy
+and second Hardy division. Their former reference to the whole collection
+also pulled angular Hardy into the odd--odd quotient graph. Angular Hardy
+is a separate claim; it is not required by the Hardy/Poisson vorticity
+division used on that route.
+\end{remark}
 
 \begin{lemma}[Critical Hardy inequality for odd functions]
 \label{lem:odd-hardy}

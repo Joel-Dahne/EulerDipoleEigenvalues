@@ -10,9 +10,9 @@ Odd–odd exclusion remains conditional: the Picone current is assembled from
 eight explicit admitted analytic inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. Quotient existence is assembled from
 four analytic inputs; bulk coercivity is the remaining outer admission.
-The mixed exclusion remains admitted. Current work targets the analytic inputs
-to the minimal odd–odd quotient construction; its Lean assembly avoids a bundled
-stronger regularity prerequisite. See the
+The mixed exclusion remains admitted. Current work is a recursive statement-only
+pass below the minimal odd–odd quotient construction, leaving new theorem proofs
+as `sorry`. Its existing assembly avoids a bundled stronger regularity prerequisite. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
