@@ -5,53 +5,46 @@
 
 ## Current position
 
-`odd_odd_exclusion` is stated with an admitted proof. The blueprint regularity
-review has reached `∇ω/d ∈ L²` and `ν = ω/Ψ ∈ L²`; global H² regularity of
-the stream quotient remains open. The renormalized virial is derived
-conditional on that quotient domain. These analytic derivations are not
-in Lean; the rest of the exclusion remains unverified.
+`odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
+own. They depend on six explicit admitted analytic inputs in
+[OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean): quotient existence,
+orthogonality, canonical boundary regularity, the Picone current, bulk
+coercivity and corrected interval positivity. This is a conditional assembly,
+not an admission-free exclusion. The full dependency graph has not yet been
+translated into Lean statements.
 
-## Main priority when work resumes
+The interfaces use actual Fourier derivatives, continuous quotient traces,
+weighted interval domains and H¹ endpoint traces. Picone supplies absolute
+bulk integrability; coercivity consumes it explicitly. The final contradiction
+and the bridges from zero mass to zero quotient and vorticity are proved.
+Only nonnegative corrected boundary energy is consumed; strict positivity
+and a boundary equality classification are off the exclusion route.
 
-Audit the dyadic elliptic estimate and double division near the saddle in
-`prop:dd-quotient-domain`. The weighted gradient and L² vorticity quotient
-are now derived; the H² stream quotient, corner remainders and quotient
-transport-domain assembly are the remaining regularity steps.
-For the virial limit, the additional regularity needed is even global H²
-for `φ`, `ν/d ∈ L²`, and the quotient transport equation; the separate
-weighted corner remainder estimates are not needed there.
+## Next work: review the final interfaces first
 
-The even–even gradient traces apply to `φ` via the auxiliary vorticity
-`Δφ`. Hardy division controls the singular bulk gradient coefficient,
-and Hölder continuity controls the renormalized potential. This proves
-existence of a full bulk limit, which can then be identified using the
-canonical pairing only along good levels. The scalar finite part fixes
-the edge endpoint constant `log 8 / 2`. See `prop:dd-virial`.
+Human-review the new statements against the blueprint, especially the
+canonical boundary bridge and finite-energy domain. Then expand the admitted
+bulk and boundary inputs into their immediate coefficient/Poincaré and
+one-dimensional ingredients. This top-down work should test the final steps
+before further investment in the regularity bootstrap.
 
-Other inputs needing review include the Picone/current argument, the weighted
-Poincaré inequality, and constants in the corrected boundary estimate. The
-weighted-forcing H¹ route now covers both odd–odd and mixed, replacing the
-tentative generic H¹ sketch. Zero forcing on an edge and the weighted corner
-trace force zero vorticity trace there; no midpoint condition is needed.
-The transport gains handle all four characters through local endpoint
-formulas; the quotient's pairing application needs only the implemented ±1.
-See [shared infrastructure](shared.md). Exact certificate verification is also
-pending and is deferred while the analytic review continues. The detailed
-questions live in the blueprint's digest notes.
+The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`:
+even global H² for `φ`, the multiplication identities, the quotient transport
+pair and `ν/d ∈ L²`. Separate weighted corner remainders are not fields of
+this interface. The stronger `prop:dd-quotient-domain` remains available as a
+proposed sufficient route, not a proved Lean prerequisite.
 
-The finite parts now use only the leading period value asymptotic, derived
-directly from the defining integral in `lem:period-leading-asymptotic`;
-they no longer depend on the elliptic identity or sharp derivative remainders.
-Hölder embedding remains a dependency. The logarithmic multiplier now uses
-coordinate slicing, so the finite-p embedding is off the current sector
-route. The new logarithmic nodes make the weighted-gradient argument explicit
-in the generated odd–odd graph.
+## Analytic review boundary
 
-## Where to work
+The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³,
+`∇ω/d ∈ L²` and `ω/Ψ ∈ L²`. Double division for the H² stream quotient and
+transport-domain assembly still need mathematical review. The renormalized
+virial is derived conditional on the quotient domain; the Picone current,
+weighted Poincaré and corrected boundary constants still need review.
+Certificate verification remains deferred.
 
-- [Odd–odd blueprint](../../blueprint/src/chapters/odd_odd.tex),
-  [regularity](../../blueprint/src/chapters/regularity.tex) and
-  [digest notes](../../blueprint/src/chapters/notes.tex).
-- [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean).
-- [Certificates](../../blueprint/src/chapters/certificates.tex):
-  shared checking infrastructure is tracked in [shared status](shared.md).
+The virial finite parts use only the leading period value asymptotic, not the
+elliptic identity or sharp remainders. Logarithmic multiplication uses slicing,
+not the finite-p embedding. Shared infrastructure and character limitations
+are tracked in [shared status](shared.md); mathematical questions are in the
+[blueprint digest notes](../../blueprint/src/chapters/notes.tex).

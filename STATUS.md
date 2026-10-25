@@ -5,9 +5,10 @@ working; update current priorities and blockers rather than appending history.
 
 ## Current phase
 
-The even–even exclusion is admission-free (`even_even_exclusion`);
-the odd–odd and mixed exclusions remain admitted.
-Resume mathematical review and shared analytic infrastructure with the
+The even–even exclusion is admission-free (`even_even_exclusion`).
+Odd–odd exclusion is assembled from six admitted analytic inputs; the mixed
+exclusion remains admitted. Current work reviews and expands the final
+odd–odd interfaces before returning to earlier analytic infrastructure. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
@@ -15,7 +16,8 @@ Resume mathematical review and shared analytic infrastructure with the
 - The Fourier/L² foundations and algebraic symmetry/sector reductions are
   formalized.
 - The even–even exclusion is proved without admissions (transitive audit).
-  Odd–odd and mixed exclusion proofs remain admitted.
+  Odd–odd is assembled from explicit admitted analytic inputs; mixed remains
+  admitted.
 - The main theorem is assembled from the sector exclusions; it is not yet an
   admission-free proof. A completed blueprint proof may still cite admissions.
 - The reworked manuscript has its introduction through the main theorem;
@@ -42,8 +44,8 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 
 ## Validation baseline
 
-A full Lean build passed after the orbit-restriction proof (`lem:coarea`).
-The transitive admission audit reports zero admissions for `even_even_exclusion`.
-Admissions remain off that route: odd–odd, mixed, transport self-adjointness,
-finite-p embedding, the elliptic period identity and sharp period asymptotics.
-Blueprint source checks and the web build pass.
+A full Lean build passes. Challenge/Solution statements agree; the comparison
+still reports the main theorem's admissions, as expected. The transitive audit
+finds zero admissions for `even_even_exclusion` and exactly the six explicit
+analytic inputs for `odd_odd_exclusion`. Other admissions remain outside the
+even–even route. Blueprint source checks, regression tests and the web build pass.

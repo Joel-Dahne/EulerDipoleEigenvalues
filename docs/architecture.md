@@ -105,9 +105,11 @@ proof mechanisms. Module names below are relative to
   weighted boundary regularity and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
-- `OddOdd.lean`, `Mixed.lean`, `Main.lean`: remaining sector interfaces,
-  rotation between mixed sectors, and main theorem assembly.
-  Consult [sector status](../STATUS.md#topic-pages) for proof completion.
+- `OddOdd.lean`: quotient/boundary data, explicit Picone densities, finite-energy
+  and corrected-boundary interfaces, and odd–odd exclusion assembly.
+- `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed
+  sectors, and main theorem assembly. Consult
+  [sector status](../STATUS.md#topic-pages) for proof completion.
 
 ## Source checks and verification tools
 

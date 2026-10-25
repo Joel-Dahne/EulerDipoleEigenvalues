@@ -21,6 +21,40 @@ For an odd--odd eigenfunction let $\phi=\psi/\Psi$ and $\nu=\omega/\Psi$, and
 on $\Cell$ define $E=1-s^{-2}\Div(s^2\nabla)$.
 \end{definition}
 
+\begin{definition}[Quotient data consumed by exclusion]
+\label{def:dd-exclusion-domain}
+\uses{def:dd-quotient, def:sobolev-torus, def:reflections, def:transport-pair,
+ def:torus-of-lift, def:cell-arcs, lem:cell-neighbourhood}
+\lean{NoEmbeddedEigenvalues.DDQuotientData}
+\leanok
+At parameter $\lambda$ and vorticity $\omega$, quotient data consist of
+$\phi,\nu\in L^2(\T^2)$, with $\phi\in H^2(\T^2)$ even under both
+separatrix reflections, and $\psi=\Psi\phi$, $\omega=\Psi\nu$ almost
+everywhere. The lifted pair $(\nu,\widetilde\phi)$, using the continuous
+representative of $\phi$, is a transport pair on the fixed bounded cell
+neighbourhood of Lemma~\ref{lem:cell-neighbourhood}, and $\nu/d\in L^2$
+there. Weighted corner remainders are not part of these data.
+\end{definition}
+
+\begin{corollary}[Existence of the exclusion quotient data]
+\label{cor:dd-exclusion-domain}
+\uses{def:eigen-problem, def:sectors, def:dd-exclusion-domain}
+\lean{NoEmbeddedEigenvalues.dd_quotient_domain}
+\leanok
+For every odd--odd eigenfunction with $\lambda\ne0$, the quotient data of
+Definition~\ref{def:dd-exclusion-domain} exist.
+\end{corollary}
+
+\begin{proof}
+\uses{prop:dd-quotient-domain, lem:lift-sobolev-local,
+ lem:continuous-representative}
+Retain the global $H^2$ quotient, its even parity, the two multiplication
+identities and the transport pair. Restrict the weighted vorticity to the
+fixed cell neighbourhood and use the continuous forcing representative.
+This discards the extra corner-remainder assertions of
+Proposition~\ref{prop:dd-quotient-domain}; it does not prove that proposition.
+\end{proof}
+
 \begin{lemma}[Quotient equations]
 \label{lem:dd-quotient-equations}
 \uses{def:dd-quotient}
@@ -38,8 +72,12 @@ conjugation is the same computation.
 
 \begin{lemma}[Orthogonality and parity of the quotient]
 \label{lem:dd-orthogonality}
-\uses{def:dd-quotient}
-$\int_\Cell\Psi^2\phi=0$, and $\phi$ is even under central inversion.
+\uses{def:dd-quotient, def:dd-exclusion-domain, def:eigen-problem, def:sectors}
+\lean{NoEmbeddedEigenvalues.dd_orthogonality}
+\leanok
+For an odd--odd eigenfunction with $\lambda\ne0$ and any quotient data of
+Definition~\ref{def:dd-exclusion-domain}, $\int_\Cell\Psi^2\phi=0$ and
+$\phi$ is even under central inversion.
 \end{lemma}
 
 \begin{proof}
@@ -528,23 +566,48 @@ Let
 \]
 \end{definition}
 
+\begin{definition}[Bulk densities for the final exclusion]
+\label{def:dd-exclusion-forms}
+\uses{def:dd-ground-state, def:sobolev-torus, def:fourier-derivatives,
+ def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.ddPiconeGradient,
+ NoEmbeddedEigenvalues.ddPiconePotential,
+ NoEmbeddedEigenvalues.ddVorticityDensity, NoEmbeddedEigenvalues.ddMassDensity}
+\leanok
+For $\phi\in H^2(\T^2)$ with specified Fourier first derivatives, use their
+lifts in the quotient rule for $\nabla(\phi/w_*)$. Denote the resulting
+Picone gradient density by $Mw_*^2|\nabla(\phi/w_*)|^2$ and the potential
+density by $(Pw_*/w_*)|\phi|^2$. For $\nu\in L^2(\T^2)$ the vorticity
+density is $F|\nu|^2$, and the mass density is $\Psi^2|\phi|^2$.
+All integrals below are ordinary integrals; integrability is specified
+separately, not built into their definitions.
+\end{definition}
+
 \begin{lemma}[Boundary current of the ground state]
 \label{lem:dd-picone-current}
-\uses{def:dd-ground-state, prop:dd-virial}
-\notready
-For an odd--odd eigenfunction,
+\uses{def:dd-exclusion-domain, def:dd-exclusion-forms,
+ def:dd-boundary-data, def:corrected-boundary-form, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.dd_picone_current}
+\leanok
+Fix an odd--odd eigenfunction with $\lambda\ne0$ and rotation character
+$\kappa=\pm1$, quotient data of Definition~\ref{def:dd-exclusion-domain},
+canonical boundary data of Definition~\ref{def:dd-boundary-data}, and
+Fourier first derivatives of $\phi$. Then
 \[
   \int_\Cell F|E\phi|^2+\int_\Cell Mw_*^2|\nabla(\phi/w_*)|^2
   +\int_\Cell\frac{Pw_*}{w_*}|\phi|^2
   =-\frac83\sum_{\text{edges}}\Big\{\mathcal F_\lambda[z]+\int B(r)|g|^2\,dt\Big\},
 \]
-with all bulk terms ordinary (absolutely convergent) integrals and
-$\mathcal F_\lambda$ the first line of $Q_\lambda$ (manuscript
-\texttt{(r4:picone-global)}).
+with all three bulk densities absolutely integrable and
+$\mathcal F_\lambda$ the first line of $Q_\lambda$. Equivalently the right
+side is $-\tfrac83\sum_k\mathcal B_\lambda(f_k)$, using the specified
+first and second interval derivatives of the canonical unknowns
+(manuscript \texttt{(r4:picone-global)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:picone, prop:dd-virial, lem:dipole-identities, prop:dd-quotient-domain}
+\uses{lem:picone, prop:dd-virial, lem:dipole-identities,
+ lem:dd-boundary-regularity, lem:canonical-arc-form, lem:boundary-form-xi}
 Apply Lemma~\ref{lem:picone} on $C_\epsilon$ with $g=w_*$. Using
 $\nabla s\cdot\nabla r=s(4-s^2-3r)$, the boundary current in flow time is
 $b_\epsilon|\phi|^2dt$ with $b_\epsilon=-\tfrac83(1-B(r))+O(\epsilon)$
@@ -614,8 +677,13 @@ $m=\ip{w}{1}$, and maximize $(m-1)(\tfrac54-m)/m^2$ (at $m=10/9$).
 
 \begin{lemma}[Bulk Picone bound]
 \label{lem:dd-bulk-picone}
-\uses{def:dd-ground-state}
-If $\phi$ is centrally even with $\int_\Cell\mu\phi=0$, then
+\uses{def:dd-exclusion-forms, def:sobolev-torus, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.dd_bulk_picone}
+\leanok
+Let $\phi\in H^2(\T^2)$ be centrally even with
+$\int_\Cell\mu\phi=0$, and specify its Fourier first derivatives.
+Assume the Picone gradient and potential densities of
+Definition~\ref{def:dd-exclusion-forms} are absolutely integrable. Then
 \[
   \int_\Cell Mw_*^2|\nabla(\phi/w_*)|^2+\int_\Cell\frac{Pw_*}{w_*}|\phi|^2
   \ge\frac{25}{54}\int_\Cell\mu|\phi|^2 .
@@ -631,20 +699,86 @@ $\int Mw_*^2|\nabla z|^2\ge\tfrac{25}{16}\cdot\tfrac{3}{1+1/80}\int\mu|z|^2
 $\tfrac{80}{27}-\tfrac52=\tfrac{25}{54}$.
 \end{proof}
 
+\begin{remark}[Digest note: the finite-energy coercivity interface]
+Central parity and weighted mean zero alone do not specify a finite form
+domain. In particular, Lean's Bochner integral has value zero when its
+integrand is not integrable. The bulk bound therefore takes explicit
+integrability hypotheses, supplied by the Picone current in the exclusion
+assembly. This is a domain clarification, not a proof of weighted
+Poincar\'e or the residual certificate.
+\end{remark}
+
 \section{The corrected boundary form}
 
 \begin{definition}[Corrected boundary form]
 \label{def:corrected-boundary-form}
-\uses{def:boundary-form, def:dd-ground-state, def:h1-interval, lem:h1-interval-endpoints}
+\uses{def:boundary-form, def:boundary-form-xi, def:dd-ground-state,
+ def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.correctedBoundaryTrace,
+ NoEmbeddedEigenvalues.correctedBoundaryBeta,
+ NoEmbeddedEigenvalues.correctedBoundaryTerm,
+ NoEmbeddedEigenvalues.correctedBoundaryForm}
+\leanok
 With $x=\tanh t$, $w=1-x^2$, let
 \[
   \beta(x)=\frac{\tfrac34-\tfrac3{16}w+(\tfrac14-\tfrac{25}{64}w)\log w}
                {1+\tfrac18w-\tfrac1{64}w^2\log w}=\frac{B(2w)}w .
 \]
-For $f\in H^1(-1,1)$ with $wf''\in L^2$ and $f(1)=\kappa f(-1)$, put
-$g=-iwf'-\lambda f$ and
-$\mathcal B_\lambda(f)=\mathcal F_\lambda(f)+\int_{-1}^1\beta|g|^2\,dx$.
+For specified functions $f,D,E$, put $g=-iwD-\lambda f$ and
+$\mathcal B_\lambda(f,D,E)=\mathcal F_\lambda(f,D,E)
++\int_{-1}^1\beta|g|^2\,dx$.
+When $(f,D,E)$ belongs to the weighted second-order domain, write
+$\mathcal B_\lambda(f)$ for this expression. Endpoint conditions refer to
+the $H^1$ traces of $f$, not its raw endpoint values.
 \end{definition}
+
+\begin{definition}[Canonical boundary data for the quotient]
+\label{def:dd-boundary-data}
+\uses{def:corrected-boundary-form, def:canonical-profile, def:cell-arcs,
+ def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints,
+ def:continuous-representative}
+\lean{NoEmbeddedEigenvalues.ddArcTrace, NoEmbeddedEigenvalues.ddBoundaryUnknown,
+ NoEmbeddedEigenvalues.DDBoundaryData}
+\leanok
+For a quotient $\phi$ and $\kappa=\pm1$, put
+$g_k=\widetilde\phi\circ\gamma_k$ and
+$f_k=z_k\circ\operatorname{artanh}$, with $z_k$ the canonical transport
+unknown. Boundary data consist of derivatives $D_k,E_k$ for which
+$(f_k,D_k,E_k)$ belongs to the weighted second-order domain,
+the endpoint traces satisfy $f_k(1)=\kappa f_k(-1)$, and
+\[
+ -iwD_k-\lambda f_k=g_k\circ\operatorname{artanh}
+ \quad\text{almost everywhere on }(-1,1).
+\]
+\end{definition}
+
+\begin{lemma}[Weighted boundary regularity of the quotient]
+\label{lem:dd-boundary-regularity}
+\uses{def:dd-exclusion-domain, def:dd-boundary-data, def:rotation-characters}
+\lean{NoEmbeddedEigenvalues.dd_boundary_regularity}
+\leanok
+Given quotient data at $\lambda\ne0$ and a rotation character $\kappa$ of
+$\omega$, the boundary data of Definition~\ref{def:dd-boundary-data} exist.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-quotient-gradient-traces, lem:melnikov, lem:trace-h2,
+ lem:canonical-profile-ac, lem:canonical-profile-ode,
+ lem:canonical-profile-weighted, lem:boundary-form-xi, lem:sobolev-holder}
+The even $H^2$ gradient traces give
+$\int\cosh^2t\,|g_k'|^2dt<\infty$; the local trace theorem gives absolute
+continuity on compact arc intervals. Apply Melnikov to the quotient
+transport pair and the weighted canonical-profile estimate to get
+$\int\cosh^2t\,|\Omega_k|^2dt<\infty$.
+The equations $z_k'=-i\Omega_k$ and
+$\Omega_k'=i\lambda\Omega_k-g_k'$ give the weighted second-order domain
+after $x=\tanh t$, as in the explicit transformation for the even--even
+boundary unknown. They also identify $-iwD_k-\lambda f_k$ with the
+quotient trace. The profile tends to zero at both ends, so the endpoint
+values of $f_k$ are $-g_k(\pm\infty)/\lambda$. Rotation gives their
+character relation. These domain and trace assertions are separate from
+the Picone identity.
+\end{proof}
 
 \begin{lemma}[Pointwise lower bound for $\beta$]
 \label{lem:beta-lower}
@@ -674,28 +808,64 @@ $-h''+(2+\log w)h=\tfrac12+\tfrac74w+(\tfrac32w+\tfrac14w^2)\log w
 +\tfrac18w^2(\log w)^2\ge\tfrac12-\tfrac32e^{-13/6}-\tfrac1{8e}>\tfrac{17}{64}$.
 \end{proof}
 
-\begin{proposition}[Positivity of the corrected boundary form]
+\begin{lemma}[Nonnegativity of the corrected boundary form]
+\label{lem:corrected-trace-nonneg}
+\uses{def:corrected-boundary-form, def:h1-interval,
+ def:weighted-boundary-domain, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.correctedBoundaryForm_nonneg}
+\leanok
+Let $(f,D,E)$ belong to the weighted second-order domain and let its
+endpoint traces satisfy $f(1)=\kappa f(-1)$, $\kappa\in\{1,-1\}$.
+For real $\lambda\ne0$, the correction density $\beta|g|^2$ is absolutely
+integrable and $\mathcal B_\lambda(f)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:beta-lower, lem:scalar-form-positive, lem:trace-sos-extension,
+ lem:affine-splitting, lem:hardy-1d, lem:h1-interval-endpoints}
+The weighted domain gives $g'=-iwE+(2ix-\lambda)D\in L^2$ and
+$g\in H^1(-1,1)$. Thus $g$ is bounded, while
+$|\beta|\le C(1+|\log w|)$; the correction is integrable.
+For $u\in H^1_0$ with $wu''\in L^2$, write $F_0=\mathcal F_\lambda(u)$ and
+$g_u=-iwu'-\lambda u$; then $\|g_u'\|_2^2\le4F_0$ and $g_u\in H^1_0$.
+If $\kappa=1$, write $f=a+u$; the lower bound for $\beta$ gives
+\[
+ \mathcal B_\lambda(f)\ge\tfrac14\int(|g'|^2+(2+\log w)|g|^2)\ge0.
+\]
+If $\kappa=-1$, write $f=bx+u$; then
+$\mathcal F_\lambda(f)=F_0+\lambda^2|b|^2$, and the manuscript's proposed
+estimates on the negative endpoint part of $\beta$ (with $a=e^{-2}$) and
+its positive part on $[-\tfrac12,\tfrac12]$ give
+\[
+ \mathcal B_\lambda(f)\ge\tfrac25F_0+
+               (\tfrac1{10}+\tfrac45\lambda^2)|b|^2\ge0.
+\]
+The numerical estimates in this second case require the review recorded below.
+\end{proof}
+
+\begin{proposition}[Strict positivity of the corrected boundary form]
 \label{prop:corrected-trace}
-\uses{def:corrected-boundary-form}
-For $\kappa\in\{1,-1\}$ and real $\lambda\ne0$, $\mathcal B_\lambda(f)>0$
-whenever $f\ne0$ (manuscript \texttt{(prop:corrected-trace)}).
+\uses{def:corrected-boundary-form, def:h1-interval,
+ def:weighted-boundary-domain, lem:h1-interval-endpoints}
+For $\kappa=\pm1$ and real $\lambda\ne0$, $\mathcal B_\lambda(f)>0$ for a
+nonzero weighted-domain $H^1$ element with endpoint character $\kappa$
+(manuscript \texttt{(prop:corrected-trace)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:beta-lower, lem:scalar-form-positive, lem:trace-sos-extension, lem:affine-splitting, lem:hardy-1d}
-For $u\in H^1_0$ with $wu''\in L^2$, write $F_0=\mathcal F_\lambda(u)$ and
-$g_u=-iwu'-\lambda u$; then $\|g_u'\|_2^2\le4F_0$ and $g_u\in H^1_0$.
-If $\kappa=1$, write $f=a+u$; then
-$\mathcal B_\lambda(f)\ge\tfrac14\int(|g'|^2+(2+\log w)|g|^2)$, which is positive
-by Lemma~\ref{lem:scalar-form-positive}, and $g=0$ forces $f=0$ when
-$\lambda\ne0$. If $\kappa=-1$, write $f=bx+u$; then
-$\mathcal F_\lambda(f)=F_0+\lambda^2|b|^2$, and estimating the negative part of
-$\beta$ near the endpoints (with $a=e^{-2}$) and the positive part on
-$[-\tfrac12,\tfrac12]$ gives
-$\mathcal B_\lambda(f)\ge\tfrac25F_0+(\tfrac1{10}+\tfrac45\lambda^2)|b|^2$.
+\uses{lem:corrected-trace-nonneg, lem:scalar-form-positive,
+ lem:trace-sos-extension, lem:h1-interval-endpoints}
+Use the case estimates in the preceding proof. For $\kappa=1$, equality
+forces $g=0$. Then $f'=i\lambda f/w$ gives constant $|f|$ on the interval;
+$L^2$ integrability of $f'$ at an endpoint forces that constant to be zero.
+For $\kappa=-1$, equality forces $b=0$ and $F_0=0$. The sum of squares gives
+$u'=0$, and the zero endpoint traces give $u=0$.
 \end{proof}
 
-\begin{remark}[Digest note]
+\begin{remark}[Digest note: nonnegativity and endpoint constants]
+The exclusion needs only Lemma~\ref{lem:corrected-trace-nonneg}: strict
+boundary positivity is unnecessary because the bulk controls mass with a
+strictly positive coefficient. The stronger proposition is off this route.
 The $\kappa=-1$ estimate chains several explicit numerical constants
 ($203/1920$, $\lambda^2/96$, $16/\pi^2$, \dots) that the manuscript states
 without intermediate steps. They should be re-derived; this is a good
@@ -703,6 +873,83 @@ candidate for a careful Lean proof, since it is one-dimensional.
 \end{remark}
 
 \section{Conclusion}
+
+\begin{lemma}[Nonnegative vorticity density]
+\label{lem:dd-vorticity-density-nonneg}
+\uses{def:dd-exclusion-forms}
+\lean{NoEmbeddedEigenvalues.ddVorticityDensity_nonneg}
+\leanok
+For every $\nu\in L^2(\T^2)$, $F|\nu|^2\ge0$ on the lifted positive cell.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities, lem:cell-square}
+\leanok
+On the cell $0<s\le2$, so $s(8-s^3)\delta^2\ge0$ and the denominator
+$3r^2$ is nonnegative. The totalized coefficient is zero when $r=0$.
+\end{proof}
+
+\begin{lemma}[Vanishing from the quotient mass]
+\label{lem:dd-mass-vanishing}
+\uses{def:dd-exclusion-forms, def:sectors}
+\lean{NoEmbeddedEigenvalues.integrableOn_ddMassDensity,
+ NoEmbeddedEigenvalues.dd_eq_zero_of_mass_eq_zero}
+\leanok
+For every $\phi\in L^2(\T^2)$ the mass density $\Psi^2|\phi|^2$ is
+integrable on the lifted positive cell. If $\phi$ is even--even and its
+mass integral is zero, then $\phi=0$ in $L^2(\T^2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-cell-vanishing, lem:lift-torus, lem:dipole-identities}
+\leanok
+The lift is square integrable on a bounded period box and $\Psi^2\le4$.
+A zero integral of the nonnegative density gives zero almost everywhere.
+Since $\Psi>0$ on the cell, $\phi$ vanishes there; reflection propagates
+vanishing to the torus.
+\end{proof}
+
+\begin{lemma}[Recovering vorticity from a zero quotient]
+\label{lem:dd-vorticity-from-quotient}
+\uses{def:dd-exclusion-domain, def:torus}
+\lean{NoEmbeddedEigenvalues.DDQuotientData.vorticity_eq_zero}
+\leanok
+For quotient data with mean-zero $\omega$, $\phi=0$ implies $\omega=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:inverse-laplacian-derivatives, lem:torus-fourier}
+\leanok
+The multiplication identity gives $\psi=\Psi\phi=0$. The Fourier Poisson
+relation $\Delta\psi=\omega$ then gives zero at every Fourier coefficient.
+\end{proof}
+
+\begin{lemma}[Odd--odd exclusion in one rotation character]
+\label{lem:dd-character-exclusion}
+\uses{def:eigen-problem, def:sectors, def:rotation-characters}
+\lean{NoEmbeddedEigenvalues.odd_odd_character_exclusion}
+\leanok
+An odd--odd eigenfunction with $\lambda\ne0$ and rotation character
+$\kappa=\pm1$ vanishes.
+\end{lemma}
+
+\begin{proof}
+\uses{cor:dd-exclusion-domain, lem:dd-orthogonality,
+ lem:dd-boundary-regularity, lem:dd-picone-current, lem:dd-bulk-picone,
+ lem:corrected-trace-nonneg, lem:dd-vorticity-density-nonneg,
+ lem:dd-mass-vanishing, lem:dd-vorticity-from-quotient, lem:elliptic-torus}
+\leanok
+Choose the quotient and boundary data and Fourier first derivatives of
+$\phi$. The current identity supplies ordinary bulk integrability. Then
+\[
+ \frac{25}{54}\int_\Cell\Psi^2|\phi|^2\le
+ \int F|\nu|^2+\int Mw_*^2|\nabla(\phi/w_*)|^2
+       +\int\frac{Pw_*}{w_*}|\phi|^2
+ =-\frac83\sum_k\mathcal B_\lambda(f_k)\le0.
+\]
+Nonnegative mass is therefore zero. The last two lemmas give $\phi=0$
+and $\omega=0$.
+\end{proof}
 
 \begin{theorem}[Odd--odd exclusion]
 \label{thm:dd-exclusion}
@@ -715,13 +962,8 @@ $S_1^*\omega=S_2^*\omega=-\omega$, then $\omega=0$ (manuscript
 \end{theorem}
 
 \begin{proof}
-\uses{lem:rotation-characters, prop:dd-quotient-domain, lem:dd-orthogonality, lem:dd-picone-current, lem:dd-bulk-picone, prop:corrected-trace}
-Fix an $R$-character $\kappa$. By Lemmas~\ref{lem:dd-picone-current}
-and~\ref{lem:dd-bulk-picone},
-\[
-  \frac{25}{54}\int_\Cell\Psi^2|\phi|^2\le
-  \int F|E\phi|^2+\int Mw_*^2|\nabla(\phi/w_*)|^2+\int\frac{Pw_*}{w_*}|\phi|^2
-  =-\frac83\sum_{\text{edges}}\mathcal B_\lambda(f)\le0
-\]
-by Proposition~\ref{prop:corrected-trace}. Hence $\phi=0$, so $\psi=0$ and $\omega=0$.
+\uses{lem:rotation-characters, lem:dd-character-exclusion}
+\leanok
+Decompose into the two rotation characters, apply
+Lemma~\ref{lem:dd-character-exclusion} to each component, and add.
 \end{proof}

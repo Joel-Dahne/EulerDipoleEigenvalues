@@ -29,14 +29,13 @@ weights and local versus global regularity.
 
 ## Next session
 
-1. **Mathematical review first:** continue the odd–odd dyadic elliptic
-   estimate and double division for the H² stream quotient in the
-   [transport](../../blueprint/src/chapters/transport.tex) and
-   [regularity](../../blueprint/src/chapters/regularity.tex) chapters.
-   The regularity review now derives the weighted vorticity gradient and L²
-   vorticity quotient, using a slicing-based logarithmic multiplier.
-   These and the preceding saddle/H¹ arguments are blueprint derivations,
-   not Lean proofs; review them before translating.
+1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
+   [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
+   exclusion is now assembled. Expand the bulk coercivity and corrected
+   boundary inputs into smaller statements before returning to the H²
+   quotient bootstrap. See [odd–odd status](odd-odd.md). The earlier saddle,
+   H¹ and weighted-gradient derivations remain blueprint mathematics,
+   not Lean proofs.
 2. **Bounded shared formalization:** coarse period derivative bounds
    (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
    Hardy division (`lem:phase-cell-division`) are reusable first targets.

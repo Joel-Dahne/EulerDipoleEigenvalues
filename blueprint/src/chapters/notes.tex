@@ -33,10 +33,21 @@ once resolved; record the resolution in the relevant node.
         asymptotic of Lemma~\ref{lem:period-leading-asymptotic}, also derived
         from the defining integral. The elliptic identity and sharp
         remainders are no longer sector prerequisites.
+  \item \textbf{Final odd--odd interfaces}
+        (Lemmas~\ref{lem:dd-bulk-picone} and~\ref{lem:dd-boundary-regularity}).
+        Bulk coercivity now has explicit finite-energy hypotheses; without
+        them a divergent Bochner integral would be assigned value zero in
+        Lean. The Picone current supplies these hypotheses. The quotient's
+        canonical profiles also need a separate weighted interval-domain
+        and endpoint-character bridge before corrected positivity applies.
+        These statements are formalized, but the two analytic inputs still
+        require proof and statement review. Only boundary nonnegativity is
+        consumed by exclusion; strict positivity is unnecessary.
   \item \textbf{Weighted Poincar\'e inequality} (Lemma~\ref{lem:zonal-poincare}).
         The identification with zonal $S^3$ Laplacians is sketched only.
   \item \textbf{Constants in the $\kappa=-1$ boundary estimate}
-        (Proposition~\ref{prop:corrected-trace}). These need to be re-derived.
+        (Lemma~\ref{lem:corrected-trace-nonneg}). These need to be re-derived;
+        the weaker conclusion of nonnegativity suffices for exclusion.
   \item \textbf{Missing verification scripts}
         (Chapter~\ref{chap:certificates}).
 \end{enumerate}
