@@ -1988,11 +1988,23 @@ orthogonal. The flow equations follow from $\dot a=-\cos a\sin b$, $\dot b=\sin 
 \uses{def:cells, lem:dipole-critical-points, lem:separatrix-lines}
 Near each saddle there are orthonormal coordinates $(u,v)$, in which the two
 separatrix rays are the coordinate axes, such that
-$\Psi=uv+O(r^4)$ and $|\nabla\Psi|^2=u^2+v^2+O(r^4)$, $r=(u^2+v^2)^{1/2}$.
+$\Psi=uv\,m(u,v)$ for a smooth nonvanishing $m$ with $m(0,0)=1$.
+In particular $\Psi=uv+O(r^4)$ and
+$|\nabla\Psi|^2=u^2+v^2+O(r^4)$, $r=(u^2+v^2)^{1/2}$.
 The linearization $H_s$ of $H$ at the saddle has eigenvalues $\pm i$ on linear
 polynomials.
 \end{lemma}
 
 \begin{proof}
-Taylor expansion of $\cos x+\cos y$ at $(\pi,0)$ in the rotated coordinates.
+At $(\pi,0)$ choose $x=\pi+(u+v)/\sqrt2$, $y=(u-v)/\sqrt2$. Then
+\[
+ \Psi=2\sin(u/\sqrt2)\sin(v/\sqrt2)=uv\,m(u,v),\qquad
+ m=\frac{\sin(u/\sqrt2)}{u/\sqrt2}
+    \frac{\sin(v/\sqrt2)}{v/\sqrt2},
+\]
+with both ratios smoothly extended at zero. They are even and equal to
+$1+O(r^2)$, giving the stated Taylor estimates. Translations and a choice
+of signs give the other saddles. The linearized flow is
+$u\partial_u-v\partial_v$ up to exchanging the axes, so $H_s=-iL_s$ has
+eigenvalues $\pm i$ on the linear polynomials.
 \end{proof}

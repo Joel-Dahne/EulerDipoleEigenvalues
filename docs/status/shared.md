@@ -29,13 +29,14 @@ weights and local versus global regularity.
 
 ## Next session
 
-1. **Mathematical review first:** continue the odd–odd logarithmically
-   weighted quotient estimates and double division in the
+1. **Mathematical review first:** continue the odd–odd dyadic elliptic
+   estimate and double division for the H² stream quotient in the
    [transport](../../blueprint/src/chapters/transport.tex) and
    [regularity](../../blueprint/src/chapters/regularity.tex) chapters.
-   The first two transport gains, cylinder inverse and ordinary H¹
-   separatrix gain now have explicit blueprint derivations, not Lean proofs.
-   Review these arguments before translating them to Lean.
+   The regularity review now derives the weighted vorticity gradient and L²
+   vorticity quotient, using a slicing-based logarithmic multiplier.
+   These and the preceding saddle/H¹ arguments are blueprint derivations,
+   not Lean proofs; review them before translating.
 2. **Bounded shared formalization:** coarse period derivative bounds
    (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
    Hardy division (`lem:phase-cell-division`) are reusable first targets.
@@ -47,8 +48,9 @@ weights and local versus global regularity.
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
-  odd–odd logarithmically weighted gradient and quotient division work still
-  need review. The weighted-forcing H¹ route only needs
+  odd–odd H² quotient division still needs review. The logarithmic gradient
+  gain and L² vorticity division now have blueprint derivations.
+  The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
@@ -59,8 +61,10 @@ weights and local versus global regularity.
   Local elliptic regularity, corner traces/gluing and interval Hardy inputs
   still need Lean proofs. Elliptic-center regularity is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
-  outside the even–even route; inverse Hausdorff–Young or a compact-support
-  Sobolev inequality are candidate approaches.
+  off the current sector routes. Odd–odd logarithmic multiplication now uses
+  coordinate slicing instead. This optional Lean infrastructure remains
+  open; inverse Hausdorff–Young or a compact-support Sobolev inequality are
+  candidate approaches.
 - [Period estimates](../../blueprint/src/chapters/geometry.tex): coarse
   derivative bounds from the regular integral suffice for the transport
   gains; they still need Lean proofs. The odd–odd finite parts now use only

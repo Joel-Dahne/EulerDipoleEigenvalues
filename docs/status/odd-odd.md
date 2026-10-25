@@ -5,17 +5,18 @@
 
 ## Current position
 
-`odd_odd_exclusion` is stated with an admitted proof. The blueprint derives
-the renormalized weighted virial conditional on the quotient domain, and
-saddle/H¹ separatrix regularity including zero edge traces and local H³
-regularity of `ψ`. These analytic derivations are not in Lean.
-The quotient regularity and the rest of the exclusion remain unverified.
+`odd_odd_exclusion` is stated with an admitted proof. The blueprint regularity
+review has reached `∇ω/d ∈ L²` and `ν = ω/Ψ ∈ L²`; global H² regularity of
+the stream quotient remains open. The renormalized virial is derived
+conditional on that quotient domain. These analytic derivations are not
+in Lean; the rest of the exclusion remains unverified.
 
 ## Main priority when work resumes
 
-Continue with the logarithmically weighted vorticity-gradient and division
-steps in `prop:dd-quotient-domain`. The ordinary H¹ gain is now derived;
-it does not yet establish the stronger quotient estimates.
+Audit the dyadic elliptic estimate and double division near the saddle in
+`prop:dd-quotient-domain`. The weighted gradient and L² vorticity quotient
+are now derived; the H² stream quotient, corner remainders and quotient
+transport-domain assembly are the remaining regularity steps.
 For the virial limit, the additional regularity needed is even global H²
 for `φ`, `ν/d ∈ L²`, and the quotient transport equation; the separate
 weighted corner remainder estimates are not needed there.
@@ -35,13 +36,16 @@ trace force zero vorticity trace there; no midpoint condition is needed.
 The transport gains handle all four characters through local endpoint
 formulas; the quotient's pairing application needs only the implemented ±1.
 See [shared infrastructure](shared.md). Exact certificate verification is also
-pending. The detailed questions live in the blueprint's digest notes.
+pending and is deferred while the analytic review continues. The detailed
+questions live in the blueprint's digest notes.
 
 The finite parts now use only the leading period value asymptotic, derived
 directly from the defining integral in `lem:period-leading-asymptotic`;
 they no longer depend on the elliptic identity or sharp derivative remainders.
-Both Hölder and finite-p embeddings remain dependencies of the less-settled
-quotient argument pending review.
+Hölder embedding remains a dependency. The logarithmic multiplier now uses
+coordinate slicing, so the finite-p embedding is off the current sector
+route. The new logarithmic nodes make the weighted-gradient argument explicit
+in the generated odd–odd graph.
 
 ## Where to work
 

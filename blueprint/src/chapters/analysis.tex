@@ -1162,6 +1162,40 @@ then proves its square integrability. Uniqueness in
 Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
 \end{proof}
 
+\begin{definition}[Logarithmic level weight]
+\label{def:log-level-weight}
+\uses{def:dipole, def:cells}
+For $0<h\le1$ put $\Lambda(h)=1+\log(1/h)$. On the torus define
+$\Lambda_\Psi=\Lambda(|\Psi|/2)$ off the separatrix, and assign it the
+value $1$ on the separatrix.
+\end{definition}
+
+\begin{lemma}[Logarithmic multiplier on a rectangle]
+\label{lem:log-multiplier-rectangle}
+\uses{def:sobolev-local}
+Let $\rho>0$ and $Q=(-\rho,\rho)^2$. For $F\in H^1(Q)$,
+\[
+ \int_Q\bigl(1+|\log|u||+|\log|v||\bigr)|F(u,v)|^2\,du\,dv
+ \le C_\rho\|F\|_{H^1(Q)}^2.
+\]
+The values of the weight on the two axes are immaterial.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2, lem:h1-interval-endpoints}
+For almost every $v$, choose the absolutely continuous section
+representative $\widetilde F(\cdot,v)$ and its endpoint extension.
+The same pointwise estimate used in Lemma~\ref{lem:trace-l2} gives
+\[
+ \sup_{|u|\le\rho}|\widetilde F(u,v)|^2
+ \le\rho^{-1}\int_{-\rho}^\rho|F(u,v)|^2du
+       +4\rho\int_{-\rho}^\rho|\partial_uF(u,v)|^2du.
+\]
+Multiply by $\int_{-\rho}^\rho|\log|u||du<\infty$ and integrate in $v$.
+The other logarithm follows by interchanging the coordinates; the constant
+term is the $L^2$ norm. No finite-$p$ Sobolev embedding is used.
+\end{proof}
+
 \begin{lemma}[Weighted trace at a corner]
 \label{lem:weighted-corner-trace}
 \uses{def:sobolev-local}

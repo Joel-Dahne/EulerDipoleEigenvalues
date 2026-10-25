@@ -887,6 +887,32 @@ Sum over the cells. Thus $C\in H^1(0,h_0)$, and its continuous
 endpoint trace must be zero because $C/h\in L^2$.
 \end{proof}
 
+\begin{lemma}[Logarithmically weighted phase-cell division]
+\label{lem:log-phase-cell-division}
+\uses{def:numerator, def:log-level-weight, def:h1-interval, def:h2-interval,
+ lem:h1-interval-endpoints}
+Suppose $N\in H^2_{\mathrm{loc}}(0,h_0)$, $N(h_j)=0$ at each divisor zero,
+and
+\[
+ \int_0^{h_0}\Lambda(h)\bigl(|N'(h)|^2+h^2|N''(h)|^2\bigr)dh<\infty.
+\]
+After decreasing $h_0<1$ to a phase-cell endpoint, $C=N/D$ satisfies
+\[
+ \int_0^{h_0}\Lambda(h)\left(|C'(h)|^2+|C(h)/h|^2\right)dh<\infty.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:phase-cell-division, lem:numerator-zeros}
+On $I_j$, $h\asymp h_j$, so
+$|\Lambda(h)-\Lambda(h_j)|\le C$ and
+$\Lambda(h)\asymp\Lambda(h_j)$ uniformly, since $\Lambda\ge1$.
+Multiply the two cell estimates in the proof of
+Lemma~\ref{lem:phase-cell-division} by $\Lambda(h_j)$, replace this constant
+weight by $\Lambda(h)$ on both sides, and sum. No derivative of $\Lambda$
+and no new weighted Hardy inequality are required.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}

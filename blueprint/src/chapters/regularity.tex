@@ -227,6 +227,204 @@ of Lemma~\ref{lem:h1-crossing-gluing}, rather than an unspecified
 removability assertion.
 \end{remark}
 
+\begin{lemma}[Logarithmically weighted forcing, odd--odd]
+\label{lem:dd-log-forcing}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
+ def:cell-arcs, def:period}
+For an odd--odd eigenfunction there is a neighbourhood $V$ of the
+separatrix such that
+\[
+ \int_V\Lambda_\Psi\left(
+       \frac{|\nabla\psi|^2}{d^3}+|D^2\psi|^2+|\nabla\psi|^2\right)<\infty.
+\]
+On each endpoint ray of a quarter orbit, near its saddle, the traces satisfy
+\[
+ \int_0^{r_0}(1+|\log r|)\left(
+          \frac{|\psi|^2}{r^3}+\frac{|\nabla\psi|^2}{r}\right)dr<\infty.
+\]
+Gradient values on rays mean Sobolev traces, not arbitrary point values.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:saddle-normal-form,
+ lem:log-multiplier-rectangle, lem:weighted-corner-trace,
+ lem:h1-crossing-gluing}
+Shrink the separatrix neighbourhood so that $\psi\in H^3$ there.
+Near a saddle, the exact factorization $\Psi=uv\,m(u,v)$ gives
+\[
+ \Lambda_\Psi\le C\bigl(1+|\log|u||+|\log|v||\bigr).
+\]
+On a regular edge rectangle there is just one logarithmic coordinate
+singularity. Lemma~\ref{lem:log-multiplier-rectangle}, localized on finitely
+many rectangles, therefore controls $\int\Lambda_\Psi|F|^2$ for local
+$H^1$ functions $F$. Apply this first to $D^2\psi$ and $\nabla\psi$,
+which are $H^1$ by the ordinary $H^3$ gain.
+
+For the remaining term write $\psi=q+R$ near a saddle. The quadratic part
+has $|\nabla q|^2/r^3\le C/r$. Its logarithmically weighted integral is
+finite: in polar coordinates the radial integrals of $1+|\log r|$ and
+the angular integrals of $|\log\sin\theta|+|\log\cos\theta|$ are finite.
+For $F=\nabla R/r^{3/2}$ the saddle jet gives
+\[
+ F/r\in L^2,\qquad
+ |\nabla F|\le C\left(|D^2R|/r^{3/2}+|\nabla R|/r^{5/2}\right)\in L^2.
+\]
+It is $H^1$ off the origin; its traces match across the axes there.
+The cutoff argument of Lemma~\ref{lem:h1-crossing-gluing} extends it in
+$H^1$ across the origin. Apply the logarithmic multiplier to each localized
+component of $F$. Away from saddle neighbourhoods, $d$ is bounded below,
+so ordinary $H^3$ and the same multiplier suffice.
+
+For the ray estimates, apply Lemma~\ref{lem:weighted-corner-trace} to
+$R/r^3$ and each component of $\nabla R/r^2$. Their quotients by $r$
+and their gradients are $L^2$ by the quadratic jet, giving
+\[
+ \int_{\rm ray}|R|^2r^{-7}dr<\infty,\qquad
+ \int_{\rm ray}|\nabla R|^2r^{-5}dr<\infty.
+\]
+These imply the desired weaker ray weights because
+$r^4(1+|\log r|)$ is bounded. The quadratic contributions are bounded by
+$Cr(1+|\log r|)$ and are integrable directly.
+\end{proof}
+
+\begin{lemma}[Logarithmic numerator bounds, odd--odd]
+\label{lem:dd-log-numerators}
+\uses{def:eigen-problem, def:sectors, def:numerator, def:log-level-weight,
+ def:cell-arcs, def:sobolev-local}
+For an odd--odd eigenfunction with fixed rotation character
+$\kappa\in\{1,-1\}$, let $N$ be its quarter numerator and put
+\[
+ B(h)=\int_{-L(h)}^0\psi(\gamma_h(t))e^{-i\lambda t}dt,\qquad
+ K(h)=\int_{-L(h)}^{L(h)}\frac{|\nabla\psi(\gamma_h(t))|^2}{d^3}dt.
+\]
+For sufficiently small $h_0>0$,
+\[
+ \int_0^{h_0}\Lambda(h)\left(K(h)+|N'(h)|^2+|B'(h)|^2
+                                  +h^2|N''(h)|^2\right)dh<\infty.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-log-forcing, lem:dd-weighted-forcing,
+ lem:weighted-numerator-estimates, lem:transport-pair-eigen,
+ lem:orbit-coordinates-area, lem:period-orbit}
+Apply Lemma~\ref{lem:weighted-numerator-estimates} to $(\omega,\psi)$;
+Lemma~\ref{lem:dd-weighted-forcing} supplies its hypotheses and hence its
+weak differentiations. With $p_\pm=\gamma_h(\pm L(h))$, its pointwise
+estimates are
+\begin{align*}
+ |N'|^2+|B'|^2&\le CK(h)+C\sum_\pm|\psi(p_\pm)|^2/h^2,\\
+ h^2|N''|^2&\le C\int_{-L}^L(|D^2\psi_h|^2+|\nabla\psi_h|^2)dt
+       +C\sum_\pm\left(|\nabla\psi(p_\pm)|^2/h
+                                +|\psi(p_\pm)|^2/h^2\right).
+\end{align*}
+Multiply by $\Lambda(h)$. Weighted coarea controls all interior terms by
+Lemma~\ref{lem:dd-log-forcing}. On each endpoint ray,
+$h=\sin^2(r/2)$, $dh\asymp r\,dr$ and
+$\Lambda(h)\asymp1+|\log r|$, so the ray estimates in that lemma control
+both endpoint terms. This proves the asserted weighted integrability.
+\end{proof}
+
+\begin{proposition}[Weighted vorticity gradient, odd--odd]
+\label{prop:dd-weighted-gradient}
+\uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
+For an odd--odd eigenfunction, $\nabla\omega/d\in L^2$ on a sufficiently
+small neighbourhood of the separatrix.
+\end{proposition}
+
+\begin{proof}
+\uses{lem:dd-log-numerators, lem:log-phase-cell-division, lem:numerator-zeros,
+ prop:dd-separatrix-h1, prop:saddle-dd, lem:rotation-characters,
+ lem:transport-unknown, lem:weighted-numerator-estimates,
+ lem:orbit-level-derivatives, lem:orbit-coordinate-gradients,
+ lem:orbit-coordinates-area, lem:period-coarse, lem:period-derivative-bounds}
+Work with either rotation character and recenter time separately on each
+quarter patch. The numerator vanishes at divisor zeros, and
+Lemma~\ref{lem:log-phase-cell-division} gives
+\[
+ \int_0^{h_0}\Lambda(h)\bigl(|C'|^2+|C/h|^2\bigr)dh<\infty.
+\]
+In the midpoint identity
+$A=ie^{2i\lambda L}C+iB$, use $|L'|\le C/h$ and
+Lemma~\ref{lem:dd-log-numerators} to obtain
+$\int\Lambda|A'|^2dh<\infty$.
+For $z=-(\omega+\psi)/\lambda$, midpoint reconstruction gives
+\[
+ \partial_hz_h(t)=e^{i\lambda t}A'(h)
+       +i\int_0^te^{i\lambda(t-u)}\partial_h\psi_h(u)du.
+\]
+The subinterval estimate of Lemma~\ref{lem:weighted-numerator-estimates}
+bounds the squared integral by $CK(h)$. Since $2L(h)\le C\Lambda(h)$,
+\[
+ \int_0^{h_0}\int_{-L(h)}^{L(h)}|\partial_hz_h|^2dt\,dh
+ \le C\int_0^{h_0}\Lambda(h)(|A'|^2+K(h))dh<\infty.
+\]
+The jet also gives $\nabla\psi/d\in L^2$, so
+$|\partial_h\psi_h|\le C|\nabla\psi_h|/d$ proves
+$\partial_h\omega_h\in L^2(dh\,dt)$.
+
+For the time derivative,
+\[
+ \partial_t\omega_h=i\lambda\omega_h-\partial_t\psi_h,\qquad
+ |\partial_t\psi_h|\le Cd|\nabla\psi_h|.
+\]
+Thus $d^{-2}\partial_t\omega_h\in L^2$, by
+$\omega/d^2\in L^2$ and $\nabla\psi/d\in L^2$.
+The inverse-coordinate estimates give
+\[
+ \frac{|\nabla\omega|}{d}
+ \le C\left(|\partial_h\omega_h|+
+                        d^{-2}|\partial_t\omega_h|\right).
+\]
+Coarea now proves the claim on each quarter strip. Sum the character
+components and use reflection for the adjacent cells. The weak gradient
+is the one already supplied across edges and saddles by
+Proposition~\ref{prop:dd-separatrix-h1}; no new jump term is introduced.
+\end{proof}
+
+\begin{lemma}[$L^2$ vorticity quotient, odd--odd]
+\label{lem:dd-vorticity-quotient-l2}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
+For an odd--odd eigenfunction, $\nu=\omega/\Psi\in L^2(\T^2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:dd-weighted-gradient, prop:dd-separatrix-h1,
+ lem:saddle-normal-form, lem:hardy-1d, lem:acl-slicing, lem:trace-l2}
+Near a saddle use a small quadrant disk $Q$ in the orthonormal coordinates.
+The exact
+factorization gives $|\Psi|\asymp r^2\sin\theta\cos\theta$ there.
+The $H^1$ vorticity has zero traces on both axes, so polar ACL slicing on
+annuli and the angular Hardy inequality give, for almost every $r$,
+\[
+ \int_0^{\pi/2}\frac{|\omega(r,\theta)|^2}
+                         {\sin^2\theta\cos^2\theta}\,d\theta
+ \le C\int_0^{\pi/2}|\partial_\theta\omega(r,\theta)|^2d\theta.
+\]
+Multiply by $r^{-3}dr$ and use
+$|\partial_\theta\omega|\le r|\nabla\omega|$ to get
+\[
+ \int_Q|\omega/\Psi|^2\le C\int_Q|\nabla\omega|^2/r^2<\infty.
+\]
+On regular edge rectangles, $|\Psi|$ is comparable to distance to the edge;
+zero vorticity trace and endpoint Hardy give the quotient in $L^2$.
+Away from the separatrix, division is bounded. A finite cover gives the
+claim on the torus.
+\end{proof}
+
+\begin{remark}[Digest note: the logarithmic gradient gain]
+The logarithm pays for the growing quarter length when controlling
+$\partial_h\omega$ without the factor $d$ present in the ordinary $H^1$
+gain. It is not differentiated: phase-cell comparability transfers the
+existing Hardy estimates to $\Lambda(h)dh$.
+The manuscript uses $H^1\hookrightarrow L^4$ to control multiplication by
+$\Lambda_\Psi$. The rectangle slicing argument of
+Lemma~\ref{lem:log-multiplier-rectangle} supplies exactly that multiplier
+bound without a finite-$p$ embedding. This resolves the weighted gradient
+and $L^2$ vorticity division steps, but does not establish the $H^2$ stream
+quotient or its weighted corner remainders.
+\end{remark}
+
 \begin{proposition}[Quotient domain, odd--odd]
 \label{prop:dd-quotient-domain}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local}
@@ -243,12 +441,13 @@ $\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:transport-first-gain, lem:hardy-1d,
-  lem:elliptic-local, lem:sobolev-holder, lem:sobolev-lp, lem:local-to-global}
-% Retain both former embedding inputs until this weighted argument is reviewed.
-Strengthen to $\nabla\omega/d\in L^2$ near the saddles using a logarithmic
-weight $\Lambda(h)=1+|\log h|$ in all numerator estimates. The angular Hardy
-inequality then gives $\omega/\Psi\in L^2$. Dyadic elliptic estimates give
+\uses{prop:dd-separatrix-h1, prop:saddle-dd, prop:dd-weighted-gradient,
+ lem:dd-vorticity-quotient-l2, lem:transport-first-gain, lem:hardy-1d,
+ lem:elliptic-local, lem:sobolev-holder, lem:local-to-global}
+Proposition~\ref{prop:dd-weighted-gradient} and
+Lemma~\ref{lem:dd-vorticity-quotient-l2} supply $\nabla\omega/d\in L^2$
+near the saddles and $\nu\in L^2(\T^2)$.
+The remaining proposed argument is as follows. Dyadic elliptic estimates give
 $D^3R/r\in L^2$ for $R=\psi-a\Psi$, and the division formula
 $R/(uv)=u^{-1}\int_0^1R_v(u,tv)\,dt$ gives the $H^2$ quotient. Multiplying
 the graph equation by $\chi_\epsilon(\Psi)/\Psi$ (using $L_0\Psi=0$) and
