@@ -152,6 +152,26 @@ and these commute. On sector $\epsilon$, each factor of $P_\epsilon$ acts as
 the identity.
 \end{proof}
 
+\begin{lemma}[Laplacian and reflection parities]
+\label{lem:laplacian-symmetries}
+\uses{def:fourier-derivatives, def:reflections, def:sectors}
+\lean{NoEmbeddedEigenvalues.CharacterSymmetry.hasFourierLaplacian,
+ NoEmbeddedEigenvalues.InSector.even_laplacian}
+\leanok
+The Fourier Laplacian commutes with the character symmetries of
+Lemma~\ref{lem:symmetries-commute}. In particular, if $\phi$ is even under
+both reflections and $\Delta\phi=\zeta\in L^2$, then $\zeta$ is even under
+both reflections.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:symmetries-commute, lem:torus-fourier}
+\leanok
+The frequency maps preserve $|k|^2$, so their coefficient transformations
+commute with the multiplier $-|k|^2$. For even $\phi$, the reflected
+Laplacian and $\zeta$ therefore have the same Fourier coefficients.
+\end{proof}
+
 \begin{lemma}[The stream function has the parities of $\omega$]
 \label{lem:stream-sector}
 \uses{def:sectors, def:inverse-laplacian}

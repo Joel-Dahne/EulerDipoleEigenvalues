@@ -6,10 +6,9 @@
 ## Current position
 
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
-own. They depend on five explicit admitted analytic inputs in
+own. They depend on four explicit admitted analytic inputs in
 [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean): quotient existence,
-canonical boundary regularity, the Picone current, bulk coercivity and
-corrected interval nonnegativity. This is a conditional assembly,
+the Picone current, bulk coercivity and corrected interval nonnegativity. This is a conditional assembly,
 not an admission-free exclusion. The full dependency graph has not yet been
 translated into Lean statements.
 
@@ -27,13 +26,19 @@ uses four Fourier modes and reflection/cell measure identities, not
 self-adjointness. Only the quotient multiplication identity and even parity
 are consumed in this step.
 
-## Next work: the canonical boundary bridge
+Canonical boundary regularity is also admission-free for supplied quotient
+data. Even H² arc energy follows by reconstruction through `Δφ` plus the
+mean. The quotient transport pair gives Melnikov, and an abstract canonical
+profile theorem supplies the weighted interval domain, forcing identity and
+endpoint values. Rotation extends through the separatrix by continuity.
+No stronger quotient assumptions or separate corner remainders are needed.
 
-Review and prove `dd_boundary_regularity` using the existing even–even
-canonical-profile machinery and the supplied quotient data. Then expand
-corrected boundary nonnegativity into its one-dimensional ingredients.
-Keep bulk coercivity and its certificate deferred. This top-down work tests
-the final steps before further investment in the regularity bootstrap.
+## Next work: corrected boundary nonnegativity
+
+Review `correctedBoundaryForm_nonneg`, separating correction integrability,
+the scalar β bound and the one-dimensional positivity estimates. Keep bulk
+coercivity and its certificate deferred. This top-down work tests the final
+steps before further investment in the regularity bootstrap.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`:
 even global H² for `φ`, the multiplication identities, the quotient transport

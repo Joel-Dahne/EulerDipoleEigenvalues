@@ -4,16 +4,22 @@ import NoEmbeddedEigenvalues.SeparatrixTraces
 import NoEmbeddedEigenvalues.PairingLimit
 
 /-!
-# Even–even boundary inputs
+# Boundary profiles and even–even inputs
 
 Blueprint: `lem:ee-neumann`, `lem:ee-first-trace-limit`, `lem:ee-gradient-traces`,
-`lem:arc-trace-ac`, `lem:ee-boundary-regularity` and `lem:ee-canonical-arc-nonneg`.
+`lem:arc-trace-ac`, `lem:h2-laplacian-reconstruction`, `lem:laplacian-symmetries`,
+`lem:even-h2-arc-regularity`, `lem:canonical-boundary-regularity`,
+`lem:ee-boundary-regularity` and `lem:ee-canonical-arc-nonneg`.
 
 Assemble the gradient limits from `SeparatrixTraces.lean` and the first-order
 trace estimate. Arc absolute continuity, Melnikov and the weighted canonical
 profile bound put the boundary unknown in the weighted interval domain after
 `ξ = tanh s`. Its endpoint character and the interval boundary positivity
 theorem then make each canonical arc contribution nonnegative.
+
+Even H² torus functions inherit these arc estimates by inverse-Laplacian reconstruction
+up to their mean. The abstract canonical-profile theorem supplies weighted interval
+regularity, forcing identification and endpoint values independently of the sector.
 
 The normal-field virial is in `NormalVirial.lean`, transport traces are in
 `PairingLimit.lean`, and the exclusion assembly is in `EvenEven.lean`.
@@ -369,6 +375,94 @@ theorem absolutelyContinuous_contStream_separatrixArc (ω : L2) :
   obtain ⟨n, hn⟩ := exists_nat_ge |s|
   exact hs n (by rw [uIcc_of_le (by linarith [abs_nonneg s])]; exact abs_le.1 hn)
 
+/-! ### Even H² functions and their arc traces -/
+
+/-- An H² torus function has an L² Fourier Laplacian. -/
+theorem MemSobolev.exists_hasFourierLaplacian {φ : L2} (hφ : MemSobolev 2 φ) :
+    ∃ ζ : L2, HasFourierLaplacian φ ζ := by
+  obtain ⟨dx, hdx⟩ := (hφ.mono (by norm_num : (1 : ℝ) ≤ 2)).exists_hasFourierPartial 0
+  obtain ⟨dy, hdy⟩ := (hφ.mono (by norm_num : (1 : ℝ) ≤ 2)).exists_hasFourierPartial 1
+  have hφ' : MemSobolev ((1 : ℝ) + 1) φ := by
+    norm_num
+    exact hφ
+  have hx : MemSobolev 1 dx := hφ'.of_hasFourierPartial hdx
+  have hy : MemSobolev 1 dy := hφ'.of_hasFourierPartial hdy
+  obtain ⟨dxx, hdxx⟩ := hx.exists_hasFourierPartial 0
+  obtain ⟨dyy, hdyy⟩ := hy.exists_hasFourierPartial 1
+  exact ⟨dxx + dyy, hasFourierLaplacian_of_second
+    ((hasFourierPartial_iff_second hdx).mp hdxx) ((hasFourierPartial_iff_second hdy).mp hdyy)⟩
+
+/-- Reconstruction by the inverse Laplacian loses only the constant Fourier mode. -/
+theorem HasFourierLaplacian.continuousRep_eq {φ ζ : L2} (h : HasFourierLaplacian φ ζ)
+    (hφ : MemSobolev 2 φ) (t : Torus) :
+    continuousRep φ t = continuousRep (invLap ζ) t + fourierCoeff φ 0 := by
+  have hsum := (hφ.hasSum_continuousRep t).sub ((memSobolev_two_invLap ζ).hasSum_continuousRep t)
+  have hz : continuousRep φ t - continuousRep (invLap ζ) t = fourierCoeff φ 0 := by
+    rw [← hsum.tsum_eq, tsum_eq_single 0]
+    · simp [fourierCoeff_invLap, char_zero]
+    · intro k hk
+      have hn : (normSq k : ℂ) ≠ 0 := by exact_mod_cast (normSq_pos k hk).ne'
+      have hc : fourierCoeff (invLap ζ) k = fourierCoeff φ k := by
+        simp only [fourierCoeff_invLap, hk, ite_false, h k]
+        field_simp
+      simp only [hc, sub_self]
+  linear_combination hz
+
+/-- The Fourier Laplacian commutes with the character symmetries. -/
+theorem CharacterSymmetry.hasFourierLaplacian (s : CharacterSymmetry) {φ ζ : L2}
+    (h : HasFourierLaplacian φ ζ) :
+    HasFourierLaplacian (s.action φ) (s.action ζ) := by
+  intro l
+  obtain ⟨k, rfl⟩ := s.onto l
+  apply mul_left_cancel₀ ((map_ne_zero (starRingEnd ℂ)).mpr (s.phase_ne_zero k))
+  rw [s.coefficient, s.normSq_eq, mul_left_comm, s.coefficient, h k]
+
+/-- Taking the Fourier Laplacian preserves evenness under both reflections. -/
+theorem InSector.even_laplacian {φ ζ : L2} (hs : InSector true true φ)
+    (h : HasFourierLaplacian φ ζ) : InSector true true ζ := by
+  simp only [InSector, paritySign, ite_true, one_smul] at hs ⊢
+  have h1 := symmetry₁.hasFourierLaplacian h
+  have h2 := symmetry₂.hasFourierLaplacian h
+  change HasFourierLaplacian (reflect₁ φ) (reflect₁ ζ) at h1
+  change HasFourierLaplacian (reflect₂ φ) (reflect₂ ζ) at h2
+  rw [hs.1] at h1
+  rw [hs.2] at h2
+  exact ⟨fourierCoeff_ext fun k ↦ (h1 k).trans (h k).symm,
+    fourierCoeff_ext fun k ↦ (h2 k).trans (h k).symm⟩
+
+/-- An even H² function has locally absolutely continuous arc traces and finite
+    cosh-weighted derivative energy. Subtracting its mean reduces this to stream traces. -/
+theorem even_sobolev_arc_regularity {φ : L2} (hφ : MemSobolev 2 φ)
+    (hs : InSector true true φ) {k : ℕ} (hk : k < 4) :
+    (∀ c d, AbsolutelyContinuousOnInterval
+      (fun s ↦ continuousRep φ (torusProj (cellArc k s))) c d) ∧
+    (∀ᵐ s, DifferentiableAt ℝ
+      (fun s ↦ continuousRep φ (torusProj (cellArc k s))) s) ∧
+    Integrable (fun s ↦ Real.cosh s ^ 2 *
+      ‖deriv (fun t ↦ continuousRep φ (torusProj (cellArc k t))) s‖ ^ 2) := by
+  obtain ⟨ζ, hζ⟩ := hφ.exists_hasFourierLaplacian
+  have hcomp : (fun s ↦ continuousRep φ (torusProj (cellArc k s))) =
+      fun s ↦ (contStream (rotate^[k] ζ) ∘ separatrixArc) s + fourierCoeff φ 0 := by
+    funext s
+    change continuousRep φ (torusProj (rotLift^[k] (separatrixArc s))) =
+      contStream (rotate^[k] ζ) (separatrixArc s) + _
+    rw [contStream_iterate_rotate]
+    exact hζ.continuousRep_eq hφ _
+  obtain ⟨hac, hd⟩ := absolutelyContinuous_contStream_separatrixArc (rotate^[k] ζ)
+  refine ⟨?_, ?_, ?_⟩
+  · intro c d
+    rw [hcomp]
+    exact (hac c d).add
+      ((LipschitzWith.const _).lipschitzOnWith.absolutelyContinuousOnInterval)
+  · filter_upwards [hd] with s hs
+    rw [hcomp]
+    exact hs.add_const _
+  · have hg : (fun s ↦ continuousRep φ (torusProj (cellArc k s))) =
+        fun s ↦ (contStream ζ ∘ cellArc k) s + fourierCoeff φ 0 :=
+      funext fun s ↦ hζ.continuousRep_eq hφ _
+    rw [hg]
+    simpa only [deriv_add_const] using ee_arc_energy (hs.even_laplacian hζ) k hk
+
 /-! ### Functions of `ξ = tanh s` -/
 
 /-- `artanh' = 1/(1 - ξ²)` on `(-1, 1)`. -/
@@ -525,57 +619,29 @@ theorem HasIntervalH1.congr_Ioo {a b : ℝ} {F G D : ℝ → ℂ} (h : HasInterv
     exact (hx hmem).congr_of_eventuallyEq
       (eventually_of_mem (isOpen_Ioo.mem_nhds hmem) fun y hy ↦ (hFG hy).symm)
 
-/-- Regularity of the boundary unknown (`lem:ee-boundary-regularity`). For an even–even
-    eigenfunction with rotation character `κ`, on each arc `γ` the canonical transport unknown
-    `z` of `g = ψ̃ ∘ γ`, written `F(ξ) = z(artanh ξ)`, lies in the weighted domain, `G =
-    -iwF' - λF ∈ H¹(-1, 1)`, its endpoint values are `-c±/λ` with `c±` the saddle values of
-    `ψ̃` at the ends of the arc, and `c₊ = κ c₋`. -/
-theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
-    (hκ : InRotationCharacter κ ω) {k : ℕ} (hk : k < 4) :
+/-- A canonical profile with a weighted arc derivative and zero Melnikov integral gives
+    the weighted interval domain, the actual forcing trace, and its endpoint values.
+    This one-dimensional result does not assume an eigenvalue equation. -/
+theorem canonical_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {g : ℝ → ℂ}
+    (hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d)
+    (hgd : ∀ᵐ s, DifferentiableAt ℝ g s)
+    (hg1 : Integrable (deriv g))
+    (hg2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2)
+    {M : ℝ} (hgb : ∀ s, ‖g s‖ ≤ M)
+    (hM : ∫ t, profileIntegrand lam g t = 0)
+    {cp cm : ℂ} (hgp : Tendsto g atTop (𝓝 cp)) (hgm : Tendsto g atBot (𝓝 cm)) :
     ∃ D E : ℝ → ℂ,
-      HasWeightedBoundaryH2 (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k)
-        (Real.artanh ξ)) D E ∧
+      HasWeightedBoundaryH2 (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)) D E ∧
       MemIntervalH1 (-1) 1 (fun ξ ↦ -Complex.I * boundaryWeight ξ * D ξ -
-        lam * canonicalUnknown lam (contStream ω ∘ cellArc k) (Real.artanh ξ)) ∧
-      intervalH1Extension (-1) 1 (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k)
-        (Real.artanh ξ)) D 1 = -contStream ω (rotLift^[k] (0, -Real.pi)) / lam ∧
-      intervalH1Extension (-1) 1 (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k)
-        (Real.artanh ξ)) D (-1) = -contStream ω (rotLift^[k] (Real.pi, 0)) / lam ∧
-      contStream ω (rotLift^[k] (0, -Real.pi)) =
-        paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
-  -- Each step names the result it comes from.
-  set g : ℝ → ℂ := contStream ω ∘ cellArc k with hg_def
-  set cp : ℂ := contStream ω (rotLift^[k] (0, -Real.pi)) with hcp_def
-  set cm : ℂ := contStream ω (rotLift^[k] (Real.pi, 0)) with hcm_def
+        lam * canonicalUnknown lam g (Real.artanh ξ)) ∧
+      (∀ ξ ∈ Ioo (-1 : ℝ) 1, -Complex.I * boundaryWeight ξ * D ξ -
+        lam * canonicalUnknown lam g (Real.artanh ξ) = g (Real.artanh ξ)) ∧
+      intervalH1Extension (-1) 1 (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)) D 1 =
+        -cp / lam ∧
+      intervalH1Extension (-1) 1 (fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ)) D (-1) =
+        -cm / lam := by
   have hl : (lam : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 hlam
-  /- (1) The trace `g = ψ̃ ∘ γ_k` on the arc. -/
-  -- From the transport traces and the weighted gradient traces.
-  have hg1 : Integrable (deriv g) := (ee_melnikov hlam hω hκ k).1
-  have hg2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2 :=
-    ee_arc_energy hs k hk
-  -- Bounded, since `ψ̃` is a continuous periodic function.
-  have hgb : ∀ s, ‖g s‖ ≤ ‖continuousRep (invLap ω)‖ := fun s ↦
-    (continuousRep (invLap ω)).norm_coe_le_norm _
-  -- Absolute continuity on `γ₀` (`lem:arc-trace-ac`), and `g = κᵏ (ψ̃ ∘ γ₀)`.
-  have hArc : g = fun s ↦ paritySign κ ^ k * (contStream ω ∘ separatrixArc) s :=
-    funext fun s ↦ contStream_iterate_rotLift hκ k (separatrixArc s)
-  obtain ⟨hac0, hd0⟩ := absolutelyContinuous_contStream_separatrixArc ω
-  have hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d := fun c d ↦ by
-    rw [hArc]
-    simpa only [smul_eq_mul] using (hac0 c d).const_smul (paritySign κ ^ k)
-  have hgd : ∀ᵐ s, DifferentiableAt ℝ g s := by
-    filter_upwards [hd0] with s hs
-    rw [hArc]
-    exact hs.const_mul _
-  -- The Melnikov identity (`ee_melnikov`).
-  have hM : ∫ t, profileIntegrand lam g t = 0 := (ee_melnikov hlam hω hκ k).2
-  -- End values: `tendsto_separatrixArc_atTop/atBot`, continuity of `ψ̃` and `rotLift`.
-  have hRc : Continuous fun p ↦ contStream ω (rotLift^[k] p) :=
-    (continuous_contStream ω).comp (Continuous.iterate (by unfold rotLift; fun_prop) k)
-  have hgp : Tendsto g atTop (𝓝 cp) := (hRc.tendsto _).comp tendsto_separatrixArc_atTop
-  have hgm : Tendsto g atBot (𝓝 cm) := (hRc.tendsto _).comp tendsto_separatrixArc_atBot
-  /- (2) The canonical profile `Ω`. -/
+  /- The canonical profile `Ω`. -/
   set Ω : ℝ → ℂ := canonicalProfile lam g with hΩ_def
   have hΩp : Tendsto Ω atTop (𝓝 0) := tendsto_canonicalProfile_atTop hg1
   have hΩm : Tendsto Ω atBot (𝓝 0) := (tendsto_canonicalProfile_atBot_iff hg1).2 hM
@@ -626,22 +692,9 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       _ ≤ ∫ t, ‖deriv g t‖ :=
           setIntegral_le_integral hg1.norm (Eventually.of_forall fun _ ↦ norm_nonneg _)
   -- `Ω` is an exponential times an indefinite integral of an integrable function.
-  have hΩac : ∀ c d, AbsolutelyContinuousOnInterval Ω c d := by
-    intro c d
-    have heq : Ω = (fun s : ℝ ↦ Complex.exp (Complex.I * lam * s)) •
-        fun s ↦ (∫ t in Ioi 0, profileIntegrand lam g t) -
-          ∫ t in (0 : ℝ)..s, profileIntegrand lam g t := by
-      funext s
-      rw [hΩ_def, canonicalProfile, integral_Ioi_profileIntegrand hg1 s]
-      rfl
-    rw [heq]
-    refine AbsolutelyContinuousOnInterval.smul ?_ ?_
-    · have hexpc : ContDiff ℝ 1 (fun s : ℝ ↦ Complex.exp (Complex.I * lam * s)) :=
-        (contDiff_const.mul Complex.ofRealCLM.contDiff).cexp
-      exact ContDiffOn.absolutelyContinuousOnInterval hexpc.contDiffOn
-    · exact ((LipschitzWith.const _).lipschitzOnWith.absolutelyContinuousOnInterval).sub
-        (absolutelyContinuousOnInterval_primitive (integrable_profileIntegrand hg1) c d)
-  /- (3) The functions in `ξ = tanh s`: `F = z ∘ artanh`, `D = F'`, `E = D'`. With
+  have hΩac : ∀ c d, AbsolutelyContinuousOnInterval Ω c d :=
+    fun c d ↦ absolutelyContinuousOnInterval_canonicalProfile hg1 c d
+  /- The functions in `ξ = tanh s`: `F = z ∘ artanh`, `D = F'`, `E = D'`. With
      `w = 1 - ξ² = sech² s`: `wF' = z' = -iΩ` and `w²D' = -i((iλ + 2ξ)Ω - g')`. -/
   set F : ℝ → ℂ := fun ξ ↦ canonicalUnknown lam g (Real.artanh ξ) with hF_def
   set D : ℝ → ℂ := fun ξ ↦ -Complex.I * Ω (Real.artanh ξ) / boundaryWeight ξ with hD_def
@@ -654,8 +707,7 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     nlinarith [hξ.1, hξ.2]
   have hwt (s : ℝ) : boundaryWeight (Real.tanh s) = 1 / Real.cosh s ^ 2 := boundaryWeight_tanh s
   have hmemt (s : ℝ) : Real.tanh s ∈ Ioo (-1 : ℝ) 1 := ⟨Real.neg_one_lt_tanh s, Real.tanh_lt_one s⟩
-  have hgc : Continuous g := hRc.comp (continuous_iff_continuousAt.2 fun s ↦
-    (hasDerivAt_separatrixArc s).continuousAt)
+  have hgc : Continuous g := continuous_of_absolutelyContinuous hgac
   have hz_eq : canonicalUnknown lam g = fun s ↦ -(lam : ℂ)⁻¹ * (Ω s + g s) := by
     funext s
     rw [canonicalUnknown, hΩ_def]
@@ -667,7 +719,6 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     rw [hz_eq]
     convert ((hΩac c d).add (hgac c d)).const_smul (-(lam : ℂ)⁻¹) using 1
   set B : ℝ := ∫ t, ‖deriv g t‖
-  set M : ℝ := ‖continuousRep (invLap ω)‖
   have hzb (s : ℝ) : ‖canonicalUnknown lam g s‖ ≤ ‖(lam : ℂ)⁻¹‖ * (B + M) := by
     rw [hz_eq, norm_mul, norm_neg]
     gcongr
@@ -792,8 +843,16 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
           mul_le_mul_of_nonneg_left hsq hc2.le
       _ = _ := by ring
   have hW : HasWeightedBoundaryH2 F D E := ⟨hFH1, hDac, hDd, hwE⟩
-  /- (4) `G = -iwD - λF` is the trace `g ∘ artanh` on `(-1, 1)`, and
+  /- `G = -iwD - λF` is the trace `g ∘ artanh` on `(-1, 1)`, and
      `∫|G'|² dξ = ∫ cosh² |g'|² ds` (`hg2`, `hgac`, `integral_tanh_subst`). -/
+  have htrace (ξ : ℝ) (hξ : ξ ∈ Ioo (-1 : ℝ) 1) :
+      -Complex.I * boundaryWeight ξ * D ξ - lam * F ξ = g (Real.artanh ξ) := by
+    have hw0' : (boundaryWeight ξ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 (hw ξ hξ).ne'
+    simp only [hD_def, hF_def, hz_eq]
+    field_simp
+    ring_nf
+    simp only [Complex.I_sq]
+    ring
   have hG : MemIntervalH1 (-1) 1 (fun ξ ↦ -Complex.I * boundaryWeight ξ * D ξ - lam * F ξ) := by
     set Dg : ℝ → ℂ := fun ξ ↦ deriv g (Real.artanh ξ) / boundaryWeight ξ with hDg_def
     have hgH1 : HasIntervalH1 (-1) 1 (fun ξ ↦ g (Real.artanh ξ)) Dg := by
@@ -820,14 +879,8 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         · simp only [hDg_def, Complex.real_smul]
           push_cast
           ring
-    refine ⟨Dg, hgH1.congr_Ioo fun ξ hξ ↦ ?_⟩
-    have hw0' : (boundaryWeight ξ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 (hw ξ hξ).ne'
-    simp only [hD_def, hF_def, hz_eq]
-    field_simp
-    ring_nf
-    simp only [Complex.I_sq]
-    ring
-  /- (5) End values: the extension is continuous up to `±1` (`HasIntervalH1.continuousOn_
+    exact ⟨Dg, hgH1.congr_Ioo fun ξ hξ ↦ (htrace ξ hξ).symm⟩
+  /- End values: the extension is continuous up to `±1` (`HasIntervalH1.continuousOn_
      extension`) and equals `F` inside, while `z(s) → -(0 + c±)/λ` (`hΩp`, `hΩm`, `hgp`, `hgm`). -/
   have hcont := hFH1.continuousOn_extension (by norm_num : (-1 : ℝ) < 1)
   have hext := hFH1.extension_eq (by norm_num : (-1 : ℝ) < 1)
@@ -859,7 +912,60 @@ theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     refine tendsto_nhds_unique hlimE (hlimF.congr' ?_)
     filter_upwards [hmem] with x hx
     exact (hext hx).symm
-  /- (6) The rotation maps one saddle to the other: `R(π, 0) = (0, -π)`. -/
+  exact ⟨D, E, hW, hG, htrace, hend1, hend2⟩
+
+/-- Regularity of the boundary unknown (`lem:ee-boundary-regularity`). For an even–even
+    eigenfunction with rotation character `κ`, on each arc `γ` the canonical transport unknown
+    `z` of `g = ψ̃ ∘ γ`, written `F(ξ) = z(artanh ξ)`, lies in the weighted domain, `G =
+    -iwF' - λF ∈ H¹(-1, 1)`, its endpoint values are `-c±/λ` with `c±` the saddle values of
+    `ψ̃` at the ends of the arc, and `c₊ = κ c₋`. -/
+theorem ee_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector true true ω) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) {k : ℕ} (hk : k < 4) :
+    ∃ D E : ℝ → ℂ,
+      HasWeightedBoundaryH2 (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k)
+        (Real.artanh ξ)) D E ∧
+      MemIntervalH1 (-1) 1 (fun ξ ↦ -Complex.I * boundaryWeight ξ * D ξ -
+        lam * canonicalUnknown lam (contStream ω ∘ cellArc k) (Real.artanh ξ)) ∧
+      intervalH1Extension (-1) 1 (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k)
+        (Real.artanh ξ)) D 1 = -contStream ω (rotLift^[k] (0, -Real.pi)) / lam ∧
+      intervalH1Extension (-1) 1 (fun ξ ↦ canonicalUnknown lam (contStream ω ∘ cellArc k)
+        (Real.artanh ξ)) D (-1) = -contStream ω (rotLift^[k] (Real.pi, 0)) / lam ∧
+      contStream ω (rotLift^[k] (0, -Real.pi)) =
+        paritySign κ * contStream ω (rotLift^[k] (Real.pi, 0)) := by
+  -- Each step names the result it comes from.
+  set g : ℝ → ℂ := contStream ω ∘ cellArc k with hg_def
+  set cp : ℂ := contStream ω (rotLift^[k] (0, -Real.pi)) with hcp_def
+  set cm : ℂ := contStream ω (rotLift^[k] (Real.pi, 0)) with hcm_def
+  /- The trace `g = ψ̃ ∘ γ_k` on the arc. -/
+  -- From the transport traces and the weighted gradient traces.
+  have hg1 : Integrable (deriv g) := (ee_melnikov hlam hω hκ k).1
+  have hg2 : Integrable fun s ↦ Real.cosh s ^ 2 * ‖deriv g s‖ ^ 2 :=
+    ee_arc_energy hs k hk
+  -- Bounded, since `ψ̃` is a continuous periodic function.
+  have hgb : ∀ s, ‖g s‖ ≤ ‖continuousRep (invLap ω)‖ := fun s ↦
+    (continuousRep (invLap ω)).norm_coe_le_norm _
+  -- Absolute continuity on `γ₀` (`lem:arc-trace-ac`), and `g = κᵏ (ψ̃ ∘ γ₀)`.
+  have hArc : g = fun s ↦ paritySign κ ^ k * (contStream ω ∘ separatrixArc) s :=
+    funext fun s ↦ contStream_iterate_rotLift hκ k (separatrixArc s)
+  obtain ⟨hac0, hd0⟩ := absolutelyContinuous_contStream_separatrixArc ω
+  have hgac : ∀ c d, AbsolutelyContinuousOnInterval g c d := fun c d ↦ by
+    rw [hArc]
+    simpa only [smul_eq_mul] using (hac0 c d).const_smul (paritySign κ ^ k)
+  have hgd : ∀ᵐ s, DifferentiableAt ℝ g s := by
+    filter_upwards [hd0] with s hs
+    rw [hArc]
+    exact hs.const_mul _
+  -- The Melnikov identity (`ee_melnikov`).
+  have hM : ∫ t, profileIntegrand lam g t = 0 := (ee_melnikov hlam hω hκ k).2
+  -- End values: `tendsto_separatrixArc_atTop/atBot`, continuity of `ψ̃` and `rotLift`.
+  have hRc : Continuous fun p ↦ contStream ω (rotLift^[k] p) :=
+    (continuous_contStream ω).comp (Continuous.iterate (by unfold rotLift; fun_prop) k)
+  have hgp : Tendsto g atTop (𝓝 cp) := (hRc.tendsto _).comp tendsto_separatrixArc_atTop
+  have hgm : Tendsto g atBot (𝓝 cm) := (hRc.tendsto _).comp tendsto_separatrixArc_atBot
+  obtain ⟨D, E, hW, hG, _, hend1, hend2⟩ :=
+    canonical_boundary_regularity hlam hgac hgd hg1 hg2 hgb hM hgp hgm
+  /- The rotation maps one saddle to the other: `R(π, 0) = (0, -π)`. -/
   have hκc : cp = paritySign κ * cm := by
     rw [hcp_def, hcm_def, show ((0 : ℝ), -Real.pi) = rotLift (Real.pi, 0) by simp [rotLift],
       ← Function.iterate_succ_apply, Function.iterate_succ_apply', contStream_rotLift hκ]

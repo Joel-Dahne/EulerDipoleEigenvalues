@@ -847,6 +847,51 @@ the endpoint traces satisfy $f_k(1)=\kappa f_k(-1)$, and
 \]
 \end{definition}
 
+\begin{lemma}[Continuous quotient identity and rotation character]
+\label{lem:dd-continuous-character}
+\uses{def:dd-exclusion-domain, def:rotation-characters,
+ def:continuous-representative, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.DDQuotientData.contStream_eq,
+ NoEmbeddedEigenvalues.DDQuotientData.continuousRep_rotLift,
+ NoEmbeddedEigenvalues.DDQuotientData.continuousRep_iterate_rotLift}
+\leanok
+For supplied quotient data, the continuous lifts satisfy
+$\tilde\psi=\Psi\widetilde\phi$ pointwise.
+If $R^*\omega=\kappa\omega$, then
+$\widetilde\phi(R^kp)=\kappa^k\widetilde\phi(p)$ for every $k\ge0$ and
+every lifted point, including the separatrix.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:continuous-representative, lem:lift-representatives,
+ lem:reflection-algebra, lem:separatrix-lines, lem:symmetries-commute}
+\leanok
+The almost-everywhere multiplication identity becomes pointwise by continuity.
+The stream function has the rotation character of $\omega$, and $\Psi$
+is rotation-invariant. Cancel $\Psi$ away from its null zero set; continuity
+extends the character identity to every point. Then iterate.
+\end{proof}
+
+\begin{lemma}[Melnikov identity for the quotient arcs]
+\label{lem:dd-arc-melnikov}
+\uses{def:dd-exclusion-domain, def:rotation-characters,
+ def:cell-arcs, def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.DDQuotientData.arc_melnikov}
+\leanok
+For supplied quotient data and a character $\kappa=\pm1$ of $\omega$,
+each continuous quotient arc trace $g_k$ satisfies
+$g_k'\in L^1(\R)$ and $\int g_k'(t)e^{-i\lambda t}dt=0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:melnikov, lem:dd-continuous-character, lem:cell-neighbourhood}
+\leanok
+Apply Melnikov to the supplied transport pair $(\nu,\widetilde\phi)$
+on the invariant cell neighbourhood. The continuous character gives
+$g_k=\kappa^kg_0$, so integrability and the zero integral transfer to
+every rotated arc.
+\end{proof}
+
 \begin{lemma}[Weighted boundary regularity of the quotient]
 \label{lem:dd-boundary-regularity}
 \uses{def:dd-exclusion-domain, def:dd-boundary-data, def:rotation-characters}
@@ -857,23 +902,30 @@ $\omega$, the boundary data of Definition~\ref{def:dd-boundary-data} exist.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-quotient-gradient-traces, lem:melnikov, lem:trace-h2,
- lem:canonical-profile-ac, lem:canonical-profile-ode,
- lem:canonical-profile-weighted, lem:boundary-form-xi, lem:sobolev-holder}
-The even $H^2$ gradient traces give
-$\int\cosh^2t\,|g_k'|^2dt<\infty$; the local trace theorem gives absolute
-continuity on compact arc intervals. Apply Melnikov to the quotient
-transport pair and the weighted canonical-profile estimate to get
-$\int\cosh^2t\,|\Omega_k|^2dt<\infty$.
-The equations $z_k'=-i\Omega_k$ and
-$\Omega_k'=i\lambda\Omega_k-g_k'$ give the weighted second-order domain
-after $x=\tanh t$, as in the explicit transformation for the even--even
-boundary unknown. They also identify $-iwD_k-\lambda f_k$ with the
-quotient trace. The profile tends to zero at both ends, so the endpoint
-values of $f_k$ are $-g_k(\pm\infty)/\lambda$. Rotation gives their
-character relation. These domain and trace assertions are separate from
-the Picone identity.
+\uses{lem:even-h2-arc-regularity, lem:dd-arc-melnikov,
+ lem:dd-continuous-character, lem:canonical-boundary-regularity,
+ lem:separatrix-arc, lem:continuous-representative}
+\leanok
+The even $H^2$ arc theorem supplies local absolute continuity,
+almost-everywhere differentiability and the weighted derivative energy.
+Quotient Melnikov supplies $g_k'\in L^1$ and its zero oscillatory integral.
+The continuous periodic representative is bounded and has limits at the
+two saddles. Apply Lemma~\ref{lem:canonical-boundary-regularity} on each arc.
+It supplies the weighted domain, actual forcing identity and endpoint
+values $-g_k(\pm\infty)/\lambda$. The pointwise quotient character relates
+those values by $\kappa$. These assertions are separate from the Picone
+identity.
 \end{proof}
+
+\begin{remark}[Digest note: the minimal quotient data suffice at the boundary]
+Weighted arc energy follows from even global $H^2$ by reconstruction
+through $\Delta\phi$; full normal-gradient trace limits are not needed here.
+Only the global regularity and even parity, the stream multiplication
+identity, and the supplied quotient transport pair enter this boundary
+step. Neither $\omega=\Psi\nu$ nor $\nu/d\in L^2$ nor separate corner
+remainders are used. The rotation character extends through the
+separatrix by continuity, without pointwise division there.
+\end{remark}
 
 \begin{lemma}[Pointwise lower bound for $\beta$]
 \label{lem:beta-lower}

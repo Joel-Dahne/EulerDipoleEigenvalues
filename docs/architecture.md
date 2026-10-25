@@ -104,11 +104,13 @@ proof mechanisms. Module names below are relative to
 - `IntervalZeroExtension.lean`: jump-free zero extension of zero-trace H¹
   data, and complex primitive/zero-extension helpers used by `TraceH2.lean`.
 - `EvenEvenBoundary.lean`: even–even gradient traces, arc absolute continuity,
-  weighted boundary regularity and canonical arc positivity.
+  even H² arc estimates via Laplacian reconstruction, abstract canonical
+  profile interval regularity, and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
-- `OddOdd.lean`: quotient/boundary data, explicit Picone densities, finite-energy
-  and corrected-boundary interfaces, and odd–odd exclusion assembly.
+- `OddOdd.lean`: quotient/boundary data, quotient characters and boundary
+  regularity, explicit Picone densities, finite-energy and corrected-boundary
+  interfaces, and odd–odd exclusion assembly.
 - `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.

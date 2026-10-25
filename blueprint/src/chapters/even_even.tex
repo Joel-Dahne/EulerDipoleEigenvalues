@@ -84,11 +84,17 @@ Moreover $0<c\le1$ on $\Cell$ minus its center (manuscript
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-identities}
+\uses{lem:ee-arc-energy, lem:ee-transport-traces, lem:arc-trace-ac,
+ lem:canonical-boundary-regularity, lem:separatrix-arc,
+ lem:continuous-representative, lem:rotation-characters}
 \leanok
-Direct differentiation, using $\Div(\nabla\Psi/\rho^2)=-\Psi\delta^2/\rho^4$
-and $\Delta\Psi=-\Psi$. The bound $c\le1$ is
-$\rho^2-\Psi(2-\Psi)=2(1-\cos x)(1-\cos y)\ge0$.
+The rotation character gives $g=\kappa^k\,\tilde\psi\circ\gamma$, so the
+arc absolute-continuity, Melnikov and weighted-energy results supply the
+hypotheses of Lemma~\ref{lem:canonical-boundary-regularity}.
+Continuity on the compact torus supplies boundedness and the saddle limits.
+The lemma gives the weighted domain, forcing regularity and endpoint values.
+Finally $R(\pi,0)=(0,-\pi)$ and the character of $\tilde\psi$ give
+$c_+=\kappa c_-$.
 \end{proof}
 
 \begin{remark}
@@ -1250,6 +1256,71 @@ $\tilde\psi$ is absolutely continuous along the line. The change of variable $s\
 decreasing and $1$-Lipschitz, which preserves absolute continuity: disjoint intervals go to
 disjoint intervals of at most the same total length. Absolutely continuous functions have
 bounded variation and are therefore differentiable almost everywhere.
+\end{proof}
+
+\begin{lemma}[Arc regularity of an even torus $H^2$ function]
+\label{lem:even-h2-arc-regularity}
+\uses{def:sobolev-torus, def:sectors, def:continuous-representative,
+ def:cell-arcs, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.even_sobolev_arc_regularity}
+\leanok
+Let $\phi\in H^2(\T^2)$ be even under both reflections. On each cell arc,
+$g_k(t)=\widetilde\phi(\pi(\gamma_k(t)))$ is absolutely continuous on
+compact intervals, differentiable almost everywhere, and satisfies
+$\int_\R\cosh^2t\,|g_k'(t)|^2dt<\infty$.
+No eigenvalue equation is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h2-laplacian-reconstruction, lem:laplacian-symmetries,
+ lem:arc-trace-ac, lem:ee-arc-energy}
+\leanok
+Put $\zeta=\Delta\phi\in L^2$. It is even under both reflections, and
+$\widetilde\phi=\widetilde{\Delta^{-1}\zeta}+\hat\phi_0$.
+Apply the stream arc estimates to $\zeta$; adding a constant preserves
+absolute continuity and does not change the arc derivative.
+\end{proof}
+
+\begin{lemma}[Canonical profiles in the weighted interval domain]
+\label{lem:canonical-boundary-regularity}
+\uses{def:canonical-profile, def:h1-interval, def:weighted-boundary-domain,
+ lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.canonical_boundary_regularity}
+\leanok
+Let $\lambda\in\R\setminus\{0\}$ and let $g:\R\to\C$ be bounded,
+locally absolutely continuous and differentiable almost everywhere.
+Assume $g'\in L^1$, $\int\cosh^2t\,|g'|^2dt<\infty$,
+$\int g'(t)e^{-i\lambda t}dt=0$, and $g(\pm\infty)=c_\pm\in\C$.
+For the canonical unknown $z$, put $F=z\circ\operatorname{artanh}$.
+Then $F\in\mathcal D_w$ with derivatives $D,E$,
+$G=-iwD-\lambda F\in H^1(-1,1)$, and
+\[
+ G(x)=g(\operatorname{artanh}x)\quad(-1<x<1),\qquad
+ F(\pm1)=-c_\pm/\lambda
+\]
+where endpoint values are $H^1$ traces.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile-ac, lem:canonical-profile-ode,
+ lem:canonical-profile-weighted}
+\leanok
+The profile $\Omega$ is bounded by $\|g'\|_{L^1}$, locally absolutely
+continuous, and tends to zero at both ends. Its weighted bound and
+$\cosh t\le e^{|t|}\le2\cosh t$ give $\int\cosh^2t\,|\Omega|^2dt<\infty$.
+At $t=\operatorname{artanh}x$, $w=1-x^2$, take
+\[
+ D=-i\Omega/w,\qquad E=-i\big((i\lambda+2x)\Omega-g'\big)/w^2.
+\]
+The profile equations and chain rule give $F'=D$, $D'=E$ almost
+everywhere, with local absolute continuity on compact subintervals.
+Boundedness gives $F\in L^2$; using $dx=dt/\cosh^2t$ gives
+$D,wE\in L^2$, since $|i\lambda+2x|\le|\lambda|+2$.
+The explicit formulas identify $G=g\circ\operatorname{artanh}$ pointwise
+on the open interval, with
+$\int|G'|^2dx=\int\cosh^2t\,|g'|^2dt$.
+Finally $z(t)\to-c_\pm/\lambda$, and continuity of the $H^1$ extension
+identifies its endpoint traces.
 \end{proof}
 
 \begin{lemma}[Regularity of the boundary unknown]

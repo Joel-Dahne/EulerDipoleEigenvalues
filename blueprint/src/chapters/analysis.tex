@@ -741,6 +741,7 @@ functions with the sup norm (and $\tilde g=0$ if the series does not converge th
   NoEmbeddedEigenvalues.summable_inv_sobolevWeight_two,
   NoEmbeddedEigenvalues.MemSobolev.summable_norm_fourierCoeff,
   NoEmbeddedEigenvalues.MemSobolev.summable_fourier_char,
+  NoEmbeddedEigenvalues.MemSobolev.hasSum_continuousRep,
   NoEmbeddedEigenvalues.continuousRep_toLp,
   NoEmbeddedEigenvalues.coeFn_eq_continuousRep,
   NoEmbeddedEigenvalues.coeFn_invLap_eq_continuousRep}
@@ -759,6 +760,28 @@ $\sum_{k\in\Z^2}(1+|k|^2)^{-2}\le\big(\sum_{n\in\Z}(1+n^2)^{-1}\big)^2<\infty$ s
 $(1+a^2)(1+b^2)\le(1+a^2+b^2)^2$. The uniformly convergent series and the $L^2$ Fourier
 series of $g$ have the same limit in $L^2$. For $\psi$ use $\psi\in H^2$
 (Lemma~\ref{lem:elliptic-torus}).
+\end{proof}
+
+\begin{lemma}[Reconstruction from the Fourier Laplacian]
+\label{lem:h2-laplacian-reconstruction}
+\uses{def:sobolev-torus, def:fourier-derivatives, def:inverse-laplacian,
+ def:continuous-representative}
+\lean{NoEmbeddedEigenvalues.MemSobolev.exists_hasFourierLaplacian,
+ NoEmbeddedEigenvalues.HasFourierLaplacian.continuousRep_eq}
+\leanok
+Every $\phi\in H^2(\T^2)$ has a Fourier Laplacian $\zeta\in L^2(\T^2)$.
+For any such $\zeta$, the continuous representatives satisfy
+$\widetilde\phi=\widetilde{\Delta^{-1}\zeta}+\hat\phi_0$ pointwise.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-torus, lem:fourier-derivative-composition,
+ lem:inverse-laplacian-fourier, lem:continuous-representative}
+\leanok
+Take the two pure second derivatives in $L^2$ and add them.
+At every nonzero frequency, the Laplacian multiplier cancels the
+inverse-Laplacian multiplier. Subtract the absolutely convergent Fourier
+series of the continuous representatives; only the zero mode remains.
 \end{proof}
 
 \begin{definition}[Functions on the torus from periodic lifts]

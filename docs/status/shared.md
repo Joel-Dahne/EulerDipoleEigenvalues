@@ -22,8 +22,10 @@ The even–even route is admission-free, including:
   mollification, H¹ commutator and the annular L² virial.
 - Eigenfunction transport, resonant vanishing, Melnikov, canonical profiles
   and pairing limits.
-- Interval H¹ and weighted boundary positivity by exhaustion. General
-  smooth-density theory is not required by these results.
+- Interval H¹ and weighted boundary positivity by exhaustion. Abstract
+  canonical profiles have weighted interval regularity and identified
+  forcing/endpoints; even H² torus functions have the needed arc energy.
+  General smooth-density theory is not required by these results.
 
 Reuse requires checking the hypotheses, especially parity/rotation characters,
 weights and local versus global regularity.
@@ -32,10 +34,10 @@ weights and local versus global regularity.
 
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
-   exclusion is now assembled. Next review/prove the canonical quotient
-   boundary bridge, then expand corrected boundary nonnegativity. Bulk
-   coercivity and its certificate remain deferred. See [odd–odd status](odd-odd.md). The earlier saddle,
-   H¹ and weighted-gradient derivations remain blueprint mathematics,
+   exclusion is now assembled. Next expand corrected boundary nonnegativity
+   into its scalar and one-dimensional ingredients. Bulk coercivity and its
+   certificate remain deferred. See [odd–odd status](odd-odd.md). The earlier
+   saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
 2. **Bounded shared formalization:** coarse period derivative bounds
    (`lem:period-derivative-bounds`, starting in `Period.lean`) and phase-cell
