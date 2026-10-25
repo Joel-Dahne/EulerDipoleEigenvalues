@@ -6,11 +6,12 @@
 ## Current position
 
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
-own. They depend on four explicit admitted analytic inputs in
-[OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean): quotient existence,
-the Picone current, bulk coercivity and corrected interval nonnegativity. This is a conditional assembly,
-not an admission-free exclusion. The full dependency graph has not yet been
-translated into Lean statements.
+own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
+current is also assembled without its own `sorry`, from eight explicit
+analytic inputs. Alongside quotient existence, bulk coercivity and corrected
+interval nonnegativity, this gives eleven transitive admissions. This is a
+conditional assembly, not an admission-free exclusion. Only the first
+Picone dependency layer, not the full recursive graph, is stated in Lean.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -33,12 +34,22 @@ profile theorem supplies the weighted interval domain, forcing identity and
 endpoint values. Rotation extends through the separatrix by continuity.
 No stronger quotient assumptions or separate corner remainders are needed.
 
-## Next work: corrected boundary nonnegativity
+The Picone interfaces separate three bulk integrability assertions, Sobolev
+Picone on a positive truncation, the character-wise virial limit, and three
+geometric level/current limits. The common logarithmic counterterm and the
+whole value finite part cancel in Lean. Ordinary exhaustion and boundary-form
+identification are proved; the latter still uses admitted B-trace
+integrability. The scalar B derivative formula and β normalization are
+admission-free. No sign certificate is used by the current assembly.
 
-Review `correctedBoundaryForm_nonneg`, separating correction integrability,
-the scalar β bound and the one-dimensional positivity estimates. Keep bulk
-coercivity and its certificate deferred. This top-down work tests the final
-steps before further investment in the regularity bootstrap.
+## Next work: review and prove the Picone inputs
+
+Human-review the eight statements against their blueprint nodes, then start
+with the vorticity-density and gradient-energy integrability estimates.
+Truncated Picone needs the weak H² argument and center removal; the residual
+integrability calculation needs an explicit singular-coefficient audit.
+Bulk coercivity/certificate work remains deferred. Corrected interval
+nonnegativity is a separate remaining outer input.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`:
 even global H² for `φ`, the multiplication identities, the quotient transport
@@ -51,8 +62,9 @@ proposed sufficient route, not a proved Lean prerequisite.
 The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³,
 `∇ω/d ∈ L²` and `ω/Ψ ∈ L²`. Double division for the H² stream quotient and
 transport-domain assembly still need mathematical review. The renormalized
-virial is derived conditional on the quotient domain; the Picone current,
-weighted Poincaré and corrected boundary constants still need review.
+virial is derived conditional on the quotient domain; its Lean character-wise
+interface and the analytic inputs below Picone, weighted Poincaré and corrected
+boundary constants still need review.
 Certificate verification remains deferred.
 
 The virial finite parts use only the leading period value asymptotic, not the

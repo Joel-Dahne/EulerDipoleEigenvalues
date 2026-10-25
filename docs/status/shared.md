@@ -9,7 +9,7 @@ and proof mechanisms belong in the blueprint and module documentation.
 
 ## Available foundations
 
-The even–even route is admission-free, including:
+The even–even route is admission-free. Available foundations include:
 
 - Fourier/L² setup, symmetry/rotation decompositions and inverse-Laplacian
   regularity. Weak dipole testing and odd cell-pairing identities need
@@ -26,6 +26,9 @@ The even–even route is admission-free, including:
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
   General smooth-density theory is not required by these results.
+- Ordinary exhaustion by stream levels and exact one-dimensional B/β
+  boundary normalization. Picone's finite-part assembly is conditional on
+  separate analytic integrability and trace inputs.
 
 Reuse requires checking the hypotheses, especially parity/rotation characters,
 weights and local versus global regularity.
@@ -34,9 +37,10 @@ weights and local versus global regularity.
 
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
-   exclusion is now assembled. Next expand corrected boundary nonnegativity
-   into its scalar and one-dimensional ingredients. Bulk coercivity and its
-   certificate remain deferred. See [odd–odd status](odd-odd.md). The earlier
+   exclusion is now assembled. Review the eight Picone inputs and prove the
+   density-integrability estimates before the harder weak Picone/virial limits.
+   Corrected boundary nonnegativity remains a separate outer input. Bulk
+   coercivity and its certificate remain deferred. See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
 2. **Bounded shared formalization:** coarse period derivative bounds

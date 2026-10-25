@@ -14,6 +14,11 @@ Sobolev representative. Arc values use the continuous representative of the H² 
 Endpoint conditions use interval H¹ traces, never raw endpoint values. Boundary regularity
 uses the even H² arc theorem and the abstract canonical-profile theorem. The quotient's
 rotation character extends through the separatrix by continuity.
+
+Picone uses the actual outward current on `Ψ = ε`, represented by orbit parameter `ε/2`.
+The bulk and current renormalizations use one common counterterm, including the same
+corner multiplicities. Absolute integrability is a separate input from their cancellation;
+no residual sign certificate or corrected-form positivity is used in the current assembly.
 -/
 
 noncomputable section
@@ -313,6 +318,295 @@ theorem dd_boundary_regularity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       simp only [correctedBoundaryTrace, hUnknown k, hArc k]
       exact ht k x hx
 
+/-! ### Truncations, finite parts and the ground-state current -/
+
+/-- The lifted positive cell above the actual stream level `ε` (not the orbit parameter). -/
+def ddTruncatedCell (ε : ℝ) : Set (ℝ × ℝ) :=
+  {p | p ∈ cellSquare ∧ ε < dipoleLift p}
+
+/-- The untransformed gradient/potential energy. -/
+def ddRawEnergy (φ dx dy : L2) (p : ℝ × ℝ) : ℝ :=
+  ddMatrixForm p (liftL2 dx p) (liftL2 dy p) - ddF p * ‖liftL2 φ p‖ ^ 2
+
+/-- The truncated virial bulk, including the vorticity term. -/
+def ddRawBulk (φ ν dx dy : L2) (ε : ℝ) : ℝ :=
+  ∫ p in ddTruncatedCell ε, ddVorticityDensity ν p + ddRawEnergy φ dx dy p
+
+/-- The three separate ordinary integrals after the Picone transformation. -/
+def ddPiconeBulk (φ ν dx dy : L2) (ε : ℝ) : ℝ :=
+  (∫ p in ddTruncatedCell ε, ddVorticityDensity ν p) +
+    (∫ p in ddTruncatedCell ε, ddPiconeGradient φ dx dy p) +
+    ∫ p in ddTruncatedCell ε, ddPiconePotential φ p
+
+/-- The two actual saddle endpoint values of a lifted arc. -/
+def ddArcEnd (φ : L2) (k : Fin 4) (positive : Bool) : ℂ :=
+  continuousRep φ (torusProj (rotLift^[k.val]
+    (if positive then (0, -Real.pi) else (Real.pi, 0))))
+
+/-- Half the endpoint sum: each of the four lifted corners is incident to two arcs.
+    The two torus saddles are counted with their lifted multiplicities. -/
+def ddCornerMass (φ : L2) : ℝ :=
+  (1 / 2 : ℝ) * ∑ k : Fin 4, (‖ddArcEnd φ k false‖ ^ 2 + ‖ddArcEnd φ k true‖ ^ 2)
+
+/-- Arc value mass with its two endpoint constants removed. The choice at `t = 0`
+    is immaterial for integration. -/
+def ddArcValueRemainder (φ : L2) (k : Fin 4) (t : ℝ) : ℝ :=
+  ‖ddArcTrace φ k t‖ ^ 2 -
+    if t < 0 then ‖ddArcEnd φ k false‖ ^ 2 else ‖ddArcEnd φ k true‖ ^ 2
+
+/-- The value finite part for truncation by `Ψ = ε`, including its `log 8` constant. -/
+def ddValueFinitePart (φ : L2) : ℝ :=
+  (∑ k : Fin 4, ∫ t, ddArcValueRemainder φ k t) + Real.log 8 * ddCornerMass φ
+
+/-- The identical counterterm used for the virial bulk and the boundary current. -/
+def ddLogCounterterm (φ : L2) (ε : ℝ) : ℝ :=
+  (8 / 3 : ℝ) * ddCornerMass φ * Real.log (1 / ε)
+
+/-- The comparison function restricted to `s = 0`. -/
+def ddBoundaryGround (r : ℝ) : ℝ := 1 + r / 16 - r ^ 2 / 256 * Real.log (r / 2)
+
+/-- The explicit boundary coefficient, in expanded rational/logarithmic form. -/
+def ddBoundaryB (r : ℝ) : ℝ :=
+  (5 * r / 16 + r / 256 * ((32 - 25 * r) * Real.log (r / 2) + 16 - 12 * r)) /
+    ddBoundaryGround r
+
+/-- The actual outward Picone current coefficient in flow time. The outward normal of
+    `C_ε` is `-∇Ψ/|∇Ψ|`, so the coefficient has a minus sign. -/
+def ddGroundCurrentCoeff (p : ℝ × ℝ) : ℝ :=
+  -ddA p * (partialX dipoleLift p * partialX ddGround p +
+    partialY dipoleLift p * partialY ddGround p) / ddGround p
+
+/-- Level value mass. `levelIntegral h` is on `Ψ = 2h`, hence the argument `ε/2`. -/
+def ddLevelMass (φ : L2) (ε : ℝ) : ℝ :=
+  levelIntegral (ε / 2) (fun p ↦ ‖continuousRep φ (torusProj p)‖ ^ 2)
+
+/-- The `B`-weighted value mass on the same level. -/
+def ddLevelBMass (φ : L2) (ε : ℝ) : ℝ :=
+  levelIntegral (ε / 2) (fun p ↦ ddBoundaryB (gradSq dipoleLift p) *
+    ‖continuousRep φ (torusProj p)‖ ^ 2)
+
+/-- The actual level current, using continuous values rather than raw L² representatives. -/
+def ddGroundCurrent (φ : L2) (ε : ℝ) : ℝ :=
+  levelIntegral (ε / 2) (fun p ↦ ddGroundCurrentCoeff p *
+    ‖continuousRep φ (torusProj p)‖ ^ 2)
+
+/-- On a separatrix arc, `r = 2 sech² t`. -/
+def ddArcCorrection (φ : L2) (k : Fin 4) (t : ℝ) : ℝ :=
+  ddBoundaryB (2 / Real.cosh t ^ 2) * ‖ddArcTrace φ k t‖ ^ 2
+
+/-- Absolute integrability from `ν/d ∈ L²`, independently of the eigenvalue equation. -/
+theorem dd_vorticityDensity_integrable (ν : L2)
+    (hν : MemLp (fun p ↦ liftL2 ν p / (saddleDist p : ℂ)) 2
+      (volume.restrict cellNeighbourhood)) :
+    IntegrableOn (ddVorticityDensity ν) cellSquare := by
+  sorry
+
+/-- The even boundary Hardy estimate controls the original and divided gradient energies. -/
+theorem dd_gradient_energies_integrable {φ dx dy : L2} (hφ : MemSobolev 2 φ)
+    (hs : InSector true true φ) (hdx : HasFourierPartial 0 φ dx)
+    (hdy : HasFourierPartial 1 φ dy) :
+    IntegrableOn (fun p ↦ ddMatrixForm p (liftL2 dx p) (liftL2 dy p)) cellSquare ∧
+      IntegrableOn (ddPiconeGradient φ dx dy) cellSquare := by
+  sorry
+
+/-- Integrability of the actual differentiated residual, not a sign certificate for it. -/
+theorem dd_piconePotential_integrable {φ : L2} (hφ : MemSobolev 2 φ) :
+    IntegrableOn (ddPiconePotential φ) cellSquare := by
+  sorry
+
+/-- Sobolev Picone on every positive truncation, with bulk and current integrability.
+    The center is included; its removal and limiting argument belong to this input. -/
+theorem dd_truncated_picone {φ dx dy : L2} (hφ : MemSobolev 2 φ)
+    (hdx : HasFourierPartial 0 φ dx) (hdy : HasFourierPartial 1 φ dy)
+    {ε : ℝ} (hε : ε ∈ Ioo (0 : ℝ) 2) :
+    IntegrableOn (ddRawEnergy φ dx dy) (ddTruncatedCell ε) ∧
+      IntegrableOn (ddPiconeGradient φ dx dy) (ddTruncatedCell ε) ∧
+      IntegrableOn (ddPiconePotential φ) (ddTruncatedCell ε) ∧
+      IntervalIntegrable (fun t ↦ ddGroundCurrentCoeff (dipoleOrbit (ε / 2) t) *
+        ‖continuousRep φ (torusProj (dipoleOrbit (ε / 2) t))‖ ^ 2)
+        volume 0 (orbitPeriod (ε / 2)) ∧
+      (∫ p in ddTruncatedCell ε, ddRawEnergy φ dx dy p) =
+        (∫ p in ddTruncatedCell ε, ddPiconeGradient φ dx dy p) +
+          (∫ p in ddTruncatedCell ε, ddPiconePotential φ p) + ddGroundCurrent φ ε := by
+  sorry
+
+/-- Character-wise renormalized virial for supplied quotient data. This is a full bulk
+    limit; pairing convergence along good levels is sufficient to identify it. -/
+theorem dd_character_virial_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
+    (q : DDQuotientData lam ω) {κ : Bool} (hκ : InRotationCharacter κ ω) {dx dy : L2}
+    (hdx : HasFourierPartial 0 q.phi dx) (hdy : HasFourierPartial 1 q.phi dy) :
+    Tendsto (fun ε ↦ ddRawBulk q.phi q.nu dx dy ε + ddLogCounterterm q.phi ε)
+      (𝓝[>] 0) (𝓝 (-(8 / 3 : ℝ) *
+        ((∑ k : Fin 4, canonicalArcForm lam (ddArcTrace q.phi k)) + ddValueFinitePart q.phi))) := by
+  sorry
+
+/-- The scalar value finite part and absolute integrability of its renormalized arc terms. -/
+theorem dd_value_finite_part {φ : L2} (hφ : MemSobolev 2 φ) :
+    (∀ k : Fin 4, Integrable (ddArcValueRemainder φ k)) ∧
+      Tendsto (fun ε ↦ ddLevelMass φ ε - ddCornerMass φ * Real.log (1 / ε))
+        (𝓝[>] 0) (𝓝 (ddValueFinitePart φ)) := by
+  sorry
+
+/-- The logarithmic `B` weight is integrable on every arc and has a full level limit. -/
+theorem dd_boundaryB_trace_limit {φ : L2} (hφ : MemSobolev 2 φ) :
+    (∀ k : Fin 4, Integrable (ddArcCorrection φ k)) ∧
+      Tendsto (ddLevelBMass φ) (𝓝[>] 0)
+        (𝓝 (∑ k : Fin 4, ∫ t, ddArcCorrection φ k t)) := by
+  sorry
+
+/-- The error in replacing the actual current coefficient by `-(8/3)(1-B)` integrates
+    to zero: the uniform `O(ε)` coefficient error times the logarithmic period vanishes. -/
+theorem dd_current_remainder_limit {φ : L2} (hφ : MemSobolev 2 φ) :
+    Tendsto (fun ε ↦ ddGroundCurrent φ ε + (8 / 3 : ℝ) * ddLevelMass φ ε -
+      (8 / 3 : ℝ) * ddLevelBMass φ ε) (𝓝[>] 0) (𝓝 0) := by
+  sorry
+
+/-- The boundary comparison function is positive on the geometric range of `r`. -/
+theorem ddBoundaryGround_pos {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) :
+    0 < ddBoundaryGround r := by
+  have hl : Real.log (r / 2) ≤ 0 := Real.log_nonpos (by positivity) (by linarith)
+  have hmul : r ^ 2 / 256 * Real.log (r / 2) ≤ 0 :=
+    mul_nonpos_of_nonneg_of_nonpos (by positivity) hl
+  unfold ddBoundaryGround
+  linarith
+
+/-- Explicit derivative of the one-dimensional boundary comparison function. -/
+theorem hasDerivAt_ddBoundaryGround {r : ℝ} (hr : 0 < r) :
+    HasDerivAt ddBoundaryGround
+      (1 / 16 - r / 128 * Real.log (r / 2) - r / 256) r := by
+  have hlog := ((hasDerivAt_id r).div_const 2).log (by positivity : r / 2 ≠ 0)
+  have h := ((hasDerivAt_const r (1 : ℝ)).add ((hasDerivAt_id r).div_const 16)).sub
+    ((((hasDerivAt_id r).pow 2).div_const 256).mul hlog)
+  convert h using 1
+  · rfl
+  · simp only [id_eq, Pi.pow_apply]
+    field_simp [hr.ne']
+    ring
+
+/-- The expanded coefficient agrees with the derivative formula for the boundary current. -/
+theorem ddBoundaryB_eq {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) :
+    ddBoundaryB r = 1 - 4 * (r / 8 + (4 - 3 * r) * deriv ddBoundaryGround r) /
+      ddBoundaryGround r := by
+  rw [(hasDerivAt_ddBoundaryGround hr).deriv]
+  dsimp only [ddBoundaryB]
+  field_simp [(ddBoundaryGround_pos hr hr2).ne']
+  unfold ddBoundaryGround
+  ring
+
+/-- The explicit expanded boundary coefficient has exactly the normalization used in β. -/
+theorem ddBoundaryB_two_weight (x : ℝ) :
+    ddBoundaryB (2 * boundaryWeight x) = boundaryWeight x * correctedBoundaryBeta x := by
+  have h : 2 * boundaryWeight x / 2 = boundaryWeight x := by ring
+  dsimp only [ddBoundaryB, ddBoundaryGround, correctedBoundaryBeta]
+  rw [h]
+  ring_nf
+
+/-- The arc correction in flow time is the Jacobian-weighted interval correction. -/
+theorem ddBoundaryB_cosh (t : ℝ) : ddBoundaryB (2 / Real.cosh t ^ 2) =
+    (1 / Real.cosh t ^ 2) * correctedBoundaryBeta (Real.tanh t) := by
+  rw [show 2 / Real.cosh t ^ 2 = 2 * boundaryWeight (Real.tanh t) by
+    rw [boundaryWeight_tanh]; ring, ddBoundaryB_two_weight, boundaryWeight_tanh]
+
+/-- Renormalizing the actual current uses the very same counterterm as the virial bulk. -/
+theorem dd_ground_current_limit {φ : L2} (hφ : MemSobolev 2 φ) :
+    Tendsto (fun ε ↦ ddGroundCurrent φ ε + ddLogCounterterm φ ε) (𝓝[>] 0)
+      (𝓝 (-(8 / 3 : ℝ) * (ddValueFinitePart φ -
+        ∑ k : Fin 4, ∫ t, ddArcCorrection φ k t))) := by
+  have h := ((dd_current_remainder_limit hφ).sub
+    ((dd_value_finite_part hφ).2.const_mul (8 / 3 : ℝ))).add
+      ((dd_boundaryB_trace_limit hφ).2.const_mul (8 / 3 : ℝ))
+  convert h using 1
+  · funext ε
+    dsimp only [ddLogCounterterm]
+    ring
+  · congr 1
+    ring
+
+/-- Integrable functions converge under exhaustion by the actual stream levels. This is
+    dominated convergence and does not assume any sign of the integrand. -/
+theorem tendsto_ddTruncatedCell_integral {f : ℝ × ℝ → ℝ}
+    (hf : IntegrableOn f cellSquare) :
+    Tendsto (fun ε ↦ ∫ p in ddTruncatedCell ε, f p) (𝓝[>] 0)
+      (𝓝 (∫ p in cellSquare, f p)) := by
+  have hcell : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  have hm (ε : ℝ) : MeasurableSet {p : ℝ × ℝ | ε < dipoleLift p} :=
+    measurableSet_lt measurable_const (by unfold dipoleLift; fun_prop)
+  have hrep (ε : ℝ) : (∫ p in ddTruncatedCell ε, f p) =
+      ∫ p in cellSquare, {p | ε < dipoleLift p}.indicator f p := by
+    rw [setIntegral_indicator (hm ε)]
+    rfl
+  have h := tendsto_integral_filter_of_dominated_convergence (μ := volume.restrict cellSquare)
+    (F := fun ε ↦ {p | ε < dipoleLift p}.indicator f) (f := f) (fun p ↦ ‖f p‖)
+    (Eventually.of_forall fun ε ↦ hf.aestronglyMeasurable.indicator (hm ε))
+    (Eventually.of_forall fun ε ↦ Eventually.of_forall fun p ↦ by
+      by_cases hp : p ∈ {p | ε < dipoleLift p}
+      · rw [indicator_of_mem hp]
+      · rw [indicator_of_notMem hp, norm_zero]
+        exact norm_nonneg _)
+    hf.norm (by
+      filter_upwards [ae_restrict_mem hcell] with p hp
+      have hs : 0 < dipoleLift p := by
+        simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+      have hev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε < dipoleLift p :=
+        nhdsWithin_le_nhds (Iio_mem_nhds hs)
+      apply tendsto_const_nhds.congr'
+      filter_upwards [hev] with ε hε
+      rw [indicator_of_mem (show p ∈ {p | ε < dipoleLift p} from hε)])
+  exact h.congr' (Eventually.of_forall fun ε ↦ (hrep ε).symm)
+
+/-- Changing variables in the correction preserves absolute integrability and identifies
+    the actual canonical forcing supplied by the boundary data. No positivity is used. -/
+theorem dd_boundary_correction_eq {lam : ℝ} {κ : Bool} {φ : L2}
+    (hφ : MemSobolev 2 φ) (b : DDBoundaryData lam κ φ) (k : Fin 4) :
+    IntegrableOn (correctedBoundaryTerm lam (ddBoundaryUnknown lam φ k) (b.first k))
+      (Ioo (-1) 1) ∧
+      (∫ t, ddArcCorrection φ k t) =
+        ∫ x in (-1 : ℝ)..1, correctedBoundaryTerm lam
+          (ddBoundaryUnknown lam φ k) (b.first k) x := by
+  have ha := ae_comp_tanh ((ae_restrict_iff' measurableSet_Ioo).1 (b.trace_eq k))
+  have ht : ∀ᵐ t, correctedBoundaryTrace lam (ddBoundaryUnknown lam φ k) (b.first k)
+      (Real.tanh t) = ddArcTrace φ k t := by
+    filter_upwards [ha] with t ht
+    simpa only [Real.artanh_tanh] using ht ⟨Real.neg_one_lt_tanh t, Real.tanh_lt_one t⟩
+  have he : (fun t ↦ (1 / Real.cosh t ^ 2) • correctedBoundaryTerm lam
+      (ddBoundaryUnknown lam φ k) (b.first k) (Real.tanh t)) =ᵐ[volume] ddArcCorrection φ k := by
+    filter_upwards [ht] with t ht
+    simp only [smul_eq_mul, correctedBoundaryTerm, ht, ddArcCorrection, ddBoundaryB_cosh]
+    ring
+  refine ⟨(integrableOn_Ioo_iff_tanh _).2
+    (((dd_boundaryB_trace_limit hφ).1 k).congr he.symm), ?_⟩
+  rw [intervalIntegral.integral_of_le (by norm_num : (-1 : ℝ) ≤ 1),
+    integral_Ioc_eq_integral_Ioo, ← integral_tanh_subst]
+  exact (integral_congr_ae he).symm
+
+/-- The canonical arc form is the uncorrected interval form for the specified derivatives. -/
+theorem DDQuotientData.canonicalArcForm_eq_boundaryForm {lam : ℝ} {ω : L2}
+    (q : DDQuotientData lam ω) (hlam : lam ≠ 0) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) (b : DDBoundaryData lam κ q.phi) (k : Fin 4) :
+    canonicalArcForm lam (ddArcTrace q.phi k) =
+      boundaryForm lam (ddBoundaryUnknown lam q.phi k) (b.first k) (b.second k) := by
+  have hg := (q.arc_melnikov hκ k.val).1
+  have he := (even_sobolev_arc_regularity q.regular q.even k.isLt).2.2
+  have hArc : ddArcTrace q.phi k =
+      (fun s ↦ continuousRep q.phi (torusProj (cellArc k.val s))) := rfl
+  rw [← hArc] at hg he
+  have hUnknown : ddBoundaryUnknown lam q.phi k =
+      (fun ξ ↦ canonicalUnknown lam (ddArcTrace q.phi k) (Real.artanh ξ)) := rfl
+  have hw := b.regular k
+  rw [hUnknown] at hw ⊢
+  exact (canonicalArcForm_eq_flowBoundaryForm hlam hg he hw).trans (hw.flowBoundaryForm_eq lam)
+
+/-- Identification with the corrected interval form for arbitrary supplied boundary data. -/
+theorem DDQuotientData.correctedBoundaryForm_eq {lam : ℝ} {ω : L2}
+    (q : DDQuotientData lam ω) (hlam : lam ≠ 0) {κ : Bool}
+    (hκ : InRotationCharacter κ ω) (b : DDBoundaryData lam κ q.phi) (k : Fin 4) :
+    canonicalArcForm lam (ddArcTrace q.phi k) + (∫ t, ddArcCorrection q.phi k t) =
+      correctedBoundaryForm lam (ddBoundaryUnknown lam q.phi k) (b.first k) (b.second k) := by
+  rw [q.canonicalArcForm_eq_boundaryForm hlam hκ b k,
+    (dd_boundary_correction_eq q.regular b k).2]
+  rfl
+
 /-- Ordinary-integral Picone identity after cancellation of the corner finite parts. -/
 theorem dd_picone_current {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
@@ -327,7 +621,39 @@ theorem dd_picone_current {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         (∫ p in cellSquare, ddPiconePotential q.phi p) =
       -(8 / 3 : ℝ) * ∑ k : Fin 4,
         correctedBoundaryForm lam (ddBoundaryUnknown lam q.phi k) (b.first k) (b.second k) := by
-  sorry
+  have hv := dd_vorticityDensity_integrable q.nu q.weighted_nu
+  obtain ⟨_, hg⟩ := dd_gradient_energies_integrable q.regular q.even hdx hdy
+  have hp := dd_piconePotential_integrable q.regular
+  refine ⟨hv, hg, hp, ?_⟩
+  have hBulk : Tendsto (ddPiconeBulk q.phi q.nu dx dy) (𝓝[>] 0)
+      (𝓝 ((∫ p in cellSquare, ddVorticityDensity q.nu p) +
+        (∫ p in cellSquare, ddPiconeGradient q.phi dx dy p) +
+          ∫ p in cellSquare, ddPiconePotential q.phi p)) :=
+    ((tendsto_ddTruncatedCell_integral hv).add
+      (tendsto_ddTruncatedCell_integral hg)).add (tendsto_ddTruncatedCell_integral hp)
+  have h := (dd_character_virial_limit hlam hω hs q hκ hdx hdy).sub
+    (dd_ground_current_limit q.regular)
+  have hLevel := h.congr' (f₂ := ddPiconeBulk q.phi q.nu dx dy) (by
+    filter_upwards [Ioo_mem_nhdsGT (by norm_num : (0 : ℝ) < 2)] with ε hε
+    obtain ⟨hr, _, _, _, ht⟩ := dd_truncated_picone q.regular hdx hdy hε
+    have hvε := hv.mono_set (show ddTruncatedCell ε ⊆ cellSquare from fun _ hp ↦ hp.1)
+    dsimp only [ddRawBulk, ddPiconeBulk]
+    rw [integral_add hvε hr, ht]
+    ring)
+  have hforms : (∑ k : Fin 4, canonicalArcForm lam (ddArcTrace q.phi k)) +
+      (∑ k : Fin 4, ∫ t, ddArcCorrection q.phi k t) =
+      ∑ k : Fin 4, correctedBoundaryForm lam
+        (ddBoundaryUnknown lam q.phi k) (b.first k) (b.second k) := by
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun k _ ↦ q.correctedBoundaryForm_eq hlam hκ b k
+  calc
+    _ = -(8 / 3 : ℝ) *
+        ((∑ k : Fin 4, canonicalArcForm lam (ddArcTrace q.phi k)) + ddValueFinitePart q.phi) -
+        (-(8 / 3 : ℝ) * (ddValueFinitePart q.phi -
+          ∑ k : Fin 4, ∫ t, ddArcCorrection q.phi k t)) := tendsto_nhds_unique hBulk hLevel
+    _ = -(8 / 3 : ℝ) * ((∑ k : Fin 4, canonicalArcForm lam (ddArcTrace q.phi k)) +
+        (∑ k : Fin 4, ∫ t, ddArcCorrection q.phi k t)) := by ring
+    _ = _ := by rw [hforms]
 
 /-- Bulk coercivity on the finite-energy domain. Integrability is a hypothesis, so the
     default value of a divergent Bochner integral cannot masquerade as an energy. -/

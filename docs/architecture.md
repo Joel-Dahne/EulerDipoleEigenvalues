@@ -109,8 +109,9 @@ proof mechanisms. Module names below are relative to
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
 - `OddOdd.lean`: quotient/boundary data, quotient characters and boundary
-  regularity, explicit Picone densities, finite-energy and corrected-boundary
-  interfaces, and odd–odd exclusion assembly.
+  regularity, actual truncated Picone energies and currents, scalar finite
+  parts and their cancellation, boundary-form identification, and the
+  analytic interfaces consumed by odd–odd exclusion.
 - `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.
