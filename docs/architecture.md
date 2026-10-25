@@ -99,6 +99,9 @@ proof mechanisms. Module names below are relative to
 - `BoundaryForm.lean`, `WeightedBoundary.lean`, `WeightedBoundaryForm.lean`:
   classical positivity, weighted second-order domain, completion of squares,
   affine splitting and positivity by interval exhaustion.
+- `CorrectedBoundaryForm.lean`: logarithmic β bounds, forcing H¹ regularity,
+  absolute correction integrability, rational affine estimates and the
+  equal/opposite endpoint assemblies.
 - `FlowBoundaryForm.lean`, `CanonicalBoundaryForm.lean`: flow-time to
   `ξ = tanh s` transformation and identification of the canonical arc form.
 - `IntervalZeroExtension.lean`: jump-free zero extension of zero-trace H¹

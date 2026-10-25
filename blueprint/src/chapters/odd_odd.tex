@@ -1262,14 +1262,15 @@ No positivity of either form is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-boundaryB-beta, lem:dd-boundaryB-trace-limit,
+\uses{lem:dd-boundaryB-beta, lem:corrected-correction-integrable,
  lem:dd-arc-melnikov, lem:even-h2-arc-regularity,
  lem:canonical-arc-form, lem:boundary-form-xi}
 \leanok
 The supplied forcing identity gives
 $g_k(t)=(-iwD_k-\lambda f_k)(\tanh t)$ almost everywhere.
 Substitution $x=\tanh t$ and $B(2\sech^2t)=\sech^2t\,\beta(\tanh t)$
-identify the corrections and transfer absolute integrability.
+identify the corrections. Absolute integrability follows directly from the
+weighted-domain forcing theorem, without a level-trace limit.
 The canonical arc-form identity and weighted change of variables identify
 the uncorrected terms for the specified interval derivatives.
 \end{proof}
@@ -1277,14 +1278,292 @@ the uncorrected terms for the specified interval derivatives.
 \begin{lemma}[Pointwise lower bound for $\beta$]
 \label{lem:beta-lower}
 \uses{def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.correctedBoundaryBeta_lower}
+\leanok
 $\beta\ge\tfrac12+\tfrac14\log w$ on $(-1,1)$ (manuscript
 \texttt{(eq:beta-lower)}).
 \end{lemma}
 
 \begin{proof}
+\leanok
 Multiplying by the positive denominator, the difference is
 $\tfrac{1-w}4+\tfrac{w^2-54w}{128}\log w+\tfrac{w^2}{256}(\log w)^2\ge0$ for
 $0<w\le1$.
+\end{proof}
+
+
+\begin{lemma}[Logarithmic control of the correction coefficient]
+\label{lem:beta-log-bound}
+\uses{def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.correctedBoundaryBeta_denominator_ge_one,
+ NoEmbeddedEigenvalues.abs_correctedBoundaryBeta_le}
+\leanok
+On $(-1,1)$ the denominator defining $\beta$ is at least one and
+$|\beta|\le1+|\log w|$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use $0<w\le1$ and $\log w\le0$. The denominator is at least one.
+The constant and logarithmic coefficients of its numerator have absolute
+value at most one, giving the asserted bound after division.
+\end{proof}
+
+\begin{lemma}[Central positivity and rational endpoint localization]
+\label{lem:beta-central-tail}
+\uses{def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.correctedBoundaryBeta_central,
+ NoEmbeddedEigenvalues.log_seven_lt_two,
+ NoEmbeddedEigenvalues.correctedBoundaryBeta_negative_le}
+\leanok
+Put $d=1-|x|$, $a=1/7$ and $K_a(d)=\max\{\log(a/d),0\}$.
+On $[-1/2,1/2]$, $\beta\ge5/12$; throughout $(-1,1)$,
+$\beta_-=\max\{-\beta,0\}\le K_a(d)/4$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:beta-lower}
+\leanok
+On the central interval, $w\ge3/4$ and
+$\log w\ge1-w^{-1}\ge-1/3$. Near the endpoints $w\ge d$.
+The degree-five exponential Taylor sum at $2$ exceeds $7$, so
+$\log7<2$ and
+$\beta\ge1/2+\tfrac14\log d\ge\tfrac14\log(7d)$.
+Take negative parts.
+\end{proof}
+
+\begin{definition}[Forcing derivative and affine forcing]
+\label{def:corrected-forcing-derivative}
+\uses{def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.correctedBoundaryTraceDerivative,
+ NoEmbeddedEigenvalues.correctedAffineForcing}
+\leanok
+Set $v_\lambda[D,E]=-iwE+(2ix-\lambda)D$ and
+$g_b=b(-iw-\lambda x)$.
+\end{definition}
+
+\begin{lemma}[Ordinary H1 regularity of the forcing]
+\label{lem:corrected-forcing-h1}
+\uses{def:h1-interval, def:weighted-boundary-domain,
+ def:corrected-forcing-derivative}
+\lean{NoEmbeddedEigenvalues.hasDerivAt_correctedBoundaryTrace,
+ NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryTrace_h1,
+ NoEmbeddedEigenvalues.correctedAffineForcing_h1}
+\leanok
+For a weighted-domain triple $(f,D,E)$ and any real $\lambda$,
+$(g,v_\lambda[D,E])$ is an interval $H^1$ pair.
+Also $(g_b,b(2ix-\lambda))$ is an $H^1$ pair for every $b\in\mathbb C$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Differentiate on compact subintervals. The weighted domain supplies $wE$
+and $D$ in $L^2$, and $f\in H^1$. Multiplication by the smooth bounded
+coefficients preserves the required local absolute continuity and $L^2$
+bounds. The affine forcing is polynomial.
+\end{proof}
+
+\begin{lemma}[Absolute integrability of the logarithmic correction]
+\label{lem:corrected-correction-integrable}
+\uses{def:h1-interval, def:weighted-boundary-domain, def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.integrableOn_log_boundaryWeight,
+ NoEmbeddedEigenvalues.integrableOn_correctedBoundaryBeta,
+ NoEmbeddedEigenvalues.HasIntervalH1.integrable_correctedBoundaryBeta,
+ NoEmbeddedEigenvalues.HasWeightedBoundaryH2.integrable_correctedBoundaryTerm}
+\leanok
+The functions $\log w$ and $\beta$ belong to $L^1(-1,1)$.
+For every $g\in H^1(-1,1)$, $\beta|g|^2\in L^1$.
+In particular the correction is absolutely integrable for every
+weighted-domain triple, without an endpoint condition or $\lambda\ne0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:beta-log-bound, lem:corrected-forcing-h1, lem:h1-interval-endpoints}
+\leanok
+Write $\log w=\log(1+x)+\log(1-x)$ and use integrability of $\log t$
+at zero. The coefficient bound makes $\beta$ integrable.
+The continuous $H^1$ extension on the compact interval is bounded.
+Apply this to the forcing.
+\end{proof}
+
+\begin{lemma}[Half-interval Dirichlet bound]
+\label{lem:corrected-half-poincare}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_le_half_derivative}
+\leanok
+For an $H^1$ pair $(G,V)$ with zero endpoint traces,
+$\int|G|^2\le\tfrac12\int|V|^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-endpoint-estimates}
+\leanok
+On the left half, $|G(x)|^2\le(x+1)\int_{-1}^0|V|^2$.
+Integrate $x+1$, giving a factor $1/2$. Do the same from the right
+endpoint on the right half and add. The sharp Poincar\'e constant is
+not needed.
+\end{proof}
+
+\begin{lemma}[Zero-trace forcing energy and traces]
+\label{lem:corrected-zero-energy}
+\uses{def:h1-interval, def:weighted-boundary-domain,
+ lem:h1-interval-endpoints, def:corrected-forcing-derivative}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryTrace_zero_energy}
+\leanok
+For a zero-trace weighted-domain function $u$, let
+$F_0=\mathcal F_\lambda(u)$ and $g_u=-iwu'-\lambda u$.
+Then $g_u$ has zero endpoint traces and
+$\int|g_u'|^2\le4F_0$ for every real $\lambda$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:corrected-forcing-h1, lem:trace-sos-extension,
+ lem:h1-interval-endpoints}
+The sum of squares gives $2F_0=\|S_\lambda u\|_2^2+\|u'\|_2^2$.
+Since $ig_u'=S_\lambda u-(xu)'$ and integration by parts gives
+$\|(xu)'\|_2^2=\|xu'\|_2^2$, the elementary two-term square bound gives
+$\|g_u'\|_2^2\le4F_0$.
+Moreover $wu'\in H^1$; a nonzero endpoint trace would contradict
+$u'\in L^2$. Its endpoint traces therefore vanish, as do those of $g_u$.
+\end{proof}
+
+\begin{lemma}[Logarithmic endpoint moments]
+\label{lem:corrected-log-moments}
+For $a>0$ and $j=0,1,2$, the nonnegative integrand is integrable and
+\[
+ \int_0^a d^j\log(a/d)\,dd=\frac{a^{j+1}}{(j+1)^2}.
+\]
+\end{lemma}
+
+\begin{proof}
+Differentiate
+$d^{j+1}\log(a/d)/(j+1)+d^{j+1}/(j+1)^2$.
+Its limit at zero is zero; its value at $a$ is the stated expression.
+Power times logarithm is integrable at zero.
+\end{proof}
+
+\begin{lemma}[Midpoint bound for the correction]
+\label{lem:corrected-midpoint-bound}
+\uses{def:h1-interval, def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.correctedBoundaryBeta_midpoint_bound}
+\leanok
+For any $H^1$ pair $(G,V)$,
+\[
+ \int\beta|G|^2\ge\frac5{112}|G(0)|^2-\frac{53}{448}\int|V|^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:beta-central-tail, lem:corrected-log-moments, lem:h1-endpoint-estimates,
+ lem:corrected-correction-integrable}
+Write $G=G(0)+u$ and split derivative energy between the two half intervals.
+On the central interval,
+$\int_{-1/2}^{1/2}|u|^2\le\frac18\int|V|^2$.
+Using only $\beta\ge3/8$ there and
+$|G(0)+u|^2\ge\frac12|G(0)|^2-|u|^2$ gives a positive contribution
+at least $\frac3{16}|G(0)|^2-\frac3{64}\int|V|^2$.
+On each endpoint layer, use
+$|G|^2\le2|G(0)|^2+2|x|\int_{\text{same half}}|V|^2$
+and $\int_0^a K_a(d)\,dd=a$.
+The negative contribution is at most
+$a|G(0)|^2+(a/2)\int|V|^2$. Subtract with $a=1/7$.
+\end{proof}
+
+\begin{lemma}[Negative correction for an affine split]
+\label{lem:corrected-negative-affine}
+\uses{def:h1-interval, lem:h1-interval-endpoints,
+ def:corrected-forcing-derivative}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.correctedBoundary_negative_affine}
+\leanok
+For a zero-trace $H^1$ pair $(G,V)$, every real $\lambda$ and $b\in\mathbb C$,
+\[
+ \int\beta_-|G+g_b|^2\le\frac1{392}\int|V|^2+
+       \left(\frac4{3087}+\frac{\lambda^2}7\right)|b|^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:beta-central-tail, lem:corrected-log-moments,
+ lem:h1-endpoint-estimates, lem:corrected-correction-integrable}
+Put $a=1/7$. Endpoint Cauchy--Schwarz, using energy on the corresponding
+half interval, gives $\int\beta_-|G|^2\le(a^2/16)\int|V|^2$.
+The first three logarithmic moments and $w\le2d$, $|x|\le1$ give
+$\int\beta_-w^2\le2a^3/9$ and $\int\beta_-x^2\le a/2$.
+Use $|G+g_b|^2\le2|G|^2+2|g_b|^2$ and
+$|g_b|^2=|b|^2(w^2+\lambda^2x^2)$.
+\end{proof}
+
+\begin{lemma}[Positive correction for an affine split]
+\label{lem:corrected-positive-affine}
+\uses{def:h1-interval, lem:h1-interval-endpoints,
+ def:corrected-forcing-derivative}
+\lean{NoEmbeddedEigenvalues.integral_correctedAffineForcing_central,
+ NoEmbeddedEigenvalues.HasIntervalH1.correctedBoundary_positive_affine}
+\leanok
+For a zero-trace $H^1$ pair $(G,V)$, every real $\lambda$ and $b\in\mathbb C$,
+\[
+ \int\beta_+|G+g_b|^2\ge-\frac18\int|V|^2+
+       \left(\frac{203}{1920}+\frac{\lambda^2}{96}\right)|b|^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:beta-central-tail, lem:corrected-half-poincare,
+ lem:corrected-correction-integrable, lem:corrected-forcing-h1}
+\leanok
+On $I=[-1/2,1/2]$ use only $\beta\ge1/4$ and
+$|G+g_b|^2\ge\frac12|g_b|^2-|G|^2$.
+Exact polynomial integration gives
+$\int_I|g_b|^2=(203/240+\lambda^2/12)|b|^2$.
+The half-interval bound controls the loss by
+$\frac14\int_I|G|^2\le\frac18\int|V|^2$.
+\end{proof}
+
+\begin{lemma}[Equal-endpoint corrected form]
+\label{lem:corrected-equal-endpoints}
+\uses{def:h1-interval, def:weighted-boundary-domain,
+ lem:h1-interval-endpoints, def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_equal}
+\leanok
+For a weighted-domain triple with equal endpoint traces and any real
+$\lambda$, $\mathcal B_\lambda(f)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-affine-splitting, lem:weighted-boundary-positivity,
+ lem:corrected-zero-energy, lem:corrected-midpoint-bound}
+\leanok
+Write $f=a+u$ with $u$ zero-trace.
+Then $\mathcal F_\lambda(f)=F_0\ge0$ and $g'=g_u'$.
+The midpoint estimate and $\|g'\|_2^2\le4F_0$ give
+$\mathcal B_\lambda(f)\ge(59/112)F_0+(5/112)|g(0)|^2\ge0$.
+\end{proof}
+
+\begin{lemma}[Opposite-endpoint corrected form]
+\label{lem:corrected-opposite-endpoints}
+\uses{def:h1-interval, def:weighted-boundary-domain,
+ lem:h1-interval-endpoints, def:corrected-boundary-form}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_eq_parts,
+ NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_opposite}
+\leanok
+For a weighted-domain triple with opposite endpoint traces and any real
+$\lambda$, $\mathcal B_\lambda(f)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-affine-splitting, lem:weighted-boundary-positivity,
+ lem:corrected-zero-energy, lem:corrected-negative-affine,
+ lem:corrected-positive-affine, lem:corrected-correction-integrable}
+\leanok
+Write $f=bx+u$, with $u$ zero-trace and $F_0=\mathcal F_\lambda(u)\ge0$.
+Affine splitting gives $\mathcal F_\lambda(f)=F_0+\lambda^2|b|^2$.
+Use the signed correction decomposition and the two affine estimates with
+$\|g_u'\|_2^2\le4F_0$. Rational arithmetic gives
+\[
+ \mathcal B_\lambda(f)\ge\frac25F_0+
+       \left(\frac1{10}+\frac45\lambda^2\right)|b|^2\ge0.
+\]
+In particular no unverified decimal approximation is used in this margin.
 \end{proof}
 
 \begin{lemma}[A positive scalar form]
@@ -1315,26 +1594,13 @@ integrable and $\mathcal B_\lambda(f)\ge0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:beta-lower, lem:scalar-form-positive, lem:trace-sos-extension,
- lem:affine-splitting, lem:hardy-1d, lem:h1-interval-endpoints}
-The weighted domain gives $g'=-iwE+(2ix-\lambda)D\in L^2$ and
-$g\in H^1(-1,1)$. Thus $g$ is bounded, while
-$|\beta|\le C(1+|\log w|)$; the correction is integrable.
-For $u\in H^1_0$ with $wu''\in L^2$, write $F_0=\mathcal F_\lambda(u)$ and
-$g_u=-iwu'-\lambda u$; then $\|g_u'\|_2^2\le4F_0$ and $g_u\in H^1_0$.
-If $\kappa=1$, write $f=a+u$; the lower bound for $\beta$ gives
-\[
- \mathcal B_\lambda(f)\ge\tfrac14\int(|g'|^2+(2+\log w)|g|^2)\ge0.
-\]
-If $\kappa=-1$, write $f=bx+u$; then
-$\mathcal F_\lambda(f)=F_0+\lambda^2|b|^2$, and the manuscript's proposed
-estimates on the negative endpoint part of $\beta$ (with $a=e^{-2}$) and
-its positive part on $[-\tfrac12,\tfrac12]$ give
-\[
- \mathcal B_\lambda(f)\ge\tfrac25F_0+
-               (\tfrac1{10}+\tfrac45\lambda^2)|b|^2\ge0.
-\]
-The numerical estimates in this second case require the review recorded below.
+\uses{lem:corrected-correction-integrable, lem:corrected-equal-endpoints,
+ lem:corrected-opposite-endpoints}
+\leanok
+Integrability follows from the weighted-domain forcing theorem independently
+of the endpoint character. Apply the equal- or opposite-endpoint estimate.
+Nonnegativity holds also at $\lambda=0$; the existing exclusion interface
+retains its nonzero-parameter hypothesis.
 \end{proof}
 
 \begin{proposition}[Strict positivity of the corrected boundary form]
@@ -1347,23 +1613,26 @@ nonzero weighted-domain $H^1$ element with endpoint character $\kappa$
 \end{proposition}
 
 \begin{proof}
-\uses{lem:corrected-trace-nonneg, lem:scalar-form-positive,
+\uses{lem:corrected-equal-endpoints, lem:corrected-opposite-endpoints,
  lem:trace-sos-extension, lem:h1-interval-endpoints}
-Use the case estimates in the preceding proof. For $\kappa=1$, equality
-forces $g=0$. Then $f'=i\lambda f/w$ gives constant $|f|$ on the interval;
-$L^2$ integrability of $f'$ at an endpoint forces that constant to be zero.
-For $\kappa=-1$, equality forces $b=0$ and $F_0=0$. The sum of squares gives
-$u'=0$, and the zero endpoint traces give $u=0$.
+Use the coercive case estimates. For $\kappa=1$, equality forces $F_0=0$
+and $g(0)=0$. The sum of squares makes the zero-trace remainder vanish,
+so $f=a$ and $g(0)=-\lambda a$; since $\lambda\ne0$, $a=0$.
+For $\kappa=-1$, equality forces $b=0$ and $F_0=0$; again the zero-trace
+remainder vanishes.
 \end{proof}
 
 \begin{remark}[Digest note: nonnegativity and endpoint constants]
 The exclusion needs only Lemma~\ref{lem:corrected-trace-nonneg}: strict
 boundary positivity is unnecessary because the bulk controls mass with a
 strictly positive coefficient. The stronger proposition is off this route.
-The $\kappa=-1$ estimate chains several explicit numerical constants
-($203/1920$, $\lambda^2/96$, $16/\pi^2$, \dots) that the manuscript states
-without intermediate steps. They should be re-derived; this is a good
-candidate for a careful Lean proof, since it is one-dimensional.
+The endpoint constants are resolved by the affine estimates above.
+A rational cutoff $a=1/7$ replaces $e^{-2}$, justified by an exact
+exponential Taylor sum. The half-interval bound replaces $16/\pi^2$;
+the positive central contribution and final rational margins are checked
+in Lean. The equal-endpoint estimate uses a first-order midpoint bound
+instead of the auxiliary scalar comparison function.
+The strict equality argument also needs no oscillatory ODE classification.
 \end{remark}
 
 \section{Conclusion}

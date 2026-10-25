@@ -7,7 +7,9 @@ working; update current priorities and blockers rather than appending history.
 
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
-eight explicit admitted analytic inputs, with three other outer inputs.
+eight explicit admitted analytic inputs. Corrected boundary nonnegativity is
+assembled from three interval estimates; quotient existence and bulk coercivity
+are the other outer inputs.
 The mixed exclusion remains admitted. Current work reviews and expands the final
 odd–odd interfaces before returning to earlier analytic infrastructure. See the
 [next-session plan](docs/status/shared.md#next-session).
@@ -48,7 +50,10 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, eight below `dd_picone_current`,
-and eleven for `odd_odd_exclusion`. Expanding the current exposes its analytic
-frontier; it does not eliminate those admissions. Quotient orthogonality and canonical
-boundary regularity are admission-free for supplied quotient data. Other
-admissions remain outside the even–even route. Blueprint source checks, regression tests and the web build pass.
+three below `correctedBoundaryForm_nonneg`, and thirteen for
+`odd_odd_exclusion`. Expanding the assemblies exposes their analytic frontiers;
+it does not eliminate those admissions. Quotient orthogonality and canonical
+boundary regularity are admission-free for supplied quotient data. Correction
+integrability, the β bounds and the positive-central affine estimate are also
+admission-free. Other admissions remain outside the even–even route.
+Blueprint source checks, regression tests and the web build pass.

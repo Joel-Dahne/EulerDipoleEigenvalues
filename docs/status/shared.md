@@ -29,6 +29,10 @@ The even–even route is admission-free. Available foundations include:
 - Ordinary exhaustion by stream levels and exact one-dimensional B/β
   boundary normalization. Picone's finite-part assembly is conditional on
   separate analytic integrability and trace inputs.
+- Corrected-boundary forcing H¹ regularity, logarithmic correction
+  integrability and pointwise β bounds; half-interval Dirichlet estimates
+  and the exact positive-central affine correction. Boundary nonnegativity
+  is conditional on three further interval estimates.
 
 Reuse requires checking the hypotheses, especially parity/rotation characters,
 weights and local versus global regularity.
@@ -37,10 +41,10 @@ weights and local versus global regularity.
 
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
-   exclusion is now assembled. Review the eight Picone inputs and prove the
-   density-integrability estimates before the harder weak Picone/virial limits.
-   Corrected boundary nonnegativity remains a separate outer input. Bulk
-   coercivity and its certificate remain deferred. See [odd–odd status](odd-odd.md). The earlier
+   exclusion is now assembled. Next prove the three interval estimates in
+   `CorrectedBoundaryForm.lean`, then return to the eight Picone inputs.
+   Bulk coercivity and its certificate remain deferred.
+   See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
 2. **Bounded shared formalization:** coarse period derivative bounds

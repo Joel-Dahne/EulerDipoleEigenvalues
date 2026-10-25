@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.DipoleOrthogonality
+import NoEmbeddedEigenvalues.CorrectedBoundaryForm
 
 /-!
 # Odd–odd exclusion: the final analytic interfaces
@@ -133,36 +134,6 @@ theorem dd_orthogonality {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     simp only [ddWeight, Complex.ofReal_pow]
     ring
   · exact (rotate_rotate q.phi).symm.trans q.even.rotate_rotate
-
-/-- The transformed edge trace `g = -iwf' - λf`. -/
-def correctedBoundaryTrace (lam : ℝ) (F D : ℝ → ℂ) (x : ℝ) : ℂ :=
-  -Complex.I * (boundaryWeight x : ℂ) * D x - (lam : ℂ) * F x
-
-/-- The correction `β`, expressed in the interval coordinate. Endpoint values are
-    irrelevant to the integrals and the domain uses genuine H¹ traces. -/
-def correctedBoundaryBeta (x : ℝ) : ℝ :=
-  (3 / 4 - 3 / 16 * boundaryWeight x +
-      (1 / 4 - 25 / 64 * boundaryWeight x) * Real.log (boundaryWeight x)) /
-    (1 + 1 / 8 * boundaryWeight x -
-      1 / 64 * boundaryWeight x ^ 2 * Real.log (boundaryWeight x))
-
-/-- The ordinary interval correction density. -/
-def correctedBoundaryTerm (lam : ℝ) (F D : ℝ → ℂ) (x : ℝ) : ℝ :=
-  correctedBoundaryBeta x * ‖correctedBoundaryTrace lam F D x‖ ^ 2
-
-/-- The corrected boundary form, with the existing weighted-domain boundary form. -/
-def correctedBoundaryForm (lam : ℝ) (F D E : ℝ → ℂ) : ℝ :=
-  boundaryForm lam F D E + ∫ x in (-1 : ℝ)..1, correctedBoundaryTerm lam F D x
-
-/-- Nonnegativity on the weighted second-order domain, including integrability.
-    The exclusion needs no strict positivity or boundary equality classification. -/
-theorem correctedBoundaryForm_nonneg {lam : ℝ} (hlam : lam ≠ 0) {κ : Bool}
-    {F D E : ℝ → ℂ} (hF : HasWeightedBoundaryH2 F D E)
-    (hends : intervalH1Extension (-1) 1 F D 1 =
-      paritySign κ * intervalH1Extension (-1) 1 F D (-1)) :
-    IntegrableOn (correctedBoundaryTerm lam F D) (Ioo (-1) 1) ∧
-      0 ≤ correctedBoundaryForm lam F D E := by
-  sorry
 
 /-- Continuous quotient trace on an oriented cell edge. -/
 def ddArcTrace (φ : L2) (k : Fin 4) (t : ℝ) : ℂ :=
@@ -558,7 +529,7 @@ theorem tendsto_ddTruncatedCell_integral {f : ℝ × ℝ → ℝ}
 /-- Changing variables in the correction preserves absolute integrability and identifies
     the actual canonical forcing supplied by the boundary data. No positivity is used. -/
 theorem dd_boundary_correction_eq {lam : ℝ} {κ : Bool} {φ : L2}
-    (hφ : MemSobolev 2 φ) (b : DDBoundaryData lam κ φ) (k : Fin 4) :
+    (b : DDBoundaryData lam κ φ) (k : Fin 4) :
     IntegrableOn (correctedBoundaryTerm lam (ddBoundaryUnknown lam φ k) (b.first k))
       (Ioo (-1) 1) ∧
       (∫ t, ddArcCorrection φ k t) =
@@ -574,8 +545,7 @@ theorem dd_boundary_correction_eq {lam : ℝ} {κ : Bool} {φ : L2}
     filter_upwards [ht] with t ht
     simp only [smul_eq_mul, correctedBoundaryTerm, ht, ddArcCorrection, ddBoundaryB_cosh]
     ring
-  refine ⟨(integrableOn_Ioo_iff_tanh _).2
-    (((dd_boundaryB_trace_limit hφ).1 k).congr he.symm), ?_⟩
+  refine ⟨(b.regular k).integrable_correctedBoundaryTerm lam, ?_⟩
   rw [intervalIntegral.integral_of_le (by norm_num : (-1 : ℝ) ≤ 1),
     integral_Ioc_eq_integral_Ioo, ← integral_tanh_subst]
   exact (integral_congr_ae he).symm
@@ -604,7 +574,7 @@ theorem DDQuotientData.correctedBoundaryForm_eq {lam : ℝ} {ω : L2}
     canonicalArcForm lam (ddArcTrace q.phi k) + (∫ t, ddArcCorrection q.phi k t) =
       correctedBoundaryForm lam (ddBoundaryUnknown lam q.phi k) (b.first k) (b.second k) := by
   rw [q.canonicalArcForm_eq_boundaryForm hlam hκ b k,
-    (dd_boundary_correction_eq q.regular b k).2]
+    (dd_boundary_correction_eq b k).2]
   rfl
 
 /-- Ordinary-integral Picone identity after cancellation of the corner finite parts. -/

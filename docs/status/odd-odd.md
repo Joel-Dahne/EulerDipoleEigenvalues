@@ -8,10 +8,11 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from eight explicit
-analytic inputs. Alongside quotient existence, bulk coercivity and corrected
-interval nonnegativity, this gives eleven transitive admissions. This is a
-conditional assembly, not an admission-free exclusion. Only the first
-Picone dependency layer, not the full recursive graph, is stated in Lean.
+analytic inputs. Corrected boundary nonnegativity is assembled from three
+interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
+Together with quotient existence and bulk coercivity this gives thirteen
+transitive admissions, not an admission-free exclusion. The full recursive
+analytic graph is not yet stated in Lean.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -38,18 +39,26 @@ The Picone interfaces separate three bulk integrability assertions, Sobolev
 Picone on a positive truncation, the character-wise virial limit, and three
 geometric level/current limits. The common logarithmic counterterm and the
 whole value finite part cancel in Lean. Ordinary exhaustion and boundary-form
-identification are proved; the latter still uses admitted B-trace
-integrability. The scalar B derivative formula and β normalization are
-admission-free. No sign certificate is used by the current assembly.
+identification are admission-free, as are the scalar B derivative formula
+and β normalization. Correction integrability now follows directly from the
+weighted interval domain, not the admitted B-trace limit. No sign certificate
+is used by the current assembly.
 
-## Next work: review and prove the Picone inputs
+The corrected-boundary review replaces the auxiliary scalar Picone function
+by a first-order midpoint estimate, and replaces the sharp Poincaré constant
+by half-interval Cauchy–Schwarz. The pointwise β lower/absolute/central/tail bounds,
+forcing H¹ regularity, correction integrability, the positive-central estimate
+and closing rational margins are proved. The cutoff is the rational 1/7;
+the constants 203/1920 and λ²/96 come from exact polynomial integration.
+Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
-Human-review the eight statements against their blueprint nodes, then start
-with the vorticity-density and gradient-energy integrability estimates.
-Truncated Picone needs the weak H² argument and center removal; the residual
-integrability calculation needs an explicit singular-coefficient audit.
-Bulk coercivity/certificate work remains deferred. Corrected interval
-nonnegativity is a separate remaining outer input.
+## Next work: the three interval estimates
+
+Prove zero-trace forcing energy/endpoints, the logarithmic midpoint bound,
+and the negative affine-tail bound. Their blueprint derivations use elementary
+integration by parts, endpoint estimates and logarithmic moments; they remain
+Lean admissions. Then return to Picone density integrability and weak
+truncation/virial limits. Bulk coercivity and its certificate remain deferred.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`:
 even global H² for `φ`, the multiplication identities, the quotient transport
@@ -63,8 +72,9 @@ The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³,
 `∇ω/d ∈ L²` and `ω/Ψ ∈ L²`. Double division for the H² stream quotient and
 transport-domain assembly still need mathematical review. The renormalized
 virial is derived conditional on the quotient domain; its Lean character-wise
-interface and the analytic inputs below Picone, weighted Poincaré and corrected
-boundary constants still need review.
+interface and the analytic inputs below Picone and weighted Poincaré still
+need review. The corrected-boundary constants have explicit rational derivations;
+the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 
 The virial finite parts use only the leading period value asymptotic, not the
