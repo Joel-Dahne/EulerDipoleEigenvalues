@@ -41,8 +41,10 @@ weights and local versus global regularity.
 
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
-   exclusion is now assembled. Next prove the three interval estimates in
-   `CorrectedBoundaryForm.lean`, then return to the eight Picone inputs.
+   exclusion is now assembled. Prioritize the minimal quotient construction:
+   one-coordinate/weighted double division, H² point removal and weak
+   invariant transport division. The three corrected-boundary estimates and
+   eight Picone inputs remain separate work.
    Bulk coercivity and its certificate remain deferred.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
@@ -58,8 +60,14 @@ weights and local versus global regularity.
 ## Open analytic work
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
-  odd–odd H² quotient division still needs review. The logarithmic gradient
-  gain and L² vorticity division now have blueprint derivations.
+  odd–odd H² quotient division now has an explicit dyadic/cone blueprint
+  derivation, as does the logarithmic gradient gain. Once the even stream
+  quotient is H², coordinate Hardy plus Poisson gives the L² vorticity
+  quotient; its separate angular-Hardy argument is unnecessary.
+  Even H² also implies the advertised extra corner bounds, so the bundled
+  quotient-domain proposition is downstream and off the exclusion route.
+  Invariant-cutoff testing avoids global transport-operator closedness.
+  These reductions have not been formalized.
   The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace

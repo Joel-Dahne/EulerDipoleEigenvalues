@@ -39,28 +39,37 @@ there. Weighted corner remainders are not part of these data.
 \begin{corollary}[Existence of the exclusion quotient data]
 \label{cor:dd-exclusion-domain}
 \uses{def:eigen-problem, def:sectors, def:dd-exclusion-domain}
-\lean{NoEmbeddedEigenvalues.dd_quotient_domain}
+\lean{NoEmbeddedEigenvalues.dd_exclusion_domain}
 \leanok
 For every odd--odd eigenfunction with $\lambda\ne0$, the quotient data of
 Definition~\ref{def:dd-exclusion-domain} exist.
 \end{corollary}
 
 \begin{proof}
-\uses{prop:dd-quotient-domain, lem:lift-sobolev-local,
- lem:continuous-representative}
-Retain the global $H^2$ quotient, its even parity, the two multiplication
-identities and the transport pair. Restrict the weighted vorticity to the
-fixed cell neighbourhood and use the continuous forcing representative.
-This discards the extra corner-remainder assertions of
-Proposition~\ref{prop:dd-quotient-domain}; it does not prove that proposition.
+\uses{prop:dd-stream-quotient-h2, lem:dd-vorticity-quotient-l2,
+ lem:dd-quotient-transport, lem:transport-first-gain,
+ lem:lift-sobolev-local, lem:continuous-representative,
+ lem:cell-neighbourhood, lem:reflection-algebra}
+Construct the even global $H^2$ stream quotient. Coordinate Hardy and the
+Poisson relation then give the $L^2$ vorticity quotient. Both quotients are
+even, since their numerators and
+$\Psi$ are odd. Their multiplication identities hold almost everywhere
+since the separatrix is null. Weak invariant division gives
+the transport equation, so their lifts form a transport pair on each
+bounded orbit neighbourhood. The first transport gain gives $\nu/d\in L^2$
+on the positive cell. Reflections cover adjacent negative cells, and
+periodicity covers the fixed bounded cell neighbourhood.
+Use the continuous representative of $\phi$ as forcing.
+No separate corner remainder of $\phi$ is an input.
 \end{proof}
 
 \begin{lemma}[Quotient equations]
 \label{lem:dd-quotient-equations}
 \uses{def:dd-quotient}
-$\nu=-E\phi$. Multiplication by $s$ is unitary from $L^2(\Cell,\mu\,dx)$ onto
-$L^2(\Cell)$ and conjugates $E$ to $-\Delta$: $sE(s^{-1}u)=-\Delta u$. If
-$(\omega,\psi)$ is a transport pair then so is $(\nu,\phi)$, since $L_0\Psi=0$.
+$\nu=-E\phi$ on the open cell. Multiplication by $s$ is unitary from
+$L^2(\Cell,\mu\,dx)$ onto $L^2(\Cell)$ and conjugates $E$ to $-\Delta$:
+$sE(s^{-1}u)=-\Delta u$. These are identities on the cell, not assertions
+that the divided functions have a global transport domain.
 \end{lemma}
 
 \begin{proof}
@@ -434,8 +443,8 @@ has odd--odd parity. Passing through the auxiliary vorticity $\Delta\phi$
 therefore supplies the full corner-tail control of the existing trace
 argument. No new weighted gradient trace theorem is needed once
 $\phi\in H^2(\T^2)$ is established. This does not establish that quotient
-regularity, which remains an input from
-Proposition~\ref{prop:dd-quotient-domain}.
+regularity, which is supplied separately by
+Proposition~\ref{prop:dd-stream-quotient-h2}.
 \end{remark}
 
 \begin{lemma}[Finite part of the bulk weight]
@@ -598,12 +607,12 @@ transport profile, and
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-truncated-virial, prop:dd-quotient-domain,
+\uses{lem:dd-truncated-virial, cor:dd-exclusion-domain,
  lem:dd-quotient-gradient-traces, lem:dd-value-finite-part,
  lem:dd-renormalized-bulk, lem:pairing-limit, lem:melnikov,
  lem:canonical-profile-ode, lem:rotation-characters, lem:lift-sobolev-local}
 First take a rotation character $\kappa\in\{1,-1\}$.
-Proposition~\ref{prop:dd-quotient-domain} supplies an even $H^2$ quotient,
+Corollary~\ref{cor:dd-exclusion-domain} supplies an even $H^2$ quotient,
 $(E\phi)/d=-\nu/d\in L^2$, and a transport pair $(\nu,\phi)$ on a bounded
 rotation-invariant neighbourhood of the closed cell. Thus
 Lemma~\ref{lem:dd-renormalized-bulk} gives existence of $J_{\FP}[\phi]$
@@ -658,12 +667,11 @@ canonical profile, not a claimed pointwise trace of $\nu$.
 Only the leading period constant is used, not the elliptic identity or
 sharp derivative asymptotics.
 
-This resolves the virial limit conditional on the quotient-domain
-conclusions. Beyond the quotient transport equation, its proof uses neither
+This derives the virial limit from the minimal exclusion data.
+Beyond the quotient transport equation, its proof uses neither
 $(\phi-a)/d^2\in L^2$ nor $\nabla\phi/d\in L^2$ separately: even $H^2$
-regularity and $\nu/d\in L^2$ suffice. Proposition~\ref{prop:dd-quotient-domain}
-itself, including the
-transport gains that establish these hypotheses, remains subject to review.
+regularity and $\nu/d\in L^2$ suffice. The construction of these data is
+separate, and does not invoke the bundled corner-domain proposition.
 \end{remark}
 
 \section{The Picone decomposition}

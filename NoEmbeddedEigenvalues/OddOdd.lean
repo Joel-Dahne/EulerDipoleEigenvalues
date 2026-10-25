@@ -105,8 +105,9 @@ structure DDQuotientData (lam : ℝ) (ω : L2) where
   weighted_nu : MemLp (fun p ↦ liftL2 nu p / (saddleDist p : ℂ)) 2
     (volume.restrict cellNeighbourhood)
 
-/-- The regular quotient and its transport pair, without additional corner-jet claims. -/
-theorem dd_quotient_domain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+/-- Existence of the minimal quotient data consumed by exclusion
+    (`cor:dd-exclusion-domain`), without the stronger corner-jet conclusions. -/
+theorem dd_exclusion_domain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
     Nonempty (DDQuotientData lam ω) := by
   sorry
@@ -708,7 +709,7 @@ theorem DDQuotientData.vorticity_eq_zero {lam : ℝ} {ω : L2}
 theorem odd_odd_character_exclusion {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false false ω) {κ : Bool}
     (hκ : InRotationCharacter κ ω) : ω = 0 := by
-  obtain ⟨q⟩ := dd_quotient_domain hlam hω hs
+  obtain ⟨q⟩ := dd_exclusion_domain hlam hω hs
   obtain ⟨hmean, hc⟩ := dd_orthogonality hlam hω hs q
   obtain ⟨b⟩ := dd_boundary_regularity hlam q hκ
   have h1 : MemSobolev 1 q.phi := q.regular.mono (by norm_num)

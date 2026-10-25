@@ -139,7 +139,7 @@ The expression $r^{-1}\omega$ in the manuscript's last step is a cylinder
 $L^2$ input, not a physical-area $L^2$ input.
 The subsequent $H^1$ and logarithmically weighted transport arguments in
 Propositions~\ref{prop:dd-separatrix-h1} and
-\ref{prop:dd-quotient-domain} are separate steps; the saddle bootstrap
+\ref{prop:dd-stream-quotient-h2} are separate steps; the saddle bootstrap
 does not supply them.
 \end{remark}
 
@@ -382,36 +382,6 @@ is the one already supplied across edges and saddles by
 Proposition~\ref{prop:dd-separatrix-h1}; no new jump term is introduced.
 \end{proof}
 
-\begin{lemma}[$L^2$ vorticity quotient, odd--odd]
-\label{lem:dd-vorticity-quotient-l2}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local}
-For an odd--odd eigenfunction, $\nu=\omega/\Psi\in L^2(\T^2)$.
-\end{lemma}
-
-\begin{proof}
-\uses{prop:dd-weighted-gradient, prop:dd-separatrix-h1,
- lem:saddle-normal-form, lem:hardy-1d, lem:acl-slicing, lem:trace-l2}
-Near a saddle use a small quadrant disk $Q$ in the orthonormal coordinates.
-The exact
-factorization gives $|\Psi|\asymp r^2\sin\theta\cos\theta$ there.
-The $H^1$ vorticity has zero traces on both axes, so polar ACL slicing on
-annuli and the angular Hardy inequality give, for almost every $r$,
-\[
- \int_0^{\pi/2}\frac{|\omega(r,\theta)|^2}
-                         {\sin^2\theta\cos^2\theta}\,d\theta
- \le C\int_0^{\pi/2}|\partial_\theta\omega(r,\theta)|^2d\theta.
-\]
-Multiply by $r^{-3}dr$ and use
-$|\partial_\theta\omega|\le r|\nabla\omega|$ to get
-\[
- \int_Q|\omega/\Psi|^2\le C\int_Q|\nabla\omega|^2/r^2<\infty.
-\]
-On regular edge rectangles, $|\Psi|$ is comparable to distance to the edge;
-zero vorticity trace and endpoint Hardy give the quotient in $L^2$.
-Away from the separatrix, division is bounded. A finite cover gives the
-claim on the torus.
-\end{proof}
-
 \begin{remark}[Digest note: the logarithmic gradient gain]
 The logarithm pays for the growing quarter length when controlling
 $\partial_h\omega$ without the factor $d$ present in the ordinary $H^1$
@@ -420,15 +390,130 @@ existing Hardy estimates to $\Lambda(h)dh$.
 The manuscript uses $H^1\hookrightarrow L^4$ to control multiplication by
 $\Lambda_\Psi$. The rectangle slicing argument of
 Lemma~\ref{lem:log-multiplier-rectangle} supplies exactly that multiplier
-bound without a finite-$p$ embedding. This resolves the weighted gradient
-and $L^2$ vorticity division steps, but does not establish the $H^2$ stream
-quotient or its weighted corner remainders.
+bound without a finite-$p$ embedding. The weighted gradient supplies the
+third-derivative input to the stream-quotient construction below; it is not
+by itself an $H^2$ division argument.
 \end{remark}
 
-\begin{proposition}[Quotient domain, odd--odd]
-\label{prop:dd-quotient-domain}
+\section{The minimal odd--odd quotient domain}
+
+\begin{lemma}[The weighted third derivative needed for division]
+\label{lem:dd-weighted-third-stream}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local}
-\notready
+Let $q$ be the quadratic saddle jet and $R_0=\psi-q$ in orthonormal
+saddle coordinates. Then $D^3R_0/r\in L^2$ on a smaller saddle disk.
+If $a$ is chosen so that $a\Psi$ has quadratic part $q$, the same bound,
+and the existing bounds $R/r^4,\nabla R/r^3,D^2R/r^2\in L^2$,
+hold for $R=\psi-a\Psi$.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:saddle-dd, prop:dd-separatrix-h1, prop:dd-weighted-gradient,
+ lem:elliptic-local, lem:saddle-normal-form}
+Because $q$ is harmonic, $\Delta R_0=\omega$.
+On dyadic annuli of radius $\rho$, the local elliptic estimate gives
+\[
+ \rho^{-1}\|D^3R_0\|_{2,A_\rho}
+ \le C\bigl(\rho^{-1}\|\nabla\omega\|_{2,A_\rho^*}
+       +\rho^{-2}\|\omega\|_{2,A_\rho^*}
+       +\rho^{-4}\|R_0\|_{2,A_\rho^*}\bigr).
+\]
+Square and sum using finite overlap and $r\asymp\rho$.
+The three terms are controlled by the weighted gradient, the second
+transport gain and the quadratic saddle jet, respectively.
+For the normalized remainder, $a\Psi-q=O(r^4)$ with derivatives through
+order three. Its derivatives divided by the respective weights are bounded.
+One must not assert $\Delta R=\omega$ after this replacement:
+instead $\Delta R=\omega+a\Psi$. No new elliptic estimate is needed.
+\end{proof}
+
+\begin{proposition}[H2 stream quotient]
+\label{prop:dd-stream-quotient-h2}
+\uses{def:eigen-problem, def:sectors, def:sobolev-torus}
+For an odd--odd eigenfunction at $\lambda\ne0$, the a.e. quotient
+$\phi=\psi/\Psi$ extends to $H^2(\T^2)$ and is even under both
+separatrix reflections.
+\end{proposition}
+
+\begin{proof}
+\uses{lem:dd-weighted-third-stream, prop:dd-separatrix-h1,
+ prop:saddle-dd, lem:saddle-normal-form, lem:weighted-double-division,
+ lem:weighted-h2-point-removal, lem:odd-h3-division,
+ lem:stream-sector, lem:separatrix-lines, lem:inverse-laplacian-fourier,
+ lem:local-to-global}
+Near a saddle normalize $R=\psi-a\Psi$ as above and write
+$\Psi=uv\,m$ with $m$ smooth, even in each coordinate and nonvanishing.
+Weighted double division gives $V=R/(uv)$ on the punctured disk, with
+$V/r^2,\nabla V/r,D^2V\in L^2$.
+These bounds persist for $V/m$ by the product rule.
+Point removal therefore gives
+$\phi=a+V/m\in H^2$ across the saddle.
+
+On each regular separatrix segment $\psi\in H^3$ and is odd across its
+straight axis. One-coordinate division gives an even $H^2$ quotient;
+the other factor of $\Psi$ is smooth and nonzero there.
+Away from the separatrix the original global $H^2$ regularity of $\psi$
+suffices for smooth division, including at elliptic centers.
+A finite cover and local-to-global give the torus result.
+Odd parity of both $\psi$ and $\Psi$ makes their quotient even.
+The weighted numerator estimates are internal inputs here; the corner
+bounds for the quotient need not be separately assumed.
+\end{proof}
+
+\begin{lemma}[$L^2$ vorticity quotient, odd--odd]
+\label{lem:dd-vorticity-quotient-l2}
+\uses{def:eigen-problem, def:sectors}
+For an odd--odd eigenfunction, $\nu=\omega/\Psi\in L^2(\T^2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:dd-stream-quotient-h2, lem:even-h2-dipole-laplacian,
+ lem:inverse-laplacian-derivatives}
+The stream quotient is even and $H^2$, and $\psi=\Psi\phi$.
+Since $\Delta\psi=\omega$, the divided-Laplacian lemma with $F=\phi$
+gives $\nu\in L^2$.
+The manuscript instead applies angular Hardy to the vorticity using
+$\nabla\omega/d\in L^2$. That separate division argument is unnecessary
+after stream $H^2$ is established.
+\end{proof}
+
+\begin{lemma}[Weak transport survives division by the invariant dipole]
+\label{lem:dd-quotient-transport}
+\uses{def:transport-pair, def:dd-quotient, def:sobolev-local}
+Let the original weak relation
+$L_0(\omega+\psi)=i\lambda\omega$ hold on an open set $U$.
+Suppose $\omega=\Psi\nu$, $\psi=\Psi\phi$ a.e. and
+$\nu,\phi\in L^2_{\mathrm{loc}}(U)$. Then
+$L_0(\nu+\phi)=i\lambda\nu$ weakly on $U$.
+The analogous statement holds for periodic $L^2$ functions on the torus.
+No $H^1$ regularity of $\nu$ or weighted corner bound is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities, lem:separatrix-lines, lem:L0-h1-tests}
+Choose smooth $0\le\chi_\epsilon\le1$ on $\R$, zero for
+$|s|\le\epsilon$ and one for $|s|\ge2\epsilon$.
+The multiplier $m_\epsilon=\chi_\epsilon(\Psi)/\Psi$, extended by zero,
+is smooth. Since $L_0\Psi=0$, $L_0m_\epsilon=0$.
+Test the original equation against $m_\epsilon\eta$ for
+$\eta\in C_c^\infty(U)$. The product rule has no cutoff derivative term:
+\[
+ \int\chi_\epsilon(\Psi)(\nu+\phi)L_0\eta
+   =-i\lambda\int\chi_\epsilon(\Psi)\nu\eta .
+\]
+The separatrix is a null set, being a finite union of lines locally.
+Dominated convergence, with bounds
+$|(\nu+\phi)L_0\eta|$ and $|\lambda\nu\eta|$, proves the claim.
+The same argument uses smooth periodic tests on the torus.
+Thus no global closed-operator or self-adjointness theorem is needed.
+This proves the weak equation, not integrability of the divided unknown
+or $H^2$ regularity of the divided forcing. Those separate inputs are
+required before declaring $(\nu,\phi)$ a transport pair.
+\end{proof}
+
+\begin{proposition}[Quotient domain with corner bounds, odd--odd]
+\label{prop:dd-quotient-domain}
+\uses{def:eigen-problem, def:sectors, def:sobolev-torus}
 For every odd--odd eigenfunction,
 \[
   \phi:=\psi/\Psi\in H^2(\T^2),\qquad \nu:=\omega/\Psi\in L^2(\T^2),\qquad
@@ -441,19 +526,30 @@ $\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{prop:dd-separatrix-h1, prop:saddle-dd, prop:dd-weighted-gradient,
- lem:dd-vorticity-quotient-l2, lem:transport-first-gain, lem:hardy-1d,
- lem:elliptic-local, lem:sobolev-holder, lem:local-to-global}
-Proposition~\ref{prop:dd-weighted-gradient} and
-Lemma~\ref{lem:dd-vorticity-quotient-l2} supply $\nabla\omega/d\in L^2$
-near the saddles and $\nu\in L^2(\T^2)$.
-The remaining proposed argument is as follows. Dyadic elliptic estimates give
-$D^3R/r\in L^2$ for $R=\psi-a\Psi$, and the division formula
-$R/(uv)=u^{-1}\int_0^1R_v(u,tv)\,dt$ gives the $H^2$ quotient. Multiplying
-the graph equation by $\chi_\epsilon(\Psi)/\Psi$ (using $L_0\Psi=0$) and
-closedness give the quotient transport equation. Finally
-Lemma~\ref{lem:transport-first-gain} for $(\nu,\phi)$ gives $\nu/d\in L^2$.
+\uses{cor:dd-exclusion-domain, lem:dd-quotient-transport,
+ lem:even-h2-corner-hardy, lem:saddle-normal-form}
+The exclusion data supply the $H^2$ quotient, $L^2$ vorticity quotient,
+local transport pair and $\nu/d\in L^2$ near all saddles.
+Away from the saddles, $d$ is bounded below, so the last estimate is global.
+Weak invariant division on the torus gives the global transport relation.
+At each saddle apply the corner Hardy lemma to the even $H^2$ quotient,
+with $a=\phi(P)$. This supplies both additional weighted bounds.
 \end{proof}
+
+\begin{remark}[Digest note: the corner conclusions are not independent inputs]
+The full manuscript proposition is a consequence of the minimal exclusion
+data, rather than a prerequisite for obtaining them. Its two extra corner
+bounds follow from even $H^2$ regularity alone. Thus \emph{stronger} describes
+the bundled statement, not an independent analytic regularity requirement.
+
+The stream-quotient proof above still uses the quadratic numerator jet
+and the weighted third derivative. Double division yields precisely the
+weighted quotient tails needed for an elementary $H^2$ point-removal
+argument. Removing these weights from the final interface does not remove
+that internal proof work. The simplification is to prove the small
+division/removal lemmas once and keep the bundled proposition off the
+exclusion route.
+\end{remark}
 
 \section{Mixed sectors: regularity across the separatrix}
 

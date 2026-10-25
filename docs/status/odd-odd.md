@@ -52,28 +52,41 @@ and closing rational margins are proved. The cutoff is the rational 1/7;
 the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
-## Next work: the three interval estimates
+## Next work: formalize the minimal quotient construction
 
-Prove zero-trace forcing energy/endpoints, the logarithmic midpoint bound,
-and the negative affine-tail bound. Their blueprint derivations use elementary
-integration by parts, endpoint estimates and logarithmic moments; they remain
-Lean admissions. Then return to Picone density integrability and weak
-truncation/virial limits. Bulk coercivity and its certificate remain deferred.
+The blueprint now derives `cor:dd-exclusion-domain` directly: stream H²
+implies vorticity L² by coordinate Hardy and the Poisson product rule;
+weak transport division and the first gain then give `ν/d ∈ L²`.
+The stream proof spells out the dyadic third-derivative estimate, weighted
+cone division and H² point removal. The separate angular-Hardy vorticity
+division argument is no longer needed. Invariant cutoff testing supplies quotient
+transport without closedness of the global transport operator.
 
-The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`:
-even global H² for `φ`, the multiplication identities, the quotient transport
-pair and `ν/d ∈ L²`. Separate weighted corner remainders are not fields of
-this interface. The stronger `prop:dd-quotient-domain` remains available as a
-proposed sufficient route, not a proved Lean prerequisite.
+First formalize the division/removal lemmas and the weak transport bridge;
+the weighted elliptic and earlier transport inputs also remain unformalized.
+The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
+and negative affine tail) remain a separate backlog. Bulk coercivity and its
+certificate remain deferred.
+
+The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
+(Lean: `dd_exclusion_domain`): even global H² for `φ`, the multiplication
+identities, the quotient transport pair and `ν/d ∈ L²`. The additional corner
+bounds follow from even H² alone by coordinate and radial Hardy estimates.
+Thus `prop:dd-quotient-domain` is now downstream of the minimal result and
+off the exclusion route, not an independent stronger regularity obligation.
+The numerator's weighted jet and third derivative are still used internally
+to prove stream H². All these new reductions are blueprint derivations;
+`dd_exclusion_domain` remains one admitted Lean declaration.
 
 ## Analytic review boundary
 
 The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³,
-`∇ω/d ∈ L²` and `ω/Ψ ∈ L²`. Double division for the H² stream quotient and
-transport-domain assembly still need mathematical review. The renormalized
-virial is derived conditional on the quotient domain; its Lean character-wise
-interface and the analytic inputs below Picone and weighted Poincaré still
-need review. The corrected-boundary constants have explicit rational derivations;
+`∇ω/d ∈ L²`. Double division for the H² stream quotient, the subsequent
+Hardy/Poisson proof of `ω/Ψ ∈ L²`, and transport-domain assembly now have
+explicit analytic blueprint derivations,
+not Lean proofs. The virial uses only the minimal quotient data; its Lean
+character-wise interface and the analytic inputs below Picone and weighted
+Poincaré still need review. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 

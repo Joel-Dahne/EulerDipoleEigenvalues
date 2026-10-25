@@ -1100,6 +1100,189 @@ $\|D^3u\|_{L^2(A_r)}\le C(\|\nabla\Delta u\|_{L^2(A_r^*)}
 independent of $r$.
 \end{lemma}
 
+\begin{lemma}[One-coordinate division of an odd H3 function]
+\label{lem:odd-h3-division}
+\uses{def:sobolev-local}
+Let $R\in H^3(I\times(-b,b))$ be odd in $v$, where $I$ is a bounded
+interval and $b>0$. Then $R/v$ has an even $H^2$ extension across $v=0$,
+with $\|R/v\|_{H^2}\le C\|R\|_{H^3}$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing}
+The zero trace and ACL give
+\[
+ R(u,v)/v=\int_0^1R_v(u,tv)\,dt,\qquad
+ \partial_u^j\partial_v^k(R/v)
+   =\int_0^1t^k\partial_u^j\partial_v^{k+1}R(u,tv)\,dt
+ \quad(j+k\le2).
+\]
+The $L^2$ dilation in $v$ costs $t^{-1/2}$, and
+$\int_0^1t^{k-1/2}dt<\infty$. Minkowski proves all the required bounds.
+The same bounds justify weak differentiation under the integral.
+The quotient is even, so its extension is even as an $H^2$ function;
+no separate matching of normal derivative traces is needed.
+\end{proof}
+
+\begin{lemma}[Weighted double division near crossing axes]
+\label{lem:weighted-double-division}
+\uses{def:sobolev-local}
+Let $R\in H^3(D)$ on a disk $D$ centered at the origin be odd under both
+axis reflections, and put $r=(u^2+v^2)^{1/2}$. Suppose
+$\nabla R/r^3$, $D^2R/r^2$ and $D^3R/r$ belong to $L^2(D)$.
+Then $V=R/(uv)$ is $H^2_{\mathrm{loc}}$ on the punctured disk, including
+across its open half-axes, and
+\[
+ \|V/r^2\|_2+\|\nabla V/r\|_2+\|D^2V\|_2
+ \le C\bigl(\|\nabla R/r^3\|_2+\|D^2R/r^2\|_2+\|D^3R/r\|_2\bigr).
+\]
+Values on the axes do not affect these integrals.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-h3-division, lem:acl-slicing}
+On $0<v<u$, $r\asymp u$ and
+\[
+ V=u^{-1}\int_0^1R_v(u,tv)\,dt.
+\]
+If $T_kF=\int_0^1t^kF(u,tv)\,dt$, differentiation gives
+\[
+ V_{uu}=2u^{-3}T_0R_v-2u^{-2}T_0R_{uv}+u^{-1}T_0R_{uuv},\quad
+ V_{uv}=-u^{-2}T_1R_{vv}+u^{-1}T_1R_{uvv},\quad
+ V_{vv}=u^{-1}T_2R_{vvv}.
+\]
+The expressions for $V/r^2$ and $\nabla V/r$ involve the same first-
+and second-derivative terms. For every real $\ell$,
+\[
+ \|u^{-\ell}F(u,tv)\|_{L^2(0<v<u,\,(u,v)\in D)}
+ \le t^{-1/2}\|u^{-\ell}F\|_{L^2(0<v<u,\,(u,v)\in D)}.
+\]
+Indeed the substitution $w=tv$ shrinks the cone into itself and keeps
+$u$ fixed. Thus the radius weight does not incur another dilation loss.
+Integrate $t^{k-1/2}$ and use Minkowski. Interchange $u,v$ on the other
+cone and reflect to the other quadrants.
+To justify the weak formulas first work where the larger coordinate is
+bounded away from zero and apply one-coordinate division. Let this lower
+bound decrease to zero using the uniform weighted estimates.
+The one-coordinate lemma also supplies $H^2$ across each open axis.
+\end{proof}
+
+\begin{lemma}[Weighted removal of a point in H2]
+\label{lem:weighted-h2-point-removal}
+\uses{def:sobolev-local}
+If $V\in H^2_{\mathrm{loc}}(D\setminus\{0\})$ and
+$V/r^2$, $\nabla V/r$ and $D^2V$ are in $L^2(D)$, then $V$ extends
+to $H^2(D)$. Its continuous representative has value zero at the origin.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:local-to-global, lem:sobolev-holder}
+Choose a smooth radial $\eta_\epsilon$ equal to zero on $r<\epsilon$
+and one on $r>2\epsilon$, with
+$|D^j\eta_\epsilon|\le C\epsilon^{-j}$ for $j=1,2$.
+On the transition annulus,
+\[
+ \|V D^2\eta_\epsilon\|_2\le C\|V/r^2\|_{2,\mathrm{ann}},\qquad
+ \|\nabla V\otimes\nabla\eta_\epsilon\|_2
+       \le C\|\nabla V/r\|_{2,\mathrm{ann}}.
+\]
+Both tails tend to zero; the lower derivatives and Hessian tails do too.
+Consequently $\eta_\epsilon V$ converges in $H^2$ to $V$, excluding
+point-supported derivative defects. Localize and use the continuous
+$H^2$ representative. A nonzero value at zero would contradict $V/r^2\in L^2$.
+\end{proof}
+
+\begin{lemma}[Coordinate Hardy bounds for even H2 functions]
+\label{lem:even-h2-axis-hardy}
+\uses{def:sobolev-local}
+Let $F\in H^2((-a,a)\times I)$ be even in $u$, with $a>0$ and $I$ a
+bounded interval. Then
+\[
+ \int |F_u/u|^2\le4\int|F_{uu}|^2.
+\]
+If both coordinate intervals are symmetric and $F$ is even in both
+coordinates, the analogous estimate for $F_v/v$ also holds.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:hardy-endpoint, lem:weak-derivative-basic}
+The weak derivative $F_u$ is $H^1$ and odd in $u$, so its one-dimensional
+continuous sections have zero trace at $u=0$ for almost every $v$.
+Apply endpoint Hardy on the positive and negative half intervals and
+integrate in $v$. Interchange the coordinates for the other estimate.
+\end{proof}
+
+\begin{lemma}[Corner Hardy bounds for even H2 functions]
+\label{lem:even-h2-corner-hardy}
+\uses{def:sobolev-local}
+Let $F\in H^2(D)$ on a disk centered at zero be even under both axis
+reflections, and let $c=F(0)$ for its continuous representative. On a
+smaller concentric disk,
+\[
+ \nabla F/r\in L^2,\qquad (F-c)/r^2\in L^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:even-h2-axis-hardy, lem:acl-slicing, lem:local-to-global,
+ lem:sobolev-holder}
+Coordinate Hardy on symmetric sections of the disk gives
+\[
+ \int |F_u/u|^2\le4\int |F_{uu}|^2,\qquad
+ \int |F_v/v|^2\le4\int |F_{vv}|^2.
+\]
+Since $|u|,|v|\le r$, these imply $\nabla F/r\in L^2$.
+
+For almost every polar angle put $h(r)=F(r,\theta)-c$.
+Continuity at zero and the weighted derivative bound give
+\[
+ |h(\epsilon)|^2/\epsilon^2
+ \le\tfrac12\int_0^\epsilon |h'(r)|^2\,dr/r\longrightarrow0.
+\]
+Integration by parts on $(\epsilon,R)$, discarding the nonpositive
+outer boundary term, gives
+\[
+ A_\epsilon:=\int_\epsilon^R|h|^2\,dr/r^3
+ \le\frac{|h(\epsilon)|^2}{2\epsilon^2}
+      +\sqrt{A_\epsilon}\sqrt{\int_\epsilon^R|h'|^2\,dr/r}.
+\]
+Young's inequality and $\epsilon\downarrow0$ yield
+$\int_0^R|h|^2dr/r^3\le\int_0^R|h'|^2dr/r$.
+Integrate in angle. This proves the second bound from the first;
+no eigenfunction equation or quadratic expansion of $F$ is used.
+\end{proof}
+
+\begin{lemma}[Divided Laplacian of an even H2 function]
+\label{lem:even-h2-dipole-laplacian}
+\uses{def:sobolev-torus, def:reflections, def:dipole, def:fourier-derivatives}
+If $F\in H^2(\T^2)$ is even under both separatrix reflections, then
+\[
+ N_F:=\frac{\Delta(\Psi F)}{\Psi}\in L^2(\T^2),\qquad
+ \|N_F\|_2\le C\|F\|_{H^2}.
+\]
+The quotient is defined a.e. off the null separatrix and satisfies
+$\Delta(\Psi F)=\Psi N_F$ a.e.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:even-h2-axis-hardy, lem:saddle-normal-form,
+ lem:diagonal-calculus, lem:lift-sobolev-local, lem:separatrix-lines,
+ lem:weak-derivative-basic}
+The weak product rule gives
+\[
+ N_F=\Delta F-F+2\,\frac{\nabla\Psi\cdot\nabla F}{\Psi}
+ \quad\text{off the separatrix}.
+\]
+Near a regular edge write $\Psi=u\,m$ in orthonormal coordinates, where
+$m$ is smooth and nonvanishing. The only singular term is $F_u/u$.
+Near a saddle write $\Psi=uv\,m$; the singular terms are
+$F_u/u$ and $F_v/v$. All other coefficients are smooth and bounded.
+Coordinate Hardy controls each singular term by a pure second derivative
+of $F$. Away from the separatrix all coefficients are bounded.
+A finite cover proves the estimate and the a.e. identity.
+No weighted derivative or trace of the vorticity is used in this step.
+\end{proof}
+
 \begin{lemma}[ACL slicing for a single weak partial derivative]
 \label{lem:acl-slicing}
 \uses{def:weak-derivative-local}
