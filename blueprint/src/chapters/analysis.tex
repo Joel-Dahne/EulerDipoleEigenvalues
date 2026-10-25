@@ -1255,13 +1255,11 @@ no eigenfunction equation or quadratic expansion of $F$ is used.
 \begin{lemma}[Divided Laplacian of an even H2 function]
 \label{lem:even-h2-dipole-laplacian}
 \uses{def:sobolev-torus, def:reflections, def:dipole, def:fourier-derivatives}
-If $F\in H^2(\T^2)$ is even under both separatrix reflections, then
-\[
- N_F:=\frac{\Delta(\Psi F)}{\Psi}\in L^2(\T^2),\qquad
- \|N_F\|_2\le C\|F\|_{H^2}.
-\]
-The quotient is defined a.e. off the null separatrix and satisfies
-$\Delta(\Psi F)=\Psi N_F$ a.e.
+\lean{NoEmbeddedEigenvalues.even_h2_dipole_laplacian}
+\leanok
+Let $F,\psi,\zeta\in L^2(\T^2)$, with $F\in H^2(\T^2)$ even under both
+separatrix reflections, $\psi=\Psi F$ a.e., and $\Delta\psi=\zeta$ in the
+Fourier sense. Then there is $N_F\in L^2(\T^2)$ with $\zeta=\Psi N_F$ a.e.
 \end{lemma}
 
 \begin{proof}
@@ -1279,8 +1277,26 @@ Near a saddle write $\Psi=uv\,m$; the singular terms are
 $F_u/u$ and $F_v/v$. All other coefficients are smooth and bounded.
 Coordinate Hardy controls each singular term by a pure second derivative
 of $F$. Away from the separatrix all coefficients are bounded.
-A finite cover proves the estimate and the a.e. identity.
+Define $N_F$ by this formula off the null separatrix, and zero on it.
+A finite cover gives $N_F\in L^2$ and the a.e. identity.
 No weighted derivative or trace of the vorticity is used in this step.
+\end{proof}
+
+\begin{lemma}[Bound for the divided Laplacian]
+\label{lem:even-h2-dipole-laplacian-bound}
+\uses{lem:even-h2-dipole-laplacian, def:sobolev-torus}
+The divided Laplacian satisfies $\|N_F\|_2\le C\|F\|_{H^2}$ for a constant
+independent of the even function $F$. This quantitative bound is not
+required by the exclusion construction.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:even-h2-axis-hardy, lem:saddle-normal-form, lem:diagonal-calculus}
+In each chart the singular terms have squared norms at most four times
+the corresponding pure second-derivative squared norms.
+The remaining coefficients are bounded, so their terms are controlled by
+$\|F\|_{H^1}$. Sum over the fixed finite cover and absorb the chart and
+coefficient bounds into $C$.
 \end{proof}
 
 \begin{lemma}[ACL slicing for a single weak partial derivative]

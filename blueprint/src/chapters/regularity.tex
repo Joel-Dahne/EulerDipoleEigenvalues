@@ -430,6 +430,8 @@ instead $\Delta R=\omega+a\Psi$. No new elliptic estimate is needed.
 \begin{proposition}[H2 stream quotient]
 \label{prop:dd-stream-quotient-h2}
 \uses{def:eigen-problem, def:sectors, def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.dd_stream_quotient_h2}
+\leanok
 For an odd--odd eigenfunction at $\lambda\ne0$, the a.e. quotient
 $\phi=\psi/\Psi$ extends to $H^2(\T^2)$ and is even under both
 separatrix reflections.
@@ -463,12 +465,15 @@ bounds for the quotient need not be separately assumed.
 \begin{lemma}[$L^2$ vorticity quotient, odd--odd]
 \label{lem:dd-vorticity-quotient-l2}
 \uses{def:eigen-problem, def:sectors}
+\lean{NoEmbeddedEigenvalues.dd_vorticity_quotient_l2}
+\leanok
 For an odd--odd eigenfunction, $\nu=\omega/\Psi\in L^2(\T^2)$.
 \end{lemma}
 
 \begin{proof}
 \uses{prop:dd-stream-quotient-h2, lem:even-h2-dipole-laplacian,
  lem:inverse-laplacian-derivatives}
+\leanok
 The stream quotient is even and $H^2$, and $\psi=\Psi\phi$.
 Since $\Delta\psi=\omega$, the divided-Laplacian lemma with $F=\phi$
 gives $\nu\in L^2$.
@@ -485,8 +490,8 @@ $L_0(\omega+\psi)=i\lambda\omega$ hold on an open set $U$.
 Suppose $\omega=\Psi\nu$, $\psi=\Psi\phi$ a.e. and
 $\nu,\phi\in L^2_{\mathrm{loc}}(U)$. Then
 $L_0(\nu+\phi)=i\lambda\nu$ weakly on $U$.
-The analogous statement holds for periodic $L^2$ functions on the torus.
 No $H^1$ regularity of $\nu$ or weighted corner bound is assumed.
+The periodic version is stated separately below.
 \end{lemma}
 
 \begin{proof}
@@ -511,6 +516,26 @@ or $H^2$ regularity of the divided forcing. Those separate inputs are
 required before declaring $(\nu,\phi)$ a transport pair.
 \end{proof}
 
+\begin{corollary}[Periodic quotient transport]
+\label{cor:dd-quotient-transport-periodic}
+\uses{def:dipole}
+\lean{NoEmbeddedEigenvalues.dd_quotient_transport}
+\leanok
+Let $\omega,\psi,\nu,\phi\in L^2(\T^2)$ and $\lambda\in\R$.
+If $L_0(\omega+\psi)=i\lambda\omega$ in the character-tested sense,
+$\omega=\Psi\nu$ a.e. and $\psi=\Psi\phi$ a.e., then
+$L_0(\nu+\phi)=i\lambda\nu$ in the same sense.
+No nonzero-parameter, Sobolev or weighted hypothesis is needed.
+\end{corollary}
+
+\begin{proof}
+\uses{lem:dd-quotient-transport, lem:L0-h1-tests}
+Use the same invariant multipliers with smooth periodic tests.
+Dominated convergence applies on the finite-volume torus.
+Testing the resulting identity against characters gives the stated relation;
+no maximal-domain or closed-operator theorem is used.
+\end{proof}
+
 \begin{proposition}[Quotient domain with corner bounds, odd--odd]
 \label{prop:dd-quotient-domain}
 \uses{def:eigen-problem, def:sectors, def:sobolev-torus}
@@ -526,7 +551,7 @@ $\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
-\uses{cor:dd-exclusion-domain, lem:dd-quotient-transport,
+\uses{cor:dd-exclusion-domain, cor:dd-quotient-transport-periodic,
  lem:even-h2-corner-hardy, lem:saddle-normal-form}
 The exclusion data supply the $H^2$ quotient, $L^2$ vorticity quotient,
 local transport pair and $\nu/d\in L^2$ near all saddles.

@@ -21,7 +21,9 @@ The even–even route is admission-free. Available foundations include:
 - Weak action-angle chain rules in both directions, periodization, transversal
   mollification, H¹ commutator and the annular L² virial.
 - Eigenfunction transport, resonant vanishing, Melnikov, canonical profiles
-  and pairing limits.
+  and pairing limits. The generic periodic-to-continuous transport-pair bridge
+  is admission-free; minimal odd–odd quotient existence is assembled from
+  four explicit admitted inputs.
 - Interval H¹ and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
@@ -41,9 +43,10 @@ weights and local versus global regularity.
 
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
-   exclusion is now assembled. Prioritize the minimal quotient construction:
-   one-coordinate/weighted double division, H² point removal and weak
-   invariant transport division. The three corrected-boundary estimates and
+   exclusion is now assembled. Quotient existence is assembled in
+   `OddOddQuotient.lean` from four admitted inputs. Prioritize weak invariant
+   division and Hardy/Poisson division; then expand stream H² into
+   one-coordinate/weighted double division and H² point removal. The three corrected-boundary estimates and
    eight Picone inputs remain separate work.
    Bulk coercivity and its certificate remain deferred.
    See [odd–odd status](odd-odd.md). The earlier
@@ -67,7 +70,9 @@ weights and local versus global regularity.
   Even H² also implies the advertised extra corner bounds, so the bundled
   quotient-domain proposition is downstream and off the exclusion route.
   Invariant-cutoff testing avoids global transport-operator closedness.
-  These reductions have not been formalized.
+  The quotient and representative-change assemblies are proved in Lean;
+  four analytic interfaces remain admitted. The periodic first gain explicitly
+  includes cell covering beyond the fixed neighbourhood's boundary saddles.
   The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace

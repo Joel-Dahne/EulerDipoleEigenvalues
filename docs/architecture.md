@@ -111,7 +111,10 @@ proof mechanisms. Module names below are relative to
   profile interval regularity, and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
-- `OddOdd.lean`: quotient/boundary data, quotient characters and boundary
+- `OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
+  invariant division/periodic gain interfaces, the generic continuous-forcing
+  transport-pair bridge, and quotient-existence assembly.
+- `OddOdd.lean`: boundary data, quotient characters and boundary
   regularity, actual truncated Picone energies and currents, scalar finite
   parts and their cancellation, boundary-form identification, and the
   analytic interfaces consumed by odd–odd exclusion.

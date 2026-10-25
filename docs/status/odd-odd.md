@@ -10,9 +10,10 @@ own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from eight explicit
 analytic inputs. Corrected boundary nonnegativity is assembled from three
 interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
-Together with quotient existence and bulk coercivity this gives thirteen
-transitive admissions, not an admission-free exclusion. The full recursive
-analytic graph is not yet stated in Lean.
+Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
+is assembled from four admitted analytic inputs. Together with bulk coercivity
+this gives sixteen transitive admissions, not an admission-free exclusion.
+The full recursive analytic graph is not yet stated in Lean.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -52,9 +53,12 @@ and closing rational margins are proved. The cutoff is the rational 1/7;
 the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
-## Next work: formalize the minimal quotient construction
+## Next work: prove the quotient inputs
 
-The blueprint now derives `cor:dd-exclusion-domain` directly: stream H²
+`dd_exclusion_domain` now follows in Lean from four explicit inputs:
+`dd_stream_quotient_h2`, `even_h2_dipole_laplacian`,
+`dd_quotient_transport`, and `transport_first_gain_periodic`.
+The construction uses no corner-remainder hypotheses: stream H²
 implies vorticity L² by coordinate Hardy and the Poisson product rule;
 weak transport division and the first gain then give `ν/d ∈ L²`.
 The stream proof spells out the dyadic third-derivative estimate, weighted
@@ -62,8 +66,11 @@ cone division and H² point removal. The separate angular-Hardy vorticity
 division argument is no longer needed. Invariant cutoff testing supplies quotient
 transport without closedness of the global transport operator.
 
-First formalize the division/removal lemmas and the weak transport bridge;
-the weighted elliptic and earlier transport inputs also remain unformalized.
+Next prove weak invariant division and the Hardy/Poisson input, then expand
+the stream H² input into the division/removal and weighted elliptic lemmas.
+The periodic first gain includes cell covering on the full fixed neighbourhood;
+it assumes a global torus relation, not merely a pair on that neighbourhood.
+The earlier transport gains also still need Lean proofs.
 The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
 and negative affine tail) remain a separate backlog. Bulk coercivity and its
 certificate remain deferred.
@@ -75,16 +82,19 @@ bounds follow from even H² alone by coordinate and radial Hardy estimates.
 Thus `prop:dd-quotient-domain` is now downstream of the minimal result and
 off the exclusion route, not an independent stronger regularity obligation.
 The numerator's weighted jet and third derivative are still used internally
-to prove stream H². All these new reductions are blueprint derivations;
-`dd_exclusion_domain` remains one admitted Lean declaration.
+to prove stream H². The quotient assembly has no own `sorry` and four
+transitive admissions. `dd_vorticity_quotient_l2` is derived from the first
+two inputs. The generic continuous-representative transport-pair bridge has
+zero transitive admissions. No quantitative divided-Laplacian norm bound is
+included in the Lean interface; it is a separate optional blueprint node.
 
 ## Analytic review boundary
 
 The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³,
 `∇ω/d ∈ L²`. Double division for the H² stream quotient, the subsequent
-Hardy/Poisson proof of `ω/Ψ ∈ L²`, and transport-domain assembly now have
-explicit analytic blueprint derivations,
-not Lean proofs. The virial uses only the minimal quotient data; its Lean
+Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
+analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
+the quotient and transport-domain assemblies are proved. The virial uses only the minimal quotient data; its Lean
 character-wise interface and the analytic inputs below Picone and weighted
 Poincaré still need review. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.

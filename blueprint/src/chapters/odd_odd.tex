@@ -46,20 +46,19 @@ Definition~\ref{def:dd-exclusion-domain} exist.
 \end{corollary}
 
 \begin{proof}
-\uses{prop:dd-stream-quotient-h2, lem:dd-vorticity-quotient-l2,
- lem:dd-quotient-transport, lem:transport-first-gain,
- lem:lift-sobolev-local, lem:continuous-representative,
- lem:cell-neighbourhood, lem:reflection-algebra}
+\uses{prop:dd-stream-quotient-h2, lem:even-h2-dipole-laplacian,
+ lem:inverse-laplacian-derivatives, cor:dd-quotient-transport-periodic,
+ lem:periodic-transport-pair, cor:transport-first-gain-periodic,
+ lem:cell-neighbourhood}
+\leanok
 Construct the even global $H^2$ stream quotient. Coordinate Hardy and the
 Poisson relation then give the $L^2$ vorticity quotient. Both quotients are
-even, since their numerators and
-$\Psi$ are odd. Their multiplication identities hold almost everywhere
-since the separatrix is null. Weak invariant division gives
-the transport equation, so their lifts form a transport pair on each
-bounded orbit neighbourhood. The first transport gain gives $\nu/d\in L^2$
-on the positive cell. Reflections cover adjacent negative cells, and
-periodicity covers the fixed bounded cell neighbourhood.
-Use the continuous representative of $\phi$ as forcing.
+even, since their numerators and $\Psi$ are odd. Their multiplication
+identities hold almost everywhere since the separatrix is null.
+Periodic weak invariant division gives the quotient transport relation.
+The periodic transport-pair bridge supplies the fixed-neighbourhood pair,
+using the continuous representative of $\phi$. The periodic first gain
+supplies the weighted vorticity on that entire neighbourhood.
 No separate corner remainder of $\phi$ is an input.
 \end{proof}
 

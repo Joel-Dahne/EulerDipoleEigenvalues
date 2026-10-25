@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.DipoleOrthogonality
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm
+import NoEmbeddedEigenvalues.OddOddQuotient
 
 /-!
 # Odd–odd exclusion: the final analytic interfaces
@@ -90,27 +91,6 @@ def ddVorticityDensity (ν : L2) (p : ℝ × ℝ) : ℝ := ddF p * ‖liftL2 ν 
 
 /-- The mass density controlled by the final coercivity estimate. -/
 def ddMassDensity (φ : L2) (p : ℝ × ℝ) : ℝ := ddWeight p * ‖liftL2 φ p‖ ^ 2
-
-/-- Quotient conclusions used by the final exclusion. Weighted corner remainders are
-    deliberately not part of this interface. -/
-structure DDQuotientData (lam : ℝ) (ω : L2) where
-  phi : L2
-  nu : L2
-  regular : MemSobolev 2 phi
-  even : InSector true true phi
-  stream_eq : ∀ᵐ t, invLap ω t = (Ψ t : ℂ) * phi t
-  vorticity_eq : ∀ᵐ t, ω t = (Ψ t : ℂ) * nu t
-  transport : IsTransportPair lam cellNeighbourhood (liftL2 nu)
-    (fun p ↦ continuousRep phi (torusProj p))
-  weighted_nu : MemLp (fun p ↦ liftL2 nu p / (saddleDist p : ℂ)) 2
-    (volume.restrict cellNeighbourhood)
-
-/-- Existence of the minimal quotient data consumed by exclusion
-    (`cor:dd-exclusion-domain`), without the stronger corner-jet conclusions. -/
-theorem dd_exclusion_domain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
-    Nonempty (DDQuotientData lam ω) := by
-  sorry
 
 /-- Weighted mean zero and central parity of the quotient. -/
 theorem dd_orthogonality {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}

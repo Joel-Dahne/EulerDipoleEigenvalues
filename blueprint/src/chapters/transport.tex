@@ -86,6 +86,26 @@ The weak relation is linear, and $z=-(v+f)/\lambda$ gives
 $L_0z=-i v$ and $i(\lambda z+f)=-iv$.
 \end{proof}
 
+\begin{lemma}[Periodic relations give transport pairs]
+\label{lem:periodic-transport-pair}
+\uses{def:transport-pair, def:sobolev-torus, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.isTransportPair_continuousRep}
+\leanok
+Let $\nu,\phi\in L^2(\T^2)$, $\phi\in H^2(\T^2)$, $\lambda\ne0$, and
+$L_0(\nu+\phi)=i\lambda\nu$ in the character-tested sense.
+On every bounded open union of orbits $U$, the lift of $\nu$ and the
+continuous lift of $\phi$ form a transport pair.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-sobolev-local, lem:continuous-representative,
+ lem:lift-periodization, lem:L0-h1-tests}
+\leanok
+Lift the $L^2$, $H^2$ and weak transport data. The raw lift of $\phi$
+equals its continuous representative a.e., so both its Sobolev membership
+and the weak identity persist under this change of representative.
+\end{proof}
+
 \begin{lemma}[Eigenfunctions give transport pairs]
 \label{lem:transport-pair-eigen}
 \uses{def:transport-pair, def:eigen-problem, def:torus-of-lift}
@@ -1005,6 +1025,32 @@ Neither argument needs an elliptic relation or a Melnikov statement for
 the $\pm i$ characters; the resonant-zero input here is the local endpoint
 formula, not the separatrix Melnikov limit.
 \end{remark}
+
+\begin{corollary}[Periodic first transport gain]
+\label{cor:transport-first-gain-periodic}
+\uses{def:sobolev-torus, def:dipole, def:cell-arcs, lem:cell-neighbourhood}
+\lean{NoEmbeddedEigenvalues.transport_first_gain_periodic}
+\leanok
+Let $\nu,\phi\in L^2(\T^2)$, $\phi\in H^2(\T^2)$, $\lambda\ne0$, and
+$L_0(\nu+\phi)=i\lambda\nu$ in the character-tested sense.
+Then $\widetilde\nu/d$ belongs to $L^2$ on the full fixed cell
+neighbourhood. No parity, elliptic relation or zero saddle value is assumed.
+\end{corollary}
+
+\begin{proof}
+\uses{lem:transport-first-gain, lem:periodic-transport-pair,
+ lem:reflection-algebra, lem:cell-neighbourhood}
+The periodic relation supplies transport pairs on bounded invariant
+neighbourhoods of every closed cell, not only the fixed neighbourhood.
+Apply the first gain on the positive cell and its translated/reflected
+copies. Reflections preserve the transport field; translations that
+reverse its sign replace $\lambda$ by $-\lambda$, which is still nonzero.
+Finitely many copies cover the fixed bounded neighbourhood up to the null
+separatrix. Their weighted integrals sum to a finite bound.
+In particular, the fixed neighbourhood's boundary saddles are treated
+using larger neighbourhoods; a transport pair defined only on the fixed
+neighbourhood is not the hypothesis of this corollary.
+\end{proof}
 
 \begin{lemma}[Second transport gain]
 \label{lem:transport-second-gain}
