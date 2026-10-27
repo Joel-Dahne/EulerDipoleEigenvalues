@@ -1067,17 +1067,61 @@ must be uniform along the entire level before multiplying by its
 logarithmically diverging period.
 \end{remark}
 
-\begin{lemma}[Bulk coefficient bounds]
-\label{lem:dd-bulk-coefficients}
-\uses{def:dd-ground-state}
-On $\Cell$, writing $w=w_*$,
+\begin{definition}[Weighted cell form domain]
+\label{def:dd-weighted-h1}
+\uses{def:sobolev-local, def:cells, def:dipole}
+\lean{NoEmbeddedEigenvalues.DDWeightedH1, NoEmbeddedEigenvalues.ddCellMeasure,
+ NoEmbeddedEigenvalues.ddWeightedMean, NoEmbeddedEigenvalues.ddWeightedNormSq,
+ NoEmbeddedEigenvalues.ddWeightedEnergy, NoEmbeddedEigenvalues.ddWeightedVariance}
+\leanok
+On the lifted positive cell $C$, put $d\rho=\mu\,dx$ with $\mu=\Psi^2$.
+A weighted $H^1$ triple $(z,z_x,z_y)$ consists of functions with
+$\partial_xz=z_x$, $\partial_yz=z_y$ distributionally on $C$ and
+$z,z_x,z_y\in L^2(C,d\rho)$. This is the maximal weak form domain:
+no boundary trace condition or approximation hypothesis is imposed.
+Set
 \[
-  1\le w\le\tfrac54,\qquad Mw^2\ge\tfrac{25}{16}\mu I,\qquad Pw\ge-\tfrac52\mu w.
+ Z=\rho(C),\quad m_z=Z^{-1}\int_C z\,d\rho,\quad
+ N[z]=\int_C|z|^2\,d\rho,\quad
+ E[z_x,z_y]=\int_C(|z_x|^2+|z_y|^2)\,d\rho,\quad
+ V[z]=\int_C|z-m_z|^2\,d\rho.
+\]
+Only the mean is normalized; the norms, energy and variance are not.
+\end{definition}
+
+\begin{lemma}[Weighted cell mass and finite integrals]
+\label{lem:dd-weighted-integrals}
+\uses{def:sobolev-local, def:dd-weighted-h1}
+\lean{NoEmbeddedEigenvalues.ddCellMeasure_mass,
+ NoEmbeddedEigenvalues.DDWeightedH1.integrable}
+\leanok
+The mass is $Z=2\pi^2$. For every weighted $H^1$ triple, $z$, $|z|^2$,
+$|z_x|^2+|z_y|^2$ and $|z-m_z|^2$ are integrable with respect to $\rho$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:diagonal-calculus, lem:dipole-identities}
+In diagonal coordinates, $d\rho=8\cos^2a\cos^2b\,da\,db$ on
+$(-\pi/2,\pi/2)^2$, giving $Z=2\pi^2$. Cauchy--Schwarz against the
+finite measure gives value integrability; the other assertions follow
+from the specified weighted $L^2$ bounds.
+\end{proof}
+
+\begin{lemma}[Ground-state range and matrix lower bound]
+\label{lem:dd-ground-matrix-bounds}
+\uses{def:dd-ground-state}
+\lean{NoEmbeddedEigenvalues.dd_ground_matrix_bounds}
+\leanok
+On the positive cell with $r=|\nabla\Psi|^2\ne0$, writing $w=w_*$,
+\[
+  1\le w\le\tfrac54,\qquad
+  w^2\langle Mv,v\rangle\ge\tfrac{25}{16}\mu|v|^2
+  \quad(v\in\mathbb C^2).
 \]
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-identities, cert:dd-residual}
+\uses{lem:dipole-identities}
 The geometric range is $0<s<2$, $s(2-s)\le r\le2-s^2/2$. Since $0<r\le2$, the
 logarithmic term is nonnegative, and $s^2+r\le4-r$, $r\log(2/r)\le2/e$ give
 $w\le5/4$. Next, $3sr(A_0-C_0)\ge4s(s-2)^2(s+4)\ge0$, so it suffices to bound
@@ -1085,45 +1129,176 @@ $C_0w^2$; for fixed $s$, $(16+r+s^2)^2/r$ decreases in $r$, and at
 $r=2-s^2/2$ the inequality reduces to
 $2(s^2+2s+4)(s^2+36)^2-4800s(s+2)\ge0$, which with $t=2-s$ is
 $t(1920+4544t-1984t^2+312t^3-28t^4+2t^5)\ge0$, true since
-$4544-1984t\ge576$ and $312-28t\ge256$ on $[0,2]$. The bound
-$Pw\ge-\tfrac52\mu w$ is Lemma~\ref{cert:dd-residual}.
+$4544-1984t\ge576$ and $312-28t\ge256$ on $[0,2]$.
 \end{proof}
+
+\begin{lemma}[Bulk coefficient bounds]
+\label{lem:dd-bulk-coefficients}
+\uses{def:dd-ground-state}
+\lean{NoEmbeddedEigenvalues.dd_bulk_coefficients}
+\leanok
+On the positive cell with $r\ne0$, writing $w=w_*$,
+\[
+  1\le w\le\tfrac54,\qquad Mw^2\ge\tfrac{25}{16}\mu I,\qquad Pw\ge-\tfrac52\mu w.
+\]
+In particular these bounds hold almost everywhere on the cell.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-ground-matrix-bounds, cert:dd-residual, lem:dipole-critical-points}
+The first two bounds are Lemma~\ref{lem:dd-ground-matrix-bounds};
+the last is the residual certificate. The excluded center is a null set.
+\end{proof}
+
+\begin{remark}[Digest note: coefficient values at the center]
+The manuscript's pointwise coefficient bounds must be read where their
+singular formulas are defined. In Lean, totalized division assigns
+$M=0$ at the elliptic center, where $\mu=4$, so the matrix lower bound
+cannot hold there. The punctured-cell statement and its almost-everywhere
+consequence resolve this domain issue; assigned values at the isolated
+center play no role in the integral inequalities.
+\end{remark}
 
 \begin{lemma}[Weighted Poincar\'e inequality]
 \label{lem:zonal-poincare}
-\uses{def:cells}
-\notready
-Normalize $\mu\,dx$ to a probability measure on $\Cell$. If $z$ is even under
-central inversion, then
-$\int\mu|\nabla z|^2\ge3\int\mu|z-\ip{z}{1}_\mu|^2$.
+\uses{def:sobolev-local, def:dd-weighted-h1}
+\lean{NoEmbeddedEigenvalues.zonal_poincare}
+\leanok
+For a weighted $H^1$ triple $(z,z_x,z_y)$, assume
+$z(-x,-y)=z(x,y)$ for almost every point of the cell. Then
+\[
+ E[z_x,z_y]\ge3V[z].
+\]
+The derivatives are Cartesian weak derivatives. No zero boundary trace,
+boundedness of $z$, separate reflection parity or mean-zero assumption
+is required.
 \end{lemma}
 
 \begin{proof}
 \uses{lem:cell-square, lem:separatrix-lines, lem:diagonal-calculus}
-In the $(a,b)$ coordinates $\mu\,dx=c\cos^2a\cos^2b\,da\,db$, and the weighted
-Neumann Laplacian is half the sum of two zonal Laplacians on $S^3$ (polar angle
-$a+\pi/2$), with eigenvalues $n(n+2)$. Central inversion removes the modes of
-degree $(1,0)$ and $(0,1)$; the next is $(1,1)$ with eigenvalue
+In diagonal coordinates, $d\rho=8\cos^2a\cos^2b\,da\,db$ and the
+Cartesian gradient energy is one half of the diagonal-coordinate energy.
+The one-dimensional zonal eigenvalues are $n(n+2)$.
+Simultaneous inversion sends the product mode of degrees $(n,m)$ to
+$(-1)^{n+m}$ times itself. It therefore removes odd total degree;
+the first nonconstant remaining mode is $(1,1)$, with eigenvalue
 $\tfrac12(3+3)=3$.
+To make this argument a proof, the product spectral expansion and its
+energy bound must be established on the whole weak form domain, not only
+for smooth functions or finite mode sums.
 \end{proof}
 
-\begin{remark}[Digest note]
-Lemma~\ref{lem:zonal-poincare} needs a precise statement of the function space
-(the form domain of the weighted Neumann Laplacian on the square) and of the
-spectral decomposition, as the ``zonal $S^3$'' identification is only
-sketched. A self-contained alternative: separation of variables in $a$ and
-$b$ with Gegenbauer polynomials $C^{(1)}_n(\sin a)$.
+\begin{remark}[Digest note: weighted spectral proof]
+The form domain and all integrability hypotheses are now explicit in
+Definition~\ref{def:dd-weighted-h1}. The remaining issue is a proof of
+the weighted product spectral inequality on that domain. One route is
+the zonal $S^3$ interpretation; another uses the complete orthogonal
+family $C^{(1)}_n(\sin a)C^{(1)}_m(\sin b)$. Either route must justify
+the weak-domain energy inequality, not assume boundary regularity or
+smooth density as an extra eigenfunction hypothesis.
 \end{remark}
 
 \begin{lemma}[Kantorovich-type bound]
 \label{lem:kantorovich}
-For a probability measure and a function $1\le w\le5/4$,
-$\Var(w)/\ip{w}{1}^2\le1/80$.
+\lean{NoEmbeddedEigenvalues.kantorovich_bound}
+\leanok
+On a probability space, let $w$ be a real, almost-everywhere measurable
+function with $1\le w\le5/4$ almost everywhere. Then
+$\ip{w}{1}>0$ and $\Var(w)/\ip{w}{1}^2\le1/80$.
 \end{lemma}
 
 \begin{proof}
 Integrate $(w-1)(\tfrac54-w)\ge0$ to get $\Var(w)\le(m-1)(\tfrac54-m)$ with
 $m=\ip{w}{1}$, and maximize $(m-1)(\tfrac54-m)/m^2$ (at $m=10/9$).
+\end{proof}
+
+\begin{lemma}[Constrained weighted Poincar\'e bound]
+\label{lem:dd-constrained-poincare}
+\uses{def:sobolev-local, def:dd-weighted-h1}
+\lean{NoEmbeddedEigenvalues.dd_weighted_constraint,
+ NoEmbeddedEigenvalues.dd_constrained_poincare}
+\leanok
+Let $z\in L^2(d\rho)$ and let $w$ be real, measurable and satisfy
+$1\le w\le5/4$ almost everywhere. If $\int_C wz\,d\rho=0$, then
+$N[z]\le(81/80)V[z]$.
+If additionally $(z,z_x,z_y)$ is a weighted $H^1$ triple and $z$ is
+centrally even almost everywhere, then
+\[
+ \tfrac{25}{16}E[z_x,z_y]\ge\tfrac{80}{27}N[wz].
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zonal-poincare, lem:kantorovich, lem:dd-weighted-integrals}
+For the probability normalization of $\rho$, write $m=m_z$.
+The constraint and Cauchy--Schwarz give
+$|m|^2\le(1/80)Z^{-1}V[z]$, so
+$N[z]=V[z]+Z|m|^2\le(81/80)V[z]$.
+Combine $E\ge3V[z]$ and $N[wz]\le(25/16)N[z]$.
+\end{proof}
+
+\begin{lemma}[Weighted form domain of the Picone quotient]
+\label{lem:dd-bulk-form-domain}
+\uses{def:sobolev-torus, def:dd-exclusion-forms, def:dd-weighted-h1,
+ def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.dd_bulk_form_domain}
+\leanok
+Let $\phi\in H^2(\T^2)$ be centrally even, with
+$\int_C\mu\phi=0$, and specify its Fourier first derivatives.
+Assume the Picone gradient density is absolutely integrable.
+Then $z=\phi/w_*$ and the quotient-rule derivatives from
+Definition~\ref{def:dd-exclusion-forms} form a weighted $H^1$ triple.
+Moreover $z$ is centrally even almost everywhere,
+$\int_C w_*z\,d\rho=0$, and $N[w_*z]=\int_C\mu|\phi|^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-ground-matrix-bounds, lem:lift-sobolev-local,
+ lem:dipole-critical-points, lem:lift-representatives}
+The ground state is positive and has the local first-order regularity
+needed for weak division, including at the center. Its lower bound
+controls the weighted value norm; the matrix lower bound and the supplied
+Picone energy control both weighted derivatives. The comparison function
+is centrally even, so division preserves parity. Finally $w_*z=\phi$
+almost everywhere identifies the constraint and mass. No residual sign
+certificate is used by this step.
+\end{proof}
+
+\begin{lemma}[Picone gradient coercivity]
+\label{lem:dd-bulk-gradient-bound}
+\uses{def:sobolev-torus, def:dd-exclusion-forms, def:fourier-derivatives,
+ lem:dd-bulk-form-domain}
+\lean{NoEmbeddedEigenvalues.dd_bulk_gradient_bound}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:dd-bulk-form-domain},
+\[
+ \int_C Mw_*^2|\nabla(\phi/w_*)|^2
+ \ge\tfrac{80}{27}\int_C\mu|\phi|^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-bulk-form-domain, lem:dd-constrained-poincare,
+ lem:dd-ground-matrix-bounds}
+Apply constrained weighted Poincar\'e to $z=\phi/w_*$ and use
+$Mw_*^2\ge(25/16)\mu I$.
+\end{proof}
+
+\begin{lemma}[Picone potential lower bound]
+\label{lem:dd-bulk-potential-bound}
+\uses{def:dd-exclusion-forms}
+\lean{NoEmbeddedEigenvalues.dd_bulk_potential_bound}
+\leanok
+For $\phi\in L^2(\T^2)$ with absolutely integrable Picone potential density,
+\[
+ \int_C(Pw_*/w_*)|\phi|^2\ge-\tfrac52\int_C\mu|\phi|^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-bulk-coefficients, lem:lift-torus}
+Integrate the almost-everywhere residual lower bound; both densities
+are integrable. No Poincar\'e inequality enters here.
 \end{proof}
 
 \begin{lemma}[Bulk Picone bound]
@@ -1142,21 +1317,18 @@ Definition~\ref{def:dd-exclusion-forms} are absolutely integrable. Then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-bulk-coefficients, lem:zonal-poincare, lem:kantorovich}
-With $z=\phi/w_*$ and $m=\ip{z}{1}_\mu$, the constraint $\ip{w_*z}{1}_\mu=0$
-and Cauchy--Schwarz give $|m|^2\le\tfrac1{80}\int\mu|z-m|^2$. Hence
-$\int Mw_*^2|\nabla z|^2\ge\tfrac{25}{16}\cdot\tfrac{3}{1+1/80}\int\mu|z|^2
-\ge\tfrac{80}{27}\int\mu|\phi|^2$ (using $|\phi|\le\tfrac54|z|$), and
-$\tfrac{80}{27}-\tfrac52=\tfrac{25}{54}$.
+\uses{lem:dd-bulk-gradient-bound, lem:dd-bulk-potential-bound}
+Add the gradient and potential bounds:
+$80/27-5/2=25/54$.
 \end{proof}
 
 \begin{remark}[Digest note: the finite-energy coercivity interface]
-Central parity and weighted mean zero alone do not specify a finite form
-domain. In particular, Lean's Bochner integral has value zero when its
-integrand is not integrable. The bulk bound therefore takes explicit
-integrability hypotheses, supplied by the Picone current in the exclusion
-assembly. This is a domain clarification, not a proof of weighted
-Poincar\'e or the residual certificate.
+The bulk hypotheses now feed an explicit weighted-domain bridge before
+Poincar\'e is invoked. In particular they do not assume that $z$ has
+weighted mean zero: the constraint is on $w_*z$ and Kantorovich controls
+the remaining mean. The weak form-domain Poincar\'e inequality and the
+residual sign certificate are separate proof obligations. A statement
+marker for the bridge is not a proof of either.
 \end{remark}
 
 \section{The corrected boundary form}

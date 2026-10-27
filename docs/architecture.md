@@ -157,6 +157,10 @@ proof mechanisms. Module names below are relative to
   algebra and Green flux, raw-quotient annular/truncated identities, even H²
   gradient traces and full renormalized bulk limits. Separates inward virial
   normals from the shared outward derivative convention.
+- `OddOddCoercivity.lean`: maximal weak weighted H¹ cell triples, normalized
+  means and unnormalized energies, central-parity Poincaré, Kantorovich,
+  constrained coercivity and the bridge from the actual Picone quotient.
+  Separates the gradient estimate from the residual-certificate potential bound.
 - `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.

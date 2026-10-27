@@ -12,7 +12,9 @@ assembled from three interval estimates. Quotient existence is assembled from
 four analytic inputs; bulk coercivity is the remaining outer admission.
 The mixed exclusion remains admitted. The recursive statement-only pass now
 covers the nodes below the minimal odd–odd quotient construction, the
-character-wise virial limit and truncated Picone; new proofs remain `sorry`.
+character-wise virial limit and truncated Picone. Bulk coercivity's weighted
+form domain and Poincaré interfaces are now stated too; new proofs remain
+`sorry`, and the certificate backend remains deferred.
 The statement pass continues; compatibility review, including local/global
 quotient and exceptional-level bridges, and analytic proofs remain deferred. The assembly
 avoids a bundled stronger regularity prerequisite. See the

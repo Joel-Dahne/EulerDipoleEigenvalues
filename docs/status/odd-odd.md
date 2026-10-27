@@ -59,6 +59,20 @@ Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
 ## Current work: recursive statement pass
 
+[OddOddCoercivity.lean](../../NoEmbeddedEigenvalues/OddOddCoercivity.lean)
+now states the bulk form-domain/Poincaré branch. `DDWeightedH1` is the maximal
+weak weighted H¹ domain, without boundary traces or a density hypothesis.
+The actual quotient-rule derivatives feed it from the existing Picone-energy
+hypothesis; no stronger quotient regularity is assumed. Central parity gives
+Cartesian Poincaré constant 3; Kantorovich handles the mean under `∫wz = 0`.
+Gradient coercivity and the residual-certificate potential bound are separate
+interfaces. All new proofs are `sorry`; the existing outer admission and
+exclusion assembly have not changed. The orange statement flag is removed
+from `zonal-poincare`, but its weak-domain spectral proof remains open.
+The coefficient bounds exclude the totalized matrix value at the center,
+which does not affect any integral. The certificate tools/data remain deferred;
+this is not complete recursive statement coverage of the certificate branch.
+
 The dependency closures of zero-trace forcing energy, the midpoint bound and
 the negative affine correction are now stated. The sum-of-squares nodes reuse
 existing proved classical/weighted interfaces; no density argument or duplicate
@@ -173,8 +187,9 @@ Parent admissions have not been replaced by assemblies: the blueprint records
 the intended recursive dependencies, whereas the Lean sorry audit still stops
 at the four existing quotient inputs (sixteen for the full exclusion).
 The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
-and negative affine tail) remain a separate backlog. Bulk coercivity and its
-certificate remain deferred.
+and negative affine tail) remain a separate proof backlog. Bulk coercivity's
+weighted-domain and inequality interfaces are now stated; their proofs and
+the certificate backend remain open.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
 (Lean: `dd_exclusion_domain`): even global H² for `φ`, the multiplication
@@ -197,7 +212,8 @@ Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the minimal quotient data; its Lean
 character-wise interface and its newly stated recursive virial inputs, as well
-as the analytic inputs below Picone and weighted Poincaré, still need review. The corrected-boundary constants have explicit rational derivations;
+as the analytic inputs below Picone, still need compatibility review. Weighted
+Poincaré now has a precise weak form-domain statement, but no spectral proof. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 

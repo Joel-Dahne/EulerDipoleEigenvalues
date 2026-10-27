@@ -68,7 +68,11 @@ weights and local versus global regularity.
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
    logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
    The estimates themselves and eight Picone inputs remain analytic proof work.
-   Bulk coercivity and its certificate remain deferred.
+   `OddOddCoercivity.lean` now states the maximal weak weighted form domain,
+   central-parity Poincaré, Kantorovich, the actual quotient-domain bridge and
+   separate gradient/potential bounds. These new proofs remain `sorry`; the
+   outer coercivity admission is unchanged. Weighted spectral proof work and
+   the residual-certificate tools/data remain open.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
