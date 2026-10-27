@@ -69,6 +69,10 @@ def quarterQuotient (lam : ℝ) (κ : ℂ) (f : ℝ × ℝ → ℂ) (h : ℝ) : 
 def IsPhaseCellEndpoint (lam : ℝ) (κ : ℂ) (h : ℝ) : Prop :=
   Complex.exp (Complex.I * (quarterPhase lam h : ℂ)) = -κ
 
+/-- Local interval H¹ with a compatible specified derivative. -/
+def HasIntervalH1Loc (a b : ℝ) (N N₁ : ℝ → ℂ) : Prop :=
+  ∀ c d, a < c → c < d → d < b → HasIntervalH1 c d N N₁
+
 /-- Local H² on an open interval with compatible specified derivatives. -/
 def HasIntervalH2Loc (a b : ℝ) (N N₁ N₂ : ℝ → ℂ) : Prop :=
   ∀ c d, a < c → c < d → d < b → HasIntervalH2 c d N N₁ N₂

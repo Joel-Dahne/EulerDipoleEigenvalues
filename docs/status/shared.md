@@ -49,10 +49,12 @@ weights and local versus global regularity.
    next local/sector layer with `sorry`. The scalar/geometry batch is now
    stated in `ScalarDivision.lean` and `SaddleNormalForm.lean`; cylinder
    inversion and weighted transport/gluing are stated in `CylinderInverse.lean`,
-   `WeightedTraces.lean` and `WeightedTransport.lean`. Next finish the quarter
-   endpoint/resonant-zero, weighted numerator and logarithmic interfaces before
-   attempting proofs. The three corrected-boundary estimates and eight Picone
-   inputs remain separate work.
+   `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,
+   weighted numerator and logarithmic interfaces are now stated too, covering
+   the quotient branch's result nodes. Next review their compatibility and the
+   remaining bundled quotient/operator definition before choosing proof work.
+   The three corrected-boundary estimates and eight Picone inputs remain
+   separate work.
    Bulk coercivity and its certificate remain deferred.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
@@ -64,8 +66,11 @@ weights and local versus global regularity.
    Check real cylinder exponents, finite harmonic jets, one-sided trace
    matching and the whole-edge forcing hypothesis. Shared jet/trace/quadratic
    data now sit below their parent interfaces; saddle geometry no longer
-   imports eigenfunction regularity. Check the sector-layer import ordering
-   again when adding the logarithmic statements.
+   imports eigenfunction regularity. Ordinary saddle/separatrix interfaces,
+   logarithmic estimates and weighted gradients now occupy separate layers.
+   Check cutoff restriction of the quantitative numerator data, agreement of
+   canonical ray traces and the distinction between local lifted bulk norms
+   and finite norms on bounded representative collars.
    Angular Hardy and mixed saddle linearization are off the odd–odd route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and
    `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE
@@ -93,9 +98,9 @@ weights and local versus global regularity.
   the sector saddle/separatrix/gradient interfaces are now stated with `sorry`.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
   Cylinder inversion and the weighted H¹/corner/edge/gluing layer are now
-  stated too. Quarter endpoint/resonant-zero and weighted/logarithmic numerator
-  infrastructure still need complete statement links. No new analytic proofs
-  were supplied in the recursive statement pass.
+  stated too, as are the quarter endpoint/resonant-zero and weighted/logarithmic
+  numerator interfaces. Quantitative bounds and actual fiber integrability
+  are explicit. No new analytic proofs were supplied in the statement pass.
   The transport gains cover all four characters without Melnikov;
   implemented Melnikov/pairing results still only accept ±1.
   Local elliptic regularity, cylinder inversion, corner traces/gluing and

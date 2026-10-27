@@ -313,11 +313,13 @@ removability assertion.
 \begin{lemma}[Logarithmically weighted forcing, odd--odd]
 \label{lem:dd-log-forcing}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
- def:cell-arcs, def:period}
-For an odd--odd eigenfunction there is a neighbourhood $V$ of the
-separatrix such that
+ def:cell-arcs, def:period, def:stream-second-jet, def:quarter-endpoint-rays}
+\lean{NoEmbeddedEigenvalues.dd_log_forcing}
+\leanok
+For an odd--odd eigenfunction there is an open lifted neighbourhood $U$ of
+$\{\Psi=0\}$ such that, for every compact $K\subset U$,
 \[
- \int_V\Lambda_\Psi\left(
+ \int_K\Lambda_\Psi\left(
        \frac{|\nabla\psi|^2}{d^3}+|D^2\psi|^2+|\nabla\psi|^2\right)<\infty.
 \]
 On each endpoint ray of a quarter orbit, near its saddle, the traces satisfy
@@ -325,7 +327,10 @@ On each endpoint ray of a quarter orbit, near its saddle, the traces satisfy
  \int_0^{r_0}(1+|\log r|)\left(
           \frac{|\psi|^2}{r^3}+\frac{|\nabla\psi|^2}{r}\right)dr<\infty.
 \]
-Gradient values on rays mean Sobolev traces, not arbitrary point values.
+All derivatives use the same canonical stream jet. Gradient values on rays
+mean canonical transverse Sobolev traces, not arbitrary point values.
+The displayed bulk assertion means the indicated weighted components are
+locally $L^2$ on $U$; ray bounds are on a bounded radial interval.
 \end{lemma}
 
 \begin{proof}
@@ -339,7 +344,7 @@ Near a saddle, the exact factorization $\Psi=uv\,m(u,v)$ gives
 \]
 On a regular edge rectangle there is just one logarithmic coordinate
 singularity. Lemma~\ref{lem:log-multiplier-rectangle}, localized on finitely
-many rectangles, therefore controls $\int\Lambda_\Psi|F|^2$ for local
+many rectangles covering any compact subset of the neighbourhood, controls $\int\Lambda_\Psi|F|^2$ for local
 $H^1$ functions $F$. Apply this first to $D^2\psi$ and $\nabla\psi$,
 which are $H^1$ by the ordinary $H^3$ gain.
 
@@ -370,17 +375,29 @@ $r^4(1+|\log r|)$ is bounded. The quadratic contributions are bounded by
 $Cr(1+|\log r|)$ and are integrable directly.
 \end{proof}
 
+\begin{remark}[Digest note: logarithmic norms on the periodic lift]
+The full lifted separatrix is unbounded. Bulk norms are local on its
+neighbourhood, equivalently finite on bounded representative collars;
+a nonzero periodic lift cannot have a finite full-plane $L^2$ norm.
+All four recentered quarters' endpoint rays are included.
+\end{remark}
+
 \begin{lemma}[Logarithmic numerator bounds, odd--odd]
 \label{lem:dd-log-numerators}
 \uses{def:eigen-problem, def:sectors, def:numerator, def:log-level-weight,
- def:cell-arcs, def:sobolev-local}
+ def:cell-arcs, def:sobolev-local, def:stream-second-jet,
+ def:weighted-numerator-data}
+\lean{NoEmbeddedEigenvalues.dd_log_numerators}
+\leanok
 For an odd--odd eigenfunction with fixed rotation character
 $\kappa\in\{1,-1\}$, let $N$ be its quarter numerator and put
 \[
  B(h)=\int_{-L(h)}^0\psi(\gamma_h(t))e^{-i\lambda t}dt,\qquad
  K(h)=\int_{-L(h)}^{L(h)}\frac{|\nabla\psi(\gamma_h(t))|^2}{d^3}dt.
 \]
-For sufficiently small $h_0>0$,
+Use its canonical stream jet and compatible data of
+Definition~\ref{def:weighted-numerator-data}, including actual fiber
+integrability for $K(h)$. For sufficiently small $0<h_0<1/2$,
 \[
  \int_0^{h_0}\Lambda(h)\left(K(h)+|N'(h)|^2+|B'(h)|^2
                                   +h^2|N''(h)|^2\right)dh<\infty.
@@ -388,7 +405,7 @@ For sufficiently small $h_0>0$,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-log-forcing, lem:dd-weighted-forcing,
+\uses{lem:dd-log-forcing, lem:dd-weighted-forcing, lem:stream-weak-second-jet,
  lem:weighted-numerator-estimates, lem:transport-pair-eigen,
  lem:orbit-coordinates-area, lem:period-orbit}
 Apply Lemma~\ref{lem:weighted-numerator-estimates} to $(\omega,\psi)$;

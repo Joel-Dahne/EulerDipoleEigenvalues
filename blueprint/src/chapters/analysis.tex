@@ -1123,6 +1123,31 @@ $f\in H^n(U)$ if and only if it has a specified weak jet of order $n$
 whose entries of orders $0,\ldots,n$ all belong to $L^2(U)$.
 \end{lemma}
 
+\begin{definition}[Canonical second stream jet]
+\label{def:stream-second-jet}
+\uses{def:stream-lifts, def:stream-derivatives, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.streamJet2}
+\leanok
+Let $J_\varnothing=\widetilde\psi$, $J_j$ be the lift of the existing
+Fourier multiplier $\partial_j\Delta^{-1}\omega$, and $J_{ij}$ the lift of
+$\partial_i\partial_j\Delta^{-1}\omega$. Set unused higher entries to zero.
+\end{definition}
+
+\begin{lemma}[Weak second stream jet]
+\label{lem:stream-weak-second-jet}
+\uses{def:stream-second-jet, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.streamJet2_weak}
+\leanok
+For every $\omega\in L^2$ and every $U$, $J$ is a specified second weak jet
+of the continuous stream lift on $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:inverse-laplacian-derivatives, lem:lift-sobolev-local, lem:weak-derivative-basic}
+Use the existing first/second Fourier multiplier identities and their weak
+lift bridges; change the value representative to the continuous stream.
+\end{proof}
+
 \begin{lemma}[Local elliptic regularity]
 \label{lem:elliptic-local}
 \uses{def:sobolev-local, def:local-weak-jets}
@@ -1446,15 +1471,24 @@ Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
 \begin{definition}[Logarithmic level weight]
 \label{def:log-level-weight}
 \uses{def:dipole, def:cells}
+\lean{NoEmbeddedEigenvalues.logLevelWeight, NoEmbeddedEigenvalues.torusDipoleLogWeight,
+ NoEmbeddedEigenvalues.dipoleLogWeight, NoEmbeddedEigenvalues.logRadiusWeight,
+ NoEmbeddedEigenvalues.logRectangleWeight}
+\leanok
 For $0<h\le1$ put $\Lambda(h)=1+\log(1/h)$. On the torus define
 $\Lambda_\Psi=\Lambda(|\Psi|/2)$ off the separatrix, and assign it the
-value $1$ on the separatrix.
+value $1$ on the separatrix; use the same formula on the lift.
+Also write $\ell(r)=1+|\log r|$ and
+$W(u,v)=1+|\log|u||+|\log|v||$, with arbitrary axis values.
 \end{definition}
 
 \begin{lemma}[Logarithmic multiplier on a rectangle]
 \label{lem:log-multiplier-rectangle}
-\uses{def:sobolev-local}
-Let $\rho>0$ and $Q=(-\rho,\rho)^2$. For $F\in H^1(Q)$,
+\uses{def:sobolev-local, def:local-weak-jets, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.log_multiplier_rectangle}
+\leanok
+Let $\rho>0$ and $Q=(-\rho,\rho)^2$. For $F\in H^1(Q)$ with a specified
+first weak jet, $\sqrt W F\in L^2(Q)$ and
 \[
  \int_Q\bigl(1+|\log|u||+|\log|v||\bigr)|F(u,v)|^2\,du\,dv
  \le C_\rho\|F\|_{H^1(Q)}^2.
@@ -2090,6 +2124,15 @@ the same. The statement concerns the values of the given function $g$ at
 every point, not an a.e.\ class; the argument only uses a pointwise lower
 bound, so no regularity of $g$ is needed.
 \end{proof}
+
+\begin{definition}[Local interval H1 with a specified derivative]
+\label{def:h1-local-interval}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc}
+\leanok
+$\operatorname{HasIntervalH1Loc}(a,b;N,N_1)$ means interval $H^1$ data
+$(N,N_1)$ on every $(c,d)$ with $a<c<d<b$, using the same derivative.
+\end{definition}
 
 \begin{definition}[Local interval H2 with specified derivatives]
 \label{def:h2-local-interval}

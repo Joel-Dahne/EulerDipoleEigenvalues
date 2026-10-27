@@ -13,7 +13,8 @@ interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/C
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 is assembled from four admitted analytic inputs. Together with bulk coercivity
 this gives sixteen transitive admissions, not an admission-free exclusion.
-The full recursive analytic graph is not yet stated in Lean.
+All result nodes below the minimal quotient construction now have linked Lean
+statements; the rest of the odd–odd graph still has unstated results.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -67,7 +68,8 @@ division argument is no longer needed. Invariant cutoff testing supplies quotien
 transport without closedness of the global transport operator.
 
 The first recursive layer is now stated, not proved, in
-[QuotientLocal.lean](../../NoEmbeddedEigenvalues/QuotientLocal.lean) and
+[QuotientLocal.lean](../../NoEmbeddedEigenvalues/QuotientLocal.lean),
+[OddOddSaddle.lean](../../NoEmbeddedEigenvalues/OddOddSaddle.lean) and
 [OddOddRegularity.lean](../../NoEmbeddedEigenvalues/OddOddRegularity.lean).
 Using the shared definitions in `LocalJets.lean` and `WeightedTraces.lean`,
 it supplies local division and removal,
@@ -95,17 +97,28 @@ whole edge. The weighted forcing remains `f/d², ∇f/d^(3/2) ∈ L²`, with no
 elliptic/parity/midpoint assumptions. Quarter derivatives are weak derivatives
 on separate patches; the physical collar cutoff is `Ψ < 2h₀`.
 
-Next finish quarter endpoint/resonant-zero and weighted numerator interfaces,
-then logarithmic multiplication, forcing/numerators and weighted phase-cell
-division. Do not start proofs during this statement pass. Human review of
-hypotheses and derivative/trace packaging is still needed.
+The numerator/logarithmic batch is stated in `OrbitNumerators.lean`,
+`WeightedNumerators.lean`, `LogarithmicWeights.lean` and
+`OddOddLogarithmic.lean`. `QuarterCoordinates.lean` supplies the shared maps;
+`StreamJet.lean` fixes the same Fourier derivatives for bulk, ray and orbit
+estimates. Endpoint values come from orbitwise ACL witnesses with separate
+locally L² endpoint functions. Ray values are canonical transverse traces.
+Fiber integrability and quantitative numerator bounds are exported explicitly.
+Logarithmic bulk norms are local on the periodic lift; all four recentered
+quarters' rays are covered.
+
+Next review compatibility before beginning proofs: shared cutoffs, prescribed
+jets, canonical traces and interval derivatives. The bundled `def:dd-quotient`
+notation, including its weighted differential operator E, is the remaining
+unlinked definition on this branch. A statement marker is not a proof audit.
 The periodic first gain includes cell covering on the full fixed neighbourhood;
 it assumes a global torus relation, not merely a pair on that neighbourhood.
 
 Shared jet/trace definitions and the normalized quadratic have moved unchanged
 below the parent interfaces. `SaddleNormalForm.lean` no longer imports
 `OddOddRegularity.lean`, so the saddle bootstrap can use its geometry without
-an import cycle.
+an import cycle. Ordinary saddle/separatrix statements are now below the
+logarithmic layer, which is below the weighted-gradient/third-jet statements.
 Parent admissions have not been replaced by assemblies: the blueprint records
 the intended recursive dependencies, whereas the Lean sorry audit still stops
 at the four existing quotient inputs (sixteen for the full exclusion).

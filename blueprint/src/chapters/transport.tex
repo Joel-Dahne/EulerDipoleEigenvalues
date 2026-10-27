@@ -817,6 +817,15 @@ $e^{i\Phi_\lambda(h)}=-\kappa$: it lies halfway between resonances,
 not at a zero of the divisor.
 \end{definition}
 
+\begin{definition}[Quarter character on a region]
+\label{def:quarter-character}
+\uses{def:reflections, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.HasQuarterCharacterOn}
+\leanok
+A function has quarter character $\kappa$ on $A$ if
+$F(Rp)=\kappa F(p)$ a.e. on $A$.
+\end{definition}
+
 \begin{definition}[Quarter-orbit numerator and divisor]
 \label{def:numerator}
 \uses{def:transport-pair, def:period, def:reflections, lem:period-orbit,
@@ -824,7 +833,7 @@ not at a zero of the divisor.
 \lean{NoEmbeddedEigenvalues.quarterNumerator, NoEmbeddedEigenvalues.quarterDivisor,
  NoEmbeddedEigenvalues.quarterQuotient}
 \leanok
-For a transport pair, using the continuous forcing representative, satisfying $R^*v=\kappa v$ and $R^*f=\kappa f$,
+For the continuous forcing representative of a transport pair,
 $\kappa\in\{1,-1,i,-i\}$, and the quarter orbits of
 Definition~\ref{def:period}, let
 \[
@@ -841,10 +850,28 @@ at divisor zeros must instead be those of the locally $H^1$ numerator
 extension. Raw values on an exceptional orbit are not resonance data.
 \end{remark}
 
+\begin{definition}[Quarter endpoint rays and traces]
+\label{def:quarter-endpoint-rays}
+\uses{def:canonical-transverse-trace, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterEndpointRadius, NoEmbeddedEigenvalues.quarterEndpointRay,
+ NoEmbeddedEigenvalues.quarterEndpointChart, NoEmbeddedEigenvalues.rotatedQuarterEndpointRay,
+ NoEmbeddedEigenvalues.rotatedQuarterEndpointChart, NoEmbeddedEigenvalues.HasQuarterRayTrace}
+\leanok
+Put $r(h)=2\arcsin\sqrt h$, $p_-(r)=(\pi-r,0)$ and $p_+(r)=(0,-\pi+r)$.
+The transverse charts are $(r,n)\mapsto(\pi-r,n)$ and
+$(r,n)\mapsto(n,-\pi+r)$; rotate both ray and chart by $R^k$ for quarter $k$.
+A ray trace means the canonical interior
+transverse trace on every compact radial interval and symmetric normal
+rectangle compactly contained in the specified open neighbourhood.
+\end{definition}
+
 \begin{lemma}[Quarter-orbit endpoint formula]
 \label{lem:quarter-endpoint-formula}
-\uses{def:numerator}
-On a level interval $(0,h_0)$ whose orbit annulus lies in the pair's
+\uses{def:numerator, def:quarter-character}
+\lean{NoEmbeddedEigenvalues.quarter_endpoint_formula}
+\leanok
+Assume both $v$ and the forcing have quarter character $\kappa$, $\kappa^4=1$.
+On a level interval $0<h<h_0<1$ whose orbit annulus lies in the pair's
 domain, for almost every $h$ the transport unknown has a locally absolutely
 continuous orbit representative $Z_h$, with
 \[
@@ -877,27 +904,46 @@ No spatial trace of $v$ on an endpoint ray is assumed.
 
 \begin{lemma}[Numerator vanishes at divisor zeros]
 \label{lem:numerator-zeros}
-\uses{def:numerator, def:h1-interval}
-$N\in H^1_{\mathrm{loc}}(0,h_0)$ and $N(h_j)=0$ at every zero $h_j$ of $D$.
-The zeros are simple and, enumerated decreasingly, satisfy
-$0<q_-\le h_{j+1}/h_j\le q_+<1$. On the phase cell $I_j$
-around $h_j$ one has $h\sim h_j$ and $|D(h)|\ge c_\lambda|h-h_j|/h_j$.
+\uses{def:numerator, def:quarter-character, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.numerator_zeros}
+\leanok
+Under the endpoint lemma's hypotheses, $N$ has a specified local $H^1$
+derivative on $(0,h_0)$ and $N(h)=0$ at every zero of $D$ there.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:period-regularity,
- lem:period-coarse, lem:period-derivative-bounds, lem:coarea,
+\uses{lem:quarter-endpoint-formula, lem:period-regularity, lem:coarea,
  lem:lift-sobolev-local}
-On compact level intervals the Sobolev chain rule and the moving-endpoint
-formula give $N\in H^1$; here $f\in H^2$ and the endpoint values of $f$
-are those of its continuous representative. If $N(h_j)\ne0$ at a zero of
-$D$, continuity of $N$ and $|D(h)|\le C|h-h_j|$ would force
-$|Z_h(-L)|\ge c/|h-h_j|$ almost everywhere nearby, contradicting
-Lemma~\ref{lem:quarter-endpoint-formula}.
-Simplicity and geometric spacing follow by integrating
-$c/h\le-L'(h)\le C/h$. On a phase cell, the sine bound gives
-$|D(h)|\ge c_\lambda|h-h_j|/h_j$. Only ratio bounds between consecutive
-zeros, not an exact geometric progression, are asserted.
+On compact level intervals the Sobolev chain rule and moving-endpoint
+formula give $N\in H^1$. The forcing values use its continuous representative.
+If $N(h_j)\ne0$, continuity and $|D(h)|\le C|h-h_j|$ would force
+$|Z_h(-L)|\ge c/|h-h_j|$ a.e. nearby, contradicting the endpoint lemma's
+local $L^2$ bound.
+\end{proof}
+
+\begin{lemma}[Geometry of quarter-divisor zeros]
+\label{lem:quarter-divisor-geometry}
+\uses{def:numerator, def:phase-cell-scalars}
+\lean{NoEmbeddedEigenvalues.quarter_divisor_geometry}
+\leanok
+For real $\lambda\ne0$ and $\kappa^4=1$, arbitrarily small cutoffs
+$0<\rho<1$ admit a decreasing enumeration $(h_j)_{j\ge0}$ of all divisor
+zeros below $\rho$, with simple zeros and
+$0<q_-\le h_{j+1}/h_j\le q_+<1$.
+For some $K>1$, if $0<h,z<\rho$, $D(z)=0$ and
+$|\Phi_\lambda(h)-\Phi_\lambda(z)|\le\pi$, then
+\[
+ z/K\le h\le Kz,\qquad |D(h)|\ge |h-z|/(Kz).
+\]
+This geometry is independent of any transport pair or numerator.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:period-coarse, lem:period-derivative-bounds}
+Integrate $c/h\le-L'(h)\le C/h$ between consecutive phase values.
+Strict monotonicity, divergence at zero and nonvanishing derivative give
+enumeration and simplicity. The sine bound on a complete phase cell gives
+the last inequality. Only ratio bounds, not an exact progression, are asserted.
 \end{proof}
 
 \begin{lemma}[Uniform complete-cell division estimates]
@@ -955,7 +1001,9 @@ $C/h\in L^2$.
 \begin{lemma}[Logarithmically weighted phase-cell division]
 \label{lem:log-phase-cell-division}
 \uses{def:numerator, def:log-level-weight, def:h1-interval, def:h2-interval,
- lem:h1-interval-endpoints}
+ def:h2-local-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.log_phase_cell_division}
+\leanok
 Suppose $N\in H^2_{\mathrm{loc}}(0,h_0)$, $N(h_j)=0$ at each divisor zero,
 and
 \[
@@ -968,7 +1016,7 @@ After decreasing $h_0<1$ to a phase-cell endpoint, $C=N/D$ satisfies
 \end{lemma}
 
 \begin{proof}
-\uses{lem:phase-cell-division, lem:phase-cell-estimates, lem:numerator-zeros}
+\uses{lem:phase-cell-division, lem:phase-cell-estimates, lem:quarter-divisor-geometry}
 On $I_j$, $h\asymp h_j$, so
 $|\Lambda(h)-\Lambda(h_j)|\le C$ and
 $\Lambda(h)\asymp\Lambda(h_j)$ uniformly, since $\Lambda\ge1$.
@@ -1001,7 +1049,7 @@ at its four corners, then $v/d\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
+\uses{lem:quarter-endpoint-formula, lem:numerator-zeros, lem:quarter-divisor-geometry,
  lem:orbit-saddle-distance, lem:orbit-level-derivatives,
  lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
  lem:hardy-endpoint, lem:sobolev-holder, lem:local-to-global,
@@ -1126,7 +1174,7 @@ $v/d^2\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
+\uses{lem:quarter-endpoint-formula, lem:numerator-zeros, lem:quarter-divisor-geometry,
  lem:orbit-saddle-distance, lem:orbit-level-derivatives,
  lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
  lem:hardy-endpoint, lem:orbit-coordinates-area,
@@ -1158,19 +1206,66 @@ coarea. Both terms are integrable because $0<\delta<1$.
 
 \section{Transport with weighted forcing}
 
+\begin{definition}[Specified weighted numerator data]
+\label{def:weighted-numerator-data}
+\uses{def:numerator, def:quarter-endpoint-rays, def:local-weak-jets,
+ def:cell-separatrix-collar, def:h1-interval, def:h1-local-interval,
+ def:h2-interval, def:h2-local-interval}
+\lean{NoEmbeddedEigenvalues.quarterHalfNumerator, NoEmbeddedEigenvalues.quarterJetDensity,
+ NoEmbeddedEigenvalues.QuarterJetIntegrable, NoEmbeddedEigenvalues.quarterJetEnergy,
+ NoEmbeddedEigenvalues.quarterForcingLevelDerivative,
+ NoEmbeddedEigenvalues.quarterEndpointValueEnergy,
+ NoEmbeddedEigenvalues.quarterEndpointGradientEnergy,
+ NoEmbeddedEigenvalues.WeightedQuarterNumeratorData}
+\leanok
+For continuous forcing $g$ and second jet $D$, put
+\[
+ \mathcal J_{k,s}(h)=\int_{-L}^L\sum_{|w|=k}|D_w(\gamma_h)/d^s|^2dt,
+ \quad \mathcal K=\mathcal J_{1,3/2},\quad
+ \mathcal H=\mathcal J_{2,0}+\mathcal J_{1,0},\quad
+ B=\int_{-L}^0ge^{-i\lambda t}dt .
+\]
+Fiber integrability is a separate predicate, not inferred from a
+default-valued Bochner integral. Data at $h_0$ comprise compatible
+derivatives $N_1,N_2,B_1$, local $H^2$ data for $N$, local $H^1$ data for
+$B$, and $N_1,B_1,hN_2\in L^2(0,h_0)$.
+They include canonical gradient ray traces $T_{\sigma,j}$ on a radius
+$0<r_0<1$ with $r(h_0)<r_0$, endpoint $L^2$ data
+$g(p_\sigma(r(h)))/h$, $T_{\sigma,j}(r(h))/\sqrt h$, and integrable quarter
+energies $\mathcal K,\mathcal J_{1,0},\mathcal J_{2,0}$ with a.e. finite fibers.
+The forcing has weak level derivative
+$G_h=\nabla g(\gamma_h)\cdot\partial_h\gamma_h$.
+The data also include $M>0$, uniform in $h$ and subinterval $[a,b]\subset[-L,L]$,
+with the a.e. bounds
+\[
+ \left|\int_a^bG_he^{-i\lambda t}dt\right|^2\le M\mathcal K,\qquad
+ |N_1|^2+|B_1|^2\le M(\mathcal K+P_g),\qquad
+ h^2|N_2|^2\le M(\mathcal H+Q_T+P_g),
+\]
+where $P_g=\sum_\sigma|g(p_\sigma(r(h)))|^2/h^2$ and
+$Q_T=\sum_{\sigma,j}|T_{\sigma,j}(r(h))|^2/h$.
+\end{definition}
+
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
-\uses{def:transport-pair, def:numerator, def:sobolev-local}
+\uses{def:transport-pair, def:numerator, def:sobolev-local,
+ def:weighted-numerator-data}
+\lean{NoEmbeddedEigenvalues.weighted_numerator_estimates}
+\leanok
 For a transport pair on a bounded open union of orbits containing the
 closed cell square, suppose $f/d^2,\nabla f/d^{3/2}\in L^2$ near its corners.
-For a fixed quarter character, put
-$B(h)=\int_{-L(h)}^0f(\gamma_h(t))e^{-i\lambda t}\,dt$.
+Use the continuous forcing representative and a specified second weak jet.
+Put $B(h)=\int_{-L(h)}^0f(\gamma_h(t))e^{-i\lambda t}\,dt$.
 Then $N,B$ are locally absolutely continuous, $N'$ is locally absolutely
 continuous, and
 \[
  N',\ B',\ hN''\in L^2(0,h_0)
 \]
-for sufficiently small $h_0>0$.
+for sufficiently small $0<h_0<1/2$. A full package of
+Definition~\ref{def:weighted-numerator-data} exists, including the uniform
+subinterval and pointwise bounds needed by the logarithmic argument.
+No quarter-character assumption is needed here. The jet names derivatives
+already supplied by $H^2$, not extra regularity.
 \end{lemma}
 
 \begin{proof}
@@ -1246,10 +1341,13 @@ follows from $f\in H^2$ on the given neighbourhood.
 
 \begin{proof}
 \uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
+  lem:sobolev-weak-jets, lem:weak-derivative-unique,
   lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
   lem:reflection-algebra, lem:symmetries-commute,
   lem:orbit-saddle-distance, lem:orbit-time-integrals,
   lem:orbit-coordinate-gradients, lem:orbit-level-derivatives, lem:coarea}
+Choose a second weak jet of the forcing; its first entries agree a.e.
+with the supplied gradient by weak-derivative uniqueness.
 Decompose into the four quarter characters. Rotations preserve the
 weighted hypotheses. Numerator vanishing and phase-cell division give
 $C/h,C'\in L^2$. With $B$ from the preceding lemma,

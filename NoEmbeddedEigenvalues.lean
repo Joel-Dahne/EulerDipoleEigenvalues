@@ -38,8 +38,15 @@ import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddQuotient
+import NoEmbeddedEigenvalues.OddOddSaddle
+import NoEmbeddedEigenvalues.OddOddLogarithmic
 import NoEmbeddedEigenvalues.OddOddRegularity
 import NoEmbeddedEigenvalues.LocalJets
+import NoEmbeddedEigenvalues.StreamJet
+import NoEmbeddedEigenvalues.LogarithmicWeights
+import NoEmbeddedEigenvalues.QuarterCoordinates
+import NoEmbeddedEigenvalues.OrbitNumerators
+import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.CylinderInverse
 import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.WeightedTransport

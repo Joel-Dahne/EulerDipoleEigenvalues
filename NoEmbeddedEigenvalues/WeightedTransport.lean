@@ -1,6 +1,8 @@
 import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.Transport
+import NoEmbeddedEigenvalues.QuarterCoordinates
+import NoEmbeddedEigenvalues.WeightedNumerators
 
 /-!
 # Weighted cellwise transport regularity interfaces
@@ -19,18 +21,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
-
-/-- The positive-cell separatrix collar, with a cutoff on Ψ rather than h. -/
-def cellSeparatrixStrip (ε : ℝ) : Set (ℝ × ℝ) :=
-  {p | p ∈ cellSquare ∧ 0 < dipoleLift p ∧ dipoleLift p < ε}
-
-/-- The base quarter's moving-endpoint coordinate domain. -/
-def quarterOrbitStrip (h₀ : ℝ) : Set (ℝ × ℝ) :=
-  {q | 0 < q.1 ∧ q.1 < h₀ ∧ -eighthPeriod q.1 < q.2 ∧ q.2 < eighthPeriod q.1}
-
-/-- Each quarter is parametrized by its own recentered time, including rotations. -/
-def recenteredQuarterMap (k : Fin 4) (q : ℝ × ℝ) : ℝ × ℝ :=
-  rotLift^[k.val] (dipoleOrbit q.1 q.2)
 
 /-- The first gain when the continuous forcing vanishes at the four cell saddles
 (`lem:transport-first-gain-zero`). No pointwise representative of v is used. -/

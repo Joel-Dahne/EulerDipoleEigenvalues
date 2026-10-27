@@ -43,6 +43,8 @@ proof mechanisms. Module names below are relative to
 - `SobolevLocal.lean`: weak derivatives, local Sobolev spaces and weighted norms.
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak jets, integer
   and real-power radial integrability, energies and the Sobolev/jet interface.
+- `StreamJet.lean`: the canonical second stream jet from the existing Fourier
+  partial multipliers, and its weak-jet interface.
 - `QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic,
   invariant division and first/second transport-gain interfaces.
 - `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
@@ -62,6 +64,8 @@ proof mechanisms. Module names below are relative to
 - `ScalarDivision.lean`: canonical-trace endpoint/second Hardy, coarse period
   derivative and uniform complete-cell/global quotient interfaces, for all four
   quarter characters.
+- `LogarithmicWeights.lean`: level/torus/lift/radial weights, the rectangle
+  multiplier and logarithmic phase-cell division interfaces.
 - `DiagonalCalculus.lean`, `SegmentEstimates.lean`: diagonal calculus and
   restrictions to segments/hyperbolas near a line.
 - `SeparatrixTraces.lean`: line representatives, even–even arc/level traces,
@@ -83,6 +87,12 @@ proof mechanisms. Module names below are relative to
   single global time coordinate.
 - `Transport.lean`, `TransportODE.lean`: weak transport pairs, finite-interval
   ODE/pairing estimates, periodic uniqueness and AC composition utilities.
+- `QuarterCoordinates.lean`: cell collars, recentered quarter domains/maps,
+  endpoint rays and canonical radial/transverse trace data.
+- `OrbitNumerators.lean`: endpoint ACL/local-L² data, resonant numerator zeros
+  and the independent divisor-geometry interfaces, for all four characters.
+- `WeightedNumerators.lean`: compatible numerator derivatives, canonical ray
+  traces, fiber integrability and exported quantitative subinterval bounds.
 - `WeightedTransport.lean`: zero-saddle first gain, weighted forcing/H¹ and
   whole-edge zero-trace interfaces, with weak recentered quarter derivatives.
 - `OrbitRestriction.lean`, `ResonantVanishing.lean`: restriction to almost every
@@ -127,8 +137,12 @@ proof mechanisms. Module names below are relative to
   profile interval regularity, and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
-- `OddOddRegularity.lean`: eigenfunction saddle, separatrix and weighted-gradient
-  interfaces using the shared jet, trace and saddle-geometry data.
+- `OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
+  and ordinary separatrix H¹/H³ interfaces.
+- `OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and numerator interfaces,
+  using one fixed canonical stream jet.
+- `OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
+  sits above the ordinary and logarithmic layers without circular imports.
 - `OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
   invariant division/periodic gain interfaces, the generic continuous-forcing
   transport-pair bridge, and quotient-existence assembly.
