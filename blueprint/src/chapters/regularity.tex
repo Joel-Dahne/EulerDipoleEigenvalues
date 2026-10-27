@@ -548,28 +548,102 @@ separatrix reflections.
 
 \begin{proof}
 \uses{lem:dd-weighted-third-stream, prop:dd-separatrix-h1,
- prop:saddle-dd, lem:saddle-normal-form, lem:weighted-double-division,
- lem:weighted-h2-point-removal, lem:odd-h3-division,
- lem:stream-sector, lem:separatrix-lines, lem:inverse-laplacian-fourier,
- lem:local-to-global}
-Near a saddle normalize $R=\psi-a\Psi$ as above and write
-$\Psi=uv\,m$ with $m$ smooth, even in each coordinate and nonvanishing.
-Weighted double division gives $V=R/(uv)$ on the punctured disk, with
-$V/r^2,\nabla V/r,D^2V\in L^2$.
-These bounds persist for $V/m$ by the product rule.
-Point removal therefore gives
-$\phi=a+V/m\in H^2$ across the saddle.
+ lem:saddle-normal-form, lem:saddle-chart-parity, lem:sobolev-weak-jets,
+ lem:weighted-double-division, lem:weighted-h2-point-removal,
+ lem:odd-h3-division, lem:stream-sector, lem:separatrix-lines,
+ lem:elliptic-torus, lem:localization-cutoff, lem:local-to-global,
+ lem:angular-periodization}
+Use the continuous stream lift and the single periodic function
+$F=\widetilde\psi/\Psi$, assigning zero on the separatrix.
+Local extensions below agree with $F$ a.e.; no pointwise agreement with
+this assigned value on the separatrix is required.
 
-On each regular separatrix segment $\psi\in H^3$ and is odd across its
-straight axis. One-coordinate division gives an even $H^2$ quotient;
-the other factor of $\Psi$ is smooth and nonzero there.
-Away from the separatrix the original global $H^2$ regularity of $\psi$
-suffices for smooth division, including at elliptic centers.
-A finite cover and local-to-global give the torus result.
-Odd parity of both $\psi$ and $\Psi$ makes their quotient even.
-The weighted numerator estimates are internal inputs here; the corner
-bounds for the quotient need not be separately assumed.
+At a saddle $P$, take $a$ and the specified third jet of
+$R=\widetilde\psi-a\Psi$ from
+Lemma~\ref{lem:dd-weighted-third-stream}.
+The weights $r^{4-k}$ are bounded on its disk, so the weighted jet
+entries are also unweighted $L^2$ entries, ignoring the null center.
+Lemma~\ref{lem:sobolev-weak-jets} gives $R\in H^3$ there.
+
+Pull this jet back by $\Xi_P$. This changes derivative components,
+not just their arguments: if $A=D\Xi_P$, then
+\[
+ \widehat D_{j_1\cdots j_k}
+ =\sum_{i_1,\ldots,i_k}A_{i_1j_1}\cdots A_{i_kj_k}
+       (D_{i_1\cdots i_k}\circ\Xi_P).
+\]
+Thus the jet transforms by $(A^T)^{\otimes k}$. Since $A$ is orthogonal,
+Euclidean radii, volume and the summed squares of the ordered jet entries
+are preserved. Thus the pulled-back remainder $\widehat R$ has exactly
+the weighted first-, second- and third-derivative hypotheses of
+Lemma~\ref{lem:weighted-double-division}.
+It is odd in both axes: apply stream-sector preservation and
+Lemma~\ref{lem:saddle-chart-parity}, transfer the raw stream's a.e.
+identity to its continuous representative through the affine chart,
+and subtract $a\,uv\,m$.
+
+Weighted double division supplies $V$ and a specified punctured second jet
+with $V/r^2,\nabla V/r,D^2V\in L^2$ on the same disk.
+These are precisely the inputs to
+Lemma~\ref{lem:weighted-h2-point-removal}: apply it to $V$, before
+multiplying by $m^{-1}$. Hence $V\in H^2$ across zero.
+Shrink the disk so its compact closure lies in the original disk and
+in $\{m>0\}$. Now $m^{-1}$ and its derivatives through order two are
+bounded, and ordinary smooth multiplication gives $a+V/m\in H^2$.
+Off the axes,
+\[
+ \widetilde\psi\circ\Xi_P
+   =a\,uv\,m+uv\,V=uv\,m(a+V/m).
+\]
+Thus this function, pushed back through $\Xi_P^{-1}$, represents $F$
+a.e. near $P$. There is no need to transfer the weighted bounds to $V/m$.
+
+At a regular separatrix point choose an affine diagonal rectangle,
+with tangential coordinate first and normal coordinate second, whose
+compact closure lies in the $H^3$ neighbourhood from
+Proposition~\ref{prop:dd-separatrix-h1} and avoids the saddles.
+In these coordinates the stream is $H^3$ and odd in the normal variable
+$v$, and $\Psi=v\,b(u,v)$ with $b$ smooth and nonzero.
+Lemma~\ref{lem:odd-h3-division} gives the $H^2$ quotient by $v$.
+Shrink again before multiplying by $b^{-1}$.
+On the complement of the separatrix, the original global $H^2$ stream
+regularity and smooth division by $\Psi$ suffice, including at centers.
+
+These local statements give $F\in H^2_{\mathrm{loc}}(\R^2)$: on each
+compact set use a finite subcover and a smooth partition of unity.
+For passage to the torus, let $\beta(\theta)$ be the smooth, compactly
+supported unit-period partition of Lemma~\ref{lem:angular-periodization}
+(the first argument of \texttt{anglePartition} is fixed at zero), and set
+\[
+ \chi(x,y)=\beta(x/(2\pi))\beta(y/(2\pi)).
+\]
+Its $2\pi\Z^2$ translates sum to one. By
+Lemma~\ref{lem:localization-cutoff}, $\chi F\in H^2(\R^2)$ has compact
+support, so its periodization lies in $H^2(\T^2)$ by the first assertion
+of Lemma~\ref{lem:local-to-global}. That periodization equals $F$ a.e.,
+since $F$ is periodic and the translates of $\chi$ sum to one.
+No injective torus chart is needed for this compact-periodization step.
+The separatrix is null, so the resulting element has multiplication identity
+$\psi=\Psi\phi$ a.e. Odd parity of both factors makes $\phi$ even under
+each separatrix reflection, by cancellation off this null set.
+No fourth derivative, vorticity quotient or quotient corner bound is an input.
 \end{proof}
+
+\begin{remark}[Digest note: division, coordinates and localization]
+The manuscript's stream-quotient division argument
+(manuscript \texttt{(prop:dd-quotient-domain)}) can remove the point
+before multiplying by the smooth inverse factor. This order avoids
+weighted product estimates that the final $H^2$ conclusion does not need.
+Cartesian weak jets must be transformed on their derivative indices;
+composing their entries with the chart alone is not a change of coordinates.
+The localized representatives agree a.e. with one periodic quotient, not
+with prescribed point values on the separatrix. This also avoids a separate
+matching condition on saddle coefficients in overlapping lift patches.
+Local Sobolev gluing on the lift and periodization are distinct steps.
+For the latter a single compact cutoff built from the existing angular
+partition suffices; a new torus partition-of-unity construction is unnecessary.
+The weighted operator $E$ is not used in this construction.
+\end{remark}
 
 \begin{lemma}[$L^2$ vorticity quotient, odd--odd]
 \label{lem:dd-vorticity-quotient-l2}

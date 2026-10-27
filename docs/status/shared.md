@@ -51,8 +51,10 @@ weights and local versus global regularity.
    inversion and weighted transport/gluing are stated in `CylinderInverse.lean`,
    `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,
    weighted numerator and logarithmic interfaces are now stated too, covering
-   the quotient branch's result nodes. Next review their compatibility and the
-   remaining bundled quotient/operator definition before choosing proof work.
+   the quotient branch's result nodes. The stream-H² compatibility review
+   identifies affine weak-jet/radial-L² pullback, domain-a.e. congruence and
+   periodic gluing as the next interface bridges, before choosing proof work.
+   The remaining bundled quotient/operator E definition is off this target's route.
    The three corrected-boundary estimates and eight Picone inputs remain
    separate work.
    Bulk coercivity and its certificate remain deferred.
@@ -71,6 +73,15 @@ weights and local versus global regularity.
    Check cutoff restriction of the quantitative numerator data, agreement of
    canonical ray traces and the distinction between local lifted bulk norms
    and finite norms on bounded representative collars.
+   For stream H², remove the point for the double quotient V before smooth
+   multiplication, and shrink disks/rectangles before taking inverse factors.
+   Coordinate changes mix derivative indices; the first-order diagonal chain
+   rule is not yet a higher-order affine-jet interface. Localization of one
+   cut-off piece is not yet the periodic gluing interface. Reuse the private
+   domain-a.e. congruence proof in `TransversalMollifier.lean` instead of adding
+   an admission. After local Sobolev gluing on the lift, tensor/rescale the
+   existing `anglePartition` and use `memSobolev_compactPeriodize` to avoid
+   constructing a new partition of unity on the torus.
    Angular Hardy and mixed saddle linearization are off the odd–odd route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and
    `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE

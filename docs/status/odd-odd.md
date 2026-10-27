@@ -107,10 +107,27 @@ Fiber integrability and quantitative numerator bounds are exported explicitly.
 Logarithmic bulk norms are local on the periodic lift; all four recentered
 quarters' rays are covered.
 
-Next review compatibility before beginning proofs: shared cutoffs, prescribed
-jets, canonical traces and interval derivatives. The bundled `def:dd-quotient`
-notation, including its weighted differential operator E, is the remaining
-unlinked definition on this branch. A statement marker is not a proof audit.
+The `prop:dd-stream-quotient-h2` compatibility review finds matching analytic
+inputs without a fourth derivative or new corner hypothesis. Bounded radial
+powers supply ordinary H³; chart changes must mix derivative indices. Double
+division feeds point removal directly: remove the point for V first, then shrink
+before multiplying by the smooth inverse factor. A common periodic raw quotient
+fixes a.e. overlap agreement, without matching assigned separatrix values.
+
+The next statement-level bridges are affine pullback of weak jets/radial L²
+bounds, Sobolev congruence under a.e. equality on the domain, and periodic
+local-to-global gluing. `DiagonalACL.lean` supplies first-order diagonal cases;
+`SobolevLocal.lean` currently gives global-a.e. congruence;
+`LocalToGlobal.lean` already periodizes arbitrary compactly supported Hᵏ data.
+Domain-a.e. weak congruence is proved privately as `HasWeakPartialOn.congr_ae_on`
+in `TransversalMollifier.lean`: promote it and derive its Sobolev version, rather
+than add an admission. For periodic gluing, reuse the rescaled/tensored
+`anglePartition` and `memSobolev_compactPeriodize`; local Sobolev gluing on the
+lift still needs an exposed interface. These are Lean interface gaps, not
+extra eigenfunction hypotheses. No analytic
+proofs or parent assemblies have changed. A statement marker is not a proof audit.
+The bundled `def:dd-quotient`, including its operator E, remains unlinked but is
+not a dependency of the stream-H² proposition.
 The periodic first gain includes cell covering on the full fixed neighbourhood;
 it assumes a global torus relation, not merely a pair on that neighbourhood.
 

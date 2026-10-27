@@ -12,6 +12,18 @@ The periodic gain includes passage from the positive cell to the fixed bounded l
 neighbourhood. Its hypothesis is a global torus transport relation, not merely a pair
 on that neighbourhood: the latter would not control its boundary saddles.
 No separate weighted corner remainder of the stream quotient is used.
+
+For the stream construction, bounded radial powers convert the weighted third jet
+of `ψ - a * Ψ` to an ordinary H³ jet on each saddle disk. An affine pullback mixes
+all derivative indices; merely composing the Cartesian jet entries is not enough.
+Double division and point removal use the same punctured second jet. Remove the
+point for `V = (ψ - a * Ψ) / (u * v)` first, then shrink before multiplication by
+`m⁻¹`. At regular edges the second chart coordinate is normal, as in `odd_h3_division`.
+Local representatives agree a.e. with one periodic raw quotient. Values assigned to
+that quotient on the separatrix are not the values of its continuous H² representative.
+Local Sobolev gluing on the lift is separate from periodization. Once the lift is
+locally H² everywhere, one compact cutoff with periodized value one suffices for
+passage to the torus; it can be built from the existing unit-period angular partition.
 -/
 
 noncomputable section
