@@ -16,9 +16,17 @@ $n=\nabla s/\sqrt r$, and $t$ the unit tangent.
 
 \begin{definition}[Odd--odd quotient]
 \label{def:dd-quotient}
-\uses{def:eigen-problem, def:cells}
+\uses{def:eigen-problem, def:cells, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.ddStreamQuotient,
+ NoEmbeddedEigenvalues.ddVorticityQuotient, NoEmbeddedEigenvalues.ddCellMeasure,
+ NoEmbeddedEigenvalues.ddOperator, NoEmbeddedEigenvalues.HasDDOperator}
+\leanok
 For an odd--odd eigenfunction let $\phi=\psi/\Psi$ and $\nu=\omega/\Psi$, and
 on $\Cell$ define $E=1-s^{-2}\Div(s^2\nabla)$.
+For specified weak first derivatives, $Eu=e$ means
+$\int_\Cell s^2(e-u)\eta=\int_\Cell s^2\nabla u\cdot\nabla\eta$
+for every smooth compactly supported test $\eta$ in the open cell.
+Classical differential expressions are used only for smooth functions.
 \end{definition}
 
 \begin{definition}[Quotient data consumed by exclusion]
@@ -64,15 +72,22 @@ No separate corner remainder of $\phi$ is an input.
 
 \begin{lemma}[Quotient equations]
 \label{lem:dd-quotient-equations}
-\uses{def:dd-quotient}
-$\nu=-E\phi$ on the open cell. Multiplication by $s$ is unitary from
+\uses{def:dd-quotient, def:dd-exclusion-domain}
+\lean{NoEmbeddedEigenvalues.dd_quotient_equations,
+ NoEmbeddedEigenvalues.DDQuotientData.operator_eq,
+ NoEmbeddedEigenvalues.dd_cell_unitary, NoEmbeddedEigenvalues.dd_operator_conjugation}
+\leanok
+$\nu=-E\phi$ weakly on the open cell, both for the original quotients
+and for supplied exclusion quotient data with specified Fourier first derivatives.
+Multiplication by $s$ is unitary from
 $L^2(\Cell,\mu\,dx)$ onto $L^2(\Cell)$ and conjugates $E$ to $-\Delta$:
 $sE(s^{-1}u)=-\Delta u$. These are identities on the cell, not assertions
 that the divided functions have a global transport domain.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-identities}
+\uses{lem:dipole-identities, lem:inverse-laplacian-derivatives,
+ lem:lift-sobolev-local}
 $\Delta(s\phi)=s\Delta\phi+2\nabla s\cdot\nabla\phi-s\phi
 =s\big(s^{-2}\Div(s^2\nabla\phi)-\phi\big)$, using $\Delta s=-s$. The
 conjugation is the same computation.
@@ -196,6 +211,12 @@ transport fields of those data.
 \begin{definition}[Odd--odd virial field]
 \label{def:dd-virial-field}
 \uses{def:dd-quotient}
+\lean{NoEmbeddedEigenvalues.ddVirialQ, NoEmbeddedEigenvalues.ddVirialField₁,
+ NoEmbeddedEigenvalues.ddVirialField₂, NoEmbeddedEigenvalues.ddVirialCoeff,
+ NoEmbeddedEigenvalues.ddF, NoEmbeddedEigenvalues.ddC, NoEmbeddedEigenvalues.ddA,
+ NoEmbeddedEigenvalues.ddMxx, NoEmbeddedEigenvalues.ddMxy, NoEmbeddedEigenvalues.ddMyy,
+ NoEmbeddedEigenvalues.ddPiconeOperator}
+\leanok
 Let $q(s)=(s^3-8)/(3s^2)$, $W=q(s)\nabla s/r$, and
 \[
   F=\frac{s(8-s^3)\delta^2}{3r^2},\quad
@@ -209,7 +230,9 @@ and $P=-\Div(M\nabla)-F$. Note $\delta^2=4-2r-s^2$.
 \begin{lemma}[Odd--odd virial algebra]
 \label{lem:dd-virial-algebra}
 \uses{def:dd-virial-field, def:adapted-field}
-$W$ is adapted with coefficient $f=F/\mu$, it has constant defect
+\lean{NoEmbeddedEigenvalues.dd_virial_algebra}
+\leanok
+On the positive cell with its center removed, $W$ is adapted with coefficient $f=F/\mu$, it has constant defect
 $f-\Div_\mu W=-1$ where $\Div_\mu W=\mu^{-1}\Div(\mu W)$, and
 $\mu(2\sym DW-fI)=M$.
 \end{lemma}
@@ -235,6 +258,11 @@ Now $q'=1/3+16/(3s^3)$, giving the asserted $A_0$.
 \begin{definition}[Weighted generator, bulk density and level term]
 \label{def:dd-virial-densities}
 \uses{def:dd-virial-field}
+\lean{NoEmbeddedEigenvalues.ddWeightedLaplacian, NoEmbeddedEigenvalues.ddWeightedDiv,
+ NoEmbeddedEigenvalues.ddWeightedGenerator, NoEmbeddedEigenvalues.ddVirialDensity,
+ NoEmbeddedEigenvalues.ddVirialLevel, NoEmbeddedEigenvalues.ddInwardNormal,
+ NoEmbeddedEigenvalues.ddRegularCell}
+\leanok
 On the punctured positive cell put
 \[
  L_\mu=\mu^{-1}\Div(\mu\nabla),\qquad
@@ -254,12 +282,15 @@ let the level term be
              \operatorname{Re}(Eu\,\bar u)\bigr)
  -\sigma^2\operatorname{Re}(\bar u p)\right]d\ell.
 \]
-Here $d\ell=\sqrt r\,dt$ and $\tau$ is either unit tangent.
+Here $d\ell=\sqrt r\,dt$ and $\tau$ is either unit tangent. The shared Lean
+\texttt{normalDeriv} points outward, so the inward derivative here is its negative.
 \end{definition}
 
 \begin{lemma}[The weighted first identity on an annulus]
 \label{lem:dd-weighted-first}
 \uses{def:dd-virial-densities, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.dd_weighted_first}
+\leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and real
 $\chi\in C_c^\infty(0,2)$, put
 $W_\chi=\chi(s)W$, $f_\chi=\chi(s)f$ and
@@ -269,7 +300,9 @@ $D_{\mu,\chi}=W_\chi\cdot\nabla+\tfrac12\Div_\mu W_\chi$. Then
  =2\operatorname{Re}\int_\Cell\mu D_{\mu,\chi}\phi\,\bar\nu.
 \]
 Only the original eigenfunction domain is required, not
-Proposition~\ref{prop:dd-quotient-domain}.
+Proposition~\ref{prop:dd-quotient-domain}. First derivatives are supplied
+as local weak derivative witnesses of the raw stream quotient on the open cell;
+no global divided regularity is assumed.
 \end{lemma}
 
 \begin{proof}
@@ -290,6 +323,9 @@ needed. The argument does not use reflection parity.
 \begin{lemma}[Local weighted Green identity]
 \label{lem:dd-green}
 \uses{def:dd-virial-densities}
+\lean{NoEmbeddedEigenvalues.dd_green,
+ NoEmbeddedEigenvalues.ddGreenFlux₁, NoEmbeddedEigenvalues.ddGreenFlux₂}
+\leanok
 For every complex $C^3$ function $u$ on the punctured cell,
 \[
  \mu f\bigl(|Eu|^2-\operatorname{Re}(Eu\,\bar u)\bigr)
@@ -331,6 +367,8 @@ In the flux, $f-d_\mu=-1$ leaves exactly $\mathcal V[u]$.
 \begin{lemma}[Odd--odd annular virial]
 \label{lem:dd-annular-virial}
 \uses{def:dd-virial-densities, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.dd_annular_virial}
+\leanok
 For an odd--odd eigenfunction with $\lambda\ne0$, $j[\phi]$ is integrable
 on every compact level annulus. There is a null set $N\subset(0,2)$ such
 that for all $0<a<b<2$ outside $N$,
@@ -373,6 +411,8 @@ single null set.
 \begin{lemma}[Odd--odd truncated virial]
 \label{lem:dd-truncated-virial}
 \uses{def:dd-virial-densities, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.dd_truncated_virial}
+\leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and almost every
 $\epsilon\in(0,2)$, the density $j[\phi]$ is integrable on $\{s>\epsilon\}$
 and
@@ -410,6 +450,8 @@ no higher eigenfunction regularity there are required.
 \begin{lemma}[Gradient traces for even $H^2$ functions]
 \label{lem:dd-quotient-gradient-traces}
 \uses{def:sobolev-torus, def:reflections, def:cell-arcs, def:dd-virial-field}
+\lean{NoEmbeddedEigenvalues.dd_quotient_gradient_traces}
+\leanok
 Let $u\in H^2(\T^2)$ be even under both separatrix reflections, with
 continuous representative and arc traces $g_k=u\circ\gamma_k$. Then
 $\int_\R|g_k'|^2/(2\sech^2t)\,dt<\infty$, and as $\epsilon\to0$ outside
@@ -449,6 +491,8 @@ Proposition~\ref{prop:dd-stream-quotient-h2}.
 \begin{lemma}[Finite part of the bulk weight]
 \label{lem:dd-finite-part}
 \uses{def:dd-virial-field, def:period}
+\lean{NoEmbeddedEigenvalues.dd_finite_part}
+\leanok
 With $T(s)=S(s/2)$ the period on the level $\{\Psi=s\}$,
 \[
   \int_{\{s>\epsilon\}}F=\frac{8-\epsilon^3}3T(\epsilon)-\int_{\{s>\epsilon\}}s^2,
@@ -535,7 +579,10 @@ $2L(\epsilon/2)=\log(8/\epsilon)+o(1)$.
 
 \begin{lemma}[Existence of the renormalized bulk limit]
 \label{lem:dd-renormalized-bulk}
-\uses{def:dd-virial-densities, def:sobolev-torus, def:reflections, def:cell-arcs}
+\uses{def:dd-virial-densities, def:sobolev-torus, def:reflections, def:cell-arcs,
+ def:dd-value-renormalization}
+\lean{NoEmbeddedEigenvalues.dd_renormalized_bulk}
+\leanok
 Let $u\in H^2(\T^2)$ be even under both separatrix reflections and suppose
 $(Eu)/d\in L^2(\Cell)$. Then $F|Eu|^2$ and
 $\ip{M\nabla u}{\nabla u}$ are absolutely integrable on $\Cell$, and the
@@ -545,6 +592,9 @@ finite limit
             +\tfrac83\sum_P|u(P)|^2\log(1/\epsilon)\right)
 \]
 exists along all positive $\epsilon\to0$, not only along good levels.
+More generally, the same assertion holds with any specified $e$ in place of
+$Eu$, assuming $e/d\in L^2(\Cell)$: this integrability estimate does not use
+an equation relating $e$ to $u$.
 \end{lemma}
 
 \begin{proof}

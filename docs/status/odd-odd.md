@@ -13,8 +13,11 @@ interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/C
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 is assembled from four admitted analytic inputs. Together with bulk coercivity
 this gives sixteen transitive admissions, not an admission-free exclusion.
-All result nodes below the minimal quotient construction now have linked Lean
-statements; the rest of the odd–odd graph still has unstated results.
+All nodes in the recursive dependency closures of the minimal quotient
+construction, `lem:dd-character-virial-limit` and `lem:dd-truncated-picone`
+now have linked Lean statements.
+Other parts of the odd–odd graph still have unstated results; statement markers
+are not proofs.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -55,6 +58,28 @@ the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
 ## Current work: recursive statement pass
+
+The `dd-truncated-picone` dependency closure is now stated too. Its only missing
+result was the shared classical Picone identity, now in
+[Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean), with `sorry` proofs.
+The integrated interface assumes absolute integrability and the outward
+divergence formula for the actual current. It does not supply the weak H²
+extension or center removal in `dd_truncated_picone`; that parent and the
+exclusion assemblies are unchanged. Compatibility review remains deferred
+while the statement pass continues.
+
+[OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) now covers
+the missing weighted-virial interfaces below `dd-character-virial-limit`, including
+the quotient/operator definitions; `Period.lean` states the leading value asymptotic
+separately from sharp remainders. All new theorem proofs are `sorry`; no parent
+assembly or transitive exclusion admission count has changed. The interfaces
+separate weak quotient equations from classical Green/conjugation identities,
+raw local quotients from supplied global data, common exceptional-level sets
+from full bulk limits, and inward from the library's outward normal derivative.
+The deferred compatibility review must pass from supplied data to the raw local
+virial, rescale exceptional levels by `ε = 2h`, and align the pairing subsequence
+with all exceptional sets. This is statement/interface work, not new analytic
+proof work.
 
 `dd_exclusion_domain` now follows in Lean from four explicit inputs:
 `dd_stream_quotient_h2`, `even_h2_dipole_laplacian`,
@@ -126,8 +151,8 @@ than add an admission. For periodic gluing, reuse the rescaled/tensored
 lift still needs an exposed interface. These are Lean interface gaps, not
 extra eigenfunction hypotheses. No analytic
 proofs or parent assemblies have changed. A statement marker is not a proof audit.
-The bundled `def:dd-quotient`, including its operator E, remains unlinked but is
-not a dependency of the stream-H² proposition.
+The bundled `def:dd-quotient`, including classical and weak operator E, is
+linked in `OddOddVirial.lean`; it is not a dependency of the stream-H² proposition.
 The periodic first gain includes cell covering on the full fixed neighbourhood;
 it assumes a global torus relation, not merely a pair on that neighbourhood.
 
@@ -163,8 +188,8 @@ The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³ and
 Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the minimal quotient data; its Lean
-character-wise interface and the analytic inputs below Picone and weighted
-Poincaré still need review. The corrected-boundary constants have explicit rational derivations;
+character-wise interface and its newly stated recursive virial inputs, as well
+as the analytic inputs below Picone and weighted Poincaré, still need review. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 

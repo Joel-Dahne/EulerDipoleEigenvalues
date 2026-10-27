@@ -120,6 +120,9 @@ proof mechanisms. Module names below are relative to
 
 ### Interval boundary forms and sector assembly
 
+- `Picone.lean`: finite-dimensional symmetric-matrix Picone algebra, classical
+  planar differential identities and an integrated identity conditional on
+  integrability and the outward divergence formula for the actual current.
 - `DuBoisReymond.lean`, `IntervalH1.lean`, `IntervalH1Estimates.lean`:
   interval weak calculus, endpoint traces, estimates and vanishing layers.
 - `BoundaryForm.lean`, `WeightedBoundary.lean`, `WeightedBoundaryForm.lean`:
@@ -150,6 +153,10 @@ proof mechanisms. Module names below are relative to
   regularity, actual truncated Picone energies and currents, scalar finite
   parts and their cancellation, boundary-form identification, and the
   analytic interfaces consumed by odd–odd exclusion.
+- `OddOddVirial.lean`: classical and weak quotient operators, weighted virial
+  algebra and Green flux, raw-quotient annular/truncated identities, even H²
+  gradient traces and full renormalized bulk limits. Separates inward virial
+  normals from the shared outward derivative convention.
 - `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.

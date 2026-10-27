@@ -11,9 +11,10 @@ eight explicit admitted analytic inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. Quotient existence is assembled from
 four analytic inputs; bulk coercivity is the remaining outer admission.
 The mixed exclusion remains admitted. The recursive statement-only pass now
-covers the result nodes below the minimal odd–odd quotient construction;
-new proofs remain `sorry`. Next is compatibility/statement review, including
-remaining quotient/operator notation, not new analytic proofs. The assembly
+covers the nodes below the minimal odd–odd quotient construction, the
+character-wise virial limit and truncated Picone; new proofs remain `sorry`.
+The statement pass continues; compatibility review, including local/global
+quotient and exceptional-level bridges, and analytic proofs remain deferred. The assembly
 avoids a bundled stronger regularity prerequisite. See the
 [next-session plan](docs/status/shared.md#next-session).
 

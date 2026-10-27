@@ -54,7 +54,16 @@ weights and local versus global regularity.
    the quotient branch's result nodes. The stream-H² compatibility review
    identifies affine weak-jet/radial-L² pullback, domain-a.e. congruence and
    periodic gluing as the next interface bridges, before choosing proof work.
-   The remaining bundled quotient/operator E definition is off this target's route.
+   `OddOddVirial.lean` now states the entire missing weighted-virial layer below
+   `dd-character-virial-limit`, including the bundled quotient/operator E definition;
+   `Period.lean` separately states the leading value asymptotic. The new proofs
+   remain `sorry`. Next review the raw/supplied quotient bridge, inward normal
+   convention, `ε = 2h` exceptional-level rescaling and common pairing subsequence.
+   The `dd-truncated-picone` dependency closure is also stated: `Picone.lean`
+   supplies the shared classical identities with `sorry` proofs. Its integrated
+   version consumes the outward divergence formula and integrability, not a
+   Sobolev extension or singular-point removal. Continue the statement pass;
+   the compatibility review and analytic proofs remain deferred.
    The three corrected-boundary estimates and eight Picone inputs remain
    separate work.
    Bulk coercivity and its certificate remain deferred.
@@ -127,8 +136,8 @@ weights and local versus global regularity.
   gains; they are stated in `ScalarDivision.lean` and still need Lean proofs.
   Smoothness and strict decrease were already proved in `Period.lean`.
   The odd–odd finite parts now use only
-  the leading value asymptotic, with a direct blueprint derivation from the
-  defining integral. The elliptic identity and sharp remainders are off all
+  the leading value asymptotic, stated separately in `Period.lean`, with a direct
+  blueprint derivation from the defining integral. The elliptic identity and sharp remainders are off all
   sector routes; they remain unproved in Lean. Sharp remainders also need a
   quantified mathematical proof or precise reference; differentiating a
   value O-term is not sufficient.

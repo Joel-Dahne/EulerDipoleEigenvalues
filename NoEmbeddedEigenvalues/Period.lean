@@ -406,6 +406,19 @@ theorem orbitPeriod_eq_ellipticK {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
     orbitPeriod h = 4 * ∫ θ in (0 : ℝ)..π / 2, 1 / √(1 - (1 - h ^ 2) * sin θ ^ 2) := by
   sorry
 
+open Filter Topology in
+/-- Leading value asymptotic from the defining integral, without a sharp remainder
+    or any claim about its derivative (`lem:period-leading-asymptotic`). -/
+theorem eighthPeriod_leading_asymptotic :
+    Tendsto (fun h ↦ eighthPeriod h - log (4 / h) / 2) (𝓝[>] 0) (𝓝 0) := by
+  sorry
+
+open Filter Topology in
+/-- The corresponding leading value asymptotic for the full orbit period. -/
+theorem orbitPeriod_leading_asymptotic :
+    Tendsto (fun h ↦ orbitPeriod h - 4 * log (4 / h)) (𝓝[>] 0) (𝓝 0) := by
+  sorry
+
 /-- `L(h) = ½ log(4/h) + O(h² log(1/h))` and `L'(h) = -1/(2h) + O(h log(1/h))` as `h → 0`. -/
 theorem eighthPeriod_asymptotics : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Set.Ioo 0 h₀,
     |eighthPeriod h - log (4 / h) / 2| ≤ C * h ^ 2 * log (1 / h) ∧

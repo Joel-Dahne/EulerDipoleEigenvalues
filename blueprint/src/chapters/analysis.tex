@@ -2327,12 +2327,22 @@ the manuscript's ``even cutoff'', and there is no lower-order term.
 
 \begin{lemma}[Picone identity]
 \label{lem:picone}
-Let $G$ be a symmetric matrix field and $g>0$ smooth. Then pointwise
+\lean{NoEmbeddedEigenvalues.picone_algebra, NoEmbeddedEigenvalues.picone_identity,
+ NoEmbeddedEigenvalues.picone_divergence, NoEmbeddedEigenvalues.picone_integral}
+\leanok
+Let $G$ be a real symmetric matrix field, $g>0$ real and $z$ complex,
+with $g,z$ differentiable. Then pointwise
 \[
   G\nabla z\cdot\nabla\bar z
   =g^2\,G\nabla(z/g)\cdot\nabla(\bar z/g)+G\nabla g\cdot\nabla(|z|^2/g).
 \]
-Consequently, after integration by parts on a domain $U$,
+For the integrated version, let $U$ be an open planar domain,
+$G\in C^1(U)$, $g\in C^2(U)$ and $z\in C^1(U)$.
+Put $J=(|z|^2/g)G\nabla g$. Assume the volume densities below,
+$\Div J$ and the boundary current are absolutely integrable, and supply
+the outward divergence formula
+$\int_U\Div J=\int_{\partial U}\nu\cdot J$.
+Then
 \[
   \int_U G\nabla z\cdot\nabla\bar z-V|z|^2
   =\int_U g^2G\nabla(z/g)\cdot\nabla(\bar z/g)
@@ -2343,4 +2353,9 @@ Consequently, after integration by parts on a domain $U$,
 
 \begin{proof}
 Expand $\nabla(z/g)=(\nabla z)/g-z\nabla g/g^2$.
+The last pointwise term is
+$\Div J-(\Div(G\nabla g))|z|^2/g$; integrate this identity using
+the supplied divergence formula. Positivity of $G$ is not needed.
+The divergence formula, any Sobolev extension, and removal of singular
+points are separate analytic justifications, not consequences of this algebra.
 \end{proof}
