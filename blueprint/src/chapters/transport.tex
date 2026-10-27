@@ -978,9 +978,23 @@ weight by $\Lambda(h)$ on both sides, and sum. No derivative of $\Lambda$
 and no new weighted Hardy inequality are required.
 \end{proof}
 
+\begin{definition}[Cell collars and recentered quarter profiles]
+\label{def:cell-separatrix-collar}
+\uses{def:cells, def:dipole, def:period, def:reflections, lem:period-orbit}
+\lean{NoEmbeddedEigenvalues.cellSeparatrixStrip, NoEmbeddedEigenvalues.quarterOrbitStrip,
+ NoEmbeddedEigenvalues.recenteredQuarterMap}
+\leanok
+Put $V_\epsilon=\{p\in\Cell:0<\Psi(p)<\epsilon\}$,
+$Q_{h_0}=\{(h,t):0<h<h_0,\ -L(h)<t<L(h)\}$, and
+$\Gamma_k(h,t)=R^k\gamma_h(t)$ for $k=0,1,2,3$.
+Thus $v_k=v\circ\Gamma_k$ denotes the separately recentered quarter profile.
+\end{definition}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.transport_first_gain_zero}
+\leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square. If the continuous representative of $f$ vanishes
 at its four corners, then $v/d\in L^2(\Cell)$.
@@ -1212,15 +1226,22 @@ control both endpoint terms.
 
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
-\uses{def:transport-pair, def:cell-arcs, def:sobolev-local}
+\uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.weighted_transport_h1}
+\leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
-the closed cell square. If $f/d^2,\nabla f/d^{3/2}\in L^2$ near its corners,
-then $v/d^2\in L^2(\Cell)$ and, for some $\epsilon_0>0$,
-$v\in H^1(\{p\in\Cell:0<\Psi(p)<\epsilon_0\})$.
-On each recentered quarter patch over a sufficiently small level interval,
-$d\,\partial_hv$ and $d^{-1}\partial_tv$ belong to $L^2(dh\,dt)$.
+the closed cell square. Specify the weak Cartesian derivatives of $f$ on
+that neighbourhood and suppose $f/d^2,\nabla f/d^{3/2}\in L^2(\Cell)$.
+Then $v/d^2\in L^2(\Cell)$ and, for some $0<h_0<1/2$,
+$v\in H^1(V_{2h_0})$.
+For every $k$, the profile $v_k$ has weak derivatives on $Q_{h_0}$ with
+$(d\circ\Gamma_k)\partial_hv_k$ and
+$(d\circ\Gamma_k)^{-1}\partial_tv_k$ in $L^2(dh\,dt)$.
 No elliptic relation $\Delta f=v$, reflection parity, zero forcing
-trace or zero midpoint value is required.
+trace or zero midpoint value is required. The weighted conditions need only
+be checked near the corners: away from them, global cell integrability
+follows from $f\in H^2$ on the given neighbourhood.
 \end{lemma}
 
 \begin{proof}
@@ -1277,11 +1298,15 @@ Sum the four character components. No assertion of zero edge trace is made.
 
 \begin{lemma}[Zero edge trace from zero forcing]
 \label{lem:transport-zero-edge-trace}
-\uses{def:transport-pair, def:cell-arcs, def:sobolev-local}
-Suppose a transport pair is defined near the closed cell, with
-$v\in H^1$ on a cellwise separatrix neighbourhood and $v/d\in L^2$ there.
-If the continuous forcing $f$ vanishes on a regular edge, the cellwise
-Sobolev trace of $v$ on that edge is zero.
+\uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
+ def:cell-separatrix-collar, def:cell-edge-trace}
+\lean{NoEmbeddedEigenvalues.transport_zero_edge_trace}
+\leanok
+Suppose a transport pair is defined on an orbit neighbourhood containing
+$\overline\Cell$. Let $\epsilon>0$, $v\in H^1(V_\epsilon)$ and
+$v/d\in L^2(V_\epsilon)$. If the continuous forcing representative vanishes
+on one whole open cell edge between its two saddle endpoints, the canonical
+cellwise trace of $v$ on that edge is zero.
 \end{lemma}
 
 \begin{proof}
@@ -1320,6 +1345,14 @@ $dt\asymp dr/r$ near that endpoint, so $Tv$ is square integrable on an
 infinite time half-line. Because $\lambda$ is real, the modulus of
 $ce^{i\lambda t}$ is constant; hence $c=0$.
 \end{proof}
+
+\begin{remark}[Digest note: a whole edge, not just a regular segment]
+The zero-trace statement requires zero forcing along the whole open edge.
+On a proper segment the homogeneous boundary mode can be nonzero;
+propagating its constant modulus to an infinite-time saddle end is what
+forces its coefficient to vanish. Neither raw line values of $v$ nor
+a pointwise value at the corner enter the statement.
+\end{remark}
 
 \begin{remark}[Digest note: weighted forcing replaces the generic $H^1$ gain]
 The subinterval Cauchy--Schwarz estimate uses $\int d\,dt<\infty$, so the

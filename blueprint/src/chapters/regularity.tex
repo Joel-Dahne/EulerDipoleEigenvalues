@@ -12,21 +12,40 @@ In this chapter $d$ is distance to the saddle set and $r$ distance to a fixed sa
 
 \section{Weighted elliptic estimates at a saddle}
 
+\begin{definition}[Cylinder parity and harmonic jets]
+\label{def:cylinder-inverse-data}
+\uses{def:local-plane-geometry, def:local-weak-jets, def:sectors}
+\lean{NoEmbeddedEigenvalues.HasAxisParityOn, NoEmbeddedEigenvalues.AllowedSaddleDegree,
+ NoEmbeddedEigenvalues.classicalComplexJet, NoEmbeddedEigenvalues.IsPlaneHarmonicOn}
+\leanok
+Prescribed axis parity means $u$ has the selected reflection signs a.e.
+Allowed angular degrees are $0,2,4,\ldots$ for even--even,
+$2,4,\ldots$ for odd--odd, and $1,3,5,\ldots$ for either mixed parity.
+A smooth plane harmonic function has all ordered classical coordinate
+derivatives and satisfies $\partial_u^2h+\partial_v^2h=0$.
+Its degree-$m$ jet means its order-$m$ derivatives at zero.
+\end{definition}
+
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
-\uses{def:sobolev-local}
-Let $u\in H^2$ on a disk about a saddle, with a prescribed reflection parity
-in two orthonormal separatrix coordinates, and $\Delta u=F$. Let $a>1$
+\uses{def:sobolev-local, def:local-weak-jets, def:cylinder-inverse-data}
+\lean{NoEmbeddedEigenvalues.cylinder_inverse}
+\leanok
+Work on $D_\rho(0)$ in orthonormal saddle coordinates. Let $u\in H^2$
+with a specified second weak jet, prescribed axis parity and weak Laplacian
+$F$. Let $a>1$
 avoid the nonnegative angular frequencies allowed by the parity. If
 $r^{1-a}F\in L^2(r\,dr\,d\theta)$, equivalently
 $r^{2-a}F\in L^2(dr/r\,d\theta)$, then on a smaller disk
-$u=u_0+\mathfrak h$, where $\mathfrak h$ is harmonic with Taylor series
-containing only the allowed degrees, and
+$u=u_0+\mathfrak h$ a.e., where $u_0\in H^2$ and
+$\mathfrak h$ is smooth harmonic, both with the prescribed parity.
+All Taylor jets of $\mathfrak h$ of forbidden degree vanish, and
 \[
   \int\Big(\frac{|u_0|^2}{r^{2a+2}}+\frac{|\nabla u_0|^2}{r^{2a}}
            +\frac{|D^2u_0|^2}{r^{2a-2}}\Big)\,dx\,dy<\infty .
 \]
-Moreover $u_0$ has a continuous representative with $|u_0|\le Cr^a$
+The specified weak jet of $u_0$ has Laplacian $F$ a.e.
+Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 (manuscript \texttt{(eq:subcritical-elliptic-norm)}).
 \end{lemma}
 
@@ -64,8 +83,16 @@ The same estimates on the first and second derivatives show
 $\eta_\epsilon u_0\to u_0$ in physical $H^2$ on the smaller disk; here
 $a>1$ is essential. Hence $\Delta u_0=F$ distributionally there.
 The difference $u-u_0$ is weakly harmonic, so Weyl's lemma makes it smooth
-and harmonic across the origin. Its parity restricts the Taylor degrees.
+and harmonic across the origin. Its parity kills all forbidden-degree jets.
 \end{proof}
+
+\begin{remark}[Digest note: finite Taylor data suffice for the cylinder remainder]
+The odd--odd bootstrap only needs finite Taylor remainders of the smooth harmonic
+part. The subcritical step uses its vanishing order two; the $a=3$ step
+subtracts its quadratic jet and uses vanishing through order three.
+Convergence of a full harmonic power series is not an input. The physical
+forcing weight is $F/r^{a-1}$, equivalent to $r^{2-a}F$ in cylinder measure.
+\end{remark}
 
 \section{Saddle estimates}
 
@@ -129,8 +156,8 @@ Fix $0<\delta<1$ and apply Lemma~\ref{lem:cylinder-inverse} with
 $a=2-\delta$. Its physical forcing hypothesis is
 $r^{\delta-1}\omega\in L^2$, supplied by the first gain. Odd--odd reflection
 parity permits only angular degrees $2,4,\ldots$, all strictly larger than
-$a$. Every term of the harmonic remainder therefore has the same finite
-weighted norm as $u_0$. Consequently
+$a$. Its constant and linear jets vanish, so a second-order Taylor
+estimate gives the same finite weighted norms as $u_0$. Consequently
 \[
  |\psi|\le Cr^{2-\delta},\qquad
  \nabla\psi/r^{2-\delta}\in L^2
@@ -144,8 +171,8 @@ $H^2$ regularity. This gives $\omega/d^2\in L^2$.
 Now apply the cylinder inverse with $a=3$. Its physical hypothesis is
 $\omega/r^2\in L^2$, equivalently $r^{-1}\omega\in L^2(dr/r\,d\theta)$,
 and $3$ avoids all permitted angular degrees. Subtract the degree-two term
-$q$ of the harmonic remainder. The remaining harmonic terms have degree
-at least four, so they have finite weighted norm for $a=3$. The permitted
+$q$ of the harmonic remainder. The remaining smooth harmonic function has zero jets through order three,
+so Taylor estimates through order two give the finite weighted norm for $a=3$. The permitted
 quadratic is a multiple of $uv$, equivalently $Q_{P,a}$: the factor
 $\cos P_x=\pm1$ makes this normalization nondegenerate.
 If two quadratics worked, their difference would
@@ -214,9 +241,8 @@ on the fixed lines, which are exactly the separatrix.
 
 \begin{definition}[Zero canonical trace on separatrix lines]
 \label{def:zero-separatrix-trace}
-\uses{def:h1-interval, def:cells, lem:trace-acl, lem:trace-l2}
-\lean{NoEmbeddedEigenvalues.diagonalTraceChart,
- NoEmbeddedEigenvalues.HasZeroSeparatrixTraceOn}
+\uses{def:h1-interval, def:diagonal-trace-chart, lem:trace-acl, lem:trace-l2}
+\lean{NoEmbeddedEigenvalues.HasZeroSeparatrixTraceOn}
 \leanok
 Use a diagonal chart whose first coordinate is tangential and second
 coordinate normal. For every compact chart rectangle inside $U$ and every

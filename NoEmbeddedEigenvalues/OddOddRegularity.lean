@@ -1,4 +1,7 @@
 import NoEmbeddedEigenvalues.QuotientLocal
+import NoEmbeddedEigenvalues.WeightedTraces
+import NoEmbeddedEigenvalues.CylinderInverse
+import NoEmbeddedEigenvalues.SaddleNormalForm
 
 /-!
 # Odd–odd regularity interfaces below the quotient domain
@@ -18,26 +21,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
-
-/-- The quadratic Taylor polynomial of `a * Ψ` at a saddle. -/
-def saddleQuadratic (c : ℝ × ℝ) (a : ℂ) (p : ℝ × ℝ) : ℂ :=
-  a * (Real.cos c.1 : ℂ) / 2 * (((p.2 - c.2) ^ 2 - (p.1 - c.1) ^ 2 : ℝ) : ℂ)
-
-/-- A diagonal chart with tangential coordinate first and normal coordinate second. -/
-def diagonalTraceChart (j : Fin 2) (q : ℝ × ℝ) : ℝ × ℝ :=
-  if j = 0 then diagInv (q.2, q.1) else diagInv q
-
-/-- Zero Sobolev trace on separatrix lines inside U. The normal trace may be at an
-endpoint or inside a transverse rectangle. The compact rectangle is contained in U. -/
-def HasZeroSeparatrixTraceOn (U : Set (ℝ × ℝ)) (F : ℝ × ℝ → ℂ) : Prop :=
-  ∀ (j : Fin 2) (l r a b t : ℝ), l < r → a < b → t ∈ Icc a b → Real.cos t = 0 →
-    diagonalTraceChart j '' (Icc l r ×ˢ Icc a b) ⊆ U →
-    ∃ G D : ℝ × ℝ → ℂ,
-      G =ᵐ[volume.restrict (Ioo l r ×ˢ Ioo a b)] (fun q ↦ F (diagonalTraceChart j q)) ∧
-      MemLp G 2 (volume.restrict (Ioo l r ×ˢ Ioo a b)) ∧
-      MemLp D 2 (volume.restrict (Ioo l r ×ˢ Ioo a b)) ∧
-      HasACLSectionsOn (Ioo l r) (Ioo a b) G D ∧
-      ∀ᵐ s ∂(volume.restrict (Ioo l r)), aclTrace a b G D t s = 0
 
 /-- First eigenfunction saddle gain (`prop:saddle-first-gain`), expressed on the
 fixed bounded lift neighbourhood rather than taking a global norm on ℝ². -/

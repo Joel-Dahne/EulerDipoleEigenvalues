@@ -39,6 +39,10 @@ import NoEmbeddedEigenvalues.CorrectedBoundaryForm
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddQuotient
 import NoEmbeddedEigenvalues.OddOddRegularity
+import NoEmbeddedEigenvalues.LocalJets
+import NoEmbeddedEigenvalues.CylinderInverse
+import NoEmbeddedEigenvalues.WeightedTraces
+import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.SaddleNormalForm

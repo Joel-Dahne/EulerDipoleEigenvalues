@@ -1094,6 +1094,7 @@ $p+2\pi n\in U$, so the sum reduces to $F(p)$. Injectivity is used only here.
 \label{def:local-weak-jets}
 \uses{def:sobolev-local, def:local-plane-geometry}
 \lean{NoEmbeddedEigenvalues.HasWeakJetOn, NoEmbeddedEigenvalues.RadialJetLp,
+ NoEmbeddedEigenvalues.RadialJetRpowLp,
  NoEmbeddedEigenvalues.radialJetEnergy, NoEmbeddedEigenvalues.weakJetEnergy}
 \leanok
 Use the Euclidean disks and axis notation of
@@ -1106,7 +1107,9 @@ $D_w/r_c^s\in L^2(U)$ for every word of length $k$, and set
  E_{k,s}(D;U,c)=\sum_{|w|=k}\int_U|D_w/r_c^s|^2,\qquad
  H_n(D;U)=\sum_{k=0}^n E_{k,0}(D;U,0).
 \]
-Every use of an energy below includes its square-integrability hypothesis.
+For real exponents, $\mathcal R_{k,s}$ uses the same integrability
+condition with the real power $r_c^s$; the displayed energies use integer
+exponents. Every use of an energy includes its square-integrability hypothesis.
 The axis reflection and symmetric rectangle exchange the roles of the
 coordinates when the normal index is $1$ instead of $0$.
 \end{definition}
@@ -1474,9 +1477,67 @@ The other logarithm follows by interchanging the coordinates; the constant
 term is the $L^2$ norm. No finite-$p$ Sobolev embedding is used.
 \end{proof}
 
+\begin{definition}[Canonical transverse chart trace]
+\label{def:canonical-transverse-trace}
+\uses{def:h1-interval, lem:h1-interval-endpoints, lem:acl-slicing, lem:trace-l2}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace}
+\leanok
+For $l<r$, $a<b$ and $t\in[a,b]$, a trace $T$ of $F$ in a chart $\Xi$
+means that on $(l,r)\times(a,b)$ there are a measurable ACL representative
+$G=F\circ\Xi$ a.e. and its transverse derivative $D$, both in $L^2$, such that
+$T(s)=\operatorname{Tr}_tG(s)$ a.e. Here $\operatorname{Tr}_t$ is the
+canonical interval $H^1$ extension, including endpoints.
+\end{definition}
+
+\begin{definition}[Diagonal trace chart]
+\label{def:diagonal-trace-chart}
+\uses{def:cells}
+\lean{NoEmbeddedEigenvalues.diagonalTraceChart}
+\leanok
+Use tangential coordinate first and normal coordinate second:
+$\Xi_0(s,t)=\operatorname{diagInv}(t,s)$ and
+$\Xi_1(s,t)=\operatorname{diagInv}(s,t)$.
+\end{definition}
+
+\begin{definition}[Corner rays and matching crossing traces]
+\label{def:corner-crossing-traces}
+\uses{def:canonical-transverse-trace, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.polarTraceChart, NoEmbeddedEigenvalues.HasRadialTrace,
+ NoEmbeddedEigenvalues.quadrantDisk, NoEmbeddedEigenvalues.axisTraceChart,
+ NoEmbeddedEigenvalues.HasMatchingAxisTraces}
+\leanok
+The polar trace chart is $(r,\theta)\mapsto(r\cos\theta,r\sin\theta)$.
+A radial trace at $\theta\in[0,\pi/2]$ is a canonical transverse trace
+on every $(a,b)\times(0,\pi/2)$ with $0<a<b<\rho$.
+The four signed quadrants of $D_\rho(0)$ use a prescribed positive or
+negative sign for each coordinate.
+
+For crossing traces use the Cartesian chart with the selected coordinate
+normal and the other tangential. On every symmetric normal rectangle
+compactly contained in the disk, whose tangential interval avoids zero,
+require a common canonical trace from its two open normal halves.
+This defines matching traces on the open half-axes only, not a trace at
+the crossing or an ACL representative across an axis.
+\end{definition}
+
+\begin{definition}[Canonical cell-edge trace]
+\label{def:cell-edge-trace}
+\uses{def:canonical-transverse-trace, def:diagonal-trace-chart}
+\lean{NoEmbeddedEigenvalues.cellEdgeNormal, NoEmbeddedEigenvalues.HasCellEdgeTrace}
+\leanok
+The chosen normal edge coordinate is $t_*=\pi/2$ or $-\pi/2$.
+A trace from a cellwise region $V$ is a canonical transverse trace
+in every diagonal rectangle with compact tangential interval in
+$(-\pi/2,\pi/2)$, with normal endpoint $t_*$, and with its open rectangle
+contained in $V$. It is taken from below for $t_*=\pi/2$ and from above
+for $t_*=-\pi/2$.
+\end{definition}
+
 \begin{lemma}[Weighted trace at a corner]
 \label{lem:weighted-corner-trace}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:local-weak-jets, def:corner-crossing-traces}
+\lean{NoEmbeddedEigenvalues.weighted_corner_trace}
+\leanok
 Let $Q=\{0<r<r_0,\ 0<\theta<\pi/2\}$ be a quadrant of a disk, with
 $r_0>0$. If $u\in H^1(Q)$ and $u/r\in L^2(Q)$, its traces on the two
 straight sides satisfy
@@ -1485,7 +1546,9 @@ straight sides satisfy
        |u(r,\theta_0)|^2\,\frac{dr}{r}
  \le C\int_Q\left(\frac{|u|^2}{r^2}+|\nabla u|^2\right)\,dx\,dy ,
 \]
-where $C$ is independent of $r_0$. The same bound holds for the
+The traces are the canonical radial traces of
+Definition~\ref{def:corner-crossing-traces} and belong to $L^2(dr/r)$.
+The constant $C$ is independent of $r_0$. The same bound holds for the
 single-ray integral at any fixed $\theta_0\in[0,\pi/2]$, with a
 constant independent of $\theta_0$.
 \end{lemma}
@@ -1505,11 +1568,13 @@ endpoints, or at any fixed angular value, give the asserted integrals.
 
 \begin{lemma}[$H^1$ gluing at crossing edges]
 \label{lem:h1-crossing-gluing}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:corner-crossing-traces}
+\lean{NoEmbeddedEigenvalues.h1_crossing_gluing}
+\leanok
 Let $D$ be a disk centred at the origin, split into four quadrants by two
 orthogonal axes, and let $u\in L^2(D)$. Suppose its restrictions to the
-quadrants are in $H^1$, their traces match on each open half-axis, and
-$u/r\in L^2(D)$, where $r$ is distance to the origin. Then $u\in H^1(D)$,
+quadrants are in $H^1$ with specified weak gradients, their canonical
+one-sided traces match on each open half-axis, and $u/r\in L^2(D)$, where $r$ is distance to the origin. Then $u\in H^1(D)$,
 with weak gradient given by the quadrant gradients.
 \end{lemma}
 

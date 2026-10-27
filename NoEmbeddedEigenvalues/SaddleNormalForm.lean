@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.QuotientLocal
-import NoEmbeddedEigenvalues.OddOddRegularity
+import NoEmbeddedEigenvalues.LocalJets
+import NoEmbeddedEigenvalues.DipoleCalculus
+import NoEmbeddedEigenvalues.OrbitCoordinates
+import NoEmbeddedEigenvalues.Sectors
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
 
 /-!
@@ -20,6 +22,10 @@ namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
 open scoped ContDiff
+
+/-- The quadratic Taylor polynomial of `a * Ψ` at a saddle. -/
+def saddleQuadratic (c : ℝ × ℝ) (a : ℂ) (p : ℝ × ℝ) : ℂ :=
+  a * (Real.cos c.1 : ℂ) / 2 * (((p.2 - c.2) ^ 2 - (p.1 - c.1) ^ 2 : ℝ) : ℂ)
 
 /-- The affine saddle chart, with signs normalized so the leading dipole is uv. -/
 def saddleOrthoChart (P q : ℝ × ℝ) : ℝ × ℝ :=

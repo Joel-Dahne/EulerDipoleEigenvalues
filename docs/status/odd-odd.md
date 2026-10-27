@@ -69,7 +69,8 @@ transport without closedness of the global transport operator.
 The first recursive layer is now stated, not proved, in
 [QuotientLocal.lean](../../NoEmbeddedEigenvalues/QuotientLocal.lean) and
 [OddOddRegularity.lean](../../NoEmbeddedEigenvalues/OddOddRegularity.lean).
-It supplies specified weak jets/radial energies, local division and removal,
+Using the shared definitions in `LocalJets.lean` and `WeightedTraces.lean`,
+it supplies local division and removal,
 coordinate Hardy, elliptic regularity/dyadic bounds, local invariant division,
 the first two transport gains, and the sector saddle/separatrix/gradient inputs.
 Canonical transverse interval H¹ extensions encode zero traces.
@@ -83,14 +84,28 @@ Taylor bounds. The chart quadratic has the same coefficient as the Cartesian
 normalization. Angular Hardy and linearized-Hamiltonian claims are separated
 from this route; existing primitive Hardy and period smoothness are reused.
 
-Next is the weighted regularity batch: cylinder inversion, corner traces,
-zero-edge transport and H¹ gluing. Then state logarithmic forcing/numerators
-and logarithmically weighted phase-cell division. Keep these batches separate
-and do not start proofs during the statement pass. Human review
-of the new hypotheses and derivative/trace packaging is still needed.
+The weighted regularity batch is now stated in
+[CylinderInverse.lean](../../NoEmbeddedEigenvalues/CylinderInverse.lean),
+[WeightedTraces.lean](../../NoEmbeddedEigenvalues/WeightedTraces.lean) and
+[WeightedTransport.lean](../../NoEmbeddedEigenvalues/WeightedTransport.lean).
+The cylinder input uses physical-area weight `F/r^(a-1)`; finite harmonic
+Taylor jets suffice for the bootstrap. Trace matching uses separate one-sided
+ACL data, not an already-glued representative. Zero forcing is required on a
+whole edge. The weighted forcing remains `f/d², ∇f/d^(3/2) ∈ L²`, with no
+elliptic/parity/midpoint assumptions. Quarter derivatives are weak derivatives
+on separate patches; the physical collar cutoff is `Ψ < 2h₀`.
+
+Next finish quarter endpoint/resonant-zero and weighted numerator interfaces,
+then logarithmic multiplication, forcing/numerators and weighted phase-cell
+division. Do not start proofs during this statement pass. Human review of
+hypotheses and derivative/trace packaging is still needed.
 The periodic first gain includes cell covering on the full fixed neighbourhood;
 it assumes a global torus relation, not merely a pair on that neighbourhood.
 
+Shared jet/trace definitions and the normalized quadratic have moved unchanged
+below the parent interfaces. `SaddleNormalForm.lean` no longer imports
+`OddOddRegularity.lean`, so the saddle bootstrap can use its geometry without
+an import cycle.
 Parent admissions have not been replaced by assemblies: the blueprint records
 the intended recursive dependencies, whereas the Lean sorry audit still stops
 at the four existing quotient inputs (sixteen for the full exclusion).

@@ -47,10 +47,12 @@ weights and local versus global regularity.
    `OddOddQuotient.lean` from four admitted inputs. The current pass is
    statements only: `QuotientLocal.lean` and `OddOddRegularity.lean` state the
    next local/sector layer with `sorry`. The scalar/geometry batch is now
-   stated in `ScalarDivision.lean` and `SaddleNormalForm.lean`. Next take
-   cylinder inversion and weighted transport/gluing as one batch, then the
-   logarithmic phase-cell and numerator estimates, before attempting proofs. The three corrected-boundary estimates and
-   eight Picone inputs remain separate work.
+   stated in `ScalarDivision.lean` and `SaddleNormalForm.lean`; cylinder
+   inversion and weighted transport/gluing are stated in `CylinderInverse.lean`,
+   `WeightedTraces.lean` and `WeightedTransport.lean`. Next finish the quarter
+   endpoint/resonant-zero, weighted numerator and logarithmic interfaces before
+   attempting proofs. The three corrected-boundary estimates and eight Picone
+   inputs remain separate work.
    Bulk coercivity and its certificate remain deferred.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
@@ -59,8 +61,12 @@ weights and local versus global regularity.
    needed for logarithmic summation, canonical interval traces and compatibility
    of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the
    continuous forcing representative, not raw values on exceptional orbits.
-   Angular Hardy and the mixed-sector
-   saddle linearization are not prerequisites of the odd–odd quotient route.
+   Check real cylinder exponents, finite harmonic jets, one-sided trace
+   matching and the whole-edge forcing hypothesis. Shared jet/trace/quadratic
+   data now sit below their parent interfaces; saddle geometry no longer
+   imports eigenfunction regularity. Check the sector-layer import ordering
+   again when adding the logarithmic statements.
+   Angular Hardy and mixed saddle linearization are off the odd–odd route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and
    `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE
    character helpers already allow complex characters; check resonant phases
@@ -86,13 +92,15 @@ weights and local versus global regularity.
   H¹ gluing has an explicit cutoff proof. The first two transport gains and
   the sector saddle/separatrix/gradient interfaces are now stated with `sorry`.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
-  Cylinder inversion, the weighted H¹/gluing layer and logarithmic numerator
+  Cylinder inversion and the weighted H¹/corner/edge/gluing layer are now
+  stated too. Quarter endpoint/resonant-zero and weighted/logarithmic numerator
   infrastructure still need complete statement links. No new analytic proofs
   were supplied in the recursive statement pass.
   The transport gains cover all four characters without Melnikov;
   implemented Melnikov/pairing results still only accept ±1.
-  Local elliptic regularity, corner traces/gluing and interval Hardy inputs
-  still need Lean proofs. Elliptic-center regularity is not a prerequisite.
+  Local elliptic regularity, cylinder inversion, corner traces/gluing and
+  interval Hardy inputs still need Lean proofs. Elliptic-center regularity
+  is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   off the current sector routes. Odd–odd logarithmic multiplication now uses
   coordinate slicing instead. This optional Lean infrastructure remains
