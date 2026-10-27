@@ -64,8 +64,10 @@ weights and local versus global regularity.
    version consumes the outward divergence formula and integrability, not a
    Sobolev extension or singular-point removal. Continue the statement pass;
    the compatibility review and analytic proofs remain deferred.
-   The three corrected-boundary estimates and eight Picone inputs remain
-   separate work.
+   Recursive statement coverage also includes the three corrected-boundary
+   estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
+   logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
+   The estimates themselves and eight Picone inputs remain analytic proof work.
    Bulk coercivity and its certificate remain deferred.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,

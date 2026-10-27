@@ -1486,7 +1486,10 @@ $u'\in L^2$. Its endpoint traces therefore vanish, as do those of $g_u$.
 
 \begin{lemma}[Logarithmic endpoint moments]
 \label{lem:corrected-log-moments}
-For $a>0$ and $j=0,1,2$, the nonnegative integrand is integrable and
+\lean{NoEmbeddedEigenvalues.logarithmic_endpoint_moment}
+\leanok
+For $a>0$ and every integer $j\ge0$ (in particular $j=0,1,2$),
+the nonnegative integrand is integrable and
 \[
  \int_0^a d^j\log(a/d)\,dd=\frac{a^{j+1}}{(j+1)^2}.
 \]

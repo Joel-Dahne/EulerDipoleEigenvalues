@@ -14,8 +14,8 @@ Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQu
 is assembled from four admitted analytic inputs. Together with bulk coercivity
 this gives sixteen transitive admissions, not an admission-free exclusion.
 All nodes in the recursive dependency closures of the minimal quotient
-construction, `lem:dd-character-virial-limit` and `lem:dd-truncated-picone`
-now have linked Lean statements.
+construction, `lem:dd-character-virial-limit`, `lem:dd-truncated-picone`
+and the three corrected-boundary interval estimates now have linked Lean statements.
 Other parts of the odd–odd graph still have unstated results; statement markers
 are not proofs.
 
@@ -58,6 +58,14 @@ the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
 ## Current work: recursive statement pass
+
+The dependency closures of zero-trace forcing energy, the midpoint bound and
+the negative affine correction are now stated. The sum-of-squares nodes reuse
+existing proved classical/weighted interfaces; no density argument or duplicate
+admission is introduced. `CorrectedBoundaryForm.lean` now states the nonnegative,
+integrable logarithmic endpoint moments for all natural powers, with `sorry`.
+The three interval estimates themselves remain admitted; no parent assembly or
+transitive exclusion admission count has changed.
 
 The `dd-truncated-picone` dependency closure is now stated too. Its only missing
 result was the shared classical Picone identity, now in

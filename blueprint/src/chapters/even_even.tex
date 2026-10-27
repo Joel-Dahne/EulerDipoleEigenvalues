@@ -988,19 +988,24 @@ cross term vanishes in either case.
 
 \begin{lemma}[Sum of squares, smooth case]
 \label{lem:trace-sos-smooth}
-\uses{lem:boundary-form-xi}
-For $F\in C_c^\infty(-1,1)$ and real $\lambda$,
+\uses{lem:boundary-form-xi, def:boundary-jet}
+\lean{NoEmbeddedEigenvalues.BoundaryJet.sum_of_squares}
+\leanok
+For a classical boundary jet $(F,D,E)$ with $F(-1)=F(1)=0$ and real $\lambda$,
 \[
-  \mathcal F_\lambda(F)=\frac12\int_{-1}^1|wF''-\xi F'+F-i\lambda F'|^2\,d\xi
-  +\frac12\int_{-1}^1|F'|^2\,d\xi
+  \mathcal F_\lambda(F)=\frac12\int_{-1}^1|wE-\xi D+F-i\lambda D|^2\,d\xi
+  +\frac12\int_{-1}^1|D|^2\,d\xi.
 \]
+In particular this applies to $F\in C_c^\infty(-1,1)$ with $D=F'$ and $E=F''$
 (manuscript \texttt{(ee:trace-sos)}).
 \end{lemma}
 
 \begin{proof}
 \uses{lem:trace-completion-classical}
-Extend $F$ by zero to $\R$ and apply the classical completion to
-$(F,F',F'')$. The endpoint correction vanishes.
+\leanok
+Apply the classical completion to $(F,D,E)$. The endpoint correction vanishes.
+For a compactly supported smooth $F$, extend by zero to $\R$ and take
+$(D,E)=(F',F'')$.
 \end{proof}
 
 \begin{remark}
@@ -1193,7 +1198,10 @@ the endpoint correction for arbitrary value traces.
 
 \begin{lemma}[Sum of squares, extension]
 \label{lem:trace-sos-extension}
-\uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval, def:weighted-boundary-domain}
+\uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval,
+ def:weighted-boundary-domain, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.sum_of_squares}
+\leanok
 The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in\mathcal D_w$
 with zero endpoint traces (equivalently, $F\in H^1_0(-1,1)$ with the
 weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain}).
@@ -1201,6 +1209,7 @@ weighted second-order regularity of Definition~\ref{def:weighted-boundary-domain
 
 \begin{proof}
 \uses{lem:boundary-form-xi, lem:weighted-completion}
+\leanok
 By Lemma~\ref{lem:boundary-form-xi}, $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,D,E)$.
 Apply Lemma~\ref{lem:weighted-completion}; the endpoint correction vanishes.
 The manuscript argues by density instead; see the digest note after

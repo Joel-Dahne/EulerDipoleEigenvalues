@@ -6,8 +6,9 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 # The logarithmically corrected boundary form
 
 The forcing is an H¹ function on the weighted second-order domain.
-The logarithmic coefficient, its integrability, and the endpoint-character
-energy estimates are separated. All endpoint values are H¹ traces.
+The logarithmic coefficient, its integrability, endpoint logarithmic moments,
+and the endpoint-character energy estimates are separated. All endpoint values
+are H¹ traces.
 -/
 
 noncomputable section
@@ -220,6 +221,16 @@ theorem correctedBoundaryBeta_negative_le {x : ℝ} (hx : x ∈ Ioo (-1 : ℝ) 1
     Real.log_div (by norm_num : (1 : ℝ) ≠ 0) (by norm_num : (7 : ℝ) ≠ 0), Real.log_one]
   rw [mul_max_of_nonneg _ _ (by norm_num : (0 : ℝ) ≤ 1 / 4), mul_zero]
   exact max_le_max (by linarith) le_rfl
+
+/-- Logarithmic moments on an endpoint layer. The integrand is nonnegative,
+    absolutely integrable, and has an exact value for every natural power;
+    the boundary estimates use only the powers zero, one and two. -/
+theorem logarithmic_endpoint_moment {a : ℝ} (ha : 0 < a) (j : ℕ) :
+    (∀ d ∈ Ioo (0 : ℝ) a, 0 ≤ d ^ j * Real.log (a / d)) ∧
+      IntervalIntegrable (fun d ↦ d ^ j * Real.log (a / d)) volume 0 a ∧
+      (∫ d in (0 : ℝ)..a, d ^ j * Real.log (a / d)) =
+        a ^ (j + 1) / ((j : ℝ) + 1) ^ 2 := by
+  sorry
 
 /-- The affine forcing corresponding to the boundary function `b*x`. -/
 def correctedAffineForcing (lam : ℝ) (b : ℂ) (x : ℝ) : ℂ :=
