@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.ACLSlicing
 import NoEmbeddedEigenvalues.AnglePeriodization
 import NoEmbeddedEigenvalues.BoundaryForm
+import NoEmbeddedEigenvalues.BernsteinCertificates
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalACL
 import NoEmbeddedEigenvalues.DiagonalCalculus
@@ -34,6 +35,8 @@ import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.PairingLimit
 import NoEmbeddedEigenvalues.Picone
 import NoEmbeddedEigenvalues.Mixed
+import NoEmbeddedEigenvalues.MixedComparison
+import NoEmbeddedEigenvalues.PolynomialInequalities
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm

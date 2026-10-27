@@ -13,11 +13,10 @@ interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/C
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 is assembled from four admitted analytic inputs. Together with bulk coercivity
 this gives sixteen transitive admissions, not an admission-free exclusion.
-All nodes in the recursive dependency closures of the minimal quotient
-construction, `lem:dd-character-virial-limit`, `lem:dd-truncated-picone`
-and the three corrected-boundary interval estimates now have linked Lean statements.
-Other parts of the odd–odd graph still have unstated results; statement markers
-are not proofs.
+All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
+now have statement/Mathlib markers, including the certificate tools and residual
+sign claim. Off-route auxiliary results may remain unstated. These markers are
+neither a human compatibility review nor a proof audit.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -59,6 +58,14 @@ Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
 ## Current work: recursive statement pass
 
+The certificate chapter is stated in `BernsteinCertificates.lean`,
+`MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
+The explicit odd–odd residual table has a separate identity with the actual
+operator, and the sign statement is independent of any Bernstein algorithm.
+Coefficient generation, polynomialization and exact verification are not supplied;
+no proof backend has been selected. The same distinction is retained for the
+mixed interior and Robin inequalities. No exclusion assembly has changed.
+
 [OddOddCoercivity.lean](../../NoEmbeddedEigenvalues/OddOddCoercivity.lean)
 now states the bulk form-domain/Poincaré branch. `DDWeightedH1` is the maximal
 weak weighted H¹ domain, without boundary traces or a density hypothesis.
@@ -70,8 +77,9 @@ interfaces. All new proofs are `sorry`; the existing outer admission and
 exclusion assembly have not changed. The orange statement flag is removed
 from `zonal-poincare`, but its weak-domain spectral proof remains open.
 The coefficient bounds exclude the totalized matrix value at the center,
-which does not affect any integral. The certificate tools/data remain deferred;
-this is not complete recursive statement coverage of the certificate branch.
+which does not affect any integral. The certificate statements now complete
+this branch at Blueprint-node level; their proofs and verification data remain
+separate work.
 
 The dependency closures of zero-trace forcing energy, the midpoint bound and
 the negative affine correction are now stated. The sum-of-squares nodes reuse

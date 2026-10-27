@@ -71,8 +71,13 @@ weights and local versus global regularity.
    `OddOddCoercivity.lean` now states the maximal weak weighted form domain,
    central-parity Poincaré, Kantorovich, the actual quotient-domain bridge and
    separate gradient/potential bounds. These new proofs remain `sorry`; the
-   outer coercivity admission is unchanged. Weighted spectral proof work and
-   the residual-certificate tools/data remain open.
+   outer coercivity admission is unchanged. All nodes below odd–odd exclusion
+   now have Blueprint statement/Mathlib markers. The certificate chapter's
+   statements and explicit operator identities are in `BernsteinCertificates.lean`,
+   `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
+   No coefficient checker or subdivision dataset is implemented, and no backend
+   is selected. Weighted spectral proof work and exact certificate verification
+   remain open; statement markers are not a compatibility audit.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
    not Lean proofs.
@@ -150,9 +155,11 @@ weights and local versus global regularity.
 - `TransportOperator.lean`: self-adjointness/core/group results remain
   admitted and are not prerequisites of either the even–even or odd–odd
   route.
-- [Certificates](../../blueprint/src/chapters/certificates.tex): odd–odd/mixed
-  verification scripts and data are missing. A sound exact checker must
-  connect coefficient data to the defining expressions, not merely check tables.
+- [Certificates](../../blueprint/src/chapters/certificates.tex): all chapter
+  statements are linked, including operator-to-residual identities. Proofs remain
+  `sorry`. The original verification scripts and generated data are missing;
+  polynomialization and any exact checker must still be proved sound. The
+  statements do not require choosing Bernstein subdivision as the final method.
 
 ## Other open work
 

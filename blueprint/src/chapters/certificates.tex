@@ -1,19 +1,25 @@
 \chapter{Certified polynomial inequalities}
 \label{chap:certificates}
 
-The odd--odd and mixed sectors rely on explicit two-variable inequalities
-involving polynomials and $\log$. They are reduced to positivity of
-polynomials on boxes, certified by nonnegative Bernstein coefficients after
-subdivision. This chapter is independent of the rest of the analysis, so it
-can be formalized in parallel. The natural Lean design is a verified Bernstein
-checker (a function on lists of rational coefficients, proved sound once) run
-by \texttt{decide} or \texttt{native\_decide}.
+The odd--odd and mixed sectors use explicit two-variable sign inequalities.
+One proposed proof strategy reduces the logarithmic expressions to polynomial
+positivity on boxes, using nonnegative Bernstein coefficients after subdivision.
+The sign statements themselves do not prescribe this strategy. A Bernstein
+implementation would need both a sound exact checker and identities connecting
+its rational coefficient data to the actual differential expressions.
 
 \section{General tools}
 
 \begin{definition}[Bernstein coefficients]
 \label{def:bernstein}
-For a polynomial $\sum_{k\le n,\,l\le m}a_{kl}\xi^k\eta^l$ of bidegree $(n,m)$,
+\lean{NoEmbeddedEigenvalues.certificatePolynomial,
+ NoEmbeddedEigenvalues.certificateBernsteinCoeff,
+ NoEmbeddedEigenvalues.certificateAffineCoeff,
+ NoEmbeddedEigenvalues.certificateBoxCoeff,
+ NoEmbeddedEigenvalues.certificateBernsteinBasis}
+\leanok
+For a rational polynomial $\sum_{k\le n,\,l\le m}a_{kl}\xi^k\eta^l$
+with degree bounds $(n,m)$,
 its Bernstein coefficients on $[0,1]^2$ are
 \[
   b_{ij}=\sum_{k\le i,\,l\le j}a_{kl}\frac{\binom ik}{\binom nk}\frac{\binom jl}{\binom ml},
@@ -26,9 +32,19 @@ onto $[0,1]^2$.
 \begin{lemma}[Bernstein positivity criterion]
 \label{lem:bernstein-positivity}
 \uses{def:bernstein}
-If all Bernstein coefficients of $P$ on a box are nonnegative, then $P\ge0$ on
-that box. If moreover they are positive except for those with indices in a set
-$Z$, then $P>0$ away from the corresponding faces and corners.
+\lean{NoEmbeddedEigenvalues.certificate_bernstein_expansion,
+ NoEmbeddedEigenvalues.certificate_box_expansion,
+ NoEmbeddedEigenvalues.certificate_bernstein_nonneg,
+ NoEmbeddedEigenvalues.certificate_bernstein_pos}
+\leanok
+For rational power coefficients on a nondegenerate rational box, the Bernstein
+expansion represents the same polynomial after affine pullback.
+If all Bernstein coefficients are nonnegative, then $P\ge0$ on the box.
+If moreover they are positive outside an index set $Z$, then $P>0$ at each
+point where some index $(i,j)\notin Z$ has
+$B_i^n(\xi)B_j^m(\eta)>0$, with $(\xi,\eta)$ the normalized box coordinates.
+This active-basis condition specifies exactly which boundary faces or corners
+are excluded; the set $Z$ alone does not name an exceptional geometric set.
 \end{lemma}
 
 \begin{proof}
@@ -38,6 +54,13 @@ polynomials.
 
 \begin{lemma}[Rational bounds for the logarithm]
 \label{lem:log-bounds}
+\lean{NoEmbeddedEigenvalues.certificateLogTaylor,
+ NoEmbeddedEigenvalues.certificateLogTwoLower,
+ NoEmbeddedEigenvalues.certificateLogTwoUpper,
+ NoEmbeddedEigenvalues.certificate_log_ratio_bounds,
+ NoEmbeddedEigenvalues.certificate_log_one_sub_bounds,
+ NoEmbeddedEigenvalues.certificate_log_two_bounds}
+\leanok
 For $0<r\le2$,
 \[
   \frac{r-2}r\le\log(r/2)\le\frac{2(r-2)}{r+2}+\frac{2(r-2)^3}{3(r+2)^3},
@@ -55,6 +78,8 @@ remainders.
 
 \begin{lemma}[Affine dependence on the logarithm]
 \label{lem:affine-in-log}
+\lean{NoEmbeddedEigenvalues.certificate_affine_in_log}
+\leanok
 If $A+B\ell\ge0$ for $\ell=\ell_-$ and for $\ell=\ell_+$, then $A+B\ell\ge0$ for
 every $\ell\in[\ell_-,\ell_+]$, regardless of the sign of $B$.
 \end{lemma}
@@ -68,8 +93,16 @@ An affine function on an interval attains its minimum at an endpoint.
 \begin{lemma}[Odd--odd residual]
 \label{cert:dd-residual}
 \uses{def:dd-ground-state}
-$Pw_*+\tfrac52s^2w_*\ge0$ on the geometric range $0<s<2$,
-$s(2-s)\le r\le2-s^2/2$.
+\lean{NoEmbeddedEigenvalues.ddResidualA, NoEmbeddedEigenvalues.ddResidualB,
+ NoEmbeddedEigenvalues.ddResidualExpression,
+ NoEmbeddedEigenvalues.dd_residual_identity, NoEmbeddedEigenvalues.dd_residual_nonneg}
+\leanok
+Let $R(s,r)=s\mathsf A(s,r)/(384r^3)
++s\mathsf B(s,r)\log(r/2)/(1536r^2)$, with the integer polynomials
+$\mathsf A,\mathsf B$ from the manuscript's residual table.
+Then $R\ge0$ on $0<s<2$, $s(2-s)\le r\le2-s^2/2$.
+On the positive cell with $r\ne0$, the actual differential expression satisfies
+$Pw_*+\tfrac52s^2w_*=R(s,r)$.
 \end{lemma}
 
 \begin{proof}
@@ -88,9 +121,18 @@ listed in the manuscript.
 \begin{lemma}[Odd-in-$b$ interior inequality]
 \label{cert:odd-b}
 \uses{def:odd-b-comparison}
+\lean{NoEmbeddedEigenvalues.mixedOddBResidual,
+ NoEmbeddedEigenvalues.mixed_odd_b_identity,
+ NoEmbeddedEigenvalues.mixed_odd_b_residual_nonneg,
+ NoEmbeddedEigenvalues.mixed_odd_b_interior}
+\leanok
 For the comparison function of Definition~\ref{def:odd-b-comparison},
-$\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ on $(0,1]\times[0,1]$ in the $(h,k)$
-variables.
+$\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ on the open quarter cell $Q$.
+More precisely, the normalized residual $\mathcal R_v(h,k)$ defined by the
+explicit differentiation formula in manuscript \texttt{(lem:mixed-v-comparison)}
+is nonnegative on $(0,1]\times[0,1]$, and on $Q$
+$\mathcal Pw_v-h^2w_v/100=v\mathcal R_v(h,k)$.
+At $(h,k)=(1,1)$ the potential uses its continuous value.
 \end{lemma}
 
 \begin{proof}
@@ -105,8 +147,16 @@ subdivision (658 nodes in total).
 \begin{lemma}[Odd-in-$a$ interior inequality]
 \label{cert:odd-a}
 \uses{def:odd-a-comparison}
+\lean{NoEmbeddedEigenvalues.mixedOddAResidual,
+ NoEmbeddedEigenvalues.mixed_odd_a_identity,
+ NoEmbeddedEigenvalues.mixed_odd_a_residual_nonneg,
+ NoEmbeddedEigenvalues.mixed_odd_a_interior}
+\leanok
 For the comparison function of Definition~\ref{def:odd-a-comparison},
 $\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ on $Q$.
+The normalized rational residual $\mathcal R_u$ obtained by differentiating
+$u e^{F_u}$ and subtracting $h^2/200$ is nonnegative for $0<h,k<1$,
+and $\mathcal Pw_u-h^2w_u/200=w_u\mathcal R_u(h,k)$ on $Q$.
 \end{lemma}
 
 \begin{proof}
@@ -120,9 +170,15 @@ nonnegative Bernstein coefficients on two, respectively four, boxes.
 \begin{lemma}[Odd-in-$a$ Robin inequality]
 \label{cert:robin}
 \uses{def:odd-a-comparison}
-$3h-2(1-h^2)\partial_hF_u(h,0)-(2-h^2)\partial_kF_u(h,0)-\tfrac h{250}\ge0$ for $h\in[0,1]$; the
-left side is
-$\tfrac1{1000}(673h^7-1953h^6-3213h^5+7317h^4+109h^3-4647h^2+1718h+1)-\tfrac h{250}$.
+\lean{NoEmbeddedEigenvalues.mixedRobinPolynomial,
+ NoEmbeddedEigenvalues.mixed_robin_identity, NoEmbeddedEigenvalues.mixed_robin_nonneg}
+\leanok
+The polynomial
+$P(h)=\tfrac1{1000}(673h^7-1953h^6-3213h^5+7317h^4+109h^3-4647h^2+1718h+1)-\tfrac h{250}$
+is nonnegative for $h\in[0,1]$. For $0<h\le1$,
+$3h-2(1-h^2)\partial_hF_u(h,0)-(2-h^2)\partial_kF_u(h,0)-\tfrac h{250}=P(h)$.
+At $h=0$ use the continuous extension of this boundary expression, not the
+raw coordinate derivatives of $F_u$ at the corner.
 \end{lemma}
 
 \begin{proof}
@@ -131,12 +187,24 @@ One-variable Bernstein coefficients after dyadic subdivision of $[0,1]$ (nine
 nodes, depth at most four).
 \end{proof}
 
+\begin{remark}[Digest note: Robin corner derivatives]
+The endpoint requires a distinction between raw partial derivatives and boundary
+limits. Along the two axes, the rational formula gives
+$\partial_hF_u(0,0)=-9/2000$ and $\partial_kF_u(0,0)=-1/250$.
+Substitution into the raw differential expression gives $17/1000$,
+whereas its limit along $h>0$, $k=0$ is $P(0)=1/1000$.
+Thus the derivative identity is stated only for $h>0$ and the closed-interval
+certificate concerns its polynomial extension. Bounded first derivatives of
+$F_u$ do not imply a continuous gradient at the corner.
+\end{remark}
+
 \begin{remark}[Digest note]
 The manuscript refers to the scripts \texttt{verify\_odd\_b.py},
 \texttt{verify\_odd\_a.py} and \texttt{verify\_robin.py}, which are not in this
 repository. The polynomials $A,B$ (odd-in-$b$) and $N$ (odd-in-$a$) are only
 described as ``generated by'' differentiation formulas. For formalization we
-should either generate them inside Lean from the definitions of $F$, $\mathsf G$
-and $U$ (most trustworthy), or import the coefficient lists and prove in Lean
-that they agree with the defining expressions.
+must either generate them from the definitions of $F$, $\mathsf G$ and $U$,
+or import the coefficient lists and prove that they agree with the defining
+expressions. The operator-to-normalized-residual identity is distinct from
+this polynomialization step; coefficient signs alone prove neither identity.
 \end{remark}

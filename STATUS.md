@@ -11,10 +11,10 @@ eight explicit admitted analytic inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. Quotient existence is assembled from
 four analytic inputs; bulk coercivity is the remaining outer admission.
 The mixed exclusion remains admitted. The recursive statement-only pass now
-covers the nodes below the minimal odd–odd quotient construction, the
-character-wise virial limit and truncated Picone. Bulk coercivity's weighted
-form domain and Poincaré interfaces are now stated too; new proofs remain
-`sorry`, and the certificate backend remains deferred.
+covers every node in the odd–odd exclusion's Blueprint dependency closure,
+including the certificate chapter's tools and sign claims. New proofs remain
+`sorry`; no certificate algorithm has been selected or verified. Statement
+markers are not a compatibility or proof audit.
 The statement pass continues; compatibility review, including local/global
 quotient and exceptional-level bridges, and analytic proofs remain deferred. The assembly
 avoids a bundled stronger regularity prerequisite. See the

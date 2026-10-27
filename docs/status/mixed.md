@@ -16,6 +16,14 @@ relation. The shared first saddle gain and cylinder inverse now have explicit
 blueprint derivations, not Lean proofs. Paired flux remains unverified.
 No new part of the exclusion is proved in Lean.
 
+`MixedComparison.lean` now defines the second-order coefficients and both
+comparison functions; boundedness claims are separate statements.
+`PolynomialInequalities.lean` states their interior sign claims, normalized
+residual/operator identities and the Robin polynomial inequality, all with
+`sorry` proofs. The Robin derivative identity is restricted to `h>0` and its
+continuous polynomial extension covers zero: raw corner partials do not give
+the same endpoint value. No certificate checker or proof backend is selected.
+
 ## Priorities when work resumes
 
 - Reuse the shared saddle bootstrap for the linear jet; formalize its

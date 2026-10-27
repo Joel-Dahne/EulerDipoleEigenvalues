@@ -165,6 +165,17 @@ proof mechanisms. Module names below are relative to
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.
 
+### Certificate interfaces
+
+- `BernsteinCertificates.lean`: exact rational power/Bernstein arrays and affine
+  box pullbacks, expansion and positivity statements, rational logarithmic bounds
+  and affine interpolation. Uses Mathlib's Bernstein basis; no checker is defined.
+- `MixedComparison.lean`: actual diagonal-coordinate mixed matrix, potential,
+  differential operator and explicit odd-in-a/b comparison functions.
+- `PolynomialInequalities.lean`: explicit odd–odd residual table and its operator
+  identity, mixed normalized differential residuals and interior sign claims,
+  and the Robin margin polynomial with its positive-level derivative identity.
+
 ## Source checks and verification tools
 
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,

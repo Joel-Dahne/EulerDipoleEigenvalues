@@ -315,15 +315,28 @@ $\int|\nabla_0(h\phi)|^2=\int\mu(|\nabla_0\phi|^2+|\phi|^2)$, and expand.
 \begin{definition}[Second-order coefficients]
 \label{def:mixed-coefficients}
 \uses{def:cells, lem:cell-square, lem:diagonal-calculus}
+\lean{NoEmbeddedEigenvalues.mixedOpenCell, NoEmbeddedEigenvalues.mixedQuarterCell,
+ NoEmbeddedEigenvalues.mixedD, NoEmbeddedEigenvalues.mixedC, NoEmbeddedEigenvalues.mixedV,
+ NoEmbeddedEigenvalues.mixedComparisonDiagonal,
+ NoEmbeddedEigenvalues.mixedComparisonOffDiagonal,
+ NoEmbeddedEigenvalues.mixedComparisonPotential, NoEmbeddedEigenvalues.mixedComparisonOperator}
+\leanok
 In the local notation of this chapter let
 \[
   G=\begin{pmatrix}g&j\\j&g\end{pmatrix},\quad g=h^2+\frac{2hu^2}p,\quad
   j=\frac{2h^2uv}{p^2},\quad V=-\frac{h^2R}{p^2}+\frac{2hu^2}p-\frac{2u^4}R,
 \]
 with $u^4/R$ assigned its continuous value $0$ at the center, and let
-$\mathcal P=-\Div(G\nabla)+V$ in the $(a,b)$ variables. $G$ and $V$ are bounded:
-$0\le-V\le4$, $g\le3$, $|j|\le2$.
+$\mathcal P=-\Div(G\nabla)+V$ in the $(a,b)$ variables.
 \end{definition}
+
+\begin{lemma}[Bounded second-order coefficients]
+\label{lem:mixed-coefficient-bounds}
+\uses{def:mixed-coefficients}
+\lean{NoEmbeddedEigenvalues.mixed_comparison_coefficient_bounds}
+\leanok
+On the open diagonal-coordinate cell, $0\le-V\le4$, $g\le3$ and $|j|\le2$.
+\end{lemma}
 
 \begin{lemma}[Completion of the square]
 \label{lem:mixed-completion}
@@ -340,7 +353,7 @@ All terms are finite, and $Q_2$ is continuous on $H^1(\Cell)$ (manuscript
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, lem:hardy-1d}
+\uses{prop:mixed-quotient-domain, lem:hardy-1d, lem:mixed-coefficient-bounds}
 Integrate the drift by parts, complete the square, and use
 $2\int\mu W\cdot\operatorname{Re}(\phi\nabla_0\bar\phi)
 =-\int\mu\Div_\mu W|\phi|^2+\sum_N\int h|\phi|^2\,da$. Finiteness:
@@ -401,6 +414,8 @@ current on $h=\epsilon$ is $O(\epsilon(1+|\log\epsilon|)^2)$. Extend by density
 \begin{definition}[Odd-in-$b$ comparison function]
 \label{def:odd-b-comparison}
 \uses{def:mixed-coefficients}
+\lean{NoEmbeddedEigenvalues.mixedOddBMultiplier, NoEmbeddedEigenvalues.mixedOddBComparison}
+\leanok
 Let $w_v=vF_v(h,k)$ with
 \[
   F_v=1+\frac{4132k^2+2167k^3-2011hk-7640hk^2-226h^2+3795h^2k-834h^3}{10000}
@@ -431,6 +446,8 @@ interior inequality is Lemma~\ref{cert:odd-b}.
 \begin{definition}[Odd-in-$a$ comparison function]
 \label{def:odd-a-comparison}
 \uses{def:mixed-coefficients}
+\lean{NoEmbeddedEigenvalues.mixedOddAExponent, NoEmbeddedEigenvalues.mixedOddAComparison}
+\leanok
 Let $w_u=ue^{F_u}$, where, with $S=h+k$,
 \begin{align*}
 1000F_u={}&721k^2-107k^3+60k^4+85k^6
@@ -439,10 +456,23 @@ Let $w_u=ue^{F_u}$, where, with $S=h+k$,
  &-\frac h2-4k-\frac{4h^3}{S^2}-\frac{2744h^6}{S^4}+\frac{1033h^8}{S^6}
   +\frac{224h^4}{S}+\frac{235h^8}{S^5}
 \end{align*}
-(manuscript \texttt{(lem:mixed-u-comparison)}). Every rational term is
-homogeneous of degree at least one, so $F_u$ and its first derivatives are
-bounded on $Q$.
+(manuscript \texttt{(lem:mixed-u-comparison)}).
 \end{definition}
+
+\begin{lemma}[Bounded exponent and first derivatives]
+\label{lem:mixed-u-exponent-bounds}
+\uses{def:odd-a-comparison}
+\lean{NoEmbeddedEigenvalues.mixed_odd_a_exponent_bounds}
+\leanok
+There is a finite constant bounding $|F_u|$, $|\partial_hF_u|$ and
+$|\partial_kF_u|$ throughout $0<h,k<1$.
+\end{lemma}
+
+\begin{proof}
+Every rational term is homogeneous of degree at least one; use
+$h/(h+k),k/(h+k)\in[0,1]$ to bound it and its first derivatives.
+This asserts boundedness, not a continuous gradient at $(0,0)$.
+\end{proof}
 
 \begin{lemma}[Odd-in-$a$ comparison]
 \label{lem:mixed-u-comparison}
@@ -483,7 +513,8 @@ $K[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db=\frac1{400}\int_\Cell|\psi|
 \end{theorem}
 
 \begin{proof}
-\uses{lem:mixed-parity-split, lem:robin-comparison, lem:mixed-u-comparison, lem:mixed-v-comparison, lem:mixed-G-positive}
+\uses{lem:mixed-parity-split, lem:robin-comparison, lem:mixed-u-comparison,
+ lem:mixed-v-comparison, lem:mixed-G-positive, lem:mixed-u-exponent-bounds}
 Apply Lemma~\ref{lem:robin-comparison} on the quarter cells to $\phi_u$ (with
 Lemma~\ref{lem:mixed-u-comparison}) and to $\phi_v$ (with
 Lemma~\ref{lem:mixed-v-comparison}), reflect, and drop the nonnegative square
