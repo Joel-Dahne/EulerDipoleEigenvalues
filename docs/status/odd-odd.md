@@ -175,6 +175,12 @@ division feeds point removal directly: remove the point for V first, then shrink
 before multiplying by the smooth inverse factor. A common periodic raw quotient
 fixes a.e. overlap agreement, without matching assigned separatrix values.
 
+The final parity step is proved as `InSector.even_dipole_quotient` in
+`OddOddQuotient.lean`: the multiplication identity alone gives even parity
+by reflection and cancellation off the null separatrix. Its axiom audit has
+no `sorryAx`. `dd_stream_quotient_h2` now uses this step, but its H² quotient
+existence subgoal remains admitted. No dependency proofs were changed.
+
 The next statement-level bridges are affine pullback of weak jets/radial L²
 bounds, Sobolev congruence under a.e. equality on the domain, and periodic
 local-to-global gluing. `DiagonalACL.lean` supplies first-order diagonal cases;
@@ -185,8 +191,8 @@ in `TransversalMollifier.lean`: promote it and derive its Sobolev version, rathe
 than add an admission. For periodic gluing, reuse the rescaled/tensored
 `anglePartition` and `memSobolev_compactPeriodize`; local Sobolev gluing on the
 lift still needs an exposed interface. These are Lean interface gaps, not
-extra eigenfunction hypotheses. No analytic
-proofs or parent assemblies have changed. A statement marker is not a proof audit.
+extra eigenfunction hypotheses. The H² construction is not yet assembled
+from the analytic inputs. A statement marker is not a proof audit.
 The bundled `def:dd-quotient`, including classical and weak operator E, is
 linked in `OddOddVirial.lean`; it is not a dependency of the stream-H² proposition.
 The periodic first gain includes cell covering on the full fixed neighbourhood;

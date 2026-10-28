@@ -32,12 +32,69 @@ namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
 
+/-- Dividing odd–odd data by the dipole gives even data. Only the a.e.
+multiplication identity is needed, not quotient regularity or the eigen-equation. -/
+theorem InSector.even_dipole_quotient {ψ φ : L2} (hs : InSector false false ψ)
+    (hψ : ∀ᵐ t, ψ t = (Ψ t : ℂ) * φ t) : InSector true true φ := by
+  have hΨ : Continuous Ψ :=
+    (Real.Angle.continuous_cos.comp continuous_fst).add
+      (Real.Angle.continuous_cos.comp continuous_snd)
+  have hsingle (x : Real.Angle) : volume ({x} : Set Real.Angle) = 0 := by
+    change (volume : Measure (AddCircle (2 * Real.pi))) {x} = 0
+    have hx := AddCircle.volume_closedBall (T := 2 * Real.pi) (x := x) (ε := 0)
+    have hx0 : (volume : Measure (AddCircle (2 * Real.pi))) (Metric.closedBall x 0) = 0 := by
+      simpa only [mul_zero, min_eq_right (by positivity : (0 : ℝ) ≤ 2 * Real.pi),
+        ENNReal.ofReal_zero] using hx
+    exact measure_mono_null
+      (singleton_subset_iff.mpr (Metric.mem_closedBall_self (by norm_num))) hx0
+  have hnull : ∀ᵐ t : Torus, Ψ t ≠ 0 := by
+    rw [Measure.volume_eq_prod]
+    apply (Measure.ae_prod_iff_ae_ae
+      (isClosed_eq hΨ continuous_const).isOpen_compl.measurableSet).2
+    exact Filter.Eventually.of_forall fun x ↦ by
+      rw [ae_iff]
+      simp only [not_not]
+      have hsub : {y : Real.Angle | Ψ (x, y) = 0} ⊆
+          {((Real.pi : ℝ) : Real.Angle) - x, x - ((Real.pi : ℝ) : Real.Angle)} := by
+        intro y hy
+        rcases Ψ_eq_zero_iff (x, y) |>.mp hy with hy | hy
+        · exact Or.inl (eq_sub_iff_add_eq.mpr (by simpa [add_comm] using hy))
+        · exact Or.inr (eq_sub_iff_add_eq.mpr
+            (by simpa [add_comm] using (sub_eq_iff_eq_add.mp hy).symm))
+      have hpair := measure_union_null (hsingle (((Real.pi : ℝ) : Real.Angle) - x))
+        (hsingle (x - ((Real.pi : ℝ) : Real.Angle)))
+      exact measure_mono_null hsub (by simpa only [singleton_union] using hpair)
+  have href {T : Torus → Torus} (hT : MeasurePreserving T)
+      (hΨT : ∀ t, Ψ (T t) = -Ψ t) (hψT : pullback T hT ψ = -ψ) :
+      pullback T hT φ = φ := by
+    apply Lp.ext
+    have hraw := Lp.coeFn_compMeasurePreserving φ hT
+    change (pullback T hT φ : Torus → ℂ) =ᵐ[volume] (fun t ↦ φ (T t)) at hraw
+    filter_upwards [hraw, ae_comp_of_pullback_eq hψT, Lp.coeFn_neg ψ, hψ,
+      hT.quasiMeasurePreserving.ae hψ, hnull] with t ht hst hnt hpt hspt hn
+    rw [ht]
+    apply mul_left_cancel₀ (Complex.ofReal_ne_zero.mpr hn)
+    have heq : -(Ψ t : ℂ) * φ (T t) = -((Ψ t : ℂ) * φ t) := by
+      simpa only [hΨT t, Complex.ofReal_neg, hst, hnt, Pi.neg_apply, hpt] using hspt.symm
+    simpa only [neg_mul, neg_inj] using heq
+  constructor
+  · simpa [paritySign, reflect₁, CharacterSymmetry.action, symmetry₁] using
+      href measurePreserving_S₁ (fun t ↦ congrFun Ψ_comp_S₁ t)
+        (by simpa [paritySign, reflect₁, CharacterSymmetry.action, symmetry₁] using hs.1)
+  · simpa [paritySign, reflect₂, CharacterSymmetry.action, symmetry₂] using
+      href measurePreserving_S₂ (fun t ↦ congrFun Ψ_comp_S₂ t)
+        (by simpa [paritySign, reflect₂, CharacterSymmetry.action, symmetry₂] using hs.2)
+
 /-- Even H² stream quotient (`prop:dd-stream-quotient-h2`). -/
 theorem dd_stream_quotient_h2 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
     ∃ φ : L2, MemSobolev 2 φ ∧ InSector true true φ ∧
       ∀ᵐ t, invLap ω t = (Ψ t : ℂ) * φ t := by
-  sorry
+  obtain ⟨φ, hφ, hψ⟩ : ∃ φ : L2, MemSobolev 2 φ ∧
+      ∀ᵐ t, invLap ω t = (Ψ t : ℂ) * φ t := by
+    -- Construct the H² quotient using local division and periodic gluing.
+    sorry
+  exact ⟨φ, hφ, hs.invLap.even_dipole_quotient hψ, hψ⟩
 
 /-- Coordinate Hardy controls the divided Laplacian of an even H² function
 (`lem:even-h2-dipole-laplacian`). The Laplacian is specified by its Fourier relation;
