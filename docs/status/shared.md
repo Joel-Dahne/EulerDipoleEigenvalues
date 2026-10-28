@@ -15,8 +15,8 @@ The even–even route is admission-free. Available foundations include:
   regularity. Weak dipole testing and odd cell-pairing identities need
   neither self-adjointness nor Sobolev regularity.
 - Torus/local Sobolev bridges, domain-a.e. weak-derivative/Sobolev congruence,
-  continuous Hölder representatives, ACL slicing, rectangle traces and
-  even–even separatrix traces.
+  local Sobolev gluing of a.e.-equal representatives, continuous Hölder
+  representatives, ACL slicing, rectangle traces and even–even separatrix traces.
 - Orbit coordinates, area/coarea, orbit restriction, coarse period bounds,
   saddle-distance/comparison and level-derivative estimates.
 - Weak action-angle chain rules in both directions, periodization, transversal
@@ -55,7 +55,9 @@ weights and local versus global regularity.
    the quotient branch's result nodes. The stream-H² compatibility review
    identifies affine weak-jet/radial-L² pullback and periodic gluing as the
    remaining interface bridges. Domain-a.e. congruence is proved in
-   `SobolevLocal.lean` for weak derivatives, Hᵏ and Hᵏ_loc, without admissions.
+   `SobolevLocal.lean` for weak derivatives, Hᵏ and Hᵏ_loc. Local Sobolev
+   gluing on the plane is proved in `SobolevGluing.lean`, including patchwise
+   a.e.-equal representatives. Both interfaces are admission-free.
    `OddOddVirial.lean` now states the entire missing weighted-virial layer below
    `dd-character-virial-limit`, including the bundled quotient/operator E definition;
    `Period.lean` separately states the leading value asymptotic. The new proofs
@@ -101,8 +103,9 @@ weights and local versus global regularity.
    rule is not yet a higher-order affine-jet interface. Localization of one
    cut-off piece is not yet the periodic gluing interface. Use the public
    domain-a.e. congruence lemmas in `SobolevLocal.lean` when identifying local
-   representatives. After local Sobolev gluing on the lift, tensor/rescale the
-   existing `anglePartition` and use `memSobolev_compactPeriodize` to avoid
+   representatives. Apply the local gluing theorem in `SobolevGluing.lean`,
+   then tensor/rescale the existing `anglePartition` and use
+   `memSobolev_compactPeriodize` to avoid
    constructing a new partition of unity on the torus.
    Angular Hardy and mixed saddle linearization are off the odd–odd route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and

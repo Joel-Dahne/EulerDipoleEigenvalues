@@ -187,12 +187,16 @@ in `SobolevLocal.lean`:
 `MemSobolevLocOn.congr_ae_on`. The weak-derivative proof is reused from
 `TransversalMollifier.lean`, which now calls the public lemma. A full build passes.
 
+Local Sobolev gluing on the lift (`lem:sobolev-local-gluing`) is proved without
+admissions in `SobolevGluing.lean`, including patchwise a.e.-equal representatives.
+It uses precompact patches, a finite smooth partition of unity and the cutoff lemma.
+
 The remaining bridges are affine pullback of weak jets/radial L² bounds and
-periodic local-to-global gluing. `DiagonalACL.lean` supplies first-order diagonal
-cases; `LocalToGlobal.lean` already periodizes arbitrary compactly supported Hᵏ
-data. For periodic gluing, reuse the rescaled/tensored
-`anglePartition` and `memSobolev_compactPeriodize`; local Sobolev gluing on the
-lift still needs an exposed interface. These are Lean interface gaps, not
+periodic reconstruction. `DiagonalACL.lean` supplies first-order diagonal cases;
+`LocalToGlobal.lean` already periodizes arbitrary compactly supported Hᵏ data.
+For periodic reconstruction, use the rescaled/tensored `anglePartition` and
+`memSobolev_compactPeriodize` after the local gluing theorem.
+These are Lean interface gaps, not
 extra eigenfunction hypotheses. The H² construction is not yet assembled
 from the analytic inputs. A statement marker is not a proof audit.
 The bundled `def:dd-quotient`, including classical and weak operator E, is

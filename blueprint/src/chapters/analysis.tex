@@ -325,6 +325,8 @@ $G(h)-G(h')=M(h')-M(h)=\int_h^{h'}m$ wherever $D(h)=D(h')=k$.
   NoEmbeddedEigenvalues.MemSobolevOnWith.add,
   NoEmbeddedEigenvalues.MemSobolevOnWith.const_mul,
   NoEmbeddedEigenvalues.MemSobolevOn.mono,
+  NoEmbeddedEigenvalues.MemSobolevOn.zero,
+  NoEmbeddedEigenvalues.MemSobolevOn.finset_sum,
   NoEmbeddedEigenvalues.MemSobolevOn.memSobolevLocOn,
   NoEmbeddedEigenvalues.MemSobolevLocOn.of_succ,
   NoEmbeddedEigenvalues.MemSobolevLocOn.add}
@@ -1077,6 +1079,33 @@ quotient argument pending its review.
 
 \section{Local Sobolev theory (candidate assumptions)}
 \label{sec:local-sobolev}
+
+\begin{lemma}[Local Sobolev gluing]
+\label{lem:sobolev-local-gluing}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.memSobolevLocOn_of_locally,
+  NoEmbeddedEigenvalues.memSobolevLocOn_of_locally_ae}
+\leanok
+Let $k\ge0$ be an integer, $U\subset\R^2$ and $f:\R^2\to\C$.
+Suppose each $p\in U$ has an open neighbourhood $W$ and a function
+$g\in H^k_{\mathrm{loc}}(W)$ equal to $f$ almost everywhere on $W$.
+Then $f\in H^k_{\mathrm{loc}}(U)$. In particular, local Sobolev
+regularity can be checked in a neighbourhood of each point.
+No values on exceptional null sets need to match.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sobolev-congr-ae, lem:localization-cutoff,
+  lem:weak-derivative-basic}
+\leanok
+Domain-a.e.\ congruence gives local Sobolev regularity of $f$ on each
+neighbourhood. Shrink these neighbourhoods to precompact open patches.
+For each open $V\Subset U$, compactness of $\overline V$ gives a finite
+subcover. Choose a smooth partition of unity on $\overline V$ subordinate
+to those patches. Each partition function has compact support in its
+patch, so the cutoff lemma puts its product with $f$ in $H^k(\R^2)$.
+Their finite sum equals $f$ on $V$, giving $f\in H^k(V)$.
+\end{proof}
 
 \begin{lemma}[Localization]
 \label{lem:local-to-global}

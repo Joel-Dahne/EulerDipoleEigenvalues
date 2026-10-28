@@ -66,6 +66,7 @@ import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.SmoothIntervalIntegral
 import NoEmbeddedEigenvalues.SobolevLocal
+import NoEmbeddedEigenvalues.SobolevGluing
 import NoEmbeddedEigenvalues.LiftPeriodization
 import NoEmbeddedEigenvalues.SobolevHolder
 import NoEmbeddedEigenvalues.SobolevTorus

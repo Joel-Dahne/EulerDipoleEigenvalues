@@ -41,6 +41,8 @@ proof mechanisms. Module names below are relative to
 ### Local Sobolev spaces, lifts and traces
 
 - `SobolevLocal.lean`: weak derivatives, local Sobolev spaces and weighted norms.
+- `SobolevGluing.lean`: neighbourhood-wise local Sobolev regularity and gluing
+  of representatives agreeing a.e.; separate from torus periodization.
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak jets, integer
   and real-power radial integrability, energies and the Sobolev/jet interface.
 - `StreamJet.lean`: the canonical second stream jet from the existing Fourier

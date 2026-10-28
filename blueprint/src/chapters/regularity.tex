@@ -552,7 +552,7 @@ separatrix reflections.
  lem:weighted-double-division, lem:weighted-h2-point-removal,
  lem:odd-h3-division, lem:stream-sector, lem:separatrix-lines,
  lem:elliptic-torus, lem:localization-cutoff, lem:local-to-global,
- lem:angular-periodization, lem:sobolev-congr-ae}
+ lem:angular-periodization, lem:sobolev-congr-ae, lem:sobolev-local-gluing}
 Use the continuous stream lift and the single periodic function
 $F=\widetilde\psi/\Psi$, assigning zero on the separatrix.
 Local extensions below agree with $F$ a.e.; no pointwise agreement with
@@ -609,8 +609,8 @@ Shrink again before multiplying by $b^{-1}$.
 On the complement of the separatrix, the original global $H^2$ stream
 regularity and smooth division by $\Psi$ suffice, including at centers.
 
-These local statements give $F\in H^2_{\mathrm{loc}}(\R^2)$: on each
-compact set use a finite subcover and a smooth partition of unity.
+Lemma~\ref{lem:sobolev-local-gluing} now gives
+$F\in H^2_{\mathrm{loc}}(\R^2)$ from these local a.e.\ representatives.
 For passage to the torus, let $\beta(\theta)$ be the smooth, compactly
 supported unit-period partition of Lemma~\ref{lem:angular-periodization}
 (the first argument of \texttt{anglePartition} is fixed at zero), and set
