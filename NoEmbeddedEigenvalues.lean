@@ -44,6 +44,7 @@ import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.OddOddQuotient
+import NoEmbeddedEigenvalues.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.OddOddSaddle
 import NoEmbeddedEigenvalues.OddOddLogarithmic
 import NoEmbeddedEigenvalues.OddOddRegularity
@@ -69,6 +70,7 @@ import NoEmbeddedEigenvalues.Setup
 import NoEmbeddedEigenvalues.SmoothIntervalIntegral
 import NoEmbeddedEigenvalues.SobolevLocal
 import NoEmbeddedEigenvalues.SobolevGluing
+import NoEmbeddedEigenvalues.SobolevMultipliers
 import NoEmbeddedEigenvalues.LiftPeriodization
 import NoEmbeddedEigenvalues.SobolevHolder
 import NoEmbeddedEigenvalues.SobolevTorus

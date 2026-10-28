@@ -1107,6 +1107,32 @@ patch, so the cutoff lemma puts its product with $f$ in $H^k(\R^2)$.
 Their finite sum equals $f$ on $V$, giving $f\in H^k(V)$.
 \end{proof}
 
+\begin{lemma}[Local smooth Sobolev multiplication]
+\label{lem:sobolev-local-multiplier}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.mul_contDiffOn,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.div_smooth}
+\leanok
+Let $U\subset\R^2$ be open and $k\ge0$ an integer.
+If $f\in H^k_{\mathrm{loc}}(U)$ and $g\in C^\infty(U;\C)$, then
+$gf\in H^k_{\mathrm{loc}}(U)$.
+In particular, $f/g$ has the same local regularity for a globally
+smooth real factor $g$ that is nonzero on $U$.
+No uniform bound on derivatives over all of $U$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:localization-cutoff, lem:sobolev-local-gluing}
+\leanok
+Near each point choose a compact smooth cutoff $\eta$ supported in $U$
+and identically one on a smaller neighbourhood. The function $\eta g$
+is globally smooth: on its support use the smoothness of $g$ in $U$,
+and off the support it vanishes near the point.
+Cutoff localization gives $(\eta g)f\in H^k(\R^2)$.
+It equals $gf$ on the smaller neighbourhood; local gluing concludes.
+For division, apply multiplication to $g^{-1}$ on its nonzero open set.
+\end{proof}
+
 \begin{lemma}[Localization]
 \label{lem:local-to-global}
 \uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift, def:fourier-derivatives}

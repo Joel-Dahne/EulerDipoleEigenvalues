@@ -16,7 +16,9 @@ The even–even route is admission-free. Available foundations include:
   neither self-adjointness nor Sobolev regularity.
 - Torus/local Sobolev bridges, domain-a.e. congruence, local Sobolev gluing,
   volume-preserving affine weak-jet/radial-L² pullback, and periodic Hᵏ_loc
-  reconstruction. The normalized saddle chart instantiates the affine interface.
+  reconstruction. Local smooth Sobolev multipliers use compact cutoffs,
+  without global derivative bounds. The normalized saddle chart instantiates
+  the affine interface.
   Continuous Hölder representatives, ACL slicing, rectangle traces and
   even–even separatrix traces.
 - Orbit coordinates, area/coarea, orbit restriction, coarse period bounds,
@@ -25,8 +27,8 @@ The even–even route is admission-free. Available foundations include:
   mollification, H¹ commutator and the annular L² virial.
 - Eigenfunction transport, resonant vanishing, Melnikov, canonical profiles
   and pairing limits. The generic periodic-to-continuous transport-pair bridge
-  is admission-free; minimal odd–odd quotient existence is assembled from
-  four explicit admitted inputs.
+  is admission-free. The odd–odd stream-H² quotient is assembled from nine
+  existing local analytic inputs; the other three quotient stages remain admitted.
 - Interval H¹ and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
@@ -47,7 +49,8 @@ weights and local versus global regularity.
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
    exclusion is now assembled. Quotient existence is assembled in
-   `OddOddQuotient.lean` from four admitted inputs.
+   `OddOddQuotient.lean`: its stream-H² stage now expands to nine existing
+   local analytic admissions; its other three stages remain outer admissions.
    `QuotientLocal.lean` and `OddOddRegularity.lean` state the
    next local/sector layer with `sorry`. The scalar/geometry batch is now
    stated in `ScalarDivision.lean` and `SaddleNormalForm.lean`; cylinder
@@ -57,9 +60,11 @@ weights and local versus global regularity.
    the quotient branch's result nodes. The stream-H² congruence, local gluing,
    affine pullback and periodic reconstruction bridges are now admission-free:
    `SobolevLocal.lean`, `SobolevGluing.lean`, `AffineJets.lean`,
-   `SaddleChartPullback.lean` and `PeriodicSobolev.lean`. Next assemble the
-   local quotient construction in `dd_stream_quotient_h2`; its H² existence
-   subgoal and the analytic input proofs remain admitted.
+   `SaddleChartPullback.lean` and `PeriodicSobolev.lean`. Local smooth multiplication
+   is proved in `SobolevMultipliers.lean`. `StreamQuotientAssembly.lean` now
+   assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
+   hypotheses. Next proof work is its recorded local analytic frontier or the
+   other quotient stages, not a remaining generic gluing interface.
    `OddOddVirial.lean` now states the entire missing weighted-virial layer below
    `dd-character-virial-limit`, including the bundled quotient/operator E definition;
    `Period.lean` separately states the leading value asymptotic. The new proofs
@@ -99,14 +104,11 @@ weights and local versus global regularity.
    Check cutoff restriction of the quantitative numerator data, agreement of
    canonical ray traces and the distinction between local lifted bulk norms
    and finite norms on bounded representative collars.
-   For stream H², remove the point for the double quotient V before smooth
-   multiplication, and shrink disks/rectangles before taking inverse factors.
-   Use `AffineJets.lean` for higher-order affine pullback: all derivative
-   indices are transformed. `SaddleChartPullback.lean` supplies the actual
-   normalized disk chart, with no additional hypotheses beyond a lifted saddle.
-   Use domain-a.e. congruence and `SobolevGluing.lean` to identify/glue local
-   representatives, then `PeriodicSobolev.lean` for torus reconstruction.
-   The latter uses the tensor angular cutoff, not a new torus partition of unity.
+   The stream-H² local/global compatibility is checked by
+   `StreamQuotientAssembly.lean`: remove the point before smooth multiplication,
+   restrict to nonzero inverse-factor neighbourhoods, transform all derivative
+   indices, identify local representatives a.e., and reconstruct via the tensor
+   angular cutoff. Its analytic input proofs remain separate.
    Angular Hardy and mixed saddle linearization are off the odd–odd route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and
    `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE
@@ -123,8 +125,10 @@ weights and local versus global regularity.
   Even H² also implies the advertised extra corner bounds, so the bundled
   quotient-domain proposition is downstream and off the exclusion route.
   Invariant-cutoff testing avoids global transport-operator closedness.
-  The quotient and representative-change assemblies are proved in Lean;
-  four analytic interfaces remain admitted. The periodic first gain explicitly
+  The quotient and representative-change assemblies are proved in Lean.
+  Stream-H² now expands to nine existing local analytic admissions;
+  Hardy–Poisson, weak invariant division and the periodic first gain remain
+  the other three outer quotient admissions. The periodic first gain explicitly
   includes cell covering beyond the fixed neighbourhood's boundary saddles.
   The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed

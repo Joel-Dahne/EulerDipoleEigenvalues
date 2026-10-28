@@ -8,16 +8,17 @@ working; update current priorities and blockers rather than appending history.
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
 eight explicit admitted analytic inputs. Corrected boundary nonnegativity is
-assembled from three interval estimates. Quotient existence is assembled from
-four analytic inputs; bulk coercivity is the remaining outer admission.
+assembled from three interval estimates. The stream-H² quotient is assembled
+from local analytic inputs; the other three quotient stages and bulk coercivity
+remain outer admissions.
 The mixed exclusion remains admitted. The recursive statement-only pass now
 covers every node in the odd–odd exclusion's Blueprint dependency closure,
-including the certificate chapter's tools and sign claims. New proofs remain
-`sorry`; no certificate algorithm has been selected or verified. Statement
-markers are not a compatibility or proof audit.
-The statement pass continues; compatibility review, including local/global
-quotient and exceptional-level bridges, and analytic proofs remain deferred. The assembly
-avoids a bundled stronger regularity prerequisite. See the
+including the certificate chapter's tools and sign claims. Their analytic
+proofs remain open; no certificate algorithm has been selected or verified.
+Statement markers are not a compatibility or proof audit.
+The local/global stream-quotient assembly is now checked in Lean, without a
+stronger corner hypothesis. Exceptional-level compatibility and the remaining
+analytic proofs are separate work. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
@@ -56,8 +57,9 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, eight below `dd_picone_current`,
-three below `correctedBoundaryForm_nonneg`, four below `dd_exclusion_domain`,
-and sixteen for `odd_odd_exclusion`. Expanding the assemblies exposes their analytic frontiers;
+three below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
+twelve below `dd_exclusion_domain`, and twenty-four for `odd_odd_exclusion`.
+Expanding the assemblies exposes their analytic frontiers;
 it does not eliminate those admissions. Quotient orthogonality and canonical
 boundary regularity are admission-free for supplied quotient data. The generic
 periodic-to-continuous transport-pair bridge is also admission-free. Correction

@@ -553,7 +553,9 @@ separatrix reflections.
  lem:odd-h3-division, lem:stream-sector, lem:separatrix-lines,
  lem:elliptic-torus, lem:sobolev-congr-ae, lem:sobolev-local-gluing,
  lem:affine-jet-pullback, lem:saddle-chart-pullback,
- lem:periodic-sobolev-reconstruction}
+ lem:periodic-sobolev-reconstruction, lem:sobolev-local-multiplier,
+ lem:continuous-representative, lem:lift-sobolev-local}
+\leanok
 Use the continuous stream lift and the single periodic function
 $F=\widetilde\psi/\Psi$, assigning zero on the separatrix.
 Local extensions below agree with $F$ a.e.; no pointwise agreement with
@@ -574,9 +576,9 @@ not just their arguments: if $A=D\Xi_P$, then
  =\sum_{i_1,\ldots,i_k}A_{i_1j_1}\cdots A_{i_kj_k}
        (D_{i_1\cdots i_k}\circ\Xi_P).
 \]
-Thus the jet transforms by $(A^T)^{\otimes k}$. Since $A$ is orthogonal,
-Euclidean radii, volume and the summed squares of the ordered jet entries
-are preserved. Thus the pulled-back remainder $\widehat R$ has exactly
+Thus the jet transforms by $(A^T)^{\otimes k}$. The chart preserves
+Euclidean radii and volume, and finite constant-coefficient sums preserve
+each radial $L^2$ condition. Thus the pulled-back remainder $\widehat R$ has exactly
 the weighted first-, second- and third-derivative hypotheses of
 Lemma~\ref{lem:weighted-double-division}.
 It is odd in both axes: apply stream-sector preservation and
@@ -589,9 +591,10 @@ with $V/r^2,\nabla V/r,D^2V\in L^2$ on the same disk.
 These are precisely the inputs to
 Lemma~\ref{lem:weighted-h2-point-removal}: apply it to $V$, before
 multiplying by $m^{-1}$. Hence $V\in H^2$ across zero.
-Shrink the disk so its compact closure lies in the original disk and
-in $\{m>0\}$. Now $m^{-1}$ and its derivatives through order two are
-bounded, and ordinary smooth multiplication gives $a+V/m\in H^2$.
+Since $m(0)=1$, the intersection of the disk with $\{m\ne0\}$ is a
+neighbourhood of zero. Lemma~\ref{lem:sobolev-local-multiplier} gives
+$a+V/m\in H^2_{\mathrm{loc}}$ there; global derivative bounds on $m^{-1}$
+are not needed.
 Off the axes,
 \[
  \widetilde\psi\circ\Xi_P
@@ -600,13 +603,18 @@ Off the axes,
 Thus this function, pushed back through $\Xi_P^{-1}$, represents $F$
 a.e. near $P$. There is no need to transfer the weighted bounds to $V/m$.
 
-At a regular separatrix point choose an affine diagonal rectangle,
-with tangential coordinate first and normal coordinate second, whose
-compact closure lies in the $H^3$ neighbourhood from
-Proposition~\ref{prop:dd-separatrix-h1} and avoids the saddles.
+Every separatrix point lies on a coordinate axis of a chart based at
+$P=(0,n\pi)$ for an odd integer $n$: use
+$\cos x+\cos y=2\cos((x+y)/2)\cos((x-y)/2)$.
+Swap the chart axes if needed to put the normal coordinate second.
+The factor $b(u,v)=u\,m(u,v)$ is nonzero at a regular axis point;
+otherwise $\sin(u/\sqrt2)=0$ identifies another lattice saddle.
+Choose a small affine diagonal rectangle whose compact closure lies
+in the $H^3$ neighbourhood from
+Proposition~\ref{prop:dd-separatrix-h1}.
 By Lemma~\ref{lem:affine-jet-pullback}, the stream is $H^3$ in these
 orthonormal coordinates, and it is odd in the normal variable
-$v$, and $\Psi=v\,b(u,v)$ with $b$ smooth and nonzero.
+$v$, and $\Psi=v\,b(u,v)$ with $b$ smooth and nonzero at the chosen point.
 Lemma~\ref{lem:odd-h3-division} gives the $H^2$ quotient by $v$.
 Shrink again before multiplying by $b^{-1}$.
 On the complement of the separatrix, the original global $H^2$ stream
@@ -618,8 +626,10 @@ Lemma~\ref{lem:periodic-sobolev-reconstruction} now supplies an
 $H^2(\T^2)$ element whose lift is $F$ a.e.: localize by the tensor angular
 partition, whose lattice translates sum to one, and periodize.
 No injective torus chart is needed.
-The separatrix is null, so the resulting element has multiplication identity
-$\psi=\Psi\phi$ a.e. Odd parity of both factors makes $\phi$ even under
+The separatrix is null, so the multiplication identity holds a.e. on the
+lift. Both sides have continuous representatives; hence the identity holds
+pointwise for those representatives and descends to the torus.
+Thus $\psi=\Psi\phi$ a.e. Odd parity of both factors makes $\phi$ even under
 each separatrix reflection, by cancellation off this null set.
 No fourth derivative, vorticity quotient or quotient corner bound is an input.
 \end{proof}

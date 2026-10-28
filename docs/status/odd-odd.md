@@ -11,8 +11,10 @@ current is also assembled without its own `sorry`, from eight explicit
 analytic inputs. Corrected boundary nonnegativity is assembled from three
 interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
-is assembled from four admitted analytic inputs. Together with bulk coercivity
-this gives sixteen transitive admissions, not an admission-free exclusion.
+has an assembled stream-H² stage and three remaining outer admissions.
+The stream-H² assembly reaches nine existing local analytic admissions, so the
+quotient domain has twelve transitive admissions and the full odd–odd exclusion
+has twenty-four. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
@@ -56,13 +58,13 @@ and closing rational margins are proved. The cutoff is the rational 1/7;
 the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
-## Current work: statement coverage and proof outlines
+## Statement coverage and analytic frontier
 
 The formerly outline-free shared prerequisites now have Blueprint proofs and
 explicit dependencies. Every result in the exclusion's recorded dependency
 closure has a proof environment; this is not an audit of all its arguments.
-Lean code and admission counts are unchanged; the broader compatibility
-review remains deferred.
+The stream-H² route is now assembled in Lean as described below. Compatibility
+review of the other analytic branches remains separate.
 
 The certificate chapter is stated in `BernsteinCertificates.lean`,
 `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
@@ -168,44 +170,28 @@ Fiber integrability and quantitative numerator bounds are exported explicitly.
 Logarithmic bulk norms are local on the periodic lift; all four recentered
 quarters' rays are covered.
 
-The `prop:dd-stream-quotient-h2` compatibility review finds matching analytic
-inputs without a fourth derivative or new corner hypothesis. Bounded radial
-powers supply ordinary H³; chart changes must mix derivative indices. Double
-division feeds point removal directly: remove the point for V first, then shrink
-before multiplying by the smooth inverse factor. A common periodic raw quotient
-fixes a.e. overlap agreement, without matching assigned separatrix values.
+`dd_stream_quotient_h2` now has no `sorry` of its own. Its construction is in
+[StreamQuotientAssembly.lean](../../NoEmbeddedEigenvalues/StreamQuotientAssembly.lean):
+bounded radial powers give H³ for the saddle remainder; affine pullback mixes
+all jet indices; double division feeds point removal before smooth inverse
+multiplication. Explicit diagonal charts cover regular separatrix points.
+Local a.e. representatives identify one periodic raw quotient, which is glued
+and reconstructed on the torus. The multiplication identity descends through
+continuous representatives. `InSector.even_dipole_quotient` then supplies parity.
+No fourth derivative, extra corner hypothesis or vorticity quotient is used.
 
-The final parity step is proved as `InSector.even_dipole_quotient` in
-`OddOddQuotient.lean`: the multiplication identity alone gives even parity
-by reflection and cancellation off the null separatrix. Its axiom audit has
-no `sorryAx`. `dd_stream_quotient_h2` now uses this step, but its H² quotient
-existence subgoal remains admitted.
+The source assembly introduces no new admission. Its transitive audit exposes
+nine existing inputs: weighted third jets, separatrix H³, specified-jet
+realization, local division/removal and saddle geometry/parity. Their proofs
+remain the stream-H² frontier. The other three quotient stages remain admitted.
+The larger audit count reflects expansion of the former outer admission, not
+new assumptions. The Blueprint proof is marked complete relative to these inputs.
 
-Domain-a.e. congruence (`lem:sobolev-congr-ae`) is admission-free and public
-in `SobolevLocal.lean`:
-`HasWeakPartialOn.congr_ae_on`, `MemSobolevOn.congr_ae_on`, and
-`MemSobolevLocOn.congr_ae_on`. The weak-derivative proof is reused from
-`TransversalMollifier.lean`, which now calls the public lemma. A full build passes.
+Reusable congruence, gluing, affine, periodic and smooth-multiplier interfaces
+are admission-free; see [shared infrastructure](shared.md). The local multiplier
+in `SobolevMultipliers.lean` uses compact cutoffs, so inverse factors only need
+to be smooth on their nonzero neighbourhoods, without global derivative bounds.
 
-Local Sobolev gluing on the lift (`lem:sobolev-local-gluing`) is proved without
-admissions in `SobolevGluing.lean`, including patchwise a.e.-equal representatives.
-It uses precompact patches, a finite smooth partition of unity and the cutoff lemma.
-
-The affine and periodic bridges are also proved without admissions.
-`AffineJets.lean` transforms every weak-jet index under a volume-preserving
-invertible affine map, preserves Sobolev membership (including inverse/local
-pullback), and transfers integer radial L² bounds when radii agree.
-`SaddleChartPullback.lean` instantiates this on the normalized saddle disks,
-proving its determinant and radius identities directly from the chart formula.
-`PeriodicSobolev.lean` reconstructs torus Hᵏ data from a periodic Hᵏ_loc lift
-using the tensor angular partition and compact periodization. All have Blueprint
-nodes on the stream-H² route. No extra eigenfunction hypothesis is introduced.
-
-The previously identified congruence, local gluing, affine and periodic interface
-gaps are closed. The remaining work is the H² quotient construction in
-`dd_stream_quotient_h2` itself: assemble local division, point removal, smooth
-inverse factors, local a.e. identification and periodic reconstruction.
-The analytic input proofs remain separate. A statement marker is not a proof audit.
 The bundled `def:dd-quotient`, including classical and weak operator E, is
 linked in `OddOddVirial.lean`; it is not a dependency of the stream-H² proposition.
 The periodic first gain includes cell covering on the full fixed neighbourhood;
@@ -216,9 +202,8 @@ below the parent interfaces. `SaddleNormalForm.lean` no longer imports
 `OddOddRegularity.lean`, so the saddle bootstrap can use its geometry without
 an import cycle. Ordinary saddle/separatrix statements are now below the
 logarithmic layer, which is below the weighted-gradient/third-jet statements.
-Parent admissions have not been replaced by assemblies: the blueprint records
-the intended recursive dependencies, whereas the Lean sorry audit still stops
-at the four existing quotient inputs (sixteen for the full exclusion).
+The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs;
+the other three quotient stages still stop at their outer admissions.
 The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
 and negative affine tail) remain a separate proof backlog. Bulk coercivity's
 weighted-domain and inequality interfaces are now stated; their proofs and
@@ -231,7 +216,7 @@ bounds follow from even H² alone by coordinate and radial Hardy estimates.
 Thus `prop:dd-quotient-domain` is now downstream of the minimal result and
 off the exclusion route, not an independent stronger regularity obligation.
 The numerator's weighted jet and third derivative are still used internally
-to prove stream H². The quotient assembly has no own `sorry` and four
+to prove stream H². The quotient assembly has no own `sorry` and twelve
 transitive admissions. `dd_vorticity_quotient_l2` is derived from the first
 two inputs. The generic continuous-representative transport-pair bridge has
 zero transitive admissions. No quantitative divided-Laplacian norm bound is

@@ -43,6 +43,8 @@ proof mechanisms. Module names below are relative to
 - `SobolevLocal.lean`: weak derivatives, local Sobolev spaces and weighted norms.
 - `SobolevGluing.lean`: neighbourhood-wise local Sobolev regularity and gluing
   of representatives agreeing a.e.; separate from torus periodization.
+- `SobolevMultipliers.lean`: local multiplication by smooth factors and
+  division by smooth nonvanishing real factors, via compact cutoffs.
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak jets, integer
   and real-power radial integrability, energies and the Sobolev/jet interface.
 - `AffineJets.lean`: volume-preserving affine pullback of weak derivatives,
@@ -154,6 +156,9 @@ proof mechanisms. Module names below are relative to
   using one fixed canonical stream jet.
 - `OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   sits above the ordinary and logarithmic layers without circular imports.
+- `StreamQuotientAssembly.lean`: saddle division/removal, regular-edge chart
+  covering, local smooth division, gluing and reconstruction of the H² stream
+  quotient from the lower local analytic inputs.
 - `OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
   invariant division/periodic gain interfaces, the generic continuous-forcing
   transport-pair bridge, and quotient-existence assembly.
