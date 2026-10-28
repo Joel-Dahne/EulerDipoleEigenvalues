@@ -2074,6 +2074,19 @@ For a lifted saddle $P$, $Q_{P,a}(\Xi_P(u,v))=a\,uv$.
 The Cartesian and orthonormal versions therefore use the same coefficient.
 \end{lemma}
 
+\begin{proof}
+\uses{lem:dipole-critical-points}
+Put $s=\cos P_x$. At a saddle $s=\pm1$, so $s^2=1$.
+The chart displacements are $X=(u-sv)/\sqrt2$ and
+$Y=(u+sv)/\sqrt2$, whence
+\[
+ Y^2-X^2=\frac{(u+sv)^2-(u-sv)^2}{2}=2suv.
+\]
+Substitution in $Q_{P,a}=as(Y^2-X^2)/2$ gives $as^2uv=auv$.
+The sign in the chart and the Cartesian factor $\cos P_x$ cancel;
+there is no extra sign or factor of two in the coefficient $a$.
+\end{proof}
+
 \begin{lemma}[Differentiated saddle Taylor estimates]
 \label{lem:saddle-normal-form-derivatives}
 \uses{def:saddle-ortho-chart, def:local-plane-geometry}

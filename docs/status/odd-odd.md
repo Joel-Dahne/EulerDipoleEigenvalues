@@ -56,7 +56,13 @@ and closing rational margins are proved. The cutoff is the rational 1/7;
 the constants 203/1920 and λ²/96 come from exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
-## Current work: recursive statement pass
+## Current work: statement coverage and proof outlines
+
+The formerly outline-free shared prerequisites now have Blueprint proofs and
+explicit dependencies. Every result in the exclusion's recorded dependency
+closure has a proof environment; this is not an audit of all its arguments.
+Lean code and admission counts are unchanged; the broader compatibility
+review remains deferred.
 
 The certificate chapter is stated in `BernsteinCertificates.lean`,
 `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.

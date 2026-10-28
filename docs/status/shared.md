@@ -134,8 +134,10 @@ weights and local versus global regularity.
   are explicit. No new analytic proofs were supplied in the statement pass.
   The transport gains cover all four characters without Melnikov;
   implemented Melnikov/pairing results still only accept ±1.
-  Local elliptic regularity, cylinder inversion, corner traces/gluing and
-  interval Hardy inputs still need Lean proofs. Elliptic-center regularity
+  The shared jet, saddle normalization, endpoint Hardy and local elliptic
+  prerequisites have substantive Blueprint derivations with explicit proof
+  dependencies; their Lean proofs remain admitted. Cylinder inversion and
+  corner traces/gluing also still need Lean proofs. Elliptic-center regularity
   is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   off the current sector routes. Odd–odd logarithmic multiplication now uses

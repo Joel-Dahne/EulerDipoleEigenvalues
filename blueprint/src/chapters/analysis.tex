@@ -1128,6 +1128,26 @@ $f\in H^n(U)$ if and only if it has a specified weak jet of order $n$
 whose entries of orders $0,\ldots,n$ all belong to $L^2(U)$.
 \end{lemma}
 
+\begin{proof}
+Induct on $n$. For $n=0$, set $D_\varnothing=f$ and all unused entries
+zero. At the successor step, the recursive Sobolev definition supplies
+first derivatives $g_j\in H^n(U)$, $j=0,1$.
+Choose order-$n$ jets $E^j$ for them by induction and set
+\[
+ D_\varnothing=f,\qquad D_{wj}=E^j_w\quad (|w|\le n).
+\]
+Set longer entries to zero. Here $wj$ appends the letter $j$ on the right:
+the head of a word is the \emph{outer} derivative. Every nonempty word has a unique last letter,
+so these two subtrees do not conflict. The root equations are
+$\partial_jf=g_j$, and within each subtree
+$\partial_iD_{wj}=D_{iwj}$; the required $L^2$ assertions come from induction.
+Conversely, from an order-$(n+1)$ jet take $g_j=D_j$ and
+$E^j_w=D_{wj}$. These are square-integrable order-$n$ jets for the first
+derivatives, so induction gives $g_j\in H^n(U)$ and hence
+$f\in H^{n+1}(U)$. No commutation or uniqueness of weak derivatives is
+needed for this equivalence.
+\end{proof}
+
 \begin{definition}[Canonical second stream jet]
 \label{def:stream-second-jet}
 \uses{def:stream-lifts, def:stream-derivatives, def:local-weak-jets}
@@ -1163,6 +1183,36 @@ If a specified second weak jet of $u$ has trace $F$, then
 $u\in H^3_{\rm loc}(U)$.
 \end{lemma}
 
+\begin{proof}
+\uses{lem:weak-derivative-unique, lem:sobolev-weak-jets,
+ lem:localization-cutoff, lem:local-to-global, lem:elliptic-torus,
+ lem:lift-sobolev-local}
+Work in a relatively compact ball $B\subset U$ that projects injectively
+to the torus, and choose $\chi\in C_c^\infty(B)$ equal to one on a smaller
+ball. Weak derivative uniqueness identifies the specified trace with
+$\Delta u=F$. Repeated cutoff differentiation gives, on all of $\R^2$,
+\[
+ w=\chi u\in H^2(\R^2),\qquad
+ \Delta w=G:=\chi F+2\nabla\chi\cdot\nabla u+(\Delta\chi)u.
+\]
+Each term of $G$ is in $H^1(\R^2)$ with compact support in $B$:
+only first derivatives of $F$ and second derivatives of $u$ occur.
+Periodize $w,G$. Their Fourier coefficients satisfy
+$-|k|^2\widehat w_k=\widehat G_k$.
+The nonzero modes gain two derivatives by
+Lemma~\ref{lem:elliptic-torus}, and the zero mode is controlled by
+$w\in L^2$. Equivalently,
+\[
+ \|w\|_{H^3(\T^2)}^2
+ \le C\bigl(\|G\|_{H^1(\T^2)}^2+\|w\|_{L^2(\T^2)}^2\bigr).
+\]
+On $B$ the periodic lift is the original cutoff, so the lift lemma gives
+$u\in H^3$ on the smaller ball. A finite cover and subordinate smooth
+partition of unity give $H^3(V)$ for every open $V$ with compact closure
+in $U$; weak derivative uniqueness identifies the local jets on overlaps.
+Thus this is an interior argument, with no boundary condition on $u$.
+\end{proof}
+
 \begin{lemma}[Uniform dyadic elliptic estimate]
 \label{lem:elliptic-dyadic}
 \uses{def:sobolev-local, def:local-weak-jets}
@@ -1179,6 +1229,77 @@ Then $D^3u\in L^2(A_r)$ and
 with one constant for all $c,r,u,F$. Existence of the local third jet
 is supplied separately by Lemma~\ref{lem:elliptic-local}.
 \end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-local, lem:weak-derivative-unique,
+ lem:localization-cutoff, lem:local-to-global, lem:elliptic-torus,
+ lem:lift-sobolev-local, lem:line-mollifier-kernel,
+ lem:line-mollifier-contraction, lem:line-mollifier-convergence}
+First prove the estimate on the fixed annuli
+$A=\{1<|q|<2\}$ and $B=\{1/2<|q|<4\}$ for $\Delta v=H$.
+Lemma~\ref{lem:elliptic-local} and weak derivative uniqueness identify
+all entries of the supplied third jet with the local $H^3$ derivatives.
+This proves their square integrability on $A$ before any energy integral
+is used; the quantitative bound is obtained independently as follows.
+
+Fix nested annuli
+$B_1=\{3/4<|q|<5/2\}$ and $B_2=\{5/8<|q|<3\}$.
+Choose real cutoffs $\eta,\chi,\theta$, supported respectively in
+$B,B_2,B_1$, and equal to one near
+$\overline{B_2},\overline{B_1},\overline A$, respectively.
+Testing $\Delta v=H$ against $\eta^2\bar v$ and taking real parts gives
+\[
+ \int\eta^2|\nabla v|^2
+ =-\Re\int\eta^2\bar v H
+   -2\Re\int\eta\bar v\nabla\eta\cdot\nabla v.
+\]
+Absorb half the gradient term by Cauchy--Schwarz and Young to obtain
+\[
+ \|\nabla v\|_{2,B_2}^2
+ \le C\bigl(\|H\|_{2,B}^2+\|v\|_{2,B}^2\bigr).
+\]
+For the test, apply the line kernel successively in both coordinates
+to the zero extensions of $v,H$. For sufficiently small kernel support,
+the weak test identities give $\Delta v_\epsilon=H_\epsilon$ near
+$\operatorname{supp}\eta$. The contraction and convergence lemmas,
+also applied to the first derivatives of $v$, allow passage to the limit
+in the displayed identity. No bound on third derivatives is used here.
+
+For compactly supported $z$ in the fixed period box, the torus Fourier
+estimate, including its constant mode, is
+\[
+ \|z\|_{H^{j+2}}^2
+ \le C\bigl(\|\Delta z\|_{H^j}^2+\|z\|_2^2\bigr),\qquad j=0,1.
+\]
+Apply the $j=0$ estimate to $z=\chi v$. The formula
+$\Delta(\chi v)=\chi H+2\nabla\chi\cdot\nabla v+(\Delta\chi)v$
+and the gradient bound give
+$\|v\|_{H^2(B_1)}^2\le C(\|H\|_{2,B}^2+\|v\|_{2,B}^2)$.
+Next apply the $j=1$ estimate to $z=\theta v$:
+its Laplacian has $H^1$ norm controlled by
+$\|H\|_{H^1(B)}+\|v\|_{H^2(B_1)}$.
+Both cutoff products fit inside $(-\pi,\pi)^2$, so periodization and
+lifting preserve the local derivatives. Hence
+\[
+ \|D^3v\|_{2,A}^2
+ \le C\bigl(\|\nabla H\|_{2,B}^2+\|H\|_{2,B}^2+\|v\|_{2,B}^2\bigr).
+\]
+All cutoffs were fixed, so this constant is independent of $v,H$.
+
+Finally set $v(q)=u(c+rq)$ and $H(q)=r^2F(c+rq)$.
+The weak chain rule follows by substitution in the test identities.
+In dimension two the squared norms transform as
+\[
+ \|D^3v\|_{2,A}^2=r^4\|D^3u\|_{2,A_r}^2,\qquad
+ \|\nabla H\|_{2,B}^2=r^4\|\nabla F\|_{2,A_r^*}^2,
+\]
+\[
+ \|H\|_{2,B}^2=r^2\|F\|_{2,A_r^*}^2,\qquad
+ \|v\|_{2,B}^2=r^{-2}\|u\|_{2,A_r^*}^2.
+\]
+Divide by $r^4$ to get exactly the powers $1,r^{-2},r^{-6}$ in the
+statement, with the same constant for every centre and scale.
+\end{proof}
 
 \begin{lemma}[One-coordinate division of an odd H3 function]
 \label{lem:odd-h3-division}
@@ -2160,6 +2281,28 @@ If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then $F/x\in L^2(0,\eta)
   \int_0^\eta|F/x|^2\,dx\le4\int_0^\eta|F'|^2\,dx.
 \]
 \end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints, lem:hardy-average}
+Let $D=F'$ be the specified a.e. derivative, extended by zero off
+$(0,\eta)$. Choose a measurable version of this extension.
+It lies in $L^1(\R)\cap L^2(\R)$ because the interval is bounded.
+The endpoint fundamental theorem and the zero trace give, for $0<x<\eta$,
+\[
+ F(x)=\widetilde F(x)-\widetilde F(0)=\int_0^xD(t)\,dt.
+\]
+Apply the primitive form of Lemma~\ref{lem:hardy-average} on the positive
+half-line and restrict its nonnegative left-hand integral to $(0,\eta)$:
+\[
+ \int_0^\eta\frac{|F(x)|^2}{x^2}\,dx
+ \le\int_0^\infty\frac{|\int_0^xD(t)\,dt|^2}{x^2}\,dx
+ \le4\int_0^\infty|D(x)|^2\,dx
+ =4\int_0^\eta|F'(x)|^2\,dx<\infty.
+\]
+Measurability and finiteness prove $F/x\in L^2$, as well as the bound.
+No integration by parts at the singular endpoint, and no assumption on
+the raw value of $F(0)$, is needed.
+\end{proof}
 
 \begin{remark}
 The endpoint case is separated from the $H^2$ collection below.
