@@ -926,16 +926,26 @@ convergence of the vorticity pairing.
 \begin{proof}
 \uses{lem:dd-truncated-virial, lem:dd-quotient-gradient-traces,
  lem:dd-value-finite-part, lem:dd-renormalized-bulk, lem:pairing-limit,
- lem:dd-arc-melnikov, lem:dd-continuous-character, lem:canonical-arc-form,
- lem:dd-quotient-equations, lem:inverse-laplacian-derivatives}
-The Poisson relation and the multiplication identities give $E\phi=-\nu$.
-The supplied data then give the full renormalized bulk limit.
-Select pairing levels outside the exceptional sets of the truncated
-virial and gradient traces. On that sequence the normal terms vanish,
+ lem:dd-continuous-character, lem:orbit-coordinates-area,
+ lem:level-integral-congr, lem:lift-sobolev-local, lem:continuous-representative}
+\leanok
+The multiplication identities identify the raw stream quotient with
+$\widetilde\phi$ pointwise on the open cell, and the raw vorticity
+quotient with $\nu$ almost everywhere. Transfer the specified weak
+derivatives to the raw stream quotient. Coarea transfers representative
+equalities to almost every level and justifies splitting the boundary
+integral into its five separately integrable terms.
+
+The renormalized bulk has a full positive-level limit. Select the
+pairing sequence outside both the truncated-virial exceptional set and
+the pullback of the gradient exceptional set under $h\mapsto2h$;
+this pullback is null. On $\epsilon_j=2h_j$ the normal terms vanish,
 the tangential energy tends to the arc derivative energy, and the
 pairing tends to the canonical profile pairing. The scalar value
 finite part contributes $V_\phi$, including $A_\phi\log8$.
-The resulting sequence identifies the full bulk limit.
+Replacing $(8-\epsilon^3)/3$ by $8/3$ against the counterterm leaves
+only $A_\phi\epsilon^3\log(1/\epsilon)/3\to0$.
+Uniqueness of the subsequential limit identifies the full bulk limit.
 Unlike Proposition~\ref{prop:dd-virial}, this interface takes quotient data
 as input and requires neither their existence nor character recombination.
 \end{proof}

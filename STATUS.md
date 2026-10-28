@@ -7,7 +7,7 @@ working; update current priorities and blockers rather than appending history.
 
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
-eight explicit admitted analytic inputs. Corrected boundary nonnegativity is
+ten explicit admitted analytic inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages and bulk coercivity
 remain outer admissions.
@@ -56,9 +56,9 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
-finds zero admissions for `even_even_exclusion`, eight below `dd_picone_current`,
+finds zero admissions for `even_even_exclusion`, ten below `dd_picone_current`,
 three below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and twenty-four for `odd_odd_exclusion`.
+twelve below `dd_exclusion_domain`, and twenty-six for `odd_odd_exclusion`.
 Expanding the assemblies exposes their analytic frontiers;
 it does not eliminate those admissions. Quotient orthogonality and canonical
 boundary regularity are admission-free for supplied quotient data. The generic

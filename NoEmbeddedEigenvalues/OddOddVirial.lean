@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.OddOdd
+import NoEmbeddedEigenvalues.OddOddForms
 
 /-!
 # Weighted odd–odd virial interfaces
@@ -15,7 +15,8 @@ use the opposite sign; the quadratic energies are unaffected.
 
 The gradient limits allow a common null set of exceptional levels. In contrast, the
 renormalized bulk has a full positive-level limit; no all-level vorticity pairing
-limit is asserted. These interfaces do not change the Picone/exclusion assembly.
+limit is asserted. Supplied-data bridges identify the raw local quotients a.e.,
+rescale exceptional levels by `ε = 2h`, and split the boundary integral using coarea.
 -/
 
 noncomputable section
@@ -266,5 +267,208 @@ theorem dd_renormalized_bulk {u dx dy : L2} (hu : MemSobolev 2 u)
         (∫ p in ddTruncatedCell ε, ddVirialDensity (liftL2 u) e (liftL2 dx) (liftL2 dy) p) +
           ddLogCounterterm u ε) (𝓝[>] 0) (𝓝 J) := by
   sorry
+
+/-- On the positive cell the raw stream quotient is exactly the continuous supplied
+    quotient. No assertion is made on the separatrix. -/
+theorem DDQuotientData.raw_stream_eq {lam : ℝ} {ω : L2}
+    (q : DDQuotientData lam ω) {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
+    ddStreamQuotient ω p = continuousRep q.phi (torusProj p) := by
+  have hpos : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+  rw [ddStreamQuotient, q.contStream_eq]
+  exact mul_div_cancel_left₀ _ (Complex.ofReal_ne_zero.mpr hpos.ne')
+
+/-- The raw vorticity quotient agrees with supplied data a.e. on the open cell. -/
+theorem DDQuotientData.raw_vorticity_eq {lam : ℝ} {ω : L2}
+    (q : DDQuotientData lam ω) :
+    ∀ᵐ p ∂(volume.restrict cellSquare), ddVorticityQuotient ω p = liftL2 q.nu p := by
+  have hm : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  filter_upwards [ae_restrict_of_ae (ae_torusProj q.vorticity_eq),
+    ae_restrict_mem hm] with p hp hpc
+  have hpos : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hpc
+  unfold ddVorticityQuotient liftL2
+  rw [hp, Ψ_torusProj]
+  exact mul_div_cancel_left₀ _ (Complex.ofReal_ne_zero.mpr hpos.ne')
+
+/-- Change the raw local quotients to supplied data in the truncated virial. The
+    conclusion is in the orbit parameter, so the stream level is explicitly `2*h`. -/
+theorem DDQuotientData.ae_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (q : DDQuotientData lam ω) (hω : IsEigenSolution lam ω)
+    (hs : InSector false false ω) {dx dy : L2}
+    (hx : HasFourierPartial 0 q.phi dx) (hy : HasFourierPartial 1 q.phi dy) :
+    ∀ᵐ h ∂(volume.restrict (Ioo (0 : ℝ) 1)),
+      ddRawBulk q.phi q.nu dx dy (2 * h) =
+        ddVirialLevel (fun p ↦ continuousRep q.phi (torusProj p))
+          (fun p ↦ -liftL2 q.nu p) (liftL2 dx) (liftL2 dy) (2 * h) := by
+  have hm : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  have hrep := ae_torusProj (coeFn_eq_continuousRep q.regular)
+  have hu : ∀ᵐ p, p ∈ cellSquare →
+      liftL2 q.phi p = ddStreamQuotient ω p := by
+    filter_upwards [hrep] with p hp hpc
+    exact hp.trans (q.raw_stream_eq hpc).symm
+  have hd (j : Fin 2) (d : L2) (hd : HasFourierPartial j q.phi d) :
+      HasWeakPartialOn cellSquare j (ddStreamQuotient ω) (liftL2 d) :=
+    (hasWeakPartialOn_liftL2 hd cellSquare).congr_ae_on hm hu
+      (Eventually.of_forall fun _ _ ↦ rfl)
+  have hv := dd_truncated_virial hlam hω hs (hd 0 dx hx) (hd 1 dy hy)
+  have hv' := (Measure.quasiMeasurePreserving_smul (μ := (volume : Measure ℝ))
+    (by norm_num : (2 : ℝ) ≠ 0)).ae ((ae_restrict_iff' measurableSet_Ioo).mp hv)
+  simp only [smul_eq_mul] at hv'
+  have mν : Measurable (liftL2 q.nu) := (Lp.stronglyMeasurable q.nu).measurable.comp
+    isOpenQuotientMap_torusProj.continuous.measurable
+  have mv : Measurable (ddVorticityQuotient ω) := by
+    unfold ddVorticityQuotient dipoleLift liftL2
+    have := (Lp.stronglyMeasurable ω).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable
+    fun_prop
+  have hlevels := ae_level_of_ae_cellSquare (measurableSet_eq_fun mv mν) q.raw_vorticity_eq
+  filter_upwards [ae_restrict_of_ae hv', hlevels, ae_restrict_mem measurableSet_Ioo]
+    with h hvh hlevel hh
+  have hε : 2 * h ∈ Ioo (0 : ℝ) 2 := ⟨by linarith [hh.1], by linarith [hh.2]⟩
+  have hvir := (hvh hε).2
+  have hb : ddRawBulk q.phi q.nu dx dy (2 * h) =
+      ∫ p in ddTruncatedCell (2 * h),
+        ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p)
+          (liftL2 dx) (liftL2 dy) p := by
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_of_ae hrep,
+      ae_restrict_of_ae ((ae_restrict_iff' hm).mp q.raw_vorticity_eq),
+      ae_restrict_mem (show MeasurableSet (ddTruncatedCell (2 * h)) from
+        hm.inter (measurableSet_lt measurable_const
+          (show Measurable dipoleLift by unfold dipoleLift; fun_prop)))]
+      with p hp hvp hpc
+    rw [ddVirialDensity, q.raw_stream_eq hpc.1, hvp hpc.1, norm_neg, ← hp]
+    dsimp only [ddVorticityDensity, ddRawEnergy, liftL2]
+    ring
+  rw [hb, hvir, ddVirialLevel, ddVirialLevel]
+  simp only [mul_div_cancel_left₀ _ (by norm_num : (2 : ℝ) ≠ 0)]
+  rw [levelIntegral_eq_integral_orbitWindow hh.1 hh.2,
+    levelIntegral_eq_integral_orbitWindow hh.1 hh.2]
+  apply integral_congr_ae
+  filter_upwards [hlevel] with t ht
+  rw [q.raw_stream_eq (dipoleOrbit_mem_cellSquare hh.1 hh.2 t), ht]
+
+/-- Splitting the boundary integral is justified on almost every level by coarea
+    applied separately to the five integrable densities. -/
+theorem dd_virial_level_split {φ : L2} (hφ : MemSobolev 2 φ) (ν dx dy : L2) :
+    ∀ᵐ h ∂(volume.restrict (Ioo (0 : ℝ) 1)),
+      ddVirialLevel (fun p ↦ continuousRep φ (torusProj p))
+        (fun p ↦ -liftL2 ν p) (liftL2 dx) (liftL2 dy) (2 * h) =
+      (8 - (2 * h) ^ 3) / 3 *
+        (levelIntegral h (fun p ↦ ‖ddInwardNormal (liftL2 dx) (liftL2 dy) p‖ ^ 2) -
+          levelIntegral h (fun p ↦ ‖tangentDeriv (liftL2 dx) (liftL2 dy) p‖ ^ 2) -
+          ddLevelMass φ (2 * h) -
+          levelIntegral h (fun p ↦
+            (liftL2 ν p * (starRingEnd ℂ) (continuousRep φ (torusProj p))).re)) -
+        (2 * h) ^ 2 * levelIntegral h (fun p ↦ gradNorm p *
+          ((starRingEnd ℂ) (continuousRep φ (torusProj p)) *
+            ddInwardNormal (liftL2 dx) (liftL2 dy) p).re) := by
+  let u := fun p ↦ continuousRep φ (torusProj p)
+  let n := ddInwardNormal (liftL2 dx) (liftL2 dy)
+  let τ := tangentDeriv (liftL2 dx) (liftL2 dy)
+  have ml (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable
+  have mu : Measurable u := ((continuousRep φ).continuous.comp
+    isOpenQuotientMap_torusProj.continuous).measurable
+  have mn : Measurable n := by
+    change Measurable (fun p ↦ -normalDeriv (liftL2 dx) (liftL2 dy) p)
+    simp only [normalDeriv, gradNorm]
+    fun_prop
+  have mt : Measurable τ := by
+    change Measurable (fun p ↦ tangentDeriv (liftL2 dx) (liftL2 dy) p)
+    simp only [tangentDeriv, gradNorm]
+    fun_prop
+  have mr : Measurable gradNorm := by unfold gradNorm; fun_prop
+  have hsub : cellSquare ⊆
+      Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
+    rintro p ⟨ha, hb⟩
+    simp only [diagCoord, abs_lt] at ha hb
+    exact ⟨⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩,
+      ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩⟩
+  have hsq (g : L2) : IntegrableOn (fun p ↦ ‖liftL2 g p‖ ^ 2) cellSquare :=
+    (integrableOn_norm_liftL2_sq g).mono_set hsub
+  have iu : IntegrableOn (fun p ↦ ‖u p‖ ^ 2) cellSquare := by
+    apply (hsq φ).congr
+    filter_upwards [ae_restrict_of_ae (ae_torusProj (coeFn_eq_continuousRep hφ))]
+      with p hp
+    exact congrArg (fun z : ℂ ↦ ‖z‖ ^ 2) hp
+  let F := fun p ↦ ‖u p‖ ^ 2 + ‖liftL2 dx p‖ ^ 2 +
+    ‖liftL2 dy p‖ ^ 2 + ‖liftL2 ν p‖ ^ 2
+  have iF : IntegrableOn F cellSquare := ((iu.add (hsq dx)).add (hsq dy)).add (hsq ν)
+  have hn (p) : ‖n p‖ ^ 2 ≤ 2 * F p := by
+    have hb := norm_normalDeriv_le (liftL2 dx) (liftL2 dy) p
+    have he : ‖n p‖ = ‖normalDeriv (liftL2 dx) (liftL2 dy) p‖ := norm_neg _
+    dsimp only [F]
+    rw [← he] at hb
+    nlinarith [sq_nonneg (‖liftL2 dx p‖ - ‖liftL2 dy p‖),
+      norm_nonneg (n p), norm_nonneg (liftL2 dx p), norm_nonneg (liftL2 dy p),
+      sq_nonneg ‖u p‖, sq_nonneg ‖liftL2 ν p‖]
+  have ht (p) : ‖τ p‖ ^ 2 ≤ 2 * F p := by
+    have hb := norm_tangentDeriv_le (liftL2 dx) (liftL2 dy) p
+    dsimp only [F]
+    nlinarith [sq_nonneg (‖liftL2 dx p‖ - ‖liftL2 dy p‖),
+      norm_nonneg (τ p), norm_nonneg (liftL2 dx p), norm_nonneg (liftL2 dy p),
+      sq_nonneg ‖u p‖, sq_nonneg ‖liftL2 ν p‖]
+  have hre (a b : ℂ) : |(a * (starRingEnd ℂ) b).re| ≤ ‖a‖ * ‖b‖ := by
+    exact (Complex.abs_re_le_norm _).trans (by rw [norm_mul, Complex.norm_conj])
+  have hp (p) : |(liftL2 ν p * (starRingEnd ℂ) (u p)).re| ≤ F p := by
+    refine (hre _ _).trans ?_
+    dsimp only [F]
+    nlinarith [sq_nonneg (‖liftL2 ν p‖ - ‖u p‖),
+      sq_nonneg ‖liftL2 dx p‖, sq_nonneg ‖liftL2 dy p‖]
+  have hr (p) : gradNorm p ≤ 2 := by
+    have h0 : 0 ≤ gradNorm p := Real.sqrt_nonneg _
+    have h2 : gradNorm p ^ 2 ≤ 2 := by
+      rw [gradNorm, Real.sq_sqrt (by positivity)]
+      nlinarith [Real.sin_sq_le_one p.1, Real.sin_sq_le_one p.2]
+    nlinarith
+  have hm (p) : |gradNorm p * ((starRingEnd ℂ) (u p) * n p).re| ≤ 3 * F p := by
+    rw [abs_mul, abs_of_nonneg (show 0 ≤ gradNorm p from Real.sqrt_nonneg _)]
+    have hu : ‖u p‖ ^ 2 ≤ F p := by
+      dsimp only [F]
+      nlinarith [sq_nonneg (‖liftL2 dx p‖), sq_nonneg (‖liftL2 dy p‖),
+        sq_nonneg (‖liftL2 ν p‖)]
+    have hb : |((starRingEnd ℂ) (u p) * n p).re| ≤ ‖u p‖ * ‖n p‖ := by
+      simpa [mul_comm] using hre (n p) (u p)
+    nlinarith [mul_le_mul (hr p) hb (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 2),
+      hn p, sq_nonneg (‖u p‖ - ‖n p‖)]
+  have iN : IntegrableOn (fun p ↦ ‖n p‖ ^ 2) cellSquare :=
+    (iF.const_mul 2).mono' (mn.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ by rw [Real.norm_of_nonneg (sq_nonneg _)]; exact hn p)
+  have iT : IntegrableOn (fun p ↦ ‖τ p‖ ^ 2) cellSquare :=
+    (iF.const_mul 2).mono' (mt.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun p ↦ by rw [Real.norm_of_nonneg (sq_nonneg _)]; exact ht p)
+  have iP : IntegrableOn (fun p ↦ (liftL2 ν p * (starRingEnd ℂ) (u p)).re) cellSquare :=
+    iF.mono' (by fun_prop) (Eventually.of_forall fun p ↦ hp p)
+  have iM : IntegrableOn (fun p ↦ gradNorm p * ((starRingEnd ℂ) (u p) * n p).re)
+      cellSquare :=
+    (iF.const_mul 3).mono' (by fun_prop) (Eventually.of_forall fun p ↦ hm p)
+  filter_upwards [(integral_cellSquare_eq iN).1, (integral_cellSquare_eq iT).1,
+    (integral_cellSquare_eq iu).1, (integral_cellSquare_eq iP).1,
+    (integral_cellSquare_eq iM).1, ae_restrict_mem measurableSet_Ioo]
+    with h jN jT jU jP jM hh
+  simp only [ddVirialLevel, ddLevelMass, mul_div_cancel_left₀ _ (by norm_num : (2 : ℝ) ≠ 0),
+    levelIntegral_eq_integral_orbitWindow hh.1 hh.2]
+  change (∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+    (8 - (2 * h) ^ 3) / 3 * (‖n (dipoleOrbit h t)‖ ^ 2 - ‖τ (dipoleOrbit h t)‖ ^ 2 -
+      ‖u (dipoleOrbit h t)‖ ^ 2 + (-liftL2 ν (dipoleOrbit h t) *
+        (starRingEnd ℂ) (u (dipoleOrbit h t))).re) -
+      (2 * h) ^ 2 * gradNorm (dipoleOrbit h t) *
+        ((starRingEnd ℂ) (u (dipoleOrbit h t)) * n (dipoleOrbit h t)).re) = _
+  simp only [neg_mul, Complex.neg_re, ← sub_eq_add_neg]
+  simp_rw [mul_assoc ((2 * h) ^ 2)]
+  simp only [neg_mul] at jN jT jU jP jM
+  have hsplit := integral_sub
+    ((((jN.sub jT).sub jU).sub jP).const_mul ((8 - (2 * h) ^ 3) / 3))
+    (jM.const_mul ((2 * h) ^ 2))
+  simp only [Pi.sub_apply] at hsplit
+  rw [hsplit, integral_const_mul, integral_const_mul]
+  have h1 := integral_sub ((jN.sub jT).sub jU) jP
+  have h2 := integral_sub (jN.sub jT) jU
+  have h3 := integral_sub jN jT
+  simp only [Pi.sub_apply] at h1 h2 h3
+  rw [h1, h2, h3]
 
 end NoEmbeddedEigenvalues

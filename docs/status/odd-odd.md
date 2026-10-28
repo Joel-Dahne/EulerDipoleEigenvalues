@@ -7,14 +7,14 @@
 
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
-current is also assembled without its own `sorry`, from eight explicit
-analytic inputs. Corrected boundary nonnegativity is assembled from three
-interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
+current is also assembled without its own `sorry`, from explicit analytic
+inputs, reaching ten admissions. Corrected boundary nonnegativity is assembled
+from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions and the full odd–odd exclusion
-has twenty-four. This is not an admission-free exclusion.
+has twenty-six. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
@@ -106,18 +106,23 @@ extension or center removal in `dd_truncated_picone`; that parent and the
 exclusion assemblies are unchanged. Compatibility review remains deferred
 while the statement pass continues.
 
-[OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) now covers
-the missing weighted-virial interfaces below `dd-character-virial-limit`, including
-the quotient/operator definitions; `Period.lean` states the leading value asymptotic
-separately from sharp remainders. All new theorem proofs are `sorry`; no parent
-assembly or transitive exclusion admission count has changed. The interfaces
-separate weak quotient equations from classical Green/conjugation identities,
-raw local quotients from supplied global data, common exceptional-level sets
-from full bulk limits, and inward from the library's outward normal derivative.
-The deferred compatibility review must pass from supplied data to the raw local
-virial, rescale exceptional levels by `ε = 2h`, and align the pairing subsequence
-with all exceptional sets. This is statement/interface work, not new analytic
-proof work.
+`dd_character_virial_limit` is proved relative to four existing analytic inputs:
+`dd_truncated_virial`, `dd_quotient_gradient_traces`, `dd_value_finite_part`
+and `dd_renormalized_bulk`. No new admission or stronger hypothesis is introduced.
+[OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
+raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
+boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels
+back under `h ↦ 2h`, selects one pairing sequence avoiding every exceptional set,
+and identifies the full bulk limit by uniqueness. The coefficient error is
+`ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
+This expands the Picone audit from eight admissions to ten, and the exclusion
+audit from twenty-four to twenty-six; it does not prove the four analytic inputs.
+
+[OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
+forms, boundary data, characters and value finite-part interface below the virial,
+avoiding an import cycle. The weak/classical quotient equations remain separate
+from this assembly. `Period.lean` states the leading value asymptotic separately
+from sharp remainders.
 
 `dd_exclusion_domain` now follows in Lean from four explicit inputs:
 `dd_stream_quotient_h2`, `even_h2_dipole_laplacian`,
@@ -228,9 +233,10 @@ The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³ and
 `∇ω/d ∈ L²`; their principal interfaces are now stated in Lean with `sorry`. Double division for the H² stream quotient, the subsequent
 Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
-the quotient and transport-domain assemblies are proved. The virial uses only the minimal quotient data; its Lean
-character-wise interface and its newly stated recursive virial inputs, as well
-as the analytic inputs below Picone, still need compatibility review. Weighted
+the quotient and transport-domain assemblies are proved. The virial uses only the
+minimal quotient data. Its character-wise assembly and representative/exceptional-level
+bridges are checked; the four analytic virial inputs and the remaining inputs below
+Picone still need proofs and analytic review. Weighted
 Poincaré now has a precise weak form-domain statement, but no spectral proof. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
