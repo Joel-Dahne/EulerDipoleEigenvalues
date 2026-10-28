@@ -179,16 +179,18 @@ The final parity step is proved as `InSector.even_dipole_quotient` in
 `OddOddQuotient.lean`: the multiplication identity alone gives even parity
 by reflection and cancellation off the null separatrix. Its axiom audit has
 no `sorryAx`. `dd_stream_quotient_h2` now uses this step, but its H² quotient
-existence subgoal remains admitted. No dependency proofs were changed.
+existence subgoal remains admitted.
 
-The next statement-level bridges are affine pullback of weak jets/radial L²
-bounds, Sobolev congruence under a.e. equality on the domain, and periodic
-local-to-global gluing. `DiagonalACL.lean` supplies first-order diagonal cases;
-`SobolevLocal.lean` currently gives global-a.e. congruence;
-`LocalToGlobal.lean` already periodizes arbitrary compactly supported Hᵏ data.
-Domain-a.e. weak congruence is proved privately as `HasWeakPartialOn.congr_ae_on`
-in `TransversalMollifier.lean`: promote it and derive its Sobolev version, rather
-than add an admission. For periodic gluing, reuse the rescaled/tensored
+Domain-a.e. congruence (`lem:sobolev-congr-ae`) is admission-free and public
+in `SobolevLocal.lean`:
+`HasWeakPartialOn.congr_ae_on`, `MemSobolevOn.congr_ae_on`, and
+`MemSobolevLocOn.congr_ae_on`. The weak-derivative proof is reused from
+`TransversalMollifier.lean`, which now calls the public lemma. A full build passes.
+
+The remaining bridges are affine pullback of weak jets/radial L² bounds and
+periodic local-to-global gluing. `DiagonalACL.lean` supplies first-order diagonal
+cases; `LocalToGlobal.lean` already periodizes arbitrary compactly supported Hᵏ
+data. For periodic gluing, reuse the rescaled/tensored
 `anglePartition` and `memSobolev_compactPeriodize`; local Sobolev gluing on the
 lift still needs an exposed interface. These are Lean interface gaps, not
 extra eigenfunction hypotheses. The H² construction is not yet assembled

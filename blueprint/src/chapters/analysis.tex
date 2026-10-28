@@ -339,6 +339,31 @@ A locally integrable function times a continuous function with compact support
 in $U$ is integrable, so the defining integrals split.
 \end{proof}
 
+\begin{lemma}[Sobolev congruence on the domain]
+\label{lem:sobolev-congr-ae}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.congr_ae_on,
+  NoEmbeddedEigenvalues.MemSobolevOn.congr_ae_on,
+  NoEmbeddedEigenvalues.MemSobolevLocOn.congr_ae_on}
+\leanok
+Let $U\subset\R^2$ be measurable, and let $g=g'$ and $h=h'$ almost
+everywhere on $U$. If $h$ is a weak partial derivative of $g$ on $U$,
+then $h'$ is the same weak partial derivative of $g'$.
+For each integer $k\ge0$, $g\in H^k(U)$ implies $g'\in H^k(U)$.
+Likewise $g\in H^k_{\mathrm{loc}}(U)$ implies
+$g'\in H^k_{\mathrm{loc}}(U)$; for this last assertion $U$ need not be
+measurable. No agreement outside $U$ is required.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Test functions and their derivatives vanish outside $U$, so a.e.\ changes
+on $U$ leave both sides of the weak derivative identity unchanged.
+The $L^2(U)$ condition is also unchanged. Retain the same first weak
+derivatives to obtain the Sobolev assertion. For local membership, restrict
+the a.e.\ identity to each open $V\Subset U$ and apply the preceding assertion.
+\end{proof}
+
 \begin{lemma}[Uniqueness of weak partial derivatives]
 \label{lem:weak-derivative-unique}
 \uses{def:sobolev-local}

@@ -160,6 +160,30 @@ theorem HasWeakPartialOn.mono (hd : HasWeakPartialOn U j g h) (hVU : V ⊆ U) :
     HasWeakPartialOn V j g h :=
   ⟨hd.1.mono_set hVU, hd.2.1.mono_set hVU, fun φ hφ ↦ hd.2.2 φ (hφ.mono hVU)⟩
 
+/-- Weak derivatives on a measurable set are unchanged by a.e. changes on that set. -/
+theorem HasWeakPartialOn.congr_ae_on {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
+    {j : Fin 2} {g g' h h' : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn U j g h)
+    (hg : ∀ᵐ p, p ∈ U → g p = g' p) (hh : ∀ᵐ p, p ∈ U → h p = h' p) :
+    HasWeakPartialOn U j g' h' := by
+  refine ⟨hd.1.congr ((ae_restrict_iff' hU).mpr hg),
+    hd.2.1.congr ((ae_restrict_iff' hU).mpr hh), fun φ hφ ↦ ?_⟩
+  have e1 : (∫ p, g' p * coordPartial j φ p) = ∫ p, g p * coordPartial j φ p := by
+    refine integral_congr_ae ?_
+    filter_upwards [hg] with p hp
+    by_cases hpU : p ∈ U
+    · rw [hp hpU]
+    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hpU (hφ.tsupport_subset
+        (tsupport_coordPartial_subset j φ ht))), mul_zero, mul_zero]
+  have e2 : (∫ p, h' p * φ p) = ∫ p, h p * φ p := by
+    refine integral_congr_ae ?_
+    filter_upwards [hh] with p hp
+    by_cases hpU : p ∈ U
+    · rw [hp hpU]
+    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hpU (hφ.tsupport_subset ht)), mul_zero,
+        mul_zero]
+  rw [e1, e2]
+  exact hd.2.2 φ hφ
+
 /-- Weak derivatives are linear: sums. -/
 theorem HasWeakPartialOn.add (hd : HasWeakPartialOn U j g h) (hd' : HasWeakPartialOn U j g' h') :
     HasWeakPartialOn U j (fun p ↦ g p + g' p) (fun p ↦ h p + h' p) := by
@@ -528,6 +552,28 @@ theorem MemSobolevOn.congr_ae {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × �
     refine ⟨MemLp.ae_eq (ae_restrict_of_ae hg) hL, fun j ↦ ?_⟩
     obtain ⟨d, hd1, hd2⟩ := hd j
     exact ⟨d, hd1.congr_left hg, hd2⟩
+
+/-- Changing a function a.e. on its domain preserves Sobolev membership.
+No agreement outside the domain is required. -/
+theorem MemSobolevOn.congr_ae_on {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × ℝ → ℂ}
+    (h : MemSobolevOn k U g) (hU : MeasurableSet U)
+    (hg : ∀ᵐ p, p ∈ U → g p = g' p) : MemSobolevOn k U g' := by
+  cases k with
+  | zero => exact MemLp.ae_eq ((ae_restrict_iff' hU).mpr hg) h
+  | succ k =>
+    refine ⟨MemLp.ae_eq ((ae_restrict_iff' hU).mpr hg) h.1, fun j ↦ ?_⟩
+    obtain ⟨d, hd, hdk⟩ := h.2 j
+    exact ⟨d, hd.congr_ae_on hU hg (Filter.Eventually.of_forall fun _ _ ↦ rfl), hdk⟩
+
+/-- Local Sobolev membership depends only on a.e. values on the domain.
+The domain itself need not be measurable. -/
+theorem MemSobolevLocOn.congr_ae_on {k : ℕ} {U : Set (ℝ × ℝ)} {g g' : ℝ × ℝ → ℂ}
+    (h : MemSobolevLocOn k U g) (hg : ∀ᵐ p, p ∈ U → g p = g' p) :
+    MemSobolevLocOn k U g' := by
+  intro V hV hc hVU
+  apply (h V hV hc hVU).congr_ae_on hV.measurableSet
+  filter_upwards [hg] with p hp hpV
+  exact hp (hVU (subset_closure hpV))
 
 /-! ### From the lift to the torus
 

@@ -1866,30 +1866,6 @@ theorem integral_mul_levelDualCoeff {u : ℝ × ℝ → ℂ} {g : Fin 2 → ℝ 
       dsimp only [ψ]
       ring
 
-/-- Weak derivatives on a measurable set are unchanged by a.e. changes on that set. -/
-private theorem HasWeakPartialOn.congr_ae_on {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
-    {j : Fin 2} {g g' h h' : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn U j g h)
-    (hg : ∀ᵐ p, p ∈ U → g p = g' p) (hh : ∀ᵐ p, p ∈ U → h p = h' p) :
-    HasWeakPartialOn U j g' h' := by
-  refine ⟨hd.1.congr ((ae_restrict_iff' hU).mpr hg),
-    hd.2.1.congr ((ae_restrict_iff' hU).mpr hh), fun φ hφ ↦ ?_⟩
-  have e1 : (∫ p, g' p * coordPartial j φ p) = ∫ p, g p * coordPartial j φ p := by
-    refine integral_congr_ae ?_
-    filter_upwards [hg] with p hp
-    by_cases hpU : p ∈ U
-    · rw [hp hpU]
-    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hpU (hφ.tsupport_subset
-        (tsupport_coordPartial_subset j φ ht))), mul_zero, mul_zero]
-  have e2 : (∫ p, h' p * φ p) = ∫ p, h p * φ p := by
-    refine integral_congr_ae ?_
-    filter_upwards [hh] with p hp
-    by_cases hpU : p ∈ U
-    · rw [hp hpU]
-    · rw [image_eq_zero_of_notMem_tsupport (fun ht ↦ hpU (hφ.tsupport_subset ht)), mul_zero,
-        mul_zero]
-  rw [e1, e2]
-  exact hd.2.2 φ hφ
-
 /-- Weak derivatives on the punctured cell extend to the plane for functions vanishing off a
 closed interior level band. -/
 private theorem HasWeakPartialOn.univ_of_band {a b : ℝ} (ha : 0 < a) (hb : b < 1) {j : Fin 2}
