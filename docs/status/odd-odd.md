@@ -106,8 +106,8 @@ extension or center removal in `dd_truncated_picone`; that parent and the
 exclusion assemblies are unchanged. Compatibility review remains deferred
 while the statement pass continues.
 
-`dd_character_virial_limit` is proved relative to four existing analytic inputs:
-`dd_truncated_virial`, `dd_quotient_gradient_traces`, `dd_value_finite_part`
+`dd_character_virial_limit` reaches four analytic admissions:
+`dd_annular_virial`, `dd_quotient_gradient_traces`, `dd_value_finite_part`
 and `dd_renormalized_bulk`. No new admission or stronger hypothesis is introduced.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
@@ -115,8 +115,18 @@ boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels
 back under `h ↦ 2h`, selects one pairing sequence avoiding every exceptional set,
 and identifies the full bulk limit by uniqueness. The coefficient error is
 `ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
-This expands the Picone audit from eight admissions to ten, and the exclusion
-audit from twenty-four to twenty-six; it does not prove the four analytic inputs.
+The Picone and exclusion audits reach ten and twenty-six admissions respectively.
+
+`dd_truncated_virial` is now assembled from `dd_annular_virial` alone. Its
+positive-truncation integrability and center removal are admission-free.
+Local smooth division of the original stream gives H¹ and weak-derivative
+uniqueness controls arbitrary derivative witnesses. Direct coefficient bounds
+avoid the admitted weighted-virial algebra. A Cauchy–Schwarz center-flux estimate,
+coarea and the existing integrable-energy sequence lemma give vanishing flux
+outside any prescribed null set; dominated convergence closes the annular limit.
+Measurable versions and null hulls handle witnesses not assumed measurable.
+No global quotient existence or new center hypothesis is used. The next virial
+frontier is the annular identity, not center removal.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,

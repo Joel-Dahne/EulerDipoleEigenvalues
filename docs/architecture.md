@@ -167,9 +167,11 @@ proof mechanisms. Module names below are relative to
   currents and the common scalar finite part. Sits below the weighted virial.
 - `OddOddVirial.lean`: classical and weak quotient operators, weighted virial
   algebra and Green flux, raw-quotient annular/truncated identities, even H²
-  gradient traces and full renormalized bulk limits. Supplied-data bridges and
-  coarea splitting use the orbit parameter `h = ε/2`. Separates inward virial
-  normals from the shared outward derivative convention.
+  gradient traces and full renormalized bulk limits. Positive-truncation H¹
+  division, weak-witness uniqueness, coefficient bounds and center-flux removal
+  assemble the truncated identity from the annular one. Supplied-data bridges
+  and coarea splitting use `h = ε/2`; inward virial normals are separate from
+  the shared outward derivative convention.
 - `OddOdd.lean`: character-wise virial-limit assembly, scalar finite-part
   cancellation, boundary-form identification, bulk coercivity interface and
   odd–odd exclusion assembly.

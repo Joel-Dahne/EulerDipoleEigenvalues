@@ -422,13 +422,23 @@ and
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-annular-virial, lem:dd-virial-algebra, lem:normal-field-algebra,
- lem:normal-coeff-bound, lem:inverse-laplacian-derivatives,
- lem:continuous-representative, lem:orbit-coordinates-area, lem:period-integral}
-On $\{s>\epsilon\}$ division by $s$ preserves $H^2$ regularity and $\phi$
-is bounded. The representation $W=\alpha W_{\rm ee}$ in
-Lemma~\ref{lem:dd-virial-algebra} shows that $F$ and $M$ are bounded there,
-including as $s\to2$. Thus $j[\phi]$ is integrable.
+\uses{lem:dd-annular-virial, lem:normal-coeff-bound,
+ lem:inverse-laplacian-derivatives, lem:continuous-representative,
+ lem:lift-sobolev-local, lem:sobolev-local-multiplier,
+ lem:cell-neighbourhood, lem:level-integral-congr,
+ lem:orbit-coordinates-area, lem:period-integral, lem:ee-center-limit}
+\leanok
+On a neighbourhood of the closure of $\{s>\epsilon\}$, smooth division
+by $s$ preserves local $H^1$ regularity. Uniqueness of weak derivatives
+therefore puts the specified derivative witnesses in $L^2$ on the
+truncation; $\omega/s\in L^2$ follows directly from $s>\epsilon$.
+No global quotient-domain theorem is used.
+
+Put $\beta(s)=(s^2+2s+4)/3$. Direct factorization gives
+$F=\beta f_{\rm ee}$ and $C_0=\beta c_{\rm ee}$, including their
+totalized center values. The normal-coefficient bounds give
+$|F|\le8/\epsilon$, $|C_0|\le4$ and
+$|A_0|\le8+16/\epsilon$. Hence $j[\phi]$ is absolutely integrable.
 
 Put $H(s)=\int_{\{\Psi=s\}}(|\phi|^2+|\nabla\phi|^2+|E\phi|^2)dt$ near
 $s=2$. Coarea gives $H\in L^1$ near $2$. The period is bounded there,
@@ -440,6 +450,10 @@ for $G_\phi$, Cauchy--Schwarz and the boundedness of $\phi$ give
 for almost every $s$ near $2$. Outside any prescribed null set there are
 $b_j\to2$ with $(2-b_j)H(b_j)\to0$, since otherwise $H(s)$ would dominate
 a positive multiple of $(2-s)^{-1}$. Hence $G_\phi(b_j)\to0$.
+For arbitrary weak-derivative witnesses, choose measurable versions on
+$\{s>1\}$. A measurable null hull of the exceptional planar set and
+coarea show that this replacement changes the boundary term on only a
+null set of levels. Include this set when selecting $b_j$.
 Apply Lemma~\ref{lem:dd-annular-virial} with upper level $b_j$ and use
 dominated convergence. No smooth extension of $W$ through the center and
 no higher eigenfunction regularity there are required.

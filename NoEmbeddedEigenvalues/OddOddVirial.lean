@@ -17,6 +17,12 @@ The gradient limits allow a common null set of exceptional levels. In contrast, 
 renormalized bulk has a full positive-level limit; no all-level vorticity pairing
 limit is asserted. Supplied-data bridges identify the raw local quotients a.e.,
 rescale exceptional levels by `ε = 2h`, and split the boundary integral using coarea.
+
+Positive truncations need only smooth local division of the original stream, not
+existence of global quotient data. Weak-derivative uniqueness gives square integrability
+for arbitrary witnesses. Bounded bulk coefficients and a Cauchy–Schwarz center-flux
+estimate allow the annular identity to include the center by dominated convergence.
+Measurable versions and null hulls transfer these estimates to the given witnesses.
 -/
 
 noncomputable section
@@ -209,6 +215,606 @@ theorem dd_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy b := by
   sorry
 
+/-! ### Positive-level regularity and bulk integrability -/
+
+/-- Positive truncations are open. -/
+theorem isOpen_ddTruncatedCell (a : ℝ) : IsOpen (ddTruncatedCell a) := by
+  have hc : IsOpen cellSquare := by
+    exact (isOpen_lt (show Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).1|)
+      by unfold diagCoord; fun_prop) continuous_const).inter
+      (isOpen_lt (show Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).2|)
+        by unfold diagCoord; fun_prop) continuous_const)
+  exact hc.inter (isOpen_lt continuous_const
+    (show Continuous dipoleLift by unfold dipoleLift; fun_prop))
+
+/-- Division by the stream function is harmless on a positive truncation, including
+    its elliptic center. This uses only the global H² stream, not a divided domain. -/
+theorem ddStreamQuotient_memSobolevOn (ω : L2) {a : ℝ} (ha : 0 < a) :
+    MemSobolevOn 1 (ddTruncatedCell a) (ddStreamQuotient ω) := by
+  have hs : MemSobolev 1 (invLap ω) := (memSobolev_two_invLap ω).mono (by norm_num)
+  have hb : Bornology.IsBounded cellNeighbourhood := isBounded_cellNeighbourhood
+  have hh : MemSobolevOn 1 cellNeighbourhood (liftL2 (invLap ω)) := by
+    exact memSobolevOn_liftL2 (k := 1) (g := invLap ω) (U := cellNeighbourhood)
+      (by simpa using hs) hb
+  have hc : MemSobolevOn 1 cellNeighbourhood (contStream ω) :=
+    MemSobolevOn.congr_ae (k := 1) (U := cellNeighbourhood)
+      (g := liftL2 (invLap ω)) (g' := contStream ω) hh (streamLift_ae_eq_contStream ω)
+  let U := cellNeighbourhood ∩ {p | 0 < dipoleLift p}
+  have hU : IsOpen U := isOrbitUnion_cellNeighbourhood.1.inter
+    (isOpen_lt continuous_const
+      (show Continuous dipoleLift by unfold dipoleLift; fun_prop))
+  have hloc : MemSobolevLocOn 1 U (contStream ω) :=
+    (MemSobolevOn.memSobolevLocOn (k := 1) hc).mono inter_subset_left
+  have hd : MemSobolevLocOn 1 U (ddStreamQuotient ω) :=
+    hloc.div_smooth hU (by unfold dipoleLift; fun_prop) (fun _ hp ↦ hp.2.ne')
+  have hbound : Bornology.IsBounded cellSquare :=
+    hb.subset (subset_closure.trans closure_cellSquare_subset_cellNeighbourhood)
+  have hclosure : closure (ddTruncatedCell a) ⊆ U := by
+    intro p hp
+    refine ⟨closure_cellSquare_subset_cellNeighbourhood
+      (closure_mono (fun _ h ↦ h.1) hp), ?_⟩
+    have hle : a ≤ dipoleLift p :=
+      closure_minimal (fun _ h ↦ h.2.le)
+        (isClosed_le continuous_const
+          (show Continuous dipoleLift by unfold dipoleLift; fun_prop)) hp
+    exact ha.trans_le hle
+  exact hd _ (isOpen_ddTruncatedCell a)
+    (hbound.subset (fun _ hp ↦ hp.1)).isCompact_closure hclosure
+
+/-- Arbitrary weak-derivative witnesses of the raw quotient are square integrable
+    above every positive level, by local weak-derivative uniqueness. -/
+theorem ddStreamQuotient_memLp_derivative {ω : L2} {j : Fin 2}
+    {d : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn cellSquare j (ddStreamQuotient ω) d)
+    {a : ℝ} (ha : 0 < a) :
+    MemLp d 2 (volume.restrict (ddTruncatedCell a)) := by
+  obtain ⟨d', hd', hi⟩ := (ddStreamQuotient_memSobolevOn ω ha).2 j
+  have heq := hd'.ae_eq (isOpen_ddTruncatedCell a)
+    (hd.mono (fun _ hp ↦ hp.1))
+  exact (memLp_congr_ae ((ae_restrict_iff'
+    (isOpen_ddTruncatedCell a).measurableSet).mpr heq)).mp hi
+
+/-- The apparent center singularities of the bulk coefficients are bounded on
+    every positive truncation. Values at `Ψ = 2` are the totalized expressions. -/
+theorem dd_coefficients_bound {p : ℝ × ℝ} {a : ℝ} (ha : 0 < a)
+    (hp : a < dipoleLift p) :
+    |ddF p| ≤ 8 / a ∧ |ddA p| ≤ 8 + 16 / a ∧ |ddC p| ≤ 4 := by
+  let s := dipoleLift p
+  have hs0 : 0 < s := ha.trans hp
+  have hs2 : s ≤ 2 := by
+    dsimp only [s, dipoleLift]
+    linarith [Real.cos_le_one p.1, Real.cos_le_one p.2]
+  have hβ0 : 0 ≤ (s ^ 2 + 2 * s + 4) / 3 := by positivity
+  have hβ : (s ^ 2 + 2 * s + 4) / 3 ≤ 4 := by nlinarith
+  have hF : ddF p = (s ^ 2 + 2 * s + 4) / 3 * normalCoeff p := by
+    unfold ddF normalCoeff
+    dsimp only [s]
+    ring
+  have hC : ddC p = (s ^ 2 + 2 * s + 4) / 3 * normalC p := by
+    unfold ddC normalC
+    dsimp only [s]
+    ring
+  have hf : 0 ≤ ddF p ∧ ddF p ≤ 8 / a := by
+    rcases lt_or_eq_of_le hs2 with hs | hs
+    · have hn := normalCoeff_nonneg hs0 hs
+      have hb : normalCoeff p ≤ 2 / a := by
+        refine (normalCoeff_le hs0 hs).trans ?_
+        apply (div_le_div_iff₀ hs0 ha).mpr
+        nlinarith [hp]
+      rw [hF]
+      refine ⟨mul_nonneg hβ0 hn, ?_⟩
+      calc _ ≤ 4 * (2 / a) := mul_le_mul hβ hb hn (by norm_num)
+        _ = _ := by ring
+    · have hz : ddF p = 0 := by unfold ddF; change s * (8 - s ^ 3) * _ / _ = 0; rw [hs]; norm_num
+      rw [hz]
+      exact ⟨le_rfl, by positivity⟩
+  have hc : 0 ≤ ddC p ∧ ddC p ≤ 4 := by
+    rcases lt_or_eq_of_le hs2 with hs | hs
+    · obtain ⟨hn, hb⟩ := normalC_pos_le_one hs0 hs
+      rw [hC]
+      exact ⟨mul_nonneg hβ0 hn.le, (mul_le_mul hβ hb hn.le (by norm_num)).trans_eq (by ring)⟩
+    · have hz : ddC p = 0 := by unfold ddC; change s * (8 - s ^ 3) / _ = 0; rw [hs]; norm_num
+      rw [hz]
+      exact ⟨le_rfl, by norm_num⟩
+  have hi : 1 / s ≤ 1 / a := one_div_le_one_div_of_le ha hp.le
+  have hs : 0 ≤ 2 * s ^ 2 / 3 := by positivity
+  have ht : 0 ≤ 32 / (3 * s) := by positivity
+  have hA : |ddA p| ≤ 8 + 16 / a := by
+    unfold ddA
+    change |2 * s ^ 2 / 3 + 32 / (3 * s) - ddC p| ≤ _
+    calc
+      _ ≤ (2 * s ^ 2 / 3 + 32 / (3 * s)) + ddC p := by
+        have hab := abs_sub (2 * s ^ 2 / 3 + 32 / (3 * s)) (ddC p)
+        rw [abs_of_nonneg (add_nonneg hs ht), abs_of_nonneg hc.1] at hab
+        exact hab
+      _ ≤ _ := by
+        have hpow : s ^ 2 ≤ 4 := by nlinarith
+        have hb : 32 / (3 * s) ≤ (32 / 3 : ℝ) * (1 / a) := by
+          calc _ = (32 / 3 : ℝ) * (1 / s) := by ring
+            _ ≤ _ := mul_le_mul_of_nonneg_left hi (by norm_num)
+        have hia : 0 ≤ 1 / a := by positivity
+        simp only [div_eq_mul_inv] at hb hia ⊢
+        nlinarith [hc.2]
+  exact ⟨by rw [abs_of_nonneg hf.1]; exact hf.2,
+    hA, by rw [abs_of_nonneg hc.1]; exact hc.2⟩
+
+theorem measurable_ddStreamQuotient (ω : L2) : Measurable (ddStreamQuotient ω) := by
+  unfold ddStreamQuotient dipoleLift
+  have hc := (continuous_contStream ω).measurable
+  fun_prop
+
+theorem measurable_ddVorticityQuotient (ω : L2) : Measurable (ddVorticityQuotient ω) := by
+  unfold ddVorticityQuotient dipoleLift
+  have hm : Measurable (liftL2 ω) := (Lp.stronglyMeasurable ω).measurable.comp
+    isOpenQuotientMap_torusProj.continuous.measurable
+  fun_prop
+
+/-- The undivided vorticity's L² norm controls division above a positive level. -/
+theorem ddVorticityQuotient_memLp (ω : L2) {a : ℝ} (ha : 0 < a) :
+    MemLp (ddVorticityQuotient ω) 2 (volume.restrict (ddTruncatedCell a)) := by
+  have hb : Bornology.IsBounded (ddTruncatedCell a) :=
+    isBounded_cellNeighbourhood.subset (fun _ hp ↦
+      closure_cellSquare_subset_cellNeighbourhood (subset_closure hp.1))
+  apply ((memLp_liftL2 ω hb).norm.const_mul (1 / a)).mono'
+    (measurable_ddVorticityQuotient ω).aestronglyMeasurable
+  filter_upwards [ae_restrict_mem (isOpen_ddTruncatedCell a).measurableSet] with p hp
+  have hs : 0 < dipoleLift p := ha.trans hp.2
+  rw [ddVorticityQuotient, norm_div, Complex.norm_real,
+    Real.norm_of_nonneg hs.le]
+  have hn := mul_le_mul_of_nonneg_right (one_div_le_one_div_of_le ha hp.2.le)
+    (norm_nonneg (liftL2 ω p))
+  convert hn using 1
+  ring
+
+/-- L² values and first derivatives suffice for absolute integrability of the
+    weighted virial bulk on a positive truncation. -/
+theorem ddVirialDensity_integrable {u e ux uy : ℝ × ℝ → ℂ} {a : ℝ} (ha : 0 < a)
+    (hu : MemLp u 2 (volume.restrict (ddTruncatedCell a)))
+    (he : MemLp e 2 (volume.restrict (ddTruncatedCell a)))
+    (hx : MemLp ux 2 (volume.restrict (ddTruncatedCell a)))
+    (hy : MemLp uy 2 (volume.restrict (ddTruncatedCell a))) :
+    IntegrableOn (ddVirialDensity u e ux uy) (ddTruncatedCell a) := by
+  have isq (v : ℝ × ℝ → ℂ) (hv : MemLp v 2 (volume.restrict (ddTruncatedCell a))) :
+      IntegrableOn (fun p ↦ ‖v p‖ ^ 2) (ddTruncatedCell a) :=
+    (memLp_two_iff_integrable_sq hv.norm.aestronglyMeasurable).mp hv.norm
+  have iU := isq u hu
+  have iE := isq e he
+  have iX := isq ux hx
+  have iY := isq uy hy
+  have msx : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
+  have msy : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
+  have mi : Measurable (fun p : ℝ × ℝ ↦ (gradNorm p : ℂ)⁻¹) := by
+    unfold gradNorm
+    fun_prop
+  have mn : AEStronglyMeasurable (normalDeriv ux uy)
+      (volume.restrict (ddTruncatedCell a)) := by
+    exact ((msx.aestronglyMeasurable.mul hx.aestronglyMeasurable).add
+      (msy.aestronglyMeasurable.mul hy.aestronglyMeasurable)).mul
+        mi.aestronglyMeasurable
+  have mt : AEStronglyMeasurable (tangentDeriv ux uy)
+      (volume.restrict (ddTruncatedCell a)) := by
+    exact ((msy.aestronglyMeasurable.mul hx.aestronglyMeasurable).sub
+      (msx.aestronglyMeasurable.mul hy.aestronglyMeasurable)).mul
+        mi.aestronglyMeasurable
+  have mf : Measurable ddF := by
+    change Measurable (fun p ↦ ddF p)
+    simp only [ddF, gradSq_dipoleLift, dipoleLift]
+    fun_prop
+  have ma : Measurable ddA := by
+    change Measurable (fun p ↦ ddA p)
+    simp only [ddA, ddC, gradSq_dipoleLift, dipoleLift]
+    fun_prop
+  have mc : Measurable ddC := by
+    change Measurable (fun p ↦ ddC p)
+    simp only [ddC, gradSq_dipoleLift, dipoleLift]
+    fun_prop
+  have md : AEStronglyMeasurable (ddVirialDensity u e ux uy)
+      (volume.restrict (ddTruncatedCell a)) :=
+    (mf.aestronglyMeasurable.mul (he.aestronglyMeasurable.norm.pow 2 |>.sub
+      (hu.aestronglyMeasurable.norm.pow 2))).add
+      ((ma.aestronglyMeasurable.mul (mn.norm.pow 2)).add
+        (mc.aestronglyMeasurable.mul (mt.norm.pow 2)))
+  apply (((iE.add iU).const_mul (8 / a)).add
+    ((iX.add iY).const_mul (24 + 32 / a))).mono' md
+  filter_upwards [ae_restrict_mem (isOpen_ddTruncatedCell a).measurableSet] with p hp
+  rw [Real.norm_eq_abs]
+  obtain ⟨hf, hA, hC⟩ := dd_coefficients_bound ha hp.2
+  have hn : ‖normalDeriv ux uy p‖ ^ 2 ≤ 2 * (‖ux p‖ ^ 2 + ‖uy p‖ ^ 2) := by
+    have hb := norm_normalDeriv_le ux uy p
+    nlinarith [norm_nonneg (normalDeriv ux uy p), norm_nonneg (ux p),
+      norm_nonneg (uy p), sq_nonneg (‖ux p‖ - ‖uy p‖)]
+  have ht : ‖tangentDeriv ux uy p‖ ^ 2 ≤ 2 * (‖ux p‖ ^ 2 + ‖uy p‖ ^ 2) := by
+    have hb := norm_tangentDeriv_le ux uy p
+    nlinarith [norm_nonneg (tangentDeriv ux uy p), norm_nonneg (ux p),
+      norm_nonneg (uy p), sq_nonneg (‖ux p‖ - ‖uy p‖)]
+  have hv : |‖e p‖ ^ 2 - ‖u p‖ ^ 2| ≤ ‖e p‖ ^ 2 + ‖u p‖ ^ 2 := by
+    have hb := abs_sub (‖e p‖ ^ 2) (‖u p‖ ^ 2)
+    rw [abs_of_nonneg (sq_nonneg (‖e p‖)), abs_of_nonneg (sq_nonneg (‖u p‖))] at hb
+    exact hb
+  dsimp only [ddVirialDensity, ddMatrixForm]
+  calc
+    _ ≤ |ddF p * (‖e p‖ ^ 2 - ‖u p‖ ^ 2)| +
+        (|ddA p * ‖normalDeriv (fun _ ↦ ux p) (fun _ ↦ uy p) p‖ ^ 2| +
+          |ddC p * ‖tangentDeriv (fun _ ↦ ux p) (fun _ ↦ uy p) p‖ ^ 2|) :=
+      (abs_add_le _ _).trans (add_le_add_right (abs_add_le _ _) _)
+    _ ≤ (8 / a) * (‖e p‖ ^ 2 + ‖u p‖ ^ 2) +
+        ((8 + 16 / a) * (2 * (‖ux p‖ ^ 2 + ‖uy p‖ ^ 2)) +
+          4 * (2 * (‖ux p‖ ^ 2 + ‖uy p‖ ^ 2))) := by
+      simp only [abs_mul, abs_pow, abs_norm]
+      gcongr
+      · exact hn
+      · exact ht
+    _ = _ := by dsimp only [Pi.add_apply]; ring
+
+/-! ### Center flux and removal -/
+
+/-- A quantitative center bound for arbitrary measurable values and first derivatives.
+    It uses only a bounded value and square-integrable orbit energy, not an equation. -/
+theorem abs_ddVirialLevel_le {u e ux uy : ℝ × ℝ → ℂ}
+    (mu : Measurable u) (me : Measurable e) (mx : Measurable ux) (my : Measurable uy)
+    {M h : ℝ} (hM0 : 0 ≤ M) (hh : 1 / 2 < h) (h1 : h < 1)
+    (hF : IntegrableOn (fun t ↦ ‖u (dipoleOrbit h t)‖ ^ 2 +
+      ‖ux (dipoleOrbit h t)‖ ^ 2 + ‖uy (dipoleOrbit h t)‖ ^ 2 +
+      ‖e (dipoleOrbit h t)‖ ^ 2) (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)))
+    (hM : ∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
+      ‖u (dipoleOrbit h t)‖ ≤ M) :
+    |ddVirialLevel u e ux uy (2 * h)| ≤
+      4 * M * √(128 * ((1 - h) * ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        (‖u (dipoleOrbit h t)‖ ^ 2 + ‖ux (dipoleOrbit h t)‖ ^ 2 +
+          ‖uy (dipoleOrbit h t)‖ ^ 2 + ‖e (dipoleOrbit h t)‖ ^ 2))) +
+      96 * ((1 - h) * ∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+        (‖u (dipoleOrbit h t)‖ ^ 2 + ‖ux (dipoleOrbit h t)‖ ^ 2 +
+          ‖uy (dipoleOrbit h t)‖ ^ 2 + ‖e (dipoleOrbit h t)‖ ^ 2)) := by
+  have h0 : 0 < h := by linarith
+  have hL := eighthPeriod_pos h0 h1
+  have hL2 : eighthPeriod h ≤ 2 :=
+    (eighthPeriod_le_inv h0 h1).trans (by rw [div_le_iff₀ h0]; linarith)
+  let I := Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)
+  let γ := fun t ↦ dipoleOrbit h t
+  let n := ddInwardNormal ux uy
+  let τ := tangentDeriv ux uy
+  let F := fun t ↦ ‖u (γ t)‖ ^ 2 + ‖ux (γ t)‖ ^ 2 +
+    ‖uy (γ t)‖ ^ 2 + ‖e (γ t)‖ ^ 2
+  let B := fun t ↦ ‖n (γ t)‖ ^ 2 - ‖τ (γ t)‖ ^ 2 - ‖u (γ t)‖ ^ 2 +
+    (e (γ t) * (starRingEnd ℂ) (u (γ t))).re
+  let A := fun t ↦ gradNorm (γ t) * ((starRingEnd ℂ) (u (γ t)) * n (γ t)).re
+  have mγ : Measurable γ :=
+    (continuous_dipoleOrbit.comp (continuous_const.prodMk continuous_id)).measurable
+  have mn : Measurable (fun t ↦ n (γ t)) := by
+    dsimp [n, ddInwardNormal, normalDeriv, gradNorm]
+    fun_prop
+  have mt : Measurable (fun t ↦ τ (γ t)) := by
+    dsimp [τ, tangentDeriv, gradNorm]
+    fun_prop
+  have mρ : Measurable (fun t ↦ gradNorm (γ t)) := by unfold gradNorm; fun_prop
+  have hρ0 (t) : 0 ≤ gradNorm (γ t) := Real.sqrt_nonneg _
+  have hρ2 (t) : gradNorm (γ t) ^ 2 ≤ 4 * (1 - h) := by
+    have hΨ := dipoleLift_dipoleOrbit h0 h1 t
+    change dipoleLift (γ t) = 2 * h at hΨ
+    rw [gradNorm, Real.sq_sqrt (by positivity)]
+    simp only [dipoleLift] at hΨ
+    nlinarith [Real.sin_sq_add_cos_sq (γ t).1, Real.sin_sq_add_cos_sq (γ t).2,
+      sq_nonneg (1 - Real.cos (γ t).1), sq_nonneg (1 - Real.cos (γ t).2)]
+  have hn (t) : ‖n (γ t)‖ ^ 2 ≤ 2 * F t := by
+    have hb := norm_normalDeriv_le ux uy (γ t)
+    have he : ‖n (γ t)‖ = ‖normalDeriv ux uy (γ t)‖ := norm_neg _
+    rw [← he] at hb
+    dsimp only [F]
+    nlinarith [norm_nonneg (n (γ t)), norm_nonneg (ux (γ t)), norm_nonneg (uy (γ t)),
+      sq_nonneg (‖ux (γ t)‖ - ‖uy (γ t)‖), sq_nonneg (‖u (γ t)‖), sq_nonneg (‖e (γ t)‖)]
+  have ht (t) : ‖τ (γ t)‖ ^ 2 ≤ 2 * F t := by
+    have hb := norm_tangentDeriv_le ux uy (γ t)
+    dsimp only [F]
+    nlinarith [norm_nonneg (τ (γ t)), norm_nonneg (ux (γ t)), norm_nonneg (uy (γ t)),
+      sq_nonneg (‖ux (γ t)‖ - ‖uy (γ t)‖), sq_nonneg (‖u (γ t)‖), sq_nonneg (‖e (γ t)‖)]
+  have hu (t) : ‖u (γ t)‖ ^ 2 ≤ F t := by
+    dsimp only [F]
+    nlinarith [sq_nonneg (‖ux (γ t)‖), sq_nonneg (‖uy (γ t)‖), sq_nonneg (‖e (γ t)‖)]
+  have hre (a b : ℂ) : |(a * (starRingEnd ℂ) b).re| ≤ ‖a‖ * ‖b‖ :=
+    (Complex.abs_re_le_norm _).trans (by rw [norm_mul, Complex.norm_conj])
+  have hp (t) : |(e (γ t) * (starRingEnd ℂ) (u (γ t))).re| ≤ F t := by
+    refine (hre _ _).trans ?_
+    dsimp only [F]
+    nlinarith [sq_nonneg (‖e (γ t)‖ - ‖u (γ t)‖),
+      sq_nonneg (‖ux (γ t)‖), sq_nonneg (‖uy (γ t)‖)]
+  have hb (t) : |B t| ≤ 6 * F t := by
+    have hp' := abs_le.mp (hp t)
+    dsimp only [B]
+    apply abs_le.mpr
+    constructor <;> nlinarith [hn t, ht t, hu t,
+      sq_nonneg (‖n (γ t)‖), sq_nonneg (‖τ (γ t)‖), sq_nonneg (‖u (γ t)‖)]
+  have ha (t) : |A t| ≤ 3 * F t := by
+    dsimp only [A]
+    rw [abs_mul, abs_of_nonneg (hρ0 t)]
+    have hr : gradNorm (γ t) ≤ 2 := by nlinarith [hρ2 t, hρ0 t]
+    have hrp : |((starRingEnd ℂ) (u (γ t)) * n (γ t)).re| ≤ ‖u (γ t)‖ * ‖n (γ t)‖ := by
+      simpa [mul_comm] using hre (n (γ t)) (u (γ t))
+    nlinarith [mul_le_mul hr hrp (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 2),
+      hn t, hu t, sq_nonneg (‖u (γ t)‖ - ‖n (γ t)‖)]
+  have iF : Integrable F (volume.restrict I) := hF
+  have iN : Integrable (fun t ↦ ‖n (γ t)‖ ^ 2) (volume.restrict I) :=
+    (iF.const_mul 2).mono' (mn.norm.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by rw [Real.norm_of_nonneg (sq_nonneg _)]; exact hn t)
+  have iB : Integrable B (volume.restrict I) :=
+    (iF.const_mul 6).mono'
+      (((mn.norm.pow_const 2).sub (mt.norm.pow_const 2)).sub
+        ((mu.comp mγ).norm.pow_const 2) |>.add
+        (Complex.measurable_re.comp ((me.comp mγ).mul
+          (Complex.continuous_conj.measurable.comp (mu.comp mγ))))).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ hb t)
+  have iA : Integrable A (volume.restrict I) :=
+    (iF.const_mul 3).mono'
+      (mρ.mul (Complex.measurable_re.comp
+        ((Complex.continuous_conj.measurable.comp (mu.comp mγ)).mul mn))).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ ha t)
+  have iρ : Integrable (fun t ↦ gradNorm (γ t) ^ 2) (volume.restrict I) :=
+    (integrable_const (4 * (1 - h))).mono' (mρ.pow_const 2).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by rw [Real.norm_of_nonneg (sq_nonneg _)]; exact hρ2 t)
+  have iρn : Integrable (fun t ↦ gradNorm (γ t) * ‖n (γ t)‖) (volume.restrict I) :=
+    (iρ.add iN).mono' (mρ.mul mn.norm).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ by
+        rw [Real.norm_of_nonneg (mul_nonneg (hρ0 t) (norm_nonneg _)), Pi.add_apply]
+        nlinarith [sq_nonneg (gradNorm (γ t) - ‖n (γ t)‖)])
+  let g := ∫ t in I, F t
+  have hg0 : 0 ≤ g := integral_nonneg fun t ↦ by dsimp only [F]; positivity
+  have hNI : (∫ t in I, ‖n (γ t)‖ ^ 2) ≤ 2 * g := by
+    rw [← integral_const_mul]
+    exact integral_mono iN (iF.const_mul 2) hn
+  have hBI : |∫ t in I, B t| ≤ 6 * g := by
+    rw [← integral_const_mul]
+    exact abs_integral_le_integral_abs.trans (integral_mono iB.abs (iF.const_mul 6) hb)
+  have hρI : ∫ t in I, gradNorm (γ t) ^ 2 ≤ 64 * (1 - h) := by
+    calc _ ≤ ∫ t in I, 4 * (1 - h) := integral_mono iρ (integrable_const _) hρ2
+      _ = 8 * eighthPeriod h * (4 * (1 - h)) := by
+        rw [setIntegral_const, Real.volume_real_Ico_of_le (by linarith),
+          smul_eq_mul]
+        ring
+      _ ≤ _ := by nlinarith
+  have hCS := integral_mul_le_Lp_mul_Lq_of_nonneg (μ := volume.restrict I)
+    Real.HolderConjugate.two_two (Eventually.of_forall hρ0)
+    (Eventually.of_forall fun t ↦ norm_nonneg (n (γ t)))
+    (by rw [ENNReal.ofReal_ofNat]
+        exact (memLp_two_iff_integrable_sq mρ.aestronglyMeasurable).2 iρ)
+    (by rw [ENNReal.ofReal_ofNat]
+        exact (memLp_two_iff_integrable_sq mn.norm.aestronglyMeasurable).2 iN)
+  simp only [Real.rpow_two, ← Real.sqrt_eq_rpow] at hCS
+  have hAI : |∫ t in I, A t| ≤ M * √(128 * ((1 - h) * g)) := by
+    calc _ ≤ ∫ t in I, |A t| := abs_integral_le_integral_abs
+      _ ≤ ∫ t in I, M * (gradNorm (γ t) * ‖n (γ t)‖) := by
+        apply integral_mono_ae iA.abs (iρn.const_mul M)
+        filter_upwards [hM] with t hMt
+        dsimp only [A]
+        rw [abs_mul, abs_of_nonneg (hρ0 t)]
+        have hrp : |((starRingEnd ℂ) (u (γ t)) * n (γ t)).re| ≤
+            ‖u (γ t)‖ * ‖n (γ t)‖ := by
+          simpa [mul_comm] using hre (n (γ t)) (u (γ t))
+        calc _ ≤ gradNorm (γ t) * (‖u (γ t)‖ * ‖n (γ t)‖) :=
+            mul_le_mul_of_nonneg_left hrp (hρ0 t)
+          _ ≤ gradNorm (γ t) * (M * ‖n (γ t)‖) :=
+            mul_le_mul_of_nonneg_left
+              (mul_le_mul_of_nonneg_right hMt (norm_nonneg _)) (hρ0 t)
+          _ = _ := by ring
+      _ = M * ∫ t in I, gradNorm (γ t) * ‖n (γ t)‖ := integral_const_mul _ _
+      _ ≤ M * (√(∫ t in I, gradNorm (γ t) ^ 2) *
+          √(∫ t in I, ‖n (γ t)‖ ^ 2)) := by gcongr
+      _ ≤ M * (√(64 * (1 - h)) * √(2 * g)) := by gcongr
+      _ = _ := by
+        rw [← Real.sqrt_mul (by linarith)]
+        congr 2
+        ring
+  have hc0 : 0 ≤ (8 - (2 * h) ^ 3) / 3 := by
+    have hp := pow_le_pow_left₀ h0.le h1.le 3
+    norm_num at hp
+    nlinarith
+  have hc : (8 - (2 * h) ^ 3) / 3 ≤ 16 * (1 - h) := by
+    have h2 : h ^ 2 ≤ 1 := by nlinarith
+    nlinarith [mul_nonneg (by linarith : 0 ≤ 1 - h) (by nlinarith : 0 ≤ 5 - h - h ^ 2)]
+  have hG : ddVirialLevel u e ux uy (2 * h) =
+      (8 - (2 * h) ^ 3) / 3 * (∫ t in I, B t) - (2 * h) ^ 2 * ∫ t in I, A t := by
+    unfold ddVirialLevel
+    rw [mul_div_cancel_left₀ _ (by norm_num : (2 : ℝ) ≠ 0),
+      levelIntegral_eq_integral_orbitWindow h0 h1]
+    simp_rw [mul_assoc ((2 * h) ^ 2)]
+    exact (integral_sub (iB.const_mul _) (iA.const_mul _)).trans
+      (by rw [integral_const_mul, integral_const_mul])
+  rw [hG]
+  calc _ ≤ (8 - (2 * h) ^ 3) / 3 * |∫ t in I, B t| +
+        (2 * h) ^ 2 * |∫ t in I, A t| := by
+          have hb := abs_sub ((8 - (2 * h) ^ 3) / 3 * ∫ t in I, B t)
+            ((2 * h) ^ 2 * ∫ t in I, A t)
+          rw [abs_mul, abs_mul, abs_of_nonneg hc0,
+            abs_of_nonneg (sq_nonneg (2 * h))] at hb
+          exact hb
+    _ ≤ 16 * (1 - h) * (6 * g) + 4 * (M * √(128 * ((1 - h) * g))) := by
+      gcongr
+      nlinarith
+    _ = _ := by ring
+
+/-- The weighted boundary term vanishes along center levels avoiding any prescribed
+    null set. Energy is required only on the fixed inner truncation `Ψ > 1`. -/
+theorem dd_center_limit {u e ux uy : ℝ × ℝ → ℂ}
+    (mu : Measurable u) (me : Measurable e) (mx : Measurable ux) (my : Measurable uy)
+    (hi : IntegrableOn (fun p ↦ ‖u p‖ ^ 2 + ‖ux p‖ ^ 2 + ‖uy p‖ ^ 2 + ‖e p‖ ^ 2)
+      (ddTruncatedCell 1))
+    {M : ℝ} (hM0 : 0 ≤ M) (hM : ∀ p ∈ ddTruncatedCell 1, ‖u p‖ ≤ M)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ seq : ℕ → ℝ, (∀ j, seq j ∈ Ioo 0 1 ∧ seq j ∉ N) ∧
+      Tendsto seq atTop (𝓝 1) ∧
+      Tendsto (fun j ↦ ddVirialLevel u e ux uy (2 * seq j)) atTop (𝓝 0) := by
+  let F := (ddTruncatedCell 1).indicator
+    (fun p ↦ ‖u p‖ ^ 2 + ‖ux p‖ ^ 2 + ‖uy p‖ ^ 2 + ‖e p‖ ^ 2)
+  have mF : Measurable F := by
+    apply Measurable.indicator _ (isOpen_ddTruncatedCell 1).measurableSet
+    fun_prop
+  have iF : IntegrableOn F cellSquare :=
+    hi.integrable_indicator (isOpen_ddTruncatedCell 1).measurableSet |>.integrableOn
+  have hF0 (p) : 0 ≤ F p := by
+    apply Set.indicator_nonneg
+    intro p _
+    positivity
+  have hg : ∫⁻ h in Ioo 0 1, ∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+      ENNReal.ofReal (F (dipoleOrbit h t)) ≠ ⊤ := by
+    intro htop
+    have hc := lintegral_cellSquare_eq (ENNReal.measurable_ofReal.comp mF)
+    have hlt := iF.lintegral_lt_top
+    simp only [Function.comp_apply] at hc
+    rw [hc, htop, ENNReal.mul_top (by norm_num)] at hlt
+    exact lt_irrefl _ hlt
+  have hgood : ∀ᵐ h ∂(volume.restrict (Ioo 0 1)), 1 / 2 < h → h < 1 →
+      |ddVirialLevel u e ux uy (2 * h)| ≤
+        4 * M * √(128 * ((1 - h) * (∫⁻ t in Ico (-2 * eighthPeriod h)
+          (6 * eighthPeriod h), ENNReal.ofReal (F (dipoleOrbit h t))).toReal)) +
+        96 * ((1 - h) * (∫⁻ t in Ico (-2 * eighthPeriod h)
+          (6 * eighthPeriod h), ENNReal.ofReal (F (dipoleOrbit h t))).toReal) := by
+    filter_upwards [(integral_cellSquare_eq iF).1] with h hFh hh h1
+    have horbit (t) : dipoleOrbit h t ∈ ddTruncatedCell 1 :=
+      ⟨dipoleOrbit_mem_cellSquare (by linarith) h1 t,
+        by rw [dipoleLift_dipoleOrbit (by linarith) h1]; linarith⟩
+    have hFeq (t) : F (dipoleOrbit h t) =
+        ‖u (dipoleOrbit h t)‖ ^ 2 + ‖ux (dipoleOrbit h t)‖ ^ 2 +
+          ‖uy (dipoleOrbit h t)‖ ^ 2 + ‖e (dipoleOrbit h t)‖ ^ 2 :=
+      indicator_of_mem (horbit t) _
+    have hb := abs_ddVirialLevel_le mu me mx my hM0 hh h1
+      (hFh.congr_fun (fun t _ ↦ hFeq t) measurableSet_Ico)
+      (ae_restrict_of_forall_mem measurableSet_Ico (fun t _ ↦ hM _ (horbit t)))
+    have hint : (∫ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h), F (dipoleOrbit h t)) =
+        (∫⁻ t in Ico (-2 * eighthPeriod h) (6 * eighthPeriod h),
+          ENNReal.ofReal (F (dipoleOrbit h t))).toReal :=
+      integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall fun t ↦ hF0 _)
+        hFh.aestronglyMeasurable
+    rw [← hint]
+    simpa only [hFeq] using hb
+  rw [ae_restrict_iff' measurableSet_Ioo] at hgood
+  obtain ⟨seq, hmem, hlim, hprod⟩ := exists_seq_one_sub_mul_tendsto_zero hg
+    (N := N ∪ {h | ¬(h ∈ Ioo 0 1 → 1 / 2 < h → h < 1 → _)})
+    (measure_union_null hN (ae_iff.1 hgood))
+  refine ⟨seq, fun j ↦ ⟨(hmem j).1, fun h ↦ (hmem j).2 (Or.inl h)⟩, hlim, ?_⟩
+  have hpr : Tendsto (fun j ↦ (1 - seq j) * (∫⁻ t in Ico (-2 * eighthPeriod (seq j))
+      (6 * eighthPeriod (seq j)), ENNReal.ofReal (F (dipoleOrbit (seq j) t))).toReal)
+      atTop (𝓝 0) := by
+    have h := (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp hprod
+    simp only [ENNReal.toReal_zero] at h
+    exact h.congr fun j ↦ by
+      simp only [Function.comp_apply, ENNReal.toReal_mul,
+        ENNReal.toReal_ofReal (by linarith [(hmem j).1.2] : 0 ≤ 1 - seq j)]
+  have hup : Tendsto (fun j ↦
+      4 * M * √(128 * ((1 - seq j) * (∫⁻ t in Ico (-2 * eighthPeriod (seq j))
+        (6 * eighthPeriod (seq j)), ENNReal.ofReal (F (dipoleOrbit (seq j) t))).toReal)) +
+      96 * ((1 - seq j) * (∫⁻ t in Ico (-2 * eighthPeriod (seq j))
+        (6 * eighthPeriod (seq j)), ENNReal.ofReal (F (dipoleOrbit (seq j) t))).toReal))
+      atTop (𝓝 0) := by
+    simpa using ((hpr.const_mul 128).sqrt.const_mul (4 * M)).add (hpr.const_mul 96)
+  refine squeeze_zero_norm' ?_ hup
+  filter_upwards [hlim.eventually (lt_mem_nhds (by norm_num : (1 / 2 : ℝ) < 1))]
+    with j hj
+  have hgj := (hmem j).2
+  simp only [mem_union, mem_ofPred_eq, not_or, not_not] at hgj
+  exact hgj.2 (hmem j).1 hj (hmem j).1.2
+
+/-- Coarea transfers even nonmeasurable a.e. properties: cover the bad planar set
+    by a measurable null set before applying the measurable coarea interface. -/
+theorem ae_level_of_ae_cellSquare' {P : ℝ × ℝ → Prop}
+    (hP : ∀ᵐ p ∂(volume.restrict cellSquare), P p) :
+    ∀ᵐ h ∂(volume.restrict (Ioo (0 : ℝ) 1)),
+      ∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
+        P (dipoleOrbit h t) := by
+  have hc : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  let B := {p | p ∈ cellSquare ∧ ¬P p}
+  have hB : volume B = 0 := by
+    simpa only [ae_iff, not_imp] using (ae_restrict_iff' hc).mp hP
+  let M := toMeasurable volume B
+  have hM : volume M = 0 := by rw [measure_toMeasurable, hB]
+  have hlevels := ae_level_of_ae_cellSquare
+    (measurableSet_toMeasurable volume B).compl
+    (ae_restrict_of_ae (measure_eq_zero_iff_ae_notMem.mp hM))
+  filter_upwards [hlevels, ae_restrict_mem measurableSet_Ioo] with h hh hi
+  filter_upwards [hh] with t ht
+  by_contra hbad
+  exact ht (subset_toMeasurable volume B
+    ⟨dipoleOrbit_mem_cellSquare hi.1 hi.2 t, hbad⟩)
+
+/-- Center removal for the original eigenfunction quotients and arbitrary weak
+    derivative witnesses; no global divided-domain theorem is invoked. -/
+theorem dd_raw_center_limit (ω : L2) {ux uy : ℝ × ℝ → ℂ}
+    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
+    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ seq : ℕ → ℝ, (∀ j, seq j ∈ Ioo 0 2 ∧ seq j ∉ N) ∧
+      Tendsto seq atTop (𝓝 2) ∧
+      Tendsto (fun j ↦ ddVirialLevel (ddStreamQuotient ω)
+        (fun p ↦ -ddVorticityQuotient ω p) ux uy (seq j)) atTop (𝓝 0) := by
+  have hxl := ddStreamQuotient_memLp_derivative hx (by norm_num : (0 : ℝ) < 1)
+  have hyl := ddStreamQuotient_memLp_derivative hy (by norm_num : (0 : ℝ) < 1)
+  let X := hxl.aestronglyMeasurable.mk ux
+  let Y := hyl.aestronglyMeasurable.mk uy
+  have mX : Measurable X := hxl.aestronglyMeasurable.stronglyMeasurable_mk.measurable
+  have mY : Measurable Y := hyl.aestronglyMeasurable.stronglyMeasurable_mk.measurable
+  have hX : ux =ᵐ[volume.restrict (ddTruncatedCell 1)] X := hxl.aestronglyMeasurable.ae_eq_mk
+  have hY : uy =ᵐ[volume.restrict (ddTruncatedCell 1)] Y := hyl.aestronglyMeasurable.ae_eq_mk
+  have iU : IntegrableOn (fun p ↦ ‖ddStreamQuotient ω p‖ ^ 2) (ddTruncatedCell 1) :=
+    (memLp_two_iff_integrable_sq
+      (measurable_ddStreamQuotient ω).norm.aestronglyMeasurable).mp
+      (ddStreamQuotient_memSobolevOn ω (by norm_num : (0 : ℝ) < 1)).1.norm
+  have iE : IntegrableOn (fun p ↦ ‖-ddVorticityQuotient ω p‖ ^ 2) (ddTruncatedCell 1) :=
+    (memLp_two_iff_integrable_sq
+      (measurable_ddVorticityQuotient ω).neg.norm.aestronglyMeasurable).mp
+      (ddVorticityQuotient_memLp ω (by norm_num : (0 : ℝ) < 1)).neg.norm
+  have iX : IntegrableOn (fun p ↦ ‖X p‖ ^ 2) (ddTruncatedCell 1) :=
+    (memLp_two_iff_integrable_sq mX.norm.aestronglyMeasurable).mp
+      ((memLp_congr_ae hX).mp hxl).norm
+  have iY : IntegrableOn (fun p ↦ ‖Y p‖ ^ 2) (ddTruncatedCell 1) :=
+    (memLp_two_iff_integrable_sq mY.norm.aestronglyMeasurable).mp
+      ((memLp_congr_ae hY).mp hyl).norm
+  have hbound (p) (hp : p ∈ ddTruncatedCell 1) :
+      ‖ddStreamQuotient ω p‖ ≤ ‖continuousRep (invLap ω)‖ := by
+    have hs : 0 < dipoleLift p := lt_trans (by norm_num) hp.2
+    rw [ddStreamQuotient, norm_div, Complex.norm_real, Real.norm_of_nonneg hs.le]
+    calc _ ≤ ‖contStream ω p‖ := div_le_self (norm_nonneg _) hp.2.le
+      _ ≤ _ := (continuousRep (invLap ω)).norm_coe_le_norm _
+  have hrep : ∀ᵐ p ∂(volume.restrict cellSquare),
+      p ∈ ddTruncatedCell 1 → ux p = X p ∧ uy p = Y p := by
+    filter_upwards [ae_restrict_of_ae
+      ((ae_restrict_iff' (isOpen_ddTruncatedCell 1).measurableSet).mp hX),
+      ae_restrict_of_ae
+        ((ae_restrict_iff' (isOpen_ddTruncatedCell 1).measurableSet).mp hY)]
+      with p hp hq hpc
+    exact ⟨hp hpc, hq hpc⟩
+  let P : ℝ → Prop := fun h ↦ 1 / 2 < h →
+    ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy (2 * h) =
+      ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) X Y (2 * h)
+  have hP : ∀ᵐ h ∂(volume.restrict (Ioo (0 : ℝ) 1)), P h := by
+    filter_upwards [ae_level_of_ae_cellSquare' hrep, ae_restrict_mem measurableSet_Ioo]
+      with h hh hi hhalf
+    unfold ddVirialLevel
+    rw [mul_div_cancel_left₀ _ (by norm_num : (2 : ℝ) ≠ 0),
+      levelIntegral_eq_integral_orbitWindow hi.1 hi.2,
+      levelIntegral_eq_integral_orbitWindow hi.1 hi.2]
+    apply integral_congr_ae
+    filter_upwards [hh] with t ht
+    have hp : dipoleOrbit h t ∈ ddTruncatedCell 1 :=
+      ⟨dipoleOrbit_mem_cellSquare hi.1 hi.2 t,
+        by rw [dipoleLift_dipoleOrbit hi.1 hi.2]; linarith⟩
+    obtain ⟨hx, hy⟩ := ht hp
+    simp only [ddInwardNormal, normalDeriv, tangentDeriv, hx, hy]
+  let B := {h | h ∈ Ioo 0 1 ∧ ¬P h}
+  have hB : volume B = 0 := by
+    simpa only [ae_iff, not_imp] using (ae_restrict_iff' measurableSet_Ioo).mp hP
+  have hNr : volume ((fun h : ℝ ↦ 2 * h) ⁻¹' N) = 0 := by
+    rw [Real.volume_preimage_mul_left (by norm_num : (2 : ℝ) ≠ 0), hN, mul_zero]
+  obtain ⟨seq, hseq, hlim, hG⟩ := dd_center_limit
+    (measurable_ddStreamQuotient ω) (measurable_ddVorticityQuotient ω).neg mX mY
+    (((iU.add iX).add iY).add iE) (norm_nonneg _) hbound
+    (measure_union_null hNr hB)
+  refine ⟨fun j ↦ 2 * seq j, fun j ↦ ⟨⟨by linarith [(hseq j).1.1],
+    by linarith [(hseq j).1.2]⟩, fun hj ↦ (hseq j).2 (Or.inl hj)⟩, ?_, ?_⟩
+  · simpa using hlim.const_mul (2 : ℝ)
+  · apply hG.congr'
+    filter_upwards [hlim.eventually (lt_mem_nhds (by norm_num : (1 / 2 : ℝ) < 1))]
+      with j hj
+    have hp : P (seq j) := by
+      by_contra hbad
+      exact (hseq j).2 (Or.inr ⟨(hseq j).1, hbad⟩)
+    exact (hp hj).symm
+
 /-- Truncated virial including the center, at almost every positive stream level. -/
 theorem dd_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
@@ -221,7 +827,62 @@ theorem dd_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       (∫ p in ddTruncatedCell ε,
         ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
       ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy ε := by
-  sorry
+  obtain ⟨-, N, hN, hann⟩ := dd_annular_virial hlam hω hs hx hy
+  have hlt2 : ∀ᵐ p : ℝ × ℝ, dipoleLift p < 2 := by
+    filter_upwards [ae_cos_fst_ne_cos_snd] with p hp
+    by_contra hge
+    exact hp (by
+      have h1 := Real.cos_le_one p.1
+      have h2 := Real.cos_le_one p.2
+      unfold dipoleLift at hge
+      linarith)
+  filter_upwards [ae_restrict_mem measurableSet_Ioo,
+    ae_restrict_of_ae (measure_eq_zero_iff_ae_notMem.mp hN)] with a ha haN
+  have hi := ddVirialDensity_integrable ha.1
+    (ddStreamQuotient_memSobolevOn ω ha.1).1
+    (ddVorticityQuotient_memLp ω ha.1).neg
+    (ddStreamQuotient_memLp_derivative hx ha.1)
+    (ddStreamQuotient_memLp_derivative hy ha.1)
+  refine ⟨hi, ?_⟩
+  obtain ⟨seq, hseq, hlim, hG⟩ := dd_raw_center_limit ω hx hy hN
+  let D := ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy
+  let A := ddTruncatedCell a
+  have hm (b : ℝ) : MeasurableSet {p | dipoleLift p < b} :=
+    measurableSet_lt (show Measurable dipoleLift by unfold dipoleLift; fun_prop) measurable_const
+  have hset (j : ℕ) : {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < seq j} =
+      A ∩ {p | dipoleLift p < seq j} := by
+    ext p
+    simp only [A, ddTruncatedCell, mem_ofPred_eq, mem_inter_iff, and_assoc]
+  have hev : ∀ᶠ j in atTop, a < seq j := hlim.eventually (lt_mem_nhds ha.2)
+  have hlim1 : Tendsto (fun j ↦ ∫ p in A ∩ {p | dipoleLift p < seq j}, D p)
+      atTop (𝓝 (ddVirialLevel (ddStreamQuotient ω)
+        (fun p ↦ -ddVorticityQuotient ω p) ux uy a)) := by
+    have hd := (tendsto_const_nhds (x := ddVirialLevel (ddStreamQuotient ω)
+      (fun p ↦ -ddVorticityQuotient ω p) ux uy a)).sub hG
+    rw [sub_zero] at hd
+    apply hd.congr'
+    filter_upwards [hev] with j hj
+    rw [← hset]
+    exact (hann a (seq j) ha.1 hj (hseq j).1.2 haN (hseq j).2).symm
+  have hlim2 : Tendsto (fun j ↦ ∫ p in A ∩ {p | dipoleLift p < seq j}, D p)
+      atTop (𝓝 (∫ p in A, D p)) := by
+    have hind (j : ℕ) : (∫ p in A ∩ {p | dipoleLift p < seq j}, D p) =
+        ∫ p in A, {p | dipoleLift p < seq j}.indicator D p := by
+      rw [Set.inter_comm A, ← Measure.restrict_restrict (hm _), integral_indicator (hm _)]
+    simp_rw [hind]
+    apply tendsto_integral_of_dominated_convergence (fun p ↦ ‖D p‖)
+    · exact fun j ↦ hi.aestronglyMeasurable.indicator (hm _)
+    · exact hi.norm
+    · intro j
+      filter_upwards with p
+      by_cases hp : p ∈ {p | dipoleLift p < seq j}
+      · simp [indicator_of_mem hp]
+      · simp [indicator_of_notMem hp]
+    · filter_upwards [ae_restrict_of_ae hlt2] with p hp
+      apply tendsto_const_nhds.congr'
+      filter_upwards [hlim.eventually (lt_mem_nhds hp)] with j hj
+      exact (indicator_of_mem (show p ∈ {q | dipoleLift q < seq j} from hj) D).symm
+  exact tendsto_nhds_unique hlim2 hlim1
 
 /-- Even H² gradient limits, using specified Fourier derivatives and continuous values.
     All three limits share one exceptional null set in the `ε = Ψ` variable. -/

@@ -66,8 +66,10 @@ weights and local versus global regularity.
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
    `dd_character_virial_limit` is assembled without its own `sorry`, from four
-   existing analytic admissions: truncated virial, gradient traces, value finite
-   part and renormalized bulk. Raw/supplied quotient changes, coarea splitting,
+   analytic admissions: annular virial, gradient traces, value finite part
+   and renormalized bulk. Truncated virial now follows from the annular identity;
+   local H¹ division, coefficient bounds and center removal are proved without
+   quotient existence. Raw/supplied quotient changes, coarea splitting,
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These four analytic proofs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
