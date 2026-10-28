@@ -191,14 +191,21 @@ Local Sobolev gluing on the lift (`lem:sobolev-local-gluing`) is proved without
 admissions in `SobolevGluing.lean`, including patchwise a.e.-equal representatives.
 It uses precompact patches, a finite smooth partition of unity and the cutoff lemma.
 
-The remaining bridges are affine pullback of weak jets/radial L² bounds and
-periodic reconstruction. `DiagonalACL.lean` supplies first-order diagonal cases;
-`LocalToGlobal.lean` already periodizes arbitrary compactly supported Hᵏ data.
-For periodic reconstruction, use the rescaled/tensored `anglePartition` and
-`memSobolev_compactPeriodize` after the local gluing theorem.
-These are Lean interface gaps, not
-extra eigenfunction hypotheses. The H² construction is not yet assembled
-from the analytic inputs. A statement marker is not a proof audit.
+The affine and periodic bridges are also proved without admissions.
+`AffineJets.lean` transforms every weak-jet index under a volume-preserving
+invertible affine map, preserves Sobolev membership (including inverse/local
+pullback), and transfers integer radial L² bounds when radii agree.
+`SaddleChartPullback.lean` instantiates this on the normalized saddle disks,
+proving its determinant and radius identities directly from the chart formula.
+`PeriodicSobolev.lean` reconstructs torus Hᵏ data from a periodic Hᵏ_loc lift
+using the tensor angular partition and compact periodization. All have Blueprint
+nodes on the stream-H² route. No extra eigenfunction hypothesis is introduced.
+
+The previously identified congruence, local gluing, affine and periodic interface
+gaps are closed. The remaining work is the H² quotient construction in
+`dd_stream_quotient_h2` itself: assemble local division, point removal, smooth
+inverse factors, local a.e. identification and periodic reconstruction.
+The analytic input proofs remain separate. A statement marker is not a proof audit.
 The bundled `def:dd-quotient`, including classical and weak operator E, is
 linked in `OddOddVirial.lean`; it is not a dependency of the stream-H² proposition.
 The periodic first gain includes cell covering on the full fixed neighbourhood;

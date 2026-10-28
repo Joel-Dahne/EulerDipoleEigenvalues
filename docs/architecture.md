@@ -45,6 +45,10 @@ proof mechanisms. Module names below are relative to
   of representatives agreeing a.e.; separate from torus periodization.
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak jets, integer
   and real-power radial integrability, energies and the Sobolev/jet interface.
+- `AffineJets.lean`: volume-preserving affine pullback of weak derivatives,
+  full specified jets, Sobolev regularity and radius-preserving radial L² bounds.
+- `SaddleChartPullback.lean`: the explicit normalized saddle chart instantiated
+  in the affine Sobolev/jet/radial interface.
 - `StreamJet.lean`: the canonical second stream jet from the existing Fourier
   partial multipliers, and its weak-jet interface.
 - `QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic,
@@ -58,6 +62,8 @@ proof mechanisms. Module names below are relative to
 - `LiftPeriodization.lean`: compact-test periodization, integral unfolding,
   H¹ transport tests, and transfer of torus Sobolev/transport relations to lifts.
 - `LocalToGlobal.lean`: periodization of compactly supported local Sobolev data.
+- `PeriodicSobolev.lean`: compact tensor angular partition and reconstruction
+  of torus Hᵏ data from a periodic Hᵏ_loc lift.
 - `CellPeriodization.lean`: box periodization of compactly supported cell data
   and uniqueness of weak derivatives.
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.

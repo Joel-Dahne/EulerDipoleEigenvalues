@@ -551,8 +551,9 @@ separatrix reflections.
  lem:saddle-normal-form, lem:saddle-chart-parity, lem:sobolev-weak-jets,
  lem:weighted-double-division, lem:weighted-h2-point-removal,
  lem:odd-h3-division, lem:stream-sector, lem:separatrix-lines,
- lem:elliptic-torus, lem:localization-cutoff, lem:local-to-global,
- lem:angular-periodization, lem:sobolev-congr-ae, lem:sobolev-local-gluing}
+ lem:elliptic-torus, lem:sobolev-congr-ae, lem:sobolev-local-gluing,
+ lem:affine-jet-pullback, lem:saddle-chart-pullback,
+ lem:periodic-sobolev-reconstruction}
 Use the continuous stream lift and the single periodic function
 $F=\widetilde\psi/\Psi$, assigning zero on the separatrix.
 Local extensions below agree with $F$ a.e.; no pointwise agreement with
@@ -565,7 +566,8 @@ The weights $r^{4-k}$ are bounded on its disk, so the weighted jet
 entries are also unweighted $L^2$ entries, ignoring the null center.
 Lemma~\ref{lem:sobolev-weak-jets} gives $R\in H^3$ there.
 
-Pull this jet back by $\Xi_P$. This changes derivative components,
+Pull this jet back by $\Xi_P$ using
+Lemma~\ref{lem:saddle-chart-pullback}. This changes derivative components,
 not just their arguments: if $A=D\Xi_P$, then
 \[
  \widehat D_{j_1\cdots j_k}
@@ -602,7 +604,8 @@ At a regular separatrix point choose an affine diagonal rectangle,
 with tangential coordinate first and normal coordinate second, whose
 compact closure lies in the $H^3$ neighbourhood from
 Proposition~\ref{prop:dd-separatrix-h1} and avoids the saddles.
-In these coordinates the stream is $H^3$ and odd in the normal variable
+By Lemma~\ref{lem:affine-jet-pullback}, the stream is $H^3$ in these
+orthonormal coordinates, and it is odd in the normal variable
 $v$, and $\Psi=v\,b(u,v)$ with $b$ smooth and nonzero.
 Lemma~\ref{lem:odd-h3-division} gives the $H^2$ quotient by $v$.
 Shrink again before multiplying by $b^{-1}$.
@@ -611,18 +614,10 @@ regularity and smooth division by $\Psi$ suffice, including at centers.
 
 Lemma~\ref{lem:sobolev-local-gluing} now gives
 $F\in H^2_{\mathrm{loc}}(\R^2)$ from these local a.e.\ representatives.
-For passage to the torus, let $\beta(\theta)$ be the smooth, compactly
-supported unit-period partition of Lemma~\ref{lem:angular-periodization}
-(the first argument of \texttt{anglePartition} is fixed at zero), and set
-\[
- \chi(x,y)=\beta(x/(2\pi))\beta(y/(2\pi)).
-\]
-Its $2\pi\Z^2$ translates sum to one. By
-Lemma~\ref{lem:localization-cutoff}, $\chi F\in H^2(\R^2)$ has compact
-support, so its periodization lies in $H^2(\T^2)$ by the first assertion
-of Lemma~\ref{lem:local-to-global}. That periodization equals $F$ a.e.,
-since $F$ is periodic and the translates of $\chi$ sum to one.
-No injective torus chart is needed for this compact-periodization step.
+Lemma~\ref{lem:periodic-sobolev-reconstruction} now supplies an
+$H^2(\T^2)$ element whose lift is $F$ a.e.: localize by the tensor angular
+partition, whose lattice translates sum to one, and periodize.
+No injective torus chart is needed.
 The separatrix is null, so the resulting element has multiplication identity
 $\psi=\Psi\phi$ a.e. Odd parity of both factors makes $\phi$ even under
 each separatrix reflection, by cancellation off this null set.

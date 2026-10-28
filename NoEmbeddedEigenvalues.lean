@@ -48,6 +48,7 @@ import NoEmbeddedEigenvalues.OddOddSaddle
 import NoEmbeddedEigenvalues.OddOddLogarithmic
 import NoEmbeddedEigenvalues.OddOddRegularity
 import NoEmbeddedEigenvalues.LocalJets
+import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights
 import NoEmbeddedEigenvalues.QuarterCoordinates
@@ -59,6 +60,7 @@ import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.SaddleNormalForm
+import NoEmbeddedEigenvalues.SaddleChartPullback
 import NoEmbeddedEigenvalues.Period
 import NoEmbeddedEigenvalues.ResonantVanishing
 import NoEmbeddedEigenvalues.Sectors
@@ -83,6 +85,7 @@ import NoEmbeddedEigenvalues.OrbitRestriction
 import NoEmbeddedEigenvalues.VirialAlgebra
 import NoEmbeddedEigenvalues.CellPeriodization
 import NoEmbeddedEigenvalues.LocalToGlobal
+import NoEmbeddedEigenvalues.PeriodicSobolev
 import NoEmbeddedEigenvalues.VirialFourier
 import NoEmbeddedEigenvalues.VirialQuadratic
 import NoEmbeddedEigenvalues.VirialL2

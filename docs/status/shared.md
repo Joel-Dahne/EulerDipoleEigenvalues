@@ -14,9 +14,11 @@ The even–even route is admission-free. Available foundations include:
 - Fourier/L² setup, symmetry/rotation decompositions and inverse-Laplacian
   regularity. Weak dipole testing and odd cell-pairing identities need
   neither self-adjointness nor Sobolev regularity.
-- Torus/local Sobolev bridges, domain-a.e. weak-derivative/Sobolev congruence,
-  local Sobolev gluing of a.e.-equal representatives, continuous Hölder
-  representatives, ACL slicing, rectangle traces and even–even separatrix traces.
+- Torus/local Sobolev bridges, domain-a.e. congruence, local Sobolev gluing,
+  volume-preserving affine weak-jet/radial-L² pullback, and periodic Hᵏ_loc
+  reconstruction. The normalized saddle chart instantiates the affine interface.
+  Continuous Hölder representatives, ACL slicing, rectangle traces and
+  even–even separatrix traces.
 - Orbit coordinates, area/coarea, orbit restriction, coarse period bounds,
   saddle-distance/comparison and level-derivative estimates.
 - Weak action-angle chain rules in both directions, periodization, transversal
@@ -52,12 +54,12 @@ weights and local versus global regularity.
    inversion and weighted transport/gluing are stated in `CylinderInverse.lean`,
    `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,
    weighted numerator and logarithmic interfaces are now stated too, covering
-   the quotient branch's result nodes. The stream-H² compatibility review
-   identifies affine weak-jet/radial-L² pullback and periodic gluing as the
-   remaining interface bridges. Domain-a.e. congruence is proved in
-   `SobolevLocal.lean` for weak derivatives, Hᵏ and Hᵏ_loc. Local Sobolev
-   gluing on the plane is proved in `SobolevGluing.lean`, including patchwise
-   a.e.-equal representatives. Both interfaces are admission-free.
+   the quotient branch's result nodes. The stream-H² congruence, local gluing,
+   affine pullback and periodic reconstruction bridges are now admission-free:
+   `SobolevLocal.lean`, `SobolevGluing.lean`, `AffineJets.lean`,
+   `SaddleChartPullback.lean` and `PeriodicSobolev.lean`. Next assemble the
+   local quotient construction in `dd_stream_quotient_h2`; its H² existence
+   subgoal and the analytic input proofs remain admitted.
    `OddOddVirial.lean` now states the entire missing weighted-virial layer below
    `dd-character-virial-limit`, including the bundled quotient/operator E definition;
    `Period.lean` separately states the leading value asymptotic. The new proofs
@@ -99,14 +101,12 @@ weights and local versus global regularity.
    and finite norms on bounded representative collars.
    For stream H², remove the point for the double quotient V before smooth
    multiplication, and shrink disks/rectangles before taking inverse factors.
-   Coordinate changes mix derivative indices; the first-order diagonal chain
-   rule is not yet a higher-order affine-jet interface. Localization of one
-   cut-off piece is not yet the periodic gluing interface. Use the public
-   domain-a.e. congruence lemmas in `SobolevLocal.lean` when identifying local
-   representatives. Apply the local gluing theorem in `SobolevGluing.lean`,
-   then tensor/rescale the existing `anglePartition` and use
-   `memSobolev_compactPeriodize` to avoid
-   constructing a new partition of unity on the torus.
+   Use `AffineJets.lean` for higher-order affine pullback: all derivative
+   indices are transformed. `SaddleChartPullback.lean` supplies the actual
+   normalized disk chart, with no additional hypotheses beyond a lifted saddle.
+   Use domain-a.e. congruence and `SobolevGluing.lean` to identify/glue local
+   representatives, then `PeriodicSobolev.lean` for torus reconstruction.
+   The latter uses the tensor angular cutoff, not a new torus partition of unity.
    Angular Hardy and mixed saddle linearization are off the odd–odd route.
 3. **Character API:** plan the ±i extension of `Melnikov.lean` and
    `PairingLimit.lean`, preserving the completed ±1 interfaces. The ODE

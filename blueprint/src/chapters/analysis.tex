@@ -1149,6 +1149,37 @@ $\pi(K)$ every term vanishes. For $p\in U$ and $n\ne0$, injectivity of $\pi$ on 
 $p+2\pi n\in U$, so the sum reduces to $F(p)$. Injectivity is used only here.
 \end{proof}
 
+\begin{lemma}[Periodic Sobolev reconstruction]
+\label{lem:periodic-sobolev-reconstruction}
+\uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.torusPartition,
+ NoEmbeddedEigenvalues.contDiff_torusPartition,
+ NoEmbeddedEigenvalues.hasCompactSupport_torusPartition,
+ NoEmbeddedEigenvalues.liftPeriodize_torusPartition,
+ NoEmbeddedEigenvalues.exists_memSobolev_of_periodic_lift,
+ NoEmbeddedEigenvalues.memSobolev_of_liftL2_loc}
+\leanok
+For each integer $k\ge0$, a $2\pi\Z^2$-periodic function
+$F\in H^k_{\mathrm{loc}}(\R^2)$ is a.e.\ the lift of some
+$g\in H^k(\T^2)$. Consequently, if the lift of $g\in L^2(\T^2)$
+belongs to $H^k_{\mathrm{loc}}(\R^2)$, then $g\in H^k(\T^2)$.
+No continuity of $F$ or injective torus chart is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:angular-periodization, lem:localization-cutoff, lem:local-to-global}
+\leanok
+Fix the first argument of the angular partition at zero, obtaining
+$\beta(\theta)$, and put
+$\chi(x,y)=\beta(x/(2\pi))\beta(y/(2\pi))$.
+This is smooth and compactly supported, and its lattice translates
+sum to one. Localization gives $\chi F\in H^k(\R^2)$; compact
+periodization gives $g\in H^k(\T^2)$. Periodicity of $F$ factors it
+out of the translate sum, so the lift of $g$ equals $F$ a.e.
+Equality of two $L^2$ lifts implies equality of their torus elements,
+by restricting to a fundamental box.
+\end{proof}
+
 \begin{definition}[Specified local weak jets and radial energies]
 \label{def:local-weak-jets}
 \uses{def:sobolev-local, def:local-plane-geometry}
@@ -1172,6 +1203,80 @@ exponents. Every use of an energy includes its square-integrability hypothesis.
 The axis reflection and symmetric rectangle exchange the roles of the
 coordinates when the normal index is $1$ instead of $0$.
 \end{definition}
+
+\begin{definition}[Affine pullback of a specified jet]
+\label{def:affine-jet}
+\uses{def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.planeAffine, NoEmbeddedEigenvalues.planeDirection,
+ NoEmbeddedEigenvalues.affineCoeff, NoEmbeddedEigenvalues.affineJet}
+\leanok
+Let $T(q)=Aq+c$, where $A$ is an invertible real $2\times2$ matrix.
+For a jet family $D$, define its transformed family by
+\[
+ \widehat D_{\varnothing}=D_{\varnothing}\circ T,\qquad
+ \widehat D_{jw}=\sum_{i=0}^1 A_{ij}\widehat{D^{(i)}}_w,
+ \qquad D^{(i)}_v=D_{iv}.
+\]
+Thus each derivative index is transformed, not merely its argument.
+\end{definition}
+
+\begin{lemma}[Affine pullback of weak jets and radial bounds]
+\label{lem:affine-jet-pullback}
+\uses{def:affine-jet, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.measurePreserving_planeAffine,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.comp_planeAffine,
+ NoEmbeddedEigenvalues.HasWeakJetOn.comp_planeAffine,
+ NoEmbeddedEigenvalues.MemSobolevOn.comp_planeAffine,
+ NoEmbeddedEigenvalues.MemSobolevOn.comp_planeAffine_symm,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.comp_planeAffine,
+ NoEmbeddedEigenvalues.RadialJetLp.comp_planeAffine}
+\leanok
+Suppose $|\det A|=1$ and $U\subset\R^2$ is open.
+A specified order-$n$ weak jet of $f$ on $U$ pulls back to the
+transformed order-$n$ weak jet of $f\circ T$ on $T^{-1}U$.
+Membership in $H^n(U)$ and $H^n_{\mathrm{loc}}(U)$ pulls back as well;
+the inverse affine chart also preserves Sobolev membership.
+If $r_{c_0}(Tq)=r_{c_1}(q)$, every radial condition
+$\mathcal R_{k,s}(D;U,c_0)$ with integer $k,s\ge0$ transfers to
+$\mathcal R_{k,s}(\widehat D;T^{-1}U,c_1)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+The determinant condition makes $T$ volume preserving.
+Pull a test function back by $T^{-1}$ and apply the Cartesian weak
+derivative identities to its affine chain rule. This gives
+$\partial_j(f\circ T)=\sum_i A_{ij}(\partial_i f)\circ T$.
+Induct on the jet word, distributing the constant coefficients.
+Only linearity is needed; mixed derivatives need not be commuted.
+Induct on Sobolev order for the Sobolev assertion, and use images
+of relatively compact open sets for local membership.
+For radial bounds the radius identity pulls the denominator through
+composition; finite linear combinations preserve $L^2$.
+\end{proof}
+
+\begin{lemma}[Saddle-chart pullback of Sobolev and radial jet data]
+\label{lem:saddle-chart-pullback}
+\uses{def:saddle-ortho-chart, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.saddle_chart_pullback}
+\leanok
+Let $P$ be a lifted saddle. If $f\in H^n(D_\rho(P))$ has a specified
+order-$n$ weak jet $D$, then $f\circ\Xi_P\in H^n(D_\rho(0))$ has a
+specified transformed jet $E$. Every integer radial condition
+$\mathcal R_{k,s}(D;D_\rho(P),P)$ transfers to
+$\mathcal R_{k,s}(E;D_\rho(0),0)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-jet-pullback}
+\leanok
+The explicit linear part of $\Xi_P$ has determinant $\cos P_x$,
+whose absolute value is one at a saddle.
+Its formula directly gives $r_P(\Xi_P(q))=r_0(q)$.
+Apply the affine pullback lemma; the radius identity identifies
+the preimage disk with $D_\rho(0)$.
+\end{proof}
 
 \begin{lemma}[Sobolev membership via specified jets]
 \label{lem:sobolev-weak-jets}
