@@ -425,7 +425,35 @@ theorem dd_boundary_flux (u e ux uy : ℝ × ℝ → ℂ) {p : ℝ × ℝ}
     (hp : p ∈ ddRegularCell) :
     ddGreenNormalFlux u ux uy p - ddWeight p * ddVirialQ (dipoleLift p) *
       (e p * (starRingEnd ℂ) (u p)).re = ddBoundaryDensity u e ux uy p := by
-  sorry
+  have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp.1)
+  have hρ2 : gradNorm p ^ 2 = gradSq dipoleLift p := by
+    rw [gradNorm, gradSq_dipoleLift, Real.sq_sqrt (by positivity)]
+  have hρ : gradNorm p ≠ 0 := by
+    intro hz
+    apply hp.2
+    rw [← hρ2, hz]
+    norm_num
+  have hframe := norm_normalDeriv_sq_add_norm_tangentDeriv_sq ux uy hρ
+  have hT : ‖tangentDeriv ux uy p‖ ^ 2 =
+      ‖ux p‖ ^ 2 + ‖uy p‖ ^ 2 - ‖normalDeriv ux uy p‖ ^ 2 := by linarith
+  have hcoeff : (8 - dipoleLift p ^ 3) / 3 =
+      -(ddWeight p * ddVirialQ (dipoleLift p)) := by
+    unfold ddWeight ddVirialQ
+    field_simp
+    ring
+  rw [ddBoundaryDensity, ddInwardNormal, norm_neg, hT, hcoeff]
+  simp only [ddGreenNormalFlux, ddWeakGreenFlux₁, ddWeakGreenFlux₂,
+    ddVirialField₁, ddVirialField₂, partialX_dipoleLift, partialY_dipoleLift,
+    normalDeriv, norm_div, div_pow, Complex.norm_real, Real.norm_eq_abs, sq_abs, hρ2,
+    Complex.sq_norm, Complex.normSq_apply, Complex.add_re, Complex.add_im,
+    Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+    Complex.conj_re, Complex.conj_im, Complex.neg_re, Complex.neg_im,
+    Complex.div_ofReal_re, Complex.div_ofReal_im]
+  dsimp only [ddWeight]
+  field_simp [hp.2]
+  rw [gradSq_dipoleLift]
+  ring
 
 /-- First component of the classical Green flux. -/
 def ddGreenFlux₁ (u : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=

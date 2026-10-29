@@ -8,13 +8,13 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching thirteen admissions. Corrected boundary nonnegativity is assembled
+inputs, reaching twelve admissions. Corrected boundary nonnegativity is assembled
 from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions and the full odd–odd exclusion
-has twenty-nine. This is not an admission-free exclusion.
+has twenty-eight. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
@@ -106,8 +106,8 @@ extension or center removal in `dd_truncated_picone`; that parent and the
 exclusion assemblies are unchanged. Compatibility review remains deferred
 while the statement pass continues.
 
-`dd_character_virial_limit` reaches seven admissions: `dd_weak_green`,
-`dd_boundary_flux`, `dd_weighted_first`, `dd_quotient_equations`,
+`dd_character_virial_limit` reaches six admissions: `dd_weak_green`,
+`dd_weighted_first`, `dd_quotient_equations`,
 `dd_quotient_gradient_traces`, `dd_value_finite_part` and `dd_renormalized_bulk`.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
@@ -117,12 +117,14 @@ and identifies the full bulk limit by uniqueness. The coefficient error is
 `ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
 
 `dd_cutoff_identity` now has no `sorry` of its own. It combines the new
-`dd_weak_green` and `dd_boundary_flux` nodes, both admitted, with the existing
+admitted `dd_weak_green` and proved `dd_boundary_flux` nodes with the existing
 admitted weighted first identity and quotient equation. The weak Green statement
 takes local H² for the stream, local L² for its operator value, and
 `HasDDOperator` with specified weak gradients; it uses neither an eigenfunction
-nor a derivative of the forcing. Boundary-flux identification is pointwise and
-assumes neither a PDE nor regularity of the supplied values. Its use is confined
+nor a derivative of the forcing. Boundary-flux identification is admission-free:
+normal–tangent orthogonality reduces the quadratic terms, and
+`-μq = (8-s³)/3` identifies the coefficient with the prescribed boundary density.
+It assumes neither a PDE nor regularity of the supplied values. Its use is confined
 to nonzero cutoff-derivative levels, automatically away from the center.
 The assembly obtains local quotient regularity by smooth division and transfers
 the weak Poisson equation to arbitrary supplied witnesses by uniqueness.
@@ -139,11 +141,11 @@ Weighted differential algebra and raw half-density conjugation are also
 admission-free. `dd_green` remains a separate classical admission beneath the
 blueprint's weak Green proof, not a direct dependency in the current Lean audit.
 
-The split replaces one outer cutoff admission by four explicit inputs; it does
-not close those inputs. Audits now reach thirteen admissions below
-`dd_picone_current` and twenty-nine below `odd_odd_exclusion`.
-Next targets are the weak Green and boundary-flux nodes;
-the weighted first identity and quotient equation also need proofs.
+The cutoff assembly reaches three admissions: weak Green, weighted first
+identity and quotient equation. Audits reach twelve admissions below
+`dd_picone_current` and twenty-eight below `odd_odd_exclusion`.
+The weak Green node is the next target; the weighted first identity and
+quotient equation also need proofs.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,
@@ -262,7 +264,7 @@ Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the
 minimal quotient data. Its character-wise assembly and representative/exceptional-level
-bridges are checked; the seven admitted virial inputs and the remaining inputs below
+bridges are checked; the six admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
 Poincaré now has a precise weak form-domain statement, but no spectral proof. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.

@@ -66,17 +66,19 @@ weights and local versus global regularity.
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
-   `dd_character_virial_limit` is assembled without its own `sorry`, from seven
-   admissions: weak Green, boundary-flux algebra, weighted first identity,
-   quotient equation, gradient traces, value finite part and renormalized bulk.
+   `dd_character_virial_limit` is assembled without its own `sorry`, from six
+   admissions: weak Green, weighted first identity, quotient equation, gradient
+   traces, value finite part and renormalized bulk.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
    a generic cutoff-to-annular extraction handles common exceptional sets.
    Annular virial is assembled from `dd_cutoff_identity`, now itself proved
-   from the new admitted weak Green and boundary-flux nodes and the existing
-   weighted first identity and quotient equation. Coarea and endpoint assembly
-   are checked. The weak Green and pointwise boundary-flux proofs are next targets.
+   from the admitted weak Green, weighted first identity and quotient equation,
+   with admission-free pointwise boundary-flux algebra. Normal–tangent
+   orthogonality and `-μq = (8-s³)/3` give the flux identification, with the inward
+   normal convention unchanged. Coarea and endpoint assembly are checked.
+   The weak Green proof is the next target.
    Multiplying back by Ψ identifies
    arbitrary raw weak gradients with Fourier stream derivatives and proves
    half-density conjugation. Raw/supplied quotient changes, coarea splitting,
@@ -91,7 +93,7 @@ weights and local versus global regularity.
    Recursive statement coverage also includes the three corrected-boundary
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
    logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
-   The estimates themselves and thirteen transitive Picone inputs remain proof work.
+   The estimates themselves and twelve transitive Picone inputs remain proof work.
    `OddOddCoercivity.lean` now states the maximal weak weighted form domain,
    central-parity Poincaré, Kantorovich, the actual quotient-domain bridge and
    separate gradient/potential bounds. These new proofs remain `sorry`; the
