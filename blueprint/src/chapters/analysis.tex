@@ -341,6 +341,29 @@ A locally integrable function times a continuous function with compact support
 in $U$ is integrable, so the defining integrals split.
 \end{proof}
 
+\begin{lemma}[Smooth multiplication for weak derivatives]
+\label{lem:weak-derivative-product}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.mul_smooth}
+\leanok
+Let $U\subset\R^2$ be open and let $h=\partial_jg$ weakly on $U$.
+For every smooth $\chi:\R^2\to\mathbb C$,
+\[
+ \partial_j(\chi g)=(\partial_j\chi)g+\chi h
+ \quad\hbox{weakly on }U.
+\]
+The multiplier need not have compact support or bounded derivatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+Test the weak derivative identity with $\chi\eta$, where $\eta$ is a test
+function on $U$, and expand $\partial_j(\chi\eta)$. All products are
+integrable because $\eta$ and its derivatives have compact support in $U$.
+Multiplication by a continuous function preserves local integrability.
+\end{proof}
+
 \begin{lemma}[Sobolev congruence on the domain]
 \label{lem:sobolev-congr-ae}
 \uses{def:sobolev-local}

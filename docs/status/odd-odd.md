@@ -107,7 +107,7 @@ exclusion assemblies are unchanged. Compatibility review remains deferred
 while the statement pass continues.
 
 `dd_character_virial_limit` reaches four analytic admissions:
-`dd_annular_virial`, `dd_quotient_gradient_traces`, `dd_value_finite_part`
+`dd_cutoff_identity`, `dd_quotient_gradient_traces`, `dd_value_finite_part`
 and `dd_renormalized_bulk`. No new admission or stronger hypothesis is introduced.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
@@ -126,11 +126,12 @@ coarea and the existing integrable-energy sequence lemma give vanishing flux
 outside any prescribed null set; dominated convergence closes the annular limit.
 Measurable versions and null hulls handle witnesses not assumed measurable.
 No global quotient existence or new center hypothesis is used. The next virial
-frontier is the weak cutoff identity inside `dd_annular_virial`, not center removal.
+frontier is `dd_cutoff_identity` (Blueprint `lem:dd-cutoff-identity`), not center removal.
 
-The annular theorem now applies the proved
-`dd_annular_virial_of_cutoff_identity`; its own `sorry` is precisely the weak
-cutoff identity, with the original hypotheses unchanged. Boundary-density
+The annular theorem has no `sorry` of its own: it applies
+`dd_annular_virial_of_cutoff_identity` to `dd_cutoff_identity`, with the original
+hypotheses unchanged. The new cutoff node replaces the former annular admission;
+it is not an additional assumption or a completed analytic proof. Boundary-density
 integrability, direct identification of its level integral, coarea and a common
 exceptional set are checked. The generic `annular_virial_of_cutoff_identity`
 requires only closed-band integrability, not positivity or smooth witnesses.
@@ -138,8 +139,14 @@ requires only closed-band integrability, not positivity or smooth witnesses.
 and all three Cartesian matrix entries. The raw quotient is H² on positive
 truncations and arbitrary specified weak derivatives are H¹ there. The local
 weak Green extension and weighted first identity are not proved by this
-extraction; `dd_green` and `dd_weighted_first` remain admitted. No new
-admission has been introduced, and the exclusion audit counts are unchanged.
+extraction; `dd_green` and `dd_weighted_first` remain admitted. The weak product
+rule is proved in `SobolevLocal.lean` without support/boundedness hypotheses on
+the smooth multiplier. Multiplying the raw quotient back by Ψ identifies its
+specified weak gradient with Fourier stream derivatives; `ddWeightedGenerator_raw_ae`
+then proves the half-density conjugation. The remaining cutoff proof must still
+supply the integrated weak Green argument (or an equivalent Fourier/ordinary-virial
+change-of-weight proof); these representative bridges alone do not do so.
+No new admission has been introduced, and the exclusion audit counts are unchanged.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,

@@ -262,7 +262,7 @@ Now $q'=1/3+16/(3s^3)$, giving the asserted $A_0$.
 \lean{NoEmbeddedEigenvalues.ddWeightedLaplacian, NoEmbeddedEigenvalues.ddWeightedDiv,
  NoEmbeddedEigenvalues.ddWeightedGenerator, NoEmbeddedEigenvalues.ddVirialDensity,
  NoEmbeddedEigenvalues.ddVirialLevel, NoEmbeddedEigenvalues.ddInwardNormal,
- NoEmbeddedEigenvalues.ddRegularCell}
+ NoEmbeddedEigenvalues.ddRegularCell, NoEmbeddedEigenvalues.ddBoundaryDensity}
 \leanok
 On the punctured positive cell put
 \[
@@ -282,6 +282,13 @@ let the level term be
  \bigl(|p|^2-|\partial_\tau u|^2-|u|^2+
              \operatorname{Re}(Eu\,\bar u)\bigr)
  -\sigma^2\operatorname{Re}(\bar u p)\right]d\ell.
+\]
+Equivalently $G_u(\sigma)=\oint_{s=\sigma}b[u]\,dt$, where
+\[
+ b[u]=\frac{8-s^3}{3}
+ \bigl(|p|^2-|\partial_\tau u|^2-|u|^2+
+             \operatorname{Re}(Eu\,\bar u)\bigr)
+ -s^2\sqrt r\,\operatorname{Re}(\bar u p).
 \]
 Here $d\ell=\sqrt r\,dt$ and $\tau$ is either unit tangent. The shared Lean
 \texttt{normalDeriv} points outward, so the inward derivative here is its negative.
@@ -307,7 +314,8 @@ no global divided regularity is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-l2, lem:dd-virial-algebra, lem:dd-quotient-equations}
+\uses{lem:virial-l2, lem:dd-virial-algebra, lem:dd-quotient-equations,
+ lem:weak-derivative-product, lem:weak-derivative-unique, lem:sobolev-congr-ae}
 Extend $W_\chi,f_\chi$ periodically and by zero outside the positive cell.
 They are smooth, supported away from $s=0,2$, and adapted because $L_0s=0$.
 For the ordinary half-density generator $D_\chi$ one has
@@ -315,6 +323,11 @@ For the ordinary half-density generator $D_\chi$ one has
  \Div_\mu W_\chi=\Div W_\chi+2W_\chi\cdot\nabla\log s,
  \qquad sD_{\mu,\chi}\phi=D_\chi(s\phi)=D_\chi\psi.
 \]
+For supplied weak derivatives, multiply $\phi$ back by the smooth
+factor $s$ and use weak-derivative uniqueness to identify
+$\partial_j\psi=s\,\partial_j\phi+(\partial_js)\phi$ almost everywhere
+on the cell. Thus the generator conjugation holds for the specified
+representatives, not just for smooth functions.
 Substitute $\omega=s\nu$ and $\psi=s\phi$ in the first identity of
 Lemma~\ref{lem:virial-l2}. All integrands have annular support, where division
 by $s$ is smooth and bounded. No weighted mollifier or inverse of $E$ is
@@ -365,6 +378,52 @@ $\mu[\tfrac12L_\mu(f-d_\mu)-f]|u|^2=-F|u|^2$.
 In the flux, $f-d_\mu=-1$ leaves exactly $\mathcal V[u]$.
 \end{proof}
 
+\begin{lemma}[Odd--odd weak cutoff identity]
+\label{lem:dd-cutoff-identity}
+\uses{def:dd-virial-densities, def:eigen-problem}
+\lean{NoEmbeddedEigenvalues.dd_cutoff_identity}
+\leanok
+For an odd--odd eigenfunction with $\lambda\ne0$, use the original
+quotients $\phi=\psi/s$, $\nu=\omega/s$ on the open cell and any supplied
+local weak gradient of $\phi$. For every real
+$\eta\in C_c^\infty(0,1)$,
+\[
+ \int_\Cell \eta(s/2)j[\phi]
+ =\int_\Cell \tfrac12\eta'(s/2)b[\phi],
+\]
+where $b[u]$ is the planar boundary density from
+Definition~\ref{def:dd-virial-densities}. Both densities use $E\phi=-\nu$
+in the weak sense and the supplied gradient. No global divided regularity
+or derivative of $\nu$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-weighted-first, lem:dd-green, lem:dd-quotient-equations,
+ lem:inverse-laplacian-derivatives, lem:lift-sobolev-local,
+ lem:sobolev-local-multiplier}
+Put $\chi(s)=\eta(s/2)$. On its compact annular support,
+$\phi=\psi/s$ has local $H^2$ regularity and $E\phi=-\nu\in L^2$,
+by the original inverse-Laplacian regularity.
+The Green identity holds distributionally there: its product rules involve
+only products of $L^2$ functions and their first weak derivatives, with
+at most two derivatives of $\phi$. Its flux and bulk terms are locally
+integrable; no derivative of $\nu$ is used.
+
+Since $D_{\mu,\chi}=\chi D_\mu+\tfrac12\chi'q$, substituting $\nu=-E\phi$
+in Lemma~\ref{lem:dd-weighted-first} and then using
+Lemma~\ref{lem:dd-green} gives
+\[
+ \int_\Cell\chi(s)j[\phi]
+ =\int_\Cell\chi'(s)
+    \left(\nabla s\cdot\mathcal V[\phi]
+                   -\mu q\operatorname{Re}(E\phi\,\bar\phi)\right).
+\]
+The quantity in parentheses is $b[\phi]$: use
+$W\cdot\nabla\phi=qp/\sqrt r$ and $\mu q=(s^3-8)/3$.
+The annular support keeps both integrations away from the separatrix
+and center.
+\end{proof}
+
 \begin{lemma}[Odd--odd annular virial]
 \label{lem:dd-annular-virial}
 \uses{def:dd-virial-densities, def:eigen-problem}
@@ -379,40 +438,21 @@ that for all $0<a<b<2$ outside $N$,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-weighted-first, lem:dd-green, lem:dd-quotient-equations,
- lem:inverse-laplacian-derivatives, lem:lift-sobolev-local,
- lem:sobolev-local-multiplier, lem:cell-neighbourhood, lem:normal-coeff-bound,
+\uses{lem:dd-cutoff-identity, lem:inverse-laplacian-derivatives,
+ lem:lift-sobolev-local, lem:sobolev-local-multiplier,
+ lem:cell-neighbourhood, lem:normal-coeff-bound,
  lem:coarea-level-cutoff, lem:du-bois-reymond}
-On every compact annulus, $\phi=\psi/s$ has local $H^2$ regularity and
-$E\phi=-\nu\in L^2$, by the original inverse-Laplacian regularity.
-The Green identity holds distributionally there: its product rules involve
-only products of $L^2$ functions and their first weak derivatives, with
-at most two derivatives of $\phi$. In particular its flux and bulk terms
-are locally integrable; no derivative of $\nu$ is used.
+\leanok
+Local smooth division gives $H^2$ on positive truncations and
+weak-derivative uniqueness transfers the gradient bounds to the supplied
+witnesses. The bulk coefficients are bounded there. The planar boundary
+density is integrable there by the $L^2$ value and gradient bounds.
+Its level integral is $G_\phi$ pointwise, without splitting the summands.
 
-Since $D_{\mu,\chi}=\chi D_\mu+\tfrac12\chi'q$, substituting $\nu=-E\phi$
-in Lemma~\ref{lem:dd-weighted-first} and then using
-Lemma~\ref{lem:dd-green} gives
-\[
- \int_\Cell\chi(s)j[\phi]
- =\int_\Cell\chi'(s)
-    \left(\nabla s\cdot\mathcal V[\phi]
-                   -\mu q\operatorname{Re}(E\phi\,\bar\phi)\right).
-\]
-The quantity in parentheses divided by $\sqrt r$ is precisely the
-$d\ell$ integrand of $G_\phi(s)$: use
-$W\cdot\nabla\phi=qp/\sqrt r$ and $\mu q=(s^3-8)/3$.
-Coarea therefore gives
-$\int\chi(s)m(s)\,ds=\int\chi'(s)G_\phi(s)\,ds$, where
-$m(s)=\int_{\{\Psi=s\}}j[\phi]dt$; both functions are locally integrable.
-The one-dimensional weak derivative identity is $G_\phi'=-m$.
-For coarea, use the planar boundary density obtained by replacing the
-level parameter $s$ in the integrand of $G_\phi(s)$ by $\Psi(p)$.
-It is integrable on positive truncations by the $L^2$ value and gradient
-bounds, and its level integral equals $G_\phi$ pointwise, without
-splitting the summands. Lemma~\ref{lem:du-bois-reymond} then gives one
-common null set for both endpoints. In orbit coordinates the density of
-the bulk is $2\oint j\,dt$; rescale the exceptional set by $s=2h$.
+Apply coarea to Lemma~\ref{lem:dd-cutoff-identity}. In orbit coordinates
+the bulk density is $2\oint j\,dt$, and the boundary term is
+$G_\phi(2h)$. Lemma~\ref{lem:du-bois-reymond} gives one common null set
+for both endpoints. Rescale it by $s=2h$.
 \end{proof}
 
 \begin{lemma}[Odd--odd truncated virial]

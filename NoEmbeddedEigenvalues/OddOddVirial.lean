@@ -28,6 +28,9 @@ The weighted differential algebra is pointwise on the regular cell. The annular
 extraction takes a weak cutoff identity as input, then obtains one exceptional set
 for both endpoints by coarea and du Bois–Reymond. The planar boundary density
 identifies each level term directly, without splitting its summands.
+The weak cutoff identity and its annular assembly are separate interfaces.
+Multiplication back by Ψ identifies supplied weak quotient gradients with Fourier
+stream derivatives, giving half-density conjugation without classical raw derivatives.
 -/
 
 noncomputable section
@@ -261,13 +264,13 @@ theorem partialY_ddVirialField₂ {p : ℝ × ℝ}
   field_simp
   ring
 
-/-- Weighted divergence differs from ordinary divergence by `2q(s)/s`. -/
-theorem ddWeightedDiv_virial {p : ℝ × ℝ}
-    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
-    ddWeightedDiv ddVirialField₁ ddVirialField₂ p =
-      partialX ddVirialField₁ p + partialY ddVirialField₂ p +
-        2 * ddVirialQ (dipoleLift p) / dipoleLift p := by
-  have hd := contDiffAt_ddVirialField hs hr
+/-- Conjugating a half-density by Ψ changes its divergence by twice the
+    logarithmic derivative of Ψ. No smoothness of the function acted on is used. -/
+theorem ddWeightedDiv_eq {W₁ W₂ : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
+    (hW₁ : DifferentiableAt ℝ W₁ p) (hW₂ : DifferentiableAt ℝ W₂ p)
+    (hs : dipoleLift p ≠ 0) :
+    ddWeightedDiv W₁ W₂ p = divergence W₁ W₂ p -
+      2 * (Real.sin p.1 * W₁ p + Real.sin p.2 * W₂ p) / dipoleLift p := by
   have hm : DifferentiableAt ℝ ddWeight p := by unfold ddWeight dipoleLift; fun_prop
   have hx : partialX ddWeight p = -2 * dipoleLift p * Real.sin p.1 := by
     exact (((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2)).pow 2).deriv.trans
@@ -276,13 +279,43 @@ theorem ddWeightedDiv_virial {p : ℝ × ℝ}
     exact (((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1)).pow 2).deriv.trans
       (by unfold dipoleLift; ring)
   unfold ddWeightedDiv divergence
-  rw [show (fun q ↦ ddWeight q * ddVirialField₁ q) =
-      (fun q ↦ ddWeight q • ddVirialField₁ q) from rfl,
-    show (fun q ↦ ddWeight q * ddVirialField₂ q) =
-      (fun q ↦ ddWeight q • ddVirialField₂ q) from rfl,
-    partialX_smul hm (hd.1.differentiableAt (by simp)),
-    partialY_smul hm (hd.2.differentiableAt (by simp)), hx, hy]
-  simp only [smul_eq_mul, ddWeight, ddVirialField₁, ddVirialField₂,
+  rw [show (fun q ↦ ddWeight q * W₁ q) = (fun q ↦ ddWeight q • W₁ q) from rfl,
+    show (fun q ↦ ddWeight q * W₂ q) = (fun q ↦ ddWeight q • W₂ q) from rfl,
+    partialX_smul hm hW₁, partialY_smul hm hW₂, hx, hy]
+  simp only [smul_eq_mul, ddWeight]
+  field_simp
+  ring
+
+/-- The half-density conjugation only needs the pointwise weak product-rule
+    relations, not classical derivatives of either representative. -/
+theorem ddWeightedGenerator_conjugation {W₁ W₂ : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
+    (hW₁ : DifferentiableAt ℝ W₁ p) (hW₂ : DifferentiableAt ℝ W₂ p)
+    (hs : dipoleLift p ≠ 0) {u ux uy v vx vy : ℂ}
+    (hv : (dipoleLift p : ℂ) * u = v)
+    (hx : -(Real.sin p.1 : ℂ) * u + (dipoleLift p : ℂ) * ux = vx)
+    (hy : -(Real.sin p.2 : ℂ) * u + (dipoleLift p : ℂ) * uy = vy) :
+    (dipoleLift p : ℂ) *
+      ddWeightedGenerator W₁ W₂ (fun _ ↦ u) (fun _ ↦ ux) (fun _ ↦ uy) p =
+      (W₁ p : ℂ) * vx + (W₂ p : ℂ) * vy +
+        ((divergence W₁ W₂ p / 2 : ℝ) : ℂ) * v := by
+  rw [← hv, ← hx, ← hy]
+  unfold ddWeightedGenerator
+  rw [ddWeightedDiv_eq hW₁ hW₂ hs]
+  have hsC : (dipoleLift p : ℂ) ≠ 0 := by exact_mod_cast hs
+  push_cast
+  field_simp
+  ring
+
+/-- Weighted divergence differs from ordinary divergence by 2q(s)/s. -/
+theorem ddWeightedDiv_virial {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    ddWeightedDiv ddVirialField₁ ddVirialField₂ p =
+      partialX ddVirialField₁ p + partialY ddVirialField₂ p +
+        2 * ddVirialQ (dipoleLift p) / dipoleLift p := by
+  have hd := contDiffAt_ddVirialField hs hr
+  rw [ddWeightedDiv_eq (hd.1.differentiableAt (by simp))
+    (hd.2.differentiableAt (by simp)) hs]
+  simp only [divergence, ddVirialField₁, ddVirialField₂,
     partialX_dipoleLift, partialY_dipoleLift]
   field_simp
   rw [gradSq_dipoleLift] at *
@@ -582,6 +615,62 @@ theorem ddStreamQuotient_memLp_derivative {ω : L2} {j : Fin 2}
     MemLp d 2 (volume.restrict (ddTruncatedCell a)) :=
   (ddStreamQuotient_memSobolevOn_derivative hd ha).1
 
+/-- Multiplying back by Ψ identifies arbitrary weak quotient derivatives with the
+    original Fourier stream derivatives, without differentiating a representative. -/
+theorem ddStreamQuotient_weakPartial_eq {ω : L2} {j : Fin 2} {d : ℝ × ℝ → ℂ}
+    (hd : HasWeakPartialOn cellSquare j (ddStreamQuotient ω) d) :
+    ∀ᵐ p, p ∈ cellSquare →
+      coordPartial j (fun q ↦ (dipoleLift q : ℂ)) p * ddStreamQuotient ω p +
+        (dipoleLift p : ℂ) * d p = liftL2 (streamPartial j ω) p := by
+  have hp := hd.mul_smooth isOpen_cellSquare
+    (show ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun q ↦ (dipoleLift q : ℂ)) from
+      Complex.ofRealCLM.contDiff.comp
+        ((Real.contDiff_cos.comp contDiff_fst).add (Real.contDiff_cos.comp contDiff_snd)))
+  have heq : ∀ᵐ p : ℝ × ℝ, p ∈ cellSquare →
+      (dipoleLift p : ℂ) * ddStreamQuotient ω p = contStream ω p :=
+    Eventually.of_forall fun p hp ↦ by
+      have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+        simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
+      have hsC : (dipoleLift p : ℂ) ≠ 0 := by exact_mod_cast hs
+      dsimp [ddStreamQuotient]
+      field_simp
+  have hp' := hp.congr_ae_on isOpen_cellSquare.measurableSet heq
+    (Eventually.of_forall fun _ _ ↦ rfl)
+  have ht := (hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ω j)
+    cellSquare).congr_left (streamLift_ae_eq_contStream ω)
+  exact hp'.ae_eq isOpen_cellSquare ht
+
+/-- The weighted generator of the raw quotient is the ordinary generator of the
+    original stream, for every supplied weak gradient and smooth real field. -/
+theorem ddWeightedGenerator_raw_ae (ω : L2) {ux uy : ℝ × ℝ → ℂ}
+    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
+    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy)
+    {W₁ W₂ : ℝ × ℝ → ℝ} (hW₁ : Differentiable ℝ W₁) (hW₂ : Differentiable ℝ W₂) :
+    ∀ᵐ p, p ∈ cellSquare →
+      (dipoleLift p : ℂ) * ddWeightedGenerator W₁ W₂ (ddStreamQuotient ω) ux uy p =
+        (W₁ p : ℂ) * liftL2 (streamPartial 0 ω) p +
+          (W₂ p : ℂ) * liftL2 (streamPartial 1 ω) p +
+          ((divergence W₁ W₂ p / 2 : ℝ) : ℂ) * liftL2 (invLap ω) p := by
+  have hΨ : Differentiable ℝ dipoleLift := by unfold dipoleLift; fun_prop
+  have hcx : coordPartial (0 : Fin 2) (fun q ↦ (dipoleLift q : ℂ)) =
+      fun p ↦ -(Real.sin p.1 : ℂ) := by
+    simp [coordPartial, partialX_ofReal hΨ, partialX_dipoleLift]
+  have hcy : coordPartial (1 : Fin 2) (fun q ↦ (dipoleLift q : ℂ)) =
+      fun p ↦ -(Real.sin p.2 : ℂ) := by
+    simp [coordPartial, partialY_ofReal hΨ, partialY_dipoleLift]
+  filter_upwards [ddStreamQuotient_weakPartial_eq hx, ddStreamQuotient_weakPartial_eq hy,
+    streamLift_ae_eq_contStream ω] with p hdx hdy hv hp
+  have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
+  have hsC : (dipoleLift p : ℂ) ≠ 0 := by exact_mod_cast hs
+  have hu : (dipoleLift p : ℂ) * ddStreamQuotient ω p = liftL2 (invLap ω) p := by
+    change (dipoleLift p : ℂ) * (contStream ω p / (dipoleLift p : ℂ)) = _
+    rw [← hv]
+    field_simp
+    rfl
+  exact ddWeightedGenerator_conjugation (hW₁ p) (hW₂ p) hs hu
+    (by simpa only [hcx] using hdx hp) (by simpa only [hcy] using hdy hp)
+
 /-- The apparent center singularities of the bulk coefficients are bounded on
     every positive truncation. Values at `Ψ = 2` are the totalized expressions. -/
 theorem dd_coefficients_bound {p : ℝ × ℝ} {a : ℝ} (ha : 0 < a)
@@ -863,6 +952,22 @@ theorem dd_annular_virial_of_cutoff_identity (ω : L2) {ux uy : ℝ × ℝ → �
       levelIntegral_ddBoundaryDensity _ _ _ _ (by linarith) (by linarith)] at h
     simpa only [mul_div_cancel₀ _ (by norm_num : (2 : ℝ) ≠ 0)] using h
 
+/-- The weak weighted cutoff identity on the original eigenfunction domain.
+    Its test is supported on normalized levels in a compact subinterval of (0,1). -/
+theorem dd_cutoff_identity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
+    {ux uy : ℝ × ℝ → ℂ}
+    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
+    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy)
+    {φ : ℝ → ℝ} (hφ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ)
+    {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    (hsupp : ∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) :
+    (∫ p in cellSquare, φ (dipoleLift p / 2) *
+      ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
+    ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 *
+      ddBoundaryDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p := by
+  sorry
+
 /-- Annular virial with one common exceptional set for both endpoints. Neither a
     derivative of the vorticity nor global quotient data are hypotheses. -/
 theorem dd_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
@@ -882,7 +987,7 @@ theorem dd_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy b := by
   apply dd_annular_virial_of_cutoff_identity ω hx hy
   intro φ hφ a b ha hb hsupp
-  sorry
+  exact dd_cutoff_identity hlam hω hs hx hy hφ ha hb hsupp
 
 /-! ### Center flux and removal -/
 

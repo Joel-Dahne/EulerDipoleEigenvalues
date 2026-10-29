@@ -17,7 +17,8 @@ The even–even route is admission-free. Available foundations include:
 - Torus/local Sobolev bridges, domain-a.e. congruence, local Sobolev gluing,
   volume-preserving affine weak-jet/radial-L² pullback, and periodic Hᵏ_loc
   reconstruction. Local smooth Sobolev multipliers use compact cutoffs,
-  without global derivative bounds. The normalized saddle chart instantiates
+  without global derivative bounds. The local weak product rule also allows
+  smooth multipliers without compact support. The normalized saddle chart instantiates
   the affine interface.
   Continuous Hölder representatives, ACL slicing, rectangle traces and
   even–even separatrix traces.
@@ -71,8 +72,11 @@ weights and local versus global regularity.
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
    a generic cutoff-to-annular extraction handles common exceptional sets.
-   The remaining annular `sorry` is the weak cutoff identity, not its coarea
-   or endpoint assembly. Raw/supplied quotient changes, coarea splitting,
+   Annular virial is assembled from the new `dd_cutoff_identity` node, which
+   replaces its former admission. Its weak Green/cutoff proof remains open;
+   coarea and endpoint assembly are checked. Multiplying back by Ψ identifies
+   arbitrary raw weak gradients with Fourier stream derivatives and proves
+   half-density conjugation. Raw/supplied quotient changes, coarea splitting,
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These four analytic proofs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.

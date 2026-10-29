@@ -170,8 +170,10 @@ proof mechanisms. Module names below are relative to
   gradient traces and full renormalized bulk limits. Positive-truncation H¹
   division, weak-witness uniqueness, coefficient bounds and center-flux removal
   assemble the truncated identity from the annular one. Weighted differential
-  algebra and cutoff-to-annular extraction separate the weak cutoff identity
-  from boundary integrability and exceptional-level bookkeeping. Supplied-data bridges
+  algebra and cutoff-to-annular extraction separate `dd_cutoff_identity`
+  from boundary integrability and exceptional-level bookkeeping. Weak product-rule
+  and generator conjugation identify the raw quotient gradient with Fourier stream
+  derivatives. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from
   the shared outward derivative convention.
 - `OddOdd.lean`: character-wise virial-limit assembly, scalar finite-part

@@ -16,7 +16,8 @@ Local Sobolev spaces are defined on open sets `U ⊆ ℝ²`, the lift of the tor
 weak derivatives tested against smooth functions with compact support in `U`. The
 weighted spaces replace Lebesgue measure on `U` by a weighted measure. Only the
 definitions and the first layer of facts are here: linearity and restriction, classical
-derivatives are weak derivatives, and multiplication by a smooth cutoff.
+derivatives are weak derivatives, and the local product rule for a smooth
+multiplier, without compact support or global derivative bounds.
 The test-annihilator criterion and a.e. uniqueness of weak partial derivatives live here
 so the action-angle chain rules can use them without importing `CellPeriodization.lean`.
 -/
@@ -434,6 +435,49 @@ theorem coordPartial_mul (j : Fin 2) {a b : ℝ × ℝ → ℂ} (ha : Differenti
   split_ifs
   · exact partialX_mul (ha p) (hb p)
   · exact partialY_mul (ha p) (hb p)
+
+/-- The local weak product rule needs no compact support on the smooth multiplier. -/
+theorem HasWeakPartialOn.mul_smooth {U : Set (ℝ × ℝ)} {j : Fin 2}
+    {g h χ : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn U j g h) (hU : IsOpen U)
+    (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ) :
+    HasWeakPartialOn U j (fun p ↦ χ p * g p)
+      (fun p ↦ coordPartial j χ p * g p + χ p * h p) := by
+  have hχd : Differentiable ℝ χ := hχ.differentiable (by simp)
+  have hχc : Continuous χ := hχ.continuous
+  have hχj := contDiff_coordPartial_top j hχ
+  refine ⟨hd.1.continuousOn_mul hχc.continuousOn hU.isLocallyClosed,
+    (hd.1.continuousOn_mul hχj.continuous.continuousOn hU.isLocallyClosed).add
+      (hd.2.1.continuousOn_mul hχc.continuousOn hU.isLocallyClosed), fun φ hφ ↦ ?_⟩
+  have hφd : Differentiable ℝ φ := hφ.contDiff.differentiable (by simp)
+  -- `ψ = χ φ` is a test function on `U`.
+  have hψ : IsTestFunctionOn U (fun p ↦ χ p * φ p) :=
+    ⟨hχ.mul hφ.contDiff, hφ.hasCompactSupport.mul_left,
+      (tsupport_mul_subset_right (f := χ) (g := φ)).trans hφ.tsupport_subset⟩
+  have hw := hd.2.2 _ hψ
+  rw [coordPartial_mul j hχd hφd] at hw
+  have hφc := hφ.contDiff.continuous
+  have hφj := hφ.continuous_coordPartial j
+  have a1 : Integrable fun p ↦ g p * (coordPartial j χ p * φ p) :=
+    integrable_mul_of_tsupport_subset hd.1 (hχj.continuous.mul hφc) hφ.hasCompactSupport.mul_left
+      ((tsupport_mul_subset_right (f := coordPartial j χ) (g := φ)).trans hφ.tsupport_subset)
+  have a2 : Integrable fun p ↦ g p * (χ p * coordPartial j φ p) :=
+    integrable_mul_of_tsupport_subset hd.1 (hχc.mul hφj)
+      (hφ.hasCompactSupport_coordPartial j).mul_left
+      ((tsupport_mul_subset_right (f := χ) (g := coordPartial j φ)).trans
+        ((tsupport_coordPartial_subset j φ).trans hφ.tsupport_subset))
+  have a3 : Integrable fun p ↦ h p * (χ p * φ p) :=
+    integrable_mul_of_tsupport_subset hd.2.1 (hχc.mul hφc) hφ.hasCompactSupport.mul_left
+      ((tsupport_mul_subset_right (f := χ) (g := φ)).trans hφ.tsupport_subset)
+  simp only [mul_add] at hw
+  rw [integral_add a1 a2] at hw
+  have e1 : ∫ p, χ p * g p * coordPartial j φ p = ∫ p, g p * (χ p * coordPartial j φ p) := by
+    congr 1; funext p; ring
+  have e2 : ∫ p, (coordPartial j χ p * g p + χ p * h p) * φ p =
+      (∫ p, g p * (coordPartial j χ p * φ p)) + ∫ p, h p * (χ p * φ p) := by
+    rw [← integral_add a1 a3]
+    congr 1; funext p; ring
+  rw [e1, e2]
+  linear_combination hw
 
 /-- Product rule for a smooth cutoff `χ` with compact support in `V`: if `h` is the weak
     derivative of `g` on `V`, then `(∂ⱼχ) g + χ h` is the weak derivative of `χ g` on any set
