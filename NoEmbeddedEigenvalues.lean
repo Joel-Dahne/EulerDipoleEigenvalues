@@ -72,6 +72,7 @@ import NoEmbeddedEigenvalues.SmoothIntervalIntegral
 import NoEmbeddedEigenvalues.SobolevLocal
 import NoEmbeddedEigenvalues.SobolevGluing
 import NoEmbeddedEigenvalues.SobolevMultipliers
+import NoEmbeddedEigenvalues.SobolevApproximation
 import NoEmbeddedEigenvalues.LiftPeriodization
 import NoEmbeddedEigenvalues.SobolevHolder
 import NoEmbeddedEigenvalues.SobolevTorus

@@ -144,8 +144,19 @@ blueprint's weak Green proof, not a direct dependency in the current Lean audit.
 The cutoff assembly reaches three admissions: weak Green, weighted first
 identity and quotient equation. Audits reach twelve admissions below
 `dd_picone_current` and twenty-eight below `odd_odd_exclusion`.
-The weak Green node is the next target; the weighted first identity and
-quotient equation also need proofs.
+The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
+with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
+smooth approximants on the original open domain and strong L² convergence of
+all jets through order two on a precompact patch, without boundary assumptions.
+`tendsto_integral_mul_conj_of_L2` proves bounded-coefficient quadratic-integral
+stability without admissions. `ddWeightedDiv_cutoff` and
+`ddWeightedGenerator_cutoff` prove the cutoff half-density correction pointwise
+on the regular cell, without classical derivatives of the supplied function.
+The weak Green theorem itself remains admitted:
+its classical integration and limit assembly are not yet implemented, so the
+new approximation theorem is a Blueprint dependency, not yet a Lean proof
+dependency. The classical `dd_green`, weighted first identity and quotient
+equation also need proofs.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,

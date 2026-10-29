@@ -26,11 +26,6 @@ odd–odd permits 2,4,…, and either mixed parity permits 1,3,…. -/
 def AllowedSaddleDegree (ε : Fin 2 → Bool) (m : ℕ) : Prop :=
   (Even m ↔ ε 0 = ε 1) ∧ (m = 0 → ε 0 = true ∧ ε 1 = true)
 
-/-- Classical complex jet, used for the smooth harmonic remainder. -/
-def classicalComplexJet : List (Fin 2) → (ℝ × ℝ → ℂ) → ℝ × ℝ → ℂ
-  | [], f => f
-  | j :: w, f => coordPartial j (classicalComplexJet w f)
-
 /-- Smooth harmonicity for the Euclidean plane, stated in Cartesian coordinates.
 It does not posit an inner-product structure on the maximum-norm product. -/
 def IsPlaneHarmonicOn (U : Set (ℝ × ℝ)) (h : ℝ × ℝ → ℂ) : Prop :=

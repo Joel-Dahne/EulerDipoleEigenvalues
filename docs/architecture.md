@@ -45,8 +45,11 @@ proof mechanisms. Module names below are relative to
   of representatives agreeing a.e.; separate from torus periodization.
 - `SobolevMultipliers.lean`: local multiplication by smooth factors and
   division by smooth nonvanishing real factors, via compact cutoffs.
-- `LocalJets.lean`: Euclidean disk/axis geometry, specified weak jets, integer
-  and real-power radial integrability, energies and the Sobolev/jet interface.
+- `LocalJets.lean`: Euclidean disk/axis geometry, specified weak and classical
+  complex jets, integer and real-power radial integrability, energies and the
+  Sobolev/jet interface.
+- `SobolevApproximation.lean`: local H² smooth-approximation interface on
+  precompact patches, and bounded-coefficient L² product-integral stability.
 - `AffineJets.lean`: volume-preserving affine pullback of weak derivatives,
   full specified jets, Sobolev regularity and radius-preserving radial L² bounds.
 - `SaddleChartPullback.lean`: the explicit normalized saddle chart instantiated

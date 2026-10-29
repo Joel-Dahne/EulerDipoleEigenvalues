@@ -37,6 +37,8 @@ The even–even route is admission-free. Available foundations include:
 - Ordinary exhaustion by stream levels and exact one-dimensional B/β
   boundary normalization. Picone's finite-part assembly is conditional on
   separate analytic integrability and trace inputs.
+- Bounded-coefficient L² product-integral convergence, using the continuous
+  L∞ multiplier and L² inner product, without smooth density or domination.
 - Corrected-boundary forcing H¹ regularity, logarithmic correction
   integrability and pointwise β bounds; half-interval Dirichlet estimates
   and the exact positive-central affine correction. Boundary nonnegativity
@@ -78,7 +80,11 @@ weights and local versus global regularity.
    with admission-free pointwise boundary-flux algebra. Normal–tangent
    orthogonality and `-μq = (8-s³)/3` give the flux identification, with the inward
    normal convention unchanged. Coarea and endpoint assembly are checked.
-   The weak Green proof is the next target.
+   The weak Green Blueprint proof now uses the admitted local H² approximation
+   interface in `SobolevApproximation.lean`. Its quadratic-integral limit and
+   pointwise cutoff-generator helpers are proved; classical integration and
+   the weak Green limit assembly remain
+   unimplemented. This new node is not yet on the Lean admission-audit route.
    Multiplying back by Ψ identifies
    arbitrary raw weak gradients with Fourier stream derivatives and proves
    half-density conjugation. Raw/supplied quotient changes, coarea splitting,

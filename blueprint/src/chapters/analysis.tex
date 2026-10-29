@@ -1232,7 +1232,8 @@ by restricting to a fundamental box.
 \begin{definition}[Specified local weak jets and radial energies]
 \label{def:local-weak-jets}
 \uses{def:sobolev-local, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn, NoEmbeddedEigenvalues.RadialJetLp,
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn, NoEmbeddedEigenvalues.classicalComplexJet,
+ NoEmbeddedEigenvalues.RadialJetLp,
  NoEmbeddedEigenvalues.RadialJetRpowLp,
  NoEmbeddedEigenvalues.radialJetEnergy, NoEmbeddedEigenvalues.weakJetEnergy}
 \leanok
@@ -1240,6 +1241,8 @@ Use the Euclidean disks and axis notation of
 Definition~\ref{def:local-plane-geometry}.
 A specified weak jet $D$ of order $n$ has $D_\varnothing=f$ and
 $\partial_jD_w=D_{jw}$ weakly whenever $|w|<n$.
+For smooth $v$, let $\partial_wv$ denote the classical jet with the same
+outer-derivative-first convention, including $\partial_\varnothing v=v$.
 Write $\mathcal R_{k,s}(D)$ for the assertion
 $D_w/r_c^s\in L^2(U)$ for every word of length $k$, and set
 \[
@@ -1354,6 +1357,37 @@ $E^j_w=D_{wj}$. These are square-integrable order-$n$ jets for the first
 derivatives, so induction gives $g_j\in H^n(U)$ and hence
 $f\in H^{n+1}(U)$. No commutation or uniqueness of weak derivatives is
 needed for this equivalence.
+\end{proof}
+
+\begin{lemma}[Local $H^2$ smooth approximation]
+\label{lem:local-h2-smooth-approximation}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.local_h2_smooth_approximation}
+\leanok
+Let $U,V\subset\R^2$ be open, with $\overline V$ compact and contained
+in $U$, and let $u\in H^2_{\mathrm{loc}}(U)$. There are a specified
+weak jet $D$ of order two on $V$ and functions $v_n\in C_c^\infty(U;\C)$
+such that, for every word $w$ of length at most two,
+\[
+ D_w,\ \partial_wv_n\in L^2(V),\qquad
+ \|\partial_wv_n-D_w\|_{L^2(V)}\longrightarrow0.
+\]
+The support of $v_n$ lies in $U$, not necessarily in $V$.
+No boundary trace or zero extension of the original representative is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:localization-cutoff, lem:sobolev-weak-jets,
+ lem:line-mollifier, lem:line-mollifier-convergence, lem:affine-jet-pullback}
+Choose a smooth compact cutoff supported in $U$ and equal to one on a
+neighbourhood of $\overline V$. Its product with $u$ lies in $H^2(\R^2)$
+by cutoff localization. Convolve in both Cartesian variables with compactly
+supported mollifiers, choosing sufficiently small radii so that the enlarged
+support stays inside $U$. The weak jet commutes with convolution;
+the line-mollifier convergence theorem applies to every derivative of order
+at most two. Exchange the two coordinates for the second mollification.
+Restriction to $V$ gives the asserted convergence and identifies the root
+of the limiting jet with $u$.
 \end{proof}
 
 \begin{definition}[Canonical second stream jet]

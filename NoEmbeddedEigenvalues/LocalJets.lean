@@ -27,6 +27,11 @@ def HasWeakJetOn (n : ℕ) (U : Set (ℝ × ℝ)) (f : ℝ × ℝ → ℂ)
     (D : List (Fin 2) → ℝ × ℝ → ℂ) : Prop :=
   D [] = f ∧ ∀ w, w.length < n → ∀ j, HasWeakPartialOn U j (D w) (D (j :: w))
 
+/-- Classical complex jet, with the head of the word as the outer derivative. -/
+def classicalComplexJet : List (Fin 2) → (ℝ × ℝ → ℂ) → ℝ × ℝ → ℂ
+  | [], f => f
+  | j :: w, f => coordPartial j (classicalComplexJet w f)
+
 /-- Square integrability of every order-k derivative divided by the indicated radius power. -/
 def RadialJetLp (k s : ℕ) (U : Set (ℝ × ℝ)) (c : ℝ × ℝ)
     (D : List (Fin 2) → ℝ × ℝ → ℂ) : Prop :=

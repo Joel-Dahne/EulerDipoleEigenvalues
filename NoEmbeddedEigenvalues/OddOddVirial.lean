@@ -307,6 +307,58 @@ theorem ddWeightedGenerator_conjugation {W₁ W₂ : ℝ × ℝ → ℝ} {p : �
   field_simp
   ring
 
+/-- A level cutoff adds its normal derivative to weighted divergence. -/
+theorem ddWeightedDiv_cutoff {χ : ℝ → ℝ}
+    (hχ : Differentiable ℝ χ) {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    ddWeightedDiv (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+      (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q) p =
+      χ (dipoleLift p) * ddWeightedDiv ddVirialField₁ ddVirialField₂ p +
+        deriv χ (dipoleLift p) * ddVirialQ (dipoleLift p) := by
+  have hd := contDiffAt_ddVirialField hs hr
+  have hW₁ := hd.1.differentiableAt (by simp)
+  have hW₂ := hd.2.differentiableAt (by simp)
+  have hc : DifferentiableAt ℝ (fun q ↦ χ (dipoleLift q)) p :=
+    (hχ _).comp p (by unfold dipoleLift; fun_prop)
+  have hcx : partialX (fun q ↦ χ (dipoleLift q)) p =
+      deriv χ (dipoleLift p) * -Real.sin p.1 :=
+    ((hχ _).hasDerivAt.comp p.1
+      ((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2))).deriv
+  have hcy : partialY (fun q ↦ χ (dipoleLift q)) p =
+      deriv χ (dipoleLift p) * -Real.sin p.2 :=
+    ((hχ _).hasDerivAt.comp p.2
+      ((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1))).deriv
+  rw [ddWeightedDiv_eq
+    (W₁ := fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+    (W₂ := fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
+    (hc.mul hW₁) (hc.mul hW₂) hs, ddWeightedDiv_eq hW₁ hW₂ hs]
+  unfold divergence
+  rw [show (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q) =
+      (fun q ↦ χ (dipoleLift q) • ddVirialField₁ q) from rfl,
+    show (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q) =
+      (fun q ↦ χ (dipoleLift q) • ddVirialField₂ q) from rfl,
+    partialX_smul hc hW₁, partialY_smul hc hW₂, hcx, hcy]
+  simp only [smul_eq_mul, ddVirialField₁, ddVirialField₂,
+    partialX_dipoleLift, partialY_dipoleLift]
+  field_simp [hr]
+  rw [gradSq_dipoleLift]
+  ring
+
+/-- Cutoff bookkeeping for the weighted half-density generator uses only
+    specified first-gradient values, with no classical derivatives of u. -/
+theorem ddWeightedGenerator_cutoff {χ : ℝ → ℝ}
+    (hχ : Differentiable ℝ χ) (u ux uy : ℝ × ℝ → ℂ)
+    {p : ℝ × ℝ} (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+      (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q) u ux uy p =
+      (χ (dipoleLift p) : ℂ) *
+        ddWeightedGenerator ddVirialField₁ ddVirialField₂ u ux uy p +
+      ((deriv χ (dipoleLift p) * ddVirialQ (dipoleLift p) / 2 : ℝ) : ℂ) * u p := by
+  unfold ddWeightedGenerator
+  rw [ddWeightedDiv_cutoff hχ hs hr]
+  push_cast
+  ring
+
 /-- Weighted divergence differs from ordinary divergence by 2q(s)/s. -/
 theorem ddWeightedDiv_virial {p : ℝ × ℝ}
     (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :

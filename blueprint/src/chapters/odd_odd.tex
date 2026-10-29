@@ -411,14 +411,16 @@ There is no eigenfunction, parity, or derivative-of-$e$ hypothesis.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-green, lem:sobolev-local-multiplier,
- lem:line-mollifier, lem:line-mollifier-convergence, lem:weak-derivative-unique}
+\uses{lem:dd-green, lem:local-h2-smooth-approximation,
+ lem:weak-derivative-unique}
 The support of $\chi(s)$ and $\chi'(s)$ is a compact subset of the
-punctured cell, where all coefficients are smooth with bounded
-derivatives. Localize $u$ by a smooth compact cutoff equal to one on a
-neighbourhood of this set, and mollify in both Cartesian variables.
-The approximants converge in $H^2$ there; hence their operator values
-converge to $e$ in $L^2$, by the weak equation and uniqueness.
+punctured cell. Choose an open neighbourhood $V$ of this set with
+compact closure inside the punctured cell.
+Apply Lemma~\ref{lem:local-h2-smooth-approximation} there. Weak-derivative
+uniqueness identifies its first jet with the supplied gradient.
+The smooth coefficients and their derivatives are bounded on $\overline V$,
+so the operator values of the approximants converge to $e$ in $L^2(V)$,
+by the weak equation and uniqueness.
 Every quadratic product in the Green identity and its flux converges
 in $L^1$ by Cauchy--Schwarz. Thus the integrated classical identity of
 Lemma~\ref{lem:dd-green} passes to the weak representatives.
