@@ -262,7 +262,9 @@ Now $q'=1/3+16/(3s^3)$, giving the asserted $A_0$.
 \lean{NoEmbeddedEigenvalues.ddWeightedLaplacian, NoEmbeddedEigenvalues.ddWeightedDiv,
  NoEmbeddedEigenvalues.ddWeightedGenerator, NoEmbeddedEigenvalues.ddVirialDensity,
  NoEmbeddedEigenvalues.ddVirialLevel, NoEmbeddedEigenvalues.ddInwardNormal,
- NoEmbeddedEigenvalues.ddRegularCell, NoEmbeddedEigenvalues.ddBoundaryDensity}
+ NoEmbeddedEigenvalues.ddRegularCell, NoEmbeddedEigenvalues.ddBoundaryDensity,
+ NoEmbeddedEigenvalues.ddWeakGreenFlux₁, NoEmbeddedEigenvalues.ddWeakGreenFlux₂,
+ NoEmbeddedEigenvalues.ddGreenNormalFlux}
 \leanok
 On the punctured positive cell put
 \[
@@ -292,6 +294,16 @@ Equivalently $G_u(\sigma)=\oint_{s=\sigma}b[u]\,dt$, where
 \]
 Here $d\ell=\sqrt r\,dt$ and $\tau$ is either unit tangent. The shared Lean
 \texttt{normalDeriv} points outward, so the inward derivative here is its negative.
+For arbitrary supplied values $u,e$ and gradient $g=(u_x,u_y)$, write
+$j[u,e]$ and $b[u,e]$ for these densities with $Eu=e$ and $\nabla u=g$.
+Define the real Green flux and its level contraction by
+\[
+ \mathcal V[u,g]=\mu\left[-\operatorname{Re}(\bar u g)
+ -2\operatorname{Re}\bigl((W\cdot g)\bar g\bigr)
+ +W(|g|^2+|u|^2)\right],\qquad
+ \mathcal N[u,g]=\nabla s\cdot\mathcal V[u,g].
+\]
+These definitions do not assert that the supplied gradient is classical.
 \end{definition}
 
 \begin{lemma}[The weighted first identity on an annulus]
@@ -378,6 +390,71 @@ $\mu[\tfrac12L_\mu(f-d_\mu)-f]|u|^2=-F|u|^2$.
 In the flux, $f-d_\mu=-1$ leaves exactly $\mathcal V[u]$.
 \end{proof}
 
+\begin{lemma}[Weak weighted Green identity on an annulus]
+\label{lem:dd-weak-green}
+\uses{def:dd-virial-densities, def:dd-quotient, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.dd_weak_green}
+\leanok
+Let $u\in H^2_{\mathrm{loc}}(\Cell)$ and $e\in L^2_{\mathrm{loc}}(\Cell)$,
+with $Eu=e$ weakly on the open cell for specified first weak derivatives
+$g=(u_x,u_y)$. For real $\chi\in C_c^\infty(0,2)$, put
+$D_{\mu,\chi}=\chi(s)W\cdot\nabla+\tfrac12\Div_\mu(\chi(s)W)$. Then
+\begin{align*}
+ \int_\Cell\chi(s)j[u,e]
+ ={}&\int_\Cell\mu\chi(s)f
+       \bigl(|e|^2-\operatorname{Re}(e\bar u)\bigr)
+       +2\int_\Cell\mu\operatorname{Re}(D_{\mu,\chi}u\,\bar e)\\
+ &+\int_\Cell\chi'(s)
+       \bigl(\mathcal N[u,g]-\mu q\operatorname{Re}(e\bar u)\bigr).
+\end{align*}
+There is no eigenfunction, parity, or derivative-of-$e$ hypothesis.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-green, lem:sobolev-local-multiplier,
+ lem:line-mollifier, lem:line-mollifier-convergence, lem:weak-derivative-unique}
+The support of $\chi(s)$ and $\chi'(s)$ is a compact subset of the
+punctured cell, where all coefficients are smooth with bounded
+derivatives. Localize $u$ by a smooth compact cutoff equal to one on a
+neighbourhood of this set, and mollify in both Cartesian variables.
+The approximants converge in $H^2$ there; hence their operator values
+converge to $e$ in $L^2$, by the weak equation and uniqueness.
+Every quadratic product in the Green identity and its flux converges
+in $L^1$ by Cauchy--Schwarz. Thus the integrated classical identity of
+Lemma~\ref{lem:dd-green} passes to the weak representatives.
+Integration by parts gives the term $\chi'\mathcal N$.
+Finally
+$D_{\mu,\chi}=\chi D_\mu+\tfrac12\chi'q$ and
+$\operatorname{Re}(u\bar e)=\operatorname{Re}(e\bar u)$ give the displayed
+formula. No differentiation of $e$ occurs.
+\end{proof}
+
+\begin{lemma}[Identification of the weighted boundary flux]
+\label{lem:dd-boundary-flux}
+\uses{def:dd-virial-densities}
+\lean{NoEmbeddedEigenvalues.dd_boundary_flux}
+\leanok
+At every point of the punctured positive cell, for arbitrary complex
+values $u,e$ and supplied gradient $g$,
+\[
+ \mathcal N[u,g]-\mu q\operatorname{Re}(e\bar u)=b[u,e].
+\]
+No differential equation or regularity of these values is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-tangent-frame}
+Write $p=n\cdot g$ and $\tau=t\cdot g$.
+Then $W\cdot g=qp/\sqrt r$ and $|g|^2=|p|^2+|\tau|^2$, so
+\[
+ \mathcal N[u,g]
+ =-\mu\sqrt r\,\operatorname{Re}(\bar u p)
+   +\mu q(-|p|^2+|\tau|^2+|u|^2).
+\]
+Subtract the forcing pairing and use $-\mu q=(8-s^3)/3$.
+This is exactly $b[u,e]$, with the inward normal convention.
+\end{proof}
+
 \begin{lemma}[Odd--odd weak cutoff identity]
 \label{lem:dd-cutoff-identity}
 \uses{def:dd-virial-densities, def:eigen-problem}
@@ -398,30 +475,26 @@ or derivative of $\nu$ is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-weighted-first, lem:dd-green, lem:dd-quotient-equations,
- lem:inverse-laplacian-derivatives, lem:lift-sobolev-local,
- lem:sobolev-local-multiplier}
-Put $\chi(s)=\eta(s/2)$. On its compact annular support,
-$\phi=\psi/s$ has local $H^2$ regularity and $E\phi=-\nu\in L^2$,
-by the original inverse-Laplacian regularity.
-The Green identity holds distributionally there: its product rules involve
-only products of $L^2$ functions and their first weak derivatives, with
-at most two derivatives of $\phi$. Its flux and bulk terms are locally
-integrable; no derivative of $\nu$ is used.
-
-Since $D_{\mu,\chi}=\chi D_\mu+\tfrac12\chi'q$, substituting $\nu=-E\phi$
-in Lemma~\ref{lem:dd-weighted-first} and then using
-Lemma~\ref{lem:dd-green} gives
+\uses{lem:dd-weighted-first, lem:dd-weak-green, lem:dd-boundary-flux,
+ lem:dd-quotient-equations, lem:inverse-laplacian-derivatives,
+ lem:lift-sobolev-local, lem:sobolev-local-multiplier,
+ lem:weak-derivative-unique}
+\leanok
+Put $\chi(s)=\eta(s/2)$. Smooth local division gives
+$\phi\in H^2_{\mathrm{loc}}(\Cell)$ and
+$\nu\in L^2_{\mathrm{loc}}(\Cell)$.
+Lemma~\ref{lem:dd-quotient-equations} supplies $E\phi=-\nu$ weakly;
+uniqueness replaces its gradient witnesses by the supplied ones.
+Apply Lemma~\ref{lem:dd-weak-green} with $u=\phi$, $e=-\nu$.
+Its first two integrals cancel by Lemma~\ref{lem:dd-weighted-first}, since
 \[
- \int_\Cell\chi(s)j[\phi]
- =\int_\Cell\chi'(s)
-    \left(\nabla s\cdot\mathcal V[\phi]
-                   -\mu q\operatorname{Re}(E\phi\,\bar\phi)\right).
+ |e|^2-\operatorname{Re}(e\bar\phi)
+   =\operatorname{Re}\bigl(\nu\overline{\nu+\phi}\bigr).
 \]
-The quantity in parentheses is $b[\phi]$: use
-$W\cdot\nabla\phi=qp/\sqrt r$ and $\mu q=(s^3-8)/3$.
-The annular support keeps both integrations away from the separatrix
-and center.
+Where $\chi'$ is nonzero, $0<s<2$ and $r>0$, so
+Lemma~\ref{lem:dd-boundary-flux} identifies the remaining integrand
+with $\chi'(s)b[\phi]$. Where $\chi'=0$ both integrands vanish.
+Finally $\chi'(s)=\eta'(s/2)/2$.
 \end{proof}
 
 \begin{lemma}[Odd--odd annular virial]

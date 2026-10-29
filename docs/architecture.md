@@ -171,7 +171,9 @@ proof mechanisms. Module names below are relative to
   division, weak-witness uniqueness, coefficient bounds and center-flux removal
   assemble the truncated identity from the annular one. Weighted differential
   algebra and cutoff-to-annular extraction separate `dd_cutoff_identity`
-  from boundary integrability and exceptional-level bookkeeping. Weak product-rule
+  from boundary integrability and exceptional-level bookkeeping. The cutoff
+  combines local weak Green and pointwise boundary-flux interfaces with the
+  weighted first identity and weak quotient equation. Weak product-rule
   and generator conjugation identify the raw quotient gradient with Fourier stream
   derivatives. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from

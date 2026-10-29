@@ -8,13 +8,13 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching ten admissions. Corrected boundary nonnegativity is assembled
+inputs, reaching thirteen admissions. Corrected boundary nonnegativity is assembled
 from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions and the full odd–odd exclusion
-has twenty-six. This is not an admission-free exclusion.
+has twenty-nine. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
@@ -106,47 +106,44 @@ extension or center removal in `dd_truncated_picone`; that parent and the
 exclusion assemblies are unchanged. Compatibility review remains deferred
 while the statement pass continues.
 
-`dd_character_virial_limit` reaches four analytic admissions:
-`dd_cutoff_identity`, `dd_quotient_gradient_traces`, `dd_value_finite_part`
-and `dd_renormalized_bulk`. No new admission or stronger hypothesis is introduced.
+`dd_character_virial_limit` reaches seven admissions: `dd_weak_green`,
+`dd_boundary_flux`, `dd_weighted_first`, `dd_quotient_equations`,
+`dd_quotient_gradient_traces`, `dd_value_finite_part` and `dd_renormalized_bulk`.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
 boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels
 back under `h ↦ 2h`, selects one pairing sequence avoiding every exceptional set,
 and identifies the full bulk limit by uniqueness. The coefficient error is
 `ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
-The Picone and exclusion audits reach ten and twenty-six admissions respectively.
 
-`dd_truncated_virial` is now assembled from `dd_annular_virial` alone. Its
-positive-truncation integrability and center removal are admission-free.
-Local smooth division of the original stream gives H¹ and weak-derivative
-uniqueness controls arbitrary derivative witnesses. Direct coefficient bounds
-avoid the admitted weighted-virial algebra. A Cauchy–Schwarz center-flux estimate,
-coarea and the existing integrable-energy sequence lemma give vanishing flux
-outside any prescribed null set; dominated convergence closes the annular limit.
-Measurable versions and null hulls handle witnesses not assumed measurable.
-No global quotient existence or new center hypothesis is used. The next virial
-frontier is `dd_cutoff_identity` (Blueprint `lem:dd-cutoff-identity`), not center removal.
+`dd_cutoff_identity` now has no `sorry` of its own. It combines the new
+`dd_weak_green` and `dd_boundary_flux` nodes, both admitted, with the existing
+admitted weighted first identity and quotient equation. The weak Green statement
+takes local H² for the stream, local L² for its operator value, and
+`HasDDOperator` with specified weak gradients; it uses neither an eigenfunction
+nor a derivative of the forcing. Boundary-flux identification is pointwise and
+assumes neither a PDE nor regularity of the supplied values. Its use is confined
+to nonzero cutoff-derivative levels, automatically away from the center.
+The assembly obtains local quotient regularity by smooth division and transfers
+the weak Poisson equation to arbitrary supplied witnesses by uniqueness.
+The original cutoff and annular statements are unchanged; no global quotient
+domain or stronger hypothesis has been introduced.
 
-The annular theorem has no `sorry` of its own: it applies
-`dd_annular_virial_of_cutoff_identity` to `dd_cutoff_identity`, with the original
-hypotheses unchanged. The new cutoff node replaces the former annular admission;
-it is not an additional assumption or a completed analytic proof. Boundary-density
-integrability, direct identification of its level integral, coarea and a common
-exceptional set are checked. The generic `annular_virial_of_cutoff_identity`
-requires only closed-band integrability, not positivity or smooth witnesses.
-`dd_virial_algebra` is admission-free, including adaptedness, weighted defect
-and all three Cartesian matrix entries. The raw quotient is H² on positive
-truncations and arbitrary specified weak derivatives are H¹ there. The local
-weak Green extension and weighted first identity are not proved by this
-extraction; `dd_green` and `dd_weighted_first` remain admitted. The weak product
-rule is proved in `SobolevLocal.lean` without support/boundedness hypotheses on
-the smooth multiplier. Multiplying the raw quotient back by Ψ identifies its
-specified weak gradient with Fourier stream derivatives; `ddWeightedGenerator_raw_ae`
-then proves the half-density conjugation. The remaining cutoff proof must still
-supply the integrated weak Green argument (or an equivalent Fourier/ordinary-virial
-change-of-weight proof); these representative bridges alone do not do so.
-No new admission has been introduced, and the exclusion audit counts are unchanged.
+`dd_truncated_virial` follows from `dd_annular_virial`, whose only input with
+admissions is the assembled cutoff identity. Positive-truncation integrability,
+coefficient bounds, center removal, coarea and common-exceptional-set extraction
+are proved without admissions. A Cauchy–Schwarz flux estimate and an
+integrable-energy sequence remove the center; dominated convergence closes the
+annular limit. Measurable versions and null hulls handle arbitrary witnesses.
+Weighted differential algebra and raw half-density conjugation are also
+admission-free. `dd_green` remains a separate classical admission beneath the
+blueprint's weak Green proof, not a direct dependency in the current Lean audit.
+
+The split replaces one outer cutoff admission by four explicit inputs; it does
+not close those inputs. Audits now reach thirteen admissions below
+`dd_picone_current` and twenty-nine below `odd_odd_exclusion`.
+Next targets are the weak Green and boundary-flux nodes;
+the weighted first identity and quotient equation also need proofs.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,
@@ -265,7 +262,7 @@ Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the
 minimal quotient data. Its character-wise assembly and representative/exceptional-level
-bridges are checked; the four analytic virial inputs and the remaining inputs below
+bridges are checked; the seven admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
 Poincaré now has a precise weak form-domain statement, but no spectral proof. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.

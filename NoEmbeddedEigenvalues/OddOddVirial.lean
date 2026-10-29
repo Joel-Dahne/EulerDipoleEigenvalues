@@ -28,7 +28,8 @@ The weighted differential algebra is pointwise on the regular cell. The annular
 extraction takes a weak cutoff identity as input, then obtains one exceptional set
 for both endpoints by coarea and du Bois–Reymond. The planar boundary density
 identifies each level term directly, without splitting its summands.
-The weak cutoff identity and its annular assembly are separate interfaces.
+The weak Green identity, pointwise boundary-flux identification, weak cutoff
+identity and annular assembly are separate interfaces.
 Multiplication back by Ψ identifies supplied weak quotient gradients with Fourier
 stream derivatives, giving half-density conjugation without classical raw derivatives.
 -/
@@ -399,6 +400,33 @@ theorem levelIntegral_ddBoundaryDensity (u e ux uy : ℝ × ℝ → ℂ)
   intro t _
   simp only [ddBoundaryDensity, dipoleLift_dipoleOrbit h0 h1]
 
+/-- First component of the Green flux evaluated on a specified weak gradient. -/
+def ddWeakGreenFlux₁ (u ux uy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
+  ddWeight p * (-((starRingEnd ℂ) (u p) * ux p).re -
+    2 * (((ddVirialField₁ p : ℂ) * ux p +
+      (ddVirialField₂ p : ℂ) * uy p) * (starRingEnd ℂ) (ux p)).re +
+    ddVirialField₁ p * (‖ux p‖ ^ 2 + ‖uy p‖ ^ 2 + ‖u p‖ ^ 2))
+
+/-- Second component of the Green flux evaluated on a specified weak gradient. -/
+def ddWeakGreenFlux₂ (u ux uy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
+  ddWeight p * (-((starRingEnd ℂ) (u p) * uy p).re -
+    2 * (((ddVirialField₁ p : ℂ) * ux p +
+      (ddVirialField₂ p : ℂ) * uy p) * (starRingEnd ℂ) (uy p)).re +
+    ddVirialField₂ p * (‖ux p‖ ^ 2 + ‖uy p‖ ^ 2 + ‖u p‖ ^ 2))
+
+/-- Contraction of the weak Green flux with ∇Ψ, in flow-time normalization. -/
+def ddGreenNormalFlux (u ux uy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
+  partialX dipoleLift p * ddWeakGreenFlux₁ u ux uy p +
+    partialY dipoleLift p * ddWeakGreenFlux₂ u ux uy p
+
+/-- Boundary-flux algebra for arbitrary values and a specified gradient on the
+    regular cell; it needs no differential equation or regularity of those values. -/
+theorem dd_boundary_flux (u e ux uy : ℝ × ℝ → ℂ) {p : ℝ × ℝ}
+    (hp : p ∈ ddRegularCell) :
+    ddGreenNormalFlux u ux uy p - ddWeight p * ddVirialQ (dipoleLift p) *
+      (e p * (starRingEnd ℂ) (u p)).re = ddBoundaryDensity u e ux uy p := by
+  sorry
+
 /-- First component of the classical Green flux. -/
 def ddGreenFlux₁ (u : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
   ddWeight p * (-((starRingEnd ℂ) (u p) * partialX u p).re -
@@ -422,6 +450,27 @@ theorem dd_green {u : ℝ × ℝ → ℂ} (hu : ContDiffOn ℝ 3 u ddRegularCell
         u (partialX u) (partialY u) p * (starRingEnd ℂ) (ddOperator u p)).re =
       ddVirialDensity u (ddOperator u) (partialX u) (partialY u) p +
         divergence (ddGreenFlux₁ u) (ddGreenFlux₂ u) p := by
+  sorry
+
+/-- The weighted Green identity tested against an annular level cutoff.
+    All derivatives of u are weak witnesses; e realizes Eu weakly. The cutoff
+    generator includes its half-density correction. Local H² and L² suffice,
+    without an eigenfunction hypothesis or differentiation of e. -/
+theorem dd_weak_green {u e ux uy : ℝ × ℝ → ℂ}
+    (hu : MemSobolevLocOn 2 cellSquare u) (he : MemSobolevLocOn 0 cellSquare e)
+    (hop : HasDDOperator u e ux uy)
+    {χ : ℝ → ℝ} (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ)
+    (hc : HasCompactSupport χ) (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2) :
+    (∫ p in cellSquare, χ (dipoleLift p) * ddVirialDensity u e ux uy p) =
+      (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+        (‖e p‖ ^ 2 - (e p * (starRingEnd ℂ) (u p)).re)) +
+      2 * (∫ p in cellSquare, ddWeight p *
+        (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+          (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q) u ux uy p *
+          (starRingEnd ℂ) (e p)).re) +
+      ∫ p in cellSquare, deriv χ (dipoleLift p) *
+        (ddGreenNormalFlux u ux uy p - ddWeight p * ddVirialQ (dipoleLift p) *
+          (e p * (starRingEnd ℂ) (u p)).re) := by
   sorry
 
 /-- Weighted first identity with annular cutoff, on the original eigenfunction domain.
@@ -589,6 +638,32 @@ theorem ddStreamQuotient_memSobolevOn_of_le (ω : L2) {k : ℕ} (hk : k ≤ 2)
     exact ha.trans_le hle
   exact hd _ (isOpen_ddTruncatedCell a)
     (hbound.subset (fun _ hp ↦ hp.1)).isCompact_closure hclosure
+
+/-- Local H² division on the open cell, with no global divided Sobolev domain. -/
+theorem ddStreamQuotient_memSobolevLocOn (ω : L2) :
+    MemSobolevLocOn 2 cellSquare (ddStreamQuotient ω) := by
+  have hs := memSobolev_two_invLap ω
+  have hh : MemSobolevOn 2 cellNeighbourhood (liftL2 (invLap ω)) :=
+    memSobolevOn_liftL2 (k := 2) (g := invLap ω) (U := cellNeighbourhood)
+      (by simpa using hs) isBounded_cellNeighbourhood
+  have hc : MemSobolevOn 2 cellNeighbourhood (contStream ω) :=
+    MemSobolevOn.congr_ae (k := 2) hh (streamLift_ae_eq_contStream ω)
+  have hl : MemSobolevLocOn 2 cellSquare (contStream ω) :=
+    (MemSobolevOn.memSobolevLocOn (k := 2) hc).mono
+      (subset_closure.trans closure_cellSquare_subset_cellNeighbourhood)
+  exact hl.div_smooth isOpen_cellSquare (by unfold dipoleLift; fun_prop) fun p hp ↦
+    ne_of_gt (by simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
+
+/-- Local L² division of the original vorticity on the open cell. -/
+theorem ddVorticityQuotient_memSobolevLocOn (ω : L2) :
+    MemSobolevLocOn 0 cellSquare (ddVorticityQuotient ω) := by
+  have hh : MemSobolevOn 0 cellNeighbourhood (liftL2 ω) :=
+    memLp_liftL2 ω isBounded_cellNeighbourhood
+  have hl : MemSobolevLocOn 0 cellSquare (liftL2 ω) :=
+    (MemSobolevOn.memSobolevLocOn (k := 0) hh).mono
+      (subset_closure.trans closure_cellSquare_subset_cellNeighbourhood)
+  exact hl.div_smooth isOpen_cellSquare (by unfold dipoleLift; fun_prop) fun p hp ↦
+    ne_of_gt (by simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
 
 /-- H¹ regularity on positive truncations. -/
 theorem ddStreamQuotient_memSobolevOn (ω : L2) {a : ℝ} (ha : 0 < a) :
@@ -966,7 +1041,74 @@ theorem dd_cutoff_identity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
     ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 *
       ddBoundaryDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p := by
-  sorry
+  let χ : ℝ → ℝ := fun s ↦ φ (s / 2)
+  have hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ :=
+    hφ.comp (contDiff_id.div_const 2)
+  have hχ' (s : ℝ) : deriv χ s = deriv φ (s / 2) / 2 := by
+    have h := ((hφ.differentiable (by simp)) (s / 2)).hasDerivAt.comp s
+      ((hasDerivAt_id s).div_const 2)
+    exact h.deriv.trans (by ring)
+  have hχcc : tsupport χ ⊆ Icc (2 * a) (2 * b) := by
+    apply closure_minimal _ isClosed_Icc
+    intro s hs
+    obtain ⟨h1, h2⟩ := hsupp (s / 2) hs
+    exact ⟨by linarith, by linarith⟩
+  have hc : HasCompactSupport χ :=
+    isCompact_Icc.of_isClosed_subset (isClosed_tsupport χ) hχcc
+  have hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2 := fun s hs ↦
+    ⟨by linarith [(hχcc hs).1], by linarith [(hχcc hs).2]⟩
+  -- Choose the weak Poisson witnesses, then replace them by the supplied ones.
+  obtain ⟨vx, vy, hop⟩ := dd_quotient_equations hω
+  have hxeq := hop.1.ae_eq isOpen_cellSquare hx
+  have hyeq := hop.2.1.ae_eq isOpen_cellSquare hy
+  have hop' : HasDDOperator (ddStreamQuotient ω)
+      (fun p ↦ -ddVorticityQuotient ω p) ux uy := by
+    refine ⟨hx, hy, hop.2.2.1, fun η hη ↦ ?_⟩
+    rw [hop.2.2.2 η hη]
+    apply integral_congr_ae
+    filter_upwards [(ae_restrict_iff' isOpen_cellSquare.measurableSet).mpr hxeq,
+      (ae_restrict_iff' isOpen_cellSquare.measurableSet).mpr hyeq] with p hpx hpy
+    rw [hpx, hpy]
+  have he : MemSobolevLocOn 0 cellSquare (fun p ↦ -ddVorticityQuotient ω p) := by
+    intro V hV hcV hsub
+    exact MemLp.neg ((ddVorticityQuotient_memSobolevLocOn ω) V hV hcV hsub)
+  have hg := dd_weak_green (ddStreamQuotient_memSobolevLocOn ω) he hop' hχ hc hχs
+  -- The flux identity is used only where χ' is nonzero, hence off the center.
+  have hboundary :
+      (∫ p in cellSquare, deriv χ (dipoleLift p) *
+        (ddGreenNormalFlux (ddStreamQuotient ω) ux uy p -
+          ddWeight p * ddVirialQ (dipoleLift p) *
+            (-ddVorticityQuotient ω p * (starRingEnd ℂ) (ddStreamQuotient ω p)).re)) =
+      ∫ p in cellSquare, deriv χ (dipoleLift p) *
+        ddBoundaryDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p := by
+    apply integral_congr_ae
+    filter_upwards [ae_restrict_mem isOpen_cellSquare.measurableSet] with p hp
+    by_cases hd : deriv χ (dipoleLift p) = 0
+    · simp [hd]
+    · have hs := hχs (support_deriv_subset hd)
+      rw [dd_boundary_flux (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy
+        (show p ∈ ddRegularCell from
+          ⟨hp, (gradSq_dipoleLift_pos hs.1 hs.2).ne'⟩)]
+  rw [hboundary] at hg
+  have hpair (p : ℝ × ℝ) :
+      ‖-ddVorticityQuotient ω p‖ ^ 2 -
+        (-ddVorticityQuotient ω p * (starRingEnd ℂ) (ddStreamQuotient ω p)).re =
+      (ddVorticityQuotient ω p * (starRingEnd ℂ)
+        (ddVorticityQuotient ω p + ddStreamQuotient ω p)).re := by
+    simp only [norm_neg, map_add, mul_add, Complex.add_re, neg_mul, Complex.neg_re,
+      sub_neg_eq_add]
+    congr 1
+    simp [Complex.mul_conj, Complex.sq_norm]
+  simp_rw [hpair] at hg
+  simp only [map_neg, mul_neg, Complex.neg_re, integral_neg] at hg
+  have hfirst := dd_weighted_first hlam hω hs hx hy hχ hc hχs
+  have hid :
+      (∫ p in cellSquare, χ (dipoleLift p) *
+        ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
+      ∫ p in cellSquare, deriv χ (dipoleLift p) *
+        ddBoundaryDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p := by
+    linarith
+  simpa only [hχ'] using hid
 
 /-- Annular virial with one common exceptional set for both endpoints. Neither a
     derivative of the vorticity nor global quotient data are hypotheses. -/
