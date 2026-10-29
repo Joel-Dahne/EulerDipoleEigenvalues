@@ -69,7 +69,10 @@ weights and local versus global regularity.
    analytic admissions: annular virial, gradient traces, value finite part
    and renormalized bulk. Truncated virial now follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
-   quotient existence. Raw/supplied quotient changes, coarea splitting,
+   quotient existence. Weighted differential algebra is also admission-free;
+   a generic cutoff-to-annular extraction handles common exceptional sets.
+   The remaining annular `sorry` is the weak cutoff identity, not its coarea
+   or endpoint assembly. Raw/supplied quotient changes, coarea splitting,
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These four analytic proofs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.

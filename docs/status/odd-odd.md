@@ -126,7 +126,20 @@ coarea and the existing integrable-energy sequence lemma give vanishing flux
 outside any prescribed null set; dominated convergence closes the annular limit.
 Measurable versions and null hulls handle witnesses not assumed measurable.
 No global quotient existence or new center hypothesis is used. The next virial
-frontier is the annular identity, not center removal.
+frontier is the weak cutoff identity inside `dd_annular_virial`, not center removal.
+
+The annular theorem now applies the proved
+`dd_annular_virial_of_cutoff_identity`; its own `sorry` is precisely the weak
+cutoff identity, with the original hypotheses unchanged. Boundary-density
+integrability, direct identification of its level integral, coarea and a common
+exceptional set are checked. The generic `annular_virial_of_cutoff_identity`
+requires only closed-band integrability, not positivity or smooth witnesses.
+`dd_virial_algebra` is admission-free, including adaptedness, weighted defect
+and all three Cartesian matrix entries. The raw quotient is H² on positive
+truncations and arbitrary specified weak derivatives are H¹ there. The local
+weak Green extension and weighted first identity are not proved by this
+extraction; `dd_green` and `dd_weighted_first` remain admitted. No new
+admission has been introduced, and the exclusion audit counts are unchanged.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,

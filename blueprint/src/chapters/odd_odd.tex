@@ -239,6 +239,7 @@ $\mu(2\sym DW-fI)=M$.
 
 \begin{proof}
 \uses{lem:normal-field-algebra}
+\leanok
 Write $W=\alpha(s)W_{\rm ee}$, where
 $\alpha(s)=(s^2+2s+4)/(3s^2)$ and
 $W_{\rm ee}=(s-2)\nabla s/r$. Since $L_0s=0$, the adapted coefficient is
@@ -380,6 +381,7 @@ that for all $0<a<b<2$ outside $N$,
 \begin{proof}
 \uses{lem:dd-weighted-first, lem:dd-green, lem:dd-quotient-equations,
  lem:inverse-laplacian-derivatives, lem:lift-sobolev-local,
+ lem:sobolev-local-multiplier, lem:cell-neighbourhood, lem:normal-coeff-bound,
  lem:coarea-level-cutoff, lem:du-bois-reymond}
 On every compact annulus, $\phi=\psi/s$ has local $H^2$ regularity and
 $E\phi=-\nu\in L^2$, by the original inverse-Laplacian regularity.
@@ -404,8 +406,13 @@ Coarea therefore gives
 $\int\chi(s)m(s)\,ds=\int\chi'(s)G_\phi(s)\,ds$, where
 $m(s)=\int_{\{\Psi=s\}}j[\phi]dt$; both functions are locally integrable.
 The one-dimensional weak derivative identity is $G_\phi'=-m$.
-Lemma~\ref{lem:du-bois-reymond} and coarea give the assertion outside a
-single null set.
+For coarea, use the planar boundary density obtained by replacing the
+level parameter $s$ in the integrand of $G_\phi(s)$ by $\Psi(p)$.
+It is integrable on positive truncations by the $L^2$ value and gradient
+bounds, and its level integral equals $G_\phi$ pointwise, without
+splitting the summands. Lemma~\ref{lem:du-bois-reymond} then gives one
+common null set for both endpoints. In orbit coordinates the density of
+the bulk is $2\oint j\,dt$; rescale the exceptional set by $s=2h$.
 \end{proof}
 
 \begin{lemma}[Odd--odd truncated virial]

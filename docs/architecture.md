@@ -169,7 +169,9 @@ proof mechanisms. Module names below are relative to
   algebra and Green flux, raw-quotient annular/truncated identities, even H²
   gradient traces and full renormalized bulk limits. Positive-truncation H¹
   division, weak-witness uniqueness, coefficient bounds and center-flux removal
-  assemble the truncated identity from the annular one. Supplied-data bridges
+  assemble the truncated identity from the annular one. Weighted differential
+  algebra and cutoff-to-annular extraction separate the weak cutoff identity
+  from boundary integrability and exceptional-level bookkeeping. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from
   the shared outward derivative convention.
 - `OddOdd.lean`: character-wise virial-limit assembly, scalar finite-part

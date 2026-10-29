@@ -23,6 +23,11 @@ existence of global quotient data. Weak-derivative uniqueness gives square integ
 for arbitrary witnesses. Bounded bulk coefficients and a Cauchy–Schwarz center-flux
 estimate allow the annular identity to include the center by dominated convergence.
 Measurable versions and null hulls transfer these estimates to the given witnesses.
+
+The weighted differential algebra is pointwise on the regular cell. The annular
+extraction takes a weak cutoff identity as input, then obtains one exceptional set
+for both endpoints by coarea and du Bois–Reymond. The planar boundary density
+identifies each level term directly, without splitting its summands.
 -/
 
 noncomputable section
@@ -125,6 +130,191 @@ def ddWeightedGenerator (W₁ W₂ : ℝ × ℝ → ℝ) (u ux uy : ℝ × ℝ �
 /-- The cell with the elliptic center removed; all virial coefficients are smooth here. -/
 def ddRegularCell : Set (ℝ × ℝ) := {p | p ∈ cellSquare ∧ gradSq dipoleLift p ≠ 0}
 
+theorem ddVirialField₁_eq :
+    ddVirialField₁ = fun p ↦ ddVirialQ (dipoleLift p) * -Real.sin p.1 / gradSq dipoleLift p := by
+  funext p
+  rw [ddVirialField₁, partialX_dipoleLift]
+
+theorem ddVirialField₂_eq :
+    ddVirialField₂ = fun p ↦ ddVirialQ (dipoleLift p) * -Real.sin p.2 / gradSq dipoleLift p := by
+  funext p
+  rw [ddVirialField₂, partialY_dipoleLift]
+
+/-- The radial coefficient has a particularly simple derivative away from zero. -/
+theorem hasDerivAt_ddVirialQ {s : ℝ} (hs : s ≠ 0) :
+    HasDerivAt ddVirialQ (1 / 3 + 16 / (3 * s ^ 3)) s := by
+  have h := (((hasDerivAt_id s).pow 3).sub_const 8).div
+    (((hasDerivAt_id s).pow 2).const_mul 3) (by positivity : 3 * s ^ 2 ≠ 0)
+  convert h using 1
+  · rfl
+  · simp only [id_eq, Pi.pow_apply]
+    field_simp
+    ring
+
+theorem contDiffAt_ddVirialField {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) ddVirialField₁ p ∧
+      ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) ddVirialField₂ p := by
+  have hq : ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun q ↦ ddVirialQ (dipoleLift q)) p := by
+    unfold ddVirialQ
+    have hΨ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) dipoleLift := by
+      unfold dipoleLift
+      fun_prop
+    exact ((hΨ.contDiffAt.pow 3).sub
+      contDiffAt_const).div
+      (contDiffAt_const.mul ((by unfold dipoleLift; fun_prop :
+        ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) dipoleLift).contDiffAt.pow 2)) (by positivity)
+  have hg : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (gradSq dipoleLift) := by
+    simp only [gradSq_dipoleLift]
+    fun_prop
+  constructor
+  · unfold ddVirialField₁
+    exact (hq.mul (by rw [partialX_dipoleLift]; fun_prop)).div hg.contDiffAt hr
+  · unfold ddVirialField₂
+    exact (hq.mul (by rw [partialY_dipoleLift]; fun_prop)).div hg.contDiffAt hr
+
+theorem partialX_ddVirialField₁ {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    partialX ddVirialField₁ p =
+      (1 / 3 + 16 / (3 * dipoleLift p ^ 3)) * Real.sin p.1 ^ 2 / gradSq dipoleLift p -
+      ddVirialQ (dipoleLift p) * Real.cos p.1 / gradSq dipoleLift p +
+      2 * ddVirialQ (dipoleLift p) * Real.sin p.1 ^ 2 * Real.cos p.1 /
+        gradSq dipoleLift p ^ 2 := by
+  have hq := (hasDerivAt_ddVirialQ hs).comp p.1
+    ((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2))
+  have h : HasDerivAt (fun t ↦ ddVirialQ (Real.cos t + Real.cos p.2) *
+      -Real.sin t / (Real.sin t ^ 2 + Real.sin p.2 ^ 2)) _ p.1 :=
+    (hq.mul (Real.hasDerivAt_sin p.1).neg).div
+    (((Real.hasDerivAt_sin p.1).pow 2).add_const (Real.sin p.2 ^ 2))
+      (by simpa only [gradSq_dipoleLift, Pi.pow_apply] using hr)
+  rw [ddVirialField₁_eq]
+  simp only [partialX, dipoleLift, gradSq_dipoleLift]
+  simp only [Pi.mul_apply, Pi.neg_apply, Function.comp_apply, dipoleLift] at h
+  rw [h.deriv]
+  simp only [gradSq_dipoleLift] at hr
+  field_simp
+  ring
+
+theorem partialY_ddVirialField₁ {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    partialY ddVirialField₁ p =
+      (1 / 3 + 16 / (3 * dipoleLift p ^ 3)) * Real.sin p.1 * Real.sin p.2 /
+        gradSq dipoleLift p +
+      2 * ddVirialQ (dipoleLift p) * Real.sin p.1 * Real.sin p.2 * Real.cos p.2 /
+        gradSq dipoleLift p ^ 2 := by
+  have hq := (hasDerivAt_ddVirialQ hs).comp p.2
+    ((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1))
+  have h : HasDerivAt (fun t ↦ ddVirialQ (Real.cos p.1 + Real.cos t) *
+      -Real.sin p.1 / (Real.sin p.1 ^ 2 + Real.sin t ^ 2)) _ p.2 :=
+    (hq.mul_const (-Real.sin p.1)).div
+    (((Real.hasDerivAt_sin p.2).pow 2).const_add (Real.sin p.1 ^ 2))
+      (by simpa only [gradSq_dipoleLift, Pi.pow_apply] using hr)
+  rw [ddVirialField₁_eq]
+  simp only [partialY, dipoleLift, gradSq_dipoleLift]
+  simp only [Function.comp_apply, dipoleLift] at h
+  rw [h.deriv]
+  simp only [gradSq_dipoleLift] at hr
+  field_simp
+  ring
+
+theorem partialX_ddVirialField₂ {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    partialX ddVirialField₂ p =
+      (1 / 3 + 16 / (3 * dipoleLift p ^ 3)) * Real.sin p.1 * Real.sin p.2 /
+        gradSq dipoleLift p +
+      2 * ddVirialQ (dipoleLift p) * Real.sin p.1 * Real.sin p.2 * Real.cos p.1 /
+        gradSq dipoleLift p ^ 2 := by
+  have hq := (hasDerivAt_ddVirialQ hs).comp p.1
+    ((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2))
+  have h : HasDerivAt (fun t ↦ ddVirialQ (Real.cos t + Real.cos p.2) *
+      -Real.sin p.2 / (Real.sin t ^ 2 + Real.sin p.2 ^ 2)) _ p.1 :=
+    (hq.mul_const (-Real.sin p.2)).div
+    (((Real.hasDerivAt_sin p.1).pow 2).add_const (Real.sin p.2 ^ 2))
+      (by simpa only [gradSq_dipoleLift, Pi.pow_apply] using hr)
+  rw [ddVirialField₂_eq]
+  simp only [partialX, dipoleLift, gradSq_dipoleLift]
+  simp only [Function.comp_apply, dipoleLift] at h
+  rw [h.deriv]
+  simp only [gradSq_dipoleLift] at hr
+  field_simp
+  ring
+
+theorem partialY_ddVirialField₂ {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    partialY ddVirialField₂ p =
+      (1 / 3 + 16 / (3 * dipoleLift p ^ 3)) * Real.sin p.2 ^ 2 / gradSq dipoleLift p -
+      ddVirialQ (dipoleLift p) * Real.cos p.2 / gradSq dipoleLift p +
+      2 * ddVirialQ (dipoleLift p) * Real.sin p.2 ^ 2 * Real.cos p.2 /
+        gradSq dipoleLift p ^ 2 := by
+  have hq := (hasDerivAt_ddVirialQ hs).comp p.2
+    ((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1))
+  have h : HasDerivAt (fun t ↦ ddVirialQ (Real.cos p.1 + Real.cos t) *
+      -Real.sin t / (Real.sin p.1 ^ 2 + Real.sin t ^ 2)) _ p.2 :=
+    (hq.mul (Real.hasDerivAt_sin p.2).neg).div
+    (((Real.hasDerivAt_sin p.2).pow 2).const_add (Real.sin p.1 ^ 2))
+      (by simpa only [gradSq_dipoleLift, Pi.pow_apply] using hr)
+  rw [ddVirialField₂_eq]
+  simp only [partialY, dipoleLift, gradSq_dipoleLift]
+  simp only [Pi.mul_apply, Pi.neg_apply, Function.comp_apply, dipoleLift] at h
+  rw [h.deriv]
+  simp only [gradSq_dipoleLift] at hr
+  field_simp
+  ring
+
+/-- Weighted divergence differs from ordinary divergence by `2q(s)/s`. -/
+theorem ddWeightedDiv_virial {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    ddWeightedDiv ddVirialField₁ ddVirialField₂ p =
+      partialX ddVirialField₁ p + partialY ddVirialField₂ p +
+        2 * ddVirialQ (dipoleLift p) / dipoleLift p := by
+  have hd := contDiffAt_ddVirialField hs hr
+  have hm : DifferentiableAt ℝ ddWeight p := by unfold ddWeight dipoleLift; fun_prop
+  have hx : partialX ddWeight p = -2 * dipoleLift p * Real.sin p.1 := by
+    exact (((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2)).pow 2).deriv.trans
+      (by unfold dipoleLift; ring)
+  have hy : partialY ddWeight p = -2 * dipoleLift p * Real.sin p.2 := by
+    exact (((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1)).pow 2).deriv.trans
+      (by unfold dipoleLift; ring)
+  unfold ddWeightedDiv divergence
+  rw [show (fun q ↦ ddWeight q * ddVirialField₁ q) =
+      (fun q ↦ ddWeight q • ddVirialField₁ q) from rfl,
+    show (fun q ↦ ddWeight q * ddVirialField₂ q) =
+      (fun q ↦ ddWeight q • ddVirialField₂ q) from rfl,
+    partialX_smul hm (hd.1.differentiableAt (by simp)),
+    partialY_smul hm (hd.2.differentiableAt (by simp)), hx, hy]
+  simp only [smul_eq_mul, ddWeight, ddVirialField₁, ddVirialField₂,
+    partialX_dipoleLift, partialY_dipoleLift]
+  field_simp
+  rw [gradSq_dipoleLift] at *
+  ring
+
+/-- Pointwise differential algebra; only the two explicit denominators need be nonzero. -/
+theorem dd_virial_algebra_at {p : ℝ × ℝ}
+    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
+    (classicalL0 ddVirialField₁ p - Real.cos p.2 * ddVirialField₂ p =
+      ddVirialCoeff p * Real.sin p.2 ∧
+      classicalL0 ddVirialField₂ p + Real.cos p.1 * ddVirialField₁ p =
+        -(ddVirialCoeff p * Real.sin p.1)) ∧
+    ddVirialCoeff p - ddWeightedDiv ddVirialField₁ ddVirialField₂ p = -1 ∧
+    ddWeight p * (2 * partialX ddVirialField₁ p - ddVirialCoeff p) = ddMxx p ∧
+    ddWeight p * (partialY ddVirialField₁ p + partialX ddVirialField₂ p) = ddMxy p ∧
+    ddWeight p * (2 * partialY ddVirialField₂ p - ddVirialCoeff p) = ddMyy p := by
+  have hx : Real.sin p.1 ^ 2 = 1 - Real.cos p.1 ^ 2 := by
+    linarith [Real.sin_sq_add_cos_sq p.1]
+  have hy : Real.sin p.2 ^ 2 = 1 - Real.cos p.2 ^ 2 := by
+    linarith [Real.sin_sq_add_cos_sq p.2]
+  refine ⟨⟨?_, ?_⟩, ?_, ?_, ?_, ?_⟩
+  all_goals
+    simp only [classicalL0, smul_eq_mul, ddWeightedDiv_virial hs hr,
+      partialX_ddVirialField₁ hs hr, partialY_ddVirialField₁ hs hr,
+      partialX_ddVirialField₂ hs hr, partialY_ddVirialField₂ hs hr]
+    simp only [ddVirialField₁, ddVirialField₂, partialX_dipoleLift, partialY_dipoleLift,
+      ddVirialCoeff, ddWeight, ddF, ddMxx, ddMxy, ddMyy, ddA, ddC, ddVirialQ]
+    simp only [gradSq_dipoleLift, dipoleLift] at hs hr ⊢
+    field_simp
+    simp only [hx, hy]
+    ring
+
 /-- Adaptedness, constant weighted defect, and all three entries of
     `μ(2 sym DW - f I) = M`. -/
 theorem dd_virial_algebra :
@@ -134,7 +324,10 @@ theorem dd_virial_algebra :
         ddWeight p * (2 * partialX ddVirialField₁ p - ddVirialCoeff p) = ddMxx p ∧
         ddWeight p * (partialY ddVirialField₁ p + partialX ddVirialField₂ p) = ddMxy p ∧
         ddWeight p * (2 * partialY ddVirialField₂ p - ddVirialCoeff p) = ddMyy p := by
-  sorry
+  have hlocal (p) (hp : p ∈ ddRegularCell) := dd_virial_algebra_at
+    (show dipoleLift p ≠ 0 from ne_of_gt (by
+      simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp.1)) hp.2
+  exact ⟨fun p hp ↦ (hlocal p hp).1, fun p hp ↦ (hlocal p hp).2⟩
 
 /-- Function-level virial density, with the value of `Eu` supplied separately. -/
 def ddVirialDensity (u e ux uy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
@@ -152,6 +345,26 @@ def ddVirialLevel (u e ux uy : ℝ × ℝ → ℂ) (ε : ℝ) : ℝ :=
     (8 - ε ^ 3) / 3 * (‖ddInwardNormal ux uy p‖ ^ 2 - ‖tangentDeriv ux uy p‖ ^ 2 -
       ‖u p‖ ^ 2 + (e p * (starRingEnd ℂ) (u p)).re) -
     ε ^ 2 * gradNorm p * ((starRingEnd ℂ) (u p) * ddInwardNormal ux uy p).re)
+
+/-- Planar boundary density whose restriction to Ψ = ε is the level integrand. -/
+def ddBoundaryDensity (u e ux uy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
+  (8 - dipoleLift p ^ 3) / 3 *
+    (‖ddInwardNormal ux uy p‖ ^ 2 - ‖tangentDeriv ux uy p‖ ^ 2 -
+      ‖u p‖ ^ 2 + (e p * (starRingEnd ℂ) (u p)).re) -
+    dipoleLift p ^ 2 * gradNorm p *
+      ((starRingEnd ℂ) (u p) * ddInwardNormal ux uy p).re
+
+/-- The boundary density identifies the level term without choosing gradient traces
+    or splitting possibly nonintegrable level integrals. -/
+theorem levelIntegral_ddBoundaryDensity (u e ux uy : ℝ × ℝ → ℂ)
+    {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
+    levelIntegral h (ddBoundaryDensity u e ux uy) = ddVirialLevel u e ux uy (2 * h) := by
+  unfold ddVirialLevel
+  rw [mul_div_cancel_left₀ _ (by norm_num : (2 : ℝ) ≠ 0)]
+  unfold levelIntegral
+  apply intervalIntegral.integral_congr
+  intro t _
+  simp only [ddBoundaryDensity, dipoleLift_dipoleOrbit h0 h1]
 
 /-- First component of the classical Green flux. -/
 def ddGreenFlux₁ (u : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
@@ -196,24 +409,106 @@ theorem dd_weighted_first {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         (ddStreamQuotient ω) ux uy p * (starRingEnd ℂ) (ddVorticityQuotient ω p)).re := by
   sorry
 
-/-- Annular virial with one common exceptional set for both endpoints. Neither a
-    derivative of the vorticity nor global quotient data are hypotheses. -/
-theorem dd_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
-    {ux uy : ℝ × ℝ → ℂ}
-    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
-    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy) :
-    (∀ a b : ℝ, 0 < a → a < b → b < 2 →
-      IntegrableOn (ddVirialDensity (ddStreamQuotient ω)
-        (fun p ↦ -ddVorticityQuotient ω p) ux uy)
-        {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < b}) ∧
-    ∃ N : Set ℝ, volume N = 0 ∧ ∀ a b : ℝ, 0 < a → a < b → b < 2 →
-      a ∉ N → b ∉ N →
-      (∫ p in {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < b},
-        ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
-      ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy a -
-        ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy b := by
-  sorry
+/-- A compact-level cutoff identity determines the virial on every annulus outside
+    one common null set. The bulk and boundary densities need only be integrable
+    on closed level bands; no positivity or smooth representatives are required. -/
+theorem annular_virial_of_cutoff_identity {J B : ℝ × ℝ → ℝ}
+    (hJ : ∀ a b : ℝ, 0 < a → b < 1 →
+      IntegrableOn J {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b})
+    (hB : ∀ a b : ℝ, 0 < a → b < 1 →
+      IntegrableOn B {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b})
+    (hcut : ∀ φ : ℝ → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ →
+      ∀ a b : ℝ, 0 < a → b < 1 → (∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) →
+        (∫ p in cellSquare, φ (dipoleLift p / 2) * J p) =
+          ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 * B p) :
+    ∃ N : Set ℝ, volume N = 0 ∧
+      ∀ h h' : ℝ, 0 < h → h < h' → h' < 1 → h ∉ N → h' ∉ N →
+        (∫ p in {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'}, J p) =
+          levelIntegral h B - levelIntegral h' B := by
+  have hΨ : Measurable dipoleLift := by unfold dipoleLift; fun_prop
+  have hderiv_supp {φ : ℝ → ℝ} {a b : ℝ} (hsupp : ∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) :
+      ∀ s, deriv φ s ≠ 0 → a ≤ s ∧ s ≤ b := by
+    intro s hs
+    by_contra hns
+    apply hs
+    have hev : φ =ᶠ[𝓝 s] fun _ ↦ 0 := by
+      filter_upwards [isClosed_Icc.isOpen_compl.mem_nhds (show s ∉ Icc a b from hns)] with t ht
+      by_contra hne
+      exact ht (hsupp t hne)
+    rw [hev.deriv_eq, deriv_const]
+  have hbound {g : ℝ → ℝ} (hg : Continuous g) {a b : ℝ}
+      (hsupp : ∀ s, g s ≠ 0 → a ≤ s ∧ s ≤ b) :
+      ∃ C, ∀ s, |g s| ≤ C := by
+    obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn
+      (hg.continuousOn (s := Icc a b))
+    refine ⟨max C 0, fun s ↦ ?_⟩
+    by_cases hs : g s = 0
+    · simp [hs]
+    · exact (show |g s| ≤ C by simpa using hC s (hsupp s hs)).trans (le_max_left _ _)
+  have hcompl {g F : ℝ → ℝ} {a b : ℝ} (hsupp : ∀ s, g s ≠ 0 → a ≤ s ∧ s ≤ b) :
+      ∫ s, g s * F s = ∫ s in Icc a b, g s * F s := by
+    refine (setIntegral_eq_integral_of_forall_compl_eq_zero fun s hs ↦ ?_).symm
+    have : g s = 0 := by
+      by_contra hne
+      exact hs (hsupp s hne)
+    simp [this]
+  have hid : ∀ φ : ℝ → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ →
+      ∀ a b : ℝ, 0 < a → b < 1 → (∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) →
+        ∫ s, φ s * (2 * levelIntegral s J) =
+          ∫ s, deriv φ s * levelIntegral s B := by
+    intro φ hφ a b ha hb hsupp
+    have hdc : Continuous (deriv φ) := hφ.continuous_deriv (by simp)
+    obtain ⟨C, hC⟩ := hbound hφ.continuous hsupp
+    obtain ⟨C', hC'⟩ := hbound hdc (hderiv_supp hsupp)
+    have hsupp' : ∀ s, deriv φ s / 2 ≠ 0 → a ≤ s ∧ s ≤ b := fun s hs ↦
+      hderiv_supp hsupp s fun h ↦ hs (by simp [h])
+    have hC'' : ∀ s, |deriv φ s / 2| ≤ C' / 2 := fun s ↦ by
+      rw [abs_div, abs_two]
+      exact div_le_div_of_nonneg_right (hC' s) (by norm_num)
+    have c1 := integral_cellSquare_level_mul hφ.continuous.measurable hC ha hb hsupp
+      (hJ a b ha hb)
+    have c2 := integral_cellSquare_level_mul (hdc.measurable.div_const 2) hC'' ha hb hsupp'
+      (hB a b ha hb)
+    rw [hcompl hsupp, hcompl (hderiv_supp hsupp)]
+    calc
+      _ = 2 * ∫ s in Icc a b, φ s * levelIntegral s J := by
+        rw [← integral_const_mul]; congr 1; funext s; ring
+      _ = ∫ p in cellSquare, φ (dipoleLift p / 2) * J p := c1.symm
+      _ = ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 * B p :=
+        hcut φ hφ a b ha hb hsupp
+      _ = 2 * ∫ s in Icc a b, deriv φ s / 2 * levelIntegral s B := c2
+      _ = _ := by rw [← integral_const_mul]; congr 1; funext s; ring
+  obtain ⟨N, hN, hdbr⟩ := exists_null_sub_eq_intervalIntegral (α := 0) (β := 1)
+    (m := fun h ↦ 2 * levelIntegral h J) (G := fun h ↦ levelIntegral h B)
+    (fun a b ha hb ↦ (integrableOn_levelIntegral ha hb (hJ a b ha hb)).const_mul 2)
+    (fun a b ha hb ↦ integrableOn_levelIntegral ha hb (hB a b ha hb)) hid
+  refine ⟨N, hN, fun h h' h0 hh' h'1 hNh hNh' ↦ ?_⟩
+  rw [← hdbr h h' h0 hh' h'1 hNh hNh']
+  let S := {p | 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'}
+  have hS : MeasurableSet S :=
+    (measurableSet_lt measurable_const hΨ).inter (measurableSet_lt hΨ measurable_const)
+  have hind := integral_cellSquare_level_mul
+    (φ := (Ioo h h').indicator fun _ ↦ (1 : ℝ)) (measurable_const.indicator measurableSet_Ioo)
+    (C := 1) (fun s ↦ by by_cases hs : s ∈ Ioo h h' <;> simp [hs]) h0 h'1
+    (fun s hs ↦ ⟨(Set.mem_of_indicator_ne_zero hs).1.le,
+      (Set.mem_of_indicator_ne_zero hs).2.le⟩) (hJ h h' h0 h'1)
+  have hpt (p) : (Ioo h h').indicator (fun _ ↦ (1 : ℝ)) (dipoleLift p / 2) * J p =
+      S.indicator J p := by
+    by_cases hp : p ∈ S
+    · rw [indicator_of_mem (show dipoleLift p / 2 ∈ Ioo h h' from
+        ⟨by linarith [hp.1], by linarith [hp.2]⟩), indicator_of_mem hp, one_mul]
+    · rw [indicator_of_notMem (show dipoleLift p / 2 ∉ Ioo h h' from
+        fun hm ↦ hp ⟨by linarith [hm.1], by linarith [hm.2]⟩), indicator_of_notMem hp, zero_mul]
+  have hst (s) : (Ioo h h').indicator (fun _ ↦ (1 : ℝ)) s * levelIntegral s J =
+      (Ioo h h').indicator (fun s ↦ levelIntegral s J) s := by
+    by_cases hs : s ∈ Ioo h h' <;> simp [hs]
+  simp_rw [hpt, hst] at hind
+  rw [integral_indicator hS, Measure.restrict_restrict hS, integral_indicator measurableSet_Ioo,
+    Measure.restrict_restrict measurableSet_Ioo, inter_eq_left.2 Ioo_subset_Icc_self] at hind
+  have hset : {p | p ∈ cellSquare ∧ 2 * h < dipoleLift p ∧ dipoleLift p < 2 * h'} =
+      S ∩ cellSquare := by ext p; simp only [S, mem_ofPred_eq, mem_inter_iff]; tauto
+  rw [hset, hind, intervalIntegral.integral_of_le hh'.le, integral_Ioc_eq_integral_Ioo,
+    integral_const_mul]
 
 /-! ### Positive-level regularity and bulk integrability -/
 
@@ -227,25 +522,26 @@ theorem isOpen_ddTruncatedCell (a : ℝ) : IsOpen (ddTruncatedCell a) := by
   exact hc.inter (isOpen_lt continuous_const
     (show Continuous dipoleLift by unfold dipoleLift; fun_prop))
 
-/-- Division by the stream function is harmless on a positive truncation, including
-    its elliptic center. This uses only the global H² stream, not a divided domain. -/
-theorem ddStreamQuotient_memSobolevOn (ω : L2) {a : ℝ} (ha : 0 < a) :
-    MemSobolevOn 1 (ddTruncatedCell a) (ddStreamQuotient ω) := by
-  have hs : MemSobolev 1 (invLap ω) := (memSobolev_two_invLap ω).mono (by norm_num)
+/-- Smooth division preserves both available stream derivatives on a positive
+    truncation, including its elliptic center, without a global divided domain. -/
+theorem ddStreamQuotient_memSobolevOn_of_le (ω : L2) {k : ℕ} (hk : k ≤ 2)
+    {a : ℝ} (ha : 0 < a) : MemSobolevOn k (ddTruncatedCell a) (ddStreamQuotient ω) := by
+  have hs : MemSobolev (k : ℝ) (invLap ω) :=
+    (memSobolev_two_invLap ω).mono (by exact_mod_cast hk)
   have hb : Bornology.IsBounded cellNeighbourhood := isBounded_cellNeighbourhood
-  have hh : MemSobolevOn 1 cellNeighbourhood (liftL2 (invLap ω)) := by
-    exact memSobolevOn_liftL2 (k := 1) (g := invLap ω) (U := cellNeighbourhood)
+  have hh : MemSobolevOn k cellNeighbourhood (liftL2 (invLap ω)) := by
+    exact memSobolevOn_liftL2 (k := k) (g := invLap ω) (U := cellNeighbourhood)
       (by simpa using hs) hb
-  have hc : MemSobolevOn 1 cellNeighbourhood (contStream ω) :=
-    MemSobolevOn.congr_ae (k := 1) (U := cellNeighbourhood)
+  have hc : MemSobolevOn k cellNeighbourhood (contStream ω) :=
+    MemSobolevOn.congr_ae (k := k) (U := cellNeighbourhood)
       (g := liftL2 (invLap ω)) (g' := contStream ω) hh (streamLift_ae_eq_contStream ω)
   let U := cellNeighbourhood ∩ {p | 0 < dipoleLift p}
   have hU : IsOpen U := isOrbitUnion_cellNeighbourhood.1.inter
     (isOpen_lt continuous_const
       (show Continuous dipoleLift by unfold dipoleLift; fun_prop))
-  have hloc : MemSobolevLocOn 1 U (contStream ω) :=
-    (MemSobolevOn.memSobolevLocOn (k := 1) hc).mono inter_subset_left
-  have hd : MemSobolevLocOn 1 U (ddStreamQuotient ω) :=
+  have hloc : MemSobolevLocOn k U (contStream ω) :=
+    (MemSobolevOn.memSobolevLocOn (k := k) hc).mono inter_subset_left
+  have hd : MemSobolevLocOn k U (ddStreamQuotient ω) :=
     hloc.div_smooth hU (by unfold dipoleLift; fun_prop) (fun _ hp ↦ hp.2.ne')
   have hbound : Bornology.IsBounded cellSquare :=
     hb.subset (subset_closure.trans closure_cellSquare_subset_cellNeighbourhood)
@@ -261,17 +557,30 @@ theorem ddStreamQuotient_memSobolevOn (ω : L2) {a : ℝ} (ha : 0 < a) :
   exact hd _ (isOpen_ddTruncatedCell a)
     (hbound.subset (fun _ hp ↦ hp.1)).isCompact_closure hclosure
 
-/-- Arbitrary weak-derivative witnesses of the raw quotient are square integrable
-    above every positive level, by local weak-derivative uniqueness. -/
+/-- H¹ regularity on positive truncations. -/
+theorem ddStreamQuotient_memSobolevOn (ω : L2) {a : ℝ} (ha : 0 < a) :
+    MemSobolevOn 1 (ddTruncatedCell a) (ddStreamQuotient ω) :=
+  ddStreamQuotient_memSobolevOn_of_le ω (by norm_num) ha
+
+/-- H² regularity on positive truncations. -/
+theorem ddStreamQuotient_memSobolevOn_two (ω : L2) {a : ℝ} (ha : 0 < a) :
+    MemSobolevOn 2 (ddTruncatedCell a) (ddStreamQuotient ω) :=
+  ddStreamQuotient_memSobolevOn_of_le ω (by norm_num) ha
+
+/-- Arbitrary weak-derivative witnesses inherit H¹ regularity from the H² quotient. -/
+theorem ddStreamQuotient_memSobolevOn_derivative {ω : L2} {j : Fin 2}
+    {d : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn cellSquare j (ddStreamQuotient ω) d)
+    {a : ℝ} (ha : 0 < a) : MemSobolevOn 1 (ddTruncatedCell a) d := by
+  obtain ⟨d', hd', hi⟩ := (ddStreamQuotient_memSobolevOn_two ω ha).2 j
+  exact MemSobolevOn.congr_ae_on (k := 1) hi (isOpen_ddTruncatedCell a).measurableSet
+    (hd'.ae_eq (isOpen_ddTruncatedCell a) (hd.mono (fun _ hp ↦ hp.1)))
+
+/-- Arbitrary weak-derivative witnesses are square integrable above positive levels. -/
 theorem ddStreamQuotient_memLp_derivative {ω : L2} {j : Fin 2}
     {d : ℝ × ℝ → ℂ} (hd : HasWeakPartialOn cellSquare j (ddStreamQuotient ω) d)
     {a : ℝ} (ha : 0 < a) :
-    MemLp d 2 (volume.restrict (ddTruncatedCell a)) := by
-  obtain ⟨d', hd', hi⟩ := (ddStreamQuotient_memSobolevOn ω ha).2 j
-  have heq := hd'.ae_eq (isOpen_ddTruncatedCell a)
-    (hd.mono (fun _ hp ↦ hp.1))
-  exact (memLp_congr_ae ((ae_restrict_iff'
-    (isOpen_ddTruncatedCell a).measurableSet).mpr heq)).mp hi
+    MemLp d 2 (volume.restrict (ddTruncatedCell a)) :=
+  (ddStreamQuotient_memSobolevOn_derivative hd ha).1
 
 /-- The apparent center singularities of the bulk coefficients are bounded on
     every positive truncation. Values at `Ψ = 2` are the totalized expressions. -/
@@ -365,6 +674,35 @@ theorem ddVorticityQuotient_memLp (ω : L2) {a : ℝ} (ha : 0 < a) :
   convert hn using 1
   ring
 
+/-- The normal component of an L² gradient is L² for any measure, including
+    totalized values at critical points. -/
+theorem memLp_normalDeriv {μ : Measure (ℝ × ℝ)} {ux uy : ℝ × ℝ → ℂ}
+    (hx : MemLp ux 2 μ) (hy : MemLp uy 2 μ) : MemLp (normalDeriv ux uy) 2 μ := by
+  have msx : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
+  have msy : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
+  have mi : Measurable (fun p : ℝ × ℝ ↦ (gradNorm p : ℂ)⁻¹) := by
+    unfold gradNorm
+    fun_prop
+  apply (hx.norm.add hy.norm).mono'
+    (((msx.aestronglyMeasurable.mul hx.aestronglyMeasurable).add
+      (msy.aestronglyMeasurable.mul hy.aestronglyMeasurable)).mul
+        mi.aestronglyMeasurable)
+  exact Eventually.of_forall (norm_normalDeriv_le ux uy)
+
+/-- The tangential component obeys the same L² estimate. -/
+theorem memLp_tangentDeriv {μ : Measure (ℝ × ℝ)} {ux uy : ℝ × ℝ → ℂ}
+    (hx : MemLp ux 2 μ) (hy : MemLp uy 2 μ) : MemLp (tangentDeriv ux uy) 2 μ := by
+  have msx : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
+  have msy : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
+  have mi : Measurable (fun p : ℝ × ℝ ↦ (gradNorm p : ℂ)⁻¹) := by
+    unfold gradNorm
+    fun_prop
+  apply (hx.norm.add hy.norm).mono'
+    (((msy.aestronglyMeasurable.mul hx.aestronglyMeasurable).sub
+      (msx.aestronglyMeasurable.mul hy.aestronglyMeasurable)).mul
+        mi.aestronglyMeasurable)
+  exact Eventually.of_forall (norm_tangentDeriv_le ux uy)
+
 /-- L² values and first derivatives suffice for absolute integrability of the
     weighted virial bulk on a positive truncation. -/
 theorem ddVirialDensity_integrable {u e ux uy : ℝ × ℝ → ℂ} {a : ℝ} (ha : 0 < a)
@@ -380,21 +718,8 @@ theorem ddVirialDensity_integrable {u e ux uy : ℝ × ℝ → ℂ} {a : ℝ} (h
   have iE := isq e he
   have iX := isq ux hx
   have iY := isq uy hy
-  have msx : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.1 : ℂ)) := by fun_prop
-  have msy : Measurable (fun p : ℝ × ℝ ↦ (Real.sin p.2 : ℂ)) := by fun_prop
-  have mi : Measurable (fun p : ℝ × ℝ ↦ (gradNorm p : ℂ)⁻¹) := by
-    unfold gradNorm
-    fun_prop
-  have mn : AEStronglyMeasurable (normalDeriv ux uy)
-      (volume.restrict (ddTruncatedCell a)) := by
-    exact ((msx.aestronglyMeasurable.mul hx.aestronglyMeasurable).add
-      (msy.aestronglyMeasurable.mul hy.aestronglyMeasurable)).mul
-        mi.aestronglyMeasurable
-  have mt : AEStronglyMeasurable (tangentDeriv ux uy)
-      (volume.restrict (ddTruncatedCell a)) := by
-    exact ((msy.aestronglyMeasurable.mul hx.aestronglyMeasurable).sub
-      (msx.aestronglyMeasurable.mul hy.aestronglyMeasurable)).mul
-        mi.aestronglyMeasurable
+  have mn := (memLp_normalDeriv hx hy).aestronglyMeasurable
+  have mt := (memLp_tangentDeriv hx hy).aestronglyMeasurable
   have mf : Measurable ddF := by
     change Measurable (fun p ↦ ddF p)
     simp only [ddF, gradSq_dipoleLift, dipoleLift]
@@ -444,6 +769,120 @@ theorem ddVirialDensity_integrable {u e ux uy : ℝ × ℝ → ℂ} {a : ℝ} (h
       · exact hn
       · exact ht
     _ = _ := by dsimp only [Pi.add_apply]; ring
+
+/-- The boundary density is absolutely integrable above each positive level.
+    Thus coarea produces locally integrable level terms for arbitrary weak witnesses. -/
+theorem ddBoundaryDensity_integrable {u e ux uy : ℝ × ℝ → ℂ} {a : ℝ} (ha : 0 < a)
+    (hu : MemLp u 2 (volume.restrict (ddTruncatedCell a)))
+    (he : MemLp e 2 (volume.restrict (ddTruncatedCell a)))
+    (hx : MemLp ux 2 (volume.restrict (ddTruncatedCell a)))
+    (hy : MemLp uy 2 (volume.restrict (ddTruncatedCell a))) :
+    IntegrableOn (ddBoundaryDensity u e ux uy) (ddTruncatedCell a) := by
+  have hn : MemLp (ddInwardNormal ux uy) 2 (volume.restrict (ddTruncatedCell a)) :=
+    (memLp_normalDeriv hx hy).neg
+  have ht := memLp_tangentDeriv hx hy
+  have isq (v : ℝ × ℝ → ℂ) (hv : MemLp v 2 (volume.restrict (ddTruncatedCell a))) :
+      IntegrableOn (fun p ↦ ‖v p‖ ^ 2) (ddTruncatedCell a) :=
+    (memLp_two_iff_integrable_sq hv.norm.aestronglyMeasurable).mp hv.norm
+  have ic : IntegrableOn (fun p ↦ ‖ddInwardNormal ux uy p‖ ^ 2 -
+      ‖tangentDeriv ux uy p‖ ^ 2 - ‖u p‖ ^ 2 +
+      (e p * (starRingEnd ℂ) (u p)).re) (ddTruncatedCell a) :=
+    (((isq _ hn).sub (isq _ ht)).sub (isq _ hu)).add (he.integrable_mul hu.star).re
+  have il : IntegrableOn (fun p ↦ ((starRingEnd ℂ) (u p) *
+      ddInwardNormal ux uy p).re) (ddTruncatedCell a) := (hu.star.integrable_mul hn).re
+  have mb : Measurable (fun p ↦ (8 - dipoleLift p ^ 3) / 3) := by
+    unfold dipoleLift
+    fun_prop
+  have ml : Measurable (fun p ↦ dipoleLift p ^ 2 * gradNorm p) := by
+    unfold dipoleLift gradNorm
+    fun_prop
+  have hb : ∀ᵐ p ∂(volume.restrict (ddTruncatedCell a)),
+      ‖(8 - dipoleLift p ^ 3) / 3‖ ≤ 8 ∧ ‖dipoleLift p ^ 2 * gradNorm p‖ ≤ 8 := by
+    filter_upwards [ae_restrict_mem (isOpen_ddTruncatedCell a).measurableSet] with p hp
+    have hs0 : 0 < dipoleLift p := ha.trans hp.2
+    have hs2 : dipoleLift p ≤ 2 := by
+      unfold dipoleLift
+      linarith [Real.cos_le_one p.1, Real.cos_le_one p.2]
+    have hg0 : 0 ≤ gradNorm p := Real.sqrt_nonneg _
+    have hg2 : gradNorm p ≤ 2 := by
+      have hsq : gradNorm p ^ 2 ≤ 2 := by
+        rw [gradNorm, Real.sq_sqrt (by positivity)]
+        linarith [Real.sin_sq_le_one p.1, Real.sin_sq_le_one p.2]
+      nlinarith
+    have hs3 : dipoleLift p ^ 3 ≤ 8 := by
+      calc _ ≤ (2 : ℝ) ^ 3 := pow_le_pow_left₀ hs0.le hs2 3
+        _ = 8 := by norm_num
+    constructor
+    · rw [Real.norm_of_nonneg (by linarith : 0 ≤ (8 - dipoleLift p ^ 3) / 3)]
+      have hs3pos : 0 ≤ dipoleLift p ^ 3 := by positivity
+      linarith
+    · rw [Real.norm_of_nonneg (by positivity)]
+      have hpow : dipoleLift p ^ 2 ≤ 4 := by nlinarith
+      nlinarith
+  exact (ic.bdd_mul mb.aestronglyMeasurable (hb.mono fun _ h ↦ h.1)).sub
+    (il.bdd_mul ml.aestronglyMeasurable (hb.mono fun _ h ↦ h.2))
+
+/-- Once the weak cutoff identity is known, all integrability, coarea, level
+    normalization and common-exceptional-set conclusions of the annular virial follow. -/
+theorem dd_annular_virial_of_cutoff_identity (ω : L2) {ux uy : ℝ × ℝ → ℂ}
+    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
+    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy)
+    (hcut : ∀ φ : ℝ → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ →
+      ∀ a b : ℝ, 0 < a → b < 1 → (∀ s, φ s ≠ 0 → a ≤ s ∧ s ≤ b) →
+        (∫ p in cellSquare, φ (dipoleLift p / 2) *
+          ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
+        ∫ p in cellSquare, deriv φ (dipoleLift p / 2) / 2 *
+          ddBoundaryDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) :
+    (∀ a b : ℝ, 0 < a → a < b → b < 2 →
+      IntegrableOn (ddVirialDensity (ddStreamQuotient ω)
+        (fun p ↦ -ddVorticityQuotient ω p) ux uy)
+        {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < b}) ∧
+    ∃ N : Set ℝ, volume N = 0 ∧ ∀ a b : ℝ, 0 < a → a < b → b < 2 →
+      a ∉ N → b ∉ N →
+      (∫ p in {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < b},
+        ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
+      ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy a -
+        ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy b := by
+  have iJ (a : ℝ) (ha : 0 < a) := ddVirialDensity_integrable ha
+    (ddStreamQuotient_memSobolevOn ω ha).1 (ddVorticityQuotient_memLp ω ha).neg
+    (ddStreamQuotient_memLp_derivative hx ha) (ddStreamQuotient_memLp_derivative hy ha)
+  have iB (a : ℝ) (ha : 0 < a) := ddBoundaryDensity_integrable ha
+    (ddStreamQuotient_memSobolevOn ω ha).1 (ddVorticityQuotient_memLp ω ha).neg
+    (ddStreamQuotient_memLp_derivative hx ha) (ddStreamQuotient_memLp_derivative hy ha)
+  refine ⟨fun a b ha _ _ ↦ (iJ a ha).mono_set (fun _ hp ↦ ⟨hp.1, hp.2.1⟩), ?_⟩
+  obtain ⟨N, hN, hann⟩ := annular_virial_of_cutoff_identity
+    (J := ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy)
+    (B := ddBoundaryDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy)
+    (fun a _ ha _ ↦ (iJ a ha).mono_set fun _ hp ↦ ⟨hp.1, by linarith [hp.2.1]⟩)
+    (fun a _ ha _ ↦ (iB a ha).mono_set fun _ hp ↦ ⟨hp.1, by linarith [hp.2.1]⟩) hcut
+  refine ⟨(fun ε : ℝ ↦ ε / 2) ⁻¹' N, ?_, fun a b ha hab hb haN hbN ↦ ?_⟩
+  · rw [show (fun ε : ℝ ↦ ε / 2) = (fun ε ↦ (1 / 2 : ℝ) * ε) by funext ε; ring,
+      Real.volume_preimage_mul_left (by norm_num : (1 / 2 : ℝ) ≠ 0), hN, mul_zero]
+  · have h := hann (a / 2) (b / 2) (by linarith) (by linarith) (by linarith) haN hbN
+    rw [levelIntegral_ddBoundaryDensity _ _ _ _ (by linarith) (by linarith),
+      levelIntegral_ddBoundaryDensity _ _ _ _ (by linarith) (by linarith)] at h
+    simpa only [mul_div_cancel₀ _ (by norm_num : (2 : ℝ) ≠ 0)] using h
+
+/-- Annular virial with one common exceptional set for both endpoints. Neither a
+    derivative of the vorticity nor global quotient data are hypotheses. -/
+theorem dd_annular_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
+    {ux uy : ℝ × ℝ → ℂ}
+    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
+    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy) :
+    (∀ a b : ℝ, 0 < a → a < b → b < 2 →
+      IntegrableOn (ddVirialDensity (ddStreamQuotient ω)
+        (fun p ↦ -ddVorticityQuotient ω p) ux uy)
+        {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < b}) ∧
+    ∃ N : Set ℝ, volume N = 0 ∧ ∀ a b : ℝ, 0 < a → a < b → b < 2 →
+      a ∉ N → b ∉ N →
+      (∫ p in {p | p ∈ cellSquare ∧ a < dipoleLift p ∧ dipoleLift p < b},
+        ddVirialDensity (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy p) =
+      ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy a -
+        ddVirialLevel (ddStreamQuotient ω) (fun p ↦ -ddVorticityQuotient ω p) ux uy b := by
+  apply dd_annular_virial_of_cutoff_identity ω hx hy
+  intro φ hφ a b ha hb hsupp
+  sorry
 
 /-! ### Center flux and removal -/
 
