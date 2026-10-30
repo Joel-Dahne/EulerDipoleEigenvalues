@@ -82,9 +82,10 @@ weights and local versus global regularity.
    normal convention unchanged. Coarea and endpoint assembly are checked.
    The weak Green Blueprint proof now uses the admitted local H² approximation
    interface in `SobolevApproximation.lean`. Its quadratic-integral limit and
-   pointwise cutoff-generator helpers are proved; classical integration and
-   the weak Green limit assembly remain
-   unimplemented. This new node is not yet on the Lean admission-audit route.
+   pointwise cutoff-generator helpers are proved. The local classical Green
+   identity is now admission-free, by direct flux differentiation and the constant
+   weighted defect. Its cutoff integration and the weak Green limit assembly
+   remain unimplemented. The approximation node is not yet on the Lean audit route.
    Multiplying back by Ψ identifies
    arbitrary raw weak gradients with Fourier stream derivatives and proves
    half-density conjugation. Raw/supplied quotient changes, coarea splitting,

@@ -521,6 +521,58 @@ def ddGreenFlux₂ (u : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℝ :=
       (ddVirialField₂ p : ℂ) * partialY u p) * (starRingEnd ℂ) (partialY u p)).re +
     ddVirialField₂ p * (‖partialX u p‖ ^ 2 + ‖partialY u p‖ ^ 2 + ‖u p‖ ^ 2))
 
+/-- Derivative of the quadratic Green flux along a real parameter. -/
+private theorem hasDerivAt_greenFlux
+    {m a b c : ℝ → ℝ} {v x y z : ℝ → ℂ}
+    {m' a' b' c' : ℝ} {v' x' y' z' : ℂ} {t : ℝ}
+    (hm : HasDerivAt m m' t) (ha : HasDerivAt a a' t)
+    (hb : HasDerivAt b b' t) (hc : HasDerivAt c c' t)
+    (hv : HasDerivAt v v' t) (hx : HasDerivAt x x' t)
+    (hy : HasDerivAt y y' t) (hz : HasDerivAt z z' t) :
+    HasDerivAt
+      (fun s ↦ m s * (-((starRingEnd ℂ) (v s) * z s).re -
+        2 * (((a s : ℂ) * x s + (b s : ℂ) * y s) *
+          (starRingEnd ℂ) (z s)).re +
+        c s * (‖x s‖ ^ 2 + ‖y s‖ ^ 2 + ‖v s‖ ^ 2)))
+      (m' * (-((starRingEnd ℂ) (v t) * z t).re -
+        2 * (((a t : ℂ) * x t + (b t : ℂ) * y t) *
+          (starRingEnd ℂ) (z t)).re +
+        c t * (‖x t‖ ^ 2 + ‖y t‖ ^ 2 + ‖v t‖ ^ 2)) +
+       m t * (-((starRingEnd ℂ) v' * z t + (starRingEnd ℂ) (v t) * z').re -
+        2 * ((((a' : ℂ) * x t + (a t : ℂ) * x' +
+          ((b' : ℂ) * y t + (b t : ℂ) * y')) * (starRingEnd ℂ) (z t) +
+          ((a t : ℂ) * x t + (b t : ℂ) * y t) * (starRingEnd ℂ) z').re) +
+        (c' * (‖x t‖ ^ 2 + ‖y t‖ ^ 2 + ‖v t‖ ^ 2) +
+          c t * (2 * (x' * (starRingEnd ℂ) (x t)).re +
+            2 * (y' * (starRingEnd ℂ) (y t)).re +
+            2 * (v' * (starRingEnd ℂ) (v t)).re)))) t := by
+  have hreal {f : ℝ → ℂ} {d : ℂ} (h : HasDerivAt f d t) :
+      HasDerivAt (fun s ↦ (f s).re) d.re t :=
+    Complex.reCLM.hasFDerivAt.comp_hasDerivAt t h
+  convert hm.mul (((hreal (hv.star.mul hz)).neg.sub
+    ((hreal (((ha.ofReal_comp.mul hx).add (hb.ofReal_comp.mul hy)).mul hz.star)).const_mul 2)).add
+    (hc.mul ((hx.norm_sq.add hy.norm_sq).add hv.norm_sq))) using 1 <;>
+    simp only [real_inner_eq_re_inner (𝕜 := ℂ), RCLike.inner_apply,
+      Pi.mul_apply, Pi.add_apply, Pi.sub_apply, Pi.neg_apply] <;> rfl
+
+/-- Normal/tangential and Cartesian expressions for the same quadratic form. -/
+theorem ddMatrixForm_eq_cartesian (vx vy : ℂ) {p : ℝ × ℝ}
+    (hr : gradSq dipoleLift p ≠ 0) :
+    ddMatrixForm p vx vy =
+      ddMxx p * ‖vx‖ ^ 2 + 2 * ddMxy p * (vx * (starRingEnd ℂ) vy).re +
+        ddMyy p * ‖vy‖ ^ 2 := by
+  have hρ2 : gradNorm p ^ 2 = gradSq dipoleLift p := by
+    rw [gradNorm, gradSq_dipoleLift, Real.sq_sqrt (by positivity)]
+  simp only [ddMatrixForm, normalDeriv, tangentDeriv, norm_div, div_pow,
+    Complex.norm_real, Real.norm_eq_abs, sq_abs, hρ2,
+    ddMxx, ddMxy, ddMyy, Complex.sq_norm, Complex.normSq_apply,
+    Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
+    Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+    Complex.conj_re, Complex.conj_im]
+  field_simp
+  rw [gradSq_dipoleLift]
+  ring
+
 /-- Local classical Green identity, separate from its weak annular justification. -/
 theorem dd_green {u : ℝ × ℝ → ℂ} (hu : ContDiffOn ℝ 3 u ddRegularCell)
     {p : ℝ × ℝ} (hp : p ∈ ddRegularCell) :
@@ -530,7 +582,109 @@ theorem dd_green {u : ℝ × ℝ → ℂ} (hu : ContDiffOn ℝ 3 u ddRegularCell
         u (partialX u) (partialY u) p * (starRingEnd ℂ) (ddOperator u p)).re =
       ddVirialDensity u (ddOperator u) (partialX u) (partialY u) p +
         divergence (ddGreenFlux₁ u) (ddGreenFlux₂ u) p := by
-  sorry
+  have hU : IsOpen ddRegularCell :=
+    isOpen_cellSquare.inter (isOpen_ne.preimage (by
+      simp only [gradSq_dipoleLift]
+      fun_prop))
+  have hat : ContDiffAt ℝ 3 u p := hu.contDiffAt (hU.mem_nhds hp)
+  have hud : DifferentiableAt ℝ u p := hat.differentiableAt (by norm_num)
+  have hfd : DifferentiableAt ℝ (fderiv ℝ u) p :=
+    (hat.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
+  have hex : partialX u =ᶠ[𝓝 p] fun q ↦ fderiv ℝ u q (1, 0) := by
+    filter_upwards [hU.mem_nhds hp] with q hq
+    exact partialX_eq_fderiv ((hu.contDiffAt (hU.mem_nhds hq)).differentiableAt (by norm_num))
+  have hey : partialY u =ᶠ[𝓝 p] fun q ↦ fderiv ℝ u q (0, 1) := by
+    filter_upwards [hU.mem_nhds hp] with q hq
+    exact partialY_eq_fderiv ((hu.contDiffAt (hU.mem_nhds hq)).differentiableAt (by norm_num))
+  have hux : DifferentiableAt ℝ (partialX u) p :=
+    (hfd.clm_apply (differentiableAt_const _)).congr_of_eventuallyEq hex
+  have huy : DifferentiableAt ℝ (partialY u) p :=
+    (hfd.clm_apply (differentiableAt_const _)).congr_of_eventuallyEq hey
+  have hmix : partialY (partialX u) p = partialX (partialY u) p := by
+    have hxd := (hfd.clm_apply (differentiableAt_const (1, 0)))
+    have hyd := (hfd.clm_apply (differentiableAt_const (0, 1)))
+    have hxx : partialY (partialX u) p =
+        partialY (fun q ↦ fderiv ℝ u q (1, 0)) p :=
+      (hasDerivAt_partialY hxd).congr_of_eventuallyEq
+        (hex.comp_tendsto ((continuous_const.prodMk continuous_id).tendsto p.2)) |>.deriv
+    have hyy : partialX (partialY u) p =
+        partialX (fun q ↦ fderiv ℝ u q (0, 1)) p :=
+      (hasDerivAt_partialX hyd).congr_of_eventuallyEq
+        (hey.comp_tendsto ((continuous_id.prodMk continuous_const).tendsto p.1)) |>.deriv
+    rw [hxx, hyy, partialY_eq_fderiv hxd, partialX_eq_fderiv hyd,
+      fderiv_clm_apply hfd (differentiableAt_const _),
+      fderiv_clm_apply hfd (differentiableAt_const _)]
+    simpa using (hat.isSymmSndFDerivAt (by norm_num)) (0, 1) (1, 0)
+  have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp.1)
+  have hm : DifferentiableAt ℝ ddWeight p := by unfold ddWeight dipoleLift; fun_prop
+  have hw := contDiffAt_ddVirialField hs hp.2
+  have hw₁ := hw.1.differentiableAt (by simp)
+  have hw₂ := hw.2.differentiableAt (by simp)
+  have hx := (hasDerivAt_greenFlux
+    (hasDerivAt_partialX hm) (hasDerivAt_partialX hw₁)
+    (hasDerivAt_partialX hw₂) (hasDerivAt_partialX hw₁)
+    (hasDerivAt_partialX hud) (hasDerivAt_partialX hux)
+    (hasDerivAt_partialX huy) (hasDerivAt_partialX hux)).deriv
+  have hy := (hasDerivAt_greenFlux
+    (hasDerivAt_partialY hm) (hasDerivAt_partialY hw₁)
+    (hasDerivAt_partialY hw₂) (hasDerivAt_partialY hw₂)
+    (hasDerivAt_partialY hud) (hasDerivAt_partialY hux)
+    (hasDerivAt_partialY huy) (hasDerivAt_partialY huy)).deriv
+  change partialX (ddGreenFlux₁ u) p = _ at hx
+  change partialY (ddGreenFlux₂ u) p = _ at hy
+  have hm0 : ddWeight p ≠ 0 := pow_ne_zero _ hs
+  have hmx : partialX ddWeight p = 2 * dipoleLift p * partialX dipoleLift p := by
+    simpa [ddWeight, partialX, Pi.pow_apply] using!
+      ((hasDerivAt_partialX (show DifferentiableAt ℝ dipoleLift p by
+        unfold dipoleLift; fun_prop)).pow 2).deriv
+  have hmy : partialY ddWeight p = 2 * dipoleLift p * partialY dipoleLift p := by
+    simpa [ddWeight, partialY, Pi.pow_apply] using!
+      ((hasDerivAt_partialY (show DifferentiableAt ℝ dipoleLift p by
+        unfold dipoleLift; fun_prop)).pow 2).deriv
+  obtain ⟨hdefect, hxx, hxy, hyy⟩ := (dd_virial_algebra.2 p hp)
+  have hF : ddF p = ddWeight p * ddVirialCoeff p := by
+    exact (mul_div_cancel₀ (ddF p) hm0).symm
+  have hdiv :
+      ddWeight p * ddVirialCoeff p -
+        ddWeight p * (partialX ddVirialField₁ p + partialY ddVirialField₂ p) -
+        partialX ddWeight p * ddVirialField₁ p -
+        partialY ddWeight p * ddVirialField₂ p = -ddWeight p := by
+    rw [ddWeightedDiv_eq hw₁ hw₂ hs] at hdefect
+    rw [hmx, hmy]
+    dsimp only [ddWeight]
+    simp only [divergence, partialX_dipoleLift, partialY_dipoleLift] at hdefect ⊢
+    field_simp at hdefect ⊢
+    linear_combination hdefect
+  have hop : ddOperator u p = u p -
+      (((partialX ddWeight p : ℝ) : ℂ) * partialX u p +
+        (ddWeight p : ℂ) * partialX (partialX u) p +
+        (((partialY ddWeight p : ℝ) : ℂ) * partialY u p +
+          (ddWeight p : ℂ) * partialY (partialY u) p)) / (ddWeight p : ℂ) := by
+    unfold ddOperator ddWeightedLaplacian
+    have hmc : DifferentiableAt ℝ (fun q ↦ (ddWeight q : ℂ)) p := by
+      unfold ddWeight dipoleLift
+      fun_prop
+    rw [partialX_mul hmc hux, partialY_mul hmc huy]
+    have hmx' := (hasDerivAt_partialX hm).ofReal_comp.deriv
+    have hmy' := (hasDerivAt_partialY hm).ofReal_comp.deriv
+    change partialX (fun q ↦ (ddWeight q : ℂ)) p = _ at hmx'
+    change partialY (fun q ↦ (ddWeight q : ℂ)) p = _ at hmy'
+    rw [hmx', hmy']
+  rw [divergence, hx, hy]
+  rw [ddVirialDensity, ddMatrixForm_eq_cartesian _ _ hp.2, hF, ← hxx, ← hxy, ← hyy,
+    ddWeightedGenerator, hop, hmix]
+  simp only [Complex.sq_norm, Complex.normSq_apply, Complex.add_re, Complex.add_im,
+    Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im,
+    Complex.ofReal_re, Complex.ofReal_im, Complex.conj_re, Complex.conj_im,
+    Complex.div_ofReal_re, Complex.div_ofReal_im, zero_mul, add_zero, sub_zero]
+  rw [show ddWeightedDiv ddVirialField₁ ddVirialField₂ p = ddVirialCoeff p + 1 by
+    linarith [hdefect]]
+  field_simp
+  linear_combination hdiv * ddWeight p *
+    ((u p).re ^ 2 + (u p).im ^ 2 +
+      (partialX u p).re ^ 2 + (partialX u p).im ^ 2 +
+      (partialY u p).re ^ 2 + (partialY u p).im ^ 2)
 
 /-- The weighted Green identity tested against an annular level cutoff.
     All derivatives of u are weak witnesses; e realizes Eu weakly. The cutoff

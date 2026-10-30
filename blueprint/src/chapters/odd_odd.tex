@@ -368,26 +368,21 @@ where the real vector field on the right is
 
 \begin{proof}
 \uses{lem:dd-virial-algebra}
-Expand $E=1-L_\mu$. The product rule gives
+\leanok
+Put $e=Eu$, $T=W\cdot\nabla u$ and $d_\mu=\Div_\mu W$.
+Differentiate the displayed flux directly, using
+$\mu e=\mu u-\Div(\mu\nabla u)$. The mixed Hessian terms cancel, giving
 \[
- \mu f\operatorname{Re}(L_\mu u\,\bar u)
- =-\mu f|\nabla u|^2+\tfrac12\mu L_\mu f|u|^2
- +\Div\left(\mu f\operatorname{Re}(\bar u\nabla u)
-                  -\tfrac12\mu\nabla f|u|^2\right)
+ \Div\mathcal V[u]
+ =\mu\operatorname{Re}(e\bar u)+2\mu\operatorname{Re}(T\bar e)
+  +\mu(d_\mu-1)(|u|^2+|\nabla u|^2)
+  -2\mu\ip{\sym DW\nabla u}{\nabla u}.
 \]
-and
-\begin{align*}
- -2\mu\operatorname{Re}(D_\mu u\,\overline{L_\mu u})
- ={}&2\mu\ip{\sym DW\nabla u}{\nabla u}
-       -\tfrac12\mu L_\mu d_\mu|u|^2\\
- &+\Div\left[-2\mu\operatorname{Re}
-                (D_\mu u\,\overline{\nabla u})
-       +\mu W|\nabla u|^2+\tfrac12\mu\nabla d_\mu|u|^2\right].
-\end{align*}
-Finally $2\mu\operatorname{Re}(D_\mu u\,\bar u)=\Div(\mu W|u|^2)$.
-The bulk zeroth-order term is
-$\mu[\tfrac12L_\mu(f-d_\mu)-f]|u|^2=-F|u|^2$.
-In the flux, $f-d_\mu=-1$ leaves exactly $\mathcal V[u]$.
+Now $d_\mu-1=f$, $\mu f=F$, and
+$\mu(2\sym DW-fI)=M$ identify the last two terms as
+$F|u|^2-\ip{M\nabla u}{\nabla u}$.
+Substitute $D_\mu u=T+\tfrac12d_\mu u$ and $d_\mu-f=1$.
+This proves the identity without differentiating $e$, $f$ or $d_\mu$.
 \end{proof}
 
 \begin{lemma}[Weak weighted Green identity on an annulus]
