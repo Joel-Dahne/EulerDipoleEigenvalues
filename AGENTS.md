@@ -40,6 +40,11 @@ and formalize, and the settled structure feeds back into the paper.
   derivation), and keep sanity checks clearly separate from proofs.
 - When explaining a step, give the mechanism (why it works, what the key
   cancellation or sign is), not only a restatement.
+- In explanations, plans and progress reports, prefer the Blueprint node's
+  title and label over its Lean declaration name when both exist. Include
+  the label (e.g. `thm:ee-exclusion`) so the node is easy to find in the graph.
+  Add the Lean name in parentheses only when useful for locating code; use
+  exact Lean names when discussing code or diagnostics.
 - Record problems as digest notes (see below) instead of quietly fixing them
   in the blueprint, so the authors see what changed and why.
 - Look out for simplifications and better structure: unused generality, results
