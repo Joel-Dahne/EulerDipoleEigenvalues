@@ -193,6 +193,12 @@ weights and local versus global regularity.
   polynomialization and any exact checker must still be proved sound. The
   statements do not require choosing Bernstein subdivision as the final method.
 
+## Blueprint navigation
+
+Graph statement popups include clickable **Depends on** and **Used by** lists,
+using Blueprint labels and the direct edges visible in the current full or
+sector/custom graph. See [Blueprint navigation](../../blueprint/README.md#building).
+
 ## Other open work
 
 - Human statement review, particularly setup, sector reduction, interval

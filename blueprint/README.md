@@ -49,6 +49,8 @@ questions and problems found in the manuscript, and collect them in
 - `src/plastex.cfg`: web build configuration
 - `src/sectorgraphs.py`: local plasTeX package adding sector graph links to
   the HTML5 sidebar (loaded only by `web.tex`)
+- `src/graph_neighbours.js`: clickable prerequisite/dependent lists in graph
+  statement popups, loaded through `plastex.cfg`
 - `../scripts/check_blueprint.py`: source-only consistency checker and metadata reader
 - `../scripts/blueprint_status.py`: generated sector status report
 
@@ -86,6 +88,14 @@ read-only static files on rebuild and regenerates these sector views:
 The index and chapter sidebars list these three views below the full
 Dependency graph link. These entries use plasTeX's native HTML5 navigation
 extension, so they are regenerated with the site rather than patched into HTML.
+
+Clicking a graph node opens its statement with **Depends on** and **Used by**
+Blueprint-label lists. Click a label to open that neighbour's statement in the
+same graph; Ctrl/Cmd-click opens its chapter entry in a new tab. The lists follow
+immediate edges in the displayed graph: transitively redundant edges are omitted,
+and sector/custom views list only neighbours inside that view. Long popups scroll.
+The local script extends the standard renderer without an upstream fork.
+Its DOM regression fixture runs with `just test-blueprint` when Node is installed.
 
 ## Consistency checks
 

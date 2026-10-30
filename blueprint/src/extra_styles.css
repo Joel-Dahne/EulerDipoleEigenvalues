@@ -23,3 +23,41 @@ div.corollary_thmcontent {
 div.proof_content {
 	border-left: .08rem solid grey;
 }
+
+/* Keep long statements and neighbour lists inside the viewport. */
+div.dep-modal-content {
+    max-height: calc(100vh - 6rem);
+}
+
+.dep-neighbours {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #c4c8ce;
+}
+
+.dep-neighbours h3 {
+    font-size: 1rem;
+    margin: .75rem 0 .25rem;
+}
+
+.dep-neighbours ul {
+    margin-top: .25rem;
+    padding-left: 1.25rem;
+}
+
+.dep-neighbours li {
+    overflow-wrap: anywhere;
+    margin-bottom: .25rem;
+}
+
+div.dep-modal-content .dep-neighbours a {
+    color: #245a83;
+    text-decoration: underline;
+}
+
+.dep-neighbours a:focus-visible {
+    outline: 2px solid #245a83;
+    outline-offset: 2px;
+}
