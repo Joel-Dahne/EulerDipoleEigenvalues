@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.OddOddForms
+import NoEmbeddedEigenvalues.SobolevApproximation
 
 /-!
 # Weighted odd–odd virial interfaces
@@ -35,6 +36,11 @@ field. Its divergence has zero integral; the cutoff generator's half-density
 correction then gives the smooth weighted Green identity.
 Multiplication back by Ψ identifies supplied weak quotient gradients with Fourier
 stream derivatives, giving half-density conjugation without classical raw derivatives.
+
+The weak weighted operator is identified algebraically from any specified second
+weak jet by testing its weighted divergence. Bounded coefficient multipliers then
+carry strong L² jet convergence to strong L² convergence of the operator values
+on precompact cell patches, including patches through the elliptic center.
 -/
 
 noncomputable section
@@ -74,6 +80,306 @@ def HasDDOperator (u e ux uy : ℝ × ℝ → ℂ) : Prop :=
       (∫ p in cellSquare, (ddWeight p : ℂ) * (e p - u p) * η p) =
         ∫ p in cellSquare, (ddWeight p : ℂ) *
           (ux p * partialX η p + uy p * partialY η p)
+
+private theorem contDiff_ddWeight_complex :
+    ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun p ↦ (ddWeight p : ℂ)) := by
+  have hreal : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) ddWeight := by
+    unfold ddWeight dipoleLift
+    fun_prop
+  exact Complex.ofRealCLM.contDiff.comp hreal
+
+/-- The weighted operator evaluated algebraically on a specified second-order jet.
+    No classical derivative is taken of any jet representative. -/
+def ddJetOperator (D : List (Fin 2) → ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℂ :=
+  D [] p -
+    (coordPartial 0 (fun q ↦ (ddWeight q : ℂ)) p * D [0] p +
+      (ddWeight p : ℂ) * D [0, 0] p +
+      (coordPartial 1 (fun q ↦ (ddWeight q : ℂ)) p * D [1] p +
+        (ddWeight p : ℂ) * D [1, 1] p)) / (ddWeight p : ℂ)
+
+/-- A weak realization of the weighted operator agrees with its algebraic jet
+    expression on each open patch. Only weak derivative uniqueness is used;
+    neither a derivative of the forcing nor smooth density is required. -/
+theorem HasDDOperator.ae_eq_jet {u e ux uy : ℝ × ℝ → ℂ}
+    (hop : HasDDOperator u e ux uy) {V : Set (ℝ × ℝ)}
+    (hV : IsOpen V) (hVU : V ⊆ cellSquare)
+    {D : List (Fin 2) → ℝ × ℝ → ℂ} (hD : HasWeakJetOn 2 V u D) :
+    ∀ᵐ p, p ∈ V →
+      ux p = D [0] p ∧ uy p = D [1] p ∧ e p = ddJetOperator D p := by
+  have hx : HasWeakPartialOn V 0 u (D [0]) := by
+    simpa only [hD.1] using hD.2 [] (by simp) 0
+  have hy : HasWeakPartialOn V 1 u (D [1]) := by
+    simpa only [hD.1] using hD.2 [] (by simp) 1
+  have hux := (hop.1.mono hVU).ae_eq hV hx
+  have huy := (hop.2.1.mono hVU).ae_eq hV hy
+  have hμ := contDiff_ddWeight_complex
+  let a := fun p ↦ coordPartial 0 (fun q ↦ (ddWeight q : ℂ)) p * D [0] p +
+    (ddWeight p : ℂ) * D [0, 0] p
+  let b := fun p ↦ coordPartial 1 (fun q ↦ (ddWeight q : ℂ)) p * D [1] p +
+    (ddWeight p : ℂ) * D [1, 1] p
+  have ha : HasWeakPartialOn V 0 (fun p ↦ (ddWeight p : ℂ) * D [0] p) a :=
+    (hD.2 [0] (by simp) 0).mul_smooth hV hμ
+  have hb : HasWeakPartialOn V 1 (fun p ↦ (ddWeight p : ℂ) * D [1] p) b :=
+    (hD.2 [1] (by simp) 1).mul_smooth hV hμ
+  let r := fun p ↦ (ddWeight p : ℂ) * (e p - u p)
+  have hr : LocallyIntegrableOn r V :=
+    ((hop.2.2.1.mono_set hVU).sub hx.1).continuousOn_mul
+      hμ.continuous.continuousOn hV.isLocallyClosed
+  have hres := ae_eq_zero_of_forall_test hV ((hr.add ha.2.1).add hb.2.1) (by
+    intro η hη
+    have hz (p) (hp : p ∉ V) :
+        η p = 0 ∧ partialX η p = 0 ∧ partialY η p = 0 :=
+      ⟨image_eq_zero_of_notMem_tsupport (fun ht ↦ hp (hη.tsupport_subset ht)),
+        image_eq_zero_of_notMem_tsupport (fun ht ↦
+          hp (hη.tsupport_subset (tsupport_partialX_subset η ht))),
+        image_eq_zero_of_notMem_tsupport (fun ht ↦
+          hp (hη.tsupport_subset (tsupport_partialY_subset η ht)))⟩
+    have ht := hop.2.2.2 η (hη.mono hVU)
+    have hleft : (∫ p in cellSquare, (ddWeight p : ℂ) * (e p - u p) * η p) =
+        ∫ p, r p * η p :=
+      setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun p hp ↦ by simp [(hz p (fun h ↦ hp (hVU h))).1])
+    have hright :
+        (∫ p in cellSquare, (ddWeight p : ℂ) *
+          (ux p * partialX η p + uy p * partialY η p)) =
+        ∫ p, (ddWeight p : ℂ) * D [0] p * coordPartial 0 η p +
+          (ddWeight p : ℂ) * D [1] p * coordPartial 1 η p := by
+      rw [setIntegral_eq_integral_of_forall_compl_eq_zero (fun p hp ↦ by
+        obtain ⟨_, hx0, hy0⟩ := hz p (fun h ↦ hp (hVU h))
+        simp [hx0, hy0])]
+      apply integral_congr_ae
+      filter_upwards [hux, huy] with p hxp hyp
+      by_cases hp : p ∈ V
+      · simp [hxp hp, hyp hp, coordPartial, mul_add, mul_assoc]
+      · obtain ⟨_, hx0, hy0⟩ := hz p hp
+        simp [coordPartial, hx0, hy0]
+    have i0 := integrable_mul_of_tsupport_subset hr hη.contDiff.continuous
+      hη.hasCompactSupport hη.tsupport_subset
+    have ia := integrable_mul_of_tsupport_subset ha.2.1 hη.contDiff.continuous
+      hη.hasCompactSupport hη.tsupport_subset
+    have ib := integrable_mul_of_tsupport_subset hb.2.1 hη.contDiff.continuous
+      hη.hasCompactSupport hη.tsupport_subset
+    have ix := integrable_mul_of_tsupport_subset ha.1 (hη.continuous_coordPartial 0)
+      (hη.hasCompactSupport_coordPartial 0)
+      ((tsupport_coordPartial_subset 0 η).trans hη.tsupport_subset)
+    have iy := integrable_mul_of_tsupport_subset hb.1 (hη.continuous_coordPartial 1)
+      (hη.hasCompactSupport_coordPartial 1)
+      ((tsupport_coordPartial_subset 1 η).trans hη.tsupport_subset)
+    rw [hleft, hright, integral_add ix iy, ha.2.2 η hη, hb.2.2 η hη] at ht
+    simp only [Pi.add_apply, add_mul]
+    rw [integral_add (f := fun p ↦ r p * η p + a p * η p) (i0.add ia) ib,
+      integral_add i0 ia]
+    linear_combination ht)
+  filter_upwards [hux, huy, hres] with p hxp hyp hres hp
+  refine ⟨hxp hp, hyp hp, ?_⟩
+  have hs : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell (hVU hp)
+  have hμ0 : (ddWeight p : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (pow_ne_zero _ hs.ne')
+  have hh := hres hp
+  dsimp only [Pi.add_apply, r, a, b] at hh
+  rw [ddJetOperator, hD.1]
+  field_simp
+  linear_combination hh
+
+
+/-- On smooth functions the algebraic weak-jet expression is the classical
+    weighted operator, including its totalized values outside the cell. -/
+theorem ddOperator_eq_jet {v : ℝ × ℝ → ℂ}
+    (hv : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) v) :
+    ddOperator v = ddJetOperator (fun w ↦ classicalComplexJet w v) := by
+  have hv2 : ContDiff ℝ 2 v := hv.of_le (by simp)
+  have hx := (contDiff_partialX hv2).differentiable one_ne_zero
+  have hy := (contDiff_partialY hv2).differentiable one_ne_zero
+  have hμ := contDiff_ddWeight_complex.differentiable (by simp)
+  funext p
+  simp only [ddOperator, ddWeightedLaplacian, ddJetOperator, classicalComplexJet,
+    coordPartial, show (1 : Fin 2) ≠ 0 by decide, ↓reduceIte]
+  rw [partialX_mul (hμ p) (hx p), partialY_mul (hμ p) (hy p)]
+
+private theorem green_L2_add {α ι : Type*} [MeasurableSpace α]
+    {μ : Measure α} {l : Filter ι} {f g : ι → α → ℂ} {F G : α → ℂ}
+    (hf : ∀ n, MemLp (f n) 2 μ) (hg : ∀ n, MemLp (g n) 2 μ)
+    (hF : MemLp F 2 μ) (hG : MemLp G 2 μ)
+    (hflim : Tendsto (fun n ↦ eLpNorm (fun p ↦ f n p - F p) 2 μ) l (𝓝 0))
+    (hglim : Tendsto (fun n ↦ eLpNorm (fun p ↦ g n p - G p) 2 μ) l (𝓝 0)) :
+    Tendsto (fun n ↦ eLpNorm (fun p ↦ (f n p + g n p) - (F p + G p)) 2 μ) l (𝓝 0) := by
+  have hft := (Lp.tendsto_Lp_iff_tendsto_eLpNorm'' f hf F hF).mpr hflim
+  have hgt := (Lp.tendsto_Lp_iff_tendsto_eLpNorm'' g hg G hG).mpr hglim
+  apply (Lp.tendsto_Lp_iff_tendsto_eLpNorm''
+    (fun n p ↦ f n p + g n p) (fun n ↦ (hf n).add (hg n))
+    (fun p ↦ F p + G p) (hF.add hG)).mp
+  simpa only [MemLp.toLp_add] using! hft.add hgt
+
+private theorem green_L2_sub {α ι : Type*} [MeasurableSpace α]
+    {μ : Measure α} {l : Filter ι} {f g : ι → α → ℂ} {F G : α → ℂ}
+    (hf : ∀ n, MemLp (f n) 2 μ) (hg : ∀ n, MemLp (g n) 2 μ)
+    (hF : MemLp F 2 μ) (hG : MemLp G 2 μ)
+    (hflim : Tendsto (fun n ↦ eLpNorm (fun p ↦ f n p - F p) 2 μ) l (𝓝 0))
+    (hglim : Tendsto (fun n ↦ eLpNorm (fun p ↦ g n p - G p) 2 μ) l (𝓝 0)) :
+    Tendsto (fun n ↦ eLpNorm (fun p ↦ (f n p - g n p) - (F p - G p)) 2 μ) l (𝓝 0) := by
+  have hft := (Lp.tendsto_Lp_iff_tendsto_eLpNorm'' f hf F hF).mpr hflim
+  have hgt := (Lp.tendsto_Lp_iff_tendsto_eLpNorm'' g hg G hG).mpr hglim
+  apply (Lp.tendsto_Lp_iff_tendsto_eLpNorm''
+    (fun n p ↦ f n p - g n p) (fun n ↦ (hf n).sub (hg n))
+    (fun p ↦ F p - G p) (hF.sub hG)).mp
+  simpa only [MemLp.toLp_sub] using! hft.sub hgt
+
+private theorem green_L2_mul {α ι : Type*} [MeasurableSpace α]
+    {μ : Measure α} {l : Filter ι} {c : α → ℂ} (hc : MemLp c ⊤ μ)
+    {f : ι → α → ℂ} {F : α → ℂ}
+    (hf : ∀ n, MemLp (f n) 2 μ) (hF : MemLp F 2 μ)
+    (hflim : Tendsto (fun n ↦ eLpNorm (fun p ↦ f n p - F p) 2 μ) l (𝓝 0)) :
+    Tendsto (fun n ↦ eLpNorm (fun p ↦ c p * f n p - c p * F p) 2 μ) l (𝓝 0) := by
+  let M : Lp ℂ 2 μ →L[ℂ] Lp ℂ 2 μ :=
+    (ContinuousLinearMap.mul ℂ ℂ).holderL μ ⊤ 2 2 (hc.toLp c)
+  have hM {a : α → ℂ} (ha : MemLp a 2 μ) :
+      M (ha.toLp a) = (hc.mul ha).toLp (fun p ↦ c p * a p) := by
+    apply Lp.ext
+    have hm : M (ha.toLp a) =ᵐ[μ] fun p ↦ (hc.toLp c) p * (ha.toLp a) p :=
+      (ContinuousLinearMap.mul ℂ ℂ).coeFn_holder _ _
+    have hca : MemLp (fun p ↦ c p * a p) 2 μ := hc.mul ha
+    filter_upwards [hm, hc.coeFn_toLp, ha.coeFn_toLp, hca.coeFn_toLp]
+      with p hp hcp hap hcap
+    simp only [hcp, hap] at hp
+    exact hp.trans hcap.symm
+  have ht := M.continuous.tendsto _ |>.comp
+    ((Lp.tendsto_Lp_iff_tendsto_eLpNorm'' f hf F hF).mpr hflim)
+  apply (Lp.tendsto_Lp_iff_tendsto_eLpNorm''
+    (fun n p ↦ c p * f n p) (fun n ↦ hc.mul (hf n))
+    (fun p ↦ c p * F p) (hc.mul hF)).mp
+  simpa only [Function.comp_def, hM] using ht
+
+/-- Strong L² convergence of the full classical jet implies convergence of the
+    weighted operator on a precompact patch of the positive cell. -/
+theorem ddOperator_tendsto_L2_of_jet {V : Set (ℝ × ℝ)}
+    (hV : IsOpen V) (hVc : IsCompact (closure V)) (hVU : closure V ⊆ cellSquare)
+    {v : ℕ → ℝ × ℝ → ℂ}
+    (hv : ∀ n, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (v n))
+    {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : ∀ w, w.length ≤ 2 → MemLp (D w) 2 (volume.restrict V))
+    (hvm : ∀ w, w.length ≤ 2 →
+      ∀ n, MemLp (classicalComplexJet w (v n)) 2 (volume.restrict V))
+    (hvlim : ∀ w, w.length ≤ 2 →
+      Tendsto (fun n ↦ eLpNorm (fun p ↦ classicalComplexJet w (v n) p - D w p)
+        2 (volume.restrict V)) atTop (𝓝 0)) :
+    (∀ n, MemLp (ddOperator (v n)) 2 (volume.restrict V)) ∧
+      MemLp (ddJetOperator D) 2 (volume.restrict V) ∧
+      Tendsto (fun n ↦ eLpNorm (fun p ↦ ddOperator (v n) p - ddJetOperator D p)
+        2 (volume.restrict V)) atTop (𝓝 0) := by
+  let μ := volume.restrict V
+  let c := fun p ↦ (ddWeight p : ℂ)
+  have hc := contDiff_ddWeight_complex
+  have hcx := contDiff_coordPartial_top 0 hc
+  have hcy := contDiff_coordPartial_top 1 hc
+  have hc0 (p) (hp : p ∈ closure V) : c p ≠ 0 := by
+    have hs : 0 < dipoleLift p := by
+      simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell (hVU hp)
+    exact Complex.ofReal_ne_zero.mpr (pow_ne_zero _ hs.ne')
+  have hbound {f : ℝ × ℝ → ℂ} (hf : ContinuousOn f (closure V))
+      (hm : AEStronglyMeasurable f μ) : MemLp f ⊤ μ := by
+    obtain ⟨C, hC⟩ := hVc.exists_bound_of_continuousOn hf
+    exact memLp_top_of_bound hm C
+      (ae_restrict_of_forall_mem hV.measurableSet fun p hp ↦ hC p (subset_closure hp))
+  have mC : MemLp c ⊤ μ := hbound hc.continuous.continuousOn hc.continuous.aestronglyMeasurable
+  have mX : MemLp (coordPartial 0 c) ⊤ μ :=
+    hbound hcx.continuous.continuousOn hcx.continuous.aestronglyMeasurable
+  have mY : MemLp (coordPartial 1 c) ⊤ μ :=
+    hbound hcy.continuous.continuousOn hcy.continuous.aestronglyMeasurable
+  have mI : MemLp (fun p ↦ (c p)⁻¹) ⊤ μ :=
+    hbound (hc.continuous.continuousOn.inv₀ hc0) hc.continuous.aestronglyMeasurable.inv₀
+  let J := fun n w ↦ classicalComplexJet w (v n)
+  let T := fun (E : List (Fin 2) → ℝ × ℝ → ℂ) p ↦
+    coordPartial 0 c p * E [0] p + c p * E [0, 0] p +
+      (coordPartial 1 c p * E [1] p + c p * E [1, 1] p)
+  have hmul {a : ℝ × ℝ → ℂ} (ha : MemLp a ⊤ μ) (w) (hw : w.length ≤ 2) :
+      (∀ n, MemLp (fun p ↦ a p * J n w p) 2 μ) ∧
+        MemLp (fun p ↦ a p * D w p) 2 μ ∧
+        Tendsto (fun n ↦ eLpNorm (fun p ↦ a p * J n w p - a p * D w p) 2 μ)
+          atTop (𝓝 0) :=
+    ⟨fun n ↦ ha.mul (hvm w hw n), ha.mul (hD w hw),
+      green_L2_mul ha (hvm w hw) (hD w hw) (hvlim w hw)⟩
+  obtain ⟨mx, mxd, tx⟩ := hmul mX [0] (by simp)
+  obtain ⟨mxx, mxxd, txx⟩ := hmul mC [0, 0] (by simp)
+  obtain ⟨my, myd, ty⟩ := hmul mY [1] (by simp)
+  obtain ⟨myy, myyd, tyy⟩ := hmul mC [1, 1] (by simp)
+  have mT : ∀ n, MemLp (T (J n)) 2 μ :=
+    fun n ↦ ((mx n).add (mxx n)).add ((my n).add (myy n))
+  have mTD : MemLp (T D) 2 μ := (mxd.add mxxd).add (myd.add myyd)
+  have tT : Tendsto (fun n ↦ eLpNorm (fun p ↦ T (J n) p - T D p) 2 μ) atTop (𝓝 0) :=
+    green_L2_add (fun n ↦ (mx n).add (mxx n)) (fun n ↦ (my n).add (myy n))
+      (mxd.add mxxd) (myd.add myyd)
+      (green_L2_add mx mxx mxd mxxd tx txx) (green_L2_add my myy myd myyd ty tyy)
+  have hop (E) : ddJetOperator E = fun p ↦ E [] p - (c p)⁻¹ * T E p := by
+    funext p
+    simp only [ddJetOperator, T, c, div_eq_mul_inv, mul_comm]
+  have hclass (n) := ddOperator_eq_jet (hv n)
+  have mOp (n) : MemLp (ddOperator (v n)) 2 μ := by
+    rw [hclass, hop]
+    exact (hvm [] (by simp) n).sub (mI.mul (mT n))
+  refine ⟨mOp, ?_, ?_⟩
+  · rw [hop]
+    exact (hD [] (by simp)).sub (mI.mul mTD)
+  · simp_rw [hclass, hop]
+    exact green_L2_sub (hvm [] (by simp)) (fun n ↦ mI.mul (mT n))
+      (hD [] (by simp)) (mI.mul mTD) (hvlim [] (by simp))
+      (green_L2_mul mI mT mTD tT)
+
+/-- Jet convergence reaches the supplied weak forcing, rather than an
+    unidentified second-order expression. -/
+theorem HasDDOperator.tendsto_L2_of_jet {u e ux uy : ℝ × ℝ → ℂ}
+    (hop : HasDDOperator u e ux uy) {V : Set (ℝ × ℝ)}
+    (hV : IsOpen V) (hVc : IsCompact (closure V)) (hVU : closure V ⊆ cellSquare)
+    {D : List (Fin 2) → ℝ × ℝ → ℂ} (hj : HasWeakJetOn 2 V u D)
+    (hD : ∀ w, w.length ≤ 2 → MemLp (D w) 2 (volume.restrict V))
+    {v : ℕ → ℝ × ℝ → ℂ}
+    (hv : ∀ n, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (v n))
+    (hvm : ∀ w, w.length ≤ 2 →
+      ∀ n, MemLp (classicalComplexJet w (v n)) 2 (volume.restrict V))
+    (hvlim : ∀ w, w.length ≤ 2 →
+      Tendsto (fun n ↦ eLpNorm (fun p ↦ classicalComplexJet w (v n) p - D w p)
+        2 (volume.restrict V)) atTop (𝓝 0)) :
+    (∀ n, MemLp (ddOperator (v n)) 2 (volume.restrict V)) ∧
+      MemLp e 2 (volume.restrict V) ∧
+      Tendsto (fun n ↦ eLpNorm (fun p ↦ ddOperator (v n) p - e p)
+        2 (volume.restrict V)) atTop (𝓝 0) := by
+  obtain ⟨hm, hE, ht⟩ := ddOperator_tendsto_L2_of_jet hV hVc hVU hv hD hvm hvlim
+  have hae : e =ᵐ[volume.restrict V] ddJetOperator D :=
+    (ae_restrict_iff' hV.measurableSet).mpr
+      ((hop.ae_eq_jet hV (subset_closure.trans hVU) hj).mono fun p hp hV ↦ (hp hV).2.2)
+  refine ⟨hm, hE.ae_eq hae.symm, ?_⟩
+  have heq (n) :
+      eLpNorm (fun p ↦ ddOperator (v n) p - e p) 2 (volume.restrict V) =
+        eLpNorm (fun p ↦ ddOperator (v n) p - ddJetOperator D p) 2 (volume.restrict V) :=
+    eLpNorm_congr_ae (hae.mono fun p hp ↦ congrArg (fun z ↦ ddOperator (v n) p - z) hp)
+  simpa only [heq] using ht
+
+/-- Local H² smooth approximation can be chosen with classical operator values
+    converging to the prescribed weak forcing. Compact support is in the original
+    cell, not in the approximation patch. -/
+theorem HasDDOperator.local_smooth_approximation {u e ux uy : ℝ × ℝ → ℂ}
+    (hop : HasDDOperator u e ux uy) (hu : MemSobolevLocOn 2 cellSquare u)
+    {V : Set (ℝ × ℝ)} (hV : IsOpen V) (hVc : IsCompact (closure V))
+    (hVU : closure V ⊆ cellSquare) :
+    ∃ D : List (Fin 2) → ℝ × ℝ → ℂ,
+      HasWeakJetOn 2 V u D ∧
+      (∀ w, w.length ≤ 2 → MemLp (D w) 2 (volume.restrict V)) ∧
+      ∃ v : ℕ → ℝ × ℝ → ℂ,
+        (∀ n, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (v n) ∧
+          HasCompactSupport (v n) ∧ tsupport (v n) ⊆ cellSquare) ∧
+        (∀ w, w.length ≤ 2 →
+          (∀ n, MemLp (classicalComplexJet w (v n)) 2 (volume.restrict V)) ∧
+          Tendsto (fun n ↦ eLpNorm (fun p ↦ classicalComplexJet w (v n) p - D w p)
+            2 (volume.restrict V)) atTop (𝓝 0)) ∧
+        (∀ n, MemLp (ddOperator (v n)) 2 (volume.restrict V)) ∧
+        MemLp e 2 (volume.restrict V) ∧
+        Tendsto (fun n ↦ eLpNorm (fun p ↦ ddOperator (v n) p - e p)
+          2 (volume.restrict V)) atTop (𝓝 0) := by
+  obtain ⟨D, hj, hD, v, hv, hlim⟩ :=
+    local_h2_smooth_approximation isOpen_cellSquare hV hVc hVU hu
+  exact ⟨D, hj, hD, v, hv, hlim,
+    hop.tendsto_L2_of_jet hV hVc hVU hj hD (fun n ↦ (hv n).1)
+      (fun w hw ↦ (hlim w hw).1) (fun w hw ↦ (hlim w hw).2)⟩
 
 /-- Multiplication by `s` is unitary from weighted to ordinary cell L². The
     representative identity is asserted only a.e. on the positive cell. -/

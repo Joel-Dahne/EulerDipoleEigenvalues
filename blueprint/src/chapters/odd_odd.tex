@@ -428,6 +428,109 @@ $\operatorname{Re}(u\bar e)=\operatorname{Re}(e\bar u)$,
 gives the displayed identity.
 \end{proof}
 
+\begin{definition}[Weighted operator on a specified jet]
+\label{def:dd-operator-jet}
+\uses{def:dd-quotient, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.ddJetOperator}
+\leanok
+For a complex jet $D$, define
+\[
+ \mathcal E_\mu[D]
+ =D_\varnothing-\frac{
+   (\partial_x\mu)D_0+\mu D_{00}
+   +(\partial_y\mu)D_1+\mu D_{11}}{\mu},
+ \qquad \mu=\Psi^2.
+\]
+The expression is algebraic in the jet entries; none of their representatives
+is differentiated classically.
+\end{definition}
+
+\begin{lemma}[Identification of the weighted operator from weak jets]
+\label{lem:dd-operator-jet}
+\uses{def:dd-operator-jet, def:local-weak-jets, def:dd-quotient}
+\lean{NoEmbeddedEigenvalues.HasDDOperator.ae_eq_jet}
+\leanok
+Let $V\subset\Cell$ be open and let $D$ be a specified second weak jet
+of $u$ on $V$. If $Eu=e$ weakly on $\Cell$, for specified first
+derivatives $(u_x,u_y)$, then almost everywhere on $V$,
+\[
+ u_x=D_0,\qquad u_y=D_1,\qquad e=\mathcal E_\mu[D].
+\]
+No derivative of $e$ or smooth approximation is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-unique, lem:weak-derivative-product,
+ lem:weak-derivative-basic}
+\leanok
+Weak-derivative uniqueness identifies the supplied first derivatives with
+$D_0,D_1$. The product rule gives weak derivatives
+\[
+ \partial_x(\mu D_0)=(\partial_x\mu)D_0+\mu D_{00},\qquad
+ \partial_y(\mu D_1)=(\partial_y\mu)D_1+\mu D_{11}.
+\]
+Test these against a smooth compactly supported function in $V$ and add
+the equations to the weak realization of $E$. The locally integrable function
+$\mu(e-u)+\partial_x(\mu D_0)+\partial_y(\mu D_1)$ annihilates every test
+function, hence vanishes almost everywhere. Division by $\mu>0$ on $V$
+gives the asserted formula.
+\end{proof}
+
+\begin{lemma}[Weighted-operator convergence under strong jet approximation]
+\label{lem:dd-operator-jet-stability}
+\uses{def:dd-operator-jet, def:local-weak-jets, def:dd-quotient}
+\lean{NoEmbeddedEigenvalues.ddOperator_eq_jet,
+ NoEmbeddedEigenvalues.ddOperator_tendsto_L2_of_jet,
+ NoEmbeddedEigenvalues.HasDDOperator.tendsto_L2_of_jet}
+\leanok
+Let $V$ be open with compact closure contained in $\Cell$.
+Suppose $v_n$ are smooth on the plane, all $\partial_wv_n,D_w$ lie in
+$L^2(V)$ for $|w|\le2$, and
+$\partial_wv_n\to D_w$ strongly in $L^2(V)$ for every such word. Then
+\[
+ Ev_n,\ \mathcal E_\mu[D]\in L^2(V),\qquad
+ Ev_n\longrightarrow\mathcal E_\mu[D]\quad\text{in }L^2(V).
+\]
+If $D$ is a weak jet of $u$ and $Eu=e$ weakly for supplied first derivatives,
+the limit is $e$ and $e\in L^2(V)$.
+There is no support or boundary-trace hypothesis on the approximants.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-operator-jet}
+\leanok
+The classical product rule gives $Ev_n=\mathcal E_\mu[\partial v_n]$.
+The coefficients $\mu,\partial_x\mu,\partial_y\mu,\mu^{-1}$ are bounded
+on $\overline V$. Multiplication by each coefficient is a continuous
+operator on $L^2(V)$, and addition and subtraction preserve strong convergence.
+Apply these operations to the jet formula. The supplied-forcing case follows
+from Lemma~\ref{lem:dd-operator-jet} and invariance under a.e. changes.
+No puncture at the elliptic center is needed for this operator estimate.
+\end{proof}
+
+\begin{corollary}[Local smooth approximation with prescribed weak forcing]
+\label{cor:dd-operator-smooth-approximation}
+\uses{def:dd-quotient, def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.HasDDOperator.local_smooth_approximation}
+\leanok
+Let $u\in H^2_{\mathrm{loc}}(\Cell)$ and $Eu=e$ weakly for specified first
+derivatives. On every open $V$ with compact closure in $\Cell$,
+the full-jet approximants of Lemma~\ref{lem:local-h2-smooth-approximation}
+can be chosen with $v_n\in C_c^\infty(\Cell)$ and
+\[
+ Ev_n,\ e\in L^2(V),\qquad Ev_n\longrightarrow e
+ \quad\text{strongly in }L^2(V).
+\]
+Their supports need not lie in $V$.
+\end{corollary}
+
+\begin{proof}
+\uses{lem:local-h2-smooth-approximation, lem:dd-operator-jet-stability}
+\leanok
+Apply the local $H^2$ approximation theorem on $V$ and then
+Lemma~\ref{lem:dd-operator-jet-stability} to its specified jet.
+\end{proof}
+
 \begin{lemma}[Weak weighted Green identity on an annulus]
 \label{lem:dd-weak-green}
 \uses{def:dd-virial-densities, def:dd-quotient, def:sobolev-local}
@@ -449,16 +552,15 @@ There is no eigenfunction, parity, or derivative-of-$e$ hypothesis.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-smooth-green, lem:local-h2-smooth-approximation,
- lem:weak-derivative-unique}
+\uses{lem:dd-smooth-green, cor:dd-operator-smooth-approximation,
+ lem:dd-operator-jet}
 The support of $\chi(s)$ and $\chi'(s)$ is a compact subset of the
 punctured cell. Choose an open neighbourhood $V$ of this set with
 compact closure inside the punctured cell.
-Apply Lemma~\ref{lem:local-h2-smooth-approximation} there. Weak-derivative
-uniqueness identifies its first jet with the supplied gradient.
-The smooth coefficients and their derivatives are bounded on $\overline V$,
-so the operator values of the approximants converge to $e$ in $L^2(V)$,
-by the weak equation and uniqueness.
+Apply Corollary~\ref{cor:dd-operator-smooth-approximation} there to obtain
+full-jet approximants whose operator values converge strongly to $e$.
+Lemma~\ref{lem:dd-operator-jet} identifies the first jet with the supplied gradient.
+The virial coefficients are bounded on $\overline V$.
 Every quadratic product in the cutoff identity converges
 in $L^1$ by Cauchy--Schwarz. Apply
 Lemma~\ref{lem:dd-smooth-green} to the approximants and pass to the limit.

@@ -143,7 +143,10 @@ admission-free too: direct flux differentiation cancels the mixed Hessian terms,
 and the constant weighted defect identifies the remaining quadratic form.
 Its smooth annular cutoff integration (`lem:dd-smooth-green`) is also
 admission-free, including the compact-support/divergence argument and the
-half-density correction. Neither is yet a dependency in the weak Green Lean audit.
+half-density correction. Weighted-operator identification from specified weak jets
+(`lem:dd-operator-jet`) and strong L² operator stability
+(`lem:dd-operator-jet-stability`) are also admission-free. These results are not yet
+dependencies in the weak Green Lean audit.
 
 The cutoff assembly reaches three admissions: weak Green, weighted first
 identity and quotient equation. Audits reach twelve admissions below
@@ -158,9 +161,12 @@ stability without admissions. `ddWeightedDiv_cutoff` and
 on the regular cell, without classical derivatives of the supplied function.
 The smooth endpoint allows compact support anywhere inside the original cell,
 not only inside the approximation annulus. The weak Green theorem itself remains
-admitted: operator-jet identification and the approximation-limit assembly remain.
-The approximation theorem is a Blueprint dependency, not yet a Lean proof
-dependency. The weighted first identity and quotient equation also need proofs.
+admitted: the cutoff quadratic-integral limit assembly remains.
+The operator-approximation corollary (`cor:dd-operator-smooth-approximation`)
+combines the proved jet bridges with the admitted local H² density theorem;
+it has no admission of its own, but is conditional on that theorem. Neither
+approximation result is yet on the weak Green Lean audit route. The weighted
+first identity and quotient equation also need proofs.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,

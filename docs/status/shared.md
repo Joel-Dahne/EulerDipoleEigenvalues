@@ -86,8 +86,11 @@ weights and local versus global regularity.
    identity is now admission-free, by direct flux differentiation and the constant
    weighted defect. Its smooth annular cutoff integration is now admission-free
    too: the cutoff flux is globally C¹ and compactly supported, and the half-density
-   correction has the required sign. Operator-jet identification and the weak Green
-   limit assembly remain. The approximation node is not yet on the Lean audit route.
+   correction has the required sign. Weak-operator jet identification and strong L²
+   operator stability are now admission-free, without a derivative of the forcing.
+   The local operator-approximation corollary uses the existing admitted H² density
+   theorem; only the cutoff quadratic-integral limit assembly remains in weak Green.
+   The approximation node is not yet on the weak Green Lean audit route.
    Multiplying back by Ψ identifies
    arbitrary raw weak gradients with Fourier stream derivatives and proves
    half-density conjugation. Raw/supplied quotient changes, coarea splitting,
