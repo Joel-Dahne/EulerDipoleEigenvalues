@@ -197,7 +197,8 @@ weights and local versus global regularity.
 
 Graph statement popups include clickable **Depends on** and **Used by** lists,
 using Blueprint labels and the direct edges visible in the current full or
-sector/custom graph. See [Blueprint navigation](../../blueprint/README.md#building).
+sector/custom graph. Status dots copy each node's graph fill and border colours.
+See [Blueprint navigation](../../blueprint/README.md#building).
 
 ## Other open work
 

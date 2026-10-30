@@ -44,7 +44,8 @@ div.dep-modal-content {
 
 .dep-neighbours ul {
     margin-top: .25rem;
-    padding-left: 1.25rem;
+    padding-left: 0;
+    list-style: none;
 }
 
 .dep-neighbours li {
@@ -55,6 +56,17 @@ div.dep-modal-content {
 div.dep-modal-content .dep-neighbours a {
     color: #245a83;
     text-decoration: underline;
+}
+
+.dep-status-dot {
+    display: inline-block;
+    width: .75rem;
+    height: .75rem;
+    margin-right: .4rem;
+    vertical-align: -.05rem;
+    box-sizing: border-box;
+    border: 1.5px solid;
+    border-radius: 50%;
 }
 
 .dep-neighbours a:focus-visible {

@@ -20,8 +20,15 @@
 
     function populateNeighbours() {
         const neighbours = new Map();
-        graph.querySelectorAll(".node > title").forEach(title => {
-            neighbours.set(title.textContent.trim(), {parents: new Set(), children: new Set()});
+        graph.querySelectorAll(".node").forEach(node => {
+            const label = node.querySelector("title").textContent.trim();
+            const shape = node.querySelector("ellipse, polygon, path, rect");
+            neighbours.set(label, {
+                parents: new Set(), children: new Set(),
+                // Preserve hollow nodes and the separate fill/border statuses.
+                fill: shape?.getAttribute("fill") || "none",
+                stroke: shape?.getAttribute("stroke") || "black",
+            });
         });
         // Read the rendered edges, not the source \uses: the standard graph
         // removes transitive edges, and sector views omit nodes outside the view.
@@ -58,8 +65,15 @@
                     event.preventDefault();
                     openNode(label);
                 });
+                const {fill, stroke} = neighbours.get(label);
+                const dot = document.createElement("span");
+                dot.className = "dep-status-dot";
+                dot.style.backgroundColor = fill === "none" ? "transparent" : fill;
+                dot.style.borderColor = stroke;
+                dot.title = "Same status colours as the graph node (see Legend).";
+                dot.setAttribute("aria-hidden", "true");
                 const li = document.createElement("li");
-                li.append(link);
+                li.append(dot, link);
                 ul.append(li);
             });
             column.append(ul);

@@ -90,8 +90,10 @@ Dependency graph link. These entries use plasTeX's native HTML5 navigation
 extension, so they are regenerated with the site rather than patched into HTML.
 
 Clicking a graph node opens its statement with **Depends on** and **Used by**
-Blueprint-label lists. Click a label to open that neighbour's statement in the
-same graph; Ctrl/Cmd-click opens its chapter entry in a new tab. The lists follow
+Blueprint-label lists. A dot beside each label copies its graph node's fill and
+border colours, with the same status meanings as the graph legend (including
+hollow nodes). Click a label to open that neighbour's statement in the same graph;
+Ctrl/Cmd-click opens its chapter entry in a new tab. The lists follow
 immediate edges in the displayed graph: transitively redundant edges are omitted,
 and sector/custom views list only neighbours inside that view. Long popups scroll.
 The local script extends the standard renderer without an upstream fork.

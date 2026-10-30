@@ -17,13 +17,17 @@ function testGraphNeighbours(source) {
             this.textContent = "";
             this.style = {};
             this.listeners = {};
+            this.attributes = {};
         }
         append(...children) {
             children.forEach(child => { child.parent = this; this.children.push(child); });
         }
         querySelector(selector) {
+            const selectors = selector.split(",").map(part => part.trim());
             for (const child of this.children) {
-                if (child.className.split(" ").includes(selector.slice(1))) return child;
+                if (selectors.some(part => part.startsWith(".")
+                    ? child.className.split(" ").includes(part.slice(1))
+                    : child.tagName === part)) return child;
                 const match = child.querySelector(selector);
                 if (match) return match;
             }
@@ -32,6 +36,8 @@ function testGraphNeighbours(source) {
         remove() {
             this.parent.children = this.parent.children.filter(child => child !== this);
         }
+        getAttribute(name) { return this.attributes[name] ?? null; }
+        setAttribute(name, value) { this.attributes[name] = value; }
         addEventListener(type, listener) { this.listeners[type] = listener; }
         focus() { this.focused = true; }
     }
@@ -86,8 +92,25 @@ function testGraphNeighbours(source) {
         "lem:a.b->thm:target", // Duplicate edges must not duplicate entries.
         "thm:target->thm:outside", // Sector views must stay inside the view.
     ];
+    const colours = [
+        ["polygon", "#B0ECA3", "green"], // Definition.
+        ["ellipse", "#1CAC78", "green"], // Proof formalized.
+        ["ellipse", "#A3D6FF", "blue"], // Statement formalized, proof not formalized.
+        ["ellipse", "none", "#FFAA33"], // Hollow unfinished node.
+    ];
+    const renderedNodes = labels.map((label, index) => {
+        const node = element("g", "node");
+        const title = element("title");
+        title.textContent = label;
+        const [tag, fill, stroke] = colours[index];
+        const shape = element(tag);
+        shape.setAttribute("fill", fill);
+        shape.setAttribute("stroke", stroke);
+        node.append(title, shape);
+        return node;
+    });
     graph.querySelectorAll = selector => (rendered
-        ? (selector === ".node > title" ? labels : edges).map(text => ({textContent: text}))
+        ? (selector === ".node" ? renderedNodes : edges.map(text => ({textContent: text})))
         : []);
     run(document, d3, jquery);
     assert(!ids.get("def:root").querySelector(".dep-neighbours"), "wait for async SVG");
@@ -98,7 +121,7 @@ function testGraphNeighbours(source) {
     function panel(label) { return ids.get(label).querySelector(".dep-neighbours"); }
     function links(label, column) {
         const list = panel(label).children[column].children[1];
-        return list.tagName === "ul" ? list.children.map(li => li.children[0]) : [];
+        return list.tagName === "ul" ? list.children.map(li => li.querySelector("a")) : [];
     }
     assert(panel("def:root").children[0].children[0].textContent === "Depends on", "parent heading");
     assert(panel("def:root").children[1].children[0].textContent === "Used by", "child heading");
@@ -107,6 +130,18 @@ function testGraphNeighbours(source) {
     assert(links("def:root", 1).map(link => link.textContent).join() === "lem:a.b,lem:other", "sorted children");
     assert(links("thm:target", 0).map(link => link.textContent).join() === "lem:a.b,lem:other", "sorted deduplicated parents");
     assert(links("thm:target", 1).length === 0, "exclude neighbours outside sector");
+
+    function dot(label, column, index = 0) {
+        return panel(label).children[column].children[1].children[index].querySelector(".dep-status-dot");
+    }
+    assert(dot("thm:target", 0).style.backgroundColor === "#1CAC78", "copy proof fill colour");
+    assert(dot("thm:target", 0).style.borderColor === "green", "copy proof border colour");
+    assert(dot("thm:target", 0, 1).style.backgroundColor === "#A3D6FF", "copy statement-only fill colour");
+    assert(dot("thm:target", 0, 1).style.borderColor === "blue", "preserve separate border status");
+    assert(dot("lem:a.b", 0).style.backgroundColor === "#B0ECA3", "copy polygon definition colour");
+    assert(dot("lem:a.b", 1).style.backgroundColor === "transparent", "keep hollow nodes hollow");
+    assert(dot("lem:a.b", 1).style.borderColor === "#FFAA33", "copy unfinished border colour");
+    assert(dot("thm:target", 0).getAttribute("aria-hidden") === "true", "decorative dot is hidden from screen readers");
 
     const link = links("thm:target", 0)[0];
     assert(link.href === "chapter.html#lem:a.b", "real chapter-link fallback");
@@ -123,7 +158,9 @@ function testGraphNeighbours(source) {
     assert(ids.get("lem:a.b_modal").querySelector(".dep-modal-content").scrollTop === 0, "reset scroll");
     assert(ids.get("lem:a.b_modal").querySelector(".dep-closebtn").focused, "move keyboard focus to new popup");
 
+    renderedNodes[1].querySelector("ellipse").setAttribute("fill", "#9CEC8B");
     callbacks["end.neighbours"]();
+    assert(dot("thm:target", 0).style.backgroundColor === "#9CEC8B", "refresh colours after rerender");
     run(document, d3, jquery); // Also support a graph rendered before script loading.
     assert(labels.every(label => ids.get(label).children.filter(child => child.className === "dep-neighbours").length === 1), "rerender does not duplicate panels");
     return "Graph neighbour DOM tests passed";
