@@ -84,8 +84,10 @@ weights and local versus global regularity.
    interface in `SobolevApproximation.lean`. Its quadratic-integral limit and
    pointwise cutoff-generator helpers are proved. The local classical Green
    identity is now admission-free, by direct flux differentiation and the constant
-   weighted defect. Its cutoff integration and the weak Green limit assembly
-   remain unimplemented. The approximation node is not yet on the Lean audit route.
+   weighted defect. Its smooth annular cutoff integration is now admission-free
+   too: the cutoff flux is globally C¹ and compactly supported, and the half-density
+   correction has the required sign. Operator-jet identification and the weak Green
+   limit assembly remain. The approximation node is not yet on the Lean audit route.
    Multiplying back by Ψ identifies
    arbitrary raw weak gradients with Fourier stream derivatives and proves
    half-density conjugation. Raw/supplied quotient changes, coarea splitting,

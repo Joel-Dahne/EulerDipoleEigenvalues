@@ -141,7 +141,9 @@ Weighted differential algebra and raw half-density conjugation are also
 admission-free. The local classical Green identity (`lem:dd-green`) is now
 admission-free too: direct flux differentiation cancels the mixed Hessian terms,
 and the constant weighted defect identifies the remaining quadratic form.
-It is not yet a dependency in the weak Green Lean audit.
+Its smooth annular cutoff integration (`lem:dd-smooth-green`) is also
+admission-free, including the compact-support/divergence argument and the
+half-density correction. Neither is yet a dependency in the weak Green Lean audit.
 
 The cutoff assembly reaches three admissions: weak Green, weighted first
 identity and quotient equation. Audits reach twelve admissions below
@@ -154,9 +156,10 @@ all jets through order two on a precompact patch, without boundary assumptions.
 stability without admissions. `ddWeightedDiv_cutoff` and
 `ddWeightedGenerator_cutoff` prove the cutoff half-density correction pointwise
 on the regular cell, without classical derivatives of the supplied function.
-The weak Green theorem itself remains admitted:
-its classical integration and limit assembly are not yet implemented, so the
-new approximation theorem is a Blueprint dependency, not yet a Lean proof
+The smooth endpoint allows compact support anywhere inside the original cell,
+not only inside the approximation annulus. The weak Green theorem itself remains
+admitted: operator-jet identification and the approximation-limit assembly remain.
+The approximation theorem is a Blueprint dependency, not yet a Lean proof
 dependency. The weighted first identity and quotient equation also need proofs.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common

@@ -385,6 +385,49 @@ Substitute $D_\mu u=T+\tfrac12d_\mu u$ and $d_\mu-f=1$.
 This proves the identity without differentiating $e$, $f$ or $d_\mu$.
 \end{proof}
 
+\begin{lemma}[Smooth weighted Green identity with annular cutoff]
+\label{lem:dd-smooth-green}
+\uses{def:dd-virial-densities, def:dd-quotient}
+\lean{NoEmbeddedEigenvalues.dd_smooth_green}
+\leanok
+Let $u\in C_c^\infty(\Cell;\mathbb C)$, $e=Eu$ and $g=\nabla u$.
+For real $\chi\in C_c^\infty(0,2)$, put
+$D_{\mu,\chi}=\chi(s)W\cdot\nabla+\tfrac12\Div_\mu(\chi(s)W)$.
+Then
+\begin{align*}
+ \int_\Cell\chi(s)j[u,e]
+ ={}&\int_\Cell\mu\chi(s)f
+       \bigl(|e|^2-\operatorname{Re}(e\bar u)\bigr)
+       +2\int_\Cell\mu\operatorname{Re}(D_{\mu,\chi}u\,\bar e)\\
+ &+\int_\Cell\chi'(s)
+       \bigl(\mathcal N[u,g]-\mu q\operatorname{Re}(e\bar u)\bigr).
+\end{align*}
+The support of $u$ need not be contained in the annulus supporting $\chi(s)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-green, lem:dd-virial-algebra}
+\leanok
+The cutoff flux $\chi(s)\mathcal V[u]$ extends to a $C^1$ vector field
+on the plane: near each singular coefficient level, $\chi(s)$ vanishes
+identically. Its support is contained in the compact support of $u$,
+since classical derivatives and $Eu$ vanish outside that support.
+Thus its divergence has integral zero, with no boundary contribution
+from the cell. All cutoff quadratic terms are continuous and compactly
+supported, hence integrable.
+
+Multiply Lemma~\ref{lem:dd-green} by $\chi(s)$ and integrate. The product rule gives
+\[
+ \int_\Cell\chi(s)\Div\mathcal V[u]
+ =-\int_\Cell\chi'(s)\mathcal N[u,\nabla u].
+\]
+Finally
+$D_{\mu,\chi}u=\chi(s)D_\mu u+\tfrac12\chi'(s)qu$.
+Moving this correction to the flux side, and using
+$\operatorname{Re}(u\bar e)=\operatorname{Re}(e\bar u)$,
+gives the displayed identity.
+\end{proof}
+
 \begin{lemma}[Weak weighted Green identity on an annulus]
 \label{lem:dd-weak-green}
 \uses{def:dd-virial-densities, def:dd-quotient, def:sobolev-local}
@@ -406,7 +449,7 @@ There is no eigenfunction, parity, or derivative-of-$e$ hypothesis.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-green, lem:local-h2-smooth-approximation,
+\uses{lem:dd-smooth-green, lem:local-h2-smooth-approximation,
  lem:weak-derivative-unique}
 The support of $\chi(s)$ and $\chi'(s)$ is a compact subset of the
 punctured cell. Choose an open neighbourhood $V$ of this set with
@@ -416,14 +459,11 @@ uniqueness identifies its first jet with the supplied gradient.
 The smooth coefficients and their derivatives are bounded on $\overline V$,
 so the operator values of the approximants converge to $e$ in $L^2(V)$,
 by the weak equation and uniqueness.
-Every quadratic product in the Green identity and its flux converges
-in $L^1$ by Cauchy--Schwarz. Thus the integrated classical identity of
-Lemma~\ref{lem:dd-green} passes to the weak representatives.
-Integration by parts gives the term $\chi'\mathcal N$.
-Finally
-$D_{\mu,\chi}=\chi D_\mu+\tfrac12\chi'q$ and
-$\operatorname{Re}(u\bar e)=\operatorname{Re}(e\bar u)$ give the displayed
-formula. No differentiation of $e$ occurs.
+Every quadratic product in the cutoff identity converges
+in $L^1$ by Cauchy--Schwarz. Apply
+Lemma~\ref{lem:dd-smooth-green} to the approximants and pass to the limit.
+The integration by parts and half-density correction are already included
+in that smooth identity. No differentiation of $e$ occurs.
 \end{proof}
 
 \begin{lemma}[Identification of the weighted boundary flux]

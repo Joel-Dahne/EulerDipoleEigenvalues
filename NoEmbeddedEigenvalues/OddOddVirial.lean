@@ -29,7 +29,10 @@ extraction takes a weak cutoff identity as input, then obtains one exceptional s
 for both endpoints by coarea and du Bois–Reymond. The planar boundary density
 identifies each level term directly, without splitting its summands.
 The weak Green identity, pointwise boundary-flux identification, weak cutoff
-identity and annular assembly are separate interfaces.
+identity and annular assembly are separate interfaces. For smooth compactly supported
+functions, the annular cutoff flux extends to a globally C¹ compactly supported
+field. Its divergence has zero integral; the cutoff generator's half-density
+correction then gives the smooth weighted Green identity.
 Multiplication back by Ψ identifies supplied weak quotient gradients with Fourier
 stream derivatives, giving half-density conjugation without classical raw derivatives.
 -/
@@ -685,6 +688,416 @@ theorem dd_green {u : ℝ × ℝ → ℂ} (hu : ContDiffOn ℝ 3 u ddRegularCell
     ((u p).re ^ 2 + (u p).im ^ 2 +
       (partialX u p).re ^ 2 + (partialX u p).im ^ 2 +
       (partialY u p).re ^ 2 + (partialY u p).im ^ 2)
+
+/-! ### Smooth cutoff integration of the weighted Green identity -/
+
+section SmoothGreen
+
+open scoped ContDiff
+
+/-- Annular multiplication removes both singular levels of a coefficient. -/
+private theorem contDiff_annular_mul {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2) {F : ℝ × ℝ → ℝ} {n : ℕ}
+    (hF : ∀ p, 0 < dipoleLift p → dipoleLift p < 2 → ContDiffAt ℝ n F p) :
+    ContDiff ℝ n (fun p ↦ χ (dipoleLift p) * F p) := by
+  apply contDiff_iff_contDiffAt.mpr
+  intro p
+  by_cases hp : dipoleLift p ∈ tsupport χ
+  · have hs := hχs hp
+    exact ((hχ.of_le (by simp)).comp (by unfold dipoleLift; fun_prop)).contDiffAt.mul
+      (hF p hs.1 hs.2)
+  · apply (contDiffAt_const (c := (0 : ℝ))).congr_of_eventuallyEq
+    have hz := (notMem_tsupport_iff_eventuallyEq.mp hp).comp_tendsto
+      (show Continuous dipoleLift by unfold dipoleLift; fun_prop).continuousAt
+    filter_upwards [hz] with q hq
+    change χ (dipoleLift q) = 0 at hq
+    simp [hq]
+
+/-- The classical operator is local even on totalized representatives. -/
+private theorem ddOperator_eq_zero_of_notMem_tsupport (u : ℝ × ℝ → ℂ)
+    {p : ℝ × ℝ} (hp : p ∉ tsupport u) : ddOperator u p = 0 := by
+  have hv : u p = 0 := image_eq_zero_of_notMem_tsupport hp
+  have hx : ∀ᶠ q in 𝓝 p, partialX u q = 0 := by
+    filter_upwards [(isClosed_tsupport u).isOpen_compl.mem_nhds hp] with q hq
+    exact image_eq_zero_of_notMem_tsupport (fun h ↦ hq (tsupport_partialX_subset u h))
+  have hy : ∀ᶠ q in 𝓝 p, partialY u q = 0 := by
+    filter_upwards [(isClosed_tsupport u).isOpen_compl.mem_nhds hp] with q hq
+    exact image_eq_zero_of_notMem_tsupport (fun h ↦ hq (tsupport_partialY_subset u h))
+  have hmx : ∀ᶠ q in 𝓝 p, (ddWeight q : ℂ) * partialX u q = 0 := by
+    filter_upwards [hx] with q hq; simp [hq]
+  have hmy : ∀ᶠ q in 𝓝 p, (ddWeight q : ℂ) * partialY u q = 0 := by
+    filter_upwards [hy] with q hq; simp [hq]
+  simp [ddOperator, ddWeightedLaplacian, hv,
+    partialX_eq_zero_of_eventually hmx, partialY_eq_zero_of_eventually hmy]
+
+/-- Cutoff-generator bookkeeping also holds at the totalized singular points:
+    the cutoff field vanishes on a neighbourhood of every such point. -/
+private theorem ddWeightedGenerator_cutoff_global {χ : ℝ → ℝ}
+    (hχ : ContDiff ℝ ∞ χ) (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2)
+    (u ux uy : ℝ × ℝ → ℂ) (p : ℝ × ℝ) :
+    ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+      (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q) u ux uy p =
+      (χ (dipoleLift p) : ℂ) *
+        ddWeightedGenerator ddVirialField₁ ddVirialField₂ u ux uy p +
+      ((deriv χ (dipoleLift p) * ddVirialQ (dipoleLift p) / 2 : ℝ) : ℂ) * u p := by
+  by_cases hp : dipoleLift p ∈ tsupport χ
+  · have hs := hχs hp
+    exact ddWeightedGenerator_cutoff (hχ.differentiable (by simp)) u ux uy
+      hs.1.ne' (gradSq_dipoleLift_pos hs.1 hs.2).ne'
+  · have hz := notMem_tsupport_iff_eventuallyEq.mp hp
+    have hc : χ (dipoleLift p) = 0 := hz.self_of_nhds
+    have hd : deriv χ (dipoleLift p) = 0 := by
+      rw [hz.deriv_eq]
+      exact deriv_const _ _
+    have hzc := hz.comp_tendsto
+      (show Continuous dipoleLift by unfold dipoleLift; fun_prop).continuousAt
+    have h₁ : ∀ᶠ q in 𝓝 p,
+        ddWeight q * (χ (dipoleLift q) * ddVirialField₁ q) = 0 := by
+      filter_upwards [hzc] with q hq
+      change χ (dipoleLift q) = 0 at hq
+      simp [hq]
+    have h₂ : ∀ᶠ q in 𝓝 p,
+        ddWeight q * (χ (dipoleLift q) * ddVirialField₂ q) = 0 := by
+      filter_upwards [hzc] with q hq
+      change χ (dipoleLift q) = 0 at hq
+      simp [hq]
+    simp [ddWeightedGenerator, ddWeightedDiv, divergence, hc, hd,
+      partialX_eq_zero_of_eventually h₁, partialY_eq_zero_of_eventually h₂]
+
+private theorem integral_divergence_eq_zero_real {F₁ F₂ : ℝ × ℝ → ℝ}
+    (h₁ : ContDiff ℝ 1 F₁) (h₂ : ContDiff ℝ 1 F₂)
+    (hc₁ : HasCompactSupport F₁) (hc₂ : HasCompactSupport F₂) :
+    Integrable (divergence F₁ F₂) ∧ ∫ p, divergence F₁ F₂ p = 0 := by
+  have hx : Integrable (partialX F₁) :=
+    (contDiff_partialX (n := 0) (by simpa using h₁)).continuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.intro hc₁ fun p hp ↦
+        partialX_eq_zero_of_eventually (notMem_tsupport_iff_eventuallyEq.mp hp))
+  have hy : Integrable (partialY F₂) :=
+    (contDiff_partialY (n := 0) (by simpa using h₂)).continuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.intro hc₂ fun p hp ↦
+        partialY_eq_zero_of_eventually (notMem_tsupport_iff_eventuallyEq.mp hp))
+  have ex := integral_partialX_eq_zero (Complex.ofRealCLM.contDiff.comp h₁)
+    (hc₁.comp_left Complex.ofReal_zero)
+  have ey := integral_partialY_eq_zero (Complex.ofRealCLM.contDiff.comp h₂)
+    (hc₂.comp_left Complex.ofReal_zero)
+  simp only [Function.comp_def, Complex.ofRealCLM_apply] at ex ey
+  rw [partialX_ofReal (h₁.differentiable one_ne_zero)] at ex
+  rw [partialY_ofReal (h₂.differentiable one_ne_zero)] at ey
+  have exr : (∫ p, partialX F₁ p) = 0 := by
+    simpa only [integral_complex_ofReal, Complex.ofReal_eq_zero] using! ex
+  have eyr : (∫ p, partialY F₂ p) = 0 := by
+    simpa only [integral_complex_ofReal, Complex.ofReal_eq_zero] using! ey
+  refine ⟨hx.add hy, ?_⟩
+  change (∫ p, partialX F₁ p + partialY F₂ p) = 0
+  rw [integral_add hx hy]
+  rw [exr, eyr, add_zero]
+
+private theorem green_contDiffAt_re {f : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
+    (hf : ContDiffAt ℝ 1 f p) : ContDiffAt ℝ 1 (fun q ↦ (f q).re) p :=
+  Complex.reCLM.contDiff.contDiffAt.comp p hf
+
+private theorem green_contDiffAt_im {f : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
+    (hf : ContDiffAt ℝ 1 f p) : ContDiffAt ℝ 1 (fun q ↦ (f q).im) p :=
+  Complex.imCLM.contDiff.contDiffAt.comp p hf
+
+private theorem green_contDiffAt_ofReal {f : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
+    (hf : ContDiffAt ℝ 1 f p) : ContDiffAt ℝ 1 (fun q ↦ (f q : ℂ)) p := by
+  simpa only [Complex.ofRealCLM_apply] using! Complex.ofRealCLM.contDiff.contDiffAt.comp p hf
+
+private theorem green_contDiffAt_norm_sq {f : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
+    (hf : ContDiffAt ℝ 1 f p) : ContDiffAt ℝ 1 (fun q ↦ ‖f q‖ ^ 2) p :=
+  hf.norm_sq ℂ
+
+attribute [local fun_prop] green_contDiffAt_re green_contDiffAt_im
+  green_contDiffAt_ofReal green_contDiffAt_norm_sq
+
+/-- The classical Green identity integrated against an annular cutoff.
+    This is the smooth endpoint for local H² approximation; compact support is
+    in the original cell, not in the annulus where approximation is performed. -/
+theorem dd_smooth_green {u : ℝ × ℝ → ℂ} (hu : ContDiff ℝ ∞ u)
+    (hc : HasCompactSupport u) (hus : tsupport u ⊆ cellSquare)
+    {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2) :
+    (∫ p in cellSquare, χ (dipoleLift p) *
+      ddVirialDensity u (ddOperator u) (partialX u) (partialY u) p) =
+      (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+        (‖ddOperator u p‖ ^ 2 - (ddOperator u p * (starRingEnd ℂ) (u p)).re)) +
+      2 * (∫ p in cellSquare, ddWeight p *
+        (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+          (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
+          u (partialX u) (partialY u) p *
+          (starRingEnd ℂ) (ddOperator u p)).re) +
+      ∫ p in cellSquare, deriv χ (dipoleLift p) *
+        (ddGreenNormalFlux u (partialX u) (partialY u) p -
+          ddWeight p * ddVirialQ (dipoleLift p) *
+            (ddOperator u p * (starRingEnd ℂ) (u p)).re) := by
+  let e := ddOperator u
+  let G : ℝ × ℝ → ℂ := fun p ↦
+    (ddVirialField₁ p : ℂ) * partialX u p + (ddVirialField₂ p : ℂ) * partialY u p +
+      ((ddVirialCoeff p + 1 : ℝ) : ℂ) / 2 * u p
+  let A : ℝ × ℝ → ℝ := fun p ↦ ddWeight p * ddVirialCoeff p *
+    (‖e p‖ ^ 2 - (e p * (starRingEnd ℂ) (u p)).re)
+  let B : ℝ × ℝ → ℝ := fun p ↦ ddWeight p * (G p * (starRingEnd ℂ) (e p)).re
+  let Q : ℝ × ℝ → ℝ := fun p ↦ ddWeight p * ddVirialQ (dipoleLift p) *
+    (e p * (starRingEnd ℂ) (u p)).re
+  let N := ddGreenNormalFlux u (partialX u) (partialY u)
+  let V₁ : ℝ × ℝ → ℝ := fun p ↦ χ (dipoleLift p) * ddGreenFlux₁ u p
+  let V₂ : ℝ × ℝ → ℝ := fun p ↦ χ (dipoleLift p) * ddGreenFlux₂ u p
+  have hux : ContDiff ℝ 2 (partialX u) := contDiff_partialX (hu.of_le (by simp))
+  have huy : ContDiff ℝ 2 (partialY u) := contDiff_partialY (hu.of_le (by simp))
+  have hm : ContDiff ℝ 2 ddWeight := by unfold ddWeight dipoleLift; fun_prop
+  have hn : ContDiff ℝ 1 (fun p ↦
+      partialX (fun q ↦ (ddWeight q : ℂ) * partialX u q) p +
+      partialY (fun q ↦ (ddWeight q : ℂ) * partialY u q) p) :=
+    (contDiff_partialX ((Complex.ofRealCLM.contDiff.comp hm).mul hux)).add
+      (contDiff_partialY ((Complex.ofRealCLM.contDiff.comp hm).mul huy))
+  have he (p) (hs : 0 < dipoleLift p) : ContDiffAt ℝ 1 e p := by
+    have hμc : ContDiff ℝ 1 (fun q ↦ (ddWeight q : ℂ)) := by
+      simpa only [Function.comp_def, Complex.ofRealCLM_apply] using!
+        Complex.ofRealCLM.contDiff.comp (hm.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2))
+    have hv : ContDiffAt ℝ 1 u p := (hu.of_le (by simp)).contDiffAt
+    have hdiv : ContDiffAt ℝ 1 (fun q ↦
+        (partialX (fun r ↦ (ddWeight r : ℂ) * partialX u r) q +
+          partialY (fun r ↦ (ddWeight r : ℂ) * partialY u r) q) /
+            (ddWeight q : ℂ)) p :=
+      by
+        simpa only [div_eq_mul_inv] using!
+          hn.contDiffAt.mul (hμc.contDiffAt.inv
+            (Complex.ofReal_ne_zero.mpr (pow_ne_zero _ hs.ne')))
+    exact hv.sub hdiv
+  have hcoeff (p) (hs : 0 < dipoleLift p) (ht : dipoleLift p < 2) :
+      ContDiffAt ℝ 1 ddVirialField₁ p ∧ ContDiffAt ℝ 1 ddVirialField₂ p ∧
+        ContDiffAt ℝ 1 ddVirialCoeff p ∧
+        ContDiffAt ℝ 1 (fun q ↦ ddVirialQ (dipoleLift q)) p := by
+    have hr := (gradSq_dipoleLift_pos hs ht).ne'
+    have hw := contDiffAt_ddVirialField hs.ne' hr
+    refine ⟨hw.1.of_le (by simp), hw.2.of_le (by simp), ?_, ?_⟩
+    · have hd : ContDiffAt ℝ 1 dipoleLift p := by unfold dipoleLift; fun_prop
+      have hg : ContDiffAt ℝ 1 (gradSq dipoleLift) p := by
+        simp only [gradSq_dipoleLift]
+        fun_prop
+      unfold ddVirialCoeff ddF ddWeight
+      fun_prop (disch := positivity)
+    · unfold ddVirialQ
+      have hd : ContDiffAt ℝ 1 dipoleLift p := by unfold dipoleLift; fun_prop
+      exact ((hd.pow 3).sub contDiffAt_const).div
+        (contDiffAt_const.mul (hd.pow 2)) (by positivity)
+  have hflux (p) (hs : 0 < dipoleLift p) (ht : dipoleLift p < 2) :
+      ContDiffAt ℝ 1 (ddGreenFlux₁ u) p ∧ ContDiffAt ℝ 1 (ddGreenFlux₂ u) p := by
+    obtain ⟨hw₁, hw₂, hf, hq⟩ := hcoeff p hs ht
+    have hx := (hux.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2)).contDiffAt (x := p)
+    have hy := (huy.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2)).contDiffAt (x := p)
+    have hv := (hu.of_le (by simp : (1 : WithTop ℕ∞) ≤ ∞)).contDiffAt (x := p)
+    have hμ := (hm.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2)).contDiffAt (x := p)
+    constructor
+    · unfold ddGreenFlux₁
+      fun_prop
+    · unfold ddGreenFlux₂
+      fun_prop
+  have hV₁ : ContDiff ℝ 1 V₁ :=
+    contDiff_annular_mul hχ hχs fun p hs ht ↦ (hflux p hs ht).1
+  have hV₂ : ContDiff ℝ 1 V₂ :=
+    contDiff_annular_mul hχ hχs fun p hs ht ↦ (hflux p hs ht).2
+  have hzero (p) (hp : p ∉ tsupport u) :
+      u p = 0 ∧ partialX u p = 0 ∧ partialY u p = 0 ∧ e p = 0 :=
+    ⟨image_eq_zero_of_notMem_tsupport hp,
+      image_eq_zero_of_notMem_tsupport (fun h ↦ hp (tsupport_partialX_subset u h)),
+      image_eq_zero_of_notMem_tsupport (fun h ↦ hp (tsupport_partialY_subset u h)),
+      ddOperator_eq_zero_of_notMem_tsupport u hp⟩
+  have hzflux (p) (hp : p ∉ tsupport u) :
+      ddGreenFlux₁ u p = 0 ∧ ddGreenFlux₂ u p = 0 := by
+    obtain ⟨hv, hx, hy, _⟩ := hzero p hp
+    simp [ddGreenFlux₁, ddGreenFlux₂, hv, hx, hy]
+  have hcV₁ : HasCompactSupport V₁ := HasCompactSupport.intro hc fun p hp ↦ by
+    simp [V₁, (hzflux p hp).1]
+  have hcV₂ : HasCompactSupport V₂ := HasCompactSupport.intro hc fun p hp ↦ by
+    simp [V₂, (hzflux p hp).2]
+  obtain ⟨iDiv, hDiv⟩ := integral_divergence_eq_zero_real hV₁ hV₂ hcV₁ hcV₂
+  have hDivZero (p) (hp : p ∉ tsupport u) : divergence V₁ V₂ p = 0 := by
+    have hz₁ : ∀ᶠ q in 𝓝 p, V₁ q = 0 := by
+      filter_upwards [(isClosed_tsupport u).isOpen_compl.mem_nhds hp] with q hq
+      simp [V₁, (hzflux q hq).1]
+    have hz₂ : ∀ᶠ q in 𝓝 p, V₂ q = 0 := by
+      filter_upwards [(isClosed_tsupport u).isOpen_compl.mem_nhds hp] with q hq
+      simp [V₂, (hzflux q hq).2]
+    simp [divergence, partialX_eq_zero_of_eventually hz₁, partialY_eq_zero_of_eventually hz₂]
+  have hDivCell : (∫ p in cellSquare, divergence V₁ V₂ p) = 0 := by
+    rw [setIntegral_eq_integral_of_forall_compl_eq_zero
+      (fun p hp ↦ hDivZero p (fun h ↦ hp (hus h)))]
+    exact hDiv
+  have hreg (p) (hs : 0 < dipoleLift p) (ht : dipoleLift p < 2) :
+      ContDiffAt ℝ 1 A p ∧ ContDiffAt ℝ 1 B p ∧
+        ContDiffAt ℝ 1 Q p ∧ ContDiffAt ℝ 1 N p := by
+    obtain ⟨hw₁, hw₂, hf, hq⟩ := hcoeff p hs ht
+    have hv := (hu.of_le (by simp : (1 : WithTop ℕ∞) ≤ ∞)).contDiffAt (x := p)
+    have hx := (hux.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2)).contDiffAt (x := p)
+    have hy := (huy.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2)).contDiffAt (x := p)
+    have hμ := (hm.of_le (by norm_num : (1 : WithTop ℕ∞) ≤ 2)).contDiffAt (x := p)
+    have he' := he p hs
+    have hg : ContDiffAt ℝ 1 G p := by dsimp only [G]; fun_prop
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · dsimp only [A]; fun_prop
+    · dsimp only [B]; fun_prop
+    · dsimp only [Q]; fun_prop
+    · obtain ⟨hf₁, hf₂⟩ := hflux p hs ht
+      change ContDiffAt ℝ 1 (fun q ↦ partialX dipoleLift q * ddGreenFlux₁ u q +
+        partialY dipoleLift q * ddGreenFlux₂ u q) p
+      simp only [partialX_dipoleLift, partialY_dipoleLift]
+      fun_prop
+  have hzreg (p) (hp : p ∉ tsupport u) : A p = 0 ∧ B p = 0 ∧ Q p = 0 ∧ N p = 0 := by
+    obtain ⟨hv, hx, hy, he'⟩ := hzero p hp
+    simp [A, B, Q, N, G, ddGreenNormalFlux, ddWeakGreenFlux₁, ddWeakGreenFlux₂, hv, hx, hy, he']
+  have hint {η : ℝ → ℝ} (hη : ContDiff ℝ ∞ η) (hηs : tsupport η ⊆ Ioo (0 : ℝ) 2)
+      {F : ℝ × ℝ → ℝ}
+      (hF : ∀ p, 0 < dipoleLift p → dipoleLift p < 2 → ContDiffAt ℝ 1 F p)
+      (hF0 : ∀ p ∉ tsupport u, F p = 0) :
+      Integrable (fun p ↦ η (dipoleLift p) * F p) :=
+    (contDiff_annular_mul hη hηs hF).continuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.intro hc fun p hp ↦ by rw [hF0 p hp, mul_zero])
+  have hχ' : ContDiff ℝ ∞ (deriv χ) := hχ.deriv'
+  have hχ's : tsupport (deriv χ) ⊆ Ioo (0 : ℝ) 2 := tsupport_deriv_subset.trans hχs
+  have iA := (hint hχ hχs (fun p hs ht ↦ (hreg p hs ht).1)
+    (fun p hp ↦ (hzreg p hp).1)).integrableOn (s := cellSquare)
+  have iB := (hint hχ hχs (fun p hs ht ↦ (hreg p hs ht).2.1)
+    (fun p hp ↦ (hzreg p hp).2.1)).integrableOn (s := cellSquare)
+  have iQ := (hint hχ' hχ's (fun p hs ht ↦ (hreg p hs ht).2.2.1)
+    (fun p hp ↦ (hzreg p hp).2.2.1)).integrableOn (s := cellSquare)
+  have iN := (hint hχ' hχ's (fun p hs ht ↦ (hreg p hs ht).2.2.2)
+    (fun p hp ↦ (hzreg p hp).2.2.2)).integrableOn (s := cellSquare)
+  have hG (p) (hs : 0 < dipoleLift p) (ht : dipoleLift p < 2) :
+      ddWeightedGenerator ddVirialField₁ ddVirialField₂ u (partialX u) (partialY u) p = G p := by
+    have hd := (dd_virial_algebra_at hs.ne' (gradSq_dipoleLift_pos hs ht).ne').2.1
+    have hd' : ddWeightedDiv ddVirialField₁ ddVirialField₂ p = ddVirialCoeff p + 1 := by
+      linarith
+    simp only [ddWeightedGenerator, G, hd', Complex.ofReal_div, Complex.ofReal_ofNat]
+  have hproduct (p) (hs : 0 < dipoleLift p) (ht : dipoleLift p < 2) :
+      divergence V₁ V₂ p =
+        χ (dipoleLift p) * divergence (ddGreenFlux₁ u) (ddGreenFlux₂ u) p +
+          deriv χ (dipoleLift p) * N p := by
+    obtain ⟨hf₁, hf₂⟩ := hflux p hs ht
+    have hd₁ := hf₁.differentiableAt one_ne_zero
+    have hd₂ := hf₂.differentiableAt one_ne_zero
+    have hdχ := hχ.differentiable (by simp)
+    have hd : DifferentiableAt ℝ (fun q ↦ χ (dipoleLift q)) p :=
+      (hdχ _).comp p (by unfold dipoleLift; fun_prop)
+    have hx : partialX (fun q ↦ χ (dipoleLift q)) p =
+        deriv χ (dipoleLift p) * -Real.sin p.1 :=
+      ((hdχ _).hasDerivAt.comp p.1
+        ((Real.hasDerivAt_cos p.1).add_const (Real.cos p.2))).deriv
+    have hy : partialY (fun q ↦ χ (dipoleLift q)) p =
+        deriv χ (dipoleLift p) * -Real.sin p.2 :=
+      ((hdχ _).hasDerivAt.comp p.2
+        ((Real.hasDerivAt_cos p.2).const_add (Real.cos p.1))).deriv
+    change partialX (fun q ↦ χ (dipoleLift q) • ddGreenFlux₁ u q) p +
+      partialY (fun q ↦ χ (dipoleLift q) • ddGreenFlux₂ u q) p = _
+    rw [partialX_smul hd hd₁, partialY_smul hd hd₂, hx, hy]
+    change _ = χ (dipoleLift p) *
+      (partialX (ddGreenFlux₁ u) p + partialY (ddGreenFlux₂ u) p) +
+        deriv χ (dipoleLift p) *
+          (partialX dipoleLift p * ddGreenFlux₁ u p + partialY dipoleLift p * ddGreenFlux₂ u p)
+    simp only [smul_eq_mul, partialX_dipoleLift, partialY_dipoleLift]
+    ring
+  have hpoint (p) (hp : p ∈ cellSquare) :
+      χ (dipoleLift p) * ddVirialDensity u e (partialX u) (partialY u) p =
+        χ (dipoleLift p) * A p + 2 * (χ (dipoleLift p) * B p) +
+          deriv χ (dipoleLift p) * N p - divergence V₁ V₂ p := by
+    by_cases hps : dipoleLift p ∈ tsupport χ
+    · obtain ⟨hs, ht⟩ := hχs hps
+      have hh := dd_green ((hu.of_le (by simp : (3 : WithTop ℕ∞) ≤ ∞)).contDiffOn)
+        (show p ∈ ddRegularCell from ⟨hp, (gradSq_dipoleLift_pos hs ht).ne'⟩)
+      rw [hG p hs ht] at hh
+      dsimp only [A, B, e]
+      linear_combination -χ (dipoleLift p) * hh + hproduct p hs ht
+    · have hz := notMem_tsupport_iff_eventuallyEq.mp hps
+      have hc0 : χ (dipoleLift p) = 0 := hz.self_of_nhds
+      have hd0 : deriv χ (dipoleLift p) = 0 := by
+        rw [hz.deriv_eq]
+        exact deriv_const _ _
+      have hz' := hz.comp_tendsto
+        (show Continuous dipoleLift by unfold dipoleLift; fun_prop).continuousAt
+      have hv₁ : ∀ᶠ q in 𝓝 p, V₁ q = 0 := by
+        filter_upwards [hz'] with q hq
+        change χ (dipoleLift q) = 0 at hq
+        simp [V₁, hq]
+      have hv₂ : ∀ᶠ q in 𝓝 p, V₂ q = 0 := by
+        filter_upwards [hz'] with q hq
+        change χ (dipoleLift q) = 0 at hq
+        simp [V₂, hq]
+      simp [hc0, hd0, divergence,
+        partialX_eq_zero_of_eventually hv₁, partialY_eq_zero_of_eventually hv₂]
+  have hmain :
+      (∫ p in cellSquare, χ (dipoleLift p) *
+        ddVirialDensity u e (partialX u) (partialY u) p) =
+      (∫ p in cellSquare, χ (dipoleLift p) * A p) +
+        2 * (∫ p in cellSquare, χ (dipoleLift p) * B p) +
+        ∫ p in cellSquare, deriv χ (dipoleLift p) * N p := by
+    calc
+      _ = ∫ p in cellSquare, (χ (dipoleLift p) * A p +
+          2 * (χ (dipoleLift p) * B p) + deriv χ (dipoleLift p) * N p) -
+            divergence V₁ V₂ p :=
+        setIntegral_congr_fun isOpen_cellSquare.measurableSet hpoint
+      _ = _ := by
+        rw [integral_sub
+          (f := fun p ↦ χ (dipoleLift p) * A p +
+            2 * (χ (dipoleLift p) * B p) + deriv χ (dipoleLift p) * N p)
+          ((iA.add (iB.const_mul 2)).add iN) iDiv.integrableOn,
+          integral_add (f := fun p ↦ χ (dipoleLift p) * A p +
+            2 * (χ (dipoleLift p) * B p)) (iA.add (iB.const_mul 2)) iN,
+          integral_add iA (iB.const_mul 2), integral_const_mul, hDivCell, sub_zero]
+  have hcut (p) :
+      ddWeight p *
+        (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+          (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
+          u (partialX u) (partialY u) p * (starRingEnd ℂ) (e p)).re =
+      χ (dipoleLift p) * B p + deriv χ (dipoleLift p) * Q p / 2 := by
+    rw [ddWeightedGenerator_cutoff_global hχ hχs]
+    by_cases hp : dipoleLift p ∈ tsupport χ
+    · obtain ⟨hs, ht⟩ := hχs hp
+      rw [hG p hs ht]
+      simp only [B, Q, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im,
+        Complex.conj_re, Complex.conj_im, Complex.ofReal_re, Complex.ofReal_im,
+        zero_mul, add_zero, sub_zero]
+      ring
+    · have hc0 := image_eq_zero_of_notMem_tsupport hp
+      have hd0 := image_eq_zero_of_notMem_tsupport (fun h ↦ hp (tsupport_deriv_subset h))
+      simp [hc0, hd0, B, Q]
+  have hAint :
+      (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+        (‖e p‖ ^ 2 - (e p * (starRingEnd ℂ) (u p)).re)) =
+        ∫ p in cellSquare, χ (dipoleLift p) * A p := by
+    apply integral_congr_ae
+    exact Eventually.of_forall fun p ↦ by dsimp only [A]; ring
+  have hBint :
+      (∫ p in cellSquare, ddWeight p *
+        (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+          (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
+          u (partialX u) (partialY u) p * (starRingEnd ℂ) (e p)).re) =
+      (∫ p in cellSquare, χ (dipoleLift p) * B p) +
+        (∫ p in cellSquare, deriv χ (dipoleLift p) * Q p) / 2 := by
+    calc
+      _ = ∫ p in cellSquare, χ (dipoleLift p) * B p +
+          deriv χ (dipoleLift p) * Q p / 2 :=
+        integral_congr_ae (Eventually.of_forall hcut)
+      _ = _ := by rw [integral_add iB (iQ.div_const 2), integral_div]
+  have hCint :
+      (∫ p in cellSquare, deriv χ (dipoleLift p) * (N p - Q p)) =
+      (∫ p in cellSquare, deriv χ (dipoleLift p) * N p) -
+        ∫ p in cellSquare, deriv χ (dipoleLift p) * Q p := by
+    simp_rw [mul_sub]
+    exact integral_sub iN iQ
+  change (∫ p in cellSquare, χ (dipoleLift p) *
+      ddVirialDensity u e (partialX u) (partialY u) p) =
+    (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+      (‖e p‖ ^ 2 - (e p * (starRingEnd ℂ) (u p)).re)) +
+      2 * (∫ p in cellSquare, ddWeight p *
+        (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+          (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
+          u (partialX u) (partialY u) p * (starRingEnd ℂ) (e p)).re) +
+      ∫ p in cellSquare, deriv χ (dipoleLift p) * (N p - Q p)
+  rw [hAint, hBint, hCint]
+  linear_combination hmain
+
+end SmoothGreen
 
 /-- The weighted Green identity tested against an annular level cutoff.
     All derivatives of u are weak witnesses; e realizes Eu weakly. The cutoff
