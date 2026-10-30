@@ -41,6 +41,10 @@ The weak weighted operator is identified algebraically from any specified second
 weak jet by testing its weighted divergence. Bounded coefficient multipliers then
 carry strong L² jet convergence to strong L² convergence of the operator values
 on precompact cell patches, including patches through the elliptic center.
+For weak Green, a compact regular patch contains the cutoff support. On that patch,
+all four integrands are finite bounded-coefficient quadratic forms in the value,
+forcing and two weak gradients; L² product stability passes the smooth identity
+to the supplied representatives.
 -/
 
 noncomputable section
@@ -1405,6 +1409,273 @@ theorem dd_smooth_green {u : ℝ × ℝ → ℂ} (hu : ContDiff ℝ ∞ u)
 
 end SmoothGreen
 
+/-! ### Quadratic stability on the cutoff patch -/
+
+/-- A real quadratic expression in four complex values, written as a finite sum
+    of real parts of complex pairings. -/
+private def greenQuadratic (a : Fin 4 → Fin 4 → ℝ)
+    (z : Fin 4 → ℂ) : ℝ :=
+  ∑ i, ∑ j, a i j * (z i * (starRingEnd ℂ) (z j)).re
+
+private theorem green_pair_limit {μ : Measure (ℝ × ℝ)}
+    {a : ℝ × ℝ → ℝ} (ha : MemLp a ⊤ μ)
+    {f g : ℕ → ℝ × ℝ → ℂ} {F G : ℝ × ℝ → ℂ}
+    (hf : ∀ n, MemLp (f n) 2 μ) (hg : ∀ n, MemLp (g n) 2 μ)
+    (hF : MemLp F 2 μ) (hG : MemLp G 2 μ)
+    (tf : Tendsto (fun n ↦ eLpNorm (fun p ↦ f n p - F p) 2 μ) atTop (𝓝 0))
+    (tg : Tendsto (fun n ↦ eLpNorm (fun p ↦ g n p - G p) 2 μ) atTop (𝓝 0)) :
+    (∀ n, Integrable (fun p ↦ a p * (f n p * (starRingEnd ℂ) (g n p)).re) μ) ∧
+    Integrable (fun p ↦ a p * (F p * (starRingEnd ℂ) (G p)).re) μ ∧
+    Tendsto (fun n ↦ ∫ p, a p * (f n p * (starRingEnd ℂ) (g n p)).re ∂μ)
+      atTop (𝓝 (∫ p, a p * (F p * (starRingEnd ℂ) (G p)).re ∂μ)) := by
+  have hac : MemLp (fun p ↦ (a p : ℂ)) ⊤ μ := ha.ofReal
+  have hi {v w : ℝ × ℝ → ℂ} (hv : MemLp v 2 μ) (hw : MemLp w 2 μ) :
+      Integrable (fun p ↦ (a p : ℂ) * v p * (starRingEnd ℂ) (w p)) μ := by
+    have hav : MemLp (fun p ↦ (a p : ℂ) * v p) 2 μ := hac.mul hv
+    exact hav.integrable_mul hw.star
+  have heq (v w : ℝ × ℝ → ℂ) :
+      (fun p ↦ a p * (v p * (starRingEnd ℂ) (w p)).re) =
+      (fun p ↦ ((a p : ℂ) * v p * (starRingEnd ℂ) (w p)).re) := by
+    funext p
+    simp [Complex.mul_re, Complex.mul_im]
+    ring
+  have hir {v w : ℝ × ℝ → ℂ} (hv : MemLp v 2 μ) (hw : MemLp w 2 μ) :
+      Integrable (fun p ↦ a p * (v p * (starRingEnd ℂ) (w p)).re) μ := by
+    rw [heq]
+    exact Complex.reCLM.integrable_comp (hi hv hw)
+  refine ⟨fun n ↦ hir (hf n) (hg n), hir hF hG, ?_⟩
+  have h := Complex.continuous_re.tendsto _ |>.comp
+    (tendsto_integral_mul_conj_of_L2 hac hf hg hF hG tf tg)
+  have hInt {v w : ℝ × ℝ → ℂ} (hv : MemLp v 2 μ) (hw : MemLp w 2 μ) :
+      (∫ p, a p * (v p * (starRingEnd ℂ) (w p)).re ∂μ) =
+        (∫ p, (a p : ℂ) * v p * (starRingEnd ℂ) (w p) ∂μ).re := by
+    rw [heq]
+    exact integral_re (hi hv hw)
+  simpa only [hInt (hf _) (hg _), hInt hF hG, Function.comp_def] using h
+
+private theorem green_quadratic_limit {μ : Measure (ℝ × ℝ)}
+    {a : ℝ × ℝ → Fin 4 → Fin 4 → ℝ}
+    (ha : ∀ i j, MemLp (fun p ↦ a p i j) ⊤ μ)
+    {z : ℕ → ℝ × ℝ → Fin 4 → ℂ} {Z : ℝ × ℝ → Fin 4 → ℂ}
+    (hz : ∀ i n, MemLp (fun p ↦ z n p i) 2 μ)
+    (hZ : ∀ i, MemLp (fun p ↦ Z p i) 2 μ)
+    (tz : ∀ i, Tendsto (fun n ↦ eLpNorm (fun p ↦ z n p i - Z p i) 2 μ)
+      atTop (𝓝 0)) :
+    (∀ n, Integrable (fun p ↦ greenQuadratic (a p) (z n p)) μ) ∧
+    Integrable (fun p ↦ greenQuadratic (a p) (Z p)) μ ∧
+    Tendsto (fun n ↦ ∫ p, greenQuadratic (a p) (z n p) ∂μ) atTop
+      (𝓝 (∫ p, greenQuadratic (a p) (Z p) ∂μ)) := by
+  have hpair (i j) := green_pair_limit (ha i j) (hz i) (hz j) (hZ i) (hZ j) (tz i) (tz j)
+  have hi (n) : Integrable (fun p ↦ greenQuadratic (a p) (z n p)) μ :=
+    integrable_finsetSum _ fun i _ ↦ integrable_finsetSum _ fun j _ ↦ (hpair i j).1 n
+  have hI : Integrable (fun p ↦ greenQuadratic (a p) (Z p)) μ :=
+    integrable_finsetSum _ fun i _ ↦ integrable_finsetSum _ fun j _ ↦ (hpair i j).2.1
+  have heq (n) : (∫ p, greenQuadratic (a p) (z n p) ∂μ) =
+      ∑ i, ∑ j, ∫ p, a p i j * (z n p i * (starRingEnd ℂ) (z n p j)).re ∂μ := by
+    simp only [greenQuadratic]
+    rw [integral_finsetSum]
+    · apply Finset.sum_congr rfl
+      intro i _
+      exact integral_finsetSum _ fun j _ ↦ (hpair i j).1 n
+    · intro i _
+      exact integrable_finsetSum _ fun j _ ↦ (hpair i j).1 n
+  have hEq : (∫ p, greenQuadratic (a p) (Z p) ∂μ) =
+      ∑ i, ∑ j, ∫ p, a p i j * (Z p i * (starRingEnd ℂ) (Z p j)).re ∂μ := by
+    simp only [greenQuadratic]
+    rw [integral_finsetSum]
+    · apply Finset.sum_congr rfl
+      intro i _
+      exact integral_finsetSum _ fun j _ ↦ (hpair i j).2.1
+    · intro i _
+      exact integrable_finsetSum _ fun j _ ↦ (hpair i j).2.1
+  refine ⟨hi, hI, ?_⟩
+  simp_rw [heq, hEq]
+  exact tendsto_finsetSum _ fun i _ ↦ tendsto_finsetSum _ fun j _ ↦ (hpair i j).2.2
+
+private theorem green_cutoff_patch {χ : ℝ → ℝ} (hc : HasCompactSupport χ)
+    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2) :
+    ∃ V : Set (ℝ × ℝ), IsOpen V ∧ IsCompact (closure V) ∧
+      closure V ⊆ ddRegularCell ∧
+      ∀ p ∈ cellSquare, dipoleLift p ∈ tsupport χ → p ∈ V := by
+  let K : Set (ℝ × ℝ) := {p | |(diagCoord p).1| ≤ Real.pi / 2 ∧
+    |(diagCoord p).2| ≤ Real.pi / 2 ∧ dipoleLift p ∈ tsupport χ}
+  have hd₁ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).1|) := by
+    unfold diagCoord; fun_prop
+  have hd₂ : Continuous (fun p : ℝ × ℝ ↦ |(diagCoord p).2|) := by
+    unfold diagCoord; fun_prop
+  have hs : Continuous dipoleLift := by unfold dipoleLift; fun_prop
+  have hKc : IsClosed K := (isClosed_le hd₁ continuous_const).inter
+    ((isClosed_le hd₂ continuous_const).inter (hc.isClosed.preimage hs))
+  have hK : IsCompact K :=
+    (isCompact_Icc.prod isCompact_Icc).of_isClosed_subset hKc (show
+      K ⊆ Icc (-Real.pi) Real.pi ×ˢ Icc (-Real.pi) Real.pi from by
+      intro p hp
+      obtain ⟨h₁l, h₁u⟩ := abs_le.mp hp.1
+      obtain ⟨h₂l, h₂u⟩ := abs_le.mp hp.2.1
+      have hx : p.1 = (diagCoord p).1 + (diagCoord p).2 := by dsimp [diagCoord]; ring
+      have hy : p.2 = (diagCoord p).1 - (diagCoord p).2 := by dsimp [diagCoord]; ring
+      exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩)
+  have hKU : K ⊆ ddRegularCell := by
+    intro p hp
+    obtain ⟨h0, h2⟩ := hχs hp.2.2
+    have hcos : Real.cos (diagCoord p).1 * Real.cos (diagCoord p).2 ≠ 0 := by
+      rw [dipoleLift_eq_diag] at h0
+      intro hz
+      nlinarith [hz]
+    have hstrict (t : ℝ) (ht : |t| ≤ Real.pi / 2) (hn : Real.cos t ≠ 0) :
+        |t| < Real.pi / 2 := by
+      by_contra h
+      have he : |t| = Real.pi / 2 := le_antisymm ht (le_of_not_gt h)
+      apply hn
+      rw [← Real.cos_abs, he, Real.cos_pi_div_two]
+    exact ⟨⟨hstrict _ hp.1 (mul_ne_zero_iff.mp hcos).1,
+      hstrict _ hp.2.1 (mul_ne_zero_iff.mp hcos).2⟩, (gradSq_dipoleLift_pos h0 h2).ne'⟩
+  have hU : IsOpen ddRegularCell :=
+    isOpen_cellSquare.inter (isOpen_ne.preimage (by simp only [gradSq_dipoleLift]; fun_prop))
+  obtain ⟨V, hV, hKV, hVU, hVc⟩ := exists_open_between_and_isCompact_closure hK hU hKU
+  exact ⟨V, hV, hVc, hVU, fun p hp hs ↦ hKV ⟨hp.1.le, hp.2.le, hs⟩⟩
+
+/-- Coefficient tables for the density, forcing bulk term, generator pairing,
+    and normal-flux correction. Variables are ordered as (u, e, ux, uy).
+    Symmetry of the coefficient tables is not required. -/
+private def greenCoefficients (χ : ℝ → ℝ) (p : ℝ × ℝ) :
+    Fin 4 → Fin 4 → Fin 4 → ℝ :=
+  let s := dipoleLift p
+  let x := partialX dipoleLift p
+  let y := partialY dipoleLift p
+  let w := ddVirialField₁ p
+  let v := ddVirialField₂ p
+  let r := x * w + y * v
+  ![
+    ![![-χ s * ddF p, 0, 0, 0], ![0, χ s * ddF p, 0, 0],
+      ![0, 0, χ s * ddMxx p, 2 * χ s * ddMxy p], ![0, 0, 0, χ s * ddMyy p]],
+    ![![0, 0, 0, 0], ![-ddWeight p * χ s * ddVirialCoeff p,
+      ddWeight p * χ s * ddVirialCoeff p, 0, 0], ![0, 0, 0, 0], ![0, 0, 0, 0]],
+    ![![0, ddWeight p * (χ s * (ddVirialCoeff p + 1) + deriv χ s * ddVirialQ s) / 2, 0, 0],
+      ![0, 0, 0, 0], ![0, ddWeight p * χ s * w, 0, 0],
+      ![0, ddWeight p * χ s * v, 0, 0]],
+    ![![deriv χ s * ddWeight p * r, 0, -deriv χ s * ddWeight p * x,
+        -deriv χ s * ddWeight p * y],
+      ![-deriv χ s * ddWeight p * ddVirialQ s, 0, 0, 0],
+      ![0, 0, deriv χ s * ddWeight p * (r - 2 * x * w),
+        -2 * deriv χ s * ddWeight p * (x * v + y * w)],
+      ![0, 0, 0, deriv χ s * ddWeight p * (r - 2 * y * v)]]
+  ]
+
+/-- The four integrands of the cutoff Green identity, in the same order as
+    the coefficient tables. -/
+private def greenIntegrands (χ : ℝ → ℝ) (u e ux uy : ℝ × ℝ → ℂ)
+    (p : ℝ × ℝ) : Fin 4 → ℝ :=
+  ![χ (dipoleLift p) * ddVirialDensity u e ux uy p,
+    ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+      (‖e p‖ ^ 2 - (e p * (starRingEnd ℂ) (u p)).re),
+    ddWeight p *
+      (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+        (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q) u ux uy p *
+        (starRingEnd ℂ) (e p)).re,
+    deriv χ (dipoleLift p) * (ddGreenNormalFlux u ux uy p -
+      ddWeight p * ddVirialQ (dipoleLift p) * (e p * (starRingEnd ℂ) (u p)).re)]
+
+private theorem green_integrands_quadratic {χ : ℝ → ℝ}
+    (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ)
+    (u e ux uy : ℝ × ℝ → ℂ) {p : ℝ × ℝ} (hp : p ∈ ddRegularCell) (k : Fin 4) :
+    greenIntegrands χ u e ux uy p k =
+      greenQuadratic (greenCoefficients χ p k) ![u p, e p, ux p, uy p] := by
+  have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp.1)
+  have hd : ddWeightedDiv ddVirialField₁ ddVirialField₂ p = ddVirialCoeff p + 1 := by
+    linarith [(dd_virial_algebra_at hs hp.2).2.1]
+  have hdχ := ddWeightedDiv_cutoff (hχ.differentiable (by simp)) hs hp.2
+  fin_cases k
+  · simp [greenIntegrands, greenQuadratic, greenCoefficients, Fin.sum_univ_succ,
+      ddVirialDensity, ddMatrixForm_eq_cartesian _ _ hp.2]
+    simp only [Complex.sq_norm, Complex.normSq_apply]
+    ring
+  · simp [greenIntegrands, greenQuadratic, greenCoefficients, Fin.sum_univ_succ]
+    simp only [Complex.sq_norm, Complex.normSq_apply]
+    ring
+  · simp [greenIntegrands, greenQuadratic, greenCoefficients, Fin.sum_univ_succ,
+      ddWeightedGenerator, hdχ, hd]
+    ring
+  · simp [greenIntegrands, greenQuadratic, greenCoefficients, Fin.sum_univ_succ,
+      ddGreenNormalFlux, ddWeakGreenFlux₁, ddWeakGreenFlux₂]
+    simp only [Complex.sq_norm, Complex.normSq_apply]
+    ring
+
+private theorem green_coefficients_continuous {χ : ℝ → ℝ}
+    (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ) (k i j : Fin 4) :
+    ContinuousOn (fun p ↦ greenCoefficients χ p k i j) ddRegularCell := by
+  intro p hp
+  have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp.1)
+  have hr := hp.2
+  have hsC : ContinuousAt dipoleLift p := by unfold dipoleLift; fun_prop
+  have hrC : ContinuousAt (gradSq dipoleLift) p := by simp only [gradSq_dipoleLift]; fun_prop
+  have hsin₁ : ContinuousAt (fun q : ℝ × ℝ ↦ Real.sin q.1) p :=
+    Real.continuous_sin.continuousAt.comp continuousAt_fst
+  have hsin₂ : ContinuousAt (fun q : ℝ × ℝ ↦ Real.sin q.2) p :=
+    Real.continuous_sin.continuousAt.comp continuousAt_snd
+  have hμ : ContinuousAt ddWeight p := by unfold ddWeight dipoleLift; fun_prop
+  have hF : ContinuousAt ddF p := by
+    unfold ddF
+    fun_prop (disch := simp [hr])
+  have hA : ContinuousAt ddA p := by
+    unfold ddA ddC
+    fun_prop (disch := simp [hs, hr])
+  have hC : ContinuousAt ddC p := by
+    unfold ddC
+    fun_prop (disch := simp [hr])
+  have hMxx : ContinuousAt ddMxx p := by
+    unfold ddMxx
+    fun_prop (disch := simp [hr])
+  have hMxy : ContinuousAt ddMxy p := by
+    unfold ddMxy
+    fun_prop (disch := simp [hr])
+  have hMyy : ContinuousAt ddMyy p := by
+    unfold ddMyy
+    fun_prop (disch := simp [hr])
+  have hf : ContinuousAt ddVirialCoeff p := by
+    unfold ddVirialCoeff
+    fun_prop (disch := simp [ddWeight, hs])
+  have hq : ContinuousAt (fun q ↦ ddVirialQ (dipoleLift q)) p := by
+    unfold ddVirialQ
+    fun_prop (disch := simp [hs])
+  have hw := (contDiffAt_ddVirialField hs hr).1.continuousAt
+  have hv := (contDiffAt_ddVirialField hs hr).2.continuousAt
+  have hx : ContinuousAt (partialX dipoleLift) p := by simp only [partialX_dipoleLift]; fun_prop
+  have hy : ContinuousAt (partialY dipoleLift) p := by simp only [partialY_dipoleLift]; fun_prop
+  have hχc := hχ.continuous
+  have hχd := hχ.continuous_deriv (by simp)
+  apply ContinuousAt.continuousWithinAt
+  dsimp only [greenCoefficients]
+  fun_prop
+
+private theorem green_integrands_zero {χ : ℝ → ℝ}
+    (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ)
+    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2)
+    (u e ux uy : ℝ × ℝ → ℂ) {p : ℝ × ℝ} (hp : dipoleLift p ∉ tsupport χ) (k : Fin 4) :
+    greenIntegrands χ u e ux uy p k = 0 := by
+  have h0 := image_eq_zero_of_notMem_tsupport hp
+  have h1 := image_eq_zero_of_notMem_tsupport (fun h ↦ hp (tsupport_deriv_subset h))
+  fin_cases k <;>
+    simp [greenIntegrands, ddWeightedGenerator_cutoff_global hχ hχs, h0, h1]
+
+private theorem green_integral_localize {χ : ℝ → ℝ}
+    (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ)
+    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2)
+    {V : Set (ℝ × ℝ)} (hV : IsOpen V) (hVU : V ⊆ ddRegularCell)
+    (hsupp : ∀ p ∈ cellSquare, dipoleLift p ∈ tsupport χ → p ∈ V)
+    (u e ux uy : ℝ × ℝ → ℂ) (k : Fin 4) :
+    (∫ p in cellSquare, greenIntegrands χ u e ux uy p k) =
+      ∫ p in V, greenQuadratic (greenCoefficients χ p k) ![u p, e p, ux p, uy p] := by
+  calc
+    _ = ∫ p in V, greenIntegrands χ u e ux uy p k :=
+      (setIntegral_eq_of_subset_of_forall_sdiff_eq_zero isOpen_cellSquare.measurableSet
+        (fun p hp ↦ (hVU hp).1) (fun p hp ↦ green_integrands_zero hχ hχs u e ux uy
+          (fun hs ↦ hp.2 (hsupp p hp.1 hs)) k))
+    _ = _ := setIntegral_congr_fun hV.measurableSet
+      (fun p hp ↦ green_integrands_quadratic hχ u e ux uy (hVU hp) k)
+
 /-- The weighted Green identity tested against an annular level cutoff.
     All derivatives of u are weak witnesses; e realizes Eu weakly. The cutoff
     generator includes its half-density correction. Local H² and L² suffice,
@@ -1424,7 +1695,98 @@ theorem dd_weak_green {u e ux uy : ℝ × ℝ → ℂ}
       ∫ p in cellSquare, deriv χ (dipoleLift p) *
         (ddGreenNormalFlux u ux uy p - ddWeight p * ddVirialQ (dipoleLift p) *
           (e p * (starRingEnd ℂ) (u p)).re) := by
-  sorry
+  obtain ⟨V, hV, hVc, hVU, hsupp⟩ := green_cutoff_patch hc hχs
+  have hVC : closure V ⊆ cellSquare := fun p hp ↦ (hVU hp).1
+  have hVR : V ⊆ ddRegularCell := subset_closure.trans hVU
+  obtain ⟨D, hj, hD, v, hv, hvlim, mOp, _, tOp⟩ :=
+    hop.local_smooth_approximation hu hV hVc hVC
+  let μ := volume.restrict V
+  have hae := hop.ae_eq_jet hV (subset_closure.trans hVC) hj
+  have hx : ux =ᵐ[μ] D [0] :=
+    (ae_restrict_iff' hV.measurableSet).mpr
+      (hae.mono fun p hp hpV ↦ (hp hpV).1)
+  have hy : uy =ᵐ[μ] D [1] :=
+    (ae_restrict_iff' hV.measurableSet).mpr
+      (hae.mono fun p hp hpV ↦ (hp hpV).2.1)
+  have mu : MemLp u 2 μ := by simpa only [hj.1] using hD [] (by simp)
+  have me : MemLp e 2 μ := he V hV hVc hVC
+  have mx : MemLp ux 2 μ := (hD [0] (by simp)).ae_eq hx.symm
+  have my : MemLp uy 2 μ := (hD [1] (by simp)).ae_eq hy.symm
+  have mv (n) : MemLp (v n) 2 μ := (hvlim [] (by simp)).1 n
+  have mvx (n) : MemLp (partialX (v n)) 2 μ := by
+    simpa [classicalComplexJet, coordPartial] using (hvlim [0] (by simp)).1 n
+  have mvy (n) : MemLp (partialY (v n)) 2 μ := by
+    simpa [classicalComplexJet, coordPartial] using (hvlim [1] (by simp)).1 n
+  have tu : Tendsto (fun n ↦ eLpNorm (fun p ↦ v n p - u p) 2 μ) atTop (𝓝 0) := by
+    simpa only [classicalComplexJet, hj.1] using (hvlim [] (by simp)).2
+  have tx : Tendsto (fun n ↦ eLpNorm (fun p ↦ partialX (v n) p - ux p) 2 μ)
+      atTop (𝓝 0) := by
+    have heq (n) : eLpNorm (fun p ↦ partialX (v n) p - ux p) 2 μ =
+        eLpNorm (fun p ↦ classicalComplexJet [0] (v n) p - D [0] p) 2 μ :=
+      eLpNorm_congr_ae (hx.mono fun p hp ↦ congrArg (fun c ↦ partialX (v n) p - c) hp)
+    simpa only [heq] using (hvlim [0] (by simp)).2
+  have ty : Tendsto (fun n ↦ eLpNorm (fun p ↦ partialY (v n) p - uy p) 2 μ)
+      atTop (𝓝 0) := by
+    have heq (n) : eLpNorm (fun p ↦ partialY (v n) p - uy p) 2 μ =
+        eLpNorm (fun p ↦ classicalComplexJet [1] (v n) p - D [1] p) 2 μ :=
+      eLpNorm_congr_ae (hy.mono fun p hp ↦ congrArg (fun c ↦ partialY (v n) p - c) hp)
+    simpa only [heq] using (hvlim [1] (by simp)).2
+  let z := fun n p ↦ ![v n p, ddOperator (v n) p, partialX (v n) p, partialY (v n) p]
+  let Z := fun p ↦ ![u p, e p, ux p, uy p]
+  have mz (i : Fin 4) (n) : MemLp (fun p ↦ z n p i) 2 μ := by
+    fin_cases i
+    · exact mv n
+    · exact mOp n
+    · exact mvx n
+    · exact mvy n
+  have mZ (i : Fin 4) : MemLp (fun p ↦ Z p i) 2 μ := by
+    fin_cases i
+    · exact mu
+    · exact me
+    · exact mx
+    · exact my
+  have tz (i : Fin 4) :
+      Tendsto (fun n ↦ eLpNorm (fun p ↦ z n p i - Z p i) 2 μ) atTop (𝓝 0) := by
+    fin_cases i
+    · exact tu
+    · exact tOp
+    · exact tx
+    · exact ty
+  have mc (k i j : Fin 4) : MemLp (fun p ↦ greenCoefficients χ p k i j) ⊤ μ := by
+    have hC := (green_coefficients_continuous hχ k i j).mono hVU
+    obtain ⟨C, hCbound⟩ := hVc.exists_bound_of_continuousOn hC
+    exact memLp_top_of_bound
+      ((hC.mono subset_closure).aestronglyMeasurable hV.measurableSet) C
+      (ae_restrict_of_forall_mem hV.measurableSet
+        (fun p hp ↦ hCbound p (subset_closure hp)))
+  have tl (k : Fin 4) :
+      Tendsto (fun n ↦ ∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p k) atTop
+        (𝓝 (∫ p in cellSquare, greenIntegrands χ u e ux uy p k)) := by
+    simp_rw [green_integral_localize hχ hχs hV hVR hsupp]
+    exact (green_quadratic_limit (mc k) mz mZ tz).2.2
+  have hclass (n) :
+      (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 0) =
+      (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 1) +
+      2 * (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 2) +
+      (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 3) :=
+    dd_smooth_green (hv n).1 (hv n).2.1 (hv n).2.2 hχ hχs
+  have tr := ((tl 1).add ((tl 2).const_mul 2)).add (tl 3)
+  have hseq :
+      (fun n ↦ (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 1) +
+      2 * (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 2) +
+      (∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 3)) =
+      (fun n ↦ ∫ p in cellSquare, greenIntegrands χ (v n) (ddOperator (v n))
+        (partialX (v n)) (partialY (v n)) p 0) := funext fun n ↦ (hclass n).symm
+  rw [hseq] at tr
+  exact tendsto_nhds_unique (tl 0) tr
 
 /-- Weighted first identity with annular cutoff, on the original eigenfunction domain.
     Only local weak derivatives of the raw stream quotient are supplied. -/

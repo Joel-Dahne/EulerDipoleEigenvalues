@@ -69,18 +69,18 @@ weights and local versus global regularity.
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
    `dd_character_virial_limit` is assembled without its own `sorry`, from six
-   admissions: weak Green, weighted first identity, quotient equation, gradient
-   traces, value finite part and renormalized bulk.
+   admissions: local H² smooth approximation, weighted first identity, quotient
+   equation, gradient traces, value finite part and renormalized bulk.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
    a generic cutoff-to-annular extraction handles common exceptional sets.
    Annular virial is assembled from `dd_cutoff_identity`, now itself proved
-   from the admitted weak Green, weighted first identity and quotient equation,
-   with admission-free pointwise boundary-flux algebra. Normal–tangent
-   orthogonality and `-μq = (8-s³)/3` give the flux identification, with the inward
+   from the assembled weak Green identity, admitted weighted first identity and
+   quotient equation, with admission-free pointwise boundary-flux algebra.
+   Normal–tangent orthogonality and `-μq = (8-s³)/3` give the flux identification, with the inward
    normal convention unchanged. Coarea and endpoint assembly are checked.
-   The weak Green Blueprint proof now uses the admitted local H² approximation
+   The weak Green proof uses the admitted local H² approximation
    interface in `SobolevApproximation.lean`. Its quadratic-integral limit and
    pointwise cutoff-generator helpers are proved. The local classical Green
    identity is now admission-free, by direct flux differentiation and the constant
@@ -88,9 +88,12 @@ weights and local versus global regularity.
    too: the cutoff flux is globally C¹ and compactly supported, and the half-density
    correction has the required sign. Weak-operator jet identification and strong L²
    operator stability are now admission-free, without a derivative of the forcing.
-   The local operator-approximation corollary uses the existing admitted H² density
-   theorem; only the cutoff quadratic-integral limit assembly remains in weak Green.
-   The approximation node is not yet on the weak Green Lean audit route.
+   Weak Green is now assembled: on a compact regular cutoff patch its four
+   integrands are finite bounded-coefficient quadratic forms, so their integrals
+   converge under strong L² approximation. Its only transitive admission is the
+   local H² density theorem; the original hypotheses are unchanged. The cutoff and
+   truncated-virial audits now reach that density theorem, the weighted first
+   identity and the quotient equation.
    Multiplying back by Ψ identifies
    arbitrary raw weak gradients with Fourier stream derivatives and proves
    half-density conjugation. Raw/supplied quotient changes, coarea splitting,

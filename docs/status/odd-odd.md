@@ -106,7 +106,7 @@ extension or center removal in `dd_truncated_picone`; that parent and the
 exclusion assemblies are unchanged. Compatibility review remains deferred
 while the statement pass continues.
 
-`dd_character_virial_limit` reaches six admissions: `dd_weak_green`,
+`dd_character_virial_limit` reaches six admissions: `local_h2_smooth_approximation`,
 `dd_weighted_first`, `dd_quotient_equations`,
 `dd_quotient_gradient_traces`, `dd_value_finite_part` and `dd_renormalized_bulk`.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
@@ -116,9 +116,9 @@ back under `h ↦ 2h`, selects one pairing sequence avoiding every exceptional s
 and identifies the full bulk limit by uniqueness. The coefficient error is
 `ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
 
-`dd_cutoff_identity` now has no `sorry` of its own. It combines the new
-admitted `dd_weak_green` and proved `dd_boundary_flux` nodes with the existing
-admitted weighted first identity and quotient equation. The weak Green statement
+`dd_cutoff_identity` has no `sorry` of its own. It combines the assembled
+weak Green identity and proved boundary-flux identification with the admitted
+weighted first identity and quotient equation. The weak Green statement
 takes local H² for the stream, local L² for its operator value, and
 `HasDDOperator` with specified weak gradients; it uses neither an eigenfunction
 nor a derivative of the forcing. Boundary-flux identification is admission-free:
@@ -145,12 +145,12 @@ Its smooth annular cutoff integration (`lem:dd-smooth-green`) is also
 admission-free, including the compact-support/divergence argument and the
 half-density correction. Weighted-operator identification from specified weak jets
 (`lem:dd-operator-jet`) and strong L² operator stability
-(`lem:dd-operator-jet-stability`) are also admission-free. These results are not yet
-dependencies in the weak Green Lean audit.
+(`lem:dd-operator-jet-stability`) are also admission-free. They feed the assembled
+weak Green identity.
 
-The cutoff assembly reaches three admissions: weak Green, weighted first
-identity and quotient equation. Audits reach twelve admissions below
-`dd_picone_current` and twenty-eight below `odd_odd_exclusion`.
+The cutoff and truncated-virial assemblies reach three admissions: local H²
+smooth approximation, weighted first identity and quotient equation. Audits reach
+twelve admissions below `dd_picone_current` and twenty-eight below `odd_odd_exclusion`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of
@@ -160,13 +160,13 @@ stability without admissions. `ddWeightedDiv_cutoff` and
 `ddWeightedGenerator_cutoff` prove the cutoff half-density correction pointwise
 on the regular cell, without classical derivatives of the supplied function.
 The smooth endpoint allows compact support anywhere inside the original cell,
-not only inside the approximation annulus. The weak Green theorem itself remains
-admitted: the cutoff quadratic-integral limit assembly remains.
-The operator-approximation corollary (`cor:dd-operator-smooth-approximation`)
-combines the proved jet bridges with the admitted local H² density theorem;
-it has no admission of its own, but is conditional on that theorem. Neither
-approximation result is yet on the weak Green Lean audit route. The weighted
-first identity and quotient equation also need proofs.
+not only inside the approximation annulus. Weak Green (`lem:dd-weak-green`) now has
+no `sorry` of its own: a compact regular patch contains the cutoff support, and
+all four integrands are finite bounded-coefficient quadratic forms in the value,
+forcing and weak gradients. Strong L² approximation passes their integrals to the
+limit. Its only transitive admission is `local_h2_smooth_approximation`; the original
+hypotheses are unchanged. The remaining analytic work on this route is that density
+theorem, the weighted first identity and the quotient equation.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and value finite-part interface below the virial,

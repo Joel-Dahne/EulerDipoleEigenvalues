@@ -553,19 +553,31 @@ There is no eigenfunction, parity, or derivative-of-$e$ hypothesis.
 
 \begin{proof}
 \uses{lem:dd-smooth-green, cor:dd-operator-smooth-approximation,
- lem:dd-operator-jet}
-The support of $\chi(s)$ and $\chi'(s)$ is a compact subset of the
-punctured cell. Choose an open neighbourhood $V$ of this set with
-compact closure inside the punctured cell.
-Apply Corollary~\ref{cor:dd-operator-smooth-approximation} there to obtain
+ lem:dd-operator-jet, lem:dd-virial-algebra, lem:l2-product-integral-stability}
+\leanok
+In the closed cell, the levels belonging to $\operatorname{supp}\chi$ form
+a compact subset of the punctured cell: positive levels exclude the cell boundary,
+and levels below $2$ exclude the center. Choose an open neighbourhood $V$ of this
+set with compact closure inside the punctured cell. The derivative cutoff has
+support in the same set. All four integrands vanish outside $V$, including
+the cutoff generator, whose coefficients vanish locally there.
+
+Apply Corollary~\ref{cor:dd-operator-smooth-approximation} to obtain
 full-jet approximants whose operator values converge strongly to $e$.
-Lemma~\ref{lem:dd-operator-jet} identifies the first jet with the supplied gradient.
-The virial coefficients are bounded on $\overline V$.
-Every quadratic product in the cutoff identity converges
-in $L^1$ by Cauchy--Schwarz. Apply
-Lemma~\ref{lem:dd-smooth-green} to the approximants and pass to the limit.
-The integration by parts and half-density correction are already included
-in that smooth identity. No differentiation of $e$ occurs.
+Lemma~\ref{lem:dd-operator-jet} identifies their limiting first jet with
+the supplied gradient. Put $Z=(u,e,u_x,u_y)$.
+On $V$, each of the four integrands is a finite sum
+$a_{ij}(p)\operatorname{Re}(Z_i\overline{Z_j})$, with real coefficients
+continuous on $\overline V$, hence bounded. For the matrix density use its
+Cartesian entries; for the generator use
+$\Div_\mu(\chi W)=\chi(f+1)+\chi'q$.
+The flux has the same quadratic structure by its definition.
+
+Lemma~\ref{lem:l2-product-integral-stability} gives integrability and convergence
+of each product integral. Apply Lemma~\ref{lem:dd-smooth-green} to every approximant
+and use uniqueness of the real integral limits. The integration by parts
+and half-density correction are already included in the smooth identity.
+No differentiation of $e$ occurs.
 \end{proof}
 
 \begin{lemma}[Identification of the weighted boundary flux]

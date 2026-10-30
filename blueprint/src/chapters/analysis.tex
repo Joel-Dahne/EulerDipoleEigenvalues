@@ -1390,6 +1390,26 @@ Restriction to $V$ gives the asserted convergence and identifies the root
 of the limiting jet with $u$.
 \end{proof}
 
+\begin{lemma}[Stability of bounded-coefficient $L^2$ product integrals]
+\label{lem:l2-product-integral-stability}
+\lean{NoEmbeddedEigenvalues.tendsto_integral_mul_conj_of_L2}
+\leanok
+On a measure space $(X,m)$, let $c\in L^\infty(m)$ be complex-valued.
+If $f_n,F,g_n,G\in L^2(m)$ with
+$f_n\to F$ and $g_n\to G$ strongly in $L^2(m)$, then
+\[
+ \int_X c f_n\overline{g_n}\,dm
+ \longrightarrow \int_X c F\overline G\,dm.
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Multiplication by $c$ is a bounded linear map on $L^2(m)$.
+Compose it with the continuous $L^2$ inner product. The products are
+integrable by Hölder's inequality.
+\end{proof}
+
 \begin{definition}[Canonical second stream jet]
 \label{def:stream-second-jet}
 \uses{def:stream-lifts, def:stream-derivatives, def:local-weak-jets}
