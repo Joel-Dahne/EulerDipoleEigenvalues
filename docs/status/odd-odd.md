@@ -107,9 +107,11 @@ The identity in `lem:dd-truncated-picone` remains its sole local `sorry`:
 weak integration by parts on the punctured domain and the center-flux limit
 are the next proof work. The Blueprint explains the simpler center mechanism
 `M` bounded, `∇w = O(|p|)`, giving flux `O(ρ²)` without gradient traces of `u`.
-The shared classical identities in
-[Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean) remain admitted;
-their integrated interface assumes the outward divergence formula.
+The shared Picone identity (`lem:picone`) is proved in
+[Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean): finite-dimensional
+symmetric-matrix algebra, the classical differential and divergence identities,
+and integration under a supplied outward divergence formula. This does not
+supply the Sobolev extension or the divergence formula for the truncated cell.
 
 `dd_character_virial_limit` reaches six admissions: `local_h2_smooth_approximation`,
 `dd_weighted_first`, `dd_quotient_equations`,

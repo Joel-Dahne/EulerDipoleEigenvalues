@@ -105,8 +105,10 @@ weights and local versus global regularity.
    estimate. `dd_truncated_picone` now leaves only the identity as a local
    admission. Next are weak integration by parts on the punctured domain and
    center removal; the value-only current has flux `O(ρ²)` at the center.
-   `Picone.lean` supplies the shared classical identities with `sorry` proofs;
-   its integrated interface assumes the outward divergence formula.
+   `Picone.lean` proves the shared finite-dimensional algebra, classical
+   differential/divergence identities and integrated identity (`lem:picone`).
+   The integrated interface still assumes the outward divergence formula;
+   the weak extension and singular-point removal remain application work.
    Recursive statement coverage also includes the three corrected-boundary
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
    logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
