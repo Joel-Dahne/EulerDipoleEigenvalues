@@ -183,6 +183,9 @@ proof mechanisms. Module names below are relative to
   the shared outward derivative convention.
 - `OddOddPiconeIntegrability.lean`: ground-state first derivatives,
   positive-truncation energy integrability and a full-level center-current bound.
+- `OddOddGroundResidual.lean`: exact bounded-coordinate factorization of the
+  differentiated residual, its uniform bound and potential integrability for L² data;
+  the assembled positive-truncation integrability interface.
 - `OddOddPiconeCutoff.lean`: quadratic Fourier integration by parts, normalized
   ground-flux algebra, weak Picone cutoff testing and common-null annular extraction.
 - `OddOddPicone.lean`: regular-level current continuity and the Picone identity

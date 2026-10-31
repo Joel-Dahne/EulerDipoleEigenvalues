@@ -361,11 +361,6 @@ theorem dd_gradient_energies_integrable {φ dx dy : L2} (hφ : MemSobolev 2 φ)
       IntegrableOn (ddPiconeGradient φ dx dy) cellSquare := by
   sorry
 
-/-- Integrability of the actual differentiated residual, not a sign certificate for it. -/
-theorem dd_piconePotential_integrable {φ : L2} (hφ : MemSobolev 2 φ) :
-    IntegrableOn (ddPiconePotential φ) cellSquare := by
-  sorry
-
 /-- The scalar value finite part and absolute integrability of its renormalized arc terms. -/
 theorem dd_value_finite_part {φ : L2} (hφ : MemSobolev 2 φ) :
     (∀ k : Fin 4, Integrable (ddArcValueRemainder φ k)) ∧

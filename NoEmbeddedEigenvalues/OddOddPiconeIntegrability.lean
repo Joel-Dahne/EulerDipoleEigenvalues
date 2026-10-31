@@ -441,19 +441,4 @@ theorem contDiffAt_ddGround_partials {p : ℝ × ℝ} (hr : gradSq dipoleLift p 
   simpa only [coordPartial, show (1 : Fin 2) ≠ 0 by decide, ite_false] using
     contDiffAt_groundPartial 1 hr
 
-/-- All four integrability assertions on a positive Picone truncation. No
-    Fourier derivative relations are needed for these assertions. -/
-theorem dd_truncated_picone_integrability {φ : L2} (hφ : MemSobolev 2 φ) (dx dy : L2)
-    {ε : ℝ} (hε : ε ∈ Ioo (0 : ℝ) 2) :
-    IntegrableOn (ddRawEnergy φ dx dy) (ddTruncatedCell ε) ∧
-      IntegrableOn (ddPiconeGradient φ dx dy) (ddTruncatedCell ε) ∧
-      IntegrableOn (ddPiconePotential φ) (ddTruncatedCell ε) ∧
-      IntervalIntegrable (fun t ↦ ddGroundCurrentCoeff (dipoleOrbit (ε / 2) t) *
-        ‖continuousRep φ (torusProj (dipoleOrbit (ε / 2) t))‖ ^ 2)
-        volume 0 (orbitPeriod (ε / 2)) := by
-  exact ⟨ddRawEnergy_integrable φ dx dy hε.1,
-    ddPiconeGradient_integrable φ dx dy hε.1,
-    (dd_piconePotential_integrable hφ).mono_set (fun _ hp ↦ hp.1),
-    ddGroundCurrent_intervalIntegrable φ hε⟩
-
 end NoEmbeddedEigenvalues

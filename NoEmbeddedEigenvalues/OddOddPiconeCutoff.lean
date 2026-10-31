@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
+import NoEmbeddedEigenvalues.OddOddGroundResidual
 import NoEmbeddedEigenvalues.Picone
 
 /-!

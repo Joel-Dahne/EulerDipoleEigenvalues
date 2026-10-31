@@ -45,6 +45,7 @@ import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.OddOddForms
 import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
+import NoEmbeddedEigenvalues.OddOddGroundResidual
 import NoEmbeddedEigenvalues.OddOddPiconeCutoff
 import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.OddOddQuotient
