@@ -65,7 +65,8 @@ map, blueprint layout and verification tools; do not load the full map for
 unrelated work. Module docstrings describe implementation details.
 
 - `NoEmbeddedEigenvalues.lean` imports every library module. Add new modules
-  there; declarations belong to namespace `NoEmbeddedEigenvalues`.
+  there; declarations belong to namespace `NoEmbeddedEigenvalues` regardless
+  of subdirectory.
 - `Challenge.lean` states the main theorem and definition sanity checks with
   Mathlib only and `sorry` proofs; it is the reader's audit target.
   `Solution.lean` repeats its definitions verbatim and proves the theorems
@@ -121,8 +122,8 @@ Gotchas:
 
 Use the `lean-lsp` MCP server (provided by the VM's `lean-lsp-mcp`) rather
 than repeated `lake build` or `lake env lean`. It keeps a Lean language server
-running, so after a file has been opened once an edit is rechecked in well
-under a second.
+running and reuses unchanged imports and source prefixes. Edit latency depends
+on the invalidated work.
 
 Tool-specific setup notes live in `docs/tooling/`. When using Pi, read
 [the Pi setup notes](docs/tooling/pi.md) for its stdio Lean MCP configuration.
@@ -133,11 +134,21 @@ Costs measured in the VM (4 cores, 12 GB):
 |---|---|
 | Any new Lean process with `import Mathlib` (`lake env lean`, a module in `lake build`, opening a file in the server) | ~50 s, ~6.5 GB |
 | Same with a single targeted Mathlib import | ~15 s, ~2.4 GB |
-| Recheck after an edit in an open file | ~0.2 s |
+| Diagnostics in an open file | ~0.2 s unchanged; edits can take seconds |
 | `lean_multi_attempt` | ~60 s (reloads Mathlib) |
 
 Almost all of the 50 s is spent loading Mathlib's `.olean` files over the
 `virtiofs` share, not computing, and it is paid again by every new process.
+
+Module layout (older code may not follow these conventions):
+
+- Keep new modules focused on one blueprint node or a small coherent group;
+  small actively edited files keep diagnostic checks fast.
+- Use topic subdirectories roughly following blueprint chapters (e.g.
+  `Analysis/`, `Geometry/`, `OddOdd/`), with shared infrastructure in its natural topic.
+- When a node needs a large file, look for meaningful intermediate results to
+  expose as smaller blueprint nodes. Keep technical Lean helpers with the result
+  they support.
 
 Workflow:
 
