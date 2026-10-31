@@ -86,11 +86,16 @@ just serve           # serve it at http://localhost:8000 (needs only python3)
 just graph thm:ee-exclusion  # graph of a node and all it depends on (after just web)
 just pdf             # blueprint PDF in blueprint/print
 just build           # lake build
-just sorries virial_l2  # admitted declarations it depends on (default: main; ~50 s)
-just challenge       # Solution.lean proves Challenge.lean: statements, axioms (~2 min)
 just manuscript      # reworked manuscript PDF, rebuilt on change (needs xelatex, latexmk)
 just manuscript eigenvalues  # same for the original manuscript
 ```
+
+Task-specific audits:
+- `just challenge` (~2 min): statement/axiom comparison after changes to
+  `Challenge.lean`, `Solution.lean`, comparator configuration/checker or Lean/Mathlib
+  versions, or for requested/milestone audits.
+- `just sorries NAME...` (~50 s): actual transitive Lean admissions, on request
+  or when needed to establish admission-freedom or inspect a dependency frontier.
 
 Agents usually run in a VM that has `just`, `leanblueprint` and `kpsewhich`
 installed system-wide; there, run `just web` directly. The user runs
