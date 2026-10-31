@@ -944,6 +944,34 @@ the time window as above, and the support of $\varphi$ restricts the
 outer integral to $[a,b]$.
 \end{proof}
 
+\begin{lemma}[Annular extraction from a stream-cutoff identity]
+\label{lem:annular-from-cutoff}
+\uses{def:level-integral, def:cells}
+\lean{NoEmbeddedEigenvalues.annular_virial_of_cutoff_identity}
+\leanok
+Let $J,B$ be real densities integrable on every closed regular level band
+$\{2a\le s\le2b\}\cap\Cell$, $0<a\le b<1$. Suppose that for every smooth
+$f$ supported in such an $[a,b]$,
+\[
+ \int_\Cell f(s/2)J=\int_\Cell \tfrac12f'(s/2)B.
+\]
+Then there is one null set $N$ such that for all $0<h<h'<1$ outside $N$,
+\[
+ \int_{\Cell\cap\{2h<s<2h'\}}J
+   =\operatorname{levelIntegral}(h,B)-\operatorname{levelIntegral}(h',B).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea-level-cutoff, lem:du-bois-reymond}
+\leanok
+Coarea turns the hypothesis into
+$\int f(h)\,2\operatorname{levelIntegral}(h,J)\,dh
+ =\int f'(h)\operatorname{levelIntegral}(h,B)\,dh$.
+Both level functions are locally integrable.
+Apply du Bois-Reymond, then use coarea again for the open-band indicator.
+\end{proof}
+
 \begin{definition}[Action-angle coordinates]
 \label{def:action-angle}
 \uses{def:orbit-coordinates, def:period}

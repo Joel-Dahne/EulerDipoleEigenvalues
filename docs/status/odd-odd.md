@@ -8,13 +8,13 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching twelve admissions. Corrected boundary nonnegativity is assembled
+inputs, reaching eleven admissions. Corrected boundary nonnegativity is assembled
 from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions and the full odd–odd exclusion
-has twenty-eight. This is not an admission-free exclusion.
+has twenty-seven. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
@@ -97,21 +97,19 @@ integrable logarithmic endpoint moments for all natural powers, with `sorry`.
 The three interval estimates themselves remain admitted; no parent assembly or
 transitive exclusion admission count has changed.
 
-Positive-truncation Picone work is in
-[OddOddPicone.lean](../../NoEmbeddedEigenvalues/OddOddPicone.lean).
-Integrability on a positive Picone truncation
-(`lem:dd-truncated-picone-integrability`) is assembled without its own admission:
-raw and divided-gradient integrability and continuous level-current integrability
-are proved; potential integrability uses `dd_piconePotential_integrable`.
-The identity in `lem:dd-truncated-picone` remains its sole local `sorry`:
-weak integration by parts on the punctured domain and the center-flux limit
-are the next proof work. The Blueprint explains the simpler center mechanism
-`M` bounded, `∇w = O(|p|)`, giving flux `O(ρ²)` without gradient traces of `u`.
-The shared Picone identity (`lem:picone`) is proved in
-[Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean): finite-dimensional
-symmetric-matrix algebra, the classical differential and divergence identities,
-and integration under a supplied outward divergence formula. This does not
-supply the Sobolev extension or the divergence formula for the truncated cell.
+Sobolev Picone on a positive truncation (`lem:dd-truncated-picone`) is
+proved in [OddOddPicone.lean](../../NoEmbeddedEigenvalues/OddOddPicone.lean),
+with just one transitive admission: absolute Picone-potential integrability
+(`lem:dd-picone-potential-integrable`), the next proof target.
+[OddOddPiconeCutoff.lean](../../NoEmbeddedEigenvalues/OddOddPiconeCutoff.lean)
+proves weak cutoff testing directly from Fourier partials, without smooth density;
+annular extraction uses one common exceptional set. Current continuity and the
+full-level bound `|Iε| ≤ 192 (2-ε) ‖u‖∞²` restore every positive lower level and
+remove the center. Ground-state estimates and integrability are in
+[OddOddPiconeIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddPiconeIntegrability.lean).
+The weak cutoff and center estimates are admission-free; annular and truncated
+Picone use the separate global potential estimate. The shared classical identities
+in [Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean) are also admission-free.
 
 `dd_character_virial_limit` reaches six admissions: `local_h2_smooth_approximation`,
 `dd_weighted_first`, `dd_quotient_equations`,
@@ -157,7 +155,7 @@ weak Green identity.
 
 The cutoff and truncated-virial assemblies reach three admissions: local H²
 smooth approximation, weighted first identity and quotient equation. Audits reach
-twelve admissions below `dd_picone_current` and twenty-eight below `odd_odd_exclusion`.
+eleven admissions below `dd_picone_current` and twenty-seven below `odd_odd_exclusion`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of

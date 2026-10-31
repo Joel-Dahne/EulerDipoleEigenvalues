@@ -100,19 +100,19 @@ weights and local versus global regularity.
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These admitted inputs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
-   `OddOddPicone.lean` proves positive-truncation raw/divided-gradient and
-   level-current integrability; the potential uses its separate admitted global
-   estimate. `dd_truncated_picone` now leaves only the identity as a local
-   admission. Next are weak integration by parts on the punctured domain and
-   center removal; the value-only current has flux `O(ρ²)` at the center.
-   `Picone.lean` proves the shared finite-dimensional algebra, classical
-   differential/divergence identities and integrated identity (`lem:picone`).
-   The integrated interface still assumes the outward divergence formula;
-   the weak extension and singular-point removal remain application work.
+   `dd_truncated_picone` is proved in `OddOddPicone.lean`; its sole transitive
+   admission is the global Picone-potential integrability estimate, the next
+   target. `OddOddPiconeIntegrability.lean` supplies ground estimates and a
+   full-level center-current limit. `OddOddPiconeCutoff.lean` uses quadratic
+   Fourier integration by parts, without density or gradient traces, and the
+   shared cutoff-to-annular extraction. Current continuity restores all lower
+   levels. `Picone.lean` proves the shared classical algebra and integrated
+   identity; its generic integrated interface assumes a divergence formula,
+   while the truncated application instead uses the Fourier cutoff route.
    Recursive statement coverage also includes the three corrected-boundary
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
    logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
-   The estimates themselves and twelve transitive Picone inputs remain proof work.
+   The estimates themselves and eleven transitive Picone inputs remain proof work.
    `OddOddCoercivity.lean` now states the maximal weak weighted form domain,
    central-parity Poincaré, Kantorovich, the actual quotient-domain bridge and
    separate gradient/potential bounds. These new proofs remain `sorry`; the

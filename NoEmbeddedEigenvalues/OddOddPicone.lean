@@ -1,15 +1,14 @@
-import NoEmbeddedEigenvalues.OddOddVirial
-import NoEmbeddedEigenvalues.Picone
+import NoEmbeddedEigenvalues.OddOddPiconeCutoff
 
 /-!
-# Picone on positive stream truncations
+# Picone on every positive stream truncation
 
 Blueprint: `lem:dd-truncated-picone`.
 
-Bulk densities use supplied Fourier derivatives; the boundary current uses the
-continuous representative. On a positive truncation the raw coefficients are
-bounded even near the center, although their totalized center values need not
-be their limits. The current on each regular level is continuous.
+The value current is continuous on regular levels. Choose good annular endpoints
+approaching a prescribed lower level from above and the center from below.
+Bulk dominated convergence and the full center-current limit recover the identity
+at every positive level, without exceptional boundary gradient values.
 -/
 
 noncomputable section
@@ -19,309 +18,45 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter Topology
 open scoped ContDiff
 
-/-- The comparison function is bounded below without a residual sign certificate. -/
-theorem one_le_ddGround (p : ℝ × ℝ) : 1 ≤ ddGround p := by
-  have hr : 0 ≤ gradSq dipoleLift p := by
-    rw [gradSq_dipoleLift]
-    positivity
-  have hr2 : gradSq dipoleLift p ≤ 2 := by
-    rw [gradSq_dipoleLift]
-    nlinarith [Real.sin_sq_le_one p.1, Real.sin_sq_le_one p.2]
-  have hlog : Real.log (gradSq dipoleLift p / 2) ≤ 0 := by
-    rcases eq_or_lt_of_le hr with hz | hp
-    · simp [← hz]
-    · exact Real.log_nonpos (by positivity) (by linarith)
-  unfold ddGround
-  nlinarith [sq_nonneg (dipoleLift p), sq_nonneg (gradSq dipoleLift p),
-    mul_nonpos_of_nonneg_of_nonpos (by positivity : 0 ≤ gradSq dipoleLift p ^ 2 / 256) hlog]
-
-/-- Smoothness is only asserted off the critical points of the dipole. -/
-theorem contDiffAt_ddGround {p : ℝ × ℝ} (hr : gradSq dipoleLift p ≠ 0) :
-    ContDiffAt ℝ ∞ ddGround p := by
-  have hlog : gradSq dipoleLift p / 2 ≠ 0 := div_ne_zero hr (by norm_num)
-  unfold ddGround
-  simp only [gradSq_dipoleLift, dipoleLift] at *
-  fun_prop
-
-/-- Partial derivatives of the comparison function are continuous at regular points. -/
-private theorem continuousAt_ddGround_partials {p : ℝ × ℝ}
-    (hr : gradSq dipoleLift p ≠ 0) :
-    ContinuousAt (partialX ddGround) p ∧ ContinuousAt (partialY ddGround) p := by
-  have hg : ContDiffAt ℝ 2 ddGround p := (contDiffAt_ddGround hr).of_le (by simp)
-  have hn : ∀ᶠ q in 𝓝 p, gradSq dipoleLift q ≠ 0 :=
-    (show Continuous (gradSq dipoleLift) by
-      rw [gradSq_dipoleLift]; fun_prop).continuousAt.eventually_ne hr
-  have hd : ∀ᶠ q in 𝓝 p, DifferentiableAt ℝ ddGround q :=
-    hn.mono fun q hq ↦ (contDiffAt_ddGround hq).differentiableAt (by simp)
-  constructor
-  · apply (((hg.fderiv_right (m := 1) (by norm_num)).continuousAt).clm_apply
-      continuousAt_const).congr
-    exact hd.mono fun q hq ↦ (partialX_eq_fderiv hq).symm
-  · apply (((hg.fderiv_right (m := 1) (by norm_num)).continuousAt).clm_apply
-      continuousAt_const).congr
-    exact hd.mono fun q hq ↦ (partialY_eq_fderiv hq).symm
-
-/-- The outward current coefficient has no singularity on a positive regular level. -/
-theorem continuousAt_ddGroundCurrentCoeff {p : ℝ × ℝ}
-    (hs : dipoleLift p ≠ 0) (hr : gradSq dipoleLift p ≠ 0) :
-    ContinuousAt ddGroundCurrentCoeff p := by
-  have hsc : ContinuousAt dipoleLift p := by unfold dipoleLift; fun_prop
-  have hrc : ContinuousAt (gradSq dipoleLift) p := by rw [gradSq_dipoleLift]; fun_prop
-  have hC : ContinuousAt ddC p := by
-    unfold ddC
-    exact (hsc.mul (continuousAt_const.sub (hsc.pow 3))).div
-      (continuousAt_const.mul hrc) (mul_ne_zero (by norm_num) hr)
-  have hA : ContinuousAt ddA p := by
-    unfold ddA
-    exact (((continuousAt_const.mul (hsc.pow 2)).div_const 3).add
-      (continuousAt_const.div (continuousAt_const.mul hsc)
-        (mul_ne_zero (by norm_num) hs))).sub hC
-  have hg := (contDiffAt_ddGround hr).continuousAt
-  have hgp := continuousAt_ddGround_partials hr
-  have hgn : ddGround p ≠ 0 := ne_of_gt (lt_of_lt_of_le zero_lt_one (one_le_ddGround p))
-  unfold ddGroundCurrentCoeff
-  rw [partialX_dipoleLift, partialY_dipoleLift]
-  exact (hA.neg.mul (((by fun_prop : ContinuousAt (fun q : ℝ × ℝ ↦ -Real.sin q.1) p).mul
-    hgp.1).add ((by fun_prop : ContinuousAt (fun q : ℝ × ℝ ↦ -Real.sin q.2) p).mul
-    hgp.2))).div hg hgn
-
-/-- Absolute integrability of the raw energy needs only L² values, not parity,
-    Fourier derivative relations, or the eigenfunction equation. -/
-theorem ddRawEnergy_integrable (φ dx dy : L2) {ε : ℝ} (hε : 0 < ε) :
-    IntegrableOn (ddRawEnergy φ dx dy) (ddTruncatedCell ε) := by
-  have hb : Bornology.IsBounded (ddTruncatedCell ε) :=
-    isBounded_cellNeighbourhood.subset fun _ hp ↦
-      closure_cellSquare_subset_cellNeighbourhood (subset_closure hp.1)
-  have h := ddVirialDensity_integrable hε (memLp_liftL2 φ hb)
-    (MemLp.zero : MemLp (fun _ : ℝ × ℝ ↦ (0 : ℂ)) 2 (volume.restrict (ddTruncatedCell ε)))
-    (memLp_liftL2 dx hb) (memLp_liftL2 dy hb)
-  convert h using 1
-  ext p
-  simp [ddRawEnergy, ddVirialDensity]
-  ring
-
-/-- Every regular-level current is integrable over a full orbit period. Only
-    continuity of the chosen value representative is used. -/
-theorem ddGroundCurrent_intervalIntegrable (φ : L2) {ε : ℝ}
-    (hε : ε ∈ Ioo (0 : ℝ) 2) :
-    IntervalIntegrable (fun t ↦ ddGroundCurrentCoeff (dipoleOrbit (ε / 2) t) *
-      ‖continuousRep φ (torusProj (dipoleOrbit (ε / 2) t))‖ ^ 2)
-      volume 0 (orbitPeriod (ε / 2)) := by
-  have h0 : 0 < ε / 2 := by linarith [hε.1]
-  have h1 : ε / 2 < 1 := by linarith [hε.2]
-  have ho : Continuous (fun t : ℝ ↦ dipoleOrbit (ε / 2) t) :=
-    continuous_dipoleOrbit.comp (f := fun t : ℝ ↦ (ε / 2, t))
-      (continuous_const.prodMk continuous_id)
-  have hc : Continuous (fun t ↦ ddGroundCurrentCoeff (dipoleOrbit (ε / 2) t)) := by
+/-- The value-only current is continuous at every regular stream level. -/
+theorem continuousAt_ddGroundCurrent_level (φ : L2) {h₀ : ℝ}
+    (hh₀ : h₀ ∈ Ioo (0 : ℝ) 1) :
+    ContinuousAt (fun h ↦ ddGroundCurrent φ (2 * h)) h₀ := by
+  let c := fun h : ℝ ↦ max (h₀ / 2) (min ((h₀ + 1) / 2) h)
+  have hc : Continuous c := by fun_prop
+  have hcI (h : ℝ) : c h ∈ Ioo (0 : ℝ) 1 := by
+    constructor
+    · exact (show 0 < h₀ / 2 by linarith [hh₀.1]).trans_le (le_max_left _ _)
+    · apply (max_le (by linarith [hh₀.2]) (min_le_left _ _)).trans_lt
+      linarith [hh₀.2]
+  have hcnear : ∀ᶠ h in 𝓝 h₀, c h = h := by
+    filter_upwards [Ioo_mem_nhds (show h₀ / 2 < h₀ by linarith [hh₀.1])
+      (show h₀ < (h₀ + 1) / 2 by linarith [hh₀.2])] with h hh
+    simp only [c, min_eq_right hh.2.le, max_eq_right hh.1.le]
+  have hT : Continuous (fun h ↦ orbitPeriod (c h)) :=
+    continuousOn_orbitPeriod.comp_continuous hc hcI
+  let B := fun p ↦ ddGroundCurrentCoeff p * ‖continuousRep φ (torusProj p)‖ ^ 2
+  have ho : Continuous (fun q : ℝ × ℝ ↦ dipoleOrbit (c q.1) q.2) :=
+    continuous_dipoleOrbit.comp (f := fun q : ℝ × ℝ ↦ (c q.1, q.2))
+      ((hc.comp continuous_fst).prodMk continuous_snd)
+  have hF : Continuous (fun q : ℝ × ℝ ↦ B (dipoleOrbit (c q.1) q.2)) := by
     apply continuous_iff_continuousAt.mpr
-    intro t
-    have hs := dipoleLift_dipoleOrbit h0 h1 t
-    have hp : 0 < dipoleLift (dipoleOrbit (ε / 2) t) := by rw [hs]; positivity
-    have hp2 : dipoleLift (dipoleOrbit (ε / 2) t) < 2 := by rw [hs]; linarith
-    exact (continuousAt_ddGroundCurrentCoeff hp.ne'
-      (gradSq_dipoleLift_pos hp hp2).ne').comp ho.continuousAt
-  exact (hc.mul (((continuousRep φ).continuous.comp
-    (isOpenQuotientMap_torusProj.continuous.comp ho)).norm.pow 2)).intervalIntegrable _ _
-
-/-- The logarithmic coefficient occurring in the first derivatives of the ground state. -/
-private def groundLogCoeff (r : ℝ) : ℝ :=
-  r * (2 * Real.log (r / 2) + 1) / 128
-
-private theorem groundLogCoeff_bound {r : ℝ} (hr : 0 ≤ r) (hr2 : r ≤ 2) :
-    |groundLogCoeff r| ≤ 1 / 8 := by
-  rcases eq_or_lt_of_le hr with hz | hp
-  · simp [← hz, groundLogCoeff]
-  have hl := (Real.abs_log_mul_self_lt (r / 2) (by positivity) (by linarith)).le
-  have hb : |r * Real.log (r / 2)| ≤ 2 := by
-    have he : r * Real.log (r / 2) = 2 * (Real.log (r / 2) * (r / 2)) := by ring
-    rw [he, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-    linarith
-  have ht : |r * (2 * Real.log (r / 2) + 1)| ≤ 6 := by
-    calc
-      _ = |2 * (r * Real.log (r / 2)) + r| := by congr 1; ring
-      _ ≤ |2 * (r * Real.log (r / 2))| + |r| := abs_add_le _ _
-      _ ≤ 6 := by
-        rw [abs_mul, abs_of_nonneg hr]
-        norm_num only
-        linarith
-  unfold groundLogCoeff
-  rw [abs_div]
-  norm_num only
-  linarith
-
-/-- Explicit first derivative on the regular set; the logarithmic coefficient
-    has a bounded continuous extension to the center. -/
-theorem partialX_ddGround {p : ℝ × ℝ} (hr : gradSq dipoleLift p ≠ 0) :
-    partialX ddGround p =
-      -Real.sin p.1 * Real.cos p.2 / 8 -
-        groundLogCoeff (gradSq dipoleLift p) * Real.sin p.1 * Real.cos p.1 := by
-  have hdr := hasDerivAt_partialX
-    (show DifferentiableAt ℝ (gradSq dipoleLift) p by rw [gradSq_dipoleLift]; fun_prop)
-  have hds := hasDerivAt_partialX
-    (show DifferentiableAt ℝ dipoleLift p by unfold dipoleLift; fun_prop)
-  have h := (((hdr.add (hds.pow 2)).div_const 16).const_add 1).sub
-    (((hdr.pow 2).div_const 256).mul ((hdr.div_const 2).log (div_ne_zero hr (by norm_num))))
-  change deriv (fun t ↦ ddGround (t, p.2)) p.1 = _
-  convert h.deriv using 1
-  · rfl
-  · simp only [partialX_gradSq_dipoleLift, partialX_dipoleLift, dipoleLift, groundLogCoeff,
-      Pi.pow_apply, Nat.cast_ofNat, show 2 - 1 = 1 from rfl, pow_one, Prod.mk.eta]
-    field_simp [hr]
-    ring
-
-theorem partialY_ddGround {p : ℝ × ℝ} (hr : gradSq dipoleLift p ≠ 0) :
-    partialY ddGround p =
-      -Real.sin p.2 * Real.cos p.1 / 8 -
-        groundLogCoeff (gradSq dipoleLift p) * Real.sin p.2 * Real.cos p.2 := by
-  have hdr := hasDerivAt_partialY
-    (show DifferentiableAt ℝ (gradSq dipoleLift) p by rw [gradSq_dipoleLift]; fun_prop)
-  have hds := hasDerivAt_partialY
-    (show DifferentiableAt ℝ dipoleLift p by unfold dipoleLift; fun_prop)
-  have h := (((hdr.add (hds.pow 2)).div_const 16).const_add 1).sub
-    (((hdr.pow 2).div_const 256).mul ((hdr.div_const 2).log (div_ne_zero hr (by norm_num))))
-  change deriv (fun t ↦ ddGround (p.1, t)) p.2 = _
-  convert h.deriv using 1
-  · rfl
-  · simp only [partialY_gradSq_dipoleLift, partialY_dipoleLift, dipoleLift, groundLogCoeff,
-      Pi.pow_apply, Nat.cast_ofNat, show 2 - 1 = 1 from rfl, pow_one, Prod.mk.eta]
-    field_simp [hr]
-    ring
-
-private def groundSlope (x y r : ℝ) : ℝ :=
-  -Real.sin x * Real.cos y / 8 - groundLogCoeff r * Real.sin x * Real.cos x
-
-private theorem groundSlope_bound (x y : ℝ) {r : ℝ} (hr : 0 ≤ r) (hr2 : r ≤ 2) :
-    |groundSlope x y r| ≤ 1 := by
-  unfold groundSlope
-  calc
-    _ ≤ |-Real.sin x * Real.cos y / 8| +
-        |groundLogCoeff r * Real.sin x * Real.cos x| := abs_sub _ _
-    _ = |Real.sin x| * |Real.cos y| / 8 +
-        |groundLogCoeff r| * |Real.sin x| * |Real.cos x| := by
-      simp only [abs_div, abs_mul, abs_neg]
-      norm_num
-    _ ≤ 1 * 1 / 8 + (1 / 8) * 1 * 1 := by
-      gcongr
-      · exact Real.abs_sin_le_one x
-      · exact Real.abs_cos_le_one y
-      · exact groundLogCoeff_bound hr hr2
-      · exact Real.abs_sin_le_one x
-      · exact Real.abs_cos_le_one x
-    _ ≤ 1 := by norm_num
-
-private def groundPartial (j : Fin 2) (p : ℝ × ℝ) : ℝ :=
-  if j = 0 then groundSlope p.1 p.2 (gradSq dipoleLift p)
-  else groundSlope p.2 p.1 (gradSq dipoleLift p)
-
-private theorem groundPartial_bound (j : Fin 2) (p : ℝ × ℝ) :
-    |groundPartial j p| ≤ 1 := by
-  have hr : 0 ≤ gradSq dipoleLift p := by rw [gradSq_dipoleLift]; positivity
-  have hr2 : gradSq dipoleLift p ≤ 2 := by
-    rw [gradSq_dipoleLift]
-    nlinarith [Real.sin_sq_le_one p.1, Real.sin_sq_le_one p.2]
-  unfold groundPartial
-  split_ifs <;> exact groundSlope_bound _ _ hr hr2
-
-private theorem groundPartial_eq (j : Fin 2) {p : ℝ × ℝ}
-    (hr : gradSq dipoleLift p ≠ 0) :
-    groundPartial j p = coordPartial j ddGround p := by
-  fin_cases j <;> simp [groundPartial, groundSlope, coordPartial,
-    partialX_ddGround hr, partialY_ddGround hr]
-
-private theorem ae_regular_ddTruncatedCell {ε : ℝ} (hε : 0 < ε) :
-    ∀ᵐ p ∂volume.restrict (ddTruncatedCell ε), gradSq dipoleLift p ≠ 0 := by
-  filter_upwards [ae_restrict_mem (isOpen_ddTruncatedCell ε).measurableSet,
-    ae_restrict_of_ae ae_cos_fst_ne_cos_snd] with p hp hn
-  have hs : 0 < dipoleLift p := hε.trans hp.2
-  intro hz
-  have h := dipoleLift_mul_le_gradSq p
-  rw [hz] at h
-  have hs2 : 2 ≤ dipoleLift p := by nlinarith
-  unfold dipoleLift at hs2
-  exact hn (by linarith [Real.cos_le_one p.1, Real.cos_le_one p.2])
-
-/-- Homogeneity of the quadratic form, including the totalized critical values. -/
-theorem ddMatrixForm_real_mul (p : ℝ × ℝ) (c : ℝ) (vx vy : ℂ) :
-    ddMatrixForm p ((c : ℂ) * vx) ((c : ℂ) * vy) =
-      c ^ 2 * ddMatrixForm p vx vy := by
-  have hn : normalDeriv (fun _ ↦ (c : ℂ) * vx) (fun _ ↦ (c : ℂ) * vy) p =
-      (c : ℂ) * normalDeriv (fun _ ↦ vx) (fun _ ↦ vy) p := by
-    unfold normalDeriv
-    ring
-  have ht : tangentDeriv (fun _ ↦ (c : ℂ) * vx) (fun _ ↦ (c : ℂ) * vy) p =
-      (c : ℂ) * tangentDeriv (fun _ ↦ vx) (fun _ ↦ vy) p := by
-    unfold tangentDeriv
-    ring
-  simp only [ddMatrixForm, hn, ht, norm_mul, Complex.norm_real, Real.norm_eq_abs,
-    mul_pow, sq_abs]
-  ring
-
-/-- Positive-truncation divided-gradient integrability uses only L² data.
-    Parity and the eigenfunction equation are unnecessary away from the separatrix. -/
-theorem ddPiconeGradient_integrable (φ dx dy : L2) {ε : ℝ} (hε : 0 < ε) :
-    IntegrableOn (ddPiconeGradient φ dx dy) (ddTruncatedCell ε) := by
-  have hb : Bornology.IsBounded (ddTruncatedCell ε) :=
-    isBounded_cellNeighbourhood.subset fun _ hp ↦
-      closure_cellSquare_subset_cellNeighbourhood (subset_closure hp.1)
-  let g (j : Fin 2) (d : L2) (p : ℝ × ℝ) : ℂ :=
-    liftL2 d p - liftL2 φ p * (groundPartial j p : ℂ) / (ddGround p : ℂ)
-  have hg (j : Fin 2) (d : L2) :
-      MemLp (g j d) 2 (volume.restrict (ddTruncatedCell ε)) := by
-    have hm (f : L2) : Measurable (liftL2 f) :=
-      (Lp.stronglyMeasurable f).measurable.comp
-        isOpenQuotientMap_torusProj.continuous.measurable
-    have mg : Measurable (g j d) := by
-      dsimp only [g]
-      unfold groundPartial groundSlope groundLogCoeff ddGround
-      simp only [gradSq_dipoleLift, dipoleLift]
-      split_ifs <;> fun_prop
-    apply ((memLp_liftL2 d hb).norm.add (memLp_liftL2 φ hb).norm).mono'
-      mg.aestronglyMeasurable
-    filter_upwards [] with p
-    have hw : 0 < ddGround p := lt_of_lt_of_le zero_lt_one (one_le_ddGround p)
-    calc
-      ‖g j d p‖ ≤ ‖liftL2 d p‖ + ‖liftL2 φ p * (groundPartial j p : ℂ) /
-          (ddGround p : ℂ)‖ := norm_sub_le _ _
-      _ = ‖liftL2 d p‖ + ‖liftL2 φ p‖ * |groundPartial j p| / ddGround p := by
-        rw [norm_div, norm_mul, Complex.norm_real, Complex.norm_real, Real.norm_eq_abs,
-          Real.norm_eq_abs, abs_of_pos hw]
-      _ ≤ ‖liftL2 d p‖ + ‖liftL2 φ p‖ := by
-        have hp := groundPartial_bound j p
-        have hdiv : ‖liftL2 φ p‖ * |groundPartial j p| / ddGround p ≤ ‖liftL2 φ p‖ := by
-          apply (div_le_iff₀ hw).mpr
-          calc
-            _ ≤ ‖liftL2 φ p‖ * 1 := mul_le_mul_of_nonneg_left hp (norm_nonneg _)
-            _ ≤ _ := by gcongr; exact one_le_ddGround p
-        exact add_le_add le_rfl hdiv
-  have heq : ∀ᵐ p ∂volume.restrict (ddTruncatedCell ε),
-      ∀ j d, g j d p = (ddGround p : ℂ) * ddDividedPartial φ d j p := by
-    filter_upwards [ae_regular_ddTruncatedCell hε] with p hp j d
-    have hw : (ddGround p : ℂ) ≠ 0 :=
-      Complex.ofReal_ne_zero.mpr (ne_of_gt (lt_of_lt_of_le zero_lt_one (one_le_ddGround p)))
-    dsimp only [g, ddDividedPartial]
-    rw [groundPartial_eq j hp]
-    field_simp
-  have hi := ddVirialDensity_integrable hε MemLp.zero MemLp.zero (hg 0 dx) (hg 1 dy)
-  apply hi.congr
-  filter_upwards [heq] with p hp
-  simp only [ddVirialDensity, sub_self, mul_zero, zero_add]
-  rw [hp 0 dx, hp 1 dy, ddMatrixForm_real_mul]
+    intro q
+    have hs := dipoleLift_dipoleOrbit (hcI q.1).1 (hcI q.1).2 q.2
+    have hs0 : 0 < dipoleLift (dipoleOrbit (c q.1) q.2) := by rw [hs]; linarith [(hcI q.1).1]
+    have hs2 : dipoleLift (dipoleOrbit (c q.1) q.2) < 2 := by rw [hs]; linarith [(hcI q.1).2]
+    exact ((continuousAt_ddGroundCurrentCoeff hs0.ne'
+      (gradSq_dipoleLift_pos hs0 hs2).ne').mul
+        (((continuousRep φ).continuous.comp
+          isOpenQuotientMap_torusProj.continuous).continuousAt.norm.pow 2)).comp
+          (f := fun r : ℝ × ℝ ↦ dipoleOrbit (c r.1) r.2) ho.continuousAt
+  have hcont := intervalIntegral.continuous_parametric_intervalIntegral_of_continuous
+    (f := fun h t ↦ B (dipoleOrbit (c h) t)) (a₀ := 0) (μ := volume) hF hT
+  apply hcont.continuousAt.congr
+  filter_upwards [hcnear] with h hh
+  rw [hh]
+  simp only [ddGroundCurrent, mul_div_cancel_left₀ _ (by norm_num : (2 : ℝ) ≠ 0)]
   rfl
-
-/-- All four integrability assertions on a positive Picone truncation. No
-    Fourier derivative relations are needed for these assertions. -/
-theorem dd_truncated_picone_integrability {φ : L2} (hφ : MemSobolev 2 φ) (dx dy : L2)
-    {ε : ℝ} (hε : ε ∈ Ioo (0 : ℝ) 2) :
-    IntegrableOn (ddRawEnergy φ dx dy) (ddTruncatedCell ε) ∧
-      IntegrableOn (ddPiconeGradient φ dx dy) (ddTruncatedCell ε) ∧
-      IntegrableOn (ddPiconePotential φ) (ddTruncatedCell ε) ∧
-      IntervalIntegrable (fun t ↦ ddGroundCurrentCoeff (dipoleOrbit (ε / 2) t) *
-        ‖continuousRep φ (torusProj (dipoleOrbit (ε / 2) t))‖ ^ 2)
-        volume 0 (orbitPeriod (ε / 2)) := by
-  exact ⟨ddRawEnergy_integrable φ dx dy hε.1,
-    ddPiconeGradient_integrable φ dx dy hε.1,
-    (dd_piconePotential_integrable hφ).mono_set (fun _ hp ↦ hp.1),
-    ddGroundCurrent_intervalIntegrable φ hε⟩
 
 /-- Sobolev Picone on every positive truncation, with bulk and current integrability.
     The center is included; its removal and limiting argument belong to this input. -/
@@ -339,6 +74,86 @@ theorem dd_truncated_picone {φ dx dy : L2} (hφ : MemSobolev 2 φ)
           (∫ p in ddTruncatedCell ε, ddPiconePotential φ p) + ddGroundCurrent φ ε := by
   obtain ⟨hr, hg, hp, hc⟩ := dd_truncated_picone_integrability hφ dx dy hε
   refine ⟨hr, hg, hp, hc, ?_⟩
-  sorry
+  let J := fun p ↦ ddRawEnergy φ dx dy p - ddPiconeGradient φ dx dy p - ddPiconePotential φ p
+  let A := ddTruncatedCell ε
+  have hi : IntegrableOn J A := (hr.sub hg).sub hp
+  obtain ⟨N, hN, hann⟩ := ddPicone_annular hφ hdx hdy
+  have hDense : Dense Nᶜ := MeasureTheory.Measure.dense_of_ae (measure_eq_zero_iff_ae_notMem.mp hN)
+  let h : ℝ := ε / 2
+  let b : ℝ := (h + 1) / 2
+  have hh : h ∈ Ioo (0 : ℝ) 1 := ⟨by dsimp [h]; linarith [hε.1],
+    by dsimp [h]; linarith [hε.2]⟩
+  have hhb : h < b := by dsimp [b]; linarith [hh.2]
+  have hb1 : b < 1 := by dsimp [b]; linarith [hh.2]
+  have h2h : 2 * h = ε := by dsimp [h]; ring
+  obtain ⟨lo, _, hlo, htlo⟩ := hDense.exists_seq_strictAnti_tendsto_of_lt hhb
+  obtain ⟨up, _, hup, htup⟩ := hDense.exists_seq_strictMono_tendsto_of_lt hb1
+  let S (n : ℕ) : Set (ℝ × ℝ) := {p | 2 * lo n < dipoleLift p ∧ dipoleLift p < 2 * up n}
+  have hm (n : ℕ) : MeasurableSet (S n) := by
+    have hms : Measurable dipoleLift := by unfold dipoleLift; fun_prop
+    exact (measurableSet_lt measurable_const hms).inter (measurableSet_lt hms measurable_const)
+  have hset (n : ℕ) : {p | p ∈ cellSquare ∧
+      2 * lo n < dipoleLift p ∧ dipoleLift p < 2 * up n} = S n ∩ A := by
+    ext p
+    constructor
+    · intro hp
+      refine ⟨hp.2, hp.1, ?_⟩
+      linarith [(hlo n).1.1, hp.2.1]
+    · rintro ⟨hs, hp⟩
+      exact ⟨hp.1, hs⟩
+  have hind (n : ℕ) : (∫ p in {p | p ∈ cellSquare ∧
+      2 * lo n < dipoleLift p ∧ dipoleLift p < 2 * up n}, J p) =
+      ∫ p in A, (S n).indicator J p := by
+    rw [integral_indicator (hm n), Measure.restrict_restrict (hm n), hset]
+  have hlt2 : ∀ᵐ p : ℝ × ℝ, dipoleLift p < 2 := by
+    filter_upwards [ae_cos_fst_ne_cos_snd] with p hp
+    by_contra hge
+    apply hp
+    unfold dipoleLift at hge
+    linarith [Real.cos_le_one p.1, Real.cos_le_one p.2]
+  have htbulk : Tendsto (fun n ↦ ∫ p in {p | p ∈ cellSquare ∧
+      2 * lo n < dipoleLift p ∧ dipoleLift p < 2 * up n}, J p)
+      atTop (𝓝 (∫ p in A, J p)) := by
+    simp_rw [hind]
+    apply tendsto_integral_of_dominated_convergence (fun p ↦ ‖J p‖)
+    · exact fun n ↦ hi.aestronglyMeasurable.indicator (hm n)
+    · exact hi.norm
+    · intro n
+      filter_upwards with p
+      by_cases hp : p ∈ S n <;> simp [hp]
+    · filter_upwards [ae_restrict_mem (isOpen_ddTruncatedCell ε).measurableSet,
+        ae_restrict_of_ae hlt2] with p hp hp2
+      apply tendsto_const_nhds.congr'
+      have hl : h < dipoleLift p / 2 := by linarith [hp.2]
+      have hu : dipoleLift p / 2 < 1 := by linarith
+      filter_upwards [htlo.eventually (gt_mem_nhds hl), htup.eventually (lt_mem_nhds hu)]
+        with n hnlo hnup
+      exact (indicator_of_mem (show p ∈ S n from ⟨by linarith, by linarith⟩) J).symm
+  have htloI : Tendsto (fun n ↦ ddGroundCurrent φ (2 * lo n)) atTop
+      (𝓝 (ddGroundCurrent φ ε)) := by
+    have ht := (continuousAt_ddGroundCurrent_level φ hh).tendsto.comp htlo
+    rw [h2h] at ht
+    exact ht
+  have htup2 : Tendsto (fun n ↦ 2 * up n) atTop (𝓝[<] (2 : ℝ)) := by
+    refine tendsto_nhdsWithin_iff.mpr ⟨?_, Eventually.of_forall fun n ↦ ?_⟩
+    · simpa using htup.const_mul 2
+    · change 2 * up n < 2
+      linarith [(hup n).1.2]
+  have htupI := (tendsto_ddGroundCurrent_center φ).comp htup2
+  have htrhs := htloI.sub htupI
+  rw [sub_zero] at htrhs
+  have hid (n : ℕ) : (∫ p in {p | p ∈ cellSquare ∧
+      2 * lo n < dipoleLift p ∧ dipoleLift p < 2 * up n}, J p) =
+      ddGroundCurrent φ (2 * lo n) - ddGroundCurrent φ (2 * up n) := by
+    exact hann (lo n) (up n) (hh.1.trans (hlo n).1.1)
+      ((hlo n).1.2.trans (hup n).1.1) (hup n).1.2 (hlo n).2 (hup n).2
+  have heq : (∫ p in A, J p) = ddGroundCurrent φ ε :=
+    tendsto_nhds_unique htbulk (htrhs.congr fun n ↦ (hid n).symm)
+  change (∫ p in ddTruncatedCell ε,
+    ddRawEnergy φ dx dy p - ddPiconeGradient φ dx dy p - ddPiconePotential φ p) = _ at heq
+  have hsplt := integral_sub (hr.sub hg) hp
+  simp only [Pi.sub_apply, integral_sub hr hg] at hsplt
+  rw [hsplt] at heq
+  linarith
 
 end NoEmbeddedEigenvalues

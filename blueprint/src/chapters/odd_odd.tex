@@ -666,7 +666,7 @@ that for all $0<a<b<2$ outside $N$,
 \uses{lem:dd-cutoff-identity, lem:inverse-laplacian-derivatives,
  lem:lift-sobolev-local, lem:sobolev-local-multiplier,
  lem:cell-neighbourhood, lem:normal-coeff-bound,
- lem:coarea-level-cutoff, lem:du-bois-reymond}
+ lem:annular-from-cutoff}
 \leanok
 Local smooth division gives $H^2$ on positive truncations and
 weak-derivative uniqueness transfers the gradient bounds to the supplied
@@ -1028,6 +1028,31 @@ Let
 \]
 \end{definition}
 
+\begin{lemma}[First-order ground-state estimates]
+\label{lem:dd-ground-first-order}
+\uses{def:dd-ground-state}
+\lean{NoEmbeddedEigenvalues.one_le_ddGround,
+ NoEmbeddedEigenvalues.contDiffAt_ddGround,
+ NoEmbeddedEigenvalues.contDiffAt_ddGround_partials,
+ NoEmbeddedEigenvalues.partialX_ddGround, NoEmbeddedEigenvalues.partialY_ddGround}
+\leanok
+The ground state satisfies $w_*\ge1$. It is smooth wherever $r\ne0$,
+and there
+\[
+ \partial_xw_*=-\frac{\sin x\cos y}{8}
+   -\frac{r(2\log(r/2)+1)}{128}\sin x\cos x,
+\]
+with the analogous formula interchanging $x,y$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities}
+\leanok
+Since $0\le r\le2$, $\log(r/2)\le0$, including the totalized value
+at $r=0$. This proves $w_*\ge1$. Off $r=0$ smoothness follows from
+the explicit formula. Differentiate and use $r+s^2=2+2\cos x\cos y$.
+\end{proof}
+
 \begin{lemma}[Boundary ground-state algebra]
 \label{lem:dd-boundary-ground-algebra}
 \uses{def:dd-ground-state}
@@ -1176,8 +1201,9 @@ integrable over one orbit period.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-picone-potential-integrable, lem:normal-coeff-bound,
- lem:dipole-identities, lem:lift-torus, lem:continuous-representative}
+\uses{lem:dd-picone-potential-integrable, lem:dd-ground-first-order,
+ lem:normal-coeff-bound, lem:dipole-identities, lem:lift-torus,
+ lem:continuous-representative}
 \leanok
 On $s>\epsilon$ the coefficients $F,A_0,C_0$ are bounded, including
 near the center. The normal and tangent components are bounded by the
@@ -1202,6 +1228,100 @@ are continuous, hence their product is integrable over the compact
 time interval.
 \end{proof}
 
+\begin{lemma}[Regularity and center limit of the Picone current]
+\label{lem:dd-picone-current-regularity}
+\uses{def:sobolev-torus, def:dd-ground-current}
+\lean{NoEmbeddedEigenvalues.abs_ddGroundCurrentCoeff_le,
+ NoEmbeddedEigenvalues.abs_ddGroundCurrent_le,
+ NoEmbeddedEigenvalues.tendsto_ddGroundCurrent_center,
+ NoEmbeddedEigenvalues.continuousAt_ddGroundCurrent_level}
+\leanok
+For $u\in H^2(\T^2)$, $h\mapsto I_{2h}[u]$ is continuous on $(0,1)$.
+On $1<s<2$, the current coefficient satisfies $|b|\le12(2-s)$.
+Consequently, for $1<\epsilon<2$,
+\[
+ |I_\epsilon[u]|\le192(2-\epsilon)\|\widetilde u\|_\infty^2,
+ \qquad I_\epsilon[u]\longrightarrow0\quad(\epsilon\uparrow2).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-ground-first-order, lem:dipole-identities,
+ lem:normal-coeff-bound, lem:period-integral, lem:period-basic,
+ lem:period-orbit, lem:continuous-representative}
+\leanok
+The first-derivative formula and $|r\log(r/2)|\le2$ give
+$|\nabla s\cdot\nabla w_*|\le r/4$.
+For $s>1$, $|A_0|\le24$ and $r\le2(2-s)$, so $w_*\ge1$
+gives the claimed bound for $b$.
+Also $S(\epsilon/2)=8L(\epsilon/2)\le16$, yielding the factor $192$.
+For continuity, restrict the level parameter to a compact subinterval
+of $(0,1)$. The orbit integrand is jointly continuous and its period
+is continuous, so its integral with variable upper endpoint is continuous.
+\end{proof}
+
+\begin{lemma}[Weak Picone testing by a stream cutoff]
+\label{lem:dd-picone-cutoff}
+\uses{def:dd-picone-truncations, def:dd-ground-current, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.ddPicone_cutoff_zero}
+\leanok
+For $u,u_x,u_y\in L^2$ with the specified Fourier derivative relations
+and $\chi\in C^\infty_c((0,2))$, write
+\[
+ J[u]=e[u]-w_*^2\langle M\nabla(u/w_*),\nabla(u/w_*)\rangle
+          -(Pw_*/w_*)|u|^2.
+\]
+Then
+\[
+ \int_\Cell \chi(s)J[u]-\chi'(s)b|u|^2=0.
+\]
+No reflection parity, smooth approximation, or pointwise gradient trace is used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quadratic-weak-ibp, lem:picone, lem:dd-ground-first-order,
+ lem:dipole-identities, lem:cell-periodic-integral}
+\leanok
+Put $q=M\nabla w_*/w_*$. The finite-dimensional Picone algebra and
+the quotient rule for this explicit smooth field give
+\[
+ J[u]=(\Div q)|u|^2+2q\cdot\Re(\nabla u\,\bar u)
+\]
+on regular positive levels, using only the specified first-jet values.
+Apply quadratic weak integration by parts to the periodic field
+$W=\chi(s)q$. It is smooth globally: the cutoff vanishes near all
+singular stream levels. Since $q\cdot\nabla s=-b$, the resulting
+integrand is $\chi(s)J[u]-\chi'(s)b|u|^2$.
+It vanishes where $s\le0$, so the periodic cell-integral identity
+restricts the period square to the positive cell.
+\end{proof}
+
+\begin{lemma}[Annular Picone identity]
+\label{lem:dd-picone-annular}
+\uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
+\lean{NoEmbeddedEigenvalues.ddPicone_annular}
+\leanok
+For $u\in H^2(\T^2)$ and specified Fourier first derivatives, there is
+one null set $N$ such that for all $0<h<h'<1$ outside $N$,
+\[
+ \int_{\Cell\cap\{2h<s<2h'\}}J[u]=I_{2h}[u]-I_{2h'}[u].
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-picone-cutoff, lem:dd-truncated-picone-integrability,
+ lem:annular-from-cutoff, lem:continuous-representative,
+ lem:dd-picone-current-regularity}
+\leanok
+The bulk defect is integrable on every closed regular band.
+The continuous current density is bounded on its compact closure,
+hence integrable there. Replace the raw value representative by
+$\widetilde u$ almost everywhere in the cutoff identity.
+The three separately integrable cutoff terms can then be split.
+Apply annular extraction with $f(h)=\chi(2h)$, which accounts for
+the factor $1/2$ in the level derivative.
+\end{proof}
+
 \begin{lemma}[Sobolev Picone identity on a positive truncation]
 \label{lem:dd-truncated-picone}
 \uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
@@ -1220,30 +1340,26 @@ No reflection parity is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:picone, lem:dd-truncated-picone-integrability,
- lem:dipole-identities, lem:lift-sobolev-local, lem:continuous-representative}
-Integrability is Lemma~\ref{lem:dd-truncated-picone-integrability}.
-On a truncation with a disk about the center removed, use the weak
-product rule and Picone integration by parts with
-$J=(|u|^2/w_*)M\nabla w_*$. Its outer flux is
-\[
- J\cdot n\,d\sigma
- =-\frac{A_0\,\nabla s\cdot\nabla w_*}{w_*}|u|^2\,dt,
- \qquad n=-\nabla s/|\nabla s|,\quad d\sigma=|\nabla s|\,dt,
-\]
-which is precisely $I_\epsilon[u]$. This boundary term needs only the
-continuous value of $u$, not values of its arbitrary $L^2$ gradient
-representatives.
+\uses{lem:dd-truncated-picone-integrability, lem:dd-picone-annular,
+ lem:dd-picone-current-regularity, lem:dipole-identities}
+\leanok
+Put $h=\epsilon/2$ and choose $h<b<1$. Outside the common exceptional
+set of the annular identity, choose lower levels $\ell_n\in(h,b)$
+converging to $h$ and upper levels $u_n\in(b,1)$ converging to $1$.
+A null set has dense complement, so both choices are possible.
+The annuli $\{2\ell_n<s<2u_n\}$ approach $C_\epsilon$ pointwise
+except at the center, which is null. Absolute integrability of the
+bulk defect gives convergence of their integrals by dominated convergence.
 
-For the inner boundary, put $\rho=|p|$. Near the center,
-$r=O(\rho^2)$, $w_*\ge1$ and the explicit first derivatives above give
-$\nabla w_*=O(\rho)$; indeed $r\log r$ is bounded and
-$|\sin x|+|\sin y|=O(\rho)$. Since $M$ and $u$ are bounded,
-$|J|=O(\rho)$ and the inner flux is $O(\rho^2)\to0$.
-Absolute bulk integrability permits restoring the disk by dominated
-convergence. The weak integration-by-parts formula on the punctured
-domain must be justified independently; the smooth pointwise identity
-alone does not supply it.
+The lower currents converge to $I_\epsilon[u]$ by continuity, and the
+upper currents tend to zero by the center estimate. Passing to the limit
+in the annular identity gives $\int_{C_\epsilon}J[u]=I_\epsilon[u]$.
+Split this ordinary integral using the three integrability assertions
+and rearrange.
+
+This resolves the weak integration-by-parts and center-removal issue:
+Fourier quadratic testing supplies the weak formula directly, and no
+smooth density theorem or Sobolev gradient trace is needed.
 \end{proof}
 
 \begin{lemma}[Character-wise virial limit for supplied quotient data]

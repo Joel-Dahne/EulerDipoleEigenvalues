@@ -181,9 +181,12 @@ proof mechanisms. Module names below are relative to
   derivatives. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from
   the shared outward derivative convention.
-- `OddOddPicone.lean`: positive-truncation Picone integrability, ground-state
-  first derivatives and regular-level current continuity; the Sobolev Picone
-  identity interface, above the reusable weighted-virial coefficient estimates.
+- `OddOddPiconeIntegrability.lean`: ground-state first derivatives,
+  positive-truncation energy integrability and a full-level center-current bound.
+- `OddOddPiconeCutoff.lean`: quadratic Fourier integration by parts, normalized
+  ground-flux algebra, weak Picone cutoff testing and common-null annular extraction.
+- `OddOddPicone.lean`: regular-level current continuity and the Picone identity
+  at every positive truncation, by simultaneous endpoint exhaustion.
 - `OddOdd.lean`: character-wise virial-limit assembly, scalar finite-part
   cancellation, boundary-form identification, bulk coercivity interface and
   odd–odd exclusion assembly.

@@ -2767,3 +2767,27 @@ the supplied divergence formula. Positivity of $G$ is not needed.
 The divergence formula, any Sobolev extension, and removal of singular
 points are separate analytic justifications, not consequences of this algebra.
 \end{proof}
+
+\begin{lemma}[Quadratic weak integration by parts on the torus]
+\label{lem:quadratic-weak-ibp}
+\uses{def:square-integral, def:fourier-derivatives}
+\lean{NoEmbeddedEigenvalues.squareIntegral_weak_value_divergence}
+\leanok
+Let $W=(W_1,W_2)$ be a real periodic $C^2$ field and let $u,u_x,u_y\in L^2$
+with the specified Fourier first-derivative relations. On a period square $Q$,
+\[
+ \int_Q (\Div W)|u|^2+
+   2\bigl(W_1\Re(u_x\bar u)+W_2\Re(u_y\bar u)\bigr)=0.
+\]
+No classical differentiability of the supplied representatives is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:half-density-skew-h1, lem:square-pairing}
+\leanok
+The half-density generator is
+$D_Wu=W_1u_x+W_2u_y+\frac12(\Div W)u$.
+Its skew-symmetry gives $\Re\int_Q(D_Wu)\bar u=0$.
+Expand and multiply by two. The products are integrable by the $L^2$
+bounds and boundedness of the smooth periodic coefficients.
+\end{proof}
