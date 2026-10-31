@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.OddOddVirial
+import NoEmbeddedEigenvalues.OddOddPicone
 
 /-!
 # Odd–odd exclusion and renormalized current assembly

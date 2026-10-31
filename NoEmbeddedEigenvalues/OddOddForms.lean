@@ -366,22 +366,6 @@ theorem dd_piconePotential_integrable {φ : L2} (hφ : MemSobolev 2 φ) :
     IntegrableOn (ddPiconePotential φ) cellSquare := by
   sorry
 
-/-- Sobolev Picone on every positive truncation, with bulk and current integrability.
-    The center is included; its removal and limiting argument belong to this input. -/
-theorem dd_truncated_picone {φ dx dy : L2} (hφ : MemSobolev 2 φ)
-    (hdx : HasFourierPartial 0 φ dx) (hdy : HasFourierPartial 1 φ dy)
-    {ε : ℝ} (hε : ε ∈ Ioo (0 : ℝ) 2) :
-    IntegrableOn (ddRawEnergy φ dx dy) (ddTruncatedCell ε) ∧
-      IntegrableOn (ddPiconeGradient φ dx dy) (ddTruncatedCell ε) ∧
-      IntegrableOn (ddPiconePotential φ) (ddTruncatedCell ε) ∧
-      IntervalIntegrable (fun t ↦ ddGroundCurrentCoeff (dipoleOrbit (ε / 2) t) *
-        ‖continuousRep φ (torusProj (dipoleOrbit (ε / 2) t))‖ ^ 2)
-        volume 0 (orbitPeriod (ε / 2)) ∧
-      (∫ p in ddTruncatedCell ε, ddRawEnergy φ dx dy p) =
-        (∫ p in ddTruncatedCell ε, ddPiconeGradient φ dx dy p) +
-          (∫ p in ddTruncatedCell ε, ddPiconePotential φ p) + ddGroundCurrent φ ε := by
-  sorry
-
 /-- The scalar value finite part and absolute integrability of its renormalized arc terms. -/
 theorem dd_value_finite_part {φ : L2} (hφ : MemSobolev 2 φ) :
     (∀ k : Fin 4, Integrable (ddArcValueRemainder φ k)) ∧

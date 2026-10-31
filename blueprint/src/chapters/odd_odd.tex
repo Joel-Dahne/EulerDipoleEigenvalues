@@ -1164,6 +1164,44 @@ integrability of $|\log r|$. This is a residual regularity calculation,
 not the residual sign certificate.
 \end{proof}
 
+\begin{lemma}[Integrability on a positive Picone truncation]
+\label{lem:dd-truncated-picone-integrability}
+\uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
+\lean{NoEmbeddedEigenvalues.dd_truncated_picone_integrability}
+\leanok
+For $u\in H^2(\T^2)$, specified Fourier first derivatives, and every
+$0<\epsilon<2$, the raw energy, Picone gradient and Picone potential
+are absolutely integrable on $C_\epsilon$. The outward current is
+integrable over one orbit period.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-picone-potential-integrable, lem:normal-coeff-bound,
+ lem:dipole-identities, lem:lift-torus, lem:continuous-representative}
+\leanok
+On $s>\epsilon$ the coefficients $F,A_0,C_0$ are bounded, including
+near the center. The normal and tangent components are bounded by the
+Cartesian gradient norm, so the raw energy is integrable by the $L^2$
+bounds. Also $0\le r\le2$ gives $w_*\ge1$. Away from critical points,
+\[
+ \partial_xw_*=-\frac{\sin x\cos y}{8}
+   -\frac{r(2\log(r/2)+1)}{128}\sin x\cos x,
+\]
+and similarly with $x,y$ interchanged. Since
+$|r\log(r/2)|\le2$, these derivatives are bounded.
+Thus $w_*\nabla(u/w_*)=\nabla u-u\nabla w_*/w_*$ has $L^2$
+components. Homogeneity of the quadratic form and the same bounded
+coefficient estimate prove Picone-gradient integrability. These two
+estimates need only $L^2$ witnesses, not their derivative relations.
+The critical point is null, so its totalized coefficients do not matter.
+
+Restrict Lemma~\ref{lem:dd-picone-potential-integrable} to $C_\epsilon$
+for the potential. On the regular orbit $s=\epsilon$, the ground state
+is smooth and positive. The current coefficient and $\widetilde u$
+are continuous, hence their product is integrable over the compact
+time interval.
+\end{proof}
+
 \begin{lemma}[Sobolev Picone identity on a positive truncation]
 \label{lem:dd-truncated-picone}
 \uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
@@ -1182,14 +1220,30 @@ No reflection parity is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:picone, lem:dd-picone-potential-integrable,
+\uses{lem:picone, lem:dd-truncated-picone-integrability,
  lem:dipole-identities, lem:lift-sobolev-local, lem:continuous-representative}
-Apply the weak product rule and Picone integration by parts after removing
-the center. Its limiting flux must vanish before the center is restored.
-The outer boundary current needs only the continuous value of $u$, not
-pointwise values of arbitrary $L^2$ gradient representatives. These Sobolev
-and center justifications are part of this input; the smooth pointwise
-identity alone does not prove it.
+Integrability is Lemma~\ref{lem:dd-truncated-picone-integrability}.
+On a truncation with a disk about the center removed, use the weak
+product rule and Picone integration by parts with
+$J=(|u|^2/w_*)M\nabla w_*$. Its outer flux is
+\[
+ J\cdot n\,d\sigma
+ =-\frac{A_0\,\nabla s\cdot\nabla w_*}{w_*}|u|^2\,dt,
+ \qquad n=-\nabla s/|\nabla s|,\quad d\sigma=|\nabla s|\,dt,
+\]
+which is precisely $I_\epsilon[u]$. This boundary term needs only the
+continuous value of $u$, not values of its arbitrary $L^2$ gradient
+representatives.
+
+For the inner boundary, put $\rho=|p|$. Near the center,
+$r=O(\rho^2)$, $w_*\ge1$ and the explicit first derivatives above give
+$\nabla w_*=O(\rho)$; indeed $r\log r$ is bounded and
+$|\sin x|+|\sin y|=O(\rho)$. Since $M$ and $u$ are bounded,
+$|J|=O(\rho)$ and the inner flux is $O(\rho^2)\to0$.
+Absolute bulk integrability permits restoring the disk by dominated
+convergence. The weak integration-by-parts formula on the punctured
+domain must be justified independently; the smooth pointwise identity
+alone does not supply it.
 \end{proof}
 
 \begin{lemma}[Character-wise virial limit for supplied quotient data]

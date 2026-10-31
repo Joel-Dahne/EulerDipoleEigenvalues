@@ -100,11 +100,13 @@ weights and local versus global regularity.
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These admitted inputs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
-   The `dd-truncated-picone` dependency closure is also stated: `Picone.lean`
-   supplies the shared classical identities with `sorry` proofs. Its integrated
-   version consumes the outward divergence formula and integrability, not a
-   Sobolev extension or singular-point removal. Continue the statement pass;
-   the compatibility review and analytic proofs remain deferred.
+   `OddOddPicone.lean` proves positive-truncation raw/divided-gradient and
+   level-current integrability; the potential uses its separate admitted global
+   estimate. `dd_truncated_picone` now leaves only the identity as a local
+   admission. Next are weak integration by parts on the punctured domain and
+   center removal; the value-only current has flux `O(ρ²)` at the center.
+   `Picone.lean` supplies the shared classical identities with `sorry` proofs;
+   its integrated interface assumes the outward divergence formula.
    Recursive statement coverage also includes the three corrected-boundary
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
    logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.

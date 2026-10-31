@@ -97,14 +97,19 @@ integrable logarithmic endpoint moments for all natural powers, with `sorry`.
 The three interval estimates themselves remain admitted; no parent assembly or
 transitive exclusion admission count has changed.
 
-The `dd-truncated-picone` dependency closure is now stated too. Its only missing
-result was the shared classical Picone identity, now in
-[Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean), with `sorry` proofs.
-The integrated interface assumes absolute integrability and the outward
-divergence formula for the actual current. It does not supply the weak H²
-extension or center removal in `dd_truncated_picone`; that parent and the
-exclusion assemblies are unchanged. Compatibility review remains deferred
-while the statement pass continues.
+Positive-truncation Picone work is in
+[OddOddPicone.lean](../../NoEmbeddedEigenvalues/OddOddPicone.lean).
+Integrability on a positive Picone truncation
+(`lem:dd-truncated-picone-integrability`) is assembled without its own admission:
+raw and divided-gradient integrability and continuous level-current integrability
+are proved; potential integrability uses `dd_piconePotential_integrable`.
+The identity in `lem:dd-truncated-picone` remains its sole local `sorry`:
+weak integration by parts on the punctured domain and the center-flux limit
+are the next proof work. The Blueprint explains the simpler center mechanism
+`M` bounded, `∇w = O(|p|)`, giving flux `O(ρ²)` without gradient traces of `u`.
+The shared classical identities in
+[Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean) remain admitted;
+their integrated interface assumes the outward divergence formula.
 
 `dd_character_virial_limit` reaches six admissions: `local_h2_smooth_approximation`,
 `dd_weighted_first`, `dd_quotient_equations`,
