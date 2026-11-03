@@ -11,7 +11,8 @@ ten explicit admitted inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
 admissions. Bulk coercivity and its gradient/potential estimates are assembled
-from weighted-domain/Poincaré and coefficient inputs, which remain admitted.
+from the weighted-domain bridge, weighted Poincaré, matrix bounds and residual
+certificate, which remain admitted.
 The mixed exclusion remains admitted. The recursive statement-only pass now
 covers every node in the odd–odd exclusion's Blueprint dependency closure,
 including the certificate chapter's tools and sign claims. Their analytic

@@ -1650,6 +1650,7 @@ $|z_x|^2+|z_y|^2$ and $|z-m_z|^2$ are integrable with respect to $\rho$.
 
 \begin{proof}
 \uses{lem:cell-square, lem:diagonal-calculus, lem:dipole-identities}
+\leanok
 In diagonal coordinates, $d\rho=8\cos^2a\cos^2b\,da\,db$ on
 $(-\pi/2,\pi/2)^2$, giving $Z=2\pi^2$. Cauchy--Schwarz against the
 finite measure gives value integrability; the other assertions follow
@@ -1694,7 +1695,9 @@ In particular these bounds hold almost everywhere on the cell.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-ground-matrix-bounds, cert:dd-residual, lem:dipole-critical-points}
+\uses{lem:dd-ground-matrix-bounds, cert:dd-residual, lem:dipole-critical-points,
+ lem:dipole-identities}
+\leanok
 The first two bounds are Lemma~\ref{lem:dd-ground-matrix-bounds};
 the last is the residual certificate. The excluded center is a null set.
 \end{proof}
@@ -1778,13 +1781,25 @@ centrally even almost everywhere, then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:zonal-poincare, lem:kantorovich, lem:dd-weighted-integrals}
-For the probability normalization of $\rho$, write $m=m_z$.
-The constraint and Cauchy--Schwarz give
-$|m|^2\le(1/80)Z^{-1}V[z]$, so
-$N[z]=V[z]+Z|m|^2\le(81/80)V[z]$.
+\uses{lem:zonal-poincare, lem:dd-weighted-integrals}
+\leanok
+Write $m=m_z$ and $t=8w-9$, so $|t|\le1$. Pointwise,
+\[
+ |z-m|^2+\tfrac{16}{9}\Re(wz\overline m)-\tfrac{80}{81}|z|^2
+ =|z/9+tm|^2+(1-t^2)|m|^2\ge0.
+\]
+The cross term integrates to zero by the constraint, yielding
+$N[z]\le(81/80)V[z]$.
 Combine $E\ge3V[z]$ and $N[wz]\le(25/16)N[z]$.
 \end{proof}
+
+\begin{remark}[Digest note: a direct weighted-mean estimate]
+The completed-square proof gives the same $81/80$ constant without
+Lemma~\ref{lem:kantorovich}; it even works for any constant $m$ in place
+of the mean. Thus the separate probability normalization and variance
+optimization are unnecessary for the bulk coercivity route. The identity
+and its integration are checked in Lean.
+\end{remark}
 
 \begin{lemma}[Weighted form domain of the Picone quotient]
 \label{lem:dd-bulk-form-domain}

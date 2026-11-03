@@ -29,15 +29,25 @@ uses the weighted-domain bridge, constrained Poincaré, matrix bound and finite
 weighted integrals; the potential proof integrates the coefficient bound.
 Their statements are unchanged and their lower inputs remain admitted.
 
-The breadth-first bulk-coercivity frontier is now the weighted form-domain
-bridge (`lem:dd-bulk-form-domain`), constrained weighted Poincaré
-(`lem:dd-constrained-poincare`), ground-state/matrix bounds
-(`lem:dd-ground-matrix-bounds`), bulk coefficients
-(`lem:dd-bulk-coefficients`) and weighted finite integrals
-(`lem:dd-weighted-integrals`). The requested proof traversal excludes
-`cert:dd-residual` and its dependency subtree. The coefficient assembly also
-has an import-layer obstacle: its certificate exports currently live in
-`PolynomialInequalities.lean`, which imports `OddOdd.lean`.
+The next bulk-coercivity layer has proofs for weighted cell mass/finite
+integrals (`lem:dd-weighted-integrals`), constrained weighted Poincaré
+(`lem:dd-constrained-poincare`) and the bulk coefficient assembly
+(`lem:dd-bulk-coefficients`). The weighted-mean estimate uses a direct
+completed square, removing Kantorovich from this route. The coefficient
+assembly uses the unchanged admitted residual identity and sign claim;
+`PolynomialInequalities.lean` now imports the forms rather than the exclusion,
+removing the import cycle without modifying certificate statements or proofs.
+A transitive audit finds no admissions in the mass, finite-integral or
+weighted-mean results. Constrained Poincaré reaches only `zonal_poincare`;
+the coefficient assembly reaches only the matrix bound and the two residual
+certificate inputs.
+
+The remaining nodes at this breadth-first layer are the weighted form-domain
+bridge (`lem:dd-bulk-form-domain`) and ground-state/matrix bounds
+(`lem:dd-ground-matrix-bounds`). Weighted Poincaré (`lem:zonal-poincare`)
+is the next-layer analytic input. The requested traversal excludes
+`cert:dd-residual` and its dependency subtree; the standalone Kantorovich
+lemma is now off this route.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -98,10 +108,11 @@ now states the bulk form-domain/Poincaré branch. `DDWeightedH1` is the maximal
 weak weighted H¹ domain, without boundary traces or a density hypothesis.
 The actual quotient-rule derivatives feed it from the existing Picone-energy
 hypothesis; no stronger quotient regularity is assumed. Central parity gives
-Cartesian Poincaré constant 3; Kantorovich handles the mean under `∫wz = 0`.
-Gradient coercivity and the residual-certificate potential bound are separate
-interfaces. The gradient and potential estimates are proved relative to
-these inputs; the form-domain, Poincaré and coefficient inputs remain admitted.
+Cartesian Poincaré constant 3; a completed-square estimate handles the mean
+under `∫wz = 0`. Gradient coercivity and the residual-certificate potential
+bound are separate interfaces. Their assemblies and the constrained estimate
+are proved; the form-domain, weighted Poincaré, matrix bound and residual
+certificate remain admitted.
 The outer bulk bound combines the two estimates; the exclusion assembly is unchanged. The orange statement flag is removed
 from `zonal-poincare`, but its weak-domain spectral proof remains open.
 The coefficient bounds exclude the totalized matrix value at the center,

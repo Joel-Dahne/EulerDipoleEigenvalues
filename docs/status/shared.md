@@ -114,10 +114,13 @@ weights and local versus global regularity.
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
    logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
    The estimates themselves and ten transitive Picone inputs remain proof work.
-   `OddOddCoercivity.lean` now states the maximal weak weighted form domain,
-   central-parity Poincaré, Kantorovich, the actual quotient-domain bridge and
-   separate gradient/potential bounds. These new proofs remain `sorry`; the
-   outer coercivity admission is unchanged. All nodes below odd–odd exclusion
+   Bulk coercivity is assembled through the weighted-domain bridge and separate
+   gradient/potential bounds. Weighted mass/finite integrals and the constrained
+   mean estimate are proved; a completed square removes Kantorovich from the
+   route. The remaining analytic frontier is the quotient's weighted form-domain
+   bridge, central-parity Poincaré and ground-state/matrix bounds. The coefficient
+   assembly uses the admitted residual certificate, excluded from the current
+   breadth-first traversal; see [odd–odd status](odd-odd.md). All nodes below odd–odd exclusion
    now have Blueprint statement/Mathlib markers. The certificate chapter's
    statements and explicit operator identities are in `BernsteinCertificates.lean`,
    `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
