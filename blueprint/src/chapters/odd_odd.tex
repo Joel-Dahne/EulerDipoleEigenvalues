@@ -1672,9 +1672,10 @@ On the positive cell with $r=|\nabla\Psi|^2\ne0$, writing $w=w_*$,
 
 \begin{proof}
 \uses{lem:dipole-identities}
+\leanok
 The geometric range is $0<s<2$, $s(2-s)\le r\le2-s^2/2$. Since $0<r\le2$, the
-logarithmic term is nonnegative, and $s^2+r\le4-r$, $r\log(2/r)\le2/e$ give
-$w\le5/4$. Next, $3sr(A_0-C_0)\ge4s(s-2)^2(s+4)\ge0$, so it suffices to bound
+logarithmic term is nonnegative. The bounds $s^2+r\le4-r$ and
+$|r\log(r/2)|\le2$ give $1\le w\le5/4$. Next, $3sr(A_0-C_0)\ge4s(s-2)^2(s+4)\ge0$, so it suffices to bound
 $C_0w^2$; for fixed $s$, $(16+r+s^2)^2/r$ decreases in $r$, and at
 $r=2-s^2/2$ the inequality reduces to
 $2(s^2+2s+4)(s^2+36)^2-4800s(s+2)\ge0$, which with $t=2-s$ is
@@ -1801,6 +1802,27 @@ optimization are unnecessary for the bulk coercivity route. The identity
 and its integration are checked in Lean.
 \end{remark}
 
+\begin{lemma}[First-order regularity of the ground state]
+\label{lem:dd-ground-c1}
+\uses{def:dd-ground-state}
+\lean{NoEmbeddedEigenvalues.one_le_ddGround,
+ NoEmbeddedEigenvalues.contDiff_one_ddGround}
+\leanok
+The lifted ground state $w_*$ is $C^1$ on all of $\R^2$ and satisfies
+$w_*\ge1$ everywhere, including at the critical points of $\Psi$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities}
+\leanok
+The scalar function $x^2\log x$ is $C^1$ across zero: away from zero its
+derivative is $2x\log x+x$, which extends continuously by zero.
+The function itself is continuous at zero, so the derivative extension
+theorem applies there. Composition with $r/2=|\nabla\Psi|^2/2$ proves
+the claimed regularity. Since $0\le r\le2$, the logarithmic term in
+$w_*$ is nonnegative, giving $w_*\ge1$.
+\end{proof}
+
 \begin{lemma}[Weighted form domain of the Picone quotient]
 \label{lem:dd-bulk-form-domain}
 \uses{def:sobolev-torus, def:dd-exclusion-forms, def:dd-weighted-h1,
@@ -1817,16 +1839,25 @@ $\int_C w_*z\,d\rho=0$, and $N[w_*z]=\int_C\mu|\phi|^2$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-ground-matrix-bounds, lem:lift-sobolev-local,
- lem:dipole-critical-points, lem:lift-representatives}
-The ground state is positive and has the local first-order regularity
-needed for weak division, including at the center. Its lower bound
-controls the weighted value norm; the matrix lower bound and the supplied
-Picone energy control both weighted derivatives. The comparison function
-is centrally even, so division preserves parity. Finally $w_*z=\phi$
-almost everywhere identifies the constraint and mass. No residual sign
-certificate is used by this step.
+\uses{lem:dd-ground-c1, lem:fourier-c1-multiplier,
+ lem:lift-sobolev-local, lem:lift-representatives, lem:reflection-algebra}
+\leanok
+The reciprocal $1/w_*$ is globally $C^1$ and has bounded first derivatives
+on the compact closure of the cell. Apply the $C^1$ Fourier multiplier
+rule to $\phi$ and each specified derivative; it gives exactly the
+quotient-rule derivatives. Bounded multiplication puts the value and
+derivatives in ordinary $L^2(C)$, hence in $L^2(C,\mu\,dx)$ since
+$0\le\mu\le4$. Central inversion preserves $w_*$, so division preserves
+parity. Finally $w_*z=\phi$ identifies the constraint and mass.
 \end{proof}
+
+\begin{remark}[Digest note: the quotient domain needs no Picone energy]
+The $C^1$ argument proves the weighted domain already from $L^2$ values
+and specified $L^2$ Fourier first derivatives. Neither the stronger
+$H^2$ hypothesis nor Picone-gradient integrability is used here.
+The common bulk interface retains these hypotheses, but its domain
+proof needs neither the matrix lower bound nor a point-removal theorem.
+\end{remark}
 
 \begin{lemma}[Picone gradient coercivity]
 \label{lem:dd-bulk-gradient-bound}
@@ -1890,12 +1921,12 @@ $80/27-5/2=25/54$.
 \end{proof}
 
 \begin{remark}[Digest note: the finite-energy coercivity interface]
-The bulk hypotheses now feed an explicit weighted-domain bridge before
+The bulk hypotheses feed an explicit weighted-domain bridge before
 Poincar\'e is invoked. In particular they do not assume that $z$ has
-weighted mean zero: the constraint is on $w_*z$ and Kantorovich controls
-the remaining mean. The weak form-domain Poincar\'e inequality and the
-residual sign certificate are separate proof obligations. A statement
-marker for the bridge is not a proof of either.
+weighted mean zero: the constraint is on $w_*z$, and the completed-square
+estimate controls the remaining mean. The weak form-domain Poincar\'e inequality and the
+residual sign certificate are separate inputs; the domain and mean
+estimates do not prove either.
 \end{remark}
 
 \section{The corrected boundary form}

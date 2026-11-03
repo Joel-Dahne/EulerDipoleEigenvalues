@@ -55,6 +55,11 @@ once resolved; record the resolution in the relevant node.
         $81/80$ estimate directly from $\int wz=0$ and $1\le w\le5/4$
         (Lemma~\ref{lem:dd-constrained-poincare}). This is proved in Lean
         and removes the separate Kantorovich bound from the bulk route.
+  \item \textbf{Picone quotient domain.} The ground state and its reciprocal
+        are $C^1$ even at the center (Lemma~\ref{lem:dd-ground-c1}). Bounded
+        multiplication proves the weighted quotient domain without Picone
+        energy, matrix coercivity or point removal
+        (Lemma~\ref{lem:dd-bulk-form-domain}); this is checked in Lean.
   \item \textbf{Second mixed sector.} It is obtained from the first by the
         rotation $R$ (Lemma~\ref{lem:sector-swap},
         Corollary~\ref{cor:mixed-other-exclusion}).

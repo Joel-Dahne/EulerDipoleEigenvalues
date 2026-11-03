@@ -13,9 +13,9 @@ from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEi
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
-quotient domain has twelve transitive admissions. The last full odd–odd audit
-found twenty-six, before expansion of bulk coercivity into its two inputs;
-that total has not been re-audited. This is not an admission-free exclusion.
+quotient domain has twelve transitive admissions. The current full odd–odd
+audit finds twenty-eight: the former bulk admission has expanded to weighted
+Poincaré and the two residual-certificate inputs. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
@@ -27,27 +27,22 @@ The Bulk Picone bound (`lem:dd-bulk-picone`, `dd_bulk_picone`) now has no
 inputs now also have proofs without their own admissions. The gradient proof
 uses the weighted-domain bridge, constrained Poincaré, matrix bound and finite
 weighted integrals; the potential proof integrates the coefficient bound.
-Their statements are unchanged and their lower inputs remain admitted.
+Their statements are unchanged. The weighted form-domain bridge
+(`lem:dd-bulk-form-domain`) and ground-state/matrix bounds
+(`lem:dd-ground-matrix-bounds`) are now transitively admission-free.
+The matrix proof uses scalar polynomial inequalities and the normal/tangent
+orthonormal frame, without a residual certificate. The domain proof uses
+global C¹ regularity of the reciprocal ground state, including at the center,
+and C¹ multiplication of lifted Fourier data. It does not use the supplied
+H² or Picone-energy hypotheses; these remain in the common bulk interface.
+The simplification is recorded in the Blueprint digest notes.
 
-The next bulk-coercivity layer has proofs for weighted cell mass/finite
-integrals (`lem:dd-weighted-integrals`), constrained weighted Poincaré
-(`lem:dd-constrained-poincare`) and the bulk coefficient assembly
-(`lem:dd-bulk-coefficients`). The weighted-mean estimate uses a direct
-completed square, removing Kantorovich from this route. The coefficient
-assembly uses the unchanged admitted residual identity and sign claim;
-`PolynomialInequalities.lean` now imports the forms rather than the exclusion,
-removing the import cycle without modifying certificate statements or proofs.
-A transitive audit finds no admissions in the mass, finite-integral or
-weighted-mean results. Constrained Poincaré reaches only `zonal_poincare`;
-the coefficient assembly reaches only the matrix bound and the two residual
-certificate inputs.
-
-The remaining nodes at this breadth-first layer are the weighted form-domain
-bridge (`lem:dd-bulk-form-domain`) and ground-state/matrix bounds
-(`lem:dd-ground-matrix-bounds`). Weighted Poincaré (`lem:zonal-poincare`)
-is the next-layer analytic input. The requested traversal excludes
-`cert:dd-residual` and its dependency subtree; the standalone Kantorovich
-lemma is now off this route.
+The breadth-first frontier is now weighted Poincaré (`lem:zonal-poincare`).
+The bulk bound has exactly three transitive admissions: that inequality and
+the unchanged residual identity/sign inputs. The requested traversal excludes
+`cert:dd-residual` and its dependency subtree. The standalone Kantorovich
+lemma is off this route: a completed square gives the weighted-mean estimate.
+Weighted mass, finite integrals and the weighted-mean estimate have no admissions.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -111,8 +106,8 @@ hypothesis; no stronger quotient regularity is assumed. Central parity gives
 Cartesian Poincaré constant 3; a completed-square estimate handles the mean
 under `∫wz = 0`. Gradient coercivity and the residual-certificate potential
 bound are separate interfaces. Their assemblies and the constrained estimate
-are proved; the form-domain, weighted Poincaré, matrix bound and residual
-certificate remain admitted.
+are proved. The form-domain and matrix bound are admission-free;
+weighted Poincaré and the residual certificate remain admitted.
 The outer bulk bound combines the two estimates; the exclusion assembly is unchanged. The orange statement flag is removed
 from `zonal-poincare`, but its weak-domain spectral proof remains open.
 The coefficient bounds exclude the totalized matrix value at the center,
@@ -188,9 +183,8 @@ half-density correction. Weighted-operator identification from specified weak je
 weak Green identity.
 
 The cutoff and truncated-virial assemblies reach three admissions: local H²
-smooth approximation, weighted first identity and quotient equation. Audits reach
-ten admissions below `dd_picone_current` and, before the bulk assembly,
-twenty-six below `odd_odd_exclusion`.
+smooth approximation, weighted first identity and quotient equation. The audit
+reaches ten admissions below `dd_picone_current`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of
@@ -301,8 +295,8 @@ The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs
 the other three quotient stages still stop at their outer admissions.
 The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
 and negative affine tail) remain a separate proof backlog. Bulk coercivity's
-weighted-domain and inequality interfaces are now stated; their proofs and
-the certificate backend remain open.
+weighted-domain and matrix bounds are proved; weighted Poincaré and the
+certificate backend remain open.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
 (Lean: `dd_exclusion_domain`): even global H² for `φ`, the multiplication

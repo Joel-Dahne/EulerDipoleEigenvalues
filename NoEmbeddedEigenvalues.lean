@@ -42,6 +42,7 @@ import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm
 import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddCoercivity
+import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
 import NoEmbeddedEigenvalues.OddOddForms
 import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability

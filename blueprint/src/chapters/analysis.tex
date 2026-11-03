@@ -992,6 +992,34 @@ which unfolds to $-\int(h\circ\pi)\varphi$. For $H^k$ induct on $k$, using that
 $g\in H^{k+1}$ has Fourier derivatives in $H^k$ (Lemma~\ref{lem:elliptic-torus}).
 \end{proof}
 
+\begin{lemma}[C1 multipliers of lifted Fourier functions]
+\label{lem:fourier-c1-multiplier}
+\uses{def:fourier-derivatives, def:torus-of-lift, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.integral_liftL2_mul_coordPartial_of_contDiff,
+ NoEmbeddedEigenvalues.HasFourierPartial.weak_mul_contDiff}
+\leanok
+Let $g,d\in L^2(\T^2)$ with specified Fourier relation $\partial_jg=d$.
+For every compactly supported $C^1$ test $\eta:\R^2\to\C$,
+\[
+ \int_{\R^2}\widetilde g\,\partial_j\eta
+ =-\int_{\R^2}\widetilde d\,\eta.
+\]
+If $c\in C^1(\R^2;\C)$, then on every open set $U$ the weak derivative
+of $c\widetilde g$ is $(\partial_jc)\widetilde g+c\widetilde d$.
+No bounds at infinity are required on $c$ or its derivative.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-periodization, lem:partial-weak-equivalence}
+\leanok
+Periodization preserves compactly supported $C^1$ tests and commutes with
+their first derivatives. Unfold the integral, apply Fourier integration
+by parts on the torus, and unfold back. For the product rule, test against
+$c\eta$, which is again compactly supported and $C^1$, then expand its
+derivative. The coefficient and its derivative are bounded on each test
+support, so all integrals are genuine finite integrals.
+\end{proof}
+
 \begin{lemma}[Summability of lattice Sobolev weights]
 \label{lem:sobolev-weight-summable}
 \uses{def:sobolev-torus}

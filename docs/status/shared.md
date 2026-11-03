@@ -18,7 +18,9 @@ The even–even route is admission-free. Available foundations include:
   volume-preserving affine weak-jet/radial-L² pullback, and periodic Hᵏ_loc
   reconstruction. Local smooth Sobolev multipliers use compact cutoffs,
   without global derivative bounds. The local weak product rule also allows
-  smooth multipliers without compact support. The normalized saddle chart instantiates
+  smooth multipliers without compact support. Compact C¹ Fourier testing and
+  C¹ multiplication for lifted Fourier derivatives are proved in
+  `Analysis/FourierC1Multiplier.lean`, without smooth density. The normalized saddle chart instantiates
   the affine interface.
   Continuous Hölder representatives, ACL slicing, rectangle traces and
   even–even separatrix traces.
@@ -117,10 +119,11 @@ weights and local versus global regularity.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the
-   route. The remaining analytic frontier is the quotient's weighted form-domain
-   bridge, central-parity Poincaré and ground-state/matrix bounds. The coefficient
-   assembly uses the admitted residual certificate, excluded from the current
-   breadth-first traversal; see [odd–odd status](odd-odd.md). All nodes below odd–odd exclusion
+   route. The weighted form-domain bridge and ground-state/matrix bounds are
+   admission-free too. Global C¹ reciprocal regularity proves the domain without
+   Picone energy or point removal. The only remaining non-certificate bulk input
+   is central-parity Poincaré. The coefficient assembly uses the admitted residual
+   identity/sign, excluded from the current breadth-first traversal; see [odd–odd status](odd-odd.md). All nodes below odd–odd exclusion
    now have Blueprint statement/Mathlib markers. The certificate chapter's
    statements and explicit operator identities are in `BernsteinCertificates.lean`,
    `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
