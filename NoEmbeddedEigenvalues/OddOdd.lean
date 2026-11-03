@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.OddOddPicone
+import NoEmbeddedEigenvalues.OddOddCoercivity
 
 /-!
 # Odd–odd exclusion and renormalized current assembly
@@ -349,7 +350,9 @@ theorem dd_bulk_picone {φ dx dy : L2} (hφ : MemSobolev 2 φ)
     (25 / 54 : ℝ) * (∫ p in cellSquare, ddMassDensity φ p) ≤
       (∫ p in cellSquare, ddPiconeGradient φ dx dy p) +
         ∫ p in cellSquare, ddPiconePotential φ p := by
-  sorry
+  have hg := dd_bulk_gradient_bound hφ hdx hdy hc hmean hgrad
+  have hp := dd_bulk_potential_bound φ hpot
+  linarith
 
 /-- Nonnegativity of the retained vorticity term. -/
 theorem ddVorticityDensity_nonneg {p : ℝ × ℝ} (hp : p ∈ cellSquare) (ν : L2) :

@@ -13,12 +13,18 @@ from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEi
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
-quotient domain has twelve transitive admissions and the full odd–odd exclusion
-has twenty-six. This is not an admission-free exclusion.
+quotient domain has twelve transitive admissions. The last full odd–odd audit
+found twenty-six, before expansion of bulk coercivity into its two inputs;
+that total has not been re-audited. This is not an admission-free exclusion.
 All nodes in the recursive Blueprint dependency closure of `thm:dd-exclusion`
 now have statement/Mathlib markers, including the certificate tools and residual
 sign claim. Off-route auxiliary results may remain unstated. These markers are
 neither a human compatibility review nor a proof audit.
+
+The Bulk Picone bound (`lem:dd-bulk-picone`, `dd_bulk_picone`) now has no
+`sorry` of its own: it adds `dd_bulk_gradient_bound` and
+`dd_bulk_potential_bound`, both still admitted, using
+`80/27 - 5/2 = 25/54`. Lean-LSP checks the unchanged statement and assembly.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -81,8 +87,8 @@ The actual quotient-rule derivatives feed it from the existing Picone-energy
 hypothesis; no stronger quotient regularity is assumed. Central parity gives
 Cartesian Poincaré constant 3; Kantorovich handles the mean under `∫wz = 0`.
 Gradient coercivity and the residual-certificate potential bound are separate
-interfaces. All new proofs are `sorry`; the existing outer admission and
-exclusion assembly have not changed. The orange statement flag is removed
+interfaces. Their proofs are `sorry`; the outer bulk bound now combines
+the gradient and potential bounds, and the exclusion assembly is unchanged. The orange statement flag is removed
 from `zonal-poincare`, but its weak-domain spectral proof remains open.
 The coefficient bounds exclude the totalized matrix value at the center,
 which does not affect any integral. The certificate statements now complete
@@ -158,7 +164,8 @@ weak Green identity.
 
 The cutoff and truncated-virial assemblies reach three admissions: local H²
 smooth approximation, weighted first identity and quotient equation. Audits reach
-ten admissions below `dd_picone_current` and twenty-six below `odd_odd_exclusion`.
+ten admissions below `dd_picone_current` and, before the bulk assembly,
+twenty-six below `odd_odd_exclusion`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of

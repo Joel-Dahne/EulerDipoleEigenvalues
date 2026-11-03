@@ -9,8 +9,9 @@ The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
 ten explicit admitted inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. The stream-H² quotient is assembled
-from local analytic inputs; the other three quotient stages and bulk coercivity
-remain outer admissions.
+from local analytic inputs; the other three quotient stages remain outer
+admissions. Bulk coercivity is assembled from the admitted gradient and
+potential estimates.
 The mixed exclusion remains admitted. The recursive statement-only pass now
 covers every node in the odd–odd exclusion's Blueprint dependency closure,
 including the certificate chapter's tools and sign claims. Their analytic
@@ -58,7 +59,8 @@ A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, ten below `dd_picone_current`,
 three below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and twenty-six for `odd_odd_exclusion`.
+twelve below `dd_exclusion_domain`, and (before the bulk-coercivity assembly)
+twenty-six for `odd_odd_exclusion`; the latter total has not been re-audited.
 Expanding the assemblies exposes their analytic frontiers;
 it does not eliminate those admissions. Quotient orthogonality and canonical
 boundary regularity are admission-free for supplied quotient data. The generic
