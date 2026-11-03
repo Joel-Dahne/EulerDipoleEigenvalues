@@ -10,8 +10,8 @@ Odd–odd exclusion remains conditional: the Picone current is assembled from
 ten explicit admitted inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
-admissions. Bulk coercivity is assembled from the admitted gradient and
-potential estimates.
+admissions. Bulk coercivity and its gradient/potential estimates are assembled
+from weighted-domain/Poincaré and coefficient inputs, which remain admitted.
 The mixed exclusion remains admitted. The recursive statement-only pass now
 covers every node in the odd–odd exclusion's Blueprint dependency closure,
 including the certificate chapter's tools and sign claims. Their analytic

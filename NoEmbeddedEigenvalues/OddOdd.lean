@@ -365,32 +365,6 @@ theorem ddVorticityDensity_nonneg {p : ℝ × ℝ} (hp : p ∈ cellSquare) (ν :
   unfold ddVorticityDensity ddF
   positivity
 
-/-- The mass density is integrable on the cell for every torus L² function. -/
-theorem integrableOn_ddMassDensity (φ : L2) : IntegrableOn (ddMassDensity φ) cellSquare := by
-  have hsub : cellSquare ⊆
-      Ioc (-2 * Real.pi) (2 * Real.pi) ×ˢ Ioc (-2 * Real.pi) (2 * Real.pi) := by
-    intro p hp
-    obtain ⟨ha0, ha1⟩ := abs_lt.mp hp.1
-    obtain ⟨hb0, hb1⟩ := abs_lt.mp hp.2
-    simp only [diagCoord] at ha0 ha1 hb0 hb1
-    exact ⟨⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩,
-      ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩⟩
-  have hbase := ((integrableOn_norm_liftL2_sq φ).mono_set hsub).const_mul 4
-  have hφ : Measurable (liftL2 φ) :=
-    (Lp.stronglyMeasurable φ).measurable.comp isOpenQuotientMap_torusProj.continuous.measurable
-  have hmeas : Measurable (ddMassDensity φ) := by
-    unfold ddMassDensity ddWeight dipoleLift
-    fun_prop
-  have hcell : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
-  refine hbase.mono' hmeas.aestronglyMeasurable (ae_restrict_of_forall_mem hcell ?_)
-  intro p hp
-  have hpos : 0 < dipoleLift p := by
-    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
-  have hle : dipoleLift p ≤ 2 := by simpa [Ψ_torusProj] using Ψ_le_two (torusProj p)
-  have hsq : dipoleLift p ^ 2 ≤ 4 := by nlinarith
-  rw [Real.norm_of_nonneg (by unfold ddMassDensity ddWeight; positivity)]
-  exact mul_le_mul_of_nonneg_right hsq (sq_nonneg _)
-
 /-- Zero weighted mass gives zero quotient in the even sector. -/
 theorem dd_eq_zero_of_mass_eq_zero {φ : L2} (hs : InSector true true φ)
     (hmass : (∫ p in cellSquare, ddMassDensity φ p) = 0) : φ = 0 := by

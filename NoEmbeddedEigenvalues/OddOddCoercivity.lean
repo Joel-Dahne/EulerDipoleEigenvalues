@@ -28,6 +28,34 @@ namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
 
+private theorem measurable_ground : Measurable ddGround := by
+  unfold ddGround
+  simp only [gradSq_dipoleLift, dipoleLift]
+  fun_prop
+
+private theorem measurable_weight : Measurable ddWeight := by
+  unfold ddWeight dipoleLift
+  fun_prop
+
+private theorem ae_regular :
+    ∀ᵐ p ∂volume.restrict cellSquare, p ∈ cellSquare ∧ gradSq dipoleLift p ≠ 0 := by
+  filter_upwards [ae_restrict_mem isOpen_cellSquare.measurableSet,
+    ae_restrict_of_ae ae_cos_fst_ne_cos_snd] with p hp hn
+  have hs : 0 < dipoleLift p := by
+    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+  have ht : dipoleLift p < 2 := by
+    by_contra hge
+    apply hn
+    unfold dipoleLift at hge
+    linarith [Real.cos_le_one p.1, Real.cos_le_one p.2]
+  exact ⟨hp, (gradSq_dipoleLift_pos hs ht).ne'⟩
+
+private theorem integral_ddCellMeasure (f : ℝ × ℝ → ℝ) :
+    ∫ p, f p ∂ddCellMeasure = ∫ p in cellSquare, ddWeight p * f p := by
+  rw [ddCellMeasure, integral_withDensity_eq_integral_toReal_smul
+    (measurable_weight.ennreal_ofReal) (by simp)]
+  simp only [ddWeight, ENNReal.toReal_ofReal (sq_nonneg _), smul_eq_mul]
+
 /-- Maximal weighted first-order form domain on the open positive cell, with
     specified distributional Cartesian derivatives. There is no boundary condition. -/
 structure DDWeightedH1 (z zx zy : ℝ × ℝ → ℂ) : Prop where
@@ -145,13 +173,42 @@ theorem dd_bulk_gradient_bound {φ dx dy : L2} (hφ : MemSobolev 2 φ)
     (hgrad : IntegrableOn (ddPiconeGradient φ dx dy) cellSquare) :
     (80 / 27 : ℝ) * (∫ p in cellSquare, ddMassDensity φ p) ≤
       ∫ p in cellSquare, ddPiconeGradient φ dx dy p := by
-  sorry
+  obtain ⟨hz, hc, hm, hmass⟩ := dd_bulk_form_domain hφ hdx hdy hc hmean hgrad
+  have hb : ∀ᵐ p ∂volume.restrict cellSquare, 1 ≤ ddGround p ∧ ddGround p ≤ 5 / 4 := by
+    filter_upwards [ae_regular] with p hp
+    exact (dd_ground_matrix_bounds hp.1 hp.2).1
+  have hbρ : ∀ᵐ p ∂ddCellMeasure, 1 ≤ ddGround p ∧ ddGround p ≤ 5 / 4 :=
+    (withDensity_absolutelyContinuous _ _).ae_le hb
+  have hP := dd_constrained_poincare hz hc
+    (measurable_ground.aestronglyMeasurable) hbρ hm
+  rw [hmass] at hP
+  apply hP.trans
+  rw [ddWeightedEnergy, integral_ddCellMeasure, ← integral_const_mul]
+  have hi : IntegrableOn (fun p ↦ (25 / 16 : ℝ) * (ddWeight p *
+      (‖ddDividedPartial φ dx 0 p‖ ^ 2 + ‖ddDividedPartial φ dy 1 p‖ ^ 2))) cellSquare := by
+    have he := hz.integrable.2.2.1
+    have hi := (integrable_withDensity_iff_integrable_smul'
+      measurable_weight.ennreal_ofReal (by simp)).mp he
+    simpa only [IntegrableOn, ddWeight, ENNReal.toReal_ofReal (sq_nonneg _),
+      smul_eq_mul] using hi.const_mul (25 / 16 : ℝ)
+  apply integral_mono_ae hi hgrad
+  filter_upwards [ae_regular] with p hp
+  simpa only [ddPiconeGradient, mul_assoc] using
+    (dd_ground_matrix_bounds hp.1 hp.2).2
+      (ddDividedPartial φ dx 0 p) (ddDividedPartial φ dy 1 p)
 
 /-- The residual certificate bounds the integrable potential term from below. -/
 theorem dd_bulk_potential_bound (φ : L2)
     (hpot : IntegrableOn (ddPiconePotential φ) cellSquare) :
     -(5 / 2 : ℝ) * (∫ p in cellSquare, ddMassDensity φ p) ≤
       ∫ p in cellSquare, ddPiconePotential φ p := by
-  sorry
+  rw [← integral_const_mul]
+  apply integral_mono_ae ((integrableOn_ddMassDensity φ).const_mul _) hpot
+  filter_upwards [ae_regular] with p hp
+  have hb := dd_bulk_coefficients hp.1 hp.2
+  have hw : 0 < ddGround p := lt_of_lt_of_le zero_lt_one hb.1.1
+  have h := (le_div_iff₀ hw).mpr hb.2.2
+  simpa only [ddPiconePotential, ddMassDensity, mul_assoc] using
+    mul_le_mul_of_nonneg_right h (sq_nonneg ‖liftL2 φ p‖)
 
 end NoEmbeddedEigenvalues

@@ -23,8 +23,21 @@ neither a human compatibility review nor a proof audit.
 
 The Bulk Picone bound (`lem:dd-bulk-picone`, `dd_bulk_picone`) now has no
 `sorry` of its own: it adds `dd_bulk_gradient_bound` and
-`dd_bulk_potential_bound`, both still admitted, using
-`80/27 - 5/2 = 25/54`. Lean-LSP checks the unchanged statement and assembly.
+`dd_bulk_potential_bound`, using `80/27 - 5/2 = 25/54`. Both immediate
+inputs now also have proofs without their own admissions. The gradient proof
+uses the weighted-domain bridge, constrained Poincaré, matrix bound and finite
+weighted integrals; the potential proof integrates the coefficient bound.
+Their statements are unchanged and their lower inputs remain admitted.
+
+The breadth-first bulk-coercivity frontier is now the weighted form-domain
+bridge (`lem:dd-bulk-form-domain`), constrained weighted Poincaré
+(`lem:dd-constrained-poincare`), ground-state/matrix bounds
+(`lem:dd-ground-matrix-bounds`), bulk coefficients
+(`lem:dd-bulk-coefficients`) and weighted finite integrals
+(`lem:dd-weighted-integrals`). The requested proof traversal excludes
+`cert:dd-residual` and its dependency subtree. The coefficient assembly also
+has an import-layer obstacle: its certificate exports currently live in
+`PolynomialInequalities.lean`, which imports `OddOdd.lean`.
 
 The interfaces use actual Fourier derivatives, continuous quotient traces,
 weighted interval domains and H¹ endpoint traces. Picone supplies absolute
@@ -87,8 +100,9 @@ The actual quotient-rule derivatives feed it from the existing Picone-energy
 hypothesis; no stronger quotient regularity is assumed. Central parity gives
 Cartesian Poincaré constant 3; Kantorovich handles the mean under `∫wz = 0`.
 Gradient coercivity and the residual-certificate potential bound are separate
-interfaces. Their proofs are `sorry`; the outer bulk bound now combines
-the gradient and potential bounds, and the exclusion assembly is unchanged. The orange statement flag is removed
+interfaces. The gradient and potential estimates are proved relative to
+these inputs; the form-domain, Poincaré and coefficient inputs remain admitted.
+The outer bulk bound combines the two estimates; the exclusion assembly is unchanged. The orange statement flag is removed
 from `zonal-poincare`, but its weak-domain spectral proof remains open.
 The coefficient bounds exclude the totalized matrix value at the center,
 which does not affect any integral. The certificate statements now complete
