@@ -48,6 +48,7 @@ import NoEmbeddedEigenvalues.Analysis.ZonalBasis
 import NoEmbeddedEigenvalues.Analysis.ZonalCutoff
 import NoEmbeddedEigenvalues.Analysis.ZonalWeakPairing
 import NoEmbeddedEigenvalues.Analysis.ZonalTransport
+import NoEmbeddedEigenvalues.Analysis.ZonalSpectral
 import NoEmbeddedEigenvalues.OddOddForms
 import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability

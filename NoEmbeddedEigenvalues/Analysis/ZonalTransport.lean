@@ -76,4 +76,28 @@ theorem memLp_zonalMeasure_comp_diagInv {f : ℝ × ℝ → ℂ} (hf : MemLp f 2
   rw [map_diagInv_zonalMeasure]
   exact hf.smul_measure (by finiteness)
 
+/-- Bochner integrals retain the exact physical mass normalization. -/
+theorem integral_comp_diagInv_zonalMeasure {F : Type*} [NormedAddCommGroup F]
+    [NormedSpace ℝ F] (f : ℝ × ℝ → F) :
+    (∫ q, f (diagInv q) ∂zonalMeasure) =
+      (1 / (2 * Real.pi ^ 2) : ℝ) • (∫ p, f p ∂ddCellMeasure) := by
+  calc
+    _ = ∫ p, f p ∂Measure.map diagInv zonalMeasure :=
+      (diagInv.toHomeomorph.measurableEmbedding.integral_map f).symm
+    _ = _ := by
+      rw [map_diagInv_zonalMeasure, integral_smul_measure,
+        ENNReal.toReal_ofReal (by positivity : 0 ≤ (1 / (2 * Real.pi ^ 2) : ℝ))]
+
+/-- Pull arbitrary a.e. physical-cell predicates back to the diagonal probability
+measure; no measurability assumption on the predicate or representative is needed. -/
+theorem ae_zonalMeasure_comp_diagInv {P : ℝ × ℝ → Prop}
+    (hP : ∀ᵐ p ∂volume.restrict cellSquare, P p) :
+    ∀ᵐ q ∂zonalMeasure, P (diagInv q) := by
+  have hd : ∀ᵐ p ∂ddCellMeasure, P p :=
+    (withDensity_absolutelyContinuous _ _).ae_le hP
+  have hm : ∀ᵐ p ∂Measure.map diagInv zonalMeasure, P p := by
+    rw [map_diagInv_zonalMeasure]
+    exact Measure.ae_smul_measure hd _
+  exact diagInv.toHomeomorph.measurableEmbedding.ae_map_iff.mp hm
+
 end NoEmbeddedEigenvalues

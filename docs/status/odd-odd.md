@@ -14,8 +14,8 @@ Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQu
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds twenty-eight: the former bulk admission has expanded to weighted
-Poincaré and the two residual-certificate inputs. This is not an admission-free exclusion.
+audit finds twenty-seven admissions. The bulk bound depends only on the two
+residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
 Certificate tools and residual sign claims have statement/Mathlib markers. These markers are
@@ -37,37 +37,19 @@ and C¹ multiplication of lifted Fourier data. It does not use the supplied
 H² or Picone-energy hypotheses; these remain in the common bulk interface.
 The simplification is recorded in the Blueprint digest notes.
 
-The breadth-first frontier is weighted Poincaré (`lem:zonal-poincare`).
-Its Blueprint proof now uses a complete weighted Chebyshev basis, cutoff weak
-pairings and Bessel, without weighted Sobolev density or sphere regularity.
-[Analysis/ZonalModes.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalModes.lean)
-proves mode smoothness/parity, the sine and flux identities, the endpoint
-factor in the derivative bound, the central-parity eigenvalue gap and the
-abstract weak-pairing/Bessel estimate.
-[Analysis/ZonalBasis.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalBasis.lean)
-proves the weighted zonal basis (`lem:zonal-mode-basis`), including probability
-normalization, orthonormality, completeness and Parseval with raw weighted
-integral coefficients. The basis, normalization, coefficient formula and
-Parseval each have zero transitive admissions. Completeness uses polynomial spanning and
-Stone–Weierstrass, followed by bounded-continuous density in weighted L²;
-no sine-basis or weighted Sobolev-density theorem is assumed.
-Weak pairing (`lem:zonal-weak-pairing`) is proved in
-[Analysis/ZonalWeakPairing.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalWeakPairing.lean)
-and applied to `DDWeightedH1` in `OddOddCoercivity.lean`.
-[Analysis/ZonalCutoff.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalCutoff.lean)
-supplies interior smooth cutoffs with uniformly bounded `cos a * χ' a`;
-dominated convergence removes cutoff errors using only weighted L¹.
-[Analysis/ZonalTransport.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalTransport.lean)
-proves the exact physical/diagonal measure identity. The diagonal-domain bridge
-supplies both weak derivatives and weighted L² bounds from the original domain.
-No traces, weighted Sobolev density or extra parity are assumed. The square
-pairing, physical-domain application, flux testing and diagonal measure/domain
-bridges each have zero transitive admissions.
-`zonal_poincare` itself remains admitted. Its remaining spectral assembly needs
-mean/variance and Cartesian-energy transport, central-parity coefficient
-cancellation, normalized gradient orthonormality and the Bessel application.
-The bulk bound has exactly three transitive admissions: that inequality and
-the unchanged residual identity/sign inputs. The requested traversal excludes
+The non-certificate bulk route is admission-free. Weighted Poincaré
+(`lem:zonal-poincare`) is proved with its original maximal `DDWeightedH1`
+domain and a.e. central parity, without boundary traces, separate reflection
+symmetries or weighted Sobolev density.
+[Analysis/ZonalSpectral.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalSpectral.lean)
+assembles Parseval for the values, normalized gradient orthonormality from weak
+mode pairings, odd-degree coefficient cancellation and Bessel. The exact
+mean/variance and Cartesian-energy transport is applied in `OddOddCoercivity.lean`.
+The basis uses polynomial spanning and Stone–Weierstrass; the weak pairings
+use interior cutoffs and dominated convergence against weighted L¹.
+Weighted Poincaré, constrained Poincaré and the bulk gradient bound each have
+zero transitive admissions. The bulk bound has exactly two: the unchanged
+residual identity/sign inputs. The requested traversal excludes
 `cert:dd-residual` and its dependency subtree. The standalone Kantorovich
 lemma is off this route: a completed square gives the weighted-mean estimate.
 Weighted mass, finite integrals and the weighted-mean estimate have no admissions.
@@ -134,12 +116,11 @@ hypothesis; no stronger quotient regularity is assumed. Central parity gives
 Cartesian Poincaré constant 3; a completed-square estimate handles the mean
 under `∫wz = 0`. Gradient coercivity and the residual-certificate potential
 bound are separate interfaces. Their assemblies and the constrained estimate
-are proved. The form-domain and matrix bound are admission-free;
-weighted Poincaré and the residual certificate remain admitted.
+are proved. The form-domain, matrix bound and weighted Poincaré are
+admission-free; only the residual certificate remains admitted on this branch.
 The outer bulk bound combines the two estimates; the exclusion assembly and
-statement of `zonal-poincare` are unchanged. Its concrete spectral assembly
-remains the Lean frontier; the weak-domain mathematical argument is spelled out
-in the Blueprint, and its basis and weak-pairing inputs are proved.
+statement of `zonal-poincare` are unchanged. Its weak-domain spectral proof is
+fully formalized and spelled out in the Blueprint.
 The coefficient bounds exclude the totalized matrix value at the center,
 which does not affect any integral. The certificate statements now complete
 this branch at Blueprint-node level; their proofs and verification data remain
@@ -325,8 +306,8 @@ The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs
 the other three quotient stages still stop at their outer admissions.
 The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
 and negative affine tail) remain a separate proof backlog. Bulk coercivity's
-weighted-domain and matrix bounds are proved; weighted Poincaré and the
-certificate backend remain open.
+weighted-domain, matrix and Poincaré bounds are proved; the certificate
+backend remains open.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
 (Lean: `dd_exclusion_domain`): even global H² for `φ`, the multiplication
@@ -351,8 +332,8 @@ the quotient and transport-domain assemblies are proved. The virial uses only th
 minimal quotient data. Its character-wise assembly and representative/exceptional-level
 bridges are checked; the six admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
-Poincaré has a weak-domain spectral argument in the Blueprint; its basis and
-cutoff weak pairing are proved, while the spectral assembly remains open. The corrected-boundary constants have explicit rational derivations;
+Poincaré and its basis, cutoff weak pairing and spectral assembly are
+transitively admission-free. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 

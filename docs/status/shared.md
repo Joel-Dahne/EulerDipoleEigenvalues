@@ -121,17 +121,12 @@ weights and local versus global regularity.
    mean estimate are proved; a completed square removes Kantorovich from the
    route. The weighted form-domain bridge and ground-state/matrix bounds are
    admission-free too. Global C¹ reciprocal regularity proves the domain without
-   Picone energy or point removal. The only remaining non-certificate bulk input
-   is central-parity Poincaré. Its Blueprint proof now uses cutoff Chebyshev
-   mode pairings and Bessel directly on the maximal weak domain; mode identities,
-   the eigenvalue gap and the abstract Bessel step are proved in
-   `Analysis/ZonalModes.lean`. `Analysis/ZonalBasis.lean` proves the concrete
-   weighted basis and normalized Parseval by polynomial spanning and
-   Stone–Weierstrass. Weak mode pairing is proved on the maximal weak domain,
-   using interior cutoffs and dominated convergence; the exact weighted
-   measure transport and diagonal weak-derivative bridge are also proved.
-   The remaining Poincaré work is the concrete spectral assembly; see
-   [odd–odd status](odd-odd.md).
+   Picone energy or point removal. The non-certificate bulk route is closed:
+   central-parity Poincaré and the bulk gradient bound are admission-free.
+   The weighted zonal basis, cutoff weak pairings, coefficient parity and Bessel
+   give Poincaré on the original maximal weak domain, with exact physical
+   mean/variance and Cartesian-energy normalization. No weighted Sobolev
+   density or boundary trace hypothesis is used; see [odd–odd status](odd-odd.md).
    The coefficient assembly uses the
    admitted residual identity/sign, excluded from the current breadth-first
    traversal; see [odd–odd status](odd-odd.md). The prior recursive statement pass
@@ -140,7 +135,7 @@ weights and local versus global regularity.
    statements and explicit operator identities are in `BernsteinCertificates.lean`,
    `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
    No coefficient checker or subdivision dataset is implemented, and no backend
-   is selected. Weighted spectral proof work and exact certificate verification
+   is selected. Exact certificate verification and the other analytic branches
    remain open; statement markers are not a compatibility audit.
    See [odd–odd status](odd-odd.md). The earlier
    saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,

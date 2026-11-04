@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.PolynomialInequalities
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
 import NoEmbeddedEigenvalues.Analysis.ZonalTransport
+import NoEmbeddedEigenvalues.Analysis.ZonalSpectral
 
 /-!
 # The weighted form domain for odd–odd bulk coercivity
@@ -177,7 +178,50 @@ theorem DDWeightedH1.zonal_weak_pairing {z zx zy : ℝ × ℝ → ℂ}
 theorem zonal_poincare {z zx zy : ℝ × ℝ → ℂ} (h : DDWeightedH1 z zx zy)
     (hc : ∀ᵐ p ∂(volume.restrict cellSquare), z (-p.1, -p.2) = z p) :
     3 * ddWeightedVariance z ≤ ddWeightedEnergy zx zy := by
-  sorry
+  obtain ⟨ha, hb, hz, hza, hzb⟩ := h.zonal_diagonal_domain
+  have hcν : ∀ᵐ q ∂zonalMeasure, (z ∘ diagInv) (-q) = (z ∘ diagInv) q := by
+    filter_upwards [ae_zonalMeasure_comp_diagInv hc] with q hq
+    change z (diagInv (-q)) = z (diagInv q)
+    rw [map_neg]
+    exact (congrArg z (show -(diagInv q) = (-(diagInv q).1, -(diagInv q).2) from
+      Prod.ext rfl rfl)).trans hq
+  have hspec := zonal_poincare_square ha hb hz hza hzb hcν
+  dsimp only [Function.comp_apply] at hspec
+  let r : ℝ := 1 / (2 * Real.pi ^ 2)
+  have hr : 0 < r := by dsimp [r]; positivity
+  have hmass : ddCellMeasure.real univ = 2 * Real.pi ^ 2 := by
+    change (ddCellMeasure univ).toReal = _
+    rw [ddCellMeasure_mass, ENNReal.toReal_ofReal (by positivity)]
+  have hmean : (∫ q, z (diagInv q) ∂zonalMeasure) = ddWeightedMean z := by
+    rw [integral_comp_diagInv_zonalMeasure, ddWeightedMean, hmass]
+    simp only [Complex.real_smul]
+    push_cast
+    ring
+  have hvar : (∫ q, ‖z (diagInv q) - ∫ t, z (diagInv t) ∂zonalMeasure‖ ^ 2 ∂zonalMeasure) =
+      r * ddWeightedVariance z := by
+    simp_rw [hmean]
+    exact integral_comp_diagInv_zonalMeasure (fun p ↦ ‖z p - ddWeightedMean z‖ ^ 2)
+  have henergy : (∫ q, ‖zx (diagInv q) + zy (diagInv q)‖ ^ 2 ∂zonalMeasure) +
+      (∫ q, ‖zx (diagInv q) - zy (diagInv q)‖ ^ 2 ∂zonalMeasure) =
+        (2 * r) * ddWeightedEnergy zx zy := by
+    rw [integral_comp_diagInv_zonalMeasure (fun p ↦ ‖zx p + zy p‖ ^ 2),
+      integral_comp_diagInv_zonalMeasure (fun p ↦ ‖zx p - zy p‖ ^ 2)]
+    change r * (∫ p, ‖zx p + zy p‖ ^ 2 ∂ddCellMeasure) +
+      r * (∫ p, ‖zx p - zy p‖ ^ 2 ∂ddCellMeasure) = _
+    have ia : Integrable (fun p ↦ ‖zx p + zy p‖ ^ 2) ddCellMeasure :=
+      (h.x_l2.add h.y_l2).integrable_norm_pow (by norm_num)
+    have ib : Integrable (fun p ↦ ‖zx p - zy p‖ ^ 2) ddCellMeasure :=
+      (h.x_l2.sub h.y_l2).integrable_norm_pow (by norm_num)
+    rw [← mul_add, ← integral_add ia ib]
+    have heq : (fun p ↦ ‖zx p + zy p‖ ^ 2 + ‖zx p - zy p‖ ^ 2) =
+        fun p ↦ 2 * (‖zx p‖ ^ 2 + ‖zy p‖ ^ 2) := by
+      funext p
+      exact parallelogram_law_with_norm ℂ (zx p) (zy p)
+    rw [heq, integral_const_mul]
+    change r * (2 * ddWeightedEnergy zx zy) = _
+    ring
+  rw [hvar, henergy] at hspec
+  exact (mul_le_mul_iff_right₀ (mul_pos zero_lt_two hr)).mp (by nlinarith only [hspec])
 
 /-- The elementary Kantorovich bound, for a real weight on an arbitrary probability
     space. Boundedness and a.e. measurability suffice; no differentiability is used. -/

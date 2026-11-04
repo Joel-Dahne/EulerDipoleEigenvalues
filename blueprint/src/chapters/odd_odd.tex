@@ -1860,7 +1860,8 @@ $|\chi_j'(a)\cos a|\le4\|\theta'\|_\infty$.
 \label{lem:zonal-weak-pairing}
 \uses{def:sobolev-local, def:dd-weighted-h1, def:zonal-modes,
  lem:zonal-mode-basis}
-\lean{NoEmbeddedEigenvalues.DDWeightedH1.zonal_weak_pairing}
+\lean{NoEmbeddedEigenvalues.DDWeightedH1.zonal_weak_pairing,
+ NoEmbeddedEigenvalues.zonal_weak_pairing_square}
 \leanok
 Let $(z,z_x,z_y)$ be a weighted $H^1$ triple and let $T(a,b)=(a+b,a-b)$.
 Write $Z=z\circ T$, $Z_a=(z_x+z_y)\circ T$ and
@@ -1870,6 +1871,9 @@ $Z_b=(z_x-z_y)\circ T$. For every $n,m\ge0$,
    =2\lambda_{nm}\int_{I^2}ZQ_{nm}\,d\nu .
 \]
 All these integrals are absolutely convergent.
+The same identity and integrability assertions hold directly for any
+$Z,Z_a,Z_b\in L^2(\nu)$ with $Z_a,Z_b$ the specified distributional derivatives
+of $Z$ on $I^2$.
 \end{lemma}
 
 \begin{proof}
@@ -1922,6 +1926,64 @@ Sum $\gamma|c_i|^2\le|\ip{v_i}{D}|^2$ and apply Bessel's inequality.
 The gradient family need not be complete.
 \end{proof}
 
+\begin{lemma}[Normalized zonal gradient modes]
+\label{lem:zonal-gradient-modes}
+\uses{def:sobolev-local, def:zonal-modes, lem:zonal-mode-basis}
+\lean{NoEmbeddedEigenvalues.zonalEigenvalue_pos,
+ NoEmbeddedEigenvalues.inner_zonalGradientLp_modes,
+ NoEmbeddedEigenvalues.orthonormal_zonalUnitGradient,
+ NoEmbeddedEigenvalues.inner_zonalUnitGradient}
+\leanok
+Let $J=\{(n,m)\in\mathbb N^2:(n,m)\ne(0,0)\}$.
+Then $2\lambda_{nm}>0$ on $J$, and
+\[
+ v_{nm}=\frac{\nabla Q_{nm}}{\sqrt{2\lambda_{nm}}}
+\]
+is an orthonormal family in $L^2(\nu)\oplus_2L^2(\nu)$.
+If $Z,Z_a,Z_b\in L^2(\nu)$, with the latter two the specified weak
+derivatives on $I^2$, then, writing
+$c_{nm}=\int ZQ_{nm}\,d\nu$ and $D=(Z_a,Z_b)$,
+\[
+ \ip{v_{nm}}D=\sqrt{2\lambda_{nm}}\,c_{nm}\qquad((n,m)\in J).
+\]
+No completeness assertion is made for the gradient family.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zonal-weak-pairing, lem:zonal-mode-identities}
+\leanok
+Apply weak pairing on the square first to the smooth mode $Z=Q_{kl}$.
+Basis orthogonality gives
+$\ip{\nabla Q_{nm}}{\nabla Q_{kl}}
+ =2\lambda_{nm}\delta_{(n,m),(k,l)}$.
+The eigenvalue is positive away from the constant mode, so normalization
+gives orthonormality. Weak pairing for the supplied $Z$ gives the last formula.
+\end{proof}
+
+\begin{lemma}[Central parity of zonal coefficients]
+\label{lem:zonal-coefficient-parity}
+\uses{def:zonal-modes, lem:zonal-mode-basis}
+\lean{NoEmbeddedEigenvalues.zonalProduct_neg,
+ NoEmbeddedEigenvalues.integral_neg_zonalMeasure,
+ NoEmbeddedEigenvalues.zonalCoeff_central_parity, NoEmbeddedEigenvalues.zonalCoeff_even}
+\leanok
+For $Z\in L^2(\nu)$ centrally even almost everywhere, put
+$c_{nm}=\int ZQ_{nm}\,d\nu$. Then
+\[
+ c_{nm}=(-1)^{n+m}c_{nm}.
+\]
+In particular $c_{nm}\ne0$ implies that $n+m$ is even.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zonal-mode-identities}
+\leanok
+Simultaneous negation preserves $I^2$, Lebesgue measure and the density
+$\cos^2a\cos^2b$. Change variables by this map and use central evenness
+of $Z$ and the mode parity
+$Q_{nm}(-a,-b)=(-1)^{n+m}Q_{nm}(a,b)$.
+\end{proof}
+
 \begin{lemma}[Weighted Poincar\'e inequality]
 \label{lem:zonal-poincare}
 \uses{def:sobolev-local, def:dd-weighted-h1}
@@ -1938,9 +2000,10 @@ is required.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cell-square, lem:diagonal-calculus, lem:dd-weighted-integrals,
- lem:zonal-mode-identities, lem:zonal-mode-basis, lem:zonal-weak-pairing,
- lem:weak-mode-bessel}
+\uses{lem:zonal-diagonal-domain, lem:dd-weighted-integrals,
+ lem:zonal-mode-identities, lem:zonal-mode-basis, lem:zonal-gradient-modes,
+ lem:zonal-coefficient-parity, lem:weak-mode-bessel}
+\leanok
 Put $M=\rho(C)=2\pi^2$. In the notation of the preceding lemmas,
 $d\rho=M\,d\nu$ and
 \[
@@ -1950,24 +2013,30 @@ $d\rho=M\,d\nu$ and
  \quad c_{nm}=\int_{I^2}ZQ_{nm}\,d\nu.
 \]
 The second identity is Parseval, with $Q_{00}=1$.
-Central parity gives $c_{nm}=(-1)^{n+m}c_{nm}$, so only even
-total degree survives. Let $J$ contain the nonconstant even-total-degree
-indices and set, in $L^2(\nu;\mathbb C^2)$,
+Apply Parseval to $Z-\int Z\,d\nu$, whose constant coefficient is zero.
+Subtracting a constant preserves the specified weak derivatives and central
+parity. Central parity gives $c_{nm}=(-1)^{n+m}c_{nm}$, so only even
+total degree survives.
+Take $J=\mathbb N^2\setminus\{(0,0)\}$, with the orthonormal gradient family
+of Lemma~\ref{lem:zonal-gradient-modes}, and put $D=(Z_a,Z_b)$.
+Then
 \[
- v_{nm}=\frac{\nabla Q_{nm}}{\sqrt{2\lambda_{nm}}},\qquad
- D=\frac{(Z_a,Z_b)}{\sqrt2}.
+ |\ip{v_{nm}}D|^2=2\lambda_{nm}|c_{nm}|^2.
 \]
-Weak pairing applied to $Z=Q_{kl}$ and basis orthogonality show that
-$(v_{nm})_{J}$ is orthonormal. Applied to the supplied $Z$, it gives
-$\ip{v_{nm}}D=\sqrt{\lambda_{nm}}c_{nm}$.
-Since $\lambda_{nm}\ge3$ on $J$, Bessel yields
+Whenever $c_{nm}\ne0$, the total degree is even and
+$2\lambda_{nm}\ge6$. Bessel therefore gives
 \[
- 3V[z]/M\le\|D\|^2=E[z_x,z_y]/M.
+ 6V[z]/M\le\|D\|^2=2E[z_x,z_y]/M.
 \]
-In particular no equality expansion for the gradient energy is needed.
+The last equality uses the parallelogram identity for $z_x\pm z_y$.
+Cancel the positive mass factor to obtain the result.
+No equality expansion for the gradient energy is needed.
+\end{proof}
+
+\begin{remark}
 The constant is sharp: $Q_{11}=4\sin a\sin b$ has mean zero,
 central even parity and eigenvalue $3$.
-\end{proof}
+\end{remark}
 
 \begin{remark}[Digest note: resolving the weak-domain spectral step]
 Testing cutoff polynomial-mode fluxes and then using Bessel gives the

@@ -10,13 +10,13 @@ Odd–odd exclusion remains conditional: the Picone current is assembled from
 ten explicit admitted inputs. Corrected boundary nonnegativity is
 assembled from three interval estimates. The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
-admissions. Bulk coercivity now reaches only weighted Poincaré and the two
-residual-certificate inputs. Its weighted-domain bridge and ground-state/matrix
-bounds are admission-free.
+admissions. Bulk coercivity reaches only the two residual-certificate inputs.
+Its weighted-domain bridge, ground-state/matrix bounds and central-parity
+weighted Poincaré inequality are admission-free.
 The mixed exclusion remains admitted. The recursive statement-only pass covers
 the odd–odd dependency closure, including certificate tools and sign claims.
-The weighted zonal basis and weak mode pairings are proved on the maximal weak
-domain; central-parity Poincaré still needs the spectral assembly.
+Weighted Poincaré is proved on the maximal weak domain using the zonal basis,
+cutoff weak pairings, central parity and Bessel, without traces or Sobolev density.
 Lean analytic proofs remain open; no certificate algorithm has been selected
 or verified.
 Statement markers are not a compatibility or proof audit.
@@ -62,10 +62,10 @@ A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, ten below `dd_picone_current`,
 three below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and twenty-eight for `odd_odd_exclusion`.
-The bulk Picone bound reaches exactly three: weighted Poincaré, the residual
-identity and residual sign. The weighted form-domain bridge and matrix bound
-have zero admissions.
+twelve below `dd_exclusion_domain`, and twenty-seven for `odd_odd_exclusion`.
+The bulk Picone bound reaches exactly two: the residual identity and residual
+sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
+zero admissions, as do the weighted form-domain bridge and matrix bound.
 Expanding the assemblies exposes their analytic frontiers;
 it does not eliminate those admissions. Quotient orthogonality and canonical
 boundary regularity are admission-free for supplied quotient data. The generic
