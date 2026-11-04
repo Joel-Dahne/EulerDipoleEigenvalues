@@ -33,11 +33,6 @@ once resolved; record the resolution in the relevant node.
         the coefficient sign certificate.
         Only boundary nonnegativity is consumed by exclusion; strict
         positivity is unnecessary.
-  \item \textbf{Weighted Poincar\'e proof} (Lemma~\ref{lem:zonal-poincare}).
-        The maximal weak weighted form domain and its use by the Picone
-        quotient are now explicit. The zonal $S^3$ or Gegenbauer product
-        spectral argument still needs a proof on that whole domain,
-        not just on smooth functions or finite polynomial sums.
   \item \textbf{Certificate verification}
         (Chapter~\ref{chap:certificates}). A Bernstein proof would require
         exact polynomialization linked to the defining operators and a sound
@@ -55,6 +50,12 @@ once resolved; record the resolution in the relevant node.
         $81/80$ estimate directly from $\int wz=0$ and $1\le w\le5/4$
         (Lemma~\ref{lem:dd-constrained-poincare}). This is proved in Lean
         and removes the separate Kantorovich bound from the bulk route.
+  \item \textbf{Weighted Poincar\'e without Sobolev density.}
+        Cutoff Chebyshev-mode fluxes and Bessel give the estimate on the maximal
+        weak domain (Lemmas~\ref{lem:zonal-weak-pairing} and~\ref{lem:zonal-poincare}).
+        The weighted flux vanishes cubically at each endpoint, so only weighted
+        $L^2$ is needed to remove the cutoffs. No sphere Sobolev identification
+        or equality expansion of the gradient energy is required.
   \item \textbf{Picone quotient domain.} The ground state and its reciprocal
         are $C^1$ even at the center (Lemma~\ref{lem:dd-ground-c1}). Bounded
         multiplication proves the weighted quotient domain without Picone

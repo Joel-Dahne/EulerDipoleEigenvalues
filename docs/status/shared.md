@@ -122,9 +122,15 @@ weights and local versus global regularity.
    route. The weighted form-domain bridge and ground-state/matrix bounds are
    admission-free too. Global C¹ reciprocal regularity proves the domain without
    Picone energy or point removal. The only remaining non-certificate bulk input
-   is central-parity Poincaré. The coefficient assembly uses the admitted residual
-   identity/sign, excluded from the current breadth-first traversal; see [odd–odd status](odd-odd.md). All nodes below odd–odd exclusion
-   now have Blueprint statement/Mathlib markers. The certificate chapter's
+   is central-parity Poincaré. Its Blueprint proof now uses cutoff Chebyshev
+   mode pairings and Bessel directly on the maximal weak domain; mode identities,
+   the eigenvalue gap and the abstract Bessel step are proved in
+   `Analysis/ZonalModes.lean`. The concrete weighted basis and weak-pairing
+   construction are not yet stated in Lean. The coefficient assembly uses the
+   admitted residual identity/sign, excluded from the current breadth-first
+   traversal; see [odd–odd status](odd-odd.md). The prior recursive statement pass
+   covers nodes below odd–odd exclusion except for these two newly exposed
+   weighted spectral inputs. The certificate chapter's
    statements and explicit operator identities are in `BernsteinCertificates.lean`,
    `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
    No coefficient checker or subdivision dataset is implemented, and no backend

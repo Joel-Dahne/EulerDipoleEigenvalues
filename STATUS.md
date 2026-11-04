@@ -13,10 +13,11 @@ from local analytic inputs; the other three quotient stages remain outer
 admissions. Bulk coercivity now reaches only weighted Poincaré and the two
 residual-certificate inputs. Its weighted-domain bridge and ground-state/matrix
 bounds are admission-free.
-The mixed exclusion remains admitted. The recursive statement-only pass now
-covers every node in the odd–odd exclusion's Blueprint dependency closure,
-including the certificate chapter's tools and sign claims. Their analytic
-proofs remain open; no certificate algorithm has been selected or verified.
+The mixed exclusion remains admitted. The recursive statement-only pass covers
+the odd–odd dependency closure, including certificate tools and sign claims,
+apart from the newly exposed weighted zonal basis and weak mode pairing inputs.
+Lean analytic proofs remain open; no certificate algorithm has been selected
+or verified.
 Statement markers are not a compatibility or proof audit.
 The local/global stream-quotient assembly is now checked in Lean, without a
 stronger corner hypothesis. Exceptional-level compatibility and the remaining

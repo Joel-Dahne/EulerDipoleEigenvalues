@@ -1712,6 +1712,142 @@ consequence resolve this domain issue; assigned values at the isolated
 center play no role in the integral inequalities.
 \end{remark}
 
+\begin{definition}[Zonal modes]
+\label{def:zonal-modes}
+\lean{NoEmbeddedEigenvalues.zonalMode, NoEmbeddedEigenvalues.zonalEigenvalue}
+\leanok
+For $n,m\in\mathbb N$, let
+\[
+ q_n(a)=U_n(\sin a),\qquad
+ \lambda_{nm}=\tfrac12\bigl(n(n+2)+m(m+2)\bigr),
+\]
+where $U_n=C_n^{(1)}$ is the Chebyshev polynomial of the second kind.
+\end{definition}
+
+\begin{lemma}[Zonal mode identities and gap]
+\label{lem:zonal-mode-identities}
+\uses{def:zonal-modes}
+\lean{NoEmbeddedEigenvalues.zonalMode_zero,
+ NoEmbeddedEigenvalues.contDiff_zonalMode,
+ NoEmbeddedEigenvalues.zonalMode_neg,
+ NoEmbeddedEigenvalues.zonalMode_mul_cos,
+ NoEmbeddedEigenvalues.zonalMode_deriv_bound,
+ NoEmbeddedEigenvalues.hasDerivAt_zonalMode_flux,
+ NoEmbeddedEigenvalues.zonalEigenvalue_gap}
+\leanok
+The modes are smooth on $\mathbb R$, $q_0=1$, and
+\[
+ q_n(-a)=(-1)^nq_n(a),\qquad
+ q_n(a)\cos a=\sin\bigl((n+1)(\pi/2-a)\bigr),\qquad
+ (\cos^2a\,q_n'(a))'=-n(n+2)\cos^2a\,q_n(a).
+\]
+For each $n$ there is $C_n\ge0$ such that
+$|q_n'(a)|\le C_n|\cos a|$ for all $a$.
+If $(n,m)\ne(0,0)$ and $n+m$ is even, then $\lambda_{nm}\ge3$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The Chebyshev differential equation is
+$(1-t^2)U_n''-3tU_n'+n(n+2)U_n=0$.
+Compose with $t=\sin a$ and differentiate the weighted flux.
+The derivative bound follows from boundedness of $U_n'$ on $[-1,1]$.
+Parity and the sine identity are the standard Chebyshev identities.
+For the gap, $n^2\ge n$, $m^2\ge m$ and $n+m\ge2$.
+\end{proof}
+
+\begin{lemma}[Weighted zonal basis]
+\label{lem:zonal-mode-basis}
+\uses{def:zonal-modes}
+Put $I=(-\pi/2,\pi/2)$ and
+\[
+ d\nu=\tfrac4{\pi^2}\cos^2a\cos^2b\,da\,db
+ \quad\hbox{on }I^2.
+\]
+Then $\nu$ is a probability measure, and
+$Q_{nm}(a,b)=q_n(a)q_m(b)$, $n,m\ge0$, is a complete orthonormal
+basis of complex $L^2(\nu)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zonal-mode-identities, lem:torus-fourier-basis}
+The map
+$F\mapsto(2/\pi)\cos a\cos b\,F(a,b)$ is a unitary map from
+$L^2(\nu)$ onto $L^2(I^2,da\,db)$: its inverse is division by
+$(2/\pi)\cos a\cos b$, which is nonzero in the open square.
+The sine identity sends $Q_{nm}$ to the normalized product sine basis
+on $(0,\pi)^2$, after $t=\pi/2-a$, $u=\pi/2-b$.
+Orthogonality follows by integrating products of sines; completeness follows
+by odd reflection in each coordinate and the torus Fourier basis.
+Only $L^2$ completeness is used, not density in a weighted Sobolev norm.
+\end{proof}
+
+\begin{lemma}[Weak pairing with zonal modes]
+\label{lem:zonal-weak-pairing}
+\uses{def:sobolev-local, def:dd-weighted-h1, def:zonal-modes,
+ lem:zonal-mode-basis}
+Let $(z,z_x,z_y)$ be a weighted $H^1$ triple and let $T(a,b)=(a+b,a-b)$.
+Write $Z=z\circ T$, $Z_a=(z_x+z_y)\circ T$ and
+$Z_b=(z_x-z_y)\circ T$. For every $n,m\ge0$,
+\[
+ \int_{I^2}(Z_a\,\partial_aQ_{nm}+Z_b\,\partial_bQ_{nm})\,d\nu
+   =2\lambda_{nm}\int_{I^2}ZQ_{nm}\,d\nu .
+\]
+All these integrals are absolutely convergent.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:diagonal-calculus, lem:zonal-mode-identities}
+A linear change of test functions gives the specified weak derivatives of $Z$.
+The value and these derivatives are in $L^2(\nu)$.
+Write $w(a,b)=\cos^2a\cos^2b$. Choose smooth cutoffs $\chi_\varepsilon$ on $I$,
+zero within distance $\varepsilon$ of its endpoints, one beyond distance
+$2\varepsilon$, with $0\le\chi_\varepsilon\le1$ and
+$|\chi_\varepsilon'|\le C/\varepsilon$.
+In the weak $a$ derivative use the compactly supported smooth test
+\[
+ \chi_\varepsilon(a)\chi_\varepsilon(b)\,
+ w(a,b)\,\partial_aQ_{nm}(a,b).
+\]
+Apart from the differentiated cutoff, the flux identity gives
+$\partial_a(w\partial_aQ_{nm})=-n(n+2)wQ_{nm}$.
+The error is bounded by Cauchy--Schwarz by
+\[
+ \|Z\|_{L^2(w)}\!
+ \left(\int_{I^2}w\,|\partial_aQ_{nm}|^2
+   |\chi_\varepsilon'(a)\chi_\varepsilon(b)|^2\,da\,db\right)^{1/2}
+ \le C_{nm}\|Z\|_{L^2(w)}\,\varepsilon^{3/2}.
+\]
+Indeed $q_m$ and $U_n'$ are bounded on the closed interval,
+$|\partial_aQ_{nm}|\le C_{nm}|\cos a|$, and the endpoint layer
+has width $O(\varepsilon)$ and $|\cos a|=O(\varepsilon)$ there.
+Thus the integral in parentheses is $O(\varepsilon^3)$.
+The other terms converge by dominated convergence and weighted
+Cauchy--Schwarz. Repeat for $b$ and add.
+No trace of $Z$ or approximation of $Z$ in weighted $H^1$ is used.
+\end{proof}
+
+\begin{lemma}[Spectral gap from weak mode pairings]
+\label{lem:weak-mode-bessel}
+\lean{NoEmbeddedEigenvalues.poincare_of_weak_modes}
+\leanok
+Let $(v_i)_{i\in J}$ be an orthonormal family in a complex inner product
+space $F$, let $D\in F$, $c_i\in\mathbb C$, and let
+$N,\gamma,\ell_i\in\mathbb R$. If
+\[
+ \sum_{i\in J}|c_i|^2=N,\qquad
+ |\ip{v_i}{D}|^2=\ell_i|c_i|^2,\qquad
+ c_i\ne0\Longrightarrow\ell_i\ge\gamma,
+\]
+where the first sum converges, then $\gamma N\le\|D\|^2$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Sum $\gamma|c_i|^2\le|\ip{v_i}{D}|^2$ and apply Bessel's inequality.
+The gradient family need not be complete.
+\end{proof}
+
 \begin{lemma}[Weighted Poincar\'e inequality]
 \label{lem:zonal-poincare}
 \uses{def:sobolev-local, def:dd-weighted-h1}
@@ -1728,27 +1864,44 @@ is required.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cell-square, lem:separatrix-lines, lem:diagonal-calculus}
-In diagonal coordinates, $d\rho=8\cos^2a\cos^2b\,da\,db$ and the
-Cartesian gradient energy is one half of the diagonal-coordinate energy.
-The one-dimensional zonal eigenvalues are $n(n+2)$.
-Simultaneous inversion sends the product mode of degrees $(n,m)$ to
-$(-1)^{n+m}$ times itself. It therefore removes odd total degree;
-the first nonconstant remaining mode is $(1,1)$, with eigenvalue
-$\tfrac12(3+3)=3$.
-To make this argument a proof, the product spectral expansion and its
-energy bound must be established on the whole weak form domain, not only
-for smooth functions or finite mode sums.
+\uses{lem:cell-square, lem:diagonal-calculus, lem:dd-weighted-integrals,
+ lem:zonal-mode-identities, lem:zonal-mode-basis, lem:zonal-weak-pairing,
+ lem:weak-mode-bessel}
+Put $M=\rho(C)=2\pi^2$. In the notation of the preceding lemmas,
+$d\rho=M\,d\nu$ and
+\[
+ \frac{E[z_x,z_y]}M
+   =\frac12\int_{I^2}(|Z_a|^2+|Z_b|^2)\,d\nu,\qquad
+ \frac{V[z]}M=\sum_{(n,m)\ne(0,0)}|c_{nm}|^2,
+ \quad c_{nm}=\int_{I^2}ZQ_{nm}\,d\nu.
+\]
+The second identity is Parseval, with $Q_{00}=1$.
+Central parity gives $c_{nm}=(-1)^{n+m}c_{nm}$, so only even
+total degree survives. Let $J$ contain the nonconstant even-total-degree
+indices and set, in $L^2(\nu;\mathbb C^2)$,
+\[
+ v_{nm}=\frac{\nabla Q_{nm}}{\sqrt{2\lambda_{nm}}},\qquad
+ D=\frac{(Z_a,Z_b)}{\sqrt2}.
+\]
+Weak pairing applied to $Z=Q_{kl}$ and basis orthogonality show that
+$(v_{nm})_{J}$ is orthonormal. Applied to the supplied $Z$, it gives
+$\ip{v_{nm}}D=\sqrt{\lambda_{nm}}c_{nm}$.
+Since $\lambda_{nm}\ge3$ on $J$, Bessel yields
+\[
+ 3V[z]/M\le\|D\|^2=E[z_x,z_y]/M.
+\]
+In particular no equality expansion for the gradient energy is needed.
+The constant is sharp: $Q_{11}=4\sin a\sin b$ has mean zero,
+central even parity and eigenvalue $3$.
 \end{proof}
 
-\begin{remark}[Digest note: weighted spectral proof]
-The form domain and all integrability hypotheses are now explicit in
-Definition~\ref{def:dd-weighted-h1}. The remaining issue is a proof of
-the weighted product spectral inequality on that domain. One route is
-the zonal $S^3$ interpretation; another uses the complete orthogonal
-family $C^{(1)}_n(\sin a)C^{(1)}_m(\sin b)$. Either route must justify
-the weak-domain energy inequality, not assume boundary regularity or
-smooth density as an extra eigenfunction hypothesis.
+\begin{remark}[Digest note: resolving the weak-domain spectral step]
+Testing cutoff polynomial-mode fluxes and then using Bessel gives the
+energy inequality on the maximal weak domain directly.
+The cubic endpoint vanishing of $\cos^2a\,q_n'$ removes the test cutoffs
+using only the stated weighted $L^2$ bounds.
+Thus neither weighted smooth density nor a zonal $S^3$ Sobolev
+identification is an additional mathematical hypothesis.
 \end{remark}
 
 \begin{lemma}[Kantorovich-type bound]
