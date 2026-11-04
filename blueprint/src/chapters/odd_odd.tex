@@ -1759,6 +1759,10 @@ For the gap, $n^2\ge n$, $m^2\ge m$ and $n+m\ge2$.
 \begin{lemma}[Weighted zonal basis]
 \label{lem:zonal-mode-basis}
 \uses{def:zonal-modes}
+\lean{NoEmbeddedEigenvalues.zonalMeasure_isProbabilityMeasure,
+ NoEmbeddedEigenvalues.zonalBasis, NoEmbeddedEigenvalues.zonalBasis_apply,
+ NoEmbeddedEigenvalues.coeFn_zonalModeLp}
+\leanok
 Put $I=(-\pi/2,\pi/2)$ and
 \[
  d\nu=\tfrac4{\pi^2}\cos^2a\cos^2b\,da\,db
@@ -1770,16 +1774,28 @@ basis of complex $L^2(\nu)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:zonal-mode-identities, lem:torus-fourier-basis}
-The map
-$F\mapsto(2/\pi)\cos a\cos b\,F(a,b)$ is a unitary map from
-$L^2(\nu)$ onto $L^2(I^2,da\,db)$: its inverse is division by
-$(2/\pi)\cos a\cos b$, which is nonzero in the open square.
-The sine identity sends $Q_{nm}$ to the normalized product sine basis
-on $(0,\pi)^2$, after $t=\pi/2-a$, $u=\pi/2-b$.
-Orthogonality follows by integrating products of sines; completeness follows
-by odd reflection in each coordinate and the torus Fourier basis.
-Only $L^2$ completeness is used, not density in a weighted Sobolev norm.
+\uses{lem:zonal-mode-identities}
+\leanok
+The sine identity and integration of sine products give
+$\int_I\cos^2a\,q_n(a)q_m(a)\,da=(\pi/2)\delta_{nm}$.
+Product integration gives orthonormality and, at $(n,m)=(0,0)$,
+the probability normalization.
+
+For completeness work first on the compact square $\overline I^2$.
+The polynomials $U_n$ form a basis of the polynomial ring, since
+$\deg U_n=n$ and their leading coefficients $2^n$ are nonzero.
+Thus the complex linear span of $Q_{nm}$ contains every product
+$p(\sin a)q(\sin b)$ and is a star subalgebra containing constants.
+It separates points: $\sin$ is injective on $\overline I$, and
+the coordinate functions $\sin a$, $\sin b$ belong to the span.
+Stone--Weierstrass gives uniform density in $C(\overline I^2,\mathbb C)$.
+Extend these continuous functions to the plane by coordinatewise retraction
+onto $\overline I^2$. Their weighted $L^2$ images are dense, because they
+include the classes of all bounded continuous functions on the plane,
+and $\nu$ is finite and supported on $I^2$.
+Transporting the uniform density through this continuous linear map proves
+the claimed completeness. Only $L^2$ density is used, not density in a
+weighted Sobolev norm.
 \end{proof}
 
 \begin{lemma}[Weak pairing with zonal modes]

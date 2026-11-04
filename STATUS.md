@@ -15,7 +15,8 @@ residual-certificate inputs. Its weighted-domain bridge and ground-state/matrix
 bounds are admission-free.
 The mixed exclusion remains admitted. The recursive statement-only pass covers
 the odd–odd dependency closure, including certificate tools and sign claims,
-apart from the newly exposed weighted zonal basis and weak mode pairing inputs.
+apart from the newly exposed weak mode pairing input. The weighted zonal basis
+is proved, including completeness and the explicit coefficient normalization.
 Lean analytic proofs remain open; no certificate algorithm has been selected
 or verified.
 Statement markers are not a compatibility or proof audit.

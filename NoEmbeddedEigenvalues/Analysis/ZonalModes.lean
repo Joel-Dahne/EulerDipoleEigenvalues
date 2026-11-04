@@ -16,9 +16,9 @@ derivatives to Cartesian energy.
 `poincare_of_weak_modes` uses only Parseval for the value, orthonormality of
 normalized mode gradients, and weak pairings with those gradients. It requires
 neither an energy expansion nor smooth approximation in the weighted H¹ norm.
-To apply it to `zonal_poincare`, the concrete weighted basis and its weak
-pairings must be constructed; the algebraic mode identities here do not supply
-those analytic inputs.
+The companion `ZonalBasis.lean` constructs the concrete weighted Hilbert basis.
+Application to `zonal_poincare` also needs weak pairings with the supplied
+weighted derivatives; the algebraic mode identities here do not supply them.
 -/
 
 noncomputable section

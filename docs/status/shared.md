@@ -125,12 +125,14 @@ weights and local versus global regularity.
    is central-parity Poincaré. Its Blueprint proof now uses cutoff Chebyshev
    mode pairings and Bessel directly on the maximal weak domain; mode identities,
    the eigenvalue gap and the abstract Bessel step are proved in
-   `Analysis/ZonalModes.lean`. The concrete weighted basis and weak-pairing
-   construction are not yet stated in Lean. The coefficient assembly uses the
+   `Analysis/ZonalModes.lean`. `Analysis/ZonalBasis.lean` proves the concrete
+   weighted basis and normalized Parseval by polynomial spanning and
+   Stone–Weierstrass. Weak mode pairing is not yet stated in Lean; the
+   Poincaré assembly still needs the concrete transport/parity/pairing bridges.
+   The coefficient assembly uses the
    admitted residual identity/sign, excluded from the current breadth-first
    traversal; see [odd–odd status](odd-odd.md). The prior recursive statement pass
-   covers nodes below odd–odd exclusion except for these two newly exposed
-   weighted spectral inputs. The certificate chapter's
+   covers nodes below odd–odd exclusion except for weak mode pairing. The certificate chapter's
    statements and explicit operator identities are in `BernsteinCertificates.lean`,
    `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
    No coefficient checker or subdivision dataset is implemented, and no backend
