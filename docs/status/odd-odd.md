@@ -16,8 +16,8 @@ The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
 audit finds twenty-eight: the former bulk admission has expanded to weighted
 Poincaré and the two residual-certificate inputs. This is not an admission-free exclusion.
-The recursive statement pass covers the odd–odd dependency closure apart from
-the newly exposed weak mode pairing input. The weighted zonal basis is proved.
+The recursive statement pass covers the odd–odd dependency closure, including
+the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
 Certificate tools and residual sign claims have statement/Mathlib markers. These markers are
 neither a human compatibility review nor a proof audit.
 
@@ -51,10 +51,21 @@ integral coefficients. The basis, normalization, coefficient formula and
 Parseval each have zero transitive admissions. Completeness uses polynomial spanning and
 Stone–Weierstrass, followed by bounded-continuous density in weighted L²;
 no sine-basis or weighted Sobolev-density theorem is assumed.
-Weak pairing (`lem:zonal-weak-pairing`) has a detailed mathematical proof but
-no Lean statement yet. `zonal_poincare` itself remains admitted. Its application
-still needs diagonal-measure transport, central-parity coefficient cancellation
-and the weak gradient pairings; the basis theorem adds no hypotheses to it.
+Weak pairing (`lem:zonal-weak-pairing`) is proved in
+[Analysis/ZonalWeakPairing.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalWeakPairing.lean)
+and applied to `DDWeightedH1` in `OddOddCoercivity.lean`.
+[Analysis/ZonalCutoff.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalCutoff.lean)
+supplies interior smooth cutoffs with uniformly bounded `cos a * χ' a`;
+dominated convergence removes cutoff errors using only weighted L¹.
+[Analysis/ZonalTransport.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalTransport.lean)
+proves the exact physical/diagonal measure identity. The diagonal-domain bridge
+supplies both weak derivatives and weighted L² bounds from the original domain.
+No traces, weighted Sobolev density or extra parity are assumed. The square
+pairing, physical-domain application, flux testing and diagonal measure/domain
+bridges each have zero transitive admissions.
+`zonal_poincare` itself remains admitted. Its remaining spectral assembly needs
+mean/variance and Cartesian-energy transport, central-parity coefficient
+cancellation, normalized gradient orthonormality and the Bessel application.
 The bulk bound has exactly three transitive admissions: that inequality and
 the unchanged residual identity/sign inputs. The requested traversal excludes
 `cert:dd-residual` and its dependency subtree. The standalone Kantorovich
@@ -126,9 +137,9 @@ bound are separate interfaces. Their assemblies and the constrained estimate
 are proved. The form-domain and matrix bound are admission-free;
 weighted Poincaré and the residual certificate remain admitted.
 The outer bulk bound combines the two estimates; the exclusion assembly and
-statement of `zonal-poincare` are unchanged. Its cutoff weak pairing and concrete
-spectral assembly remain the Lean frontier; the weak-domain mathematical argument is
-spelled out in the Blueprint.
+statement of `zonal-poincare` are unchanged. Its concrete spectral assembly
+remains the Lean frontier; the weak-domain mathematical argument is spelled out
+in the Blueprint, and its basis and weak-pairing inputs are proved.
 The coefficient bounds exclude the totalized matrix value at the center,
 which does not affect any integral. The certificate statements now complete
 this branch at Blueprint-node level; their proofs and verification data remain
@@ -340,8 +351,8 @@ the quotient and transport-domain assemblies are proved. The virial uses only th
 minimal quotient data. Its character-wise assembly and representative/exceptional-level
 bridges are checked; the six admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
-Poincaré has a weak-domain spectral argument in the Blueprint, but its
-cutoff weak pairing and spectral assembly are not yet formalized. The corrected-boundary constants have explicit rational derivations;
+Poincaré has a weak-domain spectral argument in the Blueprint; its basis and
+cutoff weak pairing are proved, while the spectral assembly remains open. The corrected-boundary constants have explicit rational derivations;
 the three remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 

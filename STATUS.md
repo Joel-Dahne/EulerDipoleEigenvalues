@@ -14,9 +14,9 @@ admissions. Bulk coercivity now reaches only weighted Poincaré and the two
 residual-certificate inputs. Its weighted-domain bridge and ground-state/matrix
 bounds are admission-free.
 The mixed exclusion remains admitted. The recursive statement-only pass covers
-the odd–odd dependency closure, including certificate tools and sign claims,
-apart from the newly exposed weak mode pairing input. The weighted zonal basis
-is proved, including completeness and the explicit coefficient normalization.
+the odd–odd dependency closure, including certificate tools and sign claims.
+The weighted zonal basis and weak mode pairings are proved on the maximal weak
+domain; central-parity Poincaré still needs the spectral assembly.
 Lean analytic proofs remain open; no certificate algorithm has been selected
 or verified.
 Statement markers are not a compatibility or proof audit.

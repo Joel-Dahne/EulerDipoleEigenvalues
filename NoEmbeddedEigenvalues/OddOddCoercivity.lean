@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.PolynomialInequalities
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
+import NoEmbeddedEigenvalues.Analysis.ZonalTransport
 
 /-!
 # The weighted form domain for odd–odd bulk coercivity
@@ -138,6 +139,38 @@ theorem DDWeightedH1.integrable {z zx zy : ℝ × ℝ → ℂ} (h : DDWeightedH1
     (h.x_l2.integrable_norm_pow (by norm_num)).add
       (h.y_l2.integrable_norm_pow (by norm_num)),
     (h.value_l2.sub (memLp_const _)).integrable_norm_pow (by norm_num)⟩
+
+/-- The physical maximal weak domain supplies both diagonal weak derivatives
+and their weighted L² membership. No boundary traces or parity are needed. -/
+theorem DDWeightedH1.zonal_diagonal_domain {z zx zy : ℝ × ℝ → ℂ}
+    (h : DDWeightedH1 z zx zy) :
+    HasWeakPartialOn zonalSquare 0 (z ∘ diagInv) ((fun p ↦ zx p + zy p) ∘ diagInv) ∧
+      HasWeakPartialOn zonalSquare 1 (z ∘ diagInv) ((fun p ↦ zx p - zy p) ∘ diagInv) ∧
+      MemLp (z ∘ diagInv) 2 zonalMeasure ∧
+      MemLp ((fun p ↦ zx p + zy p) ∘ diagInv) 2 zonalMeasure ∧
+      MemLp ((fun p ↦ zx p - zy p) ∘ diagInv) 2 zonalMeasure := by
+  have ha := h.weak_x.comp_diagInv_fst isOpen_cellSquare h.weak_y
+  have hb := h.weak_x.comp_diagInv_snd isOpen_cellSquare h.weak_y
+  rw [preimage_cellSquare_diagInv] at ha hb
+  exact ⟨ha, hb, memLp_zonalMeasure_comp_diagInv h.value_l2,
+    memLp_zonalMeasure_comp_diagInv (h.x_l2.add h.y_l2),
+    memLp_zonalMeasure_comp_diagInv (h.x_l2.sub h.y_l2)⟩
+
+/-- Weak pairing with every product zonal mode, on the original maximal weak
+weighted H¹ domain (`lem:zonal-weak-pairing`), including absolute integrability. -/
+theorem DDWeightedH1.zonal_weak_pairing {z zx zy : ℝ × ℝ → ℂ}
+    (h : DDWeightedH1 z zx zy) (k : ℕ × ℕ) :
+    Integrable (fun q ↦ (zx (diagInv q) + zy (diagInv q)) *
+      (zonalProductPartial k 0 q : ℂ)) zonalMeasure ∧
+      Integrable (fun q ↦ (zx (diagInv q) - zy (diagInv q)) *
+        (zonalProductPartial k 1 q : ℂ)) zonalMeasure ∧
+      Integrable (fun q ↦ z (diagInv q) * (zonalProduct k q : ℂ)) zonalMeasure ∧
+      (∫ q, (zx (diagInv q) + zy (diagInv q)) * (zonalProductPartial k 0 q : ℂ) +
+        (zx (diagInv q) - zy (diagInv q)) * (zonalProductPartial k 1 q : ℂ) ∂zonalMeasure) =
+        (2 * zonalEigenvalue k.1 k.2 : ℝ) *
+          (∫ q, z (diagInv q) * (zonalProduct k q : ℂ) ∂zonalMeasure) := by
+  obtain ⟨ha, hb, hz, hza, hzb⟩ := h.zonal_diagonal_domain
+  exact zonal_weak_pairing_square ha hb hz hza hzb k
 
 /-- Weighted Poincaré on the maximal weak form domain, with central parity a.e.
     No endpoint traces or extra reflection parities are assumed. -/

@@ -127,12 +127,16 @@ weights and local versus global regularity.
    the eigenvalue gap and the abstract Bessel step are proved in
    `Analysis/ZonalModes.lean`. `Analysis/ZonalBasis.lean` proves the concrete
    weighted basis and normalized Parseval by polynomial spanning and
-   Stone–Weierstrass. Weak mode pairing is not yet stated in Lean; the
-   Poincaré assembly still needs the concrete transport/parity/pairing bridges.
+   Stone–Weierstrass. Weak mode pairing is proved on the maximal weak domain,
+   using interior cutoffs and dominated convergence; the exact weighted
+   measure transport and diagonal weak-derivative bridge are also proved.
+   The remaining Poincaré work is the concrete spectral assembly; see
+   [odd–odd status](odd-odd.md).
    The coefficient assembly uses the
    admitted residual identity/sign, excluded from the current breadth-first
    traversal; see [odd–odd status](odd-odd.md). The prior recursive statement pass
-   covers nodes below odd–odd exclusion except for weak mode pairing. The certificate chapter's
+   covers nodes below odd–odd exclusion, including the weighted spectral inputs.
+   The certificate chapter's
    statements and explicit operator identities are in `BernsteinCertificates.lean`,
    `MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
    No coefficient checker or subdivision dataset is implemented, and no backend

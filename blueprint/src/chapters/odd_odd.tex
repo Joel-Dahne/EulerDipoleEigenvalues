@@ -1798,10 +1798,70 @@ the claimed completeness. Only $L^2$ density is used, not density in a
 weighted Sobolev norm.
 \end{proof}
 
+\begin{lemma}[Diagonal weighted domain]
+\label{lem:zonal-diagonal-domain}
+\uses{def:sobolev-local, def:dd-weighted-h1, lem:zonal-mode-basis}
+\lean{NoEmbeddedEigenvalues.map_diagInv_zonalMeasure,
+ NoEmbeddedEigenvalues.DDWeightedH1.zonal_diagonal_domain}
+\leanok
+For $T(a,b)=(a+b,a-b)$, the weighted measures satisfy
+\[
+ T_*\nu=(2\pi^2)^{-1}\rho.
+\]
+If $(z,z_x,z_y)$ is a weighted $H^1$ triple, then
+$Z=z\circ T$, $Z_a=(z_x+z_y)\circ T$, $Z_b=(z_x-z_y)\circ T$
+belong to $L^2(\nu)$, and $Z_a,Z_b$ are the specified distributional
+derivatives of $Z$ on $I^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:diagonal-calculus, lem:dipole-identities}
+\leanok
+The Jacobian has absolute value $2$ and
+$\Psi(T(a,b))=2\cos a\cos b$, giving the exact measure identity.
+It transports all three weighted $L^2$ bounds.
+Changing compactly supported test functions by the linear inverse of $T$
+gives $\partial_a=\partial_x+\partial_y$ and
+$\partial_b=\partial_x-\partial_y$ in the distributional identities.
+\end{proof}
+
+\begin{lemma}[Zonal endpoint cutoffs]
+\label{lem:zonal-cutoffs}
+\lean{NoEmbeddedEigenvalues.contDiff_zonalCutoff,
+ NoEmbeddedEigenvalues.zonalCutoff_mem_Icc,
+ NoEmbeddedEigenvalues.tsupport_zonalCutoff_subset,
+ NoEmbeddedEigenvalues.hasCompactSupport_zonalCutoff,
+ NoEmbeddedEigenvalues.zonalCutoff_eventually,
+ NoEmbeddedEigenvalues.zonalCutoff_deriv_cos_bound}
+\leanok
+There are smooth functions $\chi_j:\mathbb R\to[0,1]$,
+$j\in\mathbb N$, compactly supported inside $I=(-\pi/2,\pi/2)$,
+and a constant $C\ge0$ such that
+\[
+ |\chi_j'(a)\cos a|\le C\qquad(j\in\mathbb N,\ a\in I).
+\]
+At each $a\in I$, eventually $\chi_j(a)=1$ and $\chi_j'(a)=0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Let $r=\pi/2$ and let $\theta$ be a smooth transition, zero on $(-\infty,0]$
+and one on $[1,\infty)$. Set
+$\chi_j(a)=\theta((j+1)(r^2-a^2)-1)$.
+Its support closure lies in $\{(j+1)(r^2-a^2)\ge1\}\Subset I$.
+At each interior point the transition argument eventually exceeds $1$.
+Where the derivative is nonzero, $(j+1)(r^2-a^2)\le2$.
+The bounds $|\cos a|\le r-|a|$ and
+$|a||\cos a|\le r^2-a^2$ therefore give
+$|\chi_j'(a)\cos a|\le4\|\theta'\|_\infty$.
+\end{proof}
+
 \begin{lemma}[Weak pairing with zonal modes]
 \label{lem:zonal-weak-pairing}
 \uses{def:sobolev-local, def:dd-weighted-h1, def:zonal-modes,
  lem:zonal-mode-basis}
+\lean{NoEmbeddedEigenvalues.DDWeightedH1.zonal_weak_pairing}
+\leanok
 Let $(z,z_x,z_y)$ be a weighted $H^1$ triple and let $T(a,b)=(a+b,a-b)$.
 Write $Z=z\circ T$, $Z_a=(z_x+z_y)\circ T$ and
 $Z_b=(z_x-z_y)\circ T$. For every $n,m\ge0$,
@@ -1813,34 +1873,32 @@ All these integrals are absolutely convergent.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cell-square, lem:diagonal-calculus, lem:zonal-mode-identities}
-A linear change of test functions gives the specified weak derivatives of $Z$.
-The value and these derivatives are in $L^2(\nu)$.
-Write $w(a,b)=\cos^2a\cos^2b$. Choose smooth cutoffs $\chi_\varepsilon$ on $I$,
-zero within distance $\varepsilon$ of its endpoints, one beyond distance
-$2\varepsilon$, with $0\le\chi_\varepsilon\le1$ and
-$|\chi_\varepsilon'|\le C/\varepsilon$.
+\uses{lem:zonal-diagonal-domain, lem:zonal-cutoffs, lem:zonal-mode-identities}
+\leanok
+The diagonal-domain lemma gives the specified weak derivatives and weighted
+$L^2$ bounds. Since $\nu$ is finite, these imply weighted $L^1$ bounds.
+Modes and their derivatives are bounded on the closed square, so the
+asserted integrals are finite.
+
+Write $w(a,b)=\cos^2a\cos^2b$ and
+$\kappa_j(a,b)=\chi_j(a)\chi_j(b)$.
 In the weak $a$ derivative use the compactly supported smooth test
-\[
- \chi_\varepsilon(a)\chi_\varepsilon(b)\,
- w(a,b)\,\partial_aQ_{nm}(a,b).
-\]
-Apart from the differentiated cutoff, the flux identity gives
+$\kappa_jw\,\partial_aQ_{nm}$.
+The flux identity gives
 $\partial_a(w\partial_aQ_{nm})=-n(n+2)wQ_{nm}$.
-The error is bounded by Cauchy--Schwarz by
+Thus, including the common normalization $4/\pi^2$,
 \[
- \|Z\|_{L^2(w)}\!
- \left(\int_{I^2}w\,|\partial_aQ_{nm}|^2
-   |\chi_\varepsilon'(a)\chi_\varepsilon(b)|^2\,da\,db\right)^{1/2}
- \le C_{nm}\|Z\|_{L^2(w)}\,\varepsilon^{3/2}.
+ \int_{I^2}\kappa_j Z_a\,\partial_aQ_{nm}\,d\nu
+ =n(n+2)\int_{I^2}\kappa_j ZQ_{nm}\,d\nu
+ -\int_{I^2}Z\chi_j'(a)\chi_j(b)\partial_aQ_{nm}\,d\nu .
 \]
-Indeed $q_m$ and $U_n'$ are bounded on the closed interval,
-$|\partial_aQ_{nm}|\le C_{nm}|\cos a|$, and the endpoint layer
-has width $O(\varepsilon)$ and $|\cos a|=O(\varepsilon)$ there.
-Thus the integral in parentheses is $O(\varepsilon^3)$.
-The other terms converge by dominated convergence and weighted
-Cauchy--Schwarz. Repeat for $b$ and add.
-No trace of $Z$ or approximation of $Z$ in weighted $H^1$ is used.
+The last integrand tends pointwise to zero. Its absolute value is
+bounded by $C_{nm}|Z|$, uniformly in $j$, because
+$|\partial_aQ_{nm}|\le C_{nm}|\cos a|$ and the cutoffs have uniformly
+bounded $|\chi_j'\cos|$.
+Dominated convergence removes this error and the remaining cutoffs.
+Repeat for $b$ and add. No endpoint-layer rate, boundary trace of $Z$,
+or approximation in weighted $H^1$ is needed.
 \end{proof}
 
 \begin{lemma}[Spectral gap from weak mode pairings]
