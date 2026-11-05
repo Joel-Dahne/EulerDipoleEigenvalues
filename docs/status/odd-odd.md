@@ -8,14 +8,14 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching ten admissions. Corrected boundary nonnegativity depends
-only on zero-trace forcing energy and traces in
+inputs, reaching ten admissions. Corrected boundary nonnegativity is
+transitively admission-free in
 [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds twenty-five admissions. The bulk bound depends only on the two
+audit finds twenty-four admissions. The bulk bound depends only on the two
 residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
@@ -128,20 +128,17 @@ which does not affect any integral. The certificate statements now complete
 this branch at Blueprint-node level; their proofs and verification data remain
 separate work.
 
-The dependency closures of zero-trace forcing energy, the midpoint bound and
-the negative affine correction are now stated. The sum-of-squares nodes reuse
-existing proved classical/weighted interfaces; no density argument or duplicate
-admission is introduced. Logarithmic endpoint moments
-(`lem:corrected-log-moments`) are proved in `CorrectedBoundaryForm.lean`, including
-nonnegativity, integrability and the exact value for every natural power.
-The negative affine correction (`lem:corrected-negative-affine`) is also
-admission-free: the endpoint β bound and the first three logarithmic moments
-are combined with zero-trace Cauchy–Schwarz using separate half-interval energies.
-The midpoint bound (`lem:corrected-midpoint-bound`) is admission-free too:
-central increments cost at most one eighth of the derivative energy, and each
-negative endpoint logarithmic layer has mass 1/7. The resulting exact margins
-are 5/112 for the midpoint value and 53/448 for the energy.
-Only zero-trace forcing energy/endpoints remain admitted on this branch.
+All corrected-boundary interval inputs are admission-free in
+`CorrectedBoundaryForm.lean`. Zero-trace forcing energy and traces
+(`lem:corrected-zero-energy`) use the weighted sum of squares and
+`∫|(xu)'|² = ∫x²|u'|²`; the L² endpoint liminf forces the forcing traces to vanish.
+Logarithmic endpoint moments (`lem:corrected-log-moments`) give the exact value
+for every natural power. The negative affine correction
+(`lem:corrected-negative-affine`) combines the first three moments with separate
+half-interval energies. The midpoint bound (`lem:corrected-midpoint-bound`)
+uses central increment cost at most one eighth of the energy and endpoint
+logarithmic mass 1/7, giving the exact margins 5/112 and 53/448.
+No density argument or strengthened endpoint hypothesis is used.
 
 Sobolev Picone on a positive truncation (`lem:dd-truncated-picone`) is
 transitively admission-free in
@@ -313,8 +310,8 @@ an import cycle. Ordinary saddle/separatrix statements are now below the
 logarithmic layer, which is below the weighted-gradient/third-jet statements.
 The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs;
 the other three quotient stages still stop at their outer admissions.
-Zero-trace forcing energy/endpoints remain the corrected-boundary proof backlog.
-Bulk coercivity's weighted-domain, matrix and Poincaré bounds are proved; the certificate
+The corrected-boundary branch and bulk coercivity's weighted-domain, matrix
+and Poincaré bounds are admission-free; the certificate
 backend remains open.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
@@ -341,8 +338,8 @@ minimal quotient data. Its character-wise assembly and representative/exceptiona
 bridges are checked; the six admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
 Poincaré and its basis, cutoff weak pairing and spectral assembly are
-transitively admission-free. The corrected-boundary constants have explicit rational derivations;
-zero-trace forcing energy/endpoints remain admitted in Lean.
+transitively admission-free. Corrected-boundary nonnegativity, including its
+rational constants and endpoint traces, is also admission-free.
 Certificate verification remains deferred.
 
 The virial finite parts use only the leading period value asymptotic, not the

@@ -44,8 +44,9 @@ The even–even route is admission-free. Available foundations include:
 - Corrected-boundary forcing H¹ regularity, logarithmic correction
   integrability and pointwise β bounds; half-interval Dirichlet estimates
   and both affine correction estimates, including exact logarithmic endpoint
-  moments and the midpoint bound. Boundary nonnegativity is conditional only
-  on zero-trace forcing energy and traces.
+  moments and the midpoint bound. Zero-trace forcing energy/traces and
+  corrected-boundary nonnegativity are admission-free; integration by parts
+  supplies the energy estimate, and the L² endpoint liminf gives zero traces.
 
 Reuse requires checking the hypotheses, especially parity/rotation characters,
 weights and local versus global regularity.
@@ -113,11 +114,9 @@ weights and local versus global regularity.
    its generic integrated interface assumes a divergence formula, while the
    truncated application instead uses the Fourier cutoff route. The current's
    boundary-B trace, full-level remainder and scalar value finite part remain open.
-   The corrected-boundary logarithmic moments, negative affine correction and
-   midpoint bound are proved in `CorrectedBoundaryForm.lean`, keeping separate
-   half-interval derivative energies to retain the endpoint constants.
-   Zero-trace forcing energy/endpoints and ten transitive Picone inputs remain
-   proof work.
+   Corrected-boundary nonnegativity and all its interval inputs are
+   admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
+   analytic admissions remain. The ten transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the

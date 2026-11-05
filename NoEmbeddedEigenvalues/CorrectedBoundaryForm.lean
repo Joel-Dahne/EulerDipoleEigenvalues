@@ -425,6 +425,105 @@ theorem correctedAffineForcing_h1 (lam : ℝ) (b : ℂ) :
     · push_cast
       ring
 
+-- Integration by parts gives ∫|(xF)'|² = ∫x²|F'|² when F has zero traces.
+private theorem integral_normSq_id_product_derivative_le {F D : ℝ → ℂ}
+    (h : HasIntervalH1 (-1) 1 F D)
+    (hm : intervalH1Extension (-1) 1 F D (-1) = 0)
+    (hp : intervalH1Extension (-1) 1 F D 1 = 0) :
+    (∫ x in (-1 : ℝ)..1, Complex.normSq (F x + (x : ℂ) * D x)) ≤
+      ∫ x in (-1 : ℝ)..1, Complex.normSq (D x) := by
+  let A : ℝ → ℂ := fun x ↦ F x + (x : ℂ) * D x
+  let Q : ℝ → ℝ := fun x ↦ x * Complex.normSq (F x)
+  let q : ℝ → ℝ := fun x ↦ Complex.normSq (A x) - x ^ 2 * Complex.normSq (D x)
+  have hA : MemLp A 2 (volume.restrict (Ioo (-1) 1)) :=
+    h.memLp_value.add (memLp_ofReal_mul_of_continuousOn continuousOn_id h.memLp_derivative)
+  have hAi : IntervalIntegrable (fun x ↦ Complex.normSq (A x)) volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      (integrable_normSq_of_memLp hA)
+  have hDi : IntervalIntegrable (fun x ↦ Complex.normSq (D x)) volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      (integrable_normSq_of_memLp h.memLp_derivative)
+  have hWi := hDi.continuousOn_mul (show ContinuousOn (fun x : ℝ ↦ x ^ 2) _ by fun_prop)
+  have hqi : IntervalIntegrable q volume (-1) 1 := hAi.sub hWi
+  have hder : ∀ᵐ x, x ∈ Ioo (-1 : ℝ) 1 → HasDerivAt Q (q x) x := by
+    filter_upwards [h.hasDerivAt_ae] with x hx hxI
+    have hfr : HasDerivAt (fun y ↦ (F y).re) (D x).re x := by
+      simpa using! reCLM.hasFDerivAt.comp_hasDerivAt x (hx hxI)
+    have hfi : HasDerivAt (fun y ↦ (F y).im) (D x).im x := by
+      simpa using! imCLM.hasFDerivAt.comp_hasDerivAt x (hx hxI)
+    convert (hasDerivAt_id x).mul ((hfr.mul hfr).add (hfi.mul hfi)) using 1
+    · ext y
+      simp [Q, normSq_apply]
+    · simp [q, A, normSq_apply]
+      ring
+  have hprim : ∀ x ∈ Ioo (-1 : ℝ) 1, ∀ y ∈ Ioo (-1 : ℝ) 1,
+      (∫ t in x..y, q t) = Q y - Q x := by
+    intro x hx y hy
+    have hF := h.absolutelyContinuous hx hy
+    have hFr := absolutelyContinuousOnInterval_re hF
+    have hFi := absolutelyContinuousOnInterval_im hF
+    have hac : AbsolutelyContinuousOnInterval Q x y := by
+      have hid := LipschitzWith.id.lipschitzOnWith.absolutelyContinuousOnInterval
+        (a := x) (b := y)
+      convert hid.fun_mul ((hFr.fun_mul hFr).fun_add (hFi.fun_mul hFi)) using 1
+      ext t
+      simp [Q, normSq_apply]
+    rw [← hac.integral_deriv_eq_sub]
+    apply intervalIntegral.integral_congr_ae
+    filter_upwards [hder] with t ht htI
+    exact (ht (ordConnected_Ioo.uIcc_subset hx hy (uIoc_subset_uIcc htI))).deriv.symm
+  have htleft : Tendsto Q (𝓝[>] (-1)) (𝓝 0) := by
+    have hf := h.tendsto_left (by norm_num)
+    rw [hm] at hf
+    simpa [Q] using (tendsto_nhdsWithin_of_tendsto_nhds
+      (tendsto_id : Tendsto (fun x : ℝ ↦ x) (𝓝 (-1)) (𝓝 (-1)))).mul
+        ((continuous_normSq.tendsto 0).comp hf)
+  have htright : Tendsto Q (𝓝[<] 1) (𝓝 0) := by
+    have hf := h.tendsto_right (by norm_num)
+    rw [hp] at hf
+    simpa [Q] using (tendsto_nhdsWithin_of_tendsto_nhds
+      (tendsto_id : Tendsto (fun x : ℝ ↦ x) (𝓝 1) (𝓝 1))).mul
+        ((continuous_normSq.tendsto 0).comp hf)
+  have hz := intervalIntegral_eq_of_frequently (La := 0) (Lb := 0)
+    (by norm_num : (-1 : ℝ) < 1) hqi hprim
+    (fun ε hε ↦ by simpa [dist_eq_norm] using (Metric.tendsto_nhds.1 htleft ε hε).frequently)
+    (fun ε hε ↦ by simpa [dist_eq_norm] using (Metric.tendsto_nhds.1 htright ε hε).frequently)
+  change (∫ x in (-1 : ℝ)..1, Complex.normSq (A x) - x ^ 2 * Complex.normSq (D x)) = 0 - 0 at hz
+  rw [intervalIntegral.integral_sub hAi hWi] at hz
+  have hle : (∫ x in (-1 : ℝ)..1, x ^ 2 * Complex.normSq (D x)) ≤
+      ∫ x in (-1 : ℝ)..1, Complex.normSq (D x) := by
+    apply intervalIntegral.integral_mono_on (by norm_num) hWi hDi
+    intro x hx
+    have hx2 : x ^ 2 ≤ 1 := sub_nonneg.mp (boundaryWeight_bounds hx).1
+    simpa using mul_le_mul_of_nonneg_right hx2 (normSq_nonneg (D x))
+  change (∫ x in (-1 : ℝ)..1, Complex.normSq (A x)) ≤ _
+  linarith
+
+-- The forcing has a limit, and wD is frequently small by square integrability.
+-- With zero value trace, this forces the forcing trace itself to vanish.
+private theorem correctedBoundaryTrace_endpoint_zero {l : Filter ℝ} [l.NeBot]
+    {F D : ℝ → ℂ} {c : ℂ} (lam : ℝ)
+    (hI : ∀ᶠ x in l, x ∈ Icc (-1 : ℝ) 1)
+    (hF : Tendsto F l (𝓝 0)) (hg : Tendsto (correctedBoundaryTrace lam F D) l (𝓝 c))
+    (hD : ∀ ε > 0, ∃ᶠ x in l, boundaryWeight x * ‖D x‖ < ε ∧
+      boundaryWeight x * ‖D x‖ ^ 2 < ε) : c = 0 := by
+  have ht : Tendsto (fun x ↦ (boundaryWeight x : ℂ) * D x) l (𝓝 (I * c)) := by
+    convert ((hg.add (hF.const_mul (lam : ℂ))).const_mul I) using 1
+    · ext x
+      simp [correctedBoundaryTrace]
+      ring_nf
+      simp
+    · simp
+  apply norm_le_zero_iff.mp
+  refine le_of_forall_pos_le_add fun ε hε ↦ ?_
+  have hsmall : ∃ᶠ x in l, ‖(boundaryWeight x : ℂ) * D x‖ ≤ ε := by
+    refine ((hD ε hε).and_eventually hI).mono ?_
+    rintro x ⟨⟨hx, -⟩, hxI⟩
+    simpa [norm_mul, Complex.norm_real, Real.norm_of_nonneg (boundaryWeight_bounds hxI).1]
+      using hx.le
+  have hle := le_of_tendsto_of_frequently ht.norm hsmall
+  simpa [norm_mul] using hle
+
 /-- Zero-trace boundary energy controls the forcing derivative and its endpoint traces. -/
 theorem HasWeightedBoundaryH2.correctedBoundaryTrace_zero_energy {F D E : ℝ → ℂ}
     (h : HasWeightedBoundaryH2 F D E) (lam : ℝ)
@@ -436,7 +535,60 @@ theorem HasWeightedBoundaryH2.correctedBoundaryTrace_zero_energy {F D E : ℝ �
         (correctedBoundaryTraceDerivative lam D E) (-1) = 0 ∧
       intervalH1Extension (-1) 1 (correctedBoundaryTrace lam F D)
         (correctedBoundaryTraceDerivative lam D E) 1 = 0 := by
-  sorry
+  have hg := h.correctedBoundaryTrace_h1 lam
+  have hD2 := h.h1.memLp_derivative.norm.integrable_sq
+  have hleft : intervalH1Extension (-1) 1 (correctedBoundaryTrace lam F D)
+      (correctedBoundaryTraceDerivative lam D E) (-1) = 0 := by
+    apply correctedBoundaryTrace_endpoint_zero lam
+      (eventually_of_mem (Ioo_mem_nhdsGT (by norm_num : (-1 : ℝ) < 1))
+        fun _ hx ↦ Ioo_subset_Icc_self hx)
+      (by simpa only [hm] using h.h1.tendsto_left (by norm_num))
+      (hg.tendsto_left (by norm_num))
+    exact fun ε hε ↦ frequently_weight_small_left hD2 hε
+  have hright : intervalH1Extension (-1) 1 (correctedBoundaryTrace lam F D)
+      (correctedBoundaryTraceDerivative lam D E) 1 = 0 := by
+    apply correctedBoundaryTrace_endpoint_zero lam
+      (eventually_of_mem (Ioo_mem_nhdsLT (by norm_num : (-1 : ℝ) < 1))
+        fun _ hx ↦ Ioo_subset_Icc_self hx)
+      (by simpa only [hp] using h.h1.tendsto_right (by norm_num))
+      (hg.tendsto_right (by norm_num))
+    exact fun ε hε ↦ frequently_weight_small_right hD2 hε
+  refine ⟨?_, hleft, hright⟩
+  let A : ℝ → ℂ := fun x ↦ F x + (x : ℂ) * D x
+  have hAm : MemLp A 2 (volume.restrict (Ioo (-1) 1)) := h.h1.memLp_value.add
+    (memLp_ofReal_mul_of_continuousOn continuousOn_id h.h1.memLp_derivative)
+  have hAi : IntervalIntegrable (fun x ↦ Complex.normSq (A x)) volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      (integrable_normSq_of_memLp hAm)
+  have hSi : IntervalIntegrable (fun x ↦ Complex.normSq (boundarySquare lam F D E x))
+      volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      (integrable_normSq_of_memLp (h.memLp_boundarySquare lam))
+  have hgi : IntervalIntegrable (fun x ↦ ‖correctedBoundaryTraceDerivative lam D E x‖ ^ 2)
+      volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      hg.memLp_derivative.norm.integrable_sq
+  have hpoint (x : ℝ) : ‖correctedBoundaryTraceDerivative lam D E x‖ ^ 2 ≤
+      2 * Complex.normSq (boundarySquare lam F D E x) + 2 * Complex.normSq (A x) := by
+    have he : I * correctedBoundaryTraceDerivative lam D E x =
+        boundarySquare lam F D E x - A x := by
+      apply Complex.ext <;>
+        simp [correctedBoundaryTraceDerivative, boundarySquare, A, mul_re, mul_im] <;> ring
+    have hn : ‖correctedBoundaryTraceDerivative lam D E x‖ =
+        ‖boundarySquare lam F D E x - A x‖ := by
+      rw [← he, norm_mul, norm_I, one_mul]
+    rw [hn]
+    simp only [Complex.normSq_eq_norm_sq]
+    have ht := pow_le_pow_left₀ (norm_nonneg _) (norm_sub_le (boundarySquare lam F D E x) (A x)) 2
+    nlinarith [sq_nonneg (‖boundarySquare lam F D E x‖ - ‖A x‖)]
+  have hi := intervalIntegral.integral_mono_on (by norm_num : (-1 : ℝ) ≤ 1) hgi
+    ((hSi.const_mul 2).add (hAi.const_mul 2)) (fun x _ ↦ hpoint x)
+  rw [intervalIntegral.integral_add (hSi.const_mul 2) (hAi.const_mul 2),
+    intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul] at hi
+  have hAcontrol := integral_normSq_id_product_derivative_le h.h1 hm hp
+  have hsos := h.sum_of_squares lam hm hp
+  change (∫ x in (-1 : ℝ)..1, Complex.normSq (A x)) ≤ _ at hAcontrol
+  linarith
 
 -- The positive part of the logarithm vanishes outside the endpoint layer.
 private theorem logarithmic_positive_moment (j : ℕ) :

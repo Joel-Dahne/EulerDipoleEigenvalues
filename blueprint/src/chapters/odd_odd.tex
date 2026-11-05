@@ -2541,13 +2541,16 @@ $\int|g_u'|^2\le4F_0$ for every real $\lambda$.
 
 \begin{proof}
 \uses{lem:corrected-forcing-h1, lem:trace-sos-extension,
- lem:h1-interval-endpoints}
+ lem:h1-interval-endpoints, lem:l2-endpoint-liminf}
+\leanok
 The sum of squares gives $2F_0=\|S_\lambda u\|_2^2+\|u'\|_2^2$.
 Since $ig_u'=S_\lambda u-(xu)'$ and integration by parts gives
 $\|(xu)'\|_2^2=\|xu'\|_2^2$, the elementary two-term square bound gives
 $\|g_u'\|_2^2\le4F_0$.
-Moreover $wu'\in H^1$; a nonzero endpoint trace would contradict
-$u'\in L^2$. Its endpoint traces therefore vanish, as do those of $g_u$.
+At each endpoint, $u$ and $g_u$ have limits and $u$ has zero trace,
+so $wu'=i(g_u+\lambda u)$ has a limit.
+The $L^2$ endpoint liminf makes $w|u'|$ arbitrarily small near the endpoint;
+this forces the limit of $wu'$ to be zero, and hence the trace of $g_u$ is zero.
 \end{proof}
 
 \begin{lemma}[Logarithmic endpoint moments]

@@ -7,8 +7,8 @@ working; update current priorities and blockers rather than appending history.
 
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
-ten explicit admitted inputs. Corrected boundary nonnegativity now depends
-only on zero-trace forcing energy and traces. The stream-H² quotient is assembled
+ten explicit admitted inputs. Corrected boundary nonnegativity is admission-free.
+The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
 admissions. Bulk coercivity reaches only the two residual-certificate inputs.
 Its weighted-domain bridge, ground-state/matrix bounds and central-parity
@@ -61,8 +61,8 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, ten below `dd_picone_current`,
-one below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and twenty-five for `odd_odd_exclusion`.
+zero below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
+twelve below `dd_exclusion_domain`, and twenty-four for `odd_odd_exclusion`.
 The bulk Picone bound reaches exactly two: the residual identity and residual
 sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
 zero admissions, as do the weighted form-domain bridge and matrix bound.
