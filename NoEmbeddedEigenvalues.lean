@@ -44,6 +44,7 @@ import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddBoundaryTrace
 import NoEmbeddedEigenvalues.OddOddCurrentRemainder
 import NoEmbeddedEigenvalues.OddOddBulkIntegrability
+import NoEmbeddedEigenvalues.OddOddPotentialMass
 import NoEmbeddedEigenvalues.OddOddRenormalizedBulk
 import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier

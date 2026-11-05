@@ -181,11 +181,13 @@ proof mechanisms. Module names below are relative to
   derivatives. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from
   the shared outward derivative convention.
-- `OddOddBulkIntegrability.lean`: generic weighted forcing integrability and its
-  torus-vorticity specialization by restriction to the cell.
-- `OddOddRenormalizedBulk.lean`: ordinary stream-level exhaustion, the weighted
-  value-mass finite part and full renormalized bulk assembly. Reuses the raw
-  gradient conclusion of the both-gradient integrability interface.
+- `OddOddBulkIntegrability.lean`: saddle-weighted coefficient bound, generic forcing
+  integrability, its torus-vorticity specialization and ordinary stream-level exhaustion.
+- `OddOddPotentialMass.lean`: two-saddle trigonometric interpolation, integrability
+  of the Hölder corner remainder and the weighted value-mass finite part.
+- `OddOddRenormalizedBulk.lean`: full renormalized bulk assembly from forcing
+  integrability, the raw conclusion of the both-gradient estimate and the weighted
+  value-mass finite part.
 - `OddOddPiconeIntegrability.lean`: ground-state first derivatives,
   positive-truncation energy integrability and a full-level center-current bound.
 - `OddOddGroundResidual.lean`: exact bounded-coordinate factorization of the

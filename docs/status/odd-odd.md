@@ -174,12 +174,18 @@ Picone, the B-weighted trace or the integrated remainder.
 The renormalized bulk limit (`lem:dd-renormalized-bulk`) is assembled in
 [OddOddRenormalizedBulk.lean](../../NoEmbeddedEigenvalues/OddOddRenormalizedBulk.lean),
 with its original statement unchanged. Its two transitive admissions are the
-both-gradient estimate (`lem:dd-gradient-energies-integrable`) and the weighted
-value-mass finite part (`lem:dd-potential-mass-finite-part`). The last is independent
-of even parity and its blueprint proof reduces the corner constants to the scalar
-finite part (`lem:dd-finite-part`); that analytic proof is not yet formalized.
-Ordinary exhaustion and the bulk splitting are proved, including positive-truncation
-integrability of the subtracted value mass.
+both-gradient estimate (`lem:dd-gradient-energies-integrable`) and the scalar
+coefficient finite part (`lem:dd-finite-part`).
+[OddOddPotentialMass.lean](../../NoEmbeddedEigenvalues/OddOddPotentialMass.lean)
+proves the weighted value-mass finite part (`lem:dd-potential-mass-finite-part`),
+with its statement unchanged and only the scalar coefficient admission.
+A trigonometric interpolant matches the two torus saddle values; coordinate
+exchange cancels its nonconstant weighted integral. The Hölder remainder is
+dominated by a sum of integrable corner-distance powers of exponent -3/2.
+No quadrant-indicator partition or reflection parity is needed.
+Ordinary exhaustion, the bulk splitting and positive-truncation integrability
+are proved. The scalar coefficient finite part is distinct from
+`lem:dd-value-finite-part`, the remaining ground-current input.
 [OddOddBulkIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddBulkIntegrability.lean)
 proves supplied-forcing integrability (`lem:dd-forcing-density-integrable`) and its
 vorticity specialization without admissions, with their statements unchanged.

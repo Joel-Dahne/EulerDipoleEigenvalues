@@ -5,7 +5,8 @@ import NoEmbeddedEigenvalues.OddOddForms
 
 The weighted forcing estimate is independent of the quotient, its parity and
 the equation. The torus-vorticity interface is a specialization after restricting
-the weighted L² hypothesis to the cell.
+the weighted L² hypothesis to the cell. Ordinary stream-level exhaustion
+passes any integrable bulk density to the full cell integral.
 -/
 
 noncomputable section
@@ -196,5 +197,37 @@ theorem dd_vorticityDensity_integrable (ν : L2)
   exact dd_forcing_density_integrable (hν.mono_measure
     (Measure.restrict_mono (fun _ hp ↦
       closure_cellSquare_subset_cellNeighbourhood (subset_closure hp)) le_rfl))
+
+/-- Integrable functions converge under exhaustion by the actual stream levels. This is
+    dominated convergence and does not assume any sign of the integrand. -/
+theorem tendsto_ddTruncatedCell_integral {f : ℝ × ℝ → ℝ}
+    (hf : IntegrableOn f cellSquare) :
+    Tendsto (fun ε ↦ ∫ p in ddTruncatedCell ε, f p) (𝓝[>] 0)
+      (𝓝 (∫ p in cellSquare, f p)) := by
+  have hcell : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
+  have hm (ε : ℝ) : MeasurableSet {p : ℝ × ℝ | ε < dipoleLift p} :=
+    measurableSet_lt measurable_const (by unfold dipoleLift; fun_prop)
+  have hrep (ε : ℝ) : (∫ p in ddTruncatedCell ε, f p) =
+      ∫ p in cellSquare, {p | ε < dipoleLift p}.indicator f p := by
+    rw [setIntegral_indicator (hm ε)]
+    rfl
+  have h := tendsto_integral_filter_of_dominated_convergence (μ := volume.restrict cellSquare)
+    (F := fun ε ↦ {p | ε < dipoleLift p}.indicator f) (f := f) (fun p ↦ ‖f p‖)
+    (Eventually.of_forall fun ε ↦ hf.aestronglyMeasurable.indicator (hm ε))
+    (Eventually.of_forall fun ε ↦ Eventually.of_forall fun p ↦ by
+      by_cases hp : p ∈ {p | ε < dipoleLift p}
+      · rw [indicator_of_mem hp]
+      · rw [indicator_of_notMem hp, norm_zero]
+        exact norm_nonneg _)
+    hf.norm (by
+      filter_upwards [ae_restrict_mem hcell] with p hp
+      have hs : 0 < dipoleLift p := by
+        simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
+      have hev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε < dipoleLift p :=
+        nhdsWithin_le_nhds (Iio_mem_nhds hs)
+      apply tendsto_const_nhds.congr'
+      filter_upwards [hev] with ε hε
+      rw [indicator_of_mem (show p ∈ {p | ε < dipoleLift p} from hε)])
+  exact h.congr' (Eventually.of_forall fun ε ↦ (hrep ε).symm)
 
 end NoEmbeddedEigenvalues

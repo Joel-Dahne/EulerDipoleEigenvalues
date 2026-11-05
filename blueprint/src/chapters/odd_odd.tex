@@ -863,14 +863,13 @@ sum to $2LA_u$. Finally
 $2L(\epsilon/2)=\log(8/\epsilon)+o(1)$.
 \end{proof}
 
-\begin{lemma}[Integrability of a supplied forcing density]
-\label{lem:dd-forcing-density-integrable}
+\begin{lemma}[Saddle-weighted bound for the forcing coefficient]
+\label{lem:dd-forcing-coefficient-bound}
 \uses{def:dd-virial-field, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.dd_forcing_density_integrable}
+\lean{NoEmbeddedEigenvalues.ddF_mul_saddleDist_sq_bound}
 \leanok
-Let $e:\Cell\to\C$ satisfy $e/d\in L^2(\Cell)$. Then
-$F|e|^2\in L^1(\Cell)$. No equation, periodicity or separate unweighted
-$L^2$ assumption on $e$ is required.
+On the whole open lifted cell, including the totalized center value,
+$F\ge0$ and $Fd^2\le16\pi^2$.
 \end{lemma}
 
 \begin{proof}
@@ -897,9 +896,25 @@ Thus $Fd^2\le8\pi^2$ on $s\le1$, while $Fd^2\le4\pi^2$ on $s\ge1$.
 At the center the totalized coefficient is zero; the uniform bound
 $0\le Fd^2\le16\pi^2$ holds on the whole open cell.
 
-The coefficient $Fd^2$ is measurable. Multiply the integrable function
-$|e/d|^2$ by it, and use
-$F|e|^2=(Fd^2)|e/d|^2$ a.e. on the cell.
+\end{proof}
+
+\begin{lemma}[Integrability of a supplied forcing density]
+\label{lem:dd-forcing-density-integrable}
+\uses{def:dd-virial-field, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.dd_forcing_density_integrable}
+\leanok
+Let $e:\Cell\to\C$ satisfy $e/d\in L^2(\Cell)$. Then
+$F|e|^2\in L^1(\Cell)$. No equation, periodicity or separate unweighted
+$L^2$ assumption on $e$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-forcing-coefficient-bound, lem:cell-square}
+\leanok
+The distance is nonzero on the open cell: $d\ge\cos a>0$, since $\cos a$
+is one-Lipschitz and vanishes at every saddle.
+The coefficient $Fd^2$ is bounded and measurable. Multiply the integrable
+function $|e/d|^2$ by it and use $F|e|^2=(Fd^2)|e/d|^2$ a.e.
 \end{proof}
 
 \begin{lemma}[Finite part of the weighted value mass]
@@ -917,26 +932,50 @@ exists. No reflection parity is required.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-finite-part, lem:normal-coeff-bound, lem:dipole-identities,
- lem:diagonal-calculus, lem:sobolev-holder, lem:continuous-representative,
- lem:dd-truncation-exhaustion}
+\uses{lem:dd-finite-part, lem:dd-forcing-coefficient-bound, lem:normal-coeff-bound,
+ lem:dipole-identities, lem:cell-square, lem:cell-neighbourhood, lem:lift-torus,
+ lem:sobolev-holder, lem:continuous-representative, lem:dd-truncation-exhaustion}
+\leanok
 Use the continuous representative, which agrees a.e. with the supplied
-$L^2$ values. Partition the diagonal square into four quadrants $Q_P$,
-each containing one corner $P$, and set
-$A=\sum_P|u(P)|^2\mathbf1_{Q_P}$.
-The $1/2$-H\"older estimate gives
-$\big||u|^2-|u(P)|^2\big|\le Cd^{1/2}$ near $P$.
-Together with $F\le C/d^2$, this makes $F(|u|^2-A)$ absolutely
-integrable: $d^{-3/2}$ is locally integrable in two dimensions.
-Quarter rotation preserves $F$ and $C_\epsilon$ and permutes the quadrants,
-so, with $A_u=\sum_P|u(P)|^2$,
+$L^2$ values. Put $m_x=|u(\pi,0)|^2$, $m_y=|u(0,\pi)|^2$, and
 \[
- \int_{C_\epsilon}FA=\frac{A_u}{4}\int_{C_\epsilon}F.
+ a=\frac{m_x+m_y}{2}=\frac{A_u}{4},\qquad
+ b=\frac{m_y-m_x}{4},\qquad A(p)=a+b\delta(p).
 \]
-Lemma~\ref{lem:dd-finite-part} gives the finite part of this term, since
-$(A_u/4)(32/3)\log(1/\epsilon)=L_u(\epsilon)$.
-Ordinary exhaustion handles the integrable remainder.
+Opposite lifted corners have the same torus value, so $R=|u|^2-A$
+vanishes at all four corners.
+The bounded $1/2$-H\"older representative and the smooth interpolant give
+$|R(p)|\le C\operatorname{dist}(p,P)^{1/2}$ for the corner $P$ in the
+same diagonal quadrant. The product-metric corner distance satisfies
+\[
+ \operatorname{dist}(p,P)=\pi-|a_p|-|b_p|
+ \le\frac\pi2(\cos a_p+\cos b_p)\le\pi d(p),
+\]
+where $(a_p,b_p)$ are the diagonal coordinates of $p$ and
+$\cos a_p,\cos b_p\le d(p)$.
+The saddle-weighted coefficient bound therefore implies
+$|FR(p)|\le C'\operatorname{dist}(p,P)^{-3/2}$.
+Majorize by the sum of these powers over all four corners; each is
+integrable on the bounded cell in dimension two.
+
+Exchanging $x,y$ preserves $F$ and $C_\epsilon$ and changes the sign of
+$\delta$, hence $\int_{C_\epsilon}F\delta=0$.
+All terms are integrable on positive truncations, so
+\[
+ \int_{C_\epsilon}F|u|^2-L_u(\epsilon)
+ =\int_{C_\epsilon}FR+
+   \frac{A_u}{4}\left(\int_{C_\epsilon}F-\frac{32}{3}\log(1/\epsilon)\right).
+\]
+Ordinary exhaustion handles $FR$ and Lemma~\ref{lem:dd-finite-part}
+handles the scalar term.
 \end{proof}
+
+\begin{remark}[Digest note: two-saddle interpolation]
+The trigonometric interpolant matches the two torus saddle values without
+a partition into four quadrant indicators. Coordinate exchange removes its
+nonconstant part exactly. This uses no reflection parity of $u$ and makes
+the logarithmic coefficient $A_u/4$ explicit.
+\end{remark}
 
 \begin{lemma}[Existence of the renormalized bulk limit]
 \label{lem:dd-renormalized-bulk}
