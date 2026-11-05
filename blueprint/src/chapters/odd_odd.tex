@@ -1536,16 +1536,31 @@ $I_\epsilon[u]+\tfrac83H_\epsilon[u]-\tfrac83H^B_\epsilon[u]\to0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-identities, lem:dd-boundary-ground-algebra,
- lem:period-coarse, lem:continuous-representative}
-On $s=\epsilon$, the explicit coefficient is
+\uses{lem:dipole-identities, lem:dd-ground-first-order,
+ lem:dd-boundary-ground-algebra, lem:dd-picone-current-regularity,
+ lem:period-orbit, lem:period-coarse, lem:continuous-representative}
+\leanok
+Put $a=sA_0$, $d=w_b'(r)$, $q=r/8+(4-3r)d$, $v=w_b(r)$ and
+$w=w_*=v+s^2/16$. The first-derivative formulas give
 \[
- b=-\frac{sA_0[r/8+(4-s^2-3r)\partial_rw_*]}{w_*}.
+ b=-\frac{a(q-s^2d)}w,\qquad
+ \frac83(1-B(r))=\frac{32q}{3v}.
 \]
-Use $r\ge s(2-s)$ to obtain
-$b=-\tfrac83(1-B(r))+O(\epsilon)$ uniformly.
-Boundedness of $u$ and the logarithmic period bound make the integrated
-error $O(\epsilon\log(1/\epsilon))$ tend to zero.
+For $0<s\le1$, one has $s\le s(2-s)\le r\le2$.
+The explicit formulas, $|r\log(r/2)|\le2$ and $w,v\ge1$ give
+$|d|\le1$, $|q|\le5$, $|a-32/3|\le4s$ and $|a|\le16$.
+Subtracting the two rational expressions gives
+\[
+ b+\frac83(1-B(r))
+ =-\frac{(a-32/3)q}w+\frac{as^2d}w
+   +\frac{32q}{3wv}\frac{s^2}{16},
+\]
+whose absolute value is at most $64s$.
+All three level integrands are continuous on each regular orbit and hence
+integrable. Boundedness of the continuous value representative bounds the
+integrated error by $64\epsilon\|u\|_\infty^2 S(\epsilon/2)$.
+Finally $S(\epsilon/2)\le4\log(2/\epsilon)+16$, so the bound tends to zero.
+No Sobolev derivative trace or exceptional levels are used.
 \end{proof}
 
 \begin{lemma}[Renormalized limit of the actual current]

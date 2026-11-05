@@ -37,8 +37,9 @@ The even–even route is admission-free. Available foundations include:
   forcing/endpoints; even H² torus functions have the needed arc energy.
   General smooth-density theory is not required by these results.
 - Ordinary exhaustion by stream levels, exact one-dimensional B/β boundary
-  normalization and the B-weighted full-level trace. The latter uses a bounded
-  diagonal-coordinate density and continuous values, not derivative traces.
+  normalization, the B-weighted full-level trace and the integrated current
+  remainder. These value-only limits use bounded diagonal densities or a
+  uniform coefficient error times the logarithmic period, not derivative traces.
   Picone's finite-part assembly remains conditional on separate analytic inputs.
 - Bounded-coefficient L² product-integral convergence, using the continuous
   L∞ multiplier and L² inner product, without smooth density or domination.
@@ -116,11 +117,13 @@ weights and local versus global regularity.
    truncated application instead uses the Fourier cutoff route. The current's
    B-weighted trace is admission-free in `OddOddBoundaryTrace.lean`: a square-root
    bound for B cancels the quarter graph's time Jacobian and gives dominated
-   convergence on a fixed finite interval. The full-level remainder and scalar
-   value finite part remain open.
+   convergence on a fixed finite interval. `OddOddCurrentRemainder.lean` proves
+   the integrated remainder by a uniform `64ε` coefficient error and the coarse
+   logarithmic period bound. The scalar value finite part remains open; it is
+   the only admission below the renormalized ground-current limit.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The nine transitive Picone inputs remain proof work.
+   analytic admissions remain. The eight transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the

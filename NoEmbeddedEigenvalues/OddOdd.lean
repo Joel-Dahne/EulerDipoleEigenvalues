@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.OddOddBoundaryTrace
+import NoEmbeddedEigenvalues.OddOddCurrentRemainder
 
 /-!
 # Odd–odd exclusion and renormalized current assembly
@@ -133,13 +134,6 @@ theorem dd_character_virial_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       ring
   have hident := tendsto_nhds_unique (hbulk.comp hpos) htarget
   exact hident ▸ hbulk
-
-/-- The error in replacing the actual current coefficient by `-(8/3)(1-B)` integrates
-    to zero: the uniform `O(ε)` coefficient error times the logarithmic period vanishes. -/
-theorem dd_current_remainder_limit {φ : L2} (hφ : MemSobolev 2 φ) :
-    Tendsto (fun ε ↦ ddGroundCurrent φ ε + (8 / 3 : ℝ) * ddLevelMass φ ε -
-      (8 / 3 : ℝ) * ddLevelBMass φ ε) (𝓝[>] 0) (𝓝 0) := by
-  sorry
 
 /-- The boundary comparison function is positive on the geometric range of `r`. -/
 theorem ddBoundaryGround_pos {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) :
