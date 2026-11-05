@@ -8,13 +8,13 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching ten admissions. Corrected boundary nonnegativity is assembled
-from three interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
+inputs, reaching ten admissions. Corrected boundary nonnegativity depends
+on two admitted interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds twenty-seven admissions. The bulk bound depends only on the two
+audit finds twenty-six admissions. The bulk bound depends only on the two
 residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
@@ -87,9 +87,10 @@ is used by the current assembly.
 The corrected-boundary review replaces the auxiliary scalar Picone function
 by a first-order midpoint estimate, and replaces the sharp Poincaré constant
 by half-interval Cauchy–Schwarz. The pointwise β lower/absolute/central/tail bounds,
-forcing H¹ regularity, correction integrability, the positive-central estimate
-and closing rational margins are proved. The cutoff is the rational 1/7;
-the constants 203/1920 and λ²/96 come from exact polynomial integration.
+forcing H¹ regularity, correction integrability, both affine estimates,
+logarithmic endpoint moments and closing rational margins are proved.
+The cutoff is the rational 1/7; the constants 203/1920 and λ²/96 come from
+exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
 
 ## Statement coverage and analytic frontier
@@ -132,8 +133,10 @@ existing proved classical/weighted interfaces; no density argument or duplicate
 admission is introduced. Logarithmic endpoint moments
 (`lem:corrected-log-moments`) are proved in `CorrectedBoundaryForm.lean`, including
 nonnegativity, integrability and the exact value for every natural power.
-The three interval estimates themselves remain admitted; no parent assembly or
-transitive exclusion admission count has changed.
+The negative affine correction (`lem:corrected-negative-affine`) is also
+admission-free: the endpoint β bound and the first three logarithmic moments
+are combined with zero-trace Cauchy–Schwarz using separate half-interval energies.
+Zero-trace forcing energy/endpoints and the midpoint bound remain admitted.
 
 Sobolev Picone on a positive truncation (`lem:dd-truncated-picone`) is
 transitively admission-free in
@@ -305,8 +308,8 @@ an import cycle. Ordinary saddle/separatrix statements are now below the
 logarithmic layer, which is below the weighted-gradient/third-jet statements.
 The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs;
 the other three quotient stages still stop at their outer admissions.
-The three interval estimates (zero-trace forcing energy/endpoints, midpoint,
-and negative affine tail) remain a separate proof backlog. Bulk coercivity's
+The two interval estimates (zero-trace forcing energy/endpoints and midpoint)
+remain a separate proof backlog. Bulk coercivity's
 weighted-domain, matrix and Poincaré bounds are proved; the certificate
 backend remains open.
 
@@ -335,7 +338,7 @@ bridges are checked; the six admitted virial inputs and the remaining inputs bel
 Picone still need proofs and analytic review. Weighted
 Poincaré and its basis, cutoff weak pairing and spectral assembly are
 transitively admission-free. The corrected-boundary constants have explicit rational derivations;
-the three remaining interval estimates are not Lean proofs.
+the two remaining interval estimates are not Lean proofs.
 Certificate verification remains deferred.
 
 The virial finite parts use only the leading period value asymptotic, not the

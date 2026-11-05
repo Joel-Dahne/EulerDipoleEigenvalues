@@ -447,6 +447,121 @@ theorem HasIntervalH1.correctedBoundaryBeta_midpoint_bound {G V : ℝ → ℂ}
       ∫ x in (-1 : ℝ)..1, correctedBoundaryBeta x * ‖G x‖ ^ 2 := by
   sorry
 
+-- The positive part of the logarithm vanishes outside the endpoint layer.
+private theorem logarithmic_positive_moment (j : ℕ) :
+    IntervalIntegrable (fun d : ℝ ↦ d ^ j * max (Real.log ((1 / 7) / d)) 0)
+        volume 0 1 ∧
+      (∫ d in (0 : ℝ)..1, d ^ j * max (Real.log ((1 / 7) / d)) 0) =
+        (1 / 7 : ℝ) ^ (j + 1) / ((j : ℝ) + 1) ^ 2 := by
+  have hm := logarithmic_endpoint_moment (by norm_num : (0 : ℝ) < 1 / 7) j
+  have hsmall : IntervalIntegrable
+      (fun d : ℝ ↦ d ^ j * max (Real.log ((1 / 7) / d)) 0) volume 0 (1 / 7) := by
+    apply hm.2.1.congr_uIoo
+    intro d hd
+    rw [uIoo_of_lt (by norm_num : (0 : ℝ) < 1 / 7)] at hd
+    dsimp only
+    rw [max_eq_left (Real.log_nonneg ((one_le_div hd.1).2 hd.2.le))]
+  have hlarge : ∀ d ∈ Icc (1 / 7 : ℝ) 1,
+      d ^ j * max (Real.log ((1 / 7) / d)) 0 = 0 := by
+    intro d hd
+    have hdpos : 0 < d := by linarith [hd.1]
+    rw [max_eq_right (Real.log_nonpos (by positivity) ((div_le_one hdpos).2 hd.1)),
+      mul_zero]
+  have htail : IntervalIntegrable
+      (fun d : ℝ ↦ d ^ j * max (Real.log ((1 / 7) / d)) 0) volume (1 / 7) 1 := by
+    apply (intervalIntegrable_const (c := (0 : ℝ))).congr
+    intro d hd
+    rw [uIoc_of_le (by norm_num : (1 / 7 : ℝ) ≤ 1)] at hd
+    exact (hlarge d ⟨hd.1.le, hd.2⟩).symm
+  refine ⟨hsmall.trans htail, ?_⟩
+  rw [← intervalIntegral.integral_add_adjacent_intervals hsmall htail]
+  have hs : (∫ d in (0 : ℝ)..(1 / 7), d ^ j * max (Real.log ((1 / 7) / d)) 0) =
+      ∫ d in (0 : ℝ)..(1 / 7), d ^ j * Real.log ((1 / 7) / d) := by
+    apply intervalIntegral.integral_congr_Ioo_of_le (by norm_num)
+    intro d hd
+    dsimp only
+    rw [max_eq_left (Real.log_nonneg ((one_le_div hd.1).2 hd.2.le))]
+  have ht : (∫ d in (1 / 7 : ℝ)..1, d ^ j * max (Real.log ((1 / 7) / d)) 0) = 0 := by
+    calc
+      _ = ∫ _ in (1 / 7 : ℝ)..1, (0 : ℝ) := by
+        apply intervalIntegral.integral_congr_Ioo_of_le (by norm_num)
+        intro d hd
+        exact hlarge d (Ioo_subset_Icc_self hd)
+      _ = 0 := by simp
+  rw [hs, ht, add_zero, hm.2.2]
+
+-- After the two-term square bound, E is the derivative energy on one half,
+-- B is the squared affine coefficient, and d is distance to its endpoint.
+private def correctedNegativeMajorant (E B lam d : ℝ) : ℝ :=
+  (d * E / 2 + (2 * d ^ 2 + lam ^ 2 / 2) * B) *
+    max (Real.log ((1 / 7) / d)) 0
+
+private theorem correctedNegativeMajorant_moment (E B lam : ℝ) :
+    IntervalIntegrable (correctedNegativeMajorant E B lam) volume 0 1 ∧
+      (∫ d in (0 : ℝ)..1, correctedNegativeMajorant E B lam d) =
+        E / 392 + (2 / 3087 + lam ^ 2 / 14) * B := by
+  have h0 := logarithmic_positive_moment 0
+  have h1 := logarithmic_positive_moment 1
+  have h2 := logarithmic_positive_moment 2
+  have he : correctedNegativeMajorant E B lam = fun d ↦
+      E / 2 * (d ^ 1 * max (Real.log ((1 / 7) / d)) 0) +
+      (2 * B) * (d ^ 2 * max (Real.log ((1 / 7) / d)) 0) +
+      (lam ^ 2 * B / 2) * (d ^ 0 * max (Real.log ((1 / 7) / d)) 0) := by
+    funext d
+    dsimp [correctedNegativeMajorant]
+    ring
+  rw [he]
+  refine ⟨((h1.1.const_mul _).add (h2.1.const_mul _)).add (h0.1.const_mul _), ?_⟩
+  rw [intervalIntegral.integral_add ((h1.1.const_mul _).add (h2.1.const_mul _))
+      (h0.1.const_mul _),
+    intervalIntegral.integral_add (h1.1.const_mul _) (h2.1.const_mul _)]
+  simp_rw [intervalIntegral.integral_const_mul]
+  rw [h0.2, h1.2, h2.2]
+  norm_num
+  ring
+
+private theorem correctedBoundary_negative_density_le {x E : ℝ} {g : ℂ}
+    (hx : x ∈ Ioo (-1 : ℝ) 1) (hg : ‖g‖ ^ 2 ≤ (1 - |x|) * E)
+    (lam : ℝ) (b : ℂ) :
+    max (-(correctedBoundaryBeta x * ‖g + correctedAffineForcing lam b x‖ ^ 2)) 0 ≤
+      correctedNegativeMajorant E (‖b‖ ^ 2) lam (1 - |x|) := by
+  have hab : |x| < 1 := abs_lt.mpr hx
+  have hd : 0 ≤ 1 - |x| := by linarith
+  have hw : 0 ≤ boundaryWeight x := (boundaryWeight_bounds (Ioo_subset_Icc_self hx)).1
+  have hwle : boundaryWeight x ≤ 2 * (1 - |x|) := by
+    unfold boundaryWeight
+    nlinarith [sq_abs x, sq_nonneg (1 - |x|)]
+  have hxsq : x ^ 2 ≤ 1 := sub_nonneg.mp hw
+  have hbsq : ‖correctedAffineForcing lam b x‖ ^ 2 =
+      ‖b‖ ^ 2 * (boundaryWeight x ^ 2 + lam ^ 2 * x ^ 2) := by
+    rw [correctedAffineForcing, norm_mul, mul_pow]
+    congr 1
+    rw [← normSq_eq_norm_sq]
+    simp [normSq_apply]
+    ring
+  have hb : ‖correctedAffineForcing lam b x‖ ^ 2 ≤
+      ‖b‖ ^ 2 * (4 * (1 - |x|) ^ 2 + lam ^ 2) := by
+    rw [hbsq]
+    apply mul_le_mul_of_nonneg_left _ (sq_nonneg _)
+    have hw2 := pow_le_pow_left₀ hw hwle 2
+    have hx2 := mul_le_mul_of_nonneg_left hxsq (sq_nonneg lam)
+    nlinarith
+  have hsum : ‖g + correctedAffineForcing lam b x‖ ^ 2 ≤
+      2 * ((1 - |x|) * E) + 2 * (‖b‖ ^ 2 * (4 * (1 - |x|) ^ 2 + lam ^ 2)) := by
+    have ht := pow_le_pow_left₀ (norm_nonneg _) (norm_add_le g
+      (correctedAffineForcing lam b x)) 2
+    nlinarith [sq_nonneg (‖g‖ - ‖correctedAffineForcing lam b x‖)]
+  calc
+    _ = max (-correctedBoundaryBeta x) 0 * ‖g + correctedAffineForcing lam b x‖ ^ 2 := by
+      rw [max_mul_of_nonneg _ _ (sq_nonneg _), zero_mul, neg_mul]
+    _ ≤ (1 / 4 * max (Real.log ((1 / 7) / (1 - |x|))) 0) *
+        ‖g + correctedAffineForcing lam b x‖ ^ 2 :=
+      mul_le_mul_of_nonneg_right (correctedBoundaryBeta_negative_le hx) (sq_nonneg _)
+    _ ≤ (1 / 4 * max (Real.log ((1 / 7) / (1 - |x|))) 0) *
+        (2 * ((1 - |x|) * E) + 2 * (‖b‖ ^ 2 * (4 * (1 - |x|) ^ 2 + lam ^ 2))) :=
+      mul_le_mul_of_nonneg_left hsum (by positivity)
+    _ = _ := by unfold correctedNegativeMajorant; ring
+
 /-- Negative endpoint layers for a zero-trace remainder plus an affine forcing. -/
 theorem HasIntervalH1.correctedBoundary_negative_affine {G V : ℝ → ℂ}
     (h : HasIntervalH1 (-1) 1 G V)
@@ -456,7 +571,81 @@ theorem HasIntervalH1.correctedBoundary_negative_affine {G V : ℝ → ℂ}
       max (-(correctedBoundaryBeta x * ‖G x + correctedAffineForcing lam b x‖ ^ 2)) 0) ≤
       1 / 392 * (∫ x in (-1 : ℝ)..1, ‖V x‖ ^ 2) +
         (4 / 3087 + lam ^ 2 / 7) * ‖b‖ ^ 2 := by
-  sorry
+  let N : ℝ → ℝ := fun x ↦
+    max (-(correctedBoundaryBeta x * ‖G x + correctedAffineForcing lam b x‖ ^ 2)) 0
+  -- Keep the two half-energies separate to avoid losing a factor of two.
+  let EL := ∫ x in (-1 : ℝ)..0, ‖V x‖ ^ 2
+  let ER := ∫ x in (0 : ℝ)..1, ‖V x‖ ^ 2
+  have hE : IntervalIntegrable (fun x ↦ ‖V x‖ ^ 2) volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Icc_of_le (by norm_num)).2
+      h.integrableOn_sq_norm_derivative
+  have hEL : IntervalIntegrable (fun x ↦ ‖V x‖ ^ 2) volume (-1) 0 :=
+    hE.mono_set (by rw [uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 0),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]; exact Icc_subset_Icc le_rfl (by norm_num))
+  have hER : IntervalIntegrable (fun x ↦ ‖V x‖ ^ 2) volume 0 1 :=
+    hE.mono_set (by rw [uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]; exact Icc_subset_Icc (by norm_num) le_rfl)
+  have hN : IntervalIntegrable N volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      (h.add (correctedAffineForcing_h1 lam b)).integrable_correctedBoundaryBeta.neg_part
+  have hNL : IntervalIntegrable N volume (-1) 0 :=
+    hN.mono_set (by rw [uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 0),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]; exact Icc_subset_Icc le_rfl (by norm_num))
+  have hNR : IntervalIntegrable N volume 0 1 :=
+    hN.mono_set (by rw [uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]; exact Icc_subset_Icc (by norm_num) le_rfl)
+  have hML := correctedNegativeMajorant_moment EL (‖b‖ ^ 2) lam
+  have hMR := correctedNegativeMajorant_moment ER (‖b‖ ^ 2) lam
+  have hleft : (∫ x in (-1 : ℝ)..0, N x) ≤
+      EL / 392 + (2 / 3087 + lam ^ 2 / 14) * ‖b‖ ^ 2 := by
+    calc
+      _ ≤ ∫ x in (-1 : ℝ)..0, correctedNegativeMajorant EL (‖b‖ ^ 2) lam (x + 1) := by
+        apply intervalIntegral.integral_mono_on_of_le_Ioo (by norm_num) hNL
+          (by simpa using hML.1.comp_add_right 1)
+        intro x hx
+        have hxfull : x ∈ Ioo (-1 : ℝ) 1 := ⟨hx.1, by linarith [hx.2]⟩
+        have he := h.extension_sq_le_left (by norm_num) hm (Ioo_subset_Icc_self hxfull)
+        rw [h.extension_eq (by norm_num) hxfull] at he
+        have hi := intervalIntegral.integral_mono_interval le_rfl hx.1.le hx.2.le
+          (Eventually.of_forall fun _ ↦ sq_nonneg _) hEL
+        have hg : ‖G x‖ ^ 2 ≤ (1 - |x|) * EL := by
+          rw [abs_of_nonpos hx.2.le, sub_neg_eq_add]
+          calc
+            _ ≤ (x + 1) * (∫ t in (-1 : ℝ)..x, ‖V t‖ ^ 2) := by simpa using he
+            _ ≤ _ := by simpa [EL, add_comm] using
+              mul_le_mul_of_nonneg_left hi (by linarith [hx.1] : 0 ≤ x + 1)
+        simpa only [abs_of_nonpos hx.2.le, sub_neg_eq_add, add_comm 1 x] using
+          correctedBoundary_negative_density_le hxfull hg lam b
+      _ = _ := by
+        rw [intervalIntegral.integral_comp_add_right]
+        norm_num only [neg_add_cancel, zero_add]
+        exact hML.2
+  have hright : (∫ x in (0 : ℝ)..1, N x) ≤
+      ER / 392 + (2 / 3087 + lam ^ 2 / 14) * ‖b‖ ^ 2 := by
+    calc
+      _ ≤ ∫ x in (0 : ℝ)..1, correctedNegativeMajorant ER (‖b‖ ^ 2) lam (1 - x) := by
+        apply intervalIntegral.integral_mono_on_of_le_Ioo (by norm_num) hNR
+          (by simpa using (hMR.1.comp_sub_left 1).symm)
+        intro x hx
+        have hxfull : x ∈ Ioo (-1 : ℝ) 1 := ⟨by linarith [hx.1], hx.2⟩
+        have he := h.extension_sq_le_right (by norm_num) hp (Ioo_subset_Icc_self hxfull)
+        rw [h.extension_eq (by norm_num) hxfull] at he
+        have hi := intervalIntegral.integral_mono_interval hx.1.le hx.2.le le_rfl
+          (Eventually.of_forall fun _ ↦ sq_nonneg _) hER
+        have hg : ‖G x‖ ^ 2 ≤ (1 - |x|) * ER := by
+          rw [abs_of_nonneg hx.1.le]
+          exact he.trans (mul_le_mul_of_nonneg_left hi (by linarith [hx.2]))
+        simpa only [abs_of_nonneg hx.1.le] using
+          correctedBoundary_negative_density_le hxfull hg lam b
+      _ = _ := by
+        rw [intervalIntegral.integral_comp_sub_left]
+        norm_num only [sub_self, sub_zero]
+        exact hMR.2
+  change (∫ x in (-1 : ℝ)..1, N x) ≤ _
+  rw [← intervalIntegral.integral_add_adjacent_intervals hNL hNR,
+    ← intervalIntegral.integral_add_adjacent_intervals hEL hER]
+  dsimp [EL, ER] at hleft hright
+  linarith
 
 /-- Positive central mass for a zero-trace remainder plus an affine forcing. -/
 theorem HasIntervalH1.correctedBoundary_positive_affine {G V : ℝ → ℂ}
