@@ -230,7 +230,60 @@ theorem logarithmic_endpoint_moment {a : ℝ} (ha : 0 < a) (j : ℕ) :
       IntervalIntegrable (fun d ↦ d ^ j * Real.log (a / d)) volume 0 a ∧
       (∫ d in (0 : ℝ)..a, d ^ j * Real.log (a / d)) =
         a ^ (j + 1) / ((j : ℝ) + 1) ^ 2 := by
-  sorry
+  have hn : (j : ℝ) + 1 ≠ 0 := by positivity
+  have hlog (d : ℝ) (hd : 0 < d) :
+      Real.log (a / d) = Real.log a - Real.log d :=
+    Real.log_div ha.ne' hd.ne'
+  -- The logarithmic singularity is integrable; the polynomial factor is bounded.
+  have hint : IntervalIntegrable (fun d ↦ d ^ j * Real.log (a / d)) volume 0 a := by
+    have h := ((intervalIntegrable_const (c := Real.log a)).sub
+      (intervalIntegral.intervalIntegrable_log' (a := 0) (b := a))).continuousOn_mul
+        (show ContinuousOn (fun d : ℝ ↦ d ^ j) _ by fun_prop)
+    apply h.congr_uIoo
+    intro d hd
+    rw [uIoo_of_lt ha] at hd
+    dsimp only
+    rw [hlog d hd.1]
+  refine ⟨?_, hint, ?_⟩
+  · intro d hd
+    exact mul_nonneg (pow_nonneg hd.1.le j)
+      (Real.log_nonneg ((one_le_div hd.1).2 hd.2.le))
+  · let P : ℝ → ℝ := fun d ↦
+      d ^ (j + 1) * Real.log a / ((j : ℝ) + 1) -
+        Real.log d * d ^ (j + 1) / ((j : ℝ) + 1) +
+        d ^ (j + 1) / ((j : ℝ) + 1) ^ 2
+    have hzero : Tendsto P (𝓝[>] 0) (𝓝 0) := by
+      have hp : Tendsto (fun d : ℝ ↦ d ^ (j + 1)) (𝓝[>] 0) (𝓝 0) := by
+        simpa using ((continuous_pow (j + 1)).tendsto (0 : ℝ)).mono_left
+          (nhdsWithin_le_nhds (s := Ioi (0 : ℝ)))
+      have hl : Tendsto (fun d : ℝ ↦ Real.log d * d ^ (j + 1))
+          (𝓝[>] 0) (𝓝 0) := by
+        simpa only [Real.rpow_natCast] using
+          (tendsto_log_mul_rpow_nhdsGT_zero
+            (show (0 : ℝ) < (j + 1 : ℕ) by positivity))
+      simpa [P] using ((hp.mul_const (Real.log a)).div_const ((j : ℝ) + 1) |>.sub
+        (hl.div_const ((j : ℝ) + 1))).add (hp.div_const (((j : ℝ) + 1) ^ 2))
+    have htop : Tendsto P (𝓝[<] a) (𝓝 (P a)) := by
+      have hc : ContinuousAt P a := by
+        dsimp [P]
+        fun_prop (disch := exact ha.ne')
+      exact hc.tendsto.mono_left nhdsWithin_le_nhds
+    have hderiv : ∀ d ∈ Ioo (0 : ℝ) a,
+        HasDerivAt P (d ^ j * Real.log (a / d)) d := by
+      intro d hd
+      have hp := hasDerivAt_pow (j + 1) d
+      have h := (((hp.mul_const (Real.log a)).div_const ((j : ℝ) + 1)).sub
+        (((Real.hasDerivAt_log hd.1.ne').mul hp).div_const ((j : ℝ) + 1))).add
+          (hp.div_const (((j : ℝ) + 1) ^ 2))
+      convert h using 1
+      rw [hlog d hd.1]
+      push_cast
+      rw [pow_succ]
+      field_simp [hd.1.ne', hn]
+      ring
+    have heq := intervalIntegral.integral_eq_sub_of_hasDerivAt_of_tendsto
+      ha hderiv hint hzero htop
+    simpa [P, mul_comm] using heq
 
 /-- The affine forcing corresponding to the boundary function `b*x`. -/
 def correctedAffineForcing (lam : ℝ) (b : ℂ) (x : ℝ) : ℂ :=

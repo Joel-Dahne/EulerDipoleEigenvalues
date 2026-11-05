@@ -114,8 +114,8 @@ weights and local versus global regularity.
    boundary-B trace, full-level remainder and scalar value finite part remain open.
    Recursive statement coverage also includes the three corrected-boundary
    estimates: the sum-of-squares nodes reuse proved interfaces, and the endpoint
-   logarithmic moments are stated with `sorry` in `CorrectedBoundaryForm.lean`.
-   The estimates themselves and ten transitive Picone inputs remain proof work.
+   logarithmic moments are proved in `CorrectedBoundaryForm.lean` for all natural
+   powers. The estimates themselves and ten transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the

@@ -2562,10 +2562,13 @@ the nonnegative integrand is integrable and
 \end{lemma}
 
 \begin{proof}
+\leanok
+Write $\log(a/d)=\log a-\log d$. The logarithm is integrable at zero,
+and multiplication by the bounded polynomial $d^j$ preserves integrability.
 Differentiate
 $d^{j+1}\log(a/d)/(j+1)+d^{j+1}/(j+1)^2$.
-Its limit at zero is zero; its value at $a$ is the stated expression.
-Power times logarithm is integrable at zero.
+Its limit at zero is zero, since $d^{j+1}\log d\to0$;
+its value at $a$ is the stated expression.
 \end{proof}
 
 \begin{lemma}[Midpoint bound for the correction]
