@@ -1369,7 +1369,7 @@ private theorem cos_diag_fst_of_mem_saddleSet {p : ℝ × ℝ} (hp : p ∈ saddl
     sin_int_mul_pi, mul_zero, zero_sub, zero_mul, neg_zero]
 
 /-- The diagonal cosine is a one-Lipschitz function vanishing at every saddle. -/
-private theorem cos_diag_fst_le_saddleDist (p : ℝ × ℝ) :
+theorem cos_diag_fst_le_saddleDist (p : ℝ × ℝ) :
     cos (diagCoord p).1 ≤ saddleDist p := by
   have hne : saddleSet.Nonempty := ⟨(0, -π), 0, -1, by decide, by simp⟩
   apply (Metric.le_infDist hne).2

@@ -7,7 +7,7 @@ working; update current priorities and blockers rather than appending history.
 
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
-eight explicit admitted inputs. Corrected boundary nonnegativity is admission-free.
+seven explicit admitted inputs. Corrected boundary nonnegativity is admission-free.
 The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
 admissions. Bulk coercivity reaches only the two residual-certificate inputs.
@@ -60,9 +60,9 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
-finds zero admissions for `even_even_exclusion`, eight below `dd_picone_current`,
+finds zero admissions for `even_even_exclusion`, seven below `dd_picone_current`,
 zero below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and twenty-two for `odd_odd_exclusion`.
+twelve below `dd_exclusion_domain`, and twenty-one for `odd_odd_exclusion`.
 The bulk Picone bound reaches exactly two: the residual identity and residual
 sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
 zero admissions, as do the weighted form-domain bridge and matrix bound.
@@ -73,5 +73,7 @@ periodic-to-continuous transport-pair bridge is also admission-free. Correction
 integrability, the β bounds, logarithmic endpoint moments, the midpoint bound
 and both affine correction estimates are also admission-free. Picone-potential
 integrability, the positive-truncation Picone identity, the B-weighted level
-trace and the integrated current remainder are also transitively admission-free. Other odd–odd and mixed admissions remain.
+trace and the integrated current remainder are also transitively admission-free.
+Supplied-forcing and vorticity-density integrability are admission-free as well.
+Other odd–odd and mixed admissions remain.
 Blueprint source checks, regression tests and the web build pass.

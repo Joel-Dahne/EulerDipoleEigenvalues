@@ -74,9 +74,10 @@ weights and local versus global regularity.
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
-   `dd_character_virial_limit` is assembled without its own `sorry`, from six
+   `dd_character_virial_limit` is assembled without its own `sorry`, from seven
    admissions: local H² smooth approximation, weighted first identity, quotient
-   equation, gradient traces, value finite part and renormalized bulk.
+   equation, gradient traces, value finite part, gradient-energy integrability
+   and weighted value-mass finite part.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
@@ -107,10 +108,11 @@ weights and local versus global regularity.
    These admitted inputs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
    `OddOddRenormalizedBulk.lean` assembles the unchanged full bulk limit by
-   ordinary exhaustion, exposing three admissions: generic weighted forcing
-   integrability, the existing gradient-energy estimate and the weighted value-mass
-   finite part. The vorticity-density interface specializes the first in
-   `OddOddBulkIntegrability.lean`; it is not a separate analytic admission.
+   ordinary exhaustion, exposing two admissions: the existing gradient-energy
+   estimate and the weighted value-mass finite part. Generic weighted forcing
+   integrability and its vorticity specialization are admission-free in
+   `OddOddBulkIntegrability.lean`: the explicit bound `0 ≤ Fd² ≤ 16π²` supplies
+   a bounded multiplier of the integrable weighted square.
    `dd_truncated_picone` and potential integrability are transitively admission-free.
    `OddOddGroundResidual.lean` factors the actual differentiated residual into
    a polynomial in bounded coordinates, giving a uniform bound and potential
@@ -128,7 +130,7 @@ weights and local versus global regularity.
    the only admission below the renormalized ground-current limit.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The eight transitive Picone inputs remain proof work.
+   analytic admissions remain. The seven transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the
