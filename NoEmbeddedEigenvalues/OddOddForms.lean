@@ -372,13 +372,6 @@ def ddGroundCurrent (φ : L2) (ε : ℝ) : ℝ :=
 def ddArcCorrection (φ : L2) (k : Fin 4) (t : ℝ) : ℝ :=
   ddBoundaryB (2 / Real.cosh t ^ 2) * ‖ddArcTrace φ k t‖ ^ 2
 
-/-- Absolute integrability from `ν/d ∈ L²`, independently of the eigenvalue equation. -/
-theorem dd_vorticityDensity_integrable (ν : L2)
-    (hν : MemLp (fun p ↦ liftL2 ν p / (saddleDist p : ℂ)) 2
-      (volume.restrict cellNeighbourhood)) :
-    IntegrableOn (ddVorticityDensity ν) cellSquare := by
-  sorry
-
 /-- The even boundary Hardy estimate controls the original and divided gradient energies. -/
 theorem dd_gradient_energies_integrable {φ dx dy : L2} (hφ : MemSobolev 2 φ)
     (hs : InSector true true φ) (hdx : HasFourierPartial 0 φ dx)

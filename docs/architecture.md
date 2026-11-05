@@ -170,7 +170,7 @@ proof mechanisms. Module names below are relative to
   currents and the common scalar finite part. Sits below the weighted virial.
 - `OddOddVirial.lean`: classical and weak quotient operators, weighted virial
   algebra and Green flux, raw-quotient annular/truncated identities, even H²
-  gradient traces and full renormalized bulk limits. Positive-truncation H¹
+  gradient traces and the scalar coefficient finite part. Positive-truncation H¹
   division, weak-witness uniqueness, coefficient bounds and center-flux removal
   assemble the truncated identity from the annular one. Weighted differential
   algebra and cutoff-to-annular extraction separate `dd_cutoff_identity`
@@ -181,6 +181,11 @@ proof mechanisms. Module names below are relative to
   derivatives. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from
   the shared outward derivative convention.
+- `OddOddBulkIntegrability.lean`: generic weighted forcing integrability and its
+  torus-vorticity specialization by restriction to the cell.
+- `OddOddRenormalizedBulk.lean`: ordinary stream-level exhaustion, the weighted
+  value-mass finite part and full renormalized bulk assembly. Reuses the raw
+  gradient conclusion of the both-gradient integrability interface.
 - `OddOddPiconeIntegrability.lean`: ground-state first derivatives,
   positive-truncation energy integrability and a full-level center-current bound.
 - `OddOddGroundResidual.lean`: exact bounded-coordinate factorization of the

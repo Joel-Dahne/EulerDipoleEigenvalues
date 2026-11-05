@@ -171,9 +171,22 @@ The renormalized ground-current limit now reaches only the scalar value
 finite-part admission. Remaining current work does not include truncated
 Picone, the B-weighted trace or the integrated remainder.
 
-`dd_character_virial_limit` reaches six admissions: `local_h2_smooth_approximation`,
-`dd_weighted_first`, `dd_quotient_equations`,
-`dd_quotient_gradient_traces`, `dd_value_finite_part` and `dd_renormalized_bulk`.
+The renormalized bulk limit (`lem:dd-renormalized-bulk`) is assembled in
+[OddOddRenormalizedBulk.lean](../../NoEmbeddedEigenvalues/OddOddRenormalizedBulk.lean),
+with its original statement unchanged. Its three transitive admissions are
+supplied-forcing integrability (`lem:dd-forcing-density-integrable`), the existing
+both-gradient estimate (`lem:dd-gradient-energies-integrable`), and the weighted
+value-mass finite part (`lem:dd-potential-mass-finite-part`). The last is independent
+of even parity and its blueprint proof reduces the corner constants to the scalar
+finite part (`lem:dd-finite-part`); that analytic proof is not yet formalized.
+Ordinary exhaustion and the bulk splitting are proved, including positive-truncation
+integrability of the subtracted value mass. The vorticity-density interface now
+specializes the generic forcing estimate in
+[OddOddBulkIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddBulkIntegrability.lean).
+
+`dd_character_virial_limit` reaches eight admissions: the three bulk inputs above,
+`local_h2_smooth_approximation`, `dd_weighted_first`, `dd_quotient_equations`,
+`dd_quotient_gradient_traces` and `dd_value_finite_part`.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
 boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels

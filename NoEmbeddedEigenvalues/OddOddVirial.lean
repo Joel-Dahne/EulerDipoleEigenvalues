@@ -14,9 +14,9 @@ The existing `normalDeriv` points out of the positive superlevel cell. Here the
 weighted virial uses the inward normal `∇Ψ/|∇Ψ|`, so its linear normal term must
 use the opposite sign; the quadratic energies are unaffected.
 
-The gradient limits allow a common null set of exceptional levels. In contrast, the
-renormalized bulk has a full positive-level limit; no all-level vorticity pairing
-limit is asserted. Supplied-data bridges identify the raw local quotients a.e.,
+The gradient limits allow a common null set of exceptional levels. In contrast,
+`OddOddRenormalizedBulk` assembles a full positive-level bulk limit; no all-level
+vorticity pairing limit is asserted. Supplied-data bridges identify the raw local quotients a.e.,
 rescale exceptional levels by `ε = 2h`, and split the boundary integral using coarea.
 
 Positive truncations need only smooth local division of the original stream, not
@@ -2915,19 +2915,6 @@ theorem dd_finite_part :
     Tendsto (fun ε ↦ (∫ p in ddTruncatedCell ε, ddF p) -
       (32 / 3 : ℝ) * Real.log (1 / ε)) (𝓝[>] 0)
       (𝓝 ((32 / 3 : ℝ) * Real.log 8 - 2 * Real.pi ^ 2)) := by
-  sorry
-
-/-- Full renormalized bulk limit. The squared operator value can be any supplied
-    function `e` with `e/d ∈ L²`; no equation for `e` is needed for this estimate. -/
-theorem dd_renormalized_bulk {u dx dy : L2} (hu : MemSobolev 2 u)
-    (hs : InSector true true u) (hx : HasFourierPartial 0 u dx)
-    (hy : HasFourierPartial 1 u dy) {e : ℝ × ℝ → ℂ}
-    (he : MemLp (fun p ↦ e p / (saddleDist p : ℂ)) 2 (volume.restrict cellSquare)) :
-    IntegrableOn (fun p ↦ ddF p * ‖e p‖ ^ 2) cellSquare ∧
-      IntegrableOn (fun p ↦ ddMatrixForm p (liftL2 dx p) (liftL2 dy p)) cellSquare ∧
-      ∃ J : ℝ, Tendsto (fun ε ↦
-        (∫ p in ddTruncatedCell ε, ddVirialDensity (liftL2 u) e (liftL2 dx) (liftL2 dy) p) +
-          ddLogCounterterm u ε) (𝓝[>] 0) (𝓝 J) := by
   sorry
 
 /-- On the positive cell the raw stream quotient is exactly the continuous supplied

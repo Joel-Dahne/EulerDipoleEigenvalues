@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.OddOddBoundaryTrace
 import NoEmbeddedEigenvalues.OddOddCurrentRemainder
+import NoEmbeddedEigenvalues.OddOddRenormalizedBulk
 
 /-!
 # Odd–odd exclusion and renormalized current assembly
@@ -195,38 +196,6 @@ theorem dd_ground_current_limit {φ : L2} (hφ : MemSobolev 2 φ) :
     ring
   · congr 1
     ring
-
-/-- Integrable functions converge under exhaustion by the actual stream levels. This is
-    dominated convergence and does not assume any sign of the integrand. -/
-theorem tendsto_ddTruncatedCell_integral {f : ℝ × ℝ → ℝ}
-    (hf : IntegrableOn f cellSquare) :
-    Tendsto (fun ε ↦ ∫ p in ddTruncatedCell ε, f p) (𝓝[>] 0)
-      (𝓝 (∫ p in cellSquare, f p)) := by
-  have hcell : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
-  have hm (ε : ℝ) : MeasurableSet {p : ℝ × ℝ | ε < dipoleLift p} :=
-    measurableSet_lt measurable_const (by unfold dipoleLift; fun_prop)
-  have hrep (ε : ℝ) : (∫ p in ddTruncatedCell ε, f p) =
-      ∫ p in cellSquare, {p | ε < dipoleLift p}.indicator f p := by
-    rw [setIntegral_indicator (hm ε)]
-    rfl
-  have h := tendsto_integral_filter_of_dominated_convergence (μ := volume.restrict cellSquare)
-    (F := fun ε ↦ {p | ε < dipoleLift p}.indicator f) (f := f) (fun p ↦ ‖f p‖)
-    (Eventually.of_forall fun ε ↦ hf.aestronglyMeasurable.indicator (hm ε))
-    (Eventually.of_forall fun ε ↦ Eventually.of_forall fun p ↦ by
-      by_cases hp : p ∈ {p | ε < dipoleLift p}
-      · rw [indicator_of_mem hp]
-      · rw [indicator_of_notMem hp, norm_zero]
-        exact norm_nonneg _)
-    hf.norm (by
-      filter_upwards [ae_restrict_mem hcell] with p hp
-      have hs : 0 < dipoleLift p := by
-        simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
-      have hev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε < dipoleLift p :=
-        nhdsWithin_le_nhds (Iio_mem_nhds hs)
-      apply tendsto_const_nhds.congr'
-      filter_upwards [hev] with ε hε
-      rw [indicator_of_mem (show p ∈ {p | ε < dipoleLift p} from hε)])
-  exact h.congr' (Eventually.of_forall fun ε ↦ (hrep ε).symm)
 
 /-- Changing variables in the correction preserves absolute integrability and identifies
     the actual canonical forcing supplied by the boundary data. No positivity is used. -/

@@ -863,6 +863,61 @@ sum to $2LA_u$. Finally
 $2L(\epsilon/2)=\log(8/\epsilon)+o(1)$.
 \end{proof}
 
+\begin{lemma}[Integrability of a supplied forcing density]
+\label{lem:dd-forcing-density-integrable}
+\uses{def:dd-virial-field, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.dd_forcing_density_integrable}
+\leanok
+Let $e:\Cell\to\C$ satisfy $e/d\in L^2(\Cell)$. Then
+$F|e|^2\in L^1(\Cell)$. No equation, periodicity or separate unweighted
+$L^2$ assumption on $e$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities, lem:normal-coeff-bound, lem:cell-square}
+Near the saddles $r\asymp d^2$ and $s\le r$ when $s\le1$, so
+$F\le C/d^2$. Away from the saddles $F$ is bounded, including at the
+center. Since $d$ is bounded on the cell, $Fd^2$ is bounded everywhere.
+The distance is nonzero on the open cell; write
+$F|e|^2=(Fd^2)|e/d|^2$ and use the bounded measurable multiplier.
+\end{proof}
+
+\begin{lemma}[Finite part of the weighted value mass]
+\label{lem:dd-potential-mass-finite-part}
+\uses{def:sobolev-torus, def:dd-virial-field, def:dd-value-renormalization,
+ def:dd-picone-truncations}
+\lean{NoEmbeddedEigenvalues.dd_potential_mass_finite_part}
+\leanok
+For $u\in H^2(\T^2)$, the finite limit
+\[
+ \lim_{\epsilon\downarrow0}
+ \left(\int_{C_\epsilon}F|u|^2-L_u(\epsilon)\right)
+\]
+exists. No reflection parity is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-finite-part, lem:normal-coeff-bound, lem:dipole-identities,
+ lem:diagonal-calculus, lem:sobolev-holder, lem:continuous-representative,
+ lem:dd-truncation-exhaustion}
+Use the continuous representative, which agrees a.e. with the supplied
+$L^2$ values. Partition the diagonal square into four quadrants $Q_P$,
+each containing one corner $P$, and set
+$A=\sum_P|u(P)|^2\mathbf1_{Q_P}$.
+The $1/2$-H\"older estimate gives
+$\big||u|^2-|u(P)|^2\big|\le Cd^{1/2}$ near $P$.
+Together with $F\le C/d^2$, this makes $F(|u|^2-A)$ absolutely
+integrable: $d^{-3/2}$ is locally integrable in two dimensions.
+Quarter rotation preserves $F$ and $C_\epsilon$ and permutes the quadrants,
+so, with $A_u=\sum_P|u(P)|^2$,
+\[
+ \int_{C_\epsilon}FA=\frac{A_u}{4}\int_{C_\epsilon}F.
+\]
+Lemma~\ref{lem:dd-finite-part} gives the finite part of this term, since
+$(A_u/4)(32/3)\log(1/\epsilon)=L_u(\epsilon)$.
+Ordinary exhaustion handles the integrable remainder.
+\end{proof}
+
 \begin{lemma}[Existence of the renormalized bulk limit]
 \label{lem:dd-renormalized-bulk}
 \uses{def:dd-virial-densities, def:sobolev-torus, def:reflections, def:cell-arcs,
@@ -884,42 +939,22 @@ an equation relating $e$ to $u$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-finite-part, lem:normal-field-algebra, lem:normal-coeff-bound,
- lem:hardy-endpoint, lem:diagonal-calculus, lem:trace-h2, lem:lift-sobolev-local,
- lem:sobolev-holder, lem:dipole-identities}
-Near the saddles $r$ is comparable to $d^2$, while
-$r\ge s(2-s)$ implies $s\le r$ when $s\le1$. Hence $F\le C/d^2$ there.
-Away from the saddles $F$ is bounded, including at the center by
-Lemma~\ref{lem:normal-coeff-bound}. Thus $0\le F\le C(1+d^{-2})$ on the
-cell, and the assumption makes $F|Eu|^2$ integrable.
-
-For the gradient term the only unbounded coefficient is $A_0=O(s^{-1})$
-as $s\to0$; $C_0\le4$ everywhere. In diagonal coordinates,
+\uses{lem:dd-forcing-density-integrable, lem:dd-gradient-energies-integrable,
+ lem:dd-potential-mass-finite-part, lem:dd-truncation-exhaustion,
+ lem:normal-coeff-bound, lem:cell-neighbourhood, lem:lift-torus}
+\leanok
+The first two inputs give the asserted absolute integrability.
+On every positive truncation $F$ is bounded, including at the center;
+the lifted $L^2$ values therefore give an integrable weighted value mass.
+Thus the defining bulk integral splits as
 \[
- \nabla s\cdot\nabla u=-\tfrac s2(\tan a\,u_a+\tan b\,u_b),\qquad
- \frac{|\partial_nu|^2}{s}
- \le C\left(\frac{|u_a|^2}{\cos^2a}+\frac{|u_b|^2}{\cos^2b}\right)
- \quad(s\le1).
+ J_{C_\epsilon}[u]+L_u(\epsilon)
+ =\int_{C_\epsilon}F|e|^2
+  +\int_{C_\epsilon}\ip{M\nabla u}{\nabla u}
+  -\left(\int_{C_\epsilon}F|u|^2-L_u(\epsilon)\right).
 \]
-Even reflection gives zero trace of $u_a$ on $a=\pm\pi/2$ and of $u_b$ on
-$b=\pm\pi/2$. The endpoint Hardy inequality on almost every coordinate
-line, followed by Fubini, makes the right side integrable, bounded by a
-constant times the squared $H^2$ norm. Away from $s=0$, $M$ is bounded,
-including at the center, so its gradient form is absolutely integrable.
-
-Partition the diagonal square into its four quadrants $Q_P$, each containing
-one corner $P$, and put $A=\sum_P|u(P)|^2\mathbf1_{Q_P}$.
-The $1/2$-H\"older estimate gives
-$\big||u|^2-|u(P)|^2\big|\le Cd^{1/2}$ near $P$. Consequently
-$F(|u|^2-A)$ is absolutely integrable, since $d^{-3/2}$ is locally
-integrable in two dimensions. The field $F$ and the truncation $s>\epsilon$
-are invariant under quarter rotation, which permutes the quadrants, so
-\[
- \int_{\{s>\epsilon\}}FA
- =\tfrac14\left(\sum_P|u(P)|^2\right)\int_{\{s>\epsilon\}}F.
-\]
-Lemma~\ref{lem:dd-finite-part} supplies the finite part of the last integral.
-All remaining terms converge by absolute integrability.
+Ordinary exhaustion gives the limits of the first two terms; the weighted
+value-mass finite part gives the third. Their sum is the required full limit.
 \end{proof}
 
 \begin{proposition}[Renormalized virial identity]
@@ -1138,10 +1173,11 @@ fixed cell neighbourhood, then $F|\nu|^2\in L^1$ on the cell.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dipole-identities, lem:normal-coeff-bound, lem:lift-torus}
-Near a saddle, $r\asymp d^2$, $s\le Cr$ and $F\le C/d^2$.
-Away from the saddles $F$ is bounded, including near the center.
-Thus $F\le C(1+d^{-2})$; use both the unweighted and weighted $L^2$ bounds.
+\uses{lem:dd-forcing-density-integrable, lem:cell-neighbourhood}
+\leanok
+Restrict the weighted $L^2$ hypothesis from the fixed neighbourhood to
+its cell subset, and apply the supplied-forcing estimate to the lifted
+vorticity. No separate unweighted estimate is needed.
 \end{proof}
 
 \begin{lemma}[Integrability of both gradient energies]

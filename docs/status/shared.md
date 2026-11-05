@@ -106,6 +106,11 @@ weights and local versus global regularity.
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These admitted inputs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
+   `OddOddRenormalizedBulk.lean` assembles the unchanged full bulk limit by
+   ordinary exhaustion, exposing three admissions: generic weighted forcing
+   integrability, the existing gradient-energy estimate and the weighted value-mass
+   finite part. The vorticity-density interface specializes the first in
+   `OddOddBulkIntegrability.lean`; it is not a separate analytic admission.
    `dd_truncated_picone` and potential integrability are transitively admission-free.
    `OddOddGroundResidual.lean` factors the actual differentiated residual into
    a polynomial in bounded coordinates, giving a uniform bound and potential
