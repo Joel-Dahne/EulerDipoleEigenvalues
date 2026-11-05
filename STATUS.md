@@ -8,7 +8,7 @@ working; update current priorities and blockers rather than appending history.
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
 ten explicit admitted inputs. Corrected boundary nonnegativity now depends
-on two interval estimates. The stream-H² quotient is assembled
+only on zero-trace forcing energy and traces. The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
 admissions. Bulk coercivity reaches only the two residual-certificate inputs.
 Its weighted-domain bridge, ground-state/matrix bounds and central-parity
@@ -61,8 +61,8 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, ten below `dd_picone_current`,
-two below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and twenty-six for `odd_odd_exclusion`.
+one below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
+twelve below `dd_exclusion_domain`, and twenty-five for `odd_odd_exclusion`.
 The bulk Picone bound reaches exactly two: the residual identity and residual
 sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
 zero admissions, as do the weighted form-domain bridge and matrix bound.
@@ -70,8 +70,8 @@ Expanding the assemblies exposes their analytic frontiers;
 it does not eliminate those admissions. Quotient orthogonality and canonical
 boundary regularity are admission-free for supplied quotient data. The generic
 periodic-to-continuous transport-pair bridge is also admission-free. Correction
-integrability, the β bounds, logarithmic endpoint moments and both affine
-correction estimates are also admission-free. Picone-potential integrability
-and the positive-truncation Picone identity are also transitively admission-free. Other odd–odd and mixed
-admissions remain.
+integrability, the β bounds, logarithmic endpoint moments, the midpoint bound
+and both affine correction estimates are also admission-free. Picone-potential
+integrability and the positive-truncation Picone identity are also transitively
+admission-free. Other odd–odd and mixed admissions remain.
 Blueprint source checks, regression tests and the web build pass.

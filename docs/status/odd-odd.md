@@ -9,12 +9,13 @@
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
 inputs, reaching ten admissions. Corrected boundary nonnegativity depends
-on two admitted interval estimates in [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
+only on zero-trace forcing energy and traces in
+[CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds twenty-six admissions. The bulk bound depends only on the two
+audit finds twenty-five admissions. The bulk bound depends only on the two
 residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
@@ -87,8 +88,8 @@ is used by the current assembly.
 The corrected-boundary review replaces the auxiliary scalar Picone function
 by a first-order midpoint estimate, and replaces the sharp Poincaré constant
 by half-interval Cauchy–Schwarz. The pointwise β lower/absolute/central/tail bounds,
-forcing H¹ regularity, correction integrability, both affine estimates,
-logarithmic endpoint moments and closing rational margins are proved.
+forcing H¹ regularity, correction integrability, the midpoint bound, both affine
+estimates, logarithmic endpoint moments and closing rational margins are proved.
 The cutoff is the rational 1/7; the constants 203/1920 and λ²/96 come from
 exact polynomial integration.
 Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
@@ -136,7 +137,11 @@ nonnegativity, integrability and the exact value for every natural power.
 The negative affine correction (`lem:corrected-negative-affine`) is also
 admission-free: the endpoint β bound and the first three logarithmic moments
 are combined with zero-trace Cauchy–Schwarz using separate half-interval energies.
-Zero-trace forcing energy/endpoints and the midpoint bound remain admitted.
+The midpoint bound (`lem:corrected-midpoint-bound`) is admission-free too:
+central increments cost at most one eighth of the derivative energy, and each
+negative endpoint logarithmic layer has mass 1/7. The resulting exact margins
+are 5/112 for the midpoint value and 53/448 for the energy.
+Only zero-trace forcing energy/endpoints remain admitted on this branch.
 
 Sobolev Picone on a positive truncation (`lem:dd-truncated-picone`) is
 transitively admission-free in
@@ -308,9 +313,8 @@ an import cycle. Ordinary saddle/separatrix statements are now below the
 logarithmic layer, which is below the weighted-gradient/third-jet statements.
 The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs;
 the other three quotient stages still stop at their outer admissions.
-The two interval estimates (zero-trace forcing energy/endpoints and midpoint)
-remain a separate proof backlog. Bulk coercivity's
-weighted-domain, matrix and Poincaré bounds are proved; the certificate
+Zero-trace forcing energy/endpoints remain the corrected-boundary proof backlog.
+Bulk coercivity's weighted-domain, matrix and Poincaré bounds are proved; the certificate
 backend remains open.
 
 The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
@@ -338,7 +342,7 @@ bridges are checked; the six admitted virial inputs and the remaining inputs bel
 Picone still need proofs and analytic review. Weighted
 Poincaré and its basis, cutoff weak pairing and spectral assembly are
 transitively admission-free. The corrected-boundary constants have explicit rational derivations;
-the two remaining interval estimates are not Lean proofs.
+zero-trace forcing energy/endpoints remain admitted in Lean.
 Certificate verification remains deferred.
 
 The virial finite parts use only the leading period value asymptotic, not the

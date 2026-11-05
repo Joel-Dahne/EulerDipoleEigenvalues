@@ -438,15 +438,6 @@ theorem HasWeightedBoundaryH2.correctedBoundaryTrace_zero_energy {F D E : ℝ �
         (correctedBoundaryTraceDerivative lam D E) 1 = 0 := by
   sorry
 
-/-- A first-order midpoint estimate for the logarithmic correction.
-    The constants use only the central bound and logarithmic endpoint moments. -/
-theorem HasIntervalH1.correctedBoundaryBeta_midpoint_bound {G V : ℝ → ℂ}
-    (h : HasIntervalH1 (-1) 1 G V) :
-    5 / 112 * ‖G 0‖ ^ 2 -
-        53 / 448 * (∫ x in (-1 : ℝ)..1, ‖V x‖ ^ 2) ≤
-      ∫ x in (-1 : ℝ)..1, correctedBoundaryBeta x * ‖G x‖ ^ 2 := by
-  sorry
-
 -- The positive part of the logarithm vanishes outside the endpoint layer.
 private theorem logarithmic_positive_moment (j : ℕ) :
     IntervalIntegrable (fun d : ℝ ↦ d ^ j * max (Real.log ((1 / 7) / d)) 0)
@@ -489,6 +480,197 @@ private theorem logarithmic_positive_moment (j : ℕ) :
         exact hlarge d (Ioo_subset_Icc_self hd)
       _ = 0 := by simp
   rw [hs, ht, add_zero, hm.2.2]
+
+/-- A first-order midpoint estimate for the logarithmic correction.
+    The constants use only the central bound and logarithmic endpoint moments. -/
+theorem HasIntervalH1.correctedBoundaryBeta_midpoint_bound {G V : ℝ → ℂ}
+    (h : HasIntervalH1 (-1) 1 G V) :
+    5 / 112 * ‖G 0‖ ^ 2 -
+        53 / 448 * (∫ x in (-1 : ℝ)..1, ‖V x‖ ^ 2) ≤
+      ∫ x in (-1 : ℝ)..1, correctedBoundaryBeta x * ‖G x‖ ^ 2 := by
+  let C := ‖G 0‖ ^ 2
+  let U : ℝ → ℝ := fun x ↦ ‖G x - G 0‖ ^ 2
+  let P : ℝ → ℝ := fun x ↦ max (correctedBoundaryBeta x * ‖G x‖ ^ 2) 0
+  let N : ℝ → ℝ := fun x ↦ max (-(correctedBoundaryBeta x * ‖G x‖ ^ 2)) 0
+  let EL := ∫ x in (-1 : ℝ)..0, ‖V x‖ ^ 2
+  let ER := ∫ x in (0 : ℝ)..1, ‖V x‖ ^ 2
+  have hLsub : uIcc (-1 : ℝ) 0 ⊆ uIcc (-1) 1 := by
+    rw [uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 0),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]
+    exact Icc_subset_Icc le_rfl (by norm_num)
+  have hRsub : uIcc (0 : ℝ) 1 ⊆ uIcc (-1) 1 := by
+    rw [uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]
+    exact Icc_subset_Icc (by norm_num) le_rfl
+  have hCsub : uIcc (-1 / 2 : ℝ) (1 / 2) ⊆ uIcc (-1) 1 := by
+    rw [uIcc_of_le (by norm_num : (-1 / 2 : ℝ) ≤ 1 / 2),
+      uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]
+    exact Icc_subset_Icc (by norm_num) (by norm_num)
+  have hE : IntervalIntegrable (fun x ↦ ‖V x‖ ^ 2) volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Icc_of_le (by norm_num)).2
+      h.integrableOn_sq_norm_derivative
+  have hEL := hE.mono_set hLsub
+  have hER := hE.mono_set hRsub
+  have hEL0 : 0 ≤ EL := intervalIntegral.integral_nonneg (by norm_num) (fun _ _ ↦ sq_nonneg _)
+  have hER0 : 0 ≤ ER := intervalIntegral.integral_nonneg (by norm_num) (fun _ _ ↦ sq_nonneg _)
+  have hUi : IntervalIntegrable U volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      (h.memLp_value.sub (memLp_const (G 0))).norm.integrable_sq
+  have hPi : IntervalIntegrable P volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      h.integrable_correctedBoundaryBeta.pos_part
+  have hNi : IntervalIntegrable N volume (-1) 1 :=
+    (intervalIntegrable_iff_integrableOn_Ioo_of_le (by norm_num)).2
+      h.integrable_correctedBoundaryBeta.neg_part
+  -- Midpoint Cauchy–Schwarz uses only the energy on the same half-interval.
+  have hincL : ∀ x ∈ Ioc (-1 : ℝ) 0, U x ≤ -x * EL := by
+    intro x hx
+    have hxfull : x ∈ Ioo (-1 : ℝ) 1 := ⟨hx.1, by linarith [hx.2]⟩
+    have he := h.extension_sub_sq_le (by norm_num) (Ioo_subset_Icc_self hxfull)
+      (by norm_num : (0 : ℝ) ∈ Icc (-1) 1) hx.2
+    rw [h.extension_eq (by norm_num) hxfull,
+      h.extension_eq (by norm_num) (by norm_num : (0 : ℝ) ∈ Ioo (-1) 1), norm_sub_rev] at he
+    have hi := intervalIntegral.integral_mono_interval hx.1.le hx.2 le_rfl
+      (Eventually.of_forall fun _ ↦ sq_nonneg _) hEL
+    exact he.trans (by simpa [EL] using mul_le_mul_of_nonneg_left hi (neg_nonneg.mpr hx.2))
+  have hincR : ∀ x ∈ Ico (0 : ℝ) 1, U x ≤ x * ER := by
+    intro x hx
+    have hxfull : x ∈ Ioo (-1 : ℝ) 1 := ⟨by linarith [hx.1], hx.2⟩
+    have he := h.extension_sub_sq_le (by norm_num)
+      (by norm_num : (0 : ℝ) ∈ Icc (-1) 1) (Ioo_subset_Icc_self hxfull) hx.1
+    rw [h.extension_eq (by norm_num) hxfull,
+      h.extension_eq (by norm_num) (by norm_num : (0 : ℝ) ∈ Ioo (-1) 1)] at he
+    have hi := intervalIntegral.integral_mono_interval le_rfl hx.1 hx.2.le
+      (Eventually.of_forall fun _ ↦ sq_nonneg _) hER
+    exact he.trans (by simpa [ER] using mul_le_mul_of_nonneg_left hi hx.1)
+  have hcentral : (∫ x in (-1 / 2 : ℝ)..(1 / 2), U x) ≤ (EL + ER) / 8 := by
+    have hUL : IntervalIntegrable U volume (-1 / 2) 0 := hUi.mono_set (by
+      rw [uIcc_of_le (by norm_num : (-1 / 2 : ℝ) ≤ 0),
+        uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]
+      exact Icc_subset_Icc (by norm_num) (by norm_num))
+    have hUR : IntervalIntegrable U volume 0 (1 / 2) := hUi.mono_set (by
+      rw [uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1 / 2),
+        uIcc_of_le (by norm_num : (-1 : ℝ) ≤ 1)]
+      exact Icc_subset_Icc (by norm_num) (by norm_num))
+    have hl : (∫ x in (-1 / 2 : ℝ)..0, U x) ≤ EL / 8 := by
+      calc
+        _ ≤ ∫ x in (-1 / 2 : ℝ)..0, -x * EL := by
+          apply intervalIntegral.integral_mono_on (by norm_num) hUL
+            (intervalIntegral.intervalIntegrable_id.neg.mul_const EL)
+          intro x hx
+          exact hincL x ⟨by linarith [hx.1], hx.2⟩
+        _ = _ := by
+          rw [intervalIntegral.integral_mul_const, intervalIntegral.integral_neg]
+          norm_num [integral_id]
+          ring
+    have hr : (∫ x in (0 : ℝ)..(1 / 2), U x) ≤ ER / 8 := by
+      calc
+        _ ≤ ∫ x in (0 : ℝ)..(1 / 2), x * ER := by
+          apply intervalIntegral.integral_mono_on (by norm_num) hUR
+            (intervalIntegral.intervalIntegrable_id.mul_const ER)
+          intro x hx
+          exact hincR x ⟨hx.1, by linarith [hx.2]⟩
+        _ = _ := by
+          rw [intervalIntegral.integral_mul_const]
+          norm_num [integral_id]
+          ring
+    rw [← intervalIntegral.integral_add_adjacent_intervals hUL hUR]
+    linarith
+  -- The central mass dominates half the midpoint value, minus the increment.
+  have hpositive : 3 / 16 * C - 3 / 64 * (EL + ER) ≤ ∫ x in (-1 : ℝ)..1, P x := by
+    have hfull : (∫ x in (-1 / 2 : ℝ)..(1 / 2), P x) ≤
+        ∫ x in (-1 : ℝ)..1, P x := intervalIntegral.integral_mono_interval
+      (by norm_num : (-1 : ℝ) ≤ -1 / 2) (by norm_num : (-1 / 2 : ℝ) ≤ 1 / 2)
+      (by norm_num : (1 / 2 : ℝ) ≤ 1) (Eventually.of_forall fun x ↦ le_max_right _ _) hPi
+    have hc : (∫ x in (-1 / 2 : ℝ)..(1 / 2), 3 / 16 * C - 3 / 8 * U x) ≤
+        ∫ x in (-1 / 2 : ℝ)..(1 / 2), P x := by
+      apply intervalIntegral.integral_mono_on (by norm_num)
+        (intervalIntegrable_const.sub ((hUi.mono_set hCsub).const_mul _)) (hPi.mono_set hCsub)
+      intro x hx
+      have hb : (3 / 8 : ℝ) ≤ correctedBoundaryBeta x :=
+        (by norm_num : (3 / 8 : ℝ) ≤ 5 / 12).trans (correctedBoundaryBeta_central hx)
+      have ht : ‖G 0‖ ≤ ‖G x‖ + ‖G x - G 0‖ := by
+        simpa [norm_sub_rev] using norm_sub_le (G x) (G x - G 0)
+      have hs := pow_le_pow_left₀ (norm_nonneg _) ht 2
+      have hm := mul_le_mul_of_nonneg_right hb (sq_nonneg ‖G x‖)
+      have hp : correctedBoundaryBeta x * ‖G x‖ ^ 2 ≤ P x := le_max_left _ _
+      dsimp [C, U]
+      nlinarith [sq_nonneg (‖G x‖ - ‖G x - G 0‖)]
+    rw [intervalIntegral.integral_sub intervalIntegrable_const
+      ((hUi.mono_set hCsub).const_mul _)] at hc
+    simp only [intervalIntegral.integral_const, intervalIntegral.integral_const_mul,
+      smul_eq_mul] at hc
+    rw [show (1 / 2 : ℝ) - -1 / 2 = 1 by norm_num, one_mul] at hc
+    linarith only [hc, hfull, hcentral]
+  have hlog := logarithmic_positive_moment 0
+  simp only [pow_zero, one_mul, Nat.cast_zero, zero_add, one_pow, pow_one, div_one] at hlog
+  have hnegative_density : ∀ x ∈ Ioo (-1 : ℝ) 1, ∀ E : ℝ,
+      U x ≤ E → N x ≤ (C + E) / 2 * max (Real.log ((1 / 7) / (1 - |x|))) 0 := by
+    intro x hx E hUE
+    have ht : ‖G x‖ ≤ ‖G 0‖ + ‖G x - G 0‖ := by
+      simpa using norm_add_le (G 0) (G x - G 0)
+    have hs := pow_le_pow_left₀ (norm_nonneg _) ht 2
+    have hsq : ‖G x‖ ^ 2 ≤ 2 * C + 2 * E := by
+      dsimp [U] at hUE
+      dsimp [C]
+      nlinarith only [hs, hUE, sq_nonneg (‖G 0‖ - ‖G x - G 0‖)]
+    calc
+      N x = max (-correctedBoundaryBeta x) 0 * ‖G x‖ ^ 2 := by
+        dsimp [N]
+        rw [max_mul_of_nonneg _ _ (sq_nonneg _), zero_mul, neg_mul]
+      _ ≤ (1 / 4 * max (Real.log ((1 / 7) / (1 - |x|))) 0) * ‖G x‖ ^ 2 :=
+        mul_le_mul_of_nonneg_right (correctedBoundaryBeta_negative_le hx) (sq_nonneg _)
+      _ ≤ (1 / 4 * max (Real.log ((1 / 7) / (1 - |x|))) 0) * (2 * C + 2 * E) :=
+        mul_le_mul_of_nonneg_left hsq (by positivity)
+      _ = _ := by ring
+  -- Each endpoint logarithmic layer has mass 1/7; outside it the weight vanishes.
+  have hnegative : (∫ x in (-1 : ℝ)..1, N x) ≤ C / 7 + (EL + ER) / 14 := by
+    have hl : (∫ x in (-1 : ℝ)..0, N x) ≤ (C + EL) / 14 := by
+      calc
+        _ ≤ ∫ x in (-1 : ℝ)..0,
+            (C + EL) / 2 * max (Real.log ((1 / 7) / (x + 1))) 0 := by
+          apply intervalIntegral.integral_mono_on_of_le_Ioo (by norm_num) (hNi.mono_set hLsub)
+            (by simpa using (hlog.1.comp_add_right 1).const_mul ((C + EL) / 2))
+          intro x hx
+          have hUE : U x ≤ EL := (hincL x ⟨hx.1, hx.2.le⟩).trans
+            (by nlinarith [mul_nonneg (by linarith [hx.1] : 0 ≤ x + 1) hEL0])
+          simpa only [abs_of_nonpos hx.2.le, sub_neg_eq_add, add_comm 1 x] using
+            hnegative_density x ⟨hx.1, by linarith [hx.2]⟩ EL hUE
+        _ = _ := by
+          rw [intervalIntegral.integral_const_mul, intervalIntegral.integral_comp_add_right
+            (fun d : ℝ ↦ max (Real.log ((1 / 7) / d)) 0) 1]
+          norm_num only [neg_add_cancel, zero_add]
+          rw [hlog.2]
+          ring
+    have hr : (∫ x in (0 : ℝ)..1, N x) ≤ (C + ER) / 14 := by
+      calc
+        _ ≤ ∫ x in (0 : ℝ)..1,
+            (C + ER) / 2 * max (Real.log ((1 / 7) / (1 - x))) 0 := by
+          apply intervalIntegral.integral_mono_on_of_le_Ioo (by norm_num) (hNi.mono_set hRsub)
+            (by simpa using ((hlog.1.comp_sub_left 1).symm).const_mul ((C + ER) / 2))
+          intro x hx
+          have hUE : U x ≤ ER := (hincR x ⟨hx.1.le, hx.2⟩).trans
+            (by nlinarith [mul_nonneg (by linarith [hx.2] : 0 ≤ 1 - x) hER0])
+          simpa only [abs_of_nonneg hx.1.le] using
+            hnegative_density x ⟨by linarith [hx.1], hx.2⟩ ER hUE
+        _ = _ := by
+          rw [intervalIntegral.integral_const_mul, intervalIntegral.integral_comp_sub_left
+            (fun d : ℝ ↦ max (Real.log ((1 / 7) / d)) 0) 1]
+          norm_num only [sub_self, sub_zero]
+          rw [hlog.2]
+          ring
+    rw [← intervalIntegral.integral_add_adjacent_intervals (hNi.mono_set hLsub)
+      (hNi.mono_set hRsub)]
+    linarith
+  have hsplit : (∫ x in (-1 : ℝ)..1, correctedBoundaryBeta x * ‖G x‖ ^ 2) =
+      (∫ x in (-1 : ℝ)..1, P x) - ∫ x in (-1 : ℝ)..1, N x := by
+    rw [← intervalIntegral.integral_sub hPi hNi]
+    apply intervalIntegral.integral_congr
+    intro x _
+    exact (max_zero_sub_max_neg_zero_eq_self _).symm
+  rw [hsplit, ← intervalIntegral.integral_add_adjacent_intervals hEL hER]
+  change 5 / 112 * C - 53 / 448 * (EL + ER) ≤ _
+  linarith
 
 -- After the two-term square bound, E is the derivative energy on one half,
 -- B is the squared affine coefficient, and d is distance to its endpoint.
