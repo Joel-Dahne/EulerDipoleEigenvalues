@@ -8,14 +8,14 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching ten admissions. Corrected boundary nonnegativity is
+inputs, reaching nine admissions. Corrected boundary nonnegativity is
 transitively admission-free in
 [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds twenty-four admissions. The bulk bound depends only on the two
+audit finds twenty-three admissions. The bulk bound depends only on the two
 residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
@@ -82,7 +82,7 @@ geometric level/current limits. The common logarithmic counterterm and the
 whole value finite part cancel in Lean. Ordinary exhaustion and boundary-form
 identification are admission-free, as are the scalar B derivative formula
 and β normalization. Correction integrability now follows directly from the
-weighted interval domain, not the admitted B-trace limit. No sign certificate
+weighted interval domain, independently of the B-trace limit. No sign certificate
 is used by the current assembly.
 
 The corrected-boundary review replaces the auxiliary scalar Picone function
@@ -154,8 +154,16 @@ Current continuity and the full-level center-current bound restore all levels.
 [OddOddPiconeIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddPiconeIntegrability.lean)
 supplies ground-state estimates and raw/divided-gradient integrability.
 The shared classical identities in [Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean)
-are also admission-free. Remaining current work includes the boundary-B trace,
-full-level remainder and scalar value finite part, not truncated Picone.
+are also admission-free. The B-weighted level trace
+(`lem:dd-boundaryB-trace-limit`) is proved in
+[OddOddBoundaryTrace.lean](../../NoEmbeddedEigenvalues/OddOddBoundaryTrace.lean).
+The scalar bound `|B(r)| ≤ 6√r`, the quarter graph estimate `r ≤ 4 cos² a`,
+and its time Jacobian bound `2/cos a` give a bounded diagonal density.
+Dominated convergence proves the full-level limit and arc integrability for
+bounded continuous values, with no derivative traces or exceptional levels.
+The theorem's original H² statement is unchanged. Remaining current work
+includes the full-level remainder and scalar value finite part, not truncated
+Picone or the B-weighted trace.
 
 `dd_character_virial_limit` reaches six admissions: `local_h2_smooth_approximation`,
 `dd_weighted_first`, `dd_quotient_equations`,
@@ -201,7 +209,7 @@ weak Green identity.
 
 The cutoff and truncated-virial assemblies reach three admissions: local H²
 smooth approximation, weighted first identity and quotient equation. The audit
-reaches ten admissions below `dd_picone_current`.
+reaches nine admissions below `dd_picone_current`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of

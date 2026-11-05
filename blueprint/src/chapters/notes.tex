@@ -42,6 +42,12 @@ once resolved; record the resolution in the relevant node.
 
 \section*{Possible simplifications}
 \begin{enumerate}
+  \item \textbf{The $B$-weighted level trace}
+        (Lemma~\ref{lem:dd-boundaryB-trace-limit}). The bound
+        $|B(r)|\le6\sqrt r$ cancels the quarter graph's singular time Jacobian,
+        leaving a uniformly bounded density on a fixed finite interval.
+        Dominated convergence replaces orbit comparison and separate corner
+        tails, using only bounded continuous values. This route is proved in Lean.
   \item \textbf{Virial identity.} For smooth eigenfunctions the virial identity
         is a three-line computation (Lemma~\ref{lem:virial-smooth}). Stating
         it this way in the paper, followed by the justification on the $L^2$

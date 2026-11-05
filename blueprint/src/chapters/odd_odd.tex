@@ -1499,12 +1499,32 @@ $H^B_\epsilon[u]\to D_u$ as all positive $\epsilon\to0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:forcing-comparison, lem:orbit-saddle-distance,
- lem:dd-boundary-ground-algebra, lem:continuous-representative}
-Near an arc endpoint, $B(r)=O(r(1+|\log r|))$ is integrable in flow time.
-The orbit comparison transfers continuous values on compact arc windows;
-the same vanishing weight controls the corner tails uniformly.
+\uses{lem:quarter-orbit-decomposition, lem:quarter-orbit-diagonal,
+ lem:arc-diagonal, lem:quarter-weight, lem:dipole-identities,
+ lem:continuous-representative}
+\leanok
+The explicit formula and $w_b\ge1$ give
+$|B(r)|\le r+r|\log(r/2)|\le6\sqrt r$ for $0<r\le2$.
+For the second bound put $z=\sqrt{r/2}\le1$ and use
+$z(-\log z)\le1$, which follows from $\log z\ge1-z^{-1}$.
+On the quarter graph $b=\arccos(h/\cos a)$, $h\le1/4$, one has
+$0<r\le4\cos^2a$ and $1/\sqrt{\cos^2a-h^2}\le2/\cos a$.
+Thus the absolute $B$-weighted density in $a$ is at most $24\|u\|_\infty^2$.
+Extend it by zero to the fixed interval $(-\pi/2,\pi/2)$.
+The graph height tends to $\pi/2$ and its endpoints tend to $\pm\pi/2$,
+so dominated convergence gives the quarter limit.
+On the arc, $r=2\cos^2a$ and the Jacobian is $1/\cos a$;
+the same bound proves absolute integrability there.
+Sum the four rotated quarters and put $h=\epsilon/2$.
 \end{proof}
+
+\begin{remark}[Digest note: bounded diagonal density]
+The direct diagonal-coordinate proof replaces the earlier orbit-comparison
+and corner-tail sketch. Only boundedness and continuity of the value
+representative are used; no derivative trace, reflection parity or exceptional
+set of levels is required. This simplification applies to any bounded
+continuous periodic value function, not just the quotient in the exclusion.
+\end{remark}
 
 \begin{lemma}[The integrated current remainder]
 \label{lem:dd-current-remainder-limit}

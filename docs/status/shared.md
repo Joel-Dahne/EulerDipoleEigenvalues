@@ -36,9 +36,10 @@ The even–even route is admission-free. Available foundations include:
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
   General smooth-density theory is not required by these results.
-- Ordinary exhaustion by stream levels and exact one-dimensional B/β
-  boundary normalization. Picone's finite-part assembly is conditional on
-  separate analytic integrability and trace inputs.
+- Ordinary exhaustion by stream levels, exact one-dimensional B/β boundary
+  normalization and the B-weighted full-level trace. The latter uses a bounded
+  diagonal-coordinate density and continuous values, not derivative traces.
+  Picone's finite-part assembly remains conditional on separate analytic inputs.
 - Bounded-coefficient L² product-integral convergence, using the continuous
   L∞ multiplier and L² inner product, without smooth density or domination.
 - Corrected-boundary forcing H¹ regularity, logarithmic correction
@@ -113,10 +114,13 @@ weights and local versus global regularity.
    `Picone.lean` proves the shared classical algebra and integrated identity;
    its generic integrated interface assumes a divergence formula, while the
    truncated application instead uses the Fourier cutoff route. The current's
-   boundary-B trace, full-level remainder and scalar value finite part remain open.
+   B-weighted trace is admission-free in `OddOddBoundaryTrace.lean`: a square-root
+   bound for B cancels the quarter graph's time Jacobian and gives dominated
+   convergence on a fixed finite interval. The full-level remainder and scalar
+   value finite part remain open.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The ten transitive Picone inputs remain proof work.
+   analytic admissions remain. The nine transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the

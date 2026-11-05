@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddCoercivity
+import NoEmbeddedEigenvalues.OddOddBoundaryTrace
 
 /-!
 # Odd–odd exclusion and renormalized current assembly
@@ -132,13 +133,6 @@ theorem dd_character_virial_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       ring
   have hident := tendsto_nhds_unique (hbulk.comp hpos) htarget
   exact hident ▸ hbulk
-
-/-- The logarithmic `B` weight is integrable on every arc and has a full level limit. -/
-theorem dd_boundaryB_trace_limit {φ : L2} (hφ : MemSobolev 2 φ) :
-    (∀ k : Fin 4, Integrable (ddArcCorrection φ k)) ∧
-      Tendsto (ddLevelBMass φ) (𝓝[>] 0)
-        (𝓝 (∑ k : Fin 4, ∫ t, ddArcCorrection φ k t)) := by
-  sorry
 
 /-- The error in replacing the actual current coefficient by `-(8/3)(1-B)` integrates
     to zero: the uniform `O(ε)` coefficient error times the logarithmic period vanishes. -/
