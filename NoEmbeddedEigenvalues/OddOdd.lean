@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.OddOddBoundaryTrace
 import NoEmbeddedEigenvalues.OddOddCurrentRemainder
 import NoEmbeddedEigenvalues.OddOddRenormalizedBulk
+import NoEmbeddedEigenvalues.OddOddValueFinitePart
 
 /-!
 # Odd–odd exclusion and renormalized current assembly

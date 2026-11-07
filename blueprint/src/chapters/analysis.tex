@@ -1089,6 +1089,32 @@ $C_\alpha=2\bigl(\sum_k(1+|k|^2)^{\alpha-2}\bigr)^{1/2}$;
 no local Sobolev embedding or density theorem is invoked.
 \end{proof}
 
+\begin{lemma}[H\"older continuity of squared values]
+\label{lem:sobolev-squared-values}
+\uses{def:sobolev-torus, def:continuous-representative}
+\lean{NoEmbeddedEigenvalues.exists_continuousRep_norm_sq_holder}
+\leanok
+For every $u\in H^2(\T^2)$, its fixed continuous representative satisfies
+\[
+ \big||u(p)|^2-|u(q)|^2\big|\le K_u\sqrt{d(p,q)}
+ \qquad(p,q\in\T^2)
+\]
+for some $K_u\ge0$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sobolev-holder, lem:continuous-representative}
+\leanok
+The H\"older representative agrees everywhere with the fixed continuous
+one: they agree a.e. and torus volume is positive on every nonempty open set.
+If $|u|\le M$ and $u$ has one-half H\"older constant $H$, use
+\[
+ \big||u(p)|^2-|u(q)|^2\big|
+ \le (|u(p)|+|u(q)|)\,|u(p)-u(q)|
+ \le2MH\sqrt{d(p,q)}.
+\]
+\end{proof}
+
 \begin{lemma}[Finite-$p$ Sobolev embeddings on the torus]
 \label{lem:sobolev-lp}
 \uses{def:sobolev-torus}

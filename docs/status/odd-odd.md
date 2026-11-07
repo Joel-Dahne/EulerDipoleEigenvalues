@@ -8,14 +8,14 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching seven admissions. Corrected boundary nonnegativity is
+inputs, reaching six admissions. Corrected boundary nonnegativity is
 transitively admission-free in
 [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds twenty-one admissions. The bulk bound depends only on the two
+audit finds twenty admissions. The bulk bound depends only on the two
 residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
@@ -167,9 +167,13 @@ remainder (`lem:dd-current-remainder-limit`) is also admission-free in
 The explicit coefficient error is at most `64ε` for `0 < ε ≤ 1`; bounded
 continuous values and the coarse logarithmic period bound give its full-level
 limit. Its H² statement is unchanged and no derivative trace is used.
-The renormalized ground-current limit now reaches only the scalar value
-finite-part admission. Remaining current work does not include truncated
-Picone, the B-weighted trace or the integrated remainder.
+[OddOddValueFinitePart.lean](../../NoEmbeddedEigenvalues/OddOddValueFinitePart.lean)
+proves the scalar level-value finite part (`lem:dd-value-finite-part`), with its
+original statement unchanged. Endpoint-subtracted arc integrability is
+admission-free. Shared squared-value Hölder continuity gives exponential tails
+and an integrated orbit error `L(h)h^(1/4) → 0`, using only coarse period bounds.
+The value finite part and renormalized ground-current limit now reach only
+`orbitPeriod_leading_asymptotic`, for the final `log 8` normalization.
 
 The renormalized bulk limit (`lem:dd-renormalized-bulk`) is assembled in
 [OddOddRenormalizedBulk.lean](../../NoEmbeddedEigenvalues/OddOddRenormalizedBulk.lean),
@@ -194,7 +198,7 @@ dominated by a sum of integrable corner-distance powers of exponent -3/2.
 No quadrant-indicator partition or reflection parity is needed.
 Ordinary exhaustion, the bulk splitting and positive-truncation integrability
 are proved. The scalar coefficient finite part is distinct from
-`lem:dd-value-finite-part`, the remaining ground-current input.
+`lem:dd-value-finite-part`; both now share the leading period admission.
 [OddOddBulkIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddBulkIntegrability.lean)
 proves supplied-forcing integrability (`lem:dd-forcing-density-integrable`) and its
 vorticity specialization without admissions, with their statements unchanged.
@@ -203,9 +207,9 @@ The diagonal corner-distance estimate gives `d² ≤ (π²/2)r` when `s ≤ 1`;
 `0 ≤ Fd² ≤ 16π²` on the whole cell. Multiplication by this bounded measurable
 coefficient sends `|e/d|² ∈ L¹` to the required density.
 
-`dd_character_virial_limit` reaches seven admissions: the two bulk inputs above,
-`local_h2_smooth_approximation`, `dd_weighted_first`, `dd_quotient_equations`,
-`dd_quotient_gradient_traces` and `dd_value_finite_part`.
+`dd_character_virial_limit` reaches six admissions: the two bulk inputs above,
+`local_h2_smooth_approximation`, `dd_weighted_first`, `dd_quotient_equations`
+and `dd_quotient_gradient_traces`.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
 boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels
@@ -247,7 +251,7 @@ weak Green identity.
 
 The cutoff and truncated-virial assemblies reach three admissions: local H²
 smooth approximation, weighted first identity and quotient equation. The audit
-reaches seven admissions below `dd_picone_current`.
+reaches six admissions below `dd_picone_current`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of
@@ -266,8 +270,9 @@ hypotheses are unchanged. The remaining analytic work on this route is that dens
 theorem, the weighted first identity and the quotient equation.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
-forms, boundary data, characters and value finite-part interface below the virial,
-avoiding an import cycle. The weak/classical quotient equations remain separate
+forms, boundary data, characters and renormalization data below the virial,
+avoiding an import cycle. `OddOddValueFinitePart.lean` handles continuous
+level values independently of the weighted virial. The weak/classical quotient equations remain separate
 from this assembly. `Period.lean` states the leading value asymptotic separately
 from sharp remainders.
 
@@ -381,7 +386,7 @@ Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the
 minimal quotient data. Its character-wise assembly and representative/exceptional-level
-bridges are checked; the seven admitted virial inputs and the remaining inputs below
+bridges are checked; the six admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
 Poincaré and its basis, cutoff weak pairing and spectral assembly are
 transitively admission-free. Corrected-boundary nonnegativity, including its

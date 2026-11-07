@@ -269,4 +269,42 @@ theorem exists_holderWith_of_memSobolev_two {α : ℝ≥0} (hα : α < 1) :
         have : 0 ≤ D := Real.sqrt_nonneg _
         nlinarith [Real.sqrt_nonneg (sobolevNormSq 2 g)]
 
+/-- The squared norm of the continuous H² representative is one-half Hölder. -/
+theorem exists_continuousRep_norm_sq_holder {u : L2} (hu : MemSobolev 2 u) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ p q : Torus,
+      |‖continuousRep u p‖ ^ 2 - ‖continuousRep u q‖ ^ 2| ≤ K * √(dist p q) := by
+  obtain ⟨C, hC⟩ := exists_holderWith_of_memSobolev_two (α := (1 / 2 : ℝ≥0))
+    (by norm_num)
+  obtain ⟨v, hv, hH, -⟩ := hC u hu
+  have : (volume : Measure Torus).IsOpenPosMeasure := by
+    change (volume : Measure (AddCircle (2 * π) × AddCircle (2 * π))).IsOpenPosMeasure
+    infer_instance
+  have heq : (continuousRep u : Torus → ℂ) = v :=
+    Measure.eq_of_ae_eq ((coeFn_eq_continuousRep hu).symm.trans hv)
+      (continuousRep u).continuous (hH.continuous (by norm_num))
+  rw [← heq] at hH
+  set D : ℝ := ((C * Real.toNNReal √(sobolevNormSq 2 u) : ℝ≥0) : ℝ)
+  set M := ‖continuousRep u‖
+  have hD : 0 ≤ D := NNReal.coe_nonneg _
+  have hM : 0 ≤ M := norm_nonneg _
+  refine ⟨2 * M * D, by positivity, fun p q ↦ ?_⟩
+  have hd : ‖continuousRep u p - continuousRep u q‖ ≤
+      D * √(dist p q) := by
+    simpa only [D, dist_eq_norm, sqrt_eq_rpow, NNReal.coe_div, NNReal.coe_one,
+      NNReal.coe_ofNat] using
+      hH.dist_le_of_le (le_refl (dist p q))
+  set a := ‖continuousRep u p‖
+  set b := ‖continuousRep u q‖
+  have ha : a ≤ M := (continuousRep u).norm_coe_le_norm _
+  have hb : b ≤ M := (continuousRep u).norm_coe_le_norm _
+  have hdiff : |a - b| ≤ D * √(dist p q) :=
+    (abs_norm_sub_norm_le _ _).trans hd
+  calc |‖continuousRep u p‖ ^ 2 - ‖continuousRep u q‖ ^ 2| = |a - b| * (a + b) := by
+         change |a ^ 2 - b ^ 2| = _
+         rw [show a ^ 2 - b ^ 2 = (a - b) * (a + b) by ring, abs_mul,
+           abs_of_nonneg (add_nonneg (norm_nonneg _) (norm_nonneg _))]
+       _ ≤ (D * √(dist p q)) * (2 * M) :=
+         mul_le_mul hdiff (by linarith) (by positivity) (by positivity)
+       _ = 2 * M * D * √(dist p q) := by ring
+
 end NoEmbeddedEigenvalues

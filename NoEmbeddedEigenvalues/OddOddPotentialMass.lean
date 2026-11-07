@@ -95,39 +95,10 @@ private theorem massMean_corner (u : L2) : massMean u = ddCornerMass u / 4 := by
 private theorem valueMass_holder {u : L2} (hu : MemSobolev 2 u) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ p q : ℝ × ℝ,
       |valueMass u p - valueMass u q| ≤ K * √(dist p q) := by
-  obtain ⟨C, hC⟩ := exists_holderWith_of_memSobolev_two (α := (1 / 2 : ℝ≥0))
-    (by norm_num)
-  obtain ⟨v, hv, hH, -⟩ := hC u hu
-  have : (volume : Measure Torus).IsOpenPosMeasure := by
-    change (volume : Measure (AddCircle (2 * π) × AddCircle (2 * π))).IsOpenPosMeasure
-    infer_instance
-  have heq : (continuousRep u : Torus → ℂ) = v :=
-    Measure.eq_of_ae_eq ((coeFn_eq_continuousRep hu).symm.trans hv)
-      (continuousRep u).continuous (hH.continuous (by norm_num))
-  rw [← heq] at hH
-  set D : ℝ := ((C * Real.toNNReal √(sobolevNormSq 2 u) : ℝ≥0) : ℝ)
-  set M := ‖continuousRep u‖
-  have hD : 0 ≤ D := NNReal.coe_nonneg _
-  have hM : 0 ≤ M := norm_nonneg _
-  refine ⟨2 * M * D, by positivity, fun p q ↦ ?_⟩
-  have hd : ‖continuousRep u (torusProj p) - continuousRep u (torusProj q)‖ ≤
-      D * √(dist p q) := by
-    simpa only [D, dist_eq_norm, sqrt_eq_rpow, NNReal.coe_div, NNReal.coe_one,
-      NNReal.coe_ofNat] using
-      hH.dist_le_of_le (dist_torusProj_le p q)
-  set a := ‖continuousRep u (torusProj p)‖
-  set b := ‖continuousRep u (torusProj q)‖
-  have ha : a ≤ M := (continuousRep u).norm_coe_le_norm _
-  have hb : b ≤ M := (continuousRep u).norm_coe_le_norm _
-  have hdiff : |a - b| ≤ D * √(dist p q) :=
-    (abs_norm_sub_norm_le _ _).trans hd
-  calc |valueMass u p - valueMass u q| = |a - b| * (a + b) := by
-         change |a ^ 2 - b ^ 2| = _
-         rw [show a ^ 2 - b ^ 2 = (a - b) * (a + b) by ring, abs_mul,
-           abs_of_nonneg (add_nonneg (norm_nonneg _) (norm_nonneg _))]
-       _ ≤ (D * √(dist p q)) * (2 * M) :=
-         mul_le_mul hdiff (by linarith) (by positivity) (by positivity)
-       _ = 2 * M * D * √(dist p q) := by ring
+  obtain ⟨K, hK, hbound⟩ := exists_continuousRep_norm_sq_holder hu
+  refine ⟨K, hK, fun p q ↦ (hbound (torusProj p) (torusProj q)).trans ?_⟩
+  gcongr
+  exact dist_torusProj_le p q
 
 private def cellCorners : Finset (ℝ × ℝ) := {(π, 0), (0, π), (-π, 0), (0, -π)}
 

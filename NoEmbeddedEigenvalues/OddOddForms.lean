@@ -380,12 +380,4 @@ theorem dd_gradient_energies_integrable {φ dx dy : L2} (hφ : MemSobolev 2 φ)
       IntegrableOn (ddPiconeGradient φ dx dy) cellSquare := by
   sorry
 
-/-- The scalar value finite part and absolute integrability of its renormalized arc terms. -/
-theorem dd_value_finite_part {φ : L2} (hφ : MemSobolev 2 φ) :
-    (∀ k : Fin 4, Integrable (ddArcValueRemainder φ k)) ∧
-      Tendsto (fun ε ↦ ddLevelMass φ ε - ddCornerMass φ * Real.log (1 / ε))
-        (𝓝[>] 0) (𝓝 (ddValueFinitePart φ)) := by
-  sorry
-
-
 end NoEmbeddedEigenvalues

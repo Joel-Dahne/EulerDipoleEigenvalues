@@ -36,7 +36,8 @@ proof mechanisms. Module names below are relative to
   their L² action, reflection sectors and rotation characters.
 - `DipoleOrthogonality.lean`: four-mode weak dipole testing, inverse-Laplacian
   pairings and reflection/cell integral identities.
-- `SobolevHolder.lean`: continuous Fourier representative and Hölder embedding.
+- `SobolevHolder.lean`: continuous Fourier representative, Hölder embedding and
+  the shared one-half Hölder estimate for squared values.
 
 ### Local Sobolev spaces, lifts and traces
 
@@ -167,7 +168,7 @@ proof mechanisms. Module names below are relative to
   transport-pair bridge, and quotient-existence assembly.
 - `OddOddForms.lean`: quotient orthogonality, boundary data, continuous
   characters and boundary regularity; bulk forms, truncated Picone energies,
-  currents and the common scalar finite part. Sits below the weighted virial.
+  currents and common renormalization data. Sits below the weighted virial.
 - `OddOddVirial.lean`: classical and weak quotient operators, weighted virial
   algebra and Green flux, raw-quotient annular/truncated identities, even H²
   gradient traces. Positive-truncation H¹
@@ -187,6 +188,8 @@ proof mechanisms. Module names below are relative to
 - `OddOddFinitePart.lean`: exact truncated coefficient integral via the periodic
   normal-field divergence, center removal and continuity; its scalar finite part
   follows from the leading period asymptotic.
+- `OddOddValueFinitePart.lean`: endpoint-subtracted arc integrability, the integrated
+  squared-value orbit comparison and the scalar level-value finite part.
 - `OddOddPotentialMass.lean`: two-saddle trigonometric interpolation, integrability
   of the Hölder corner remainder and the weighted value-mass finite part.
 - `OddOddRenormalizedBulk.lean`: full renormalized bulk assembly from forcing

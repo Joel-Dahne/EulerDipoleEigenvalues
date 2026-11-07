@@ -439,6 +439,26 @@ With $x=2\arctan(e^{-s})$ one has $\sin x=\sech s$ and $x'=-\sech s$; since
 $y=x-\pi$, $\sin y=-\sin x$.
 \end{proof}
 
+\begin{lemma}[Exponential approach to the arc endpoints]
+\label{lem:arc-endpoint-distance}
+\uses{def:separatrix-arc}
+\lean{NoEmbeddedEigenvalues.dist_arc_pos_le, NoEmbeddedEigenvalues.dist_arc_neg_le}
+\leanok
+In the lifted product metric, for every $t\in\R$,
+\[
+ d(\gamma(t),(0,-\pi))\le2e^{-t},\qquad
+ d(\gamma(t),(\pi,0))\le2e^t.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:separatrix-arc}
+\leanok
+Writing $\alpha(t)=2\arctan(e^{-t})\in(0,\pi)$, the two distances are
+$\alpha(t)$ and $\pi-\alpha(t)=2\arctan(e^t)$.
+Use $\arctan r\le r$ for $r\ge0$.
+\end{proof}
+
 \begin{definition}[The cell arcs and the saddle distance]
 \label{def:cell-arcs}
 \uses{def:separatrix-arc, lem:dipole-critical-points}

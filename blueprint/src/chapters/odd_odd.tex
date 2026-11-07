@@ -896,6 +896,24 @@ The half endpoint sum counts the four lifted corners, not just the two
 distinct torus saddles. The choice at $t=0$ is immaterial to integration.
 \end{definition}
 
+\begin{lemma}[Integrability of endpoint-subtracted arc values]
+\label{lem:dd-arc-value-remainder}
+\uses{def:sobolev-torus, def:dd-value-renormalization}
+\lean{NoEmbeddedEigenvalues.ddArcValueRemainder_integrable}
+\leanok
+For every $u\in H^2(\T^2)$ and each cell arc $k$, the endpoint-subtracted
+squared value $v_k$ is absolutely integrable on $\R$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sobolev-squared-values, lem:arc-endpoint-distance, lem:lift-torus}
+\leanok
+The torus projection does not increase distance, and the quarter rotations
+are isometries. The squared-value H\"older bound and exponential endpoint
+distances give $|v_k(t)|\le C_u e^{-|t|/2}$, uniformly over the four arcs.
+This is an integrable majorant; the value at $t=0$ is immaterial.
+\end{proof}
+
 \begin{lemma}[Finite part of the level values]
 \label{lem:dd-value-finite-part}
 \uses{def:sobolev-torus, def:cell-arcs, def:period, def:dd-value-renormalization}
@@ -916,22 +934,40 @@ The four integrals on the right are absolutely convergent.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:forcing-comparison, lem:period-coarse, lem:period-leading-asymptotic,
- lem:period-orbit, lem:lift-sobolev-local}
-For the base quarter put $h=\epsilon/2$, $L=L(h)$ and
-$g_h=u\circ\gamma_h$. Lemma~\ref{lem:forcing-comparison} bounds $g_h,g$ by
-$M$, their difference by $Ch^{1/4}$ on $[-L,L]$, and $g-c_\pm$ by
-$Ce^{-|t|/2}$ on the two half-lines. Hence
+\uses{lem:dd-arc-value-remainder, lem:sobolev-squared-values,
+ lem:orbit-comparison, lem:period-coarse, lem:period-basic,
+ lem:period-leading-asymptotic, lem:quarter-orbit-decomposition, lem:lift-torus}
+\leanok
+Put $h=\epsilon/2$ and $L=L(h)$. Squared-value H\"older continuity and
+the $O(\sqrt h)$ orbit--arc distance give, on every rotated quarter,
 \[
- \left|\int_{-L}^L(|g_h|^2-|g|^2)dt\right|\le4MCLh^{1/4}\to0.
+ \big||u(R^k\gamma_h(t))|^2-|g_k(t)|^2\big|\le C_u h^{1/4}
+ \quad(|t|\le L).
 \]
-The exponential tails show that
-$\int_{-L}^L|g|^2dt-L(|c_-|^2+|c_+|^2)$ tends to the stated renormalized
-arc integral. Apply this argument to each rotated quarter.
-Every corner is an endpoint of two arcs, so their subtracted constants
-sum to $2LA_u$. Finally
-$2L(\epsilon/2)=\log(8/\epsilon)+o(1)$.
+Thus the difference of these integrals is at most $2C_uLh^{1/4}\to0$,
+using only the coarse logarithmic period bound.
+The exact endpoint subtraction is
+\[
+ \int_{-L}^{L}|g_k|^2-L(|c_{k,-}|^2+|c_{k,+}|^2)
+ =\int_{-L}^{L}v_k\longrightarrow\int_\R v_k.
+\]
+The quarter decomposition and the half endpoint sum defining $A_u$ now give
+\[
+ \oint_{s=\epsilon}|u|^2\,dt-2L(\epsilon/2)A_u
+ \longrightarrow\sum_k\int_\R v_k.
+\]
+Finally the leading period asymptotic, divided by four, yields
+$2L(\epsilon/2)-\log(1/\epsilon)\to\log8$.
+No reflection parity, quotient equation or local Sobolev chart is required.
 \end{proof}
+
+\begin{remark}[Digest note: compare squared values directly]
+The global H\"older estimate for $|u|^2$ replaces the local forcing-comparison
+route. It gives the integrated error directly and shares its scalar estimate
+with the weighted potential-mass subtraction. Endpoint integrability and
+orbit comparison use only coarse period bounds; the leading period constant
+enters only in the final normalization.
+\end{remark}
 
 \begin{lemma}[Saddle-weighted bound for the forcing coefficient]
 \label{lem:dd-forcing-coefficient-bound}
@@ -1004,7 +1040,7 @@ exists. No reflection parity is required.
 \begin{proof}
 \uses{lem:dd-finite-part, lem:dd-forcing-coefficient-bound, lem:normal-coeff-bound,
  lem:dipole-identities, lem:cell-square, lem:cell-neighbourhood, lem:lift-torus,
- lem:sobolev-holder, lem:continuous-representative, lem:dd-truncation-exhaustion}
+ lem:sobolev-squared-values, lem:continuous-representative, lem:dd-truncation-exhaustion}
 \leanok
 Use the continuous representative, which agrees a.e. with the supplied
 $L^2$ values. Put $m_x=|u(\pi,0)|^2$, $m_y=|u(0,\pi)|^2$, and

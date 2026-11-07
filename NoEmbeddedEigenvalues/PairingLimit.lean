@@ -29,7 +29,8 @@ namespace NoEmbeddedEigenvalues
 open Real Complex MeasureTheory Set Filter
 open scoped Topology Interval ComplexConjugate
 
-private theorem dist_arc_pos_le (s : ℝ) :
+/-- Exponential distance to the positive-time saddle endpoint. -/
+theorem dist_arc_pos_le (s : ℝ) :
     dist (separatrixArc s) (0, -π) ≤ 2 * Real.exp (-s) := by
   have ha := arcAngle_mem_Ioo s
   have he : dist (separatrixArc s) (0, -π) = arcAngle s := by
@@ -37,7 +38,8 @@ private theorem dist_arc_pos_le (s : ℝ) :
   rw [he, arcAngle]
   exact mul_le_mul_of_nonneg_left (arctan_le_self (Real.exp_pos _).le) (by norm_num)
 
-private theorem dist_arc_neg_le (s : ℝ) :
+/-- Exponential distance to the negative-time saddle endpoint. -/
+theorem dist_arc_neg_le (s : ℝ) :
     dist (separatrixArc s) (π, 0) ≤ 2 * Real.exp s := by
   have ha := arcAngle_mem_Ioo s
   have he : dist (separatrixArc s) (π, 0) = π - arcAngle s := by
@@ -180,7 +182,8 @@ private theorem eighthPeriod_rate_limits {hs : ℕ → ℝ}
     simp only [zero_pow (by decide : (2 : ℕ) ≠ 0)] at h
     exact h.congr fun n ↦ by rw [hpow]; ring
 
-private theorem integrable_exp_neg_half_abs :
+/-- The two-sided exponential majorant for Hölder arc remainders is integrable. -/
+theorem integrable_exp_neg_half_abs :
     Integrable (fun s : ℝ ↦ Real.exp (-(1 / 2) * |s|)) := by
   have hn : IntegrableOn (fun s : ℝ ↦ Real.exp (-(1 / 2) * |s|)) (Iic 0) := by
     refine (integrableOn_exp_mul_Iic (by norm_num : (0 : ℝ) < 1 / 2) 0).congr_fun

@@ -74,10 +74,10 @@ weights and local versus global regularity.
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
-   `dd_character_virial_limit` is assembled without its own `sorry`, from seven
+   `dd_character_virial_limit` is assembled without its own `sorry`, from six
    admissions: local H² smooth approximation, weighted first identity, quotient
-   equation, gradient traces, value finite part, gradient-energy integrability
-   and the leading period value asymptotic.
+   equation, gradient traces, gradient-energy integrability and the leading
+   period value asymptotic.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
@@ -132,11 +132,14 @@ weights and local versus global regularity.
    bound for B cancels the quarter graph's time Jacobian and gives dominated
    convergence on a fixed finite interval. `OddOddCurrentRemainder.lean` proves
    the integrated remainder by a uniform `64ε` coefficient error and the coarse
-   logarithmic period bound. The scalar value finite part remains open; it is
-   the only admission below the renormalized ground-current limit.
+   logarithmic period bound. `OddOddValueFinitePart.lean` proves the scalar
+   value finite part: shared squared-value Hölder continuity controls exponential
+   endpoint tails and the integrated orbit error. Arc-remainder integrability
+   has zero admissions; the value finite part and ground-current limit reach
+   only `orbitPeriod_leading_asymptotic`, already shared by the bulk finite part.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The seven transitive Picone inputs remain proof work.
+   analytic admissions remain. The six transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the
