@@ -1,12 +1,13 @@
 import NoEmbeddedEigenvalues.OddOddForms
 
 /-!
-# Forcing integrability for the odd–odd bulk
+# Forcing and weighted mass integrability for the odd–odd bulk
 
 The weighted forcing estimate is independent of the quotient, its parity and
 the equation. The torus-vorticity interface is a specialization after restricting
 the weighted L² hypothesis to the cell. Ordinary stream-level exhaustion
-passes any integrable bulk density to the full cell integral.
+passes any integrable bulk density to the full cell integral. Diagonal coordinates
+factor the squared dipole integral into two cosine-square moments.
 -/
 
 noncomputable section
@@ -197,6 +198,36 @@ theorem dd_vorticityDensity_integrable (ν : L2)
   exact dd_forcing_density_integrable (hν.mono_measure
     (Measure.restrict_mono (fun _ hp ↦
       closure_cellSquare_subset_cellNeighbourhood (subset_closure hp)) le_rfl))
+
+/-- The integral of the squared dipole over the lifted positive cell. -/
+theorem integral_cellSquare_ddWeight :
+    (∫ p in cellSquare, ddWeight p) = 2 * Real.pi ^ 2 := by
+  have hcos : (∫ x in Ioo (-Real.pi / 2) (Real.pi / 2), Real.cos x ^ 2) = Real.pi / 2 := by
+    rw [← integral_Ioc_eq_integral_Ioo,
+      ← intervalIntegral.integral_of_le (by linarith [Real.pi_pos]), integral_cos_sq]
+    simp only [neg_div, Real.cos_neg, Real.sin_neg, Real.cos_pi_div_two,
+      Real.sin_pi_div_two, zero_mul, sub_zero]
+    ring
+  rw [← integral_indicator isOpen_cellSquare.measurableSet,
+    integral_eq_two_smul_integral_diagInv]
+  have heq : (fun q ↦ cellSquare.indicator ddWeight (diagInv q)) =
+      (Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo (-Real.pi / 2) (Real.pi / 2)).indicator
+        (fun q ↦ 4 * (Real.cos q.1 ^ 2 * Real.cos q.2 ^ 2)) := by
+    funext q
+    have hq : diagInv q ∈ cellSquare ↔
+        q ∈ Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo (-Real.pi / 2) (Real.pi / 2) := by
+      simp only [cellSquare, mem_ofPred_eq, diagCoord_diagInv, abs_lt, mem_prod,
+        mem_Ioo, neg_div]
+    by_cases hp : diagInv q ∈ cellSquare
+    · rw [indicator_of_mem hp, indicator_of_mem (hq.mp hp), ddWeight,
+        dipoleLift_eq_diag, diagCoord_diagInv]
+      ring
+    · rw [indicator_of_notMem hp, indicator_of_notMem (mt hq.mpr hp)]
+  rw [heq, integral_indicator (measurableSet_Ioo.prod measurableSet_Ioo),
+    integral_const_mul, Measure.volume_eq_prod,
+    setIntegral_prod_mul (fun x : ℝ ↦ Real.cos x ^ 2) (fun x : ℝ ↦ Real.cos x ^ 2), hcos]
+  simp only [smul_eq_mul]
+  ring
 
 /-- Integrable functions converge under exhaustion by the actual stream levels. This is
     dominated convergence and does not assume any sign of the integrand. -/

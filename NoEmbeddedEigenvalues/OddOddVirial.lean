@@ -2906,17 +2906,6 @@ theorem dd_quotient_gradient_traces {u dx dy : L2} (hu : MemSobolev 2 u)
         (𝓝[Ioi 0 \ N] 0) (𝓝 0) := by
   sorry
 
-/-- Exact truncated coefficient integral and its scalar finite part. -/
-theorem dd_finite_part :
-    (∀ ε ∈ Ioo (0 : ℝ) 2,
-      (∫ p in ddTruncatedCell ε, ddF p) =
-        (8 - ε ^ 3) / 3 * orbitPeriod (ε / 2) -
-          ∫ p in ddTruncatedCell ε, ddWeight p) ∧
-    Tendsto (fun ε ↦ (∫ p in ddTruncatedCell ε, ddF p) -
-      (32 / 3 : ℝ) * Real.log (1 / ε)) (𝓝[>] 0)
-      (𝓝 ((32 / 3 : ℝ) * Real.log 8 - 2 * Real.pi ^ 2)) := by
-  sorry
-
 /-- On the positive cell the raw stream quotient is exactly the continuous supplied
     quotient. No assertion is made on the separatrix. -/
 theorem DDQuotientData.raw_stream_eq {lam : ℝ} {ω : L2}

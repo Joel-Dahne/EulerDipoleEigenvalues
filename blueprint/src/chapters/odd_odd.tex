@@ -774,6 +774,74 @@ regularity, which is supplied separately by
 Proposition~\ref{prop:dd-stream-quotient-h2}.
 \end{remark}
 
+\begin{lemma}[Squared dipole integral on the cell]
+\label{lem:dd-weight-integral}
+\uses{def:dd-virial-field, def:cells}
+\lean{NoEmbeddedEigenvalues.integral_cellSquare_ddWeight}
+\leanok
+The squared dipole has the cell integral $\int_\Cell s^2=2\pi^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:diagonal-calculus, lem:separatrix-lines}
+\leanok
+In diagonal coordinates $s^2\,dx\,dy=8\cos^2a\cos^2b\,da\,db$.
+Each cosine-square integral over $(-\pi/2,\pi/2)$ is $\pi/2$.
+\end{proof}
+
+\begin{lemma}[Truncated bulk coefficient integral]
+\label{lem:dd-coefficient-integral}
+\uses{def:dd-virial-field, def:period, def:dd-picone-truncations}
+\lean{NoEmbeddedEigenvalues.ddF_integrable_truncation,
+ NoEmbeddedEigenvalues.ddF_integral_truncation}
+\leanok
+For $0<\epsilon<2$, $F$ is integrable on $C_\epsilon$ and
+\[
+ \int_{C_\epsilon}F
+ =\frac{8-\epsilon^3}{3}S(\epsilon/2)-\int_{C_\epsilon}s^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-annulus, lem:normal-field-cutoff-algebra,
+ lem:normal-coeff-bound, lem:square-integral-partial, lem:cell-periodic-integral,
+ lem:annular-from-cutoff, lem:period-orbit, lem:period-basic, lem:period-regularity}
+\leanok
+Put $\beta(s)=(s^2+2s+4)/3$ and $K(s)=(8-s^3)/3$.
+Then $F=\beta f$, where $f$ is the unweighted normal coefficient.
+The positive-truncation coefficient bounds give integrability.
+For a smooth level cutoff $\chi$ supported inside $(0,2)$, the cutoff
+normal-field algebra gives
+\[
+ \Div(\chi(s)\beta(s)W_{\rm normal})
+ =\chi(s)(F+s^2)-\chi'(s)K(s).
+\]
+This is a smooth periodic divergence, zero where $s\le0$, so its cell
+integral vanishes. Apply annular extraction with $J=F+s^2$ and $B=K(s)$:
+outside one null set of levels,
+\[
+ \int_{\{\epsilon<s<b\}}(F+s^2)
+ =K(\epsilon)S(\epsilon/2)-K(b)S(b/2).
+\]
+As $b\to2$, the period is bounded by the elementary inverse-level bound,
+and $K(b)\to0$. Dominated convergence on a fixed positive truncation removes
+the center along good levels.
+
+Finally every level set $\{s=c\}$ is null: at fixed $x$, the equation
+$\cos y=c-\cos x$ has a countable solution set, so Fubini applies.
+Dominated convergence therefore makes the truncated bulk integral continuous
+at every positive level. The scalar period flux is continuous too; their
+almost-everywhere equality extends to all $0<\epsilon<2$.
+\end{proof}
+
+\begin{remark}[Digest note: scalar divergence without quotient analysis]
+Multiplying the unweighted normal field by the polynomial $\beta$ supplies
+the scalar coefficient identity directly. The weighted Green identity and
+the quotient equation are unnecessary. Annular extraction initially gives
+good levels only; continuity, not a stronger trace assertion, restores every
+positive level.
+\end{remark}
+
 \begin{lemma}[Finite part of the bulk weight]
 \label{lem:dd-finite-part}
 \uses{def:dd-virial-field, def:period}
@@ -790,20 +858,22 @@ $\tfrac83$ per corner.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-virial-algebra, lem:period-orbit, lem:period-integral,
- lem:period-leading-asymptotic}
-The constant defect gives $F=\Div(\mu W)-\mu$. Integrate over
-$\{\epsilon<s<b\}$ and use the outward normal $-n$ on its lower boundary:
-\[
- \int_{\{\epsilon<s<b\}}F
- =\frac{8-\epsilon^3}3T(\epsilon)-\frac{8-b^3}3T(b)
-   -\int_{\{\epsilon<s<b\}}s^2.
-\]
-As $b\to2$, $T(b)$ is bounded and the upper boundary term vanishes.
-Finally $\int_\Cell s^2=2\pi^2$ (half the torus integral by reflection), and
-Lemma~\ref{lem:period-leading-asymptotic} gives
-$T(\epsilon)=4\log(8/\epsilon)+o(1)$. Rotation symmetry distributes the
-logarithmic coefficient equally among the four corners.
+\uses{lem:dd-coefficient-integral, lem:dd-weight-integral,
+ lem:dd-truncation-exhaustion, lem:period-leading-asymptotic}
+\leanok
+Put $K(\epsilon)=(8-\epsilon^3)/3$ and $T(\epsilon)=S(\epsilon/2)$.
+The exact coefficient integral gives
+\begin{align*}
+ \int_{C_\epsilon}F-\tfrac{32}{3}\log(1/\epsilon)
+ ={}&K(\epsilon)\bigl(T(\epsilon)-4\log(8/\epsilon)\bigr)\\
+ &-\tfrac43\epsilon^3\log(8/\epsilon)
+   +\tfrac{32}{3}\log8-\int_{C_\epsilon}s^2.
+\end{align*}
+The first term tends to zero by the leading period asymptotic and
+$K(\epsilon)\to8/3$; the second tends to zero by logarithmic damping.
+Ordinary exhaustion and Lemma~\ref{lem:dd-weight-integral} give
+$\int_{C_\epsilon}s^2\to2\pi^2$. Rotation distributes the logarithmic
+coefficient equally among the four corners.
 \end{proof}
 
 \begin{definition}[Value renormalization data]
@@ -1779,10 +1849,10 @@ $|z_x|^2+|z_y|^2$ and $|z-m_z|^2$ are integrable with respect to $\rho$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cell-square, lem:diagonal-calculus, lem:dipole-identities}
+\uses{lem:dd-weight-integral}
 \leanok
-In diagonal coordinates, $d\rho=8\cos^2a\cos^2b\,da\,db$ on
-$(-\pi/2,\pi/2)^2$, giving $Z=2\pi^2$. Cauchy--Schwarz against the
+Lemma~\ref{lem:dd-weight-integral} gives $Z=2\pi^2$.
+Cauchy--Schwarz against the
 finite measure gives value integrability; the other assertions follow
 from the specified weighted $L^2$ bounds.
 \end{proof}

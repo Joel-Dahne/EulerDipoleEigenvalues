@@ -1,5 +1,4 @@
-import NoEmbeddedEigenvalues.OddOddVirial
-import NoEmbeddedEigenvalues.OddOddBulkIntegrability
+import NoEmbeddedEigenvalues.OddOddFinitePart
 import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 
 /-!
@@ -306,22 +305,9 @@ private theorem potential_remainder_integrable {u : L2} (hu : MemSobolev 2 u) :
        _ ≤ K * (16 * π ^ 4) *
            ∑ Q ∈ cellCorners, ‖p - Q‖ ^ (-(3 / 2 : ℝ)) := by gcongr
 
-private theorem coefficient_integrable_truncation {ε : ℝ} (hε : 0 < ε) :
-    IntegrableOn ddF (ddTruncatedCell ε) := by
-  have hb : Bornology.IsBounded (ddTruncatedCell ε) :=
-    isBounded_cellNeighbourhood.subset fun _ hp ↦
-      closure_cellSquare_subset_cellNeighbourhood (subset_closure hp.1)
-  have : IsFiniteMeasure (volume.restrict (ddTruncatedCell ε)) :=
-    isFiniteMeasure_restrict.mpr hb.measure_lt_top.ne
-  have h := ddVirialDensity_integrable hε (u := 0) (e := fun _ ↦ (1 : ℂ))
-    (ux := 0) (uy := 0) MemLp.zero (memLp_const _) MemLp.zero MemLp.zero
-  apply h.congr_fun _ (isOpen_ddTruncatedCell ε).measurableSet
-  intro p _
-  simp [ddVirialDensity, ddMatrixForm, normalDeriv, tangentDeriv]
-
 private theorem odd_coefficient_integrable_truncation {ε : ℝ} (hε : 0 < ε) :
     IntegrableOn (fun p ↦ ddF p * (cos p.1 - cos p.2)) (ddTruncatedCell ε) := by
-  apply (coefficient_integrable_truncation hε).mul_bdd
+  apply (ddF_integrable_truncation hε).mul_bdd
     (by fun_prop : Measurable (fun p : ℝ × ℝ ↦ cos p.1 - cos p.2)).aestronglyMeasurable
   exact Eventually.of_forall fun p ↦ by
     simpa only [Real.norm_eq_abs, show (1 + 1 : ℝ) = 2 by norm_num] using
@@ -334,7 +320,7 @@ private theorem potential_mass_decomposition {u : L2} (hu : MemSobolev 2 u)
         massMean u * ∫ p in ddTruncatedCell ε, ddF p := by
   have hR := (potential_remainder_integrable hu).mono_set
     (show ddTruncatedCell ε ⊆ cellSquare from fun _ hp ↦ hp.1)
-  have hF := (coefficient_integrable_truncation hε).const_mul (massMean u)
+  have hF := (ddF_integrable_truncation hε).const_mul (massMean u)
   have hδ := (odd_coefficient_integrable_truncation hε).const_mul (massSlope u)
   have hid : (fun p ↦ ddF p * valueMass u p) =
       ((fun p ↦ ddF p * valueRemainder u p) + (fun p ↦ massMean u * ddF p)) +

@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.OddOddVirial
+import NoEmbeddedEigenvalues.OddOddBulkIntegrability
 import NoEmbeddedEigenvalues.PolynomialInequalities
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
@@ -97,35 +98,9 @@ theorem ddCellMeasure_mass : ddCellMeasure univ = ENNReal.ofReal (2 * Real.pi ^ 
         closure_cellSquare_subset_cellNeighbourhood (subset_closure hp)
     have hc : Continuous ddWeight := by unfold ddWeight dipoleLift; fun_prop
     exact (hc.continuousOn.integrableOn_compact hb.isCompact_closure).mono_set subset_closure
-  have hcos : (∫ x in Ioo (-Real.pi / 2) (Real.pi / 2), Real.cos x ^ 2) = Real.pi / 2 := by
-    rw [← integral_Ioc_eq_integral_Ioo,
-      ← intervalIntegral.integral_of_le (by linarith [Real.pi_pos]), integral_cos_sq]
-    simp only [neg_div, Real.cos_neg, Real.sin_neg, Real.cos_pi_div_two,
-      Real.sin_pi_div_two, zero_mul, sub_zero]
-    ring
-  have hd : (∫ p in cellSquare, ddWeight p) = 2 * Real.pi ^ 2 := by
-    rw [← integral_indicator isOpen_cellSquare.measurableSet,
-      integral_eq_two_smul_integral_diagInv]
-    have heq : (fun q ↦ cellSquare.indicator ddWeight (diagInv q)) =
-        (Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo (-Real.pi / 2) (Real.pi / 2)).indicator
-          (fun q ↦ 4 * (Real.cos q.1 ^ 2 * Real.cos q.2 ^ 2)) := by
-      funext q
-      have hq : diagInv q ∈ cellSquare ↔
-          q ∈ Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo (-Real.pi / 2) (Real.pi / 2) := by
-        simp only [cellSquare, mem_ofPred_eq, diagCoord_diagInv, abs_lt, mem_prod,
-          mem_Ioo, neg_div]
-      by_cases hp : diagInv q ∈ cellSquare
-      · rw [indicator_of_mem hp, indicator_of_mem (hq.mp hp), ddWeight,
-          dipoleLift_eq_diag, diagCoord_diagInv]
-        ring
-      · rw [indicator_of_notMem hp, indicator_of_notMem (mt hq.mpr hp)]
-    rw [heq, integral_indicator (measurableSet_Ioo.prod measurableSet_Ioo),
-      integral_const_mul, Measure.volume_eq_prod,
-      setIntegral_prod_mul (fun x : ℝ ↦ Real.cos x ^ 2) (fun x : ℝ ↦ Real.cos x ^ 2), hcos]
-    simp only [smul_eq_mul]
-    ring
   rw [ddCellMeasure, withDensity_apply _ MeasurableSet.univ, setLIntegral_univ,
-    ← ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall fun p ↦ sq_nonneg _), hd]
+    ← ofReal_integral_eq_lintegral_ofReal hi
+      (Filter.Eventually.of_forall fun p ↦ sq_nonneg _), integral_cellSquare_ddWeight]
 
 /-- All integrals used in the weighted form and its variance are genuine finite
     integrals on the stated weak domain. -/

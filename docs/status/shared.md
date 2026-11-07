@@ -77,7 +77,7 @@ weights and local versus global regularity.
    `dd_character_virial_limit` is assembled without its own `sorry`, from seven
    admissions: local H² smooth approximation, weighted first identity, quotient
    equation, gradient traces, value finite part, gradient-energy integrability
-   and scalar coefficient finite part.
+   and the leading period value asymptotic.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
@@ -109,10 +109,13 @@ weights and local versus global regularity.
    asymptotic in `Period.lean` remains separate from sharp remainders.
    `OddOddRenormalizedBulk.lean` assembles the unchanged full bulk limit by
    ordinary exhaustion, exposing two admissions: the existing gradient-energy
-   estimate and the scalar coefficient finite part.
-   `OddOddPotentialMass.lean` proves the weighted value-mass finite part relative
-   only to that scalar admission: two-saddle trigonometric interpolation and
-   coordinate exchange reduce it to an integrable Hölder remainder.
+   estimate and `orbitPeriod_leading_asymptotic`.
+   `OddOddFinitePart.lean` proves the exact scalar coefficient integral without
+   admissions, and its finite part relative only to the leading period
+   asymptotic. That input is still admitted in `Period.lean`; sharp remainders
+   and the elliptic identity are not needed.
+   `OddOddPotentialMass.lean` reaches that same period admission:
+   two-saddle interpolation and coordinate exchange leave an integrable Hölder remainder.
    Generic weighted forcing integrability and its vorticity specialization are admission-free in
    `OddOddBulkIntegrability.lean`: the explicit bound `0 ≤ Fd² ≤ 16π²` supplies
    a bounded multiplier of the integrable weighted square.

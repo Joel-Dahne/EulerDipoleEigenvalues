@@ -174,11 +174,20 @@ Picone, the B-weighted trace or the integrated remainder.
 The renormalized bulk limit (`lem:dd-renormalized-bulk`) is assembled in
 [OddOddRenormalizedBulk.lean](../../NoEmbeddedEigenvalues/OddOddRenormalizedBulk.lean),
 with its original statement unchanged. Its two transitive admissions are the
-both-gradient estimate (`lem:dd-gradient-energies-integrable`) and the scalar
-coefficient finite part (`lem:dd-finite-part`).
+both-gradient estimate (`lem:dd-gradient-energies-integrable`) and the leading
+period asymptotic (`lem:period-leading-asymptotic`).
+[OddOddFinitePart.lean](../../NoEmbeddedEigenvalues/OddOddFinitePart.lean)
+proves the scalar coefficient finite part (`lem:dd-finite-part`), with its
+statement unchanged and only `orbitPeriod_leading_asymptotic` admitted beneath it.
+The exact positive-truncation identity (`lem:dd-coefficient-integral`) has zero
+admissions: a periodic normal-field divergence, annular extraction, center
+removal and continuity give every positive level. The squared-dipole cell
+integral (`lem:dd-weight-integral`) is also admission-free and shared with the
+weighted measure normalization. The leading asymptotic remains admitted in
+`Period.lean`; its Blueprint derivation is not a Lean proof.
 [OddOddPotentialMass.lean](../../NoEmbeddedEigenvalues/OddOddPotentialMass.lean)
 proves the weighted value-mass finite part (`lem:dd-potential-mass-finite-part`),
-with its statement unchanged and only the scalar coefficient admission.
+with its statement unchanged and the same single period admission.
 A trigonometric interpolant matches the two torus saddle values; coordinate
 exchange cancels its nonconstant weighted integral. The Hölder remainder is
 dominated by a sum of integrable corner-distance powers of exponent -3/2.
