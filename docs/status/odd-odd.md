@@ -25,9 +25,14 @@ Proof work is now outside the odd–odd chapter:
   is assembled from stream H², Hardy–Poisson vorticity division, periodic
   quotient transport and the periodic first transport gain. Stream H²
   (`prop:dd-stream-quotient-h2`) is itself assembled from local analytic inputs;
-  those proofs and the other three stages remain admitted. No stronger corner
-  hypothesis is needed. The stronger bundled quotient-domain proposition is
-  downstream and off the exclusion route.
+  those proofs, Hardy–Poisson division and the periodic first gain remain
+  admitted. The weighted third-stream step (`lem:dd-weighted-third-stream`)
+  now has an assembly proof from the saddle jet, weighted gradient and two
+  explicit outside-section elliptic/Taylor corollaries; see
+  [shared status](shared.md#next-session) for that frontier. Periodic quotient transport is admission-free: invariant regularized
+  reciprocals and C¹ testing give division directly on the torus.
+  No stronger corner hypothesis is needed. The stronger bundled
+  quotient-domain proposition is downstream and off the exclusion route.
 - **Picone/virial limits:** the remaining inputs are Local H² smooth
   approximation (`lem:local-h2-smooth-approximation`) and Leading period
   asymptotic (`lem:period-leading-asymptotic`). The finite parts need only the

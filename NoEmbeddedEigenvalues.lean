@@ -72,6 +72,9 @@ import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic
 import NoEmbeddedEigenvalues.Regularity.OddOddRegularity
 import NoEmbeddedEigenvalues.LocalJets
+import NoEmbeddedEigenvalues.WeakJetOperations
+import NoEmbeddedEigenvalues.WeightedElliptic
+import NoEmbeddedEigenvalues.SaddleTaylorJet
 import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights

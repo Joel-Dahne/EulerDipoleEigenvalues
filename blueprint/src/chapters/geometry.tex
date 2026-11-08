@@ -2155,6 +2155,42 @@ bounds, including their vanishing jets at zero. A value-only big-O bound
 is not being differentiated.
 \end{proof}
 
+\begin{lemma}[Harmonicity of the normalized quadratic]
+\label{lem:saddle-quadratic-harmonic}
+\uses{def:saddle-quadratic}
+\lean{NoEmbeddedEigenvalues.saddleQuadratic_harmonic}
+\leanok
+For every center $P\in\R^2$ and coefficient $a\in\C$,
+$\Delta Q_{P,a}=0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The two pure second derivatives are $-a\cos P_x$ and $a\cos P_x$.
+\end{proof}
+
+\begin{lemma}[Cartesian saddle Taylor correction]
+\label{lem:saddle-taylor-correction}
+\uses{def:saddle-quadratic, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.saddle_taylor_correction}
+\leanok
+For each saddle $P$ and $a\in\C$, the smooth function
+$T=Q_{P,a}-a\Psi$ has a specified third weak jet on some disk about $P$,
+with $D^kT/r^{4-k}\in L^2$ for every $0\le k\le3$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-normal-form-derivatives, lem:saddle-quadratic-chart,
+ lem:saddle-normal-form, lem:weak-derivative-classical}
+In the orthonormal chart, $T\circ\Xi_P=a(uv-\Psi\circ\Xi_P)$.
+The differentiated Taylor estimates bound its order-$k$ derivatives
+by $Cr^{4-k}$. Transform the derivative indices by the constant
+orthogonal matrix to obtain the Cartesian estimates.
+Classical derivatives are weak derivatives. After division by their
+radius powers the entries are bounded off the null center, hence
+square integrable on a finite disk.
+\end{proof}
+
 \begin{lemma}[Odd--odd parity in saddle coordinates]
 \label{lem:saddle-chart-parity}
 \uses{def:saddle-ortho-chart, def:sectors, def:torus-of-lift}

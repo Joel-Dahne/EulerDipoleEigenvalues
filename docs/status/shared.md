@@ -30,8 +30,9 @@ The even–even route is admission-free. Available foundations include:
   mollification, H¹ commutator and the annular L² virial.
 - Eigenfunction transport, resonant vanishing, Melnikov, canonical profiles
   and pairing limits. The generic periodic-to-continuous transport-pair bridge
-  is admission-free. The odd–odd stream-H² quotient is assembled from nine
-  existing local analytic inputs; the other three quotient stages remain admitted.
+  is admission-free. The odd–odd stream-H² quotient is assembled from
+  explicit local analytic inputs; Hardy–Poisson division and the periodic first
+  gain remain admitted. Periodic quotient transport is admission-free.
 - Interval H¹ and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
@@ -58,10 +59,22 @@ weights and local versus global regularity.
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
    exclusion is now assembled. Quotient existence is assembled in
-   `Regularity/OddOddQuotient.lean`: its stream-H² stage now expands to nine existing
-   local analytic admissions; its other three stages remain outer admissions.
-   `Regularity/QuotientLocal.lean` and `Regularity/OddOddRegularity.lean` state the
-   next local/sector layer with `sorry`. The scalar/geometry batch is now
+   `Regularity/OddOddQuotient.lean`: its stream-H² stage expands to explicit
+   local analytic admissions; Hardy–Poisson division and the periodic first gain
+   remain outer admissions. Periodic quotient transport is proved directly by
+   invariant regularized reciprocals and C¹ torus testing.
+   The next local/sector layer is in `Regularity/QuotientLocal.lean` and
+   `Regularity/OddOddRegularity.lean`. The weighted third-stream step
+   (`lem:dd-weighted-third-stream`) is assembled from the saddle jet and
+   weighted gradient: the Hessian trace supplies the weighted vorticity input,
+   without ordinary separatrix H³ or a fixed-cell localization bridge.
+   Its generic weighted elliptic gain (`lem:elliptic-weighted-third`) and
+   Cartesian Taylor correction (`lem:saddle-taylor-correction`) are explicit
+   outside-section admissions. Next in-section proof work is the weighted
+   gradient and its logarithmic prerequisites, or the saddle estimates.
+   The target's transitive audit reaches these two in-section inputs and four
+   outside-section inputs (the two corollaries, stream weak jet and saddle
+   factorization). The scalar/geometry batch is now
    stated in `ScalarDivision.lean` and `Regularity/SaddleNormalForm.lean`; cylinder
    inversion and weighted transport/gluing are stated in `Regularity/CylinderInverse.lean`,
    `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,
@@ -215,10 +228,11 @@ prerequisites remain outside this directory; see the
   quotient-domain proposition is downstream and off the exclusion route.
   Invariant-cutoff testing avoids global transport-operator closedness.
   The quotient and representative-change assemblies are proved in Lean.
-  Stream-H² now expands to nine existing local analytic admissions;
-  Hardy–Poisson, weak invariant division and the periodic first gain remain
-  the other three outer quotient admissions. The periodic first gain explicitly
-  includes cell covering beyond the fixed neighbourhood's boundary saddles.
+  Stream-H² expands to explicit local analytic admissions;
+  Hardy–Poisson division and the periodic first gain remain the other two outer
+  quotient admissions. Periodic quotient transport is proved directly on the torus.
+  The periodic first gain includes
+  cell covering beyond the fixed neighbourhood's boundary saddles.
   The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace

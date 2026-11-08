@@ -132,9 +132,12 @@ can be added here as they are formalized.
 - `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and numerator interfaces,
   using one fixed canonical stream jet.
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
-  sits above the ordinary and logarithmic layers without circular imports.
-- `Regularity/QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic,
-  invariant division and first/second transport-gain interfaces.
+  the third-jet assembly uses the saddle jet and weighted gradient, with the
+  generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in
+  `SaddleTaylorJet.lean`. `WeakJetOperations.lean` supplies jet restriction,
+  linearity, uniqueness and classical-to-weak conversion.
+- `Regularity/QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic
+  and first/second transport-gain interfaces.
 - `Regularity/StreamQuotientAssembly.lean`: saddle division/removal, regular-edge chart
   covering, local smooth division, gluing and reconstruction of the H² stream
   quotient from the lower local analytic inputs.

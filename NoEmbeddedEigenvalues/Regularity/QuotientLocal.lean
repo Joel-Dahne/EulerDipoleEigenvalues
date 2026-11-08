@@ -108,16 +108,6 @@ theorem elliptic_dyadic : ∃ C : ℝ, 0 < C ∧ ∀ (c : ℝ × ℝ) (r : ℝ),
           r⁻¹ ^ 2 * radialJetEnergy 0 0 B c G + r⁻¹ ^ 6 * radialJetEnergy 0 0 B c D) := by
   sorry
 
-/-- Local weak invariant division (`lem:dd-quotient-transport`). -/
-theorem dd_quotient_transport_local {U : Set (ℝ × ℝ)} (hU : IsOpen U) {lam : ℝ}
-    {ω ψ ν φ : ℝ × ℝ → ℂ}
-    (h : HasWeakL0On U (fun p ↦ ω p + ψ p) (fun p ↦ Complex.I * (lam * ω p)))
-    (hν : MemSobolevLocOn 0 U ν) (hφ : MemSobolevLocOn 0 U φ)
-    (hψ : ∀ᵐ p ∂(volume.restrict U), ψ p = (dipoleLift p : ℂ) * φ p)
-    (hω : ∀ᵐ p ∂(volume.restrict U), ω p = (dipoleLift p : ℂ) * ν p) :
-    HasWeakL0On U (fun p ↦ ν p + φ p) (fun p ↦ Complex.I * (lam * ν p)) := by
-  sorry
-
 /-- First transport gain on the positive cell (`lem:transport-first-gain`). -/
 theorem transport_first_gain {lam : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
     (hp : IsTransportPair lam U v f) (hb : Bornology.IsBounded U)

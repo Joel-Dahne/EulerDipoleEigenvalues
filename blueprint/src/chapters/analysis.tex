@@ -1617,6 +1617,45 @@ Divide by $r^4$ to get exactly the powers $1,r^{-2},r^{-6}$ in the
 statement, with the same constant for every centre and scale.
 \end{proof}
 
+\begin{lemma}[Weighted third-order elliptic gain]
+\label{lem:elliptic-weighted-third}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.elliptic_weighted_third}
+\leanok
+On a disk $D_\rho(c)$ let $D$ be a specified second weak jet of $u$, with
+$D^ku/r^{4-k}\in L^2$ for $0\le k\le2$, where $r=|p-c|$.
+Suppose its trace is $F$ a.e., and $F$ has specified weak first
+derivatives $G_j$ with $G_j/r\in L^2$.
+There are $0<\sigma\le\rho$ and a specified third weak jet $E$ of $u$
+on $D_\sigma(c)$ such that $E_w=D_w$ for $|w|\le2$ and
+$D^3u/r\in L^2(D_\sigma(c))$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-local, lem:elliptic-dyadic, lem:sobolev-weak-jets,
+ lem:weak-derivative-unique}
+The trace identity and the weighted Hessian give $F/r^2\in L^2$.
+All radius powers are bounded on the disk, so the assumptions also give
+$u\in H^2$ and $F\in H^1$ there. Local elliptic regularity supplies a
+third jet on a smaller disk; uniqueness allows its entries through
+order two to be the prescribed representatives $D_w$.
+
+Choose $\sigma<\rho/4$. Multiply the estimate of
+Lemma~\ref{lem:elliptic-dyadic} on each dyadic annulus by its radius
+to the power $-2$. Finite overlap and comparability of the radius on
+each enlarged annulus give
+\[
+ \int_{D_\sigma(c)}\frac{|D^3u|^2}{r^2}
+ \le C\int_{D_\rho(c)}
+ \left(\frac{|G|^2}{r^2}+\frac{|F|^2}{r^4}
+                         +\frac{|u|^2}{r^8}\right)<\infty.
+\]
+The omitted center and dyadic circles are null.
+The third entries are locally $L^2$ before summing; the sum proves
+their weighted integrability, not merely a bound on a possibly
+default-valued Bochner integral.
+\end{proof}
+
 \begin{lemma}[One-coordinate division of an odd H3 function]
 \label{lem:odd-h3-division}
 \uses{def:sobolev-local, def:local-weak-jets}
