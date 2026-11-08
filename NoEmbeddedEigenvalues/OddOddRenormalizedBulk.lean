@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.OddOddPotentialMass
+import NoEmbeddedEigenvalues.OddOddGradientIntegrability
 
 /-!
 # Assembly of the renormalized odd–odd bulk limit

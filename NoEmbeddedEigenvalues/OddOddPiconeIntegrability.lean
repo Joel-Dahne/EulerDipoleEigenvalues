@@ -123,10 +123,11 @@ theorem ddGroundCurrent_intervalIntegrable (φ : L2) {ε : ℝ}
     (isOpenQuotientMap_torusProj.continuous.comp ho)).norm.pow 2)).intervalIntegrable _ _
 
 /-- The logarithmic coefficient occurring in the first derivatives of the ground state. -/
-private def groundLogCoeff (r : ℝ) : ℝ :=
+def groundLogCoeff (r : ℝ) : ℝ :=
   r * (2 * Real.log (r / 2) + 1) / 128
 
-private theorem groundLogCoeff_bound {r : ℝ} (hr : 0 ≤ r) (hr2 : r ≤ 2) :
+/-- Uniform bound for the logarithmic coefficient on the full dipole-gradient range. -/
+theorem groundLogCoeff_bound {r : ℝ} (hr : 0 ≤ r) (hr2 : r ≤ 2) :
     |groundLogCoeff r| ≤ 1 / 8 := by
   rcases eq_or_lt_of_le hr with hz | hp
   · simp [← hz, groundLogCoeff]

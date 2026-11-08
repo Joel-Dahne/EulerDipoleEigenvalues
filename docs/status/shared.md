@@ -74,9 +74,9 @@ weights and local versus global regularity.
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
-   `dd_character_virial_limit` is assembled without its own `sorry`, from five
-   admissions: local H² smooth approximation, quotient equation, gradient traces,
-   gradient-energy integrability and the leading period value asymptotic.
+   `dd_character_virial_limit` is assembled without its own `sorry`, from four
+   admissions: local H² smooth approximation, quotient equation, gradient traces
+   and the leading period value asymptotic.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
@@ -108,8 +108,12 @@ weights and local versus global regularity.
    These admitted inputs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
    `OddOddRenormalizedBulk.lean` assembles the unchanged full bulk limit by
-   ordinary exhaustion, exposing two admissions: the existing gradient-energy
-   estimate and `orbitPeriod_leading_asymptotic`.
+   ordinary exhaustion, reaching only `orbitPeriod_leading_asymptotic`.
+   `OddOddGradientIntegrability.lean` proves both gradient energies without
+   admissions. `EvenGradientHardy.lean` supplies diagonal cosine division using
+   ACL zero traces and primitive Hardy averaging. Bounded normalized ground
+   derivatives preserve this class under the Picone quotient rule, with no
+   bounded-value or density assumption.
    `OddOddFinitePart.lean` proves the exact scalar coefficient integral without
    admissions, and its finite part relative only to the leading period
    asymptotic. That input is still admitted in `Period.lean`; sharp remainders
@@ -139,7 +143,7 @@ weights and local versus global regularity.
    only `orbitPeriod_leading_asymptotic`, already shared by the bulk finite part.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The five transitive Picone inputs remain proof work.
+   analytic admissions remain. The four transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the

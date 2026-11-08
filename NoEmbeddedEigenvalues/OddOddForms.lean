@@ -372,12 +372,4 @@ def ddGroundCurrent (φ : L2) (ε : ℝ) : ℝ :=
 def ddArcCorrection (φ : L2) (k : Fin 4) (t : ℝ) : ℝ :=
   ddBoundaryB (2 / Real.cosh t ^ 2) * ‖ddArcTrace φ k t‖ ^ 2
 
-/-- The even boundary Hardy estimate controls the original and divided gradient energies. -/
-theorem dd_gradient_energies_integrable {φ dx dy : L2} (hφ : MemSobolev 2 φ)
-    (hs : InSector true true φ) (hdx : HasFourierPartial 0 φ dx)
-    (hdy : HasFourierPartial 1 φ dy) :
-    IntegrableOn (fun p ↦ ddMatrixForm p (liftL2 dx p) (liftL2 dy p)) cellSquare ∧
-      IntegrableOn (ddPiconeGradient φ dx dy) cellSquare := by
-  sorry
-
 end NoEmbeddedEigenvalues

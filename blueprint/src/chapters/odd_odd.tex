@@ -1378,6 +1378,40 @@ its cell subset, and apply the supplied-forcing estimate to the lifted
 vorticity. No separate unweighted estimate is needed.
 \end{proof}
 
+\begin{lemma}[Diagonal domination of the gradient form]
+\label{lem:dd-diagonal-matrix-bound}
+\uses{def:dd-virial-field, def:normal-tangent, def:cells}
+\lean{NoEmbeddedEigenvalues.ddMatrixForm_diagonal_bound,
+ NoEmbeddedEigenvalues.ddMatrixForm_integrable_of_diagonal}
+\leanok
+For $p$ in the cell with $r(p)\ne0$ and arbitrary complex $v_x,v_y$, put
+$d_a=(v_x+v_y)/\cos a$ and $d_b=(v_x-v_y)/\cos b$. Then
+\[
+ |\langle Mv,v\rangle|
+ \le64\bigl(|v_x|^2+|v_y|^2+|d_a|^2+|d_b|^2\bigr).
+\]
+Consequently the matrix form is absolutely integrable whenever
+$v_x,v_y,d_a,d_b\in L^2$ on the cell.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities, lem:separatrix-lines,
+ lem:normal-tangent-frame, lem:diagonal-calculus}
+\leanok
+The scalar coefficient bounds are $|C_0|\le4$ and $|A_0|\le8+32/s$.
+For $s\ge1$ use the orthonormal normal--tangent frame.
+For $0<s<1$, the identity
+\[
+ \sin x\,v_x+\sin y\,v_y
+ =\frac s2(\sin a\,d_a+\sin b\,d_b)
+\]
+and $r\ge s(2-s)\ge s$ give
+$|v_n|^2\le(s/2)(|d_a|^2+|d_b|^2)$.
+The normal contribution is thus at most $20(|d_a|^2+|d_b|^2)$.
+The claimed bound follows in both regions. Its integrable majorant also
+handles arbitrary a.e. representatives; the excluded critical set is null.
+\end{proof}
+
 \begin{lemma}[Integrability of both gradient energies]
 \label{lem:dd-gradient-energies-integrable}
 \uses{def:sobolev-torus, def:dd-exclusion-forms, def:reflections}
@@ -1390,20 +1424,40 @@ integrable on the cell.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:hardy-endpoint, lem:trace-h2, lem:lift-sobolev-local,
- lem:diagonal-calculus, lem:dipole-identities, lem:continuous-representative}
-The only unbounded gradient coefficient is $A_0=O(1+s^{-1})$.
-Even reflection makes the normal coordinate derivatives have zero edge
-traces; the endpoint Hardy estimate controls the resulting $s^{-1}$
-normal energy. For the divided gradient use $w_*\ge1$, boundedness of $u$,
-and the quotient rule. The explicit derivative
+\uses{lem:even-h2-diagonal-hardy, lem:dd-diagonal-matrix-bound,
+ lem:dd-ground-first-order, lem:diagonal-calculus, lem:dipole-identities}
+\leanok
+Diagonal Hardy division and the matrix majorant prove the original energy
+integrable. Put $d_a=(u_x+u_y)/\cos a$ and $d_b=(u_x-u_y)/\cos b$.
+For the divided gradient, set
 \[
- \partial_nw_*=\frac{s}{\sqrt r}
-       \left[r/8+(4-s^2-3r)\partial_rw_*\right]
+ H_a=\frac{\partial_xw_*+\partial_yw_*}{w_*\cos a},\qquad
+ H_b=\frac{\partial_xw_*-\partial_yw_*}{w_*\cos b}.
 \]
-carries a factor $s$, cancelling the singular normal coefficient.
-No lower bound for $Pw_*$ and no sign certificate enters this estimate.
+Off $r=0$, the explicit derivatives factor by the respective cosines:
+\[
+ \partial_xw_*+\partial_yw_*=
+ -2\sin a\cos a\left[\frac18+
+ \frac{r(2\log(r/2)+1)}{128}(\cos^2b-\sin^2b)\right],
+\]
+with the analogous difference formula interchanging $a,b$.
+Since $w_*\ge1$ and $|r(2\log(r/2)+1)/128|\le1/8$ for $0\le r\le2$,
+these quotients have bounded measurable a.e. representatives, with $|H_a|,|H_b|\le1$.
+The normalized diagonal components of $w_*\nabla(u/w_*)$ are
+$d_a-uH_a$ and $d_b-uH_b$, both in $L^2$.
+Their Cartesian components are half their cosine-weighted sum and difference,
+so are also in $L^2$. Apply the same matrix majorant and quadratic homogeneity.
+Only $u\in L^2$ is used in this multiplication step; no bounded-value estimate,
+residual sign certificate or Sobolev density argument is needed.
 \end{proof}
+
+\begin{remark}[Digest note: two diagonal Hardy classes suffice]
+The singular normal energy is controlled by cosine division of the two
+diagonal derivatives. The primitive averaging proof supplies the required
+Hardy estimate directly, without the separate endpoint-Hardy interface.
+The ground state's normalized diagonal derivatives are bounded, so the
+divided-gradient step needs no additional boundary hypothesis or bound on $u$.
+\end{remark}
 
 \begin{definition}[Residual polynomial in bounded coordinates]
 \label{def:dd-residual-polynomial}

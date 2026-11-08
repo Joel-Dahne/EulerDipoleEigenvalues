@@ -75,6 +75,8 @@ proof mechanisms. Module names below are relative to
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.
 - `TraceL2.lean`, `TraceH2.lean`, `TraceGagliardo.lean`: rectangle trace package.
   `HardyAverage.lean` and `OddHardy.lean`: averaging and odd-function Hardy estimates.
+  `EvenGradientHardy.lean`: ACL zero traces and cosine division of even H²
+  diagonal derivatives, through the primitive Hardy estimate.
 - `ScalarDivision.lean`: canonical-trace endpoint/second Hardy, coarse period
   derivative and uniform complete-cell/global quotient interfaces, for all four
   quarter characters.
@@ -186,6 +188,8 @@ proof mechanisms. Module names below are relative to
 - `OddOddBulkIntegrability.lean`: saddle-weighted coefficient bound, generic forcing
   integrability, its torus-vorticity specialization, squared-dipole cell integral
   and ordinary stream-level exhaustion.
+- `OddOddGradientIntegrability.lean`: diagonal domination of the singular matrix
+  form and whole-cell integrability of both the raw and divided gradient energies.
 - `OddOddFinitePart.lean`: exact truncated coefficient integral via the periodic
   normal-field divergence, center removal and continuity; its scalar finite part
   follows from the leading period asymptotic.

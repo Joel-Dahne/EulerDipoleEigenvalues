@@ -1778,6 +1778,42 @@ Integrate in angle. This proves the second bound from the first;
 no eigenfunction equation or quadratic expansion of $F$ is used.
 \end{proof}
 
+\begin{lemma}[Diagonal Hardy division for even H2 functions]
+\label{lem:even-h2-diagonal-hardy}
+\uses{def:sobolev-torus, def:fourier-derivatives, def:reflections,
+ def:torus-of-lift, def:cells}
+\lean{NoEmbeddedEigenvalues.even_h2_diagonal_gradient_division}
+\leanok
+Let $u\in H^2(\T^2)$ be even under both separatrix reflections, with specified
+Fourier first derivatives $u_x,u_y$. On the lifted cell,
+\[
+ \frac{u_x+u_y}{\cos a}\in L^2,\qquad
+ \frac{u_x-u_y}{\cos b}\in L^2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h2-laplacian-reconstruction, lem:laplacian-symmetries,
+ lem:inverse-laplacian-derivatives, lem:stream-derivative-parities,
+ lem:lift-representatives, lem:lift-sobolev-local,
+ lem:diagonal-calculus, lem:trace-acl, lem:trace-l2, lem:hardy-average}
+\leanok
+Write $u=\Delta^{-1}v+\widehat u_0$. Its derivatives are stream derivatives
+of an even $v\in L^2$, hence belong to $H^1$. The derivative $u_x+u_y$ is
+odd across $a=\pm\pi/2$, and $u_x-u_y$ is odd across $b=\pm\pi/2$.
+Choose ACL representatives on a larger diagonal rectangle. On almost every
+normal section, continuity promotes the a.e. reflection identities to
+pointwise oddness and gives zero traces at both edges.
+For such a section $f$, the primitive Hardy estimate and
+$\sin t\ge2t/\pi$ on $[0,\pi/2]$ give
+\[
+ \int_{-\pi/2}^{\pi/2}\frac{|f(t)|^2}{\cos^2t}\,dt
+ \le2\pi^2\int_{-2\pi}^{2\pi}|f'(t)|^2\,dt.
+\]
+Integrate in the tangential variable and transport area through the diagonal
+map. No value of a raw representative on an edge is prescribed.
+\end{proof}
+
 \begin{lemma}[Divided Laplacian of an even H2 function]
 \label{lem:even-h2-dipole-laplacian}
 \uses{def:sobolev-torus, def:reflections, def:dipole, def:fourier-derivatives}

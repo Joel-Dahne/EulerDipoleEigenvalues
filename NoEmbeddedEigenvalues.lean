@@ -22,6 +22,7 @@ import NoEmbeddedEigenvalues.DipoleOrthogonality
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.EvenEvenBoundary
+import NoEmbeddedEigenvalues.EvenGradientHardy
 import NoEmbeddedEigenvalues.FlowBoundaryForm
 import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
@@ -44,6 +45,7 @@ import NoEmbeddedEigenvalues.OddOdd
 import NoEmbeddedEigenvalues.OddOddBoundaryTrace
 import NoEmbeddedEigenvalues.OddOddCurrentRemainder
 import NoEmbeddedEigenvalues.OddOddBulkIntegrability
+import NoEmbeddedEigenvalues.OddOddGradientIntegrability
 import NoEmbeddedEigenvalues.OddOddFinitePart
 import NoEmbeddedEigenvalues.OddOddValueFinitePart
 import NoEmbeddedEigenvalues.OddOddPotentialMass
