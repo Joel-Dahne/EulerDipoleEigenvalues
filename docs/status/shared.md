@@ -74,17 +74,16 @@ weights and local versus global regularity.
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
-   `dd_character_virial_limit` is assembled without its own `sorry`, from six
-   admissions: local H² smooth approximation, weighted first identity, quotient
-   equation, gradient traces, gradient-energy integrability and the leading
-   period value asymptotic.
+   `dd_character_virial_limit` is assembled without its own `sorry`, from five
+   admissions: local H² smooth approximation, quotient equation, gradient traces,
+   gradient-energy integrability and the leading period value asymptotic.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
    a generic cutoff-to-annular extraction handles common exceptional sets.
    Annular virial is assembled from `dd_cutoff_identity`, now itself proved
-   from the assembled weak Green identity, admitted weighted first identity and
-   quotient equation, with admission-free pointwise boundary-flux algebra.
+   from the assembled weak Green identity, proved weighted first identity and
+   admitted quotient equation, with admission-free pointwise boundary-flux algebra.
    Normal–tangent orthogonality and `-μq = (8-s³)/3` give the flux identification, with the inward
    normal convention unchanged. Coarea and endpoint assembly are checked.
    The weak Green proof uses the admitted local H² approximation
@@ -99,11 +98,12 @@ weights and local versus global regularity.
    integrands are finite bounded-coefficient quadratic forms, so their integrals
    converge under strong L² approximation. Its only transitive admission is the
    local H² density theorem; the original hypotheses are unchanged. The cutoff and
-   truncated-virial audits now reach that density theorem, the weighted first
-   identity and the quotient equation.
-   Multiplying back by Ψ identifies
-   arbitrary raw weak gradients with Fourier stream derivatives and proves
-   half-density conjugation. Raw/supplied quotient changes, coarea splitting,
+   truncated-virial audits now reach that density theorem and the quotient
+   equation. Multiplying back by Ψ identifies arbitrary raw weak gradients with
+   Fourier stream derivatives and proves half-density conjugation. Annular
+   normal-field factorization and the unweighted L² virial prove the weighted
+   first identity without admissions, global divided regularity or parity.
+   Raw/supplied quotient changes, coarea splitting,
    `ε = 2h` exceptional-set rescaling and common pairing selection are checked.
    These admitted inputs are the virial frontier; the leading period value
    asymptotic in `Period.lean` remains separate from sharp remainders.
@@ -139,7 +139,7 @@ weights and local versus global regularity.
    only `orbitPeriod_leading_asymptotic`, already shared by the bulk finite part.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The six transitive Picone inputs remain proof work.
+   analytic admissions remain. The five transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the

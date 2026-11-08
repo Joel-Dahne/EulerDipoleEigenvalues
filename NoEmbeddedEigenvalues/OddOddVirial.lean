@@ -1788,24 +1788,6 @@ theorem dd_weak_green {u e ux uy : ℝ × ℝ → ℂ}
   rw [hseq] at tr
   exact tendsto_nhds_unique (tl 0) tr
 
-/-- Weighted first identity with annular cutoff, on the original eigenfunction domain.
-    Only local weak derivatives of the raw stream quotient are supplied. -/
-theorem dd_weighted_first {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
-    {ux uy : ℝ × ℝ → ℂ}
-    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
-    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy)
-    {χ : ℝ → ℝ} (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ) (hc : HasCompactSupport χ)
-    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2) :
-    (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
-      (ddVorticityQuotient ω p * (starRingEnd ℂ)
-        (ddVorticityQuotient ω p + ddStreamQuotient ω p)).re) =
-    2 * ∫ p in cellSquare, ddWeight p *
-      (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
-        (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
-        (ddStreamQuotient ω) ux uy p * (starRingEnd ℂ) (ddVorticityQuotient ω p)).re := by
-  sorry
-
 /-- A compact-level cutoff identity determines the virial on every annulus outside
     one common null set. The bulk and boundary densities need only be integrable
     on closed level bands; no positivity or smooth representatives are required. -/
@@ -2060,6 +2042,278 @@ theorem ddWeightedGenerator_raw_ae (ω : L2) {ux uy : ℝ × ℝ → ℂ}
     rfl
   exact ddWeightedGenerator_conjugation (hW₁ p) (hW₂ p) hs hu
     (by simpa only [hcx] using hdx hp) (by simpa only [hcy] using hdy hp)
+
+section WeightedFirst
+
+open scoped ContDiff
+
+/-- Annular cutoffs of the weighted field are smooth periodic adapted fields.
+    Multiplication of the ordinary normal field by a level factor gives the
+    weighted field, including the totalized values on singular levels. -/
+theorem annularCutoff_ddVirialField {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+    {a b : ℝ} (ha : 0 < a) (hb : b < 2)
+    (hχ0 : ∀ s, χ s ≠ 0 → a ≤ s ∧ s ≤ b) :
+    ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * ddVirialField₁ p) ∧
+    ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * ddVirialField₂ p) ∧
+    ContDiff ℝ ∞ (fun p ↦ χ (dipoleLift p) * ddVirialCoeff p) ∧
+    IsPeriodicLift (fun p ↦ χ (dipoleLift p) * ddVirialField₁ p) ∧
+    IsPeriodicLift (fun p ↦ χ (dipoleLift p) * ddVirialField₂ p) ∧
+    IsPeriodicLift (fun p ↦ χ (dipoleLift p) * ddVirialCoeff p) ∧
+    IsAdaptedOn (fun p ↦ χ (dipoleLift p) * ddVirialField₁ p)
+      (fun p ↦ χ (dipoleLift p) * ddVirialField₂ p)
+      (fun p ↦ χ (dipoleLift p) * ddVirialCoeff p) univ := by
+  let κ := fun s ↦ χ s * (s ^ 2 + 2 * s + 4) / (3 * s ^ 2)
+  have hκ : ContDiff ℝ ∞ κ := by
+    apply contDiff_iff_contDiffAt.mpr
+    intro s
+    by_cases hs : s = 0
+    · subst s
+      apply contDiffAt_const (c := (0 : ℝ)).congr_of_eventuallyEq
+      filter_upwards [Iio_mem_nhds ha] with t ht
+      have hz : χ t = 0 := by
+        by_contra hn
+        exact (not_le.mpr ht) (hχ0 t hn).1
+      simp [κ, hz]
+    · dsimp only [κ]
+      exact (hχ.contDiffAt.mul (by fun_prop)).div (by fun_prop) (by simp [hs])
+  have hκ0 : ∀ s, κ s ≠ 0 → a ≤ s ∧ s ≤ b := by
+    intro s hs
+    apply hχ0 s
+    intro hz
+    exact hs (by simp [κ, hz])
+  have h₁ : (fun p ↦ κ (dipoleLift p) * normalField₁ p) =
+      fun p ↦ χ (dipoleLift p) * ddVirialField₁ p := by
+    funext p
+    unfold normalField₁ ddVirialField₁ ddVirialQ κ
+    simp only [div_eq_mul_inv]
+    ring
+  have h₂ : (fun p ↦ κ (dipoleLift p) * normalField₂ p) =
+      fun p ↦ χ (dipoleLift p) * ddVirialField₂ p := by
+    funext p
+    unfold normalField₂ ddVirialField₂ ddVirialQ κ
+    simp only [div_eq_mul_inv]
+    ring
+  have hf : (fun p ↦ κ (dipoleLift p) * normalCoeff p) =
+      fun p ↦ χ (dipoleLift p) * ddVirialCoeff p := by
+    funext p
+    unfold normalCoeff ddVirialCoeff ddF ddWeight κ
+    simp only [div_eq_mul_inv, mul_inv_rev]
+    ring
+  simpa only [h₁, h₂, hf] using annularCutoff_normalField hκ ha hb hκ0
+
+private theorem first_virial_on_cell {W₁ W₂ f : ℝ × ℝ → ℝ}
+    (had : IsAdaptedOn W₁ W₂ f univ)
+    (hW₁ : ContDiff ℝ 2 W₁) (hW₂ : ContDiff ℝ 2 W₂) (hf : ContDiff ℝ 1 f)
+    (hp₁ : IsPeriodicLift W₁) (hp₂ : IsPeriodicLift W₂) (hpf : IsPeriodicLift f)
+    {a b : ℝ} (ha : 0 < a) (hb : b < 1)
+    (hsupp : ∀ p, W₁ p ≠ 0 ∨ W₂ p ≠ 0 ∨ f p ≠ 0 →
+      2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b)
+    {lam : ℝ} (hlam : lam ≠ 0) {v : L2} (hv : IsEigenSolution lam v) :
+    (∫ p in cellSquare, (f p • liftL2 v p *
+      (starRingEnd ℂ) (liftL2 v p + streamLift v p)).re) =
+    2 * ∫ p in cellSquare,
+      ((W₁ p • streamLiftX v p + W₂ p • streamLiftY v p +
+        ((1 / 2 : ℝ) * divergence W₁ W₂ p) • streamLift v p) *
+          (starRingEnd ℂ) (liftL2 v p)).re := by
+  let D := fun p ↦ W₁ p • streamLiftX v p + W₂ p • streamLiftY v p +
+    ((1 / 2 : ℝ) * divergence W₁ W₂ p) • streamLift v p
+  let A := fun p ↦ (f p • liftL2 v p *
+    (starRingEnd ℂ) (liftL2 v p + streamLift v p)).re
+  let B := fun p ↦ (D p * (starRingEnd ℂ) (liftL2 v p)).re
+  have hdc : Continuous (divergence W₁ W₂) :=
+    (continuous_partialX_real (hW₁.of_le (by norm_num))).add
+      (continuous_partialY_real (hW₂.of_le (by norm_num)))
+  have hpdiv : IsPeriodicLift (divergence W₁ W₂) := hp₁.partialX.add hp₂.partialY
+  have hiA : IntegrableOn (fun p ↦ f p • liftL2 v p *
+      (starRingEnd ℂ) (liftL2 v p + streamLift v p)) periodSquare := by
+    convert (integrableOn_smul_liftL2_mul_conj hf.continuous hpf v v).add
+      (integrableOn_smul_liftL2_mul_conj hf.continuous hpf v (invLap v)) using 1
+    ext p
+    simp only [streamLift, map_add, mul_add, Pi.add_apply]
+  have hiB : IntegrableOn (fun p ↦ D p * (starRingEnd ℂ) (liftL2 v p)) periodSquare := by
+    convert ((integrableOn_smul_liftL2_mul_conj hW₁.continuous hp₁ (streamPartial 0 v) v).add
+      (integrableOn_smul_liftL2_mul_conj hW₂.continuous hp₂ (streamPartial 1 v) v)).add
+      (integrableOn_smul_liftL2_mul_conj (continuous_const.mul hdc)
+        (hpdiv.const_mul (1 / 2)) (invLap v) v) using 1
+    ext p
+    simp only [D, streamLift, streamLiftX, streamLiftY, add_mul, Pi.add_apply, Pi.mul_apply]
+  have heA : (squarePairing (fun p ↦ f p • liftL2 v p)
+      (fun p ↦ liftL2 v p + streamLift v p)).re = squareIntegral A := by
+    exact (integral_re hiA).symm
+  have heB : (squarePairing D (liftL2 v)).re = squareIntegral B := by
+    exact (integral_re hiB).symm
+  have hfirst := virial_l2_first had hW₁ hW₂ hf hp₁ hp₂ hpf ha hb hsupp hlam hv
+  change (squarePairing _ _).re = 2 * (squarePairing D (liftL2 v)).re at hfirst
+  rw [heA, heB] at hfirst
+  have hm (g : L2) : Measurable (liftL2 g) :=
+    (Lp.stronglyMeasurable g).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable
+  have hfm := hf.continuous.measurable
+  have hxm := hW₁.continuous.measurable
+  have hym := hW₂.continuous.measurable
+  have hmA : Measurable A := by
+    dsimp only [A, streamLift]
+    fun_prop
+  have hmB : Measurable B := by
+    dsimp only [B, D, streamLiftX, streamLiftY, streamLift]
+    fun_prop
+  have hpA : IsPeriodicLift A := by
+    intro p
+    have hu := isPeriodicLift_liftL2 v p
+    have hv := isPeriodicLift_liftL2 (invLap v) p
+    constructor <;> simp only [A, streamLift, (hpf p).1, (hpf p).2, hu.1, hu.2, hv.1, hv.2]
+  have hpB : IsPeriodicLift B := by
+    intro p
+    have hu := isPeriodicLift_liftL2 v p
+    have hv := isPeriodicLift_liftL2 (invLap v) p
+    have hx := isPeriodicLift_liftL2 (streamPartial 0 v) p
+    have hy := isPeriodicLift_liftL2 (streamPartial 1 v) p
+    constructor <;> simp only [B, D, streamLiftX, streamLiftY, streamLift,
+      (hp₁ p).1, (hp₁ p).2, (hp₂ p).1, (hp₂ p).2, (hpdiv p).1, (hpdiv p).2,
+      hu.1, hu.2, hv.1, hv.2, hx.1, hx.2, hy.1, hy.2]
+  have hzero {p : ℝ × ℝ} (hp : dipoleLift p < 2 * a) :
+      W₁ p = 0 ∧ W₂ p = 0 ∧ f p = 0 := by
+    have hn : ¬ (W₁ p ≠ 0 ∨ W₂ p ≠ 0 ∨ f p ≠ 0) :=
+      fun h ↦ (not_le.mpr hp) (hsupp p h).1
+    simpa only [not_or, ne_eq, not_not] using hn
+  have hB0 : ∀ p, dipoleLift p ≤ 0 → B p = 0 := by
+    intro p hp
+    have hz := hzero (p := p) (by linarith)
+    have hev : ∀ᶠ q in 𝓝 p, W₁ q = 0 ∧ W₂ q = 0 ∧ f q = 0 := by
+      have hn : {q : ℝ × ℝ | dipoleLift q < 2 * a} ∈ 𝓝 p :=
+        (isOpen_lt (show Continuous dipoleLift by unfold dipoleLift; fun_prop)
+          continuous_const).mem_nhds (by change dipoleLift p < 2 * a; linarith)
+      filter_upwards [hn] with q hq
+      exact hzero hq
+    have hd : divergence W₁ W₂ p = 0 := by
+      simp [divergence, partialX_eq_zero_of_eventually (hev.mono fun q hq ↦ hq.1),
+        partialY_eq_zero_of_eventually (hev.mono fun q hq ↦ hq.2.1)]
+    simp [B, D, hz.1, hz.2.1, hd]
+  have hA0 : ∀ p, dipoleLift p ≤ 0 → A p = 0 := by
+    intro p hp
+    simp [A, (hzero (p := p) (by linarith)).2.2]
+  rw [squareIntegral_eq_setIntegral_cellSquare hpA hmA hA0,
+    squareIntegral_eq_setIntegral_cellSquare hpB hmB hB0] at hfirst
+  exact hfirst
+
+private theorem weighted_pair_cancel (s : ℝ) (z w : ℂ) :
+    s ^ 2 * (z * (starRingEnd ℂ) w).re =
+      ((s : ℂ) * z * (starRingEnd ℂ) ((s : ℂ) * w)).re := by
+  have he : (s : ℂ) * z * (starRingEnd ℂ) ((s : ℂ) * w) =
+      ((s ^ 2 : ℝ) : ℂ) * (z * (starRingEnd ℂ) w) := by
+    simp only [map_mul, Complex.conj_ofReal, Complex.ofReal_pow]
+    ring
+  rw [he, Complex.re_ofReal_mul]
+
+end WeightedFirst
+
+set_option linter.unusedVariables false in
+/-- Weighted first identity with annular cutoff, on the original eigenfunction domain.
+    Only local weak derivatives of the raw stream quotient are supplied.
+    Conjugation uses the weak product rule, not the quotient equation or parity. -/
+theorem dd_weighted_first {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω)
+    {ux uy : ℝ × ℝ → ℂ}
+    (hx : HasWeakPartialOn cellSquare 0 (ddStreamQuotient ω) ux)
+    (hy : HasWeakPartialOn cellSquare 1 (ddStreamQuotient ω) uy)
+    {χ : ℝ → ℝ} (hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ) (hc : HasCompactSupport χ)
+    (hχs : tsupport χ ⊆ Ioo (0 : ℝ) 2) :
+    (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+      (ddVorticityQuotient ω p * (starRingEnd ℂ)
+        (ddVorticityQuotient ω p + ddStreamQuotient ω p)).re) =
+    2 * ∫ p in cellSquare, ddWeight p *
+      (ddWeightedGenerator (fun q ↦ χ (dipoleLift q) * ddVirialField₁ q)
+        (fun q ↦ χ (dipoleLift q) * ddVirialField₂ q)
+        (ddStreamQuotient ω) ux uy p * (starRingEnd ℂ) (ddVorticityQuotient ω p)).re := by
+  obtain ⟨a, ha, hlo⟩ := hc.exists_forall_le' continuous_id.continuousOn
+    (fun s hs ↦ (hχs hs).1)
+  obtain ⟨δ, hδ, hhi⟩ := hc.exists_forall_le' (f := fun s : ℝ ↦ 2 - s) (a := 0)
+    (continuous_const.sub continuous_id).continuousOn
+    (fun s hs ↦ by linarith [(hχs hs).2])
+  let b := 2 - δ
+  have hb : b < 2 := by dsimp [b]; linarith
+  have hband : ∀ s, χ s ≠ 0 → a ≤ s ∧ s ≤ b := by
+    intro s hs
+    have ht := subset_tsupport χ hs
+    exact ⟨hlo s ht, by dsimp [b]; linarith [hhi s ht]⟩
+  let X := fun p ↦ χ (dipoleLift p) * ddVirialField₁ p
+  let Y := fun p ↦ χ (dipoleLift p) * ddVirialField₂ p
+  let F := fun p ↦ χ (dipoleLift p) * ddVirialCoeff p
+  let D := fun p ↦ X p • streamLiftX ω p + Y p • streamLiftY ω p +
+    ((1 / 2 : ℝ) * divergence X Y p) • streamLift ω p
+  obtain ⟨hX, hY, hF, hpX, hpY, hpF, had⟩ := annularCutoff_ddVirialField hχ ha hb hband
+  have hsupp : ∀ p, X p ≠ 0 ∨ Y p ≠ 0 ∨ F p ≠ 0 →
+      2 * (a / 2) ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * (b / 2) := by
+    intro p hp
+    have hn : χ (dipoleLift p) ≠ 0 := by
+      rcases hp with hp | hp | hp <;> exact left_ne_zero_of_mul hp
+    obtain ⟨hl, hu⟩ := hband _ hn
+    constructor <;> linarith
+  have V := first_virial_on_cell had (hX.of_le (by simp)) (hY.of_le (by simp))
+    (hF.of_le (by simp)) hpX hpY hpF (by positivity : 0 < a / 2)
+    (by linarith : b / 2 < 1) hsupp hlam hω
+  change (∫ p in cellSquare, (F p • liftL2 ω p *
+    (starRingEnd ℂ) (liftL2 ω p + streamLift ω p)).re) =
+      2 * ∫ p in cellSquare, (D p * (starRingEnd ℂ) (liftL2 ω p)).re at V
+  have hv (p : ℝ × ℝ) (hp : p ∈ cellSquare) :
+      (dipoleLift p : ℂ) * ddVorticityQuotient ω p = liftL2 ω p := by
+    have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+      simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
+    have hsC : (dipoleLift p : ℂ) ≠ 0 := by exact_mod_cast hs
+    dsimp [ddVorticityQuotient]
+    field_simp
+  have hgen : ∀ᵐ p, p ∈ cellSquare →
+      (dipoleLift p : ℂ) *
+        ddWeightedGenerator X Y (ddStreamQuotient ω) ux uy p = D p := by
+    have hg := ddWeightedGenerator_raw_ae ω hx hy
+      (hX.differentiable (by simp)) (hY.differentiable (by simp))
+    filter_upwards [hg] with p hp hcell
+    have hh : divergence X Y p / 2 = (1 / 2) * divergence X Y p := by ring
+    have he := hp hcell
+    change (dipoleLift p : ℂ) * ddWeightedGenerator X Y (ddStreamQuotient ω) ux uy p =
+      (X p : ℂ) * streamLiftX ω p + (Y p : ℂ) * streamLiftY ω p +
+        ((divergence X Y p / 2 : ℝ) : ℂ) * streamLift ω p at he
+    rw [hh] at he
+    simpa only [D, Complex.real_smul] using he
+  have hl :
+      (∫ p in cellSquare, ddWeight p * χ (dipoleLift p) * ddVirialCoeff p *
+        (ddVorticityQuotient ω p * (starRingEnd ℂ)
+          (ddVorticityQuotient ω p + ddStreamQuotient ω p)).re) =
+      ∫ p in cellSquare, (F p • liftL2 ω p *
+        (starRingEnd ℂ) (liftL2 ω p + streamLift ω p)).re := by
+    apply setIntegral_congr_ae isOpen_cellSquare.measurableSet
+    filter_upwards [streamLift_ae_eq_contStream ω] with p hrep hp
+    have hs : dipoleLift p ≠ 0 := ne_of_gt (by
+      simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp)
+    have hsC : (dipoleLift p : ℂ) ≠ 0 := by exact_mod_cast hs
+    have hu : (dipoleLift p : ℂ) * ddStreamQuotient ω p = streamLift ω p := by
+      rw [hrep]
+      dsimp [ddStreamQuotient]
+      field_simp
+    calc _ = F p * (dipoleLift p ^ 2 *
+          (ddVorticityQuotient ω p * (starRingEnd ℂ)
+            (ddVorticityQuotient ω p + ddStreamQuotient ω p)).re) := by
+           dsimp [F, ddWeight]
+           ring
+         _ = F p * ((dipoleLift p : ℂ) * ddVorticityQuotient ω p *
+           (starRingEnd ℂ) ((dipoleLift p : ℂ) *
+             (ddVorticityQuotient ω p + ddStreamQuotient ω p))).re := by
+           rw [weighted_pair_cancel]
+         _ = F p * (liftL2 ω p *
+           (starRingEnd ℂ) (liftL2 ω p + streamLift ω p)).re := by
+           rw [mul_add, hv p hp, hu]
+         _ = _ := by simp only [Complex.real_smul, mul_assoc, Complex.re_ofReal_mul]
+  have hr :
+      (∫ p in cellSquare, ddWeight p *
+        (ddWeightedGenerator X Y (ddStreamQuotient ω) ux uy p *
+          (starRingEnd ℂ) (ddVorticityQuotient ω p)).re) =
+      ∫ p in cellSquare, (D p * (starRingEnd ℂ) (liftL2 ω p)).re := by
+    apply setIntegral_congr_ae isOpen_cellSquare.measurableSet
+    filter_upwards [hgen] with p hg hp
+    change dipoleLift p ^ 2 * _ = _
+    rw [weighted_pair_cancel, hg hp, hv p hp]
+  rw [hl, hr]
+  exact V
 
 /-- The apparent center singularities of the bulk coefficients are bounded on
     every positive truncation. Values at `Ψ = 2` are the totalized expressions. -/

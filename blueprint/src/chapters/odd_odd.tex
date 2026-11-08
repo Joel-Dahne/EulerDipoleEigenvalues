@@ -306,9 +306,30 @@ Define the real Green flux and its level contraction by
 These definitions do not assert that the supplied gradient is classical.
 \end{definition}
 
+\begin{lemma}[Annular cutoffs of the weighted virial field]
+\label{lem:dd-field-annulus}
+\uses{def:dd-virial-field, def:adapted-field}
+\lean{NoEmbeddedEigenvalues.annularCutoff_ddVirialField}
+\leanok
+Let $0<a\le b<2$ and let $\chi:\R\to\R$ be smooth and zero outside $[a,b]$.
+Then $\chi(s)W$ and $\chi(s)f$ are smooth and periodic on the whole lift,
+and the field is adapted everywhere with coefficient $\chi(s)f$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-annulus}
+\leanok
+Put $\alpha(s)=(s^2+2s+4)/(3s^2)$ and $\kappa=\chi\alpha$.
+The factor $\chi$ vanishes near zero, so $\kappa$ is smooth, including
+at its totalized value at zero, and has annular support.
+The algebraic identities $W=\alpha(s)W_{\rm ee}$ and
+$f=\alpha(s)f_{\rm ee}$ identify the products with the ordinary normal-field
+cutoffs of Lemma~\ref{lem:normal-field-annulus}.
+\end{proof}
+
 \begin{lemma}[The weighted first identity on an annulus]
 \label{lem:dd-weighted-first}
-\uses{def:dd-virial-densities, def:eigen-problem}
+\uses{def:dd-virial-densities, def:eigen-problem, def:weak-derivative-local}
 \lean{NoEmbeddedEigenvalues.dd_weighted_first}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and real
@@ -326,10 +347,15 @@ no global divided regularity is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:virial-l2, lem:dd-virial-algebra, lem:dd-quotient-equations,
- lem:weak-derivative-product, lem:weak-derivative-unique, lem:sobolev-congr-ae}
-Extend $W_\chi,f_\chi$ periodically and by zero outside the positive cell.
-They are smooth, supported away from $s=0,2$, and adapted because $L_0s=0$.
+\uses{lem:virial-l2, lem:dd-field-annulus, lem:cell-periodic-integral,
+ lem:weak-derivative-product, lem:weak-derivative-unique, lem:sobolev-congr-ae,
+ lem:lift-sobolev-local, lem:inverse-laplacian-derivatives, lem:lift-representatives}
+\leanok
+Compactness of $\operatorname{tsupp}\chi\subset(0,2)$ gives a closed annular
+support band. Lemma~\ref{lem:dd-field-annulus} supplies globally smooth periodic
+adapted coefficients. The ordinary L² virial identity applies to these fields.
+Its integrands are integrable products of bounded coefficients and L² lifts;
+periodicity and vanishing on $s\le0$ identify their square and cell integrals.
 For the ordinary half-density generator $D_\chi$ one has
 \[
  \Div_\mu W_\chi=\Div W_\chi+2W_\chi\cdot\nabla\log s,
@@ -345,6 +371,13 @@ Lemma~\ref{lem:virial-l2}. All integrands have annular support, where division
 by $s$ is smooth and bounded. No weighted mollifier or inverse of $E$ is
 needed. The argument does not use reflection parity.
 \end{proof}
+
+\begin{remark}[Digest note: the first identity needs no quotient equation]
+Multiplying back by $s$ identifies the supplied weak quotient gradients
+directly with the Fourier stream gradients. The quotient PDE and existence
+of global quotient data are not inputs to this identity. The original sector
+hypothesis is retained in Lean, although the proof does not use it.
+\end{remark}
 
 \begin{lemma}[Local weighted Green identity]
 \label{lem:dd-green}

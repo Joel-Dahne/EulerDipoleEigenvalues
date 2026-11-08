@@ -177,9 +177,10 @@ proof mechanisms. Module names below are relative to
   algebra and cutoff-to-annular extraction separate `dd_cutoff_identity`
   from boundary integrability and exceptional-level bookkeeping. The cutoff
   combines local weak Green and pointwise boundary-flux interfaces with the
-  weighted first identity and weak quotient equation. Weak product-rule
-  and generator conjugation identify the raw quotient gradient with Fourier stream
-  derivatives. Supplied-data bridges
+  weighted first identity and weak quotient equation. Annular normal-field
+  factorization and the unweighted L² virial give the first identity.
+  Weak product-rule and generator conjugation identify the raw quotient gradient
+  with Fourier stream derivatives, without the quotient PDE or parity. Supplied-data bridges
   and coarea splitting use `h = ε/2`; inward virial normals are separate from
   the shared outward derivative convention.
 - `OddOddBulkIntegrability.lean`: saddle-weighted coefficient bound, generic forcing
