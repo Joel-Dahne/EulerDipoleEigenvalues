@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.OddOddForms
+import NoEmbeddedEigenvalues.OddOddQuotientEquations
 import NoEmbeddedEigenvalues.SobolevApproximation
 
 /-!
@@ -52,38 +52,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set Filter Topology
-
-/-- The original stream quotient on the open positive cell. Values elsewhere are
-    totalized, not continuous separatrix traces. -/
-def ddStreamQuotient (ω : L2) (p : ℝ × ℝ) : ℂ :=
-  contStream ω p / (dipoleLift p : ℂ)
-
-/-- The original vorticity quotient, used only on the open positive cell. -/
-def ddVorticityQuotient (ω : L2) (p : ℝ × ℝ) : ℂ :=
-  liftL2 ω p / (dipoleLift p : ℂ)
-
-/-- Weighted area on the positive cell, with `μ = Ψ²`. -/
-def ddCellMeasure : Measure (ℝ × ℝ) :=
-  (volume.restrict cellSquare).withDensity (fun p ↦ ENNReal.ofReal (ddWeight p))
-
-/-- Classical weighted Laplacian `μ⁻¹ div(μ∇)`. -/
-def ddWeightedLaplacian (u : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℂ :=
-  (partialX (fun q ↦ (ddWeight q : ℂ) * partialX u q) p +
-    partialY (fun q ↦ (ddWeight q : ℂ) * partialY u q) p) / (ddWeight p : ℂ)
-
-/-- Classical `E = 1 - μ⁻¹ div(μ∇)`; not an operator on raw Sobolev representatives. -/
-def ddOperator (u : ℝ × ℝ → ℂ) (p : ℝ × ℝ) : ℂ :=
-  u p - ddWeightedLaplacian u p
-
-/-- Weak realization of `Eu = e`, recording the specified first derivatives.
-    All tests are supported inside the open cell, away from `Ψ = 0`. -/
-def HasDDOperator (u e ux uy : ℝ × ℝ → ℂ) : Prop :=
-  HasWeakPartialOn cellSquare 0 u ux ∧ HasWeakPartialOn cellSquare 1 u uy ∧
-    LocallyIntegrableOn e cellSquare ∧
-    ∀ η, IsTestFunctionOn cellSquare η →
-      (∫ p in cellSquare, (ddWeight p : ℂ) * (e p - u p) * η p) =
-        ∫ p in cellSquare, (ddWeight p : ℂ) *
-          (ux p * partialX η p + uy p * partialY η p)
 
 private theorem contDiff_ddWeight_complex :
     ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun p ↦ (ddWeight p : ℂ)) := by
@@ -384,36 +352,6 @@ theorem HasDDOperator.local_smooth_approximation {u e ux uy : ℝ × ℝ → ℂ
   exact ⟨D, hj, hD, v, hv, hlim,
     hop.tendsto_L2_of_jet hV hVc hVU hj hD (fun n ↦ (hv n).1)
       (fun w hw ↦ (hlim w hw).1) (fun w hw ↦ (hlim w hw).2)⟩
-
-/-- Multiplication by `s` is unitary from weighted to ordinary cell L². The
-    representative identity is asserted only a.e. on the positive cell. -/
-theorem dd_cell_unitary :
-    ∃ U : Lp ℂ 2 ddCellMeasure ≃ₗᵢ[ℂ] Lp ℂ 2 (volume.restrict cellSquare),
-      ∀ u, ∀ᵐ p ∂(volume.restrict cellSquare),
-        U u p = (dipoleLift p : ℂ) * u p := by
-  sorry
-
-/-- Smooth conjugation on the open cell, where division by `s` is smooth. -/
-theorem dd_operator_conjugation {u : ℝ × ℝ → ℂ}
-    (hu : ContDiffOn ℝ 2 u cellSquare) {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
-    (dipoleLift p : ℂ) * ddOperator (fun q ↦ u q / (dipoleLift q : ℂ)) p =
-      -laplacian u p := by
-  sorry
-
-/-- The original quotients satisfy the weak Poisson equation on the open cell,
-    without any assumption about their global divided regularity. -/
-theorem dd_quotient_equations {lam : ℝ} {ω : L2} (hω : IsEigenSolution lam ω) :
-    ∃ ux uy, HasDDOperator (ddStreamQuotient ω)
-      (fun p ↦ -ddVorticityQuotient ω p) ux uy := by
-  sorry
-
-/-- The quotient Poisson equation for supplied data, without a classical derivative
-    of the chosen L² representative or any global transport-domain claim. -/
-theorem DDQuotientData.operator_eq {lam : ℝ} {ω : L2}
-    (q : DDQuotientData lam ω) (hω : IsEigenSolution lam ω) {dx dy : L2}
-    (hdx : HasFourierPartial 0 q.phi dx) (hdy : HasFourierPartial 1 q.phi dy) :
-    HasDDOperator (liftL2 q.phi) (fun p ↦ -liftL2 q.nu p) (liftL2 dx) (liftL2 dy) := by
-  sorry
 
 /-- Scalar coefficient `q(s)` of the weighted virial field. -/
 def ddVirialQ (s : ℝ) : ℝ := (s ^ 3 - 8) / (3 * s ^ 2)
@@ -3159,29 +3097,6 @@ theorem dd_quotient_gradient_traces {u dx dy : L2} (hu : MemSobolev 2 u)
           ddInwardNormal (liftL2 dx) (liftL2 dy) p).re))
         (𝓝[Ioi 0 \ N] 0) (𝓝 0) := by
   sorry
-
-/-- On the positive cell the raw stream quotient is exactly the continuous supplied
-    quotient. No assertion is made on the separatrix. -/
-theorem DDQuotientData.raw_stream_eq {lam : ℝ} {ω : L2}
-    (q : DDQuotientData lam ω) {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
-    ddStreamQuotient ω p = continuousRep q.phi (torusProj p) := by
-  have hpos : 0 < dipoleLift p := by
-    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hp
-  rw [ddStreamQuotient, q.contStream_eq]
-  exact mul_div_cancel_left₀ _ (Complex.ofReal_ne_zero.mpr hpos.ne')
-
-/-- The raw vorticity quotient agrees with supplied data a.e. on the open cell. -/
-theorem DDQuotientData.raw_vorticity_eq {lam : ℝ} {ω : L2}
-    (q : DDQuotientData lam ω) :
-    ∀ᵐ p ∂(volume.restrict cellSquare), ddVorticityQuotient ω p = liftL2 q.nu p := by
-  have hm : MeasurableSet cellSquare := by unfold cellSquare diagCoord; measurability
-  filter_upwards [ae_restrict_of_ae (ae_torusProj q.vorticity_eq),
-    ae_restrict_mem hm] with p hp hpc
-  have hpos : 0 < dipoleLift p := by
-    simpa [positiveCell, Ψ_torusProj] using torusProj_mem_positiveCell hpc
-  unfold ddVorticityQuotient liftL2
-  rw [hp, Ψ_torusProj]
-  exact mul_div_cancel_left₀ _ (Complex.ofReal_ne_zero.mpr hpos.ne')
 
 /-- Change the raw local quotients to supplied data in the truncated virial. The
     conclusion is in the orbit parameter, so the stream level is explicitly `2*h`. -/

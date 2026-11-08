@@ -171,8 +171,11 @@ proof mechanisms. Module names below are relative to
 - `OddOddForms.lean`: quotient orthogonality, boundary data, continuous
   characters and boundary regularity; bulk forms, truncated Picone energies,
   currents and common renormalization data. Sits below the weighted virial.
-- `OddOddVirial.lean`: classical and weak quotient operators, weighted virial
-  algebra and Green flux, raw-quotient annular/truncated identities, even H²
+- `OddOddQuotientEquations.lean`: weighted cell measure and weak operator,
+  unitary multiplication by the dipole, local classical conjugation, and raw/
+  supplied-data weak Poisson identities through specified Fourier derivatives.
+- `OddOddVirial.lean`: weighted operator jets, virial algebra and Green flux,
+  raw-quotient annular/truncated identities, even H²
   gradient traces. Positive-truncation H¹
   division, weak-witness uniqueness, coefficient bounds and center-flux removal
   assemble the truncated identity from the annular one. Weighted differential

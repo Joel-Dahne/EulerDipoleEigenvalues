@@ -63,6 +63,7 @@ import NoEmbeddedEigenvalues.OddOddPicone
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
 import NoEmbeddedEigenvalues.OddOddGroundResidual
 import NoEmbeddedEigenvalues.OddOddPiconeCutoff
+import NoEmbeddedEigenvalues.OddOddQuotientEquations
 import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.OddOddQuotient
 import NoEmbeddedEigenvalues.StreamQuotientAssembly

@@ -8,14 +8,14 @@
 `odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
 own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
 current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching four admissions. Corrected boundary nonnegativity is
+inputs, reaching three admissions. Corrected boundary nonnegativity is
 transitively admission-free in
 [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
 Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds eighteen admissions. The bulk bound depends only on the two
+audit finds seventeen admissions. The bulk bound depends only on the two
 residual-certificate inputs. This is not an admission-free exclusion.
 The recursive statement pass covers the odd–odd dependency closure, including
 the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
@@ -215,15 +215,25 @@ The diagonal corner-distance estimate gives `d² ≤ (π²/2)r` when `s ≤ 1`;
 `0 ≤ Fd² ≤ 16π²` on the whole cell. Multiplication by this bounded measurable
 coefficient sends `|e/d|² ∈ L¹` to the required density.
 
-`dd_character_virial_limit` reaches four admissions:
-`orbitPeriod_leading_asymptotic`, `local_h2_smooth_approximation`,
-`dd_quotient_equations` and `dd_quotient_gradient_traces`.
+`dd_character_virial_limit` reaches three admissions:
+`orbitPeriod_leading_asymptotic`, `local_h2_smooth_approximation`
+and `dd_quotient_gradient_traces`.
 [OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
 raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
 boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels
 back under `h ↦ 2h`, selects one pairing sequence avoiding every exceptional set,
 and identifies the full bulk limit by uniqueness. The coefficient error is
 `ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
+
+[OddOddQuotientEquations.lean](../../NoEmbeddedEigenvalues/OddOddQuotientEquations.lean)
+proves all four claims in Quotient equations (`lem:dd-quotient-equations`)
+without admissions, with their statements unchanged: the raw and supplied-data
+weak Poisson equations, the weighted cell L² unitary map, and classical
+conjugation for C² functions on the cell. The flux
+`s∇ψ - ψ∇s` has divergence `s(ω+ψ)`; only mean-zero Poisson, local smooth
+division and weak product rules are needed. No global quotient construction,
+parity, transport equation or smooth density is used.
+Supplied Fourier gradients replace local witnesses by weak uniqueness.
 
 The weighted first identity (`lem:dd-weighted-first`, `dd_weighted_first`)
 is admission-free in `OddOddVirial.lean`, with its statement unchanged.
@@ -234,7 +244,7 @@ regularity nor reflection parity is used.
 
 `dd_cutoff_identity` has no `sorry` of its own. It combines the assembled
 weak Green identity, proved boundary-flux identification and weighted first
-identity with the admitted quotient equation. The weak Green statement
+identity with the admission-free quotient equation. The weak Green statement
 takes local H² for the stream, local L² for its operator value, and
 `HasDDOperator` with specified weak gradients; it uses neither an eigenfunction
 nor a derivative of the forcing. Boundary-flux identification is admission-free:
@@ -264,9 +274,8 @@ half-density correction. Weighted-operator identification from specified weak je
 (`lem:dd-operator-jet-stability`) are also admission-free. They feed the assembled
 weak Green identity.
 
-The cutoff and truncated-virial assemblies reach two admissions: local H²
-smooth approximation and quotient equation. The audit
-reaches four admissions below `dd_picone_current`.
+The cutoff and truncated-virial assemblies reach only local H² smooth
+approximation. The audit reaches three admissions below `dd_picone_current`.
 The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
 with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
 smooth approximants on the original open domain and strong L² convergence of
@@ -282,13 +291,13 @@ all four integrands are finite bounded-coefficient quadratic forms in the value,
 forcing and weak gradients. Strong L² approximation passes their integrals to the
 limit. Its only transitive admission is `local_h2_smooth_approximation`; the original
 hypotheses are unchanged. The remaining analytic work on this route is that density
-theorem and the quotient equation.
+theorem.
 
 [OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
 forms, boundary data, characters and renormalization data below the virial,
 avoiding an import cycle. `OddOddValueFinitePart.lean` handles continuous
-level values independently of the weighted virial. The weak/classical quotient equations remain separate
-from this assembly. `Period.lean` states the leading value asymptotic separately
+level values independently of the weighted virial. The quotient Poisson
+identities need only local division. `Period.lean` states the leading value asymptotic separately
 from sharp remainders.
 
 `dd_exclusion_domain` now follows in Lean from four explicit inputs:
@@ -401,7 +410,7 @@ Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
 analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
 the quotient and transport-domain assemblies are proved. The virial uses only the
 minimal quotient data. Its character-wise assembly and representative/exceptional-level
-bridges are checked; the four admitted virial inputs and the remaining inputs below
+bridges are checked; the three admitted virial inputs and the remaining inputs below
 Picone still need proofs and analytic review. Weighted
 Poincaré and its basis, cutoff weak pairing and spectral assembly are
 transitively admission-free. Corrected-boundary nonnegativity, including its

@@ -87,11 +87,48 @@ that the divided functions have a global transport domain.
 
 \begin{proof}
 \uses{lem:dipole-identities, lem:inverse-laplacian-derivatives,
- lem:lift-sobolev-local}
-$\Delta(s\phi)=s\Delta\phi+2\nabla s\cdot\nabla\phi-s\phi
-=s\big(s^{-2}\Div(s^2\nabla\phi)-\phi\big)$, using $\Delta s=-s$. The
-conjugation is the same computation.
+ lem:lift-sobolev-local, lem:weak-derivative-product,
+ lem:weak-derivative-unique, lem:sobolev-congr-ae,
+ lem:lift-representatives, lem:continuous-representative, lem:cell-square}
+\leanok
+Since $s>0$ on the cell, weighted and ordinary cell measure have the same null
+sets. The norm identity
+$\int s^2|u|^2=\int|su|^2$ gives the isometry, with inverse $f\mapsto f/s$.
+In particular this inverse is weighted $L^2$; no bound on $1/s$ is needed.
+
+For the weak equation, the stream and its first and second Fourier derivatives
+give weak derivative witnesses on the cell. Smooth local division gives
+$u=\psi/s$ and specified weak first derivatives. The weighted flux is
+\[
+ s^2\nabla u=s\nabla\psi-\psi\nabla s.
+\]
+Weak product rules cancel the mixed first-order terms in its divergence:
+\[
+ \Div(s\nabla\psi-\psi\nabla s)
+ =s\Delta\psi-\psi\Delta s=s(\omega+\psi).
+\]
+Test against a compactly supported $\eta$ and integrate by parts to obtain
+$Eu=-\omega/s$. Local division uses the smooth test $\eta/s$, extended
+by zero off its compact support; it does not need a globally smooth reciprocal
+or any Sobolev density theorem. Only the mean-zero part of the eigenfunction
+hypothesis enters $\Delta\psi=\omega$.
+
+For supplied data, the two multiplication identities identify the raw quotients
+a.e. with the given representatives. Weak derivative uniqueness then replaces
+the chosen local witnesses by the specified Fourier derivatives.
+For classical $C^2$ functions on the open cell, differentiate the same flux
+identity pointwise to obtain $sE(s^{-1}u)=-\Delta u$, including at the elliptic
+center.
 \end{proof}
+
+\begin{remark}[Digest note: Poisson before global quotient regularity]
+The quotient Poisson identity needs neither reflection parity nor the transport
+part of the eigenfunction equation. It is a local consequence of
+$\Delta\psi=\omega$ and $\Delta s=-s$.
+The weighted $L^2$ unitary map and classical conjugation do not assert a global
+divided Sobolev or transport domain, nor equality of domains for closed
+unbounded operators.
+\end{remark}
 
 \begin{lemma}[Fourier pairing with the dipole]
 \label{lem:dipole-fourier-pairing}
