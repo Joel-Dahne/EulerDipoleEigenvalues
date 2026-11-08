@@ -3077,27 +3077,6 @@ theorem dd_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       exact (indicator_of_mem (show p ∈ {q | dipoleLift q < seq j} from hj) D).symm
   exact tendsto_nhds_unique hlim2 hlim1
 
-/-- Even H² gradient limits, using specified Fourier derivatives and continuous values.
-    All three limits share one exceptional null set in the `ε = Ψ` variable. -/
-theorem dd_quotient_gradient_traces {u dx dy : L2} (hu : MemSobolev 2 u)
-    (hs : InSector true true u) (hx : HasFourierPartial 0 u dx)
-    (hy : HasFourierPartial 1 u dy) :
-    (∀ k : Fin 4, Integrable (fun t ↦ Real.cosh t ^ 2 / 2 *
-      ‖deriv (ddArcTrace u k) t‖ ^ 2)) ∧
-    ∃ N : Set ℝ, volume N = 0 ∧
-      Tendsto (fun ε ↦ levelIntegral (ε / 2) (fun p ↦
-        ‖ddInwardNormal (liftL2 dx) (liftL2 dy) p‖ ^ 2))
-        (𝓝[Ioi 0 \ N] 0) (𝓝 0) ∧
-      Tendsto (fun ε ↦ levelIntegral (ε / 2) (fun p ↦
-        ‖tangentDeriv (liftL2 dx) (liftL2 dy) p‖ ^ 2))
-        (𝓝[Ioi 0 \ N] 0) (𝓝 (∑ k : Fin 4,
-          ∫ t, Real.cosh t ^ 2 / 2 * ‖deriv (ddArcTrace u k) t‖ ^ 2)) ∧
-      Tendsto (fun ε ↦ levelIntegral (ε / 2) (fun p ↦ gradNorm p *
-        ((starRingEnd ℂ) (continuousRep u (torusProj p)) *
-          ddInwardNormal (liftL2 dx) (liftL2 dy) p).re))
-        (𝓝[Ioi 0 \ N] 0) (𝓝 0) := by
-  sorry
-
 /-- Change the raw local quotients to supplied data in the truncated virial. The
     conclusion is in the orbit parameter, so the stream level is explicitly `2*h`. -/
 theorem DDQuotientData.ae_truncated_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}

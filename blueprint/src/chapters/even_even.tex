@@ -661,6 +661,7 @@ instead uses the full-quarter bound and does not depend on it.
 \uses{def:normal-tangent, def:stream-lifts, def:level-integral}
 \lean{NoEmbeddedEigenvalues.ee_first_trace_limit,
   NoEmbeddedEigenvalues.abs_levelIntegral_first_le,
+  NoEmbeddedEigenvalues.abs_levelIntegral_first_le_of_bounded,
   NoEmbeddedEigenvalues.levelIntegral_gradNorm_sq,
   NoEmbeddedEigenvalues.levelIntegral_gradNorm_sq_le}
 \leanok
@@ -676,7 +677,11 @@ $\oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0$ outside a null set co
 \leanok
 On almost every level $|\psi|\le M=\sup|\tilde\psi|$, and $d\ell=\rho\,dt$, so by
 Cauchy--Schwarz $|\oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell|\le
-M(\oint\rho^2dt)^{1/2}(\oint|\psi_n|^2dt)^{1/2}$. Although the period $S(h)\to\infty$,
+M(\oint\rho^2dt)^{1/2}(\oint|\psi_n|^2dt)^{1/2}$.
+The same bound holds for arbitrary measurable $f,z$ on the level with
+$|f|\le M$ almost everywhere and $z\in L^2(dt)$, replacing
+$\psi,\psi_n$ by $f,z$; no derivative relation is required.
+Although the period $S(h)\to\infty$,
 $\oint\rho^2\,dt$ is bounded: $\rho\le Cd$ with $d$ the distance to the saddles, and
 $\int d^2\,dt\le C$ on each quarter orbit (Lemma~\ref{lem:orbit-time-integrals}); $\rho^2$ is
 invariant under the quarter rotation, so $\oint\rho^2dt$ is four quarter integrals.

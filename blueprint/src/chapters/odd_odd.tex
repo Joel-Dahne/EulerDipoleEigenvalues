@@ -821,24 +821,44 @@ a null set,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:ee-gradient-traces, lem:inverse-laplacian-fourier,
- lem:elliptic-torus, lem:symmetries-commute, lem:ee-first-trace-limit}
+\uses{lem:ee-gradient-traces, lem:h2-laplacian-reconstruction,
+ lem:laplacian-symmetries, lem:ee-first-trace-limit, lem:lift-sobolev-local,
+ lem:ee-bulk-integrable, lem:orbit-coordinates-area, lem:cell-neighbourhood}
+\leanok
 Put $\eta=\Delta u\in X$. Since the reflections are affine isometries,
 $\eta$ is even under both. Fourier coefficients give
 $\Delta^{-1}\eta=u-\langle u\rangle$, where $\langle u\rangle$ is the torus
 mean. Apply Lemma~\ref{lem:ee-gradient-traces} to this auxiliary vorticity
 $\eta$; that lemma assumes no eigenfunction equation. Constants do not
 change the gradient or $g_k'$, so its quadratic limits apply to $u$.
-For the first-order term use boundedness of $u$, the vanishing normal
-energy, and the boundedness of $\oint r\,dt$, exactly as in
-Lemma~\ref{lem:ee-first-trace-limit}.
+For the first-order term use the bounded-value estimate of
+Lemma~\ref{lem:ee-first-trace-limit}, with the continuous representative of
+$u$ and its inward normal component:
+\[
+ \left|\oint\operatorname{Re}(\bar u\,\partial_nu)\,d\ell\right|
+ \le \|\tilde u\|_\infty
+       \left(K\oint|\partial_nu|^2\,dt\right)^{1/2}\longrightarrow0.
+\]
+The mean need not vanish, and the first-order term is not invariant under
+adding a constant.
+
+Uniqueness of Fourier derivatives identifies the supplied $L^2$ derivative
+classes with the stream derivatives of $\Delta^{-1}\eta$, hence identifies
+their fixed lifted representatives. Coarea supplies normal-energy integrability
+on almost every level. Unite its exceptional set with the quadratic trace
+exceptional set in the $h$ variable, then pull this union back under
+$\epsilon\mapsto\epsilon/2$. This null set works for all three limits.
 \end{proof}
 
 \begin{remark}[Digest note: reuse of the even--even traces]
 The quotient has even--even parity even though the original eigenfunction
 has odd--odd parity. Passing through the auxiliary vorticity $\Delta\phi$
 therefore supplies the full corner-tail control of the existing trace
-argument. No new weighted gradient trace theorem is needed once
+argument. The first-order term must be estimated with the original bounded
+value, rather than identified after subtracting the mean. The same
+Cauchy--Schwarz bound applies to any bounded measurable value and any
+square-integrable normal component; no Poisson relation between them is used.
+No new weighted gradient trace theorem is needed once
 $\phi\in H^2(\T^2)$ is established. This does not establish that quotient
 regularity, which is supplied separately by
 Proposition~\ref{prop:dd-stream-quotient-h2}.

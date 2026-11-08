@@ -7,13 +7,15 @@ working; update current priorities and blockers rather than appending history.
 
 The even–even exclusion is admission-free (`even_even_exclusion`).
 Odd–odd exclusion remains conditional: the Picone current is assembled from
-three explicit admitted inputs. Corrected boundary nonnegativity is admission-free.
+two explicit admitted inputs. Corrected boundary nonnegativity is admission-free.
 The stream-H² quotient is assembled
 from local analytic inputs; the other three quotient stages remain outer
 admissions. Bulk coercivity reaches only the two residual-certificate inputs.
 Its weighted-domain bridge, ground-state/matrix bounds and central-parity
 weighted Poincaré inequality are admission-free.
-The mixed exclusion remains admitted. The recursive statement-only pass covers
+The odd–odd chapter's exclusion-route nodes now have proof markers; the
+exclusion's remaining admissions lie in prerequisite chapters. The mixed exclusion remains admitted.
+The recursive statement-only pass covers
 the odd–odd dependency closure, including certificate tools and sign claims.
 Weighted Poincaré is proved on the maximal weak domain using the zonal basis,
 cutoff weak pairings, central parity and Bessel, without traces or Sobolev density.
@@ -60,9 +62,9 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
-finds zero admissions for `even_even_exclusion`, three below `dd_picone_current`,
+finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
 zero below `correctedBoundaryForm_nonneg`, nine below `dd_stream_quotient_h2`,
-twelve below `dd_exclusion_domain`, and seventeen for `odd_odd_exclusion`.
+twelve below `dd_exclusion_domain`, and sixteen for `odd_odd_exclusion`.
 The bulk Picone bound reaches exactly two: the residual identity and residual
 sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
 zero admissions, as do the weighted form-domain bridge and matrix bound.
@@ -75,7 +77,7 @@ and both affine correction estimates are also admission-free. Picone-potential
 integrability, the positive-truncation Picone identity, the B-weighted level
 trace and the integrated current remainder are also transitively admission-free.
 Supplied-forcing and vorticity-density integrability are admission-free as well,
-as are both gradient energies, the quotient equations and the annular weighted
-first identity.
+as are both gradient energies, the quotient equations, even-H² gradient traces
+and the annular weighted first identity.
 Other odd–odd and mixed admissions remain.
 Blueprint source checks, regression tests and the web build pass.

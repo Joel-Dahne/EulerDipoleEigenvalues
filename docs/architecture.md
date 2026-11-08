@@ -151,7 +151,8 @@ proof mechanisms. Module names below are relative to
   `ξ = tanh s` transformation and identification of the canonical arc form.
 - `IntervalZeroExtension.lean`: jump-free zero extension of zero-trace H¹
   data, and complex primitive/zero-extension helpers used by `TraceH2.lean`.
-- `EvenEvenBoundary.lean`: even–even gradient traces, arc absolute continuity,
+- `EvenEvenBoundary.lean`: bounded-value first-order level estimates,
+  even–even gradient traces, arc absolute continuity,
   even H² arc estimates via Laplacian reconstruction, abstract canonical
   profile interval regularity, and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
@@ -174,9 +175,11 @@ proof mechanisms. Module names below are relative to
 - `OddOddQuotientEquations.lean`: weighted cell measure and weak operator,
   unitary multiplication by the dipole, local classical conjugation, and raw/
   supplied-data weak Poisson identities through specified Fourier derivatives.
+- `OddOddGradientTraces.lean`: even H² gradient level limits from Laplacian
+  reconstruction and even–even traces; a bounded-value first-order estimate
+  and one rescaled exceptional set.
 - `OddOddVirial.lean`: weighted operator jets, virial algebra and Green flux,
-  raw-quotient annular/truncated identities, even H²
-  gradient traces. Positive-truncation H¹
+  raw-quotient annular/truncated identities. Positive-truncation H¹
   division, weak-witness uniqueness, coefficient bounds and center-flux removal
   assemble the truncated identity from the annular one. Weighted differential
   algebra and cutoff-to-annular extraction separate `dd_cutoff_identity`

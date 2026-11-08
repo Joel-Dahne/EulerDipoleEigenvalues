@@ -65,6 +65,7 @@ import NoEmbeddedEigenvalues.OddOddGroundResidual
 import NoEmbeddedEigenvalues.OddOddPiconeCutoff
 import NoEmbeddedEigenvalues.OddOddQuotientEquations
 import NoEmbeddedEigenvalues.OddOddVirial
+import NoEmbeddedEigenvalues.OddOddGradientTraces
 import NoEmbeddedEigenvalues.OddOddQuotient
 import NoEmbeddedEigenvalues.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.OddOddSaddle

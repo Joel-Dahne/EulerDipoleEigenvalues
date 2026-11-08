@@ -42,6 +42,13 @@ once resolved; record the resolution in the relevant node.
 
 \section*{Possible simplifications}
 \begin{enumerate}
+  \item \textbf{Reuse of even--even gradient traces}
+        (Lemma~\ref{lem:dd-quotient-gradient-traces}). Reconstruct an even
+        $H^2$ function through its Laplacian plus its mean. The mean disappears
+        from the quadratic gradient limits but not the first-order flux;
+        the bounded-value Cauchy--Schwarz estimate handles the latter directly.
+        One union of null sets, rescaled from $h$ to $\epsilon=2h$, serves all
+        three limits. No new quotient corner estimates are needed.
   \item \textbf{Poisson before global quotient regularity}
         (Lemma~\ref{lem:dd-quotient-equations}). The local flux
         $s\nabla\psi-\psi\nabla s$ gives the quotient equation from the

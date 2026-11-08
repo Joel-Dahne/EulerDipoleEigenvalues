@@ -130,17 +130,18 @@ theorem levelIntegral_gradNorm_sq_le : ∃ K h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ 
         intervalIntegral.integral_const_mul _ _
     _ ≤ 4 * Cρ ^ 2 * Cd := by gcongr
 
-/-- The first-order trace term on one level: if `|ψ| ≤ M` along the level and `∮ ρ² dt ≤ K`,
-    then `|∮ Re(ψ ψ̄ₙ) dℓ| ≤ M (K ∮ |ψₙ|² dt)^{1/2}` (Cauchy–Schwarz). -/
-theorem abs_levelIntegral_first_le (ω : L2) {M K h : ℝ} (hM0 : 0 ≤ M) (h0 : 0 < h) (h1 : h < 1)
+/-- Cauchy–Schwarz on a level for a bounded measurable value and an L² normal
+    component. No relation between the two functions is required. -/
+theorem abs_levelIntegral_first_le_of_bounded {f n : ℝ × ℝ → ℂ}
+    (mf : Measurable f) (mn : Measurable n)
+    {M K h : ℝ} (hM0 : 0 ≤ M) (h0 : 0 < h) (h1 : h < 1)
     (hK : levelIntegral h (fun p ↦ gradNorm p ^ 2) ≤ K)
-    (hn : IntegrableOn (fun t ↦ ‖streamNormal ω (dipoleOrbit h t)‖ ^ 2)
+    (hn : IntegrableOn (fun t ↦ ‖n (dipoleOrbit h t)‖ ^ 2)
       (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)))
     (hM : ∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
-      ‖streamLift ω (dipoleOrbit h t)‖ ≤ M) :
-    |levelIntegral h fun p ↦
-        gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re| ≤
-      M * √(K * levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2) := by
+      ‖f (dipoleOrbit h t)‖ ≤ M) :
+    |levelIntegral h (fun p ↦ gradNorm p * (f p * (starRingEnd ℂ) (n p)).re)| ≤
+      M * √(K * levelIntegral h (fun p ↦ ‖n p‖ ^ 2)) := by
   set I := Ico (-2 * eighthPeriod h) (6 * eighthPeriod h) with hI
   set γ : ℝ → ℝ × ℝ := fun t ↦ dipoleOrbit h t with hγ
   have hγm : Measurable γ :=
@@ -148,17 +149,8 @@ theorem abs_levelIntegral_first_le (ω : L2) {M K h : ℝ} (hM0 : 0 ≤ M) (h0 :
   have hρm : Measurable fun t ↦ gradNorm (γ t) := by
     simp only [gradNorm]
     fun_prop
-  have hnm : Measurable fun t ↦ streamNormal ω (γ t) := by
-    have hx := ((Lp.stronglyMeasurable (streamPartial 0 ω)).measurable.comp
-      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
-    have hy := ((Lp.stronglyMeasurable (streamPartial 1 ω)).measurable.comp
-      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
-    simp only [streamNormal, normalDeriv, gradNorm, streamLiftX, streamLiftY, liftL2]
-    simp only [Function.comp_def] at hx hy
-    fun_prop
-  have hsm : Measurable fun t ↦ streamLift ω (γ t) :=
-    ((Lp.stronglyMeasurable (invLap ω)).measurable.comp
-      isOpenQuotientMap_torusProj.continuous.measurable).comp hγm
+  have hnm : Measurable fun t ↦ n (γ t) := mn.comp hγm
+  have hsm : Measurable fun t ↦ f (γ t) := mf.comp hγm
   have hρ0 (t : ℝ) : 0 ≤ gradNorm (γ t) := Real.sqrt_nonneg _
   have hρle (t : ℝ) : gradNorm (γ t) ^ 2 ≤ 2 := by
     rw [gradNorm, Real.sq_sqrt (by positivity)]
@@ -170,31 +162,31 @@ theorem abs_levelIntegral_first_le (ω : L2) {M K h : ℝ} (hM0 : 0 ≤ M) (h0 :
     (integrable_const (2 : ℝ)).mono' (hρm.pow_const 2).aestronglyMeasurable
       (Eventually.of_forall fun t ↦ by
         rw [Real.norm_of_nonneg (by positivity)]; exact hρle t)
-  have iN : Integrable (fun t ↦ ‖streamNormal ω (γ t)‖ ^ 2) (volume.restrict I) := hn
-  have iρn : Integrable (fun t ↦ gradNorm (γ t) * ‖streamNormal ω (γ t)‖) (volume.restrict I) :=
+  have iN : Integrable (fun t ↦ ‖n (γ t)‖ ^ 2) (volume.restrict I) := hn
+  have iρn : Integrable (fun t ↦ gradNorm (γ t) * ‖n (γ t)‖) (volume.restrict I) :=
     (iρ.add iN).mono' (hρm.mul hnm.norm).aestronglyMeasurable
       (Eventually.of_forall fun t ↦ by
         rw [Real.norm_of_nonneg (mul_nonneg (hρ0 t) (norm_nonneg _)), Pi.add_apply]
-        nlinarith [sq_nonneg (gradNorm (γ t) - ‖streamNormal ω (γ t)‖)])
+        nlinarith [sq_nonneg (gradNorm (γ t) - ‖n (γ t)‖)])
   have hfm : AEStronglyMeasurable (fun t ↦ gradNorm (γ t) *
-      (streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re) (volume.restrict I) :=
+      (f (γ t) * (starRingEnd ℂ) (n (γ t))).re) (volume.restrict I) :=
     (hρm.mul (Complex.measurable_re.comp
       (hsm.mul (Complex.continuous_conj.measurable.comp hnm)))).aestronglyMeasurable
   have hbound : ∀ᵐ t ∂(volume.restrict I), ‖gradNorm (γ t) *
-      (streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re‖ ≤
-        M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) := by
+      (f (γ t) * (starRingEnd ℂ) (n (γ t))).re‖ ≤
+        M * (gradNorm (γ t) * ‖n (γ t)‖) := by
     filter_upwards [hM] with t ht
     rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hρ0 t)]
-    calc gradNorm (γ t) * |(streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re|
-        ≤ gradNorm (γ t) * (‖streamLift ω (γ t)‖ * ‖streamNormal ω (γ t)‖) :=
+    calc gradNorm (γ t) * |(f (γ t) * (starRingEnd ℂ) (n (γ t))).re|
+        ≤ gradNorm (γ t) * (‖f (γ t)‖ * ‖n (γ t)‖) :=
           mul_le_mul_of_nonneg_left (hre _ _) (hρ0 t)
-      _ ≤ gradNorm (γ t) * (M * ‖streamNormal ω (γ t)‖) :=
+      _ ≤ gradNorm (γ t) * (M * ‖n (γ t)‖) :=
           mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right ht (norm_nonneg _)) (hρ0 t)
-      _ = M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) := by ring
+      _ = M * (gradNorm (γ t) * ‖n (γ t)‖) := by ring
   have iA := (iρn.const_mul M).mono' hfm hbound
   have hCS := integral_mul_le_Lp_mul_Lq_of_nonneg (μ := volume.restrict I)
     Real.HolderConjugate.two_two (Eventually.of_forall fun t ↦ hρ0 t)
-    (Eventually.of_forall fun t ↦ norm_nonneg (streamNormal ω (γ t)))
+    (Eventually.of_forall fun t ↦ norm_nonneg (n (γ t)))
     (by rw [ENNReal.ofReal_ofNat]
         exact (memLp_two_iff_integrable_sq hρm.aestronglyMeasurable).2 iρ)
     (by rw [ENNReal.ofReal_ofNat]
@@ -203,16 +195,39 @@ theorem abs_levelIntegral_first_le (ω : L2) {M K h : ℝ} (hM0 : 0 ≤ M) (h0 :
   rw [levelIntegral_eq_setIntegral h0 h1] at hK ⊢
   rw [levelIntegral_eq_setIntegral h0 h1]
   calc _ ≤ ∫ t in I, ‖gradNorm (γ t) *
-        (streamLift ω (γ t) * (starRingEnd ℂ) (streamNormal ω (γ t))).re‖ :=
+        (f (γ t) * (starRingEnd ℂ) (n (γ t))).re‖ :=
         (abs_integral_le_integral_abs).trans_eq rfl
-    _ ≤ ∫ t in I, M * (gradNorm (γ t) * ‖streamNormal ω (γ t)‖) :=
+    _ ≤ ∫ t in I, M * (gradNorm (γ t) * ‖n (γ t)‖) :=
         integral_mono_ae iA.norm (iρn.const_mul M) hbound
-    _ = M * ∫ t in I, gradNorm (γ t) * ‖streamNormal ω (γ t)‖ := integral_const_mul _ _
-    _ ≤ M * (√(∫ t in I, gradNorm (γ t) ^ 2) * √(∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2)) := by
+    _ = M * ∫ t in I, gradNorm (γ t) * ‖n (γ t)‖ := integral_const_mul _ _
+    _ ≤ M * (√(∫ t in I, gradNorm (γ t) ^ 2) * √(∫ t in I, ‖n (γ t)‖ ^ 2)) := by
         gcongr
-    _ ≤ M * √(K * ∫ t in I, ‖streamNormal ω (γ t)‖ ^ 2) := by
+    _ ≤ M * √(K * ∫ t in I, ‖n (γ t)‖ ^ 2) := by
         rw [Real.sqrt_mul' _ (integral_nonneg fun t ↦ by positivity)]
         gcongr
+
+/-- The first-order trace term on one level: if `|ψ| ≤ M` along the level and `∮ ρ² dt ≤ K`,
+    then `|∮ Re(ψ ψ̄ₙ) dℓ| ≤ M (K ∮ |ψₙ|² dt)^{1/2}` (Cauchy–Schwarz). -/
+theorem abs_levelIntegral_first_le (ω : L2) {M K h : ℝ} (hM0 : 0 ≤ M) (h0 : 0 < h) (h1 : h < 1)
+    (hK : levelIntegral h (fun p ↦ gradNorm p ^ 2) ≤ K)
+    (hn : IntegrableOn (fun t ↦ ‖streamNormal ω (dipoleOrbit h t)‖ ^ 2)
+      (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h)))
+    (hM : ∀ᵐ t ∂(volume.restrict (Ico (-2 * eighthPeriod h) (6 * eighthPeriod h))),
+      ‖streamLift ω (dipoleOrbit h t)‖ ≤ M) :
+    |levelIntegral h fun p ↦
+        gradNorm p * (streamLift ω p * (starRingEnd ℂ) (streamNormal ω p)).re| ≤
+      M * √(K * levelIntegral h fun p ↦ ‖streamNormal ω p‖ ^ 2) := by
+  apply abs_levelIntegral_first_le_of_bounded
+    ((Lp.stronglyMeasurable (invLap ω)).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable) ?_ hM0 h0 h1 hK hn hM
+  have hx := (Lp.stronglyMeasurable (streamPartial 0 ω)).measurable.comp
+    isOpenQuotientMap_torusProj.continuous.measurable
+  have hy := (Lp.stronglyMeasurable (streamPartial 1 ω)).measurable.comp
+    isOpenQuotientMap_torusProj.continuous.measurable
+  change Measurable (liftL2 (streamPartial 0 ω)) at hx
+  change Measurable (liftL2 (streamPartial 1 ω)) at hy
+  unfold streamNormal normalDeriv gradNorm streamLiftX streamLiftY
+  fun_prop
 
 /-- The first-order trace term (`lem:ee-first-trace-limit`): if `∮ |ψₙ|² dt → 0` along levels
     outside `N`, then `∮ Re(ψ ψ̄ₙ) dℓ → 0` outside a larger null set, by Cauchy–Schwarz with

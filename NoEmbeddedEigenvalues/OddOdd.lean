@@ -4,6 +4,7 @@ import NoEmbeddedEigenvalues.OddOddBoundaryTrace
 import NoEmbeddedEigenvalues.OddOddCurrentRemainder
 import NoEmbeddedEigenvalues.OddOddRenormalizedBulk
 import NoEmbeddedEigenvalues.OddOddValueFinitePart
+import NoEmbeddedEigenvalues.OddOddGradientTraces
 
 /-!
 # Odd–odd exclusion and renormalized current assembly

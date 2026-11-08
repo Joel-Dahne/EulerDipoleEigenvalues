@@ -74,9 +74,12 @@ weights and local versus global regularity.
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
-   `dd_character_virial_limit` is assembled without its own `sorry`, from three
-   admissions: local H² smooth approximation, gradient traces and the leading
-   period value asymptotic.
+   `dd_character_virial_limit` is assembled without its own `sorry`, from two
+   admissions: local H² smooth approximation and the leading period value
+   asymptotic. `OddOddGradientTraces.lean` proves the unchanged even-H² gradient
+   limits without admissions by Laplacian reconstruction and the existing
+   even–even traces. A shared bounded-value Cauchy–Schwarz estimate handles
+   the nonzero mean; one rescaled null set serves all three limits.
    Truncated virial follows from the annular identity;
    local H¹ division, coefficient bounds and center removal are proved without
    quotient existence. Weighted differential algebra is also admission-free;
@@ -147,7 +150,7 @@ weights and local versus global regularity.
    only `orbitPeriod_leading_asymptotic`, already shared by the bulk finite part.
    Corrected-boundary nonnegativity and all its interval inputs are
    admission-free in `CorrectedBoundaryForm.lean`; no corrected-boundary
-   analytic admissions remain. The three transitive Picone inputs remain proof work.
+   analytic admissions remain. The two transitive Picone inputs remain proof work.
    Bulk coercivity is assembled through the weighted-domain bridge and separate
    gradient/potential bounds. Weighted mass/finite integrals and the constrained
    mean estimate are proved; a completed square removes Kantorovich from the
