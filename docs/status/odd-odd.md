@@ -5,431 +5,58 @@
 
 ## Current position
 
-`odd_odd_exclusion` and its character-wise assembly have no `sorry` of their
-own. In [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), the Picone
-current is also assembled without its own `sorry`, from explicit analytic
-inputs, reaching two admissions. Corrected boundary nonnegativity is
-transitively admission-free in
-[CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
-Quotient existence in [Regularity/OddOddQuotient.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddQuotient.lean)
-has an assembled stream-H² stage and three remaining outer admissions.
-The stream-H² assembly reaches nine existing local analytic admissions, so the
-quotient domain has twelve transitive admissions. The current full odd–odd
-audit finds sixteen admissions. The bulk bound depends only on the two
-residual-certificate inputs. This is not an admission-free exclusion.
-All odd–odd chapter nodes on the exclusion route now have proof markers.
-Four off-route chapter nodes remain unmarked. The exclusion's remaining
-admissions are in prerequisite chapters, not eliminated by those markers.
-The recursive statement pass covers the odd–odd dependency closure, including
-the weighted spectral inputs. The zonal basis and weak mode pairings are proved.
-Certificate tools and residual sign claims have statement/Mathlib markers. These markers are
-neither a human compatibility review nor a proof audit.
+All nodes in the odd–odd chapter have Lean statement and proof markers,
+including Odd–odd exclusion (`thm:dd-exclusion`). The exclusion and
+its character-wise assembly have no `sorry` of their own. The remaining
+admissions lie in prerequisite chapters: this is **not** an admission-free
+exclusion. Blueprint markers do not constitute a human statement review or
+a transitive Lean audit.
 
-The Bulk Picone bound (`lem:dd-bulk-picone`, `dd_bulk_picone`) now has no
-`sorry` of its own: it adds `dd_bulk_gradient_bound` and
-`dd_bulk_potential_bound`, using `80/27 - 5/2 = 25/54`. Both immediate
-inputs now also have proofs without their own admissions. The gradient proof
-uses the weighted-domain bridge, constrained Poincaré, matrix bound and finite
-weighted integrals; the potential proof integrates the coefficient bound.
-Their statements are unchanged. The weighted form-domain bridge
-(`lem:dd-bulk-form-domain`) and ground-state/matrix bounds
-(`lem:dd-ground-matrix-bounds`) are now transitively admission-free.
-The matrix proof uses scalar polynomial inequalities and the normal/tangent
-orthonormal frame, without a residual certificate. The domain proof uses
-global C¹ regularity of the reciprocal ground state, including at the center,
-and C¹ multiplication of lifted Fourier data. It does not use the supplied
-H² or Picone-energy hypotheses; these remain in the common bulk interface.
-The simplification is recorded in the Blueprint digest notes.
+The corrected-boundary nonnegativity branch and the non-certificate bulk
+coercivity branch are transitively admission-free, including weighted Poincaré
+on the original maximal weak domain. Quotient orthogonality and canonical
+boundary regularity are admission-free for supplied quotient data.
 
-The non-certificate bulk route is admission-free. Weighted Poincaré
-(`lem:zonal-poincare`) is proved with its original maximal `DDWeightedH1`
-domain and a.e. central parity, without boundary traces, separate reflection
-symmetries or weighted Sobolev density.
-[Analysis/ZonalSpectral.lean](../../NoEmbeddedEigenvalues/Analysis/ZonalSpectral.lean)
-assembles Parseval for the values, normalized gradient orthonormality from weak
-mode pairings, odd-degree coefficient cancellation and Bessel. The exact
-mean/variance and Cartesian-energy transport is applied in `OddOddCoercivity.lean`.
-The basis uses polynomial spanning and Stone–Weierstrass; the weak pairings
-use interior cutoffs and dominated convergence against weighted L¹.
-Weighted Poincaré, constrained Poincaré and the bulk gradient bound each have
-zero transitive admissions. The bulk bound has exactly two: the unchanged
-residual identity/sign inputs. The requested traversal excludes
-`cert:dd-residual` and its dependency subtree. The standalone Kantorovich
-lemma is off this route: a completed square gives the weighted-mean estimate.
-Weighted mass, finite integrals and the weighted-mean estimate have no admissions.
+## Remaining prerequisites
 
-The interfaces use actual Fourier derivatives, continuous quotient traces,
-weighted interval domains and H¹ endpoint traces. Picone supplies absolute
-bulk integrability; coercivity consumes it explicitly. The final contradiction
-and the bridges from zero mass to zero quotient and vorticity are proved.
-Only nonnegative corrected boundary energy is consumed; strict positivity
-and a boundary equality classification are off the exclusion route.
+Proof work is now outside the odd–odd chapter:
 
-Quotient orthogonality is admission-free for any supplied quotient data; it
-does not invoke the admitted existence theorem. The supporting
-[DipoleOrthogonality.lean](../../NoEmbeddedEigenvalues/DipoleOrthogonality.lean)
-uses four Fourier modes and reflection/cell measure identities, not
-self-adjointness. Only the quotient multiplication identity and even parity
-are consumed in this step.
+- **Quotient existence:** the minimal quotient domain (`cor:dd-exclusion-domain`)
+  is assembled from stream H², Hardy–Poisson vorticity division, periodic
+  quotient transport and the periodic first transport gain. Stream H²
+  (`prop:dd-stream-quotient-h2`) is itself assembled from local analytic inputs;
+  those proofs and the other three stages remain admitted. No stronger corner
+  hypothesis is needed. The stronger bundled quotient-domain proposition is
+  downstream and off the exclusion route.
+- **Picone/virial limits:** the remaining inputs are Local H² smooth
+  approximation (`lem:local-h2-smooth-approximation`) and Leading period
+  asymptotic (`lem:period-leading-asymptotic`). The finite parts need only the
+  leading period value, not the elliptic identity or sharp remainders.
+- **Bulk potential bound:** Odd–odd residual (`cert:dd-residual`) still needs
+  both the operator-to-residual identity and the residual sign proof. No exact
+  certificate backend or verification dataset has been supplied.
 
-Canonical boundary regularity is also admission-free for supplied quotient
-data. Even H² arc energy follows by reconstruction through `Δφ` plus the
-mean. The quotient transport pair gives Melnikov, and an abstract canonical
-profile theorem supplies the weighted interval domain, forcing identity and
-endpoint values. Rotation extends through the separatrix by continuity.
-No stronger quotient assumptions or separate corner remainders are needed.
+The detailed analytic backlog and interface-review questions belong in
+[shared status](shared.md#open-analytic-work); the
+[generated report](generated.md#odd-odd) lists unfinished prerequisite nodes.
+The last recorded transitive audit is summarized in
+[project status](../../STATUS.md#validation-baseline). These are different
+views of the frontier, not interchangeable counts of gaps.
 
-The Picone interfaces separate three bulk integrability assertions, Sobolev
-Picone on a positive truncation, the character-wise virial limit, and three
-geometric level/current limits. The common logarithmic counterterm and the
-whole value finite part cancel in Lean. Ordinary exhaustion and boundary-form
-identification are admission-free, as are the scalar B derivative formula
-and β normalization. Correction integrability now follows directly from the
-weighted interval domain, independently of the B-trace limit. No sign certificate
-is used by the current assembly.
+## Review and optional work
 
-The corrected-boundary review replaces the auxiliary scalar Picone function
-by a first-order midpoint estimate, and replaces the sharp Poincaré constant
-by half-interval Cauchy–Schwarz. The pointwise β lower/absolute/central/tail bounds,
-forcing H¹ regularity, correction integrability, the midpoint bound, both affine
-estimates, logarithmic endpoint moments and closing rational margins are proved.
-The cutoff is the rational 1/7; the constants 203/1920 and λ²/96 come from
-exact polynomial integration.
-Nonnegativity needs no nonzero-parameter hypothesis; the outer API retains it.
+- Human review of the Lean statements and analytic inputs remains necessary;
+  a completed assembly verifies compatibility, not the intended mathematics.
+- Bring the settled argument into the reworked manuscript only with the
+  authors’ agreement.
 
-## Statement coverage and analytic frontier
+## Where to work
 
-The shared prerequisites have Blueprint proof outlines and explicit dependencies.
-Every result in the exclusion's recorded dependency closure has a proof
-environment; this is not an audit of all its arguments.
-The stream-H² route is now assembled in Lean as described below. Compatibility
-review of the other analytic branches remains separate.
-
-The certificate chapter is stated in `BernsteinCertificates.lean`,
-`MixedComparison.lean` and `PolynomialInequalities.lean`, with `sorry` proofs.
-The explicit odd–odd residual table has a separate identity with the actual
-operator, and the sign statement is independent of any Bernstein algorithm.
-Coefficient generation, polynomialization and exact verification are not supplied;
-no proof backend has been selected. The same distinction is retained for the
-mixed interior and Robin inequalities. No exclusion assembly has changed.
-
-[OddOddCoercivity.lean](../../NoEmbeddedEigenvalues/OddOddCoercivity.lean)
-now states the bulk form-domain/Poincaré branch. `DDWeightedH1` is the maximal
-weak weighted H¹ domain, without boundary traces or a density hypothesis.
-The actual quotient-rule derivatives feed it from the existing Picone-energy
-hypothesis; no stronger quotient regularity is assumed. Central parity gives
-Cartesian Poincaré constant 3; a completed-square estimate handles the mean
-under `∫wz = 0`. Gradient coercivity and the residual-certificate potential
-bound are separate interfaces. Their assemblies and the constrained estimate
-are proved. The form-domain, matrix bound and weighted Poincaré are
-admission-free; only the residual certificate remains admitted on this branch.
-The outer bulk bound combines the two estimates; the exclusion assembly and
-statement of `zonal-poincare` are unchanged. Its weak-domain spectral proof is
-fully formalized and spelled out in the Blueprint.
-The coefficient bounds exclude the totalized matrix value at the center,
-which does not affect any integral. The certificate statements now complete
-this branch at Blueprint-node level; their proofs and verification data remain
-separate work.
-
-All corrected-boundary interval inputs are admission-free in
-`CorrectedBoundaryForm.lean`. Zero-trace forcing energy and traces
-(`lem:corrected-zero-energy`) use the weighted sum of squares and
-`∫|(xu)'|² = ∫x²|u'|²`; the L² endpoint liminf forces the forcing traces to vanish.
-Logarithmic endpoint moments (`lem:corrected-log-moments`) give the exact value
-for every natural power. The negative affine correction
-(`lem:corrected-negative-affine`) combines the first three moments with separate
-half-interval energies. The midpoint bound (`lem:corrected-midpoint-bound`)
-uses central increment cost at most one eighth of the energy and endpoint
-logarithmic mass 1/7, giving the exact margins 5/112 and 53/448.
-No density argument or strengthened endpoint hypothesis is used.
-
-Sobolev Picone on a positive truncation (`lem:dd-truncated-picone`) is
-transitively admission-free in
-[OddOddPicone.lean](../../NoEmbeddedEigenvalues/OddOddPicone.lean).
-[OddOddGroundResidual.lean](../../NoEmbeddedEigenvalues/OddOddGroundResidual.lean)
-proves absolute potential integrability (`lem:dd-picone-potential-integrable`)
-already for L² data. The actual differentiated residual is a polynomial in the
-bounded coordinates `s`, `r`, `s(2-s)/r`, `r log(r/2)`, hence uniformly bounded;
-no residual sign certificate or singular-log integration is used.
-[OddOddPiconeCutoff.lean](../../NoEmbeddedEigenvalues/OddOddPiconeCutoff.lean)
-uses quadratic Fourier testing and common-null annular extraction, without density.
-Current continuity and the full-level center-current bound restore all levels.
-[OddOddPiconeIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddPiconeIntegrability.lean)
-supplies ground-state estimates and raw/divided-gradient integrability.
-The shared classical identities in [Picone.lean](../../NoEmbeddedEigenvalues/Picone.lean)
-are also admission-free. The B-weighted level trace
-(`lem:dd-boundaryB-trace-limit`) is proved in
-[OddOddBoundaryTrace.lean](../../NoEmbeddedEigenvalues/OddOddBoundaryTrace.lean).
-The scalar bound `|B(r)| ≤ 6√r`, the quarter graph estimate `r ≤ 4 cos² a`,
-and its time Jacobian bound `2/cos a` give a bounded diagonal density.
-Dominated convergence proves the full-level limit and arc integrability for
-bounded continuous values, with no derivative traces or exceptional levels.
-The theorem's original H² statement is unchanged. The integrated current
-remainder (`lem:dd-current-remainder-limit`) is also admission-free in
-[OddOddCurrentRemainder.lean](../../NoEmbeddedEigenvalues/OddOddCurrentRemainder.lean).
-The explicit coefficient error is at most `64ε` for `0 < ε ≤ 1`; bounded
-continuous values and the coarse logarithmic period bound give its full-level
-limit. Its H² statement is unchanged and no derivative trace is used.
-[OddOddValueFinitePart.lean](../../NoEmbeddedEigenvalues/OddOddValueFinitePart.lean)
-proves the scalar level-value finite part (`lem:dd-value-finite-part`), with its
-original statement unchanged. Endpoint-subtracted arc integrability is
-admission-free. Shared squared-value Hölder continuity gives exponential tails
-and an integrated orbit error `L(h)h^(1/4) → 0`, using only coarse period bounds.
-The value finite part and renormalized ground-current limit now reach only
-`orbitPeriod_leading_asymptotic`, for the final `log 8` normalization.
-
-The renormalized bulk limit (`lem:dd-renormalized-bulk`) is assembled in
-[OddOddRenormalizedBulk.lean](../../NoEmbeddedEigenvalues/OddOddRenormalizedBulk.lean),
-with its original statement unchanged. Its sole transitive admission is the
-leading period asymptotic (`lem:period-leading-asymptotic`).
-[OddOddGradientIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddGradientIntegrability.lean)
-proves both gradient energies (`lem:dd-gradient-energies-integrable`) without
-admissions and with the statement unchanged.
-[EvenGradientHardy.lean](../../NoEmbeddedEigenvalues/EvenGradientHardy.lean)
-supplies diagonal cosine division from even H² data, using ACL zero traces
-and the proved primitive Hardy averaging estimate. A uniform matrix majorant
-controls the singular normal coefficient. Bounded normalized diagonal ground
-derivatives preserve the same class under the quotient rule; only L² values
-are needed in this step, not boundedness, density or a sign certificate.
-[OddOddFinitePart.lean](../../NoEmbeddedEigenvalues/OddOddFinitePart.lean)
-proves the scalar coefficient finite part (`lem:dd-finite-part`), with its
-statement unchanged and only `orbitPeriod_leading_asymptotic` admitted beneath it.
-The exact positive-truncation identity (`lem:dd-coefficient-integral`) has zero
-admissions: a periodic normal-field divergence, annular extraction, center
-removal and continuity give every positive level. The squared-dipole cell
-integral (`lem:dd-weight-integral`) is also admission-free and shared with the
-weighted measure normalization. The leading asymptotic remains admitted in
-`Period.lean`; its Blueprint derivation is not a Lean proof.
-[OddOddPotentialMass.lean](../../NoEmbeddedEigenvalues/OddOddPotentialMass.lean)
-proves the weighted value-mass finite part (`lem:dd-potential-mass-finite-part`),
-with its statement unchanged and the same single period admission.
-A trigonometric interpolant matches the two torus saddle values; coordinate
-exchange cancels its nonconstant weighted integral. The Hölder remainder is
-dominated by a sum of integrable corner-distance powers of exponent -3/2.
-No quadrant-indicator partition or reflection parity is needed.
-Ordinary exhaustion, the bulk splitting and positive-truncation integrability
-are proved. The scalar coefficient finite part is distinct from
-`lem:dd-value-finite-part`; both now share the leading period admission.
-[OddOddBulkIntegrability.lean](../../NoEmbeddedEigenvalues/OddOddBulkIntegrability.lean)
-proves supplied-forcing integrability (`lem:dd-forcing-density-integrable`) and its
-vorticity specialization without admissions, with their statements unchanged.
-The diagonal corner-distance estimate gives `d² ≤ (π²/2)r` when `s ≤ 1`;
-`Fr ≤ 16`, the center-side coefficient bound and `d ≤ π` yield
-`0 ≤ Fd² ≤ 16π²` on the whole cell. Multiplication by this bounded measurable
-coefficient sends `|e/d|² ∈ L¹` to the required density.
-
-[OddOddGradientTraces.lean](../../NoEmbeddedEigenvalues/OddOddGradientTraces.lean)
-proves Gradient traces for even H² functions (`lem:dd-quotient-gradient-traces`)
-without admissions and with its statement unchanged. Reconstruction through
-`Δu` plus the mean reuses the even–even corner estimates. Fourier uniqueness
-identifies the supplied derivative classes and their fixed lifts. Arc derivatives
-ignore the mean; the first-order flux instead uses the shared bounded-value
-Cauchy–Schwarz estimate. Coarea integrability and a rescaled union of null sets
-give all three limits on the same exceptional set in the Ψ-level variable.
-
-`dd_character_virial_limit` reaches two admissions:
-`orbitPeriod_leading_asymptotic` and `local_h2_smooth_approximation`.
-[OddOddVirial.lean](../../NoEmbeddedEigenvalues/OddOddVirial.lean) proves the
-raw/supplied quotient bridge and almost-everywhere coarea splitting of all five
-boundary terms. The assembly in `OddOdd.lean` pulls gradient exceptional levels
-back under `h ↦ 2h`, selects one pairing sequence avoiding every exceptional set,
-and identifies the full bulk limit by uniqueness. The coefficient error is
-`ε³ log(1/ε) → 0`. The inward normal convention is preserved throughout.
-
-[OddOddQuotientEquations.lean](../../NoEmbeddedEigenvalues/OddOddQuotientEquations.lean)
-proves all four claims in Quotient equations (`lem:dd-quotient-equations`)
-without admissions, with their statements unchanged: the raw and supplied-data
-weak Poisson equations, the weighted cell L² unitary map, and classical
-conjugation for C² functions on the cell. The flux
-`s∇ψ - ψ∇s` has divergence `s(ω+ψ)`; only mean-zero Poisson, local smooth
-division and weak product rules are needed. No global quotient construction,
-parity, transport equation or smooth density is used.
-Supplied Fourier gradients replace local witnesses by weak uniqueness.
-
-The weighted first identity (`lem:dd-weighted-first`, `dd_weighted_first`)
-is admission-free in `OddOddVirial.lean`, with its statement unchanged.
-An annular scalar factor of the ordinary normal field supplies smooth periodic
-adapted coefficients. The unweighted L² virial identity and weak product-rule
-conjugation transfer the integrals. Neither the quotient PDE, global divided
-regularity nor reflection parity is used.
-
-`dd_cutoff_identity` has no `sorry` of its own. It combines the assembled
-weak Green identity, proved boundary-flux identification and weighted first
-identity with the admission-free quotient equation. The weak Green statement
-takes local H² for the stream, local L² for its operator value, and
-`HasDDOperator` with specified weak gradients; it uses neither an eigenfunction
-nor a derivative of the forcing. Boundary-flux identification is admission-free:
-normal–tangent orthogonality reduces the quadratic terms, and
-`-μq = (8-s³)/3` identifies the coefficient with the prescribed boundary density.
-It assumes neither a PDE nor regularity of the supplied values. Its use is confined
-to nonzero cutoff-derivative levels, automatically away from the center.
-The assembly obtains local quotient regularity by smooth division and transfers
-the weak Poisson equation to arbitrary supplied witnesses by uniqueness.
-The original cutoff and annular statements are unchanged; no global quotient
-domain or stronger hypothesis has been introduced.
-
-`dd_truncated_virial` follows from `dd_annular_virial`, whose only input with
-admissions is the assembled cutoff identity. Positive-truncation integrability,
-coefficient bounds, center removal, coarea and common-exceptional-set extraction
-are proved without admissions. A Cauchy–Schwarz flux estimate and an
-integrable-energy sequence remove the center; dominated convergence closes the
-annular limit. Measurable versions and null hulls handle arbitrary witnesses.
-Weighted differential algebra and raw half-density conjugation are also
-admission-free. The local classical Green identity (`lem:dd-green`) is now
-admission-free too: direct flux differentiation cancels the mixed Hessian terms,
-and the constant weighted defect identifies the remaining quadratic form.
-Its smooth annular cutoff integration (`lem:dd-smooth-green`) is also
-admission-free, including the compact-support/divergence argument and the
-half-density correction. Weighted-operator identification from specified weak jets
-(`lem:dd-operator-jet`) and strong L² operator stability
-(`lem:dd-operator-jet-stability`) are also admission-free. They feed the assembled
-weak Green identity.
-
-The cutoff and truncated-virial assemblies reach only local H² smooth
-approximation. The audit reaches two admissions below `dd_picone_current`.
-The weak Green proof is split at `lem:local-h2-smooth-approximation`, stated
-with `sorry` in `SobolevApproximation.lean`. It supplies compactly supported
-smooth approximants on the original open domain and strong L² convergence of
-all jets through order two on a precompact patch, without boundary assumptions.
-`tendsto_integral_mul_conj_of_L2` proves bounded-coefficient quadratic-integral
-stability without admissions. `ddWeightedDiv_cutoff` and
-`ddWeightedGenerator_cutoff` prove the cutoff half-density correction pointwise
-on the regular cell, without classical derivatives of the supplied function.
-The smooth endpoint allows compact support anywhere inside the original cell,
-not only inside the approximation annulus. Weak Green (`lem:dd-weak-green`) now has
-no `sorry` of its own: a compact regular patch contains the cutoff support, and
-all four integrands are finite bounded-coefficient quadratic forms in the value,
-forcing and weak gradients. Strong L² approximation passes their integrals to the
-limit. Its only transitive admission is `local_h2_smooth_approximation`; the original
-hypotheses are unchanged. The remaining analytic work on this route is that density
-theorem.
-
-[OddOddForms.lean](../../NoEmbeddedEigenvalues/OddOddForms.lean) holds the common
-forms, boundary data, characters and renormalization data below the virial,
-avoiding an import cycle. `OddOddValueFinitePart.lean` handles continuous
-level values independently of the weighted virial. The quotient Poisson
-identities need only local division. `Period.lean` states the leading value asymptotic separately
-from sharp remainders.
-
-`dd_exclusion_domain` now follows in Lean from four explicit inputs:
-`dd_stream_quotient_h2`, `even_h2_dipole_laplacian`,
-`dd_quotient_transport`, and `transport_first_gain_periodic`.
-The construction uses no corner-remainder hypotheses: stream H²
-implies vorticity L² by coordinate Hardy and the Poisson product rule;
-weak transport division and the first gain then give `ν/d ∈ L²`.
-The stream proof spells out the dyadic third-derivative estimate, weighted
-cone division and H² point removal. The separate angular-Hardy vorticity
-division argument is no longer needed. Invariant cutoff testing supplies quotient
-transport without closedness of the global transport operator.
-
-The first recursive layer is now stated, not proved, in
-[Regularity/QuotientLocal.lean](../../NoEmbeddedEigenvalues/Regularity/QuotientLocal.lean),
-[Regularity/OddOddSaddle.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddSaddle.lean) and
-[Regularity/OddOddRegularity.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddRegularity.lean).
-Using the shared definitions in `LocalJets.lean` and `WeightedTraces.lean`,
-it supplies local division and removal,
-coordinate Hardy, elliptic regularity/dyadic bounds, local invariant division,
-the first two transport gains, and the sector saddle/separatrix/gradient inputs.
-Canonical transverse interval H¹ extensions encode zero traces.
-
-The shared scalar/geometry batch is stated in
-[ScalarDivision.lean](../../NoEmbeddedEigenvalues/ScalarDivision.lean) and
-[Regularity/SaddleNormalForm.lean](../../NoEmbeddedEigenvalues/Regularity/SaddleNormalForm.lean):
-endpoint/second Hardy, coarse period derivatives, uniform complete-cell estimates
-and global division, plus explicit orthonormal charts, parity and differentiated
-Taylor bounds. The chart quadratic has the same coefficient as the Cartesian
-normalization. Angular Hardy and linearized-Hamiltonian claims are separated
-from this route; existing primitive Hardy and period smoothness are reused.
-
-The weighted regularity batch is now stated in
-[Regularity/CylinderInverse.lean](../../NoEmbeddedEigenvalues/Regularity/CylinderInverse.lean),
-[WeightedTraces.lean](../../NoEmbeddedEigenvalues/WeightedTraces.lean) and
-[WeightedTransport.lean](../../NoEmbeddedEigenvalues/WeightedTransport.lean).
-The cylinder input uses physical-area weight `F/r^(a-1)`; finite harmonic
-Taylor jets suffice for the bootstrap. Trace matching uses separate one-sided
-ACL data, not an already-glued representative. Zero forcing is required on a
-whole edge. The weighted forcing remains `f/d², ∇f/d^(3/2) ∈ L²`, with no
-elliptic/parity/midpoint assumptions. Quarter derivatives are weak derivatives
-on separate patches; the physical collar cutoff is `Ψ < 2h₀`.
-
-The numerator/logarithmic batch is stated in `OrbitNumerators.lean`,
-`WeightedNumerators.lean`, `LogarithmicWeights.lean` and
-`Regularity/OddOddLogarithmic.lean`. `QuarterCoordinates.lean` supplies the shared maps;
-`StreamJet.lean` fixes the same Fourier derivatives for bulk, ray and orbit
-estimates. Endpoint values come from orbitwise ACL witnesses with separate
-locally L² endpoint functions. Ray values are canonical transverse traces.
-Fiber integrability and quantitative numerator bounds are exported explicitly.
-Logarithmic bulk norms are local on the periodic lift; all four recentered
-quarters' rays are covered.
-
-`dd_stream_quotient_h2` now has no `sorry` of its own. Its construction is in
-[Regularity/StreamQuotientAssembly.lean](../../NoEmbeddedEigenvalues/Regularity/StreamQuotientAssembly.lean):
-bounded radial powers give H³ for the saddle remainder; affine pullback mixes
-all jet indices; double division feeds point removal before smooth inverse
-multiplication. Explicit diagonal charts cover regular separatrix points.
-Local a.e. representatives identify one periodic raw quotient, which is glued
-and reconstructed on the torus. The multiplication identity descends through
-continuous representatives. `InSector.even_dipole_quotient` then supplies parity.
-No fourth derivative, extra corner hypothesis or vorticity quotient is used.
-
-The source assembly introduces no new admission. Its transitive audit exposes
-nine existing inputs: weighted third jets, separatrix H³, specified-jet
-realization, local division/removal and saddle geometry/parity. Their proofs
-remain the stream-H² frontier. The other three quotient stages remain admitted.
-The larger audit count reflects expansion of the former outer admission, not
-new assumptions. The Blueprint proof is marked complete relative to these inputs.
-
-Reusable congruence, gluing, affine, periodic and smooth-multiplier interfaces
-are admission-free; see [shared infrastructure](shared.md). The local multiplier
-in `SobolevMultipliers.lean` uses compact cutoffs, so inverse factors only need
-to be smooth on their nonzero neighbourhoods, without global derivative bounds.
-
-The bundled `def:dd-quotient`, including classical and weak operator E, is
-linked in `OddOddVirial.lean`; it is not a dependency of the stream-H² proposition.
-The periodic first gain includes cell covering on the full fixed neighbourhood;
-it assumes a global torus relation, not merely a pair on that neighbourhood.
-
-Shared jet/trace definitions and the normalized quadratic have moved unchanged
-below the parent interfaces. `Regularity/SaddleNormalForm.lean` no longer imports
-`Regularity/OddOddRegularity.lean`, so the saddle bootstrap can use its geometry without
-an import cycle. Ordinary saddle/separatrix statements are now below the
-logarithmic layer, which is below the weighted-gradient/third-jet statements.
-The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs;
-the other three quotient stages still stop at their outer admissions.
-The corrected-boundary branch and bulk coercivity's weighted-domain, matrix
-and Poincaré bounds are admission-free; the certificate
-backend remains open.
-
-The exclusion consumes only the minimal data in `cor:dd-exclusion-domain`
-(Lean: `dd_exclusion_domain`): even global H² for `φ`, the multiplication
-identities, the quotient transport pair and `ν/d ∈ L²`. The additional corner
-bounds follow from even H² alone by coordinate and radial Hardy estimates.
-Thus `prop:dd-quotient-domain` is now downstream of the minimal result and
-off the exclusion route, not an independent stronger regularity obligation.
-The numerator's weighted jet and third derivative are still used internally
-to prove stream H². The quotient assembly has no own `sorry` and twelve
-transitive admissions. `dd_vorticity_quotient_l2` is derived from the first
-two inputs. The generic continuous-representative transport-pair bridge has
-zero transitive admissions. No quantitative divided-Laplacian norm bound is
-included in the Lean interface; it is a separate optional blueprint node.
-
-## Analytic review boundary
-
-The blueprint derives the saddle jet, separatrix H¹/zero traces, local H³ and
-`∇ω/d ∈ L²`; their principal interfaces are now stated in Lean with `sorry`. Double division for the H² stream quotient, the subsequent
-Hardy/Poisson proof of `ω/Ψ ∈ L²`, and invariant division have explicit
-analytic blueprint derivations. Their analytic inputs remain admitted in Lean;
-the quotient and transport-domain assemblies are proved. The virial uses only the
-minimal quotient data. Its character-wise assembly and representative/exceptional-level
-bridges are checked; the two admitted virial inputs and the remaining inputs below
-Picone still need proofs and analytic review. Weighted
-Poincaré and its basis, cutoff weak pairing and spectral assembly are
-transitively admission-free. Corrected-boundary nonnegativity, including its
-rational constants and endpoint traces, is also admission-free.
-Certificate verification remains deferred.
-
-The virial finite parts use only the leading period value asymptotic, not the
-elliptic identity or sharp remainders. Logarithmic multiplication uses slicing,
-not the finite-p embedding. Shared infrastructure and character limitations
-are tracked in [shared status](shared.md); mathematical questions are in the
-[blueprint digest notes](../../blueprint/src/chapters/notes.tex).
+- [Odd–odd blueprint](../../blueprint/src/chapters/odd_odd.tex) and
+  [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical details.
+- [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean) for the exclusion and
+  Picone-current assemblies;
+  [Regularity/OddOddQuotient.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddQuotient.lean)
+  for the quotient-domain assembly.
+- [Shared infrastructure](shared.md) for prerequisite work and the
+  [architecture guide](../architecture.md) for supporting modules.

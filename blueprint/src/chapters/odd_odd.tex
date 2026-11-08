@@ -1212,66 +1212,6 @@ Ordinary exhaustion gives the limits of the first two terms; the weighted
 value-mass finite part gives the third. Their sum is the required full limit.
 \end{proof}
 
-\begin{proposition}[Renormalized virial identity]
-\label{prop:dd-virial}
-\uses{def:dd-virial-densities, lem:dd-quotient-equations, def:canonical-profile}
-For an odd--odd eigenfunction with $\lambda\ne0$, with the bulk form
-$J_\Omega[\phi]=\int_\Omega j[\phi]$ and
-\[
-  J_{\FP}[\phi]=\lim_{\epsilon\to0}\Big\{J_{\{s>\epsilon\}}[\phi]
-  +\tfrac83\sum_P|\phi(P)|^2\log(1/\epsilon)\Big\},
-\]
-one has $J_{\FP}[\phi]=-\tfrac83\sum_{\text{edges}}Q_\lambda$, where on each edge
-$g=\phi|_{\text{edge}}=(P_t-\lambda)z$, $\Omega=-P_tz$ is its canonical
-transport profile, and
-\[
-  Q_\lambda=\int\frac{|g'|^2}{2\sech^2t}-\operatorname{Re}\int P_tz\,\bar g
-  +\int\big(|g|^2-|g_-|^2\mathbf1_{t<0}-|g_+|^2\mathbf1_{t>0}\big)
-  +\frac{\log8}2(|g_-|^2+|g_+|^2).
-\]
-\end{proposition}
-
-\begin{proof}
-\uses{lem:dd-truncated-virial, cor:dd-exclusion-domain,
- lem:dd-quotient-gradient-traces, lem:dd-value-finite-part,
- lem:dd-renormalized-bulk, lem:pairing-limit, lem:melnikov,
- lem:canonical-profile-ode, lem:rotation-characters, lem:lift-sobolev-local}
-First take a rotation character $\kappa\in\{1,-1\}$.
-Corollary~\ref{cor:dd-exclusion-domain} supplies an even $H^2$ quotient,
-$(E\phi)/d=-\nu/d\in L^2$, and a transport pair $(\nu,\phi)$ on a bounded
-rotation-invariant neighbourhood of the closed cell. Thus
-Lemma~\ref{lem:dd-renormalized-bulk} gives existence of $J_{\FP}[\phi]$
-as a full limit.
-
-Use Lemma~\ref{lem:pairing-limit} to select good levels outside the null
-sets of Lemmas~\ref{lem:dd-truncated-virial} and
-\ref{lem:dd-quotient-gradient-traces}. On these levels write
-$c_\epsilon=(8-\epsilon^3)/3$ and $A=\sum_P|\phi(P)|^2$. The truncated
-identity is
-\[
- J_{\{s>\epsilon\}}[\phi]
- =c_\epsilon\oint\left(|p|^2-|\partial_\tau\phi|^2-|\phi|^2
-                         -\operatorname{Re}(\nu\bar\phi)\right)dt
-   -\epsilon^2\oint\operatorname{Re}(\bar\phi p)d\ell.
-\]
-The gradient and first-order terms converge by
-Lemma~\ref{lem:dd-quotient-gradient-traces}. The pairing tends to
-$\sum_k\operatorname{Re}\int\Omega_k\bar g_k$.
-Lemma~\ref{lem:dd-value-finite-part} gives the value term after subtracting
-$A\log(1/\epsilon)$. Since
-$(c_\epsilon-8/3)\log(1/\epsilon)\to0$, the resulting limit is
-$-\tfrac83\sum_kQ_\lambda$; indeed
-$\sum_k(|g_{k,-}|^2+|g_{k,+}|^2)=2A$ accounts for the $\log8/2$ constant.
-The canonical profile equations follow from Melnikov and
-Lemma~\ref{lem:canonical-profile-ode}.
-
-For a general odd--odd eigenfunction, decompose into the two rotation
-characters. All bulk forms and the sums over edges and corners are
-rotation-invariant quadratic forms, so their cross terms between the
-$+1$ and $-1$ characters vanish. Adding the two identities proves the
-statement. No all-level limit of the vorticity pairing is asserted.
-\end{proof}
-
 \begin{remark}[Digest note: resolution of the virial limit]
 The manuscript's ``same finite-difference argument'' is unnecessary for
 annular fields: Lemma~\ref{lem:dd-weighted-first} transfers the established
@@ -1830,8 +1770,8 @@ finite part contributes $V_\phi$, including $A_\phi\log8$.
 Replacing $(8-\epsilon^3)/3$ by $8/3$ against the counterterm leaves
 only $A_\phi\epsilon^3\log(1/\epsilon)/3\to0$.
 Uniqueness of the subsequential limit identifies the full bulk limit.
-Unlike Proposition~\ref{prop:dd-virial}, this interface takes quotient data
-as input and requires neither their existence nor character recombination.
+This interface takes quotient data as input and requires neither their
+existence nor character recombination.
 \end{proof}
 
 \begin{lemma}[The $B$-weighted level trace]
@@ -2427,20 +2367,6 @@ Thus neither weighted smooth density nor a zonal $S^3$ Sobolev
 identification is an additional mathematical hypothesis.
 \end{remark}
 
-\begin{lemma}[Kantorovich-type bound]
-\label{lem:kantorovich}
-\lean{NoEmbeddedEigenvalues.kantorovich_bound}
-\leanok
-On a probability space, let $w$ be a real, almost-everywhere measurable
-function with $1\le w\le5/4$ almost everywhere. Then
-$\ip{w}{1}>0$ and $\Var(w)/\ip{w}{1}^2\le1/80$.
-\end{lemma}
-
-\begin{proof}
-Integrate $(w-1)(\tfrac54-w)\ge0$ to get $\Var(w)\le(m-1)(\tfrac54-m)$ with
-$m=\ip{w}{1}$, and maximize $(m-1)(\tfrac54-m)/m^2$ (at $m=10/9$).
-\end{proof}
-
 \begin{lemma}[Constrained weighted Poincar\'e bound]
 \label{lem:dd-constrained-poincare}
 \uses{def:sobolev-local, def:dd-weighted-h1}
@@ -2471,11 +2397,10 @@ Combine $E\ge3V[z]$ and $N[wz]\le(25/16)N[z]$.
 \end{proof}
 
 \begin{remark}[Digest note: a direct weighted-mean estimate]
-The completed-square proof gives the same $81/80$ constant without
-Lemma~\ref{lem:kantorovich}; it even works for any constant $m$ in place
-of the mean. Thus the separate probability normalization and variance
-optimization are unnecessary for the bulk coercivity route. The identity
-and its integration are checked in Lean.
+The completed-square proof gives the $81/80$ constant directly; it even
+works for any constant $m$ in place of the mean. Thus the separate
+probability normalization and variance optimization are unnecessary for the
+bulk coercivity route. The identity and its integration are checked in Lean.
 \end{remark}
 
 \begin{lemma}[First-order regularity of the ground state]
@@ -3080,21 +3005,6 @@ $\|g_u'\|_2^2\le4F_0$. Rational arithmetic gives
 In particular no unverified decimal approximation is used in this margin.
 \end{proof}
 
-\begin{lemma}[A positive scalar form]
-\label{lem:scalar-form-positive}
-\uses{def:h1-interval}
-For $g\in H^1(-1,1)$, $\int_{-1}^1\big(|g'|^2+(2+\log w)|g|^2\big)\,dx\ge0$,
-with equality only for $g=0$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:picone}
-Use the Picone identity with $h=1+w^2\log w/8>0$, whose endpoint derivatives
-vanish. Then
-$-h''+(2+\log w)h=\tfrac12+\tfrac74w+(\tfrac32w+\tfrac14w^2)\log w
-+\tfrac18w^2(\log w)^2\ge\tfrac12-\tfrac32e^{-13/6}-\tfrac1{8e}>\tfrac{17}{64}$.
-\end{proof}
-
 \begin{lemma}[Nonnegativity of the corrected boundary form]
 \label{lem:corrected-trace-nonneg}
 \uses{def:corrected-boundary-form, def:h1-interval,
@@ -3117,36 +3027,16 @@ Nonnegativity holds also at $\lambda=0$; the existing exclusion interface
 retains its nonzero-parameter hypothesis.
 \end{proof}
 
-\begin{proposition}[Strict positivity of the corrected boundary form]
-\label{prop:corrected-trace}
-\uses{def:corrected-boundary-form, def:h1-interval,
- def:weighted-boundary-domain, lem:h1-interval-endpoints}
-For $\kappa=\pm1$ and real $\lambda\ne0$, $\mathcal B_\lambda(f)>0$ for a
-nonzero weighted-domain $H^1$ element with endpoint character $\kappa$
-(manuscript \texttt{(prop:corrected-trace)}).
-\end{proposition}
-
-\begin{proof}
-\uses{lem:corrected-equal-endpoints, lem:corrected-opposite-endpoints,
- lem:trace-sos-extension, lem:h1-interval-endpoints}
-Use the coercive case estimates. For $\kappa=1$, equality forces $F_0=0$
-and $g(0)=0$. The sum of squares makes the zero-trace remainder vanish,
-so $f=a$ and $g(0)=-\lambda a$; since $\lambda\ne0$, $a=0$.
-For $\kappa=-1$, equality forces $b=0$ and $F_0=0$; again the zero-trace
-remainder vanishes.
-\end{proof}
-
 \begin{remark}[Digest note: nonnegativity and endpoint constants]
 The exclusion needs only Lemma~\ref{lem:corrected-trace-nonneg}: strict
 boundary positivity is unnecessary because the bulk controls mass with a
-strictly positive coefficient. The stronger proposition is off this route.
+strictly positive coefficient.
 The endpoint constants are resolved by the affine estimates above.
 A rational cutoff $a=1/7$ replaces $e^{-2}$, justified by an exact
 exponential Taylor sum. The half-interval bound replaces $16/\pi^2$;
 the positive central contribution and final rational margins are checked
 in Lean. The equal-endpoint estimate uses a first-order midpoint bound
 instead of the auxiliary scalar comparison function.
-The strict equality argument also needs no oscillatory ODE classification.
 \end{remark}
 
 \section{Conclusion}

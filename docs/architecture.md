@@ -228,7 +228,7 @@ can be added here as they are formalized.
   cancellation, boundary-form identification, bulk coercivity interface and
   odd–odd exclusion assembly.
 - `OddOddCoercivity.lean`: maximal weak weighted H¹ cell triples, normalized
-  means and unnormalized energies, central-parity Poincaré, Kantorovich,
+  means and unnormalized energies, central-parity Poincaré,
   constrained coercivity and the bridge from the actual Picone quotient.
   Separates the gradient estimate from the residual-certificate potential bound.
 - `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed

@@ -42,7 +42,7 @@ analytic proofs are separate work. See the
 ## Topic pages
 
 - [Even–even](docs/status/even-even.md): completion, review and manuscript work.
-- [Odd–odd](docs/status/odd-odd.md): unresolved weighted argument.
+- [Odd–odd](docs/status/odd-odd.md): completed exclusion route and prerequisite frontier.
 - [Mixed](docs/status/mixed.md): regularity, flux and coercivity route.
 - [Shared infrastructure](docs/status/shared.md): analytic backlog, reusable
   foundations and cross-project tasks.

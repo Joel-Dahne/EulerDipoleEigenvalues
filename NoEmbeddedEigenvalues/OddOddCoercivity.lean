@@ -198,15 +198,6 @@ theorem zonal_poincare {z zx zy : ℝ × ℝ → ℂ} (h : DDWeightedH1 z zx zy)
   rw [hvar, henergy] at hspec
   exact (mul_le_mul_iff_right₀ (mul_pos zero_lt_two hr)).mp (by nlinarith only [hspec])
 
-/-- The elementary Kantorovich bound, for a real weight on an arbitrary probability
-    space. Boundedness and a.e. measurability suffice; no differentiability is used. -/
-theorem kantorovich_bound {α : Type*} [MeasurableSpace α] (ρ : Measure α)
-    [IsProbabilityMeasure ρ] {w : α → ℝ} (hw : AEStronglyMeasurable w ρ)
-    (hb : ∀ᵐ p ∂ρ, 1 ≤ w p ∧ w p ≤ 5 / 4) :
-    0 < (∫ p, w p ∂ρ) ∧
-      (∫ p, (w p - ∫ q, w q ∂ρ) ^ 2 ∂ρ) / (∫ p, w p ∂ρ) ^ 2 ≤ (1 / 80 : ℝ) := by
-  sorry
-
 private theorem midpoint_square_bound {w : ℝ} (hw : 1 ≤ w ∧ w ≤ 5 / 4)
     (a b : ℝ) : (80 / 81 : ℝ) * a ^ 2 ≤ (a - b) ^ 2 + (16 / 9 : ℝ) * w * a * b := by
   have ht : 0 ≤ 1 - (8 * w - 9) ^ 2 := by nlinarith [hw.1, hw.2]
