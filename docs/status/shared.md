@@ -58,19 +58,19 @@ weights and local versus global regularity.
 1. **Top-down odd–odd interfaces:** review the explicit analytic inputs in
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
    exclusion is now assembled. Quotient existence is assembled in
-   `OddOddQuotient.lean`: its stream-H² stage now expands to nine existing
+   `Regularity/OddOddQuotient.lean`: its stream-H² stage now expands to nine existing
    local analytic admissions; its other three stages remain outer admissions.
-   `QuotientLocal.lean` and `OddOddRegularity.lean` state the
+   `Regularity/QuotientLocal.lean` and `Regularity/OddOddRegularity.lean` state the
    next local/sector layer with `sorry`. The scalar/geometry batch is now
-   stated in `ScalarDivision.lean` and `SaddleNormalForm.lean`; cylinder
-   inversion and weighted transport/gluing are stated in `CylinderInverse.lean`,
+   stated in `ScalarDivision.lean` and `Regularity/SaddleNormalForm.lean`; cylinder
+   inversion and weighted transport/gluing are stated in `Regularity/CylinderInverse.lean`,
    `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,
    weighted numerator and logarithmic interfaces are now stated too, covering
    the quotient branch's result nodes. The stream-H² congruence, local gluing,
    affine pullback and periodic reconstruction bridges are now admission-free:
    `SobolevLocal.lean`, `SobolevGluing.lean`, `AffineJets.lean`,
    `SaddleChartPullback.lean` and `PeriodicSobolev.lean`. Local smooth multiplication
-   is proved in `SobolevMultipliers.lean`. `StreamQuotientAssembly.lean` now
+   is proved in `SobolevMultipliers.lean`. `Regularity/StreamQuotientAssembly.lean` now
    assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
    hypotheses. Next proof work is its recorded local analytic frontier or the
    other quotient stages, not a remaining generic gluing interface.
@@ -188,7 +188,7 @@ weights and local versus global regularity.
    canonical ray traces and the distinction between local lifted bulk norms
    and finite norms on bounded representative collars.
    The stream-H² local/global compatibility is checked by
-   `StreamQuotientAssembly.lean`: remove the point before smooth multiplication,
+   `Regularity/StreamQuotientAssembly.lean`: remove the point before smooth multiplication,
    restrict to nonzero inverse-factor neighbourhoods, transform all derivative
    indices, identify local representatives a.e., and reconstruct via the tensor
    angular cutoff. Its analytic input proofs remain separate.
@@ -199,6 +199,12 @@ weights and local versus global regularity.
    and conjugation rather than assuming the existing proofs transfer unchanged.
 
 ## Open analytic work
+
+The chapter-specific Lean interfaces and quotient assembly are grouped in
+[`NoEmbeddedEigenvalues/Regularity/`](../../NoEmbeddedEigenvalues/Regularity/).
+Declarations use the namespace `NoEmbeddedEigenvalues`. Shared analytic
+prerequisites remain outside this directory; see the
+[module map](../architecture.md#eigenfunction-regularity).
 
 - [Transport and regularity](../../blueprint/src/chapters/regularity.tex):
   odd–odd H² quotient division now has an explicit dyadic/cone blueprint

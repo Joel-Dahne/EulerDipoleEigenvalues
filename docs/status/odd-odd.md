@@ -11,7 +11,7 @@ current is also assembled without its own `sorry`, from explicit analytic
 inputs, reaching two admissions. Corrected boundary nonnegativity is
 transitively admission-free in
 [CorrectedBoundaryForm.lean](../../NoEmbeddedEigenvalues/CorrectedBoundaryForm.lean).
-Quotient existence in [OddOddQuotient.lean](../../NoEmbeddedEigenvalues/OddOddQuotient.lean)
+Quotient existence in [Regularity/OddOddQuotient.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddQuotient.lean)
 has an assembled stream-H² stage and three remaining outer admissions.
 The stream-H² assembly reaches nine existing local analytic admissions, so the
 quotient domain has twelve transitive admissions. The current full odd–odd
@@ -323,9 +323,9 @@ division argument is no longer needed. Invariant cutoff testing supplies quotien
 transport without closedness of the global transport operator.
 
 The first recursive layer is now stated, not proved, in
-[QuotientLocal.lean](../../NoEmbeddedEigenvalues/QuotientLocal.lean),
-[OddOddSaddle.lean](../../NoEmbeddedEigenvalues/OddOddSaddle.lean) and
-[OddOddRegularity.lean](../../NoEmbeddedEigenvalues/OddOddRegularity.lean).
+[Regularity/QuotientLocal.lean](../../NoEmbeddedEigenvalues/Regularity/QuotientLocal.lean),
+[Regularity/OddOddSaddle.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddSaddle.lean) and
+[Regularity/OddOddRegularity.lean](../../NoEmbeddedEigenvalues/Regularity/OddOddRegularity.lean).
 Using the shared definitions in `LocalJets.lean` and `WeightedTraces.lean`,
 it supplies local division and removal,
 coordinate Hardy, elliptic regularity/dyadic bounds, local invariant division,
@@ -334,7 +334,7 @@ Canonical transverse interval H¹ extensions encode zero traces.
 
 The shared scalar/geometry batch is stated in
 [ScalarDivision.lean](../../NoEmbeddedEigenvalues/ScalarDivision.lean) and
-[SaddleNormalForm.lean](../../NoEmbeddedEigenvalues/SaddleNormalForm.lean):
+[Regularity/SaddleNormalForm.lean](../../NoEmbeddedEigenvalues/Regularity/SaddleNormalForm.lean):
 endpoint/second Hardy, coarse period derivatives, uniform complete-cell estimates
 and global division, plus explicit orthonormal charts, parity and differentiated
 Taylor bounds. The chart quadratic has the same coefficient as the Cartesian
@@ -342,7 +342,7 @@ normalization. Angular Hardy and linearized-Hamiltonian claims are separated
 from this route; existing primitive Hardy and period smoothness are reused.
 
 The weighted regularity batch is now stated in
-[CylinderInverse.lean](../../NoEmbeddedEigenvalues/CylinderInverse.lean),
+[Regularity/CylinderInverse.lean](../../NoEmbeddedEigenvalues/Regularity/CylinderInverse.lean),
 [WeightedTraces.lean](../../NoEmbeddedEigenvalues/WeightedTraces.lean) and
 [WeightedTransport.lean](../../NoEmbeddedEigenvalues/WeightedTransport.lean).
 The cylinder input uses physical-area weight `F/r^(a-1)`; finite harmonic
@@ -354,7 +354,7 @@ on separate patches; the physical collar cutoff is `Ψ < 2h₀`.
 
 The numerator/logarithmic batch is stated in `OrbitNumerators.lean`,
 `WeightedNumerators.lean`, `LogarithmicWeights.lean` and
-`OddOddLogarithmic.lean`. `QuarterCoordinates.lean` supplies the shared maps;
+`Regularity/OddOddLogarithmic.lean`. `QuarterCoordinates.lean` supplies the shared maps;
 `StreamJet.lean` fixes the same Fourier derivatives for bulk, ray and orbit
 estimates. Endpoint values come from orbitwise ACL witnesses with separate
 locally L² endpoint functions. Ray values are canonical transverse traces.
@@ -363,7 +363,7 @@ Logarithmic bulk norms are local on the periodic lift; all four recentered
 quarters' rays are covered.
 
 `dd_stream_quotient_h2` now has no `sorry` of its own. Its construction is in
-[StreamQuotientAssembly.lean](../../NoEmbeddedEigenvalues/StreamQuotientAssembly.lean):
+[Regularity/StreamQuotientAssembly.lean](../../NoEmbeddedEigenvalues/Regularity/StreamQuotientAssembly.lean):
 bounded radial powers give H³ for the saddle remainder; affine pullback mixes
 all jet indices; double division feeds point removal before smooth inverse
 multiplication. Explicit diagonal charts cover regular separatrix points.
@@ -390,8 +390,8 @@ The periodic first gain includes cell covering on the full fixed neighbourhood;
 it assumes a global torus relation, not merely a pair on that neighbourhood.
 
 Shared jet/trace definitions and the normalized quadratic have moved unchanged
-below the parent interfaces. `SaddleNormalForm.lean` no longer imports
-`OddOddRegularity.lean`, so the saddle bootstrap can use its geometry without
+below the parent interfaces. `Regularity/SaddleNormalForm.lean` no longer imports
+`Regularity/OddOddRegularity.lean`, so the saddle bootstrap can use its geometry without
 an import cycle. Ordinary saddle/separatrix statements are now below the
 logarithmic layer, which is below the weighted-gradient/third-jet statements.
 The Lean audit now follows the stream-H² assembly to its lower Blueprint inputs;

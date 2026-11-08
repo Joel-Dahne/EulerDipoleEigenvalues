@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.OddOddRegularity
+import NoEmbeddedEigenvalues.Regularity.OddOddRegularity
 import NoEmbeddedEigenvalues.SaddleChartPullback
 import NoEmbeddedEigenvalues.PeriodicSobolev
 import NoEmbeddedEigenvalues.SobolevMultipliers

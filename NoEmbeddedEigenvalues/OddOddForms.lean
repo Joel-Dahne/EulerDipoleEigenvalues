@@ -1,7 +1,7 @@
 import NoEmbeddedEigenvalues.EvenEven
 import NoEmbeddedEigenvalues.DipoleOrthogonality
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm
-import NoEmbeddedEigenvalues.OddOddQuotient
+import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 
 /-!
 # Odd–odd quotient boundary data and exclusion forms

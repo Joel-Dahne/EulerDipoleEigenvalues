@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.Derivatives
-import NoEmbeddedEigenvalues.StreamQuotientAssembly
+import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 
 /-!
 # Minimal odd–odd quotient domain

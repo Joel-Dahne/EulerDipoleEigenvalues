@@ -1,7 +1,7 @@
-import NoEmbeddedEigenvalues.QuotientLocal
+import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.WeightedTraces
-import NoEmbeddedEigenvalues.CylinderInverse
-import NoEmbeddedEigenvalues.SaddleNormalForm
+import NoEmbeddedEigenvalues.Regularity.CylinderInverse
+import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 
 /-!
 # Odd–odd saddle and ordinary separatrix regularity interfaces

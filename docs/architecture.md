@@ -57,12 +57,8 @@ proof mechanisms. Module names below are relative to
   in the affine Sobolev/jet/radial interface.
 - `StreamJet.lean`: the canonical second stream jet from the existing Fourier
   partial multipliers, and its weak-jet interface.
-- `QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic,
-  invariant division and first/second transport-gain interfaces.
 - `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
   trace data; weighted corner trace and crossing-edge H¹ gluing interfaces.
-- `CylinderInverse.lean`: parity/nonresonance data, the physical weighted
-  cylinder inverse and smooth harmonic remainder with finite Taylor jets.
 - `LiftTorus.lean`, `LiftIntegration.lean`: classical/Fourier derivative
   correspondence, smooth lifts and integration by parts over `[0, 2π]²`.
 - `LiftPeriodization.lean`: compact-test periodization, integral unfolding,
@@ -91,9 +87,6 @@ proof mechanisms. Module names below are relative to
 
 - `DipoleCalculus.lean`, `Cells.lean`, `SeparatrixArc.lean`: dipole identities,
   cells/critical sets, diagonal square and explicit heteroclinic arc.
-- `SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
-  saddle charts and sinc factor; parity, differentiated Taylor bounds and
-  quadratic compatibility. Independent of the eigenfunction regularity modules.
 - `SmoothIntervalIntegral.lean`, `Period.lean`: smooth parameter integrals and
   period function.
 - `DipoleFlow.lean`, `OrbitCoordinates.lean`: global flow, orbit/period relation,
@@ -120,6 +113,34 @@ proof mechanisms. Module names below are relative to
   quarter/full pairing limits and eigenfunction specializations.
 - `TransportOperator.lean`: unbounded `H = -iL₀`, self-adjointness/core/group
   statements. This is a separate route, not required by the even–even exclusion.
+
+### Eigenfunction regularity
+
+The Lean results for [Regularity of eigenfunctions](../blueprint/src/chapters/regularity.tex)
+live in `Regularity/`, retaining the namespace `NoEmbeddedEigenvalues`.
+General Sobolev/jet, trace and weighted-transport prerequisites remain shared
+in the sections above. Mixed-sector and center results without Lean statements
+can be added here as they are formalized.
+
+- `Regularity/CylinderInverse.lean`: parity/nonresonance data, the physical weighted
+  cylinder inverse and smooth harmonic remainder with finite Taylor jets.
+- `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
+  saddle charts and sinc factor; parity, differentiated Taylor bounds and
+  quadratic compatibility. Independent of the eigenfunction regularity modules.
+- `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
+  and ordinary separatrix H¹/H³ interfaces.
+- `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and numerator interfaces,
+  using one fixed canonical stream jet.
+- `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
+  sits above the ordinary and logarithmic layers without circular imports.
+- `Regularity/QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic,
+  invariant division and first/second transport-gain interfaces.
+- `Regularity/StreamQuotientAssembly.lean`: saddle division/removal, regular-edge chart
+  covering, local smooth division, gluing and reconstruction of the H² stream
+  quotient from the lower local analytic inputs.
+- `Regularity/OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
+  invariant division/periodic gain interfaces, the generic continuous-forcing
+  transport-pair bridge, and quotient-existence assembly.
 
 ### Virials and regularization
 
@@ -157,18 +178,6 @@ proof mechanisms. Module names below are relative to
   profile interval regularity, and canonical arc positivity.
 - `EvenEven.lean`: cell-vanishing bridges, nonnegative exhaustion and exclusion
   assembly, ending directly with vanishing of the vorticity.
-- `OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
-  and ordinary separatrix H¹/H³ interfaces.
-- `OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and numerator interfaces,
-  using one fixed canonical stream jet.
-- `OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
-  sits above the ordinary and logarithmic layers without circular imports.
-- `StreamQuotientAssembly.lean`: saddle division/removal, regular-edge chart
-  covering, local smooth division, gluing and reconstruction of the H² stream
-  quotient from the lower local analytic inputs.
-- `OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
-  invariant division/periodic gain interfaces, the generic continuous-forcing
-  transport-pair bridge, and quotient-existence assembly.
 - `OddOddForms.lean`: quotient orthogonality, boundary data, continuous
   characters and boundary regularity; bulk forms, truncated Picone energies,
   currents and common renormalization data. Sits below the weighted virial.

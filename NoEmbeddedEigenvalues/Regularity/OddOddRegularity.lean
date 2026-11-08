@@ -1,5 +1,5 @@
-import NoEmbeddedEigenvalues.OddOddSaddle
-import NoEmbeddedEigenvalues.OddOddLogarithmic
+import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic
 
 /-!
 # Odd–odd regularity interfaces below the quotient domain

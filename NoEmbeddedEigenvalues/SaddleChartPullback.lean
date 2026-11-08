@@ -1,5 +1,5 @@
 import NoEmbeddedEigenvalues.AffineJets
-import NoEmbeddedEigenvalues.SaddleNormalForm
+import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 
 /-!
 # The affine jet interface in normalized saddle coordinates

@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.OddOddSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights
