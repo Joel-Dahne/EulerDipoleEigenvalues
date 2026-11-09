@@ -425,6 +425,118 @@ $\Lambda(h)\asymp1+|\log r|$, so the ray estimates in that lemma control
 both endpoint terms. This proves the asserted weighted integrability.
 \end{proof}
 
+\begin{lemma}[Logarithmic midpoint data, odd--odd]
+\label{lem:dd-log-midpoint}
+\uses{def:eigen-problem, def:sectors, def:weighted-numerator-data,
+ def:quarter-midpoint, def:h1-interval, def:h1-local-interval,
+ def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.dd_log_midpoint}
+\leanok
+Fix a rotation character of an odd--odd eigenfunction.
+There are a cutoff $0<h_0<1/2$ and compatible numerator data $d$
+of Definition~\ref{def:weighted-numerator-data}, with
+$\int_0^{h_0}\Lambda K<\infty$, and a phase-cell endpoint $0<b<h_0$
+with a specified $C\in H^1(0,b)$, such that
+\[
+ DC=N,\qquad
+ \sqrt\Lambda\,C/h,\ \sqrt\Lambda\,C',\ \sqrt\Lambda\,A'\in L^2(0,b).
+\]
+Here $A=i e^{2i\lambda L}C+iB$ is locally $H^1$, with the specified
+derivative of Definition~\ref{def:quarter-midpoint} using $d$'s half-numerator
+derivative. For a.e.\ $h<b$, an orbitwise locally absolutely continuous
+representative $Z_h$ of $z=-(\omega+\psi)/\lambda$ satisfies
+$Z_h'=i(\lambda Z_h+\psi_h)$ and $Z_h(0)=A(h)$, with the
+variation-of-constants formula of Lemma~\ref{lem:quarter-midpoint-reconstruction}
+holding for every time on this same orbit.
+The original data $d$, including its subinterval estimate and actual
+fiber integrability, are retained on $(0,h_0)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-log-numerators, lem:log-phase-cell-division, lem:numerator-zeros,
+ lem:log-midpoint-gain, lem:quarter-midpoint-reconstruction,
+ lem:quarter-divisor-ae, lem:period-derivative-bounds,
+ lem:transport-pair-eigen, lem:rotation-characters}
+\leanok
+Use the continuous stream transport pair and lift its rotation character.
+Lemma~\ref{lem:numerator-zeros} supplies vanishing at every resonance
+for the same continuous numerator as the data $d$.
+Restrict to the minimum of the numerator cutoff, the period-derivative
+cutoff and the null-resonance cutoff. Logarithmic phase division gives
+$C,C'$ on a smaller complete-cell interval. The half-numerator derivative
+from $d$ keeps its logarithmic $L^2$ bound under restriction.
+The period bound gives $|hL'|\le C$, so
+Lemma~\ref{lem:log-midpoint-gain} applies.
+Restrict the common nonresonant good-level set to $(0,b)$ and apply
+Lemma~\ref{lem:quarter-midpoint-reconstruction} to identify the actual
+orbitwise midpoint. All choices use the same $\psi$, $d$, $C$ and cutoff.
+\end{proof}
+
+\begin{lemma}[Strong weighted quarter derivatives, odd--odd]
+\label{lem:dd-quarter-weighted-derivatives}
+\uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
+ def:sobolev-local}
+For an odd--odd eigenfunction with fixed rotation character there is
+$0<h_0<1/2$ such that every separately recentered profile
+$\omega_k=\widetilde\omega\circ\Gamma_k$ on $Q_{h_0}$ has specified
+weak derivatives $H_k,T_k$ with
+\[
+ H_k\in L^2(Q_{h_0}),\qquad
+ \frac{T_k}{(d\circ\Gamma_k)^2}\in L^2(Q_{h_0}).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-log-midpoint, prop:saddle-dd, lem:dd-weighted-forcing,
+ lem:orbit-level-derivatives, lem:orbit-coordinate-gradients,
+ lem:orbit-coordinates-area, lem:period-coarse, lem:rotation-characters,
+ lem:reflection-algebra}
+For the base quarter form the single jointly measurable reconstruction
+\[
+ Z(h,t)=e^{i\lambda t}A(h)+
+       i\int_0^t e^{i\lambda(t-u)}\psi_h(u)\,du.
+\]
+The orbitwise reconstruction formula makes this equal to the raw
+pullback of $z$ a.e.\ in $(h,t)$.
+On compact interior rectangles, weak testing and Fubini, using $d$'s
+specified forcing-level derivative, give
+\[
+ \partial_hZ=e^{i\lambda t}A'(h)+
+       i\int_0^t e^{i\lambda(t-u)}\partial_h\psi_h(u)\,du.
+\]
+No differentiation of independently selected orbit representatives is needed.
+The subinterval estimate in $d$ bounds the squared integral by $CK(h)$.
+Since $2L(h)\le C\Lambda(h)$, integration gives
+\[
+ \int_{Q_{h_0}}|\partial_hZ|^2
+ \le C\int_0^{h_0}\Lambda(h)(|A'|^2+K(h))\,dh<\infty.
+\]
+The weaker forcing weights give $\nabla\psi/d\in L^2$.
+Thus $|\partial_h\psi_h|\le C|\nabla\psi_h|/d$ and
+$\omega_h=-\lambda Z-\psi_h$ give $H_0\in L^2$.
+
+The transport equation gives
+$T_0=i\lambda\omega_h-\partial_t\psi_h$.
+Here $|\partial_t\psi_h|\le Cd|\nabla\psi_h|$, so
+$T_0/d^2\in L^2$ by the saddle mass estimate $\omega/d^2\in L^2$.
+Coarea transfers these physical-area bounds to $(h,t)$.
+Rotation character identities transfer the scalar profile estimates
+to all four recentered quarters. Enlarge the exceptional set only by
+the finite union needed for these identities and the fiber estimates.
+\end{proof}
+
+\begin{remark}[Digest note: midpoint representatives and weak reconstruction]
+The midpoint value is selected by interval absolute continuity and the
+endpoint transport identity, not by evaluating a raw spatial representative
+on a curve. The logarithmic midpoint lemma retains local interval $H^1$,
+rather than just an a.e.\ pointwise derivative.
+Weak level differentiation is then applied to the single joint
+variation-of-constants expression. A.e.\ identities for separately chosen
+orbit representatives alone would not justify this step.
+The strong quarter-derivative lemma isolates this distinction from the
+subsequent inverse-coordinate and global covering argument.
+\end{remark}
+
 \begin{proposition}[Weighted vorticity gradient, odd--odd]
 \label{prop:dd-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
@@ -436,43 +548,11 @@ $G/d\in L^2_{\rm loc}(U)$.
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-log-numerators, lem:log-phase-cell-division, lem:numerator-zeros,
- prop:dd-separatrix-h1, prop:saddle-dd, lem:rotation-characters,
- lem:transport-unknown, lem:weighted-numerator-estimates,
- lem:orbit-level-derivatives, lem:orbit-coordinate-gradients,
- lem:orbit-coordinates-area, lem:period-coarse, lem:period-derivative-bounds}
-Work with either rotation character and recenter time separately on each
-quarter patch. The numerator vanishes at divisor zeros, and
-Lemma~\ref{lem:log-phase-cell-division} gives
-\[
- \int_0^{h_0}\Lambda(h)\bigl(|C'|^2+|C/h|^2\bigr)dh<\infty.
-\]
-In the midpoint identity
-$A=ie^{2i\lambda L}C+iB$, use $|L'|\le C/h$ and
-Lemma~\ref{lem:dd-log-numerators} to obtain
-$\int\Lambda|A'|^2dh<\infty$.
-For $z=-(\omega+\psi)/\lambda$, midpoint reconstruction gives
-\[
- \partial_hz_h(t)=e^{i\lambda t}A'(h)
-       +i\int_0^te^{i\lambda(t-u)}\partial_h\psi_h(u)du.
-\]
-The subinterval estimate of Lemma~\ref{lem:weighted-numerator-estimates}
-bounds the squared integral by $CK(h)$. Since $2L(h)\le C\Lambda(h)$,
-\[
- \int_0^{h_0}\int_{-L(h)}^{L(h)}|\partial_hz_h|^2dt\,dh
- \le C\int_0^{h_0}\Lambda(h)(|A'|^2+K(h))dh<\infty.
-\]
-The jet also gives $\nabla\psi/d\in L^2$, so
-$|\partial_h\psi_h|\le C|\nabla\psi_h|/d$ proves
-$\partial_h\omega_h\in L^2(dh\,dt)$.
-
-For the time derivative,
-\[
- \partial_t\omega_h=i\lambda\omega_h-\partial_t\psi_h,\qquad
- |\partial_t\psi_h|\le Cd|\nabla\psi_h|.
-\]
-Thus $d^{-2}\partial_t\omega_h\in L^2$, by
-$\omega/d^2\in L^2$ and $\nabla\psi/d\in L^2$.
+\uses{lem:dd-quarter-weighted-derivatives, prop:dd-separatrix-h1,
+ lem:rotation-characters, lem:orbit-coordinate-gradients,
+ lem:orbit-coordinates-area, lem:symmetries-commute,
+ lem:weak-derivative-unique}
+For either rotation character, use the strong quarter derivatives.
 The inverse-coordinate estimates give
 \[
  \frac{|\nabla\omega|}{d}
@@ -483,6 +563,11 @@ Coarea now proves the claim on each quarter strip. Sum the character
 components and use reflection for the adjacent cells. The weak gradient
 is the one already supplied across edges and saddles by
 Proposition~\ref{prop:dd-separatrix-h1}; no new jump term is introduced.
+Away from the lattice saddles, $d$ is locally bounded below, so ordinary
+$H^1$ suffices. Periodicity transfers the bounded-cell estimates to every
+lifted saddle neighbourhood. Thus a compact subset of the open
+separatrix neighbourhood is covered by finitely many weighted saddle
+patches and regular $H^1$ patches.
 \end{proof}
 
 \begin{remark}[Digest note: the logarithmic gradient gain]

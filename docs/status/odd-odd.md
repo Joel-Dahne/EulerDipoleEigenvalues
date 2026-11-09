@@ -29,8 +29,12 @@ Proof work is now outside the odd–odd chapter:
   admitted. The weighted third-stream step (`lem:dd-weighted-third-stream`)
   now has an assembly proof from the saddle jet, weighted gradient and two
   explicit outside-section elliptic/Taylor corollaries; see
-  [shared status](shared.md#next-session) for that frontier. Periodic quotient transport is admission-free: invariant regularized
-  reciprocals and C¹ testing give division directly on the torus.
+  [shared status](shared.md#next-session) for that frontier. The weighted-gradient
+  branch now has checked logarithmic midpoint/reconstruction data
+  (`lem:dd-log-midpoint`), but its strong quarter derivatives and weighted
+  spatial-gradient assembly remain open. Periodic quotient transport is
+  admission-free: invariant regularized reciprocals and C¹ testing give
+  division directly on the torus.
   No stronger corner hypothesis is needed. The stronger bundled
   quotient-domain proposition is downstream and off the exclusion route.
 - **Picone/virial limits:** the remaining inputs are Local H² smooth

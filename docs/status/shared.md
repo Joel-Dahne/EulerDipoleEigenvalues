@@ -70,11 +70,20 @@ weights and local versus global regularity.
    without ordinary separatrix H³ or a fixed-cell localization bridge.
    Its generic weighted elliptic gain (`lem:elliptic-weighted-third`) and
    Cartesian Taylor correction (`lem:saddle-taylor-correction`) are explicit
-   outside-section admissions. Next in-section proof work is the weighted
-   gradient and its logarithmic prerequisites, or the saddle estimates.
-   The target's transitive audit reaches these two in-section inputs and four
-   outside-section inputs (the two corollaries, stream weak jet and saddle
-   factorization). The scalar/geometry batch is now
+   outside-section admissions. The weighted-gradient branch now has a checked
+   scalar stage, Logarithmic midpoint data (`lem:dd-log-midpoint`): phase
+   division, specified local H¹ derivative, and a common a.e. orbitwise
+   reconstruction. The generic midpoint gain has zero transitive admissions;
+   the sector assembly retains its existing logarithmic-numerator and five
+   scalar/orbit inputs. No new admissions were added. Next is Strong weighted
+   quarter derivatives (`lem:dd-quarter-weighted-derivatives`): weak level
+   differentiation of the joint reconstruction, logarithmic-length summation,
+   then inverse-coordinate transfer and periodic/reflected covering.
+   `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
+   input and the saddle estimates are also separate in-section proof work.
+   The weighted third-stream audit still reaches the saddle and weighted-gradient
+   inputs, plus the two outside-section corollaries, stream weak jet and saddle
+   factorization. The scalar/geometry batch is now
    stated in `ScalarDivision.lean` and `Regularity/SaddleNormalForm.lean`; cylinder
    inversion and weighted transport/gluing are stated in `Regularity/CylinderInverse.lean`,
    `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,

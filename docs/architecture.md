@@ -78,6 +78,8 @@ proof mechanisms. Module names below are relative to
   quarter characters.
 - `LogarithmicWeights.lean`: level/torus/lift/radial weights, the rectangle
   multiplier and logarithmic phase-cell division interfaces.
+- `LogarithmicMidpoint.lean`: local interval H¹ multiplication, logarithmic midpoint
+  control, null quarter resonances and the orbitwise midpoint/reconstruction identity.
 - `DiagonalCalculus.lean`, `SegmentEstimates.lean`: diagonal calculus and
   restrictions to segments/hyperbolas near a line.
 - `SeparatrixTraces.lean`: line representatives, even–even arc/level traces,
@@ -131,6 +133,8 @@ can be added here as they are formalized.
   and ordinary separatrix H¹/H³ interfaces.
 - `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and numerator interfaces,
   using one fixed canonical stream jet.
+- `Regularity/OddOddMidpoint.lean`: logarithmic phase quotient and midpoint data for
+  either odd–odd rotation character, with a common a.e. orbit reconstruction.
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in

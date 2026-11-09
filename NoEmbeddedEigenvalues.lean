@@ -78,6 +78,8 @@ import NoEmbeddedEigenvalues.SaddleTaylorJet
 import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights
+import NoEmbeddedEigenvalues.LogarithmicMidpoint
+import NoEmbeddedEigenvalues.Regularity.OddOddMidpoint
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.OrbitNumerators
 import NoEmbeddedEigenvalues.WeightedNumerators

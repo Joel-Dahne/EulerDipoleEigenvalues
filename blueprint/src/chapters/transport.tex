@@ -1026,6 +1026,101 @@ weight by $\Lambda(h)$ on both sides, and sum. No derivative of $\Lambda$
 and no new weighted Hardy inequality are required.
 \end{proof}
 
+\begin{definition}[Quarter midpoint coefficients]
+\label{def:quarter-midpoint}
+\uses{def:numerator, def:period}
+\lean{NoEmbeddedEigenvalues.quarterMidpointPhase, NoEmbeddedEigenvalues.quarterMidpoint,
+ NoEmbeddedEigenvalues.quarterMidpointDerivative}
+\leanok
+For $L=L(h)$, $B(h)=\int_{-L(h)}^0 g(\gamma_h(t))e^{-i\lambda t}dt$,
+and specified functions $C,C_1,B_1$, put
+\[
+ M=e^{2i\lambda L},\qquad A=iMC+iB,\qquad
+ A_1=iM(C_1+2i\lambda L'C)+iB_1.
+\]
+These are definitions, without asserting derivative identities or choosing
+raw spatial midpoint values.
+\end{definition}
+
+\begin{lemma}[Logarithmic midpoint gain]
+\label{lem:log-midpoint-gain}
+\uses{def:quarter-midpoint, def:log-level-weight,
+ def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.log_midpoint_gain}
+\leanok
+Let $b<1$, $C\in H^1(0,b)$ with derivative $C_1$ and
+$B\in H^1_{\rm loc}(0,b)$ with derivative $B_1$.
+If $|hL'(h)|\le K$ on $(0,b)$ and
+$\sqrt\Lambda\,C/h,\sqrt\Lambda\,C_1,\sqrt\Lambda\,B_1\in L^2(0,b)$,
+then $A\in H^1_{\rm loc}(0,b)$ with specified derivative $A_1$, and
+$\sqrt\Lambda\,A_1\in L^2(0,b)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity}
+\leanok
+On compact subintervals the phase is $C^1$, so absolute continuity and
+the product rule give the displayed derivative.
+Since $|M|=1$,
+\[
+ \sqrt\Lambda\,|A_1|
+ \le \sqrt\Lambda\,|C_1|+
+       2|\lambda|K\sqrt\Lambda\,|C/h|+
+       \sqrt\Lambda\,|B_1|.
+\]
+All three terms are $L^2$. The logarithmic weight is never differentiated.
+\end{proof}
+
+\begin{lemma}[Quarter resonances are null near zero]
+\label{lem:quarter-divisor-ae}
+\uses{def:numerator}
+\lean{NoEmbeddedEigenvalues.exists_ae_quarterDivisor_ne_zero}
+\leanok
+For $\lambda\ne0$, $\kappa^4=1$ and every $\eta>0$, there is
+$0<\rho<\eta$ such that $D(h)\ne0$ for a.e.\ $h\in(0,\rho)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-divisor-geometry}
+\leanok
+The zeros below a sufficiently small cutoff have a countable enumeration.
+Their range is Lebesgue null.
+\end{proof}
+
+\begin{lemma}[Identification of the quarter midpoint]
+\label{lem:quarter-midpoint-reconstruction}
+\uses{def:transport-pair, def:quarter-character, def:quarter-midpoint}
+\lean{NoEmbeddedEigenvalues.quarter_midpoint_reconstruction}
+\leanok
+Let $(v,g)$ be a transport pair, with $g$ continuous on the lift, and let
+$0<b<1$ with its orbit annulus inside the pair's domain.
+Suppose $v,g$ have quarter character $\kappa$, $D(h)C(h)=N(h)$ on
+$(0,b)$ and $D\ne0$ a.e.\ there.
+Then, for a.e.\ $h$, the transport unknown has an orbitwise locally
+absolutely continuous representative $Z_h$, agreeing with the raw
+pullback a.e.\ in time, solving $Z_h'=i(\lambda Z_h+g_h)$, and
+\[
+ Z_h(0)=A(h),\qquad
+ Z_h(t)=e^{i\lambda t}A(h)+
+     i\int_0^t e^{i\lambda(t-u)}g_h(u)\,du\quad(t\in\R).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-endpoint-formula, lem:transport-boundary-estimate}
+\leanok
+Cancel $D(h)\ne0$ in the endpoint formula to obtain
+$Z_h(-L)=ie^{i\lambda L}C(h)$.
+The integrating-factor identity on $[-L,0]$ gives
+$Z_h(0)-e^{i\lambda L}Z_h(-L)=iB(h)$.
+Substitution gives $A=i e^{2i\lambda L}C+iB$.
+Apply the integrating-factor identity again on $[0,t]$ to obtain the
+reconstruction formula, for every $t$ on the same good orbit.
+Intersect the endpoint lemma's good-level set with $\{D\ne0\}$.
+No pointwise restriction of a raw spatial $L^2$ representative to a
+midpoint curve is used.
+\end{proof}
+
 \begin{definition}[Cell collars and recentered quarter profiles]
 \label{def:cell-separatrix-collar}
 \uses{def:cells, def:dipole, def:period, def:reflections, lem:period-orbit}
