@@ -1414,6 +1414,113 @@ The interior term is integrable by $H^2$ and coarea; the ray traces
 control both endpoint terms.
 \end{proof}
 
+\begin{definition}[Joint level-reconstruction candidate]
+\label{def:quarter-reconstruction-level}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterReconstructionLevel}
+\leanok
+For $A_1:\R\to\C$ and $G:\R^2\to\C$, define
+\[
+ \mathcal H_{\lambda,A_1,G}(h,t)
+ =e^{i\lambda t}\left(A_1(h)+i\int_0^t G(h,u)e^{-i\lambda u}\,du\right).
+\]
+This definition alone asserts neither integrability nor a weak derivative
+identity.
+\end{definition}
+
+\begin{lemma}[Measurability of the moving-strip primitive]
+\label{lem:quarter-primitive-measurable}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.measurableSet_quarterOrbitStrip,
+ NoEmbeddedEigenvalues.aestronglyMeasurable_quarterPrimitive,
+ NoEmbeddedEigenvalues.aestronglyMeasurable_level_quarterStrip}
+\leanok
+The strip $Q_b$ is measurable.
+If $G$ is a.e.\ strongly measurable on $Q_b$, then
+$(h,t)\mapsto\int_0^tG(h,u)\,du$ is a.e.\ strongly measurable there.
+If $A$ is a.e.\ strongly measurable on $(0,b)$, its level pullback
+$(h,t)\mapsto A(h)$ is a.e.\ strongly measurable on $Q_b$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Zero-extend $G$ off $Q_b$ and choose a globally measurable a.e.\
+representative. Its signed primitive is jointly measurable.
+Fubini gives one good-level set on which the two integrands agree a.e.\
+in time. For every interior endpoint $t$, the interval between $0$ and
+$t$ stays inside the same fiber of $Q_b$. Thus the primitives agree for
+every such $t$, even when the totalized integrals are not integrable.
+For the level pullback, zero-extend $A$ off $(0,b)$ and use the first
+projection of product Lebesgue measure, then restrict to $Q_b$.
+\end{proof}
+
+\begin{lemma}[Moving quarter-strip summation]
+\label{lem:quarter-strip-summation}
+\uses{def:cell-separatrix-collar, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.memLp_quarterStrip_of_sq_bound}
+\leanok
+Let $0<b<1$, and suppose $2L(h)\le C\Lambda(h)$ on $(0,b)$.
+Let $F$ be a.e.\ strongly measurable on $Q_b$, let $B\ge0$ a.e.\ on
+$(0,b)$ with $\Lambda B\in L^1(0,b)$, and suppose that, for a.e.\ $h$,
+$|F(h,t)|^2\le B(h)$ for a.e.\ $t\in(-L(h),L(h))$.
+Then $F\in L^2(Q_b)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-primitive-measurable}
+\leanok
+Zero-extend $|F|^2$ off $Q_b$. Its time sections are integrable by the
+constant bound $B(h)$ on a finite interval.
+Their integrals are bounded by $2L(h)B(h)\le C\Lambda(h)B(h)$.
+Fubini gives integrability of the joint squared norm.
+No first-coordinate measure-preserving assertion or global
+measurability of the raw representative is needed.
+\end{proof}
+
+\begin{lemma}[Logarithmic level-reconstruction gain]
+\label{lem:quarter-reconstruction-level-gain}
+\uses{def:weighted-numerator-data, def:quarter-reconstruction-level,
+ def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.midpoint_integral_bound,
+ NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.midpoint_intervalIntegrable,
+ NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.reconstruction_level_memLp}
+\leanok
+Let $d$ be compatible numerator data on $(0,h_0)$, $0<b\le h_0<1/2$,
+$G$ its specified weak forcing-level derivative and $K$ its first
+weighted fiber energy.
+If $\sqrt\Lambda\,A_1\in L^2(0,b)$ and $\Lambda K\in L^1(0,b)$, then
+\[
+ \mathcal H_{\lambda,A_1,G}\in L^2(Q_b).
+\]
+On a common a.e.\ set of levels, every interior midpoint integral is
+genuinely interval integrable and its squared norm is at most
+$d.\mathrm{bound}\,K(h)$.
+This result is an estimate for the candidate, not its identification
+as a weak derivative.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-primitive-measurable, lem:quarter-strip-summation,
+ lem:period-coarse}
+\leanok
+For $t\ge0$ use the data's subinterval bound on $[0,t]$.
+For $t<0$ reverse $[t,0]$; the minus sign does not change the norm.
+The specified fiber integrability makes all interior signed integrals
+genuine Bochner integrals. The weak forcing derivative is locally
+integrable, so its phase product and primitive are a.e.\ strongly
+measurable by Lemma~\ref{lem:quarter-primitive-measurable}.
+The midpoint derivative is a.e.\ measurable by dividing the weighted
+$L^2$ representative by the positive $\sqrt\Lambda$.
+
+The phase has norm one, hence
+\[
+ |\mathcal H|^2\le 2|A_1(h)|^2+2d.\mathrm{bound}\,K(h).
+\]
+The right side is logarithmically integrable.
+The coarse bound $L-\frac12\log(1/h)\le2$ gives $2L\le4\Lambda$ for
+$h<1/2$. Apply Lemma~\ref{lem:quarter-strip-summation}.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,

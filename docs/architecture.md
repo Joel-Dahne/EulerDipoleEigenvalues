@@ -80,6 +80,8 @@ proof mechanisms. Module names below are relative to
   multiplier and logarithmic phase-cell division interfaces.
 - `LogarithmicMidpoint.lean`: local interval H¹ multiplication, logarithmic midpoint
   control, null quarter resonances and the orbitwise midpoint/reconstruction identity.
+- `QuarterReconstruction.lean`: signed midpoint-integral bounds, a.e. measurability
+  on moving quarter strips and logarithmic summation of the joint level candidate.
 - `DiagonalCalculus.lean`, `SegmentEstimates.lean`: diagonal calculus and
   restrictions to segments/hyperbolas near a line.
 - `SeparatrixTraces.lean`: line representatives, even–even arc/level traces,

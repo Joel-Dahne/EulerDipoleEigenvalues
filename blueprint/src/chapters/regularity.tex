@@ -428,8 +428,8 @@ both endpoint terms. This proves the asserted weighted integrability.
 \begin{lemma}[Logarithmic midpoint data, odd--odd]
 \label{lem:dd-log-midpoint}
 \uses{def:eigen-problem, def:sectors, def:weighted-numerator-data,
- def:quarter-midpoint, def:h1-interval, def:h1-local-interval,
- def:log-level-weight}
+ def:quarter-midpoint, def:quarter-reconstruction-level, def:h1-interval,
+ def:h1-local-interval, def:log-level-weight}
 \lean{NoEmbeddedEigenvalues.dd_log_midpoint}
 \leanok
 Fix a rotation character of an odd--odd eigenfunction.
@@ -448,6 +448,9 @@ representative $Z_h$ of $z=-(\omega+\psi)/\lambda$ satisfies
 $Z_h'=i(\lambda Z_h+\psi_h)$ and $Z_h(0)=A(h)$, with the
 variation-of-constants formula of Lemma~\ref{lem:quarter-midpoint-reconstruction}
 holding for every time on this same orbit.
+Moreover, with $G$ the forcing-level derivative specified by $d$,
+$\mathcal H_{\lambda,A',G}\in L^2(Q_b)$.
+This does not assert a weak level-derivative identity.
 The original data $d$, including its subinterval estimate and actual
 fiber integrability, are retained on $(0,h_0)$.
 \end{lemma}
@@ -456,7 +459,8 @@ fiber integrability, are retained on $(0,h_0)$.
 \uses{lem:dd-log-numerators, lem:log-phase-cell-division, lem:numerator-zeros,
  lem:log-midpoint-gain, lem:quarter-midpoint-reconstruction,
  lem:quarter-divisor-ae, lem:period-derivative-bounds,
- lem:transport-pair-eigen, lem:rotation-characters}
+ lem:transport-pair-eigen, lem:rotation-characters,
+ lem:quarter-reconstruction-level-gain}
 \leanok
 Use the continuous stream transport pair and lift its rotation character.
 Lemma~\ref{lem:numerator-zeros} supplies vanishing at every resonance
@@ -469,7 +473,9 @@ The period bound gives $|hL'|\le C$, so
 Lemma~\ref{lem:log-midpoint-gain} applies.
 Restrict the common nonresonant good-level set to $(0,b)$ and apply
 Lemma~\ref{lem:quarter-midpoint-reconstruction} to identify the actual
-orbitwise midpoint. All choices use the same $\psi$, $d$, $C$ and cutoff.
+orbitwise midpoint. Restrict $\Lambda K$ to $(0,b)$ and apply
+Lemma~\ref{lem:quarter-reconstruction-level-gain} to this same $A'$ and
+$d$. All choices use the same $\psi$, $d$, $C$ and cutoff.
 \end{proof}
 
 \begin{lemma}[Strong weighted quarter derivatives, odd--odd]
@@ -505,12 +511,9 @@ specified forcing-level derivative, give
        i\int_0^t e^{i\lambda(t-u)}\partial_h\psi_h(u)\,du.
 \]
 No differentiation of independently selected orbit representatives is needed.
-The subinterval estimate in $d$ bounds the squared integral by $CK(h)$.
-Since $2L(h)\le C\Lambda(h)$, integration gives
-\[
- \int_{Q_{h_0}}|\partial_hZ|^2
- \le C\int_0^{h_0}\Lambda(h)(|A'|^2+K(h))\,dh<\infty.
-\]
+The displayed weak identity identifies $\partial_hZ$ with the candidate
+$\mathcal H_{\lambda,A',G}$ bounded in $L^2(Q_{h_0})$ by
+Lemma~\ref{lem:dd-log-midpoint}. Hence $\partial_hZ\in L^2(Q_{h_0})$.
 The weaker forcing weights give $\nabla\psi/d\in L^2$.
 Thus $|\partial_h\psi_h|\le C|\nabla\psi_h|/d$ and
 $\omega_h=-\lambda Z-\psi_h$ give $H_0\in L^2$.
@@ -535,6 +538,11 @@ variation-of-constants expression. A.e.\ identities for separately chosen
 orbit representatives alone would not justify this step.
 The strong quarter-derivative lemma isolates this distinction from the
 subsequent inverse-coordinate and global covering argument.
+For the primitive's joint measurability, first zero-extend its integrand
+from the moving strip and replace it by a measurable a.e.\ representative.
+Fubini then gives equality of the primitives at every interior time on
+one common good-level set; arbitrary values outside the strip do not enter.
+A finite norm of the candidate alone does not prove the weak identity.
 \end{remark}
 
 \begin{proposition}[Weighted vorticity gradient, odd--odd]

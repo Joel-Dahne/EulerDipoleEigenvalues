@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic
 import NoEmbeddedEigenvalues.LogarithmicMidpoint
+import NoEmbeddedEigenvalues.QuarterReconstruction
 
 /-!
 # Logarithmic phase division and the odd–odd midpoint coefficient
@@ -7,7 +8,9 @@ import NoEmbeddedEigenvalues.LogarithmicMidpoint
 All data use the same continuous stream and canonical jet. The numerator data
 remain available on their original interval; the phase quotient and midpoint
 coefficient are constructed on a smaller complete-cell interval and identified
-with orbitwise ACL midpoint values. This does not identify a spatial weak gradient.
+with orbitwise ACL midpoint values. The joint candidate level derivative is
+square integrable on the recentered quarter strip. This estimate does not
+assert a spatial weak-derivative identity.
 -/
 
 noncomputable section
@@ -36,6 +39,9 @@ theorem dd_log_midpoint {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
             MemLp (fun h ↦ (Real.sqrt (logLevelWeight h) : ℂ) *
               quarterMidpointDerivative lam Q Q₁ d.halfFirst h) 2
               (volume.restrict (Ioo 0 h₁)) ∧
+            MemLp (quarterReconstructionLevel lam
+              (quarterMidpointDerivative lam Q Q₁ d.halfFirst) (quarterForcingLevelDerivative
+                (streamJet2 ω))) 2 (volume.restrict (quarterOrbitStrip h₁)) ∧
             ∀ᵐ h ∂(volume.restrict (Ioo 0 h₁)), ∃ Z : ℝ → ℂ,
               (∀ᵐ t, Z t = transportUnknown lam (liftL2 ω) (contStream ω) (dipoleOrbit h t)) ∧
               (∀ a b, AbsolutelyContinuousOnInterval Z a b) ∧
@@ -101,7 +107,9 @@ theorem dd_log_midpoint {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     Filter.Eventually.of_forall (contStream_rotLift hκ)
   have hprof := quarter_midpoint_reconstruction hκ4 hp hh₁ (hh₁₀.trans hh₀1) hA₁
     (continuous_contStream ω) hvκ₁ hfκ₁ hdiv hne
+  have hlevel := d.reconstruction_level_memLp hh₀half hh₁₀.le hAw
+    (hK.mono_set hsub)
   exact ⟨h₀, hh₀, hh₀half, d, hK, h₁, hh₁, hh₁₀, hend, Q, Q₁, hQ, hdiv, hQw,
-    hQ₁w, hAl, hAw, hprof⟩
+    hQ₁w, hAl, hAw, hlevel, hprof⟩
 
 end NoEmbeddedEigenvalues

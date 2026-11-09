@@ -79,6 +79,7 @@ import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights
 import NoEmbeddedEigenvalues.LogarithmicMidpoint
+import NoEmbeddedEigenvalues.QuarterReconstruction
 import NoEmbeddedEigenvalues.Regularity.OddOddMidpoint
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.OrbitNumerators
