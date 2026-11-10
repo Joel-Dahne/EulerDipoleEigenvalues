@@ -101,6 +101,12 @@ proof mechanisms. Module names below are relative to
   `WeightedFrame.lean` transfers the H and T/d² weights through bounded normalized
   frame coefficients. `QuarterInverseFrame.lean` gives the actual quarter's
   measurable dual coefficients, exact inverse algebra and weighted candidate L².
+  `SmoothChartTests.lean` gives compact zero-extended chart tests, local L¹/L²
+  and a.e. transport. `WeakChartTransport.lean` reconstructs weak spatial gradients
+  by divergence-free cofactors. `QuarterChart.lean` instantiates the actual open
+  quarter chart; `QuarterGradient.lean` identifies the inverse frame, transfers
+  its weighted L² norm by coarea and identifies arbitrary specified gradients
+  on spatial overlaps or in source coordinates.
 - `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
   differentiation of primitives and full reconstructions, and joint a.e. equality
   from a.e. fiber equality.
@@ -167,8 +173,10 @@ can be added here as they are formalized.
   `Regularity/OddOddQuarters.lean` transfers them to all four recentered quarters
   on a common cutoff by joint a.e. congruence and saddle-distance invariance.
   `Regularity/OddOddGradientCoordinates.lean` extracts a single measurable ordinary
-  separatrix gradient and retains the quarter derivatives with weighted inverse-frame
-  candidates. The spatial gradient and the quarter candidates are distinct interfaces.
+  separatrix gradient and reconstructs weighted spatial derivatives on the actual
+  base-quarter image. Two-character summation removes the character premise;
+  weak uniqueness transfers the weighted norm to the same ordinary gradient
+  on the base-quarter overlap.
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in

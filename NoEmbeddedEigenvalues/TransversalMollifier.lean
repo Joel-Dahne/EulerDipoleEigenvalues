@@ -1283,7 +1283,7 @@ private theorem continuousOn_coordPartial {E : Type*} [NormedAddCommGroup E] [No
   · exact partialX_eq_fderiv hdiff
   · exact partialY_eq_fderiv hdiff
 
-private theorem contDiffOn_coordPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem contDiffOn_coordPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : ℝ × ℝ → E} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     (hf : ContDiffOn ℝ ∞ f U) (j : Fin 2) : ContDiffOn ℝ ∞ (coordPartial j f) U := by
   have hd := (hf.fderiv_of_isOpen hU (m := ∞) (by simp)).clm_apply
@@ -1296,7 +1296,7 @@ private theorem contDiffOn_coordPartial {E : Type*} [NormedAddCommGroup E] [Norm
   · exact partialX_eq_fderiv hdiff
   · exact partialY_eq_fderiv hdiff
 
-private theorem coordPartial_congr_nhds {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem coordPartial_congr_nhds {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {φ ψ : ℝ × ℝ → E} {p : ℝ × ℝ} (he : φ =ᶠ[𝓝 p] ψ)
     (j : Fin 2) : coordPartial j φ p = coordPartial j ψ p := by
   have hx := he.comp_tendsto ((continuous_id.prodMk continuous_const).tendsto p.1)
@@ -1307,7 +1307,7 @@ private theorem coordPartial_congr_nhds {E : Type*} [NormedAddCommGroup E] [Norm
   · exact hx.deriv_eq
   · exact hy.deriv_eq
 
-private theorem partialY_partialX_at {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem partialY_partialX_at {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : ℝ × ℝ → E} {p : ℝ × ℝ} (hf : ContDiffAt ℝ ∞ f p) :
     partialY (partialX f) p = partialX (partialY f) p := by
   have hN : ∀ᶠ q in 𝓝 p, DifferentiableAt ℝ f q := by
@@ -1799,7 +1799,7 @@ theorem levelDualCoeff_divergence_ae : ∀ᵐ p, p ∈ puncturedCell →
   rw [he]
   exact sub_eq_zero.mpr (angleGrad_curl_zero hp hn)
 
-private theorem IsTestFunctionOn.mul_contDiffOn {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+theorem IsTestFunctionOn.mul_contDiffOn {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     {φ b : ℝ × ℝ → ℂ} (hφ : IsTestFunctionOn U φ) (hb : ContDiffOn ℝ ∞ b U) :
     IsTestFunctionOn U (fun p ↦ b p * φ p) := by
   have hz : ∀ p ∉ tsupport φ, b p * φ p = 0 := fun p hp ↦ by
@@ -2593,7 +2593,7 @@ private theorem stripCofactor_chain {φ : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
   rw [hN₀, hN₁, angleGrad_eq hp hcut j]
   linear_combination ((2 * orbitPeriod (levelCoord p) : ℝ) : ℂ) * hchain
 
-private theorem coordPartial_mul_at {f g : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
+theorem coordPartial_mul_at {f g : ℝ × ℝ → ℂ} {q : ℝ × ℝ}
     (hf : DifferentiableAt ℝ f q) (hg : DifferentiableAt ℝ g q) (i : Fin 2) :
     coordPartial i (fun r ↦ f r * g r) q =
       coordPartial i f q * g q + f q * coordPartial i g q := by

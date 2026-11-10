@@ -392,6 +392,88 @@ representative for the restricted measure on $U$ and transfer both
 properties by a.e.\ congruence.
 \end{proof}
 
+\begin{lemma}[Tests and integrability through a smooth chart]
+\label{lem:smooth-chart-tests}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.chartTest,
+ NoEmbeddedEigenvalues.isTestFunctionOn_chartTest,
+ NoEmbeddedEigenvalues.locallyIntegrableOn_comp_chart_symm,
+ NoEmbeddedEigenvalues.memLp_two_comp_chart_symm,
+ NoEmbeddedEigenvalues.integral_mul_test_chart,
+ NoEmbeddedEigenvalues.ae_eq_comp_chart}
+\leanok
+Let $e:S\to V$ be a partial homeomorphism between open plane sets,
+smooth on $S$, with $\det De=2$.
+A test $\phi$ supported compactly in $V$ pulls back to the genuine
+source test $\mathbf1_S(\phi\circ e)$.
+Composition with $e^{-1}$ transports local $L^1$ and $L^2$ from $S$
+to $V$. Spatial a.e.\ equality on $V$ pulls back to a.e.\ equality on $S$,
+without separate measurability assumptions on the two representatives.
+For a target test and any complex function $F$,
+\[
+ \int F\phi=2\int_S(F\circ e)(\phi\circ e).
+\]
+This last identity alone asserts no integrability.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The pulled-back test's support is contained in
+$e^{-1}(\operatorname{tsupp}\phi)$, a compact subset of $S$.
+It is smooth inside $S$ and zero in a neighbourhood of every point
+outside that compact set.
+For local integrability, pull a compact target set back through the chart,
+then use the Jacobian integrability equivalence. Apply the same equivalence
+to squared norms for $L^2$.
+For a.e.\ transport, the norm difference is a.e.\ zero and therefore genuinely
+integrable on $V$. Change variables in its zero integral; positivity of the
+constant Jacobian forces the source norm difference to vanish a.e.
+\end{proof}
+
+\begin{definition}[Chart cofactors]
+\label{def:smooth-chart-cofactor}
+For an open plane chart $e$, put $Q_x=e_y$, $Q_y=-e_x$, with values
+cast to $\C$, and define
+\[
+ C_{j0}=\partial_tQ_j,\qquad C_{j1}=-\partial_hQ_j,\qquad
+ \mathcal G_j(G)=\tfrac12(C_{j0}G_0+C_{j1}G_1).
+\]
+\lean{NoEmbeddedEigenvalues.chartDualPotential,
+ NoEmbeddedEigenvalues.chartCofactor, NoEmbeddedEigenvalues.chartGradient}
+\leanok
+\end{definition}
+
+\begin{lemma}[Weak gradient reconstructed through a chart]
+\label{lem:smooth-chart-weak-gradient}
+\uses{def:smooth-chart-cofactor, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.contDiffOn_chartCofactor,
+ NoEmbeddedEigenvalues.chartCofactor_divergence,
+ NoEmbeddedEigenvalues.chartTest_cofactor_chain,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.comp_chart_symm}
+\leanok
+For a smooth open chart $e:S\to V$ with $\det De=2$,
+the cofactor columns are smooth on $S$ and divergence-free.
+If $\partial_iF=G_i$ weakly on $S$, then
+\[
+ \partial_j(F\circ e^{-1})=\mathcal G_j(G)\circ e^{-1}
+ \quad\hbox{weakly on }V.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:smooth-chart-tests, lem:weak-derivative-basic}
+\leanok
+For a target test $\phi$, let $\psi=\mathbf1_S(\phi\circ e)$.
+The products $C_{j0}\psi,C_{j1}\psi$ are genuine compact source tests.
+The sum of their coordinate derivatives is
+$2(\partial_j\phi)\circ e$: the cofactor divergence vanishes by symmetry
+of mixed derivatives, and the remaining first-order terms give $\det De=2$.
+Apply the two supplied weak identities and add their integrals.
+Local integrability and compact support justify the splitting.
+Change variables on both sides; the same factor two yields
+$\mathcal G_j(G)$. No approximation or smoothness of the raw $F$ is used.
+\end{proof}
+
 \begin{lemma}[Integration by parts for a specified AC derivative]
 \label{lem:ac-integration-by-parts}
 \lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test}

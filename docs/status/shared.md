@@ -90,14 +90,20 @@ weights and local versus global regularity.
    the eight existing base-quarter inputs. The generic weak time identity and
    the rotation bridges have zero transitive admissions. The specified measurable
    separatrix gradient (`lem:dd-separatrix-weak-gradient`) is extracted on the whole
-   neighbourhood from local H¹ by countable a.e. gluing. Exact inverse-frame algebra
-   and weighted candidate L² are checked; the same weak quarter derivatives supply
-   Base-quarter inverse-frame data (`lem:dd-base-quarter-inverse-frame`).
-   The next obligation is Weak gradient identification on a base quarter
-   (`lem:quarter-gradient-identification`): establish the weak flow-time chain rule
-   on regular quarter patches and identify both coordinate rows of that spatial
-   gradient. A finite norm of the inverse-frame candidates alone does not do this.
-   Coarea and periodic/reflected covering then remain.
+   neighbourhood from local H¹ by countable a.e. gluing. Weak gradient identification
+   (`lem:quarter-gradient-identification`) is checked: reverse cofactor testing
+   reconstructs spatial weak derivatives on the actual quarter image, coarea
+   transports the weighted norm, and uniqueness identifies supplied derivatives
+   on overlaps. The generic chart/test/coarea/identification layer has no admissions.
+   Base-quarter weighted spatial gradient (`lem:dd-base-quarter-spatial-gradient`)
+   removes the character premise by summing the two projected raw lifts.
+   Weighted specified gradient on the base-quarter overlap
+   (`lem:dd-weighted-gradient-base-overlap`) transfers the norm to the same ordinary
+   gradient on its full separatrix neighbourhood. The base-image result retains
+   eight existing inputs; the overlap additionally uses ordinary separatrix H¹.
+   Remaining: finite-quarter image covering (including null seams), affine
+   derivative-index transport, and periodic/reflected covering to obtain local
+   weighted L² on the whole lifted neighbourhood.
    `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
    input and the saddle estimates are also separate in-section proof work.
    The weighted third-stream audit still reaches the saddle and weighted-gradient

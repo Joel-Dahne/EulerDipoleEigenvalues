@@ -704,6 +704,50 @@ cutoff. Restrict the same weak derivatives and both existing norms
 to that strip, then apply the inverse-frame estimate.
 \end{proof}
 
+\begin{lemma}[Base-quarter weighted spatial gradient, odd--odd]
+\label{lem:dd-base-quarter-spatial-gradient}
+\uses{def:eigen-problem, def:sectors, def:quarter-image,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_character_base_quarter_spatial_gradient,
+ NoEmbeddedEigenvalues.dd_base_quarter_spatial_gradient}
+\leanok
+For an odd--odd eigenfunction there are $0<b<1/2$ and specified
+Cartesian weak derivatives $E_x,E_y$ on $V_b$ with
+$E_j/d\in L^2(V_b)$. No rotation-character premise is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-base-quarter-inverse-frame, lem:quarter-spatial-reconstruction,
+ lem:rotation-characters, lem:weak-derivative-basic}
+\leanok
+For each rotation character, reconstruct the spatial derivatives from
+the actual raw quarter derivatives and transfer the weighted norm by coarea.
+For a general odd--odd eigenfunction, take the minimum of the two projected
+cutoffs, restrict the same derivatives, and add them.
+The sum of the two projected raw lifts equals the actual raw lift a.e.,
+which transfers the weak identities; division is linear for the weighted norms.
+\end{proof}
+
+\begin{lemma}[Weighted specified gradient on the base-quarter overlap]
+\label{lem:dd-weighted-gradient-base-overlap}
+\uses{def:eigen-problem, def:sectors, def:quarter-image,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_weighted_gradient_base_overlap}
+\leanok
+For an odd--odd eigenfunction there are an open lifted neighbourhood
+$U$ of $\{\Psi=0\}$, $0<b<1/2$, and specified weak derivatives $D_j$
+on all of $U$, such that $D_j/d\in L^2(U\cap V_b)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-separatrix-weak-gradient,
+ lem:dd-base-quarter-spatial-gradient, lem:weak-derivative-unique}
+\leanok
+Choose the one ordinary separatrix gradient on $U$ and the weighted
+gradient on $V_b$. Weak uniqueness on their open overlap identifies
+their representatives a.e.\ and transfers the weighted norm.
+\end{proof}
+
 \begin{proposition}[Weighted vorticity gradient, odd--odd]
 \label{prop:dd-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
@@ -716,6 +760,7 @@ $G/d\in L^2_{\rm loc}(U)$.
 
 \begin{proof}
 \uses{lem:dd-quarter-weighted-derivatives, lem:dd-separatrix-weak-gradient,
+ lem:dd-weighted-gradient-base-overlap, lem:quarter-spatial-reconstruction,
  lem:dd-base-quarter-inverse-frame, lem:quarter-gradient-identification,
  lem:rotation-characters, lem:orbit-coordinate-gradients,
  lem:orbit-coordinates-area, lem:symmetries-commute,

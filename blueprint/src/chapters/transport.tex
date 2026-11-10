@@ -1830,6 +1830,43 @@ It holds also at $r=0$ under totalized division.
 Bounded multipliers preserve $L^2$; add the two terms.
 \end{proof}
 
+\begin{definition}[Open base-quarter image]
+\label{def:quarter-image}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterImage}
+\leanok
+Write $C(p)=(h(p),t(p))$ for the canonical orbit coordinates.
+Define
+\[
+ V_b=\{p\in\Omega_+\setminus\{0\}: b(p)>0,\ C(p)\in Q_b\},
+\]
+where $b(p)$ denotes the second diagonal coordinate, not the cutoff.
+\end{definition}
+
+\begin{lemma}[Open base-quarter chart]
+\label{lem:quarter-open-chart}
+\uses{def:quarter-image}
+\lean{NoEmbeddedEigenvalues.quarterChart, NoEmbeddedEigenvalues.isOpen_quarterImage,
+ NoEmbeddedEigenvalues.quarterCoordinates_dipoleOrbit,
+ NoEmbeddedEigenvalues.contDiffOn_quarterChart,
+ NoEmbeddedEigenvalues.contDiffOn_quarterCoordinates,
+ NoEmbeddedEigenvalues.det_fderiv_quarterChart}
+\leanok
+For $b\le1$, $\Gamma_0:Q_b\to V_b$ is a smooth open chart with smooth
+inverse $C$. Thus $V_b=\Gamma_0(Q_b)$, and its Jacobian is exactly two.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates-inverse, lem:orbit-coordinates-smooth,
+ lem:action-angle-regularity, lem:orbit-jacobian, lem:dipole-flow}
+\leanok
+On $|t|<L(h)$ the orbit has positive second diagonal coordinate, so
+the inverse does not cross the time cut. The inverse identities give
+both maps and their compositions. The inverse coordinates are continuous
+and smooth on this upper patch, making the displayed image open.
+The flow map is jointly smooth and has determinant two.
+\end{proof}
+
 \begin{definition}[Base-quarter inverse-frame candidates]
 \label{def:quarter-inverse-frame}
 \uses{def:cell-separatrix-collar}
@@ -1903,9 +1940,47 @@ Thus $a_j/d$ and $b_jd$ are measurable bounded multipliers.
 Apply Lemma~\ref{lem:weighted-frame} to the two given $L^2$ functions.
 \end{proof}
 
+\begin{lemma}[Spatial gradient reconstructed on a base quarter]
+\label{lem:quarter-spatial-reconstruction}
+\uses{def:quarter-image, def:quarter-inverse-frame, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.quarterSpatialGradient,
+ NoEmbeddedEigenvalues.chartGradient_quarterChart,
+ NoEmbeddedEigenvalues.quarterSpatialGradient_weak,
+ NoEmbeddedEigenvalues.memLp_quarterSpatialGradient,
+ NoEmbeddedEigenvalues.memLp_div_saddleDist_of_quarter}
+\leanok
+If $\partial_h(F\circ\Gamma_0)=H$ and
+$\partial_t(F\circ\Gamma_0)=T$ weakly on $Q_b$, $b\le1$, then
+\[
+ E_j=\mathcal C_j(H,T)\circ C
+ \quad\hbox{satisfies}\quad \partial_jF=E_j
+ \quad\hbox{weakly on }V_b.
+\]
+If $\mathcal C_j(H,T)/(d\circ\Gamma_0)\in L^2(Q_b)$, then
+$E_j/d\in L^2(V_b)$.
+If also $\partial_jF=D_j$ weakly on an open set $U$, the same weighted
+bound holds for this specified $D_j$ on $U\cap V_b$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-open-chart, lem:smooth-chart-weak-gradient,
+ lem:smooth-chart-tests, lem:weak-derivative-unique}
+\leanok
+Apply the reverse cofactor chain rule to the actual quarter chart.
+Its time column is $Y(\Gamma_0)$ and its level column is $J$; substitution
+identifies $\mathcal G$ exactly with $\mathcal C$.
+The inverse identity gives $F\circ\Gamma_0\circ C=F$ on $V_b$.
+Constant-Jacobian $L^2$ transport of the weighted candidate gives the
+spatial norm. On $U\cap V_b$, weak uniqueness identifies $E_j$ with $D_j$,
+so a.e.\ congruence transfers the norm.
+The whole quarter image need not lie in $U$.
+\end{proof}
+
 \begin{lemma}[Weak gradient identification on a base quarter]
 \label{lem:quarter-gradient-identification}
 \uses{def:quarter-inverse-frame, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.quarterInverseGradient_identification}
+\leanok
 Let $0<b<1$, let $U$ be open with $\Gamma_0(Q_b)\subset U$, and let
 $F,D_x,D_y$ be measurable on the plane with $\partial_jF=D_j$
 weakly on $U$. If $\partial_h(F\circ\Gamma_0)=H$ and
@@ -1917,20 +1992,15 @@ $\partial_t(F\circ\Gamma_0)=T$ weakly on $Q_b$, then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-regularity, lem:orbit-coordinates-inverse,
- lem:orbit-jacobian, lem:weak-derivative-unique,
- lem:quarter-inverse-frame-algebra}
-On a compact regular quarter patch, transform weak tests through the
-smooth orbit chart with Jacobian two.
-The cofactor divergence terms cancel by equality of mixed partials.
-The two weak chain rules give
-\[
- H=J_x(D_x\circ\Gamma_0)+J_y(D_y\circ\Gamma_0),\qquad
- T=\sin p_y(D_x\circ\Gamma_0)-\sin p_x(D_y\circ\Gamma_0)
-\]
-a.e.; weak uniqueness identifies these rows with the specified $H,T$.
-Use the inverse-frame algebra. A countable interior cover makes these
-identities valid a.e.\ on the whole quarter strip.
+\uses{lem:quarter-spatial-reconstruction, lem:smooth-chart-tests,
+ lem:weak-derivative-unique}
+\leanok
+Reconstruct $E_j=\mathcal C_j(H,T)\circ C$ weakly on $V_b$.
+Here $V_b\subset U$, so weak uniqueness gives $E_j=D_j$ a.e.\ on $V_b$.
+Pull this a.e.\ identity back through the nonsingular chart and use
+$C\circ\Gamma_0=\mathrm{id}$.
+This proves the source-coordinate identification without first assuming
+a weak chain rule for the supplied spatial derivative representatives.
 \end{proof}
 
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]

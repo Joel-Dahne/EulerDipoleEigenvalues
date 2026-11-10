@@ -44,8 +44,13 @@ Proof work is now outside the odd–odd chapter:
   rotation transfer adds no admissions. A single measurable ordinary separatrix
   gradient and the weighted inverse-frame candidates are now constructed
   (`lem:dd-separatrix-weak-gradient`, `lem:dd-base-quarter-inverse-frame`).
-  Weak flow-time gradient identification (`lem:quarter-gradient-identification`),
-  coarea and periodic/reflected weighted spatial-gradient assembly remain open.
+  The weak cofactor chain rule and constant-Jacobian coarea now reconstruct actual
+  weighted spatial derivatives on the base-quarter image, without a character
+  premise (`lem:dd-base-quarter-spatial-gradient`). Uniqueness transfers that norm
+  to the same ordinary separatrix gradient on its base-quarter overlap
+  (`lem:dd-weighted-gradient-base-overlap`); the generic identification layer is
+  admission-free. Finite-quarter image/seam covering, affine index transport and
+  periodic/reflected weighted spatial-gradient assembly remain open.
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.
