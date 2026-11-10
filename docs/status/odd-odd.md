@@ -32,8 +32,10 @@ Proof work is now outside the odd–odd chapter:
   [shared status](shared.md#next-session) for that frontier. The weighted-gradient
   branch now has checked logarithmic midpoint/reconstruction data
   (`lem:dd-log-midpoint`), including L² of the joint level candidate by
-  logarithmic-length summation. Its identification as a weak derivative,
-  strong quarter derivatives and weighted spatial-gradient assembly remain open. Periodic quotient transport is
+  logarithmic-length summation and its identification as the weak level derivative
+  of the actual transport-unknown pullback. Forcing/time derivative bounds,
+  strong quarter derivatives and weighted spatial-gradient assembly remain open.
+  Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.
   No stronger corner hypothesis is needed. The stronger bundled

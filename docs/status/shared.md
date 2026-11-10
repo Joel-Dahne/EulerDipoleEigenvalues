@@ -78,10 +78,13 @@ weights and local versus global regularity.
    scalar/orbit inputs. Its joint level-reconstruction candidate is now L² on
    the moving strip: signed integral bounds, a.e. measurability and logarithmic
    length summation are checked in `QuarterReconstruction.lean`. These generic
-   estimates have no admissions. Next is Strong weighted quarter derivatives
-   (`lem:dd-quarter-weighted-derivatives`): identify this candidate by weak level
-   differentiation, control the forcing/time derivatives, then transfer through
-   inverse coordinates and periodic/reflected covering. No new admissions were added.
+   estimates have no admissions. Weak parameter integration, interval-H¹ lifting
+   and locality now identify it as the weak level derivative of the actual raw
+   transport-unknown pullback, using joint a.e. congruence. The new generic weak
+   calculus is admission-free. Next is Strong weighted quarter derivatives
+   (`lem:dd-quarter-weighted-derivatives`): bound the forcing-level derivative in
+   L², establish the stronger weighted time bound, then transfer through inverse
+   coordinates and periodic/reflected covering. No new admissions were added.
    `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
    input and the saddle estimates are also separate in-section proof work.
    The weighted third-stream audit still reaches the saddle and weighted-gradient

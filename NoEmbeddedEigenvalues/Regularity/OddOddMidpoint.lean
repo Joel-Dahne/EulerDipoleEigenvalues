@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic
 import NoEmbeddedEigenvalues.LogarithmicMidpoint
 import NoEmbeddedEigenvalues.QuarterReconstruction
+import NoEmbeddedEigenvalues.WeakQuarterReconstruction
 
 /-!
 # Logarithmic phase division and the odd–odd midpoint coefficient
@@ -8,9 +9,9 @@ import NoEmbeddedEigenvalues.QuarterReconstruction
 All data use the same continuous stream and canonical jet. The numerator data
 remain available on their original interval; the phase quotient and midpoint
 coefficient are constructed on a smaller complete-cell interval and identified
-with orbitwise ACL midpoint values. The joint candidate level derivative is
-square integrable on the recentered quarter strip. This estimate does not
-assert a spatial weak-derivative identity.
+with orbitwise ACL midpoint values. Weak differentiation of the joint reconstruction
+identifies the square-integrable level derivative of the actual transport-unknown
+pullback on the recentered quarter strip.
 -/
 
 noncomputable section
@@ -39,6 +40,10 @@ theorem dd_log_midpoint {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
             MemLp (fun h ↦ (Real.sqrt (logLevelWeight h) : ℂ) *
               quarterMidpointDerivative lam Q Q₁ d.halfFirst h) 2
               (volume.restrict (Ioo 0 h₁)) ∧
+            HasWeakPartialOn (quarterOrbitStrip h₁) 0
+              (fun q ↦ transportUnknown lam (liftL2 ω) (contStream ω) (dipoleOrbit q.1 q.2))
+              (quarterReconstructionLevel lam (quarterMidpointDerivative lam Q Q₁ d.halfFirst)
+                (quarterForcingLevelDerivative (streamJet2 ω))) ∧
             MemLp (quarterReconstructionLevel lam
               (quarterMidpointDerivative lam Q Q₁ d.halfFirst) (quarterForcingLevelDerivative
                 (streamJet2 ω))) 2 (volume.restrict (quarterOrbitStrip h₁)) ∧
@@ -109,7 +114,30 @@ theorem dd_log_midpoint {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (continuous_contStream ω) hvκ₁ hfκ₁ hdiv hne
   have hlevel := d.reconstruction_level_memLp hh₀half hh₁₀.le hAw
     (hK.mono_set hsub)
+  have hsubS : quarterOrbitStrip h₁ ⊆ quarterOrbitStrip h₀ := fun q hq ↦
+    ⟨hq.1, hq.2.1.trans hh₁₀, hq.2.2⟩
+  have hweak := quarterReconstruction_weak_of_intervalH1Loc (hh₁₀.trans hh₀1).le hAl
+    (d.forcing_level_weak.mono hsubS) lam
+  have hRaw : AEStronglyMeasurable (fun q : ℝ × ℝ ↦
+      transportUnknown lam (liftL2 ω) (contStream ω) (dipoleOrbit q.1 q.2))
+      (volume.restrict (quarterOrbitStrip h₁)) := by
+    have hv : Measurable (liftL2 ω) := (Lp.stronglyMeasurable ω).measurable.comp
+      isOpenQuotientMap_torusProj.continuous.measurable
+    have hf := (continuous_contStream ω).measurable
+    have hm : Measurable (transportUnknown lam (liftL2 ω) (contStream ω)) := by
+      unfold transportUnknown
+      fun_prop
+    exact (hm.comp continuous_dipoleOrbit.measurable).aestronglyMeasurable
+  have heq := ae_eq_quarterStrip_of_ae_sections hweak.1.aestronglyMeasurable hRaw (by
+    filter_upwards [hprof] with h hh
+    obtain ⟨Z, hzeq, _, _, _, hrec⟩ := hh
+    filter_upwards [ae_restrict_of_ae hzeq] with t ht
+    rw [quarterReconstruction_eq]
+    exact (hrec t).symm.trans ht)
+  have hweakRaw := hweak.congr_ae_on (measurableSet_quarterOrbitStrip h₁)
+    ((ae_restrict_iff' (measurableSet_quarterOrbitStrip h₁)).1 heq)
+    (Filter.Eventually.of_forall fun _ _ ↦ rfl)
   exact ⟨h₀, hh₀, hh₀half, d, hK, h₁, hh₁, hh₁₀, hend, Q, Q₁, hQ, hdiv, hQw,
-    hQ₁w, hAl, hAw, hlevel, hprof⟩
+    hQ₁w, hAl, hAw, hweakRaw, hlevel, hprof⟩
 
 end NoEmbeddedEigenvalues

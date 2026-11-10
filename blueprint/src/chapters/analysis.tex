@@ -341,6 +341,48 @@ A locally integrable function times a continuous function with compact support
 in $U$ is integrable, so the defining integrals split.
 \end{proof}
 
+\begin{lemma}[Locality of a specified weak derivative]
+\label{lem:weak-partial-locality}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_of_locally}
+\leanok
+Let $U\subset\R^2$. If every point of $U$ has an open neighbourhood on
+which the same functions $F,D$ satisfy $\partial_jF=D$ weakly, then
+$\partial_jF=D$ weakly on $U$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Local integrability follows by restricting the neighbourhood filters.
+For a test $\phi$, cover its compact support by finitely many such
+neighbourhoods and choose a subordinate smooth partition.
+The partitioned tests sum to $\phi$ everywhere, hence their derivatives
+sum to $\partial_j\phi$. Sum their weak identities; local integrability
+justifies each finite integral decomposition.
+\end{proof}
+
+\begin{lemma}[Interval $H^1$ as a planar weak derivative]
+\label{lem:interval-h1-weak-lift}
+\uses{def:h1-interval, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test,
+ NoEmbeddedEigenvalues.HasIntervalH1.weak_fst}
+\leanok
+If $A\in H^1(a,b)$ with specified derivative $A_1$, then
+$\partial_h[A(h)]=A_1(h)$ weakly on $(a,b)\times\R$.
+This is a local weak-derivative assertion, not a global planar $L^2$ bound.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-partial-locality}
+\leanok
+On compact subintervals, multiply the absolutely continuous representative
+by a smooth test vanishing at both endpoints.
+The complex FTC gives $\int A\beta'=-\int A_1\beta$.
+Fubini lifts this identity to rectangles; finite time windows give local
+integrability. Locality covers the whole product.
+Only interior interval values are used, not endpoint traces.
+\end{proof}
+
 \begin{lemma}[Smooth multiplication for weak derivatives]
 \label{lem:weak-derivative-product}
 \uses{def:weak-derivative-local}
@@ -1942,6 +1984,46 @@ primitive-and-average formula defines a jointly measurable function
 is the desired absolutely continuous representative. Finally, Fubini
 makes two representatives equal almost everywhere on almost every
 section; continuity makes them equal everywhere on those sections.
+\end{proof}
+
+\begin{lemma}[Weak differentiation under a signed parameter integral]
+\label{lem:weak-parameter-integral}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.integral_parameterPrimitive_mul_deriv,
+ NoEmbeddedEigenvalues.integrableOn_parameterPrimitive_rectangle,
+ NoEmbeddedEigenvalues.locallyIntegrableOn_parameterPrimitive_rectangle,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.parameterPrimitive_rectangle}
+\leanok
+Let $U=(a,b)\times(c,d)$ with $c<0<d$, and suppose
+$\partial_hF=D$ weakly on $U$. Then
+\[
+ P_F(h,t)=\int_0^t F(h,u)\,du,\qquad P_D(h,t)=\int_0^t D(h,u)\,du
+\]
+are locally integrable on $U$ and $\partial_hP_F=P_D$ weakly there.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing}
+\leanok
+On a compact rectangle containing the midpoint, the norm of $P_F(h,t)$
+is bounded by the integral of $|F(h,u)|$ over the entire time window.
+Fubini gives integrability of this majorant, and likewise for $D$.
+A measurable a.e.\ replacement of the zero-extended integrand makes the
+primitive jointly measurable without changing it a.e.
+
+Swap coordinates to slice the weak level identity. Real and imaginary
+parts extend the sliced identity to complex level tests.
+For each fixed time test section $\beta(h)$, Fubini gives
+\[
+ \int P_F(h,t)\beta'(h)\,dh
+ =\int_0^t\!\int F(h,u)\beta'(h)\,dh\,du
+ =-\int P_D(h,t)\beta(h)\,dh.
+\]
+Signed-interval Fubini handles negative $t$ as well.
+For a planar test, take $\beta(h)=\phi(h,t)$ separately at each fixed
+$t$, then integrate in $t$. No intersection of uncountably many null sets
+is needed: each sliced identity is integrated before varying $t$.
+Compact rectangles containing the test support and the midpoint suffice.
 \end{proof}
 
 \begin{lemma}[An elementary $L^2$ trace estimate]

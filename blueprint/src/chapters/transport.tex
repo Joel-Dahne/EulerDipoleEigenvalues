@@ -1521,6 +1521,94 @@ The coarse bound $L-\frac12\log(1/h)\le2$ gives $2L\le4\Lambda$ for
 $h<1/2$. Apply Lemma~\ref{lem:quarter-strip-summation}.
 \end{proof}
 
+\begin{definition}[Joint midpoint reconstruction]
+\label{def:quarter-reconstruction}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterDuhamel, NoEmbeddedEigenvalues.quarterReconstruction}
+\leanok
+For an amplitude $A$ and forcing $F$ on the quarter strip, put
+\[
+ \mathcal D_\lambda F(h,t)
+ =i e^{i\lambda t}\int_0^t F(h,u)e^{-i\lambda u}\,du,\qquad
+ \mathcal Z_{\lambda,A,F}=e^{i\lambda t}A(h)+\mathcal D_\lambda F(h,t).
+\]
+\end{definition}
+
+\begin{lemma}[Weak midpoint primitive on a moving quarter strip]
+\label{lem:quarter-primitive-weak}
+\uses{def:cell-separatrix-collar, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.quarterStrip_midpoint_rectangle,
+ NoEmbeddedEigenvalues.isOpen_quarterOrbitStrip,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.quarterPrimitive}
+\leanok
+For $0<b\le1$, the strip $Q_b$ is open. If $\partial_hF=D$ weakly there,
+then $\partial_hP_F=P_D$ weakly there, with $P_F,P_D$ as in
+Lemma~\ref{lem:weak-parameter-integral}; both primitives are locally integrable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-parameter-integral, lem:weak-partial-locality,
+ lem:period-regularity}
+\leanok
+At $(h,t)\in Q_b$, choose $|t|<m<L(h)$.
+Continuity of $L$ gives a level interval around $h$ on which $L>m$.
+Its product with $(-m,m)$ stays inside $Q_b$ and contains the midpoint
+in every fiber. Apply the rectangular primitive identity and glue by
+locality. There is no moving-endpoint differentiation.
+\end{proof}
+
+\begin{lemma}[Weak identification of the midpoint level reconstruction]
+\label{lem:quarter-reconstruction-weak}
+\uses{def:quarter-reconstruction, def:quarter-reconstruction-level,
+ def:weak-derivative-local, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc.weak_fst,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.quarterDuhamel,
+ NoEmbeddedEigenvalues.quarterReconstruction_eq,
+ NoEmbeddedEigenvalues.quarterReconstruction_weak_of_intervalH1Loc}
+\leanok
+Let $0<b\le1$, $A\in H^1_{\rm loc}(0,b)$ with specified derivative $A_1$,
+and $\partial_hF=D$ weakly on $Q_b$. Then
+\[
+ \partial_h\mathcal Z_{\lambda,A,F}
+   =\mathcal H_{\lambda,A_1,D}
+ \quad\hbox{weakly on }Q_b.
+\]
+The reconstruction also equals
+$e^{i\lambda t}A(h)+i\int_0^te^{i\lambda(t-u)}F(h,u)\,du$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interval-h1-weak-lift, lem:weak-partial-locality,
+ lem:quarter-primitive-weak, lem:weak-derivative-product}
+\leanok
+The interval weak lift and locality give the amplitude's planar weak
+derivative. Multiplication by $e^{\pm i\lambda t}$ introduces no level
+derivative of the phase. Apply the primitive identity to
+$F e^{-i\lambda t}$, multiply back by $i e^{i\lambda t}$ and add the
+amplitude term. Factoring the phases agrees with the unfactored formula
+even for signed intervals.
+\end{proof}
+
+\begin{lemma}[From orbitwise to joint a.e. equality]
+\label{lem:quarter-profile-ae}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.ae_eq_quarterStrip_of_ae_sections}
+\leanok
+Let $F,G$ be a.e.\ strongly measurable on $Q_b$.
+If, for a.e.\ $h\in(0,b)$, they agree for a.e.\
+$t\in(-L(h),L(h))$, then they agree a.e.\ on $Q_b$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-primitive-measurable}
+\leanok
+Zero-extend both functions and choose globally measurable a.e.\
+representatives. Fubini transfers the replacement identities to time
+sections. Their equality set is measurable, so the converse direction
+of Fubini gives joint a.e.\ equality. Restrict back to $Q_b$.
+The measurability hypotheses cannot be dropped.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,

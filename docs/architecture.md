@@ -69,6 +69,10 @@ proof mechanisms. Module names below are relative to
 - `CellPeriodization.lean`: box periodization of compactly supported cell data
   and uniqueness of weak derivatives.
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.
+- `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
+  `IntervalH1WeakLift.lean` lifts interval H¹ data to planar weak level derivatives.
+  `WeakParameterIntegral.lean` proves local integrability and weak differentiation
+  of signed midpoint primitives by sliced testing and Fubini.
 - `TraceL2.lean`, `TraceH2.lean`, `TraceGagliardo.lean`: rectangle trace package.
   `HardyAverage.lean` and `OddHardy.lean`: averaging and odd-function Hardy estimates.
   `EvenGradientHardy.lean`: ACL zero traces and cosine division of even H²
@@ -82,6 +86,9 @@ proof mechanisms. Module names below are relative to
   control, null quarter resonances and the orbitwise midpoint/reconstruction identity.
 - `QuarterReconstruction.lean`: signed midpoint-integral bounds, a.e. measurability
   on moving quarter strips and logarithmic summation of the joint level candidate.
+- `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
+  differentiation of primitives and full reconstructions, and joint a.e. equality
+  from a.e. fiber equality.
 - `DiagonalCalculus.lean`, `SegmentEstimates.lean`: diagonal calculus and
   restrictions to segments/hyperbolas near a line.
 - `SeparatrixTraces.lean`: line representatives, even–even arc/level traces,
