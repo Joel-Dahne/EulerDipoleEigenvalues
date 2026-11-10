@@ -1011,12 +1011,14 @@ parametrization is $P(h,\theta)=\gamma_h(\theta S(h))$ on the strip $(0,1)\times
 \uses{def:action-angle}
 \lean{NoEmbeddedEigenvalues.contDiffOn_actionAngleInv,
   NoEmbeddedEigenvalues.contDiffAt_angleCoord,
-  NoEmbeddedEigenvalues.contDiffOn_comp_actionAngle}
+  NoEmbeddedEigenvalues.contDiffOn_comp_actionAngle,
+  NoEmbeddedEigenvalues.contDiffAt_orbitMap}
 \leanok
 The parametrization $P$ is smooth on $(0,1)\times\R$. The angle $\theta$
 is smooth off the cut $\{b=0,a>0\}$. If $F$ is smooth on the strip and
 $1$-periodic in its second variable, then $F\circ(h,\theta)$ is smooth
-on the whole punctured cell.
+on the whole punctured cell. The flow-time map
+$(h,t)\mapsto\gamma_h(t)=P(h,t/S(h))$ is also smooth for $0<h<1$.
 \end{lemma}
 
 \begin{proof}

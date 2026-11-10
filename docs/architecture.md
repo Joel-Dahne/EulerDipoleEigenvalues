@@ -90,10 +90,17 @@ proof mechanisms. Module names below are relative to
   on moving quarter strips, fiber-integral L² summation, the forcing-level L²
   bound from weighted jet mass and logarithmic summation of the joint level candidate.
 - `QuarterMeasureTransport.lean`: spatial L² pullback through constant-Jacobian coarea.
+  `QuarterRotation.lean` transfers measurable spatial a.e. identities to joint
+  quarter identities and gives the raw profiles' iterated rotation character.
   `QuarterTimeDerivative.lean` transfers specified weak transport derivatives to
   weak quarter-time derivatives using orbit restriction and rectangular ACL testing.
   `SaddleTransportWeights.lean` controls the d⁻² sine-transport terms by d⁻³ᐟ²
   gradient components, globally and without a cutoff.
+- `WeakDerivativeGluing.lean`: specified measurable weak gradients from local H¹,
+  by countable a.e. overlap compatibility, weak locality and local L² gluing.
+  `WeightedFrame.lean` transfers the H and T/d² weights through bounded normalized
+  frame coefficients. `QuarterInverseFrame.lean` gives the actual quarter's
+  measurable dual coefficients, exact inverse algebra and weighted candidate L².
 - `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
   differentiation of primitives and full reconstructions, and joint a.e. equality
   from a.e. fiber equality.
@@ -157,6 +164,11 @@ can be added here as they are formalized.
   gives the specified weak time identity for every eigenfunction; no saddle
   regularity or packed-jet admission is used. `Regularity/OddOddQuarterTime.lean`
   adds the stronger saddle weight and assembles both base-quarter derivatives.
+  `Regularity/OddOddQuarters.lean` transfers them to all four recentered quarters
+  on a common cutoff by joint a.e. congruence and saddle-distance invariance.
+  `Regularity/OddOddGradientCoordinates.lean` extracts a single measurable ordinary
+  separatrix gradient and retains the quarter derivatives with weighted inverse-frame
+  candidates. The spatial gradient and the quarter candidates are distinct interfaces.
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in

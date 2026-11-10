@@ -614,6 +614,8 @@ that same strip without shrinking it.
 \label{lem:dd-quarter-weighted-derivatives}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
  def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.dd_quarter_weighted_derivatives}
+\leanok
 For an odd--odd eigenfunction with fixed rotation character there is
 $0<h_0<1/2$ such that every separately recentered profile
 $\omega_k=\widetilde\omega\circ\Gamma_k$ on $Q_{h_0}$ has specified
@@ -625,17 +627,18 @@ weak derivatives $H_k,T_k$ with
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-base-quarter-weighted-derivatives, lem:rotation-characters,
- lem:quarter-profile-ae, lem:reflection-algebra}
+\uses{lem:dd-base-quarter-weighted-derivatives, lem:quarter-rotation-character,
+ lem:weak-derivative-basic}
+\leanok
 The base-quarter lemma supplies both weak derivatives and their bounds
 for the same raw pullback and cutoff.
-The rotation-character identity gives
+Lemma~\ref{lem:quarter-rotation-character} gives
 $\widetilde\omega\circ\Gamma_k=\kappa^k\widetilde\omega\circ\Gamma_0$
-jointly a.e.; orbitwise equality is promoted using the measurable
-raw pullbacks. Weak a.e.\ congruence transfers the derivatives.
-Rotation preserves the saddle lattice and its distance, so multiplication
-by the constant character factor transfers both weighted norms.
-Only finitely many rotations are needed.
+jointly a.e. Hence weak linearity and a.e.\ congruence give
+$H_k=\kappa^kH_0$ and $T_k=\kappa^kT_0$.
+Since $d\circ\Gamma_k=d\circ\Gamma_0$ pointwise, the weighted
+time derivative is also a constant multiple of its base-quarter
+counterpart. Both norms transfer without shrinking the common cutoff.
 \end{proof}
 
 \begin{remark}[Digest note: midpoint representatives and weak reconstruction]
@@ -657,6 +660,50 @@ locality in Lemma~\ref{lem:quarter-reconstruction-weak}; a finite norm of
 the candidate alone would not imply it.
 \end{remark}
 
+\begin{lemma}[Specified separatrix gradient, odd--odd]
+\label{lem:dd-separatrix-weak-gradient}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.dd_separatrix_weak_gradient}
+\leanok
+For an odd--odd eigenfunction there are an open lifted neighbourhood
+$U$ of $\{\Psi=0\}$ and globally measurable functions $D_x,D_y$
+such that $\partial_j\widetilde\omega=D_j$ weakly on $U$ and
+$D_j\in L^2_{\rm loc}(U)$.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:dd-separatrix-h1, lem:local-h1-specified-gradient}
+\leanok
+Extract and glue the local $H^1$ derivative representatives, then
+choose measurable representatives on the same open neighbourhood.
+This does not require a new trace or jump calculation.
+\end{proof}
+
+\begin{lemma}[Base-quarter inverse-frame data, odd--odd]
+\label{lem:dd-base-quarter-inverse-frame}
+\uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
+ def:quarter-inverse-frame, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_base_quarter_inverse_frame}
+\leanok
+For an odd--odd eigenfunction with fixed rotation character there
+are $0<b<1/2$ and specified weak coordinate derivatives $H,T$ of
+the actual raw base-quarter profile such that
+\[
+ H,\quad T/(d\circ\Gamma_0)^2,\quad
+ \mathcal C_j(H,T)/(d\circ\Gamma_0)\in L^2(Q_b)
+ \qquad(j=x,y).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-base-quarter-weighted-derivatives,
+ lem:quarter-inverse-frame-estimate}
+\leanok
+Take the minimum of the base-quarter cutoff and the inverse-frame
+cutoff. Restrict the same weak derivatives and both existing norms
+to that strip, then apply the inverse-frame estimate.
+\end{proof}
+
 \begin{proposition}[Weighted vorticity gradient, odd--odd]
 \label{prop:dd-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
@@ -668,12 +715,18 @@ $G/d\in L^2_{\rm loc}(U)$.
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-quarter-weighted-derivatives, prop:dd-separatrix-h1,
+\uses{lem:dd-quarter-weighted-derivatives, lem:dd-separatrix-weak-gradient,
+ lem:dd-base-quarter-inverse-frame, lem:quarter-gradient-identification,
  lem:rotation-characters, lem:orbit-coordinate-gradients,
  lem:orbit-coordinates-area, lem:symmetries-commute,
- lem:weak-derivative-unique}
+ lem:affine-jet-pullback, lem:weak-derivative-unique}
+Choose the specified measurable spatial gradient supplied by
+Lemma~\ref{lem:dd-separatrix-weak-gradient}.
 For either rotation character, use the strong quarter derivatives.
-The inverse-coordinate estimates give
+On quarter patches contained in its neighbourhood, identify the
+inverse-frame candidates with this gradient by
+Lemma~\ref{lem:quarter-gradient-identification}; rotations use the
+affine weak chain rule. The inverse-coordinate estimates give
 \[
  \frac{|\nabla\omega|}{d}
  \le C\left(|\partial_h\omega_h|+

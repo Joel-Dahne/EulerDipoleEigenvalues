@@ -39,7 +39,13 @@ Proof work is now outside the odd–odd chapter:
   derivatives (`lem:dd-base-quarter-weighted-derivatives`) are now checked on
   that same raw profile: the time identity uses the Fourier first partials,
   and its weighted bound uses the existing saddle and forcing inputs.
-  Rotation transfer and weighted spatial-gradient assembly remain open.
+  Strong weighted quarter derivatives (`lem:dd-quarter-weighted-derivatives`)
+  are checked on all four separately recentered raw profiles using one cutoff;
+  rotation transfer adds no admissions. A single measurable ordinary separatrix
+  gradient and the weighted inverse-frame candidates are now constructed
+  (`lem:dd-separatrix-weak-gradient`, `lem:dd-base-quarter-inverse-frame`).
+  Weak flow-time gradient identification (`lem:quarter-gradient-identification`),
+  coarea and periodic/reflected weighted spatial-gradient assembly remain open.
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.

@@ -361,6 +361,37 @@ sum to $\partial_j\phi$. Sum their weak identities; local integrability
 justifies each finite integral decomposition.
 \end{proof}
 
+\begin{lemma}[Specified gradient from local $H^1$]
+\label{lem:local-h1-specified-gradient}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.exists_weakPartial_of_locally,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.exists_weakGradient,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.exists_measurable_weakGradient}
+\leanok
+If $U$ is open and $F\in H^1_{\rm loc}(U)$, there are globally measurable
+functions $D_x,D_y:\R^2\to\C$ with $\partial_jF=D_j$ weakly on $U$
+and $D_j\in L^2_{\rm loc}(U)$.
+More generally, locally specified weak partial derivatives with local
+$L^2$ bounds glue to one such derivative, without pointwise compatibility
+of their representatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-partial-locality, lem:weak-derivative-unique,
+ lem:sobolev-local-gluing}
+\leanok
+Choose precompact open patches inside $U$ and the derivatives supplied
+by local $H^1$. A countable subcover suffices. On each overlap, weak
+uniqueness identifies the two representatives a.e.
+Define the global derivative by choosing any active patch. For a fixed
+patch, intersect the good sets for the countably many possible active
+patches; the global choice equals its local derivative a.e.
+Weak locality and local Sobolev gluing give the global weak identity
+and local $L^2$ bounds. Finally choose a globally measurable a.e.\
+representative for the restricted measure on $U$ and transfer both
+properties by a.e.\ congruence.
+\end{proof}
+
 \begin{lemma}[Integration by parts for a specified AC derivative]
 \label{lem:ac-integration-by-parts}
 \lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test}

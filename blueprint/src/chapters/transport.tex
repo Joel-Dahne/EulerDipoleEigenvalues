@@ -1757,6 +1757,182 @@ of Fubini gives joint a.e.\ equality. Restrict back to $Q_b$.
 The measurability hypotheses cannot be dropped.
 \end{proof}
 
+\begin{lemma}[Spatial a.e. equality pulls back to a quarter]
+\label{lem:quarter-ae-pullback}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.ae_eq_comp_quarterOrbitStrip}
+\leanok
+Let $0<b\le1$ and let $F,G:\R^2\to\C$ be measurable and equal
+a.e.\ on the plane. Then $F\circ\Gamma_0=G\circ\Gamma_0$ jointly
+a.e.\ on $Q_b$. No integrability assumption is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:level-integral-congr, lem:quarter-profile-ae,
+ lem:flow-continuity}
+\leanok
+The measurable equality property transfers to a.e.\ time on a.e.\
+level by coarea. Restrict the levels to $(0,b)$ and the times from
+$[-2L,6L)$ to $(-L,L)$. Both raw compositions are measurable, so
+Lemma~\ref{lem:quarter-profile-ae} gives joint a.e.\ equality.
+\end{proof}
+
+\begin{lemma}[Joint rotation character on recentered quarters]
+\label{lem:quarter-rotation-character}
+\uses{def:rotation-characters, def:cell-separatrix-collar,
+ def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.liftL2_iterate_rotLift_ae,
+ NoEmbeddedEigenvalues.liftL2_recenteredQuarterMap_ae,
+ NoEmbeddedEigenvalues.saddleDist_rotLift,
+ NoEmbeddedEigenvalues.saddleDist_rotLift_iterate}
+\leanok
+Let $\omega\in L^2(\T^2)$ have rotation character $\kappa\in\{1,-1\}$.
+For every $0<b\le1$ and $k=0,1,2,3$,
+\[
+ \widetilde\omega\circ\Gamma_k
+   =\kappa^k\widetilde\omega\circ\Gamma_0
+ \quad\hbox{jointly a.e.\ on }Q_b.
+\]
+Moreover $d(R^kp)=d(p)$ everywhere, for every nonnegative integer $k$.
+No eigenfunction equation or sector hypothesis is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-representatives, lem:quarter-ae-pullback,
+ lem:reflection-algebra}
+\leanok
+The raw lift's spatial rotation identity can be iterated because
+rotation preserves area and hence null sets.
+Apply Lemma~\ref{lem:quarter-ae-pullback} to the measurable spatial
+functions $\widetilde\omega\circ R^k$ and $\kappa^k\widetilde\omega$.
+For the distance identity, $R$ is an isometry that maps the saddle
+lattice onto itself. Take the infimum of distances to that lattice
+and iterate.
+\end{proof}
+
+\begin{lemma}[Weighted two-column frame estimate]
+\label{lem:weighted-frame}
+\lean{NoEmbeddedEigenvalues.memLp_weighted_frame}
+\leanok
+For a measure $\mu$, let $a,b,H,T$ be complex functions and $r$ a real
+function. Assume $a/r$ and $br$ are a.e.\ strongly measurable and bounded.
+If $H,T/r^2\in L^2(\mu)$, then $(aH+bT)/r\in L^2(\mu)$.
+Measurability of the unweighted $T$ is not required.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use the pointwise identity
+\[
+ \frac{aH+bT}{r}=\frac ar H+(br)\frac{T}{r^2}.
+\]
+It holds also at $r=0$ under totalized division.
+Bounded multipliers preserve $L^2$; add the two terms.
+\end{proof}
+
+\begin{definition}[Base-quarter inverse-frame candidates]
+\label{def:quarter-inverse-frame}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterLevelDual,
+ NoEmbeddedEigenvalues.quarterTimeDual,
+ NoEmbeddedEigenvalues.quarterInverseGradient}
+\leanok
+At $q=(h,t)$ write $p=\gamma_h(t)$ and $J=\partial_h\gamma_h(t)$.
+Define
+\[
+ a=\tfrac12(-\sin p_x,-\sin p_y),\qquad
+ b=\tfrac12(-J_y,J_x),\qquad
+ \mathcal C_j(H,T)=a_jH+b_jT.
+\]
+These are candidates in quarter coordinates, not a definition of
+a spatial weak derivative.
+\end{definition}
+
+\begin{lemma}[Inverse-frame algebra and coefficient bounds]
+\label{lem:quarter-inverse-frame-algebra}
+\uses{def:quarter-inverse-frame, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.measurable_quarterLevelDual,
+ NoEmbeddedEigenvalues.measurable_quarterTimeDual,
+ NoEmbeddedEigenvalues.norm_quarterLevelDual_div_le,
+ NoEmbeddedEigenvalues.norm_quarterTimeDual_le,
+ NoEmbeddedEigenvalues.quarter_level_variation_normal,
+ NoEmbeddedEigenvalues.quarterInverseGradient_of_coordinate_rows}
+\leanok
+The coefficients $a_j,b_j$ are measurable. With $r=d(p)$,
+$|a_j/r|\le1$ and $|b_j|\le|J|$.
+For $0<h<1$,
+\[
+ \sin p_xJ_x+\sin p_yJ_y=-2.
+\]
+Consequently, if $H=J_xX+J_yY$ and
+$T=\sin p_yX-\sin p_xY$, then $\mathcal C(H,T)=(X,Y)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:flow-continuity, lem:action-angle-regularity,
+ lem:period-orbit, lem:saddle-transport-weights}
+\leanok
+Joint continuity of the orbit gives measurability of its parameter
+derivative, including the totalized values outside regular levels.
+The sine-distance bound controls $a/r$; each component of $J$ has
+norm at most $|J|$, which controls $b$.
+Differentiate $\Psi(\gamma_h(t))=2h$ to obtain the displayed identity.
+Substitution into $aH+bT$ cancels the cross terms and gives $(X,Y)$.
+The factor two fixes both the sign and the normalization.
+\end{proof}
+
+\begin{lemma}[Weighted inverse-frame candidates]
+\label{lem:quarter-inverse-frame-estimate}
+\uses{def:quarter-inverse-frame, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterInverseGradient_memLp}
+\leanok
+There is $0<\delta<1$, independent of $H,T$, such that for every
+$0<b\le\delta$, if $H,T/(d\circ\Gamma_0)^2\in L^2(Q_b)$, then
+\[
+ \mathcal C_j(H,T)/(d\circ\Gamma_0)\in L^2(Q_b),\qquad j=x,y.
+\]
+This is an integrability estimate, not a weak-derivative identification.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-inverse-frame-algebra, lem:orbit-level-derivatives,
+ lem:weighted-frame}
+\leanok
+The level variation satisfies $|J|\le C/d$ on small quarter strips.
+Thus $a_j/d$ and $b_jd$ are measurable bounded multipliers.
+Apply Lemma~\ref{lem:weighted-frame} to the two given $L^2$ functions.
+\end{proof}
+
+\begin{lemma}[Weak gradient identification on a base quarter]
+\label{lem:quarter-gradient-identification}
+\uses{def:quarter-inverse-frame, def:weak-derivative-local}
+Let $0<b<1$, let $U$ be open with $\Gamma_0(Q_b)\subset U$, and let
+$F,D_x,D_y$ be measurable on the plane with $\partial_jF=D_j$
+weakly on $U$. If $\partial_h(F\circ\Gamma_0)=H$ and
+$\partial_t(F\circ\Gamma_0)=T$ weakly on $Q_b$, then
+\[
+ \mathcal C_j(H,T)=D_j\circ\Gamma_0
+ \quad\hbox{a.e.\ on }Q_b,\qquad j=x,y.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-regularity, lem:orbit-coordinates-inverse,
+ lem:orbit-jacobian, lem:weak-derivative-unique,
+ lem:quarter-inverse-frame-algebra}
+On a compact regular quarter patch, transform weak tests through the
+smooth orbit chart with Jacobian two.
+The cofactor divergence terms cancel by equality of mixed partials.
+The two weak chain rules give
+\[
+ H=J_x(D_x\circ\Gamma_0)+J_y(D_y\circ\Gamma_0),\qquad
+ T=\sin p_y(D_x\circ\Gamma_0)-\sin p_x(D_y\circ\Gamma_0)
+\]
+a.e.; weak uniqueness identifies these rows with the specified $H,T$.
+Use the inverse-frame algebra. A countable interior cover makes these
+identities valid a.e.\ on the whole quarter strip.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,

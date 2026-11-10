@@ -826,7 +826,8 @@ theorem contDiffOn_comp_actionAngle {F : ℝ × ℝ → ℂ} (hF : ContDiffOn �
 
 /-! ### The area formula -/
 
-private theorem contDiffAt_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+/-- The flow-time parametrization is jointly smooth at every regular level. -/
+theorem contDiffAt_orbitMap {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
     ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ dipoleOrbit q.1 q.2) (h, t) := by
   have hS := contDiffOn_orbitPeriod.contDiffAt (Ioo_mem_nhds hh.1 hh.2)
   have hSp : ContDiffAt ℝ ∞ (fun q : ℝ × ℝ ↦ orbitPeriod q.1) (h, t) :=
@@ -2165,7 +2166,8 @@ private theorem rotLift_iterate_inverse (k : ℕ) (p : ℝ × ℝ) :
     Function.iterate_mul, hfour, Function.iterate_id]
   rfl
 
-private theorem saddleDist_rotLift (p : ℝ × ℝ) : saddleDist (rotLift p) = saddleDist p := by
+/-- The quarter rotation preserves the saddle lattice and its distance. -/
+theorem saddleDist_rotLift (p : ℝ × ℝ) : saddleDist (rotLift p) = saddleDist p := by
   have hmem : ∀ q ∈ saddleSet, rotLift q ∈ saddleSet := by
     rintro q ⟨m, n, ⟨j, hj⟩, rfl⟩
     refine ⟨n, -m, ⟨j - m, by omega⟩, ?_⟩
@@ -2179,7 +2181,8 @@ private theorem saddleDist_rotLift (p : ℝ × ℝ) : saddleDist (rotLift p) = s
   unfold saddleDist
   simpa only [himage] using (Metric.infDist_image isometry_rotLift (x := p) (t := saddleSet))
 
-private theorem saddleDist_rotLift_iterate (k : ℕ) (p : ℝ × ℝ) :
+/-- Every iterated quarter rotation preserves the saddle-distance weight. -/
+theorem saddleDist_rotLift_iterate (k : ℕ) (p : ℝ × ℝ) :
     saddleDist (rotLift^[k] p) = saddleDist p := by
   induction k generalizing p with
   | zero => rfl

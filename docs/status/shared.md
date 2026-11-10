@@ -83,14 +83,21 @@ weights and local versus global regularity.
    transport-unknown pullback, using joint a.e. congruence. The new generic weak
    calculus is admission-free. Fiber-integral summation and the orbit-level
    vector bound also give forcing-level L² from the data's unweighted mass.
-   Both weighted base-quarter derivatives are now checked on the same raw
-   profile (`lem:dd-base-quarter-weighted-derivatives`). The weak time identity
-   uses canonical Fourier first partials and orbitwise ACL testing and has zero
-   transitive admissions. Its weighted bound reaches exactly the existing saddle
-   mass and forcing-weight inputs; the combined base-quarter audit reaches eight
-   existing inputs. No new admissions were added. Next is rotation transfer in
-   Strong weighted quarter derivatives (`lem:dd-quarter-weighted-derivatives`), then inverse coordinates
-   and periodic/reflected covering.
+   Strong weighted quarter derivatives (`lem:dd-quarter-weighted-derivatives`)
+   are now checked for all four separately recentered raw profiles, with one
+   common cutoff. The rotation transfer uses joint a.e. character identities and
+   exact saddle-distance invariance; it has no admissions of its own and retains
+   the eight existing base-quarter inputs. The generic weak time identity and
+   the rotation bridges have zero transitive admissions. The specified measurable
+   separatrix gradient (`lem:dd-separatrix-weak-gradient`) is extracted on the whole
+   neighbourhood from local H¹ by countable a.e. gluing. Exact inverse-frame algebra
+   and weighted candidate L² are checked; the same weak quarter derivatives supply
+   Base-quarter inverse-frame data (`lem:dd-base-quarter-inverse-frame`).
+   The next obligation is Weak gradient identification on a base quarter
+   (`lem:quarter-gradient-identification`): establish the weak flow-time chain rule
+   on regular quarter patches and identify both coordinate rows of that spatial
+   gradient. A finite norm of the inverse-frame candidates alone does not do this.
+   Coarea and periodic/reflected covering then remain.
    `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
    input and the saddle estimates are also separate in-section proof work.
    The weighted third-stream audit still reaches the saddle and weighted-gradient
