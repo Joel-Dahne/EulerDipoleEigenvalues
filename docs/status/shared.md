@@ -83,11 +83,14 @@ weights and local versus global regularity.
    transport-unknown pullback, using joint a.e. congruence. The new generic weak
    calculus is admission-free. Fiber-integral summation and the orbit-level
    vector bound also give forcing-level L² from the data's unweighted mass.
-   Base-quarter vorticity level derivative (`lem:dd-quarter-level`) is assembled
-   from these two L² derivatives, with no new admissions. Next is the stronger
-   weighted time bound and rotation transfer in Strong weighted quarter derivatives
-   (`lem:dd-quarter-weighted-derivatives`), then inverse coordinates and
-   periodic/reflected covering.
+   Both weighted base-quarter derivatives are now checked on the same raw
+   profile (`lem:dd-base-quarter-weighted-derivatives`). The weak time identity
+   uses canonical Fourier first partials and orbitwise ACL testing and has zero
+   transitive admissions. Its weighted bound reaches exactly the existing saddle
+   mass and forcing-weight inputs; the combined base-quarter audit reaches eight
+   existing inputs. No new admissions were added. Next is rotation transfer in
+   Strong weighted quarter derivatives (`lem:dd-quarter-weighted-derivatives`), then inverse coordinates
+   and periodic/reflected covering.
    `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
    input and the saddle estimates are also separate in-section proof work.
    The weighted third-stream audit still reaches the saddle and weighted-gradient

@@ -1454,6 +1454,84 @@ For the level pullback, zero-extend $A$ off $(0,b)$ and use the first
 projection of product Lebesgue measure, then restrict to $Q_b$.
 \end{proof}
 
+\begin{lemma}[Spatial $L^2$ pulls back to the base quarter]
+\label{lem:quarter-l2-pullback}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterOrbitStrip_subset_orbitDomain,
+ NoEmbeddedEigenvalues.memLp_comp_quarterOrbitStrip}
+\leanok
+If $F:\R^2\to\C$ is measurable and $F\in L^2(\Cell)$, then
+$F\circ\Gamma_0\in L^2(Q_b)$ for every $0<b\le1$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates-area}
+\leanok
+Apply the constant-Jacobian integrability bridge to $|F|^2$.
+The quarter strip lies in the full flow-time domain because
+$(-L(h),L(h))\subset[-2L(h),6L(h))$.
+Restrict the resulting integrable squared norm and use measurability
+of the raw composition. No isometry or first-coordinate measure
+preservation is claimed.
+\end{proof}
+
+\begin{lemma}[Weak transport pulls back to weak quarter time]
+\label{lem:quarter-time-pullback}
+\uses{def:transport-pair, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.quarter_time}
+\leanok
+Let $0<b<1$ and let $U$ contain the orbit annulus $0<h<b$.
+Suppose $F,D$ are measurable, both in $L^2(\Cell)$, and
+$L_0F=D$ weakly on $U$. Then
+\[
+ \partial_t(F\circ\Gamma_0)=D\circ\Gamma_0
+ \quad\hbox{weakly on }Q_b.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-l2-pullback, lem:coarea, lem:acl-weak-converse,
+ lem:quarter-primitive-weak, lem:weak-partial-locality}
+\leanok
+Cover the strip by bounded interior rectangles, with level intervals
+compactly contained in $(0,b)$.
+The $L^2$ pullback lemma supplies integrable data on each rectangle.
+Orbit restriction gives a.e.\ ACL representatives with the specified
+time derivative on each such level interval.
+The ACL weak converse identifies the weak time derivative of the raw
+pullback. Locality glues the rectangular identities.
+\end{proof}
+
+\begin{lemma}[Saddle weights for the forcing transport derivative]
+\label{lem:saddle-transport-weights}
+\uses{def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.abs_sin_axis_le_saddleDist,
+ NoEmbeddedEigenvalues.abs_sin_axis_le_sqrt_saddleDist,
+ NoEmbeddedEigenvalues.norm_sin_mul_div_saddleDist_sq_le,
+ NoEmbeddedEigenvalues.memLp_sin_mul_div_saddleDist_sq}
+\leanok
+For either coordinate $j$, everywhere on the plane,
+\[
+ |\sin p_j|\le d(p),\qquad |\sin p_j|\le\sqrt{d(p)},\qquad
+ \left|\frac{\sin p_j\,z}{d(p)^2}\right|
+ \le\left|\frac{z}{d(p)^{3/2}}\right|\quad(z\in\C).
+\]
+The last inequality includes the totalized zero values at saddles.
+Consequently, for measurable $D$ on the plane and any $U$,
+$D/d^{3/2}\in L^2(U)$ implies $\sin p_j\,D/d^2\in L^2(U)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Sine is one-Lipschitz and vanishes at every saddle coordinate.
+Taking the infimum over saddles proves the first bound.
+If $a=|\sin p_j|$, then $a\le1$ and $a\le d$, so
+$a^2\le ad\le d$. This gives the square-root bound.
+For $d>0$, use $\sqrt d\,d^{3/2}=d^2$; for $d=0$ both quotients
+are zero. Measurability and domination give the $L^2$ implication.
+No small-level cutoff or upper bound on $d$ is needed.
+\end{proof}
+
 \begin{lemma}[Fiber-integral criterion for quarter-strip $L^2$]
 \label{lem:quarter-fiber-summation}
 \uses{def:cell-separatrix-collar}

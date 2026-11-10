@@ -825,7 +825,8 @@ Consequently $\det DG=2$.
 \label{lem:orbit-coordinates-area}
 \uses{def:orbit-coordinates}
 \lean{NoEmbeddedEigenvalues.lintegral_cellSquare_eq,
-  NoEmbeddedEigenvalues.integral_cellSquare_eq}
+  NoEmbeddedEigenvalues.integral_cellSquare_eq,
+  NoEmbeddedEigenvalues.integrableOn_comp_orbitMap}
 \leanok
 For integrable $f$ on the cell, the function
 $t\mapsto f(\gamma_h(t))$ is integrable over $[-2L(h),6L(h))$ for
@@ -834,8 +835,9 @@ almost every $h\in(0,1)$, and
   \int_{\Cell}f\,dx\,dy
   =2\int_0^1\int_{-2L(h)}^{6L(h)}f(\gamma_h(t))\,dt\,dh .
 \]
-The same formula holds for nonnegative measurable $f$, allowing
-infinite integrals.
+The full pullback $(h,t)\mapsto f(\gamma_h(t))$ is integrable on the
+flow-time coordinate domain. The same formula holds for nonnegative
+measurable $f$, allowing infinite integrals.
 \end{lemma}
 
 \begin{proof}

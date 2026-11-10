@@ -361,11 +361,30 @@ sum to $\partial_j\phi$. Sum their weak identities; local integrability
 justifies each finite integral decomposition.
 \end{proof}
 
+\begin{lemma}[Integration by parts for a specified AC derivative]
+\label{lem:ac-integration-by-parts}
+\lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test}
+\leanok
+Let $A:[a,b]\to\C$ be absolutely continuous with specified a.e.\
+derivative $D\in L^1(a,b)$. If $\beta$ is $C^1$ and vanishes at both
+endpoints, then
+\[
+ \int_a^b A\beta'=-\int_a^b D\beta.
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+The test is Lipschitz on the compact interval, hence absolutely continuous.
+The product rule gives $(A\beta)'=D\beta+A\beta'$ a.e.
+Both terms are integrable. The complex FTC and the zero endpoint
+values give the identity.
+\end{proof}
+
 \begin{lemma}[Interval $H^1$ as a planar weak derivative]
 \label{lem:interval-h1-weak-lift}
 \uses{def:h1-interval, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test,
- NoEmbeddedEigenvalues.HasIntervalH1.weak_fst}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.weak_fst}
 \leanok
 If $A\in H^1(a,b)$ with specified derivative $A_1$, then
 $\partial_h[A(h)]=A_1(h)$ weakly on $(a,b)\times\R$.
@@ -373,7 +392,7 @@ This is a local weak-derivative assertion, not a global planar $L^2$ bound.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weak-partial-locality}
+\uses{lem:weak-partial-locality, lem:ac-integration-by-parts}
 \leanok
 On compact subintervals, multiply the absolutely continuous representative
 by a smooth test vanishing at both endpoints.
@@ -1984,6 +2003,30 @@ primitive-and-average formula defines a jointly measurable function
 is the desired absolutely continuous representative. Finally, Fubini
 makes two representatives equal almost everywhere on almost every
 section; continuity makes them equal everywhere on those sections.
+\end{proof}
+
+\begin{lemma}[Weak time derivative from orbitwise ACL data]
+\label{lem:acl-weak-converse}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_snd_of_ae_ac}
+\leanok
+Let $I,J$ be bounded open intervals and $F,D\in L^1(I\times J)$.
+Suppose that for a.e.\ $h\in I$ there is a locally absolutely
+continuous $G_h:\R\to\C$, equal to $F(h,\cdot)$ a.e.\ on $\R$,
+with $G_h'=D(h,\cdot)$ a.e.\ on $\R$.
+Then $\partial_tF=D$ weakly on $I\times J$.
+No joint measurability of the family $G_h$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ac-integration-by-parts}
+\leanok
+Fubini gives integrable derivative sections on a.e.\ level.
+For a planar test $\phi$, integrate by parts on each good section
+with the time test $\phi(h,\cdot)$, which vanishes at the endpoints
+of $J$. Replace $G_h$ by its a.e.-equal raw section in that integral.
+The raw test products are jointly integrable; Fubini sums their
+identities. The representatives are never assembled into a joint function.
 \end{proof}
 
 \begin{lemma}[Weak differentiation under a signed parameter integral]

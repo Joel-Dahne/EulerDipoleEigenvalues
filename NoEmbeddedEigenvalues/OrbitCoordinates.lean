@@ -1036,7 +1036,9 @@ private theorem integral_orbitDomain {E : Type*} [NormedAddCommGroup E] [NormedS
       rw [hz]
       exact integral_zero _ _
 
-private theorem integrableOn_comp_orbitMap {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+/-- Integrability pulls back to the full flow-time coordinate domain; the
+Jacobian is the constant two, not a level-dependent measure factor. -/
+theorem integrableOn_comp_orbitMap {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : ℝ × ℝ → E} (hf : IntegrableOn f cellSquare) :
     IntegrableOn (fun q : ℝ × ℝ ↦ f (dipoleOrbit q.1 q.2)) orbitDomain := by
   let G : ℝ × ℝ → ℝ × ℝ := fun q ↦ dipoleOrbit q.1 q.2

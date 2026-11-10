@@ -35,8 +35,11 @@ Proof work is now outside the odd–odd chapter:
   logarithmic-length summation and its identification as the weak level derivative
   of the actual transport-unknown pullback. Forcing-level L² and the actual
   base-quarter vorticity level derivative (`lem:dd-quarter-level`) are checked
-  using the supplied unweighted fiber mass. Weighted time-derivative bounds,
-  rotation transfer and weighted spatial-gradient assembly remain open.
+  using the supplied unweighted fiber mass. Both weighted base-quarter
+  derivatives (`lem:dd-base-quarter-weighted-derivatives`) are now checked on
+  that same raw profile: the time identity uses the Fourier first partials,
+  and its weighted bound uses the existing saddle and forcing inputs.
+  Rotation transfer and weighted spatial-gradient assembly remain open.
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.

@@ -515,6 +515,101 @@ weak linearity gives $H=-\lambda H_Z-G$.
 Restrict the two $L^2$ estimates to this same strip and add them.
 \end{proof}
 
+\begin{definition}[Specified vorticity time derivative]
+\label{def:vorticity-time-derivative}
+\uses{def:eigen-problem, def:lift-operators}
+\lean{NoEmbeddedEigenvalues.vorticityTimeDerivative}
+\leanok
+Using the canonical Fourier first partial lifts of the stream, put
+\[
+ \mathcal T_{\lambda,\omega}(p)=i\lambda\widetilde\omega(p)
+   -\bigl(\sin y\,\widetilde{\partial_x\psi}(p)
+          -\sin x\,\widetilde{\partial_y\psi}(p)\bigr).
+\]
+\end{definition}
+
+\begin{lemma}[Weak quarter-time derivative of an eigenfunction]
+\label{lem:eigen-quarter-time}
+\uses{def:eigen-problem, def:vorticity-time-derivative,
+ def:cell-separatrix-collar, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.measurable_vorticityTimeDerivative,
+ NoEmbeddedEigenvalues.memLp_vorticityTimeDerivative,
+ NoEmbeddedEigenvalues.hasWeakL0On_vorticityTimeDerivative,
+ NoEmbeddedEigenvalues.eigenfunction_quarter_time}
+\leanok
+For an eigenfunction with $\lambda\ne0$ and every $0<b<1$,
+\[
+ \partial_t\bigl[\widetilde\omega\circ\Gamma_0\bigr]
+   =\mathcal T_{\lambda,\omega}\circ\Gamma_0
+ \quad\hbox{weakly on }Q_b.
+\]
+No sector, rotation character or saddle regularity is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-pair-eigen, lem:weak-gradient-transport,
+ lem:lift-sobolev-local, lem:elliptic-torus, lem:quarter-time-pullback}
+\leanok
+The canonical Fourier partial lifts differentiate the continuous stream
+weakly; a.e.\ congruence identifies its value representative.
+Thus $L_0\psi=\sin y\,\psi_x-\sin x\,\psi_y$ weakly.
+Subtract this identity from $L_0(\omega+\psi)=i\lambda\omega$.
+All spatial terms are measurable and in $L^2$ on the bounded cell,
+since the sine coefficients have norm at most one.
+Apply the weak quarter-time pullback lemma.
+This uses first Fourier partial bridges, not a classical derivative
+of a raw $L^2$ representative or a separate packed-jet admission.
+\end{proof}
+
+\begin{lemma}[Weighted base-quarter time derivative, odd--odd]
+\label{lem:dd-quarter-time}
+\uses{def:eigen-problem, def:sectors, def:vorticity-time-derivative,
+ def:cell-separatrix-collar, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_quarter_time}
+\leanok
+For an odd--odd eigenfunction with $\lambda\ne0$ and every $0<b<1$,
+the weak time identity of Lemma~\ref{lem:eigen-quarter-time} holds and
+\[
+ \frac{\mathcal T_{\lambda,\omega}\circ\Gamma_0}
+ {(d\circ\Gamma_0)^2}\in L^2(Q_b).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:eigen-quarter-time, prop:saddle-dd, lem:dd-weighted-forcing,
+ lem:saddle-transport-weights, lem:quarter-l2-pullback}
+\leanok
+The saddle mass gives $\widetilde\omega/d^2\in L^2$.
+The forcing weights give $\psi_x/d^{3/2},\psi_y/d^{3/2}\in L^2$;
+Lemma~\ref{lem:saddle-transport-weights} turns them into the two
+transport terms divided by $d^2$.
+Their linear combination is $\mathcal T_{\lambda,\omega}/d^2$.
+Restrict from the bounded neighbourhood to the cell and pull back
+this actual spatial weighted function by coarea.
+\end{proof}
+
+\begin{lemma}[Both weighted base-quarter derivatives, odd--odd]
+\label{lem:dd-base-quarter-weighted-derivatives}
+\uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_base_quarter_weighted_derivatives}
+\leanok
+For an odd--odd eigenfunction with fixed rotation character there are
+$0<b<1/2$ and specified weak derivatives $H_0,T_0$ of the same raw
+profile $\widetilde\omega\circ\Gamma_0$ such that
+\[
+ H_0\in L^2(Q_b),\qquad T_0/(d\circ\Gamma_0)^2\in L^2(Q_b).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-quarter-level, lem:dd-quarter-time}
+\leanok
+Use the level lemma's cutoff and derivative.
+The specified time derivative and its weighted bound are valid on
+that same strip without shrinking it.
+\end{proof}
+
 \begin{lemma}[Strong weighted quarter derivatives, odd--odd]
 \label{lem:dd-quarter-weighted-derivatives}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
@@ -530,22 +625,17 @@ weak derivatives $H_k,T_k$ with
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-quarter-level, prop:saddle-dd, lem:dd-weighted-forcing,
- lem:dipole-flow, lem:orbit-coordinate-gradients,
- lem:orbit-coordinates-area, lem:period-coarse, lem:rotation-characters,
- lem:reflection-algebra}
-Lemma~\ref{lem:dd-quarter-level} supplies the base-quarter weak level
-derivative $H_0\in L^2$ of the actual vorticity pullback.
-Shrink its cutoff as needed for the time-derivative estimates.
-
-The transport equation gives
-$T_0=i\lambda\omega_h-\partial_t\psi_h$.
-Here $|\partial_t\psi_h|\le Cd|\nabla\psi_h|$, so
-$T_0/d^2\in L^2$ by the saddle mass estimate $\omega/d^2\in L^2$.
-Coarea transfers these physical-area bounds to $(h,t)$.
-Rotation character identities transfer the scalar profile estimates
-to all four recentered quarters. Enlarge the exceptional set only by
-the finite union needed for these identities and the fiber estimates.
+\uses{lem:dd-base-quarter-weighted-derivatives, lem:rotation-characters,
+ lem:quarter-profile-ae, lem:reflection-algebra}
+The base-quarter lemma supplies both weak derivatives and their bounds
+for the same raw pullback and cutoff.
+The rotation-character identity gives
+$\widetilde\omega\circ\Gamma_k=\kappa^k\widetilde\omega\circ\Gamma_0$
+jointly a.e.; orbitwise equality is promoted using the measurable
+raw pullbacks. Weak a.e.\ congruence transfers the derivatives.
+Rotation preserves the saddle lattice and its distance, so multiplication
+by the constant character factor transfers both weighted norms.
+Only finitely many rotations are needed.
 \end{proof}
 
 \begin{remark}[Digest note: midpoint representatives and weak reconstruction]

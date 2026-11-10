@@ -69,6 +69,8 @@ proof mechanisms. Module names below are relative to
 - `CellPeriodization.lean`: box periodization of compactly supported cell data
   and uniqueness of weak derivatives.
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.
+  `ACLWeakDerivative.lean` gives the weak time identity from orbitwise ACL data,
+  without selecting jointly measurable ACL representatives.
 - `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
   `IntervalH1WeakLift.lean` lifts interval H¹ data to planar weak level derivatives.
   `WeakParameterIntegral.lean` proves local integrability and weak differentiation
@@ -87,6 +89,11 @@ proof mechanisms. Module names below are relative to
 - `QuarterReconstruction.lean`: signed midpoint-integral bounds, a.e. measurability
   on moving quarter strips, fiber-integral L² summation, the forcing-level L²
   bound from weighted jet mass and logarithmic summation of the joint level candidate.
+- `QuarterMeasureTransport.lean`: spatial L² pullback through constant-Jacobian coarea.
+  `QuarterTimeDerivative.lean` transfers specified weak transport derivatives to
+  weak quarter-time derivatives using orbit restriction and rectangular ACL testing.
+  `SaddleTransportWeights.lean` controls the d⁻² sine-transport terms by d⁻³ᐟ²
+  gradient components, globally and without a cutoff.
 - `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
   differentiation of primitives and full reconstructions, and joint a.e. equality
   from a.e. fiber equality.
@@ -146,7 +153,10 @@ can be added here as they are formalized.
 - `Regularity/OddOddMidpoint.lean`: logarithmic phase quotient and midpoint data for
   either odd–odd rotation character, with a common a.e. orbit reconstruction.
 - `Regularity/OddOddQuarter.lean`: the actual base-quarter vorticity level derivative
-  from midpoint reconstruction and forcing-level L².
+  from midpoint reconstruction and forcing-level L². `Regularity/QuarterTime.lean`
+  gives the specified weak time identity for every eigenfunction; no saddle
+  regularity or packed-jet admission is used. `Regularity/OddOddQuarterTime.lean`
+  adds the stronger saddle weight and assembles both base-quarter derivatives.
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in
