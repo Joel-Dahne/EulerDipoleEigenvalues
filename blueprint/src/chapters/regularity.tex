@@ -485,6 +485,36 @@ a.e.\ congruence transfers the weak derivative to the actual pullback.
 All choices use the same $\psi$, $d$, $C$ and cutoff.
 \end{proof}
 
+\begin{lemma}[Base-quarter vorticity level derivative, odd--odd]
+\label{lem:dd-quarter-level}
+\uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_quarter_level}
+\leanok
+For an odd--odd eigenfunction with fixed rotation character there are
+$0<b<1/2$ and a specified $H\in L^2(Q_b)$ with
+\[
+ \partial_h\bigl[\widetilde\omega(\gamma_h(t))\bigr]=H
+ \quad\hbox{weakly on }Q_b.
+\]
+This concerns the raw spatial pullback, not a selection of independent
+orbit representatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-log-midpoint, lem:quarter-forcing-level-gain,
+ lem:weak-derivative-basic}
+\leanok
+The midpoint lemma gives a specified $H_Z=\partial_h Z\in L^2$
+for the actual transport-unknown pullback.
+Shrink the strip to the forcing-level cutoff, retaining the same
+numerator data and canonical stream jet.
+The forcing derivative $G=\partial_h\psi_h$ is now also in $L^2$.
+Since $\omega_h=-\lambda Z-\psi_h$ pointwise for $\lambda\ne0$,
+weak linearity gives $H=-\lambda H_Z-G$.
+Restrict the two $L^2$ estimates to this same strip and add them.
+\end{proof}
+
 \begin{lemma}[Strong weighted quarter derivatives, odd--odd]
 \label{lem:dd-quarter-weighted-derivatives}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
@@ -500,28 +530,13 @@ weak derivatives $H_k,T_k$ with
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-log-midpoint, prop:saddle-dd, lem:dd-weighted-forcing,
- lem:orbit-level-derivatives, lem:orbit-coordinate-gradients,
+\uses{lem:dd-quarter-level, prop:saddle-dd, lem:dd-weighted-forcing,
+ lem:dipole-flow, lem:orbit-coordinate-gradients,
  lem:orbit-coordinates-area, lem:period-coarse, lem:rotation-characters,
  lem:reflection-algebra}
-For the base quarter form the single jointly measurable reconstruction
-\[
- Z(h,t)=e^{i\lambda t}A(h)+
-       i\int_0^t e^{i\lambda(t-u)}\psi_h(u)\,du.
-\]
-Lemma~\ref{lem:dd-log-midpoint} identifies this with the raw pullback of
-$z$ a.e.\ and supplies the specified weak identity
-\[
- \partial_hZ=e^{i\lambda t}A'(h)+
-       i\int_0^t e^{i\lambda(t-u)}\partial_h\psi_h(u)\,du.
-\]
-No differentiation of independently selected orbit representatives is needed.
-The displayed weak identity identifies $\partial_hZ$ with the candidate
-$\mathcal H_{\lambda,A',G}$ bounded in $L^2(Q_{h_0})$ by
-Lemma~\ref{lem:dd-log-midpoint}. Hence $\partial_hZ\in L^2(Q_{h_0})$.
-The weaker forcing weights give $\nabla\psi/d\in L^2$.
-Thus $|\partial_h\psi_h|\le C|\nabla\psi_h|/d$ and
-$\omega_h=-\lambda Z-\psi_h$ give $H_0\in L^2$.
+Lemma~\ref{lem:dd-quarter-level} supplies the base-quarter weak level
+derivative $H_0\in L^2$ of the actual vorticity pullback.
+Shrink its cutoff as needed for the time-derivative estimates.
 
 The transport equation gives
 $T_0=i\lambda\omega_h-\partial_t\psi_h$.

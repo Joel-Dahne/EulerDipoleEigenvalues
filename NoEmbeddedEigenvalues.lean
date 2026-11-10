@@ -85,6 +85,7 @@ import NoEmbeddedEigenvalues.WeakPartialLocality
 import NoEmbeddedEigenvalues.IntervalH1WeakLift
 import NoEmbeddedEigenvalues.WeakQuarterReconstruction
 import NoEmbeddedEigenvalues.Regularity.OddOddMidpoint
+import NoEmbeddedEigenvalues.Regularity.OddOddQuarter
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.OrbitNumerators
 import NoEmbeddedEigenvalues.WeightedNumerators

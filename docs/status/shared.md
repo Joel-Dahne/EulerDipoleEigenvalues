@@ -81,10 +81,13 @@ weights and local versus global regularity.
    estimates have no admissions. Weak parameter integration, interval-H¹ lifting
    and locality now identify it as the weak level derivative of the actual raw
    transport-unknown pullback, using joint a.e. congruence. The new generic weak
-   calculus is admission-free. Next is Strong weighted quarter derivatives
-   (`lem:dd-quarter-weighted-derivatives`): bound the forcing-level derivative in
-   L², establish the stronger weighted time bound, then transfer through inverse
-   coordinates and periodic/reflected covering. No new admissions were added.
+   calculus is admission-free. Fiber-integral summation and the orbit-level
+   vector bound also give forcing-level L² from the data's unweighted mass.
+   Base-quarter vorticity level derivative (`lem:dd-quarter-level`) is assembled
+   from these two L² derivatives, with no new admissions. Next is the stronger
+   weighted time bound and rotation transfer in Strong weighted quarter derivatives
+   (`lem:dd-quarter-weighted-derivatives`), then inverse coordinates and
+   periodic/reflected covering.
    `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
    input and the saddle estimates are also separate in-section proof work.
    The weighted third-stream audit still reaches the saddle and weighted-gradient

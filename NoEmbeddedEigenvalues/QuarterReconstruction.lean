@@ -8,7 +8,12 @@ import NoEmbeddedEigenvalues.WeightedNumerators
 The signed interval from the midpoint is handled before summation: negative
 and positive times use the same quantitative subinterval estimate. A square
 bound on each fiber is integrable over the moving strip when its product
-with the logarithmic level weight is integrable.
+with the logarithmic level weight is integrable. A fiber-integral criterion
+also sums the forcing-level derivative directly from the supplied weighted jet
+mass and the geometric level-vector bound.
+
+Blueprint: `lem:quarter-fiber-summation`, `lem:quarter-strip-summation`,
+`lem:quarter-forcing-level-gain`, `lem:quarter-reconstruction-level-gain`.
 -/
 
 noncomputable section
@@ -22,6 +27,71 @@ theorem measurableSet_quarterOrbitStrip (b : ℝ) : MeasurableSet (quarterOrbitS
       ((measurableSet_lt (measurable_eighthPeriod.comp measurable_fst).neg measurable_snd).inter
         (measurableSet_lt measurable_snd (measurable_eighthPeriod.comp measurable_fst))))
 
+/-- Joint a.e. strong measurability gives measurable sections on almost every
+moving time interval. -/
+theorem aestronglyMeasurable_quarterStrip_sections {b : ℝ} {F : ℝ × ℝ → ℂ}
+    (hF : AEStronglyMeasurable F (volume.restrict (quarterOrbitStrip b))) :
+    ∀ᵐ h ∂(volume.restrict (Ioo 0 b)),
+      AEStronglyMeasurable (fun t ↦ F (h, t))
+        (volume.restrict (Ioo (-eighthPeriod h) (eighthPeriod h))) := by
+  have hm := (aestronglyMeasurable_indicator_iff (measurableSet_quarterOrbitStrip b)).2 hF
+  have hmp : AEStronglyMeasurable ((quarterOrbitStrip b).indicator F)
+      ((volume : Measure ℝ).prod volume) := by rwa [← Measure.volume_eq_prod]
+  filter_upwards [ae_restrict_of_ae hmp.prodMk_left, ae_restrict_mem measurableSet_Ioo]
+    with h hh hhI
+  apply (aestronglyMeasurable_indicator_iff measurableSet_Ioo).1
+  convert hh using 1
+  funext t
+  simp only [quarterOrbitStrip, mem_ofPred_eq, hhI.1, hhI.2, true_and, mem_Ioo,
+    indicator_apply]
+
+/-- Integrable bounds on actual fiber square integrals control joint strip L².
+No measurability of a dominating density is needed beyond that of its mass. -/
+theorem memLp_quarterStrip_of_integral_bound {b : ℝ} {F : ℝ × ℝ → ℂ} {B : ℝ → ℝ}
+    (hF : AEStronglyMeasurable F (volume.restrict (quarterOrbitStrip b)))
+    (hB : IntegrableOn B (Ioo 0 b))
+    (hfiber : ∀ᵐ h ∂(volume.restrict (Ioo 0 b)),
+      IntegrableOn (fun t ↦ ‖F (h, t)‖ ^ 2) (Ioo (-eighthPeriod h) (eighthPeriod h)) ∧
+        (∫ t in Ioo (-eighthPeriod h) (eighthPeriod h), ‖F (h, t)‖ ^ 2) ≤ B h) :
+    MemLp F 2 (volume.restrict (quarterOrbitStrip b)) := by
+  let S := quarterOrbitStrip b
+  let f : ℝ × ℝ → ℝ := S.indicator (fun q ↦ ‖F q‖ ^ 2)
+  have hfpos : ∀ q, 0 ≤ f q := indicator_nonneg (fun _ _ ↦ sq_nonneg _)
+  have hm : AEStronglyMeasurable f (volume : Measure (ℝ × ℝ)) :=
+    (aestronglyMeasurable_indicator_iff (measurableSet_quarterOrbitStrip b)).2 (hF.norm.pow 2)
+  have hmp : AEStronglyMeasurable f ((volume : Measure ℝ).prod volume) := by
+    rwa [← Measure.volume_eq_prod]
+  have hs : ∀ᵐ h : ℝ, Integrable (fun t ↦ f (h, t)) ∧
+      (∫ t, ‖f (h, t)‖) ≤ (Ioo 0 b).indicator B h := by
+    filter_upwards [(ae_restrict_iff' measurableSet_Ioo).1 hfiber] with h hh
+    by_cases hhI : h ∈ Ioo 0 b
+    · have heq : (fun t ↦ f (h, t)) =
+          (Ioo (-eighthPeriod h) (eighthPeriod h)).indicator (fun t ↦ ‖F (h, t)‖ ^ 2) := by
+        funext t
+        simp only [f, S, quarterOrbitStrip, mem_ofPred_eq, hhI.1, hhI.2, true_and,
+          mem_Ioo, indicator_apply]
+      refine ⟨by rw [heq]; exact (hh hhI).1.integrable_indicator measurableSet_Ioo, ?_⟩
+      simp_rw [Real.norm_eq_abs, abs_of_nonneg (hfpos _)]
+      rw [heq, integral_indicator measurableSet_Ioo, indicator_of_mem hhI]
+      exact (hh hhI).2
+    · have hz : (fun t ↦ f (h, t)) = 0 := by
+        funext t
+        exact indicator_of_notMem (by intro ht; exact hhI ⟨ht.1, ht.2.1⟩) _
+      refine ⟨by rw [hz]; exact integrable_zero _ _ _, ?_⟩
+      simp_rw [congrFun hz]
+      simp [hhI]
+  have hI : Integrable (fun h ↦ ∫ t, ‖f (h, t)‖) :=
+    ((integrable_indicator_iff measurableSet_Ioo).2 hB).mono'
+      hmp.norm.integral_prod_right' (by
+        filter_upwards [hs] with h hh
+        rw [Real.norm_eq_abs, abs_of_nonneg (integral_nonneg fun t ↦ norm_nonneg (f (h, t)))]
+        exact hh.2)
+  have hi : Integrable f ((volume : Measure ℝ).prod volume) :=
+    (integrable_prod_iff hmp).2 ⟨hs.mono fun _ hh ↦ hh.1, hI⟩
+  rw [← Measure.volume_eq_prod] at hi
+  exact (memLp_two_iff_integrable_sq_norm hF).2
+    ((integrable_indicator_iff (measurableSet_quarterOrbitStrip b)).1 hi)
+
 /-- A logarithmically integrable fiber square bound controls the full moving-strip
 L² norm. Both the function and the square bound may be specified only a.e. -/
 theorem memLp_quarterStrip_of_sq_bound {b C : ℝ} (hb : b < 1)
@@ -34,68 +104,28 @@ theorem memLp_quarterStrip_of_sq_bound {b C : ℝ} (hb : b < 1)
       ∀ᵐ t ∂(volume.restrict (Ioo (-eighthPeriod h) (eighthPeriod h))),
         ‖F (h, t)‖ ^ 2 ≤ B h) :
     MemLp F 2 (volume.restrict (quarterOrbitStrip b)) := by
-  let S := quarterOrbitStrip b
-  let f : ℝ × ℝ → ℝ := S.indicator (fun q ↦ ‖F q‖ ^ 2)
-  have hfpos : ∀ q, 0 ≤ f q := indicator_nonneg (fun _ _ ↦ sq_nonneg _)
-  have hm : AEStronglyMeasurable f (volume : Measure (ℝ × ℝ)) :=
-    (aestronglyMeasurable_indicator_iff (measurableSet_quarterOrbitStrip b)).2 (hF.norm.pow 2)
-  have hmp : AEStronglyMeasurable f ((volume : Measure ℝ).prod volume) := by
-    rwa [← Measure.volume_eq_prod]
-  have hs : ∀ᵐ h : ℝ, Integrable (fun t ↦ f (h, t)) ∧
-      (∫ t, ‖f (h, t)‖) ≤ (Ioo 0 b).indicator
-        (fun h ↦ C * (logLevelWeight h * B h)) h := by
-    filter_upwards [hmp.prodMk_left, (ae_restrict_iff' measurableSet_Ioo).1 hBpos,
-      (ae_restrict_iff' measurableSet_Ioo).1 hbound] with h hmh hBh hbh
-    by_cases hh : h ∈ Ioo 0 b
-    · have heq : (fun t ↦ f (h, t)) =
-          (Ioo (-eighthPeriod h) (eighthPeriod h)).indicator (fun t ↦ ‖F (h, t)‖ ^ 2) := by
-        funext t
-        simp only [f, S, quarterOrbitStrip, mem_ofPred_eq, hh.1, hh.2, true_and,
-          mem_Ioo, indicator_apply]
-      rw [heq] at hmh ⊢
-      have hms := (aestronglyMeasurable_indicator_iff measurableSet_Ioo).1 hmh
-      have hi : IntegrableOn (fun t ↦ ‖F (h, t)‖ ^ 2)
-          (Ioo (-eighthPeriod h) (eighthPeriod h)) :=
-        (integrable_const (B h)).mono' hms (by
-          filter_upwards [hbh hh] with t ht
-          rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg ‖F (h, t)‖)]
-          exact ht)
-      refine ⟨hi.integrable_indicator measurableSet_Ioo, ?_⟩
-      simp_rw [Real.norm_eq_abs, abs_of_nonneg (hfpos _)]
-      rw [heq, integral_indicator measurableSet_Ioo, indicator_of_mem hh]
-      calc
-        (∫ t in Ioo (-eighthPeriod h) (eighthPeriod h), ‖F (h, t)‖ ^ 2) ≤
-            ∫ _ in Ioo (-eighthPeriod h) (eighthPeriod h), B h :=
-          integral_mono_ae hi (integrable_const _) (hbh hh)
-        _ = (2 * eighthPeriod h) * B h := by
-          have hpos := eighthPeriod_pos hh.1 (hh.2.trans hb)
-          rw [integral_const, Measure.real, Measure.restrict_apply_univ, Real.volume_Ioo,
-            ENNReal.toReal_ofReal (by linarith : 0 ≤ eighthPeriod h - -eighthPeriod h)]
-          simp only [smul_eq_mul]
-          ring
-        _ ≤ C * (logLevelWeight h * B h) :=
-          (mul_le_mul_of_nonneg_right (hL h hh) (hBh hh)).trans_eq (by ring)
-    · have hz : (fun t ↦ f (h, t)) = 0 := by
-        funext t
-        exact indicator_of_notMem (by
-          intro ht
-          exact hh ⟨ht.1, ht.2.1⟩) _
-      refine ⟨by rw [hz]; exact integrable_zero _ _ _, ?_⟩
-      simp_rw [congrFun hz]
-      simp [hh]
-  have hI : Integrable (fun h ↦ ∫ t, ‖f (h, t)‖) :=
-    ((integrable_indicator_iff measurableSet_Ioo).2 (hB.const_mul C)).mono'
-      hmp.norm.integral_prod_right' (by
-        filter_upwards [hs] with h hh
-        rw [Real.norm_eq_abs, abs_of_nonneg
-          (show 0 ≤ ∫ t, ‖f (h, t)‖ from integral_nonneg fun t ↦ norm_nonneg (f (h, t)))]
-        exact hh.2)
-  have hf : Integrable f ((volume : Measure ℝ).prod volume) :=
-    (integrable_prod_iff hmp).2 ⟨hs.mono fun _ hh ↦ hh.1, hI⟩
-  rw [← Measure.volume_eq_prod] at hf
-  exact (memLp_two_iff_integrable_sq_norm hF).2
-    ((integrable_indicator_iff (measurableSet_quarterOrbitStrip b)).1 hf)
-
+  apply memLp_quarterStrip_of_integral_bound hF (hB.const_mul C)
+  filter_upwards [aestronglyMeasurable_quarterStrip_sections hF, hBpos, hbound,
+    ae_restrict_mem measurableSet_Ioo] with h hm hBh hbh hh
+  have hi : IntegrableOn (fun t ↦ ‖F (h, t)‖ ^ 2)
+      (Ioo (-eighthPeriod h) (eighthPeriod h)) :=
+    (integrable_const (B h)).mono' (hm.norm.pow 2) (by
+      filter_upwards [hbh] with t ht
+      rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+      exact ht)
+  refine ⟨hi, ?_⟩
+  calc
+    (∫ t in Ioo (-eighthPeriod h) (eighthPeriod h), ‖F (h, t)‖ ^ 2) ≤
+        ∫ _ in Ioo (-eighthPeriod h) (eighthPeriod h), B h :=
+      integral_mono_ae hi (integrable_const _) hbh
+    _ = (2 * eighthPeriod h) * B h := by
+      have hpos := eighthPeriod_pos hh.1 (hh.2.trans hb)
+      rw [integral_const, Measure.real, Measure.restrict_apply_univ, Real.volume_Ioo,
+        ENNReal.toReal_ofReal (by linarith : 0 ≤ eighthPeriod h - -eighthPeriod h)]
+      simp only [smul_eq_mul]
+      ring
+    _ ≤ C * (logLevelWeight h * B h) :=
+      (mul_le_mul_of_nonneg_right (hL h hh) hBh).trans_eq (by ring)
 /-- The signed Volterra primitive preserves a.e. strong measurability on the
 moving strip. Values of the integrand outside that strip do not matter. -/
 theorem aestronglyMeasurable_quarterPrimitive {b : ℝ} {F : ℝ × ℝ → ℂ}
@@ -296,5 +326,123 @@ theorem WeightedQuarterNumeratorData.reconstruction_level_memLp
     nlinarith [sq_nonneg (‖A₁ h‖ - ‖∫ u in 0..t,
       quarterForcingLevelDerivative D (h, u) *
         Complex.exp (-Complex.I * ((lam * u : ℝ) : ℂ))‖)]
+
+/-- The first-order jet density has exactly the two coordinate components. -/
+theorem quarterJetDensity_one (s : ℝ) (D : List (Fin 2) → ℝ × ℝ → ℂ) (q : ℝ × ℝ) :
+    quarterJetDensity 1 s D q =
+      ‖D [0] (dipoleOrbit q.1 q.2) / (Real.rpow (saddleDist (dipoleOrbit q.1 q.2)) s : ℂ)‖ ^ 2 +
+      ‖D [1] (dipoleOrbit q.1 q.2) / (Real.rpow (saddleDist (dipoleOrbit q.1 q.2)) s : ℂ)‖ ^ 2 := by
+  unfold quarterJetDensity
+  calc
+    _ = ∑ j : Fin 2, ‖D [j] (dipoleOrbit q.1 q.2) /
+        (Real.rpow (saddleDist (dipoleOrbit q.1 q.2)) s : ℂ)‖ ^ 2 :=
+      Fintype.sum_equiv (Equiv.funUnique (Fin 1) (Fin 2)) _ _ (fun w ↦ by
+        have hw : List.ofFn w = [w 0] := by simp [List.ofFn_succ]
+        simp only [hw]
+        rfl)
+    _ = _ := Fin.sum_univ_two _
+
+/-- Contracting the orbit-level vector against the forcing gradient costs one
+power of saddle distance in the squared weighted-jet density. -/
+theorem quarterForcingLevelDerivative_sq_le_density
+    (D : List (Fin 2) → ℝ × ℝ → ℂ) (q : ℝ × ℝ) {C : ℝ} (hC : 0 ≤ C)
+    (hr : 0 < saddleDist (dipoleOrbit q.1 q.2))
+    (hV : ‖deriv (fun h ↦ dipoleOrbit h q.2) q.1‖ ≤
+      C / saddleDist (dipoleOrbit q.1 q.2)) :
+    ‖quarterForcingLevelDerivative D q‖ ^ 2 ≤
+      2 * C ^ 2 * saddleDist (dipoleOrbit q.1 q.2) * quarterJetDensity 1 (3 / 2) D q := by
+  let r := saddleDist (dipoleOrbit q.1 q.2)
+  let V := deriv (fun h ↦ dipoleOrbit h q.2) q.1
+  let z₀ := D [0] (dipoleOrbit q.1 q.2)
+  let z₁ := D [1] (dipoleOrbit q.1 q.2)
+  have hp : 0 < Real.rpow r (3 / 2) := Real.rpow_pos_of_pos hr _
+  have hp2 : (Real.rpow r (3 / 2)) ^ 2 = r ^ 3 := by
+    change (r ^ (3 / 2 : ℝ)) ^ 2 = r ^ 3
+    rw [← Real.rpow_natCast _ 2, ← Real.rpow_mul (show 0 ≤ r from hr.le)]
+    norm_num
+  have hn : ‖quarterForcingLevelDerivative D q‖ ≤ C / r * (‖z₀‖ + ‖z₁‖) := by
+    calc
+      _ ≤ ‖(V.1 : ℂ) * z₀‖ + ‖(V.2 : ℂ) * z₁‖ := norm_add_le _ _
+      _ ≤ C / r * ‖z₀‖ + C / r * ‖z₁‖ := by
+        simp only [norm_mul, Complex.norm_real]
+        exact add_le_add
+          (mul_le_mul_of_nonneg_right ((norm_fst_le V).trans hV) (norm_nonneg _))
+          (mul_le_mul_of_nonneg_right ((norm_snd_le V).trans hV) (norm_nonneg _))
+      _ = _ := by ring
+  have hsq := (sq_le_sq₀ (norm_nonneg _) (by positivity)).2 hn
+  rw [quarterJetDensity_one]
+  change ‖quarterForcingLevelDerivative D q‖ ^ 2 ≤
+    2 * C ^ 2 * r * (‖z₀ / (Real.rpow r (3 / 2) : ℂ)‖ ^ 2 +
+      ‖z₁ / (Real.rpow r (3 / 2) : ℂ)‖ ^ 2)
+  simp only [norm_div, Complex.norm_real, Real.norm_of_nonneg hp.le, div_pow, hp2]
+  have heq : 2 * C ^ 2 * r * (‖z₀‖ ^ 2 / r ^ 3 + ‖z₁‖ ^ 2 / r ^ 3) =
+      (C / r) ^ 2 * (2 * (‖z₀‖ ^ 2 + ‖z₁‖ ^ 2)) := by
+    field_simp
+  rw [heq]
+  calc
+    _ ≤ (C / r * (‖z₀‖ + ‖z₁‖)) ^ 2 := hsq
+    _ = (C / r) ^ 2 * (‖z₀‖ + ‖z₁‖) ^ 2 := mul_pow _ _ _
+    _ ≤ _ := mul_le_mul_of_nonneg_left (by nlinarith [sq_nonneg (‖z₀‖ - ‖z₁‖)])
+      (sq_nonneg _)
+
+/-- The supplied fiber masses and the orbit-level vector estimate give L² of
+the forcing-level derivative on every sufficiently small quarter strip. -/
+theorem WeightedQuarterNumeratorData.forcing_level_memLp
+    {lam h₀ : ℝ} {U : Set (ℝ × ℝ)} {g : ℝ × ℝ → ℂ}
+    {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (d : WeightedQuarterNumeratorData lam U g D h₀) :
+    ∃ δ : ℝ, 0 < δ ∧ δ < 1 ∧ ∀ b : ℝ, b ≤ h₀ → b ≤ δ →
+      MemLp (quarterForcingLevelDerivative D) 2 (volume.restrict (quarterOrbitStrip b)) := by
+  obtain ⟨C, η, hη, hη1, hV⟩ := deriv_dipoleOrbit_level_le_saddleDist
+  obtain ⟨c, M, ρ, hc, hρ, hd⟩ := saddleDist_dipoleOrbit
+  let δ := min η ρ
+  refine ⟨δ, lt_min hη hρ, (min_le_left _ _).trans_lt hη1, ?_⟩
+  intro b hb hδ
+  have hsub : Ioo 0 b ⊆ Ioo 0 h₀ := fun _ hh ↦ ⟨hh.1, hh.2.trans_le hb⟩
+  have hsubS : quarterOrbitStrip b ⊆ quarterOrbitStrip h₀ := fun _ hq ↦
+    ⟨hq.1, hq.2.1.trans_le hb, hq.2.2⟩
+  have hG := (d.forcing_level_weak.mono hsubS).2.1.aestronglyMeasurable
+  let K := 2 * |C| ^ 2 * |M|
+  have hbound : ∀ q ∈ quarterOrbitStrip b,
+      ‖quarterForcingLevelDerivative D q‖ ^ 2 ≤ K * quarterJetDensity 1 (3 / 2) D q := by
+    intro q hq
+    have hhη : q.1 ∈ Ioo 0 η :=
+      ⟨hq.1, hq.2.1.trans_le (hδ.trans (min_le_left _ _))⟩
+    have hhρ : q.1 ∈ Ioo 0 ρ :=
+      ⟨hq.1, hq.2.1.trans_le (hδ.trans (min_le_right _ _))⟩
+    have ht : |q.2| ≤ eighthPeriod q.1 := abs_le.mpr ⟨hq.2.2.1.le, hq.2.2.2.le⟩
+    obtain ⟨hdlo, hdhi⟩ := hd q.1 hhρ q.2 ht
+    have hpos : 0 < saddleDist (dipoleOrbit q.1 q.2) :=
+      (mul_pos hc (Real.exp_pos _)).trans_le hdlo
+    have hdM : saddleDist (dipoleOrbit q.1 q.2) ≤ |M| := calc
+      _ ≤ M * Real.exp (-|q.2|) := hdhi
+      _ ≤ |M| * Real.exp (-|q.2|) :=
+        mul_le_mul_of_nonneg_right (le_abs_self _) (Real.exp_nonneg _)
+      _ ≤ |M| := mul_le_of_le_one_right (abs_nonneg _)
+        (Real.exp_le_one_iff.2 (neg_nonpos.2 (abs_nonneg _)))
+    have hv := (hV q.1 hhη q.2 ht).1.trans
+      (div_le_div_of_nonneg_right (le_abs_self C) hpos.le)
+    have hden : 0 ≤ quarterJetDensity 1 (3 / 2) D q :=
+      Finset.sum_nonneg fun _ _ ↦ sq_nonneg _
+    exact (quarterForcingLevelDerivative_sq_le_density D q (abs_nonneg C) hpos hv).trans
+      (mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left hdM (by positivity : 0 ≤ 2 * |C| ^ 2)) hden)
+  apply memLp_quarterStrip_of_integral_bound hG
+    ((d.mass_integrable.1.mono_set hsub).const_mul K)
+  have hfiber := d.fibers_integrable.filter_mono
+    (ae_mono (Measure.restrict_mono hsub le_rfl))
+  filter_upwards [hfiber, aestronglyMeasurable_quarterStrip_sections hG,
+    ae_restrict_mem measurableSet_Ioo] with h hh hm hhI
+  have hle : ∀ᵐ t ∂(volume.restrict (Ioo (-eighthPeriod h) (eighthPeriod h))),
+      ‖quarterForcingLevelDerivative D (h, t)‖ ^ 2 ≤ K * quarterJetDensity 1 (3 / 2) D (h, t) := by
+    filter_upwards [ae_restrict_mem measurableSet_Ioo] with t ht
+    exact hbound (h, t) ⟨hhI.1, hhI.2, ht⟩
+  have hdom := hh.1.const_mul K
+  have hi := hdom.mono' (hm.norm.pow 2) (by
+    filter_upwards [hle] with t ht
+    rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+    exact ht)
+  refine ⟨hi, ?_⟩
+  exact (integral_mono_ae hi hdom hle).trans_eq (integral_const_mul _ _)
 
 end NoEmbeddedEigenvalues

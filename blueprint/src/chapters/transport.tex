@@ -1454,6 +1454,34 @@ For the level pullback, zero-extend $A$ off $(0,b)$ and use the first
 projection of product Lebesgue measure, then restrict to $Q_b$.
 \end{proof}
 
+\begin{lemma}[Fiber-integral criterion for quarter-strip $L^2$]
+\label{lem:quarter-fiber-summation}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterStrip_sections,
+ NoEmbeddedEigenvalues.memLp_quarterStrip_of_integral_bound}
+\leanok
+Let $F$ be a.e.\ strongly measurable on $Q_b$.
+Then its time sections are a.e.\ strongly measurable on
+$(-L(h),L(h))$ for a.e.\ $h\in(0,b)$.
+If $B\in L^1(0,b)$ and, for a.e.\ $h$, the squared-norm section is
+integrable with
+\[
+ \int_{-L(h)}^{L(h)}|F(h,t)|^2\,dt\le B(h),
+\]
+then $F\in L^2(Q_b)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Zero-extend from the measurable strip.
+Fubini gives the section measurability and identifies the integral of
+the squared norm with the integral of its fiber integrals.
+The latter are dominated by the integrable zero extension of $B$.
+Actual fiber integrability is a hypothesis, not inferred from a bound
+on a totalized integral. No joint measurability of a separate dominating
+density is required.
+\end{proof}
+
 \begin{lemma}[Moving quarter-strip summation]
 \label{lem:quarter-strip-summation}
 \uses{def:cell-separatrix-collar, def:log-level-weight}
@@ -1467,7 +1495,7 @@ Then $F\in L^2(Q_b)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-primitive-measurable}
+\uses{lem:quarter-fiber-summation}
 \leanok
 Zero-extend $|F|^2$ off $Q_b$. Its time sections are integrable by the
 constant bound $B(h)$ on a finite interval.
@@ -1519,6 +1547,48 @@ The phase has norm one, hence
 The right side is logarithmically integrable.
 The coarse bound $L-\frac12\log(1/h)\le2$ gives $2L\le4\Lambda$ for
 $h<1/2$. Apply Lemma~\ref{lem:quarter-strip-summation}.
+\end{proof}
+
+\begin{lemma}[Forcing-level $L^2$ gain on a quarter strip]
+\label{lem:quarter-forcing-level-gain}
+\uses{def:weighted-numerator-data}
+\lean{NoEmbeddedEigenvalues.quarterJetDensity_one,
+ NoEmbeddedEigenvalues.quarterForcingLevelDerivative_sq_le_density,
+ NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.forcing_level_memLp}
+\leanok
+Let $d$ be compatible numerator data on $(0,h_0)$ with specified
+forcing-level derivative $G$. There is $0<\delta<1$ such that
+\[
+ G\in L^2(Q_b)\qquad(0<b\le h_0,\ b\le\delta).
+\]
+No additional logarithmic energy or global measurable jet
+representative is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-level-derivatives, lem:orbit-saddle-distance,
+ lem:quarter-fiber-summation}
+\leanok
+Choose $\delta$ below the two geometric cutoffs.
+Write $r$ for the saddle distance at $\gamma_h(t)$ and
+$V=\partial_h\gamma_h(t)$.
+The geometric bounds give $0<r\le M$ and $|V|\le C/r$, for
+nonnegative constants $C,M$. The first jet density is exactly
+\[
+ E(h,t)=\left|\frac{D_0(\gamma_h(t))}{r^{3/2}}\right|^2+
+         \left|\frac{D_1(\gamma_h(t))}{r^{3/2}}\right|^2.
+\]
+The triangle inequality and $(a+b)^2\le2(a^2+b^2)$ imply
+\[
+ |G(h,t)|^2\le 2C^2rE(h,t)\le2C^2ME(h,t).
+\]
+The weak forcing derivative supplied by $d$ is locally integrable,
+hence a.e.\ strongly measurable on the strip.
+On a.e.\ level, the data supply genuine integrability of $E$.
+Thus the squared-norm section is integrable by domination and its
+integral is at most $2C^2M K(h)$.
+The unweighted mass $K\in L^1(0,h_0)$ is already part of $d$;
+Lemma~\ref{lem:quarter-fiber-summation} finishes the proof.
 \end{proof}
 
 \begin{definition}[Joint midpoint reconstruction]

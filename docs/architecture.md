@@ -85,7 +85,8 @@ proof mechanisms. Module names below are relative to
 - `LogarithmicMidpoint.lean`: local interval H¹ multiplication, logarithmic midpoint
   control, null quarter resonances and the orbitwise midpoint/reconstruction identity.
 - `QuarterReconstruction.lean`: signed midpoint-integral bounds, a.e. measurability
-  on moving quarter strips and logarithmic summation of the joint level candidate.
+  on moving quarter strips, fiber-integral L² summation, the forcing-level L²
+  bound from weighted jet mass and logarithmic summation of the joint level candidate.
 - `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
   differentiation of primitives and full reconstructions, and joint a.e. equality
   from a.e. fiber equality.
@@ -144,6 +145,8 @@ can be added here as they are formalized.
   using one fixed canonical stream jet.
 - `Regularity/OddOddMidpoint.lean`: logarithmic phase quotient and midpoint data for
   either odd–odd rotation character, with a common a.e. orbit reconstruction.
+- `Regularity/OddOddQuarter.lean`: the actual base-quarter vorticity level derivative
+  from midpoint reconstruction and forcing-level L².
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in

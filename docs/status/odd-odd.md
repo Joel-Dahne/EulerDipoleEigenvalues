@@ -33,8 +33,10 @@ Proof work is now outside the odd–odd chapter:
   branch now has checked logarithmic midpoint/reconstruction data
   (`lem:dd-log-midpoint`), including L² of the joint level candidate by
   logarithmic-length summation and its identification as the weak level derivative
-  of the actual transport-unknown pullback. Forcing/time derivative bounds,
-  strong quarter derivatives and weighted spatial-gradient assembly remain open.
+  of the actual transport-unknown pullback. Forcing-level L² and the actual
+  base-quarter vorticity level derivative (`lem:dd-quarter-level`) are checked
+  using the supplied unweighted fiber mass. Weighted time-derivative bounds,
+  rotation transfer and weighted spatial-gradient assembly remain open.
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.
