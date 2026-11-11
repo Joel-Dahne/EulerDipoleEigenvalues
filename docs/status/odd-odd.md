@@ -40,9 +40,9 @@ Proof work is now outside the odd–odd chapter:
   compact-localization, canonical-trace uniqueness and logarithmic mass-summation
   layers and the canonical stream weak jet are admission-free. The endpoint
   still reaches three existing forcing/numerator-differentiation inputs.
-  Logarithmic forcing (`lem:dd-log-forcing`) is the current target: its ordinary
-  bulk part is proved, while the saddle-weighted bulk and canonical ray bounds
-  remain; see
+  Logarithmic forcing (`lem:dd-log-forcing`) is the current target. Its ordinary
+  bulk and canonical saddle-remainder parts are proved; quadratic logarithmic
+  mass, distance comparison/gluing and canonical ray bounds remain. See
   [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

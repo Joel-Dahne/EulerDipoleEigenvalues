@@ -331,6 +331,36 @@ the specified first and second jet entries in local $H^1$ on the same
 neighbourhood. Apply the physical logarithmic multiplier to each entry.
 \end{proof}
 
+\begin{lemma}[Logarithmic canonical saddle remainder, odd--odd]
+\label{lem:dd-log-saddle-remainder}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:log-level-weight, def:stream-second-jet, def:saddle-quadratic,
+ def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.dd_log_saddle_remainder}
+\leanok
+For an odd--odd eigenfunction and every lifted saddle $c$, there are
+$\rho>0$ and $a\in\C$ such that, on the disk of radius $\rho$ about $c$,
+\[
+ \sqrt{\Lambda_\Psi}\,
+   \frac{J_j-\partial_jq_{c,a}}{r_c^{3/2}}\in L^2_{\rm loc}
+ \qquad(j=0,1).
+\]
+Here $J$ is the fixed canonical stream jet and $q_{c,a}$ is the
+Cartesian quadratic saddle polynomial.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:saddle-dd, lem:log-radial-gradient, lem:stream-weak-second-jet,
+ lem:weak-derivative-basic, lem:weak-derivative-unique,
+ lem:weak-derivative-classical}
+\leanok
+Retain the saddle remainder jet $D$ and its coefficient $a$.
+Adding the classical quadratic jet gives a weak jet of $\psi$;
+weak uniqueness identifies $D_j+\partial_jq_{c,a}=J_j$ almost everywhere.
+Transfer the logarithmic bound for the original specified $D_j$.
+No raw gradient value is evaluated on a ray.
+\end{proof}
+
 \begin{lemma}[Logarithmically weighted forcing, odd--odd]
 \label{lem:dd-log-forcing}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
@@ -355,14 +385,11 @@ locally $L^2$ on $U$; ray bounds are on a bounded radial interval.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-log-ordinary-bulk, prop:saddle-dd, lem:saddle-normal-form,
- lem:dipole-log-multiplier, lem:weighted-corner-trace,
- lem:h1-crossing-gluing}
+\uses{lem:dd-log-ordinary-bulk, lem:dd-log-saddle-remainder,
+ prop:saddle-dd, lem:saddle-normal-form, lem:weighted-corner-trace,
+ lem:sobolev-local-gluing}
 Lemma~\ref{lem:dd-log-ordinary-bulk} supplies the ordinary first- and
 second-jet masses, using the same canonical jet on one neighbourhood.
-Lemma~\ref{lem:dipole-log-multiplier} applies to any local $H^1$ function
-there; the exact diagonal factorization treats regular edges and saddle
-crossings together.
 
 For the remaining term write $\psi=q+R$ near a saddle. The normalized
 factorization $\Psi=uv\,m$, with $m$ bounded away from zero, gives
@@ -370,16 +397,13 @@ $\Lambda_\Psi\le C(1+|\log|u||+|\log|v||)$ locally.
 The quadratic part has $|\nabla q|^2/r^3\le C/r$. Its logarithmically weighted integral is
 finite: in polar coordinates the radial integrals of $1+|\log r|$ and
 the angular integrals of $|\log\sin\theta|+|\log\cos\theta|$ are finite.
-For $F=\nabla R/r^{3/2}$ the saddle jet gives
-\[
- F/r\in L^2,\qquad
- |\nabla F|\le C\left(|D^2R|/r^{3/2}+|\nabla R|/r^{5/2}\right)\in L^2.
-\]
-It is $H^1$ off the origin; its traces match across the axes there.
-The cutoff argument of Lemma~\ref{lem:h1-crossing-gluing} extends it in
-$H^1$ across the origin. Apply the logarithmic multiplier to each localized
-component of $F$. Away from saddle neighbourhoods, $d$ is bounded below,
-so ordinary $H^3$ and the same multiplier suffice.
+Lemma~\ref{lem:dd-log-saddle-remainder} supplies the remainder contribution
+in the same canonical jet: the divided remainder gradient is $H^1$ through
+the center, so the physical logarithmic multiplier applies.
+Comparison of Euclidean radius with saddle distance transfers the local
+bounds to the stated weight. Away from saddle neighbourhoods, $d$ is
+bounded below, so the ordinary logarithmic bulk bounds suffice.
+Local $L^2$ gluing gives a lifted neighbourhood of the whole separatrix.
 
 For the ray estimates, apply Lemma~\ref{lem:weighted-corner-trace} to
 $R/r^3$ and each component of $\nabla R/r^2$. Their quotients by $r$

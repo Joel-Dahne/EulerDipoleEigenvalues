@@ -518,10 +518,11 @@ Only interior interval values are used, not endpoint traces.
 \begin{lemma}[Smooth multiplication for weak derivatives]
 \label{lem:weak-derivative-product}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.mul_smooth}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.mul_smooth,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.mul_contDiffOn}
 \leanok
 Let $U\subset\R^2$ be open and let $h=\partial_jg$ weakly on $U$.
-For every smooth $\chi:\R^2\to\mathbb C$,
+For every $\chi:\R^2\to\mathbb C$ smooth on $U$,
 \[
  \partial_j(\chi g)=(\partial_j\chi)g+\chi h
  \quad\hbox{weakly on }U.
@@ -533,9 +534,34 @@ The multiplier need not have compact support or bounded derivatives.
 \uses{lem:weak-derivative-basic}
 \leanok
 Test the weak derivative identity with $\chi\eta$, where $\eta$ is a test
-function on $U$, and expand $\partial_j(\chi\eta)$. All products are
-integrable because $\eta$ and its derivatives have compact support in $U$.
+function on $U$, and expand $\partial_j(\chi\eta)$. The product is globally
+smooth even when $\chi$ is smooth only on $U$: the support of $\eta$ is
+compactly contained in $U$, and off that support the product vanishes locally.
+All products are integrable on their compact test supports.
 Multiplication by a continuous function preserves local integrability.
+\end{proof}
+
+\begin{lemma}[Isolated-point removal for a weak partial derivative]
+\label{lem:weak-point-removal}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.remove_point}
+\leanok
+Let $F,D\in L^1_{\rm loc}(U)$, $U\subset\R^2$, and $c\in\R^2$.
+If $\partial_jF=D$ weakly on $U\setminus\{c\}$, the same specified
+identity holds on $U$. No radial integrability assumption is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+For a test $\varphi$ supported in $U$, use
+$\varphi_n=\theta_n\varphi$, with
+$\theta_n(p)=1-b((n+1)(p_{1-j}-c_{1-j}))$ and a smooth bump
+$0\le b\le1$ equal to one near zero. Each $\varphi_n$ avoids a strip
+through $c$, so is a test on $U\setminus\{c\}$.
+Crucially $\partial_j\theta_n=0$, while $\theta_n\to1$ off the null
+transverse line. Dominated convergence applies to the genuine integrable
+products $F\partial_j\varphi$ and $D\varphi$, giving the original identity.
 \end{proof}
 
 \begin{lemma}[Sobolev congruence on the domain]
@@ -1508,6 +1534,67 @@ Sobolev definition. Restrict to relatively compact open sets for the local
 claim, then induct on the word. No jet representative is replaced.
 \end{proof}
 
+\begin{lemma}[Weak radial multiplication]
+\label{lem:radial-weak-multiplier}
+\uses{def:sobolev-local, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.radialMultiplier_eq,
+ NoEmbeddedEigenvalues.coordPartial_radialMultiplier,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.radial_div,
+ NoEmbeddedEigenvalues.memSobolevOn_radial_div,
+ NoEmbeddedEigenvalues.memLp_div_localRadius_rpow}
+\leanok
+Let $U\subset\R^2$ be open, $r=r_c$, and $s\in\R$.
+Suppose $\partial_jF=D_j$ weakly and
+$F/r^s$, $F/r^{s+1}$, and $D_j/r^s$ belong to $L^2(U)$.
+Then the specified weak derivative on all of $U$ is
+\[
+ \partial_j(F/r^s)=
+ -s\,\frac{p_j-c_j}{r}\frac{F}{r^{s+1}}+\frac{D_j}{r^s}\in L^2(U).
+\]
+In particular, the hypotheses for both coordinates give $F/r^s\in H^1(U)$.
+On a bounded disk, $F/r^m\in L^2$ for an integer $m\ge0$ also implies
+$F/r^t\in L^2$ for every real $t\le m$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-product, lem:weak-point-removal}
+\leanok
+Off $c$, differentiate the smooth multiplier $r^{-s}$.
+The factor $(p_j-c_j)/r$ has norm at most one, so the displayed candidate
+is genuinely square integrable. Local integrability of the function and
+candidate allows isolated-point removal in each coordinate.
+For the last claim multiply $F/r^m$ by the bounded measurable factor
+$r^{m-t}$; the cancellation is needed only off the null center.
+\end{proof}
+
+\begin{lemma}[Divided saddle-jet gradients in H1]
+\label{lem:radial-gradient-h1}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.radial_gradient_h1}
+\leanok
+Let $D$ be a specified second weak jet on a disk about $c$, with
+$D_j/r_c^3$ and $D_{ij}/r_c^2$ in $L^2$ for every $i,j$.
+Then $D_j/r_c^{3/2}\in H^1$ on the whole disk for every $j$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:radial-weak-multiplier}
+\leanok
+The weaker weights $D_j/r_c^{3/2}$, $D_j/r_c^{5/2}$ and
+$D_{ij}/r_c^{3/2}$ are square integrable on the bounded disk.
+Apply the weak radial product rule to the specified identity
+$\partial_iD_j=D_{ij}$.
+\end{proof}
+
+\begin{remark}[Digest note: point removal, not quadrant gluing]
+For the multiplier step in the manuscript
+\texttt{(eq:logarithmic-subcritical-energy)}, starting with the Cartesian
+weak saddle jet makes a crossing-edge gluing argument unnecessary.
+The radial multiplier is smooth everywhere off the center, including
+across both axes. Only the isolated point must be removed, and the
+transverse-cutoff argument needs no extra trace or radial-tail hypothesis.
+\end{remark}
+
 \begin{definition}[Affine pullback of a specified jet]
 \label{def:affine-jet}
 \uses{def:local-weak-jets}
@@ -2352,6 +2439,22 @@ Diagonal weak-derivative transport and the coordinate-weight multiplier
 give the rectangle estimate. Near each point of $U$, multiply $F$ by a
 compact smooth cutoff equal to one nearby, apply the rectangle result,
 and use local $L^2$ gluing. No full-plane norm of a periodic lift is asserted.
+\end{proof}
+
+\begin{lemma}[Logarithmic divided saddle-jet gradients]
+\label{lem:log-radial-gradient}
+\uses{def:local-weak-jets, def:sobolev-local, def:log-level-weight,
+ lem:radial-gradient-h1}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.log_radial_gradient}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:radial-gradient-h1},
+$\sqrt{\Lambda_\Psi}\,D_j/r_c^{3/2}\in L^2_{\rm loc}$ on the whole disk.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:radial-gradient-h1, lem:dipole-log-multiplier}
+\leanok
+Apply the physical logarithmic multiplier to $D_j/r_c^{3/2}\in H^1$.
 \end{proof}
 
 \begin{remark}[Digest note: one multiplier for edges and saddles]

@@ -72,6 +72,10 @@ proof mechanisms. Module names below are relative to
   `ACLWeakDerivative.lean` gives the weak time identity from orbitwise ACL data,
   without selecting jointly measurable ACL representatives.
 - `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
+- `WeakPointRemoval.lean`: a transverse cutoff removes an isolated point from a
+  specified weak partial identity under local L¹ hypotheses, without a radial tail.
+- `RadialWeakMultiplier.lean`: the local smooth weak product rule, radial derivatives,
+  weaker-weight L² transport and H¹ of the divided gradient through its center.
   `IntervalH1WeakLift.lean` lifts interval H¹ data to planar weak level derivatives.
   `WeakParameterIntegral.lean` proves local integrability and weak differentiation
   of signed midpoint primitives by sliced testing and Fubini.
@@ -184,6 +188,9 @@ can be added here as they are formalized.
   and ordinary separatrix H¹/H³ interfaces.
 - `Regularity/OddOddLogBulk.lean`: ordinary logarithmic first/second jet masses
   from the H³ stream gain, with weak uniqueness preserving canonical entries.
+- `Regularity/OddOddLogSaddle.lean`: logarithmic mass of the divided saddle remainder
+  gradient, identified with the canonical stream jet minus the classical quadratic
+  jet by weak uniqueness. The radius here is Euclidean distance from the fixed saddle.
 - `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing interface and
   numerator assembly, using one fixed canonical stream jet. The assembly localizes
   the bulk norms and identifies the forcing traces with the existing numerator

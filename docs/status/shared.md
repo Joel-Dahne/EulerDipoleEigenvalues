@@ -94,10 +94,17 @@ weights and local versus global regularity.
    finite-p embedding or a separate multiplier localization in saddle charts.
    Ordinary logarithmic stream-jet mass (`lem:dd-log-ordinary-bulk`) is proved from
    the existing Ordinary separatrix H¹/H³ input (`prop:dd-separatrix-h1`) alone.
-   **Remaining in the target:** the d⁻³ᐟ² gradient bulk term (weighted remainder H¹
-   across the saddle plus direct quadratic logarithmic mass), and the canonical
-   ray bounds. The latter require compatibility of polar corner traces with the
-   Cartesian quarter traces for the same raw jet, not arbitrary point values.
+   Canonical logarithmic saddle remainder (`lem:dd-log-saddle-remainder`) is proved
+   from Saddle jet (`prop:saddle-dd`) alone. It retains the canonical stream jet
+   minus the classical quadratic jet, with Euclidean radius from the fixed saddle.
+   The divided remainder gradient is genuinely H¹ through its center; the generic
+   radial weak-product and isolated-point-removal layers have zero admissions.
+   No quadrant trace/gluing input is needed: a transverse test cutoff has zero
+   derivative in the tested coordinate.
+   **Remaining in the target:** direct quadratic logarithmic mass, comparison of
+   Euclidean radius with saddle distance, lifted-neighbourhood gluing, and the
+   canonical ray bounds. The latter require compatibility of polar corner traces
+   with the Cartesian quarter traces for the same raw jet, not arbitrary point values.
    The full logarithmic forcing theorem remains admitted, unchanged.
    Saddle jet (`prop:saddle-dd`), weighted forcing and ordinary H¹/H³ also remain
    regularity inputs. Generic numerator differentiation and five scalar/orbit
