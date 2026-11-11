@@ -70,45 +70,25 @@ weights and local versus global regularity.
    without ordinary separatrix H³ or a fixed-cell localization bridge.
    Its generic weighted elliptic gain (`lem:elliptic-weighted-third`) and
    Cartesian Taylor correction (`lem:saddle-taylor-correction`) are explicit
-   outside-section admissions. The weighted-gradient branch now has a checked
-   scalar stage, Logarithmic midpoint data (`lem:dd-log-midpoint`): phase
-   division, specified local H¹ derivative, and a common a.e. orbitwise
-   reconstruction. The generic midpoint gain has zero transitive admissions;
-   the sector assembly retains its existing logarithmic-numerator and five
-   scalar/orbit inputs. Its joint level-reconstruction candidate is now L² on
-   the moving strip: signed integral bounds, a.e. measurability and logarithmic
-   length summation are checked in `QuarterReconstruction.lean`. These generic
-   estimates have no admissions. Weak parameter integration, interval-H¹ lifting
-   and locality now identify it as the weak level derivative of the actual raw
-   transport-unknown pullback, using joint a.e. congruence. The new generic weak
-   calculus is admission-free. Fiber-integral summation and the orbit-level
-   vector bound also give forcing-level L² from the data's unweighted mass.
-   Strong weighted quarter derivatives (`lem:dd-quarter-weighted-derivatives`)
-   are now checked for all four separately recentered raw profiles, with one
-   common cutoff. The rotation transfer uses joint a.e. character identities and
-   exact saddle-distance invariance; it has no admissions of its own and retains
-   the eight existing base-quarter inputs. The generic weak time identity and
-   the rotation bridges have zero transitive admissions. The specified measurable
-   separatrix gradient (`lem:dd-separatrix-weak-gradient`) is extracted on the whole
-   neighbourhood from local H¹ by countable a.e. gluing. Weak gradient identification
-   (`lem:quarter-gradient-identification`) is checked: reverse cofactor testing
-   reconstructs spatial weak derivatives on the actual quarter image, coarea
-   transports the weighted norm, and uniqueness identifies supplied derivatives
-   on overlaps. The generic chart/test/coarea/identification layer has no admissions.
-   Base-quarter weighted spatial gradient (`lem:dd-base-quarter-spatial-gradient`)
-   removes the character premise by summing the two projected raw lifts.
-   Weighted specified gradient on the base-quarter overlap
-   (`lem:dd-weighted-gradient-base-overlap`) transfers the norm to the same ordinary
-   gradient on its full separatrix neighbourhood. The base-image result retains
-   eight existing inputs; the overlap additionally uses ordinary separatrix H¹.
-   Remaining: finite-quarter image covering (including null seams), affine
-   derivative-index transport, and periodic/reflected covering to obtain local
-   weighted L² on the whole lifted neighbourhood.
-   `dd_weighted_gradient` itself remains admitted; its logarithmic numerator
-   input and the saddle estimates are also separate in-section proof work.
-   The weighted third-stream audit still reaches the saddle and weighted-gradient
-   inputs, plus the two outside-section corollaries, stream weak jet and saddle
-   factorization. The scalar/geometry batch is now
+   outside-section admissions. Weighted vorticity gradient, odd–odd
+   (`prop:dd-weighted-gradient`) now has a proof of its own, with its original
+   lifted-neighbourhood statement. Base-quarter reconstruction identifies genuine
+   spatial weak derivatives; rotations cover a full positive collar up to null
+   axes. Compactness, affine derivative-index transport and finite reflected
+   periodic covering transfer the weighted norm to one specified ordinary
+   gradient on the whole lifted neighbourhood. The generic reconstruction and
+   covering layer has zero transitive admissions; the endpoint retains nine
+   existing inputs. No new trace/no-jump input was added.
+   **Next regularity inputs:** Logarithmic numerator data
+   (`lem:dd-log-numerators`), Saddle jet (`prop:saddle-dd`), Weighted forcing
+   (`lem:dd-weighted-forcing`) and Ordinary separatrix H¹
+   (`prop:dd-separatrix-h1`), together with the five existing scalar/orbit inputs.
+   The weighted third-stream assembly reaches thirteen admissions: these nine,
+   the two outside-section elliptic/Taylor corollaries, stream weak jet and saddle
+   factorization. Rotations after spatial reconstruction avoid differentiated
+   time shifts; the separate four-quarter derivative family is not needed on
+   this assembly route.
+   The scalar/geometry batch is now
    stated in `ScalarDivision.lean` and `Regularity/SaddleNormalForm.lean`; cylinder
    inversion and weighted transport/gluing are stated in `Regularity/CylinderInverse.lean`,
    `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,

@@ -107,6 +107,14 @@ proof mechanisms. Module names below are relative to
   quarter chart; `QuarterGradient.lean` identifies the inverse frame, transfers
   its weighted L² norm by coarea and identifies arbitrary specified gradients
   on spatial overlaps or in source coordinates.
+  `QuarterCellCover.lean` covers a positive collar by rotated open quarter images
+  up to null Cartesian seams and shrinks collars into open separatrix domains.
+  `RotationWeakGradient.lean` transports derivative indices and weighted norms,
+  then identifies one specified gradient on the finite quarter cover.
+  `CellFolding.lean` supplies reflected periodic affine isometries, saddle-distance
+  invariance and bounded period-index covering. `PeriodicWeightedGradient.lean`
+  transports whole-cell weighted gradients to local norms for the same specified
+  gradient on a lifted separatrix neighbourhood, without a new jump argument.
 - `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
   differentiation of primitives and full reconstructions, and joint a.e. equality
   from a.e. fiber equality.
@@ -176,7 +184,9 @@ can be added here as they are formalized.
   separatrix gradient and reconstructs weighted spatial derivatives on the actual
   base-quarter image. Two-character summation removes the character premise;
   weak uniqueness transfers the weighted norm to the same ordinary gradient
-  on the base-quarter overlap.
+  on the base-quarter overlap. `Regularity/OddOddCellGradient.lean` assembles the
+  weighted gradient on an entire positive cell collar by rotations, compactness
+  and two-character summation.
 - `Regularity/OddOddRegularity.lean`: weighted vorticity gradient and third stream jet;
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in

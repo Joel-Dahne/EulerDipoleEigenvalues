@@ -748,6 +748,34 @@ gradient on $V_b$. Weak uniqueness on their open overlap identifies
 their representatives a.e.\ and transfers the weighted norm.
 \end{proof}
 
+\begin{lemma}[Weighted gradient on a whole positive cell collar]
+\label{lem:dd-cell-weighted-gradient}
+\uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.dd_character_cell_weighted_gradient,
+ NoEmbeddedEigenvalues.dd_cell_weighted_gradient}
+\leanok
+For an odd--odd eigenfunction there are $0<b<1/2$ and a specified
+Cartesian weak gradient $E$ on $V_{2b}^{\rm cell}$ such that
+$E_j/d\in L^2(V_{2b}^{\rm cell})$.
+No rotation-character premise is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-separatrix-weak-gradient,
+ lem:dd-base-quarter-spatial-gradient, lem:weighted-gradient-cell-cover,
+ lem:compact-cell-collar, lem:rotation-characters, lem:weak-derivative-basic}
+\leanok
+For either character choose the ordinary separatrix gradient on $U$
+and the weighted gradient on the base-quarter image. Shrink $b$ so the
+whole cell collar lies in $U$, by compactness.
+The four-quarter norm transfer gives the weighted norm of the same ordinary
+gradient on that entire collar; restrict its weak identities there.
+For a general odd--odd eigenfunction, restrict both character estimates to
+the minimum cutoff and sum the two gradients, using a.e.\ equality of the
+projected raw lifts with the original raw lift.
+\end{proof}
+
 \begin{proposition}[Weighted vorticity gradient, odd--odd]
 \label{prop:dd-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
@@ -759,33 +787,18 @@ $G/d\in L^2_{\rm loc}(U)$.
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-quarter-weighted-derivatives, lem:dd-separatrix-weak-gradient,
- lem:dd-weighted-gradient-base-overlap, lem:quarter-spatial-reconstruction,
- lem:dd-base-quarter-inverse-frame, lem:quarter-gradient-identification,
- lem:rotation-characters, lem:orbit-coordinate-gradients,
- lem:orbit-coordinates-area, lem:symmetries-commute,
- lem:affine-jet-pullback, lem:weak-derivative-unique}
-Choose the specified measurable spatial gradient supplied by
-Lemma~\ref{lem:dd-separatrix-weak-gradient}.
-For either rotation character, use the strong quarter derivatives.
-On quarter patches contained in its neighbourhood, identify the
-inverse-frame candidates with this gradient by
-Lemma~\ref{lem:quarter-gradient-identification}; rotations use the
-affine weak chain rule. The inverse-coordinate estimates give
-\[
- \frac{|\nabla\omega|}{d}
- \le C\left(|\partial_h\omega_h|+
-                        d^{-2}|\partial_t\omega_h|\right).
-\]
-Coarea now proves the claim on each quarter strip. Sum the character
-components and use reflection for the adjacent cells. The weak gradient
-is the one already supplied across edges and saddles by
-Proposition~\ref{prop:dd-separatrix-h1}; no new jump term is introduced.
-Away from the lattice saddles, $d$ is locally bounded below, so ordinary
-$H^1$ suffices. Periodicity transfers the bounded-cell estimates to every
-lifted saddle neighbourhood. Thus a compact subset of the open
-separatrix neighbourhood is covered by finitely many weighted saddle
-patches and regular $H^1$ patches.
+\uses{lem:dd-separatrix-weak-gradient, lem:dd-cell-weighted-gradient,
+ lem:weighted-gradient-periodic-cover}
+\leanok
+Choose the specified measurable ordinary weak gradient on $U$.
+The whole-cell result supplies a possibly different weighted gradient on
+$V_\varepsilon^{\rm cell}$ for some $\varepsilon>0$.
+The reflected periodic covering lemma transfers those weighted norms
+to the same specified ordinary gradient on
+$W=U\cap\{|\Psi|<\varepsilon\}$, an open neighbourhood of the separatrix.
+No new jump term or trace argument is needed.
+Rotations are applied after spatial reconstruction, so no level-dependent
+time shift is differentiated.
 \end{proof}
 
 \begin{remark}[Digest note: the logarithmic gradient gain]

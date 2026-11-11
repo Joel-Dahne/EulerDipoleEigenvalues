@@ -2003,6 +2003,206 @@ This proves the source-coordinate identification without first assuming
 a weak chain rule for the supplied spatial derivative representatives.
 \end{proof}
 
+\begin{lemma}[The four open quarters cover a cell collar]
+\label{lem:quarter-cell-cover}
+\uses{def:quarter-image, def:cell-arcs, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.abs_diag_fst_lt_quarterRadius,
+ NoEmbeddedEigenvalues.mem_quarterImage_of_quadrant,
+ NoEmbeddedEigenvalues.rotLift_cell_level,
+ NoEmbeddedEigenvalues.exists_rotLift_mem_quarterImage,
+ NoEmbeddedEigenvalues.ae_cell_collar_covered}
+\leanok
+For $0<b\le1$, every point in the positive cell with
+$0<h(p)<b$, $x>0$, $y<0$ belongs to $V_b$.
+Rotation preserves the cell and $h$; consequently
+\[
+ V_{2b}^{\rm cell}\subset_{\rm a.e.}
+   \bigcup_{k=0}^3 R^{-k}V_b ,
+ \qquad
+ V_\varepsilon^{\rm cell}=\{p\in\Cell:0<\Psi(p)<\varepsilon\}.
+\]
+The only omitted seams are contained in the Cartesian axes.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-orbit-diagonal, lem:quarter-open-chart}
+\leanok
+In diagonal coordinates, $x>0,y<0$ gives $b(p)>|a(p)|$.
+Thus $\cos b(p)<\cos a(p)$ and
+$h(p)=\cos a(p)\cos b(p)<\cos^2a(p)$.
+It follows that $|a(p)|<\arccos\sqrt{h(p)}$.
+The first orbit coordinate traverses precisely this open interval
+on $(-L,L)$; positivity and conservation identify its second coordinate.
+Rotate any point off the axes into this quadrant. Both axes are null by Fubini.
+\end{proof}
+
+\begin{lemma}[A uniform cell collar inside a separatrix neighbourhood]
+\label{lem:compact-cell-collar}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.isOpen_cellSeparatrixStrip,
+ NoEmbeddedEigenvalues.exists_cell_collar_subset}
+\leanok
+The positive cell collar is open. If $U$ is open and contains the lifted
+separatrix, some $\varepsilon>0$ satisfies $V_\varepsilon^{\rm cell}\subset U$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+\uses{lem:cell-square}
+The closed cell is compact. On its compact complement of $U$, $|\Psi|$
+has a strictly positive uniform lower bound, since its zero set lies in $U$.
+Use any smaller positive cutoff.
+\end{proof}
+
+\begin{lemma}[Weighted gradients under quarter rotation]
+\label{lem:weighted-gradient-rotation}
+\uses{def:weak-derivative-local, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.rotLinear,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.comp_rotLift,
+ NoEmbeddedEigenvalues.memLp_div_saddleDist_comp_rotLift,
+ NoEmbeddedEigenvalues.exists_weightedGradient_rotLift,
+ NoEmbeddedEigenvalues.exists_weightedGradient_iterate_rotLift}
+\leanok
+If $\partial_jF=E_j$ weakly on an open $V$, then the two weak
+derivatives of $F\circ R$ on $R^{-1}V$ are $-E_y\circ R,E_x\circ R$.
+If $E_j/d\in L^2(V)$, the pulled-back derivatives also belong to
+$d^{-1}$-weighted $L^2(R^{-1}V)$.
+If $F\circ R=aF$ a.e.\ with $a\ne0$, $F$ therefore has a weighted
+weak gradient on every $R^{-k}V$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-jet-pullback, lem:orbit-coordinate-gradients,
+ lem:weak-derivative-basic}
+\leanok
+Apply the affine weak chain rule with matrix
+$\left(\begin{smallmatrix}0&1\\-1&0\end{smallmatrix}\right)$.
+Rotation preserves volume and $d$. Multiply by $a^{-1}$ and use a.e.\
+congruence of the actual functions; iterate on the rotated domains.
+\end{proof}
+
+\begin{lemma}[Weighted specified gradient on a cell collar]
+\label{lem:weighted-gradient-cell-cover}
+\uses{def:weak-derivative-local, def:quarter-image,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.memLp_weighted_gradient_cell_collar}
+\leanok
+Let $0<b\le1$, let $D$ be a measurable specified weak gradient of $F$
+on an open $U$, and suppose $F\circ R=aF$ a.e., $a\ne0$.
+If $F$ has a weak gradient $E$ on $V_b$ with $E_j/d\in L^2(V_b)$,
+then $D_j/d\in L^2(U\cap V_{2b}^{\rm cell})$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-gradient-rotation, lem:quarter-cell-cover,
+ lem:weak-derivative-unique}
+\leanok
+Rotate $E$, including its derivative indices.
+On $U\cap R^{-k}V_b$ weak uniqueness identifies it with $D$.
+Sum the squared-norm integrals on this finite cover.
+Discarding the null axes affects only integrability, not weak identities.
+\end{proof}
+
+\begin{lemma}[Weighted gradients under an affine symmetry]
+\label{lem:weighted-gradient-affine}
+\uses{def:weak-derivative-local, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.exists_weightedGradient_planeAffine}
+\leanok
+Let $T(p)=Ap+c$ be an invertible volume-preserving affine map with
+$d\circ T=d$. If $F$ has a weak gradient $E$ on an open $V$ with
+$E_j/d\in L^2(V)$, and $F\circ T=aF$ a.e., $a\ne0$, then
+$F$ has a weighted weak gradient on $T^{-1}V$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-jet-pullback, lem:weak-derivative-basic}
+\leanok
+The transformed gradient is $a^{-1}A^{\mathsf T}(E\circ T)$.
+The affine weak chain rule gives its identity; volume preservation,
+$d\circ T=d$, and the constant coefficients give its weighted norm.
+\end{proof}
+
+\begin{definition}[Reflected periodic cell folds]
+\label{def:periodic-cell-folds}
+\lean{NoEmbeddedEigenvalues.separatrixReflect,
+ NoEmbeddedEigenvalues.cellFoldLinear,
+ NoEmbeddedEigenvalues.cellFoldTranslation, NoEmbeddedEigenvalues.cellFold}
+\leanok
+For $n\in\mathbb Z^2$ define
+\[
+ S(x,y)=(\pi-y,\pi-x),\qquad
+ T_{0,n}(p)=p+2\pi n,\qquad T_{1,n}(p)=S(p)+2\pi n.
+\]
+\end{definition}
+
+\begin{lemma}[Finite reflected periodic cell covering]
+\label{lem:periodic-cell-cover}
+\uses{def:periodic-cell-folds, def:cell-arcs, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.measurePreserving_cellFold,
+ NoEmbeddedEigenvalues.isometry_cellFold,
+ NoEmbeddedEigenvalues.saddleDist_cellFold,
+ NoEmbeddedEigenvalues.dipoleLift_liftShift,
+ NoEmbeddedEigenvalues.dipoleLift_separatrixReflect,
+ NoEmbeddedEigenvalues.exists_liftShift_eq,
+ NoEmbeddedEigenvalues.exists_cellFold_mem_collar,
+ NoEmbeddedEigenvalues.norm_le_pi_of_mem_cellSquare,
+ NoEmbeddedEigenvalues.cellFold_mem_shiftBox}
+\leanok
+The folds preserve volume and saddle distance.
+They preserve $\Psi$ for $s=0$ and negate it for $s=1$.
+Every point with $0<|\Psi(p)|<\varepsilon$ folds into
+$V_\varepsilon^{\rm cell}$.
+If $\|p\|\le R$ and $T_{s,n}p$ lies in the central cell, then
+$|n_1|,|n_2|\le N$ whenever $2\pi+R\le N$, $N\in\mathbb N$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:reflection-algebra,
+ lem:affine-jet-pullback}
+\leanok
+The linear parts are signed coordinate permutations with determinant of
+absolute value one. Their affine maps are isometries preserving the saddle
+lattice. Positive torus points have a central-cell representative;
+equal projections differ by an integer-period translation. For negative
+points first apply $S$.
+Central-cell points have product norm at most $\pi$;
+$\|S(p)\|\le\pi+\|p\|$. Thus each period displacement has size at most
+$2\pi+R$, giving the stated finite bound on its integer index.
+\end{proof}
+
+\begin{lemma}[Lifted weighted gradient from a cell estimate]
+\label{lem:weighted-gradient-periodic-cover}
+\uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.ae_dipoleLift_ne_zero,
+ NoEmbeddedEigenvalues.liftL2_separatrixReflect_ae,
+ NoEmbeddedEigenvalues.liftL2_cellFold_ae,
+ NoEmbeddedEigenvalues.weighted_gradient_neighbourhood_of_cell}
+\leanok
+Let $\omega$ be odd--odd and let $D$ be a measurable specified weak
+gradient of its raw lift on an open neighbourhood $U$ of $\{\Psi=0\}$.
+Suppose the raw lift also has a weak gradient $E$ on
+$V_\varepsilon^{\rm cell}$, $\varepsilon>0$, with
+$E_j/d\in L^2(V_\varepsilon^{\rm cell})$.
+On $W=U\cap\{|\Psi|<\varepsilon\}$ the same $D$ is a weak gradient and
+$D_j/d\in L^2_{\rm loc}(W)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:periodic-cell-cover, lem:weighted-gradient-affine,
+ lem:weak-derivative-unique, lem:reflection-algebra, lem:lift-periodization}
+\leanok
+The actual raw lift satisfies $F\circ T_{s,n}=(-1)^sF$ a.e.,
+by odd parity and exact periodicity. Transport $E$ with the affine rule.
+Weak uniqueness transfers its weighted norm to $D$ on each overlap with $U$.
+For a relatively compact test domain in $W$, its boundedness gives a
+finite set of folds covering every point except $\{\Psi=0\}$.
+This zero set is null: each Cartesian section is contained in two
+countable arithmetic progressions, so Fubini applies.
+Finite summation of genuine squared-norm integrals proves local $L^2$.
+All weak identities were already valid on $U$; neither the null level set
+nor seams are used to glue them.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,

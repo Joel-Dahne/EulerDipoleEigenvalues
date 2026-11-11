@@ -29,28 +29,15 @@ Proof work is now outside the odd–odd chapter:
   admitted. The weighted third-stream step (`lem:dd-weighted-third-stream`)
   now has an assembly proof from the saddle jet, weighted gradient and two
   explicit outside-section elliptic/Taylor corollaries; see
-  [shared status](shared.md#next-session) for that frontier. The weighted-gradient
-  branch now has checked logarithmic midpoint/reconstruction data
-  (`lem:dd-log-midpoint`), including L² of the joint level candidate by
-  logarithmic-length summation and its identification as the weak level derivative
-  of the actual transport-unknown pullback. Forcing-level L² and the actual
-  base-quarter vorticity level derivative (`lem:dd-quarter-level`) are checked
-  using the supplied unweighted fiber mass. Both weighted base-quarter
-  derivatives (`lem:dd-base-quarter-weighted-derivatives`) are now checked on
-  that same raw profile: the time identity uses the Fourier first partials,
-  and its weighted bound uses the existing saddle and forcing inputs.
-  Strong weighted quarter derivatives (`lem:dd-quarter-weighted-derivatives`)
-  are checked on all four separately recentered raw profiles using one cutoff;
-  rotation transfer adds no admissions. A single measurable ordinary separatrix
-  gradient and the weighted inverse-frame candidates are now constructed
-  (`lem:dd-separatrix-weak-gradient`, `lem:dd-base-quarter-inverse-frame`).
-  The weak cofactor chain rule and constant-Jacobian coarea now reconstruct actual
-  weighted spatial derivatives on the base-quarter image, without a character
-  premise (`lem:dd-base-quarter-spatial-gradient`). Uniqueness transfers that norm
-  to the same ordinary separatrix gradient on its base-quarter overlap
-  (`lem:dd-weighted-gradient-base-overlap`); the generic identification layer is
-  admission-free. Finite-quarter image/seam covering, affine index transport and
-  periodic/reflected weighted spatial-gradient assembly remain open.
+  [shared status](shared.md#next-session) for that frontier.
+  Weighted vorticity gradient, odd–odd
+  (`prop:dd-weighted-gradient`) now has a proof of its own, with no statement
+  change: actual weak spatial gradients and weighted norms are assembled on the
+  full lifted separatrix neighbourhood. The generic weak-coordinate and
+  finite-quarter/reflected-periodic covering layers are admission-free.
+  The endpoint still depends on existing logarithmic, scalar/orbit and saddle
+  inputs; the remaining regularity frontier is listed in
+  [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.
