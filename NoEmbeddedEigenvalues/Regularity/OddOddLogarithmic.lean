@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddLogBulk
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights
@@ -10,6 +10,8 @@ import NoEmbeddedEigenvalues.LogarithmicNumerators
 The canonical Fourier stream jet fixes the derivative data shared by bulk,
 ray and orbit bounds. Periodic lifts have local weighted norms on an open
 neighbourhood of the whole lifted separatrix, not a global finite plane norm.
+The ordinary bulk terms use the physical logarithmic H¹ multiplier on the fixed
+stream jet. The inverse-distance and ray terms require the quadratic saddle data.
 The ray estimates use a bounded radial interval and canonical gradient traces.
 Numerator summation restricts the existing compatible data, identifies its ray
 traces by uniqueness, and combines the weighted bulk and endpoint masses.

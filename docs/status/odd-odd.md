@@ -38,9 +38,11 @@ Proof work is now outside the odd–odd chapter:
   Logarithmic numerator bounds (`lem:dd-log-numerators`) now also have a proof
   of their own, retaining the same derivative and trace witnesses. The generic
   compact-localization, canonical-trace uniqueness and logarithmic mass-summation
-  layers are admission-free. The endpoint still reaches four existing forcing,
-  stream-jet and numerator-differentiation inputs. Next is Logarithmic forcing
-  (`lem:dd-log-forcing`) or the saddle/ordinary H¹ frontier; see
+  layers and the canonical stream weak jet are admission-free. The endpoint
+  still reaches three existing forcing/numerator-differentiation inputs.
+  Logarithmic forcing (`lem:dd-log-forcing`) is the current target: its ordinary
+  bulk part is proved, while the saddle-weighted bulk and canonical ray bounds
+  remain; see
   [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

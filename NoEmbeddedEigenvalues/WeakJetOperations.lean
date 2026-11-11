@@ -61,4 +61,37 @@ theorem classicalComplexJet_weak {f : ℝ × ℝ → ℂ}
     | cons j w ih => exact contDiff_coordPartial_top j ih
   exact ⟨rfl, fun w _ j ↦ hasWeakPartialOn_of_contDiff ((hs w).of_le (by simp)) U j⟩
 
+/-- Recursive Sobolev regularity belongs to every specified weak partial, not
+only to the witnesses used in its existential definition. -/
+theorem HasWeakPartialOn.memSobolevOn {k : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    {F D : ℝ × ℝ → ℂ} {j : Fin 2} (hd : HasWeakPartialOn U j F D)
+    (hF : MemSobolevOn (k + 1) U F) : MemSobolevOn k U D := by
+  obtain ⟨E, hE, hEk⟩ := hF.2 j
+  exact MemSobolevOn.congr_ae_on hEk hU.measurableSet (hE.ae_eq hU hd)
+
+/-- The specified derivative inherits local Sobolev regularity on the same domain. -/
+theorem HasWeakPartialOn.memSobolevLocOn {k : ℕ} {U : Set (ℝ × ℝ)}
+    {F D : ℝ × ℝ → ℂ} {j : Fin 2} (hd : HasWeakPartialOn U j F D)
+    (hF : MemSobolevLocOn (k + 1) U F) : MemSobolevLocOn k U D := by
+  intro V hV hVc hVU
+  exact (hd.mono (subset_closure.trans hVU)).memSobolevOn hV (hF V hV hVc hVU)
+
+/-- Regularity of every entry of a fixed weak jet. This does not replace the jet
+by independently chosen representatives at successive differentiation steps. -/
+theorem HasWeakJetOn.memSobolevLocOn {n m : ℕ} {U : Set (ℝ × ℝ)}
+    {F : ℝ × ℝ → ℂ} {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn n U F D) (hF : MemSobolevLocOn m U F)
+    (w : List (Fin 2)) (hw : w.length ≤ n) (hm : w.length ≤ m) :
+    MemSobolevLocOn (m - w.length) U (D w) := by
+  induction w with
+  | nil => simpa only [hD.1, List.length_nil, Nat.sub_zero] using hF
+  | cons j w ih =>
+    have hlen : w.length < n := by simp only [List.length_cons] at hw; omega
+    have hi := ih (by omega) (by simp only [List.length_cons] at hm; omega)
+    have he : m - w.length = (m - (j :: w).length) + 1 := by
+      simp only [List.length_cons] at *
+      omega
+    rw [he] at hi
+    exact (hD.2 w hlen j).memSobolevLocOn hi
+
 end NoEmbeddedEigenvalues

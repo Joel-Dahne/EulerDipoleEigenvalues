@@ -83,7 +83,11 @@ proof mechanisms. Module names below are relative to
   derivative and uniform complete-cell/global quotient interfaces, for all four
   quarter characters.
 - `LogarithmicWeights.lean`: level/torus/lift/radial weights, the rectangle
-  multiplier and logarithmic phase-cell division interfaces.
+  multiplier and logarithmic phase-cell division. `SeparableMultiplier.lean`
+  bounds integrable coordinate weights by ACL section energies, including genuine
+  weighted L² membership and an explicit uniform integral estimate.
+  `DipoleLogMultiplier.lean` uses Ψ = 2 cos(a) cos(b), diagonal weak-derivative
+  transport and compact localization to absorb the physical logarithm in local H¹.
 - `LogarithmicQuarterMass.lean`: compact collar localization of local logarithmic
   jet norms, constant-Jacobian quarter pullback and integrable fiber summation.
   `LogarithmicRayTransport.lean` proves the radius Jacobian, logarithmic comparison
@@ -178,6 +182,8 @@ can be added here as they are formalized.
   quadratic compatibility. Independent of the eigenfunction regularity modules.
 - `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
   and ordinary separatrix H¹/H³ interfaces.
+- `Regularity/OddOddLogBulk.lean`: ordinary logarithmic first/second jet masses
+  from the H³ stream gain, with weak uniqueness preserving canonical entries.
 - `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing interface and
   numerator assembly, using one fixed canonical stream jet. The assembly localizes
   the bulk norms and identifies the forcing traces with the existing numerator
@@ -202,7 +208,8 @@ can be added here as they are formalized.
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in
   `SaddleTaylorJet.lean`. `WeakJetOperations.lean` supplies jet restriction,
-  linearity, uniqueness and classical-to-weak conversion.
+  linearity, uniqueness, classical-to-weak conversion and regularity transfer
+  from recursive Sobolev witnesses to each specified jet entry.
 - `Regularity/QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic
   and first/second transport-gain interfaces.
 - `Regularity/StreamQuotientAssembly.lean`: saddle division/removal, regular-edge chart

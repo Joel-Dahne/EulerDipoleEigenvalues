@@ -84,14 +84,26 @@ weights and local versus global regularity.
    logarithmic forcing traces. The radius Jacobian controls the endpoint masses,
    with measurability supplied by the original unweighted endpoint L² data.
    All generic localization/trace/summation helpers have zero transitive admissions.
-   The numerator endpoint reaches four existing inputs: Logarithmic forcing
-   (`lem:dd-log-forcing`), Weighted forcing (`lem:dd-weighted-forcing`), the canonical
-   stream weak jet and Weighted numerator estimates (`lem:weighted-numerator-estimates`).
-   **Next regularity inputs:** logarithmic forcing, Saddle jet (`prop:saddle-dd`),
-   weighted forcing and Ordinary separatrix H¹ (`prop:dd-separatrix-h1`). The generic
-   numerator differentiation, stream jet and five scalar/orbit inputs remain
-   explicit outside-section prerequisites. The expanded weighted-gradient and
-   weighted-third-stream audits reach eleven and fourteen existing admissions.
+   The numerator endpoint reaches three existing inputs: Logarithmic forcing
+   (`lem:dd-log-forcing`), Weighted forcing (`lem:dd-weighted-forcing`) and Weighted
+   numerator estimates (`lem:weighted-numerator-estimates`). The canonical stream
+   weak jet is admission-free.
+   **Current target: logarithmic forcing** (`lem:dd-log-forcing`). The rectangle
+   multiplier and the physical local H¹ multiplier are admission-free. The exact
+   diagonal factorization handles edges and saddle crossings together, without
+   finite-p embedding or a separate multiplier localization in saddle charts.
+   Ordinary logarithmic stream-jet mass (`lem:dd-log-ordinary-bulk`) is proved from
+   the existing Ordinary separatrix H¹/H³ input (`prop:dd-separatrix-h1`) alone.
+   **Remaining in the target:** the d⁻³ᐟ² gradient bulk term (weighted remainder H¹
+   across the saddle plus direct quadratic logarithmic mass), and the canonical
+   ray bounds. The latter require compatibility of polar corner traces with the
+   Cartesian quarter traces for the same raw jet, not arbitrary point values.
+   The full logarithmic forcing theorem remains admitted, unchanged.
+   Saddle jet (`prop:saddle-dd`), weighted forcing and ordinary H¹/H³ also remain
+   regularity inputs. Generic numerator differentiation and five scalar/orbit
+   inputs are explicit outside-section prerequisites. The expanded
+   weighted-gradient audit reaches ten existing admissions; the third-stream
+   assembly additionally uses the elliptic/Taylor corollaries and saddle factorization.
    No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
    this assembly route.
@@ -275,7 +287,8 @@ prerequisites remain outside this directory; see the
   is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   off the current sector routes. Odd–odd logarithmic multiplication now uses
-  coordinate slicing instead. This optional Lean infrastructure remains
+  coordinate slicing and the exact diagonal factorization instead. Both
+  logarithmic multipliers are proved. This optional Lean infrastructure remains
   open; inverse Hausdorff–Young or a compact-support Sobolev inequality are
   candidate approaches.
 - [Period estimates](../../blueprint/src/chapters/geometry.tex): coarse

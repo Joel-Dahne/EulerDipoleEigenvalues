@@ -1484,6 +1484,30 @@ The axis reflection and symmetric rectangle exchange the roles of the
 coordinates when the normal index is $1$ instead of $0$.
 \end{definition}
 
+\begin{lemma}[Sobolev regularity of a specified weak jet]
+\label{lem:weak-jet-regularity}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.memSobolevOn,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.memSobolevLocOn,
+ NoEmbeddedEigenvalues.HasWeakJetOn.memSobolevLocOn}
+\leanok
+If $f\in H^{k+1}(U)$ on an open set and $\partial_jf=g$ weakly,
+then the specified $g$ belongs to $H^k(U)$.
+The same holds locally. Consequently, for a specified order-$n$ jet $D$
+and $f\in H^m_{\rm loc}(U)$,
+\[
+ D_w\in H^{m-|w|}_{\rm loc}(U)\qquad (|w|\le \min(m,n)).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-unique}
+\leanok
+Weak derivative uniqueness identifies $g$ with the witness in the recursive
+Sobolev definition. Restrict to relatively compact open sets for the local
+claim, then induct on the word. No jet representative is replaced.
+\end{proof}
+
 \begin{definition}[Affine pullback of a specified jet]
 \label{def:affine-jet}
 \uses{def:local-weak-jets}
@@ -1659,6 +1683,7 @@ of the continuous stream lift on $U$.
 
 \begin{proof}
 \uses{lem:inverse-laplacian-derivatives, lem:lift-sobolev-local, lem:weak-derivative-basic}
+\leanok
 Use the existing first/second Fourier multiplier identities and their weak
 lift bridges; change the value representative to the continuous stream.
 \end{proof}
@@ -2237,6 +2262,36 @@ Also write $\ell(r)=1+|\log r|$ and
 $W(u,v)=1+|\log|u||+|\log|v||$, with arbitrary axis values.
 \end{definition}
 
+\begin{lemma}[Integrable coordinate-weight multiplier]
+\label{lem:coordinate-weight-multiplier}
+\uses{def:sobolev-local, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.sqrt_weight_snd,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.sqrt_weight_fst,
+ NoEmbeddedEigenvalues.memLp_sqrt_weight_of_le_sum}
+\leanok
+Let $a<b$, $c<d$, and $F,D\in L^2(Q)$, $Q=(a,b)\times(c,d)$,
+with $\partial_tF=D$ weakly. For a nonnegative measurable
+$w\in L^1(c,d)$, $\sqrt{w(t)}F\in L^2(Q)$ and
+\[
+ \int_Qw(t)|F|^2\le\left(\int_c^d w\right)
+ \left(\frac{2}{d-c}\int_Q|F|^2+2(d-c)\int_Q|D|^2\right).
+\]
+The analogous estimate holds in the first coordinate.
+If $W,u,v$ are measurable, $u,v$ are nonnegative integrable coordinate
+weights, and $0\le W(s,t)\le1+u(s)+v(t)$, then
+$\sqrt W F\in L^2(Q)$ for $F\in H^1(Q)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2}
+\leanok
+Apply the interval H¹ supremum estimate to the measurable ACL representative
+on almost every transverse section. Fubini makes the resulting section-energy
+bound integrable; its product with $w$ is an integrable majorant.
+Integrate, then transfer the result to the original raw representative.
+For the sum weight, add the three genuine squared-norm integrals.
+\end{proof}
+
 \begin{lemma}[Logarithmic multiplier on a rectangle]
 \label{lem:log-multiplier-rectangle}
 \uses{def:sobolev-local, def:local-weak-jets, def:log-level-weight}
@@ -2252,7 +2307,8 @@ The values of the weight on the two axes are immaterial.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:acl-slicing, lem:trace-l2, lem:h1-interval-endpoints}
+\uses{lem:coordinate-weight-multiplier, lem:weak-jet-regularity}
+\leanok
 For almost every $v$, choose the absolutely continuous section
 representative $\widetilde F(\cdot,v)$ and its endpoint extension.
 The same pointwise estimate used in Lemma~\ref{lem:trace-l2} gives
@@ -2265,6 +2321,46 @@ Multiply by $\int_{-\rho}^\rho|\log|u||du<\infty$ and integrate in $v$.
 The other logarithm follows by interchanging the coordinates; the constant
 term is the $L^2$ norm. No finite-$p$ Sobolev embedding is used.
 \end{proof}
+
+\begin{lemma}[Physical logarithmic multiplier]
+\label{lem:dipole-log-multiplier}
+\uses{def:sobolev-local, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.dipoleLogWeight_bounds,
+ NoEmbeddedEigenvalues.measurable_dipoleLogWeight,
+ NoEmbeddedEigenvalues.memLp_of_comp_diagInv,
+ NoEmbeddedEigenvalues.MemSobolevOn.log_dipole_mul,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.log_dipole_mul}
+\leanok
+If $U\subset\R^2$ is open and $F\in H^1_{\rm loc}(U)$, then
+$\sqrt{\Lambda_\Psi}F\in L^2_{\rm loc}(U)$.
+The finite-norm version holds on any bounded open diagonal rectangle
+on which $F\in H^1$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coordinate-weight-multiplier, lem:separatrix-lines, lem:trace-acl,
+ lem:localization-cutoff, lem:sobolev-local-gluing}
+\leanok
+Use the exact global identity $\Psi=2\cos a\cos b$. Off the separatrix,
+\[
+ \Lambda_\Psi=1-\log|\cos a|-\log|\cos b|
+ \le1+|\log|\cos a||+|\log|\cos b|| .
+\]
+Both one-coordinate logarithms are integrable on every bounded interval;
+the assigned separatrix values satisfy the same upper bound.
+Diagonal weak-derivative transport and the coordinate-weight multiplier
+give the rectangle estimate. Near each point of $U$, multiply $F$ by a
+compact smooth cutoff equal to one nearby, apply the rectangle result,
+and use local $L^2$ gluing. No full-plane norm of a periodic lift is asserted.
+\end{proof}
+
+\begin{remark}[Digest note: one multiplier for edges and saddles]
+The multiplier in the manuscript \texttt{(eq:logarithmic-multiplier)}
+does not need a finite-$p$ Sobolev embedding or separate saddle and edge
+chart arguments. The exact diagonal factorization gives the two integrable
+coordinate weights directly. This simplifies the ordinary logarithmic bulk
+step, not the inverse-distance saddle estimate or the ray estimates.
+\end{remark}
 
 \begin{definition}[Canonical transverse chart trace]
 \label{def:canonical-transverse-trace}

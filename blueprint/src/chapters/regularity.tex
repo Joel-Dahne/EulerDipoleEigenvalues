@@ -310,6 +310,27 @@ of Lemma~\ref{lem:h1-crossing-gluing}, rather than an unspecified
 removability assertion.
 \end{remark}
 
+\begin{lemma}[Ordinary logarithmic stream-jet mass, odd--odd]
+\label{lem:dd-log-ordinary-bulk}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:log-level-weight, def:stream-second-jet}
+\lean{NoEmbeddedEigenvalues.dd_log_ordinary_bulk}
+\leanok
+For an odd--odd eigenfunction there is an open lifted neighbourhood $U$ of
+the whole separatrix such that
+$\sqrt{\Lambda_\Psi}J_w\in L^2_{\rm loc}(U)$ for every word with
+$|w|=1$ or $|w|=2$, where $J$ is the fixed canonical second stream jet.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:dd-separatrix-h1, lem:stream-weak-second-jet,
+ lem:weak-jet-regularity, lem:dipole-log-multiplier}
+\leanok
+The ordinary stream $H^3$ gain and uniqueness of weak derivatives put
+the specified first and second jet entries in local $H^1$ on the same
+neighbourhood. Apply the physical logarithmic multiplier to each entry.
+\end{proof}
+
 \begin{lemma}[Logarithmically weighted forcing, odd--odd]
 \label{lem:dd-log-forcing}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
@@ -334,22 +355,19 @@ locally $L^2$ on $U$; ray bounds are on a bounded radial interval.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:dd-separatrix-h1, prop:saddle-dd, lem:saddle-normal-form,
- lem:log-multiplier-rectangle, lem:weighted-corner-trace,
+\uses{lem:dd-log-ordinary-bulk, prop:saddle-dd, lem:saddle-normal-form,
+ lem:dipole-log-multiplier, lem:weighted-corner-trace,
  lem:h1-crossing-gluing}
-Shrink the separatrix neighbourhood so that $\psi\in H^3$ there.
-Near a saddle, the exact factorization $\Psi=uv\,m(u,v)$ gives
-\[
- \Lambda_\Psi\le C\bigl(1+|\log|u||+|\log|v||\bigr).
-\]
-On a regular edge rectangle there is just one logarithmic coordinate
-singularity. Lemma~\ref{lem:log-multiplier-rectangle}, localized on finitely
-many rectangles covering any compact subset of the neighbourhood, controls $\int\Lambda_\Psi|F|^2$ for local
-$H^1$ functions $F$. Apply this first to $D^2\psi$ and $\nabla\psi$,
-which are $H^1$ by the ordinary $H^3$ gain.
+Lemma~\ref{lem:dd-log-ordinary-bulk} supplies the ordinary first- and
+second-jet masses, using the same canonical jet on one neighbourhood.
+Lemma~\ref{lem:dipole-log-multiplier} applies to any local $H^1$ function
+there; the exact diagonal factorization treats regular edges and saddle
+crossings together.
 
-For the remaining term write $\psi=q+R$ near a saddle. The quadratic part
-has $|\nabla q|^2/r^3\le C/r$. Its logarithmically weighted integral is
+For the remaining term write $\psi=q+R$ near a saddle. The normalized
+factorization $\Psi=uv\,m$, with $m$ bounded away from zero, gives
+$\Lambda_\Psi\le C(1+|\log|u||+|\log|v||)$ locally.
+The quadratic part has $|\nabla q|^2/r^3\le C/r$. Its logarithmically weighted integral is
 finite: in polar coordinates the radial integrals of $1+|\log r|$ and
 the angular integrals of $|\log\sin\theta|+|\log\cos\theta|$ are finite.
 For $F=\nabla R/r^{3/2}$ the saddle jet gives

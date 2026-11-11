@@ -69,6 +69,7 @@ import NoEmbeddedEigenvalues.OddOddGradientTraces
 import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddLogBulk
 import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic
 import NoEmbeddedEigenvalues.Regularity.OddOddRegularity
 import NoEmbeddedEigenvalues.LocalJets
@@ -77,6 +78,8 @@ import NoEmbeddedEigenvalues.WeightedElliptic
 import NoEmbeddedEigenvalues.SaddleTaylorJet
 import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
+import NoEmbeddedEigenvalues.SeparableMultiplier
+import NoEmbeddedEigenvalues.DipoleLogMultiplier
 import NoEmbeddedEigenvalues.LogarithmicWeights
 import NoEmbeddedEigenvalues.QuarterRayTraceUniqueness
 import NoEmbeddedEigenvalues.LogarithmicQuarterMass
