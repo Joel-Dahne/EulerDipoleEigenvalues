@@ -407,7 +407,10 @@ integrability for $K(h)$. For sufficiently small $0<h_0<1/2$,
 \begin{proof}
 \uses{lem:dd-log-forcing, lem:dd-weighted-forcing, lem:stream-weak-second-jet,
  lem:weighted-numerator-estimates, lem:transport-pair-eigen,
- lem:orbit-coordinates-area, lem:period-orbit}
+ lem:compact-cell-collar, lem:log-quarter-jet-mass,
+ lem:quarter-ray-trace-unique, lem:log-endpoint-change-variables,
+ lem:log-numerator-summation}
+\leanok
 Apply Lemma~\ref{lem:weighted-numerator-estimates} to $(\omega,\psi)$;
 Lemma~\ref{lem:dd-weighted-forcing} supplies its hypotheses and hence its
 weak differentiations. With $p_\pm=\gamma_h(\pm L(h))$, its pointwise
@@ -418,12 +421,28 @@ estimates are
        +C\sum_\pm\left(|\nabla\psi(p_\pm)|^2/h
                                 +|\psi(p_\pm)|^2/h^2\right).
 \end{align*}
-Multiply by $\Lambda(h)$. Weighted coarea controls all interior terms by
-Lemma~\ref{lem:dd-log-forcing}. On each endpoint ray,
-$h=\sin^2(r/2)$, $dh\asymp r\,dr$ and
-$\Lambda(h)\asymp1+|\log r|$, so the ray estimates in that lemma control
-both endpoint terms. This proves the asserted weighted integrability.
+Shrink the level cutoff so the collar lies inside a relatively compact
+open subset of the logarithmic forcing neighbourhood
+(Lemma~\ref{lem:compact-cell-collar}).
+Lemma~\ref{lem:log-quarter-jet-mass} now controls all three interior masses
+using the same canonical stream jet.
+
+The forcing bounds and numerator data may choose different canonical ray
+traces, on different open neighbourhoods. On a smaller common radial
+interval they agree a.e.\ by Lemma~\ref{lem:quarter-ray-trace-unique}.
+Transfer the radial weighted norms to the traces already in the data.
+Choose the level cutoff still smaller so $r(h)$ remains in this interval.
+Lemma~\ref{lem:log-endpoint-change-variables} controls both endpoint masses;
+their unweighted $L^2$ data supply the required level-side measurability.
+Restrict the original data, without replacing any witnesses, and apply
+Lemma~\ref{lem:log-numerator-summation}.
 \end{proof}
+
+\begin{remark}
+The summation does not use the rotation character.
+Character information is needed later for endpoint matching and scalar phase
+division, not for these weighted numerator bounds.
+\end{remark}
 
 \begin{lemma}[Logarithmic midpoint data, odd--odd]
 \label{lem:dd-log-midpoint}

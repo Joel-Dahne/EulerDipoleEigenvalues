@@ -35,8 +35,12 @@ Proof work is now outside the odd–odd chapter:
   change: actual weak spatial gradients and weighted norms are assembled on the
   full lifted separatrix neighbourhood. The generic weak-coordinate and
   finite-quarter/reflected-periodic covering layers are admission-free.
-  The endpoint still depends on existing logarithmic, scalar/orbit and saddle
-  inputs; the remaining regularity frontier is listed in
+  Logarithmic numerator bounds (`lem:dd-log-numerators`) now also have a proof
+  of their own, retaining the same derivative and trace witnesses. The generic
+  compact-localization, canonical-trace uniqueness and logarithmic mass-summation
+  layers are admission-free. The endpoint still reaches four existing forcing,
+  stream-jet and numerator-differentiation inputs. Next is Logarithmic forcing
+  (`lem:dd-log-forcing`) or the saddle/ordinary H¹ frontier; see
   [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

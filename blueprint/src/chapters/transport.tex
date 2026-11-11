@@ -1341,6 +1341,117 @@ where $P_g=\sum_\sigma|g(p_\sigma(r(h)))|^2/h^2$ and
 $Q_T=\sum_{\sigma,j}|T_{\sigma,j}(r(h))|^2/h$.
 \end{definition}
 
+\begin{lemma}[Canonical quarter-ray trace uniqueness]
+\label{lem:quarter-ray-trace-unique}
+\uses{def:quarter-endpoint-rays, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq,
+ NoEmbeddedEigenvalues.HasQuarterRayTrace.ae_eq}
+\leanok
+Two canonical traces of the same raw function on the same quarter-endpoint
+ray agree a.e.\ on any common radial interval $(0,\rho)$ contained
+in both open ambient domains and both trace radii.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2}
+\leanok
+Every compact radial segment has a common transverse rectangle inside
+the intersection of the two open domains. Independence of ACL traces on
+this rectangle identifies the two witnesses. A countable rational
+interval cover gives equality a.e.\ on $(0,\rho)$.
+\end{proof}
+
+\begin{lemma}[Logarithmic quarter-jet mass]
+\label{lem:log-quarter-jet-mass}
+\uses{def:weighted-numerator-data, def:log-level-weight,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.logLevelWeight_nonneg,
+ NoEmbeddedEigenvalues.dipoleLogWeight_dipoleOrbit,
+ NoEmbeddedEigenvalues.integrable_quarter_fiberIntegral,
+ NoEmbeddedEigenvalues.integrable_log_quarterJetEnergy}
+\leanok
+Let $0<b\le1$, and let a measurable spatial set $V$ contain
+$V_{2b}^{\rm cell}$. If, for each word of length $k$,
+$\sqrt{\Lambda_\Psi}D_w/d^s\in L^2(V)$, then
+\[
+ \int_0^b\Lambda(h)\mathcal J_{k,s}(h)\,dh<\infty .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates-area, lem:quarter-l2-pullback}
+\leanok
+Zero-extend each squared weighted component off $V$ and restrict to the cell.
+Pull its genuine integrability back by the constant-Jacobian orbit map.
+On $Q_b$ the extension equals the original density and
+$\Lambda_\Psi(\gamma_h(t))=\Lambda(h)$.
+Sum the finitely many components, zero-extend off the moving strip, and use Fubini.
+\end{proof}
+
+\begin{lemma}[Logarithmic endpoint change of variables]
+\label{lem:log-endpoint-change-variables}
+\uses{def:quarter-endpoint-rays, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.quarterEndpointRadius_pos,
+ NoEmbeddedEigenvalues.monotone_quarterEndpointRadius,
+ NoEmbeddedEigenvalues.hasDerivAt_quarterEndpointRadius,
+ NoEmbeddedEigenvalues.quarterEndpointRadius_le_four_sqrt,
+ NoEmbeddedEigenvalues.logLevelWeight_le_endpoint,
+ NoEmbeddedEigenvalues.integrable_log_endpoint_pullback,
+ NoEmbeddedEigenvalues.integrable_log_endpoint_of_memLp,
+ NoEmbeddedEigenvalues.integrable_log_endpoint_value,
+ NoEmbeddedEigenvalues.integrable_log_endpoint_gradient}
+\leanok
+Let $0<b<1$, $r(h)=2\arcsin\sqrt h$, $r(b)<\rho$, and $n\in\{1,2\}$.
+Suppose $F(r(h))/h^{n/2}\in L^2(0,b)$ and
+$\sqrt{1+|\log r|}\,F(r)/r^{n-1/2}\in L^2(0,\rho)$.
+Then
+\[
+ \int_0^b \Lambda(h)\frac{|F(r(h))|^2}{h^n}\,dh<\infty .
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+The radius map is injective and
+$r'(h)=1/(\sqrt h\sqrt{1-h})>0$.
+Its bound $r(h)\le4\sqrt h$ gives
+\[
+ \Lambda(h)\le(3+\log16)(1+|\log r(h)|),\qquad
+ \frac1{h^n}\le\frac{64r'(h)}{r(h)^{2n-1}}.
+\]
+The one-dimensional Jacobian theorem and these inequalities give
+the integrable square majorant. The unweighted endpoint $L^2$ premise
+supplies level-side measurability; no arbitrary a.e.\ representative is
+composed with the radius map without justification.
+\end{proof}
+
+\begin{lemma}[Logarithmic summation of compatible numerator data]
+\label{lem:log-numerator-summation}
+\uses{def:weighted-numerator-data, def:log-level-weight,
+ def:h1-interval, def:h1-local-interval, def:h2-interval, def:h2-local-interval}
+\lean{NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.restrict,
+ NoEmbeddedEigenvalues.memLp_log_of_sq_bound,
+ NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.log_estimates}
+\leanok
+Compatible numerator data restrict to a smaller level interval without
+changing any derivative or ray-trace witness.
+For such data on $(0,b)$, $b\le1$, if
+\[
+ \Lambda\mathcal K,\quad\Lambda\mathcal J_{1,0},\quad
+ \Lambda\mathcal J_{2,0},\quad\Lambda P_g,\quad\Lambda Q_T
+ \quad\hbox{are integrable},
+\]
+then $\sqrt\Lambda N_1,\sqrt\Lambda B_1,\sqrt\Lambda hN_2\in L^2(0,b)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Restrict every interval, norm and a.e.\ bound in the original data.
+Multiply the existing square bounds by the nonnegative $\Lambda$ and use
+the five integrable masses as majorants. The unweighted $L^2$ data give
+measurability. No logarithmic weight is differentiated.
+\end{proof}
+
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local,
@@ -2040,18 +2151,26 @@ Rotate any point off the axes into this quadrant. Both axes are null by Fubini.
 \label{lem:compact-cell-collar}
 \uses{def:cell-separatrix-collar}
 \lean{NoEmbeddedEigenvalues.isOpen_cellSeparatrixStrip,
- NoEmbeddedEigenvalues.exists_cell_collar_subset}
+ NoEmbeddedEigenvalues.exists_cell_collar_subset,
+ NoEmbeddedEigenvalues.exists_compact_cell_collar}
 \leanok
 The positive cell collar is open. If $U$ is open and contains the lifted
-separatrix, some $\varepsilon>0$ satisfies $V_\varepsilon^{\rm cell}\subset U$.
+separatrix, some $\varepsilon>0$ and open $V$ satisfy
+\[
+ V_\varepsilon^{\rm cell}\subset V,\qquad
+ \overline V\ \hbox{compact},\qquad \overline V\subset U .
+\]
+In particular, the collar lies in $U$.
 \end{lemma}
 
 \begin{proof}
 \leanok
 \uses{lem:cell-square}
 The closed cell is compact. On its compact complement of $U$, $|\Psi|$
-has a strictly positive uniform lower bound, since its zero set lies in $U$.
-Use any smaller positive cutoff.
+has a strictly positive uniform lower bound $\delta$.
+The compact set
+$\overline\Cell\cap\{|\Psi|\le\delta/2\}$ lies in $U$ and contains the
+positive $\delta/2$-collar. Place it inside an open set with compact closure in $U$.
 \end{proof}
 
 \begin{lemma}[Weighted gradients under quarter rotation]

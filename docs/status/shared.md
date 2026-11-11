@@ -77,15 +77,22 @@ weights and local versus global regularity.
    axes. Compactness, affine derivative-index transport and finite reflected
    periodic covering transfer the weighted norm to one specified ordinary
    gradient on the whole lifted neighbourhood. The generic reconstruction and
-   covering layer has zero transitive admissions; the endpoint retains nine
-   existing inputs. No new trace/no-jump input was added.
-   **Next regularity inputs:** Logarithmic numerator data
-   (`lem:dd-log-numerators`), Saddle jet (`prop:saddle-dd`), Weighted forcing
-   (`lem:dd-weighted-forcing`) and Ordinary separatrix H¹
-   (`prop:dd-separatrix-h1`), together with the five existing scalar/orbit inputs.
-   The weighted third-stream assembly reaches thirteen admissions: these nine,
-   the two outside-section elliptic/Taylor corollaries, stream weak jet and saddle
-   factorization. Rotations after spatial reconstruction avoid differentiated
+   covering layer has zero transitive admissions. No new trace/no-jump input was added.
+   Logarithmic numerator bounds (`lem:dd-log-numerators`) also have an assembly
+   proof: a compact collar turns local bulk norms into finite quarter mass;
+   canonical ray uniqueness identifies the existing data's traces with the
+   logarithmic forcing traces. The radius Jacobian controls the endpoint masses,
+   with measurability supplied by the original unweighted endpoint L² data.
+   All generic localization/trace/summation helpers have zero transitive admissions.
+   The numerator endpoint reaches four existing inputs: Logarithmic forcing
+   (`lem:dd-log-forcing`), Weighted forcing (`lem:dd-weighted-forcing`), the canonical
+   stream weak jet and Weighted numerator estimates (`lem:weighted-numerator-estimates`).
+   **Next regularity inputs:** logarithmic forcing, Saddle jet (`prop:saddle-dd`),
+   weighted forcing and Ordinary separatrix H¹ (`prop:dd-separatrix-h1`). The generic
+   numerator differentiation, stream jet and five scalar/orbit inputs remain
+   explicit outside-section prerequisites. The expanded weighted-gradient and
+   weighted-third-stream audits reach eleven and fourteen existing admissions.
+   No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
    this assembly route.
    The scalar/geometry batch is now
@@ -200,8 +207,8 @@ weights and local versus global regularity.
    is selected. Exact certificate verification and the other analytic branches
    remain open; statement markers are not a compatibility audit.
    See [odd–odd status](odd-odd.md). The earlier
-   saddle, H¹ and weighted-gradient derivations remain blueprint mathematics,
-   not Lean proofs.
+   saddle and ordinary H¹ derivations remain blueprint mathematics, not Lean proofs;
+   weighted-gradient and logarithmic-numerator assembly now have checked proofs.
 2. **Shared interface review:** check the uniform complete-cell estimates
    needed for logarithmic summation, canonical interval traces and compatibility
    of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the
@@ -211,9 +218,10 @@ weights and local versus global regularity.
    data now sit below their parent interfaces; saddle geometry no longer
    imports eigenfunction regularity. Ordinary saddle/separatrix interfaces,
    logarithmic estimates and weighted gradients now occupy separate layers.
-   Check cutoff restriction of the quantitative numerator data, agreement of
-   canonical ray traces and the distinction between local lifted bulk norms
-   and finite norms on bounded representative collars.
+   Cutoff restriction, canonical ray-trace agreement and compact localization of
+   local logarithmic bulk norms are checked in `LogarithmicNumerators.lean`,
+   `QuarterRayTraceUniqueness.lean` and `LogarithmicQuarterMass.lean`.
+   Keep local lifted norms distinct from full-plane periodic norms.
    The stream-H² local/global compatibility is checked by
    `Regularity/StreamQuotientAssembly.lean`: remove the point before smooth multiplication,
    restrict to nonzero inverse-factor neighbourhoods, transform all derivative

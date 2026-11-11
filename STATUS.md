@@ -63,11 +63,13 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg`, nineteen below `dd_stream_quotient_h2`,
-twenty-one below `dd_exclusion_domain`, and twenty-five for `odd_odd_exclusion`.
-Weighted vorticity gradient (`prop:dd-weighted-gradient`) now has a proof of its
-own; its audit reaches nine existing analytic inputs. The generic weak-chart and
-reflected-periodic covering layers have no admissions.
+zero below `correctedBoundaryForm_nonneg`, twenty below `dd_stream_quotient_h2`,
+twenty-two below `dd_exclusion_domain`, and twenty-six for `odd_odd_exclusion`.
+Weighted vorticity gradient (`prop:dd-weighted-gradient`) has a proof of its own;
+its expanded audit reaches eleven existing analytic inputs. Logarithmic numerator
+bounds (`lem:dd-log-numerators`) also have a proof of their own, reaching four
+existing inputs. The generic weak-chart, reflected-periodic covering and
+logarithmic localization/trace/summation layers have no admissions.
 The bulk Picone bound reaches exactly two: the residual identity and residual
 sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
 zero admissions, as do the weighted form-domain bridge and matrix bound.

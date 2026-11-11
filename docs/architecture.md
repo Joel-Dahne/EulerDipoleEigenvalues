@@ -84,6 +84,13 @@ proof mechanisms. Module names below are relative to
   quarter characters.
 - `LogarithmicWeights.lean`: level/torus/lift/radial weights, the rectangle
   multiplier and logarithmic phase-cell division interfaces.
+- `LogarithmicQuarterMass.lean`: compact collar localization of local logarithmic
+  jet norms, constant-Jacobian quarter pullback and integrable fiber summation.
+  `LogarithmicRayTransport.lean` proves the radius Jacobian, logarithmic comparison
+  and weighted endpoint-energy change of variables, with explicit measurability.
+  `LogarithmicNumerators.lean` restricts compatible numerator data without changing
+  witnesses, transfers radial weighted L² using existing endpoint measurability,
+  and sums the quantitative derivative bounds against the logarithmic weight.
 - `LogarithmicMidpoint.lean`: local interval H¹ multiplication, logarithmic midpoint
   control, null quarter resonances and the orbitwise midpoint/reconstruction identity.
 - `QuarterReconstruction.lean`: signed midpoint-integral bounds, a.e. measurability
@@ -138,6 +145,8 @@ proof mechanisms. Module names below are relative to
   ODE/pairing estimates, periodic uniqueness and AC composition utilities.
 - `QuarterCoordinates.lean`: cell collars, recentered quarter domains/maps,
   endpoint rays and canonical radial/transverse trace data.
+  `QuarterRayTraceUniqueness.lean` identifies canonical traces from different open
+  neighbourhoods by common transverse rectangles and a countable interval cover.
 - `OrbitNumerators.lean`: endpoint ACL/local-L² data, resonant numerator zeros
   and the independent divisor-geometry interfaces, for all four characters.
 - `WeightedNumerators.lean`: compatible numerator derivatives, canonical ray
@@ -169,8 +178,10 @@ can be added here as they are formalized.
   quadratic compatibility. Independent of the eigenfunction regularity modules.
 - `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
   and ordinary separatrix H¹/H³ interfaces.
-- `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and numerator interfaces,
-  using one fixed canonical stream jet.
+- `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing interface and
+  numerator assembly, using one fixed canonical stream jet. The assembly localizes
+  the bulk norms and identifies the forcing traces with the existing numerator
+  traces before logarithmic summation; rotation character is not used in this step.
 - `Regularity/OddOddMidpoint.lean`: logarithmic phase quotient and midpoint data for
   either odd–odd rotation character, with a common a.e. orbit reconstruction.
 - `Regularity/OddOddQuarter.lean`: the actual base-quarter vorticity level derivative
