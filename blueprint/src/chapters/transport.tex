@@ -2458,6 +2458,39 @@ These open preimages cover every small nonzero level.
 Local Sobolev gluing applies within that open set only; it does not cross a seam.
 \end{proof}
 
+\begin{lemma}[Odd--odd traces on reflected cell edges]
+\label{lem:odd-odd-reflected-edge-traces}
+\uses{def:sectors, def:sobolev-local, def:cell-edge-trace, def:periodic-cell-folds}
+\lean{NoEmbeddedEigenvalues.torusProj_diagonalTraceChart_reflection,
+ NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_reflection_ae,
+ NoEmbeddedEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.liftShift}
+\leanok
+Let $F=\widetilde\omega$ be odd--odd, $V$ open, and $F\in H^1(V)$.
+Suppose $F$ has zero canonical trace on a chosen regular cell edge
+$t_*\in\{\pi/2,-\pi/2\}$.
+For every admissible source rectangle $(l,r)\times(a,b)$ at that edge,
+the opposite rectangle $(l,r)\times(2t_*-b,2t_*-a)$ has H1 pullback
+and the same canonical zero trace at $t_*$.
+The original and reflected trace witnesses also persist under every
+integer torus-period translation of the physical chart.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-h1-pullback, lem:transverse-trace-reflection,
+ lem:odd-odd-cell-fold-parity}
+\leanok
+Normal reflection in either signed edge, composed with $\Xi_j$ and torus
+projection, is precisely $S_1$ for $j=0$ and $S_2$ for $j=1$.
+Indeed $2t_*=\pm\pi$ has the same angular class as $\pi$.
+Both symmetries act by minus one on $\omega$.
+Nonsingularity of $\Xi_j$ transfers that raw a.e.\ parity to the pullbacks.
+First transport the ordinary H1 data, then identify the opposite-side
+canonical trace with minus the original one, hence zero.
+Periodicity gives pointwise equality of the translated raw pullbacks,
+so the trace witnesses transport without any null-line evaluation.
+\end{proof}
+
 \begin{lemma}[Off-separatrix gradient with full-collar L2 norms]
 \label{lem:odd-odd-collar-gradient}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}

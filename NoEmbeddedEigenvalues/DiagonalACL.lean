@@ -3,7 +3,7 @@ import NoEmbeddedEigenvalues.ACLSlicing
 /-!
 # Transverse ACL representatives in diagonal coordinates
 
-Blueprint: `lem:trace-acl`.
+Blueprint: `lem:trace-acl`, `lem:diagonal-l2-transport`, `lem:diagonal-h1-pullback`.
 
 The linear change of variables transfers the two weak partial derivatives to
 `∂_a = ∂ₓ + ∂_y` and `∂_b = ∂ₓ - ∂_y`, and preserves L² membership.
@@ -141,6 +141,20 @@ theorem memLp_comp_diagInv {U : Set (ℝ × ℝ)} (hU : MeasurableSet U) {F : �
   rw [← Measure.restrict_map diagInv.continuous.measurable hU, map_diagInv_volume,
     Measure.restrict_smul]
   exact hF.smul_measure (by finiteness)
+
+/-- Reverse the diagonal L² transport, retaining raw representatives. -/
+theorem memLp_of_comp_diagInv {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
+    {F : ℝ × ℝ → ℂ}
+    (hf : MemLp (F ∘ diagInv) 2 (volume.restrict (diagInv ⁻¹' U))) :
+    MemLp F 2 (volume.restrict U) := by
+  have h := diagInv.toHomeomorph.measurableEmbedding.memLp_map_measure_iff.2 hf
+  change MemLp F 2 (Measure.map diagInv (volume.restrict (diagInv ⁻¹' U))) at h
+  rw [← Measure.restrict_map diagInv.continuous.measurable hU, map_diagInv_volume,
+    Measure.restrict_smul] at h
+  have ht := h.smul_measure (c := ENNReal.ofReal (2 : ℝ)) (by finiteness)
+  rw [smul_smul, ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)] at ht
+  norm_num at ht
+  exact ht
 
 /-- The tangential weak derivative in diagonal coordinates is `Fₓ + Fᵧ`. -/
 theorem HasWeakPartialOn.comp_diagInv_fst {U : Set (ℝ × ℝ)} {F Fx Fy : ℝ × ℝ → ℂ}

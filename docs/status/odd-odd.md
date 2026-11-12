@@ -46,11 +46,13 @@ Proof work is now outside the odd–odd chapter:
   factorization. No polar trace or stronger corner premise was added.
   The current target is Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`):
   its cellwise H¹/zero-edge assembly and reflected-periodic off-separatrix gain
-  are checked, with actual full-collar gradient norms. Generic matching-trace
-  rectangle gluing now retains the specified derivatives and the common canonical
-  trace, with normal-window consistency including endpoints. Supplying the matching
-  zero traces on the actual reflected diagonal edges, spatial chart transport and
-  whole-lift assembly remain; the parent is still admitted.
+  are checked, with actual full-collar gradient norms. Cartesian H¹ patches
+  across all four reflected-periodic regular edges now retain canonical zero traces
+  (`lem:dd-cell-edge-h1`), using actual reflected traces and inverse weak chart
+  transport. The generic layers are admission-free; this assembly reaches the same
+  three cellwise analytic inputs. Geometric covering, gradient identification for
+  finite-norm saddle removal and the all-window global trace condition remain;
+  the parent is still admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

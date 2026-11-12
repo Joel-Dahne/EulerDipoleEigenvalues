@@ -63,20 +63,6 @@ theorem measurable_dipoleLogWeight : Measurable dipoleLogWeight := by
   apply Measurable.ite (by measurability) measurable_const
   fun_prop
 
-/-- Reverse the diagonal L² transport, retaining raw representatives. -/
-theorem memLp_of_comp_diagInv {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
-    {F : ℝ × ℝ → ℂ}
-    (hf : MemLp (F ∘ diagInv) 2 (volume.restrict (diagInv ⁻¹' U))) :
-    MemLp F 2 (volume.restrict U) := by
-  have h := diagInv.toHomeomorph.measurableEmbedding.memLp_map_measure_iff.2 hf
-  change MemLp F 2 (Measure.map diagInv (volume.restrict (diagInv ⁻¹' U))) at h
-  rw [← Measure.restrict_map diagInv.continuous.measurable hU, map_diagInv_volume,
-    Measure.restrict_smul] at h
-  have ht := h.smul_measure (c := ENNReal.ofReal (2 : ℝ)) (by finiteness)
-  rw [smul_smul, ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)] at ht
-  norm_num at ht
-  exact ht
-
 /-- H¹ on a bounded diagonal rectangle absorbs the physical logarithm. -/
 theorem MemSobolevOn.log_dipole_mul {a b c d : ℝ} (hab : a < b) (hcd : c < d)
     {F : ℝ × ℝ → ℂ} (hF : MemSobolevOn 1 (diagRect (Ioo a b) (Ioo c d)) F) :

@@ -4,6 +4,8 @@ import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.BernsteinCertificates
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalACL
+import NoEmbeddedEigenvalues.DiagonalH1
+import NoEmbeddedEigenvalues.DiagonalH1Inverse
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.DuBoisReymond
@@ -70,6 +72,7 @@ import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddCellH1
+import NoEmbeddedEigenvalues.Regularity.OddOddEdgeTraces
 import NoEmbeddedEigenvalues.Regularity.OddOddPuncturedH1
 import NoEmbeddedEigenvalues.Regularity.StreamElliptic
 import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix
@@ -134,6 +137,9 @@ import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderInverse
 import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.TraceWeakGluing
+import NoEmbeddedEigenvalues.ReflectedTraces
+import NoEmbeddedEigenvalues.RectangleH1Gluing
+import NoEmbeddedEigenvalues.OddOddEdgeTraces
 import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision

@@ -111,19 +111,21 @@ weights and local versus global regularity.
    for norms, not weak gluing. Finite whole-domain H¹ point removal and the
    canonical stream Poisson identity are admission-free too. The same-domain
    H³ completion in `StreamElliptic.lean` reaches only Interior elliptic H³.
-   `TraceWeakGluing.lean` proves generic matching-trace H¹ gluing with the original
-   derivative candidates: canonical boundary terms cancel in the normal identity,
-   and transverse cutoffs extend the tangential identity. It also replaces a trace's
-   derivative witness by the specified weak derivative, extends the same trace
-   between nested normal windows (including endpoints), and retains the common
-   trace on the glued rectangle. `IntervalTraceIntegration.lean` supplies genuine
-   endpoint-trace integration by parts. These generic layers introduce no admissions.
-   **Remaining:** use parity/reflected-cell geometry to supply the same canonical
-   zero trace on both sides of each actual diagonal edge, transport the specified
-   physical derivatives into and out of these charts, and cover the regular seams.
-   Then apply finite-norm point removal at the saddles and identify the zero trace
-   on every admissible global window. The Cartesian rectangle gluing theorem alone
-   does not discharge these producer/coordinate/covering obligations.
+   **Regular-edge Cartesian patches are assembled** (`lem:dd-cell-edge-h1`) in
+   `Regularity/OddOddEdgeTraces.lean`, with one strip for all four edges and all
+   period indices. The actual two odd symmetries supply matching canonical zero
+   traces. Finite half-rectangle H¹ gluing, inverse diagonal weak testing and inverse
+   period translation give genuine Cartesian H¹ and retain the full-window zero
+   trace. This assembly reaches the same three cellwise inputs, not new admissions.
+   Its generic L²/diagonal/reflection/gluing layers have zero transitive admissions.
+   **Remaining:** cover every regular separatrix point by an admissible physical
+   patch and identify patch gradients with the full-collar candidate by weak
+   uniqueness off the null separatrix. Then use its finite norms for punctured
+   saddle disks, apply point removal and establish canonical zero traces on every
+   admissible global window. One common strip can be retained by using
+   `dd_cell_edge_spatial_h1` and applying `oddOdd_collar_gradient` to its cell H¹
+   output. The parent remains admitted; local patch results alone do not prove
+   the required covering, saddle completion or global trace condition.
    Do not use logarithmic forcing or weighted vorticity gradients here: both
    already depend on this ordinary gain. Saddle jet and Weighted forcing remain
    upstream regularity inputs; the latter must be derived independently from

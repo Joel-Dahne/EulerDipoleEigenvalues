@@ -74,6 +74,10 @@ proof mechanisms. Module names below are relative to
 - `CellPeriodization.lean`: box periodization of compactly supported cell data
   and uniqueness of weak derivatives.
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.
+  The latter owns raw diagonal L² transport in both directions, shared by the
+  logarithmic multiplier and even-gradient Hardy proofs.
+  `DiagonalH1.lean`, `DiagonalH1Inverse.lean` give ordinary H¹ in both directions
+  for the actual diagonal trace charts, using the determinant-two weak test identity.
   `ACLWeakDerivative.lean` gives the weak time identity from orbitwise ACL data,
   without selecting jointly measurable ACL representatives.
 - `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
@@ -95,6 +99,12 @@ proof mechanisms. Module names below are relative to
   across a matching-trace line, by fiberwise integration by parts and transverse
   cutoffs. Derivative-witness replacement and nested normal-window consistency
   include endpoint traces. Actual whole-rectangle norms precede weak gluing.
+  `ReflectedTraces.lean` transports H¹ and canonical traces under normal reflection,
+  comparing continuous interval extensions rather than raw boundary values.
+  `RectangleH1Gluing.lean` constructs finite whole-rectangle derivative norms from
+  half-rectangle H¹ before applying matching-trace weak gluing.
+  `OddOddEdgeTraces.lean` identifies actual odd pullback parity for all four cell
+  edges and constructs the reflected/periodically translated canonical zero traces.
   `InteriorTrace.lean` selects an interior value from continuous section germs,
   proves agreement with the existing ACL trace, and supplies window independence
   and continuous trace products without evaluating raw planar representatives.
@@ -220,6 +230,9 @@ can be added here as they are formalized.
   weights, upstream of ordinary separatrix and logarithmic regularity.
   `Regularity/OddOddCellH1.lean` assembles a single positive-cell H¹ strip and
   canonical zero traces on all four edges, using the actual continuous forcing.
+  `Regularity/OddOddEdgeTraces.lean` assembles paired canonical traces and Cartesian
+  H¹ across every admissible reflected-periodic regular-edge rectangle, with one
+  cell strip and genuine finite patch norms. The full-window trace remains zero.
   `Regularity/OddOddPuncturedH1.lean` covers every small nonzero level by reflected
   periodic cell strips, selects one measurable weak gradient there and gives its
   actual local L² norms on the full collar. Norm covering does not glue weak identities.

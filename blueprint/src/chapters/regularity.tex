@@ -284,6 +284,67 @@ Zero continuous stream values on every edge then give the canonical
 one-sided zero traces by the whole-edge trace theorem.
 \end{proof}
 
+\begin{lemma}[Canonical trace pairs on reflected-periodic cell edges]
+\label{lem:dd-cell-edge-trace-pairs}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-edge-trace,
+ def:cell-separatrix-collar, def:periodic-cell-folds}
+\lean{NoEmbeddedEigenvalues.dd_cell_edge_trace_pairs}
+\leanok
+For an odd--odd eigenfunction there is one $0<\varepsilon<1$ with
+$\widetilde\omega\in H^1(V_\varepsilon^{\rm cell})$ such that
+every admissible regular-edge rectangle in this strip has H1 pullbacks
+and canonical zero traces on both its source and reflected sides.
+The same strip works for all four edges and every period index.
+Each assertion is a finite norm on its bounded window.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-cell-separatrix-h1, lem:diagonal-h1-pullback,
+ lem:odd-odd-reflected-edge-traces, lem:sobolev-congr-ae}
+\leanok
+Use the cellwise H1 and all four zero traces from the same strip.
+Restrict the diagonal H1 pullback to each source rectangle and reflect it.
+The canonical zero trace is retained on the opposite side.
+Pointwise periodicity transfers both H1 pullbacks and both trace witnesses
+to every translated physical chart.
+\end{proof}
+
+\begin{lemma}[Cartesian H1 across reflected-periodic regular cell edges]
+\label{lem:dd-cell-edge-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-edge-trace,
+ def:cell-separatrix-collar, def:periodic-cell-folds}
+\lean{NoEmbeddedEigenvalues.dd_cell_edge_h1,
+ NoEmbeddedEigenvalues.dd_cell_edge_spatial_h1}
+\leanok
+There is one $0<\varepsilon<1$ with the ordinary cell H1 gain such that,
+for every admissible source rectangle $(l,r)\times(a,b)$ at edge $t_*$,
+every period index $n$ gives H1 of the actual raw vorticity on
+\[
+ (T_{0,n}\circ\Xi_j)((l,r)\times(A,B)),
+ \qquad
+ (A,B)=
+ \begin{cases}
+  (a,2t_*-a),&t_*=\pi/2,\\
+  (2t_*-b,b),&t_*=-\pi/2 .
+ \end{cases}
+\]
+Its full-window canonical trace in this chart is zero.
+In particular this is genuine Cartesian H1 across the regular seam,
+not just finite norms or H1 away from it.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-cell-edge-trace-pairs, lem:rectangle-h1-gluing,
+ lem:diagonal-h1-inverse, lem:affine-jet-pullback, lem:sobolev-congr-ae}
+\leanok
+The source and reflected rectangles are the two halves of the displayed
+normal window, with matching canonical zero traces.
+Glue their H1 pullbacks, retaining zero as the full-window trace.
+Inverse diagonal weak transport gives Cartesian H1 on the physical image;
+the inverse period translation is volume-preserving affine.
+All value and gradient norms are actual finite whole-patch norms.
+\end{proof}
+
 \begin{lemma}[Ordinary odd--odd gain off the separatrix with full-collar norms]
 \label{lem:dd-punctured-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:weak-derivative-local,
@@ -318,24 +379,30 @@ separatrix traces and $\psi\in H^3_{\rm loc}(U)$
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-cell-separatrix-h1, lem:dd-punctured-separatrix-h1,
- lem:odd-odd-cell-fold-parity, lem:periodic-cell-cover,
- lem:transverse-trace-weak-gluing, lem:transverse-trace-window-consistency,
- lem:weak-point-removal, lem:sobolev-local-gluing,
+\uses{lem:dd-cell-edge-h1, lem:dd-punctured-separatrix-h1,
+ lem:odd-odd-h1-cell-fold, lem:periodic-cell-cover, lem:separatrix-lines,
+ lem:cell-fold-l2-cover, lem:weak-derivative-unique,
+ lem:transverse-trace-window-consistency, lem:weak-point-removal, lem:sobolev-local-gluing,
  lem:stream-h3-of-vorticity-h1}
 The cellwise lemma gives an ordinary strip and zero traces on its four
 whole regular edges. Reflected periodic copies cover every small nonzero
 level. The punctured-collar lemma identifies one weak gradient off the
 separatrix and gives its finite L2 norms on each full-collar localization.
 
-Transport the one-sided zero traces to the adjacent cells.
-On a compact regular-edge patch, apply
-Lemma~\ref{lem:transverse-trace-weak-gluing} in diagonal coordinates.
-The matching canonical zero traces cancel the normal boundary terms;
-the tangential derivative crosses by transverse cutoffs.
-This gives H1 away from the saddles, with the same finite gradient norms.
-On a small punctured disk about a saddle these norms give finite H1,
-not merely local H1 away from its center.
+Every regular separatrix point is a period translate of a point in one
+of the four open cell edges. In diagonal coordinates, reduce the tangential
+coordinate modulo $\pi$; choose the sign of the normal edge so the two
+integer shifts have matching parity and hence come from a torus-period shift.
+Choose a compact tangential interval about this point and shrink the
+one-sided normal width into the positive strip.
+Lemma~\ref{lem:dd-cell-edge-h1} gives Cartesian H1 across the resulting seam.
+These patches and the nonzero collar cover the collar away from the saddles.
+Weak uniqueness off the separatrix identifies the patch gradients with the
+specified full-collar gradient; nullity then transfers that equality a.e.,
+not a weak identity by itself.
+The finite fold norm cover supplies local L2 of the value on the full collar.
+On a small punctured disk about a saddle, the value and gradient norms
+therefore give finite H1, not merely local H1 away from its center.
 Lemma~\ref{lem:weak-point-removal} extends through the center.
 
 Local Sobolev gluing over the reflected periodic patches gives an open

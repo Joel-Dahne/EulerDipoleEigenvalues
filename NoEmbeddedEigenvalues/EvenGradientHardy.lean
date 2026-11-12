@@ -233,18 +233,6 @@ private theorem memLp_div_cos_fst_of_reflection {F D : ℝ × ℝ → ℂ}
   rw [hsmall] at hback
   exact hback
 
-private theorem memLp_of_comp_diagInv {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
-    {F : ℝ × ℝ → ℂ} (hf : MemLp (F ∘ diagInv) 2 (volume.restrict (diagInv ⁻¹' U))) :
-    MemLp F 2 (volume.restrict U) := by
-  have h := diagInv.toHomeomorph.measurableEmbedding.memLp_map_measure_iff.2 hf
-  change MemLp F 2 (Measure.map diagInv (volume.restrict (diagInv ⁻¹' U))) at h
-  rw [← Measure.restrict_map diagInv.continuous.measurable hU, map_diagInv_volume,
-    Measure.restrict_smul] at h
-  have ht := h.smul_measure (c := ENNReal.ofReal (2 : ℝ)) (by finiteness)
-  rw [smul_smul, ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)] at ht
-  norm_num at ht
-  exact ht
-
 private theorem ae_diagInv {P : ℝ × ℝ → Prop} (h : ∀ᵐ p, P p) :
     ∀ᵐ q, P (diagInv q) := by
   have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by

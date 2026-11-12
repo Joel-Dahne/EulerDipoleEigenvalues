@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.Regularity.OddOddPuncturedH1
 import NoEmbeddedEigenvalues.Regularity.StreamElliptic
 import NoEmbeddedEigenvalues.WeakPointRemoval
 import NoEmbeddedEigenvalues.TraceWeakGluing
+import NoEmbeddedEigenvalues.Regularity.OddOddEdgeTraces
 
 /-!
 # Ordinary odd–odd regularity through the lifted separatrix

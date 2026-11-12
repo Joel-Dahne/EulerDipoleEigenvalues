@@ -2549,7 +2549,6 @@ term is the $L^2$ norm. No finite-$p$ Sobolev embedding is used.
 \uses{def:sobolev-local, def:log-level-weight}
 \lean{NoEmbeddedEigenvalues.dipoleLogWeight_bounds,
  NoEmbeddedEigenvalues.measurable_dipoleLogWeight,
- NoEmbeddedEigenvalues.memLp_of_comp_diagInv,
  NoEmbeddedEigenvalues.MemSobolevOn.log_dipole_mul,
  NoEmbeddedEigenvalues.MemSobolevLocOn.log_dipole_mul}
 \leanok
@@ -2560,7 +2559,8 @@ on which $F\in H^1$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:coordinate-weight-multiplier, lem:separatrix-lines, lem:trace-acl,
+\uses{lem:coordinate-weight-multiplier, lem:separatrix-lines,
+ lem:diagonal-l2-transport, lem:diagonal-h1-pullback,
  lem:localization-cutoff, lem:sobolev-local-gluing}
 \leanok
 Use the exact global identity $\Psi=2\cos a\cos b$. Off the separatrix,
@@ -2765,6 +2765,63 @@ Actual whole-rectangle L2 membership supplies local integrability and the
 finite Sobolev norms; omitting the null line is not used to assert weak gluing.
 \end{proof}
 
+\begin{lemma}[Reflection of canonical transverse traces]
+\label{lem:transverse-trace-reflection}
+\uses{def:canonical-transverse-trace, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.normalReflectionLinear,
+ NoEmbeddedEigenvalues.normalReflection,
+ NoEmbeddedEigenvalues.measurePreserving_normalReflection,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.congr_ae_pullback,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq_reflected,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.reflect_normal}
+\leanok
+Put $R_c(s,y)=(s,c-y)$.
+If $F\circ C\in H^1((l,r)\times(a,b))$ has canonical trace $T$ at
+$t\in[a,b]$, then $\chi F\circ C\circ R_c$ belongs to H1 on
+$(l,r)\times(c-b,c-a)$ with canonical trace $\chi T$ at $c-t$,
+for any constant $\chi\in\C$.
+More generally two reflected pullbacks agreeing a.e.\ up to $\chi$
+have canonical traces agreeing a.e.\ up to $\chi$.
+A.e.\ equality of the actual pullbacks also permits changing the raw
+function or physical chart without changing a given trace.
+All statements include normal endpoints.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-jet-pullback, lem:trace-l2, lem:h1-interval-endpoints}
+\leanok
+Reflection preserves volume and maps the two open rectangles exactly.
+First transport the actual H1 and L2 data and construct the target ACL trace.
+Fubini transfers the reflected a.e.\ identity to almost every normal section.
+The continuous interval extensions agree on the open reflected interval,
+then on its closure, giving the claimed endpoint values as well.
+Raw boundary assignments never enter the comparison.
+\end{proof}
+
+\begin{lemma}[Ordinary rectangle H1 gluing from matching traces]
+\label{lem:rectangle-h1-gluing}
+\uses{def:sobolev-local, def:canonical-transverse-trace}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.glue_matching_trace}
+\leanok
+Let $l<r$ and $a<t<b$.
+If the same raw $F$ belongs to H1 on $(l,r)\times(a,t)$ and
+$(l,r)\times(t,b)$, with the same canonical trace $T$ at $y=t$,
+then it belongs to H1 on $(l,r)\times(a,b)$ and has full-window
+canonical trace $T$.
+These are finite whole-rectangle norms, not merely local H1 away from the join.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transverse-trace-weak-gluing}
+\leanok
+Choose weak derivatives on each half and assemble them piecewise.
+Indicator extension gives actual L2 membership on the whole rectangle;
+the joining line is null for this norm calculation.
+Apply matching-trace weak gluing to those derivative candidates.
+The weak identities follow from boundary-term cancellation and tangential
+cutoffs, not from the nullity of the line.
+\end{proof}
+
 \begin{definition}[Interior trace by continuous section germs]
 \label{def:interior-section-trace}
 \lean{NoEmbeddedEigenvalues.HasContinuousSectionGerm,
@@ -2827,6 +2884,86 @@ Use tangential coordinate first and normal coordinate second:
 $\Xi_0(s,t)=\operatorname{diagInv}(t,s)$ and
 $\Xi_1(s,t)=\operatorname{diagInv}(s,t)$.
 \end{definition}
+
+\begin{lemma}[Raw diagonal L2 transport]
+\label{lem:diagonal-l2-transport}
+\uses{def:cells}
+\lean{NoEmbeddedEigenvalues.memLp_comp_diagInv,
+ NoEmbeddedEigenvalues.memLp_of_comp_diagInv}
+\leanok
+For measurable $U$,
+$F\in L^2(U)$ if and only if
+$F\circ\operatorname{diagInv}\in L^2(\operatorname{diagInv}^{-1}U)$.
+The same raw representatives are retained.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-calculus}
+\leanok
+The pushed-forward measure is one half of planar volume.
+Restrict the measure identity to $U$ and transport actual L2 membership;
+multiplying by two reverses the transport. Neither factor is zero or infinite.
+\end{proof}
+
+\begin{lemma}[Ordinary H1 pullback in diagonal trace charts]
+\label{lem:diagonal-h1-pullback}
+\uses{def:sobolev-local, def:weak-derivative-local, def:diagonal-trace-chart}
+\lean{NoEmbeddedEigenvalues.continuous_diagonalTraceChart,
+ NoEmbeddedEigenvalues.isOpenMap_diagonalTraceChart,
+ NoEmbeddedEigenvalues.quasiMeasurePreserving_diagonalTraceChart,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.comp_diagInv_fst,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.comp_diagInv_snd,
+ NoEmbeddedEigenvalues.MemSobolevOn.comp_diagInv,
+ NoEmbeddedEigenvalues.MemSobolevOn.comp_diagonalTraceChart}
+\leanok
+The two trace charts are continuous and open; their pullbacks preserve a.e.\
+identities. On open $U$, specified weak derivatives $F_x,F_y$ give
+\[
+ \partial_a(F\circ\operatorname{diagInv})=(F_x+F_y)\circ\operatorname{diagInv},
+ \qquad
+ \partial_b(F\circ\operatorname{diagInv})=(F_x-F_y)\circ\operatorname{diagInv}.
+\]
+In particular $F\in H^1(U)$ implies $F\circ\Xi_j\in H^1(\Xi_j^{-1}U)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-calculus, lem:diagonal-l2-transport,
+ lem:affine-jet-pullback}
+\leanok
+Pull compact tests through the linear equivalence and use its constant
+Jacobian and the classical chain rule. Sum and difference of the actual
+Cartesian weak identities give the two specified diagonal derivatives.
+The L2 transport supplies their finite norms. Swapping parameter coordinates
+gives the other trace chart by volume-preserving affine pullback.
+\end{proof}
+
+\begin{lemma}[Cartesian H1 from diagonal H1]
+\label{lem:diagonal-h1-inverse}
+\uses{def:sobolev-local, def:diagonal-trace-chart}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.of_comp_diagInv,
+ NoEmbeddedEigenvalues.MemSobolevOn.of_comp_diagonalTraceChart,
+ NoEmbeddedEigenvalues.MemSobolevOn.diagonalTraceChart_image}
+\leanok
+For open $U$, $F\circ\Xi_j\in H^1(\Xi_j^{-1}U)$ implies $F\in H^1(U)$.
+Equivalently, H1 of the actual pullback on an open parameter set $Q$
+gives H1 of $F$ on its physical image $\Xi_j(Q)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-h1-pullback, lem:diagonal-l2-transport,
+ lem:diagonal-calculus, lem:affine-jet-pullback}
+\leanok
+For $\Xi_1=\operatorname{diagInv}$, if the two weak diagonal derivatives
+are $A,B$, the Cartesian candidates are
+$(A+B)\circ\operatorname{diagCoord}/2$ and
+$(A-B)\circ\operatorname{diagCoord}/2$.
+Reverse L2 transport proves their actual finite norms first.
+Test both diagonal identities with $\varphi\circ\operatorname{diagInv}$.
+Their sum or difference supplies twice the corresponding Cartesian
+test derivative; this factor two is exactly the Jacobian.
+All products split in the argument are integrable.
+The other ordering follows by swapping parameters.
+\end{proof}
 
 \begin{definition}[Corner rays and matching crossing traces]
 \label{def:corner-crossing-traces}
