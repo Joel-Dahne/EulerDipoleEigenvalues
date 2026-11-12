@@ -367,6 +367,60 @@ measurable gradient selection. Weak uniqueness and the finite fold cover
 retain that same gradient in all full-collar norm bounds.
 \end{proof}
 
+\begin{lemma}[Ordinary H1 across all regular lifted seams]
+\label{lem:dd-regular-separatrix-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:weak-derivative-local, def:cell-arcs, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.dd_regular_separatrix_h1}
+\leanok
+For an odd--odd eigenfunction there is $0<\varepsilon<1$ such that,
+with $C_\varepsilon=\{|\Psi|<\varepsilon\}$ and lifted saddle set $\mathcal S$,
+\[
+ \widetilde\omega\in L^2_{\rm loc}(C_\varepsilon)
+ \cap H^1_{\rm loc}(C_\varepsilon\setminus\mathcal S).
+\]
+There is one measurable specified weak gradient on
+$C_\varepsilon\setminus\mathcal S$ whose entries belong to
+$L^2_{\rm loc}(C_\varepsilon)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-cell-edge-h1, lem:periodic-regular-edge-cover,
+ lem:odd-odd-h1-cell-fold, lem:odd-odd-collar-gradient,
+ lem:saddle-distance-comparison, lem:local-h1-specified-gradient,
+ lem:weak-derivative-unique, lem:sobolev-congr-ae,
+ lem:cell-fold-l2-cover, lem:sobolev-local-gluing}
+\leanok
+Use the cell strip from the Cartesian edge producer for all conclusions.
+The admissible periodic edge patches cover every regular zero-level point;
+folded strips cover every nonzero level in the collar.
+Actual Cartesian H1 glues locally away from the closed saddle lattice.
+Choose its weak gradient $E$ and retain the original full-collar norm
+candidate $D$. On the nonzero collar weak uniqueness gives $E=D$ a.e.
+The separatrix is null, so this equality holds a.e.\ on the whole regular
+collar. Transfer the already established weak identities of $E$ to $D$.
+Nullity is used for equality of actual gradients, not to infer weak gluing.
+The finite fold norm cover also supplies the full-collar value norm.
+\end{proof}
+
+\begin{lemma}[Ordinary vorticity H1 on the whole lifted collar]
+\label{lem:dd-separatrix-vorticity-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.dd_separatrix_vorticity_h1}
+\leanok
+For an odd--odd eigenfunction there is $0<\varepsilon<1$ with
+$\widetilde\omega\in H^1_{\rm loc}(\{|\Psi|<\varepsilon\})$,
+including every regular seam and every lifted saddle.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-regular-separatrix-h1, lem:saddle-set-h1-removal}
+\leanok
+Apply finite-norm saddle-lattice removal to the same value, specified weak
+gradient and full-collar local L2 bounds.
+No stronger corner or radial-tail premise is introduced.
+\end{proof}
+
 \begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
 \label{prop:dd-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:zero-separatrix-trace}
@@ -379,39 +433,15 @@ separatrix traces and $\psi\in H^3_{\rm loc}(U)$
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-cell-edge-h1, lem:dd-punctured-separatrix-h1,
- lem:odd-odd-h1-cell-fold, lem:periodic-cell-cover, lem:separatrix-lines,
- lem:cell-fold-l2-cover, lem:weak-derivative-unique,
- lem:transverse-trace-window-consistency, lem:weak-point-removal, lem:sobolev-local-gluing,
+\uses{lem:dd-separatrix-vorticity-h1, lem:odd-odd-collar-zero-traces,
  lem:stream-h3-of-vorticity-h1}
-The cellwise lemma gives an ordinary strip and zero traces on its four
-whole regular edges. Reflected periodic copies cover every small nonzero
-level. The punctured-collar lemma identifies one weak gradient off the
-separatrix and gives its finite L2 norms on each full-collar localization.
-
-Every regular separatrix point is a period translate of a point in one
-of the four open cell edges. In diagonal coordinates, reduce the tangential
-coordinate modulo $\pi$; choose the sign of the normal edge so the two
-integer shifts have matching parity and hence come from a torus-period shift.
-Choose a compact tangential interval about this point and shrink the
-one-sided normal width into the positive strip.
-Lemma~\ref{lem:dd-cell-edge-h1} gives Cartesian H1 across the resulting seam.
-These patches and the nonzero collar cover the collar away from the saddles.
-Weak uniqueness off the separatrix identifies the patch gradients with the
-specified full-collar gradient; nullity then transfers that equality a.e.,
-not a weak identity by itself.
-The finite fold norm cover supplies local L2 of the value on the full collar.
-On a small punctured disk about a saddle, the value and gradient norms
-therefore give finite H1, not merely local H1 away from its center.
-Lemma~\ref{lem:weak-point-removal} extends through the center.
-
-Local Sobolev gluing over the reflected periodic patches gives an open
-neighbourhood of the entire lifted separatrix. Only a bounded localization
-uses finitely many fold indices.
-Normal-window trace consistency identifies the same zero trace on every
-admissible diagonal rectangle, including normal endpoints.
-Finally Lemma~\ref{lem:stream-h3-of-vorticity-h1} gives H3 of the same
-continuous stream on that open domain.
+\leanok
+Take the whole absolute-level collar from the vorticity lemma.
+It is open and contains the entire lifted separatrix.
+Odd parity and H1 on this same collar give all canonical zero traces,
+including normal endpoints. The canonical Poisson identity and interior
+elliptic regularity give H3 of the same continuous stream on exactly this domain.
+Only bounded localizations use finite norms or finitely many fold indices.
 \end{proof}
 
 \begin{remark}[Digest note: norms and traces of periodic lifts]

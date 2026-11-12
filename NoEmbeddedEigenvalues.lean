@@ -73,6 +73,7 @@ import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddCellH1
 import NoEmbeddedEigenvalues.Regularity.OddOddEdgeTraces
+import NoEmbeddedEigenvalues.Regularity.OddOddRegularSeams
 import NoEmbeddedEigenvalues.Regularity.OddOddPuncturedH1
 import NoEmbeddedEigenvalues.Regularity.StreamElliptic
 import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix
@@ -140,6 +141,10 @@ import NoEmbeddedEigenvalues.TraceWeakGluing
 import NoEmbeddedEigenvalues.ReflectedTraces
 import NoEmbeddedEigenvalues.RectangleH1Gluing
 import NoEmbeddedEigenvalues.OddOddEdgeTraces
+import NoEmbeddedEigenvalues.OddOddSobolevTraces
+import NoEmbeddedEigenvalues.RegularEdgeCover
+import NoEmbeddedEigenvalues.SaddlePointRemoval
+import NoEmbeddedEigenvalues.TraceWindowRestriction
 import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision

@@ -22,9 +22,9 @@ cutoff weak pairings, central parity and Bessel, without traces or Sobolev densi
 Lean analytic proofs remain open; no certificate algorithm has been selected
 or verified.
 Statement markers are not a compatibility or proof audit.
-The local/global stream-quotient assembly is now checked in Lean, without a
-stronger corner hypothesis. Exceptional-level compatibility and the remaining
-analytic proofs are separate work. See the
+The local/global stream-quotient and ordinary separatrix H¹/H³ assemblies are
+checked in Lean, without a stronger corner hypothesis. Cellwise forcing,
+transport, trace and elliptic inputs remain separate proof work. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
@@ -63,18 +63,21 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg`, eighteen below `dd_stream_quotient_h2`,
-twenty below `dd_exclusion_domain`, and twenty-four for `odd_odd_exclusion`.
-Weighted vorticity gradient (`prop:dd-weighted-gradient`) has a proof of its own;
-its expanded audit reaches ten existing analytic inputs. Logarithmic numerator
-bounds (`lem:dd-log-numerators`) also have a proof of their own, reaching five
-existing inputs after expanding Logarithmic forcing (`lem:dd-log-forcing`).
-Logarithmic forcing has no admission of its own and reaches three: the saddle
-jet, ordinary separatrix H¹/H³ and saddle factorization. Its Cartesian canonical
-ray-trace construction and quadratic ray estimates introduce no admissions.
-The generic weak-chart, reflected-periodic covering,
-logarithmic multiplier/localization/trace/summation layers and canonical second
-stream jet have no admissions.
+zero below `correctedBoundaryForm_nonneg`, twenty below `dd_stream_quotient_h2`,
+twenty-two below `dd_exclusion_domain`, and twenty-six for `odd_odd_exclusion`.
+Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) has a proof of its own,
+reaching four existing inputs: Weighted forcing, Weighted transport H¹,
+Whole-edge zero trace and Interior elliptic H³. Its regular-seam covering,
+finite-norm saddle removal and all-window canonical trace layers are admission-free.
+The larger downstream counts expand that former aggregate input, not new admissions.
+Weighted vorticity gradient (`prop:dd-weighted-gradient`) reaches twelve existing
+inputs, and the third-stream assembly reaches fourteen. Logarithmic numerator
+bounds (`lem:dd-log-numerators`) reach seven. Logarithmic forcing
+(`lem:dd-log-forcing`) reaches six: the four ordinary separatrix inputs, the
+saddle jet and saddle factorization. These assemblies have no admission of their own.
+The generic weak-chart, reflected-periodic covering, logarithmic
+multiplier/localization/trace/summation layers and canonical second stream jet
+have no admissions.
 The bulk Picone bound reaches exactly two: the residual identity and residual
 sign. Weighted Poincaré, constrained Poincaré and the bulk gradient bound have
 zero admissions, as do the weighted form-domain bridge and matrix bound.

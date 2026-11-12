@@ -2435,35 +2435,100 @@ Measurability and the finite integral give actual local L2 membership,
 not just a bound for a totalized norm.
 \end{proof}
 
+\begin{lemma}[Regular separatrix covering by admissible periodic edge windows]
+\label{lem:periodic-regular-edge-cover}
+\uses{def:periodic-cell-folds, def:diagonal-trace-chart, def:cell-arcs,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.exists_periodic_regular_edge,
+ NoEmbeddedEigenvalues.exists_regular_edge_window}
+\leanok
+Every lifted separatrix point outside the saddle lattice is
+$T_{0,n}\Xi_j(s,t_*)$ with $|s|<\pi/2$ and $t_*=\pm\pi/2$.
+For every $\varepsilon>0$, it lies in the open physical image of a
+source edge rectangle joined to its normal reflection, where the source
+rectangle is admissible for $V_\varepsilon^{\rm cell}$:
+its closed tangential interval lies in $(-\pi/2,\pi/2)$, its normal
+endpoint is $t_*$, and its open physical image lies in the positive strip.
+This covers every regular seam, not merely almost every point.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square, lem:periodic-cell-cover, lem:separatrix-lines,
+ lem:diagonal-trace-product}
+\leanok
+Choose a Cartesian period representative in $(-\pi,\pi]^2$.
+Its diagonal coordinates satisfy $|a|+|b|\le\pi$.
+On the zero level one has $|a|=\pi/2$ or $|b|=\pi/2$; equality in both
+would be a lifted saddle. Thus the other coordinate is strictly interior.
+Cartesian period reduction already ensures compatible diagonal shift parities.
+
+Choose a compact tangential interval about the interior coordinate and
+normal width $\delta=\min(\varepsilon/4,\pi/4)>0$ toward the positive cell.
+The product formula gives positivity, while
+$|\cos y-\cos t_*|\le|y-t_*|$ gives $\Psi<2\delta<\varepsilon$.
+The full reflected normal window contains the edge point in its interior.
+\end{proof}
+
 \begin{lemma}[Ordinary odd--odd H1 under reflected periodic covering]
 \label{lem:odd-odd-h1-cell-fold}
 \uses{def:sectors, def:sobolev-local, def:periodic-cell-folds,
  def:cell-separatrix-collar}
 \lean{NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_cellFold,
- NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_punctured_collar}
+ NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_punctured_collar,
+ NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_collar_value}
 \leanok
 For odd--odd $\omega$ and open $V$, $F=\widetilde\omega\in H^1(V)$
 implies $F\in H^1(T_{s,n}^{-1}V)$.
 In particular $F\in H^1(V_\varepsilon^{\rm cell})$ implies
 $F\in H^1_{\rm loc}(\{0<|\Psi|<\varepsilon\})$.
+Its value also belongs to $L^2_{\rm loc}(\{|\Psi|<\varepsilon\})$.
+Only this norm conclusion extends through the null seams.
 \end{lemma}
 
 \begin{proof}
 \uses{lem:odd-odd-cell-fold-parity, lem:affine-jet-pullback,
- lem:sobolev-congr-ae, lem:periodic-cell-cover, lem:sobolev-local-gluing}
+ lem:sobolev-congr-ae, lem:periodic-cell-cover, lem:sobolev-local-gluing,
+ lem:cell-fold-l2-cover}
 \leanok
 Affine pullback gives H1 of $F\circ T_{s,n}$.
 Multiplication by the same sign and raw a.e.\ congruence return $F$.
 These open preimages cover every small nonzero level.
 Local Sobolev gluing applies within that open set only; it does not cross a seam.
+Apply the finite fold norm cover to the measurable raw value for its
+full-collar local L2 conclusion.
+\end{proof}
+
+\begin{lemma}[Odd--odd parity at every lifted diagonal zero line]
+\label{lem:odd-odd-diagonal-reflection-parity}
+\uses{def:sectors, def:diagonal-trace-chart}
+\lean{NoEmbeddedEigenvalues.torusProj_diagonalTraceChart_reflection,
+ NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_reflection_ae,
+ NoEmbeddedEigenvalues.torusProj_diagonalTraceChart_reflection_of_cos_eq_zero,
+ NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_reflection_of_cos_eq_zero_ae,
+ NoEmbeddedEigenvalues.dipoleLift_diagonalTraceChart_reflection}
+\leanok
+If $\cos t_*=0$, reflection $(s,y)\mapsto(s,2t_*-y)$ composed with $\Xi_j$
+projects exactly to $S_1\circ\Xi_0$ or $S_2\circ\Xi_1$ on the torus.
+It reverses the dipole level.
+For odd--odd $\omega$, the actual vorticity pullback is odd under this reflection,
+as a planar a.e.\ identity.
+This holds at every lifted zero line, including all four central cell edges.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-trace-product, lem:diagonal-calculus, lem:lift-representatives}
+\leanok
+The equation $\cos t_*=0$ gives $2t_*\equiv\pi$ modulo $2\pi$.
+Compute both angular components of the reflected chart and apply the two
+sector signs. The nonsingular chart transports raw planar a.e.\ equalities.
+Finally $\cos(2t_*-y)=-\cos y$ reverses the dipole.
+No raw value on a zero line is used.
 \end{proof}
 
 \begin{lemma}[Odd--odd traces on reflected cell edges]
 \label{lem:odd-odd-reflected-edge-traces}
 \uses{def:sectors, def:sobolev-local, def:cell-edge-trace, def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.torusProj_diagonalTraceChart_reflection,
- NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_reflection_ae,
- NoEmbeddedEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
+\lean{NoEmbeddedEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
  NoEmbeddedEigenvalues.HasTransverseH1Trace.liftShift}
 \leanok
 Let $F=\widetilde\omega$ be odd--odd, $V$ open, and $F\in H^1(V)$.
@@ -2478,7 +2543,7 @@ integer torus-period translation of the physical chart.
 
 \begin{proof}
 \uses{lem:diagonal-h1-pullback, lem:transverse-trace-reflection,
- lem:odd-odd-cell-fold-parity}
+ lem:odd-odd-diagonal-reflection-parity, lem:odd-odd-cell-fold-parity}
 \leanok
 Normal reflection in either signed edge, composed with $\Xi_j$ and torus
 projection, is precisely $S_1$ for $j=0$ and $S_2$ for $j=1$.
@@ -2489,6 +2554,37 @@ First transport the ordinary H1 data, then identify the opposite-side
 canonical trace with minus the original one, hence zero.
 Periodicity gives pointwise equality of the translated raw pullbacks,
 so the trace witnesses transport without any null-line evaluation.
+\end{proof}
+
+\begin{lemma}[Canonical odd--odd zero traces on the full collar]
+\label{lem:odd-odd-collar-zero-traces}
+\uses{def:sectors, def:sobolev-local, def:zero-separatrix-trace,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.oddOdd_collar_zero_traces}
+\leanok
+If $\omega$ is odd--odd and
+$\widetilde\omega\in H^1_{\rm loc}(C_\varepsilon)$ for
+$C_\varepsilon=\{|\Psi|<\varepsilon\}$, it has zero canonical separatrix
+trace on every admissible closed diagonal window in that same collar,
+including normal endpoints.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-odd-diagonal-reflection-parity, lem:diagonal-h1-pullback,
+ lem:trace-l2, lem:transverse-trace-reflection,
+ lem:transverse-trace-window-consistency}
+\leanok
+For normal point $t_*\in[a,b]$ set
+$R=\max(t_*-a,b-t_*)>0$.
+The original rectangle and its reflection form the symmetric rectangle
+$[l,r]\times[t_*-R,t_*+R]$. Reflection reverses $\Psi$, so its entire
+closed physical image remains in the same absolute-level collar.
+Compact localization gives genuine finite H1 on this symmetric window.
+The canonical trace there equals minus itself by odd parity and continuous
+section uniqueness, hence is zero. Restrict its existing ACL witnesses and
+continuous endpoint extensions to $[a,b]$.
+No independent choice of a boundary representative or raw null-line value
+is involved, even when $t_*=a$ or $t_*=b$.
 \end{proof}
 
 \begin{lemma}[Off-separatrix gradient with full-collar L2 norms]

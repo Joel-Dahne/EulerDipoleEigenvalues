@@ -38,21 +38,20 @@ Proof work is now outside the odd–odd chapter:
   Logarithmic numerator bounds (`lem:dd-log-numerators`) now also have a proof
   of their own, retaining the same derivative and trace witnesses. The generic
   compact-localization, canonical-trace uniqueness and logarithmic mass-summation
-  layers and the canonical stream weak jet are admission-free. The endpoint
-  expands to five existing analytic inputs.
+  layers and the canonical stream weak jet are admission-free. The expanded
+  analytic frontier is recorded in the root validation baseline.
   Logarithmic forcing (`lem:dd-log-forcing`) has a proof of its own, retaining
   the whole lifted neighbourhood, all eight canonical ray traces and one common
-  radius. It reaches the saddle jet, ordinary separatrix H¹/H³ and saddle
+  radius. It uses the saddle jet, ordinary separatrix H¹/H³ and saddle
   factorization. No polar trace or stronger corner premise was added.
-  The current target is Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`):
-  its cellwise H¹/zero-edge assembly and reflected-periodic off-separatrix gain
-  are checked, with actual full-collar gradient norms. Cartesian H¹ patches
-  across all four reflected-periodic regular edges now retain canonical zero traces
-  (`lem:dd-cell-edge-h1`), using actual reflected traces and inverse weak chart
-  transport. The generic layers are admission-free; this assembly reaches the same
-  three cellwise analytic inputs. Geometric covering, gradient identification for
-  finite-norm saddle removal and the all-window global trace condition remain;
-  the parent is still admitted.
+  Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) now also has an assembly
+  proof with its original whole-lift statement. Regular Cartesian patches cover
+  every nonsaddle seam; weak uniqueness retains the full-collar finite-norm
+  gradient for point removal. Odd reflection and canonical window restriction
+  give zero traces on every admissible window, including normal endpoints.
+  These generic layers have zero admissions. The parent reaches four existing
+  inputs: Weighted forcing, Weighted transport H¹, Whole-edge zero trace and
+  Interior elliptic H³. Proving these analytic inputs remains work.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

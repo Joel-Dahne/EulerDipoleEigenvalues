@@ -85,6 +85,9 @@ proof mechanisms. Module names below are relative to
   a cutoff in the other coordinate removes a parallel line from a tangential
   weak identity under local L¹ hypotheses, hence removes an isolated point too,
   without a radial tail. This is not a normal jump-removal theorem.
+  `SaddlePointRemoval.lean` isolates each saddle using lattice separation,
+  obtains finite whole-punctured-neighbourhood H¹ from full-domain local norms,
+  and removes the entire lattice by local Sobolev gluing.
 - `RadialWeakMultiplier.lean`: the local smooth weak product rule, radial derivatives,
   weaker-weight L² transport and H¹ of divided gradients through their center.
   The stronger quotients R/r³ and ∂ⱼR/r² support ordinary Cartesian ray traces.
@@ -99,12 +102,17 @@ proof mechanisms. Module names below are relative to
   across a matching-trace line, by fiberwise integration by parts and transverse
   cutoffs. Derivative-witness replacement and nested normal-window consistency
   include endpoint traces. Actual whole-rectangle norms precede weak gluing.
+  `TraceWindowRestriction.lean` restricts the same canonical ACL witnesses to
+  smaller normal windows, identifying continuous extension values at endpoints.
   `ReflectedTraces.lean` transports H¹ and canonical traces under normal reflection,
   comparing continuous interval extensions rather than raw boundary values.
   `RectangleH1Gluing.lean` constructs finite whole-rectangle derivative norms from
   half-rectangle H¹ before applying matching-trace weak gluing.
   `OddOddEdgeTraces.lean` identifies actual odd pullback parity for all four cell
   edges and constructs the reflected/periodically translated canonical zero traces.
+  `OddOddSobolevTraces.lean` handles every lifted diagonal zero line: odd parity
+  makes the canonical trace vanish on a symmetric rectangle still inside the
+  absolute-level collar; restriction recovers every original endpoint window.
   `InteriorTrace.lean` selects an interior value from continuous section germs,
   proves agreement with the existing ACL trace, and supplies window independence
   and continuous trace products without evaluating raw planar representatives.
@@ -168,6 +176,9 @@ proof mechanisms. Module names below are relative to
   then identifies one specified gradient on the finite quarter cover.
   `CellFolding.lean` supplies reflected periodic affine isometries, saddle-distance
   invariance, exact nonzero-collar containment and bounded period-index covering.
+  `RegularEdgeCover.lean` covers every nonsaddle zero-level point by an admissible
+  reflected-periodic edge window, using Cartesian period reduction and a small
+  positive-cell normal interval. This is an actual seam cover, not an a.e. cover.
   `PeriodicWeightedGradient.lean` supplies the generic measurable finite-fold L²
   norm cover, shared by ordinary and weighted gradients, and
   transports whole-cell weighted gradients to local norms for the same specified
@@ -236,6 +247,9 @@ can be added here as they are formalized.
   `Regularity/OddOddPuncturedH1.lean` covers every small nonzero level by reflected
   periodic cell strips, selects one measurable weak gradient there and gives its
   actual local L² norms on the full collar. Norm covering does not glue weak identities.
+  `Regularity/OddOddRegularSeams.lean` glues the regular seams on one full collar,
+  identifies the specified finite-norm gradient by weak uniqueness, and removes
+  the isolated saddles using genuine whole-punctured-neighbourhood norms.
   `Regularity/OddOddSeparatrix.lean` houses the whole-lift H¹/zero-trace/H³ endpoint,
   separate from its cellwise producers to keep the dependency direction acyclic.
 - `Regularity/StreamElliptic.lean`: canonical Fourier-jet Poisson identity and

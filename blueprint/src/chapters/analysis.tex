@@ -611,6 +611,32 @@ so the value and derivative L2 norms transfer to $U$. Apply the weak identity
 extension to those same derivative witnesses.
 \end{proof}
 
+\begin{lemma}[Finite-norm H1 removal of the saddle lattice]
+\label{lem:saddle-set-h1-removal}
+\uses{def:sobolev-local, def:weak-derivative-local, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.memSobolevLocOn_of_weakGradient_off_saddleSet}
+\leanok
+Let $U$ be open, let $\mathcal S$ be the lifted saddle lattice, and suppose
+$F,D_j\in L^2_{\rm loc}(U)$ with
+$\partial_jF=D_j$ weakly on $U\setminus\mathcal S$.
+Then $F\in H^1_{\rm loc}(U)$.
+The value and derivative norms are assumed locally finite on the full $U$,
+not just away from $\mathcal S$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison, lem:weak-point-removal,
+ lem:sobolev-local-gluing}
+\leanok
+Choose a relatively compact open neighbourhood of each point.
+At a saddle, keep it in the product-metric $\pi/2$ ball; lattice separation
+excludes every other saddle. Else keep its closure off the closed lattice.
+The full-domain local norms give finite H1 on the whole neighbourhood
+punctured at its center, using the specified $D_j$.
+Remove that single point and glue locally.
+No global norm on the periodic lift or radial tail estimate is needed.
+\end{proof}
+
 \begin{lemma}[Sobolev congruence on the domain]
 \label{lem:sobolev-congr-ae}
 \uses{def:sobolev-local}
@@ -2708,7 +2734,8 @@ canonical interval $H^1$ extension, including endpoints.
 \uses{def:canonical-transverse-trace, def:weak-derivative-local,
  def:h1-interval, lem:h1-interval-endpoints}
 \lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.with_weak_snd,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.extend_normal}
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.extend_normal,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.restrict_normal}
 \leanok
 A canonical trace construction may use the specified weak normal derivative
 of $F\circ C$ whenever that derivative belongs to L2 on the same rectangle.
@@ -2717,6 +2744,8 @@ If a canonical trace at $t\in[c,d]$ is known on the normal window $[c,d]$,
 and $a\le c<d\le b$, then weak normal differentiability of $F\circ C$,
 with both it and its specified derivative in L2 on $(l,r)\times(a,b)$,
 gives the same trace on $[a,b]$.
+Conversely, restriction of a canonical trace on $[a,b]$ to $[c,d]$
+retains that same trace whenever $t\in[c,d]$, without new weak data.
 The point $t$ may be an endpoint of either window.
 \end{lemma}
 
@@ -2885,6 +2914,21 @@ $\Xi_0(s,t)=\operatorname{diagInv}(t,s)$ and
 $\Xi_1(s,t)=\operatorname{diagInv}(s,t)$.
 \end{definition}
 
+\begin{lemma}[Dipole product in either diagonal trace chart]
+\label{lem:diagonal-trace-product}
+\uses{def:diagonal-trace-chart}
+\lean{NoEmbeddedEigenvalues.dipoleLift_diagonalTraceChart}
+\leanok
+For $j=0,1$, $\Psi(\Xi_j(s,y))=2\cos s\cos y$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:separatrix-lines, lem:diagonal-calculus}
+\leanok
+Apply the diagonal product formula; swapping the two coordinates
+does not change the product.
+\end{proof}
+
 \begin{lemma}[Raw diagonal L2 transport]
 \label{lem:diagonal-l2-transport}
 \uses{def:cells}
@@ -2914,7 +2958,8 @@ multiplying by two reverses the transport. Neither factor is zero or infinite.
  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_diagInv_fst,
  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_diagInv_snd,
  NoEmbeddedEigenvalues.MemSobolevOn.comp_diagInv,
- NoEmbeddedEigenvalues.MemSobolevOn.comp_diagonalTraceChart}
+ NoEmbeddedEigenvalues.MemSobolevOn.comp_diagonalTraceChart,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.diagonal_trace_rectangle}
 \leanok
 The two trace charts are continuous and open; their pullbacks preserve a.e.\
 identities. On open $U$, specified weak derivatives $F_x,F_y$ give
@@ -2924,6 +2969,8 @@ identities. On open $U$, specified weak derivatives $F_x,F_y$ give
  \partial_b(F\circ\operatorname{diagInv})=(F_x-F_y)\circ\operatorname{diagInv}.
 \]
 In particular $F\in H^1(U)$ implies $F\circ\Xi_j\in H^1(\Xi_j^{-1}U)$.
+If instead $F\in H^1_{\rm loc}(U)$, its pullback has finite H1 on every
+bounded open rectangle whose closed physical image is contained in $U$.
 \end{lemma}
 
 \begin{proof}
@@ -2935,6 +2982,8 @@ Jacobian and the classical chain rule. Sum and difference of the actual
 Cartesian weak identities give the two specified diagonal derivatives.
 The L2 transport supplies their finite norms. Swapping parameter coordinates
 gives the other trace chart by volume-preserving affine pullback.
+For the local version, enclose the compact closed image in a relatively
+compact open subset of $U$, use the actual finite H1 there, then restrict.
 \end{proof}
 
 \begin{lemma}[Cartesian H1 from diagonal H1]
