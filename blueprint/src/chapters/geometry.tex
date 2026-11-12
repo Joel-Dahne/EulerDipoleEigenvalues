@@ -2076,6 +2076,39 @@ iterating the selected coordinate partials. These are Euclidean and
 classical-calculus definitions, independent of Sobolev spaces.
 \end{definition}
 
+\begin{lemma}[Saddle lattice distance and Euclidean radius]
+\label{lem:saddle-distance-comparison}
+\uses{def:cell-arcs, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.pi_le_dist_saddles,
+ NoEmbeddedEigenvalues.isClosed_saddleSet,
+ NoEmbeddedEigenvalues.saddleDist_eq_zero_iff,
+ NoEmbeddedEigenvalues.ae_saddleDist_ne_zero,
+ NoEmbeddedEigenvalues.saddleDist_eq_dist,
+ NoEmbeddedEigenvalues.localRadius_le_two_dist,
+ NoEmbeddedEigenvalues.localRadius_le_two_saddleDist}
+\leanok
+The lifted saddle set is closed, and two distinct saddles are at product-metric
+distance at least $\pi$. Its distance vanishes exactly at the saddles, and
+is nonzero almost everywhere.
+For every $c,p$, $r_c(p)\le2\operatorname{dist}(p,c)$.
+If $c$ is a saddle and $\operatorname{dist}(p,c)<\pi/2$, then
+\[
+ d(p)=\operatorname{dist}(p,c),\qquad r_c(p)\le2d(p).
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+A nonzero difference of integer lattice coordinates has absolute value at
+least one. Multiplication by $\pi$ gives uniform separation and hence
+closedness. The lattice is null, so the zero-distance characterization
+also gives nonvanishing almost everywhere.
+The product distance is the maximum of the two coordinate differences;
+their Euclidean radius is at most twice that maximum.
+Finally, the triangle inequality and lattice separation show that within
+the $\pi/2$ ball no other saddle is closer than $c$.
+\end{proof}
+
 \begin{definition}[Normalized orthonormal saddle chart]
 \label{def:saddle-ortho-chart}
 \uses{def:cells, def:local-plane-geometry}

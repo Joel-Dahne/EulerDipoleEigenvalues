@@ -92,19 +92,21 @@ weights and local versus global regularity.
    multiplier and the physical local H¹ multiplier are admission-free. The exact
    diagonal factorization handles edges and saddle crossings together, without
    finite-p embedding or a separate multiplier localization in saddle charts.
-   Ordinary logarithmic stream-jet mass (`lem:dd-log-ordinary-bulk`) is proved from
-   the existing Ordinary separatrix H¹/H³ input (`prop:dd-separatrix-h1`) alone.
-   Canonical logarithmic saddle remainder (`lem:dd-log-saddle-remainder`) is proved
-   from Saddle jet (`prop:saddle-dd`) alone. It retains the canonical stream jet
-   minus the classical quadratic jet, with Euclidean radius from the fixed saddle.
-   The divided remainder gradient is genuinely H¹ through its center; the generic
-   radial weak-product and isolated-point-removal layers have zero admissions.
-   No quadrant trace/gluing input is needed: a transverse test cutoff has zero
-   derivative in the tested coordinate.
-   **Remaining in the target:** direct quadratic logarithmic mass, comparison of
-   Euclidean radius with saddle distance, lifted-neighbourhood gluing, and the
-   canonical ray bounds. The latter require compatibility of polar corner traces
-   with the Cartesian quarter traces for the same raw jet, not arbitrary point values.
+   **All bulk assertions are proved** in Logarithmic bulk forcing
+   (`lem:dd-log-bulk`), with the unchanged canonical stream jet on one neighbourhood
+   of the full lifted separatrix. Its three transitive inputs are Ordinary separatrix
+   H¹/H³ (`prop:dd-separatrix-h1`), Saddle jet (`prop:saddle-dd`) and the explicit
+   saddle factorization within Saddle normal form (`lem:saddle-normal-form`).
+   The separable mass majorant, local L² multipliers, lattice-distance comparison
+   and local gluing introduce no admissions. The physical quadratic bound uses only
+   the existing factorization input; no polar integration was needed.
+   **Remaining in the target:** canonical ray bounds. The stronger quotients R/r³
+   and ∂ⱼR/r² are now proved H¹ through the center. Ordinary Cartesian rectangle
+   traces should suffice, avoiding polar/Cartesian compatibility: construct traces
+   in the actual affine quarter-ray charts, prove multiplication/overlap consistency,
+   and identify the continuous stream value trace and the canonical gradient traces.
+   Positive powers absorb the radial logarithm by an admission-free L² multiplier.
+   Keep trace witnesses distinct from raw gradient evaluations.
    The full logarithmic forcing theorem remains admitted, unchanged.
    Saddle jet (`prop:saddle-dd`), weighted forcing and ordinary H¹/H³ also remain
    regularity inputs. Generic numerator differentiation and five scalar/orbit

@@ -2,11 +2,14 @@ import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.RadialWeakMultiplier
 import NoEmbeddedEigenvalues.DipoleLogMultiplier
 import NoEmbeddedEigenvalues.StreamJet
+import NoEmbeddedEigenvalues.SaddleLogarithmicMass
+import NoEmbeddedEigenvalues.SaddleDistance
 
 /-!
 # Logarithmic mass of the saddle remainder gradient
 
-Blueprint: `lem:log-radial-gradient`, `lem:dd-log-saddle-remainder`.
+Blueprint: `lem:log-radial-gradient`, `lem:dd-log-saddle-remainder`,
+`lem:dd-log-saddle-gradient`.
 
 The two strongest positive-order saddle weights give H¹ of ∂ⱼR/r^(3/2)
 through the center. The physical logarithmic multiplier then applies. Weak jet
@@ -71,5 +74,40 @@ theorem dd_log_saddle_remainder {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       classicalComplexJet [j] (saddleQuadratic c a) p :=
     (eq_sub_iff_add_eq).2 (hp hpU)
   rw [he']
+
+/-- The full saddle-weighted logarithmic gradient bound on one disk about each
+saddle, with the lattice distance and the unchanged canonical stream jet. -/
+theorem dd_log_saddle_gradient {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
+    ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧ ∀ j : Fin 2,
+      MemSobolevLocOn 0 (localDisk c ρ) (fun p ↦
+        (Real.sqrt (dipoleLogWeight p) : ℂ) * streamJet2 ω [j] p /
+          (Real.rpow (saddleDist p) (3 / 2) : ℂ)) := by
+  intro c hc
+  obtain ⟨r, hr, a, hR⟩ := dd_log_saddle_remainder hlam hω hs c hc
+  obtain ⟨q, hq, hQ⟩ := saddleQuadratic_log_gradient hc
+  let ρ := min r (min q (Real.pi / 4))
+  have hρ : 0 < ρ := lt_min hr (lt_min hq (by positivity))
+  have hρr : ρ ≤ r := min_le_left _ _
+  have hρq : ρ ≤ q := (min_le_right _ _).trans (min_le_left _ _)
+  have hρpi : ρ ≤ Real.pi / 4 := (min_le_right _ _).trans (min_le_right _ _)
+  have hsubr : localDisk c ρ ⊆ localDisk c r := fun _ hp ↦ lt_of_lt_of_le hp hρr
+  have hsubq : localDisk c ρ ⊆ localDisk c q := fun _ hp ↦ lt_of_lt_of_le hp hρq
+  have hball : localDisk c ρ ⊆ Metric.ball c (Real.pi / 2) := by
+    intro p hp
+    exact (dist_le_localRadius c p).trans_lt ((lt_of_lt_of_le hp hρpi).trans
+      (by linarith [Real.pi_pos]))
+  refine ⟨ρ, hρ, fun j ↦ ?_⟩
+  have hQloc : MemSobolevLocOn 0 (localDisk c ρ) (fun p ↦
+      (Real.sqrt (dipoleLogWeight p) : ℂ) *
+        classicalComplexJet [j] (saddleQuadratic c a) p /
+          (Real.rpow (localRadius c p) (3 / 2) : ℂ)) :=
+    (show MemSobolevOn 0 (localDisk c q) _ from hQ a j).memSobolevLocOn.mono hsubq
+  have hfull : MemSobolevLocOn 0 (localDisk c ρ) (fun p ↦
+      (Real.sqrt (dipoleLogWeight p) : ℂ) * streamJet2 ω [j] p /
+        (Real.rpow (localRadius c p) (3 / 2) : ℂ)) := by
+    apply (((hR j).mono hsubr).add hQloc).congr_ae_on
+    exact Filter.Eventually.of_forall fun p _ ↦ by ring
+  exact hfull.div_saddleDist_of_radius hc hball (by norm_num)
 
 end NoEmbeddedEigenvalues

@@ -84,6 +84,7 @@ import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.SeparableMultiplier
 import NoEmbeddedEigenvalues.DipoleLogMultiplier
 import NoEmbeddedEigenvalues.LogarithmicWeights
+import NoEmbeddedEigenvalues.LogarithmicRadialMass
 import NoEmbeddedEigenvalues.QuarterRayTraceUniqueness
 import NoEmbeddedEigenvalues.LogarithmicQuarterMass
 import NoEmbeddedEigenvalues.LogarithmicRayTransport
@@ -127,6 +128,8 @@ import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 import NoEmbeddedEigenvalues.SaddleChartPullback
+import NoEmbeddedEigenvalues.SaddleLogarithmicMass
+import NoEmbeddedEigenvalues.SaddleDistance
 import NoEmbeddedEigenvalues.Period
 import NoEmbeddedEigenvalues.ResonantVanishing
 import NoEmbeddedEigenvalues.Sectors
@@ -136,6 +139,7 @@ import NoEmbeddedEigenvalues.SmoothIntervalIntegral
 import NoEmbeddedEigenvalues.SobolevLocal
 import NoEmbeddedEigenvalues.SobolevGluing
 import NoEmbeddedEigenvalues.SobolevMultipliers
+import NoEmbeddedEigenvalues.LocalL2Multipliers
 import NoEmbeddedEigenvalues.SobolevApproximation
 import NoEmbeddedEigenvalues.LiftPeriodization
 import NoEmbeddedEigenvalues.SobolevHolder

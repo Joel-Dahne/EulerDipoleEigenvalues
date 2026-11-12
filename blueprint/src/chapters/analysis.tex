@@ -1384,6 +1384,23 @@ patch, so the cutoff lemma puts its product with $f$ in $H^k(\R^2)$.
 Their finite sum equals $f$ on $V$, giving $f\in H^k(V)$.
 \end{proof}
 
+\begin{lemma}[Local L2 multiplication]
+\label{lem:local-l2-multiplier}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_bounded,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_continuousOn}
+\leanok
+If $F\in L^2_{\rm loc}(U)$ and $G$ is measurable and bounded on $U$, then
+$GF\in L^2_{\rm loc}(U)$. The same conclusion holds if $G$ is continuous
+on $U$, without a global bound. No derivatives of $G$ are needed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+On each $V\Subset U$, use a bounded coefficient times an actual $L^2$ function.
+For the continuous case, compactness bounds $G$ on $\overline V$.
+\end{proof}
+
 \begin{lemma}[Local smooth Sobolev multiplication]
 \label{lem:sobolev-local-multiplier}
 \uses{def:sobolev-local}
@@ -1567,6 +1584,22 @@ For the last claim multiply $F/r^m$ by the bounded measurable factor
 $r^{m-t}$; the cancellation is needed only off the null center.
 \end{proof}
 
+\begin{lemma}[Transfer from radius to saddle distance]
+\label{lem:saddle-distance-weight-transfer}
+\uses{def:sobolev-local, def:cell-arcs, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_of_radius}
+\leanok
+Let $c$ be a saddle, $U\subset B(c,\pi/2)$ in the product metric, and $s\ge0$.
+If $F/r_c^s\in L^2_{\rm loc}(U)$, then $F/d^s\in L^2_{\rm loc}(U)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison, lem:local-l2-multiplier}
+\leanok
+The measurable multiplier $(r_c/d)^s$ is bounded by $2^s$ on $U$.
+Off the null saddle set it transforms the first quotient into the second.
+\end{proof}
+
 \begin{lemma}[Divided saddle-jet gradients in H1]
 \label{lem:radial-gradient-h1}
 \uses{def:local-weak-jets, def:sobolev-local}
@@ -1584,6 +1617,24 @@ The weaker weights $D_j/r_c^{3/2}$, $D_j/r_c^{5/2}$ and
 $D_{ij}/r_c^{3/2}$ are square integrable on the bounded disk.
 Apply the weak radial product rule to the specified identity
 $\partial_iD_j=D_{ij}$.
+\end{proof}
+
+\begin{lemma}[Cartesian H1 quotients for subcritical rays]
+\label{lem:radial-ray-quotients-h1}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.radial_ray_quotients_h1}
+\leanok
+Let $D$ be a specified second weak jet of $R$ on a disk about $c$, with
+$R/r_c^4$, $D_j/r_c^3$ and $D_{ij}/r_c^2$ in $L^2$.
+Then $R/r_c^3$ and each $D_j/r_c^2$ belong to $H^1$ on the whole disk.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:radial-weak-multiplier}
+\leanok
+For the value quotient use $s=3$; for each gradient quotient use $s=2$.
+The given weights control the additional inverse-radius terms and all
+specified derivatives in the radial product rule.
 \end{proof}
 
 \begin{remark}[Digest note: point removal, not quadrant gluing]
@@ -2439,6 +2490,99 @@ Diagonal weak-derivative transport and the coordinate-weight multiplier
 give the rectangle estimate. Near each point of $U$, multiply $F$ by a
 compact smooth cutoff equal to one nearby, apply the rectangle result,
 and use local $L^2$ gluing. No full-plane norm of a periodic lift is asserted.
+\end{proof}
+
+\begin{lemma}[Logarithmic mass divided by radius]
+\label{lem:logarithmic-radial-mass}
+\uses{def:local-plane-geometry, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.integrableOn_abs_rpow,
+ NoEmbeddedEigenvalues.logRectangleWeight_div_radius_le,
+ NoEmbeddedEigenvalues.integrableOn_logRectangleWeight_div_radius}
+\leanok
+For $s>-1$, $|t|^s$ is integrable on every bounded symmetric interval.
+On $(-1,1)^2$ off the coordinate axes,
+\[
+ \frac{1+|\log|u||+|\log|v||}{\sqrt{u^2+v^2}}
+ \le 9|u|^{-3/4}|v|^{-3/4}.
+\]
+Consequently the left side is genuinely integrable on that square.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The one-dimensional powers are integrable since $-3/4>-1$.
+For $0<x\le1$, $|\log x|x^{1/4}\le4$ and $x^{1/4}\le1$, so the
+numerator times $|uv|^{1/4}$ is at most $9$.
+Also $\sqrt{|uv|}\le\sqrt{u^2+v^2}$. Multiply these bounds and use
+Fubini for the product majorant; both excluded axes are null.
+\end{proof}
+
+\begin{lemma}[Positive powers absorb the radial logarithm]
+\label{lem:radial-log-absorption}
+\uses{def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.logRadiusWeight_mul_rpow_le,
+ NoEmbeddedEigenvalues.memLp_logRadius_mul_rpow}
+\leanok
+For $s>0$ and $0<r\le1$,
+$r^s(1+|\log r|)\le1+1/s$.
+If $T\in L^2(0,\rho)$ with $\rho\le1$, then
+$\sqrt{1+|\log r|}\,r^sT\in L^2(0,\rho)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use $|\log r|r^s\le1/s$ and $r^s\le1$.
+The square-root logarithm is at most the logarithm weight itself,
+so it also supplies a bounded multiplier when multiplied by $r^s$.
+\end{proof}
+
+\begin{lemma}[Physical logarithmic mass at a saddle]
+\label{lem:saddle-logarithmic-mass}
+\uses{def:saddle-ortho-chart, def:cell-arcs, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.exists_saddle_log_bound,
+ NoEmbeddedEigenvalues.exists_integrableOn_dipoleLogWeight_div_radius}
+\leanok
+Near zero in every normalized saddle chart,
+$\Lambda_\Psi(\Xi_c(q))\le(1+2\log2)\Lambda_{\rm rect}(q)$,
+including the assigned values on the separatrix.
+For each lifted saddle $c$, some $\rho>0$ satisfies
+$\Lambda_\Psi/r_c\in L^1(D_\rho(c))$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-normal-form, lem:saddle-chart-pullback,
+ lem:logarithmic-radial-mass}
+\leanok
+Continuity and $m(0)=1$ give $m>1/2$ on a small disk.
+Take logarithms of $\Psi\circ\Xi_c=uv\,m$ away from its zeros; at the
+zeros $\Lambda_\Psi=1$ obeys the same bound.
+Restrict the integrable crossing majorant to that disk and transport
+back by the volume- and radius-preserving affine chart.
+\end{proof}
+
+\begin{lemma}[Quadratic logarithmic gradient mass]
+\label{lem:saddle-quadratic-log-gradient}
+\uses{def:saddle-quadratic, def:local-weak-jets, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.first_saddleQuadratic,
+ NoEmbeddedEigenvalues.norm_first_saddleQuadratic_le,
+ NoEmbeddedEigenvalues.saddleQuadratic_log_gradient}
+\leanok
+The classical first derivatives of $Q_{c,a}$ are
+$-a\cos(c_x)(p_x-c_x)$ and $a\cos(c_x)(p_y-c_y)$, so
+$|\partial_jQ_{c,a}|\le|a\cos(c_x)|r_c$.
+For every saddle $c$ there is $\rho>0$, independent of $a$, such that
+$\sqrt{\Lambda_\Psi}\,\partial_jQ_{c,a}/r_c^{3/2}\in L^2(D_\rho(c))$
+for every $a$ and $j$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-logarithmic-mass}
+\leanok
+The square norm of $\sqrt{\Lambda_\Psi}/\sqrt{r_c}$ is the integrable
+function $\Lambda_\Psi/r_c$.
+Multiply this actual $L^2$ function by the bounded measurable quotient
+$\partial_jQ_{c,a}/r_c$ and use $r_c^{3/2}=r_c\sqrt{r_c}$.
+The totalized center values do not affect membership.
 \end{proof}
 
 \begin{lemma}[Logarithmic divided saddle-jet gradients]

@@ -46,6 +46,8 @@ proof mechanisms. Module names below are relative to
   of representatives agreeing a.e.; separate from torus periodization.
 - `SobolevMultipliers.lean`: local multiplication by smooth factors and
   division by smooth nonvanishing real factors, via compact cutoffs.
+  `LocalL2Multipliers.lean` needs only bounded measurable coefficients at order
+  zero, or continuous coefficients bounded on each compact localization.
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak and classical
   complex jets, integer and real-power radial integrability, energies and the
   Sobolev/jet interface.
@@ -55,6 +57,9 @@ proof mechanisms. Module names below are relative to
   full specified jets, Sobolev regularity and radius-preserving radial L² bounds.
 - `SaddleChartPullback.lean`: the explicit normalized saddle chart instantiated
   in the affine Sobolev/jet/radial interface.
+- `SaddleDistance.lean`: lattice separation/closedness, identification of the
+  nearest saddle on a small ball, Euclidean/product radius comparisons and
+  bounded-measurable transfer of radial local L² to saddle-distance weights.
 - `StreamJet.lean`: the canonical second stream jet from the existing Fourier
   partial multipliers, and its weak-jet interface.
 - `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
@@ -75,7 +80,8 @@ proof mechanisms. Module names below are relative to
 - `WeakPointRemoval.lean`: a transverse cutoff removes an isolated point from a
   specified weak partial identity under local L¹ hypotheses, without a radial tail.
 - `RadialWeakMultiplier.lean`: the local smooth weak product rule, radial derivatives,
-  weaker-weight L² transport and H¹ of the divided gradient through its center.
+  weaker-weight L² transport and H¹ of divided gradients through their center.
+  The stronger quotients R/r³ and ∂ⱼR/r² support ordinary Cartesian ray traces.
   `IntervalH1WeakLift.lean` lifts interval H¹ data to planar weak level derivatives.
   `WeakParameterIntegral.lean` proves local integrability and weak differentiation
   of signed midpoint primitives by sliced testing and Fubini.
@@ -92,6 +98,12 @@ proof mechanisms. Module names below are relative to
   weighted L² membership and an explicit uniform integral estimate.
   `DipoleLogMultiplier.lean` uses Ψ = 2 cos(a) cos(b), diagonal weak-derivative
   transport and compact localization to absorb the physical logarithm in local H¹.
+- `LogarithmicRadialMass.lean`: a separable integrable power majorant for the
+  crossing logarithm divided by radius, and absorption of radial logarithms by
+  positive powers on bounded intervals.
+- `SaddleLogarithmicMass.lean`: the physical logarithm near each saddle, actual
+  integrability of Λ/r and logarithmic quadratic-gradient L², using the normalized
+  factorization and volume/radius-preserving affine chart.
 - `LogarithmicQuarterMass.lean`: compact collar localization of local logarithmic
   jet norms, constant-Jacobian quarter pullback and integrable fiber summation.
   `LogarithmicRayTransport.lean` proves the radius Jacobian, logarithmic comparison
@@ -186,11 +198,13 @@ can be added here as they are formalized.
   quadratic compatibility. Independent of the eigenfunction regularity modules.
 - `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
   and ordinary separatrix H¹/H³ interfaces.
-- `Regularity/OddOddLogBulk.lean`: ordinary logarithmic first/second jet masses
-  from the H³ stream gain, with weak uniqueness preserving canonical entries.
-- `Regularity/OddOddLogSaddle.lean`: logarithmic mass of the divided saddle remainder
-  gradient, identified with the canonical stream jet minus the classical quadratic
-  jet by weak uniqueness. The radius here is Euclidean distance from the fixed saddle.
+- `Regularity/OddOddLogBulk.lean`: all logarithmic bulk bounds on one lifted
+  separatrix neighbourhood. Ordinary first/second jet masses come from H³;
+  saddle bounds and continuous inverse distance away from saddles glue locally.
+- `Regularity/OddOddLogSaddle.lean`: the divided saddle remainder gradient in the
+  canonical stream jet minus the classical quadratic jet, first with Euclidean
+  radius. Adding the quadratic and shrinking the disk gives the complete canonical
+  gradient bound with the lattice-distance weight.
 - `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing interface and
   numerator assembly, using one fixed canonical stream jet. The assembly localizes
   the bulk norms and identifies the forcing traces with the existing numerator

@@ -6,7 +6,7 @@ import NoEmbeddedEigenvalues.TransversalMollifier
 # Weak multiplication by radial powers
 
 Blueprint: `lem:weak-derivative-product`, `lem:radial-weak-multiplier`,
-`lem:radial-gradient-h1`.
+`lem:radial-gradient-h1`, `lem:radial-ray-quotients-h1`.
 
 Local smooth multiplication fixes the derivative representative. An isolated
 singularity is then removed using local integrability, rather than by selecting
@@ -295,5 +295,34 @@ theorem HasWeakJetOn.radial_gradient_h1 {c : ℝ × ℝ} {ρ : ℝ}
     (memLp_div_localRadius_rpow (by norm_num) (h₁ [j] rfl))
     (memLp_div_localRadius_rpow (by norm_num) (h₁ [j] rfl))
     (fun i ↦ memLp_div_localRadius_rpow (by norm_num) (h₂ [i, j] rfl))
+
+/-- Stronger divided remainders are H¹ through the center too. Ordinary
+Cartesian L² traces of these quotients suffice for subcritical logarithmic rays. -/
+theorem HasWeakJetOn.radial_ray_quotients_h1 {c : ℝ × ℝ} {ρ : ℝ}
+    {F : ℝ × ℝ → ℂ} {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn 2 (localDisk c ρ) F D)
+    (h₀ : RadialJetLp 0 4 (localDisk c ρ) c D)
+    (h₁ : RadialJetLp 1 3 (localDisk c ρ) c D)
+    (h₂ : RadialJetLp 2 2 (localDisk c ρ) c D) :
+    MemSobolevOn 1 (localDisk c ρ)
+      (fun p ↦ F p / (Real.rpow (localRadius c p) 3 : ℂ)) ∧
+      ∀ j : Fin 2, MemSobolevOn 1 (localDisk c ρ)
+        (fun p ↦ D [j] p / (Real.rpow (localRadius c p) 2 : ℂ)) := by
+  have hU : IsOpen (localDisk c ρ) := by
+    apply isOpen_lt _ continuous_const
+    unfold localRadius
+    fun_prop
+  have hF : MemLp (fun p ↦ F p / (localRadius c p ^ 4 : ℂ)) 2
+      (volume.restrict (localDisk c ρ)) := by
+    simpa only [hD.1] using h₀ [] rfl
+  refine ⟨memSobolevOn_radial_div hU (fun i ↦ ?_)
+    (memLp_div_localRadius_rpow (by norm_num) hF)
+    (memLp_div_localRadius_rpow (by norm_num) hF)
+    (fun i ↦ memLp_div_localRadius_rpow (by norm_num) (h₁ [i] rfl)), fun j ↦ ?_⟩
+  · simpa only [hD.1] using hD.2 [] (by simp) i
+  · exact memSobolevOn_radial_div hU (fun i ↦ hD.2 [j] (by simp) i)
+      (memLp_div_localRadius_rpow (by norm_num) (h₁ [j] rfl))
+      (memLp_div_localRadius_rpow (by norm_num) (h₁ [j] rfl))
+      (fun i ↦ memLp_div_localRadius_rpow (by norm_num) (h₂ [i, j] rfl))
 
 end NoEmbeddedEigenvalues

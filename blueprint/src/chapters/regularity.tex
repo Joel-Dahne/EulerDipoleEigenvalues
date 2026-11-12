@@ -361,6 +361,51 @@ Transfer the logarithmic bound for the original specified $D_j$.
 No raw gradient value is evaluated on a ray.
 \end{proof}
 
+\begin{lemma}[Logarithmic saddle gradient, odd--odd]
+\label{lem:dd-log-saddle-gradient}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:log-level-weight, def:stream-second-jet, def:cell-arcs,
+ def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.dd_log_saddle_gradient}
+\leanok
+For an odd--odd eigenfunction and every lifted saddle $c$, there is $\rho>0$
+such that $\sqrt{\Lambda_\Psi}\,J_j/d^{3/2}\in L^2_{\rm loc}(D_\rho(c))$
+for both canonical first stream-jet entries.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-log-saddle-remainder, lem:saddle-quadratic-log-gradient,
+ lem:saddle-distance-weight-transfer}
+\leanok
+Use the same coefficient in the canonical remainder and the quadratic.
+Restrict both bounds to a common smaller disk, sum the two actual local
+$L^2$ functions, and transfer the Euclidean-radius weight to saddle distance.
+\end{proof}
+
+\begin{lemma}[Logarithmic bulk forcing, odd--odd]
+\label{lem:dd-log-bulk}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:log-level-weight, def:stream-second-jet, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.dd_log_bulk}
+\leanok
+For an odd--odd eigenfunction there is one open lifted neighbourhood $U$ of
+$\{\Psi=0\}$ on which
+$\sqrt{\Lambda_\Psi}\,J_j/d^{3/2}$ and all
+$\sqrt{\Lambda_\Psi}\,J_w$ with $|w|=1,2$ belong to $L^2_{\rm loc}$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-log-ordinary-bulk, lem:dd-log-saddle-gradient,
+ lem:saddle-distance-comparison, lem:local-l2-multiplier,
+ lem:sobolev-local-gluing}
+\leanok
+Keep the ordinary logarithmic bulk neighbourhood. At each saddle use the
+local weighted saddle gradient. Elsewhere $d>0$, and multiplication by
+the continuous factor $d^{-3/2}$ preserves local $L^2$.
+Local gluing gives the weighted bound on the same whole neighbourhood.
+No finite full-plane norm is asserted.
+\end{proof}
+
 \begin{lemma}[Logarithmically weighted forcing, odd--odd]
 \label{lem:dd-log-forcing}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
@@ -385,37 +430,44 @@ locally $L^2$ on $U$; ray bounds are on a bounded radial interval.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-log-ordinary-bulk, lem:dd-log-saddle-remainder,
- prop:saddle-dd, lem:saddle-normal-form, lem:weighted-corner-trace,
- lem:sobolev-local-gluing}
-Lemma~\ref{lem:dd-log-ordinary-bulk} supplies the ordinary first- and
-second-jet masses, using the same canonical jet on one neighbourhood.
-
-For the remaining term write $\psi=q+R$ near a saddle. The normalized
-factorization $\Psi=uv\,m$, with $m$ bounded away from zero, gives
-$\Lambda_\Psi\le C(1+|\log|u||+|\log|v||)$ locally.
-The quadratic part has $|\nabla q|^2/r^3\le C/r$. Its logarithmically weighted integral is
-finite: in polar coordinates the radial integrals of $1+|\log r|$ and
-the angular integrals of $|\log\sin\theta|+|\log\cos\theta|$ are finite.
-Lemma~\ref{lem:dd-log-saddle-remainder} supplies the remainder contribution
-in the same canonical jet: the divided remainder gradient is $H^1$ through
-the center, so the physical logarithmic multiplier applies.
-Comparison of Euclidean radius with saddle distance transfers the local
-bounds to the stated weight. Away from saddle neighbourhoods, $d$ is
-bounded below, so the ordinary logarithmic bulk bounds suffice.
-Local $L^2$ gluing gives a lifted neighbourhood of the whole separatrix.
-
-For the ray estimates, apply Lemma~\ref{lem:weighted-corner-trace} to
-$R/r^3$ and each component of $\nabla R/r^2$. Their quotients by $r$
-and their gradients are $L^2$ by the quadratic jet, giving
+\uses{lem:dd-log-bulk, prop:saddle-dd, prop:dd-separatrix-h1,
+ lem:radial-ray-quotients-h1, lem:trace-l2, lem:affine-jet-pullback,
+ lem:radial-log-absorption, lem:weak-jet-regularity,
+ lem:stream-weak-second-jet, lem:saddle-quadratic-log-gradient}
+Lemma~\ref{lem:dd-log-bulk} supplies all bulk assertions on one lifted
+neighbourhood. For the ray estimates write $\psi=q+R$ near each saddle.
+Lemma~\ref{lem:radial-ray-quotients-h1} gives $R/r^3$ and
+$\partial_jR/r^2$ in Cartesian $H^1$ through the center.
+Use the ordinary rectangle trace estimate on a small bounded
+radial/transverse rectangle in the same Cartesian ray chart.
+It gives $L^2(dr)$ traces $S_0,S_j$ for these quotients.
+Away from $r=0$ the weight is smooth, so the trace product identities are
 \[
- \int_{\rm ray}|R|^2r^{-7}dr<\infty,\qquad
- \int_{\rm ray}|\nabla R|^2r^{-5}dr<\infty.
+ \operatorname{Tr}R=r^3S_0,\qquad
+ \operatorname{Tr}(\partial_jR)=r^2S_j.
 \]
-These imply the desired weaker ray weights because
-$r^4(1+|\log r|)$ is bounded. The quadratic contributions are bounded by
-$Cr(1+|\log r|)$ and are integrable directly.
+Both desired weighted remainder traces are therefore
+$\sqrt{1+|\log r|}\,r^{3/2}S$, which belong to $L^2$ by
+Lemma~\ref{lem:radial-log-absorption}.
+The quadratic value and gradient are $O(r^2)$ and $O(r)$ respectively,
+so their divided logarithmic traces are also $L^2$.
+The continuous stream identifies the value trace with its actual ray values;
+the ordinary stream $H^3$ gain and weak uniqueness identify the gradient
+traces with the canonical first jet. Trace consistency on overlapping
+rectangles supplies all compact windows in the definition of the ray trace.
+The eight ray charts are affine signed coordinate permutations; take the
+minimum of their finitely many radii.
 \end{proof}
+
+\begin{remark}[Digest note: Cartesian traces suffice for logarithmic rays]
+The stronger polar estimates with $r^{-7}$ and $r^{-5}$ are unnecessary
+for this subcritical conclusion. Whole-disk Cartesian $H^1$ of $R/r^3$
+and $\partial_jR/r^2$ already gives $r^{-6}$ and $r^{-4}$ ray masses.
+The bounded factor $r^3(1+|\log r|)$ supplies the desired weaker norms.
+This also avoids a change between polar and Cartesian trace definitions;
+the canonical Cartesian trace product and consistency identities must
+still be justified, not replaced by raw gradient evaluations.
+\end{remark}
 
 \begin{remark}[Digest note: logarithmic norms on the periodic lift]
 The full lifted separatrix is unbounded. Bulk norms are local on its
