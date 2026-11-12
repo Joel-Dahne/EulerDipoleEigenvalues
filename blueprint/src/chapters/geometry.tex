@@ -2206,6 +2206,26 @@ $\Delta Q_{P,a}=0$.
 The two pure second derivatives are $-a\cos P_x$ and $a\cos P_x$.
 \end{proof}
 
+\begin{lemma}[Classical first jet of the saddle quadratic]
+\label{lem:saddle-quadratic-first-jet}
+\uses{def:saddle-quadratic, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.first_saddleQuadratic,
+ NoEmbeddedEigenvalues.norm_first_saddleQuadratic_le,
+ NoEmbeddedEigenvalues.continuous_saddleQuadratic,
+ NoEmbeddedEigenvalues.continuous_first_saddleQuadratic}
+\leanok
+For every center $c$ and coefficient $a$, the quadratic $Q_{c,a}$ and its
+classical first entries are continuous. These entries are
+$-a\cos(c_x)(p_x-c_x)$ and $a\cos(c_x)(p_y-c_y)$, so
+$|\partial_jQ_{c,a}|\le|a\cos(c_x)|r_c$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Differentiate the explicit Cartesian polynomial.
+Each coordinate displacement is at most its Euclidean radius.
+\end{proof}
+
 \begin{lemma}[Cartesian saddle Taylor correction]
 \label{lem:saddle-taylor-correction}
 \uses{def:saddle-quadratic, def:local-weak-jets, def:sobolev-local}

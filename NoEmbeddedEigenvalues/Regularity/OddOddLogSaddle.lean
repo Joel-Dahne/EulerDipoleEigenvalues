@@ -9,7 +9,8 @@ import NoEmbeddedEigenvalues.SaddleDistance
 # Logarithmic mass of the saddle remainder gradient
 
 Blueprint: `lem:log-radial-gradient`, `lem:dd-log-saddle-remainder`,
-`lem:dd-log-saddle-gradient`.
+`lem:dd-log-saddle-gradient`, `lem:canonical-saddle-first-jet`,
+`lem:dd-saddle-ray-quotients-h1`.
 
 The two strongest positive-order saddle weights give H¹ of ∂ⱼR/r^(3/2)
 through the center. The physical logarithmic multiplier then applies. Weak jet
@@ -37,17 +38,14 @@ theorem HasWeakJetOn.log_radial_gradient {c : ℝ × ℝ} {ρ : ℝ}
   simpa only [mul_div_assoc] using
     (hD.radial_gradient_h1 h₁ h₂ j).memSobolevLocOn.log_dipole_mul hU
 
-/-- The logarithmic saddle-remainder bound uses the same canonical first stream
-jet as numerator differentiation, not an independent spatial representative. -/
-theorem dd_log_saddle_remainder {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
-    ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧ ∃ a : ℂ, ∀ j : Fin 2,
-      MemSobolevLocOn 0 (localDisk c ρ) (fun p ↦
-        (Real.sqrt (dipoleLogWeight p) : ℂ) *
-          (streamJet2 ω [j] p - classicalComplexJet [j] (saddleQuadratic c a) p) /
-            (Real.rpow (localRadius c p) (3 / 2) : ℂ)) := by
-  intro c hc
-  obtain ⟨ρ, hρ, a, ⟨D, hD, hDw⟩, _⟩ := (saddle_dd hlam hω hs).2 c hc
+/-- Weak uniqueness identifies the original specified remainder entries with the
+fixed canonical stream jet minus the same classical quadratic jet. -/
+theorem HasWeakJetOn.canonical_saddle_first {ω : L2} {c : ℝ × ℝ} {ρ : ℝ} {a : ℂ}
+    {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn 2 (localDisk c ρ)
+      (fun p ↦ contStream ω p - saddleQuadratic c a p) D) (j : Fin 2) :
+    ∀ᵐ p, p ∈ localDisk c ρ → D [j] p = streamJet2 ω [j] p -
+      classicalComplexJet [j] (saddleQuadratic c a) p := by
   have hU : IsOpen (localDisk c ρ) := by
     apply isOpen_lt _ continuous_const
     unfold localRadius
@@ -65,15 +63,49 @@ theorem dd_log_saddle_remainder {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     rw [congrFun hD.1 p]
     simp only [classicalComplexJet]
     ring
+  filter_upwards [hsum.ae_eq hU (streamJet2_weak ω (localDisk c ρ)) [j] (by simp)]
+    with p hp hpU
+  exact (eq_sub_iff_add_eq).2 (hp hpU)
+
+/-- The logarithmic saddle-remainder bound uses the same canonical first stream
+jet as numerator differentiation, not an independent spatial representative. -/
+theorem dd_log_saddle_remainder {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
+    ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧ ∃ a : ℂ, ∀ j : Fin 2,
+      MemSobolevLocOn 0 (localDisk c ρ) (fun p ↦
+        (Real.sqrt (dipoleLogWeight p) : ℂ) *
+          (streamJet2 ω [j] p - classicalComplexJet [j] (saddleQuadratic c a) p) /
+            (Real.rpow (localRadius c p) (3 / 2) : ℂ)) := by
+  intro c hc
+  obtain ⟨ρ, hρ, a, ⟨D, hD, hDw⟩, _⟩ := (saddle_dd hlam hω hs).2 c hc
   refine ⟨ρ, hρ, a, fun j ↦ ?_⟩
   have hl := hD.log_radial_gradient (hDw 1 (by norm_num)) (hDw 2 le_rfl) j
-  have he := hsum.ae_eq hU (streamJet2_weak ω (localDisk c ρ)) [j] (by simp)
   apply hl.congr_ae_on
-  filter_upwards [he] with p hp hpU
-  have he' : D [j] p = streamJet2 ω [j] p -
-      classicalComplexJet [j] (saddleQuadratic c a) p :=
-    (eq_sub_iff_add_eq).2 (hp hpU)
-  rw [he']
+  filter_upwards [hD.canonical_saddle_first j] with p hp hpU
+  rw [hp hpU]
+
+/-- Strong Cartesian H¹ quotients for ray traces, with the same quadratic
+coefficient and canonical gradient entries as the bulk estimates. -/
+theorem dd_saddle_ray_quotients_h1 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
+    ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧ ∃ a : ℂ,
+      MemSobolevOn 1 (localDisk c ρ) (fun p ↦
+        (contStream ω p - saddleQuadratic c a p) / (Real.rpow (localRadius c p) 3 : ℂ)) ∧
+      ∀ j : Fin 2, MemSobolevOn 1 (localDisk c ρ) (fun p ↦
+        (streamJet2 ω [j] p - classicalComplexJet [j] (saddleQuadratic c a) p) /
+          (Real.rpow (localRadius c p) 2 : ℂ)) := by
+  intro c hc
+  obtain ⟨ρ, hρ, a, ⟨D, hD, hDw⟩, _⟩ := (saddle_dd hlam hω hs).2 c hc
+  have hQ := hD.radial_ray_quotients_h1 (hDw 0 (by norm_num))
+    (hDw 1 (by norm_num)) (hDw 2 le_rfl)
+  have hU : IsOpen (localDisk c ρ) := by
+    apply isOpen_lt _ continuous_const
+    unfold localRadius
+    fun_prop
+  refine ⟨ρ, hρ, a, hQ.1, fun j ↦ ?_⟩
+  apply (hQ.2 j).congr_ae_on hU.measurableSet
+  filter_upwards [hD.canonical_saddle_first j] with p hp hpU
+  rw [hp hpU]
 
 /-- The full saddle-weighted logarithmic gradient bound on one disk about each
 saddle, with the lattice distance and the unchanged canonical stream jet. -/

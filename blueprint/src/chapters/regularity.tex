@@ -331,6 +331,25 @@ the specified first and second jet entries in local $H^1$ on the same
 neighbourhood. Apply the physical logarithmic multiplier to each entry.
 \end{proof}
 
+\begin{lemma}[Canonical identification of the first saddle remainder jet]
+\label{lem:canonical-saddle-first-jet}
+\uses{def:stream-second-jet, def:saddle-quadratic, def:local-weak-jets,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.canonical_saddle_first}
+\leanok
+For any specified second weak jet $D$ of $\psi-Q_{c,a}$ on $D_\rho(c)$,
+its first entries satisfy $D_j=J_j-\partial_jQ_{c,a}$ a.e.\ on that disk,
+where $J$ is the canonical stream jet.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:stream-weak-second-jet, lem:weak-derivative-classical,
+ lem:weak-derivative-basic, lem:weak-derivative-unique}
+\leanok
+Add the classical quadratic jet to $D$ and compare the resulting weak jet
+of $\psi$ with the canonical weak jet.
+\end{proof}
+
 \begin{lemma}[Logarithmic canonical saddle remainder, odd--odd]
 \label{lem:dd-log-saddle-remainder}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
@@ -350,9 +369,7 @@ Cartesian quadratic saddle polynomial.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:saddle-dd, lem:log-radial-gradient, lem:stream-weak-second-jet,
- lem:weak-derivative-basic, lem:weak-derivative-unique,
- lem:weak-derivative-classical}
+\uses{prop:saddle-dd, lem:log-radial-gradient, lem:canonical-saddle-first-jet}
 \leanok
 Retain the saddle remainder jet $D$ and its coefficient $a$.
 Adding the classical quadratic jet gives a weak jet of $\psi$;
@@ -406,6 +423,61 @@ Local gluing gives the weighted bound on the same whole neighbourhood.
 No finite full-plane norm is asserted.
 \end{proof}
 
+\begin{lemma}[Canonical Cartesian saddle quotients in H1]
+\label{lem:dd-saddle-ray-quotients-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:stream-second-jet,
+ def:saddle-quadratic, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.dd_saddle_ray_quotients_h1}
+\leanok
+For each lifted saddle $c$ and odd--odd eigenfunction, some $\rho>0$
+and one coefficient $a$ give
+\[
+ \frac{\psi-Q_{c,a}}{r_c^3}\in H^1(D_\rho(c)),\qquad
+ \frac{J_j-\partial_jQ_{c,a}}{r_c^2}\in H^1(D_\rho(c))
+ \quad(j=0,1).
+\]
+These are whole-disk weak Sobolev assertions for the canonical entries.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:saddle-dd, lem:radial-ray-quotients-h1,
+ lem:canonical-saddle-first-jet}
+\leanok
+Retain the original remainder jet and coefficient.
+The strong radial weights give the Cartesian H1 quotients, and weak
+uniqueness transfers the gradient quotients to the canonical entries.
+\end{proof}
+
+\begin{lemma}[Canonical logarithmic ray bounds, odd--odd]
+\label{lem:dd-log-ray-bounds}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:stream-second-jet,
+ def:quarter-endpoint-rays, def:interior-section-trace, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.dd_log_ray_bounds}
+\leanok
+For each of the eight quarter-endpoint rays $\gamma(r)=C(r,0)$ of an
+odd--odd eigenfunction, there is $0<\delta<1$ such that
+\[
+ \sqrt{1+|\log r|}\,\psi(\gamma(r))/r^{3/2}\in L^2(0,\delta),\qquad
+ \sqrt{1+|\log r|}\,T_C J_j(r)/\sqrt r\in L^2(0,\delta).
+\]
+The gradient uses the continuous-section interior trace choice.
+The radius may depend on the ray.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-saddle-ray-quotients-h1, lem:quarter-ray-radial-trace,
+ lem:saddle-quadratic-ray, lem:interior-section-trace}
+\leanok
+Choose $\delta=\min(\rho/4,1/2)$ for the common canonical H1 quotients.
+Apply the Cartesian radial trace lemma with $(n,t)=(3,3/2)$ for the
+remainder value and $(n,t)=(2,1/2)$ for its gradient.
+The stream and quadratic are continuous, so their value trace is their
+actual value on the ray. Add the continuous quadratic derivative inside
+the same gradient trace germ.
+The explicit quadratic logarithmic bounds complete both estimates.
+Only the saddle jet input is used, not ordinary separatrix H3.
+\end{proof}
+
 \begin{lemma}[Logarithmically weighted forcing, odd--odd]
 \label{lem:dd-log-forcing}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
@@ -430,33 +502,18 @@ locally $L^2$ on $U$; ray bounds are on a bounded radial interval.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-log-bulk, prop:saddle-dd, prop:dd-separatrix-h1,
- lem:radial-ray-quotients-h1, lem:trace-l2, lem:affine-jet-pullback,
- lem:radial-log-absorption, lem:weak-jet-regularity,
- lem:stream-weak-second-jet, lem:saddle-quadratic-log-gradient}
-Lemma~\ref{lem:dd-log-bulk} supplies all bulk assertions on one lifted
-neighbourhood. For the ray estimates write $\psi=q+R$ near each saddle.
-Lemma~\ref{lem:radial-ray-quotients-h1} gives $R/r^3$ and
-$\partial_jR/r^2$ in Cartesian $H^1$ through the center.
-Use the ordinary rectangle trace estimate on a small bounded
-radial/transverse rectangle in the same Cartesian ray chart.
-It gives $L^2(dr)$ traces $S_0,S_j$ for these quotients.
-Away from $r=0$ the weight is smooth, so the trace product identities are
-\[
- \operatorname{Tr}R=r^3S_0,\qquad
- \operatorname{Tr}(\partial_jR)=r^2S_j.
-\]
-Both desired weighted remainder traces are therefore
-$\sqrt{1+|\log r|}\,r^{3/2}S$, which belong to $L^2$ by
-Lemma~\ref{lem:radial-log-absorption}.
-The quadratic value and gradient are $O(r^2)$ and $O(r)$ respectively,
-so their divided logarithmic traces are also $L^2$.
-The continuous stream identifies the value trace with its actual ray values;
-the ordinary stream $H^3$ gain and weak uniqueness identify the gradient
-traces with the canonical first jet. Trace consistency on overlapping
-rectangles supplies all compact windows in the definition of the ray trace.
-The eight ray charts are affine signed coordinate permutations; take the
-minimum of their finitely many radii.
+\uses{lem:dd-log-bulk, lem:dd-log-ray-bounds, prop:dd-separatrix-h1,
+ lem:weak-jet-regularity, lem:stream-weak-second-jet,
+ lem:quarter-ray-interior-trace}
+\leanok
+Intersect the bulk neighbourhood with the ordinary stream H3 neighbourhood.
+Weak uniqueness puts the canonical first entries in local H1 there, so
+Lemma~\ref{lem:quarter-ray-interior-trace} gives the same interior trace
+on every admissible window.
+Lemma~\ref{lem:dd-log-ray-bounds} estimates precisely this trace.
+Openness at each ray center lets us shrink its closed radial segment into
+the common neighbourhood. Take the positive minimum of the eight radii,
+then restrict all actual L2 bounds to that interval.
 \end{proof}
 
 \begin{remark}[Digest note: Cartesian traces suffice for logarithmic rays]
@@ -465,8 +522,8 @@ for this subcritical conclusion. Whole-disk Cartesian $H^1$ of $R/r^3$
 and $\partial_jR/r^2$ already gives $r^{-6}$ and $r^{-4}$ ray masses.
 The bounded factor $r^3(1+|\log r|)$ supplies the desired weaker norms.
 This also avoids a change between polar and Cartesian trace definitions;
-the canonical Cartesian trace product and consistency identities must
-still be justified, not replaced by raw gradient evaluations.
+the continuous-section germ identities supply the Cartesian trace product
+and window consistency, without raw gradient evaluations.
 \end{remark}
 
 \begin{remark}[Digest note: logarithmic norms on the periodic lift]

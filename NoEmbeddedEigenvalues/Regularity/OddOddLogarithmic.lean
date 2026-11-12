@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.Regularity.OddOddLogBulk
 import NoEmbeddedEigenvalues.Regularity.OddOddLogSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddLogRays
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.LogarithmicWeights
@@ -43,7 +44,58 @@ theorem dd_log_forcing {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
           HasQuarterRayTrace U ρ k side (streamJet2 ω [j]) (T j) ∧
           MemLp (fun (r : ℝ) ↦ (Real.sqrt (logRadiusWeight r) : ℂ) * T j r /
             (Real.sqrt r : ℂ)) 2 (volume.restrict (Ioo 0 ρ)) := by
-  sorry
+  classical
+  obtain ⟨V, hV, hVsep, hgrad, hbulk⟩ := dd_log_bulk hlam hω hs
+  obtain ⟨W, hW, hWsep, _, _, hH3⟩ := dd_separatrix_h1 hlam hω hs
+  let U := V ∩ W
+  have hU : IsOpen U := hV.inter hW
+  have hsep : {p | dipoleLift p = 0} ⊆ U := fun p hp ↦ ⟨hVsep hp, hWsep hp⟩
+  have hJ (j : Fin 2) : MemSobolevLocOn 1 U (streamJet2 ω [j]) := by
+    have h := (streamJet2_weak ω W).memSobolevLocOn hH3 [j] (by simp) (by simp)
+    exact h.of_succ.mono inter_subset_right
+  have hlocal (i : Fin 4 × Bool) : ∃ δ : ℝ, 0 < δ ∧ δ < 1 ∧
+      rotatedQuarterEndpointRay i.1 i.2 '' Icc 0 δ ⊆ U ∧
+      MemLp (fun r ↦ (Real.sqrt (logRadiusWeight r) : ℂ) *
+        contStream ω (rotatedQuarterEndpointRay i.1 i.2 r) /
+          (Real.rpow r (3 / 2) : ℂ)) 2 (volume.restrict (Ioo 0 δ)) ∧
+      ∀ j : Fin 2, MemLp (fun r ↦ (Real.sqrt (logRadiusWeight r) : ℂ) *
+        interiorChartTrace (rotatedQuarterEndpointChart i.1 i.2) (streamJet2 ω [j]) r /
+          (Real.sqrt r : ℂ)) 2 (volume.restrict (Ioo 0 δ)) := by
+    obtain ⟨r, hr, hr1, hval, htrace⟩ := dd_log_ray_bounds hlam hω hs i.1 i.2
+    have hc : dipoleLift (rotatedQuarterEndpointRay i.1 i.2 0) = 0 := by
+      rcases i with ⟨k, side⟩
+      fin_cases k <;> cases side <;>
+        simp [rotatedQuarterEndpointRay, quarterEndpointRay, rotLift,
+          Function.iterate_succ_apply', dipoleLift]
+    obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hU _ (hsep hc)
+    let δ := min r (ε / 2)
+    have hδ : 0 < δ := lt_min hr (half_pos hε)
+    have hδr : δ ≤ r := min_le_left _ _
+    have hsub : Ioo 0 δ ⊆ Ioo 0 r := Ioo_subset_Ioo_right hδr
+    refine ⟨δ, hδ, hδr.trans_lt hr1, ?_,
+      hval.mono_measure (Measure.restrict_mono hsub le_rfl),
+      fun j ↦ (htrace j).mono_measure (Measure.restrict_mono hsub le_rfl)⟩
+    rintro _ ⟨s, hs, rfl⟩
+    apply hball
+    apply lt_of_le_of_lt (dist_le_localRadius _ _)
+    rw [localRadius_quarterEndpointRay, abs_of_nonneg hs.1]
+    exact hs.2.trans_lt ((min_le_right r (ε / 2)).trans_lt (by linarith))
+  choose r hr hr1 hray hval htrace using hlocal
+  let ρ := Finset.univ.inf' Finset.univ_nonempty r
+  have hρ : 0 < ρ := by
+    dsimp only [ρ]
+    rw [Finset.lt_inf'_iff]
+    exact fun i _ ↦ hr i
+  have hρr (i : Fin 4 × Bool) : ρ ≤ r i := Finset.inf'_le _ (Finset.mem_univ i)
+  have hρ1 : ρ < 1 := (hρr (0, false)).trans_lt (hr1 (0, false))
+  refine ⟨U, hU, hsep, fun j ↦ (hgrad j).mono inter_subset_left,
+    fun w hw ↦ (hbulk w hw).mono inter_subset_left, ρ, hρ, hρ1, fun k side ↦ ?_⟩
+  have hsub : Ioo 0 ρ ⊆ Ioo 0 (r (k, side)) := Ioo_subset_Ioo_right (hρr (k, side))
+  refine ⟨(image_mono (Icc_subset_Icc le_rfl (hρr (k, side)))).trans (hray (k, side)),
+    (hval (k, side)).mono_measure (Measure.restrict_mono hsub le_rfl),
+    fun j ↦ interiorChartTrace (rotatedQuarterEndpointChart k side) (streamJet2 ω [j]),
+    fun j ↦ ⟨(hJ j).quarterRayTrace ρ k side,
+      (htrace (k, side) j).mono_measure (Measure.restrict_mono hsub le_rfl)⟩⟩
 
 /-- Logarithmic numerator estimates with the same canonical jet and compatible
 unweighted derivative/trace data (`lem:dd-log-numerators`). -/

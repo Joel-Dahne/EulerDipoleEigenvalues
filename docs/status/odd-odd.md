@@ -39,10 +39,11 @@ Proof work is now outside the odd–odd chapter:
   of their own, retaining the same derivative and trace witnesses. The generic
   compact-localization, canonical-trace uniqueness and logarithmic mass-summation
   layers and the canonical stream weak jet are admission-free. The endpoint
-  still reaches three existing forcing/numerator-differentiation inputs.
-  Logarithmic forcing (`lem:dd-log-forcing`) is the current target. All its bulk
-  assertions are proved in Logarithmic bulk forcing (`lem:dd-log-bulk`), reaching
-  three existing inputs; canonical Cartesian ray traces and their bounds remain. See
+  expands to five existing analytic inputs.
+  Logarithmic forcing (`lem:dd-log-forcing`) has a proof of its own, retaining
+  the whole lifted neighbourhood, all eight canonical ray traces and one common
+  radius. It reaches the saddle jet, ordinary separatrix H¹/H³ and saddle
+  factorization. No polar trace or stronger corner premise was added. See
   [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

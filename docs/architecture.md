@@ -86,6 +86,15 @@ proof mechanisms. Module names below are relative to
   `WeakParameterIntegral.lean` proves local integrability and weak differentiation
   of signed midpoint primitives by sliced testing and Fubini.
 - `TraceL2.lean`, `TraceH2.lean`, `TraceGagliardo.lean`: rectangle trace package.
+  `InteriorTrace.lean` selects an interior value from continuous section germs,
+  proves agreement with the existing ACL trace, and supplies window independence
+  and continuous trace products without evaluating raw planar representatives.
+- `QuarterRayCharts.lean`: the actual volume-preserving affine endpoint charts,
+  their Euclidean radius identities and canonical traces on every admissible window.
+  `QuarterRayRadialTrace.lean` converts whole-disk H¹ radial quotients into genuine
+  subcritical logarithmic ray norms for that same interior trace choice.
+  `SaddleQuadraticRay.lean` supplies explicit quadratic/gradient homogeneity and
+  logarithmic ray bounds, independently of saddle factorization.
   `HardyAverage.lean` and `OddHardy.lean`: averaging and odd-function Hardy estimates.
   `EvenGradientHardy.lean`: ACL zero traces and cosine division of even H²
   diagonal derivatives, through the primitive Hardy estimate.
@@ -204,9 +213,13 @@ can be added here as they are formalized.
 - `Regularity/OddOddLogSaddle.lean`: the divided saddle remainder gradient in the
   canonical stream jet minus the classical quadratic jet, first with Euclidean
   radius. Adding the quadratic and shrinking the disk gives the complete canonical
-  gradient bound with the lattice-distance weight.
-- `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing interface and
-  numerator assembly, using one fixed canonical stream jet. The assembly localizes
+  gradient bound with the lattice-distance weight. Weak uniqueness also identifies
+  strong whole-disk Cartesian H¹ quotients with the same canonical remainder entries.
+- `Regularity/OddOddLogRays.lean`: logarithmic values and canonical gradient traces
+  on each of the eight rays, using the same saddle coefficient in value and gradient.
+- `Regularity/OddOddLogarithmic.lean`: logarithmic bulk/ray forcing and
+  numerator assemblies, using one fixed canonical stream jet. The forcing chooses
+  one neighbourhood and one common radius, with canonical traces on every window. The assembly localizes
   the bulk norms and identifies the forcing traces with the existing numerator
   traces before logarithmic summation; rotation character is not used in this step.
 - `Regularity/OddOddMidpoint.lean`: logarithmic phase quotient and midpoint data for

@@ -84,35 +84,30 @@ weights and local versus global regularity.
    logarithmic forcing traces. The radius Jacobian controls the endpoint masses,
    with measurability supplied by the original unweighted endpoint L² data.
    All generic localization/trace/summation helpers have zero transitive admissions.
-   The numerator endpoint reaches three existing inputs: Logarithmic forcing
-   (`lem:dd-log-forcing`), Weighted forcing (`lem:dd-weighted-forcing`) and Weighted
-   numerator estimates (`lem:weighted-numerator-estimates`). The canonical stream
-   weak jet is admission-free.
-   **Current target: logarithmic forcing** (`lem:dd-log-forcing`). The rectangle
-   multiplier and the physical local H¹ multiplier are admission-free. The exact
-   diagonal factorization handles edges and saddle crossings together, without
-   finite-p embedding or a separate multiplier localization in saddle charts.
-   **All bulk assertions are proved** in Logarithmic bulk forcing
-   (`lem:dd-log-bulk`), with the unchanged canonical stream jet on one neighbourhood
-   of the full lifted separatrix. Its three transitive inputs are Ordinary separatrix
-   H¹/H³ (`prop:dd-separatrix-h1`), Saddle jet (`prop:saddle-dd`) and the explicit
-   saddle factorization within Saddle normal form (`lem:saddle-normal-form`).
-   The separable mass majorant, local L² multipliers, lattice-distance comparison
-   and local gluing introduce no admissions. The physical quadratic bound uses only
-   the existing factorization input; no polar integration was needed.
-   **Remaining in the target:** canonical ray bounds. The stronger quotients R/r³
-   and ∂ⱼR/r² are now proved H¹ through the center. Ordinary Cartesian rectangle
-   traces should suffice, avoiding polar/Cartesian compatibility: construct traces
-   in the actual affine quarter-ray charts, prove multiplication/overlap consistency,
-   and identify the continuous stream value trace and the canonical gradient traces.
-   Positive powers absorb the radial logarithm by an admission-free L² multiplier.
-   Keep trace witnesses distinct from raw gradient evaluations.
-   The full logarithmic forcing theorem remains admitted, unchanged.
-   Saddle jet (`prop:saddle-dd`), weighted forcing and ordinary H¹/H³ also remain
-   regularity inputs. Generic numerator differentiation and five scalar/orbit
-   inputs are explicit outside-section prerequisites. The expanded
-   weighted-gradient audit reaches ten existing admissions; the third-stream
-   assembly additionally uses the elliptic/Taylor corollaries and saddle factorization.
+   The numerator assembly uses Logarithmic forcing (`lem:dd-log-forcing`),
+   Weighted forcing (`lem:dd-weighted-forcing`) and Weighted numerator estimates
+   (`lem:weighted-numerator-estimates`). The first now expands through its own
+   proof; the audited transitive frontier is recorded in the root status.
+   The canonical stream weak jet is admission-free.
+   **Logarithmic forcing is assembled** (`lem:dd-log-forcing`), with its original
+   statement and no admission of its own. The remaining transitive inputs are
+   Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`), Saddle jet (`prop:saddle-dd`)
+   and the explicit saddle factorization within Saddle normal form
+   (`lem:saddle-normal-form`). Bulk norms and canonical ray norms use the same
+   fixed jet, one lifted neighbourhood and one positive radius for all eight rays.
+   Whole-disk H¹ of R/r³ and ∂ⱼR/r² supplies ordinary Cartesian rectangle traces;
+   a continuous-section germ choice agrees with the existing ACL trace on every
+   admissible window. The quadratic ray bounds and all new generic trace helpers
+   are admission-free. No polar trace, extra corner assumption or raw gradient
+   evaluation is used.
+   **Next regularity frontier:** Saddle jet, Weighted forcing
+   (`lem:dd-weighted-forcing`) and Ordinary separatrix H¹/H³. Weighted forcing
+   should be derived independently from the saddle data and ordinary H², not
+   from logarithmic forcing, which already uses the ordinary separatrix gain.
+   Generic numerator differentiation and five scalar/orbit inputs are explicit
+   outside-section prerequisites. The expanded weighted-gradient audit reaches
+   ten existing admissions; the third-stream assembly adds the elliptic/Taylor
+   corollaries, reaching twelve.
    No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
    this assembly route.

@@ -6,7 +6,8 @@ import NoEmbeddedEigenvalues.SaddleTaylorJet
 /-!
 # Logarithmic quadratic mass near a saddle
 
-Blueprint: `lem:saddle-logarithmic-mass`, `lem:saddle-quadratic-log-gradient`.
+Blueprint: `lem:saddle-logarithmic-mass`, `lem:saddle-quadratic-log-gradient`,
+`lem:saddle-quadratic-first-jet`.
 
 The normalized factorization bounds the physical logarithm by the crossing
 logarithm. A separable power majorant gives integrability after division by

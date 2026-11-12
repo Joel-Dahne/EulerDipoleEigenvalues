@@ -1341,6 +1341,108 @@ where $P_g=\sum_\sigma|g(p_\sigma(r(h)))|^2/h^2$ and
 $Q_T=\sum_{\sigma,j}|T_{\sigma,j}(r(h))|^2/h$.
 \end{definition}
 
+\begin{lemma}[Affine Cartesian quarter-ray charts]
+\label{lem:quarter-ray-affine-chart}
+\uses{def:quarter-endpoint-rays, def:local-plane-geometry, def:affine-jet}
+\lean{NoEmbeddedEigenvalues.planeAffine_quarterRayChart,
+ NoEmbeddedEigenvalues.measurePreserving_rotatedQuarterEndpointChart,
+ NoEmbeddedEigenvalues.localRadius_quarterRayChart,
+ NoEmbeddedEigenvalues.quarterRayCenter_mem_saddleSet,
+ NoEmbeddedEigenvalues.quarterRayRectangle_subset_disk}
+\leanok
+Each radial/transverse quarter-ray chart $C$ is affine and volume-preserving,
+with center $c=C(0,0)$ in the saddle lattice and
+$r_c(C(q))=r_0(q)$. If $\delta>0$ and $2\delta<R$, then
+$C([0,\delta]\times[-\delta,\delta])\subset D_R(c)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The linear parts are signed coordinate permutations, followed by quarter
+rotations, and the translation is the ray center.
+They preserve volume and the Euclidean radius.
+On the rectangle, $r_0(q)^2\le2\delta^2<R^2$.
+\end{proof}
+
+\begin{lemma}[Canonical interior quarter-ray traces]
+\label{lem:quarter-ray-interior-trace}
+\uses{def:quarter-endpoint-rays, def:interior-section-trace, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.comp_quarterRayChart,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.comp_quarterRayChart,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.quarterRayTrace}
+\leanok
+For open $U$, the quarter-ray affine pullback preserves integer-order
+Sobolev regularity, globally on the preimage and locally.
+If $F\in H^1_{\rm loc}(U)$, then for every $\rho$ the single choice $T_C F$
+satisfies the canonical quarter-ray trace definition on all compact
+radial/transverse windows contained in $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-ray-affine-chart, lem:affine-jet-pullback,
+ lem:interior-section-trace}
+\leanok
+Pull back the local Sobolev data.
+An admissible closed rectangle is a compact subset of the preimage of $U$,
+so the pullback is $H^1$ on its interior.
+The interior trace construction uses the same section germ for every window.
+\end{proof}
+
+\begin{lemma}[Subcritical logarithmic traces from Cartesian quotients]
+\label{lem:quarter-ray-radial-trace}
+\uses{def:quarter-endpoint-rays, def:interior-section-trace, def:sobolev-local,
+ def:local-plane-geometry, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.logarithmic_quarterRay_trace}
+\leanok
+Let $C$ be a quarter-ray chart with center $c$, let $n\in\N$, $t<n$,
+and $0<\delta\le1$ with $2\delta<R$.
+If $F/r_c^n\in H^1(D_R(c))$, then almost every section
+$s\mapsto F(C(r,s))$ has a continuous germ for $r\in(0,\delta)$, and
+\[
+ \sqrt{1+|\log r|}\,T_C F(r)/r^t\in L^2(0,\delta).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-ray-affine-chart, lem:quarter-ray-interior-trace,
+ lem:interior-section-trace, lem:radial-log-absorption}
+\leanok
+The quotient has an actual $L^2$ rectangle trace $S$.
+For $r>0$, radius is nonzero on the whole normal section; multiplying
+its continuous germ by the continuous radius power gives
+$T_C F(r)=r^nS(r)$ a.e.
+Absorb the remaining positive power $r^{n-t}$ against the logarithm.
+\end{proof}
+
+\begin{lemma}[Quadratic logarithmic quarter-ray bounds]
+\label{lem:saddle-quadratic-ray}
+\uses{def:saddle-quadratic, def:quarter-endpoint-rays, def:log-level-weight}
+\lean{NoEmbeddedEigenvalues.saddleQuadratic_quarterRay,
+ NoEmbeddedEigenvalues.first_saddleQuadratic_quarterRay,
+ NoEmbeddedEigenvalues.saddleQuadratic_log_quarterRay_value,
+ NoEmbeddedEigenvalues.saddleQuadratic_log_quarterRay_gradient}
+\leanok
+Along each ray $\gamma$ with center $c=\gamma(0)$, put $q=Q_{c,a}$.
+Then $q(\gamma(r))=r^2q(\gamma(1))$ and
+$\partial_jq(\gamma(r))=r\partial_jq(\gamma(1))$.
+For every $\rho\le1$,
+\[
+ \sqrt{1+|\log r|}\,\frac{q(\gamma(r))}{r^{3/2}}\in L^2(0,\rho),
+ \qquad
+ \sqrt{1+|\log r|}\,\frac{\partial_jq(\gamma(r))}{\sqrt r}\in L^2(0,\rho).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-quadratic-first-jet, lem:radial-log-absorption}
+\leanok
+The explicit Cartesian formulas give the two homogeneity identities.
+Both divided traces are constant coefficients times
+$\sqrt{1+|\log r|}\,r^{1/2}$.
+Use the positive-power multiplier on a constant $L^2$ function.
+No saddle factorization or polar trace input is needed.
+\end{proof}
+
 \begin{lemma}[Canonical quarter-ray trace uniqueness]
 \label{lem:quarter-ray-trace-unique}
 \uses{def:quarter-endpoint-rays, def:sobolev-local}

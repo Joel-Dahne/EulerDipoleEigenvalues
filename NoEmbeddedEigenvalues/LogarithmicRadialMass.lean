@@ -148,4 +148,17 @@ theorem memLp_logRadius_mul_rpow {ρ s : ℝ} (hρ : ρ ≤ 1) (hs : 0 < s)
       (logRadiusWeight_mul_rpow_le hr.1 (hr.2.le.trans hρ) hs)
   exact hb.mul hT
 
+/-- Rescaling an actual L² trace by a higher integer power absorbs the logarithm
+and a weaker denominator. This treats value and gradient rays with the same rule. -/
+theorem memLp_logRadius_nat_mul_div {ρ t : ℝ} {n : ℕ}
+    (hρ : ρ ≤ 1) (ht : t < n) {T : ℝ → ℂ}
+    (hT : MemLp T 2 (volume.restrict (Ioo 0 ρ))) :
+    MemLp (fun r ↦ (Real.sqrt (logRadiusWeight r) : ℂ) * (r ^ n : ℂ) * T r /
+      (Real.rpow r t : ℂ)) 2 (volume.restrict (Ioo 0 ρ)) := by
+  apply (memLp_logRadius_mul_rpow hρ (sub_pos.mpr ht) hT).ae_eq
+  filter_upwards [ae_restrict_mem measurableSet_Ioo] with r hr
+  simp only [Real.rpow_eq_pow, Real.rpow_sub hr.1, Real.rpow_natCast,
+    Complex.ofReal_div, Complex.ofReal_pow]
+  ring
+
 end NoEmbeddedEigenvalues

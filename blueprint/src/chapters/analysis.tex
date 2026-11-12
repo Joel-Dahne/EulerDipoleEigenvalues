@@ -2521,12 +2521,15 @@ Fubini for the product majorant; both excluded axes are null.
 \label{lem:radial-log-absorption}
 \uses{def:log-level-weight}
 \lean{NoEmbeddedEigenvalues.logRadiusWeight_mul_rpow_le,
- NoEmbeddedEigenvalues.memLp_logRadius_mul_rpow}
+ NoEmbeddedEigenvalues.memLp_logRadius_mul_rpow,
+ NoEmbeddedEigenvalues.memLp_logRadius_nat_mul_div}
 \leanok
 For $s>0$ and $0<r\le1$,
 $r^s(1+|\log r|)\le1+1/s$.
 If $T\in L^2(0,\rho)$ with $\rho\le1$, then
 $\sqrt{1+|\log r|}\,r^sT\in L^2(0,\rho)$.
+In particular, if $t<n$ with $n\in\N$, then
+$\sqrt{1+|\log r|}\,r^nT/r^t\in L^2(0,\rho)$.
 \end{lemma}
 
 \begin{proof}
@@ -2563,20 +2566,15 @@ back by the volume- and radius-preserving affine chart.
 \begin{lemma}[Quadratic logarithmic gradient mass]
 \label{lem:saddle-quadratic-log-gradient}
 \uses{def:saddle-quadratic, def:local-weak-jets, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.first_saddleQuadratic,
- NoEmbeddedEigenvalues.norm_first_saddleQuadratic_le,
- NoEmbeddedEigenvalues.saddleQuadratic_log_gradient}
+\lean{NoEmbeddedEigenvalues.saddleQuadratic_log_gradient}
 \leanok
-The classical first derivatives of $Q_{c,a}$ are
-$-a\cos(c_x)(p_x-c_x)$ and $a\cos(c_x)(p_y-c_y)$, so
-$|\partial_jQ_{c,a}|\le|a\cos(c_x)|r_c$.
 For every saddle $c$ there is $\rho>0$, independent of $a$, such that
 $\sqrt{\Lambda_\Psi}\,\partial_jQ_{c,a}/r_c^{3/2}\in L^2(D_\rho(c))$
 for every $a$ and $j$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:saddle-logarithmic-mass}
+\uses{lem:saddle-logarithmic-mass, lem:saddle-quadratic-first-jet}
 \leanok
 The square norm of $\sqrt{\Lambda_\Psi}/\sqrt{r_c}$ is the integrable
 function $\Lambda_\Psi/r_c$.
@@ -2620,6 +2618,59 @@ $G=F\circ\Xi$ a.e. and its transverse derivative $D$, both in $L^2$, such that
 $T(s)=\operatorname{Tr}_tG(s)$ a.e. Here $\operatorname{Tr}_t$ is the
 canonical interval $H^1$ extension, including endpoints.
 \end{definition}
+
+\begin{definition}[Interior trace by continuous section germs]
+\label{def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.HasContinuousSectionGerm,
+ NoEmbeddedEigenvalues.interiorSectionTrace,
+ NoEmbeddedEigenvalues.interiorChartTrace}
+\leanok
+A continuous section germ of $f:\R\to\C$ is a function $g$, continuous on
+some $(a,b)$ with $a<0<b$, agreeing with $f$ a.e.\ there.
+When such a germ exists, define $\tau(f)$ as the value at zero of one
+chosen germ; otherwise set $\tau(f)=0$.
+For a planar chart $C$ put
+$T_C F(r)=\tau(t\mapsto F(C(r,t)))$.
+\end{definition}
+
+\begin{lemma}[Consistent interior traces]
+\label{lem:interior-section-trace}
+\uses{def:interior-section-trace, def:canonical-transverse-trace,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.interiorSectionTrace_eq,
+ NoEmbeddedEigenvalues.interiorSectionTrace_of_continuous,
+ NoEmbeddedEigenvalues.interiorSectionTrace_congr,
+ NoEmbeddedEigenvalues.interiorSectionTrace_mul_continuous,
+ NoEmbeddedEigenvalues.interiorSectionTrace_add_continuous,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq_interiorChartTrace,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_hasContinuousSectionGerm,
+ NoEmbeddedEigenvalues.MemSobolevOn.hasInteriorChartTrace}
+\leanok
+The value $\tau(f)$ is independent of the chosen continuous germ.
+An a.e.\ change on a neighbourhood of zero preserves an existing germ value.
+If $g$ is continuous and $f$ has a continuous germ, then
+$\tau(gf)=g(0)\tau(f)$ and $\tau(f+g)=\tau(f)+g(0)$.
+For continuous $f$, $\tau(f)=f(0)$.
+
+Every canonical transverse trace at an interior normal point $0$ agrees
+a.e.\ with $T_C F$, and almost every section has a continuous germ.
+If $F\circ C\in H^1((l,r)\times(a,b))$ with $l<r$ and $a<0<b$, then
+$T_C F\in L^2(l,r)$ and satisfies the canonical transverse trace definition
+on that rectangle.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2}
+\leanok
+Two continuous representatives agree at zero because their a.e.\ equality
+on the common open interval extends to pointwise equality there.
+Continuous multiplication and addition act on these representatives.
+Fubini transfers planar a.e.\ equality to almost every normal section.
+The existing ACL representative is continuous on such sections; its interior
+extension value is therefore precisely the germ value.
+The rectangle trace estimate supplies actual $L^2$ membership.
+Exceptional sections may use the fallback value without changing any trace.
+\end{proof}
 
 \begin{definition}[Diagonal trace chart]
 \label{def:diagonal-trace-chart}

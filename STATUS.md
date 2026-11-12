@@ -63,12 +63,16 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg`, nineteen below `dd_stream_quotient_h2`,
-twenty-one below `dd_exclusion_domain`, and twenty-five for `odd_odd_exclusion`.
+zero below `correctedBoundaryForm_nonneg`, eighteen below `dd_stream_quotient_h2`,
+twenty below `dd_exclusion_domain`, and twenty-four for `odd_odd_exclusion`.
 Weighted vorticity gradient (`prop:dd-weighted-gradient`) has a proof of its own;
 its expanded audit reaches ten existing analytic inputs. Logarithmic numerator
-bounds (`lem:dd-log-numerators`) also have a proof of their own, reaching three
-existing inputs. The generic weak-chart, reflected-periodic covering,
+bounds (`lem:dd-log-numerators`) also have a proof of their own, reaching five
+existing inputs after expanding Logarithmic forcing (`lem:dd-log-forcing`).
+Logarithmic forcing has no admission of its own and reaches three: the saddle
+jet, ordinary separatrix H¹/H³ and saddle factorization. Its Cartesian canonical
+ray-trace construction and quadratic ray estimates introduce no admissions.
+The generic weak-chart, reflected-periodic covering,
 logarithmic multiplier/localization/trace/summation layers and canonical second
 stream jet have no admissions.
 The bulk Picone bound reaches exactly two: the residual identity and residual
