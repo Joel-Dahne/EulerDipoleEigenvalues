@@ -476,22 +476,45 @@ $\mathcal G_j(G)$. No approximation or smoothness of the raw $F$ is used.
 
 \begin{lemma}[Integration by parts for a specified AC derivative]
 \label{lem:ac-integration-by-parts}
-\lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test}
+\lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac,
+ NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test}
 \leanok
 Let $A:[a,b]\to\C$ be absolutely continuous with specified a.e.\
-derivative $D\in L^1(a,b)$. If $\beta$ is $C^1$ and vanishes at both
-endpoints, then
+derivative $D\in L^1(a,b)$. For $C^1$ $\beta$,
 \[
- \int_a^b A\beta'=-\int_a^b D\beta.
+ \int_a^b A\beta'=A(b)\beta(b)-A(a)\beta(a)-\int_a^b D\beta.
 \]
+In particular the boundary terms vanish for a zero-endpoint test.
 \end{lemma}
 
 \begin{proof}
 \leanok
 The test is Lipschitz on the compact interval, hence absolutely continuous.
 The product rule gives $(A\beta)'=D\beta+A\beta'$ a.e.
-Both terms are integrable. The complex FTC and the zero endpoint
-values give the identity.
+Both terms are integrable. The complex FTC gives the boundary terms;
+zero test endpoints give the stated special case.
+\end{proof}
+
+\begin{lemma}[Integration by parts with canonical interval traces]
+\label{lem:interval-trace-integration}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_mul_deriv}
+\leanok
+For $F\in H^1(a,b)$ with specified derivative $D$, $a<b$, and $C^1$ $\beta$,
+\[
+ \int_a^b F\beta'
+ =\operatorname{Tr}_bF\,\beta(b)-\operatorname{Tr}_aF\,\beta(a)-\int_a^b D\beta.
+\]
+The boundary terms use the canonical extension, not raw endpoint values.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ac-integration-by-parts, lem:h1-zero-extension}
+\leanok
+Zero-extend the integrable derivative. Its global integral primitive agrees
+with the canonical extension on $[a,b]$, which is therefore absolutely
+continuous there. Interior agreement transfers the specified derivative.
+Apply AC integration by parts and discard the null endpoints in the integrals.
 \end{proof}
 
 \begin{lemma}[Interval $H^1$ as a planar weak derivative]
@@ -541,6 +564,29 @@ All products are integrable on their compact test supports.
 Multiplication by a continuous function preserves local integrability.
 \end{proof}
 
+\begin{lemma}[Removing a transverse-coordinate level line]
+\label{lem:weak-transverse-line-removal}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.remove_transverse_line}
+\leanok
+Let $F,D\in L^1_{\rm loc}(U)$ and
+$L=\{p:p_{1-j}=t\}$, a line parallel to the $j$th coordinate direction.
+If $\partial_jF=D$ weakly on $U\setminus L$, it holds on $U$.
+No trace condition is needed for this tangential derivative.
+This does not remove a normal jump.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+For a test $\varphi$ use $\theta_n\varphi$, where
+$\theta_n(p)=1-b((n+1)(p_{1-j}-t))$ and a smooth bump
+$0\le b\le1$ equals one near zero.
+Each test avoids $L$, while $\partial_j\theta_n=0$.
+Off the null line, $\theta_n$ is eventually one.
+Dominated convergence for the integrable test products gives the identity.
+\end{proof}
+
 \begin{lemma}[Isolated-point removal for a weak partial derivative]
 \label{lem:weak-point-removal}
 \uses{def:weak-derivative-local, def:sobolev-local}
@@ -556,16 +602,10 @@ regularity away from the point.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weak-derivative-basic}
+\uses{lem:weak-transverse-line-removal, lem:weak-derivative-basic}
 \leanok
-For a test $\varphi$ supported in $U$, use
-$\varphi_n=\theta_n\varphi$, with
-$\theta_n(p)=1-b((n+1)(p_{1-j}-c_{1-j}))$ and a smooth bump
-$0\le b\le1$ equal to one near zero. Each $\varphi_n$ avoids a strip
-through $c$, so is a test on $U\setminus\{c\}$.
-Crucially $\partial_j\theta_n=0$, while $\theta_n\to1$ off the null
-transverse line. Dominated convergence applies to the genuine integrable
-products $F\partial_j\varphi$ and $D\varphi$, giving the original identity.
+Restrict the given identity further to the complement of
+$p_{1-j}=c_{1-j}$ and apply transverse-coordinate line removal.
 For the H1 corollary, removing a singleton does not change the measure,
 so the value and derivative L2 norms transfer to $U$. Apply the weak identity
 extension to those same derivative witnesses.
@@ -2662,6 +2702,68 @@ $G=F\circ\Xi$ a.e. and its transverse derivative $D$, both in $L^2$, such that
 $T(s)=\operatorname{Tr}_tG(s)$ a.e. Here $\operatorname{Tr}_t$ is the
 canonical interval $H^1$ extension, including endpoints.
 \end{definition}
+
+\begin{lemma}[Specified derivatives and normal-window trace consistency]
+\label{lem:transverse-trace-window-consistency}
+\uses{def:canonical-transverse-trace, def:weak-derivative-local,
+ def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.with_weak_snd,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.extend_normal}
+\leanok
+A canonical trace construction may use the specified weak normal derivative
+of $F\circ C$ whenever that derivative belongs to L2 on the same rectangle.
+The trace is unchanged.
+If a canonical trace at $t\in[c,d]$ is known on the normal window $[c,d]$,
+and $a\le c<d\le b$, then weak normal differentiability of $F\circ C$,
+with both it and its specified derivative in L2 on $(l,r)\times(a,b)$,
+gives the same trace on $[a,b]$.
+The point $t$ may be an endpoint of either window.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:h1-interval-endpoints}
+\leanok
+Construct the ACL representative using the specified derivative.
+Trace independence identifies its boundary values with the given trace.
+For nested windows, restrict the larger ACL representative to the smaller
+one. Uniqueness of the continuous interval extension identifies the two
+canonical values on the whole smaller closed interval.
+\end{proof}
+
+\begin{lemma}[Matching-trace gluing with specified weak gradients]
+\label{lem:transverse-trace-weak-gluing}
+\uses{def:canonical-transverse-trace, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.weak_snd_glue,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.glue_trace,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.glue_fst_across_snd,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.h1_glue}
+\leanok
+Let $l<r$, $a<t<b$, and $Q=(l,r)\times(a,b)$.
+Suppose $F,D_0,D_1\in L^2(Q)$, the same $D_j$ are the specified weak
+partials of $F$ on both halves of $Q$, and the canonical one-sided traces
+of $F$ on $y=t$ agree with the same $T$.
+Then $F\in H^1(Q)$ with those original weak derivatives, and its full-window
+canonical trace is $T$.
+The normal-derivative and trace conclusions alone require only the normal
+weak identities; the tangential identity requires no trace condition.
+The trace conclusions also apply in a supplied chart, provided the weak
+identities and L2 hypotheses concern its actual pullback.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transverse-trace-window-consistency, lem:trace-l2,
+ lem:interval-trace-integration, lem:weak-transverse-line-removal,
+ lem:weak-partial-locality}
+\leanok
+On almost every normal fiber, integration by parts on the two halves gives
+the boundary terms $T\varphi(t)$ and $-T\varphi(t)$.
+Their cancellation and Fubini yield the specified normal weak identity.
+The trace-window lemma retains the same $T$ on the glued rectangle.
+For the tangential identity, localize off the joining line and then remove
+that transverse-coordinate level line.
+Actual whole-rectangle L2 membership supplies local integrability and the
+finite Sobolev norms; omitting the null line is not used to assert weak gluing.
+\end{proof}
 
 \begin{definition}[Interior trace by continuous section germs]
 \label{def:interior-section-trace}

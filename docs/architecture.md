@@ -78,15 +78,23 @@ proof mechanisms. Module names below are relative to
   without selecting jointly measurable ACL representatives.
 - `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
 - `WeakPointRemoval.lean`: finite whole-punctured-domain H¹ extends through a point;
-  a transverse cutoff removes an isolated point from a
-  specified weak partial identity under local L¹ hypotheses, without a radial tail.
+  a cutoff in the other coordinate removes a parallel line from a tangential
+  weak identity under local L¹ hypotheses, hence removes an isolated point too,
+  without a radial tail. This is not a normal jump-removal theorem.
 - `RadialWeakMultiplier.lean`: the local smooth weak product rule, radial derivatives,
   weaker-weight L² transport and H¹ of divided gradients through their center.
   The stronger quotients R/r³ and ∂ⱼR/r² support ordinary Cartesian ray traces.
-  `IntervalH1WeakLift.lean` lifts interval H¹ data to planar weak level derivatives.
+  `IntervalH1WeakLift.lean` gives AC integration by parts, with or without boundary
+  terms, and lifts interval H¹ data to planar weak level derivatives.
+  `IntervalTraceIntegration.lean` identifies the canonical endpoint boundary terms
+  for interval H¹ data, using the absolutely continuous closed-interval extension.
   `WeakParameterIntegral.lean` proves local integrability and weak differentiation
   of signed midpoint primitives by sliced testing and Fubini.
 - `TraceL2.lean`, `TraceH2.lean`, `TraceGagliardo.lean`: rectangle trace package.
+  `TraceWeakGluing.lean` retains specified derivatives and the common canonical trace
+  across a matching-trace line, by fiberwise integration by parts and transverse
+  cutoffs. Derivative-witness replacement and nested normal-window consistency
+  include endpoint traces. Actual whole-rectangle norms precede weak gluing.
   `InteriorTrace.lean` selects an interior value from continuous section germs,
   proves agreement with the existing ACL trace, and supplies window independence
   and continuous trace products without evaluating raw planar representatives.

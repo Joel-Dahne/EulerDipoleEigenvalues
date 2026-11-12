@@ -4,7 +4,7 @@ import NoEmbeddedEigenvalues.WeakPartialLocality
 /-!
 # Weak planar derivatives of interval H¹ representatives
 
-Blueprint: `lem:interval-h1-weak-lift`.
+Blueprint: `lem:ac-integration-by-parts`, `lem:interval-h1-weak-lift`.
 
 Absolute continuity and the complex FTC give integration by parts on compact
 intervals. Fubini then lifts a specified interval derivative to the first
@@ -16,13 +16,14 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 open scoped Topology ContDiff
 
-/-- Compact-interval integration by parts for a specified a.e. complex derivative. -/
-theorem integral_mul_deriv_of_ac_zero_test {a b : ℝ} (hab : a ≤ b)
+/-- Compact-interval integration by parts with the actual boundary values. -/
+theorem integral_mul_deriv_of_ac {a b : ℝ} (hab : a ≤ b)
     {A D β : ℝ → ℂ} (hA : AbsolutelyContinuousOnInterval A a b)
     (hD : IntervalIntegrable D volume a b)
     (hder : ∀ᵐ x, x ∈ uIcc a b → HasDerivAt A (D x) x)
-    (hβ : ContDiff ℝ 1 β) (hβa : β a = 0) (hβb : β b = 0) :
-    (∫ x in Icc a b, A x * deriv β x) = -(∫ x in Icc a b, D x * β x) := by
+    (hβ : ContDiff ℝ 1 β) :
+    (∫ x in Icc a b, A x * deriv β x) =
+      A b * β b - A a * β a - ∫ x in Icc a b, D x * β x := by
   obtain ⟨K, hK⟩ := hβ.contDiffOn.exists_lipschitzOnWith (by norm_num)
     (convex_Icc a b) isCompact_Icc
   have hβac : AbsolutelyContinuousOnInterval β a b := by
@@ -38,10 +39,20 @@ theorem integral_mul_deriv_of_ac_zero_test {a b : ℝ} (hab : a ≤ b)
     convert hh using 1
     ring)
   simp only [smul_eq_mul, Pi.mul_apply] at hFTC
-  rw [hβa, hβb, zero_mul, zero_mul, sub_self, intervalIntegral.integral_add hDb hAb,
+  rw [intervalIntegral.integral_add hDb hAb,
     intervalIntegral.integral_of_le hab, intervalIntegral.integral_of_le hab,
     ← integral_Icc_eq_integral_Ioc, ← integral_Icc_eq_integral_Ioc] at hFTC
-  exact eq_neg_iff_add_eq_zero.2 (by simpa only [add_comm] using hFTC)
+  linear_combination hFTC
+
+/-- Compact-interval integration by parts for a specified a.e. complex derivative. -/
+theorem integral_mul_deriv_of_ac_zero_test {a b : ℝ} (hab : a ≤ b)
+    {A D β : ℝ → ℂ} (hA : AbsolutelyContinuousOnInterval A a b)
+    (hD : IntervalIntegrable D volume a b)
+    (hder : ∀ᵐ x, x ∈ uIcc a b → HasDerivAt A (D x) x)
+    (hβ : ContDiff ℝ 1 β) (hβa : β a = 0) (hβb : β b = 0) :
+    (∫ x in Icc a b, A x * deriv β x) = -(∫ x in Icc a b, D x * β x) := by
+  simpa only [hβa, hβb, mul_zero, sub_self, zero_sub] using
+    integral_mul_deriv_of_ac hab hA hD hder hβ
 
 /-- Interval H¹ supplies the first planar weak derivative of its level pullback. -/
 theorem HasIntervalH1.weak_fst {a b : ℝ} {A D : ℝ → ℂ} (h : HasIntervalH1 a b A D) :

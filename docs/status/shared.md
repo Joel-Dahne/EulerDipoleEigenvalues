@@ -111,11 +111,19 @@ weights and local versus global regularity.
    for norms, not weak gluing. Finite whole-domain H¹ point removal and the
    canonical stream Poisson identity are admission-free too. The same-domain
    H³ completion in `StreamElliptic.lean` reaches only Interior elliptic H³.
-   **Remaining:** transport/identify the one-sided zero traces on all reflected
-   regular-edge windows, establish the specified weak identities across those
-   seams, then apply point removal at the saddles and canonical trace consistency
-   on every window in the original target. Reuse `IntervalZeroExtension.lean`;
-   planar weak lifting and trace transport are distinct from its existing 1D theorem.
+   `TraceWeakGluing.lean` proves generic matching-trace H¹ gluing with the original
+   derivative candidates: canonical boundary terms cancel in the normal identity,
+   and transverse cutoffs extend the tangential identity. It also replaces a trace's
+   derivative witness by the specified weak derivative, extends the same trace
+   between nested normal windows (including endpoints), and retains the common
+   trace on the glued rectangle. `IntervalTraceIntegration.lean` supplies genuine
+   endpoint-trace integration by parts. These generic layers introduce no admissions.
+   **Remaining:** use parity/reflected-cell geometry to supply the same canonical
+   zero trace on both sides of each actual diagonal edge, transport the specified
+   physical derivatives into and out of these charts, and cover the regular seams.
+   Then apply finite-norm point removal at the saddles and identify the zero trace
+   on every admissible global window. The Cartesian rectangle gluing theorem alone
+   does not discharge these producer/coordinate/covering obligations.
    Do not use logarithmic forcing or weighted vorticity gradients here: both
    already depend on this ordinary gain. Saddle jet and Weighted forcing remain
    upstream regularity inputs; the latter must be derived independently from

@@ -320,7 +320,7 @@ separatrix traces and $\psi\in H^3_{\rm loc}(U)$
 \begin{proof}
 \uses{lem:dd-cell-separatrix-h1, lem:dd-punctured-separatrix-h1,
  lem:odd-odd-cell-fold-parity, lem:periodic-cell-cover,
- lem:acl-slicing, lem:trace-l2, lem:h1-zero-extension,
+ lem:transverse-trace-weak-gluing, lem:transverse-trace-window-consistency,
  lem:weak-point-removal, lem:sobolev-local-gluing,
  lem:stream-h3-of-vorticity-h1}
 The cellwise lemma gives an ordinary strip and zero traces on its four
@@ -329,9 +329,10 @@ level. The punctured-collar lemma identifies one weak gradient off the
 separatrix and gives its finite L2 norms on each full-collar localization.
 
 Transport the one-sided zero traces to the adjacent cells.
-On a compact regular-edge patch, zero-trace interval extension and ACL
-slicing give no jump in the normal sections. Fubini gives the specified
-weak identities across that edge; tangential testing has no normal boundary term.
+On a compact regular-edge patch, apply
+Lemma~\ref{lem:transverse-trace-weak-gluing} in diagonal coordinates.
+The matching canonical zero traces cancel the normal boundary terms;
+the tangential derivative crosses by transverse cutoffs.
 This gives H1 away from the saddles, with the same finite gradient norms.
 On a small punctured disk about a saddle these norms give finite H1,
 not merely local H1 away from its center.
@@ -340,8 +341,8 @@ Lemma~\ref{lem:weak-point-removal} extends through the center.
 Local Sobolev gluing over the reflected periodic patches gives an open
 neighbourhood of the entire lifted separatrix. Only a bounded localization
 uses finitely many fold indices.
-Trace independence identifies the zero extensions with the canonical
-traces on every admissible diagonal rectangle, including normal endpoints.
+Normal-window trace consistency identifies the same zero trace on every
+admissible diagonal rectangle, including normal endpoints.
 Finally Lemma~\ref{lem:stream-h3-of-vorticity-h1} gives H3 of the same
 continuous stream on that open domain.
 \end{proof}
@@ -365,8 +366,8 @@ Lemma~\ref{lem:weighted-corner-trace}; numerator differentiation uses only
 $H^2$ regularity of $\psi$, not a prior $H^1$ bound for $\omega$.
 Zero edge trace then follows from the boundary transport equation and
 weighted corner integrability, with no separate assumption about the
-midpoint value $A(0)$. The regular seams use zero-trace H1 extension and the isolated saddle uses
-finite-norm point removal. Thus the broader weighted crossing-gluing
+midpoint value $A(0)$. The regular seams use matching-trace weak gluing and
+the isolated saddle uses finite-norm point removal. Thus the broader weighted crossing-gluing
 interface is unnecessary on this route; neither step assumes a pointwise
 value of the raw vorticity at a seam or saddle.
 \end{remark}

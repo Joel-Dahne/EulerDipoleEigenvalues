@@ -120,6 +120,7 @@ import NoEmbeddedEigenvalues.CellFolding
 import NoEmbeddedEigenvalues.PeriodicWeightedGradient
 import NoEmbeddedEigenvalues.Regularity.OddOddCellGradient
 import NoEmbeddedEigenvalues.IntervalH1WeakLift
+import NoEmbeddedEigenvalues.IntervalTraceIntegration
 import NoEmbeddedEigenvalues.WeakQuarterReconstruction
 import NoEmbeddedEigenvalues.Regularity.OddOddMidpoint
 import NoEmbeddedEigenvalues.Regularity.OddOddQuarter
@@ -132,6 +133,7 @@ import NoEmbeddedEigenvalues.OrbitNumerators
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderInverse
 import NoEmbeddedEigenvalues.WeightedTraces
+import NoEmbeddedEigenvalues.TraceWeakGluing
 import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision
