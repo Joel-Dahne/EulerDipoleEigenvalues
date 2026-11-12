@@ -92,9 +92,12 @@ just manuscript eigenvalues  # same for the original manuscript
 ```
 
 Task-specific audits:
-- `just challenge` (~2 min): statement/axiom comparison after changes to
-  `Challenge.lean`, `Solution.lean`, comparator configuration/checker or Lean/Mathlib
-  versions, or for requested/milestone audits.
+- `just challenge` (~2 min): run only after changes to `Challenge.lean`,
+  `Solution.lean`, comparator configuration/checker or Lean/Mathlib versions,
+  or when the user explicitly requests this audit. It is not a routine build or
+  commit check. Ordinary library proof changes, proof completion and agent-selected
+  milestones are not triggers. Use targeted `just sorries` when admission analysis
+  is needed instead.
 - `just sorries NAME...` (~50 s): actual transitive Lean admissions, on request
   or when needed to establish admission-freedom or inspect a dependency frontier.
 
