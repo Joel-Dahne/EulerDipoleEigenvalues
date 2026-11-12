@@ -100,10 +100,26 @@ weights and local versus global regularity.
    admissible window. The quadratic ray bounds and all new generic trace helpers
    are admission-free. No polar trace, extra corner assumption or raw gradient
    evaluation is used.
-   **Next regularity frontier:** Saddle jet, Weighted forcing
-   (`lem:dd-weighted-forcing`) and Ordinary separatrix H¹/H³. Weighted forcing
-   should be derived independently from the saddle data and ordinary H², not
-   from logarithmic forcing, which already uses the ordinary separatrix gain.
+   **Current target: Ordinary separatrix H¹/H³** (`prop:dd-separatrix-h1`),
+   still admitted, with its unchanged statement in `Regularity/OddOddSeparatrix.lean`.
+   Cellwise ordinary H¹ and zero traces on all four edges are assembled in
+   `OddOddCellH1.lean`, reaching three existing inputs: Weighted forcing,
+   Weighted transport H¹ and Whole-edge zero trace. `OddOddPuncturedH1.lean`
+   gives H¹ on the nonzero collar and one measurable specified gradient with
+   actual local L² norms on the full collar. Its generic folding, selection and
+   finite-norm covering layers are admission-free; null seams are used only
+   for norms, not weak gluing. Finite whole-domain H¹ point removal and the
+   canonical stream Poisson identity are admission-free too. The same-domain
+   H³ completion in `StreamElliptic.lean` reaches only Interior elliptic H³.
+   **Remaining:** transport/identify the one-sided zero traces on all reflected
+   regular-edge windows, establish the specified weak identities across those
+   seams, then apply point removal at the saddles and canonical trace consistency
+   on every window in the original target. Reuse `IntervalZeroExtension.lean`;
+   planar weak lifting and trace transport are distinct from its existing 1D theorem.
+   Do not use logarithmic forcing or weighted vorticity gradients here: both
+   already depend on this ordinary gain. Saddle jet and Weighted forcing remain
+   upstream regularity inputs; the latter must be derived independently from
+   saddle data and ordinary H², not logarithmic forcing.
    Generic numerator differentiation and five scalar/orbit inputs are explicit
    outside-section prerequisites. The expanded weighted-gradient audit reaches
    ten existing admissions; the third-stream assembly adds the elliptic/Taylor
@@ -222,9 +238,9 @@ weights and local versus global regularity.
    No coefficient checker or subdivision dataset is implemented, and no backend
    is selected. Exact certificate verification and the other analytic branches
    remain open; statement markers are not a compatibility audit.
-   See [odd–odd status](odd-odd.md). The earlier
-   saddle and ordinary H¹ derivations remain blueprint mathematics, not Lean proofs;
-   weighted-gradient and logarithmic-numerator assembly now have checked proofs.
+   See [odd–odd status](odd-odd.md). The full saddle and across-separatrix H¹
+   endpoints remain admitted; the ordinary cellwise H¹/zero-edge and off-separatrix
+   finite-norm covering steps have checked assembly proofs.
 2. **Shared interface review:** check the uniform complete-cell estimates
    needed for logarithmic summation, canonical interval traces and compatibility
    of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the
@@ -276,7 +292,9 @@ prerequisites remain outside this directory; see the
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
   H¹ gluing has an explicit cutoff proof. The first two transport gains and
-  the sector saddle/separatrix/gradient interfaces are now stated with `sorry`.
+  full sector saddle/separatrix endpoints remain admitted. The weighted-gradient
+  assembly, ordinary cellwise H¹/zero-edge assembly and off-separatrix finite-norm
+  covering have checked proofs of their own.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
   Cylinder inversion and the weighted H¹/corner/edge/gluing layer are now
   stated too, as are the quarter endpoint/resonant-zero and weighted/logarithmic

@@ -43,8 +43,12 @@ Proof work is now outside the odd–odd chapter:
   Logarithmic forcing (`lem:dd-log-forcing`) has a proof of its own, retaining
   the whole lifted neighbourhood, all eight canonical ray traces and one common
   radius. It reaches the saddle jet, ordinary separatrix H¹/H³ and saddle
-  factorization. No polar trace or stronger corner premise was added. See
-  [shared status](shared.md#next-session).
+  factorization. No polar trace or stronger corner premise was added.
+  The current target is Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`):
+  its cellwise H¹/zero-edge assembly and reflected-periodic off-separatrix gain
+  are checked, with actual full-collar gradient norms. Across-seam weak gluing
+  and global canonical trace compatibility remain; the parent is still admitted.
+  See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
   division directly on the torus.

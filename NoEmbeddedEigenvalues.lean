@@ -69,6 +69,10 @@ import NoEmbeddedEigenvalues.OddOddGradientTraces
 import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddCellH1
+import NoEmbeddedEigenvalues.Regularity.OddOddPuncturedH1
+import NoEmbeddedEigenvalues.Regularity.StreamElliptic
+import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix
 import NoEmbeddedEigenvalues.Regularity.OddOddLogBulk
 import NoEmbeddedEigenvalues.Regularity.OddOddLogSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic

@@ -543,12 +543,16 @@ Multiplication by a continuous function preserves local integrability.
 
 \begin{lemma}[Isolated-point removal for a weak partial derivative]
 \label{lem:weak-point-removal}
-\uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.remove_point}
+\uses{def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.remove_point,
+ NoEmbeddedEigenvalues.MemSobolevOn.remove_point}
 \leanok
 Let $F,D\in L^1_{\rm loc}(U)$, $U\subset\R^2$, and $c\in\R^2$.
 If $\partial_jF=D$ weakly on $U\setminus\{c\}$, the same specified
 identity holds on $U$. No radial integrability assumption is needed.
+In particular $F\in H^1(U\setminus\{c\})$ implies $F\in H^1(U)$.
+This uses finite norms on the whole punctured domain, not merely local
+regularity away from the point.
 \end{lemma}
 
 \begin{proof}
@@ -562,6 +566,9 @@ through $c$, so is a test on $U\setminus\{c\}$.
 Crucially $\partial_j\theta_n=0$, while $\theta_n\to1$ off the null
 transverse line. Dominated convergence applies to the genuine integrable
 products $F\partial_j\varphi$ and $D\varphi$, giving the original identity.
+For the H1 corollary, removing a singleton does not change the measure,
+so the value and derivative L2 norms transfer to $U$. Apply the weak identity
+extension to those same derivative witnesses.
 \end{proof}
 
 \begin{lemma}[Sobolev congruence on the domain]
@@ -1826,6 +1833,23 @@ Use the existing first/second Fourier multiplier identities and their weak
 lift bridges; change the value representative to the continuous stream.
 \end{proof}
 
+\begin{lemma}[Canonical stream Poisson identity]
+\label{lem:canonical-stream-poisson}
+\uses{def:torus, def:stream-second-jet}
+\lean{NoEmbeddedEigenvalues.streamJet2_laplacian}
+\leanok
+For every mean-zero $\omega$, the canonical second stream entries satisfy
+$J_{00}+J_{11}=\widetilde\omega$ a.e.\ on the whole plane.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:inverse-laplacian-derivatives, lem:lift-periodization}
+\leanok
+The Fourier multiplier identity gives
+$\partial_{00}\Delta^{-1}\omega+\partial_{11}\Delta^{-1}\omega=\omega$
+in torus L2. Lift its a.e.\ representative identity to the plane.
+\end{proof}
+
 \begin{lemma}[Local elliptic regularity]
 \label{lem:elliptic-local}
 \uses{def:sobolev-local, def:local-weak-jets}
@@ -1864,6 +1888,26 @@ $u\in H^3$ on the smaller ball. A finite cover and subordinate smooth
 partition of unity give $H^3(V)$ for every open $V$ with compact closure
 in $U$; weak derivative uniqueness identifies the local jets on overlaps.
 Thus this is an interior argument, with no boundary condition on $u$.
+\end{proof}
+
+\begin{lemma}[Stream H3 from local vorticity H1]
+\label{lem:stream-h3-of-vorticity-h1}
+\uses{def:torus, def:stream-lifts, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.stream_h3_of_vorticity_h1}
+\leanok
+For a mean-zero $\omega$ and open $U$, if
+$\widetilde\omega\in H^1_{\rm loc}(U)$, then the same continuous stream
+satisfies $\widetilde\psi\in H^3_{\rm loc}(U)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:elliptic-torus, lem:lift-sobolev-local,
+ lem:stream-weak-second-jet, lem:canonical-stream-poisson, lem:elliptic-local}
+\leanok
+The torus stream is H2. Its lift has finite H2 norms on every bounded
+localization; a.e.\ congruence transfers these to the continuous stream.
+Its canonical weak second jet has trace $\widetilde\omega$.
+Apply interior elliptic regularity on the same open domain.
 \end{proof}
 
 \begin{lemma}[Uniform dyadic elliptic estimate]
@@ -2762,24 +2806,25 @@ with weak gradient given by the quadrant gradients.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:acl-slicing, lem:trace-l2}
+\uses{lem:acl-slicing, lem:trace-l2, lem:weak-point-removal}
 Away from the origin, ordinary trace gluing follows by ACL slicing:
 the one-dimensional absolutely continuous sections on either side of
 an axis have the same endpoint value, so their concatenation has no jump.
 Fubini gives the piecewise weak derivatives on the punctured disk.
-
-Choose a smooth radial cutoff $\eta_\epsilon$, zero for $r<\epsilon$ and
-one for $r>2\epsilon$, with $|\nabla\eta_\epsilon|\le C/\epsilon$.
-Then $\eta_\epsilon u\in H^1(D)$ and
-\[
- \|u\nabla\eta_\epsilon\|_2
- \le C\|u/r\|_{L^2(\{\epsilon<r<2\epsilon\})}\longrightarrow0.
-\]
-The $L^2$ tails of $u$ and its quadrant gradients also vanish.
-Thus $\eta_\epsilon u$ converges in $H^1$ to $u$ with the asserted gradient.
-This excludes a distribution supported at the crossing point without
-assuming a pointwise value of $u$ there.
+The four finite quadrant norms give finite value and derivative L2 norms
+on that whole punctured disk. The H1 consequence of
+Lemma~\ref{lem:weak-point-removal} extends these same derivatives through
+the center; no value on the crossing point is assumed.
 \end{proof}
+
+\begin{remark}[Digest note: finite H1 norms remove the isolated crossing]
+The radial-tail argument is unnecessary once the whole punctured disk has
+finite H1 norms. A transverse cutoff removes a point from each specified
+weak identity without differentiating the cutoff in the tested direction.
+The $u/r$ assumption is retained in the crossing interface, but is not needed
+for this alternative final extension step. Local H1 away from the point
+alone would not supply the required finite derivative norms.
+\end{remark}
 
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]
 \label{lem:trace-acl}

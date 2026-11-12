@@ -106,4 +106,24 @@ theorem HasWeakPartialOn.remove_point {U : Set (ℝ × ℝ)} {c : ℝ × ℝ} {j
   exact tendsto_nhds_unique (hlim _ hiF)
     (((hlim _ hiD).neg).congr (fun n ↦ (he n).symm))
 
+/-- Finite H¹ on a punctured plane domain extends through the isolated point.
+This needs the full punctured-domain norms, not merely local H¹ away from it. -/
+theorem MemSobolevOn.remove_point {U : Set (ℝ × ℝ)} {c : ℝ × ℝ}
+    {F : ℝ × ℝ → ℂ} (h : MemSobolevOn 1 (U \ {c}) F) :
+    MemSobolevOn 1 U F := by
+  have hne : ∀ᵐ p : ℝ × ℝ, p ≠ c := by
+    rw [ae_iff]
+    simp [Measure.volume_eq_prod]
+  have hμ : volume.restrict (U \ {c}) = volume.restrict U :=
+    Measure.restrict_congr_set (hne.mono fun p hp ↦ by simp [hp])
+  have hF : MemLp F 2 (volume.restrict U) := by
+    simpa only [hμ] using h.1
+  refine ⟨hF, fun j ↦ ?_⟩
+  obtain ⟨D, hd, hD⟩ := h.2 j
+  have hD' : MemLp D 2 (volume.restrict U) := by
+    simpa only [hμ] using (show MemLp D 2 (volume.restrict (U \ {c})) from hD)
+  exact ⟨D, hd.remove_point
+    (locallyIntegrableOn_of_locallyIntegrable_restrict (hF.locallyIntegrable (by norm_num)))
+    (locallyIntegrableOn_of_locallyIntegrable_restrict (hD'.locallyIntegrable (by norm_num))), hD'⟩
+
 end NoEmbeddedEigenvalues

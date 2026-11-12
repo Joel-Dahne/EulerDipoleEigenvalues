@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
+import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix
 import NoEmbeddedEigenvalues.Regularity.OddOddLogSaddle
 import NoEmbeddedEigenvalues.DipoleLogMultiplier
 import NoEmbeddedEigenvalues.WeakJetOperations

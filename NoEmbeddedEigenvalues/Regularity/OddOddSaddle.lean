@@ -4,11 +4,12 @@ import NoEmbeddedEigenvalues.Regularity.CylinderInverse
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 
 /-!
-# Odd–odd saddle and ordinary separatrix regularity interfaces
+# Odd–odd saddle and weighted forcing interfaces
 
-These inputs precede logarithmic forcing and weighted vorticity gradients.
-Their separation lets the logarithmic layer use the ordinary H³ stream
-regularity without importing the gradient theorem it is intended to prove.
+These inputs precede ordinary separatrix H¹, logarithmic forcing and weighted
+vorticity gradients. The ordinary whole-lift endpoint is in OddOddSeparatrix;
+its cellwise ingredients depend on the forcing input here, not on logarithmic
+forcing or the weighted-gradient theorem.
 -/
 
 noncomputable section
@@ -43,15 +44,6 @@ theorem dd_weighted_forcing {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (∀ j, MemLp (fun p ↦ liftL2 (streamPartial j ω) p /
       (Real.rpow (saddleDist p) (3 / 2) : ℂ)) 2 (volume.restrict cellNeighbourhood)) ∧
     ∀ p, dipoleLift p = 0 → contStream ω p = 0 := by
-  sorry
-
-/-- H¹ vorticity, zero Sobolev traces and H³ stream regularity across the separatrix
-(`prop:dd-separatrix-h1`). The neighbourhood may be unbounded; the spaces are local. -/
-theorem dd_separatrix_h1 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false false ω) :
-    ∃ U : Set (ℝ × ℝ), IsOpen U ∧ {p | dipoleLift p = 0} ⊆ U ∧
-      MemSobolevLocOn 1 U (liftL2 ω) ∧ HasZeroSeparatrixTraceOn U (liftL2 ω) ∧
-      MemSobolevLocOn 3 U (contStream ω) := by
   sorry
 
 end NoEmbeddedEigenvalues

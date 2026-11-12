@@ -2364,6 +2364,8 @@ For $n\in\mathbb Z^2$ define
  NoEmbeddedEigenvalues.saddleDist_cellFold,
  NoEmbeddedEigenvalues.dipoleLift_liftShift,
  NoEmbeddedEigenvalues.dipoleLift_separatrixReflect,
+ NoEmbeddedEigenvalues.dipoleLift_cellFold,
+ NoEmbeddedEigenvalues.cellFold_preimage_strip_subset,
  NoEmbeddedEigenvalues.exists_liftShift_eq,
  NoEmbeddedEigenvalues.exists_cellFold_mem_collar,
  NoEmbeddedEigenvalues.norm_le_pi_of_mem_cellSquare,
@@ -2373,6 +2375,8 @@ The folds preserve volume and saddle distance.
 They preserve $\Psi$ for $s=0$ and negate it for $s=1$.
 Every point with $0<|\Psi(p)|<\varepsilon$ folds into
 $V_\varepsilon^{\rm cell}$.
+Conversely every preimage of this strip lies in
+$\{0<|\Psi|<\varepsilon\}$.
 If $\|p\|\le R$ and $T_{s,n}p$ lies in the central cell, then
 $|n_1|,|n_2|\le N$ whenever $2\pi+R\le N$, $N\in\mathbb N$.
 \end{lemma}
@@ -2391,13 +2395,99 @@ $\|S(p)\|\le\pi+\|p\|$. Thus each period displacement has size at most
 $2\pi+R$, giving the stated finite bound on its integer index.
 \end{proof}
 
+\begin{lemma}[Raw odd--odd parity under cell folds]
+\label{lem:odd-odd-cell-fold-parity}
+\uses{def:sectors, def:periodic-cell-folds, def:torus-of-lift}
+\lean{NoEmbeddedEigenvalues.liftL2_separatrixReflect_ae,
+ NoEmbeddedEigenvalues.liftL2_cellFold_ae}
+\leanok
+For odd--odd $\omega$, its raw lift $F=\widetilde\omega$ satisfies
+$F\circ S=-F$ a.e.\ and $F\circ T_{s,n}=(-1)^sF$ a.e.
+No assertion about values on a null line is made.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:reflection-algebra, lem:lift-periodization}
+\leanok
+Lift the torus a.e.\ parity identity and use exact periodicity of the raw lift.
+\end{proof}
+
+\begin{lemma}[Actual local L2 from a finite cell-fold cover]
+\label{lem:cell-fold-l2-cover}
+\uses{def:sobolev-local, def:periodic-cell-folds, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.ae_dipoleLift_ne_zero,
+ NoEmbeddedEigenvalues.memSobolevLocOn_zero_of_cellFold_cover}
+\leanok
+The lifted separatrix is null.
+Let $F:\R^2\to\C$ be measurable and $U\subset\R^2$.
+If $F\in L^2(U\cap T_{s,n}^{-1}V_\varepsilon^{\rm cell})$ for every fold,
+then $F\in L^2_{\rm loc}(U\cap\{|\Psi|<\varepsilon\})$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:periodic-cell-cover, lem:separatrix-lines}
+\leanok
+Every bounded localization needs only finitely many fold indices.
+Sum the genuine squared-norm integrals on those preimages.
+Their union covers the localization except $\{\Psi=0\}$, which is null:
+each Cartesian section lies in two countable arithmetic progressions.
+Measurability and the finite integral give actual local L2 membership,
+not just a bound for a totalized norm.
+\end{proof}
+
+\begin{lemma}[Ordinary odd--odd H1 under reflected periodic covering]
+\label{lem:odd-odd-h1-cell-fold}
+\uses{def:sectors, def:sobolev-local, def:periodic-cell-folds,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_cellFold,
+ NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_punctured_collar}
+\leanok
+For odd--odd $\omega$ and open $V$, $F=\widetilde\omega\in H^1(V)$
+implies $F\in H^1(T_{s,n}^{-1}V)$.
+In particular $F\in H^1(V_\varepsilon^{\rm cell})$ implies
+$F\in H^1_{\rm loc}(\{0<|\Psi|<\varepsilon\})$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-odd-cell-fold-parity, lem:affine-jet-pullback,
+ lem:sobolev-congr-ae, lem:periodic-cell-cover, lem:sobolev-local-gluing}
+\leanok
+Affine pullback gives H1 of $F\circ T_{s,n}$.
+Multiplication by the same sign and raw a.e.\ congruence return $F$.
+These open preimages cover every small nonzero level.
+Local Sobolev gluing applies within that open set only; it does not cross a seam.
+\end{proof}
+
+\begin{lemma}[Off-separatrix gradient with full-collar L2 norms]
+\label{lem:odd-odd-collar-gradient}
+\uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_collar_gradient}
+\leanok
+Let $\omega$ be odd--odd and
+$\widetilde\omega\in H^1(V_\varepsilon^{\rm cell})$.
+Write $C_\varepsilon=\{|\Psi|<\varepsilon\}$ and
+$C_\varepsilon^\times=\{0<|\Psi|<\varepsilon\}$.
+There is one measurable $D$ with
+$\partial_j\widetilde\omega=D_j$ weakly on $C_\varepsilon^\times$
+and $D_j\in L^2_{\rm loc}(C_\varepsilon)$.
+The weak identity is not asserted across the separatrix.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-odd-h1-cell-fold, lem:local-h1-specified-gradient,
+ lem:weak-derivative-unique, lem:periodic-cell-cover, lem:cell-fold-l2-cover}
+\leanok
+Select a measurable gradient on the nonzero collar.
+Every folded strip is contained in that collar, so weak uniqueness identifies
+the chosen gradient there with the finite-norm derivative of its H1 pullback.
+The finite cell-fold norm cover gives actual local L2 through the omitted seams.
+This norm transfer does not eliminate possible distributional jumps.
+\end{proof}
+
 \begin{lemma}[Lifted weighted gradient from a cell estimate]
 \label{lem:weighted-gradient-periodic-cover}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.ae_dipoleLift_ne_zero,
- NoEmbeddedEigenvalues.liftL2_separatrixReflect_ae,
- NoEmbeddedEigenvalues.liftL2_cellFold_ae,
- NoEmbeddedEigenvalues.weighted_gradient_neighbourhood_of_cell}
+\lean{NoEmbeddedEigenvalues.weighted_gradient_neighbourhood_of_cell}
 \leanok
 Let $\omega$ be odd--odd and let $D$ be a measurable specified weak
 gradient of its raw lift on an open neighbourhood $U$ of $\{\Psi=0\}$.
@@ -2409,8 +2499,8 @@ $D_j/d\in L^2_{\rm loc}(W)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:periodic-cell-cover, lem:weighted-gradient-affine,
- lem:weak-derivative-unique, lem:reflection-algebra, lem:lift-periodization}
+\uses{lem:odd-odd-cell-fold-parity, lem:cell-fold-l2-cover,
+ lem:weighted-gradient-affine, lem:weak-derivative-unique}
 \leanok
 The actual raw lift satisfies $F\circ T_{s,n}=(-1)^sF$ a.e.,
 by odd parity and exact periodicity. Transport $E$ with the affine rule.

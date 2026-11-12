@@ -3,7 +3,8 @@ import NoEmbeddedEigenvalues.CellFolding
 /-!
 # Lifting a weighted cell gradient to a separatrix neighbourhood
 
-Blueprint: `lem:weighted-gradient-affine`, `lem:weighted-gradient-periodic-cover`.
+Blueprint: `lem:weighted-gradient-affine`, `lem:weighted-gradient-periodic-cover`,
+`lem:odd-odd-cell-fold-parity`, `lem:cell-fold-l2-cover`.
 
 Reflected periodic cell copies cover every nonzero small level. A bounded
 set needs only finitely many period indices. Weak uniqueness transfers each
@@ -64,6 +65,29 @@ theorem liftL2_cellFold_ae {ω : L2} (hs : InSector false false ω)
   · filter_upwards [liftL2_separatrixReflect_ae hs] with p hp
     simpa only [Function.comp_apply, cellFold_apply, Bool.true_eq, ite_true,
       liftL2_liftShift, neg_one_mul] using hp
+
+/-- Finite reflected-periodic covers transfer actual L² norms to every bounded
+localization of a collar. The separatrix is omitted only for norms. -/
+theorem memSobolevLocOn_zero_of_cellFold_cover {ε : ℝ} {U : Set (ℝ × ℝ)}
+    {F : ℝ × ℝ → ℂ} (hFm : Measurable F)
+    (hF : ∀ (s : Bool) (n : ℤ × ℤ), MemLp F 2
+      (volume.restrict (U ∩ cellFold s n ⁻¹' cellSeparatrixStrip ε))) :
+    MemSobolevLocOn 0 (U ∩ {p | |dipoleLift p| < ε}) F := by
+  intro V _ hVc hVW
+  obtain ⟨R, hR⟩ := hVc.isBounded.exists_norm_le
+  obtain ⟨N, hN⟩ := exists_nat_ge (2 * Real.pi + R)
+  let O := fun i : Bool × (shiftBox N) ↦ U ∩ cellFold i.1 i.2.val ⁻¹' cellSeparatrixStrip ε
+  have hi : IntegrableOn (fun p ↦ ‖F p‖ ^ 2) (⋃ i : Bool × (shiftBox N), O i) :=
+    integrableOn_finite_iUnion.mpr fun i ↦
+      (memLp_two_iff_integrable_sq_norm (hF i.1 i.2.val).aestronglyMeasurable).mp
+        (hF i.1 i.2.val)
+  have hLu := (memLp_two_iff_integrable_sq_norm hFm.aestronglyMeasurable).mpr hi
+  apply hLu.mono_measure (Measure.restrict_mono_ae ?_)
+  filter_upwards [ae_dipoleLift_ne_zero] with p hp0 hpV
+  have hpW := hVW (subset_closure hpV)
+  obtain ⟨s, n, hn⟩ := exists_cellFold_mem_collar hp0 hpW.2
+  have hnN := cellFold_mem_shiftBox hN (hR p (subset_closure hpV)) s hn.1
+  exact mem_iUnion.mpr ⟨(s, ⟨n, hnN⟩), hpW.1, hn⟩
 
 /-- Affine weak transport and exact distance invariance preserve weighted gradients. -/
 theorem exists_weightedGradient_planeAffine
@@ -130,35 +154,20 @@ theorem weighted_gradient_neighbourhood_of_cell {ω : L2} (hs : InSector false f
       (measurePreserving_cellFold s n) (saddleDist_cellFold s n)
       (isOpen_cellSeparatrixStrip ε) hE (by cases s <;> norm_num) (liftL2_cellFold_ae hs s n)
   refine ⟨W, hW, hWsep, fun j ↦ ⟨(hD j).mono inter_subset_left, ?_⟩⟩
-  intro V hV hVc hVW
-  obtain ⟨R, hR⟩ := hVc.isBounded.exists_norm_le
-  obtain ⟨N, hN⟩ := exists_nat_ge (2 * π + R)
-  let O := fun i : Bool × (shiftBox N) ↦ U ∩ cellFold i.1 i.2.val ⁻¹' cellSeparatrixStrip ε
-  have hLo (i : Bool × (shiftBox N)) : MemLp (fun p ↦ D j p / (saddleDist p : ℂ)) 2
-      (volume.restrict (O i)) := by
-    obtain ⟨G, hG⟩ := hfold i.1 i.2.val
-    have hO : IsOpen (O i) := hU.inter
-      ((isOpen_cellSeparatrixStrip ε).preimage (cellFold i.1 i.2.val).continuous)
-    have hi : MemLp (fun p ↦ G j p / (saddleDist p : ℂ)) 2
-        (volume.restrict (O i)) :=
-      (hG j).2.mono_measure (Measure.restrict_mono inter_subset_right le_rfl)
-    have he := ((hD j).mono inter_subset_left).ae_eq hO ((hG j).1.mono inter_subset_right)
-    apply hi.ae_eq
-    filter_upwards [ae_restrict_of_ae he, ae_restrict_mem hO.measurableSet] with p hp hpO
-    rw [hp hpO]
-  have hm : Measurable (fun p ↦ D j p / (saddleDist p : ℂ)) :=
-    (hDm j).div (Complex.measurable_ofReal.comp
-      (Metric.continuous_infDist_pt saddleSet).measurable)
-  have hi : IntegrableOn (fun p ↦ ‖D j p / (saddleDist p : ℂ)‖ ^ 2)
-      (⋃ i : Bool × (shiftBox N), O i) :=
-    integrableOn_finite_iUnion.mpr fun i ↦
-      (memLp_two_iff_integrable_sq_norm (hLo i).aestronglyMeasurable).mp (hLo i)
-  have hLu := (memLp_two_iff_integrable_sq_norm hm.aestronglyMeasurable).mpr hi
-  apply hLu.mono_measure (Measure.restrict_mono_ae ?_)
-  filter_upwards [ae_dipoleLift_ne_zero] with p hp0 hpV
-  have hpW := hVW (subset_closure hpV)
-  obtain ⟨s, n, hn⟩ := exists_cellFold_mem_collar hp0 hpW.2
-  have hnN := cellFold_mem_shiftBox hN (hR p (subset_closure hpV)) s hn.1
-  exact mem_iUnion.mpr ⟨(s, ⟨n, hnN⟩), hpW.1, hn⟩
+  apply memSobolevLocOn_zero_of_cellFold_cover
+    ((hDm j).div (Complex.measurable_ofReal.comp
+      (Metric.continuous_infDist_pt saddleSet).measurable))
+  intro s n
+  obtain ⟨G, hG⟩ := hfold s n
+  have hO : IsOpen (U ∩ cellFold s n ⁻¹' cellSeparatrixStrip ε) := hU.inter
+    ((isOpen_cellSeparatrixStrip ε).preimage (cellFold s n).continuous)
+  have hi : MemLp (fun p ↦ G j p / (saddleDist p : ℂ)) 2
+      (volume.restrict (U ∩ cellFold s n ⁻¹' cellSeparatrixStrip ε)) :=
+    (hG j).2.mono_measure (Measure.restrict_mono inter_subset_right le_rfl)
+  have he := ((hD j).mono inter_subset_left).ae_eq hO ((hG j).1.mono inter_subset_right)
+  apply hi.ae_eq
+  filter_upwards [ae_restrict_of_ae he, ae_restrict_mem hO.measurableSet] with p hp hpO
+  change G j p / (saddleDist p : ℂ) = D j p / (saddleDist p : ℂ)
+  rw [hp hpO]
 
 end NoEmbeddedEigenvalues

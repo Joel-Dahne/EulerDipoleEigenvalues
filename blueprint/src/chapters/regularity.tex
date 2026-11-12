@@ -255,6 +255,57 @@ including endpoints. The property asserts existence of such ACL data on
 each rectangle, not any value of a raw $L^2$ representative on a line.
 \end{definition}
 
+\begin{lemma}[Cellwise ordinary H1 and zero edge traces, odd--odd]
+\label{lem:dd-cell-separatrix-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-arcs,
+ def:cell-separatrix-collar, def:cell-edge-trace}
+\lean{NoEmbeddedEigenvalues.dd_cell_separatrix_h1}
+\leanok
+For an odd--odd eigenfunction,
+$\widetilde\omega/d^2\in L^2(\mathrm{cellSquare})$.
+There is $0<\varepsilon<1$ such that
+$\widetilde\omega\in H^1(V_\varepsilon^{\rm cell})$ and its canonical
+one-sided trace on each of the four whole regular edges is zero.
+All conclusions concern the same raw vorticity and the same strip.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-weighted-forcing, lem:transport-pair-eigen,
+ lem:stream-weak-second-jet, lem:cell-neighbourhood,
+ lem:weighted-transport-h1, lem:transport-zero-edge-trace, lem:separatrix-lines}
+\leanok
+Use the continuous stream transport pair with its actual Fourier first
+weak derivatives. Restrict the supplied forcing weights to the cell.
+The weighted transport gain gives the second mass gain and an ordinary
+H1 strip. Since $d$ is bounded on the cell closure,
+$d(\widetilde\omega/d^2)=\widetilde\omega/d$ also belongs to L2;
+the equality holds even at totalized zero denominators.
+Zero continuous stream values on every edge then give the canonical
+one-sided zero traces by the whole-edge trace theorem.
+\end{proof}
+
+\begin{lemma}[Ordinary odd--odd gain off the separatrix with full-collar norms]
+\label{lem:dd-punctured-separatrix-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:weak-derivative-local,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.dd_punctured_separatrix_h1}
+\leanok
+For an odd--odd eigenfunction there is $0<\varepsilon<1$ such that
+$\widetilde\omega\in H^1_{\rm loc}(\{0<|\Psi|<\varepsilon\})$.
+On this same nonzero collar it has a single measurable specified gradient $D$
+whose entries belong to $L^2_{\rm loc}(\{|\Psi|<\varepsilon\})$.
+Only the norms, not the weak identities, have been extended through the seams.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dd-cell-separatrix-h1, lem:odd-odd-h1-cell-fold,
+ lem:odd-odd-collar-gradient}
+\leanok
+Use the one cell strip for both reflected-periodic H1 pullback and
+measurable gradient selection. Weak uniqueness and the finite fold cover
+retain that same gradient in all full-collar norm bounds.
+\end{proof}
+
 \begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
 \label{prop:dd-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:zero-separatrix-trace}
@@ -267,31 +318,40 @@ separatrix traces and $\psi\in H^3_{\rm loc}(U)$
 \end{proposition}
 
 \begin{proof}
-\uses{lem:dd-weighted-forcing, lem:weighted-transport-h1,
- lem:transport-zero-edge-trace, lem:transport-pair-eigen,
- lem:h1-crossing-gluing, lem:elliptic-local, lem:symmetries-commute}
-Apply Lemma~\ref{lem:weighted-transport-h1} to $(\omega,\psi)$.
-Lemma~\ref{lem:dd-weighted-forcing} supplies its weighted hypotheses; away
-from the saddles these are ordinary $H^2$ bounds. Thus $\omega$ is $H^1$
-on the cellwise separatrix strips, with $\omega/d^2\in L^2$.
-The same argument on adjacent cells follows by reflection.
+\uses{lem:dd-cell-separatrix-h1, lem:dd-punctured-separatrix-h1,
+ lem:odd-odd-cell-fold-parity, lem:periodic-cell-cover,
+ lem:acl-slicing, lem:trace-l2, lem:h1-zero-extension,
+ lem:weak-point-removal, lem:sobolev-local-gluing,
+ lem:stream-h3-of-vorticity-h1}
+The cellwise lemma gives an ordinary strip and zero traces on its four
+whole regular edges. Reflected periodic copies cover every small nonzero
+level. The punctured-collar lemma identifies one weak gradient off the
+separatrix and gives its finite L2 norms on each full-collar localization.
 
-The forcing $\psi$ is zero on every regular edge. By
-Lemma~\ref{lem:transport-zero-edge-trace}, both one-sided traces of
-$\omega$ are zero. ACL trace gluing therefore gives $H^1$ across the
-regular edges. At a saddle, $\omega/r\in L^2$ follows from the stronger
-$\omega/d^2$ bound, and Lemma~\ref{lem:h1-crossing-gluing} glues the four
-quadrants including their common endpoint. Finitely many such patches
-give an open neighbourhood of the whole separatrix.
-Finally $\Delta\psi=\omega\in H^1$ there and $\psi\in H^2$ globally;
-Lemma~\ref{lem:elliptic-local} gives $\psi\in H^3$ on a smaller neighbourhood.
+Transport the one-sided zero traces to the adjacent cells.
+On a compact regular-edge patch, zero-trace interval extension and ACL
+slicing give no jump in the normal sections. Fubini gives the specified
+weak identities across that edge; tangential testing has no normal boundary term.
+This gives H1 away from the saddles, with the same finite gradient norms.
+On a small punctured disk about a saddle these norms give finite H1,
+not merely local H1 away from its center.
+Lemma~\ref{lem:weak-point-removal} extends through the center.
+
+Local Sobolev gluing over the reflected periodic patches gives an open
+neighbourhood of the entire lifted separatrix. Only a bounded localization
+uses finitely many fold indices.
+Trace independence identifies the zero extensions with the canonical
+traces on every admissible diagonal rectangle, including normal endpoints.
+Finally Lemma~\ref{lem:stream-h3-of-vorticity-h1} gives H3 of the same
+continuous stream on that open domain.
 \end{proof}
 
 \begin{remark}[Digest note: norms and traces of periodic lifts]
 The formal statements use local Sobolev spaces on the full lifted
 separatrix neighbourhood, not global $L^2(\R^2)$ norms of periodic lifts.
 On compact representatives a finite cover recovers the corresponding
-torus neighbourhood statements. The saddle estimates instead use the
+torus neighbourhood statements. The whole-lift cover is periodic and
+countable; a literal finite cover of that unbounded set is not used. The saddle estimates instead use the
 fixed bounded lift neighbourhood. Weak Cartesian jets specify the
 derivatives, Euclidean radius specifies the radial weights, and transverse
 interval $H^1$ extensions specify the zero traces.
@@ -305,9 +365,10 @@ Lemma~\ref{lem:weighted-corner-trace}; numerator differentiation uses only
 $H^2$ regularity of $\psi$, not a prior $H^1$ bound for $\omega$.
 Zero edge trace then follows from the boundary transport equation and
 weighted corner integrability, with no separate assumption about the
-midpoint value $A(0)$. The saddle extension is the explicit cutoff argument
-of Lemma~\ref{lem:h1-crossing-gluing}, rather than an unspecified
-removability assertion.
+midpoint value $A(0)$. The regular seams use zero-trace H1 extension and the isolated saddle uses
+finite-norm point removal. Thus the broader weighted crossing-gluing
+interface is unnecessary on this route; neither step assumes a pointwise
+value of the raw vorticity at a seam or saddle.
 \end{remark}
 
 \begin{lemma}[Ordinary logarithmic stream-jet mass, odd--odd]

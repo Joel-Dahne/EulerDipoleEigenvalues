@@ -104,6 +104,28 @@ theorem dipoleLift_separatrixReflect (p : ℝ × ℝ) :
     dipoleLift (separatrixReflect p) = -dipoleLift p := by
   simp [separatrixReflect, dipoleLift, Real.cos_sub, add_comm]
 
+/-- A fold preserves the dipole level up to its reflection sign. -/
+theorem dipoleLift_cellFold (s : Bool) (n : ℤ × ℤ) (p : ℝ × ℝ) :
+    dipoleLift (cellFold s n p) = (if s then -1 else 1) * dipoleLift p := by
+  cases s <;> simp [cellFold_apply, dipoleLift_liftShift, dipoleLift_separatrixReflect]
+
+/-- Every folded positive strip is contained in the nonzero absolute-level collar. -/
+theorem cellFold_preimage_strip_subset (s : Bool) (n : ℤ × ℤ) (ε : ℝ) :
+    cellFold s n ⁻¹' cellSeparatrixStrip ε ⊆
+      {p | dipoleLift p ≠ 0 ∧ |dipoleLift p| < ε} := by
+  intro p hp
+  have he := dipoleLift_cellFold s n p
+  have hzero : dipoleLift p ≠ 0 := by
+    intro hz
+    rw [hz, mul_zero] at he
+    exact hp.2.1.ne' he
+  have habs : |dipoleLift (cellFold s n p)| = |dipoleLift p| := by
+    rw [he, abs_mul]
+    cases s <;> simp
+  refine ⟨hzero, ?_⟩
+  rw [← habs, abs_of_pos hp.2.1]
+  exact hp.2.2
+
 /-- Equal torus projections differ by an explicit integer-period shift. -/
 theorem exists_liftShift_eq {p q : ℝ × ℝ} (h : torusProj q = torusProj p) :
     ∃ n : ℤ × ℤ, liftShift n p = q := by

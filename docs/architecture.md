@@ -77,7 +77,8 @@ proof mechanisms. Module names below are relative to
   `ACLWeakDerivative.lean` gives the weak time identity from orbitwise ACL data,
   without selecting jointly measurable ACL representatives.
 - `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
-- `WeakPointRemoval.lean`: a transverse cutoff removes an isolated point from a
+- `WeakPointRemoval.lean`: finite whole-punctured-domain H¹ extends through a point;
+  a transverse cutoff removes an isolated point from a
   specified weak partial identity under local L¹ hypotheses, without a radial tail.
 - `RadialWeakMultiplier.lean`: the local smooth weak product rule, radial derivatives,
   weaker-weight L² transport and H¹ of divided gradients through their center.
@@ -148,7 +149,9 @@ proof mechanisms. Module names below are relative to
   `RotationWeakGradient.lean` transports derivative indices and weighted norms,
   then identifies one specified gradient on the finite quarter cover.
   `CellFolding.lean` supplies reflected periodic affine isometries, saddle-distance
-  invariance and bounded period-index covering. `PeriodicWeightedGradient.lean`
+  invariance, exact nonzero-collar containment and bounded period-index covering.
+  `PeriodicWeightedGradient.lean` supplies the generic measurable finite-fold L²
+  norm cover, shared by ordinary and weighted gradients, and
   transports whole-cell weighted gradients to local norms for the same specified
   gradient on a lifted separatrix neighbourhood, without a new jump argument.
 - `WeakQuarterReconstruction.lean`: midpoint-containing rectangle covers, weak
@@ -205,8 +208,18 @@ can be added here as they are formalized.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor; parity, differentiated Taylor bounds and
   quadratic compatibility. Independent of the eigenfunction regularity modules.
-- `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates, weaker forcing weights
-  and ordinary separatrix H¹/H³ interfaces.
+- `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates and weaker forcing
+  weights, upstream of ordinary separatrix and logarithmic regularity.
+  `Regularity/OddOddCellH1.lean` assembles a single positive-cell H¹ strip and
+  canonical zero traces on all four edges, using the actual continuous forcing.
+  `Regularity/OddOddPuncturedH1.lean` covers every small nonzero level by reflected
+  periodic cell strips, selects one measurable weak gradient there and gives its
+  actual local L² norms on the full collar. Norm covering does not glue weak identities.
+  `Regularity/OddOddSeparatrix.lean` houses the whole-lift H¹/zero-trace/H³ endpoint,
+  separate from its cellwise producers to keep the dependency direction acyclic.
+- `Regularity/StreamElliptic.lean`: canonical Fourier-jet Poisson identity and
+  same-domain H³ stream completion from ordinary vorticity H¹, via the interior
+  elliptic interface. Only compact localizations of the periodic lift have finite norms.
 - `Regularity/OddOddLogBulk.lean`: all logarithmic bulk bounds on one lifted
   separatrix neighbourhood. Ordinary first/second jet masses come from H³;
   saddle bounds and continuous inverse distance away from saddles glue locally.
