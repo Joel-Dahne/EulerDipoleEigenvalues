@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.SaddleTaylorJet
 import NoEmbeddedEigenvalues.LocalL2Multipliers
+import NoEmbeddedEigenvalues.SobolevMultipliers
 import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-!
@@ -116,5 +117,49 @@ theorem MemSobolevLocOn.div_saddleDist_of_radius {c : ℝ × ℝ} (hc : c ∈ sa
   rw [he]
   push_cast
   field_simp
+
+/-- Radial mass at each saddle and ordinary local L² away from the lattice
+give lattice-weighted local L² on the whole lift. Radii need not be uniform. -/
+theorem MemSobolevLocOn.div_saddleDist {F : ℝ × ℝ → ℂ}
+    (hF : MemSobolevLocOn 0 univ F) {s : ℝ} (hs : 0 ≤ s)
+    (hlocal : ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧
+      MemLp (fun p ↦ F p / (Real.rpow (localRadius c p) s : ℂ)) 2
+        (volume.restrict (localDisk c ρ))) :
+    MemSobolevLocOn 0 univ (fun p ↦ F p / (Real.rpow (saddleDist p) s : ℂ)) := by
+  apply memSobolevLocOn_of_locally
+  intro c _
+  by_cases hc : c ∈ saddleSet
+  · obtain ⟨r, hr, hR⟩ := hlocal c hc
+    let ρ := min r (Real.pi / 4)
+    have hρ : 0 < ρ := lt_min hr (by positivity)
+    have hU : IsOpen (localDisk c ρ) := by
+      apply isOpen_lt _ continuous_const
+      unfold localRadius
+      fun_prop
+    have hsub : localDisk c ρ ⊆ localDisk c r := by
+      intro p hp
+      exact (show localRadius c p < ρ from hp).trans_le (min_le_left _ _)
+    have hball : localDisk c ρ ⊆ Metric.ball c (Real.pi / 2) := by
+      intro p hp
+      exact (dist_le_localRadius c p).trans_lt
+        ((lt_of_lt_of_le hp (min_le_right _ _)).trans (by linarith [Real.pi_pos]))
+    have hRad : MemSobolevLocOn 0 (localDisk c ρ)
+        (fun p ↦ F p / (Real.rpow (localRadius c p) s : ℂ)) :=
+      (show MemSobolevOn 0 (localDisk c r) _ from hR).memSobolevLocOn.mono hsub
+    refine ⟨localDisk c ρ, hU, ?_, hRad.div_saddleDist_of_radius hc hball hs⟩
+    simpa [localDisk, localRadius] using hρ
+  · let U := {p | 0 < saddleDist p}
+    have hd : Continuous saddleDist := Metric.continuous_infDist_pt saddleSet
+    have hU : IsOpen U := isOpen_lt continuous_const hd
+    have hcp : c ∈ U := lt_of_le_of_ne Metric.infDist_nonneg
+      (Ne.symm (mt saddleDist_eq_zero_iff.mp hc))
+    have hp : Continuous (fun p ↦ Real.rpow (saddleDist p) s) :=
+      hd.rpow_const (fun _ ↦ Or.inr hs)
+    have hG : ContinuousOn (fun p ↦ (Real.rpow (saddleDist p) s : ℂ)⁻¹) U :=
+      (Complex.continuous_ofReal.comp hp).continuousOn.inv₀ fun p hp ↦
+        Complex.ofReal_ne_zero.mpr (Real.rpow_pos_of_pos hp _).ne'
+    refine ⟨U, hU, hcp, ?_⟩
+    simpa only [div_eq_mul_inv, mul_comm] using
+      (hF.mono (subset_univ U)).zero_mul_continuousOn hG
 
 end NoEmbeddedEigenvalues

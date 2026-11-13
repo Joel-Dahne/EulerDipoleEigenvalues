@@ -111,17 +111,24 @@ weights and local versus global regularity.
    The canonical Poisson identity gives stream H³ on exactly that same collar.
    All new generic layers are transitively admission-free; null seams are used
    for norms and a.e. gradient identification, never as a substitute for weak gluing.
-   **Remaining analytic frontier:** Weighted forcing (`lem:dd-weighted-forcing`),
+   **Weighted forcing is assembled** (`lem:dd-weighted-forcing`), with its original
+   finite norms on the bounded cell neighbourhood and pointwise zero continuous
+   stream values on every lifted separatrix line. It reaches only Odd–odd saddle
+   estimates (`prop:saddle-dd`). Inverse-radius integrability in physical dimension
+   two gives the quadratic mass; weaker remainder weights retain the original
+   coefficient and specified Fourier derivatives. Radius-to-distance transport
+   and compact localization give the finite cell norms. Continuous odd parity
+   gives the zero stream values independently of the eigenfunction equation.
+   These generic layers are admission-free. Neither ordinary separatrix H¹/H³
+   nor logarithmic forcing is used, so the dependency direction remains acyclic.
+   **Remaining analytic frontier:** Odd–odd saddle estimates (`prop:saddle-dd`),
    Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   These are the endpoint's four existing admissions; no new premise or admission
-   was introduced. The ordinary route does not use logarithmic forcing or weighted
-   vorticity gradients, which depend on it. Weighted forcing must still be derived
-   independently from saddle data and ordinary H², not logarithmic forcing.
+   These are the ordinary separatrix endpoint's four existing admissions.
    Generic numerator differentiation and five scalar/orbit inputs are explicit
    outside-section prerequisites. The expanded weighted-gradient audit reaches
-   twelve existing admissions; the third-stream assembly adds the elliptic/Taylor
-   corollaries, reaching fourteen.
+   eleven existing admissions; the third-stream assembly adds the elliptic/Taylor
+   corollaries, reaching thirteen.
    No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
    this assembly route.
@@ -237,7 +244,7 @@ weights and local versus global regularity.
    is selected. Exact certificate verification and the other analytic branches
    remain open; statement markers are not a compatibility audit.
    See [odd–odd status](odd-odd.md). The saddle jet remains admitted; ordinary
-   across-separatrix H¹/H³ now expands to the four cellwise/elliptic inputs above.
+   across-separatrix H¹/H³ expands to the four saddle/transport/elliptic inputs above.
 2. **Shared interface review:** check the uniform complete-cell estimates
    needed for logarithmic summation, canonical interval traces and compatibility
    of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the
@@ -291,7 +298,7 @@ prerequisites remain outside this directory; see the
   H¹ gluing has an explicit cutoff proof. The first two transport gains and
   saddle jet remains admitted. The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
-  cellwise/elliptic inputs rather than a stronger corner premise.
+  saddle/transport/elliptic inputs rather than a stronger corner premise.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
   Cylinder inversion and the weighted H¹/corner/edge/gluing layer are now
   stated too, as are the quarter endpoint/resonant-zero and weighted/logarithmic

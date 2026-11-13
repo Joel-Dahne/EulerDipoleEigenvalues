@@ -89,6 +89,9 @@ import NoEmbeddedEigenvalues.WeightedElliptic
 import NoEmbeddedEigenvalues.SaddleTaylorJet
 import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
+import NoEmbeddedEigenvalues.SaddleStreamJet
+import NoEmbeddedEigenvalues.SaddleForcingMass
+import NoEmbeddedEigenvalues.StreamParity
 import NoEmbeddedEigenvalues.SeparableMultiplier
 import NoEmbeddedEigenvalues.DipoleLogMultiplier
 import NoEmbeddedEigenvalues.LogarithmicWeights

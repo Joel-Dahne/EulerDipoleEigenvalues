@@ -1461,17 +1461,22 @@ Their finite sum equals $f$ on $V$, giving $f\in H^k(V)$.
 \label{lem:local-l2-multiplier}
 \uses{def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_bounded,
- NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_continuousOn}
+ NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_continuousOn,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.zero_memLp_of_isBounded}
 \leanok
 If $F\in L^2_{\rm loc}(U)$ and $G$ is measurable and bounded on $U$, then
 $GF\in L^2_{\rm loc}(U)$. The same conclusion holds if $G$ is continuous
 on $U$, without a global bound. No derivatives of $G$ are needed.
+Also $F\in L^2_{\rm loc}(\R^2)$ has a finite L2 norm on every bounded
+subset of the plane; this does not assert a finite whole-plane norm.
 \end{lemma}
 
 \begin{proof}
 \leanok
 On each $V\Subset U$, use a bounded coefficient times an actual $L^2$ function.
 For the continuous case, compactness bounds $G$ on $\overline V$.
+For a bounded set, enclose its compact closure in a precompact open
+neighbourhood, use its actual local L2 norm, then restrict.
 \end{proof}
 
 \begin{lemma}[Local smooth Sobolev multiplication]
@@ -1657,20 +1662,75 @@ For the last claim multiply $F/r^m$ by the bounded measurable factor
 $r^{m-t}$; the cancellation is needed only off the null center.
 \end{proof}
 
-\begin{lemma}[Transfer from radius to saddle distance]
-\label{lem:saddle-distance-weight-transfer}
-\uses{def:sobolev-local, def:cell-arcs, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_of_radius}
+\begin{lemma}[Inverse-radius mass in two physical dimensions]
+\label{lem:inverse-radius-mass}
+\uses{def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.integrableOn_inv_localRadius,
+ NoEmbeddedEigenvalues.memLp_inv_sqrt_localRadius}
 \leanok
-Let $c$ be a saddle, $U\subset B(c,\pi/2)$ in the product metric, and $s\ge0$.
-If $F/r_c^s\in L^2_{\rm loc}(U)$, then $F/d^s\in L^2_{\rm loc}(U)$.
+On every bounded Euclidean disk $D_\rho(c)\subset\R^2$,
+$r_c^{-1}\in L^1$ and $r_c^{-1/2}\in L^2$.
+The assigned value at the center does not affect these genuine integrability
+and square-integrability assertions.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:saddle-distance-comparison, lem:local-l2-multiplier}
+\uses{lem:saddle-distance-comparison}
+\leanok
+Translate to the origin. The Euclidean radius is at least the product
+norm, so $r_0^{-1}\le\|p\|^{-1}$ off the origin.
+The norm power is integrable on bounded balls because the real dimension
+is two and $1<2$. Restrict to the Euclidean disk and transport Lebesgue
+measure by translation. Squaring the inverse square root gives $r_c^{-1}$.
+\end{proof}
+
+\begin{lemma}[Ordinary forcing mass of a saddle quadratic]
+\label{lem:saddle-quadratic-forcing-mass}
+\uses{def:saddle-quadratic, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.norm_saddleQuadratic_le,
+ NoEmbeddedEigenvalues.saddleQuadratic_forcing_mass}
+\leanok
+For every $c,a$ and bounded disk about $c$, the original quadratic satisfies
+\[
+ |Q_{c,a}(p)|\le |a\cos(c_x)/2|r_c(p)^2,\qquad
+ Q_{c,a}/r_c^2,\quad \partial_jQ_{c,a}/r_c^{3/2}\in L^2
+ \quad(j=0,1).
+\]
+No eigenfunction or logarithmic weight is involved.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-quadratic-first-jet, lem:inverse-radius-mass}
+\leanok
+The difference of the squared coordinate displacements is bounded by their
+sum, giving the value estimate. Thus $Q/r_c^2$ is bounded on a finite-measure
+disk. The explicit first jet gives $|\partial_jQ|/r_c\le|a\cos(c_x)|$.
+Multiply this bounded factor by the actual L2 function $r_c^{-1/2}$.
+\end{proof}
+
+\begin{lemma}[Transfer from radius to saddle distance]
+\label{lem:saddle-distance-weight-transfer}
+\uses{def:sobolev-local, def:cell-arcs, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_of_radius,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist}
+\leanok
+Let $c$ be a saddle, $U\subset B(c,\pi/2)$ in the product metric, and $s\ge0$.
+If $F/r_c^s\in L^2_{\rm loc}(U)$, then $F/d^s\in L^2_{\rm loc}(U)$.
+Consequently, if $F\in L^2_{\rm loc}(\R^2)$ and at every saddle $c$ some
+disk has $F/r_c^s\in L^2$, then $F/d^s\in L^2_{\rm loc}(\R^2)$.
+The disk radii need not be uniform.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison, lem:local-l2-multiplier,
+ lem:sobolev-local-gluing}
 \leanok
 The measurable multiplier $(r_c/d)^s$ is bounded by $2^s$ on $U$.
 Off the null saddle set it transforms the first quotient into the second.
+For the whole-lift conclusion shrink each saddle disk into its product-metric
+$\pi/2$ ball and apply this transfer. Away from the closed saddle lattice,
+$d^{-s}$ is continuous. Glue these local L2 norms; only compact
+localizations have finite norms.
 \end{proof}
 
 \begin{lemma}[Divided saddle-jet gradients in H1]

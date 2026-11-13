@@ -39,4 +39,15 @@ theorem MemSobolevLocOn.zero_mul_continuousOn {U : Set (ℝ × ℝ)}
     exact hC p (subset_closure hp)
   exact hBV.mul (hF V hV hc hVU)
 
+/-- Local L² on the whole plane has a finite norm on every bounded set.
+There is no claim of a finite norm on the whole plane. -/
+theorem MemSobolevLocOn.zero_memLp_of_isBounded {F : ℝ × ℝ → ℂ}
+    (hF : MemSobolevLocOn 0 univ F) {S : Set (ℝ × ℝ)}
+    (hS : Bornology.IsBounded S) : MemLp F 2 (volume.restrict S) := by
+  obtain ⟨V, hV, hKV, hVU, hVc⟩ :=
+    exists_open_between_and_isCompact_closure hS.isCompact_closure isOpen_univ
+      (subset_univ _)
+  have hLp : MemLp F 2 (volume.restrict V) := hF V hV hVc hVU
+  exact hLp.mono_measure (Measure.restrict_mono (subset_closure.trans hKV) le_rfl)
+
 end NoEmbeddedEigenvalues

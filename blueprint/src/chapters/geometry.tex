@@ -2084,13 +2084,15 @@ classical-calculus definitions, independent of Sobolev spaces.
  NoEmbeddedEigenvalues.saddleDist_eq_zero_iff,
  NoEmbeddedEigenvalues.ae_saddleDist_ne_zero,
  NoEmbeddedEigenvalues.saddleDist_eq_dist,
+ NoEmbeddedEigenvalues.dist_le_localRadius,
  NoEmbeddedEigenvalues.localRadius_le_two_dist,
  NoEmbeddedEigenvalues.localRadius_le_two_saddleDist}
 \leanok
 The lifted saddle set is closed, and two distinct saddles are at product-metric
 distance at least $\pi$. Its distance vanishes exactly at the saddles, and
 is nonzero almost everywhere.
-For every $c,p$, $r_c(p)\le2\operatorname{dist}(p,c)$.
+For every $c,p$,
+$\operatorname{dist}(p,c)\le r_c(p)\le2\operatorname{dist}(p,c)$.
 If $c$ is a saddle and $\operatorname{dist}(p,c)<\pi/2$, then
 \[
  d(p)=\operatorname{dist}(p,c),\qquad r_c(p)\le2d(p).
@@ -2104,7 +2106,7 @@ least one. Multiplication by $\pi$ gives uniform separation and hence
 closedness. The lattice is null, so the zero-distance characterization
 also gives nonvanishing almost everywhere.
 The product distance is the maximum of the two coordinate differences;
-their Euclidean radius is at most twice that maximum.
+their Euclidean radius lies between that maximum and twice that maximum.
 Finally, the triangle inequality and lattice separation show that within
 the $\pi/2$ ball no other saddle is closer than $c$.
 \end{proof}

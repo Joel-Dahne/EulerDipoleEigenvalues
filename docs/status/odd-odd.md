@@ -49,9 +49,13 @@ Proof work is now outside the odd–odd chapter:
   every nonsaddle seam; weak uniqueness retains the full-collar finite-norm
   gradient for point removal. Odd reflection and canonical window restriction
   give zero traces on every admissible window, including normal endpoints.
-  These generic layers have zero admissions. The parent reaches four existing
-  inputs: Weighted forcing, Weighted transport H¹, Whole-edge zero trace and
-  Interior elliptic H³. Proving these analytic inputs remains work.
+  These generic layers have zero admissions. Weighted forcing
+  (`lem:dd-weighted-forcing`) now also has a proof with its original statement,
+  depending only on Odd–odd saddle estimates (`prop:saddle-dd`). Its quadratic
+  mass and continuous-stream parity helpers are admission-free; no ordinary
+  separatrix H¹/H³ or logarithmic forcing is used. The ordinary separatrix parent
+  therefore reaches four existing inputs: the saddle jet, Weighted transport H¹,
+  Whole-edge zero trace and Interior elliptic H³. Proving these inputs remains work.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

@@ -210,6 +210,55 @@ angular frequencies to odd integers, so the multiplier has no zero.
 
 \section{Odd--odd sector: regularity across the separatrix}
 
+\begin{lemma}[Continuous odd--odd stream vanishes on the separatrix]
+\label{lem:continuous-stream-zero-separatrix}
+\uses{def:sectors, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.contStream_eq_zero_on_separatrix}
+\leanok
+For every odd--odd $\omega\in L^2$, its continuous stream representative
+vanishes at every lifted zero-level point of the dipole, including saddles.
+No eigenfunction hypothesis is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:stream-sector, lem:continuous-representative, lem:separatrix-lines}
+\leanok
+The stream has both odd reflection identities in L2.
+Measure-preserving pullback transports its a.e. agreement with the continuous
+representative. The resulting continuous parity identities hold everywhere,
+because torus volume is positive on nonempty open sets.
+At a fixed point of either reflection, the continuous stream equals its
+negative and hence is zero. The two fixed lines form the separatrix.
+This does not assign point values to a raw L2 representative.
+\end{proof}
+
+\begin{lemma}[Ordinary canonical forcing mass on each saddle disk]
+\label{lem:dd-saddle-forcing-mass}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local,
+ def:stream-second-jet, def:cell-arcs, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.dd_saddle_forcing_mass}
+\leanok
+For an odd--odd eigenfunction and each lifted saddle $c$, some common
+radius $\rho>0$ gives
+\[
+ \psi/r_c^2,\qquad J_j/r_c^{3/2}\in L^2(D_\rho(c)),\quad j=0,1,
+\]
+where $J_j$ are the specified Fourier first derivatives of the stream.
+These are finite norms on the whole disk, not only local norms off its center.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:saddle-dd, lem:saddle-quadratic-forcing-mass,
+ lem:radial-weak-multiplier, lem:canonical-saddle-first-jet}
+\leanok
+Retain the coefficient and specified remainder jet from the saddle estimates.
+On that same bounded disk, weaken $R/r_c^4$ to $R/r_c^2$ and
+$D_j/r_c^3$ to $D_j/r_c^{3/2}$ by bounded radius powers.
+Weak uniqueness identifies $D_j=J_j-\partial_jQ$ a.e.
+Add the actual quadratic value and gradient mass with this same coefficient.
+No separatrix H1, stream H3 or logarithmic forcing is used.
+\end{proof}
+
 \begin{lemma}[Weighted forcing supplied by the quadratic saddle jet]
 \label{lem:dd-weighted-forcing}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local,
@@ -226,17 +275,21 @@ vanishes on every separatrix edge.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:saddle-dd, lem:stream-sector, lem:continuous-representative,
- lem:separatrix-lines}
-Write $\psi=q+R$ near a saddle. The homogeneous quadratic satisfies
-$q/r^2=O(1)$ and $\nabla q/r^{3/2}=O(r^{-1/2})$, both square integrable
-in physical dimension two. The remainder estimates
-$R/r^4,\nabla R/r^3\in L^2$ imply the required weaker weights by
-multiplication by bounded powers of $r$.
-Finally the stream function has odd parity under both reflections.
-Its continuous representative has the same parity everywhere, since the
-continuous parity identities hold almost everywhere. It therefore vanishes
-on the fixed lines, which are exactly the separatrix.
+\uses{lem:dd-saddle-forcing-mass, lem:saddle-distance-weight-transfer,
+ lem:local-l2-multiplier, lem:lift-sobolev-local, lem:continuous-representative,
+ lem:continuous-stream-zero-separatrix}
+\leanok
+The saddle-disk lemma supplies the actual radial value and specified gradient
+norms. Ordinary stream H2 supplies the continuous value representative and
+Fourier first derivatives in local L2 everywhere.
+Transfer each radial weight to saddle distance using $r_c\le2d$ on a
+small product-metric ball; away from the closed saddle set the inverse
+distance weights are continuous. Local L2 gluing gives the weighted norms
+locally on the whole lift.
+Enclose the fixed bounded cell neighbourhood in a precompact open set,
+use those finite local norms and restrict. No finite norm is claimed on
+the whole periodic lift. The continuous parity lemma supplies the
+pointwise zero stream values on the entire lifted separatrix.
 \end{proof}
 
 \begin{definition}[Zero canonical trace on separatrix lines]

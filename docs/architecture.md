@@ -47,7 +47,8 @@ proof mechanisms. Module names below are relative to
 - `SobolevMultipliers.lean`: local multiplication by smooth factors and
   division by smooth nonvanishing real factors, via compact cutoffs.
   `LocalL2Multipliers.lean` needs only bounded measurable coefficients at order
-  zero, or continuous coefficients bounded on each compact localization.
+  zero, or continuous coefficients bounded on each compact localization. It also
+  restricts whole-plane local L² to a finite norm on any bounded set.
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak and classical
   complex jets, integer and real-power radial integrability, energies and the
   Sobolev/jet interface.
@@ -60,8 +61,14 @@ proof mechanisms. Module names below are relative to
 - `SaddleDistance.lean`: lattice separation/closedness, identification of the
   nearest saddle on a small ball, Euclidean/product radius comparisons and
   bounded-measurable transfer of radial local L² to saddle-distance weights.
+  Radial mass at each saddle and ordinary local L² elsewhere glue to weighted
+  local L² on the whole lift, without a uniform-radius or global-norm premise.
 - `StreamJet.lean`: the canonical second stream jet from the existing Fourier
   partial multipliers, and its weak-jet interface.
+  `SaddleStreamJet.lean` shares weak uniqueness for the original saddle remainder
+  entries and the explicit quadratic first-jet bounds between ordinary and
+  logarithmic forcing. `StreamParity.lean` transfers odd reflection parity to
+  the continuous stream everywhere and proves zero values on the full separatrix.
 - `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
   trace data; weighted corner trace and crossing-edge H¹ gluing interfaces.
 - `LiftTorus.lean`, `LiftIntegration.lean`: classical/Fourier derivative
@@ -137,6 +144,10 @@ proof mechanisms. Module names below are relative to
 - `LogarithmicRadialMass.lean`: a separable integrable power majorant for the
   crossing logarithm divided by radius, and absorption of radial logarithms by
   positive powers on bounded intervals.
+- `SaddleForcingMass.lean`: ordinary quadratic value/gradient mass on bounded
+  physical disks. Inverse Euclidean radius is integrable by comparison with
+  the product-norm power of exponent −1 in real dimension two; no logarithmic
+  factorization or ordinary separatrix H¹/H³ is used.
 - `SaddleLogarithmicMass.lean`: the physical logarithm near each saddle, actual
   integrability of Λ/r and logarithmic quadratic-gradient L², using the normalized
   factorization and volume/radius-preserving affine chart.
@@ -238,7 +249,10 @@ can be added here as they are formalized.
   saddle charts and sinc factor; parity, differentiated Taylor bounds and
   quadratic compatibility. Independent of the eigenfunction regularity modules.
 - `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates and weaker forcing
-  weights, upstream of ordinary separatrix and logarithmic regularity.
+  weights, upstream of ordinary separatrix and logarithmic regularity. The forcing
+  assembly retains the original saddle coefficient and Fourier derivatives,
+  weakens the remainder weights, adds actual quadratic mass, transfers to saddle
+  distance and restricts to the fixed bounded cell neighbourhood.
   `Regularity/OddOddCellH1.lean` assembles a single positive-cell H¹ strip and
   canonical zero traces on all four edges, using the actual continuous forcing.
   `Regularity/OddOddEdgeTraces.lean` assembles paired canonical traces and Cartesian
