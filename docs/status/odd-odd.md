@@ -54,15 +54,16 @@ Proof work is now outside the odd–odd chapter:
   depending only on Odd–odd saddle estimates (`prop:saddle-dd`). Its quadratic
   mass and continuous-stream parity helpers are admission-free; no ordinary
   separatrix H¹/H³ or logarithmic forcing is used. The ordinary separatrix parent
-  therefore reaches four existing inputs: the saddle jet, Weighted transport H¹,
-  Whole-edge zero trace and Interior elliptic H³. The saddle coefficient's
-  uniqueness, canonical cylinder-input data and chart identities/parity are
-  proved. Both actual cylinder steps now reach only `cylinder_inverse`: the
-  subcritical continuous-stream/first-jet estimates and the critical physical
-  remainder with its unique coefficient and fixed Fourier jet are assembled.
-  Their weighted-vorticity inputs remain explicit. The first/second transport
-  bootstrap, physical fractional-gradient transport and bounded periodic norm
-  covering remain work; `prop:saddle-dd` itself is still admitted.
+  now reaches six primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
+  and the first eigenfunction saddle gain have assembly proofs with their
+  unchanged statements. The full saddle bootstrap reaches exactly First
+  transport gain, Cylinder inverse and Second transport gain. Its bounded
+  periodic norm localization, physical specified-gradient transport and compact
+  pointwise bound are checked, without vorticity H¹ or downstream forcing.
+  The original unique quadratic and Fourier remainder jet are retained.
+  Ordinary separatrix H¹/H³ and logarithmic forcing reach those three saddle
+  primitives plus Weighted transport H¹, Whole-edge zero trace and Interior
+  elliptic H³. These six inputs remain admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

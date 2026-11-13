@@ -1757,6 +1757,72 @@ $d^{-s}$ is continuous. Glue these local L2 norms; only compact
 localizations have finite norms.
 \end{proof}
 
+\begin{lemma}[Periodic box mass on bounded lift sets]
+\label{lem:periodic-box-weighted-mass}
+\uses{def:torus-of-lift, def:sobolev-local, lem:cell-neighbourhood,
+ def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.memLp_of_periodic_periodBox,
+ NoEmbeddedEigenvalues.periodBox_subset_cellNeighbourhood,
+ NoEmbeddedEigenvalues.memLp_saddleDist_of_neighbourhood}
+\leanok
+A periodic function square integrable on $(-\pi,\pi]^2$ is square integrable
+on every bounded lift set. In particular, if
+$\widetilde\omega/d^s\in L^2(U_*)$, its norm is finite on every bounded
+lift set, for any real $s$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:lift-torus, lem:lift-periodization, lem:periodic-cell-cover}
+\leanok
+Use the box values as an actual torus L2 function and identify its lift a.e.\
+with the periodic function. A bounded localization meets only finitely many
+period boxes. The standard box lies inside $U_*$, and both the lifted
+vorticity and saddle distance are periodic. There is no whole-plane norm claim.
+\end{proof}
+
+\begin{lemma}[Weighted mass from two reflected cells]
+\label{lem:reflected-cell-weighted-mass}
+\uses{def:local-plane-geometry, def:cells, def:periodic-cell-folds,
+ def:sobolev-local, def:sectors}
+\lean{NoEmbeddedEigenvalues.memLp_saddleDist_of_reflected_cells,
+ NoEmbeddedEigenvalues.memLp_saddleDist_of_oddOdd_cell}
+\leanok
+If both $\widetilde\omega/d^s$ and
+$(\widetilde\omega\circ S)/d^s$ belong to L2 on the positive cell, where
+$S(x,y)=(\pi-y,\pi-x)$, then $\widetilde\omega/d^s$ has finite L2 norm
+on every bounded lift set. In the odd--odd sector the single positive-cell
+norm suffices.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-fold-l2-cover, lem:odd-odd-cell-fold-parity}
+\leanok
+Pull each norm through volume-preserving periodic/reflected folds.
+Distance is invariant, and the double reflection is a period translation.
+Take the finite fold cover of a bounded localization; the zero level is null
+and is omitted only for norms. Odd parity identifies the reflected norm
+with the original norm.
+\end{proof}
+
+\begin{lemma}[Weakening a lattice-distance norm to a radial norm]
+\label{lem:saddle-distance-to-radius-mass}
+\uses{def:local-plane-geometry, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.memLp_div_radius_of_saddleDist}
+\leanok
+For a measurable $F$, a lifted saddle $P$ and $s\ge0$,
+$F/d^s\in L^2(U)$ implies $F/r_P^s\in L^2(U)$.
+No small-radius restriction on $U$ is required in this direction.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison}
+\leanok
+The quotient is measurable. Off the null saddle lattice,
+$0<d\le r_P$ and monotonicity of nonnegative powers give
+$|F/r_P^s|\le |F/d^s|$. Use this genuine L2 majorant.
+This transfers norms, not weak derivative identities.
+\end{proof}
+
 \begin{lemma}[Divided saddle-jet gradients in H1]
 \label{lem:radial-gradient-h1}
 \uses{def:local-weak-jets, def:sobolev-local}

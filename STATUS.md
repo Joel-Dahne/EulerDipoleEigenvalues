@@ -24,8 +24,9 @@ or verified.
 Statement markers are not a compatibility or proof audit.
 The local/global stream-quotient and ordinary separatrix H¹/H³ assemblies are
 checked in Lean, without a stronger corner hypothesis. Weighted forcing is
-assembled from the saddle jet; saddle, transport, trace and elliptic inputs
-remain separate proof work. See the
+assembled from the saddle jet. The saddle bootstrap now has an assembly proof
+from both transport gains and cylinder inversion; these analytic inputs and the
+subsequent trace/elliptic steps remain proof work. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
@@ -64,21 +65,23 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and seventeen below `dd_stream_quotient_h2`.
-Weighted forcing (`lem:dd-weighted-forcing`) has a proof of its own, reaching
-only Odd–odd saddle estimates (`prop:saddle-dd`). Its ordinary quadratic mass,
-canonical derivative identification and continuous-stream parity layers are
-admission-free. Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) therefore
-reaches four existing inputs: the saddle jet, Weighted transport H¹,
-Whole-edge zero trace and Interior elliptic H³. Its regular-seam covering,
-finite-norm saddle removal and all-window canonical trace layers are admission-free.
-Logarithmic forcing (`lem:dd-log-forcing`) now reaches exactly those same four
-inputs: saddle factorization and reflected-periodic chart parity are admission-free.
+zero below `correctedBoundaryForm_nonneg` and nineteen below `dd_stream_quotient_h2`.
+Odd–odd saddle estimates (`prop:saddle-dd`) and the first eigenfunction gain
+have assembly proofs with their original statements. The saddle endpoint and
+weighted forcing (`lem:dd-weighted-forcing`) reach exactly First transport gain,
+Cylinder inverse and Second transport gain. Ordinary separatrix H¹/H³
+(`prop:dd-separatrix-h1`) and logarithmic forcing (`lem:dd-log-forcing`) each
+reach those three plus Weighted transport H¹, Whole-edge zero trace and Interior
+elliptic H³: six existing analytic inputs. Expanding the former saddle admission
+into its three primitives increases downstream counts by two; no new admission
+was introduced. The bounded periodic norm, physical weak-gradient transport,
+compact pointwise growth, quadratic mass, seam gluing, point removal and
+canonical trace layers are admission-free.
 Weighted-gradient, third-stream and logarithmic numerator assemblies remain
 conditional on their recorded analytic inputs, without admissions of their own.
-The saddle endpoint itself remains admitted; its coefficient uniqueness and
-canonical cylinder-input layers are checked separately. The actual stream-cylinder
-application reaches only the existing `cylinder_inverse` admission.
+The saddle coefficient uniqueness and canonical cylinder-input layers are
+admission-free. The local supplied-forcing cylinder applications themselves
+reach only the existing `cylinder_inverse` admission.
 The generic weak-chart, reflected-periodic covering, logarithmic
 multiplier/localization/trace/summation layers and canonical second stream jet
 have no admissions.

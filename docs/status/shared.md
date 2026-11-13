@@ -121,32 +121,32 @@ weights and local versus global regularity.
    gives the zero stream values independently of the eigenfunction equation.
    These generic layers are admission-free. Neither ordinary separatrix H¹/H³
    nor logarithmic forcing is used, so the dependency direction remains acyclic.
-   **Current target: Odd–odd saddle estimates** (`prop:saddle-dd`). The normalized
-   coefficient is now uniquely determined by the weighted Hessian, independently
-   of disk radius or weak representatives. Canonical cylinder-input data
-   (`lem:stream-saddle-cylinder-data`) are admission-free: finite whole-disk H²,
-   the Fourier weak jet, its actual Poisson equation and transported odd parity.
-   The actual stream-cylinder application is checked; its only admission is
-   `cylinder_inverse`, with its physical forcing weight still an explicit input.
-   Chart inverse/radius identities, exact dipole factorization, quadratic
-   normalization and reflected-periodic chart parity are proved.
-   **Both local cylinder steps are assembled.** The subcritical step gives a
-   pointwise bound for the continuous stream and weighted specified first jets.
-   The critical step supplies the unique original quadratic and the actual
-   physical Fourier remainder jet from its radial weighted-vorticity input.
-   Finite Taylor estimates, smooth remainder mass, inverse-chart weak transport
-   and a.e. jet comparison are admission-free; both actual applications reach
-   only `cylinder_inverse`. Their forcing norms remain explicit hypotheses.
-   **The saddle endpoint remains admitted.** Next localize the first gain at
-   lifted saddles, transport the fractional first-jet weights to the physical
-   frame, and aggregate finite corner/nonsaddle patches for the second transport
-   gain. Reflected-periodic bounded covering must then supply the d² norm on
-   the fixed cell neighbourhood and the critical input at every lifted saddle.
-   Do not use the downstream weighted forcing or a whole-plane periodic norm.
-   **Remaining analytic frontier:** Odd–odd saddle estimates (`prop:saddle-dd`),
-   Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
+   **Odd–odd saddle estimates are assembled** (`prop:saddle-dd`), with the
+   original bounded-neighbourhood norm, every lifted saddle and unique normalized
+   coefficient. The first eigenfunction gain also has a proof of its own, using
+   the original and reflected eigenfunctions without parity decomposition.
+   Periodic box mass supplies actual local cylinder inputs; inverse affine weak
+   transport retains the physical Fourier first derivatives. Compact growth
+   bounds and local-to-bounded L² gluing supply the second transport hypotheses,
+   without explicit corner classification or vorticity H¹. Reflected-periodic
+   bounded covering supplies the d² norm and the critical input at every saddle.
+   Weak uniqueness retains the canonical quadratic remainder jet.
+   **Remaining saddle frontier:** First transport gain (`lem:transport-first-gain`),
+   Cylinder inverse (`lem:cylinder-inverse`) and Second transport gain
+   (`lem:transport-second-gain`). The endpoint has no admission of its own;
+   its audit reaches exactly these three existing analytic inputs. Next prove
+   these primitives, not another outer saddle assembly. The generic bounded-mass,
+   inverse-frame/weak-identification, finite Taylor and compact-growth layers
+   are admission-free. No downstream weighted forcing or whole-plane norm is used.
+   **Ordinary separatrix frontier:** those three inputs, Weighted transport H¹
+   (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   These are the ordinary separatrix endpoint's four existing admissions.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these six inputs.
+   **Possible dependency simplification:** ordinary forcing already follows
+   mathematically from the subcritical stage: the value quotient is bounded by
+   C times inverse square-root radius, and the first-derivative norm is supplied.
+   The current Lean forcing assembly still uses the full saddle jet; wiring the
+   shorter route would remove its second-transport-gain dependency.
    Generic numerator differentiation and five scalar/orbit inputs are explicit
    outside-section prerequisites. The weighted-gradient and third-stream
    assemblies still depend on their recorded transport and elliptic/Taylor inputs.
@@ -264,8 +264,8 @@ weights and local versus global regularity.
    No coefficient checker or subdivision dataset is implemented, and no backend
    is selected. Exact certificate verification and the other analytic branches
    remain open; statement markers are not a compatibility audit.
-   See [odd–odd status](odd-odd.md). The saddle jet remains admitted; ordinary
-   across-separatrix H¹/H³ expands to the four saddle/transport/elliptic inputs above.
+   See [odd–odd status](odd-odd.md). The saddle and ordinary across-separatrix
+   H¹/H³ assemblies reach the primitive analytic frontier listed above.
 2. **Shared interface review:** check the uniform complete-cell estimates
    needed for logarithmic summation, canonical interval traces and compatibility
    of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the

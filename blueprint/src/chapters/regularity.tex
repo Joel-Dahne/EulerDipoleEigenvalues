@@ -184,14 +184,13 @@ $U_*$ is the fixed bounded cell neighbourhood (manuscript
 
 \begin{proof}
 \uses{lem:transport-first-gain, lem:transport-pair-eigen,
- lem:symmetries-commute}
-Lift $(\omega,\psi)$ to bounded orbit neighbourhoods of the closed cells
-and apply Lemma~\ref{lem:transport-first-gain}. For the negative cell use a
-separatrix reflection, which preserves the eigenvalue equation and the
-saddle distance. These estimates cover all torus saddle neighbourhoods;
-away from them the conclusion follows from $\omega\in L^2$.
-The four-character decomposition needed for arbitrary parity is included
-in the transport lemma.
+ lem:symmetries-commute, lem:reflected-cell-weighted-mass}
+\leanok
+Apply the positive-cell transport gain to $\omega$ and its first reflected
+eigenfunction, both with their continuous streams on $U_*$.
+The reflected lift agrees a.e.\ with $\widetilde\omega\circ S$.
+The two cell norms give the finite norm on $U_*$ by reflected-periodic
+covering. No parity assumption or four-character decomposition is needed.
 \end{proof}
 
 \begin{lemma}[Uniqueness of the normalized saddle coefficient]
@@ -303,6 +302,37 @@ gradient norms to the specified Fourier jet.
 The physical vorticity weight remains an explicit input.
 \end{proof}
 
+\begin{lemma}[Physical subcritical estimates from the first weight]
+\label{lem:dd-saddle-subcritical-from-first-weight}
+\uses{def:sectors, def:stream-derivatives, def:stream-lifts,
+ def:sobolev-local, def:local-plane-geometry, lem:cell-neighbourhood}
+\lean{NoEmbeddedEigenvalues.oddOdd_saddle_subcritical_of_first_weight}
+\leanok
+Let $\omega$ be mean-zero and odd--odd, with
+$\widetilde\omega/d\in L^2(U_*)$.
+At every lifted saddle $P$ some $r,C>0$ satisfy
+\[
+ |\psi(p)|\le C r_P(p)^{3/2}\quad(p\in D_r(P)),\qquad
+ \widetilde{\partial_j\psi}/r_P^{3/2}\in L^2(D_r(P)),\quad j=0,1.
+\]
+The first derivatives are the fixed Fourier derivatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:periodic-box-weighted-mass, lem:saddle-distance-to-radius-mass,
+ lem:radial-weak-multiplier, lem:dd-saddle-subcritical-cylinder,
+ lem:affine-jet-pullback, lem:stream-weak-second-jet, lem:saddle-chart-pullback}
+\leanok
+Localize the first weight to the unit disk at $P$. Since $d\le r_P$,
+it gives $\widetilde\omega/r_P\in L^2$, hence
+$\widetilde\omega/r_P^{1/2}\in L^2$ on that bounded disk.
+Pull this norm into the saddle chart and apply the subcritical cylinder step.
+The inverse volume-preserving affine chart transports actual weak first
+derivatives and their fractional radial norms. Weak uniqueness identifies
+them with the physical Fourier entries. The continuous value bound pulls
+back pointwise, including at the center.
+\end{proof}
+
 \begin{lemma}[Inverse saddle-chart transport of a quadratic remainder]
 \label{lem:saddle-remainder-jet-pushforward}
 \uses{def:sobolev-local, def:local-weak-jets, def:saddle-ortho-chart,
@@ -371,31 +401,29 @@ unique coefficient $a$ for the normalized quadratic $q=Q_{P,a}$ such that
 \end{proposition}
 
 \begin{proof}
-\uses{prop:saddle-first-gain, lem:dd-saddle-subcritical-cylinder,
- lem:dd-saddle-jet-from-radial-vorticity,
+\uses{prop:saddle-first-gain, lem:dd-saddle-subcritical-from-first-weight,
+ lem:saddle-growth-compact-bound, lem:saddle-distance-weight-transfer,
+ lem:local-l2-multiplier, lem:stream-weak-second-jet,
  lem:transport-second-gain, lem:transport-pair-eigen,
- lem:saddle-chart-orthogonal, lem:saddle-distance-comparison,
- lem:affine-jet-pullback, lem:stream-weak-second-jet, lem:local-l2-multiplier,
- lem:periodic-cell-cover, lem:odd-odd-cell-fold-parity, lem:cell-fold-l2-cover}
-Set $\delta=1/2$. On bounded saddle disks, the first gain and $d\le r_P$
-supply $\omega/r_P^{1/2}\in L^2$.
-Lemma~\ref{lem:dd-saddle-subcritical-cylinder} gives the pointwise continuous
-stream bound and the weighted specified first jet.
-The constant orthogonal inverse frame transports these to Cartesian
-derivatives; $r_P\le2d$ near the center changes the weight to $d^{3/2}$.
-Take a finite minimum of radii and maximum of constants at the closed
-cell's corners. Away from these corners ordinary stream H2 gives the
-forcing norms, so all hypotheses of Lemma~\ref{lem:transport-second-gain}
-hold for $(\omega,\psi)$ on the positive cell.
+ lem:reflected-cell-weighted-mass, lem:saddle-distance-to-radius-mass,
+ lem:dd-saddle-jet-from-radial-vorticity}
+\leanok
+The first weight gives the physical subcritical estimates at every lifted
+saddle. Compact uniformity on the closed positive cell gives one pointwise
+bound $|\psi|\le Cd^{3/2}$, without explicit corner classification.
+Ordinary local L2 of the fixed Fourier gradient and its radial saddle
+norms give $\nabla\psi/d^{3/2}\in L^2$ on the bounded positive cell.
+The weak derivative identities on $U_*$ come directly from the Fourier jet,
+not from this norm covering.
 
-The second gain gives $\omega/d^2\in L^2$ on that cell.
-Odd reflection and finite periodic covering give the finite norm on the
-fixed bounded neighbourhood $U_*$. Period translations transport local
-saddle data to every lifted saddle; no whole-plane periodic norm is taken.
-Since $d\le r_P$, these localized norms supply the physical input
-$\omega/r_P^2\in L^2$ to Lemma~\ref{lem:dd-saddle-jet-from-radial-vorticity}.
-That critical step returns the original unique coefficient and all three
-weighted remainder norms on one physical disk.
+Apply the second transport gain with $\delta=1/2$ to the actual continuous
+stream and these same derivatives. The resulting positive-cell norm
+$\omega/d^2\in L^2$ extends to every bounded lift set by odd reflection
+and finite periodic covering, in particular to $U_*$.
+Since $d\le r_P$, its norm on the unit disk at any lifted saddle supplies
+$\omega/r_P^2\in L^2$ to the critical saddle-jet lemma.
+That step returns the original unique coefficient and all three remainder
+weights on one physical disk. No whole-plane periodic norm is taken.
 \end{proof}
 
 \begin{remark}[Digest note: the saddle bootstrap and its weights]
@@ -479,6 +507,16 @@ Weak uniqueness identifies $D_j=J_j-\partial_jQ$ a.e.
 Add the actual quadratic value and gradient mass with this same coefficient.
 No separatrix H1, stream H3 or logarithmic forcing is used.
 \end{proof}
+
+\begin{remark}[Subcritical route to ordinary forcing]
+The conclusion of Lemma~\ref{lem:dd-saddle-forcing-mass} also follows from
+Lemma~\ref{lem:dd-saddle-subcritical-from-first-weight} and
+Lemma~\ref{lem:inverse-radius-mass}. Indeed the pointwise subcritical bound gives
+$|\psi/r_P^2|\le Cr_P^{-1/2}$ off the center, a genuine L2 majorant in two
+physical dimensions. The required first-derivative weight is already part of
+the subcritical conclusion. Thus the weaker forcing weights do not need the
+second transport gain or the critical quadratic remainder.
+\end{remark}
 
 \begin{lemma}[Weighted forcing supplied by the quadratic saddle jet]
 \label{lem:dd-weighted-forcing}

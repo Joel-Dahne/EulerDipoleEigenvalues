@@ -279,8 +279,23 @@ can be added here as they are formalized.
   uniqueness. Inverse affine transport retains the original physical quadratic;
   the final physical witness uses the fixed Fourier jet minus its classical jet.
   Both applications keep their weighted-vorticity norms explicit.
-- `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates and weaker forcing
-  weights, upstream of ordinary separatrix and logarithmic regularity. The forcing
+- `SaddleBootstrapMass.lean`: periodic box mass localizes the first vorticity
+  weight at every lifted saddle; two reflected cell norms give finite mass on
+  any bounded lift set. Odd parity reduces these to one cell norm. Distance-to-
+  radius weakening supplies physical cylinder inputs without whole-plane norms.
+- `SaddleSubcritical.lean`: derives the half-radius cylinder input from the first
+  weight and transports the subcritical value/gradient estimates back through
+  the inverse affine frame, retaining the specified Fourier first derivatives.
+- `SaddleGrowth.lean`: local pointwise saddle growth and continuity away from the
+  lattice give a common constant on compact sets by a finite open cover. No
+  classification of the cell corners or global uniform saddle radius is needed.
+- `Regularity/OddOddSaddle.lean`: first eigenfunction gain, odd–odd saddle bootstrap
+  and weaker forcing, upstream of ordinary separatrix/logarithmic regularity.
+  The first gain uses both the original and reflected eigenfunction. The second
+  gain consumes the continuous-stream pointwise bound and the same specified
+  weak gradient; bounded reflected-periodic mass supplies the critical cylinder
+  input at every saddle. The original unique quadratic remainder is retained.
+  The forcing
   assembly retains the original saddle coefficient and Fourier derivatives,
   weakens the remainder weights, adds actual quadratic mass, transfers to saddle
   distance and restricts to the fixed bounded cell neighbourhood.

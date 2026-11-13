@@ -2111,6 +2111,29 @@ Finally, the triangle inequality and lattice separation show that within
 the $\pi/2$ ball no other saddle is closer than $c$.
 \end{proof}
 
+\begin{lemma}[Compact uniformity of pointwise saddle growth]
+\label{lem:saddle-growth-compact-bound}
+\uses{def:local-plane-geometry, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.saddle_growth_bound_on_compact}
+\leanok
+Let $F$ be continuous on the plane and $s\ge0$. Suppose that at each lifted
+saddle $P$ there are $\rho_P,C_P>0$ with
+$|F(p)|\le C_P r_P(p)^s$ on $D_{\rho_P}(P)$.
+For every compact $K$ there is $C>0$ with
+$|F(p)|\le C d(p)^s$ for every $p\in K$.
+The local radii and constants need not be uniform over the infinite lattice.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison}
+\leanok
+Near a saddle, shrink inside its $\pi/2$ product ball and use
+$r_P\le2d$. Away from the closed saddle lattice, continuity of $F$ and
+strict positivity of $d$ give a local bound.
+A finite open cover of $K$ gives one constant.
+The ratio need not be continuous at a saddle; local boundedness suffices.
+\end{proof}
+
 \begin{definition}[Normalized orthonormal saddle chart]
 \label{def:saddle-ortho-chart}
 \uses{def:cells, def:local-plane-geometry}
