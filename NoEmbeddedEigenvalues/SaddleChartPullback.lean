@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
+import NoEmbeddedEigenvalues.LiftPeriodization
 
 /-!
 # The affine jet interface in normalized saddle coordinates
@@ -21,6 +22,10 @@ def saddleLinearMap (P : ℝ × ℝ) : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ) whe
     (q.1 + Real.cos P.1 * q.2) / Real.sqrt 2)
   map_add' p q := by ext <;> simp <;> ring
   map_smul' a p := by ext <;> simp <;> ring
+
+@[simp] theorem saddleLinearMap_apply (P q : ℝ × ℝ) :
+    saddleLinearMap P q = ((q.1 - Real.cos P.1 * q.2) / Real.sqrt 2,
+      (q.1 + Real.cos P.1 * q.2) / Real.sqrt 2) := rfl
 
 theorem det_saddleLinearMap (P : ℝ × ℝ) :
     LinearMap.det (saddleLinearMap P) = Real.cos P.1 := by
@@ -101,5 +106,98 @@ theorem saddle_chart_pullback {n : ℕ} {P : ℝ × ℝ} (hP : P ∈ saddleSet) 
     simpa only [planeAffine_saddleLinear P hP] using hD'
   · simpa only [hpre] using
       hk.comp_planeAffine (saddleLinear P hP) P hmp ho.measurableSet hr
+
+/-- Orthogonality preserves the trace of an arbitrary specified second jet.
+No symmetry of its mixed entries is assumed or needed. -/
+theorem affineJet_saddle_laplacian {P : ℝ × ℝ} (hP : P ∈ saddleSet)
+    (D : List (Fin 2) → ℝ × ℝ → ℂ) (q : ℝ × ℝ) :
+    affineJet (saddleLinear P hP) P D [0, 0] q +
+      affineJet (saddleLinear P hP) P D [1, 1] q =
+      D [0, 0] (saddleOrthoChart P q) + D [1, 1] (saddleOrthoChart P q) := by
+  have hsq : (Real.cos P.1 : ℂ) ^ 2 = 1 := by
+    have hr : Real.cos P.1 ^ 2 = 1 := by
+      nlinarith [abs_cos_saddle hP, sq_abs (Real.cos P.1)]
+    exact_mod_cast hr
+  have hsqrt : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by
+    exact_mod_cast Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
+  rw [← planeAffine_saddleLinear P hP]
+  simp only [affineJet, affineCoeff, planeDirection, Fin.reduceEq, ↓reduceIte,
+    saddleLinear_apply, saddleLinearMap_apply, axisCoord, Function.comp_apply,
+    mul_zero, mul_one, sub_zero, zero_sub,
+    Complex.ofReal_div, Complex.ofReal_one, Complex.ofReal_neg]
+  field_simp
+  ring_nf
+  simp only [hsq, hsqrt, Complex.ofReal_one]
+  ring
+
+/-- A local axis reflection projects to the corresponding global separatrix
+reflection at every lifted saddle, including its noncentral period copies. -/
+theorem torusProj_saddleChart_axisReflect {P : ℝ × ℝ} (hP : P ∈ saddleSet)
+    (j : Fin 2) (q : ℝ × ℝ) :
+    torusProj (saddleOrthoChart P (axisReflect j q)) =
+      (if j = 0 then S₁ else S₂) (torusProj (saddleOrthoChart P q)) := by
+  obtain ⟨m, n, ⟨k, hk⟩, rfl⟩ := hP
+  have hkr : (m : ℝ) + (n : ℝ) = 2 * (k : ℝ) + 1 := by exact_mod_cast hk
+  fin_cases j
+  all_goals
+    simp only [axisReflect, Fin.mk_zero, Fin.mk_one, Fin.reduceEq, ↓reduceIte]
+    apply Prod.ext
+  all_goals
+    dsimp only [torusProj, S₁, S₂, axisReflect]
+    first | rw [← Real.Angle.coe_sub] | rw [← Real.Angle.coe_add]
+  · apply Real.Angle.angle_eq_iff_two_pi_dvd_sub.mpr
+    refine ⟨k, ?_⟩
+    dsimp [saddleOrthoChart]
+    linear_combination Real.pi * hkr
+  · apply Real.Angle.angle_eq_iff_two_pi_dvd_sub.mpr
+    refine ⟨k, ?_⟩
+    dsimp [saddleOrthoChart]
+    linear_combination Real.pi * hkr
+  · apply Real.Angle.angle_eq_iff_two_pi_dvd_sub.mpr
+    refine ⟨k - n, ?_⟩
+    dsimp [saddleOrthoChart]
+    push_cast
+    linear_combination Real.pi * hkr
+  · apply Real.Angle.angle_eq_iff_two_pi_dvd_sub.mpr
+    refine ⟨n - k - 1, ?_⟩
+    dsimp [saddleOrthoChart]
+    push_cast
+    linear_combination -Real.pi * hkr
+
+/-- Cartesian axis reflections preserve planar volume. -/
+theorem measurePreserving_axisReflect (j : Fin 2) :
+    MeasurePreserving (axisReflect j) := by
+  rw [Measure.volume_eq_prod]
+  fin_cases j
+  · change MeasurePreserving (Prod.map Neg.neg id) _ _
+    exact (Measure.measurePreserving_neg volume).prod (MeasurePreserving.id volume)
+  · change MeasurePreserving (Prod.map id Neg.neg) _ _
+    exact (MeasurePreserving.id volume).prod (Measure.measurePreserving_neg volume)
+
+/-- Odd–odd torus parity becomes oddness in both local chart axes, a.e.
+(`lem:saddle-chart-parity`). No pointwise symmetry of an arbitrary L² representative
+is asserted. -/
+theorem saddle_chart_parity {P : ℝ × ℝ} (hP : P ∈ saddleSet) {f : L2}
+    (hf : InSector false false f) :
+    ∀ j, ∀ᵐ q, liftL2 f (saddleOrthoChart P (axisReflect j q)) =
+      -liftL2 f (saddleOrthoChart P q) := by
+  have h1 : ∀ᵐ t : Torus, f (S₁ t) = -f t := by
+    filter_upwards [ae_comp_of_pullback_eq hf.1, Lp.coeFn_smul (-1 : ℂ) f] with t ht hsm
+    simpa only [symmetry₁, paritySign, Bool.false_eq_true, ite_false, hsm,
+      Pi.smul_apply, smul_eq_mul, neg_one_mul] using ht
+  have h2 : ∀ᵐ t : Torus, f (S₂ t) = -f t := by
+    filter_upwards [ae_comp_of_pullback_eq hf.2, Lp.coeFn_smul (-1 : ℂ) f] with t ht hsm
+    simpa only [symmetry₂, paritySign, Bool.false_eq_true, ite_false, hsm,
+      Pi.smul_apply, smul_eq_mul, neg_one_mul] using ht
+  have hc1 := (measurePreserving_saddleChart hP).quasiMeasurePreserving.ae (ae_torusProj h1)
+  have hc2 := (measurePreserving_saddleChart hP).quasiMeasurePreserving.ae (ae_torusProj h2)
+  intro j
+  filter_upwards [hc1, hc2] with q hq1 hq2
+  change f (torusProj (saddleOrthoChart P (axisReflect j q))) =
+    -f (torusProj (saddleOrthoChart P q))
+  rw [torusProj_saddleChart_axisReflect hP]
+  fin_cases j
+  · exact hq1
+  · exact hq2
 
 end NoEmbeddedEigenvalues

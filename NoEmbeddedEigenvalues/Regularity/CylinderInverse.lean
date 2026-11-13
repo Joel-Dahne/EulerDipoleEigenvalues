@@ -26,6 +26,23 @@ odd–odd permits 2,4,…, and either mixed parity permits 1,3,…. -/
 def AllowedSaddleDegree (ε : Fin 2 → Bool) (m : ℕ) : Prop :=
   (Even m ↔ ε 0 = ε 1) ∧ (m = 0 → ε 0 = true ∧ ε 1 = true)
 
+/-- The subcritical exponent three halves avoids every integer angular degree. -/
+theorem cylinder_gap_three_halves (m : ℕ) : (3 / 2 : ℝ) ≠ (m : ℝ) := by
+  intro he
+  have hn : 2 * m = (3 : ℕ) := by
+    exact_mod_cast (show (2 : ℝ) * (m : ℝ) = 3 by linarith)
+  omega
+
+/-- The critical exponent three avoids the even degrees of odd–odd parity. -/
+theorem oddOdd_cylinder_gap_three (m : ℕ)
+    (hm : AllowedSaddleDegree (fun _ ↦ false) m) : (3 : ℝ) ≠ (m : ℝ) := by
+  intro he
+  have hm3 : m = 3 := by exact_mod_cast he.symm
+  subst m
+  norm_num [AllowedSaddleDegree] at hm
+  obtain ⟨k, hk⟩ := hm
+  omega
+
 /-- Smooth harmonicity for the Euclidean plane, stated in Cartesian coordinates.
 It does not posit an inner-product structure on the maximum-norm product. -/
 def IsPlaneHarmonicOn (U : Set (ℝ × ℝ)) (h : ℝ × ℝ → ℂ) : Prop :=

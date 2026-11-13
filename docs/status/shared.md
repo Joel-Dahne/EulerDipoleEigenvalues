@@ -121,14 +121,26 @@ weights and local versus global regularity.
    gives the zero stream values independently of the eigenfunction equation.
    These generic layers are admission-free. Neither ordinary separatrix H¹/H³
    nor logarithmic forcing is used, so the dependency direction remains acyclic.
+   **Current target: Odd–odd saddle estimates** (`prop:saddle-dd`). The normalized
+   coefficient is now uniquely determined by the weighted Hessian, independently
+   of disk radius or weak representatives. Canonical cylinder-input data
+   (`lem:stream-saddle-cylinder-data`) are admission-free: finite whole-disk H²,
+   the Fourier weak jet, its actual Poisson equation and transported odd parity.
+   The actual stream-cylinder application is checked; its only admission is
+   `cylinder_inverse`, with its physical forcing weight still an explicit input.
+   Chart inverse/radius identities, exact dipole factorization, quadratic
+   normalization and reflected-periodic chart parity are proved.
+   **The saddle endpoint remains admitted.** Next assemble the subcritical
+   first-gain input, finite harmonic Taylor bounds and second transport gain,
+   then the exponent-three remainder and inverse-chart jet transport. Localize
+   periodic norms on bounded sets; do not use the downstream weighted forcing.
    **Remaining analytic frontier:** Odd–odd saddle estimates (`prop:saddle-dd`),
    Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
    These are the ordinary separatrix endpoint's four existing admissions.
    Generic numerator differentiation and five scalar/orbit inputs are explicit
-   outside-section prerequisites. The expanded weighted-gradient audit reaches
-   eleven existing admissions; the third-stream assembly adds the elliptic/Taylor
-   corollaries, reaching thirteen.
+   outside-section prerequisites. The weighted-gradient and third-stream
+   assemblies still depend on their recorded transport and elliptic/Taylor inputs.
    No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
    this assembly route.
@@ -296,7 +308,7 @@ prerequisites remain outside this directory; see the
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
   H¹ gluing has an explicit cutoff proof. The first two transport gains and
-  saddle jet remains admitted. The weighted-gradient and whole-lift ordinary
+  saddle jet remain admitted. The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   saddle/transport/elliptic inputs rather than a stronger corner premise.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.

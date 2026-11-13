@@ -5,6 +5,8 @@ import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 import NoEmbeddedEigenvalues.SaddleForcingMass
 import NoEmbeddedEigenvalues.SaddleDistance
 import NoEmbeddedEigenvalues.StreamParity
+import NoEmbeddedEigenvalues.SaddleCoefficient
+import NoEmbeddedEigenvalues.SaddleStreamCoordinates
 
 /-!
 # Odd–odd saddle and weighted forcing interfaces

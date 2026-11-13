@@ -123,26 +123,6 @@ theorem ae_Ψ_ne_zero : ∀ᵐ t : Torus, Ψ t ≠ 0 := by
 private theorem ae_dipole_ne_zero : ∀ᵐ p, dipoleLift p ≠ 0 := by
   simpa only [Ψ_torusProj] using ae_torusProj ae_Ψ_ne_zero
 
-private theorem measurePreserving_axisReflect (j : Fin 2) :
-    MeasurePreserving (axisReflect j) := by
-  rw [Measure.volume_eq_prod]
-  fin_cases j
-  · change MeasurePreserving (Prod.map Neg.neg id) _ _
-    exact (Measure.measurePreserving_neg volume).prod (MeasurePreserving.id volume)
-  · change MeasurePreserving (Prod.map id Neg.neg) _ _
-    exact (MeasurePreserving.id volume).prod (Measure.measurePreserving_neg volume)
-
-private theorem contStream_chart_parity {P : ℝ × ℝ} (hP : P ∈ saddleSet) {ζ : L2}
-    (hs : InSector false false ζ) :
-    ∀ j, ∀ᵐ q, contStream ζ (saddleOrthoChart P (axisReflect j q)) =
-      -contStream ζ (saddleOrthoChart P q) := by
-  have heq : liftL2 (invLap ζ) =ᵐ[volume] contStream ζ := streamLift_ae_eq_contStream ζ
-  have hc := (measurePreserving_saddleChart hP).quasiMeasurePreserving.ae heq
-  intro j
-  filter_upwards [saddle_chart_parity hP hs.invLap j, hc,
-    (measurePreserving_axisReflect j).quasiMeasurePreserving.ae hc] with q hq h0 h1
-  rwa [h0, h1] at hq
-
 /-! ### Saddle patches -/
 
 private theorem saddle_quotient_patch {lam : ℝ} (hlam : lam ≠ 0) {ζ : L2}

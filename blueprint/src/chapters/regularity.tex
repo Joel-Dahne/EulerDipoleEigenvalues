@@ -94,6 +94,68 @@ Convergence of a full harmonic power series is not an input. The physical
 forcing weight is $F/r^{a-1}$, equivalent to $r^{2-a}F$ in cylinder measure.
 \end{remark}
 
+\begin{lemma}[Canonical stream data for saddle cylinder inversion]
+\label{lem:stream-saddle-cylinder-data}
+\uses{def:sobolev-local, def:stream-second-jet, def:sectors,
+ def:saddle-ortho-chart, def:affine-jet}
+\lean{NoEmbeddedEigenvalues.memSobolevOn_contStream_saddleChart,
+ NoEmbeddedEigenvalues.streamJet2_saddle_weak,
+ NoEmbeddedEigenvalues.streamJet2_saddle_laplacian,
+ NoEmbeddedEigenvalues.contStream_chart_parity}
+\leanok
+For mean-zero odd--odd $\omega$, let $u=\psi\circ\Xi_P$ and let $E$ be
+the affine transform of the fixed Fourier second stream jet.
+On every bounded disk $D_\rho(0)$, $u\in H^2$ with that specified weak
+jet, and $E_{00}+E_{11}=\widetilde\omega\circ\Xi_P$ a.e.
+Moreover $u$ is odd in both chart axes a.e.\ on the whole plane.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:inverse-laplacian-derivatives, lem:lift-sobolev-local,
+ lem:continuous-representative, lem:stream-weak-second-jet,
+ lem:canonical-stream-poisson, lem:saddle-chart-pullback,
+ lem:saddle-chart-laplacian, lem:saddle-chart-parity}
+\leanok
+Ordinary stream H2 gives a finite norm on the physical bounded disk,
+before affine pullback. Transport its actual Fourier weak jet.
+The orthogonal trace identity and measure-preserving pullback give the
+charted Poisson equation on the whole disk, including its center.
+Transport the a.e.\ agreement with the continuous stream through both
+the chart and each axis reflection to identify the parity.
+\end{proof}
+
+\begin{lemma}[Cylinder inversion for the canonical odd--odd stream]
+\label{lem:stream-saddle-cylinder-inverse}
+\uses{def:sobolev-local, def:sectors, def:stream-lifts,
+ def:cylinder-inverse-data, def:local-weak-jets, def:saddle-ortho-chart}
+\lean{NoEmbeddedEigenvalues.oddOdd_stream_cylinder_inverse,
+ NoEmbeddedEigenvalues.cylinder_gap_three_halves,
+ NoEmbeddedEigenvalues.oddOdd_cylinder_gap_three}
+\leanok
+Let $\omega$ be mean-zero and odd--odd, $P$ a lifted saddle, $\rho>0$,
+and $a>1$ avoid the allowed angular degrees. Put
+$F=\widetilde\omega\circ\Xi_P$.
+If $F/r^{a-1}\in L^2(D_\rho(0))$, then on a smaller disk
+$\psi\circ\Xi_P=u_0+\mathfrak h$ a.e., where $u_0\in H^2$ has a
+specified weak jet with Laplacian $F$ and
+\[
+ \partial^k u_0/r^{a+1-k}\in L^2,\qquad 0\le k\le2.
+\]
+The function $u_0$ is continuous with $|u_0|\le Cr^a$.
+Both summands have the original axis parity; $\mathfrak h$ is smooth
+harmonic and its forbidden-degree jets vanish at zero.
+Both $a=3/2$ and $a=3$ satisfy the gap condition.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:stream-saddle-cylinder-data, lem:cylinder-inverse}
+\leanok
+Apply the cylinder inverse with the canonical data from the preceding lemma,
+retaining the physical-area forcing norm as an explicit input.
+Three halves is not an integer, and three is not an allowed even degree.
+This application supplies no weighted-vorticity bootstrap by itself.
+\end{proof}
+
 \section{Saddle estimates}
 
 \begin{definition}[Normalized saddle quadratic]
@@ -131,6 +193,34 @@ The four-character decomposition needed for arbitrary parity is included
 in the transport lemma.
 \end{proof}
 
+\begin{lemma}[Uniqueness of the normalized saddle coefficient]
+\label{lem:saddle-coefficient-uniqueness}
+\uses{def:local-weak-jets, def:saddle-quadratic, def:sobolev-local,
+ def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.saddle_coefficient_unique,
+ NoEmbeddedEigenvalues.existsUnique_saddle_coefficient_iff,
+ NoEmbeddedEigenvalues.second_fst_saddleQuadratic}
+\leanok
+Let $P$ be a lifted saddle and $F$ any complex-valued function.
+Suppose $F-Q_{P,a}$ and $F-Q_{P,b}$ have specified second weak jets
+on possibly different positive-radius disks, whose second entries divided
+by $r_P^2$ lie in L2. Then $a=b$.
+In particular existence of a second remainder jet with
+$\partial^k(F-Q_{P,a})/r_P^{4-k}\in L^2$, $0\le k\le2$, is equivalent
+to existence with a unique coefficient on the same disk.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic, lem:saddle-quadratic-first-jet,
+ lem:inverse-square-nonintegrability, lem:dipole-critical-points}
+\leanok
+Restrict both jets to the smaller disk and subtract. Weak uniqueness
+identifies their difference with the classical jet of $Q_{P,b-a}$.
+Its $xx$ entry is the constant $-(b-a)\cos P_x$.
+The common weighted L2 condition forces that constant to vanish;
+$\cos P_x=\pm1$ gives $a=b$. Only the order-two weight is needed.
+\end{proof}
+
 \begin{proposition}[Odd--odd saddle estimates]
 \label{prop:saddle-dd}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
@@ -148,16 +238,20 @@ unique coefficient $a$ for the normalized quadratic $q=Q_{P,a}$ such that
 \end{proposition}
 
 \begin{proof}
-\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:transport-second-gain,
- lem:transport-pair-eigen, lem:saddle-normal-form, lem:saddle-chart-parity,
- lem:saddle-quadratic-chart,
- lem:stream-sector}
-Fix $0<\delta<1$ and apply Lemma~\ref{lem:cylinder-inverse} with
-$a=2-\delta$. Its physical forcing hypothesis is
+\uses{prop:saddle-first-gain, lem:stream-saddle-cylinder-inverse,
+ lem:transport-second-gain, lem:transport-pair-eigen,
+ lem:saddle-chart-orthogonal, lem:saddle-chart-parity,
+ lem:saddle-quadratic-chart, lem:saddle-coefficient-uniqueness,
+ lem:stream-sector, lem:continuous-representative,
+ lem:periodic-cell-cover, lem:odd-odd-cell-fold-parity, lem:cell-fold-l2-cover}
+Set $\delta=1/2$ and apply
+Lemma~\ref{lem:stream-saddle-cylinder-inverse} with $a=3/2=2-\delta$. Its physical forcing hypothesis is
 $r^{\delta-1}\omega\in L^2$, supplied by the first gain. Odd--odd reflection
 parity permits only angular degrees $2,4,\ldots$, all strictly larger than
 $a$. Its constant and linear jets vanish, so a second-order Taylor
-estimate gives the same finite weighted norms as $u_0$. Consequently
+estimate gives the same finite weighted norms as $u_0$.
+Both summands are continuous on the disk, so their a.e.\ decomposition
+agrees everywhere with the continuous stream. Consequently
 \[
  |\psi|\le Cr^{2-\delta},\qquad
  \nabla\psi/r^{2-\delta}\in L^2
@@ -166,7 +260,10 @@ near each saddle. The pointwise bound uses the cylinder inverse's bound
 on $u_0$ and the harmonic remainder's quadratic vanishing.
 Apply Lemma~\ref{lem:transport-second-gain} to $(\omega,\psi)$ on the cells;
 away from the saddles its weighted forcing hypotheses follow from ordinary
-$H^2$ regularity. This gives $\omega/d^2\in L^2$.
+$H^2$ regularity. This gives $\omega/d^2\in L^2$ on the positive cell.
+Odd reflection and finite periodic covering give the finite norm on the
+fixed bounded neighbourhood $U_*$. Period translations transport local
+saddle data to every lifted saddle; no whole-plane periodic norm is taken.
 
 Now apply the cylinder inverse with $a=3$. Its physical hypothesis is
 $\omega/r^2\in L^2$, equivalently $r^{-1}\omega\in L^2(dr/r\,d\theta)$,
@@ -175,9 +272,10 @@ $q$ of the harmonic remainder. The remaining smooth harmonic function has zero j
 so Taylor estimates through order two give the finite weighted norm for $a=3$. The permitted
 quadratic is a multiple of $uv$, equivalently $Q_{P,a}$: the factor
 $\cos P_x=\pm1$ makes this normalization nondegenerate.
-If two quadratics worked, their difference would
-have finite $\int|q|^2r^{-8}dx\,dy$, impossible for a nonzero homogeneous
-quadratic. This proves uniqueness.
+Uniqueness follows from Lemma~\ref{lem:saddle-coefficient-uniqueness}:
+the difference of the specified second remainder jets has a constant
+$xx$ entry, which cannot have a finite $r^{-2}$-weighted L2 norm unless
+the coefficients agree.
 \end{proof}
 
 \begin{remark}[Digest note: the saddle bootstrap and its weights]
@@ -190,7 +288,10 @@ $L^2$ input, not a physical-area $L^2$ input.
 The subsequent $H^1$ and logarithmically weighted transport arguments in
 Propositions~\ref{prop:dd-separatrix-h1} and
 \ref{prop:dd-stream-quotient-h2} are separate steps; the saddle bootstrap
-does not supply them.
+does not supply them. Cellwise norms are extended only to bounded
+localizations by reflected-periodic covering. The pointwise subcritical
+forcing bound concerns the continuous stream: it requires the continuous
+summands to identify the a.e.\ cylinder decomposition everywhere.
 \end{remark}
 
 \begin{corollary}[Mixed saddle jet]
@@ -1218,7 +1319,7 @@ $R_0=\psi-Q_{P,a}$ and $R=\psi-a\Psi$ have specified third weak jets with
  lem:elliptic-weighted-third, lem:saddle-quadratic-harmonic,
  lem:saddle-taylor-correction, lem:stream-weak-second-jet,
  lem:inverse-laplacian-derivatives, lem:weak-derivative-unique,
- lem:saddle-normal-form}
+ lem:saddle-dipole-factorization}
 \leanok
 Take the coefficient and second remainder jet from
 Proposition~\ref{prop:saddle-dd}. Harmonicity of $Q_{P,a}$ and the
@@ -1264,7 +1365,8 @@ separatrix reflections.
 
 \begin{proof}
 \uses{lem:dd-weighted-third-stream, prop:dd-separatrix-h1,
- lem:saddle-normal-form, lem:saddle-chart-parity, lem:sobolev-weak-jets,
+ lem:saddle-factor-regular, lem:saddle-dipole-factorization,
+ lem:saddle-chart-parity, lem:sobolev-weak-jets,
  lem:weighted-double-division, lem:weighted-h2-point-removal,
  lem:odd-h3-division, lem:stream-sector, lem:separatrix-lines,
  lem:elliptic-torus, lem:sobolev-congr-ae, lem:sobolev-local-gluing,

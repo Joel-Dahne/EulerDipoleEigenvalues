@@ -2127,6 +2127,56 @@ $((X+Y)/\sqrt2,\ s(Y-X)/\sqrt2)$ for $(X,Y)=p-P$.
 The sinc factors use their value $1$ at zero.
 \end{definition}
 
+\begin{lemma}[Orthonormal saddle-chart identities]
+\label{lem:saddle-chart-orthogonal}
+\uses{def:saddle-ortho-chart, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.saddleOrthoChart_orthogonal}
+\leanok
+At every lifted saddle $P$, the displayed chart and coordinate map are
+mutual inverses and $r_P(\Xi_P(q))=r_0(q)$ for every $q$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-critical-points}
+\leanok
+The saddle cosine has square one. Substitute the two affine formulas
+and use $(\sqrt2)^2=2$; expanding the squared Euclidean radii gives the
+same identity. No assertion about equality with the product metric is made.
+\end{proof}
+
+\begin{lemma}[Exact saddle dipole factorization]
+\label{lem:saddle-dipole-factorization}
+\uses{def:saddle-ortho-chart, def:dipole}
+\lean{NoEmbeddedEigenvalues.saddle_dipole_factorization}
+\leanok
+For every lifted saddle $P$ and every $q=(u,v)$,
+$\Psi(\Xi_P(q))=uv\,m(q)$.
+This is a global algebraic identity in the chart, not a Taylor estimate.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-critical-points}
+\leanok
+The saddle sines vanish and $\cos P_y=-\cos P_x$, with $\cos P_x=\pm1$.
+The cosine addition formulas give
+$2\sin(u/\sqrt2)\sin(v/\sqrt2)$ at either saddle type.
+Use $t\,\operatorname{sinc}(t)=\sin t$, including $t=0$.
+\end{proof}
+
+\begin{lemma}[Regularity and positivity of the saddle factor]
+\label{lem:saddle-factor-regular}
+\uses{def:saddle-ortho-chart, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.saddleFactor_regular}
+\leanok
+The factor $m$ is smooth, even in each coordinate, equals one at zero,
+and is positive on a sufficiently small Euclidean disk.
+\end{lemma}
+
+\begin{proof}
+Each extended sine quotient is smooth and even and has value one at zero.
+Continuity gives a positive neighbourhood.
+\end{proof}
+
 \begin{lemma}[Saddle normal form]
 \label{lem:saddle-normal-form}
 \uses{def:saddle-ortho-chart, lem:dipole-critical-points, lem:separatrix-lines}
@@ -2145,6 +2195,8 @@ $|\nabla\Psi|^2\circ\Xi_P=u^2+v^2+O(r^4)$.
 \end{lemma}
 
 \begin{proof}
+\uses{lem:saddle-chart-orthogonal, lem:saddle-dipole-factorization,
+ lem:saddle-factor-regular, lem:saddle-normal-form-derivatives}
 Since $s=\pm1$, the affine chart matrix is orthogonal.
 The cosine identities at the saddle give
 $\Psi\circ\Xi_P=2\sin(u/\sqrt2)\sin(v/\sqrt2)=uv\,m$.
@@ -2163,6 +2215,7 @@ The Cartesian and orthonormal versions therefore use the same coefficient.
 
 \begin{proof}
 \uses{lem:dipole-critical-points}
+\leanok
 Put $s=\cos P_x$. At a saddle $s=\pm1$, so $s^2=1$.
 The chart displacements are $X=(u-sv)/\sqrt2$ and
 $Y=(u+sv)/\sqrt2$, whence
@@ -2188,7 +2241,8 @@ ordered coordinate derivatives of orders $0\le k\le3$,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:saddle-normal-form}
+\uses{lem:saddle-dipole-factorization, lem:saddle-factor-regular,
+ lem:saddle-chart-orthogonal}
 Taylor expansion of the explicit smooth sine factors gives the derivative
 bounds, including their vanishing jets at zero. A value-only big-O bound
 is not being differentiated.
@@ -2240,7 +2294,7 @@ with $D^kT/r^{4-k}\in L^2$ for every $0\le k\le3$.
 
 \begin{proof}
 \uses{lem:saddle-normal-form-derivatives, lem:saddle-quadratic-chart,
- lem:saddle-normal-form, lem:weak-derivative-classical}
+ lem:saddle-chart-orthogonal, lem:weak-derivative-classical}
 In the orthonormal chart, $T\circ\Xi_P=a(uv-\Psi\circ\Xi_P)$.
 The differentiated Taylor estimates bound its order-$k$ derivatives
 by $Cr^{4-k}$. Transform the derivative indices by the constant
@@ -2253,7 +2307,9 @@ square integrable on a finite disk.
 \begin{lemma}[Odd--odd parity in saddle coordinates]
 \label{lem:saddle-chart-parity}
 \uses{def:saddle-ortho-chart, def:sectors, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.saddle_chart_parity}
+\lean{NoEmbeddedEigenvalues.saddle_chart_parity,
+ NoEmbeddedEigenvalues.torusProj_saddleChart_axisReflect,
+ NoEmbeddedEigenvalues.measurePreserving_axisReflect}
 \leanok
 If $f$ is odd under both torus separatrix reflections, then
 $\widetilde f\circ\Xi_P$ is odd in both coordinate axes a.e.
@@ -2261,7 +2317,8 @@ for every lifted saddle $P$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:reflection-algebra, lem:lift-torus}
+\uses{lem:reflection-algebra, lem:lift-torus, lem:saddle-chart-pullback}
+\leanok
 The two axis reflections conjugate to the two separatrix reflections,
 up to period translations. Transfer the torus a.e. identities through
 the invertible affine chart.

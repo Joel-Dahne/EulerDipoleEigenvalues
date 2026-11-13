@@ -1684,6 +1684,30 @@ is two and $1<2$. Restrict to the Euclidean disk and transport Lebesgue
 measure by translation. Squaring the inverse square root gives $r_c^{-1}$.
 \end{proof}
 
+\begin{lemma}[Critical inverse-square nonintegrability]
+\label{lem:inverse-square-nonintegrability}
+\uses{def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.not_integrableOn_inv_sq_localRadius,
+ NoEmbeddedEigenvalues.memLp_const_div_sq_localRadius_iff}
+\leanok
+For every $c$ and $\rho>0$, $r_c^{-2}\notin L^1(D_\rho(c))$.
+For $z\in\C$, $z/r_c^2\in L^2(D_\rho(c))$ if and only if $z=0$.
+These claims concern genuine integrability; the assigned value at the
+single center is immaterial.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison}
+\leanok
+Translate to the origin. The product ball of radius $\rho/2$ lies in the
+Euclidean disk, and $r_0\le2\|p\|$ there. Integrability of $r_0^{-2}$
+would imply integrability of $\|p\|^{-2}$ on that product ball.
+Mathlib's norm-radial Haar integration formula in dimension two reduces
+this to integrability of $t^{-1}$ on $(0,\rho/2)$, a contradiction.
+If $z\ne0$, its weighted L2 norm would give the inverse-square function
+in L2, hence L1 on the finite-measure disk.
+\end{proof}
+
 \begin{lemma}[Ordinary forcing mass of a saddle quadratic]
 \label{lem:saddle-quadratic-forcing-mass}
 \uses{def:saddle-quadratic, def:local-plane-geometry}
@@ -1851,6 +1875,27 @@ whose absolute value is one at a saddle.
 Its formula directly gives $r_P(\Xi_P(q))=r_0(q)$.
 Apply the affine pullback lemma; the radius identity identifies
 the preimage disk with $D_\rho(0)$.
+\end{proof}
+
+\begin{lemma}[Laplacian of the transformed saddle jet]
+\label{lem:saddle-chart-laplacian}
+\uses{def:affine-jet, def:saddle-ortho-chart}
+\lean{NoEmbeddedEigenvalues.affineJet_saddle_laplacian}
+\leanok
+For any formal array $D$ and lifted saddle $P$, let $E$ be its affine
+jet transform under $\Xi_P$. Pointwise,
+\[
+ E_{00}+E_{11}=(D_{00}+D_{11})\circ\Xi_P.
+\]
+No symmetry of $D_{01}$ and $D_{10}$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-chart-orthogonal}
+\leanok
+Expand the four matrix coefficients. Both diagonal coefficients become
+one and both mixed coefficients cancel separately, using
+$(\cos P_x)^2=1$ and $(\sqrt2)^2=2$.
 \end{proof}
 
 \begin{lemma}[Sobolev membership via specified jets]
@@ -2723,7 +2768,7 @@ $\Lambda_\Psi/r_c\in L^1(D_\rho(c))$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:saddle-normal-form, lem:saddle-chart-pullback,
+\uses{lem:saddle-dipole-factorization, lem:saddle-chart-pullback,
  lem:logarithmic-radial-mass}
 \leanok
 Continuity and $m(0)=1$ give $m>1/2$ on a small disk.

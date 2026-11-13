@@ -57,7 +57,10 @@ proof mechanisms. Module names below are relative to
 - `AffineJets.lean`: volume-preserving affine pullback of weak derivatives,
   full specified jets, Sobolev regularity and radius-preserving radial L² bounds.
 - `SaddleChartPullback.lean`: the explicit normalized saddle chart instantiated
-  in the affine Sobolev/jet/radial interface.
+  in the affine Sobolev/jet/radial interface. Orthogonality preserves the second
+  jet's Laplacian without assuming symmetry of mixed entries. Integer period
+  identities conjugate local axis reflections to the two torus reflections;
+  measure-preserving pullback transports actual raw a.e. parity.
 - `SaddleDistance.lean`: lattice separation/closedness, identification of the
   nearest saddle on a small ball, Euclidean/product radius comparisons and
   bounded-measurable transfer of radial local L² to saddle-distance weights.
@@ -69,6 +72,8 @@ proof mechanisms. Module names below are relative to
   entries and the explicit quadratic first-jet bounds between ordinary and
   logarithmic forcing. `StreamParity.lean` transfers odd reflection parity to
   the continuous stream everywhere and proves zero values on the full separatrix.
+  `SaddleCoefficient.lean` proves coefficient uniqueness from the weighted Hessian
+  alone, on possibly different disk radii, and packages existence as uniqueness.
 - `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
   trace data; weighted corner trace and crossing-edge H¹ gluing interfaces.
 - `LiftTorus.lean`, `LiftIntegration.lean`: classical/Fourier derivative
@@ -144,6 +149,10 @@ proof mechanisms. Module names below are relative to
 - `LogarithmicRadialMass.lean`: a separable integrable power majorant for the
   crossing logarithm divided by radius, and absorption of radial logarithms by
   positive powers on bounded intervals.
+- `RadialNonintegrability.lean`: critical inverse-square nonintegrability in
+  physical dimension two, by Euclidean/product-radius comparison and Mathlib's
+  norm-radial Haar formula. Nonzero constant Hessian defects cannot satisfy
+  the weighted L² condition.
 - `SaddleForcingMass.lean`: ordinary quadratic value/gradient mass on bounded
   physical disks. Inverse Euclidean radius is integrable by comparison with
   the product-norm power of exponent −1 in real dimension two; no logarithmic
@@ -245,9 +254,17 @@ can be added here as they are formalized.
 
 - `Regularity/CylinderInverse.lean`: parity/nonresonance data, the physical weighted
   cylinder inverse and smooth harmonic remainder with finite Taylor jets.
+  Explicit gap lemmas cover exponents three halves and three for odd–odd data.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
-  saddle charts and sinc factor; parity, differentiated Taylor bounds and
-  quadratic compatibility. Independent of the eigenfunction regularity modules.
+  saddle charts and sinc factor, exact factorization, differentiated Taylor
+  bounds and quadratic compatibility. The raw chart parity theorem lives in
+  `SaddleChartPullback.lean`, after its measure transport.
+  Independent of the eigenfunction regularity modules.
+- `SaddleStreamCoordinates.lean`: finite H² and the fixed Fourier weak jet in
+  saddle coordinates, actual charted Poisson and continuous-stream a.e. parity.
+  The cylinder specialization keeps the physical weighted vorticity norm explicit
+  and returns the same weighted particular jet and smooth harmonic remainder.
+  It uses no ordinary separatrix H¹/H³ or weighted-forcing input.
 - `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates and weaker forcing
   weights, upstream of ordinary separatrix and logarithmic regularity. The forcing
   assembly retains the original saddle coefficient and Fourier derivatives,

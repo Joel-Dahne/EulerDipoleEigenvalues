@@ -91,6 +91,9 @@ import NoEmbeddedEigenvalues.AffineJets
 import NoEmbeddedEigenvalues.StreamJet
 import NoEmbeddedEigenvalues.SaddleStreamJet
 import NoEmbeddedEigenvalues.SaddleForcingMass
+import NoEmbeddedEigenvalues.RadialNonintegrability
+import NoEmbeddedEigenvalues.SaddleCoefficient
+import NoEmbeddedEigenvalues.SaddleStreamCoordinates
 import NoEmbeddedEigenvalues.StreamParity
 import NoEmbeddedEigenvalues.SeparableMultiplier
 import NoEmbeddedEigenvalues.DipoleLogMultiplier

@@ -64,8 +64,7 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg`, nineteen below `dd_stream_quotient_h2`
-and twenty-one below `dd_exclusion_domain`.
+zero below `correctedBoundaryForm_nonneg` and seventeen below `dd_stream_quotient_h2`.
 Weighted forcing (`lem:dd-weighted-forcing`) has a proof of its own, reaching
 only Odd–odd saddle estimates (`prop:saddle-dd`). Its ordinary quadratic mass,
 canonical derivative identification and continuous-stream parity layers are
@@ -73,11 +72,13 @@ admission-free. Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) therefore
 reaches four existing inputs: the saddle jet, Weighted transport H¹,
 Whole-edge zero trace and Interior elliptic H³. Its regular-seam covering,
 finite-norm saddle removal and all-window canonical trace layers are admission-free.
-Weighted vorticity gradient (`prop:dd-weighted-gradient`) reaches eleven existing
-inputs, and the third-stream assembly reaches thirteen. Logarithmic numerator
-bounds (`lem:dd-log-numerators`) reach six. Logarithmic forcing
-(`lem:dd-log-forcing`) reaches five: the four ordinary separatrix inputs and
-saddle factorization. These assemblies have no admission of their own.
+Logarithmic forcing (`lem:dd-log-forcing`) now reaches exactly those same four
+inputs: saddle factorization and reflected-periodic chart parity are admission-free.
+Weighted-gradient, third-stream and logarithmic numerator assemblies remain
+conditional on their recorded analytic inputs, without admissions of their own.
+The saddle endpoint itself remains admitted; its coefficient uniqueness and
+canonical cylinder-input layers are checked separately. The actual stream-cylinder
+application reaches only the existing `cylinder_inverse` admission.
 The generic weak-chart, reflected-periodic covering, logarithmic
 multiplier/localization/trace/summation layers and canonical second stream jet
 have no admissions.
