@@ -20,20 +20,39 @@ theorem HasWeakJetOn.add {n : ℕ} {U : Set (ℝ × ℝ)} {f g : ℝ × ℝ → 
     HasWeakJetOn n U (fun p ↦ f p + g p) (fun w p ↦ D w p + E w p) :=
   ⟨by simp only [hD.1, hE.1], fun w hw j ↦ (hD.2 w hw j).add (hE.2 w hw j)⟩
 
-/-- Uniqueness of all entries of a specified jet, on an open set. -/
-theorem HasWeakJetOn.ae_eq {n : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    {f : ℝ × ℝ → ℂ} {D E : List (Fin 2) → ℝ × ℝ → ℂ}
-    (hD : HasWeakJetOn n U f D) (hE : HasWeakJetOn n U f E) :
+/-- Subtraction retains the specified representatives at every order. -/
+theorem HasWeakJetOn.sub {n : ℕ} {U : Set (ℝ × ℝ)} {f g : ℝ × ℝ → ℂ}
+    {D E : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn n U f D) (hE : HasWeakJetOn n U g E) :
+    HasWeakJetOn n U (fun p ↦ f p - g p) (fun w p ↦ D w p - E w p) := by
+  refine ⟨by simp only [hD.1, hE.1], fun w hw j ↦ ?_⟩
+  simpa only [neg_one_mul, sub_eq_add_neg] using
+    (hD.2 w hw j).add ((hE.2 w hw j).const_mul (-1))
+
+/-- A.e. equality of the base functions identifies every specified weak entry. -/
+theorem HasWeakJetOn.ae_eq_of_value_ae {n : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    {f g : ℝ × ℝ → ℂ} {D E : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn n U f D) (hE : HasWeakJetOn n U g E)
+    (hfg : f =ᵐ[volume.restrict U] g) :
     ∀ w, w.length ≤ n → ∀ᵐ p, p ∈ U → D w p = E w p := by
   intro w
   induction w with
-  | nil => intro _; simp only [hD.1, hE.1]; exact Filter.Eventually.of_forall (by simp)
+  | nil =>
+    intro _
+    simpa only [hD.1, hE.1] using (ae_restrict_iff' hU.measurableSet).mp hfg
   | cons j w ih =>
     intro hw
     have hw' : w.length < n := by simpa using hw
     have hd := (hD.2 w hw' j).congr_ae_on hU.measurableSet
       (ih (by omega)) (Filter.Eventually.of_forall fun _ _ ↦ rfl)
     exact hd.ae_eq hU (hE.2 w hw' j)
+
+/-- Uniqueness of all entries of a specified jet, on an open set. -/
+theorem HasWeakJetOn.ae_eq {n : ℕ} {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+    {f : ℝ × ℝ → ℂ} {D E : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn n U f D) (hE : HasWeakJetOn n U f E) :
+    ∀ w, w.length ≤ n → ∀ᵐ p, p ∈ U → D w p = E w p :=
+  hD.ae_eq_of_value_ae hU hE (Filter.Eventually.of_forall fun _ ↦ rfl)
 
 /-- Radial integrability restricts to smaller domains. -/
 theorem RadialJetLp.mono {k s : ℕ} {U V : Set (ℝ × ℝ)} {c : ℝ × ℝ}

@@ -1803,6 +1803,96 @@ across both axes. Only the isolated point must be removed, and the
 transverse-cutoff argument needs no extra trace or radial-tail hypothesis.
 \end{remark}
 
+\begin{lemma}[Comparison of specified jets with a.e.-equal values]
+\label{lem:weak-jet-ae-comparison}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.ae_eq_of_value_ae,
+ NoEmbeddedEigenvalues.HasWeakJetOn.sub}
+\leanok
+On an open set $U$, specified order-$n$ weak jets of functions equal a.e.\
+have a.e.-equal entries at every order through $n$.
+Subtraction of specified jets gives the specified jet of the difference.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic, lem:weak-derivative-unique}
+\leanok
+Induct on the derivative word, starting with the a.e.\ value identity.
+At the successor step use congruence of weak testing and uniqueness.
+Subtraction follows from addition and multiplication by $-1$.
+\end{proof}
+
+\begin{lemma}[Differentiated bounds from a flat finite classical jet]
+\label{lem:classical-jet-flat-bounds}
+\uses{def:local-plane-geometry, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.classicalComplexJet_append,
+ NoEmbeddedEigenvalues.contDiffOn_classicalComplexJet,
+ NoEmbeddedEigenvalues.norm_le_pow_of_flat_jet,
+ NoEmbeddedEigenvalues.exists_bound_top_classicalJet,
+ NoEmbeddedEigenvalues.exists_classicalJet_flat_bounds,
+ NoEmbeddedEigenvalues.exists_radial_classicalJet_flat_bounds}
+\leanok
+Let $f$ be smooth on an open neighbourhood $U$ of zero and let its ordered
+classical jets of orders less than $n$ vanish at zero.
+There are $R,C>0$, with $D_R(0)\subset U$, such that simultaneously for
+every word $w$ with $|w|\le n$ and every $p\in D_R(0)$,
+\[
+ |\partial_w f(p)|\le C r_0(p)^{n-|w|}.
+\]
+No analyticity is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison}
+\leanok
+Bound the finitely many order-$n$ entries on one compact product ball inside
+$U$. Repeated mean-value inequalities give the estimate for each lower entry.
+For the product norm, coordinate bounds $|\partial_j g|\le B$ imply
+$\|Dg\|\le2B$; induction gives the constant $2^n B$.
+Apply this to every differentiated function, using concatenation of words.
+Finally $\|p\|\le r_0(p)$ gives the Euclidean disk bound.
+No value-only big-O estimate is differentiated.
+\end{proof}
+
+\begin{lemma}[Local classical weak jets]
+\label{lem:local-classical-weak-jet}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_of_contDiffOn,
+ NoEmbeddedEigenvalues.classicalComplexJet_weakOn}
+\leanok
+A function smooth on an open set $U$ has its actual classical jet as a
+specified weak jet of every finite order on the whole of $U$.
+Global smoothness or a smooth extension outside $U$ is unnecessary.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-product}
+\leanok
+Multiply the constant weak function one by the local smooth function.
+Its product rule gives the classical first partial.
+Apply this to each smooth classical jet entry.
+\end{proof}
+
+\begin{lemma}[Radial mass of a flat finite jet]
+\label{lem:flat-jet-radial-mass}
+\uses{def:local-weak-jets, def:sobolev-local, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.exists_radial_classicalJet_flat_memLp}
+\leanok
+Under the flat-jet hypotheses of Lemma~\ref{lem:classical-jet-flat-bounds},
+one positive-radius disk has the classical specified weak jet and
+$\partial^k f/r_0^{n-k}\in L^2(D_R(0))$, $0\le k\le n$.
+These are actual finite norms, not only finite-valued totalized energies.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:classical-jet-flat-bounds, lem:local-classical-weak-jet}
+\leanok
+Each quotient is bounded and measurable on the finite-measure disk.
+Its assigned value at zero does not affect integrability.
+The weak identities hold on the whole disk, independently of this null-set
+observation.
+\end{proof}
+
 \begin{definition}[Affine pullback of a specified jet]
 \label{def:affine-jet}
 \uses{def:local-weak-jets}

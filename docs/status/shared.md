@@ -130,10 +130,19 @@ weights and local versus global regularity.
    `cylinder_inverse`, with its physical forcing weight still an explicit input.
    Chart inverse/radius identities, exact dipole factorization, quadratic
    normalization and reflected-periodic chart parity are proved.
-   **The saddle endpoint remains admitted.** Next assemble the subcritical
-   first-gain input, finite harmonic Taylor bounds and second transport gain,
-   then the exponent-three remainder and inverse-chart jet transport. Localize
-   periodic norms on bounded sets; do not use the downstream weighted forcing.
+   **Both local cylinder steps are assembled.** The subcritical step gives a
+   pointwise bound for the continuous stream and weighted specified first jets.
+   The critical step supplies the unique original quadratic and the actual
+   physical Fourier remainder jet from its radial weighted-vorticity input.
+   Finite Taylor estimates, smooth remainder mass, inverse-chart weak transport
+   and a.e. jet comparison are admission-free; both actual applications reach
+   only `cylinder_inverse`. Their forcing norms remain explicit hypotheses.
+   **The saddle endpoint remains admitted.** Next localize the first gain at
+   lifted saddles, transport the fractional first-jet weights to the physical
+   frame, and aggregate finite corner/nonsaddle patches for the second transport
+   gain. Reflected-periodic bounded covering must then supply the d² norm on
+   the fixed cell neighbourhood and the critical input at every lifted saddle.
+   Do not use the downstream weighted forcing or a whole-plane periodic norm.
    **Remaining analytic frontier:** Odd–odd saddle estimates (`prop:saddle-dd`),
    Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).

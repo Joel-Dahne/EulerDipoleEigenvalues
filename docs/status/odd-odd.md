@@ -57,8 +57,12 @@ Proof work is now outside the odd–odd chapter:
   therefore reaches four existing inputs: the saddle jet, Weighted transport H¹,
   Whole-edge zero trace and Interior elliptic H³. The saddle coefficient's
   uniqueness, canonical cylinder-input data and chart identities/parity are
-  proved; the actual cylinder application still reaches `cylinder_inverse`.
-  The saddle bootstrap and weighted remainder existence remain work.
+  proved. Both actual cylinder steps now reach only `cylinder_inverse`: the
+  subcritical continuous-stream/first-jet estimates and the critical physical
+  remainder with its unique coefficient and fixed Fourier jet are assembled.
+  Their weighted-vorticity inputs remain explicit. The first/second transport
+  bootstrap, physical fractional-gradient transport and bounded periodic norm
+  covering remain work; `prop:saddle-dd` itself is still admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

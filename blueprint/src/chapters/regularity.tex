@@ -161,13 +161,14 @@ This application supplies no weighted-vorticity bootstrap by itself.
 \begin{definition}[Normalized saddle quadratic]
 \label{def:saddle-quadratic}
 \uses{def:dipole, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.saddleQuadratic}
+\lean{NoEmbeddedEigenvalues.saddleQuadratic, NoEmbeddedEigenvalues.saddleAxisQuadratic}
 \leanok
 For a saddle $P$ and $a\in\C$ put
 \[
  Q_{P,a}(p)=\frac{a\cos P_x}{2}
               \bigl((p_y-P_y)^2-(p_x-P_x)^2\bigr).
 \]
+The chart quadratic is $q_a(u,v)=auv$.
 The remainders are $R_0=\psi-Q_{P,a}$ and $R=\psi-a\Psi$.
 \end{definition}
 
@@ -221,6 +222,138 @@ The common weighted L2 condition forces that constant to vanish;
 $\cos P_x=\pm1$ gives $a=b$. Only the order-two weight is needed.
 \end{proof}
 
+\begin{lemma}[Odd--odd smooth quadratic remainder]
+\label{lem:odd-odd-smooth-quadratic-remainder}
+\uses{def:cylinder-inverse-data, def:saddle-quadratic, def:sobolev-local,
+ def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.HasAxisParityOn.eqOn_disk,
+ NoEmbeddedEigenvalues.oddOdd_pure_second_zero,
+ NoEmbeddedEigenvalues.oddOdd_quadratic_flat_jet,
+ NoEmbeddedEigenvalues.oddOdd_quadratic_remainder_mass}
+\leanok
+Suppose $h$ is smooth on $D_\rho(0)$, $\rho>0$, is odd in both axes a.e.,
+and its forbidden-degree jets vanish at zero.
+On a smaller positive-radius disk there is $a\in\C$ such that the actual
+classical jet of $h-q_a$ is a specified second weak jet and
+\[
+ \partial^k(h-q_a)/r^{4-k}\in L^2,\qquad 0\le k\le2.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:flat-jet-radial-mass}
+\leanok
+Continuity identifies a.e.\ axis parity everywhere.
+The restrictions $h(t,0)$ and $h(0,t)$ vanish near zero; their second
+derivatives give $h_{xx}(0)=h_{yy}(0)=0$.
+Smooth mixed derivatives commute, so choose $a=h_{xy}(0)$.
+The forbidden jets of degrees zero, one and three vanish.
+Thus all jets of $h-q_a$ below order four vanish; apply the flat-jet
+radial-mass lemma. Neither an infinite harmonic series nor harmonicity
+beyond the supplied finite-jet data is needed.
+\end{proof}
+
+\begin{lemma}[Subcritical mass of the smooth cylinder summand]
+\label{lem:odd-odd-subcritical-smooth-mass}
+\uses{def:cylinder-inverse-data, def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.oddOdd_subcritical_smooth_mass}
+\leanok
+Let $h$ be smooth on $D_\rho(0)$, $\rho>0$, with the forbidden-degree
+jets of odd--odd cylinder data zero at the center.
+On one smaller disk, for some $C>0$,
+$|h|\le Cr^{3/2}$ and $\partial_jh/r^{3/2}\in L^2$ for both coordinates.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:classical-jet-flat-bounds, lem:inverse-radius-mass}
+\leanok
+Only the zero and first jets are used: finite Taylor bounds give
+$|h|\le Cr^2$ and $|\partial_jh|\le Cr$.
+Shrink below radius one for the value bound.
+The normalized gradient $\partial_jh/r$ is bounded and measurable;
+multiply by the genuine L2 function $r^{-1/2}$.
+\end{proof}
+
+\begin{lemma}[Subcritical cylinder bounds for the actual stream]
+\label{lem:dd-saddle-subcritical-cylinder}
+\uses{def:stream-second-jet, def:sectors, def:sobolev-local,
+ def:saddle-ortho-chart, def:affine-jet, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.oddOdd_stream_cylinder_subcritical}
+\leanok
+Let $\omega$ be mean-zero and odd--odd and $P$ a lifted saddle.
+If $(\widetilde\omega\circ\Xi_P)/r^{1/2}\in L^2(D_\rho(0))$, $\rho>0$,
+there are $0<r_1<\rho$ and $C>0$ with
+\[
+ |\psi(\Xi_P(q))|\le Cr(q)^{3/2},\qquad
+ E_j/r^{3/2}\in L^2(D_{r_1}(0)),\quad j=0,1,
+\]
+where $E$ is the affine transform of the fixed Fourier stream jet.
+The value bound holds at every point of the disk.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:stream-saddle-cylinder-inverse, lem:odd-odd-subcritical-smooth-mass,
+ lem:local-classical-weak-jet, lem:weak-jet-ae-comparison}
+\leanok
+Use the cylinder exponent $3/2$ and add the smooth-summand bounds.
+All summands are continuous, so the a.e.\ decomposition equals the
+continuous stream everywhere on the open disk.
+Their sum is a genuine weak jet; weak uniqueness transfers its weighted
+gradient norms to the specified Fourier jet.
+The physical vorticity weight remains an explicit input.
+\end{proof}
+
+\begin{lemma}[Inverse saddle-chart transport of a quadratic remainder]
+\label{lem:saddle-remainder-jet-pushforward}
+\uses{def:sobolev-local, def:local-weak-jets, def:saddle-ortho-chart,
+ def:saddle-quadratic, def:stream-lifts}
+\lean{NoEmbeddedEigenvalues.saddle_quadratic_jet_pushforward}
+\leanok
+A specified second weak jet of $\psi\circ\Xi_P-q_a$ on $D_\rho(0)$,
+with its order-$k$ entries divided by $r^{4-k}$ in L2 for $0\le k\le2$,
+transports to a specified second weak jet of $\psi-Q_{P,a}$ on
+$D_\rho(P)$ with those same weights. The coefficient is unchanged.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-jet-pullback, lem:saddle-chart-pullback,
+ lem:saddle-chart-orthogonal, lem:saddle-quadratic-chart}
+\leanok
+The inverse affine chart preserves volume and Euclidean radius.
+Pull back the actual weak identities and all derivative indices.
+The exact quadratic chart identity identifies the base function, including
+its original coefficient.
+\end{proof}
+
+\begin{lemma}[Critical saddle jet from the physical vorticity weight]
+\label{lem:dd-saddle-jet-from-radial-vorticity}
+\uses{def:sectors, def:sobolev-local, def:stream-lifts,
+ def:local-weak-jets, def:saddle-quadratic}
+\lean{NoEmbeddedEigenvalues.oddOdd_stream_cylinder_quadratic,
+ NoEmbeddedEigenvalues.oddOdd_saddle_jet_of_radial_vorticity}
+\leanok
+Let $\omega$ be mean-zero and odd--odd and $P$ a lifted saddle.
+If $\widetilde\omega/r_P^2\in L^2(D_\rho(P))$, $\rho>0$, there is
+$0<r_1<\rho$ with a unique $a\in\C$ admitting a specified second weak
+remainder jet of $\psi-Q_{P,a}$ whose order-$k$ entries divided by
+$r_P^{4-k}$ belong to L2 for $0\le k\le2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:stream-saddle-cylinder-inverse, lem:odd-odd-smooth-quadratic-remainder,
+ lem:weak-jet-ae-comparison, lem:saddle-remainder-jet-pushforward,
+ lem:stream-weak-second-jet, lem:saddle-coefficient-uniqueness}
+\leanok
+Transport the actual physical forcing norm into the chart and use exponent
+three. Add the particular jet to the smooth quadratic remainder jet.
+Compare their sum with the fixed Fourier jet minus the quadratic jet by
+a.e.\ value identification and weak uniqueness.
+Push the weak identities and weighted norms back to the physical disk;
+weak uniqueness retains the canonical Fourier remainder entries.
+The earlier coefficient-uniqueness lemma supplies the unique quantifier.
+This does not produce the weighted vorticity input.
+\end{proof}
+
 \begin{proposition}[Odd--odd saddle estimates]
 \label{prop:saddle-dd}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
@@ -238,44 +371,31 @@ unique coefficient $a$ for the normalized quadratic $q=Q_{P,a}$ such that
 \end{proposition}
 
 \begin{proof}
-\uses{prop:saddle-first-gain, lem:stream-saddle-cylinder-inverse,
+\uses{prop:saddle-first-gain, lem:dd-saddle-subcritical-cylinder,
+ lem:dd-saddle-jet-from-radial-vorticity,
  lem:transport-second-gain, lem:transport-pair-eigen,
- lem:saddle-chart-orthogonal, lem:saddle-chart-parity,
- lem:saddle-quadratic-chart, lem:saddle-coefficient-uniqueness,
- lem:stream-sector, lem:continuous-representative,
+ lem:saddle-chart-orthogonal, lem:saddle-distance-comparison,
+ lem:affine-jet-pullback, lem:stream-weak-second-jet, lem:local-l2-multiplier,
  lem:periodic-cell-cover, lem:odd-odd-cell-fold-parity, lem:cell-fold-l2-cover}
-Set $\delta=1/2$ and apply
-Lemma~\ref{lem:stream-saddle-cylinder-inverse} with $a=3/2=2-\delta$. Its physical forcing hypothesis is
-$r^{\delta-1}\omega\in L^2$, supplied by the first gain. Odd--odd reflection
-parity permits only angular degrees $2,4,\ldots$, all strictly larger than
-$a$. Its constant and linear jets vanish, so a second-order Taylor
-estimate gives the same finite weighted norms as $u_0$.
-Both summands are continuous on the disk, so their a.e.\ decomposition
-agrees everywhere with the continuous stream. Consequently
-\[
- |\psi|\le Cr^{2-\delta},\qquad
- \nabla\psi/r^{2-\delta}\in L^2
-\]
-near each saddle. The pointwise bound uses the cylinder inverse's bound
-on $u_0$ and the harmonic remainder's quadratic vanishing.
-Apply Lemma~\ref{lem:transport-second-gain} to $(\omega,\psi)$ on the cells;
-away from the saddles its weighted forcing hypotheses follow from ordinary
-$H^2$ regularity. This gives $\omega/d^2\in L^2$ on the positive cell.
+Set $\delta=1/2$. On bounded saddle disks, the first gain and $d\le r_P$
+supply $\omega/r_P^{1/2}\in L^2$.
+Lemma~\ref{lem:dd-saddle-subcritical-cylinder} gives the pointwise continuous
+stream bound and the weighted specified first jet.
+The constant orthogonal inverse frame transports these to Cartesian
+derivatives; $r_P\le2d$ near the center changes the weight to $d^{3/2}$.
+Take a finite minimum of radii and maximum of constants at the closed
+cell's corners. Away from these corners ordinary stream H2 gives the
+forcing norms, so all hypotheses of Lemma~\ref{lem:transport-second-gain}
+hold for $(\omega,\psi)$ on the positive cell.
+
+The second gain gives $\omega/d^2\in L^2$ on that cell.
 Odd reflection and finite periodic covering give the finite norm on the
 fixed bounded neighbourhood $U_*$. Period translations transport local
 saddle data to every lifted saddle; no whole-plane periodic norm is taken.
-
-Now apply the cylinder inverse with $a=3$. Its physical hypothesis is
-$\omega/r^2\in L^2$, equivalently $r^{-1}\omega\in L^2(dr/r\,d\theta)$,
-and $3$ avoids all permitted angular degrees. Subtract the degree-two term
-$q$ of the harmonic remainder. The remaining smooth harmonic function has zero jets through order three,
-so Taylor estimates through order two give the finite weighted norm for $a=3$. The permitted
-quadratic is a multiple of $uv$, equivalently $Q_{P,a}$: the factor
-$\cos P_x=\pm1$ makes this normalization nondegenerate.
-Uniqueness follows from Lemma~\ref{lem:saddle-coefficient-uniqueness}:
-the difference of the specified second remainder jets has a constant
-$xx$ entry, which cannot have a finite $r^{-2}$-weighted L2 norm unless
-the coefficients agree.
+Since $d\le r_P$, these localized norms supply the physical input
+$\omega/r_P^2\in L^2$ to Lemma~\ref{lem:dd-saddle-jet-from-radial-vorticity}.
+That critical step returns the original unique coefficient and all three
+weighted remainder norms on one physical disk.
 \end{proof}
 
 \begin{remark}[Digest note: the saddle bootstrap and its weights]

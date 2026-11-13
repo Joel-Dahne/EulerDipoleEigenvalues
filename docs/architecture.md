@@ -52,6 +52,10 @@ proof mechanisms. Module names below are relative to
 - `LocalJets.lean`: Euclidean disk/axis geometry, specified weak and classical
   complex jets, integer and real-power radial integrability, energies and the
   Sobolev/jet interface.
+- `SmoothJetBounds.lean`: uniform finite Taylor bounds for every ordered classical
+  derivative, by top-jet compact bounds and repeated mean-value inequalities.
+  Product-norm balls are distinguished from Euclidean disks. Local smoothness
+  supplies actual weak jets; bounded radial quotients give genuine finite L² norms.
 - `SobolevApproximation.lean`: local H² smooth-approximation interface on
   precompact patches, and bounded-coefficient L² product-integral stability.
 - `AffineJets.lean`: volume-preserving affine pullback of weak derivatives,
@@ -265,6 +269,16 @@ can be added here as they are formalized.
   The cylinder specialization keeps the physical weighted vorticity norm explicit
   and returns the same weighted particular jet and smooth harmonic remainder.
   It uses no ordinary separatrix H¹/H³ or weighted-forcing input.
+- `HarmonicSaddleJets.lean`: pointwise axis parity for continuous cylinder data,
+  pure Hessian vanishing, the normalized mixed quadratic and finite fourth-order
+  remainder mass. The subcritical summand uses quadratic vanishing and inverse
+  square-root radius mass, without an infinite harmonic expansion.
+- `SaddleCylinderRemainder.lean`: actual stream bounds at exponent three halves
+  and the critical quadratic remainder at exponent three. A.e. decomposition
+  identifies the continuous value everywhere and the specified jets by weak
+  uniqueness. Inverse affine transport retains the original physical quadratic;
+  the final physical witness uses the fixed Fourier jet minus its classical jet.
+  Both applications keep their weighted-vorticity norms explicit.
 - `Regularity/OddOddSaddle.lean`: eigenfunction saddle estimates and weaker forcing
   weights, upstream of ordinary separatrix and logarithmic regularity. The forcing
   assembly retains the original saddle coefficient and Fourier derivatives,
@@ -321,7 +335,8 @@ can be added here as they are formalized.
   the third-jet assembly uses the saddle jet and weighted gradient, with the
   generic dyadic gain in `WeightedElliptic.lean` and the Cartesian correction in
   `SaddleTaylorJet.lean`. `WeakJetOperations.lean` supplies jet restriction,
-  linearity, uniqueness, classical-to-weak conversion and regularity transfer
+  addition/subtraction, uniqueness including a.e.-equal base values,
+  classical-to-weak conversion and regularity transfer
   from recursive Sobolev witnesses to each specified jet entry.
 - `Regularity/QuotientLocal.lean`: division/removal, coordinate Hardy, local/dyadic elliptic
   and first/second transport-gain interfaces.
