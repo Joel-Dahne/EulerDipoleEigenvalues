@@ -314,6 +314,189 @@ agrees with $F$ on the input open disk. A smooth radial cutoff is optional,
 not an additional analytic prerequisite.
 \end{remark}
 
+\begin{definition}[Real-line L2 Fourier modes]
+\label{def:cylinder-fourier-modes}
+\uses{def:cylinder-angular-analysis, lem:cylinder-angular-analysis}
+\lean{NoEmbeddedEigenvalues.cylinderTimeMode, NoEmbeddedEigenvalues.cylinderFourierMode}
+\leanok
+For cylinder L2 data $G$, let $g_n=[G_n]_{L^2(\R)}$ and
+$\mathscr F_nG=\mathcal F_{\rm cyc}g_n$.
+Here $\mathcal F_{\rm cyc}$ is Mathlib's real-line unitary L2 Fourier transform,
+with Schwartz kernel $e^{-2\pi i\eta t}$.
+No real-line L1 assumption is made on $G_n$.
+\end{definition}
+
+\begin{lemma}[Integrated angular Parseval and real-line Plancherel]
+\label{lem:cylinder-fourier-modes}
+\uses{def:cylinder-fourier-modes}
+\lean{NoEmbeddedEigenvalues.cylinderTimeMode_ae,
+ NoEmbeddedEigenvalues.cylinderFourierMode_inverse,
+ NoEmbeddedEigenvalues.cylinderRealL2_norm_sq,
+ NoEmbeddedEigenvalues.cylinderTimeMode_hasSum_mass,
+ NoEmbeddedEigenvalues.cylinderFourierMode_hasSum_mass,
+ NoEmbeddedEigenvalues.cylinderFourierMode_smul_of_coeff_ae,
+ NoEmbeddedEigenvalues.cylinderFourierMode_eq_zero}
+\leanok
+The class $g_n$ agrees with the specified coefficient $G_n$ a.e., and
+$\mathcal F_{\rm cyc}^{-1}\mathscr F_nG=g_n$.
+Both squared-norm sums converge, with
+\[
+ \sum_{n\in\Z}\|g_n\|_2^2
+ =\sum_{n\in\Z}\|\mathscr F_nG\|_2^2
+ =\int |G|^2\,d\mu_{\rm cyl}.
+\]
+An a.e.\ scalar relation $G_m=cG_n$ gives
+$\mathscr F_mG=c\,\mathscr F_nG$, including vanishing.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-angular-analysis}
+\leanok
+Integrate angular Parseval using dominated convergence for series.
+The sum of squared coefficients equals the integrable slice mass a.e.;
+it dominates every nonnegative partial sum.
+The real L2 norm agrees with the integral of the squared representative.
+Apply Mathlib's L2 Fourier isometry and inverse.
+Representative identities pass to L2 classes before using linearity.
+\end{proof}
+
+\begin{definition}[Normalized angular-frequency data]
+\label{def:cylinder-normalized-frequency-data}
+\uses{def:cylinder-fourier-modes}
+\lean{NoEmbeddedEigenvalues.cylinderFrequencyMeasure,
+ NoEmbeddedEigenvalues.cylinderFourierMeasure,
+ NoEmbeddedEigenvalues.cylinderFourierData}
+\leanok
+Set $d\nu(\xi)=d\xi/(2\pi)$ and
+$d\mu_{\mathcal F}(\xi,n)=d\nu(\xi)\,d\#(n)$ on $\R\times\Z$.
+Choose a Borel representative $f_n$ of each L2 class $\mathscr F_nG$ and set
+\[
+ \Phi_G(\xi,n)=f_n\bigl(\xi/(2\pi)\bigr).
+\]
+This is an L2 transform construction, not a totalized real-line integral of
+a possibly non-L1 coefficient.
+\end{definition}
+
+\begin{lemma}[Cycle-to-angular frequency measure transport]
+\label{lem:cylinder-frequency-transport}
+\uses{def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.measurePreserving_cylinderCycleFrequency,
+ NoEmbeddedEigenvalues.measurePreserving_cylinderAngularFrequency,
+ NoEmbeddedEigenvalues.measurableEmbedding_cylinderCycleFrequency,
+ NoEmbeddedEigenvalues.cylinderFrequencyMeasure_le_volume}
+\leanok
+The maps $\xi\mapsto\xi/(2\pi)$ and $\eta\mapsto2\pi\eta$ preserve measure
+from $\nu$ to Lebesgue measure and conversely.
+The former is a measurable embedding, and $\nu\le d\xi$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Lebesgue measure under nonzero real dilation scales by the reciprocal
+absolute dilation. The positive finite factor $1/(2\pi)$ cancels it.
+The comparison follows from $2\pi>1$.
+\end{proof}
+
+\begin{lemma}[Finite normalized product spectral mass and support]
+\label{lem:cylinder-normalized-fourier-data}
+\uses{def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierData_ae,
+ NoEmbeddedEigenvalues.measurable_cylinderFourierData,
+ NoEmbeddedEigenvalues.cylinderFourierData_mode_memLp,
+ NoEmbeddedEigenvalues.cylinderFourierData_mode_mass,
+ NoEmbeddedEigenvalues.memLp_two_prod_count_of_summable_mass,
+ NoEmbeddedEigenvalues.cylinderFourierData_memLp,
+ NoEmbeddedEigenvalues.cylinderFourierData_sq_mass,
+ NoEmbeddedEigenvalues.cylinderFourierData_smul_modes,
+ NoEmbeddedEigenvalues.cylinderFourierData_mode_eq_zero,
+ NoEmbeddedEigenvalues.cylinderFourierData_support}
+\leanok
+For cylinder L2 data $G$, $\Phi_G$ is jointly measurable and genuinely in
+$L^2(\mu_{\mathcal F})$. Each frequency slice is L2 in $\nu$, and
+\[
+ \int|\Phi_G(\xi,n)|^2\,d\nu(\xi)=\|\mathscr F_nG\|_2^2,\qquad
+ \int|\Phi_G|^2\,d\mu_{\mathcal F}=\int|G|^2\,d\mu_{\rm cyl}.
+\]
+Scalar relations between Fourier mode classes hold a.e.\ between their
+normalized representatives. If $G_n=0$ a.e.\ for all $n\notin M$, then
+$\Phi_G(\xi,n)=0$ for $\mu_{\mathcal F}$-a.e.\ $(\xi,n)$ with $n\notin M$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-fourier-modes, lem:cylinder-frequency-transport}
+\leanok
+Countability of the angular index gives joint measurability of the chosen
+Borel representatives. Transport each actual L2 mode norm by the frequency
+dilation. Integrated Parseval makes the mode masses summable, and the product
+integrability criterion gives finite joint mass, not merely modewise finiteness.
+Fubini and counting integration give its exact value.
+Scalar class identities pass through representative choice a.e.
+For support, combine the countably many null exceptional sets in frequency
+before passing to the product measure.
+\end{proof}
+
+\begin{lemma}[Modewise inversion of normalized spectral data]
+\label{lem:cylinder-normalized-fourier-inverse}
+\uses{def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierData_rescale_ae,
+ NoEmbeddedEigenvalues.cylinderFourierDataMode_eq,
+ NoEmbeddedEigenvalues.cylinderFourierData_inverse_ae}
+\leanok
+For each $n$, the rescaled function $\eta\mapsto\Phi_G(2\pi\eta,n)$
+represents $\mathscr F_nG$ in real-line L2. Its inverse L2 Fourier transform
+agrees a.e.\ with the original specified coefficient $G_n$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-frequency-transport, lem:cylinder-normalized-fourier-data,
+ lem:cylinder-fourier-modes}
+\leanok
+Pull the representative identity back under the measure-preserving forward
+dilation. The resulting L2 classes are equal.
+Apply the inverse Fourier equivalence and then the original coefficient's
+a.e.\ representative identity.
+\end{proof}
+
+\begin{lemma}[Normalized spectral data from physical Poisson forcing]
+\label{lem:cylinder-forcing-fourier-data}
+\uses{def:cylinder-physical-forcing, def:cylinder-inverse-data,
+ def:cylinder-normalized-frequency-data, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_forcing_fourier_data,
+ NoEmbeddedEigenvalues.cylinder_forcing_fourier_neg}
+\leanok
+Under the original specified Poisson, parity and weighted-forcing hypotheses,
+$\Phi_G$ is genuinely L2 on $\mu_{\mathcal F}$ and
+\[
+ \int|\Phi_G|^2\,d\mu_{\mathcal F}
+ =\frac1{2\pi}\int_{D_\rho(0)}\left|\frac{F}{r^{a-1}}\right|^2.
+\]
+It vanishes jointly a.e.\ at forbidden angular degrees $|n|$.
+For each $n$, its negative and positive modes obey
+\[
+ \Phi_G(\xi,-n)=\operatorname{sgn}(\varepsilon_1)\Phi_G(\xi,n)
+ \quad\text{for }\nu\text{-a.e. }\xi.
+\]
+No forcing-parity, spectral-support or real-line L1 hypothesis is added.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-forcing-data, lem:cylinder-normalized-fourier-data,
+ lem:cylinder-angular-support, lem:cylinder-fourier-modes}
+\leanok
+Apply the normalized product transform to the actual cylinder forcing.
+Its norm and forbidden coefficient identities have already been produced
+from the original physical data. The angular reflection identity
+$G_{-n}=\operatorname{sgn}(\varepsilon_1)G_n$ passes through the linear L2
+transform and representative rescaling.
+\end{proof}
+
+\begin{remark}[The remaining synthesis boundary]
+These nodes provide normalized signed spectral data and modewise L2 inversion.
+Identification with the bounded cosine/sine synthesis and physical weak
+derivatives is separate. Folding positive and negative modes gives factor $2$
+for cosines or $2i$ for sines; the even constant mode has factor one.
+\end{remark}
+
 \begin{definition}[Cylinder spectral data and synthesis]
 \label{def:cylinder-spectral-data}
 \uses{def:cylinder-inverse-data}
@@ -494,13 +677,15 @@ Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 \begin{proof}
 \uses{lem:cylinder-symbol-gap, lem:cylinder-spectral-inverse,
  lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis,
- lem:cylinder-forcing-data, lem:cylinder-angular-analysis, lem:cylinder-forbidden-jets}
+ lem:cylinder-forcing-fourier-data, lem:cylinder-normalized-fourier-inverse,
+ lem:cylinder-forbidden-jets}
 With $t=-\log r$, use the zero-extended cylinder forcing
 $G=\mathbf1_{\{r<\rho\}}r^{2-a}F\circ\Gamma$.
-Lemma~\ref{lem:cylinder-forcing-data} supplies its finite cylinder L2 norm
-and allowed angular support from the original Poisson data.
-Its angular coefficients are L2 functions of $t$, with the probability-Haar
-normalization of Lemma~\ref{lem:cylinder-angular-analysis}.
+Lemma~\ref{lem:cylinder-forcing-fourier-data} supplies genuine normalized spectral
+data, exact mass and allowed support from the original Poisson data.
+Modewise inverse L2 Fourier analysis recovers its original coefficients.
+Fold the signed modes using the prescribed reflection sign, keeping the
+constant mode separate.
 For $\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
 in $t$ and angular mode $m$ give
 \[

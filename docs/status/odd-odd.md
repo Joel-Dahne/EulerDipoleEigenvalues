@@ -70,8 +70,11 @@ Proof work is now outside the odd–odd chapter:
   Joint logarithmic-polar transport now supplies the physical forcing's actual
   cylinder norm, exact 1/(2π) squared-mass normalization and a.e. angular parity
   slices. Angular Parseval gives real-line L² coefficient functions, with forbidden
-  modes zero a.e. Normalized real Fourier reconstruction, weak-PDE identification,
-  the Cartesian jet and smooth harmonic representative remain open.
+  modes zero a.e. Real-line Plancherel now gives actual joint normalized spectral
+  data, exact mass and modewise inverse L² identities. Allowed support and the
+  negative-mode sign come from the original physical Poisson data.
+  Identification with bounded cosine/sine synthesis, the weak PDE, Cartesian
+  jet and smooth harmonic representative remain open.
   The physical inverse remains admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is

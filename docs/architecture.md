@@ -274,6 +274,14 @@ can be added here as they are formalized.
 - `Analysis/CylinderAngularTransform.lean`: normalized angular coefficient
   functions, Parseval on a.e. slices and actual real-line L² membership of each
   coefficient, using the Parseval sum as an integrable majorant.
+- `Analysis/CylinderFourier.lean`: actual real-line L² coefficient classes and
+  cycle-frequency Fourier modes, integrated angular Parseval, Plancherel and
+  inverse/scalar relations. No time L¹ assumption is needed.
+- `Analysis/CylinderFourierData.lean`: exact cycle/angular-frequency measure
+  transport, joint Borel spectral representatives and genuine product L² mass
+  on dξ/(2π) times signed counting measure. Support and scalar mode relations
+  survive representative choice; normalized modewise inversion recovers the
+  specified coefficients a.e.
 - `Analysis/CylinderSymbol.lean`: exact logarithmic-cylinder symbol factorization,
   a uniform gap on a discrete angular spectrum, order-two ellipticity and a
   genuine spectral L² inverse with uniform weighted norm bound. Frequency ξ is
@@ -295,6 +303,10 @@ can be added here as they are formalized.
   specified weak Laplacian give joint forcing parity, a.e. angular slices and
   allowed Fourier support. Its mode functions are real-line L², with forbidden
   modes zero a.e.; no separate support premise or chosen-circle evaluation.
+- `Regularity/CylinderFourierForcing.lean`: original physical Poisson data produce
+  the normalized product spectrum, exact physical weighted mass, joint allowed
+  support and negative-mode reflection sign. Bounded cosine/sine synthesis and
+  physical weak-derivative identification are distinct obligations.
 - `Regularity/CylinderInverse.lean`: the physical weighted cylinder inverse and
   smooth harmonic remainder with finite Taylor jets.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.

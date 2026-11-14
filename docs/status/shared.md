@@ -157,12 +157,16 @@ weights and local versus global regularity.
    The exact cylinder squared mass is 1/(2π) times the physical weighted mass.
    Angular Parseval and real-line L² membership of each coefficient are proved;
    forbidden coefficients vanish a.e. in logarithmic radius.
-   **Next:** real-line L² Fourier analysis of these modes, normalized reconstruction
-   and the weak cylinder PDE; then transport the finite Cartesian jet and obtain
-   the smooth harmonic representative. Mathlib uses cycle frequency (a factor
-   2π), while the symbol uses angular frequency. Signed complex angular coefficients
-   also need conversion to the existing unnormalized cosine/sine synthesis, with
-   the constant mode normalized separately. Once the physical jet's
+   Real-line L² Fourier analysis now produces jointly measurable spectral data
+   in angular frequency with measure dξ/(2π) times signed counting measure.
+   Integrated Parseval/Plancherel gives exact product mass; normalized modewise
+   inversion recovers the specified coefficients a.e. Original Poisson data give
+   joint allowed support and the negative-mode reflection sign, without time L¹.
+   **Next:** fold signed modes into the existing cosine/sine synthesis (factors
+   2 or 2i, but one for the even constant mode), identify its bounded integral
+   with the L² inverse and prove the weak cylinder PDE. Then transport the finite
+   Cartesian jet and obtain the smooth harmonic representative.
+   Once the physical jet's
    finite norms are established, `HasWeakPartialOn.remove_point` can fill its
    center at each derivative level without radial commutator estimates.
    **Ordinary separatrix frontier:** those three inputs, Weighted transport H¹

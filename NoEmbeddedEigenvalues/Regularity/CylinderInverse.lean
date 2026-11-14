@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.Regularity.CylinderForcing
+import NoEmbeddedEigenvalues.Regularity.CylinderFourierForcing
 import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis
 
 /-!
