@@ -138,6 +138,22 @@ weights and local versus global regularity.
    these primitives, not another outer saddle assembly. The generic bounded-mass,
    inverse-frame/weak-identification, finite Taylor and compact-growth layers
    are admission-free. No downstream weighted forcing or whole-plane norm is used.
+   **Current target: Cylinder inverse** (`lem:cylinder-inverse`). Its exact symbol
+   identity, uniform discrete spectral gap and order-two ellipticity are proved.
+   Actual division by the symbol gives L² and two-derivative weighted spectral L²,
+   the multiplier equation a.e. and a uniform norm estimate. The inverse Sobolev
+   weight is genuinely L²; Hölder gives L¹ data. Their cosine/sine synthesis is
+   an actual bounded continuous integral, pointwise periodic in angle. These
+   layers are admission-free, but the physical inverse itself remains admitted.
+   **Next:** identify a parity-preserving normalized cylinder transform and its
+   weak derivatives. Derive allowed-mode support of the forcing from the input
+   solution's parity and its specified weak Laplacian, rather than assuming that
+   support. Then transport the jet through the logarithmic-polar chart
+   and obtain the smooth harmonic remainder and forbidden jets. Mathlib's real
+   Fourier transform uses cycle frequency (a factor 2π); the symbol uses angular
+   frequency and the synthesis modes are unnormalized. Once the physical jet's
+   finite norms are established, `HasWeakPartialOn.remove_point` can fill its
+   center at each derivative level without radial commutator estimates.
    **Ordinary separatrix frontier:** those three inputs, Weighted transport H¹
    (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).

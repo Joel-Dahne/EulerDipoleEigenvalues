@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.LocalJets
 import NoEmbeddedEigenvalues.Sectors
+import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis
 
 /-!
 # Weighted cylinder inverse interface

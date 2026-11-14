@@ -54,6 +54,9 @@ import NoEmbeddedEigenvalues.OddOddPotentialMass
 import NoEmbeddedEigenvalues.OddOddRenormalizedBulk
 import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
+import NoEmbeddedEigenvalues.Analysis.CylinderSymbol
+import NoEmbeddedEigenvalues.Analysis.CylinderSpectralMass
+import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis
 import NoEmbeddedEigenvalues.Analysis.ZonalModes
 import NoEmbeddedEigenvalues.Analysis.ZonalBasis
 import NoEmbeddedEigenvalues.Analysis.ZonalCutoff

@@ -256,6 +256,17 @@ General Sobolev/jet, trace and weighted-transport prerequisites remain shared
 in the sections above. Mixed-sector and center results without Lean statements
 can be added here as they are formalized.
 
+- `Analysis/CylinderSymbol.lean`: exact logarithmic-cylinder symbol factorization,
+  a uniform gap on a discrete angular spectrum, order-two ellipticity and a
+  genuine spectral L² inverse with uniform weighted norm bound. Frequency ξ is
+  angular frequency, not the cycle frequency used by Mathlib's Fourier transform.
+- `Analysis/CylinderSpectralMass.lean`: integrability of the inverse squared
+  Sobolev weight on real frequency times counting measure, and weighted-L² to
+  L¹ spectral data by a separable majorant and Hölder.
+- `Analysis/CylinderSynthesis.lean`: measurable, continuous, bounded cosine/sine
+  synthesis kernels; genuine integrals, dominated continuity and pointwise
+  angular periodicity. Modes are unnormalized; unitary Fourier reconstruction
+  and identification of physical weak derivatives are separate from these bounds.
 - `Regularity/CylinderInverse.lean`: parity/nonresonance data, the physical weighted
   cylinder inverse and smooth harmonic remainder with finite Taylor jets.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.

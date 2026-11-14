@@ -26,6 +26,160 @@ derivatives and satisfies $\partial_u^2h+\partial_v^2h=0$.
 Its degree-$m$ jet means its order-$m$ derivatives at zero.
 \end{definition}
 
+\begin{definition}[Cylinder spectral data and synthesis]
+\label{def:cylinder-spectral-data}
+\uses{def:cylinder-inverse-data}
+\lean{NoEmbeddedEigenvalues.cylinderSymbol,
+ NoEmbeddedEigenvalues.cylinderSobolevWeight,
+ NoEmbeddedEigenvalues.cylinderSpectralMeasure,
+ NoEmbeddedEigenvalues.cylinderAngularMode,
+ NoEmbeddedEigenvalues.cylinderSynthesisKernel,
+ NoEmbeddedEigenvalues.cylinderSynthesis}
+\leanok
+For $\xi\in\R$, $m\in\N$, set
+\[
+ \sigma_a(\xi,m)=(i\xi-a)^2-m^2,\qquad
+ w(\xi,m)=1+\xi^2+m^2,\qquad d\mu_{\rm sp}=d\xi\,d\#(m).
+\]
+Here $\xi$ is angular frequency: the logarithmic derivative has symbol $i\xi$.
+For a Boolean $b$, let $e_{b,m}(\theta)=\cos(m\theta)$ when $b$ is even,
+and $\sin(m\theta)$ otherwise. These modes are unnormalized.
+Set
+\[
+ K_b((t,\theta),(\xi,m))=e^{it\xi}e_{b,m}(\theta),\qquad
+ {\cal S}_{b,\mu}V(t,\theta)=\int K_b((t,\theta),p)V(p)\,d\mu(p).
+\]
+\end{definition}
+
+\begin{lemma}[Factorization of the cylinder symbol]
+\label{lem:cylinder-symbol-factorization}
+\uses{def:cylinder-spectral-data}
+\lean{NoEmbeddedEigenvalues.cylinderSymbol_norm_sq,
+ NoEmbeddedEigenvalues.cylinderSymbol_ne_zero}
+\leanok
+For every real $a,\xi$ and $m\in\N$,
+\[
+ |\sigma_a(\xi,m)|^2=
+  \bigl(\xi^2+(a-m)^2\bigr)\bigl(\xi^2+(a+m)^2\bigr).
+\]
+If $a>0$ and $a\ne m$, the symbol is nonzero for every $\xi$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Expand the real and imaginary parts. Under nonresonance the first factor is
+positive, and $a+m>0$ makes the second positive.
+\end{proof}
+
+\begin{lemma}[Uniform ellipticity on the allowed cylinder modes]
+\label{lem:cylinder-symbol-gap}
+\uses{def:cylinder-spectral-data}
+\lean{NoEmbeddedEigenvalues.exists_uniform_nat_frequency_gap,
+ NoEmbeddedEigenvalues.cylinderSymbol_elliptic_bound}
+\leanok
+Let $M\subset\N$ and suppose $a\ne m$ for every $m\in M$.
+There is $0<\delta\le1$ with $\delta\le|a-m|$ for all $m\in M$.
+If $a\ge1$, there is $B\ge1$ with
+\[
+ 1+\xi^2+m^2\le B|\sigma_a(\xi,m)|
+ \quad(m\in M,\ \xi\in\R).
+\]
+Both constants are uniform over the angular and real frequencies.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-symbol-factorization}
+\leanok
+Take the minimum of one and the nonzero gaps for modes $m\in M$ with
+$m\le\max(0,\lceil a\rceil)$. This is a nonempty finite set of positive numbers.
+For larger $m$ the gap is at least one.
+Put $L=3+2a^2$. Using
+$m^2\le2a^2+2(a-m)^2$ gives
+\[
+ \delta^2w\le L\bigl(\xi^2+(a-m)^2\bigr),\qquad
+ w\le \xi^2+(a+m)^2.
+\]
+Multiplication gives $\delta^2w^2\le L|\sigma_a|^2$; for example,
+$B=L/\delta^2\ge1$ suffices.
+\end{proof}
+
+\begin{lemma}[Weighted spectral cylinder inverse]
+\label{lem:cylinder-spectral-inverse}
+\uses{def:cylinder-spectral-data, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_spectral_inverse}
+\leanok
+Let $a\ge1$ avoid $M\subset\N$. One $B\ge1$ works for every measure $\mu$
+on $\R\times\N$ supported a.e.\ on the modes in $M$ and every $G\in L^2(\mu)$:
+\[
+ V=G/\sigma_a\in L^2(\mu),\qquad wV\in L^2(\mu),\qquad
+ \sigma_a V=G\ \hbox{a.e.},\qquad \|wV\|_2\le B\|G\|_2.
+\]
+These are spectral weighted norms; identification with physical weak
+derivatives is a separate assertion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-symbol-gap, lem:cylinder-symbol-factorization}
+\leanok
+The quotient is a.e.\ strongly measurable. Uniform ellipticity gives
+$|wV|\le B|G|$ on the allowed modes, a genuine L2 majorant.
+Since $w\ge1$, the unweighted norm is finite too.
+Nonvanishing gives the multiplier equation without a totalized-inverse defect.
+\end{proof}
+
+\begin{lemma}[Integrable spectral mass for cylinder synthesis]
+\label{lem:cylinder-spectral-mass}
+\uses{def:cylinder-spectral-data, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.summable_inv_one_add_nat_sq,
+ NoEmbeddedEigenvalues.integrable_sq_inv_cylinderSobolevWeight,
+ NoEmbeddedEigenvalues.memLp_inv_cylinderSobolevWeight,
+ NoEmbeddedEigenvalues.integrable_of_memLp_cylinderSobolevWeight}
+\leanok
+The reciprocal weight $w^{-1}$ belongs to $L^2(\mu_{\rm sp})$.
+If $\mu\le\mu_{\rm sp}$, $V$ is a.e.\ strongly measurable and
+$wV\in L^2(\mu)$, then $V\in L^1(\mu)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use the separable majorant
+\[
+ w^{-2}\le(1+\xi^2)^{-1}(1+m^2)^{-1}.
+\]
+The first factor is integrable on $\R$. The second is summable, including
+$m=0$, since $(1+m^2)^{-1}\le2(m+1)^{-2}$.
+This proves actual L2 membership of $w^{-1}$.
+Hölder applied to $w^{-1}|wV|=|V|$ gives the last assertion.
+\end{proof}
+
+\begin{lemma}[Bounded continuous cylinder synthesis]
+\label{lem:cylinder-bounded-synthesis}
+\uses{def:cylinder-spectral-data, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.integrable_cylinderSynthesis,
+ NoEmbeddedEigenvalues.continuous_cylinderSynthesis,
+ NoEmbeddedEigenvalues.norm_cylinderSynthesis_le,
+ NoEmbeddedEigenvalues.cylinderAngularMode_periodic,
+ NoEmbeddedEigenvalues.cylinderSynthesis_periodic,
+ NoEmbeddedEigenvalues.cylinderSynthesis_of_memLp_weighted}
+\leanok
+For $V\in L^1(\mu)$ the defining synthesis integral is integrable at every
+$(t,\theta)$. Its value is continuous, $2\pi$-periodic in $\theta$, and
+\[
+ |{\cal S}_{b,\mu}V(t,\theta)|\le\int|V|\,d\mu.
+\]
+Consequently, if $\mu\le\mu_{\rm sp}$ and $V$ is a.e.\ strongly measurable
+with $wV\in L^2(\mu)$, the synthesis has a positive bound uniform over the
+whole cylinder.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-spectral-mass}
+\leanok
+The kernel is measurable in frequency, continuous in $(t,\theta)$ and
+bounded by one. The integrable dominator $|V|$ gives both continuity and
+the bound. Integer angular modes give pointwise periodicity before integration.
+\end{proof}
+
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
 \uses{def:sobolev-local, def:local-weak-jets, def:cylinder-inverse-data}
@@ -50,6 +204,8 @@ Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 \end{lemma}
 
 \begin{proof}
+\uses{lem:cylinder-symbol-gap, lem:cylinder-spectral-inverse,
+ lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis}
 Choose a radial cutoff $\chi$ supported in the original disk and equal to
 one on a smaller disk. With $t=-\log r$, extend
 $G=r^{2-a}\chi F$ by zero to the full cylinder $\R\times S^1$.
@@ -85,6 +241,18 @@ $a>1$ is essential. Hence $\Delta u_0=F$ distributionally there.
 The difference $u-u_0$ is weakly harmonic, so Weyl's lemma makes it smooth
 and harmonic across the origin. Its parity kills all forbidden-degree jets.
 \end{proof}
+
+\begin{remark}[Point removal for the reconstructed jet]
+After the weighted Cartesian jet has been established off the origin, a
+second-order radial cutoff is unnecessary for extending its weak identities.
+For $a>1$, all three weights $a+1-k$, $0\le k\le2$, are positive, so bounded
+radial multipliers give the actual unweighted L2 norms of every specified entry.
+Apply Lemma~\ref{lem:weak-point-removal} first to the function and each first
+derivative, then to each first derivative and its specified second entries.
+This gives a whole-disk weak jet and finite H2 norm, without a defect at the
+center. Omitting the center is used only to transfer norms, not to assert a
+weak derivative.
+\end{remark}
 
 \begin{remark}[Digest note: finite Taylor data suffice for the cylinder remainder]
 The odd--odd bootstrap only needs finite Taylor remainders of the smooth harmonic

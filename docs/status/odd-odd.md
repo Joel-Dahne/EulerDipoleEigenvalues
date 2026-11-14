@@ -63,7 +63,12 @@ Proof work is now outside the odd–odd chapter:
   The original unique quadratic and Fourier remainder jet are retained.
   Ordinary separatrix H¹/H³ and logarithmic forcing reach those three saddle
   primitives plus Weighted transport H¹, Whole-edge zero trace and Interior
-  elliptic H³. These six inputs remain admitted.
+  elliptic H³. These six inputs remain admitted. Cylinder inversion is the current
+  target: the uniform symbol bound, genuine weighted spectral L² inverse and
+  bounded continuous periodic synthesis are admission-free. The normalized
+  transform/weak-PDE, logarithmic-polar transport and harmonic remainder still
+  need implementation; see shared status for the representative/normalization
+  boundary. The physical inverse remains admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give
