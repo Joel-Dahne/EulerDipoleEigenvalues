@@ -306,6 +306,20 @@ can be added here as they are formalized.
 - `Analysis/CylinderCartesianWeak.lean`: local integrability from whole bounded
   disk norms and identification of every fixed Cartesian weak pair through
   order two on the entire punctured plane.
+- `Analysis/WeakLaplacian.lean`: compact-test Laplacians of the specified ordered
+  weak jet, classical zero-trace identification, reflected translations and
+  the Euclidean complex-plane Laplacian bridge without changing the product norm.
+- `Analysis/RadialMeanKernel.lean`: explicit inner-product radial bump, genuine
+  positive finite planar mass and normalized Euclidean compact kernel.
+- `Analysis/PlaneConvolution.lean`: smooth compact-kernel Cartesian derivatives,
+  compact-test harmonicity of local smoothing and finite Fubini kernel exchange.
+- `Analysis/RadialMeanValue.lean`: classical circle means on the actual polar
+  strip and reproduction by the normalized radial kernel, with genuine bounded
+  polar-rectangle integrability before Fubini.
+- `Analysis/WeakHarmonicLocal.lean`: actual approximate-identity limits and a
+  fixed smooth local representative of weak-harmonic data; pointwise agreement
+  on open overlaps gives a same-domain smooth harmonic representative, with
+  the whole-domain a.e. identity obtained through a countable subcover.
 - `Analysis/CylinderAngularTransform.lean`: normalized angular coefficient
   functions, Parseval on a.e. slices and actual real-line L² membership of each
   coefficient, using the Parseval sum as an integrable majorant.
@@ -429,8 +443,11 @@ can be added here as they are formalized.
   The source-facing assembly supplies all premises from the original Poisson
   data and adds no support or cylinder-jet hypothesis.
 - `Regularity/HarmonicComparison.lean`: same-domain specified second weak jets
-  and equal weak Laplacians give a smooth harmonic difference with common parity,
-  independently of radial weights, spectral inversion or Taylor extraction.
+  and equal weak Laplacians give a smooth harmonic difference with common parity.
+  The bounded disk gives an integrable zero extension; compact tests retain the
+  original weak equation, radial smoothing supplies its smooth representative
+  on that same disk, and joint a.e. reflection transport retains parity.
+  No radial weights, spectral inversion or Taylor extraction are used.
 - `Regularity/CylinderInverse.lean`: assembly of the physical particular solution,
   smooth harmonic comparison and parity's forbidden Taylor jets; its original
   public statement and all derivative witnesses are retained.

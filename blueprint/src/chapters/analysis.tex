@@ -2031,6 +2031,354 @@ At the successor step use congruence of weak testing and uniqueness.
 Subtraction follows from addition and multiplication by $-1$.
 \end{proof}
 
+\begin{definition}[Cartesian test Laplacian]
+\label{def:cartesian-test-laplacian}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.planeLaplacian}
+\leanok
+For a complex-valued plane function put
+$\Delta_{\rm cart}f=\partial_0\partial_0f+\partial_1\partial_1f$.
+No inner product on the maximum-norm product is imposed.
+\end{definition}
+
+\begin{lemma}[Specified weak jets identify the test Laplacian]
+\label{lem:weak-jet-laplacian-test}
+\uses{def:cartesian-test-laplacian, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.IsTestFunctionOn.coordPartial,
+ NoEmbeddedEigenvalues.IsTestFunctionOn.planeLaplacian,
+ NoEmbeddedEigenvalues.HasWeakJetOn.integral_laplacian_test}
+\leanok
+Coordinate derivatives and $\Delta_{\rm cart}$ preserve compact tests on $U$.
+If $D$ is a specified second weak jet of $f$ on $U$, then
+\[
+ \int f\,\Delta_{\rm cart}\phi
+   =\int(D_{00}+D_{11})\phi
+\]
+for every such test $\phi$. No mixed entry is commuted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-basic}
+\leanok
+For each $j$ test $\partial_jf=D_j$ with $\partial_j\phi$, then
+$\partial_jD_j=D_{jj}$ with $\phi$.
+Compact support and local integrability make all pairings integrable before
+adding the two repeated-coordinate identities.
+\end{proof}
+
+\begin{lemma}[Classical zero Laplacian from compact tests]
+\label{lem:classical-laplacian-from-tests}
+\uses{def:cartesian-test-laplacian, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.planeLaplacian_eq_zero_of_test}
+\leanok
+Let $U$ be open and $g\in C^\infty(\R^2)$.
+If $\int g\Delta_{\rm cart}\phi=0$ for every compact test on $U$,
+then $\Delta_{\rm cart}g=0$ at every point of $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-jet-laplacian-test, lem:weak-derivative-classical,
+ lem:weak-derivative-unique}
+\leanok
+Use the classical jet in the test identity. The fundamental lemma for
+distributions gives $\Delta_{\rm cart}g=0$ a.e.\ on $U$.
+Continuity upgrades this to equality everywhere on the open set.
+\end{proof}
+
+\begin{lemma}[Euclidean and translated Cartesian Laplacians]
+\label{lem:cartesian-complex-laplacian}
+\uses{def:cartesian-test-laplacian}
+\lean{NoEmbeddedEigenvalues.coordPartial_eq_fderiv_plane,
+ NoEmbeddedEigenvalues.coordPartial_two_eq_iteratedFDeriv,
+ NoEmbeddedEigenvalues.planeLaplacian_eq_iteratedFDeriv,
+ NoEmbeddedEigenvalues.laplacian_complex_of_plane,
+ NoEmbeddedEigenvalues.coordPartial_comp_sub_left,
+ NoEmbeddedEigenvalues.planeLaplacian_comp_sub_left,
+ NoEmbeddedEigenvalues.harmonicOnNhd_complex_of_plane}
+\leanok
+Write $e(z)=(\Re z,\Im z)$. For smooth $g$,
+\[
+ \Delta_{\C}(g\circ e)=(\Delta_{\rm cart}g)\circ e,\qquad
+ \Delta_{\rm cart}[g(x-\cdot)](p)=\Delta_{\rm cart}g(x-p).
+\]
+Thus a smooth Cartesian function with zero trace on an open set $V$
+pulls back to a classically harmonic function on $e^{-1}(V)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The second Fr\'echet derivative applied twice to $(1,0)$ and $(0,1)$
+gives the Cartesian trace. Under $e$, the orthonormal complex directions
+$1,i$ map to those two vectors. For reflection and translation,
+each first derivative has a minus sign and the repeated derivatives have
+two cancelling signs. None of this differentiates a raw weak representative.
+\end{proof}
+
+\begin{definition}[Explicit Euclidean radial mean kernel]
+\label{def:radial-plane-mean-kernel}
+\lean{NoEmbeddedEigenvalues.radialPlaneBump, NoEmbeddedEigenvalues.radialPlaneKernel}
+\leanok
+Let $\vartheta$ be the fixed smooth transition from zero to one and
+$b(z)=\vartheta(2-\lVert z\rVert)$.
+For $R>0$, $z_p=p_0+ip_1$, put
+\[
+ \eta_R(p)=b((2/R)z_p),\qquad
+ K_R(p)=\frac{\eta_R(p)}{\int_{\R^2}\eta_R},
+\]
+viewing the normalized kernel as complex-valued.
+\end{definition}
+
+\begin{lemma}[Finite normalized genuinely radial kernel]
+\label{lem:radial-plane-mean-kernel}
+\uses{def:radial-plane-mean-kernel}
+\lean{NoEmbeddedEigenvalues.contDiff_radialPlaneBump,
+ NoEmbeddedEigenvalues.radialPlaneBump_support,
+ NoEmbeddedEigenvalues.hasCompactSupport_radialPlaneBump,
+ NoEmbeddedEigenvalues.integral_radialPlaneBump_pos,
+ NoEmbeddedEigenvalues.contDiff_radialPlaneKernel,
+ NoEmbeddedEigenvalues.hasCompactSupport_radialPlaneKernel,
+ NoEmbeddedEigenvalues.integral_radialPlaneKernel,
+ NoEmbeddedEigenvalues.radialPlaneKernel_norm_eq,
+ NoEmbeddedEigenvalues.tsupport_radialPlaneKernel}
+\leanok
+For $R>0$ the bump and kernel are smooth and compactly supported,
+the bump has a genuine finite positive integral, and $\int K_R=1$.
+The kernel depends only on $|z_p|$ and its closed support lies in
+$|z_p|\le R$. This is the Euclidean disk, not a product-metric ball.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use the explicit inner-product bump base on $\C$, composed with the real
+coordinate equivalence. The bump is one at zero, nonnegative and supported
+in the bounded disk; continuity and compact support give integrability and
+positive mass. Divide by that actual mass.
+A generic chosen normed-space bump base need not be radial, so its existence
+alone would not justify the mean-value argument.
+\end{proof}
+
+\begin{definition}[Actual plane convolution]
+\label{def:plane-convolution}
+\lean{NoEmbeddedEigenvalues.planeConvolution}
+\leanok
+For complex plane functions let
+$(f*k)(x)=\int_{\R^2}f(y)k(x-y)\,dy$.
+The integral value alone makes no assertion of finiteness.
+\end{definition}
+
+\begin{lemma}[Actual convolution symmetries]
+\label{lem:plane-convolution-basic}
+\uses{def:plane-convolution}
+\lean{NoEmbeddedEigenvalues.planeConvolution_comm,
+ NoEmbeddedEigenvalues.planeConvolution_ofReal}
+\leanok
+Actual plane convolution is commutative, and a real kernel agrees with the
+corresponding real-scalar convolution. These are value identities and do
+not assert integrability for arbitrary inputs.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use the measure-preserving substitution $y\mapsto x-y$ and commutativity
+of complex multiplication. For real kernels use the real scalar action on $\C$.
+\end{proof}
+
+\begin{lemma}[Smooth compact-kernel convolution calculus]
+\label{lem:plane-convolution-calculus}
+\uses{def:plane-convolution, def:cartesian-test-laplacian,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.contDiff_planeConvolution,
+ NoEmbeddedEigenvalues.coordPartial_planeConvolution,
+ NoEmbeddedEigenvalues.planeLaplacian_planeConvolution,
+ NoEmbeddedEigenvalues.isTestFunctionOn_kernelTranslate}
+\leanok
+For $f\in L^1_{\rm loc}(\R^2)$ and a smooth compact kernel $k$,
+\[
+ f*k\in C^\infty,\qquad
+ \partial_j(f*k)=f*(\partial_jk),\qquad
+ \Delta_{\rm cart}(f*k)=f*(\Delta_{\rm cart}k).
+\]
+If $x-\operatorname{tsupp}k\subset U$, then $y\mapsto k(x-y)$ is a genuine
+compact test on $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cartesian-complex-laplacian}
+\leanok
+Smooth compact-kernel differentiation under the integral is supplied by
+Mathlib; local integrability and compact support justify the integrals of
+kernel derivatives. Evaluate the Fr\'echet derivative in each coordinate
+direction and apply it again. For the test assertion, use the reflected
+translation homeomorphism for compact support and its smoothness.
+\end{proof}
+
+\begin{lemma}[Harmonicity of each local smoothing]
+\label{lem:weak-harmonic-smoothing}
+\uses{def:plane-convolution, def:cartesian-test-laplacian,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.planeLaplacian_smoothing_eq_zero}
+\leanok
+Suppose $f\in L^1_{\rm loc}(\R^2)$ and
+$\int f\Delta_{\rm cart}\phi=0$ for all compact tests on $U$.
+For a smooth compact kernel $k$, if $x-\operatorname{tsupp}k\subset U$,
+then $\Delta_{\rm cart}(f*k)(x)=0$.
+No weak equation across an extension boundary is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:plane-convolution-calculus, lem:cartesian-complex-laplacian}
+\leanok
+The Laplacian of the convolution is its pairing against
+$\Delta_{\rm cart}k(x-\cdot)$.
+Both derivative signs cancel in the reflected translated test.
+Its whole support is inside the weak domain, so the supplied test identity applies.
+\end{proof}
+
+\begin{lemma}[Finite Fubini exchange of two smoothing kernels]
+\label{lem:plane-convolution-kernel-exchange}
+\uses{def:plane-convolution}
+\lean{NoEmbeddedEigenvalues.planeConvolution_assoc,
+ NoEmbeddedEigenvalues.planeConvolution_swap_kernels}
+\leanok
+If $k,l$ are continuous compact kernels and $f\in L^1(\R^2)$, then
+$(k*l)*f=k*(l*f)$ and $k*(l*f)=l*(k*f)$ pointwise.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:plane-convolution-basic}
+\leanok
+Bound the norm of the triple integrand by
+$C\lVert k(y)\rVert\lVert f(x-t)\rVert$, using boundedness of $l$.
+This is a genuinely integrable product on the two variable planes.
+Fubini, translation invariance and commutativity give the identities.
+\end{proof}
+
+\begin{lemma}[Fixed radial smoothing reproduces classical harmonic values]
+\label{lem:radial-plane-harmonic-mean}
+\uses{def:radial-plane-mean-kernel, def:plane-convolution}
+\lean{NoEmbeddedEigenvalues.harmonic_integral_polar_angle,
+ NoEmbeddedEigenvalues.integral_radialPlaneKernel_mul_harmonic}
+\leanok
+Let $g$ be continuous on the plane and classically harmonic in a neighbourhood
+of the closed Euclidean disk of radius $R>0$ about $x$.
+Then $(K_R*g)(x)=g(x)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:radial-plane-mean-kernel}
+\leanok
+Use polar coordinates about zero for the convolution variable.
+The weighted integrands on the polar strip are genuinely integrable:
+they vanish for radii above $R$ and are continuous on a bounded closed rectangle.
+Radiality makes the coefficient constant in the angle.
+Mathlib's classical harmonic circle mean-value identity on each closed
+circle of radius at most $R$ replaces its angular average by $g(x)$.
+The exact angular normalization and $\int K_R=1$ give the result.
+Circle means are applied only to a classical representative, not raw weak data.
+\end{proof}
+
+\begin{definition}[Shrinking bounded-shape plane kernels]
+\label{def:plane-approximate-kernel}
+\lean{NoEmbeddedEigenvalues.planeApproxBump, NoEmbeddedEigenvalues.planeApproxKernel}
+\leanok
+Let $r_n=(n+1)^{-1}$. Choose the standard normed-space bump with inner radius
+$r_n/2$ and outer radius $r_n$ for the product maximum norm.
+Let $\kappa_n$ be its normalized integral-one kernel, viewed in $\C$.
+Unlike $K_R$, no Euclidean radiality is specified.
+\end{definition}
+
+\begin{lemma}[Actual approximate-identity limits]
+\label{lem:plane-approximate-identity}
+\uses{def:plane-approximate-kernel, def:plane-convolution}
+\lean{NoEmbeddedEigenvalues.planeApproxConvolution_tendsto_ae,
+ NoEmbeddedEigenvalues.planeApproxConvolution_tendsto_continuous}
+\leanok
+If $f\in L^1_{\rm loc}(\R^2)$, then $(f*\kappa_n)(x)\to f(x)$ for a.e.\ $x$.
+For continuous $f$ this convergence holds at every $x$.
+These are limits of actual convolution integrals.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:plane-convolution-basic}
+\leanok
+The outer radii tend to zero and the outer-to-inner radius ratio is two.
+Apply Mathlib's normalized bump approximate-identity theorem,
+using Lebesgue differentiation for the a.e.\ assertion.
+\end{proof}
+
+\begin{lemma}[Joint a.e. equality transports compact test pairings]
+\label{lem:joint-ae-compact-test}
+\lean{NoEmbeddedEigenvalues.integral_mul_test_congr_ae}
+\leanok
+If $U$ is measurable, $f=g$ jointly a.e.\ on $U$, and
+$\operatorname{tsupp}\phi\subset U$, then $\int f\phi=\int g\phi$.
+This value identity alone asserts no integrability.
+\end{lemma}
+
+\begin{proof}
+\leanok
+On $U$ use the joint a.e.\ identity; outside $U$ the test vanishes pointwise.
+The two product functions are a.e.\ equal on the entire plane.
+\end{proof}
+
+\begin{lemma}[A fixed smooth local representative of weak-harmonic data]
+\label{lem:weak-harmonic-local-smoothing}
+\uses{def:cartesian-test-laplacian, def:plane-convolution,
+ def:radial-plane-mean-kernel, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.weak_harmonic_local_smoothing}
+\leanok
+Suppose $f\in L^1(\R^2)$ and
+$\int f\Delta_{\rm cart}\phi=0$ for all compact tests on $U$.
+Let $B_\infty$ denote a ball for the product maximum norm.
+If $r>0$ and $\overline B_\infty(c,4r)\subset U$, then the same fixed
+$g=f*K_r$ is globally smooth, equals $f$ a.e.\ on $B_\infty(c,r)$,
+and has zero classical Cartesian Laplacian at every point of that ball.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:plane-convolution-calculus, lem:weak-harmonic-smoothing,
+ lem:cartesian-complex-laplacian, lem:plane-convolution-kernel-exchange, lem:radial-plane-harmonic-mean,
+ lem:plane-approximate-identity, lem:joint-ae-compact-test,
+ lem:classical-laplacian-from-tests}
+\leanok
+Put $M_n=f*\kappa_n$. Once $r_n\le r$, the weak equation makes $M_n$
+classically harmonic on $B_\infty(c,3r)$.
+For $x\in B_\infty(c,r)$ the closed Euclidean radius-$r$ disk about $x$
+lies inside that harmonic region, since the product norm is no larger
+than the Euclidean norm.
+Thus $K_r*M_n=M_n$ there.
+Kernel exchange gives $K_r*M_n=\kappa_n*(K_r*f)$.
+The left equality tends to $f$ a.e.; the last convolution tends pointwise
+to the smooth $g$. Uniqueness of limits gives $g=f$ jointly a.e.\ on the ball.
+Transfer compact tests on this ball from $g$ to $f$ and identify the
+classical zero Laplacian. No derivative convergence or restriction of raw
+data to a circle is used.
+\end{proof}
+
+\begin{lemma}[Smooth weak-harmonic representative on the entire original domain]
+\label{lem:weak-harmonic-smooth-representative}
+\uses{def:cartesian-test-laplacian, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.weak_harmonic_smooth_rep}
+\leanok
+Let $U$ be open, $f\in L^1(\R^2)$, and
+$\int f\Delta_{\rm cart}\phi=0$ for every compact test on $U$.
+There is a globally defined $h$, smooth on all of $U$, with
+$\Delta_{\rm cart}h=0$ pointwise on $U$ and $h=f$ jointly a.e.\ on $U$.
+The comparison domain is not shrunk.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-harmonic-local-smoothing}
+\leanok
+At each point choose a product-metric ball whose fourfold closed ball lies
+inside $U$, and take the local smooth convolution representative.
+On overlaps the continuous representatives agree a.e.\ with the same $f$,
+hence agree pointwise on the open overlap.
+Choosing a local value therefore defines one function with the same smooth
+harmonic germ at every point of $U$.
+A countable subcover gives its joint a.e.\ agreement on the whole domain.
+\end{proof}
+
 \begin{lemma}[Differentiated bounds from a flat finite classical jet]
 \label{lem:classical-jet-flat-bounds}
 \uses{def:local-plane-geometry, def:local-weak-jets}

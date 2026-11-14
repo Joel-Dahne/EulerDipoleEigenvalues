@@ -25,8 +25,8 @@ Statement markers are not a compatibility or proof audit.
 The local/global stream-quotient and ordinary separatrix H¹/H³ assemblies are
 checked in Lean, without a stronger corner hypothesis. Weighted forcing is
 assembled from the saddle jet. The saddle bootstrap now has an assembly proof
-from both transport gains and cylinder inversion; these analytic inputs and the
-subsequent trace/elliptic steps remain proof work. See the
+from both transport gains and admission-free cylinder inversion; the transport
+gains and subsequent trace/elliptic steps remain proof work. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
@@ -65,22 +65,23 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and 19 below `dd_stream_quotient_h2`.
+zero below `correctedBoundaryForm_nonneg` and 18 below `dd_stream_quotient_h2`.
 Odd–odd saddle estimates (`prop:saddle-dd`) and the first eigenfunction gain
 have assembly proofs with their original statements. The saddle endpoint and
-weighted forcing (`lem:dd-weighted-forcing`) each reach three inputs: both
-transport gains and Smooth harmonic comparison.
-Weak full-cylinder inversion (`lem:cylinder-weak-inverse`) is admission-free with its unchanged statement, actual nil integral, every ordered
-weak entry and original forcing. Joint L² approximation and open-patch weak
+weighted forcing (`lem:dd-weighted-forcing`) now reach only the two transport gains.
+Weak full-cylinder inversion (`lem:cylinder-weak-inverse`) is admission-free
+with its unchanged statement, actual nil integral, every ordered weak entry and original forcing. Joint L² approximation and open-patch weak
 locality establish its identities on the entire real-angle lift.
 Weighted Cartesian particular solution (`lem:cylinder-cartesian-particular`)
 is also admission-free with its unchanged statement and original forcing.
 Cofactor-weighted tests on overlapping log-polar charts identify all ordered
 entries; whole-disk finite norms remove the center at both derivative levels.
-Cylinder inverse now reaches only Smooth harmonic comparison.
+Smooth harmonic comparison (`lem:weak-poisson-harmonic-comparison`) is
+admission-free on the same whole disk, with its original statement and parity.
+Cylinder inverse and its odd–odd application now have zero transitive admissions.
 Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) and logarithmic forcing
-(`lem:dd-log-forcing`) each reach the three saddle inputs plus Weighted transport H¹,
-Whole-edge zero trace and Interior elliptic H³: six inputs.
+(`lem:dd-log-forcing`) each reach the two transport gains plus Weighted transport H¹,
+Whole-edge zero trace and Interior elliptic H³: five inputs.
 The bounded periodic norm, physical weak-gradient transport,
 compact pointwise growth, quadratic mass, seam gluing, point removal and
 canonical trace layers are admission-free.
@@ -88,7 +89,7 @@ Weighted-gradient, third-stream and logarithmic numerator assemblies remain
 conditional on their recorded analytic inputs, without admissions of their own.
 The saddle coefficient uniqueness and canonical cylinder-input layers are
 admission-free. The original-forcing particular-solution assembly is
-admission-free; the full local cylinder inverse still reaches harmonic comparison.
+admission-free, as is the full local cylinder inverse.
 The generic weak-chart, reflected-periodic covering, logarithmic
 multiplier/localization/trace/summation layers and canonical second stream jet
 have no admissions.

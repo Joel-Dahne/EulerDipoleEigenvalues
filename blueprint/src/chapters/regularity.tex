@@ -2233,12 +2233,22 @@ No radial weights or spectral hypotheses enter this comparison.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weak-jet-ae-comparison, lem:weak-derivative-basic}
-The difference has the specified weak jet $D-E$ and weak Laplacian zero.
-Weyl's lemma gives a smooth harmonic representative on the whole disk.
-Transfer the a.e.\ difference identity jointly through the measure-preserving
-axis reflections to obtain parity of that representative.
-This is a separate regularity obligation, not a consequence of finite norms.
+\uses{lem:weak-jet-ae-comparison, lem:weak-jet-laplacian-test,
+ lem:weak-derivative-basic, lem:joint-ae-compact-test,
+ lem:weak-harmonic-smooth-representative}
+\leanok
+The difference has exactly the specified jet $D-E$.
+Two integrations by parts and the given diagonal-trace identity show that
+its compact-test Laplacian is zero.
+Its whole-disk L2 norm on the bounded disk gives genuine L1 after zero
+extension. Tests supported inside the disk retain the same weak equation;
+no equation across its boundary is asserted.
+Apply the smooth representative theorem on the entire original disk.
+Transport the joint a.e.\ difference identity through each measure-preserving
+axis reflection, subtract the original parity identities, and obtain the
+same parity for the smooth representative.
+No elliptic regularity admission, radial weight or smaller comparison disk
+is used.
 \end{proof}
 
 \begin{lemma}[Cylinder inverse]

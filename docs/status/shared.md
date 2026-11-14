@@ -131,44 +131,31 @@ weights and local versus global regularity.
    without explicit corner classification or vorticity H¹. Reflected-periodic
    bounded covering supplies the d² norm and the critical input at every saddle.
    Weak uniqueness retains the canonical quadratic remainder jet.
-   **Remaining saddle frontier:** both transport gains and smooth harmonic
-   comparison. The unchanged Cylinder inverse (`lem:cylinder-inverse`) now
-   reaches only harmonic comparison.
-   **Weak full-cylinder inversion is admission-free**
-   (`lem:cylinder-weak-inverse`, `Regularity/CylinderWeak.lean`).
-   Its original hypotheses supply the same actual nil integral, every ordered
-   weak entry through order two, finite joint norms and the original forcing.
-   One finite-mass spectral exhaustion makes all L² derivative spectra
-   integrable simultaneously. Kernel integration by parts and Fubini prove
-   the actual approximants' whole-plane weak identities. Inverse isometry,
-   the exact translated-strip mass and L² weak-pair closedness give the limiting
-   identities locally; smooth partitions of tests give them on the entire lift.
-   No derivative-L¹ premise, mixed-entry commutation or null-seam weak gluing
-   is used. The normalized Fourier round-trip identifies the original forcing.
-   **Weighted Cartesian particular solution is admission-free**
-   (`lem:cylinder-cartesian-particular`, `Regularity/CylinderParticular.lean`),
-   with its unchanged statement, actual pointwise candidate, original forcing,
-   growth constant, parity and specified ordered second jet. Genuine weighted
-   and whole-disk norms precede weak transport. Divergence-free cofactor tests
-   handle the variable negative Jacobian on two overlapping open charts;
-   weak locality includes both angular cuts. Supplied source weak entries
-   identify both mixed orders separately. Whole-disk norms remove the center.
-   No raw representative is restricted to a selected ray.
-   The original-forcing particular-solution assembly is now admission-free too.
-   **Next target: Smooth harmonic comparison**
-   (`lem:weak-poisson-harmonic-comparison`, `Regularity/HarmonicComparison.lean`):
-   from equal specified weak Laplacians, obtain a smooth harmonic representative
-   of the raw difference on the same whole disk, then transfer the common parity.
-   The weak-to-smooth representative step remains substantial; finite H2 norms
-   or classical mean-value theorems alone do not supply it. No extra source
-   hypothesis or smaller comparison disk may be substituted.
+   **Remaining saddle frontier:** First and Second transport gain
+   (`lem:transport-first-gain`, `lem:transport-second-gain`).
+   **Cylinder inverse is admission-free** (`lem:cylinder-inverse`), as is its
+   odd–odd application, with their unchanged statements and original data.
+   Full-lift weak inversion preserves the actual nil integral and every
+   ordered inverse entry without derivative-L¹ premises. Cartesian reconstruction
+   preserves the same pointwise value, original forcing, growth, parity and
+   genuine weighted/whole-disk norms. Overlapping cofactor charts include both
+   angular cuts before center removal; no raw representative is sliced on a ray.
+   **Smooth harmonic comparison is admission-free**
+   (`lem:weak-poisson-harmonic-comparison`, `Regularity/HarmonicComparison.lean`)
+   on the same whole disk. Two weak test integrations identify the zero Laplacian
+   of the raw difference. A genuine integrable zero extension, fixed radial
+   smoothing and pointwise overlap compatibility give its smooth representative;
+   joint a.e. reflection transport retains parity. No admitted elliptic theorem,
+   stronger source hypothesis or smaller comparison disk is used.
+   **Next targets:** the two transport gains with their original transport pairs,
+   continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
    Their finite Taylor extraction is proved separately. Keep common interfaces
    generic; leave the mixed linear-jet corollary deferred.
-   **Ordinary separatrix frontier:** the three saddle inputs above plus Weighted
+   **Ordinary separatrix frontier:** the two transport gains above plus Weighted
    transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these six inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these five inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -345,21 +332,20 @@ prerequisites remain outside this directory; see the
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
   H¹ gluing has an explicit cutoff proof. Both transport gains remain admitted;
-  the saddle jet is assembled from them and the cylinder inputs.
+  the saddle jet depends on them; cylinder inversion is admission-free.
   The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   saddle/transport/elliptic inputs rather than a stronger corner premise.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
-  Cylinder inversion and the weighted H¹/corner/edge/gluing layer are now
-  stated too, as are the quarter endpoint/resonant-zero and weighted/logarithmic
-  numerator interfaces. Quantitative bounds and actual fiber integrability
-  are explicit. No new analytic proofs were supplied in the statement pass.
+  The weighted H¹/corner/edge/gluing, quarter endpoint/resonant-zero and
+  weighted/logarithmic numerator interfaces retain explicit quantitative
+  bounds and actual fiber-integrability conclusions.
   The transport gains cover all four characters without Melnikov;
   implemented Melnikov/pairing results still only accept ±1.
   The shared jet, saddle normalization, endpoint Hardy and local elliptic
   prerequisites have substantive Blueprint derivations with explicit proof
-  dependencies. Cylinder inversion is assembled from the three interfaces
-  listed above; the remaining corner/weighted-transport prerequisites are also
+  dependencies. Cylinder inversion is admission-free across all three interfaces
+  above; the remaining corner/weighted-transport prerequisites are also
   recorded there. Elliptic-center regularity is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   off the current sector routes. Odd–odd logarithmic multiplication now uses
