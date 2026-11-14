@@ -83,6 +83,11 @@ import NoEmbeddedEigenvalues.Analysis.CylinderSignedInverse
 import NoEmbeddedEigenvalues.Analysis.FourierL2Integral
 import NoEmbeddedEigenvalues.Analysis.LogPolarCoordinates
 import NoEmbeddedEigenvalues.Analysis.LogPolarL2
+import NoEmbeddedEigenvalues.Analysis.LogPolarInverse
+import NoEmbeddedEigenvalues.Analysis.CylinderPhysicalValue
+import NoEmbeddedEigenvalues.Analysis.CylinderPhysicalL2
+import NoEmbeddedEigenvalues.Analysis.CylinderCartesianJet
+import NoEmbeddedEigenvalues.WeakJetFiniteness
 import NoEmbeddedEigenvalues.Analysis.CylinderSymbol
 import NoEmbeddedEigenvalues.Analysis.CylinderSpectralMass
 import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis

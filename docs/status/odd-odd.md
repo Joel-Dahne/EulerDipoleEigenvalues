@@ -72,7 +72,10 @@ Proof work is now outside the odd–odd chapter:
   inputs plus Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
   **Next target:** Weighted Cartesian particular solution
   (`lem:cylinder-cartesian-particular`), then Smooth harmonic comparison
-  (`lem:weak-poisson-harmonic-comparison`). Both remain substantial.
+  (`lem:weak-poisson-harmonic-comparison`). The Cartesian value, ordered candidates,
+  finite weighted/whole-disk norms and algebraic forcing identification are proved.
+  Its punctured-disk weak test identities remain substantial; the center-removal
+  and Sobolev assembly are checked. See shared status for the precise frontier.
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is proved. Keep the shared interfaces generic and defer
   mixed linear-jet extraction.

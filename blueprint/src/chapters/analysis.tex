@@ -1642,6 +1642,43 @@ The axis reflection and symmetric rectangle exchange the roles of the
 coordinates when the normal index is $1$ instead of $0$.
 \end{definition}
 
+\begin{lemma}[Finite specified weak jets give Sobolev membership]
+\label{lem:finite-weak-jet-sobolev}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.memSobolevOn}
+\leanok
+If $D$ is a specified order-$n$ weak jet of $f$ on $U$ and
+$D_w\in L^2(U)$ for every $|w|\le n$, then $f\in H^n(U)$.
+The supplied derivative entries are retained.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Induct on $n$ in the recursive Sobolev definition.
+The derivative of index $j$ has the specified subfamily $w\mapsto D_{wj}$,
+with the same outer-derivative-first convention.
+Every norm is on the original domain $U$.
+\end{proof}
+
+\begin{lemma}[Point removal for a finite specified weak jet]
+\label{lem:weak-jet-point-removal}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakJetOn.remove_point}
+\leanok
+If $D$ is a specified order-$n$ weak jet of $f$ on $U\setminus\{c\}$ and
+every $D_w$, $|w|\le n$, has finite L2 norm on the whole $U$, then the
+same family is a specified order-$n$ weak jet on $U$.
+Local norms only away from $c$ are not sufficient.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-point-removal}
+\leanok
+The whole-domain L2 norms give local integrability on $U$ of each ordered
+pair $D_w,D_{jw}$, $|w|<n$. Apply specified weak-partial point removal to each
+pair separately. No mixed derivatives are commuted and no entries are changed.
+\end{proof}
+
 \begin{lemma}[Sobolev regularity of a specified weak jet]
 \label{lem:weak-jet-regularity}
 \uses{def:local-weak-jets, def:sobolev-local}

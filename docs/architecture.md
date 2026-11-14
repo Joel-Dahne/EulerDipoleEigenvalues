@@ -107,6 +107,9 @@ proof mechanisms. Module names below are relative to
   `SaddlePointRemoval.lean` isolates each saddle using lattice separation,
   obtains finite whole-punctured-neighbourhood H¹ from full-domain local norms,
   and removes the entire lattice by local Sobolev gluing.
+- `WeakJetFiniteness.lean`: recursive Sobolev membership from one fixed finite
+  weak jet, and isolated-point removal for every ordered pair using whole-domain
+  finite norms. No independently chosen derivatives or mixed-word commutation.
 - `RadialWeakMultiplier.lean`: the local smooth weak product rule, radial derivatives,
   weaker-weight L² transport and H¹ of divided gradients through their center.
   The stronger quotients R/r³ and ∂ⱼR/r² support ordinary Cartesian ray traces.
@@ -274,6 +277,20 @@ can be added here as they are formalized.
   are handled before slicing.
 - `Analysis/LogPolarL2.lean`: square-root-Jacobian L² pullback, actual finite norms,
   exact 1/(2π) squared-mass normalization and a.e. angular L² slices.
+- `Analysis/LogPolarInverse.lean`: measurable circle-valued inverse coordinates,
+  continuity at every nonzero point, both pointwise round-trips and joint
+  planar-to-cylinder null-set transport, including all real-angle seams.
+- `Analysis/CylinderPhysicalValue.lean`: the same pointwise cylinder candidate
+  reconstructed as rᵃS; global continuity through zero for a positive exponent,
+  the unchanged uniform growth constant and pointwise axis parity.
+- `Analysis/CylinderPhysicalL2.lean`: inverse square-root-Jacobian reconstruction,
+  genuine planar L² before its exact 2π mass identity, weighted L² for every
+  real homogeneity and bounded-disk restoration of nonnegative radial weights.
+- `Analysis/CylinderCartesianJet.lean`: fixed ordered first/second Cartesian
+  candidates, bounded angular coefficients, global weighted and whole-disk
+  unweighted finite norms. The two mixed cylinder words remain distinct.
+  The algebraic trace recovers the original forcing by joint null-set transport;
+  weak derivative identification is separate.
 - `Analysis/CylinderAngularTransform.lean`: normalized angular coefficient
   functions, Parseval on a.e. slices and actual real-line L² membership of each
   coefficient, using the Parseval sum as an integrable majorant.
@@ -392,8 +409,10 @@ can be added here as they are formalized.
 - `Regularity/CylinderParticular.lean`: weighted Cartesian reconstruction from
   that specified cylinder jet, whole-disk weak Poisson identities, finite radial
   norms, growth and parity, with a pointwise identity tying it to the same input
-  cylinder candidate. The source-facing assembly supplies all premises from the
-  original Poisson data and adds no support or cylinder-jet hypothesis.
+  cylinder candidate. The explicit formulas and whole-disk finite norms separate
+  weak transport on the punctured disk from ordered center removal.
+  The source-facing assembly supplies all premises from the original Poisson
+  data and adds no support or cylinder-jet hypothesis.
 - `Regularity/HarmonicComparison.lean`: same-domain specified second weak jets
   and equal weak Laplacians give a smooth harmonic difference with common parity,
   independently of radial weights, spectral inversion or Taylor extraction.

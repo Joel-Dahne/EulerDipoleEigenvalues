@@ -1,5 +1,7 @@
 import NoEmbeddedEigenvalues.Regularity.CylinderWeak
 import NoEmbeddedEigenvalues.Regularity.CylinderJointForcing
+import NoEmbeddedEigenvalues.Analysis.CylinderCartesianJet
+import NoEmbeddedEigenvalues.WeakJetFiniteness
 
 /-!
 # Weighted physical particular solution from the specified cylinder jet
@@ -8,6 +10,13 @@ The logarithmic cylinder solution is transported as an ordered weak jet, with
 finite weighted physical norms. Whole-disk weak identities include the center.
 The pointwise logarithmic-polar identity ties the physical solution to the same
 actual cylinder candidate. No harmonic comparison is part of this interface.
+
+The candidate formulas and area Jacobian provide genuine whole-disk norms
+independently of weak derivative identification. Transport of compact tests
+uses overlapping real-angle patches with variable Jacobian -r²; the
+constant-Jacobian quarter-chart theorem does not apply directly. Once each
+punctured weak pair is identified, whole-disk local integrability removes the
+center separately at both derivative levels.
 -/
 
 noncomputable section
@@ -39,7 +48,43 @@ theorem cylinder_cartesian_particular {ρ a C : ℝ} (hρ : 0 < ρ) (ha : 1 < a)
         HasAxisParityOn ε (localDisk 0 ρ₁) u₀ ∧
         ∀ q, logCylinderPlane q ∈ localDisk 0 ρ₁ →
           u₀ (logCylinderPlane q) = (Real.exp (-a * q.1) : ℂ) * S q := by
-  sorry
+  let u₀ := cylinderPhysicalValue a S
+  let E := cylinderCartesianJet a J
+  let U := localDisk 0 (ρ / 2)
+  have hE0 : E [] = u₀ := by
+    dsimp only [E, cylinderCartesianJet, u₀]
+    rw [hJ.1]
+  have hL : ∀ w, w.length ≤ 2 → MemLp (E w) 2 (volume.restrict U) :=
+    cylinderCartesianJet_memLp ha hJ.2.2
+  have hW : HasWeakJetOn 2 (U \ {0}) u₀ E := by
+    refine ⟨hE0, ?_⟩
+    intro w hw j
+    have hF := locallyIntegrableOn_of_locallyIntegrable_restrict
+      ((hL w (Nat.le_of_lt hw)).locallyIntegrable (by norm_num))
+    have hD := locallyIntegrableOn_of_locallyIntegrable_restrict
+      ((hL (j :: w) (by simpa using Nat.succ_le_of_lt hw)).locallyIntegrable (by norm_num))
+    refine ⟨hF.mono_set sdiff_subset, hD.mono_set sdiff_subset, ?_⟩
+    intro φ hφ
+    sorry
+  have hwhole := hW.remove_point hL
+  have hU : U ⊆ localDisk 0 ρ := by
+    intro p hp
+    exact lt_trans (show localRadius 0 p < ρ / 2 from hp) (by linarith)
+  have hEq : ∀ᵐ p ∂(volume.restrict U), E [0, 0] p + E [1, 1] p = F p :=
+    (cylinderCartesianJet_forcing hP).filter_mono
+      (ae_mono (Measure.restrict_mono hU le_rfl))
+  refine ⟨ρ / 2, by positivity, by linarith, u₀, E,
+    hwhole.memSobolevOn hL, hwhole,
+    (continuous_cylinderPhysicalValue (by linarith) hS hbound).continuousOn,
+    fun p _ ↦ norm_cylinderPhysicalValue_le hbound p, ?_, hEq, ?_,
+    fun q _ ↦ cylinderPhysicalValue_plane a S q⟩
+  · intro k hk w hw
+    simpa only [E, hw] using
+      (cylinderCartesianJet_weighted hJ.2.2 w (by omega)).mono_measure
+        (show volume.restrict U ≤ volume from Measure.restrict_le_self)
+  · intro j
+    exact Filter.Eventually.of_forall
+      (cylinderPhysicalValue_axis_parity (by linarith) hp j)
 
 /-- The original Poisson data supply all premises of physical reconstruction;
 the same actual signed candidate is retained (`lem:cylinder-forcing-particular`). -/

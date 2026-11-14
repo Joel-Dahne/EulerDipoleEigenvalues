@@ -147,11 +147,18 @@ weights and local versus global regularity.
    is used. The normalized Fourier round-trip identifies the original forcing.
    **Next target: Weighted Cartesian particular solution**
    (`lem:cylinder-cartesian-particular`, `Regularity/CylinderParticular.lean`).
-   Transport the specified ordered jet through overlapping log-polar charts.
-   Derive genuine radial weighted norms, continuity/growth and parity, retaining
-   the same pointwise candidate pullback. Obtain unweighted whole-disk finite
-   norms from the positive radial weights, then remove the center at each
-   derivative level. No raw representative may be restricted to a selected ray.
+   Its statement is unchanged. Circle-valued inverse coordinates and the actual
+   physical value are constructed, with pointwise round-trips, continuity through
+   zero, unchanged growth constant and both parities. Fixed ordered first/second
+   candidates have genuine global weighted norms and unweighted whole-disk
+   norms. Their algebraic trace equals the original forcing jointly a.e.; the
+   two mixed cylinder words cancel separately. Finite-jet Sobolev membership
+   and level-by-level center removal are proved and wired into the assembly.
+   **Remaining hole:** the punctured-disk weak test identities for those same
+   candidates. Transport tests through overlapping log-polar charts with their
+   variable Jacobian, including every angular seam. Finite norms and the
+   algebraic forcing equation are not yet a weak Cartesian PDE.
+   No raw representative may be restricted to a selected ray.
    **Following target: Smooth harmonic comparison**
    (`lem:weak-poisson-harmonic-comparison`, `Regularity/HarmonicComparison.lean`):
    equal specified weak Laplacians on the same whole disk give a smooth harmonic

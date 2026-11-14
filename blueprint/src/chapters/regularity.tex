@@ -253,6 +253,25 @@ sum. Fubini makes the latter an integrable majorant in $t$, proving real-line
 L2 membership without assuming time integrability of $G_n$.
 \end{proof}
 
+\begin{lemma}[Radius and reflections of the cylinder plane map]
+\label{lem:log-cylinder-pointwise-geometry}
+\uses{def:log-cylinder-coordinates, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.localRadius_logCylinderPlane,
+ NoEmbeddedEigenvalues.logCylinderPlane_reflect_fst,
+ NoEmbeddedEigenvalues.logCylinderPlane_reflect_snd}
+\leanok
+For every $q=(t,\theta)$, $r_0(\Gamma(q))=e^{-t}$.
+Reflection of $\Gamma(t,\theta)$ in the first or second Cartesian coordinate
+is respectively $\Gamma(t,\pi-\theta)$ or $\Gamma(t,-\theta)$, pointwise.
+No Poisson equation, parity assumption, or integrability is needed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Choose any real angular representative. Use $\cos^2+\sin^2=1$, the positivity
+of $e^{-t}$, and the two trigonometric reflection identities.
+\end{proof}
+
 \begin{definition}[Physical forcing on the logarithmic cylinder]
 \label{def:cylinder-physical-forcing}
 \uses{def:log-cylinder-l2-pullback, def:local-plane-geometry}
@@ -263,16 +282,29 @@ For planar forcing $F$ on $D_\rho(0)$, extend
 $W=\mathbf1_{D_\rho(0)}F/r^{a-1}$ by zero and define $G=TW$.
 \end{definition}
 
+\begin{lemma}[Pointwise physical forcing formula]
+\label{lem:cylinder-physical-forcing-formula}
+\uses{def:cylinder-physical-forcing}
+\lean{NoEmbeddedEigenvalues.cylinderForcing_apply}
+\leanok
+For arbitrary planar $F$ and real $a,\rho$, the forcing is
+$G(t,\theta)=e^{(a-2)t}F(\Gamma(t,\theta))$ when $e^{-t}<\rho$ and zero otherwise.
+No measurability, parity or Poisson premise is needed for this pointwise identity.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-pointwise-geometry}
+\leanok
+Substitute the exact radius in the zero-extended quotient and multiply by
+the square-root area Jacobian $e^{-t}$. Real-power algebra gives $e^{(a-2)t}$.
+\end{proof}
+
 \begin{lemma}[Cylinder forcing from the specified Poisson data]
 \label{lem:cylinder-forcing-data}
 \uses{def:cylinder-physical-forcing, def:cylinder-inverse-data,
  def:cylinder-angular-parity, def:cylinder-angular-analysis,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.localRadius_logCylinderPlane,
- NoEmbeddedEigenvalues.logCylinderPlane_reflect_fst,
- NoEmbeddedEigenvalues.logCylinderPlane_reflect_snd,
- NoEmbeddedEigenvalues.cylinderForcing_apply,
- NoEmbeddedEigenvalues.cylinderForcing_memLp,
+\lean{NoEmbeddedEigenvalues.cylinderForcing_memLp,
  NoEmbeddedEigenvalues.cylinderForcing_sq_mass,
  NoEmbeddedEigenvalues.HasAxisParityOn.cylinderWeightedExtension,
  NoEmbeddedEigenvalues.HasAxisParityOn.logCylinder_slices,
@@ -295,7 +327,8 @@ when $|n|$ is forbidden.
 
 \begin{proof}
 \uses{lem:cylinder-forcing-parity, lem:log-cylinder-measure,
- lem:log-cylinder-l2-mass, lem:cylinder-angular-support, lem:cylinder-angular-analysis}
+ lem:log-cylinder-l2-mass, lem:cylinder-angular-support, lem:cylinder-angular-analysis,
+ lem:log-cylinder-pointwise-geometry, lem:cylinder-physical-forcing-formula}
 \leanok
 The specified weak Laplacian gives the forcing parity.
 Radial division and zero extension preserve it because the disk is reflection
@@ -1731,6 +1764,236 @@ The candidate equation is consequently the weak cylinder PDE with the original
 forcing, not merely a polynomial of unrelated L2 entries.
 \end{proof}
 
+\begin{definition}[Circle-valued inverse logarithmic-polar coordinates]
+\label{def:log-cylinder-inverse-coordinates}
+\uses{def:log-cylinder-coordinates, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.logCylinderCoordinates}
+\leanok
+For $p=(x,y)$, let $z=x+iy$, $r=r_0(p)$, and set
+\[
+ Q(p)=(-\log r,[\arg z]).
+\]
+This is totalized at zero using the real logarithm and complex argument.
+The angle is a circle value, not a chosen real angular branch.
+\end{definition}
+
+\begin{lemma}[Whole-puncture inverse coordinates and joint null sets]
+\label{lem:log-cylinder-inverse-coordinates}
+\uses{def:log-cylinder-inverse-coordinates}
+\lean{NoEmbeddedEigenvalues.localRadius_eq_complex_norm,
+ NoEmbeddedEigenvalues.measurable_logCylinderCoordinates,
+ NoEmbeddedEigenvalues.continuousAt_logCylinderCoordinates,
+ NoEmbeddedEigenvalues.logCylinderCoordinates_plane,
+ NoEmbeddedEigenvalues.logCylinderPlane_coordinates,
+ NoEmbeddedEigenvalues.quasiMeasurePreserving_logCylinderCoordinates}
+\leanok
+$Q$ is measurable and continuous at every $p\ne0$, including all real-angle seams.
+The two pointwise identities are
+$Q(\Gamma(q))=q$ for every cylinder point and $\Gamma(Q(p))=p$ for every $p\ne0$.
+Joint cylinder a.e.\ assertions pull back under $Q$ to joint planar a.e.\ assertions.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-measure, lem:log-cylinder-pointwise-geometry}
+\leanok
+The Euclidean radius is $|z|$. The complex argument modulo $2\pi$ is continuous
+off zero and recovers every angular character, even across the negative real axis.
+For null sets, express planar measure as the pushforward of
+$e^{-2t}\,dt\,d\vartheta$ on the injective strip.
+There $Q\circ\Gamma$ is exactly the angular quotient projection.
+Absolute continuity of the density and the positive Haar normalization give
+joint null-set transport in the inverse direction.
+\end{proof}
+
+\begin{definition}[Pointwise physical cylinder reconstruction]
+\label{def:cylinder-physical-value}
+\uses{def:log-cylinder-inverse-coordinates}
+\lean{NoEmbeddedEigenvalues.cylinderPhysicalValue}
+\leanok
+For a cylinder function $S$ and real $a$, define
+$U_a(S)(p)=r_0(p)^aS(Q(p))$.
+\end{definition}
+
+\begin{lemma}[Physical values, continuity, growth and parity]
+\label{lem:cylinder-physical-value}
+\uses{def:cylinder-physical-value, def:sectors}
+\lean{NoEmbeddedEigenvalues.cylinderPhysicalValue_plane,
+ NoEmbeddedEigenvalues.cylinderPhysicalValue_zero,
+ NoEmbeddedEigenvalues.norm_cylinderPhysicalValue_le,
+ NoEmbeddedEigenvalues.continuousAt_cylinderPhysicalValue,
+ NoEmbeddedEigenvalues.continuous_cylinderPhysicalValue,
+ NoEmbeddedEigenvalues.cylinderPhysicalValue_axis_parity}
+\leanok
+For any $a$ and $S$, $U_a(S)(\Gamma(t,\theta))=e^{-at}S(t,\theta)$ pointwise.
+If $a>0$, $S$ is continuous and $|S|\le C$, then $U_a(S)$ is continuous on the
+whole plane, is zero at the center, and satisfies $|U_a(S)|\le Cr^a$ with the
+same $C$.
+Both pointwise cylinder reflection signs give the corresponding pointwise
+Cartesian reflection signs, including at zero.
+These value claims do not assert differentiability.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-inverse-coordinates, lem:log-cylinder-pointwise-geometry}
+\leanok
+Use the pointwise round-trips off zero.
+At zero, squeeze by $Cr^a\to0$.
+For parity, reflect $\Gamma(t,\theta)$ using respectively $\pi-\theta$ and
+$-\theta$, and use the pointwise input signs. The actual zero value handles
+the center without evaluating any a.e.\ identity there.
+\end{proof}
+
+\begin{definition}[Inverse square-root-Jacobian reconstruction]
+\label{def:cylinder-physical-l2-inverse}
+\uses{def:log-cylinder-inverse-coordinates}
+\lean{NoEmbeddedEigenvalues.cylinderPhysicalL2Inverse}
+\leanok
+Put $V(S)(p)=S(Q(p))/r_0(p)$, with totalized division at zero.
+\end{definition}
+
+\begin{lemma}[Genuine inverse-Jacobian L2 and exact mass]
+\label{lem:cylinder-physical-l2-inverse}
+\uses{def:cylinder-physical-l2-inverse, def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.logCylinderL2Pullback_physicalInverse,
+ NoEmbeddedEigenvalues.memLp_cylinderPhysicalL2Inverse,
+ NoEmbeddedEigenvalues.integral_sq_cylinderPhysicalL2Inverse}
+\leanok
+The square-root-Jacobian pullback of $V(S)$ is exactly $S$, pointwise.
+If $S$ is genuinely cylinder L2, then $V(S)$ is genuinely planar L2 and
+\[
+ \int_{\R^2}|V(S)|^2=2\pi\int|S|^2\,d\mu_{\rm cyl}.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-inverse-coordinates, lem:cylinder-lift-local-mass,
+ lem:log-cylinder-measure, lem:log-cylinder-l2-mass}
+\leanok
+Joint inverse-coordinate null-set transport supplies a.e.\ strong measurability.
+On the injective strip, the area Jacobian cancels $|1/r|^2$ exactly.
+The finite strip L2 norm therefore gives genuine integrability of the physical
+squared norm, by change of variables. Only after finiteness is established,
+apply the forward square-root-Jacobian mass identity to obtain the factor $2\pi$.
+\end{proof}
+
+\begin{lemma}[Weighted L2 for every physical homogeneity]
+\label{lem:cylinder-physical-weighted-l2}
+\uses{def:cylinder-physical-value, def:cylinder-physical-l2-inverse}
+\lean{NoEmbeddedEigenvalues.cylinderPhysicalValue_weighted_ae,
+ NoEmbeddedEigenvalues.memLp_cylinderPhysicalValue_weighted}
+\leanok
+For any real $b$, $U_b(S)/r^{b+1}=V(S)$ jointly a.e.
+Consequently genuine cylinder L2 of $S$ gives genuine planar L2 of this
+weighted reconstruction. No sign condition on $b$ is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-physical-l2-inverse}
+\leanok
+Away from the null center, cancel $r^b$ using positivity of $r$.
+Transfer the genuine finite norm by the joint a.e.\ identity.
+No raw representative is restricted to a selected ray.
+\end{proof}
+
+\begin{lemma}[Restoring a nonnegative radial weight on a bounded disk]
+\label{lem:radial-weight-restore-l2}
+\uses{def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.memLp_of_div_localRadius_rpow}
+\leanok
+For $s\ge0$, $f/r^s\in L^2(D_\rho)$ implies $f\in L^2(D_\rho)$.
+No continuity or weak derivative is assumed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The radial multiplier $r^s$ is genuinely bounded on the disk.
+Its product with the given L2 quotient equals $f$ off the null center.
+Use multiplication of L-infinity and L2 functions, followed by a.e.\ congruence.
+\end{proof}
+
+\begin{definition}[Ordered physical cylinder-jet candidates]
+\label{def:cylinder-cartesian-jet-candidates}
+\uses{def:cylinder-physical-value, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.cylinderRadialFrame,
+ NoEmbeddedEigenvalues.cylinderAngularFrame,
+ NoEmbeddedEigenvalues.cylinderCartesianFirst,
+ NoEmbeddedEigenvalues.cylinderCartesianFirstAngle,
+ NoEmbeddedEigenvalues.cylinderCartesianSecond,
+ NoEmbeddedEigenvalues.cylinderCartesianJet}
+\leanok
+Write $c=(\cos\theta,\sin\theta)$ and $b=(-\sin\theta,\cos\theta)$,
+using the real and imaginary parts of the unit angular character.
+For an ordered cylinder family $J$, define
+\[
+\begin{aligned}
+ L_i&=c_i(aJ_\emptyset-J_0)+b_iJ_1,\\
+ T_i&=c_i(aJ_0-J_{00})+b_iJ_{01},\\
+ A_i&=b_i(aJ_\emptyset-J_0)-c_iJ_1+c_i(aJ_1-J_{10})+b_iJ_{11},\\
+ B_{ji}&=(a-1)c_jL_i-c_jT_i+b_jA_i.
+\end{aligned}
+\]
+Set $E_\emptyset=U_a(J_\emptyset)$, $E_i=U_{a-1}(L_i)$ and
+$E_{ji}=U_{a-2}(B_{ji})$, and set longer entries to zero.
+These are candidate formulas, not weak derivative assertions.
+In particular $J_{01}$ and $J_{10}$ remain distinct ordered inputs.
+\end{definition}
+
+\begin{lemma}[Finite weighted and whole-disk Cartesian candidate norms]
+\label{lem:cylinder-cartesian-candidate-norms}
+\uses{def:cylinder-cartesian-jet-candidates}
+\lean{NoEmbeddedEigenvalues.cylinderRadialFrame_memLp,
+ NoEmbeddedEigenvalues.cylinderAngularFrame_memLp,
+ NoEmbeddedEigenvalues.cylinderCartesianFirst_memLp,
+ NoEmbeddedEigenvalues.cylinderCartesianSecond_memLp,
+ NoEmbeddedEigenvalues.cylinderCartesianJet_weighted,
+ NoEmbeddedEigenvalues.cylinderCartesianJet_memLp}
+\leanok
+If every $J_w$, $|w|\le2$, is genuinely cylinder L2, then for any real $a$
+\[
+ E_w/r^{a+1-|w|}\in L^2(\R^2),\qquad |w|\le2.
+\]
+For $a>1$ all the same entries are genuinely unweighted L2 on every bounded
+disk. Neither conclusion asserts that the entries are weak derivatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-physical-weighted-l2, lem:radial-weight-restore-l2}
+\leanok
+Both frame coefficients have modulus at most one.
+Thus all $L_i,T_i,A_i,B_{ji}$ are finite linear combinations of genuine L2
+entries with bounded angular coefficients.
+Apply inverse-Jacobian reconstruction at each homogeneity.
+On a bounded disk restore the nonnegative exponent $a+1-|w|$.
+Every norm is established before any weak-jet identification.
+\end{proof}
+
+\begin{lemma}[Algebraic Cartesian trace and the original forcing]
+\label{lem:cylinder-cartesian-candidate-forcing}
+\uses{def:cylinder-cartesian-jet-candidates, def:cylinder-jet-operator,
+ def:cylinder-physical-forcing}
+\lean{NoEmbeddedEigenvalues.cylinderCartesianSecond_trace,
+ NoEmbeddedEigenvalues.cylinderCartesianJet_laplacian,
+ NoEmbeddedEigenvalues.cylinderCartesianJet_forcing}
+\leanok
+Pointwise, $B_{00}+B_{11}=\mathcal P_aJ$, hence
+\[
+ E_{00}+E_{11}=r^{a-2}(\mathcal P_aJ)\circ Q.
+\]
+If $\mathcal P_aJ=G$ jointly a.e.\ for the zero-extended physical forcing on
+$D_\rho$, then $E_{00}+E_{11}=F$ a.e.\ on that whole disk.
+This is an equation of candidates, not by itself a weak Poisson equation.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-inverse-coordinates, lem:cylinder-physical-forcing-formula}
+\leanok
+Expand the coefficients and use $\cos^2\theta+\sin^2\theta=1$.
+The two mixed words cancel separately; no mixed derivative commutation is used.
+Pull back the cylinder equation jointly under $Q$.
+Off the null center inside $D_\rho$, multiply the physical forcing
+$r^{2-a}F$ by $r^{a-2}$.
+\end{proof}
+
 \begin{lemma}[Weighted Cartesian particular solution from the cylinder jet]
 \label{lem:cylinder-cartesian-particular}
 \uses{def:cylinder-weak-jet, def:cylinder-jet-operator, def:cylinder-physical-forcing,
@@ -1758,21 +2021,25 @@ The candidate is tied pointwise to the input:
 \end{lemma}
 
 \begin{proof}
-\uses{lem:log-cylinder-measure, lem:log-cylinder-l2-mass,
- lem:weak-partial-locality, lem:weak-point-removal, lem:radial-weak-multiplier}
-Use overlapping angular charts to transport the actual ordered weak jet on
-the punctured disk. Polar differentiation expresses its order-$k$ entries
-as $r^{a-k}$ times linear combinations of cylinder entries with bounded
-angular coefficients. The area Jacobian gives precisely the displayed finite
-weighted norms. Joint null-set transport is used; no raw derivative is
-evaluated on a selected ray, and no weak identity is inferred from a null seam.
-The bounded continuous cylinder function gives pointwise growth and continuity
-after assigning value zero at the center.
-Since $a+1-k>0$ for $k\le2$, bounded radial multipliers give whole-disk
-unweighted L2 of every specified entry. Remove the center first for the value
-and its first derivatives, then for the first derivatives and their specified
-second derivatives. Thus the weak jet and the Poisson identity extend without
-a point defect. The cylinder reflection identities transfer parity.
+\uses{lem:cylinder-physical-value, lem:cylinder-cartesian-candidate-norms,
+ lem:cylinder-cartesian-candidate-forcing, lem:weak-jet-point-removal,
+ lem:finite-weak-jet-sobolev, lem:log-cylinder-measure,
+ lem:weak-partial-locality, lem:radial-weak-multiplier}
+Take $\rho_1=\rho/2$, $u_0=U_a(S)$ and the specified Cartesian candidate family.
+The nil entry agrees pointwise because $J_\emptyset=S$.
+The candidate norms give genuine whole-disk L2 at every ordered level,
+independently of weak derivative identification.
+The value reconstruction gives continuity, the unchanged growth constant,
+the same pointwise pullback and both parities.
+Use overlapping angular charts and the variable Jacobian $-r^2$ to transport
+the weak test identities on the punctured disk, retaining each prescribed
+ordered entry. In particular the test identities include the seams of every
+chosen real-angle branch.
+For each ordered pair, the whole-disk finite norms remove the center.
+The same weak jet and finite norms give recursive H2 membership.
+Its algebraic trace equation is then the weak Poisson equation for the
+original forcing. No norm or null-seam argument substitutes for the
+punctured-disk weak test identities.
 \end{proof}
 
 \begin{lemma}[Weighted particular solution from the original Poisson data]
