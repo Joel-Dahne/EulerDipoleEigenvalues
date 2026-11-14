@@ -138,21 +138,26 @@ weights and local versus global regularity.
    Its former single admission is exposed as those three precise interfaces;
    this decomposition does not close an analytic gap.
    **Next target: Weak full-cylinder inversion** (`lem:cylinder-weak-inverse`,
-   `Regularity/CylinderWeak.lean`). Identify the constructed ordered L² candidate
-   entries as weak derivatives on the whole periodic lift, and prove the cylinder
-   PDE for the same actual signed integral. This also needs the inverse of the
-   original normalized data identified with the original cylinder function.
-   Genuine finite inverse witnesses are now available without derivative L¹:
-   `Analysis/CylinderL2Inverse.lean` extends actual synthesis isometrically from
-   its dense L¹-intersection domain to all spectral L². Integrable inputs retain
-   their actual integral a.e. `Analysis/CylinderJetCandidates.lean` controls every
-   ordered multiplier through order two and constructs joint L² entries with
-   exact mass; the nil entry remains the actual integral pointwise.
-   The signed-inverse candidate assembly
-   (`lem:cylinder-signed-inverse-candidates`) supplies those entries under exactly
-   the weak-inverse target's data hypotheses. These results have no admissions,
-   but assert no weak derivative/PDE identity. The `HasCylinderH2Jet` interface
-   still requires those identities on the whole lift, including all seams.
+   `Regularity/CylinderWeak.lean`). The sole remaining hole in its proof is the
+   whole-plane test identity for each ordered word of length below two and each
+   coordinate. The original statement, same nil integral and ordered entries
+   are unchanged.
+   **Closed construction/identification layers:** arbitrary spectral L² synthesis,
+   all ordered candidate entries through order two with finite joint norms and
+   exact mass, and both normalized Fourier round-trips. Inverse analysis of the
+   original data now recovers the original cylinder function a.e., without any
+   L¹ premise. The same signed candidates satisfy the algebraic forcing identity
+   (`lem:cylinder-signed-candidate-equation`), not yet a weak PDE.
+   Translated fundamental strips also prove local integrability of every lifted
+   entry on the full real-angle plane (`lem:cylinder-lift-local-mass`); no seam
+   or raw representative restriction is ignored. All these layers are
+   admission-free. The weak-inverse theorem still has its own admission.
+   **Proof route for the test identity:** truncate frequency and angular degree
+   together, differentiate the resulting actual integrals, and pass to the
+   untruncated pairings by strong L² convergence of every ordered entry.
+   This needs a finite-strip bound uniform in the truncation and a weak-limit
+   argument on compact planar test supports; the untruncated derivative spectra
+   must not be assumed L¹. Local norm transport is not itself weak gluing.
    **Following targets:**
    - Weighted Cartesian particular solution (`lem:cylinder-cartesian-particular`,
      `Regularity/CylinderParticular.lean`): transport the specified weak jet,

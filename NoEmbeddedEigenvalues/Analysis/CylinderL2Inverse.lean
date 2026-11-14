@@ -17,7 +17,7 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory
 open scoped ComplexInnerProductSpace
 
-private theorem cylinderL2_norm_sq {α : Type*} [MeasurableSpace α] {μ : Measure α}
+theorem cylinderL2_norm_sq {α : Type*} [MeasurableSpace α] {μ : Measure α}
     (f : Lp ℂ 2 μ) : ‖f‖ ^ 2 = ∫ x, ‖f x‖ ^ 2 ∂μ := by
   have h := congrArg RCLike.re (L2.inner_def (𝕜 := ℂ) f f)
   rw [← integral_re] at h

@@ -349,16 +349,32 @@ can be added here as they are formalized.
   Genuine joint inverse witnesses and exact mass need no L¹ premise; integrable
   inputs retain the same actual integral a.e. This is not a Fourier round-trip
   or a weak derivative theorem.
+- `Analysis/CylinderFourierRelations.lean`: representative-compatible joint a.e.
+  congruence, addition and scalar relations for actual normalized spectral data;
+  joint cylinder identities are sliced only a.e. before mode extraction.
+- `Analysis/CylinderFourierL2.lean`: class-valued normalized joint analysis as a
+  linear isometry, with exact agreement with the specified raw Fourier data.
+- `Analysis/CylinderFourierRoundtrip.lean`: analysis of the actual integrable
+  synthesis and both L² round-trips. Density and injectivity recover arbitrary
+  original cylinder L² data with no L¹ premise on it or its Fourier data.
 - `Analysis/CylinderJetCandidates.lean`: ordered derivative multipliers through
   degree two, their quadratic-weight domination and actual finite spectral L²;
   specified joint L² inverse entries with exact mass and a pointwise actual nil
   integral. It asserts no weak derivative identities.
+- `Analysis/CylinderCandidateEquation.lean`: the signed symbol equals the ordered
+  jet polynomial, and its actual spectral multiplier equation gives the original
+  forcing in the same L² candidate entries, by the full normalized round-trip.
+  This algebraic a.e. identity does not assert that those entries are derivatives.
+- `Analysis/CylinderLift.lean`: finite joint mass on every translated angular
+  period and local integrability on the full real-angle lift, including all seams.
+  It asserts neither global planar L² nor weak gluing from a null seam.
 - `Regularity/CylinderWeak.lean`: specified finite second weak cylinder jets on
   the full periodic real-angle lift, the conjugated Laplacian, and the weak
   inversion interface for the same actual normalized signed integral candidate.
-  Its signed-inverse candidate assembly already provides finite L² entries and
-  their exact spectral inverse identification. The weak-jet interface separately
-  requires identities on the whole lift; no seam is omitted.
+  Its signed-inverse candidate assembly provides finite L² entries, their exact
+  spectral inverse identification and the original forcing in their jet operator.
+  The weak-jet interface separately requires test identities on the whole lift;
+  no seam is omitted.
 - `Regularity/CylinderParticular.lean`: weighted Cartesian reconstruction from
   that specified cylinder jet, whole-disk weak Poisson identities, finite radial
   norms, growth and parity, with a pointwise identity tying it to the same input

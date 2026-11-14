@@ -1206,6 +1206,108 @@ which identifies the actual integral representative for all L1-intersection
 inputs, not just the simple functions used for density.
 \end{proof}
 
+\begin{lemma}[Representative-compatible cylinder Fourier relations]
+\label{lem:cylinder-fourier-relations}
+\uses{def:cylinder-angular-analysis, def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierData_congr_ae,
+ NoEmbeddedEigenvalues.cylinderFourierData_add_ae,
+ NoEmbeddedEigenvalues.cylinderFourierData_smul_ae}
+\leanok
+Joint cylinder a.e.\ equality of genuine L2 inputs gives joint normalized
+spectral a.e.\ equality. Addition and complex scalar multiplication of inputs
+likewise give the corresponding joint spectral a.e.\ relations.
+No pointwise linearity of chosen raw representatives is asserted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-angular-analysis, lem:cylinder-fourier-modes,
+ lem:cylinder-frequency-transport}
+\leanok
+Slice joint identities only a.e.\ in time, then take angular coefficients.
+The coefficients pass to real-line L2 classes, on which Fourier analysis is linear.
+Transfer the class relations back to the specified normalized representatives.
+Combine countably many frequency null sets before making a joint signed-mode
+assertion.
+\end{proof}
+
+\begin{definition}[Class-valued normalized cylinder Fourier analysis]
+\label{def:cylinder-fourier-l2}
+\uses{def:cylinder-normalized-frequency-data, lem:cylinder-fourier-relations,
+ lem:cylinder-normalized-fourier-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierL2}
+\leanok
+Define $\mathcal F_2[G]=[\Phi_G]$ on genuine cylinder L2 classes, using the
+specified normalized spectral data of a representative.
+\end{definition}
+
+\begin{lemma}[Normalized cylinder analysis is a linear isometry]
+\label{lem:cylinder-fourier-l2}
+\uses{def:cylinder-fourier-l2, def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierL2_ae,
+ NoEmbeddedEigenvalues.cylinderFourierL2_toLp}
+\leanok
+The map $\mathcal F_2$ is well-defined, complex-linear and isometric.
+For every genuine raw cylinder-L2 $G$, passing $G$ to its class and applying
+$\mathcal F_2$ gives exactly $[\Phi_G]$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-fourier-relations, lem:cylinder-normalized-fourier-data}
+\leanok
+Representative-compatible relations give well-definedness and linearity.
+The genuine joint normalized Plancherel identity gives equality of class norms.
+\end{proof}
+
+\begin{lemma}[Spectrum of the actual joint inverse integral]
+\label{lem:cylinder-synthesis-spectrum}
+\uses{def:cylinder-fourier-l2, def:cylinder-joint-synthesis,
+ def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierData_synthesis_ae,
+ NoEmbeddedEigenvalues.cylinderFourierL2_synthesis}
+\leanok
+For actual spectral $H\in L^1\cap L^2$,
+$\Phi_{JH}=H$ jointly a.e., and $\mathcal F_2[JH]=[H]$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-joint-coefficients, lem:cylinder-joint-l2,
+ lem:cylinder-time-synthesis, lem:cylinder-fourier-l2}
+\leanok
+Each actual angular coefficient is the specified normalized inverse time integral.
+Its L2 class is the unitary real-line inverse of that same frequency mode.
+Forward time analysis therefore recovers its rescaled input class.
+Transport frequency a.e.\ identities with the explicit dilation and combine
+the countably many signed indices. No degree is exceptional.
+\end{proof}
+
+\begin{lemma}[Two-sided normalized cylinder Fourier inversion]
+\label{lem:cylinder-fourier-roundtrip}
+\uses{def:cylinder-fourier-l2, def:cylinder-l2-inverse,
+ def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderFourierL2_inverse,
+ NoEmbeddedEigenvalues.cylinderInverseL2_fourier,
+ NoEmbeddedEigenvalues.cylinderInverseL2_fourierData_ae}
+\leanok
+On all spectral and cylinder L2 classes,
+\[
+ \mathcal F_2\mathcal I_2=1,\qquad \mathcal I_2\mathcal F_2=1.
+\]
+In particular, for every genuine cylinder-L2 $G$ the raw inverse witness
+$\mathcal I_2[\Phi_G]$ agrees with $G$ jointly a.e.
+Neither $G$ nor $\Phi_G$ is required to be L1.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-l2-inverse, lem:cylinder-fourier-l2,
+ lem:cylinder-synthesis-spectrum}
+\leanok
+On finite-mass simple spectral classes, the inverse agrees with the actual
+integral and the spectrum lemma gives $\mathcal F_2\mathcal I_2=1$.
+Simple-function density and continuity of both isometries extend the identity
+to all spectral L2. Injectivity of $\mathcal F_2$ then gives the other composition.
+Representative agreement recovers the original raw function a.e.
+\end{proof}
+
 \begin{definition}[Ordered cylinder derivative spectra]
 \label{def:cylinder-spectral-jets}
 \uses{def:cylinder-normalized-frequency-data, def:cylinder-signed-inverse}
@@ -1307,12 +1409,112 @@ Retain its actual nil integral and the specified L2 inverse class of every
 ordered derivative spectrum.
 \end{proof}
 
+\begin{definition}[Algebraic cylinder jet operator]
+\label{def:cylinder-jet-operator}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.cylinderJetOperator}
+\leanok
+For any ordered family of cylinder functions $E$, set
+\[
+ \mathcal P_aE=E_{00}-2aE_0+a^2E_\emptyset+E_{11}.
+\]
+This is an algebraic polynomial of entries; it does not assert that the entries
+are weak derivatives.
+\end{definition}
+
+\begin{lemma}[The symbol as an ordered jet polynomial]
+\label{lem:cylinder-symbol-jet}
+\uses{def:cylinder-spectral-jets, def:cylinder-spectral-data}
+\lean{NoEmbeddedEigenvalues.cylinderSymbol_eq_jetSymbols}
+\leanok
+For every signed spectral point $(\xi,n)$,
+\[
+ \sigma_a(\xi,|n|)
+   =d_{00}(\xi,n)-2a\,d_0(\xi,n)+a^2d_\emptyset+d_{11}(\xi,n).
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Expand $(i\xi-a)^2-|n|^2$ and use $i^2=-1$ and $|n|^2=n^2$.
+The signed angular multiplier is $in$, not $i|n|$.
+\end{proof}
+
+\begin{lemma}[Forcing identity for the specified inverse entries]
+\label{lem:cylinder-candidate-equation}
+\uses{def:cylinder-jet-operator, def:cylinder-inverse-jet-entries,
+ def:cylinder-normalized-frequency-data, def:cylinder-spectral-data}
+\lean{NoEmbeddedEigenvalues.cylinderInverseJetEntries_equation}
+\leanok
+Let $H$ be a.e.\ strongly measurable with $w_{\Z}H$ genuinely spectral L2,
+and let $G$ be genuinely cylinder L2.
+If $\sigma_a(\xi,|n|)H(\xi,n)=\Phi_G(\xi,n)$ jointly a.e., the same specified
+inverse entries satisfy $\mathcal P_aE=G$ jointly a.e.
+This is an equation among candidate entries, not a weak PDE assertion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-symbol-jet, lem:cylinder-inverse-jet-candidates,
+ lem:cylinder-fourier-roundtrip}
+\leanok
+The four derivative spectra are genuinely L2. Their same linear combination
+equals $\Phi_G$ as a spectral L2 class, by the symbol polynomial and the given
+spectral equation. Apply linearity of $\mathcal I_2$.
+Its inverse of $[\Phi_G]$ is the original $[G]$, by the full L2 round-trip.
+The specified entry identifications then give the joint raw a.e.\ equation.
+\end{proof}
+
+\begin{lemma}[Forcing identity for the allowed signed inverse candidates]
+\label{lem:cylinder-signed-candidate-equation}
+\uses{def:cylinder-jet-operator, def:cylinder-signed-inverse,
+ def:cylinder-l2-inverse, def:cylinder-spectral-jets,
+ def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_candidates_equation}
+\leanok
+Let $a\ge1$ avoid $M$, and let genuinely cylinder-L2 $G$ have its actual
+normalized spectrum zero jointly a.e.\ when $|n|\notin M$.
+One and the same family $E$ retains the actual nil integral $J(W_{a,G})$,
+every finite joint L2 norm through order two, and every specified
+spectral inverse identification, and also satisfies $\mathcal P_aE=G$ jointly a.e.
+No forcing or spectral L1 hypothesis, and no weak derivative hypothesis, is added.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-signed-inverse, lem:cylinder-inverse-jet-candidates,
+ lem:cylinder-candidate-equation}
+\leanok
+Use the weighted signed quotient's own candidate entries.
+Its actual spectral multiplier equation supplies the generic forcing identity.
+\end{proof}
+
+\begin{lemma}[Finite local mass on the full real-angle lift]
+\label{lem:cylinder-lift-local-mass}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.memLp_logCylinderProjection_strip,
+ NoEmbeddedEigenvalues.locallyIntegrableOn_logCylinderProjection}
+\leanok
+For every genuine cylinder-L2 $S$ and every real $b$, the joint lift
+$\widehat S(t,\vartheta)=S(t,[\vartheta])$ has finite planar L2 on
+$\R\times(b,b+2\pi]$. It is locally integrable on the whole real-angle plane.
+No finite global planar L2 norm of the periodic lift is asserted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-measure}
+\leanok
+Convert probability Haar to angular length measure by the finite factor $2\pi$.
+The quotient projection from any translated fundamental angular interval is
+measure-preserving for length measure, so joint L2 pulls back to that strip.
+Every real angle lies in the open interior of such a strip; the restricted L2
+norm gives local integrability there. This covers all seams by actual
+neighbourhoods, not by a null-seam argument.
+\end{proof}
+
 \begin{definition}[Specified finite weak cylinder jet]
 \label{def:cylinder-weak-jet}
 \uses{def:cylinder-joint-synthesis, def:log-cylinder-coordinates,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinderLift, NoEmbeddedEigenvalues.HasCylinderH2Jet,
- NoEmbeddedEigenvalues.cylinderJetOperator}
+\lean{NoEmbeddedEigenvalues.cylinderLift, NoEmbeddedEigenvalues.HasCylinderH2Jet}
 \leanok
 For a function $S$ on the angular cylinder write
 $\widehat S(t,\vartheta)=S(t,[\vartheta])$ for its real-angle lift.
@@ -1321,16 +1523,12 @@ cylinder such that $J_\emptyset=S$, every $J_w$ with $|w|\le2$ is genuinely
 L2 in $\mu_{\rm cyl}$, and their real-angle lifts form a specified second
 weak jet on all of $\R^2$. Index zero denotes time and index one denotes angle.
 In particular these weak identities include every angular seam.
-Set
-\[
- \mathcal P_aJ=J_{00}-2aJ_0+a^2J_\emptyset+J_{11}.
-\]
 No commutation of mixed weak entries is assumed.
 \end{definition}
 
 \begin{lemma}[Weak full-cylinder inversion]
 \label{lem:cylinder-weak-inverse}
-\uses{def:cylinder-weak-jet, def:cylinder-signed-inverse,
+\uses{def:cylinder-weak-jet, def:cylinder-jet-operator, def:cylinder-signed-inverse,
  def:cylinder-normalized-frequency-data, def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_weak}
 \leanok
@@ -1344,21 +1542,29 @@ reconstruction.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cylinder-signed-inverse-candidates, lem:cylinder-signed-inverse,
- lem:cylinder-joint-coefficients, lem:cylinder-normalized-fourier-inverse}
-Use the specified genuinely joint L2 inverse entries for each ordered
-derivative spectrum. The nil entry is the same actual integral pointwise;
-the other entries need not be continuous or have L1 spectra.
-Identify their weak derivatives by testing the Fourier multipliers.
-The spectral multiplier identity, together with identification of the inverse
-of the original normalized data, then gives the weak PDE.
-Establish the weak identities on the full periodic lift, not just on one strip
-with an omitted seam.
+\uses{lem:cylinder-signed-candidate-equation, lem:cylinder-lift-local-mass}
+Choose the specified entries retaining the same actual nil integral, finite
+joint norms and $\mathcal P_aE=G$ a.e.
+Every lifted entry is locally integrable on the whole real-angle plane.
+For each $|w|<2$, coordinate $j$, and smooth compactly supported planar test $\phi$,
+establish
+\[
+ \int \widehat E_w\,\partial_j\phi
+   =-\int\widehat E_{j::w}\,\phi.
+\]
+One route truncates continuous frequency and angular degree simultaneously:
+the resulting integrals can be differentiated classically, while all entries
+through order two converge in joint L2 by the inverse isometry.
+Finite strip covers of the compact test support transfer this convergence
+to local planar L2, allowing the weak pairings to pass to the limit.
+The untruncated derivative spectra need not be L1.
+The identities must hold on the full periodic lift, not only on a strip
+with a seam omitted.
 \end{proof}
 
 \begin{lemma}[Weighted Cartesian particular solution from the cylinder jet]
 \label{lem:cylinder-cartesian-particular}
-\uses{def:cylinder-weak-jet, def:cylinder-physical-forcing,
+\uses{def:cylinder-weak-jet, def:cylinder-jet-operator, def:cylinder-physical-forcing,
  def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.cylinder_cartesian_particular}
 \leanok

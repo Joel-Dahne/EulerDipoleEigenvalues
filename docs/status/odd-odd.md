@@ -72,9 +72,13 @@ Proof work is now outside the odd–odd chapter:
   gives actual finite inverse witnesses for every ordered derivative spectrum
   through order two, without assuming those spectra L¹. Their exact mass and
   inverse-class identification are proved, retaining the actual nil integral
-  pointwise. These are candidate entries, not yet weak derivatives.
-  What remains is their whole-lift weak identification and cylinder PDE, then
-  physical reconstruction and harmonic comparison.
+  pointwise. Both normalized Fourier round-trips now recover the original
+  cylinder L² data without an L¹ premise. The same candidate entries satisfy
+  the algebraic forcing equation; translated-period norms give local
+  integrability on the full real-angle lift. These are not yet weak derivatives:
+  the whole-plane weak test identities remain the hole in Weak full-cylinder
+  inversion. Physical reconstruction and harmonic comparison remain subsequent
+  obligations.
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is already proved. Keep the common interfaces generic and
   defer the mixed linear-jet corollary. The split exposes the analytic work;

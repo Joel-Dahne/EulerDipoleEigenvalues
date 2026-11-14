@@ -1,5 +1,7 @@
 import NoEmbeddedEigenvalues.Analysis.CylinderSignedInverse
 import NoEmbeddedEigenvalues.Analysis.CylinderJetCandidates
+import NoEmbeddedEigenvalues.Analysis.CylinderCandidateEquation
+import NoEmbeddedEigenvalues.Analysis.CylinderLift
 import NoEmbeddedEigenvalues.LocalJets
 
 /-!
@@ -70,6 +72,33 @@ theorem cylinder_signed_inverse_jet_candidates {a : ℝ} (ha : 1 ≤ a) {M : Set
     fun _ hw ↦ cylinderInverseJetEntries_memLp hV hWV hw,
     fun _ hw ↦ cylinderInverseJetEntries_ae hV hWV hw⟩
 
+/-- The same signed inverse candidates have the original forcing in their jet
+operator, without asserting that they are weak derivatives
+(`lem:cylinder-signed-candidate-equation`). -/
+theorem cylinder_signed_inverse_candidates_equation {a : ℝ} (ha : 1 ≤ a) {M : Set ℕ}
+    (hgap : ∀ m ∈ M, a ≠ (m : ℝ))
+    {G : ℝ × AddCircle (2 * Real.pi) → ℂ} (hG : MemLp G 2 logCylinderMeasure)
+    (hM : ∀ᵐ p ∂cylinderFourierMeasure,
+      p.2.natAbs ∉ M → cylinderFourierData hG p = 0) :
+    ∃ E : List (Fin 2) → ℝ × AddCircle (2 * Real.pi) → ℂ,
+      E [] = cylinderJointSynthesis (cylinderSignedInverse a hG) ∧
+      (∀ w : List (Fin 2), w.length ≤ 2 → MemLp (E w) 2 logCylinderMeasure) ∧
+      (∀ (w : List (Fin 2)) (hw : w.length ≤ 2),
+        E w =ᵐ[logCylinderMeasure]
+          (cylinderInverseL2
+            ((cylinder_signed_inverse_spectral_jet_memLp ha hgap hG hM hw).toLp
+              (cylinderSpectralJet w (cylinderSignedInverse a hG))) :
+                ℝ × AddCircle (2 * Real.pi) → ℂ)) ∧
+      cylinderJetOperator a E =ᵐ[logCylinderMeasure] G := by
+  have hV : AEStronglyMeasurable (cylinderSignedInverse a hG) cylinderFourierMeasure :=
+    (measurable_cylinderSignedInverse a hG).aestronglyMeasurable
+  have hWV := (cylinderSignedInverse_bounds ha hgap hG hM).2.1
+  exact ⟨cylinderInverseJetEntries hV hWV, cylinderInverseJetEntries_nil hV hWV,
+    fun _ hw ↦ cylinderInverseJetEntries_memLp hV hWV hw,
+    (fun _ hw ↦ cylinderInverseJetEntries_ae hV hWV hw),
+    cylinderInverseJetEntries_equation hV hWV hG
+      (cylinderSignedInverse_bounds ha hgap hG hM).2.2.2.1⟩
+
 /-- The actual signed inverse integral has a finite weak second jet and solves
 `((∂t - a)^2 + ∂θ^2) S = G` on the full cylinder (`lem:cylinder-weak-inverse`). -/
 theorem cylinder_signed_inverse_weak {a : ℝ} (ha : 1 ≤ a) {M : Set ℕ}
@@ -80,6 +109,14 @@ theorem cylinder_signed_inverse_weak {a : ℝ} (ha : 1 ≤ a) {M : Set ℕ}
     ∃ E : List (Fin 2) → ℝ × AddCircle (2 * Real.pi) → ℂ,
       HasCylinderH2Jet (cylinderJointSynthesis (cylinderSignedInverse a hG)) E ∧
       cylinderJetOperator a E =ᵐ[logCylinderMeasure] G := by
+  obtain ⟨E, hE0, hEL2, hEA, hEq⟩ :=
+    cylinder_signed_inverse_candidates_equation ha hgap hG hM
+  refine ⟨E, ⟨hE0, ⟨congrArg cylinderLift hE0, ?_⟩, hEL2⟩, hEq⟩
+  intro w hw j
+  refine ⟨locallyIntegrableOn_logCylinderProjection (hEL2 w (Nat.le_of_lt hw)),
+    locallyIntegrableOn_logCylinderProjection
+      (hEL2 (j :: w) (by simpa using Nat.succ_le_of_lt hw)), ?_⟩
+  intro φ hφ
   sorry
 
 end NoEmbeddedEigenvalues
