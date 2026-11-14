@@ -92,14 +92,13 @@ lemma chartCofactor_values {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
 
 /-- The cofactor column converts source differentiation of a pulled-back test
 to spatial differentiation multiplied by the determinant. -/
-lemma chartTest_cofactor_chain {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
+lemma chartTest_cofactor_chain_det {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
     (he : ContDiffOn ℝ ∞ e e.source)
-    (hdet : ∀ q ∈ e.source, (fderiv ℝ e q).det = 2)
     {φ : ℝ × ℝ → ℂ} (hφ : IsTestFunctionOn e.target φ)
     (j : Fin 2) {q : ℝ × ℝ} (hq : q ∈ e.source) :
     chartCofactor e j 0 q * coordPartial 0 (chartTest e φ) q +
       chartCofactor e j 1 q * coordPartial 1 (chartTest e φ) q =
-      (2 : ℂ) * coordPartial j φ (e q) := by
+      ((fderiv ℝ e q).det : ℂ) * coordPartial j φ (e q) := by
   let A := fderiv ℝ e q
   have hd := (he.contDiffAt (e.open_source.mem_nhds hq)).differentiableAt (by simp)
   have hp := hφ.contDiff.differentiable (by simp) (e q)
@@ -130,22 +129,32 @@ lemma chartTest_cofactor_chain {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × �
     change deriv (fun t ↦ φ (e (q.1, t))) q.2 = _
     convert! (hp.hasFDerivAt.comp_hasDerivAt q.2 hy).deriv.trans (hl _) using 1
   have hr : (A (1, 0)).1 * (A (0, 1)).2 -
-      (A (0, 1)).1 * (A (1, 0)).2 = 2 := by
-    have h := hdet q hq
-    change LinearMap.det (A : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) = 2 at h
+      (A (0, 1)).1 * (A (1, 0)).2 = A.det := by
+    have h : LinearMap.det (A : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) = A.det := rfl
     rw [← LinearMap.det_toMatrix (Module.Basis.finTwoProd ℝ), Matrix.det_fin_two] at h
     simp only [LinearMap.toMatrix_apply, Module.Basis.finTwoProd_zero,
       Module.Basis.finTwoProd_one, Module.Basis.coe_finTwoProd_repr, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_fin_one] at h
     convert! h using 1
   have hc : ((A (1, 0)).1 : ℂ) * ((A (0, 1)).2 : ℂ) -
-      ((A (0, 1)).1 : ℂ) * ((A (1, 0)).2 : ℂ) = 2 := by exact_mod_cast hr
+      ((A (0, 1)).1 : ℂ) * ((A (1, 0)).2 : ℂ) = (A.det : ℂ) := by exact_mod_cast hr
   rw [hc₀, hc₁, (chartCofactor_values he j hq).1, (chartCofactor_values he j hq).2]
   by_cases hj : j = 0
   · simp only [hj, ite_eq_left, coordPartial]
     linear_combination partialX φ (e q) * hc
   · simp only [hj, ite_false, coordPartial]
     linear_combination partialY φ (e q) * hc
+
+lemma chartTest_cofactor_chain {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
+    (he : ContDiffOn ℝ ∞ e e.source)
+    (hdet : ∀ q ∈ e.source, (fderiv ℝ e q).det = 2)
+    {φ : ℝ × ℝ → ℂ} (hφ : IsTestFunctionOn e.target φ)
+    (j : Fin 2) {q : ℝ × ℝ} (hq : q ∈ e.source) :
+    chartCofactor e j 0 q * coordPartial 0 (chartTest e φ) q +
+      chartCofactor e j 1 q * coordPartial 1 (chartTest e φ) q =
+      (2 : ℂ) * coordPartial j φ (e q) := by
+  rw [chartTest_cofactor_chain_det he hφ j hq, hdet q hq]
+  norm_num
 
 /-- Two specified weak coordinate derivatives reconstruct a specified Cartesian
 weak derivative on the chart image. -/

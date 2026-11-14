@@ -195,7 +195,10 @@ proof mechanisms. Module names below are relative to
   frame coefficients. `QuarterInverseFrame.lean` gives the actual quarter's
   measurable dual coefficients, exact inverse algebra and weighted candidate L².
   `SmoothChartTests.lean` gives compact zero-extended chart tests, local L¹/L²
-  and a.e. transport. `WeakChartTransport.lean` reconstructs weak spatial gradients
+  and a.e. transport. `WeakChartTransportVariable.lean` transports specified weak
+  pairs through a negative variable Jacobian by divergence-free cofactor tests,
+  with physical local integrability supplied independently.
+  `WeakChartTransport.lean` reconstructs weak spatial gradients
   by divergence-free cofactors. `QuarterChart.lean` instantiates the actual open
   quarter chart; `QuarterGradient.lean` identifies the inverse frame, transfers
   its weighted L² norm by coarea and identifies arbitrary specified gradients
@@ -280,6 +283,9 @@ can be added here as they are formalized.
 - `Analysis/LogPolarInverse.lean`: measurable circle-valued inverse coordinates,
   continuity at every nonzero point, both pointwise round-trips and joint
   planar-to-cylinder null-set transport, including all real-angle seams.
+- `Analysis/LogPolarAtlas.lean`: two genuine open real-angle charts with opposite
+  cuts cover the entire punctured plane. Both forward maps are exactly Γ,
+  with the same derivative and negative variable Jacobian.
 - `Analysis/CylinderPhysicalValue.lean`: the same pointwise cylinder candidate
   reconstructed as rᵃS; global continuity through zero for a positive exponent,
   the unchanged uniform growth constant and pointwise axis parity.
@@ -291,6 +297,15 @@ can be added here as they are formalized.
   unweighted finite norms. The two mixed cylinder words remain distinct.
   The algebraic trace recovers the original forcing by joint null-set transport;
   weak derivative identification is separate.
+- `Analysis/CylinderCartesianSource.lean`: smooth lifted radial/angular frames,
+  exponential weights and weak product rules for the first coefficient.
+  Its time and angular derivatives retain the two distinct mixed entries.
+- `Analysis/CylinderPhysicalWeak.lean`: homogeneous physical weak pairs from
+  source weak pairs and the same pointwise pullbacks; cofactor tests on both
+  angular charts followed by genuine open-patch weak locality.
+- `Analysis/CylinderCartesianWeak.lean`: local integrability from whole bounded
+  disk norms and identification of every fixed Cartesian weak pair through
+  order two on the entire punctured plane.
 - `Analysis/CylinderAngularTransform.lean`: normalized angular coefficient
   functions, Parseval on a.e. slices and actual real-line L² membership of each
   coefficient, using the Parseval sum as an integrable majorant.

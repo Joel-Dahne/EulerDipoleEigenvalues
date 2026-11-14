@@ -1994,6 +1994,156 @@ Off the null center inside $D_\rho$, multiply the physical forcing
 $r^{2-a}F$ by $r^{a-2}$.
 \end{proof}
 
+\begin{definition}[Two open logarithmic-polar charts]
+\label{def:log-polar-open-atlas}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.logPolarBaseChart, NoEmbeddedEigenvalues.logPolarChart}
+\leanok
+Let $e_0$ be $\Gamma(t,\vartheta)$ on the strip $-\pi<\vartheta<\pi$,
+with inverse $(-\log r,\arg(x+iy))$ and target the plane slit along
+the nonpositive horizontal axis.
+Define the second partial homeomorphism by composing source translation
+$(t,\vartheta)\mapsto(t,\vartheta-\pi)$, $e_0$, and target negation.
+Write these as $e_b$, $b\in\{0,1\}$.
+\end{definition}
+
+\begin{lemma}[An actual open cover of the whole punctured plane]
+\label{lem:log-polar-open-atlas}
+\uses{def:log-polar-open-atlas}
+\lean{NoEmbeddedEigenvalues.logPolarChart_apply,
+ NoEmbeddedEigenvalues.logPolarChart_target,
+ NoEmbeddedEigenvalues.contDiff_logPolarPlane,
+ NoEmbeddedEigenvalues.contDiff_logPolarChart,
+ NoEmbeddedEigenvalues.fderiv_logPolarChart,
+ NoEmbeddedEigenvalues.det_fderiv_logPolarChart,
+ NoEmbeddedEigenvalues.exists_logPolarChart_target}
+\leanok
+Both forward chart maps are exactly $\Gamma$ on their entire real source
+coordinate plane. They are smooth, with determinant $-e^{-2t}$.
+Their open targets are the two opposite slit planes and cover every $p\ne0$.
+In particular a point on either omitted ray lies inside the other chart target.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-measure}
+\leanok
+Polar inverse identities and $\exp(\log r)=r$ give the base chart.
+Negating both Cartesian coordinates cancels the angular shift by $\pi$,
+so the second forward map is again $\Gamma$, with the same derivative.
+If the second coordinate is nonzero, the point is in both slit planes;
+otherwise its nonzero first coordinate has one of the two strict signs.
+This is an open cover, not a cover only modulo a null seam.
+\end{proof}
+
+\begin{lemma}[Weak real-angle calculus of the Cartesian coefficients]
+\label{lem:cylinder-cartesian-source-calculus}
+\uses{def:cylinder-cartesian-jet-candidates, def:cylinder-weak-jet,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinderRadialFrame_lift,
+ NoEmbeddedEigenvalues.cylinderAngularFrame_lift,
+ NoEmbeddedEigenvalues.contDiff_cylinderRadialFrame_lift,
+ NoEmbeddedEigenvalues.contDiff_cylinderAngularFrame_lift,
+ NoEmbeddedEigenvalues.coordPartial_cylinderRadialFrame_lift,
+ NoEmbeddedEigenvalues.coordPartial_cylinderAngularFrame_lift,
+ NoEmbeddedEigenvalues.cylinderSourceWeight,
+ NoEmbeddedEigenvalues.contDiff_cylinderSourceWeight,
+ NoEmbeddedEigenvalues.coordPartial_cylinderSourceWeight,
+ NoEmbeddedEigenvalues.cylinderSourceWeight_pred,
+ NoEmbeddedEigenvalues.cylinderSourceWeight_hasWeakPartial,
+ NoEmbeddedEigenvalues.cylinderCartesianFirst_hasWeakPartial}
+\leanok
+The lifted frames are smooth, with zero time derivatives and
+$\partial_\vartheta c_i=b_i$, $\partial_\vartheta b_i=-c_i$.
+Writing $\chi_a(t,\vartheta)=e^{-at}$, one has
+$\partial_t\chi_a=-a\chi_a$, $\partial_\vartheta\chi_a=0$ and
+$e^{-t}\chi_{a-1}=\chi_a$.
+Multiplying a supplied weak pair $\partial_kK=D$ by $\chi_a$ gives the
+specified derivative $\chi_a(D-\delta_{k0}aK)$ on the entire real-angle plane.
+For a specified second weak cylinder jet,
+\[
+ \partial_t\widehat L_i=\widehat T_i,\qquad
+ \partial_\vartheta\widehat L_i=\widehat A_i
+\]
+weakly on that whole plane, with the ordered coefficients of
+Definition~\ref{def:cylinder-cartesian-jet-candidates}.
+No global planar L2 norm of a periodic lift is asserted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-product, lem:weak-derivative-basic}
+\leanok
+The unit angular character lifts to $\cos\vartheta+i\sin\vartheta$.
+Differentiate only these smooth scalar frames and the actual exponential.
+Apply the local smooth weak product rule to the supplied entries.
+The time derivative of $J_1$ is $J_{01}$; the angular derivative of $J_0$
+is $J_{10}$. Both enter separately in $T_i,A_i$.
+Unbounded exponential coefficients cause no problem for compactly supported
+tests; no global multiplier bound is used.
+\end{proof}
+
+\begin{lemma}[Weak physical homogeneous reconstruction through both cuts]
+\label{lem:cylinder-physical-weak-partial}
+\uses{def:cylinder-cartesian-jet-candidates, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.chartCofactor_logPolarChart,
+ NoEmbeddedEigenvalues.cylinderPhysicalValue_logPolarPlane,
+ NoEmbeddedEigenvalues.cylinderPhysical_hasWeakPartial}
+\leanok
+Let $a\in\R$ and $\partial_k\widehat K_\emptyset=\widehat K_k$ weakly
+on the entire real-angle plane.
+Suppose specified $f,d$ are locally integrable on the plane and satisfy
+pointwise for every real-angle source point
+\[
+ f\circ\Gamma=\chi_a\widehat K_\emptyset,\qquad
+ d\circ\Gamma=\chi_{a-1}\widehat{L_j^a(K)}.
+\]
+Then $\partial_jf=d$ weakly on the whole punctured plane.
+Here $L_j^a(K)=c_j(aK_\emptyset-K_0)+b_jK_1$.
+The actual physical value $U_a(K)$ has exactly the first displayed pullback.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:negative-jacobian-weak-partial, lem:log-polar-open-atlas,
+ lem:cylinder-cartesian-source-calculus, lem:cylinder-physical-value,
+ lem:weak-partial-locality}
+\leanok
+On either chart $C_{j0}=e^{-t}c_j$ and $C_{j1}=-e^{-t}b_j$.
+The source weak derivative pair is
+$\chi_a(K_0-aK_\emptyset),\chi_aK_1$.
+Its cofactor combination equals $-e^{-t}\chi_aL_j^a(K)$, which is
+$-e^{-2t}\chi_{a-1}L_j^a(K)$ by the exact exponential identity.
+Apply negative-Jacobian weak transport with the supplied physical local norms.
+Open-patch weak locality then covers the entire puncture, including both cuts.
+Every pullback identification is pointwise; no raw a.e.\ entry is evaluated
+on a selected ray.
+\end{proof}
+
+\begin{lemma}[All specified ordered Cartesian weak pairs]
+\label{lem:cylinder-cartesian-weak-pairs}
+\uses{def:cylinder-cartesian-jet-candidates, def:cylinder-weak-jet,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinderCartesianJet_locallyIntegrable,
+ NoEmbeddedEigenvalues.cylinderCartesianJet_hasWeakPartial}
+\leanok
+For $a>1$ and a specified finite second weak cylinder jet $J$, every candidate
+entry $E_w$, $|w|\le2$, is locally integrable on the whole plane.
+Moreover $\partial_jE_w=E_{jw}$ weakly on the entire punctured plane whenever
+$|w|<2$. Every mixed ordered entry is retained separately.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-cartesian-candidate-norms,
+ lem:cylinder-physical-weak-partial, lem:cylinder-cartesian-source-calculus}
+\leanok
+For local integrability at $p$, use the genuine norm on the whole disk
+of radius $r_0(p)+1$.
+For the nil entry apply homogeneous transport at exponent $a$.
+For $E_i$, apply it at exponent $a-1$ to the coefficient family
+$K_\emptyset=L_i$, $K_0=T_i$, $K_1=A_i$.
+Its first Cartesian homogeneous coefficient is exactly $B_{ji}$.
+Thus the same fixed second entry is the weak derivative, with no commutation
+of $J_{01}$ and $J_{10}$ and no null-seam weak gluing.
+\end{proof}
+
 \begin{lemma}[Weighted Cartesian particular solution from the cylinder jet]
 \label{lem:cylinder-cartesian-particular}
 \uses{def:cylinder-weak-jet, def:cylinder-jet-operator, def:cylinder-physical-forcing,
@@ -2023,8 +2173,8 @@ The candidate is tied pointwise to the input:
 \begin{proof}
 \uses{lem:cylinder-physical-value, lem:cylinder-cartesian-candidate-norms,
  lem:cylinder-cartesian-candidate-forcing, lem:weak-jet-point-removal,
- lem:finite-weak-jet-sobolev, lem:log-cylinder-measure,
- lem:weak-partial-locality, lem:radial-weak-multiplier}
+ lem:finite-weak-jet-sobolev, lem:cylinder-cartesian-weak-pairs}
+\leanok
 Take $\rho_1=\rho/2$, $u_0=U_a(S)$ and the specified Cartesian candidate family.
 The nil entry agrees pointwise because $J_\emptyset=S$.
 The candidate norms give genuine whole-disk L2 at every ordered level,

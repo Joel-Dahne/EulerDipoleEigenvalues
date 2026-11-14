@@ -131,9 +131,9 @@ weights and local versus global regularity.
    without explicit corner classification or vorticity H¹. Reflected-periodic
    bounded covering supplies the d² norm and the critical input at every saddle.
    Weak uniqueness retains the canonical quadratic remainder jet.
-   **Remaining saddle frontier:** both transport gains, weighted Cartesian
-   reconstruction, and smooth harmonic comparison. The unchanged Cylinder
-   inverse (`lem:cylinder-inverse`) is an assembly reaching the last two.
+   **Remaining saddle frontier:** both transport gains and smooth harmonic
+   comparison. The unchanged Cylinder inverse (`lem:cylinder-inverse`) now
+   reaches only harmonic comparison.
    **Weak full-cylinder inversion is admission-free**
    (`lem:cylinder-weak-inverse`, `Regularity/CylinderWeak.lean`).
    Its original hypotheses supply the same actual nil integral, every ordered
@@ -145,34 +145,30 @@ weights and local versus global regularity.
    identities locally; smooth partitions of tests give them on the entire lift.
    No derivative-L¹ premise, mixed-entry commutation or null-seam weak gluing
    is used. The normalized Fourier round-trip identifies the original forcing.
-   **Next target: Weighted Cartesian particular solution**
-   (`lem:cylinder-cartesian-particular`, `Regularity/CylinderParticular.lean`).
-   Its statement is unchanged. Circle-valued inverse coordinates and the actual
-   physical value are constructed, with pointwise round-trips, continuity through
-   zero, unchanged growth constant and both parities. Fixed ordered first/second
-   candidates have genuine global weighted norms and unweighted whole-disk
-   norms. Their algebraic trace equals the original forcing jointly a.e.; the
-   two mixed cylinder words cancel separately. Finite-jet Sobolev membership
-   and level-by-level center removal are proved and wired into the assembly.
-   **Remaining hole:** the punctured-disk weak test identities for those same
-   candidates. Transport tests through overlapping log-polar charts with their
-   variable Jacobian, including every angular seam. Finite norms and the
-   algebraic forcing equation are not yet a weak Cartesian PDE.
-   No raw representative may be restricted to a selected ray.
-   **Following target: Smooth harmonic comparison**
+   **Weighted Cartesian particular solution is admission-free**
+   (`lem:cylinder-cartesian-particular`, `Regularity/CylinderParticular.lean`),
+   with its unchanged statement, actual pointwise candidate, original forcing,
+   growth constant, parity and specified ordered second jet. Genuine weighted
+   and whole-disk norms precede weak transport. Divergence-free cofactor tests
+   handle the variable negative Jacobian on two overlapping open charts;
+   weak locality includes both angular cuts. Supplied source weak entries
+   identify both mixed orders separately. Whole-disk norms remove the center.
+   No raw representative is restricted to a selected ray.
+   The original-forcing particular-solution assembly is now admission-free too.
+   **Next target: Smooth harmonic comparison**
    (`lem:weak-poisson-harmonic-comparison`, `Regularity/HarmonicComparison.lean`):
-   equal specified weak Laplacians on the same whole disk give a smooth harmonic
-   difference, retaining the original parity.
-   The source-facing particular-solution assembly supplies its own cylinder
-   hypotheses from the original physical Poisson data; it now reaches only
-   Cartesian reconstruction. Both remaining obligations are substantial.
+   from equal specified weak Laplacians, obtain a smooth harmonic representative
+   of the raw difference on the same whole disk, then transfer the common parity.
+   The weak-to-smooth representative step remains substantial; finite H2 norms
+   or classical mean-value theorems alone do not supply it. No extra source
+   hypothesis or smaller comparison disk may be substituted.
    Prioritize the odd–odd applications at exponents three halves and three.
    Their finite Taylor extraction is proved separately. Keep common interfaces
    generic; leave the mixed linear-jet corollary deferred.
-   **Ordinary separatrix frontier:** the four saddle inputs above plus Weighted
+   **Ordinary separatrix frontier:** the three saddle inputs above plus Weighted
    transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these seven inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these six inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.

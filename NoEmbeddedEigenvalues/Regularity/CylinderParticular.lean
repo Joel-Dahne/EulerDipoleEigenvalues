@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.Regularity.CylinderWeak
 import NoEmbeddedEigenvalues.Regularity.CylinderJointForcing
-import NoEmbeddedEigenvalues.Analysis.CylinderCartesianJet
+import NoEmbeddedEigenvalues.Analysis.CylinderCartesianWeak
 import NoEmbeddedEigenvalues.WeakJetFiniteness
 
 /-!
@@ -59,13 +59,8 @@ theorem cylinder_cartesian_particular {ρ a C : ℝ} (hρ : 0 < ρ) (ha : 1 < a)
   have hW : HasWeakJetOn 2 (U \ {0}) u₀ E := by
     refine ⟨hE0, ?_⟩
     intro w hw j
-    have hF := locallyIntegrableOn_of_locallyIntegrable_restrict
-      ((hL w (Nat.le_of_lt hw)).locallyIntegrable (by norm_num))
-    have hD := locallyIntegrableOn_of_locallyIntegrable_restrict
-      ((hL (j :: w) (by simpa using Nat.succ_le_of_lt hw)).locallyIntegrable (by norm_num))
-    refine ⟨hF.mono_set sdiff_subset, hD.mono_set sdiff_subset, ?_⟩
-    intro φ hφ
-    sorry
+    exact (cylinderCartesianJet_hasWeakPartial ha hJ w hw j).mono
+      (fun p hp ↦ ⟨mem_univ p, hp.2⟩)
   have hwhole := hW.remove_point hL
   have hU : U ⊆ localDisk 0 ρ := by
     intro p hp

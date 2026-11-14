@@ -429,12 +429,27 @@ representative for the restricted measure on $U$ and transfer both
 properties by a.e.\ congruence.
 \end{proof}
 
+\begin{lemma}[Compact tests through any smooth open chart]
+\label{lem:smooth-chart-test-pullback}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.chartTest, NoEmbeddedEigenvalues.isTestFunctionOn_chartTest}
+\leanok
+Let $e:S\to V$ be an open plane chart smooth on $S$.
+For a test $\phi$ supported compactly in $V$,
+$\phi^e=\mathbf1_S(\phi\circ e)$ is a genuine compact source test.
+No constant-Jacobian or orientation hypothesis is needed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Its support lies in $e^{-1}(\operatorname{tsupp}\phi)$, a compact subset of $S$.
+On $S$ use smooth composition; outside that compact set use local vanishing.
+\end{proof}
+
 \begin{lemma}[Tests and integrability through a smooth chart]
 \label{lem:smooth-chart-tests}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.chartTest,
- NoEmbeddedEigenvalues.isTestFunctionOn_chartTest,
- NoEmbeddedEigenvalues.locallyIntegrableOn_comp_chart_symm,
+\lean{NoEmbeddedEigenvalues.locallyIntegrableOn_comp_chart_symm,
  NoEmbeddedEigenvalues.memLp_two_comp_chart_symm,
  NoEmbeddedEigenvalues.integral_mul_test_chart,
  NoEmbeddedEigenvalues.ae_eq_comp_chart}
@@ -454,6 +469,7 @@ This last identity alone asserts no integrability.
 \end{lemma}
 
 \begin{proof}
+\uses{lem:smooth-chart-test-pullback}
 \leanok
 The pulled-back test's support is contained in
 $e^{-1}(\operatorname{tsupp}\phi)$, a compact subset of $S$.
@@ -480,12 +496,64 @@ cast to $\C$, and define
 \leanok
 \end{definition}
 
-\begin{lemma}[Weak gradient reconstructed through a chart]
-\label{lem:smooth-chart-weak-gradient}
+\begin{lemma}[Cofactor calculus for a variable Jacobian]
+\label{lem:smooth-chart-cofactor-calculus}
 \uses{def:smooth-chart-cofactor, def:weak-derivative-local}
 \lean{NoEmbeddedEigenvalues.contDiffOn_chartCofactor,
  NoEmbeddedEigenvalues.chartCofactor_divergence,
- NoEmbeddedEigenvalues.chartTest_cofactor_chain,
+ NoEmbeddedEigenvalues.chartCofactor_values,
+ NoEmbeddedEigenvalues.chartTest_cofactor_chain_det}
+\leanok
+For any smooth open plane chart, each cofactor column is smooth and
+$\partial_0C_{j0}+\partial_1C_{j1}=0$ on its source.
+For a target test $\phi$,
+\[
+ C_{j0}\partial_0\phi^e+C_{j1}\partial_1\phi^e
+   =(\det De)(\partial_j\phi)\circ e.
+\]
+The determinant can vary and have either sign.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:smooth-chart-test-pullback}
+\leanok
+The divergence cancels the classical mixed derivatives of the chart potential.
+The chain rule and the two-by-two adjugate identity give the second formula.
+Only smooth chart derivatives commute here, not supplied weak derivatives.
+\end{proof}
+
+\begin{lemma}[Specified weak pair through a negative variable Jacobian]
+\label{lem:negative-jacobian-weak-partial}
+\uses{def:smooth-chart-cofactor, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.of_comp_chart_neg}
+\leanok
+Let $e:S\to V$ be a smooth open plane chart with $\det De<0$.
+Suppose $\partial_iF=G_i$ weakly on $S$, while the specified physical
+$f,d$ are locally integrable on $V$ and satisfy pointwise on $S$
+\[
+ f\circ e=F,\qquad
+ (\det De)(d\circ e)=C_{j0}G_0+C_{j1}G_1.
+\]
+Then $\partial_jf=d$ weakly on $V$, with these same representatives.
+Local integrability is an input, not inferred from an integral-value identity.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:smooth-chart-test-pullback, lem:smooth-chart-cofactor-calculus,
+ lem:weak-derivative-basic}
+\leanok
+Test the two source weak identities against $C_{j0}\phi^e,C_{j1}\phi^e$.
+All source integrals are genuinely finite by local integrability and compact
+support. Cofactor divergence cancels the differentiated coefficients.
+Change variables on both sides; since $|\det De|=-\det De$, the same minus
+sign appears on both physical integrals and cancels.
+The physical local integrability hypotheses also justify the target integrals.
+\end{proof}
+
+\begin{lemma}[Weak gradient reconstructed through a chart]
+\label{lem:smooth-chart-weak-gradient}
+\uses{def:smooth-chart-cofactor, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.chartTest_cofactor_chain,
  NoEmbeddedEigenvalues.HasWeakPartialOn.comp_chart_symm}
 \leanok
 For a smooth open chart $e:S\to V$ with $\det De=2$,
@@ -498,7 +566,8 @@ If $\partial_iF=G_i$ weakly on $S$, then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:smooth-chart-tests, lem:weak-derivative-basic}
+\uses{lem:smooth-chart-tests, lem:weak-derivative-basic,
+ lem:smooth-chart-cofactor-calculus}
 \leanok
 For a target test $\phi$, let $\psi=\mathbf1_S(\phi\circ e)$.
 The products $C_{j0}\psi,C_{j1}\psi$ are genuine compact source tests.
