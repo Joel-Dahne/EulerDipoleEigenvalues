@@ -361,6 +361,43 @@ sum to $\partial_j\phi$. Sum their weak identities; local integrability
 justifies each finite integral decomposition.
 \end{proof}
 
+\begin{lemma}[Continuity of an L2 test pairing]
+\label{lem:l2-test-pairing-limit}
+\lean{NoEmbeddedEigenvalues.tendsto_integral_mul_of_L2}
+\leanok
+On any measure space, if genuine complex-L2 $f_i$ converge strongly to $F$ and
+$\psi$ is genuinely L2, then $\int f_i\psi\to\int F\psi$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Write the pairing as the L2 inner product of the fixed conjugate of $\psi$
+with the class of $f_i$. Continuity of the inner product gives convergence;
+representative agreement gives the actual integrals.
+\end{proof}
+
+\begin{lemma}[Strong L2 limits retain a specified weak partial]
+\label{lem:weak-partial-l2-limit}
+\uses{def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.of_tendsto_L2}
+\leanok
+Let $U\subset\R^2$. Suppose $\partial_jf_N=d_N$ weakly on $U$,
+all $f_N,d_N,F,D$ are genuinely in $L^2(U)$, and
+$f_N\to F$, $d_N\to D$ strongly in that same L2 space.
+Then $\partial_jF=D$ weakly on $U$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:l2-test-pairing-limit}
+\leanok
+Local integrability follows from the genuine L2 norms.
+For a smooth compactly supported test on $U$, both the test and its partial
+are L2. Their pairings converge by the preceding lemma.
+The tests vanish outside $U$, so restricted integrals equal whole-plane
+integrals, and the weak identities pass to the limit.
+No pointwise convergence, Sobolev density, or trace hypothesis is needed.
+\end{proof}
+
 \begin{lemma}[Specified gradient from local $H^1$]
 \label{lem:local-h1-specified-gradient}
 \uses{def:sobolev-local}

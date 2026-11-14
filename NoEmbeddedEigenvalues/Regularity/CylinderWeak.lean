@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.Analysis.CylinderSignedInverse
 import NoEmbeddedEigenvalues.Analysis.CylinderJetCandidates
 import NoEmbeddedEigenvalues.Analysis.CylinderCandidateEquation
 import NoEmbeddedEigenvalues.Analysis.CylinderLift
+import NoEmbeddedEigenvalues.Analysis.CylinderL2Weak
 import NoEmbeddedEigenvalues.LocalJets
 
 /-!
@@ -111,12 +112,9 @@ theorem cylinder_signed_inverse_weak {a : ℝ} (ha : 1 ≤ a) {M : Set ℕ}
       cylinderJetOperator a E =ᵐ[logCylinderMeasure] G := by
   obtain ⟨E, hE0, hEL2, hEA, hEq⟩ :=
     cylinder_signed_inverse_candidates_equation ha hgap hG hM
-  refine ⟨E, ⟨hE0, ⟨congrArg cylinderLift hE0, ?_⟩, hEL2⟩, hEq⟩
-  intro w hw j
-  refine ⟨locallyIntegrableOn_logCylinderProjection (hEL2 w (Nat.le_of_lt hw)),
-    locallyIntegrableOn_logCylinderProjection
-      (hEL2 (j :: w) (by simpa using Nat.succ_le_of_lt hw)), ?_⟩
-  intro φ hφ
-  sorry
+  have hV : AEStronglyMeasurable (cylinderSignedInverse a hG) cylinderFourierMeasure :=
+    (measurable_cylinderSignedInverse a hG).aestronglyMeasurable
+  have hWV := (cylinderSignedInverse_bounds ha hgap hG hM).2.1
+  exact ⟨E, ⟨hE0, cylinderInverseL2_family_hasWeakJet hV hWV hE0 hEA, hEL2⟩, hEq⟩
 
 end NoEmbeddedEigenvalues

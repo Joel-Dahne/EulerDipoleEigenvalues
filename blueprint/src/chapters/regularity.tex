@@ -1510,6 +1510,182 @@ norm gives local integrability there. This covers all seams by actual
 neighbourhoods, not by a null-seam argument.
 \end{proof}
 
+\begin{lemma}[Joint convergence and null-set transport on the real-angle lift]
+\label{lem:cylinder-lift-l2-convergence}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.integral_sq_logCylinderProjection_strip,
+ NoEmbeddedEigenvalues.tendsto_L2_logCylinderProjection_strip,
+ NoEmbeddedEigenvalues.ae_logCylinderProjection}
+\leanok
+For genuinely cylinder-L2 $S$ and any $b\in\R$,
+\[
+ \int_{\R\times(b,b+2\pi]}|\widehat S|^2
+   =2\pi\int |S|^2\,d\mu_{\rm cyl}.
+\]
+Consequently strong joint cylinder-L2 convergence transports to strong planar
+L2 convergence on each such strip, with a factor independent of the approximant.
+Joint cylinder a.e.\ assertions pull back jointly to the entire real-angle plane.
+These are norm and null-set statements, not weak derivative gluing.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-lift-local-mass, lem:log-cylinder-measure}
+\leanok
+Use measure preservation on the translated fundamental strip and the exact
+finite factor between probability Haar and angular length.
+Apply the squared-mass identity to each difference of approximants.
+For a.e.\ assertions, a countable family of translated strips covers the plane;
+pull back the joint null set on each strip and take their countable union.
+\end{proof}
+
+\begin{lemma}[Derivatives of the lifted signed kernel]
+\label{lem:cylinder-kernel-derivative}
+\uses{def:cylinder-joint-synthesis, def:cylinder-spectral-jets,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.cylinderJointKernel_lift,
+ NoEmbeddedEigenvalues.contDiff_cylinderJointKernel_lift,
+ NoEmbeddedEigenvalues.coordPartial_cylinderJointKernel_lift}
+\leanok
+For each signed spectral point $p=(\xi,n)$, the lifted kernel is
+\[
+ K((t,[\vartheta]),p)=e^{it\xi}e^{in\vartheta}.
+\]
+It is smooth on the entire real-angle plane, and
+$\partial_j\widehat K_p=d_j(p)\widehat K_p$ for both coordinates.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Mathlib's angular character has period $2\pi$, so its exponent is exactly
+$in\vartheta$. Differentiate the two real-variable exponential factors.
+In particular the angular multiplier is $in$ with no extra $2\pi$ factor.
+\end{proof}
+
+\begin{lemma}[Whole-lift weak differentiation of actual integrable synthesis]
+\label{lem:cylinder-integral-weak-partial}
+\uses{def:cylinder-joint-synthesis, def:cylinder-spectral-jets,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.integral_cylinderJointSynthesis_lift_mul_swap,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_hasWeakPartial}
+\leanok
+If $H$ and $d_jH$ are genuinely spectral L1, then
+$\partial_j\widehat{JH}=\widehat{J(d_jH)}$ weakly on all of $\R^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-kernel-derivative, lem:cylinder-joint-coefficients,
+ lem:weak-derivative-classical}
+\leanok
+Both actual inverse integrals are continuous, hence locally integrable.
+The kernel has modulus one, so the product of each integrable spectrum
+with an integrable planar test is genuinely jointly integrable.
+Fubini transfers both weak pairings to the spectral variable.
+Apply classical integration by parts to the smooth lifted kernel times the
+compact test. Its derivative supplies exactly $d_j$.
+The two L1 premises are used for these integrable approximants only.
+\end{proof}
+
+\begin{definition}[Common finite-mass cylinder spectral cutoffs]
+\label{def:cylinder-spectral-cutoff}
+\uses{def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderSpectralCutoff}
+\leanok
+Choose the fixed measurable increasing finite-mass exhaustion $A_N$ of the
+sigma-finite normalized signed spectral measure, and put
+$H^{(N)}=\mathbf1_{A_N}H$.
+Use the same $A_N$ for every ordered derivative spectrum.
+\end{definition}
+
+\begin{lemma}[Integrable simultaneous approximation of L2 spectra]
+\label{lem:cylinder-spectral-cutoff}
+\uses{def:cylinder-spectral-cutoff, def:cylinder-spectral-jets,
+ def:cylinder-l2-inverse, def:cylinder-joint-synthesis}
+\lean{NoEmbeddedEigenvalues.cylinderSpectralCutoff_memLp,
+ NoEmbeddedEigenvalues.cylinderSpectralCutoff_integrable,
+ NoEmbeddedEigenvalues.cylinderSpectralJet_cutoff,
+ NoEmbeddedEigenvalues.cylinderSpectralCutoff_tendsto,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_cutoff_memLp,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_cutoff_tendsto}
+\leanok
+For every genuine spectral-L2 $H$, each $H^{(N)}$ is genuinely L1 and L2,
+$[H^{(N)}]\to[H]$ strongly, and
+$[JH^{(N)}]\to\mathcal I_2[H]$ strongly in joint cylinder L2.
+Every ordered multiplier commutes with this same cutoff:
+$(H^{(N)})_w=(H_w)^{(N)}$.
+In particular all L2 derivative spectra through order two have integrable
+approximants without being assumed L1 themselves.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-l2-inverse}
+\leanok
+Restrict each L2 function to $A_N$. Its measure is finite, so the restricted
+function is integrable. The squared truncation error is bounded by $|H|^2$
+and is eventually zero at each spectral point. Dominated convergence gives
+strong L2 convergence.
+The inverse isometry transports it; on each integrable truncation the inverse
+class agrees with the actual integral. Multipliers commute pointwise with
+the common indicator.
+No frequency bounds or higher spectral moments are required.
+\end{proof}
+
+\begin{lemma}[Whole-lift weak differentiation of the L2 inverse]
+\label{lem:cylinder-l2-weak-partial}
+\uses{def:cylinder-l2-inverse, def:cylinder-spectral-jets,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.cylinderInverseL2_hasWeakPartial}
+\leanok
+If $H$ and $d_jH$ are genuinely spectral L2, the specified raw inverse
+representatives satisfy
+\[
+ \partial_j\widehat{\mathcal I_2[H]}
+   =\widehat{\mathcal I_2[d_jH]}
+\]
+weakly on the entire real-angle plane.
+Neither spectrum is assumed integrable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-integral-weak-partial, lem:cylinder-spectral-cutoff,
+ lem:cylinder-lift-l2-convergence, lem:weak-partial-l2-limit,
+ lem:weak-partial-locality}
+\leanok
+Truncate both spectra with the same finite-mass cutoff.
+Their actual integrals satisfy whole-plane weak identities, and converge
+strongly in joint cylinder L2 to the specified inverse classes.
+The exact strip mass transports convergence of both entries to every
+translated angular period. Closedness of a weak pair gives the limiting
+identity on that strip, hence on its open interior.
+Every planar point lies inside such a translated strip.
+Locality with a smooth partition of compact test supports proves the identity
+on the whole plane. No weak identity is inferred from a null seam.
+\end{proof}
+
+\begin{lemma}[The specified ordered inverse family is a weak jet]
+\label{lem:cylinder-l2-weak-jet}
+\uses{def:cylinder-l2-inverse, def:cylinder-spectral-jets,
+ def:cylinder-joint-synthesis, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinderInverseL2_family_hasWeakJet}
+\leanok
+Let $H$ be a.e.\ strongly measurable with $w_{\Z}H$ genuinely spectral L2.
+Suppose one family $E$ has $E_\emptyset=JH$ pointwise and
+$E_w=\mathcal I_2[H_w]$ jointly a.e.\ for $|w|\le2$.
+Then the same lifted family is a specified weak second jet of $\widehat{JH}$
+on the whole real-angle plane.
+Each ordered entry is retained; no commutation of mixed weak entries is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-spectral-jet-l2, lem:cylinder-l2-weak-partial,
+ lem:cylinder-lift-l2-convergence}
+\leanok
+For $|w|<2$, both $H_w$ and $H_{j::w}=d_jH_w$ are genuinely L2.
+Apply the inverse weak-partial theorem to this ordered pair.
+Transport the joint representative identifications to whole-plane a.e.\
+identifications, then use weak-derivative congruence.
+The nil entry remains the pointwise same actual integral.
+\end{proof}
+
 \begin{definition}[Specified finite weak cylinder jet]
 \label{def:cylinder-weak-jet}
 \uses{def:cylinder-joint-synthesis, def:log-cylinder-coordinates,
@@ -1542,24 +1718,17 @@ reconstruction.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cylinder-signed-candidate-equation, lem:cylinder-lift-local-mass}
+\uses{lem:cylinder-signed-candidate-equation, lem:cylinder-signed-inverse,
+ lem:cylinder-l2-weak-jet}
+\leanok
 Choose the specified entries retaining the same actual nil integral, finite
 joint norms and $\mathcal P_aE=G$ a.e.
-Every lifted entry is locally integrable on the whole real-angle plane.
-For each $|w|<2$, coordinate $j$, and smooth compactly supported planar test $\phi$,
-establish
-\[
- \int \widehat E_w\,\partial_j\phi
-   =-\int\widehat E_{j::w}\,\phi.
-\]
-One route truncates continuous frequency and angular degree simultaneously:
-the resulting integrals can be differentiated classically, while all entries
-through order two converge in joint L2 by the inverse isometry.
-Finite strip covers of the compact test support transfer this convergence
-to local planar L2, allowing the weak pairings to pass to the limit.
-The untruncated derivative spectra need not be L1.
-The identities must hold on the full periodic lift, not only on a strip
-with a seam omitted.
+The signed quotient has genuine quadratic weighted spectral L2.
+Its inverse-class identifications therefore give a specified second weak jet
+of this same actual integral on the entire real-angle lift.
+Together with the retained finite norms, this is the required cylinder H2 jet.
+The candidate equation is consequently the weak cylinder PDE with the original
+forcing, not merely a polynomial of unrelated L2 entries.
 \end{proof}
 
 \begin{lemma}[Weighted Cartesian particular solution from the cylinder jet]

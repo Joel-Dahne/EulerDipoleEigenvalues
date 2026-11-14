@@ -97,6 +97,9 @@ proof mechanisms. Module names below are relative to
   `ACLWeakDerivative.lean` gives the weak time identity from orbitwise ACL data,
   without selecting jointly measurable ACL representatives.
 - `WeakPartialLocality.lean`: gluing one specified weak derivative by a partition of tests.
+- `WeakPartialLimit.lean`: fixed L² test pairing continuity and closedness of a
+  specified weak partial under strong joint L² convergence of both entries on
+  the same domain, without Sobolev density, pointwise convergence or traces.
 - `WeakPointRemoval.lean`: finite whole-punctured-domain H¹ extends through a point;
   a cutoff in the other coordinate removes a parallel line from a tangential
   weak identity under local L¹ hypotheses, hence removes an isolated point too,
@@ -347,8 +350,8 @@ can be added here as they are formalized.
 - `Analysis/CylinderL2Inverse.lean`: isometric extension of actual signed synthesis
   from the dense L¹-intersection subspace to all normalized joint spectral L².
   Genuine joint inverse witnesses and exact mass need no L¹ premise; integrable
-  inputs retain the same actual integral a.e. This is not a Fourier round-trip
-  or a weak derivative theorem.
+  inputs retain the same actual integral a.e. Analysis and weak derivatives
+  are handled in the modules below.
 - `Analysis/CylinderFourierRelations.lean`: representative-compatible joint a.e.
   congruence, addition and scalar relations for actual normalized spectral data;
   joint cylinder identities are sliced only a.e. before mode extraction.
@@ -368,13 +371,24 @@ can be added here as they are formalized.
 - `Analysis/CylinderLift.lean`: finite joint mass on every translated angular
   period and local integrability on the full real-angle lift, including all seams.
   It asserts neither global planar L² nor weak gluing from a null seam.
+- `Analysis/CylinderLiftL2.lean`: exact translated-strip squared mass with factor
+  2π, transport of joint strong L² convergence, and joint null-set pullback to
+  the entire real-angle plane. No global planar L² or weak seam gluing.
+- `Analysis/CylinderIntegralWeak.lean`: classical lifted kernel derivatives and
+  Fubini transfer of test pairings. Actual integrable spectra and their specified
+  integrable first multipliers give whole-plane weak partials of the integrals.
+- `Analysis/CylinderSpectralCutoff.lean`: one common finite-mass exhaustion
+  commutes with every ordered multiplier. Each L² spectrum has actual integrable
+  truncations; their inverse integrals converge strongly to its L² inverse class.
+- `Analysis/CylinderL2Weak.lean`: whole-lift weak partials of arbitrary L² inverse
+  classes with L² derivative multipliers. Closedness on translated strips and
+  open-patch weak locality retain every ordered inverse-family entry and the
+  pointwise actual nil integral, without derivative-L¹ premises.
 - `Regularity/CylinderWeak.lean`: specified finite second weak cylinder jets on
-  the full periodic real-angle lift, the conjugated Laplacian, and the weak
-  inversion interface for the same actual normalized signed integral candidate.
-  Its signed-inverse candidate assembly provides finite L² entries, their exact
-  spectral inverse identification and the original forcing in their jet operator.
-  The weak-jet interface separately requires test identities on the whole lift;
-  no seam is omitted.
+  the full periodic real-angle lift, the conjugated Laplacian, and normalized
+  signed weak inversion. The same actual integral and finite ordered entries
+  solve the equation with the original forcing; no seam or extra source premise
+  is omitted.
 - `Regularity/CylinderParticular.lean`: weighted Cartesian reconstruction from
   that specified cylinder jet, whole-disk weak Poisson identities, finite radial
   norms, growth and parity, with a pointwise identity tying it to the same input

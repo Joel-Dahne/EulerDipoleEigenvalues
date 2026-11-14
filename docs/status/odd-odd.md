@@ -54,35 +54,28 @@ Proof work is now outside the odd–odd chapter:
   depending only on Odd–odd saddle estimates (`prop:saddle-dd`). Its quadratic
   mass and continuous-stream parity helpers are admission-free; no ordinary
   separatrix H¹/H³ or logarithmic forcing is used. The ordinary separatrix parent
-  now reaches eight primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
+  now reaches seven primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
   and the first eigenfunction saddle gain have assembly proofs with unchanged
   statements, canonical Fourier remainder jets and the unique normalized quadratic.
-  The saddle bootstrap reaches both transport gains plus three cylinder inputs:
-  weak full-cylinder inversion, weighted Cartesian reconstruction and smooth
-  harmonic comparison. The original Cylinder inverse is a checked assembly of
-  those interfaces, not an admission-free theorem.
-  Ordinary separatrix H¹/H³ and logarithmic forcing reach these five inputs plus
-  Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
-  **Next target:** Weak full-cylinder inversion (`lem:cylinder-weak-inverse`).
-  Spectral gap/ellipticity, normalized actual data, weighted spectral norms and
-  genuine joint cylinder inverse Plancherel are proved. The original physical
-  Poisson data give a bounded continuous signed candidate with identified angular
-  coefficients and both reflection signs pointwise, without extra support
-  premises or chosen-circle evaluation. An isometric L² synthesis extension now
-  gives actual finite inverse witnesses for every ordered derivative spectrum
-  through order two, without assuming those spectra L¹. Their exact mass and
-  inverse-class identification are proved, retaining the actual nil integral
-  pointwise. Both normalized Fourier round-trips now recover the original
-  cylinder L² data without an L¹ premise. The same candidate entries satisfy
-  the algebraic forcing equation; translated-period norms give local
-  integrability on the full real-angle lift. These are not yet weak derivatives:
-  the whole-plane weak test identities remain the hole in Weak full-cylinder
-  inversion. Physical reconstruction and harmonic comparison remain subsequent
-  obligations.
+  The saddle bootstrap reaches both transport gains, weighted Cartesian
+  reconstruction and smooth harmonic comparison: four inputs.
+  **Weak full-cylinder inversion is admission-free**
+  (`lem:cylinder-weak-inverse`), retaining its original hypotheses and actual nil
+  integral. Finite-mass spectral cutoffs make every ordered derivative spectrum
+  integrable without assuming the originals L¹. Kernel weak identities,
+  joint L² convergence, exact strip mass and genuine open-patch locality give
+  all weak entries on the entire real-angle lift. The Fourier round-trip
+  identifies the original forcing. No mixed-entry commutation or null-seam
+  weak gluing is used.
+  Cylinder inverse remains a checked assembly of two analytic obligations.
+  Ordinary separatrix H¹/H³ and logarithmic forcing reach the four saddle
+  inputs plus Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
+  **Next target:** Weighted Cartesian particular solution
+  (`lem:cylinder-cartesian-particular`), then Smooth harmonic comparison
+  (`lem:weak-poisson-harmonic-comparison`). Both remain substantial.
   Prioritize the odd–odd applications at three halves and three; their finite
-  Taylor extraction is already proved. Keep the common interfaces generic and
-  defer the mixed linear-jet corollary. The split exposes the analytic work;
-  it does not close any of these three obligations.
+  Taylor extraction is proved. Keep the shared interfaces generic and defer
+  mixed linear-jet extraction.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

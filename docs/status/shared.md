@@ -131,59 +131,41 @@ weights and local versus global regularity.
    without explicit corner classification or vorticity H¹. Reflected-periodic
    bounded covering supplies the d² norm and the critical input at every saddle.
    Weak uniqueness retains the canonical quadratic remainder jet.
-   **Remaining saddle frontier:** both transport gains and three cylinder
-   obligations: weak full-cylinder inversion, weighted Cartesian reconstruction,
-   and smooth harmonic comparison. The original Cylinder inverse
-   (`lem:cylinder-inverse`) is now a checked assembly with its unchanged statement.
-   Its former single admission is exposed as those three precise interfaces;
-   this decomposition does not close an analytic gap.
-   **Next target: Weak full-cylinder inversion** (`lem:cylinder-weak-inverse`,
-   `Regularity/CylinderWeak.lean`). The sole remaining hole in its proof is the
-   whole-plane test identity for each ordered word of length below two and each
-   coordinate. The original statement, same nil integral and ordered entries
-   are unchanged.
-   **Closed construction/identification layers:** arbitrary spectral L² synthesis,
-   all ordered candidate entries through order two with finite joint norms and
-   exact mass, and both normalized Fourier round-trips. Inverse analysis of the
-   original data now recovers the original cylinder function a.e., without any
-   L¹ premise. The same signed candidates satisfy the algebraic forcing identity
-   (`lem:cylinder-signed-candidate-equation`), not yet a weak PDE.
-   Translated fundamental strips also prove local integrability of every lifted
-   entry on the full real-angle plane (`lem:cylinder-lift-local-mass`); no seam
-   or raw representative restriction is ignored. All these layers are
-   admission-free. The weak-inverse theorem still has its own admission.
-   **Proof route for the test identity:** truncate frequency and angular degree
-   together, differentiate the resulting actual integrals, and pass to the
-   untruncated pairings by strong L² convergence of every ordered entry.
-   This needs a finite-strip bound uniform in the truncation and a weak-limit
-   argument on compact planar test supports; the untruncated derivative spectra
-   must not be assumed L¹. Local norm transport is not itself weak gluing.
-   **Following targets:**
-   - Weighted Cartesian particular solution (`lem:cylinder-cartesian-particular`,
-     `Regularity/CylinderParticular.lean`): transport the specified weak jet,
-     prove all radial norms, growth and parity, then remove the center at each
-     derivative level. Its pointwise pullback identity retains the same candidate.
-   - Smooth harmonic comparison (`lem:weak-poisson-harmonic-comparison`,
-     `Regularity/HarmonicComparison.lean`): equal whole-disk weak Laplacians give
-     a smooth harmonic difference with the original parity.
-   The source-facing particular-solution assembly
-   (`lem:cylinder-forcing-particular`) already connects the original Poisson data
-   to the first two interfaces without an extra support or cylinder-jet premise.
-   Original functions, specified Fourier jets and forcing weights are unchanged.
-   **Available foundations:** symbol gap/ellipticity, actual normalized spectral
-   data and weighted L²/L¹, exact joint inverse Plancherel, bounded continuous
-   signed synthesis, angular coefficient identification and pointwise parity.
-   Physical forcing gives support and parity without chosen-circle evaluation.
-   All these construction/norm layers are admission-free; they do not prove
-   the weak PDE. Direct signed synthesis avoids a trigonometric-normalization
-   bridge for the existential inverse.
+   **Remaining saddle frontier:** both transport gains, weighted Cartesian
+   reconstruction, and smooth harmonic comparison. The unchanged Cylinder
+   inverse (`lem:cylinder-inverse`) is an assembly reaching the last two.
+   **Weak full-cylinder inversion is admission-free**
+   (`lem:cylinder-weak-inverse`, `Regularity/CylinderWeak.lean`).
+   Its original hypotheses supply the same actual nil integral, every ordered
+   weak entry through order two, finite joint norms and the original forcing.
+   One finite-mass spectral exhaustion makes all L² derivative spectra
+   integrable simultaneously. Kernel integration by parts and Fubini prove
+   the actual approximants' whole-plane weak identities. Inverse isometry,
+   the exact translated-strip mass and L² weak-pair closedness give the limiting
+   identities locally; smooth partitions of tests give them on the entire lift.
+   No derivative-L¹ premise, mixed-entry commutation or null-seam weak gluing
+   is used. The normalized Fourier round-trip identifies the original forcing.
+   **Next target: Weighted Cartesian particular solution**
+   (`lem:cylinder-cartesian-particular`, `Regularity/CylinderParticular.lean`).
+   Transport the specified ordered jet through overlapping log-polar charts.
+   Derive genuine radial weighted norms, continuity/growth and parity, retaining
+   the same pointwise candidate pullback. Obtain unweighted whole-disk finite
+   norms from the positive radial weights, then remove the center at each
+   derivative level. No raw representative may be restricted to a selected ray.
+   **Following target: Smooth harmonic comparison**
+   (`lem:weak-poisson-harmonic-comparison`, `Regularity/HarmonicComparison.lean`):
+   equal specified weak Laplacians on the same whole disk give a smooth harmonic
+   difference, retaining the original parity.
+   The source-facing particular-solution assembly supplies its own cylinder
+   hypotheses from the original physical Poisson data; it now reaches only
+   Cartesian reconstruction. Both remaining obligations are substantial.
    Prioritize the odd–odd applications at exponents three halves and three.
-   Their finite Taylor extraction is already proved separately. Keep the common
-   analytic interfaces generic; leave the mixed linear-jet corollary deferred.
-   **Ordinary separatrix frontier:** the five saddle inputs above plus Weighted
+   Their finite Taylor extraction is proved separately. Keep common interfaces
+   generic; leave the mixed linear-jet corollary deferred.
+   **Ordinary separatrix frontier:** the four saddle inputs above plus Weighted
    transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these eight inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these seven inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -197,8 +179,9 @@ weights and local versus global regularity.
    this assembly route.
    The scalar/geometry batch is now
    stated in `ScalarDivision.lean` and `Regularity/SaddleNormalForm.lean`; cylinder
-   inversion and weighted transport/gluing are stated in `Regularity/CylinderInverse.lean`,
-   `WeightedTraces.lean` and `WeightedTransport.lean`. The endpoint/resonant-zero,
+   reconstruction and weighted transport/gluing remain analytic inputs in
+   `Regularity/CylinderParticular.lean`, `WeightedTraces.lean` and
+   `WeightedTransport.lean`. The endpoint/resonant-zero,
    weighted numerator and logarithmic interfaces are now stated too, covering
    the quotient branch's result nodes. The stream-H² congruence, local gluing,
    affine pullback and periodic reconstruction bridges are now admission-free:
