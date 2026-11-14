@@ -2011,6 +2011,36 @@ For radial bounds the radius identity pulls the denominator through
 composition; finite linear combinations preserve $L^2$.
 \end{proof}
 
+\begin{lemma}[Reflection parity of a specified weak jet]
+\label{lem:axis-reflection-weak-jet}
+\uses{def:local-weak-jets, def:affine-jet, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.affineJet_axisReflectionLinear,
+ NoEmbeddedEigenvalues.HasWeakJetOn.axisReflect_entries,
+ NoEmbeddedEigenvalues.HasWeakJetOn.axisReflect_laplacian}
+\leanok
+Let $U\subset\R^2$ be open and invariant under the coordinate reflection $R_j$.
+Let $D$ be a specified order-$n$ weak jet of $f$, and suppose
+$f(R_jp)=c f(p)$ a.e.\ on $U$, for a complex scalar $c$.
+If $N_j(w)$ counts occurrences of $j$ in the ordered word $w$, then
+\[
+ (-1)^{N_j(w)}D_w(R_jp)=cD_w(p)
+ \quad\hbox{a.e.\ on }U,\qquad |w|\le n.
+\]
+In particular, for $n=2$, a specified weak Laplacian $F=D_{00}+D_{11}$
+inherits the same reflection identity.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:affine-jet-pullback, lem:weak-jet-ae-comparison}
+\leanok
+The reflection is volume preserving and its matrix is diagonal.
+Its transformed jet is exactly $(-1)^{N_j(w)}D_w\circ R_j$.
+Compare this jet with $cD$ by weak uniqueness using the a.e.\ equality of
+the base functions. Each pure second entry has reflection factor one.
+Pull back the a.e.\ Laplace identity by the restricted quasi-measure-preserving
+reflection and add the two entries. No mixed entries are commuted.
+\end{proof}
+
 \begin{lemma}[Saddle-chart pullback of Sobolev and radial jet data]
 \label{lem:saddle-chart-pullback}
 \uses{def:saddle-ortho-chart, def:local-weak-jets, def:sobolev-local}

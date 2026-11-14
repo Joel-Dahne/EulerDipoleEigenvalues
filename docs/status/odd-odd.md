@@ -65,10 +65,12 @@ Proof work is now outside the odd–odd chapter:
   primitives plus Weighted transport H¹, Whole-edge zero trace and Interior
   elliptic H³. These six inputs remain admitted. Cylinder inversion is the current
   target: the uniform symbol bound, genuine weighted spectral L² inverse and
-  bounded continuous periodic synthesis are admission-free. The normalized
-  transform/weak-PDE, logarithmic-polar transport and harmonic remainder still
-  need implementation; see shared status for the representative/normalization
-  boundary. The physical inverse remains admitted.
+  bounded continuous periodic synthesis are admission-free. Weak forcing parity,
+  forbidden smooth Taylor jets and angular coefficient support are also proved.
+  Joint logarithmic-polar transport must still connect the physical and angular
+  parity statements; normalized transform/weak-PDE identification and the smooth
+  harmonic representative remain open. See shared status for this boundary.
+  The physical inverse remains admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

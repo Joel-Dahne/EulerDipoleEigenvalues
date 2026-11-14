@@ -26,6 +26,105 @@ derivatives and satisfies $\partial_u^2h+\partial_v^2h=0$.
 Its degree-$m$ jet means its order-$m$ derivatives at zero.
 \end{definition}
 
+\begin{lemma}[Axis parity of the weak Poisson forcing]
+\label{lem:cylinder-forcing-parity}
+\uses{def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasAxisParityOn.weak_laplacian}
+\leanok
+If $u$ has prescribed axis parity on $D_\rho(0)$ and a specified weak
+second jet with Laplacian $F$ a.e., then $F$ has the same axis parity.
+A separate parity assumption on the forcing is unnecessary.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:axis-reflection-weak-jet}
+\leanok
+The disk is invariant under both reflections. Apply the weak-jet reflection
+identity to each pure second entry and transport the a.e.\ Poisson identity
+under the volume-preserving reflection.
+\end{proof}
+
+\begin{lemma}[Forbidden Taylor jets from smooth axis parity]
+\label{lem:cylinder-forbidden-jets}
+\uses{def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasAxisParityOn.classicalJet_at_zero,
+ NoEmbeddedEigenvalues.HasAxisParityOn.forbidden_jet_zero}
+\leanok
+Let $\rho>0$ and let $f$ be smooth on $D_\rho(0)$ with prescribed axis
+parity $\varepsilon$. Every ordered jet of forbidden total degree vanishes:
+\[
+ \neg\mathrm{AllowedSaddleDegree}(\varepsilon,|w|)
+ \quad\Longrightarrow\quad \partial^w f(0)=0.
+\]
+Harmonicity is not required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:axis-reflection-weak-jet, lem:local-classical-weak-jet}
+\leanok
+The classical jets are specified weak jets. Their continuity upgrades the a.e.\
+reflection identity to pointwise equality, before evaluating at the origin.
+If a jet is nonzero, cancellation forces
+$(-1)^{N_j(w)}=\operatorname{sgn}(\varepsilon_j)$ for each axis.
+Since $N_0(w)+N_1(w)=|w|$, its degree has the allowed parity.
+At degree zero both reflection factors are one, so only even--even can
+have a nonzero value. This also excludes the odd--odd constant mode.
+\end{proof}
+
+\begin{definition}[Axis parity on the angular circle]
+\label{def:cylinder-angular-parity}
+\uses{def:cylinder-inverse-data}
+\lean{NoEmbeddedEigenvalues.HasCircleAxisParity}
+\leanok
+For $f:\R/(2\pi\Z)\to\C$, angular axis parity means the Haar-a.e.\ identities
+\[
+ f(\pi-\theta)=\operatorname{sgn}(\varepsilon_0)f(\theta),\qquad
+ f(-\theta)=\operatorname{sgn}(\varepsilon_1)f(\theta).
+\]
+Angular Haar measure has total mass one.
+\end{definition}
+
+\begin{lemma}[Allowed support of the angular Fourier coefficients]
+\label{lem:cylinder-angular-support}
+\uses{def:cylinder-angular-parity}
+\lean{NoEmbeddedEigenvalues.cylinderAngularCharacter_pi,
+ NoEmbeddedEigenvalues.cylinderAngularCoeff_translate,
+ NoEmbeddedEigenvalues.cylinderAngularCoeff_neg,
+ NoEmbeddedEigenvalues.HasCircleAxisParity.half_turn,
+ NoEmbeddedEigenvalues.HasCircleAxisParity.coeff_characters,
+ NoEmbeddedEigenvalues.HasCircleAxisParity.fourierCoeff_forbidden,
+ NoEmbeddedEigenvalues.HasCircleAxisParity.fourierCoeff_support}
+\leanok
+Let $f$ be integrable on the angular circle with the prescribed axis parity.
+Every coefficient integral
+$\widehat f(n)=\int e^{-in\theta}f(\theta)\,d\theta/(2\pi)$ is integrable, and
+\[
+ (-1)^{|n|}\widehat f(n)
+  =\operatorname{sgn}(\varepsilon_0)\operatorname{sgn}(\varepsilon_1)\widehat f(n),
+ \qquad
+ \widehat f(-n)=\operatorname{sgn}(\varepsilon_1)\widehat f(n).
+\]
+Consequently $\widehat f(n)=0$ whenever $|n|$ is forbidden.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Composition of the two a.e.\ reflections, transported under negation, gives
+the half-turn character. Haar translation and negation give the coefficient
+identities; the character of $\pi$ at index $n$ is $(-1)^{|n|}$.
+A nonzero coefficient therefore forces the allowed degree parity.
+At $n=0$, the second identity forces the second sign to be one and the
+half-turn identity then forces the first sign to be one.
+Bounded Fourier characters times the given L1 function are integrable,
+so the vanishing concerns genuine coefficient integrals.
+\end{proof}
+
+\begin{remark}[Angular slices of planar data]
+For planar L2 data, angular parity must be obtained by joint measure transport
+and a.e.\ slicing. Restricting an arbitrary planar representative to an
+arbitrarily chosen circle does not provide these premises.
+\end{remark}
+
 \begin{definition}[Cylinder spectral data and synthesis]
 \label{def:cylinder-spectral-data}
 \uses{def:cylinder-inverse-data}
@@ -205,12 +304,15 @@ Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 
 \begin{proof}
 \uses{lem:cylinder-symbol-gap, lem:cylinder-spectral-inverse,
- lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis}
-Choose a radial cutoff $\chi$ supported in the original disk and equal to
+ lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis,
+ lem:cylinder-forcing-parity, lem:cylinder-angular-support, lem:cylinder-forbidden-jets}
+The forcing inherits the solution's axis parity by its specified weak
+Laplacian. Choose a radial cutoff $\chi$ supported in the original disk and equal to
 one on a smaller disk. With $t=-\log r$, extend
 $G=r^{2-a}\chi F$ by zero to the full cylinder $\R\times S^1$.
-It is in $L^2(dt\,d\theta)$ by the hypothesis. For
-$\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
+It is in $L^2(dt\,d\theta)$ by the hypothesis. Joint measure transport and
+a.e.\ slicing give the angular parity identities, hence allowed Fourier support.
+For $\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
 in $t$ and angular mode $m$ give
 \[
  |(i\xi-a)^2-m^2|^2
@@ -258,8 +360,12 @@ weak derivative.
 The odd--odd bootstrap only needs finite Taylor remainders of the smooth harmonic
 part. The subcritical step uses its vanishing order two; the $a=3$ step
 subtracts its quadratic jet and uses vanishing through order three.
-Convergence of a full harmonic power series is not an input. The physical
-forcing weight is $F/r^{a-1}$, equivalent to $r^{2-a}F$ in cylinder measure.
+Convergence of a full harmonic power series is not an input.
+Lemma~\ref{lem:cylinder-forbidden-jets} derives forbidden-degree vanishing
+from smooth axis parity alone. Thus after obtaining the smooth harmonic
+representative, no harmonic expansion is needed to prove its jet assertions.
+The physical forcing weight is $F/r^{a-1}$, equivalent to $r^{2-a}F$ in
+cylinder measure.
 \end{remark}
 
 \begin{lemma}[Canonical stream data for saddle cylinder inversion]

@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.AffineJets
+import NoEmbeddedEigenvalues.Analysis.AxisReflectionJets
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 import NoEmbeddedEigenvalues.LiftPeriodization
 
@@ -163,16 +163,6 @@ theorem torusProj_saddleChart_axisReflect {P : ℝ × ℝ} (hP : P ∈ saddleSet
     dsimp [saddleOrthoChart]
     push_cast
     linear_combination -Real.pi * hkr
-
-/-- Cartesian axis reflections preserve planar volume. -/
-theorem measurePreserving_axisReflect (j : Fin 2) :
-    MeasurePreserving (axisReflect j) := by
-  rw [Measure.volume_eq_prod]
-  fin_cases j
-  · change MeasurePreserving (Prod.map Neg.neg id) _ _
-    exact (Measure.measurePreserving_neg volume).prod (MeasurePreserving.id volume)
-  · change MeasurePreserving (Prod.map id Neg.neg) _ _
-    exact (MeasurePreserving.id volume).prod (Measure.measurePreserving_neg volume)
 
 /-- Odd–odd torus parity becomes oddness in both local chart axes, a.e.
 (`lem:saddle-chart-parity`). No pointwise symmetry of an arbitrary L² representative

@@ -256,6 +256,15 @@ General Sobolev/jet, trace and weighted-transport prerequisites remain shared
 in the sections above. Mixed-sector and center results without Lean statements
 can be added here as they are formalized.
 
+- `Analysis/AxisReflectionJets.lean`: volume-preserving axis reflections, disk
+  invariance and diagonal pullback of ordered weak jets. Weak uniqueness transfers
+  scalar reflection parity to each specified entry and its Laplacian, without
+  mixed-entry symmetry or a separate forcing-parity premise.
+- `Analysis/CylinderAngularSpectrum.lean`: probability-Haar angular parity,
+  Fourier translation/reflection identities and allowed support, including the
+  zero-mode restriction. Integrable data give genuine coefficient integrals.
+  Its circle premises require joint transport/a.e. slicing of planar data,
+  not evaluation of raw planar L² functions on a chosen circle.
 - `Analysis/CylinderSymbol.lean`: exact logarithmic-cylinder symbol factorization,
   a uniform gap on a discrete angular spectrum, order-two ellipticity and a
   genuine spectral L² inverse with uniform weighted norm bound. Frequency ξ is
@@ -267,8 +276,13 @@ can be added here as they are formalized.
   synthesis kernels; genuine integrals, dominated continuity and pointwise
   angular periodicity. Modes are unnormalized; unitary Fourier reconstruction
   and identification of physical weak derivatives are separate from these bounds.
-- `Regularity/CylinderInverse.lean`: parity/nonresonance data, the physical weighted
-  cylinder inverse and smooth harmonic remainder with finite Taylor jets.
+- `Regularity/CylinderData.lean`: axis parity, allowed angular degrees and
+  Cartesian smooth harmonicity, independent of the inverse theorem.
+- `Regularity/CylinderParity.lean`: parity of the actual weak Poisson forcing,
+  continuous pointwise reflection identities and forbidden Taylor jets from
+  smooth axis parity alone. Upgrading a.e. identities precedes center evaluation.
+- `Regularity/CylinderInverse.lean`: the physical weighted cylinder inverse and
+  smooth harmonic remainder with finite Taylor jets.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization, differentiated Taylor

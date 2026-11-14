@@ -16,30 +16,6 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set
 open scoped ContDiff Topology
 
-/-- Euclidean disks centered at the origin are invariant under axis reflection. -/
-theorem localRadius_axisReflect (j : Fin 2) (p : ℝ × ℝ) :
-    localRadius 0 (axisReflect j p) = localRadius 0 p := by
-  unfold axisReflect
-  split_ifs <;> simp [localRadius]
-
-/-- Continuous representatives inherit the axis identities everywhere on a disk. -/
-theorem HasAxisParityOn.eqOn_disk {ρ : ℝ} {ε : Fin 2 → Bool} {f : ℝ × ℝ → ℂ}
-    (hp : HasAxisParityOn ε (localDisk 0 ρ) f) (hf : ContinuousOn f (localDisk 0 ρ))
-    (j : Fin 2) :
-    EqOn (fun p ↦ f (axisReflect j p)) (fun p ↦ paritySign (ε j) * f p) (localDisk 0 ρ) := by
-  have hU : IsOpen (localDisk 0 ρ) := by
-    apply isOpen_lt _ continuous_const
-    unfold localRadius
-    fun_prop
-  have hc : Continuous (axisReflect j) := by
-    unfold axisReflect
-    split_ifs <;> fun_prop
-  apply Measure.eqOn_open_of_ae_eq (hp j) hU
-  · exact hf.comp hc.continuousOn fun p hp ↦ by
-      change localRadius 0 (axisReflect j p) < ρ
-      rwa [localRadius_axisReflect]
-  · exact continuousOn_const.mul hf
-
 /-- Pure second jets vanish at the center for continuous odd--odd data. -/
 theorem oddOdd_pure_second_zero {ρ : ℝ} (hρ : 0 < ρ) {f : ℝ × ℝ → ℂ}
     (hp : HasAxisParityOn (fun _ ↦ false) (localDisk 0 ρ) f)

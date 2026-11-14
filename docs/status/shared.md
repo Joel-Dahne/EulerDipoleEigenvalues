@@ -145,11 +145,17 @@ weights and local versus global regularity.
    weight is genuinely L²; Hölder gives L¹ data. Their cosine/sine synthesis is
    an actual bounded continuous integral, pointwise periodic in angle. These
    layers are admission-free, but the physical inverse itself remains admitted.
-   **Next:** identify a parity-preserving normalized cylinder transform and its
-   weak derivatives. Derive allowed-mode support of the forcing from the input
-   solution's parity and its specified weak Laplacian, rather than assuming that
-   support. Then transport the jet through the logarithmic-polar chart
-   and obtain the smooth harmonic remainder and forbidden jets. Mathlib's real
+   Weak Poisson forcing now inherits the input solution's axis parity, retaining
+   its specified jet. Angular parity gives allowed support of actual integrable
+   Fourier coefficients, including exclusion of the constant mode outside
+   even–even. Smooth axis parity alone gives every forbidden Taylor jet; no
+   harmonic expansion is needed for that conclusion.
+   **Next:** joint logarithmic-polar measure transport and a.e. slicing must
+   supply the angular parity premises; do not restrict a raw planar representative
+   to a chosen circle. Identify the normalized cylinder transform and its weak
+   PDE, transport the finite Cartesian jet and obtain the smooth harmonic
+   representative. The forcing-parity and coefficient-support producers are
+   proved separately, not yet connected through this chart. Mathlib's real
    Fourier transform uses cycle frequency (a factor 2π); the symbol uses angular
    frequency and the synthesis modes are unnormalized. Once the physical jet's
    finite norms are established, `HasWeakPartialOn.remove_point` can fill its
