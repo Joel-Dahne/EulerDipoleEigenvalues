@@ -125,6 +125,195 @@ and a.e.\ slicing. Restricting an arbitrary planar representative to an
 arbitrarily chosen circle does not provide these premises.
 \end{remark}
 
+\begin{definition}[Logarithmic-polar coordinates and cylinder measure]
+\label{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.logPolarPlane, NoEmbeddedEigenvalues.logPolarStrip,
+ NoEmbeddedEigenvalues.logPolarDeriv, NoEmbeddedEigenvalues.logCylinderPlane,
+ NoEmbeddedEigenvalues.logCylinderProjection, NoEmbeddedEigenvalues.logCylinderMeasure}
+\leanok
+Write $C=\R/(2\pi\Z)$ and $d\mu_{\rm cyl}=dt\,d\theta/(2\pi)$ on $\R\times C$.
+Set
+\[
+ \Gamma(t,\theta)=e^{-t}(\cos\theta,\sin\theta),\qquad
+ S=\R\times(-\pi,\pi).
+\]
+Also set
+\[
+ A(t,\theta)=e^{-t}
+ \begin{pmatrix}-\cos\theta&-\sin\theta\\-\sin\theta&\cos\theta\end{pmatrix}.
+\]
+Projection sends a real angle to its class in $C$.
+\end{definition}
+
+\begin{lemma}[Joint logarithmic-polar measure transport]
+\label{lem:log-cylinder-measure}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.hasFDerivAt_logPolarPlane,
+ NoEmbeddedEigenvalues.det_logPolarDeriv,
+ NoEmbeddedEigenvalues.image_logPolarPlane_strip,
+ NoEmbeddedEigenvalues.measurePreserving_logPolarPlane,
+ NoEmbeddedEigenvalues.quasiMeasurePreserving_logPolarPlane,
+ NoEmbeddedEigenvalues.measurePreserving_logCylinderProjection,
+ NoEmbeddedEigenvalues.logCylinderMeasure_eq_smul_length,
+ NoEmbeddedEigenvalues.quasiMeasurePreserving_logCylinderPlane}
+\leanok
+The real-angle map has derivative $A(t,\theta)$ and is injective on $S$,
+with Jacobian determinant $-e^{-2t}$,
+and maps $S$ onto the plane minus the nonpositive horizontal ray.
+It sends $e^{-2t}\,dt\,d\theta$ on $S$ to planar area measure.
+Both the real-angle chart on $S$ and the full cylinder map preserve planar
+null sets under preimage. In particular, planar a.e.\ identities transport
+jointly to the cylinder.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Compose the positive radius $e^{-t}$ with the injective polar chart and
+compute the determinant. The area formula gives the weighted pushforward;
+the omitted ray has zero area. Positivity of the Jacobian makes weighted
+and unweighted source measures have the same null sets.
+Projection of one angular period preserves angular length measure.
+The open and half-open angular intervals differ by a null seam.
+Factor the real-angle map through this projection; probability Haar measure
+differs from angular length by the positive factor $1/(2\pi)$.
+\end{proof}
+
+\begin{definition}[Square-root-Jacobian cylinder pullback]
+\label{def:log-cylinder-l2-pullback}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.logCylinderL2Pullback}
+\leanok
+For a planar function $f$, define $Tf(t,\theta)=e^{-t}f(\Gamma(t,\theta))$.
+\end{definition}
+
+\begin{lemma}[Finite cylinder mass and exact normalization]
+\label{lem:log-cylinder-l2-mass}
+\uses{def:log-cylinder-l2-pullback}
+\lean{NoEmbeddedEigenvalues.memLp_logPolarPlane_scaled,
+ NoEmbeddedEigenvalues.memLp_logCylinderL2Pullback,
+ NoEmbeddedEigenvalues.integral_sq_logPolarPlane_scaled,
+ NoEmbeddedEigenvalues.integral_sq_logCylinderL2Pullback,
+ NoEmbeddedEigenvalues.memLp_logCylinder_slices}
+\leanok
+If $f\in L^2(\R^2)$, then $Tf\in L^2(\mu_{\rm cyl})$, with
+\[
+ \int |Tf|^2\,d\mu_{\rm cyl}=\frac1{2\pi}\int_{\R^2}|f|^2.
+\]
+More generally every cylinder L2 function has genuine angular L2 slices
+for almost every $t$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-measure}
+\leanok
+Pull back the actual L2 function using the weighted measure-preserving chart.
+The density $e^{-2t}$ in the squared norm is exactly the square of the
+multiplying factor $e^{-t}$. Pass to the angular quotient and scale angular
+length to probability Haar measure. This proves integrability as well as the
+mass identity. Fubini applied to the integrable squared norm gives finite
+slice mass; slice measurability follows from a jointly strongly measurable
+representative and joint a.e.\ agreement.
+\end{proof}
+
+\begin{definition}[Angular analysis of cylinder data]
+\label{def:cylinder-angular-analysis}
+\uses{def:log-cylinder-coordinates}
+\lean{NoEmbeddedEigenvalues.cylinderAngularCoeff}
+\leanok
+For cylinder data $G$, set
+\[
+ G_n(t)=\int_C e^{-in\theta}G(t,\theta)\,\frac{d\theta}{2\pi},
+ \qquad n\in\Z.
+\]
+\end{definition}
+
+\begin{lemma}[Angular Parseval and real-line coefficient mass]
+\label{lem:cylinder-angular-analysis}
+\uses{def:cylinder-angular-analysis}
+\lean{NoEmbeddedEigenvalues.hasSum_sq_circle_fourierCoeff,
+ NoEmbeddedEigenvalues.cylinderAngularCoeff_parseval,
+ NoEmbeddedEigenvalues.cylinderAngularCoeff_memLp}
+\leanok
+If $G\in L^2(\mu_{\rm cyl})$, each $G_n$ is an actual L2 function on $\R$.
+For almost every $t$,
+\[
+ \sum_{n\in\Z}|G_n(t)|^2=\int_C |G(t,\theta)|^2\,\frac{d\theta}{2\pi},
+\]
+with a convergent sum.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-l2-mass}
+\leanok
+Apply Mathlib's probability-Haar Parseval identity to the L2 class of each
+good slice. Transfer both its coefficients and squared norm to the raw
+representative by a.e.\ agreement. The parameter integrals are a.e.\ measurable.
+Each individual squared coefficient is bounded by the nonnegative Parseval
+sum. Fubini makes the latter an integrable majorant in $t$, proving real-line
+L2 membership without assuming time integrability of $G_n$.
+\end{proof}
+
+\begin{definition}[Physical forcing on the logarithmic cylinder]
+\label{def:cylinder-physical-forcing}
+\uses{def:log-cylinder-l2-pullback, def:local-plane-geometry}
+\lean{NoEmbeddedEigenvalues.cylinderWeightedExtension,
+ NoEmbeddedEigenvalues.cylinderForcing}
+\leanok
+For planar forcing $F$ on $D_\rho(0)$, extend
+$W=\mathbf1_{D_\rho(0)}F/r^{a-1}$ by zero and define $G=TW$.
+\end{definition}
+
+\begin{lemma}[Cylinder forcing from the specified Poisson data]
+\label{lem:cylinder-forcing-data}
+\uses{def:cylinder-physical-forcing, def:cylinder-inverse-data,
+ def:cylinder-angular-parity, def:cylinder-angular-analysis,
+ def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.localRadius_logCylinderPlane,
+ NoEmbeddedEigenvalues.logCylinderPlane_reflect_fst,
+ NoEmbeddedEigenvalues.logCylinderPlane_reflect_snd,
+ NoEmbeddedEigenvalues.cylinderForcing_apply,
+ NoEmbeddedEigenvalues.cylinderForcing_memLp,
+ NoEmbeddedEigenvalues.cylinderForcing_sq_mass,
+ NoEmbeddedEigenvalues.HasAxisParityOn.cylinderWeightedExtension,
+ NoEmbeddedEigenvalues.HasAxisParityOn.logCylinder_slices,
+ NoEmbeddedEigenvalues.cylinder_forcing_data,
+ NoEmbeddedEigenvalues.cylinder_forcing_modes}
+\leanok
+Suppose $u$ has prescribed axis parity, a specified second weak jet with
+Laplacian $F$ on $D_\rho(0)$, and $F/r^{a-1}\in L^2(D_\rho(0))$.
+The associated $G$ is genuinely in cylinder L2, equals $r^{2-a}F\circ\Gamma$
+when $r=e^{-t}<\rho$ and zero otherwise, and satisfies
+\[
+ \int |G|^2\,d\mu_{\rm cyl}
+   =\frac1{2\pi}\int_{D_\rho(0)}\left|\frac{F}{r^{a-1}}\right|^2.
+\]
+For almost every $t$, its angular slice is L2, has the prescribed angular
+parity, and has genuine Fourier coefficients supported on allowed degrees.
+Each time-dependent coefficient $G_n$ is L2 on $\R$ and is zero a.e.\
+when $|n|$ is forbidden.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-forcing-parity, lem:log-cylinder-measure,
+ lem:log-cylinder-l2-mass, lem:cylinder-angular-support, lem:cylinder-angular-analysis}
+\leanok
+The specified weak Laplacian gives the forcing parity.
+Radial division and zero extension preserve it because the disk is reflection
+invariant. The identity $r(\Gamma(t,\theta))=e^{-t}$ gives the forcing formula
+and the mass identity. The two Cartesian reflections become
+$\theta\mapsto\pi-\theta$ and $\theta\mapsto-\theta$.
+Pull back the planar parity identities jointly before applying a.e.\ slicing.
+Then use angular support and angular L2 analysis. No forcing-support hypothesis
+or evaluation on an exceptional circle is added.
+\end{proof}
+
+\begin{remark}[No differentiated forcing cutoff]
+Zero extension of the forcing is enough here: the cylinder inverse acts on
+L2 data and no derivative of a cutoff is taken. The resulting Poisson forcing
+agrees with $F$ on the input open disk. A smooth radial cutoff is optional,
+not an additional analytic prerequisite.
+\end{remark}
+
 \begin{definition}[Cylinder spectral data and synthesis]
 \label{def:cylinder-spectral-data}
 \uses{def:cylinder-inverse-data}
@@ -305,13 +494,13 @@ Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 \begin{proof}
 \uses{lem:cylinder-symbol-gap, lem:cylinder-spectral-inverse,
  lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis,
- lem:cylinder-forcing-parity, lem:cylinder-angular-support, lem:cylinder-forbidden-jets}
-The forcing inherits the solution's axis parity by its specified weak
-Laplacian. Choose a radial cutoff $\chi$ supported in the original disk and equal to
-one on a smaller disk. With $t=-\log r$, extend
-$G=r^{2-a}\chi F$ by zero to the full cylinder $\R\times S^1$.
-It is in $L^2(dt\,d\theta)$ by the hypothesis. Joint measure transport and
-a.e.\ slicing give the angular parity identities, hence allowed Fourier support.
+ lem:cylinder-forcing-data, lem:cylinder-angular-analysis, lem:cylinder-forbidden-jets}
+With $t=-\log r$, use the zero-extended cylinder forcing
+$G=\mathbf1_{\{r<\rho\}}r^{2-a}F\circ\Gamma$.
+Lemma~\ref{lem:cylinder-forcing-data} supplies its finite cylinder L2 norm
+and allowed angular support from the original Poisson data.
+Its angular coefficients are L2 functions of $t$, with the probability-Haar
+normalization of Lemma~\ref{lem:cylinder-angular-analysis}.
 For $\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
 in $t$ and angular mode $m$ give
 \[
@@ -328,7 +517,7 @@ since $\sum_m\int_\R(1+\xi^2+m^2)^{-2}d\xi<\infty$.
 
 Set $u_0=r^aV(-\log r,\theta)$. Polar differentiation gives the displayed
 weighted norms and $|u_0|\le Cr^a$, while
-$\Delta u_0=\chi F$ off the origin. It remains to exclude a distribution
+$\Delta u_0=F$ on the original disk off the origin. It remains to exclude a distribution
 at the origin. Let $\eta_\epsilon$ vanish on $r<\epsilon$ and equal one on
 $r>2\epsilon$. On the intervening annulus $A_\epsilon$,
 \[

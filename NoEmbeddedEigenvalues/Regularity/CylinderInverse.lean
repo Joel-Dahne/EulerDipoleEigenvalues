@@ -1,6 +1,5 @@
-import NoEmbeddedEigenvalues.Regularity.CylinderParity
+import NoEmbeddedEigenvalues.Regularity.CylinderForcing
 import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis
-import NoEmbeddedEigenvalues.Analysis.CylinderAngularSpectrum
 
 /-!
 # Weighted cylinder inverse interface

@@ -265,6 +265,15 @@ can be added here as they are formalized.
   zero-mode restriction. Integrable data give genuine coefficient integrals.
   Its circle premises require joint transport/a.e. slicing of planar data,
   not evaluation of raw planar L² functions on a chosen circle.
+- `Analysis/LogPolarCoordinates.lean`: real-angle and circle-valued logarithmic
+  cylinder maps, exact derivative/Jacobian, area-preserving weighted chart and
+  joint null-set transport. The null angular seam and probability-Haar scaling
+  are handled before slicing.
+- `Analysis/LogPolarL2.lean`: square-root-Jacobian L² pullback, actual finite norms,
+  exact 1/(2π) squared-mass normalization and a.e. angular L² slices.
+- `Analysis/CylinderAngularTransform.lean`: normalized angular coefficient
+  functions, Parseval on a.e. slices and actual real-line L² membership of each
+  coefficient, using the Parseval sum as an integrable majorant.
 - `Analysis/CylinderSymbol.lean`: exact logarithmic-cylinder symbol factorization,
   a uniform gap on a discrete angular spectrum, order-two ellipticity and a
   genuine spectral L² inverse with uniform weighted norm bound. Frequency ξ is
@@ -281,6 +290,11 @@ can be added here as they are formalized.
 - `Regularity/CylinderParity.lean`: parity of the actual weak Poisson forcing,
   continuous pointwise reflection identities and forbidden Taylor jets from
   smooth axis parity alone. Upgrading a.e. identities precedes center evaluation.
+- `Regularity/CylinderForcing.lean`: zero-extended physical forcing and exact
+  logarithmic-cylinder weight/mass formulas. The original solution parity and
+  specified weak Laplacian give joint forcing parity, a.e. angular slices and
+  allowed Fourier support. Its mode functions are real-line L², with forbidden
+  modes zero a.e.; no separate support premise or chosen-circle evaluation.
 - `Regularity/CylinderInverse.lean`: the physical weighted cylinder inverse and
   smooth harmonic remainder with finite Taylor jets.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.

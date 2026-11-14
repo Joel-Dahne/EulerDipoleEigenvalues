@@ -150,14 +150,19 @@ weights and local versus global regularity.
    Fourier coefficients, including exclusion of the constant mode outside
    even–even. Smooth axis parity alone gives every forbidden Taylor jet; no
    harmonic expansion is needed for that conclusion.
-   **Next:** joint logarithmic-polar measure transport and a.e. slicing must
-   supply the angular parity premises; do not restrict a raw planar representative
-   to a chosen circle. Identify the normalized cylinder transform and its weak
-   PDE, transport the finite Cartesian jet and obtain the smooth harmonic
-   representative. The forcing-parity and coefficient-support producers are
-   proved separately, not yet connected through this chart. Mathlib's real
-   Fourier transform uses cycle frequency (a factor 2π); the symbol uses angular
-   frequency and the synthesis modes are unnormalized. Once the physical jet's
+   Joint logarithmic-polar transport now connects these statements: its actual
+   Jacobian and null-set transport, zero-extended physical forcing and a.e.
+   angular L²/parity slices are proved. The original Poisson data produce allowed
+   support, without a forcing-support hypothesis or evaluation on a chosen circle.
+   The exact cylinder squared mass is 1/(2π) times the physical weighted mass.
+   Angular Parseval and real-line L² membership of each coefficient are proved;
+   forbidden coefficients vanish a.e. in logarithmic radius.
+   **Next:** real-line L² Fourier analysis of these modes, normalized reconstruction
+   and the weak cylinder PDE; then transport the finite Cartesian jet and obtain
+   the smooth harmonic representative. Mathlib uses cycle frequency (a factor
+   2π), while the symbol uses angular frequency. Signed complex angular coefficients
+   also need conversion to the existing unnormalized cosine/sine synthesis, with
+   the constant mode normalized separately. Once the physical jet's
    finite norms are established, `HasWeakPartialOn.remove_point` can fill its
    center at each derivative level without radial commutator estimates.
    **Ordinary separatrix frontier:** those three inputs, Weighted transport H¹

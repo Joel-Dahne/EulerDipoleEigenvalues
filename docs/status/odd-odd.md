@@ -67,9 +67,11 @@ Proof work is now outside the odd–odd chapter:
   target: the uniform symbol bound, genuine weighted spectral L² inverse and
   bounded continuous periodic synthesis are admission-free. Weak forcing parity,
   forbidden smooth Taylor jets and angular coefficient support are also proved.
-  Joint logarithmic-polar transport must still connect the physical and angular
-  parity statements; normalized transform/weak-PDE identification and the smooth
-  harmonic representative remain open. See shared status for this boundary.
+  Joint logarithmic-polar transport now supplies the physical forcing's actual
+  cylinder norm, exact 1/(2π) squared-mass normalization and a.e. angular parity
+  slices. Angular Parseval gives real-line L² coefficient functions, with forbidden
+  modes zero a.e. Normalized real Fourier reconstruction, weak-PDE identification,
+  the Cartesian jet and smooth harmonic representative remain open.
   The physical inverse remains admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is

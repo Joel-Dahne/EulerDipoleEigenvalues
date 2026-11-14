@@ -56,6 +56,9 @@ import NoEmbeddedEigenvalues.OddOddCoercivity
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
 import NoEmbeddedEigenvalues.Analysis.AxisReflectionJets
 import NoEmbeddedEigenvalues.Analysis.CylinderAngularSpectrum
+import NoEmbeddedEigenvalues.Analysis.CylinderAngularTransform
+import NoEmbeddedEigenvalues.Analysis.LogPolarCoordinates
+import NoEmbeddedEigenvalues.Analysis.LogPolarL2
 import NoEmbeddedEigenvalues.Analysis.CylinderSymbol
 import NoEmbeddedEigenvalues.Analysis.CylinderSpectralMass
 import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis
@@ -154,6 +157,7 @@ import NoEmbeddedEigenvalues.OrbitNumerators
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderData
 import NoEmbeddedEigenvalues.Regularity.CylinderParity
+import NoEmbeddedEigenvalues.Regularity.CylinderForcing
 import NoEmbeddedEigenvalues.Regularity.CylinderInverse
 import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.TraceWeakGluing
