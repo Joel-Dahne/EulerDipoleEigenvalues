@@ -75,9 +75,12 @@ Proof work is now outside the odd–odd chapter:
   negative-mode sign come from the original physical Poisson data.
   Signed folding now gives the actual trigonometric forcing data, its weighted
   spectral inverse and a bounded continuous periodic synthesis with both pointwise
-  reflection signs. Each allowed mode's actual inverse integral is identified
-  with its L² inverse and has exact finite time mass. Joint cylinder L²
-  reconstruction, the weak PDE, Cartesian jet and harmonic representative remain open.
+  reflection signs. Direct signed complex synthesis now has genuine joint
+  cylinder L², exact mass and identified actual angular coefficients. Applied to
+  the original Poisson data, its actual signed inverse is continuous, bounded
+  and has both reflection signs pointwise. The signed basis avoids a cosine/sine
+  normalization bridge for the existential physical inverse. Its weak cylinder
+  jet/PDE, Cartesian jet and harmonic representative remain open.
   The physical inverse remains admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is

@@ -63,6 +63,11 @@ import NoEmbeddedEigenvalues.Analysis.CylinderTrigData
 import NoEmbeddedEigenvalues.Analysis.CylinderTrigInverse
 import NoEmbeddedEigenvalues.Analysis.CylinderTrigParity
 import NoEmbeddedEigenvalues.Analysis.CylinderTimeSynthesis
+import NoEmbeddedEigenvalues.Analysis.CylinderJointSynthesis
+import NoEmbeddedEigenvalues.Analysis.CylinderJointL2
+import NoEmbeddedEigenvalues.Analysis.CylinderJointParity
+import NoEmbeddedEigenvalues.Analysis.CylinderSignedMass
+import NoEmbeddedEigenvalues.Analysis.CylinderSignedInverse
 import NoEmbeddedEigenvalues.Analysis.FourierL2Integral
 import NoEmbeddedEigenvalues.Analysis.LogPolarCoordinates
 import NoEmbeddedEigenvalues.Analysis.LogPolarL2
@@ -167,6 +172,7 @@ import NoEmbeddedEigenvalues.Regularity.CylinderParity
 import NoEmbeddedEigenvalues.Regularity.CylinderForcing
 import NoEmbeddedEigenvalues.Regularity.CylinderFourierForcing
 import NoEmbeddedEigenvalues.Regularity.CylinderSpectralForcing
+import NoEmbeddedEigenvalues.Regularity.CylinderJointForcing
 import NoEmbeddedEigenvalues.Regularity.CylinderInverse
 import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.TraceWeakGluing

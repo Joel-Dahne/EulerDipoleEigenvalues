@@ -916,6 +916,252 @@ Apply the normalized inverse-integral theorem, specializing to the actual
 physical forcing's cylinder L2 data when required.
 \end{proof}
 
+\begin{definition}[Joint signed cylinder synthesis]
+\label{def:cylinder-joint-synthesis}
+\uses{def:cylinder-normalized-frequency-data, def:cylinder-time-synthesis}
+\lean{NoEmbeddedEigenvalues.cylinderJointKernel,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis,
+ NoEmbeddedEigenvalues.cylinderJointTimeModes}
+\leanok
+Write $\chi_n([\vartheta])=e^{in\vartheta}$ on
+$\R/(2\pi\Z)$. For signed spectral data $H$, set
+\[
+ K((t,\theta),(\xi,n))=e^{it\xi}\chi_n(\theta),\qquad
+ JH(t,\theta)=\int K((t,\theta),p)H(p)\,d\mu_{\mathcal F}(p),
+\]
+and $B_H(t,n)=T_\nu(H(\cdot,n))(t)$.
+These are actual integrals; their finiteness is established separately.
+\end{definition}
+
+\begin{lemma}[Actual joint synthesis and its angular coefficients]
+\label{lem:cylinder-joint-coefficients}
+\uses{def:cylinder-joint-synthesis, def:cylinder-angular-analysis}
+\lean{NoEmbeddedEigenvalues.norm_cylinderJointKernel,
+ NoEmbeddedEigenvalues.continuous_cylinderJointKernel,
+ NoEmbeddedEigenvalues.integrable_cylinderJointSynthesis,
+ NoEmbeddedEigenvalues.continuous_cylinderJointSynthesis,
+ NoEmbeddedEigenvalues.norm_cylinderJointSynthesis_le,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_slice_memLp,
+ NoEmbeddedEigenvalues.cylinderFourierMeasure_mode_integrable,
+ NoEmbeddedEigenvalues.cylinderFourierMeasure_mode_memLp,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_coeff}
+\leanok
+For $H\in L^1(\mu_{\mathcal F})$, the actual integral $JH$ is continuous and
+bounded by $\int|H|\,d\mu_{\mathcal F}$ on the whole cylinder.
+Every angular slice is genuinely L2, and for every $n,t$,
+\[
+ (JH)_n(t)=B_H(t,n).
+\]
+Every signed spectral mode is genuinely L1 in $\nu$; if $H$ is also L2, every
+mode is genuinely L2 as well. There is no exceptional angular degree.
+\end{lemma}
+
+\begin{proof}
+\uses{def:cylinder-fourier-modes}
+\leanok
+The kernel is jointly continuous and has norm one. Domination by $|H|$ gives
+continuity and a finite uniform bound; probability Haar gives angular L2 at
+every time. Counting-measure Fubini leaves no exceptional degree.
+For the coefficient identity, $|H|$ also dominates the product of the
+coefficient character and synthesis kernel on angle times spectrum. Fubini
+exchanges the genuine integrals. Angular orthogonality gives the Kronecker
+symbol $\delta_{n,m}$, whose counting integral selects precisely the actual
+frequency slice used by $T_\nu$.
+\end{proof}
+
+\begin{lemma}[Genuine joint inverse Plancherel]
+\label{lem:cylinder-joint-l2}
+\uses{def:cylinder-joint-synthesis}
+\lean{NoEmbeddedEigenvalues.measurable_cylinderJointTimeModes,
+ NoEmbeddedEigenvalues.cylinderJointTimeModes_memLp,
+ NoEmbeddedEigenvalues.cylinderJointTimeModes_sq_mass,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_slice_mass,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_memLp,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_sq_mass}
+\leanok
+For $H\in L^1(\mu_{\mathcal F})\cap L^2(\mu_{\mathcal F})$, the actual family
+$B_H$ is jointly L2 in $dt\,d\#(n)$, and $JH$ is jointly L2 in $\mu_{\rm cyl}$.
+Both finite squared masses equal the spectral mass:
+\[
+ \int|JH|^2\,d\mu_{\rm cyl}
+ =\int_\R\sum_{n\in\Z}|B_H(t,n)|^2\,dt
+ =\int|H|^2\,d\mu_{\mathcal F}.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-joint-coefficients, lem:cylinder-time-synthesis,
+ lem:cylinder-normalized-fourier-data, lem:cylinder-angular-analysis}
+\leanok
+Each actual time mode has finite L2 by the normalized inverse-integral theorem.
+Its continuity gives joint measurability across the countable index. Spectral
+product L2 supplies a finite sum of mode masses; modewise Plancherel transfers
+that sum to time. The product integrability criterion gives genuine joint L2
+of $B_H$.
+On every angular slice, Parseval and the coefficient identity give
+$\int|JH(t,\theta)|^2\,d\theta=\sum_n|B_H(t,n)|^2$.
+The latter is now an integrable function of time, so product Fubini gives genuine
+joint L2 of $JH$. Only after establishing these finite norms do the integrated
+mass identities follow.
+\end{proof}
+
+\begin{lemma}[Pointwise parity of signed joint synthesis]
+\label{lem:cylinder-joint-parity}
+\uses{def:cylinder-joint-synthesis, def:cylinder-inverse-data}
+\lean{NoEmbeddedEigenvalues.cylinderJointSynthesis_neg,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_half_turn,
+ NoEmbeddedEigenvalues.cylinderJointSynthesis_parity}
+\leanok
+Suppose $H\in L^1(\mu_{\mathcal F})$ vanishes jointly a.e.\ at forbidden degrees,
+and for each $n$, $H(\xi,-n)=\operatorname{sgn}(\varepsilon_1)H(\xi,n)$ for
+$\nu$-a.e.\ $\xi$. Then for every $t,\theta$,
+\[
+ JH(t,\pi-\theta)=\operatorname{sgn}(\varepsilon_0)JH(t,\theta),\qquad
+ JH(t,-\theta)=\operatorname{sgn}(\varepsilon_1)JH(t,\theta).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-trig-parity, lem:cylinder-angular-support}
+\leanok
+Combine the negative-mode null sets over all integers before integrating in
+frequency. Reindex the inner counting integral by $n\mapsto-n$ to obtain
+angular-negation parity pointwise.
+Allowed degree gives
+$\chi_n(\pi)=(-1)^{|n|}=\operatorname{sgn}(\varepsilon_0)
+\operatorname{sgn}(\varepsilon_1)$; forbidden data are zero. Apply this character
+before integration to obtain the half-turn identity, then compose with negation.
+No a.e.\ representative is evaluated on a selected circle or time slice.
+\end{proof}
+
+\begin{definition}[Signed spectral weight and inverse]
+\label{def:cylinder-signed-inverse}
+\uses{def:cylinder-spectral-data, def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinderSignedWeight,
+ NoEmbeddedEigenvalues.cylinderSignedInverse}
+\leanok
+On the original normalized signed spectrum set
+\[
+ w_{\Z}(\xi,n)=1+\xi^2+|n|^2,\qquad
+ W_{a,G}(\xi,n)=\Phi_G(\xi,n)/\sigma_a(\xi,|n|).
+\]
+\end{definition}
+
+\begin{lemma}[Finite reciprocal signed spectral mass]
+\label{lem:cylinder-signed-mass}
+\uses{def:cylinder-signed-inverse}
+\lean{NoEmbeddedEigenvalues.measurable_cylinderAbsModes,
+ NoEmbeddedEigenvalues.measurable_cylinderSignedWeight,
+ NoEmbeddedEigenvalues.one_le_cylinderSignedWeight,
+ NoEmbeddedEigenvalues.summable_inv_one_add_int_natAbs_sq,
+ NoEmbeddedEigenvalues.memLp_inv_cylinderSignedWeight,
+ NoEmbeddedEigenvalues.integrable_of_memLp_cylinderSignedWeight}
+\leanok
+One has $w_{\Z}\ge1$ and $w_{\Z}^{-1}\in L^2(\mu_{\mathcal F})$.
+Consequently, genuinely measurable spectral data with
+$w_{\Z}H\in L^2(\mu_{\mathcal F})$ are actually L1.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-spectral-mass, lem:cylinder-frequency-transport}
+\leanok
+Split the integers into natural degrees and strictly negative degrees. The
+reciprocal quadratic angular mass is summable on both tails. Multiply by the
+integrable real-frequency majorant, using $\nu\le d\xi$ and
+$w_{\Z}^{-2}\le(1+\xi^2)^{-1}(1+|n|^2)^{-1}$. Hölder gives L1 of
+$H=w_{\Z}^{-1}(w_{\Z}H)$.
+\end{proof}
+
+\begin{lemma}[Finite signed spectral inverse on the actual support]
+\label{lem:cylinder-signed-inverse}
+\uses{def:cylinder-signed-inverse}
+\lean{NoEmbeddedEigenvalues.measurable_cylinderSignedInverse,
+ NoEmbeddedEigenvalues.cylinderSignedInverse_bounds}
+\leanok
+Let $a\ge1$ avoid $M\subset\N$, and let $G$ be genuine cylinder L2 data with
+$\Phi_G(\xi,n)=0$ jointly a.e.\ whenever $|n|\notin M$.
+Then $W_{a,G}$ and $w_{\Z}W_{a,G}$ are L2, $W_{a,G}$ is genuinely L1, and
+\[
+ \sigma_a(\xi,|n|)W_{a,G}(\xi,n)=\Phi_G(\xi,n)\quad\hbox{a.e.}
+\]
+The inverse retains the same allowed support. No invertibility is required at
+forbidden degrees, where the actual input data are zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-symbol-gap, lem:cylinder-symbol-factorization,
+ lem:cylinder-normalized-fourier-data, lem:cylinder-signed-mass}
+\leanok
+Use the uniform allowed-degree symbol bound at $|n|$ to dominate
+$|w_{\Z}W_{a,G}|$ by a fixed multiple of $|\Phi_G|$. Outside $M$ both are zero.
+Genuine normalized spectral L2 therefore gives weighted and unweighted L2;
+the reciprocal-weight lemma gives L1. Cancel the nonzero symbol on allowed
+degrees and use zero input at the remaining degrees.
+\end{proof}
+
+\begin{lemma}[The physical forcing's actual signed inverse data]
+\label{lem:cylinder-forcing-signed-inverse}
+\uses{def:cylinder-signed-inverse, def:cylinder-physical-forcing,
+ def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_forcing_signed_inverse_bounds,
+ NoEmbeddedEigenvalues.cylinder_forcing_signed_inverse_neg}
+\leanok
+Under the original weak Poisson, parity, weighted-forcing and nonresonance
+hypotheses, the actual forcing $G$ gives $W_{a,G}$ with all finite spectral
+norms, multiplier identity and allowed support above.
+For every $n$ it also satisfies
+$W_{a,G}(\xi,-n)=\operatorname{sgn}(\varepsilon_1)W_{a,G}(\xi,n)$ for
+$\nu$-a.e.\ $\xi$. No support or forcing-parity premise is added.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-forcing-fourier-data, lem:cylinder-signed-inverse}
+\leanok
+The original Poisson data supply the actual spectral support required by signed
+inversion. Their negative-mode identity survives division because
+$|-n|=|n|$ and hence the two symbols coincide, even at totalized forbidden modes.
+\end{proof}
+
+\begin{lemma}[Actual joint L2 inverse candidate from physical forcing]
+\label{lem:cylinder-forcing-joint-inverse}
+\uses{def:cylinder-joint-synthesis, def:cylinder-signed-inverse,
+ def:cylinder-physical-forcing, def:cylinder-inverse-data,
+ def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_forcing_joint_inverse}
+\leanok
+Under those original hypotheses, let $S=J(W_{a,G})$ for the actual physical
+forcing's signed inverse. Then $S$ is continuous, bounded by one positive
+constant on the whole cylinder, and genuinely jointly L2, with exact mass
+\[
+ \int|S|^2\,d\mu_{\rm cyl}=\int|W_{a,G}|^2\,d\mu_{\mathcal F}.
+\]
+Every actual angular coefficient is its specified time inverse integral,
+$S_n(t)=T_\nu(W_{a,G}(\cdot,n))(t)$ for every $n,t$.
+Both original reflection signs hold pointwise on the cylinder.
+No extra spectral, integrability or reconstruction premise is accepted.
+This conclusion does not assert weak derivatives or the physical Poisson identity.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-forcing-signed-inverse, lem:cylinder-joint-coefficients,
+ lem:cylinder-joint-l2, lem:cylinder-joint-parity}
+\leanok
+The actual signed quotient has frequency L1 and weighted/unweighted L2 from the
+original forcing data. Apply actual coefficient extraction and joint inverse
+Plancherel to this same quotient, not an unrelated chosen reconstruction.
+Its own support and negative-mode sign give pointwise parity. The L1 norm plus
+one supplies a positive uniform bound.
+\end{proof}
+
+\begin{remark}[Unitary signed-mode route]
+For the existential physical inverse, use the signed candidate directly.
+Probability-Haar Parseval then has no cosine/sine folding factors and counts the
+constant character once. The trigonometric folding identities remain exact
+comparisons, but identifying the two integral conventions is unnecessary for
+constructing the particular solution. Finite weighted spectral norms and joint
+L2 reconstruction remain distinct from the weak cylinder jet and PDE.
+\end{remark}
+
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
 \uses{def:sobolev-local, def:local-weak-jets, def:cylinder-inverse-data}
@@ -943,18 +1189,17 @@ Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 \uses{lem:cylinder-symbol-gap, lem:cylinder-spectral-inverse,
  lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis,
  lem:cylinder-forcing-fourier-data, lem:cylinder-normalized-fourier-inverse,
- lem:cylinder-forcing-trig-candidate, lem:cylinder-candidate-time-modes,
- lem:cylinder-forbidden-jets}
+ lem:cylinder-forcing-joint-inverse, lem:cylinder-forbidden-jets}
 With $t=-\log r$, use the zero-extended cylinder forcing
 $G=\mathbf1_{\{r<\rho\}}r^{2-a}F\circ\Gamma$.
 Lemma~\ref{lem:cylinder-forcing-fourier-data} supplies genuine normalized spectral
 data, exact mass and allowed support from the original Poisson data.
 Modewise inverse L2 Fourier analysis recovers its original coefficients.
-The signed modes fold with the prescribed reflection sign and the separate
-constant-mode normalization in Lemma~\ref{lem:cylinder-forcing-trig-candidate}.
-This gives an actual bounded, continuous, periodic candidate with both
-reflection signs. Lemma~\ref{lem:cylinder-candidate-time-modes} identifies
-each of its time integrals with its real-line L2 inverse class.
+Use the direct signed candidate of Lemma~\ref{lem:cylinder-forcing-joint-inverse}.
+It has genuine joint cylinder L2, exact mass, actual angular coefficients and
+both reflection signs pointwise, as well as a continuous bounded representative.
+The signed basis avoids a trigonometric normalization bridge for this
+existential construction.
 For $\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
 in $t$ and angular mode $m$ give
 \[

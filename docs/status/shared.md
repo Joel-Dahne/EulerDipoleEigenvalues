@@ -169,9 +169,17 @@ weights and local versus global regularity.
    inverse integral, with finite time L² and exact Plancherel mass. The integral/L²
    bridge uses Schwartz pairings and locally integrable uniqueness, not an assumed
    finite norm of the inverse integral.
-   **Next:** identify the joint angular/time reconstruction in cylinder L² and
-   prove its weak PDE. Then transport the finite Cartesian jet, remove the center
-   and obtain the smooth harmonic representative.
+   Direct signed complex reconstruction now gives genuine joint cylinder L²
+   and exact inverse Plancherel mass. Fubini extracts each actual angular
+   coefficient before Parseval; finite summed time-mode masses establish joint
+   integrability. The original Poisson data give their own signed inverse with
+   weighted spectral L², actual L¹, continuous bounded reconstruction and both
+   reflection signs pointwise, without extra reconstruction or support premises.
+   Using the signed basis directly avoids a trigonometric normalization bridge
+   for the existential physical inverse.
+   **Next:** construct the weak cylinder jet/PDE, including L² inverse witnesses
+   for derivative multipliers that need not be L¹. Then transport the finite
+   Cartesian jet, remove the center and obtain the smooth harmonic representative.
    Once the physical jet's
    finite norms are established, `HasWeakPartialOn.remove_point` can fill its
    center at each derivative level without radial commutator estimates.

@@ -296,6 +296,19 @@ can be added here as they are formalized.
 - `Analysis/CylinderTimeSynthesis.lean`: exact cycle/angular-frequency conversion
   of the time inverse integral, its L² representative and Plancherel mass;
   specialization to every allowed mode of the actual spectral candidate.
+- `Analysis/CylinderJointSynthesis.lean`: actual signed complex-mode integral on
+  the angular circle; continuity/bounds, genuine angular L² slices and coefficient
+  extraction by Fubini. Every coefficient is the specified time inverse integral.
+- `Analysis/CylinderJointL2.lean`: actual time-mode family's joint L² and mass,
+  angular Parseval and genuine joint cylinder L² of the bounded integral, with
+  exact inverse Plancherel mass. Finiteness precedes the mass identity.
+- `Analysis/CylinderJointParity.lean`: pointwise signed synthesis parity from
+  countably combined negative-mode relations and the allowed half-turn character.
+- `Analysis/CylinderSignedMass.lean`: reciprocal signed Sobolev weight in genuine
+  normalized spectral L², and weighted-L² to L¹ via Hölder.
+- `Analysis/CylinderSignedInverse.lean`: the original normalized signed spectrum's
+  nonresonant quotient, weighted/unweighted L², actual L¹, allowed support and
+  spectral multiplier identity; forbidden zero data need no invertible symbol.
 - `Analysis/CylinderSymbol.lean`: exact logarithmic-cylinder symbol factorization,
   a uniform gap on a discrete angular spectrum, order-two ellipticity and a
   genuine spectral L² inverse with uniform weighted norm bound. Frequency ξ is
@@ -324,7 +337,13 @@ can be added here as they are formalized.
   signed-pair/constant-mode folding and a finite weighted spectral inverse with
   bounded continuous periodic synthesis and both pointwise reflection signs.
   Its actual modewise time inverse integrals have genuine L² and exact mass.
-  Joint cylinder L² reconstruction and physical weak derivatives are separate.
+  Physical weak derivatives are separate from these trigonometric bounds.
+- `Regularity/CylinderJointForcing.lean`: the original physical Poisson data give
+  their own signed spectral inverse and actual continuous bounded reconstruction,
+  with genuine joint cylinder L², exact mass, identified angular coefficients and
+  both pointwise reflection signs. No extra support/reconstruction premise.
+  Direct signed synthesis avoids a trigonometric-normalization bridge for the
+  existential physical inverse; weak cylinder and Cartesian jets are separate.
 - `Regularity/CylinderInverse.lean`: the physical weighted cylinder inverse and
   smooth harmonic remainder with finite Taylor jets.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
