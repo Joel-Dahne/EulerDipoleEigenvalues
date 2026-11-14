@@ -73,8 +73,11 @@ Proof work is now outside the odd–odd chapter:
   modes zero a.e. Real-line Plancherel now gives actual joint normalized spectral
   data, exact mass and modewise inverse L² identities. Allowed support and the
   negative-mode sign come from the original physical Poisson data.
-  Identification with bounded cosine/sine synthesis, the weak PDE, Cartesian
-  jet and smooth harmonic representative remain open.
+  Signed folding now gives the actual trigonometric forcing data, its weighted
+  spectral inverse and a bounded continuous periodic synthesis with both pointwise
+  reflection signs. Each allowed mode's actual inverse integral is identified
+  with its L² inverse and has exact finite time mass. Joint cylinder L²
+  reconstruction, the weak PDE, Cartesian jet and harmonic representative remain open.
   The physical inverse remains admitted.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is

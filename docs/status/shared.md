@@ -162,10 +162,16 @@ weights and local versus global regularity.
    Integrated Parseval/Plancherel gives exact product mass; normalized modewise
    inversion recovers the specified coefficients a.e. Original Poisson data give
    joint allowed support and the negative-mode reflection sign, without time L¹.
-   **Next:** fold signed modes into the existing cosine/sine synthesis (factors
-   2 or 2i, but one for the even constant mode), identify its bounded integral
-   with the L² inverse and prove the weak cylinder PDE. Then transport the finite
-   Cartesian jet and obtain the smooth harmonic representative.
+   Signed folding, including the separate constant mode, now produces the actual
+   trigonometric forcing data and a weighted spectral inverse. Its synthesis is
+   genuinely bounded, continuous, periodic and has both reflection signs pointwise.
+   Every allowed mode has actual frequency L¹/L² and an identified real-line
+   inverse integral, with finite time L² and exact Plancherel mass. The integral/L²
+   bridge uses Schwartz pairings and locally integrable uniqueness, not an assumed
+   finite norm of the inverse integral.
+   **Next:** identify the joint angular/time reconstruction in cylinder L² and
+   prove its weak PDE. Then transport the finite Cartesian jet, remove the center
+   and obtain the smooth harmonic representative.
    Once the physical jet's
    finite norms are established, `HasWeakPartialOn.remove_point` can fill its
    center at each derivative level without radial commutator estimates.

@@ -282,6 +282,20 @@ can be added here as they are formalized.
   on dξ/(2π) times signed counting measure. Support and scalar mode relations
   survive representative choice; normalized modewise inversion recovers the
   specified coefficients a.e.
+- `Analysis/CylinderTrigData.lean`: signed-to-trigonometric folding with factors
+  2, 2i and the separate constant mode; actual joint L² amplitudes, allowed-measure
+  domination and integrable slices at every allowed degree.
+- `Analysis/CylinderTrigInverse.lean`: the actual folded data's nonresonant
+  spectral quotient, weighted L²/L¹ and bounded continuous synthesis candidate;
+  each allowed frequency mode has genuine L¹ and L².
+- `Analysis/CylinderTrigParity.lean`: allowed-degree character and pointwise
+  reflection identities for the trigonometric modes and their synthesis.
+- `Analysis/FourierL2Integral.lean`: the inverse integral of actual L¹ ∩ L² data
+  represents the L² inverse a.e., by Schwartz pairings and tempered-distribution
+  compatibility. L² of the integral is inferred only after this identification.
+- `Analysis/CylinderTimeSynthesis.lean`: exact cycle/angular-frequency conversion
+  of the time inverse integral, its L² representative and Plancherel mass;
+  specialization to every allowed mode of the actual spectral candidate.
 - `Analysis/CylinderSymbol.lean`: exact logarithmic-cylinder symbol factorization,
   a uniform gap on a discrete angular spectrum, order-two ellipticity and a
   genuine spectral L² inverse with uniform weighted norm bound. Frequency ξ is
@@ -305,8 +319,12 @@ can be added here as they are formalized.
   modes zero a.e.; no separate support premise or chosen-circle evaluation.
 - `Regularity/CylinderFourierForcing.lean`: original physical Poisson data produce
   the normalized product spectrum, exact physical weighted mass, joint allowed
-  support and negative-mode reflection sign. Bounded cosine/sine synthesis and
-  physical weak-derivative identification are distinct obligations.
+  support and negative-mode reflection sign.
+- `Regularity/CylinderSpectralForcing.lean`: original physical forcing gives exact
+  signed-pair/constant-mode folding and a finite weighted spectral inverse with
+  bounded continuous periodic synthesis and both pointwise reflection signs.
+  Its actual modewise time inverse integrals have genuine L² and exact mass.
+  Joint cylinder L² reconstruction and physical weak derivatives are separate.
 - `Regularity/CylinderInverse.lean`: the physical weighted cylinder inverse and
   smooth harmonic remainder with finite Taylor jets.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
