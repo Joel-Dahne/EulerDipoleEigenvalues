@@ -344,10 +344,21 @@ can be added here as they are formalized.
   both pointwise reflection signs. No extra support/reconstruction premise.
   Direct signed synthesis avoids a trigonometric-normalization bridge for the
   existential physical inverse; weak cylinder and Cartesian jets are separate.
+- `Analysis/CylinderL2Inverse.lean`: isometric extension of actual signed synthesis
+  from the dense L¹-intersection subspace to all normalized joint spectral L².
+  Genuine joint inverse witnesses and exact mass need no L¹ premise; integrable
+  inputs retain the same actual integral a.e. This is not a Fourier round-trip
+  or a weak derivative theorem.
+- `Analysis/CylinderJetCandidates.lean`: ordered derivative multipliers through
+  degree two, their quadratic-weight domination and actual finite spectral L²;
+  specified joint L² inverse entries with exact mass and a pointwise actual nil
+  integral. It asserts no weak derivative identities.
 - `Regularity/CylinderWeak.lean`: specified finite second weak cylinder jets on
   the full periodic real-angle lift, the conjugated Laplacian, and the weak
   inversion interface for the same actual normalized signed integral candidate.
-  Circle-valued derivative entries have genuine joint L²; no seam is omitted.
+  Its signed-inverse candidate assembly already provides finite L² entries and
+  their exact spectral inverse identification. The weak-jet interface separately
+  requires identities on the whole lift; no seam is omitted.
 - `Regularity/CylinderParticular.lean`: weighted Cartesian reconstruction from
   that specified cylinder jet, whole-disk weak Poisson identities, finite radial
   norms, growth and parity, with a pointwise identity tying it to the same input

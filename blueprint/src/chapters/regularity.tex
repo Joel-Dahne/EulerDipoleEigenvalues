@@ -1162,6 +1162,151 @@ constructing the particular solution. Finite weighted spectral norms and joint
 L2 reconstruction remain distinct from the weak cylinder jet and PDE.
 \end{remark}
 
+\begin{definition}[Normalized L2 cylinder synthesis]
+\label{def:cylinder-l2-inverse}
+\uses{def:cylinder-joint-synthesis, def:cylinder-normalized-frequency-data,
+ def:log-cylinder-coordinates, lem:cylinder-joint-l2}
+\lean{NoEmbeddedEigenvalues.cylinderInverseL2}
+\leanok
+Let $\mathcal D$ be the subspace of spectral L2 classes whose representatives
+are also L1. Define $\mathcal I_2$ on joint spectral L2 by continuous-linear
+extension of $[H]\mapsto[JH]$ from $\mathcal D$.
+Both measures retain the normalized signed convention.
+\end{definition}
+
+\begin{lemma}[Isometric L2 synthesis and actual integral agreement]
+\label{lem:cylinder-l2-inverse}
+\uses{def:cylinder-l2-inverse, def:cylinder-joint-synthesis}
+\lean{NoEmbeddedEigenvalues.cylinderInverseL2_ae_integral,
+ NoEmbeddedEigenvalues.cylinderInverseL2_memLp,
+ NoEmbeddedEigenvalues.cylinderInverseL2_sq_mass}
+\leanok
+The extension is well-defined, linear and isometric. For every genuinely
+spectral L2 function $H$, its inverse witness $\mathcal I_2[H]$ is genuinely
+jointly cylinder L2 and
+\[
+ \int|\mathcal I_2[H]|^2\,d\mu_{\rm cyl}
+   =\int|H|^2\,d\mu_{\mathcal F}.
+\]
+If $H$ is also L1, the witness agrees a.e.\ with the same actual integral $JH$.
+No L1 hypothesis is imposed for the general L2 construction.
+No Fourier round-trip or weak derivative identity is included here.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-joint-l2}
+\leanok
+The integral map respects spectral a.e.\ equality, addition on integrable data,
+and scalar multiplication. Joint inverse Plancherel makes it an isometry
+on $\mathcal D$. Every L2 simple function has finite-measure nonzero support and
+belongs to $\mathcal D$, so simple-function density makes $\mathcal D$ dense.
+Extend the linear isometry into the complete cylinder L2 space.
+The extension agrees with the original map on every element of $\mathcal D$,
+which identifies the actual integral representative for all L1-intersection
+inputs, not just the simple functions used for density.
+\end{proof}
+
+\begin{definition}[Ordered cylinder derivative spectra]
+\label{def:cylinder-spectral-jets}
+\uses{def:cylinder-normalized-frequency-data, def:cylinder-signed-inverse}
+\lean{NoEmbeddedEigenvalues.cylinderDerivativeSymbol,
+ NoEmbeddedEigenvalues.cylinderJetSymbol, NoEmbeddedEigenvalues.cylinderSpectralJet}
+\leanok
+For $p=(\xi,n)$ put $d_0(p)=i\xi$, $d_1(p)=in$.
+For ordered words define $d_\emptyset=1$ and $d_{j::w}=d_jd_w$.
+The specified candidate spectrum is $H_w=d_wH$.
+\end{definition}
+
+\begin{lemma}[Finite derivative spectra from the quadratic weight]
+\label{lem:cylinder-spectral-jet-l2}
+\uses{def:cylinder-spectral-jets, def:cylinder-signed-inverse}
+\lean{NoEmbeddedEigenvalues.norm_cylinderJetSymbol_le,
+ NoEmbeddedEigenvalues.cylinderSpectralJet_memLp}
+\leanok
+For every $p$ and every ordered word $|w|\le2$,
+$|d_w(p)|\le w_{\Z}(p)$.
+Consequently, if $H$ is a.e.\ strongly measurable and $w_{\Z}H$ is genuinely
+spectral L2, each $H_w$, $|w|\le2$, is genuinely spectral L2.
+No L1 property of these derivative spectra is assumed or concluded.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Each individual derivative symbol has squared norm at most $\xi^2+n^2$.
+For a two-letter word use
+$2|d_jd_k|\le |d_j|^2+|d_k|^2\le2(\xi^2+n^2)$;
+the empty and one-letter bounds follow from the extra constant in
+$w_{\Z}=1+\xi^2+n^2$. Measurability and pointwise domination by
+$|w_{\Z}H|$ give the genuine L2 assertions.
+\end{proof}
+
+\begin{definition}[Specified L2 inverse candidate entries]
+\label{def:cylinder-inverse-jet-entries}
+\uses{def:cylinder-l2-inverse, def:cylinder-spectral-jets,
+ def:cylinder-joint-synthesis, lem:cylinder-spectral-jet-l2}
+\lean{NoEmbeddedEigenvalues.cylinderInverseJetEntries}
+\leanok
+For a.e.\ strongly measurable $H$ with $w_{\Z}H$ genuinely spectral L2,
+set $E_\emptyset=JH$ pointwise. For $1\le|w|\le2$, choose the specified raw
+representative of $\mathcal I_2[H_w]$. Entries of length greater than two
+are defined to be zero. This is an ordered family of candidate entries,
+not a definition of weak derivatives.
+\end{definition}
+
+\begin{lemma}[Genuine joint L2 inverse candidate entries]
+\label{lem:cylinder-inverse-jet-candidates}
+\uses{def:cylinder-inverse-jet-entries, def:cylinder-spectral-jets}
+\lean{NoEmbeddedEigenvalues.cylinderInverseJetEntries_nil,
+ NoEmbeddedEigenvalues.cylinderInverseJetEntries_memLp,
+ NoEmbeddedEigenvalues.cylinderInverseJetEntries_ae,
+ NoEmbeddedEigenvalues.cylinderInverseJetEntries_sq_mass}
+\leanok
+For every $|w|\le2$, the specified entry $E_w$ is genuinely jointly cylinder L2,
+agrees a.e.\ with $\mathcal I_2[H_w]$, and satisfies
+\[
+ \int|E_w|^2\,d\mu_{\rm cyl}=\int|H_w|^2\,d\mu_{\mathcal F}.
+\]
+The zeroth entry is exactly the original actual integral $JH$ at every point.
+No weak-jet or weak-PDE identity is asserted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-signed-mass, lem:cylinder-l2-inverse,
+ lem:cylinder-joint-l2, lem:cylinder-spectral-jet-l2}
+\leanok
+The quadratic weight supplies actual L1 of $H$ and genuine L2 of every $H_w$.
+For nonempty words use the L2 isometry directly, without totalized inverse
+integrals. For the empty word, actual-integral agreement identifies $JH$
+with the same L2 inverse witness. All finite norms are established before the
+mass identities.
+\end{proof}
+
+\begin{lemma}[Specified L2 candidates for the allowed signed inverse]
+\label{lem:cylinder-signed-inverse-candidates}
+\uses{def:cylinder-signed-inverse, def:cylinder-l2-inverse,
+ def:cylinder-spectral-jets, def:cylinder-normalized-frequency-data}
+\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_spectral_jet_memLp,
+ NoEmbeddedEigenvalues.cylinder_signed_inverse_jet_candidates}
+\leanok
+Let $a\ge1$ avoid $M$ and let genuinely cylinder-L2 $G$ have its actual
+normalized spectrum zero jointly a.e.\ when $|n|\notin M$.
+For $H=W_{a,G}$ there are specified entries with
+$E_\emptyset=J(W_{a,G})$ pointwise, genuine joint L2 through order two, and
+$E_w=\mathcal I_2[(W_{a,G})_w]$ a.e.\ for every $|w|\le2$.
+The derivative spectra themselves have genuine finite L2 norms.
+No extra spectral-derivative integrability or weak-jet premise is accepted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-signed-inverse, lem:cylinder-inverse-jet-candidates,
+ lem:cylinder-spectral-jet-l2}
+\leanok
+The allowed signed inverse already has genuine quadratic weighted spectral L2.
+Apply the common candidate construction to that same measurable quotient.
+Retain its actual nil integral and the specified L2 inverse class of every
+ordered derivative spectrum.
+\end{proof}
+
 \begin{definition}[Specified finite weak cylinder jet]
 \label{def:cylinder-weak-jet}
 \uses{def:cylinder-joint-synthesis, def:log-cylinder-coordinates,
@@ -1199,16 +1344,16 @@ reconstruction.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cylinder-signed-inverse, lem:cylinder-joint-l2,
+\uses{lem:cylinder-signed-inverse-candidates, lem:cylinder-signed-inverse,
  lem:cylinder-joint-coefficients, lem:cylinder-normalized-fourier-inverse}
-Weighted spectral L2 controls the derivative multipliers through order two.
-Construct their genuine joint L2 inverse representatives and identify their
-weak derivatives by testing the Fourier multipliers.
-These derivative multipliers need not be L1; they cannot all be reconstructed
-by invoking the bounded integral theorem. The specified zeroth entry is already
-identified by joint inverse Plancherel. The spectral multiplier identity then
-gives the weak PDE. Establish the weak identities on the full periodic lift,
-not just on one strip with an omitted seam.
+Use the specified genuinely joint L2 inverse entries for each ordered
+derivative spectrum. The nil entry is the same actual integral pointwise;
+the other entries need not be continuous or have L1 spectra.
+Identify their weak derivatives by testing the Fourier multipliers.
+The spectral multiplier identity, together with identification of the inverse
+of the original normalized data, then gives the weak PDE.
+Establish the weak identities on the full periodic lift, not just on one strip
+with an omitted seam.
 \end{proof}
 
 \begin{lemma}[Weighted Cartesian particular solution from the cylinder jet]

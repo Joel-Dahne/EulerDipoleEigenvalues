@@ -65,6 +65,8 @@ import NoEmbeddedEigenvalues.Analysis.CylinderTrigParity
 import NoEmbeddedEigenvalues.Analysis.CylinderTimeSynthesis
 import NoEmbeddedEigenvalues.Analysis.CylinderJointSynthesis
 import NoEmbeddedEigenvalues.Analysis.CylinderJointL2
+import NoEmbeddedEigenvalues.Analysis.CylinderL2Inverse
+import NoEmbeddedEigenvalues.Analysis.CylinderJetCandidates
 import NoEmbeddedEigenvalues.Analysis.CylinderJointParity
 import NoEmbeddedEigenvalues.Analysis.CylinderSignedMass
 import NoEmbeddedEigenvalues.Analysis.CylinderSignedInverse

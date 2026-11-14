@@ -138,12 +138,21 @@ weights and local versus global regularity.
    Its former single admission is exposed as those three precise interfaces;
    this decomposition does not close an analytic gap.
    **Next target: Weak full-cylinder inversion** (`lem:cylinder-weak-inverse`,
-   `Regularity/CylinderWeak.lean`). Construct finite joint L² inverse witnesses
-   for derivative multipliers through order two, identify the ordered weak
-   derivatives on the whole periodic lift, and prove the cylinder PDE for the
-   same actual signed inverse integral. Derivative multipliers need not be L¹.
-   The supporting `HasCylinderH2Jet` interface includes actual zeroth-entry
-   equality, whole-lift weak identities and genuine joint L² of every entry.
+   `Regularity/CylinderWeak.lean`). Identify the constructed ordered L² candidate
+   entries as weak derivatives on the whole periodic lift, and prove the cylinder
+   PDE for the same actual signed integral. This also needs the inverse of the
+   original normalized data identified with the original cylinder function.
+   Genuine finite inverse witnesses are now available without derivative L¹:
+   `Analysis/CylinderL2Inverse.lean` extends actual synthesis isometrically from
+   its dense L¹-intersection domain to all spectral L². Integrable inputs retain
+   their actual integral a.e. `Analysis/CylinderJetCandidates.lean` controls every
+   ordered multiplier through order two and constructs joint L² entries with
+   exact mass; the nil entry remains the actual integral pointwise.
+   The signed-inverse candidate assembly
+   (`lem:cylinder-signed-inverse-candidates`) supplies those entries under exactly
+   the weak-inverse target's data hypotheses. These results have no admissions,
+   but assert no weak derivative/PDE identity. The `HasCylinderH2Jet` interface
+   still requires those identities on the whole lift, including all seams.
    **Following targets:**
    - Weighted Cartesian particular solution (`lem:cylinder-cartesian-particular`,
      `Regularity/CylinderParticular.lean`): transport the specified weak jet,

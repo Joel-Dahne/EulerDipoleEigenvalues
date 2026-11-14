@@ -68,8 +68,13 @@ Proof work is now outside the odd–odd chapter:
   genuine joint cylinder inverse Plancherel are proved. The original physical
   Poisson data give a bounded continuous signed candidate with identified angular
   coefficients and both reflection signs pointwise, without extra support
-  premises or chosen-circle evaluation. What remains is its actual weak cylinder
-  jet/PDE, physical reconstruction and harmonic comparison.
+  premises or chosen-circle evaluation. An isometric L² synthesis extension now
+  gives actual finite inverse witnesses for every ordered derivative spectrum
+  through order two, without assuming those spectra L¹. Their exact mass and
+  inverse-class identification are proved, retaining the actual nil integral
+  pointwise. These are candidate entries, not yet weak derivatives.
+  What remains is their whole-lift weak identification and cylinder PDE, then
+  physical reconstruction and harmonic comparison.
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is already proved. Keep the common interfaces generic and
   defer the mixed linear-jet corollary. The split exposes the analytic work;
