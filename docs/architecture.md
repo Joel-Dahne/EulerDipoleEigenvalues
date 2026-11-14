@@ -344,8 +344,21 @@ can be added here as they are formalized.
   both pointwise reflection signs. No extra support/reconstruction premise.
   Direct signed synthesis avoids a trigonometric-normalization bridge for the
   existential physical inverse; weak cylinder and Cartesian jets are separate.
-- `Regularity/CylinderInverse.lean`: the physical weighted cylinder inverse and
-  smooth harmonic remainder with finite Taylor jets.
+- `Regularity/CylinderWeak.lean`: specified finite second weak cylinder jets on
+  the full periodic real-angle lift, the conjugated Laplacian, and the weak
+  inversion interface for the same actual normalized signed integral candidate.
+  Circle-valued derivative entries have genuine joint L²; no seam is omitted.
+- `Regularity/CylinderParticular.lean`: weighted Cartesian reconstruction from
+  that specified cylinder jet, whole-disk weak Poisson identities, finite radial
+  norms, growth and parity, with a pointwise identity tying it to the same input
+  cylinder candidate. The source-facing assembly supplies all premises from the
+  original Poisson data and adds no support or cylinder-jet hypothesis.
+- `Regularity/HarmonicComparison.lean`: same-domain specified second weak jets
+  and equal weak Laplacians give a smooth harmonic difference with common parity,
+  independently of radial weights, spectral inversion or Taylor extraction.
+- `Regularity/CylinderInverse.lean`: assembly of the physical particular solution,
+  smooth harmonic comparison and parity's forbidden Taylor jets; its original
+  public statement and all derivative witnesses are retained.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization, differentiated Taylor

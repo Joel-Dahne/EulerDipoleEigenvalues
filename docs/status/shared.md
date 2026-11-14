@@ -131,62 +131,45 @@ weights and local versus global regularity.
    without explicit corner classification or vorticity H¹. Reflected-periodic
    bounded covering supplies the d² norm and the critical input at every saddle.
    Weak uniqueness retains the canonical quadratic remainder jet.
-   **Remaining saddle frontier:** First transport gain (`lem:transport-first-gain`),
-   Cylinder inverse (`lem:cylinder-inverse`) and Second transport gain
-   (`lem:transport-second-gain`). The endpoint has no admission of its own;
-   its audit reaches exactly these three existing analytic inputs. Next prove
-   these primitives, not another outer saddle assembly. The generic bounded-mass,
-   inverse-frame/weak-identification, finite Taylor and compact-growth layers
-   are admission-free. No downstream weighted forcing or whole-plane norm is used.
-   **Current target: Cylinder inverse** (`lem:cylinder-inverse`). Its exact symbol
-   identity, uniform discrete spectral gap and order-two ellipticity are proved.
-   Actual division by the symbol gives L² and two-derivative weighted spectral L²,
-   the multiplier equation a.e. and a uniform norm estimate. The inverse Sobolev
-   weight is genuinely L²; Hölder gives L¹ data. Their cosine/sine synthesis is
-   an actual bounded continuous integral, pointwise periodic in angle. These
-   layers are admission-free, but the physical inverse itself remains admitted.
-   Weak Poisson forcing now inherits the input solution's axis parity, retaining
-   its specified jet. Angular parity gives allowed support of actual integrable
-   Fourier coefficients, including exclusion of the constant mode outside
-   even–even. Smooth axis parity alone gives every forbidden Taylor jet; no
-   harmonic expansion is needed for that conclusion.
-   Joint logarithmic-polar transport now connects these statements: its actual
-   Jacobian and null-set transport, zero-extended physical forcing and a.e.
-   angular L²/parity slices are proved. The original Poisson data produce allowed
-   support, without a forcing-support hypothesis or evaluation on a chosen circle.
-   The exact cylinder squared mass is 1/(2π) times the physical weighted mass.
-   Angular Parseval and real-line L² membership of each coefficient are proved;
-   forbidden coefficients vanish a.e. in logarithmic radius.
-   Real-line L² Fourier analysis now produces jointly measurable spectral data
-   in angular frequency with measure dξ/(2π) times signed counting measure.
-   Integrated Parseval/Plancherel gives exact product mass; normalized modewise
-   inversion recovers the specified coefficients a.e. Original Poisson data give
-   joint allowed support and the negative-mode reflection sign, without time L¹.
-   Signed folding, including the separate constant mode, now produces the actual
-   trigonometric forcing data and a weighted spectral inverse. Its synthesis is
-   genuinely bounded, continuous, periodic and has both reflection signs pointwise.
-   Every allowed mode has actual frequency L¹/L² and an identified real-line
-   inverse integral, with finite time L² and exact Plancherel mass. The integral/L²
-   bridge uses Schwartz pairings and locally integrable uniqueness, not an assumed
-   finite norm of the inverse integral.
-   Direct signed complex reconstruction now gives genuine joint cylinder L²
-   and exact inverse Plancherel mass. Fubini extracts each actual angular
-   coefficient before Parseval; finite summed time-mode masses establish joint
-   integrability. The original Poisson data give their own signed inverse with
-   weighted spectral L², actual L¹, continuous bounded reconstruction and both
-   reflection signs pointwise, without extra reconstruction or support premises.
-   Using the signed basis directly avoids a trigonometric normalization bridge
-   for the existential physical inverse.
-   **Next:** construct the weak cylinder jet/PDE, including L² inverse witnesses
-   for derivative multipliers that need not be L¹. Then transport the finite
-   Cartesian jet, remove the center and obtain the smooth harmonic representative.
-   Once the physical jet's
-   finite norms are established, `HasWeakPartialOn.remove_point` can fill its
-   center at each derivative level without radial commutator estimates.
-   **Ordinary separatrix frontier:** those three inputs, Weighted transport H¹
-   (`lem:weighted-transport-h1`), Whole-edge zero trace
+   **Remaining saddle frontier:** both transport gains and three cylinder
+   obligations: weak full-cylinder inversion, weighted Cartesian reconstruction,
+   and smooth harmonic comparison. The original Cylinder inverse
+   (`lem:cylinder-inverse`) is now a checked assembly with its unchanged statement.
+   Its former single admission is exposed as those three precise interfaces;
+   this decomposition does not close an analytic gap.
+   **Next target: Weak full-cylinder inversion** (`lem:cylinder-weak-inverse`,
+   `Regularity/CylinderWeak.lean`). Construct finite joint L² inverse witnesses
+   for derivative multipliers through order two, identify the ordered weak
+   derivatives on the whole periodic lift, and prove the cylinder PDE for the
+   same actual signed inverse integral. Derivative multipliers need not be L¹.
+   The supporting `HasCylinderH2Jet` interface includes actual zeroth-entry
+   equality, whole-lift weak identities and genuine joint L² of every entry.
+   **Following targets:**
+   - Weighted Cartesian particular solution (`lem:cylinder-cartesian-particular`,
+     `Regularity/CylinderParticular.lean`): transport the specified weak jet,
+     prove all radial norms, growth and parity, then remove the center at each
+     derivative level. Its pointwise pullback identity retains the same candidate.
+   - Smooth harmonic comparison (`lem:weak-poisson-harmonic-comparison`,
+     `Regularity/HarmonicComparison.lean`): equal whole-disk weak Laplacians give
+     a smooth harmonic difference with the original parity.
+   The source-facing particular-solution assembly
+   (`lem:cylinder-forcing-particular`) already connects the original Poisson data
+   to the first two interfaces without an extra support or cylinder-jet premise.
+   Original functions, specified Fourier jets and forcing weights are unchanged.
+   **Available foundations:** symbol gap/ellipticity, actual normalized spectral
+   data and weighted L²/L¹, exact joint inverse Plancherel, bounded continuous
+   signed synthesis, angular coefficient identification and pointwise parity.
+   Physical forcing gives support and parity without chosen-circle evaluation.
+   All these construction/norm layers are admission-free; they do not prove
+   the weak PDE. Direct signed synthesis avoids a trigonometric-normalization
+   bridge for the existential inverse.
+   Prioritize the odd–odd applications at exponents three halves and three.
+   Their finite Taylor extraction is already proved separately. Keep the common
+   analytic interfaces generic; leave the mixed linear-jet corollary deferred.
+   **Ordinary separatrix frontier:** the five saddle inputs above plus Weighted
+   transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these six inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these eight inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -361,8 +344,9 @@ prerequisites remain outside this directory; see the
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
-  H¹ gluing has an explicit cutoff proof. The first two transport gains and
-  saddle jet remain admitted. The weighted-gradient and whole-lift ordinary
+  H¹ gluing has an explicit cutoff proof. Both transport gains remain admitted;
+  the saddle jet is assembled from them and the cylinder inputs.
+  The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   saddle/transport/elliptic inputs rather than a stronger corner premise.
   Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
@@ -374,9 +358,9 @@ prerequisites remain outside this directory; see the
   implemented Melnikov/pairing results still only accept ±1.
   The shared jet, saddle normalization, endpoint Hardy and local elliptic
   prerequisites have substantive Blueprint derivations with explicit proof
-  dependencies; their Lean proofs remain admitted. Cylinder inversion and
-  corner traces/gluing also still need Lean proofs. Elliptic-center regularity
-  is not a prerequisite.
+  dependencies. Cylinder inversion is assembled from the three interfaces
+  listed above; the remaining corner/weighted-transport prerequisites are also
+  recorded there. Elliptic-center regularity is not a prerequisite.
 - [Finite-p Sobolev embedding](../../blueprint/src/chapters/analysis.tex):
   off the current sector routes. Odd–odd logarithmic multiplication now uses
   coordinate slicing and the exact diagonal factorization instead. Both

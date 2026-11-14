@@ -54,34 +54,26 @@ Proof work is now outside the odd–odd chapter:
   depending only on Odd–odd saddle estimates (`prop:saddle-dd`). Its quadratic
   mass and continuous-stream parity helpers are admission-free; no ordinary
   separatrix H¹/H³ or logarithmic forcing is used. The ordinary separatrix parent
-  now reaches six primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
-  and the first eigenfunction saddle gain have assembly proofs with their
-  unchanged statements. The full saddle bootstrap reaches exactly First
-  transport gain, Cylinder inverse and Second transport gain. Its bounded
-  periodic norm localization, physical specified-gradient transport and compact
-  pointwise bound are checked, without vorticity H¹ or downstream forcing.
-  The original unique quadratic and Fourier remainder jet are retained.
-  Ordinary separatrix H¹/H³ and logarithmic forcing reach those three saddle
-  primitives plus Weighted transport H¹, Whole-edge zero trace and Interior
-  elliptic H³. These six inputs remain admitted. Cylinder inversion is the current
-  target: the uniform symbol bound, genuine weighted spectral L² inverse and
-  bounded continuous periodic synthesis are admission-free. Weak forcing parity,
-  forbidden smooth Taylor jets and angular coefficient support are also proved.
-  Joint logarithmic-polar transport now supplies the physical forcing's actual
-  cylinder norm, exact 1/(2π) squared-mass normalization and a.e. angular parity
-  slices. Angular Parseval gives real-line L² coefficient functions, with forbidden
-  modes zero a.e. Real-line Plancherel now gives actual joint normalized spectral
-  data, exact mass and modewise inverse L² identities. Allowed support and the
-  negative-mode sign come from the original physical Poisson data.
-  Signed folding now gives the actual trigonometric forcing data, its weighted
-  spectral inverse and a bounded continuous periodic synthesis with both pointwise
-  reflection signs. Direct signed complex synthesis now has genuine joint
-  cylinder L², exact mass and identified actual angular coefficients. Applied to
-  the original Poisson data, its actual signed inverse is continuous, bounded
-  and has both reflection signs pointwise. The signed basis avoids a cosine/sine
-  normalization bridge for the existential physical inverse. Its weak cylinder
-  jet/PDE, Cartesian jet and harmonic representative remain open.
-  The physical inverse remains admitted.
+  now reaches eight primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
+  and the first eigenfunction saddle gain have assembly proofs with unchanged
+  statements, canonical Fourier remainder jets and the unique normalized quadratic.
+  The saddle bootstrap reaches both transport gains plus three cylinder inputs:
+  weak full-cylinder inversion, weighted Cartesian reconstruction and smooth
+  harmonic comparison. The original Cylinder inverse is a checked assembly of
+  those interfaces, not an admission-free theorem.
+  Ordinary separatrix H¹/H³ and logarithmic forcing reach these five inputs plus
+  Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
+  **Next target:** Weak full-cylinder inversion (`lem:cylinder-weak-inverse`).
+  Spectral gap/ellipticity, normalized actual data, weighted spectral norms and
+  genuine joint cylinder inverse Plancherel are proved. The original physical
+  Poisson data give a bounded continuous signed candidate with identified angular
+  coefficients and both reflection signs pointwise, without extra support
+  premises or chosen-circle evaluation. What remains is its actual weak cylinder
+  jet/PDE, physical reconstruction and harmonic comparison.
+  Prioritize the odd–odd applications at three halves and three; their finite
+  Taylor extraction is already proved. Keep the common interfaces generic and
+  defer the mixed linear-jet corollary. The split exposes the analytic work;
+  it does not close any of these three obligations.
   See [shared status](shared.md#next-session).
   Periodic quotient transport is
   admission-free: invariant regularized reciprocals and C¹ testing give

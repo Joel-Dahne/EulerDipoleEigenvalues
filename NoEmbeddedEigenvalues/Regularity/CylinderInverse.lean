@@ -1,4 +1,5 @@
-import NoEmbeddedEigenvalues.Regularity.CylinderJointForcing
+import NoEmbeddedEigenvalues.Regularity.CylinderParticular
+import NoEmbeddedEigenvalues.Regularity.HarmonicComparison
 import NoEmbeddedEigenvalues.Regularity.CylinderSpectralForcing
 import NoEmbeddedEigenvalues.Analysis.CylinderSynthesis
 
@@ -59,6 +60,19 @@ theorem cylinder_inverse {ρ a : ℝ} (hρ : 0 < ρ) (ha : 1 < a)
         (∀ w : List (Fin 2), ¬AllowedSaddleDegree ε w.length →
           classicalComplexJet w h 0 = 0) ∧
         (∀ᵐ p ∂(volume.restrict (localDisk 0 ρ₁)), u p = u₀ p + h p) := by
-  sorry
+  obtain ⟨ρ₁, C, hρ₁, hρ₁ρ, hC, u₀, E, hu₀, hE, hcu, hb, hw, hΔ₀, hp₀, hmatch⟩ :=
+    cylinder_forcing_particular hρ ha hgap hD hΔ hp hF
+  have hsub : localDisk 0 ρ₁ ⊆ localDisk 0 ρ := fun p hp ↦
+    show localRadius 0 p < ρ from lt_trans hp hρ₁ρ
+  have hsame : ∀ᵐ p ∂(volume.restrict (localDisk 0 ρ₁)),
+      D [0, 0] p + D [1, 1] p = E [0, 0] p + E [1, 1] p := by
+    filter_upwards [ae_restrict_of_ae_restrict_of_subset hsub hΔ, hΔ₀] with p h1 h2
+    exact h1.trans h2.symm
+  have hp' : HasAxisParityOn ε (localDisk 0 ρ₁) u := fun j ↦
+    ae_restrict_of_ae_restrict_of_subset hsub (hp j)
+  obtain ⟨h, hh, hph, heq⟩ := weak_poisson_harmonic_comparison hρ₁
+    (hu.mono hsub) hu₀ (hD.mono hsub) hE hsame hp' hp₀
+  exact ⟨ρ₁, C, hρ₁, hρ₁ρ, hC, u₀, h, E, hu₀, hE, hcu, hb, hw, hΔ₀, hp₀, hh, hph,
+    fun w hw ↦ hph.forbidden_jet_zero hρ₁ hh.1 w hw, heq⟩
 
 end NoEmbeddedEigenvalues

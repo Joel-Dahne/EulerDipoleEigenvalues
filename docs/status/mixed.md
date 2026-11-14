@@ -12,8 +12,12 @@ for the second mixed sector.
 
 The blueprint has local boundary-square and weighted-forcing H¹ derivations.
 The latter applies to the jet-subtracted mixed remainder without an elliptic
-relation. The shared first saddle gain and cylinder inverse now have explicit
-blueprint derivations, not Lean proofs. Paired flux remains unverified.
+relation. The shared first saddle gain has a conditional Lean assembly. Cylinder inverse
+is assembled from three explicit analytic obligations: weak full-cylinder
+inversion, weighted Cartesian reconstruction and smooth harmonic comparison.
+These are shared with odd–odd; the mixed application at exponent two and its
+linear Taylor extraction remain deferred. See [shared status](shared.md#next-session).
+Paired flux remains unverified.
 No new part of the exclusion is proved in Lean.
 
 `MixedComparison.lean` now defines the second-order coefficients and both

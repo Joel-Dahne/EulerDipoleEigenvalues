@@ -65,23 +65,25 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and nineteen below `dd_stream_quotient_h2`.
+zero below `correctedBoundaryForm_nonneg` and 21 below `dd_stream_quotient_h2`.
 Odd–odd saddle estimates (`prop:saddle-dd`) and the first eigenfunction gain
 have assembly proofs with their original statements. The saddle endpoint and
-weighted forcing (`lem:dd-weighted-forcing`) reach exactly First transport gain,
-Cylinder inverse and Second transport gain. Ordinary separatrix H¹/H³
-(`prop:dd-separatrix-h1`) and logarithmic forcing (`lem:dd-log-forcing`) each
-reach those three plus Weighted transport H¹, Whole-edge zero trace and Interior
-elliptic H³: six existing analytic inputs. Expanding the former saddle admission
-into its three primitives increases downstream counts by two; no new admission
-was introduced. The bounded periodic norm, physical weak-gradient transport,
+weighted forcing (`lem:dd-weighted-forcing`) each reach five inputs: both
+transport gains, Weak full-cylinder inversion, Weighted Cartesian particular
+solution and Smooth harmonic comparison. Cylinder inverse has an assembly proof
+with its unchanged statement; those three explicit cylinder obligations remain
+admitted. Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) and logarithmic forcing
+(`lem:dd-log-forcing`) each reach those five plus Weighted transport H¹, Whole-edge
+zero trace and Interior elliptic H³: eight inputs. This exposes the former single
+cylinder admission; it is not a completion of the analytic proof.
+The bounded periodic norm, physical weak-gradient transport,
 compact pointwise growth, quadratic mass, seam gluing, point removal and
 canonical trace layers are admission-free.
 Weighted-gradient, third-stream and logarithmic numerator assemblies remain
 conditional on their recorded analytic inputs, without admissions of their own.
 The saddle coefficient uniqueness and canonical cylinder-input layers are
 admission-free. The local supplied-forcing cylinder applications themselves
-reach only the existing `cylinder_inverse` admission.
+reach exactly the three explicit cylinder obligations above.
 The generic weak-chart, reflected-periodic covering, logarithmic
 multiplier/localization/trace/summation layers and canonical second stream jet
 have no admissions.

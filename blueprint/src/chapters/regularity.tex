@@ -1162,6 +1162,148 @@ constructing the particular solution. Finite weighted spectral norms and joint
 L2 reconstruction remain distinct from the weak cylinder jet and PDE.
 \end{remark}
 
+\begin{definition}[Specified finite weak cylinder jet]
+\label{def:cylinder-weak-jet}
+\uses{def:cylinder-joint-synthesis, def:log-cylinder-coordinates,
+ def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinderLift, NoEmbeddedEigenvalues.HasCylinderH2Jet,
+ NoEmbeddedEigenvalues.cylinderJetOperator}
+\leanok
+For a function $S$ on the angular cylinder write
+$\widehat S(t,\vartheta)=S(t,[\vartheta])$ for its real-angle lift.
+A specified finite second weak cylinder jet $J$ consists of functions on the
+cylinder such that $J_\emptyset=S$, every $J_w$ with $|w|\le2$ is genuinely
+L2 in $\mu_{\rm cyl}$, and their real-angle lifts form a specified second
+weak jet on all of $\R^2$. Index zero denotes time and index one denotes angle.
+In particular these weak identities include every angular seam.
+Set
+\[
+ \mathcal P_aJ=J_{00}-2aJ_0+a^2J_\emptyset+J_{11}.
+\]
+No commutation of mixed weak entries is assumed.
+\end{definition}
+
+\begin{lemma}[Weak full-cylinder inversion]
+\label{lem:cylinder-weak-inverse}
+\uses{def:cylinder-weak-jet, def:cylinder-signed-inverse,
+ def:cylinder-normalized-frequency-data, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_weak}
+\leanok
+Let $a\ge1$ avoid $M\subset\N$ and let $G\in L^2(\mu_{\rm cyl})$ with its
+actual normalized spectrum zero jointly a.e.\ whenever $|n|\notin M$.
+The actual integral $S=J(W_{a,G})$ has a specified finite second weak
+cylinder jet $E$, with
+$\mathcal P_aE=G$ a.e.\ on the whole cylinder.
+The zeroth entry is this same actual integral, not a separately chosen L2
+reconstruction.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-signed-inverse, lem:cylinder-joint-l2,
+ lem:cylinder-joint-coefficients, lem:cylinder-normalized-fourier-inverse}
+Weighted spectral L2 controls the derivative multipliers through order two.
+Construct their genuine joint L2 inverse representatives and identify their
+weak derivatives by testing the Fourier multipliers.
+These derivative multipliers need not be L1; they cannot all be reconstructed
+by invoking the bounded integral theorem. The specified zeroth entry is already
+identified by joint inverse Plancherel. The spectral multiplier identity then
+gives the weak PDE. Establish the weak identities on the full periodic lift,
+not just on one strip with an omitted seam.
+\end{proof}
+
+\begin{lemma}[Weighted Cartesian particular solution from the cylinder jet]
+\label{lem:cylinder-cartesian-particular}
+\uses{def:cylinder-weak-jet, def:cylinder-physical-forcing,
+ def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_cartesian_particular}
+\leanok
+Let $\rho>0$, $a>1$, and let $S$ have a specified finite weak cylinder jet $J$
+with $\mathcal P_aJ=G$, where $G$ is the zero-extended physical forcing for
+$F$ on $D_\rho$. Suppose $S$ is continuous, $|S|\le C$ on the whole cylinder,
+and has both prescribed reflection signs pointwise.
+On some $D_{\rho_1}$, $0<\rho_1<\rho$, there is a continuous $u_0\in H^2$
+with a specified second weak jet $E$ such that
+\[
+ \Delta_Eu_0=F\quad\hbox{a.e.},\qquad
+ E_w/r^{a+1-|w|}\in L^2(D_{\rho_1}),\quad |w|\le2,\qquad
+ |u_0|\le Cr^a.
+\]
+Both the weak jet and Poisson identity hold on the whole disk, including its
+center, and $u_0$ has the original axis parity.
+The candidate is tied pointwise to the input:
+\[
+ u_0(\Gamma(t,\theta))=e^{-at}S(t,\theta)
+ \quad\hbox{whenever }\Gamma(t,\theta)\in D_{\rho_1}.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-cylinder-measure, lem:log-cylinder-l2-mass,
+ lem:weak-partial-locality, lem:weak-point-removal, lem:radial-weak-multiplier}
+Use overlapping angular charts to transport the actual ordered weak jet on
+the punctured disk. Polar differentiation expresses its order-$k$ entries
+as $r^{a-k}$ times linear combinations of cylinder entries with bounded
+angular coefficients. The area Jacobian gives precisely the displayed finite
+weighted norms. Joint null-set transport is used; no raw derivative is
+evaluated on a selected ray, and no weak identity is inferred from a null seam.
+The bounded continuous cylinder function gives pointwise growth and continuity
+after assigning value zero at the center.
+Since $a+1-k>0$ for $k\le2$, bounded radial multipliers give whole-disk
+unweighted L2 of every specified entry. Remove the center first for the value
+and its first derivatives, then for the first derivatives and their specified
+second derivatives. Thus the weak jet and the Poisson identity extend without
+a point defect. The cylinder reflection identities transfer parity.
+\end{proof}
+
+\begin{lemma}[Weighted particular solution from the original Poisson data]
+\label{lem:cylinder-forcing-particular}
+\uses{def:cylinder-inverse-data, def:cylinder-physical-forcing,
+ def:cylinder-signed-inverse, def:cylinder-joint-synthesis,
+ def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.cylinder_forcing_particular}
+\leanok
+Under the original weak Poisson, parity, weighted-forcing and nonresonance
+hypotheses, with $a>1$ and $\rho>0$, the physical particular solution of the
+preceding lemma exists on a smaller disk, with one positive bound $C$.
+It is tied pointwise to the actual signed inverse candidate
+$S=J(W_{a,G})$ from those same data. All three weighted derivative norms,
+whole-disk weak identities, continuity, growth and parity are retained.
+No cylinder-jet, spectral-support or extra forcing-parity hypothesis is accepted.
+No smooth harmonic comparison is included.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cylinder-forcing-fourier-data, lem:cylinder-forcing-joint-inverse,
+ lem:cylinder-weak-inverse, lem:cylinder-cartesian-particular}
+\leanok
+The original Poisson data supply the actual normalized allowed support.
+Apply weak cylinder inversion to those data. Their own joint signed inverse
+also supplies continuity, both pointwise reflection signs and one positive
+uniform bound. Apply Cartesian reconstruction to that same candidate and jet.
+\end{proof}
+
+\begin{lemma}[Smooth harmonic comparison of weak Poisson solutions]
+\label{lem:weak-poisson-harmonic-comparison}
+\uses{def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.weak_poisson_harmonic_comparison}
+\leanok
+Let $\rho>0$. Suppose $u,v\in H^2(D_\rho)$ have specified second weak jets
+$D,E$ on that same whole disk, with
+$D_{00}+D_{11}=E_{00}+E_{11}$ a.e.
+If both functions have the same prescribed axis parity, there is a smooth
+classically harmonic $h$ on $D_\rho$ with that parity and $u=v+h$ a.e.
+No radial weights or spectral hypotheses enter this comparison.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-jet-ae-comparison, lem:weak-derivative-basic}
+The difference has the specified weak jet $D-E$ and weak Laplacian zero.
+Weyl's lemma gives a smooth harmonic representative on the whole disk.
+Transfer the a.e.\ difference identity jointly through the measure-preserving
+axis reflections to obtain parity of that representative.
+This is a separate regularity obligation, not a consequence of finite norms.
+\end{proof}
+
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
 \uses{def:sobolev-local, def:local-weak-jets, def:cylinder-inverse-data}
@@ -1186,63 +1328,16 @@ Moreover $u_0$ can be chosen continuous with $|u_0|\le Cr^a$
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cylinder-symbol-gap, lem:cylinder-spectral-inverse,
- lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis,
- lem:cylinder-forcing-fourier-data, lem:cylinder-normalized-fourier-inverse,
- lem:cylinder-forcing-joint-inverse, lem:cylinder-forbidden-jets}
-With $t=-\log r$, use the zero-extended cylinder forcing
-$G=\mathbf1_{\{r<\rho\}}r^{2-a}F\circ\Gamma$.
-Lemma~\ref{lem:cylinder-forcing-fourier-data} supplies genuine normalized spectral
-data, exact mass and allowed support from the original Poisson data.
-Modewise inverse L2 Fourier analysis recovers its original coefficients.
-Use the direct signed candidate of Lemma~\ref{lem:cylinder-forcing-joint-inverse}.
-It has genuine joint cylinder L2, exact mass, actual angular coefficients and
-both reflection signs pointwise, as well as a continuous bounded representative.
-The signed basis avoids a trigonometric normalization bridge for this
-existential construction.
-For $\mathcal P_a=(\partial_t-a)^2+\partial_\theta^2$, Fourier transformation
-in $t$ and angular mode $m$ give
-\[
- |(i\xi-a)^2-m^2|^2
- =\bigl(\xi^2+(m-a)^2\bigr)\bigl(\xi^2+(m+a)^2\bigr)
- \ge c_a(1+\xi^2+m^2)^2
-\]
-on the allowed modes. The positive constant exists because those modes
-are discrete and none has $|m|=a$; for large $|m|+|\xi|$ the ratio is
-bounded below directly. Thus inversion gives $V\in H^2$ on the full
-cylinder, with $\mathcal P_aV=G$, preserving the reflection parity.
-The Fourier Cauchy--Schwarz estimate gives $\|V\|_\infty\le C\|V\|_{H^2}$,
-since $\sum_m\int_\R(1+\xi^2+m^2)^{-2}d\xi<\infty$.
-
-Set $u_0=r^aV(-\log r,\theta)$. Polar differentiation gives the displayed
-weighted norms and $|u_0|\le Cr^a$, while
-$\Delta u_0=F$ on the original disk off the origin. It remains to exclude a distribution
-at the origin. Let $\eta_\epsilon$ vanish on $r<\epsilon$ and equal one on
-$r>2\epsilon$. On the intervening annulus $A_\epsilon$,
-\[
- \|[\Delta,\eta_\epsilon]u_0\|_2
- \le C\epsilon^{a-1}\left(
-   \|\nabla u_0/r^a\|_{L^2(A_\epsilon)}
-  +\|u_0/r^{a+1}\|_{L^2(A_\epsilon)}\right)\longrightarrow0.
-\]
-The same estimates on the first and second derivatives show
-$\eta_\epsilon u_0\to u_0$ in physical $H^2$ on the smaller disk; here
-$a>1$ is essential. Hence $\Delta u_0=F$ distributionally there.
-The difference $u-u_0$ is weakly harmonic, so Weyl's lemma makes it smooth
-and harmonic across the origin. Its parity kills all forbidden-degree jets.
+\uses{lem:cylinder-forcing-particular, lem:weak-poisson-harmonic-comparison,
+ lem:cylinder-forbidden-jets, lem:weak-derivative-basic}
+\leanok
+Construct the weighted particular solution from the original Poisson data.
+Restrict the input function and its same specified jet to that smaller disk.
+Their Laplacians agree there, so smooth harmonic comparison supplies the
+remainder with its parity and a.e.\ decomposition.
+Smooth axis parity gives every forbidden Taylor jet.
+The particular solution's radius, constant and ordered weak jet are unchanged.
 \end{proof}
-
-\begin{remark}[Point removal for the reconstructed jet]
-After the weighted Cartesian jet has been established off the origin, a
-second-order radial cutoff is unnecessary for extending its weak identities.
-For $a>1$, all three weights $a+1-k$, $0\le k\le2$, are positive, so bounded
-radial multipliers give the actual unweighted L2 norms of every specified entry.
-Apply Lemma~\ref{lem:weak-point-removal} first to the function and each first
-derivative, then to each first derivative and its specified second entries.
-This gives a whole-disk weak jet and finite H2 norm, without a defect at the
-center. Omitting the center is used only to transfer norms, not to assert a
-weak derivative.
-\end{remark}
 
 \begin{remark}[Digest note: finite Taylor data suffice for the cylinder remainder]
 The odd--odd bootstrap only needs finite Taylor remainders of the smooth harmonic
@@ -1254,6 +1349,11 @@ from smooth axis parity alone. Thus after obtaining the smooth harmonic
 representative, no harmonic expansion is needed to prove its jet assertions.
 The physical forcing weight is $F/r^{a-1}$, equivalent to $r^{2-a}F$ in
 cylinder measure.
+The two odd--odd consumers use respectively the pointwise/first-derivative
+subcritical estimates and the full second-jet quadratic remainder.
+The mixed corollary uses $a=2$ and a permitted linear Taylor term.
+All share weak cylinder inversion, physical reconstruction and harmonic
+comparison; restricting the parity alone does not remove these analytic steps.
 \end{remark}
 
 \begin{lemma}[Canonical stream data for saddle cylinder inversion]
