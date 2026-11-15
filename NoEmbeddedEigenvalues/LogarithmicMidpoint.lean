@@ -151,23 +151,6 @@ theorem log_midpoint_gain {lam b K : ℝ} (hb : b < 1)
     push_cast
     field_simp [Complex.ofReal_ne_zero.mpr hh.1.ne']
 
-/-- Near zero, the exceptional quarter-resonance levels form a null set
-(`lem:quarter-divisor-ae`). The cutoff may be made arbitrarily small. -/
-theorem exists_ae_quarterDivisor_ne_zero {lam : ℝ} (hlam : lam ≠ 0)
-    {κ : ℂ} (hκ : κ ^ 4 = 1) {η : ℝ} (hη : 0 < η) :
-    ∃ ρ : ℝ, 0 < ρ ∧ ρ < η ∧
-      ∀ᵐ h ∂(volume.restrict (Ioo 0 ρ)), quarterDivisor lam κ h ≠ 0 := by
-  obtain ⟨ρ, K, ql, qu, hρ, hρη, _, _, _, _, _, _, ⟨zs, _, hzs⟩, _⟩ :=
-    quarter_divisor_geometry hlam hκ hη
-  have hn : ∀ᵐ h : ℝ, h ∉ range zs := by
-    rw [ae_iff]
-    simp only [not_not]
-    exact (countable_range zs).measure_zero volume
-  refine ⟨ρ, hρ, hρη, ?_⟩
-  filter_upwards [ae_restrict_of_ae hn, ae_restrict_mem measurableSet_Ioo] with h hh hI hz
-  obtain ⟨n, rfl⟩ := (hzs h hI).mp hz
-  exact hh (mem_range_self n)
-
 /-- The scalar midpoint is the value of an orbitwise ACL representative
 (`lem:quarter-midpoint-reconstruction`), not a raw spatial trace. -/
 theorem quarter_midpoint_reconstruction {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1)

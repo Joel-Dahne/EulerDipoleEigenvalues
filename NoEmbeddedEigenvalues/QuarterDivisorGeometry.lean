@@ -18,7 +18,7 @@ then controls the divisor throughout each complete phase cell.
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
-open Set Filter
+open Set Filter MeasureTheory
 open scoped Topology
 
 private theorem logarithmic_comparison {F : ℝ → ℝ} {c C r : ℝ}
@@ -350,5 +350,22 @@ theorem quarter_divisor_geometry {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ 
     refine ⟨hl, hu, hd.trans ?_⟩
     rw [habs, quarterDivisor, (sub_eq_zero.1 hzero), norm_sub_rev]
     exact phase_chord_lower hphase
+
+/-- Near zero, the exceptional quarter-resonance levels form a null set
+(`lem:quarter-divisor-ae`). The cutoff may be made arbitrarily small. -/
+theorem exists_ae_quarterDivisor_ne_zero {lam : ℝ} (hlam : lam ≠ 0)
+    {κ : ℂ} (hκ : κ ^ 4 = 1) {η : ℝ} (hη : 0 < η) :
+    ∃ ρ : ℝ, 0 < ρ ∧ ρ < η ∧
+      ∀ᵐ h ∂(volume.restrict (Ioo 0 ρ)), quarterDivisor lam κ h ≠ 0 := by
+  obtain ⟨ρ, K, ql, qu, hρ, hρη, _, _, _, _, _, _, ⟨zs, _, hzs⟩, _⟩ :=
+    quarter_divisor_geometry hlam hκ hη
+  have hn : ∀ᵐ h : ℝ, h ∉ range zs := by
+    rw [ae_iff]
+    simp only [not_not]
+    exact (countable_range zs).measure_zero volume
+  refine ⟨ρ, hρ, hρη, ?_⟩
+  filter_upwards [ae_restrict_of_ae hn, ae_restrict_mem measurableSet_Ioo] with h hh hI hz
+  obtain ⟨n, rfl⟩ := (hzs h hI).mp hz
+  exact hh (mem_range_self n)
 
 end NoEmbeddedEigenvalues

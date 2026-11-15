@@ -4540,11 +4540,12 @@ instead of Hardy's inequality to control its endpoint flux.
 \begin{lemma}[Interior linear Hardy energy]
 \label{lem:hardy-interior-linear}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_interior,
+ NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le}
 \leanok
 Let $N\in H^1(a,b)$ have specified derivative $D$, and let
-$z\in(a,b)$ with $N(z)=0$. If $U\in L^2(a,b)$ satisfies
-$N(x)=(x-z)U(x)$ throughout $(a,b)$, then
+$z\in(a,b)$ with $N(z)=0$. If $U$ is a.e.\ strongly measurable and satisfies
+$N(x)=(x-z)U(x)$ throughout $(a,b)$, then $U\in L^2(a,b)$ and
 \[
  \int_a^b|U(x)|^2\,dx\le8\int_a^b|D(x)|^2\,dx.
 \]
@@ -4559,7 +4560,9 @@ primitive Hardy inequality to $V_\sigma(t)=\sigma E(z+\sigma t)$.
 The fundamental theorem identifies its primitive with $N(z+\sigma t)$
 while the segment stays inside $(a,b)$. Each orientation contributes at
 most $4\int_a^b|D|^2$; translation and reflection preserve this energy.
-Splitting the interval at $z$ gives the stated bound.
+Splitting the interval at $z$ gives the bound first for nonnegative
+integrals. Its finite right side proves genuine quotient L2 integrability
+before converting to the displayed Bochner integrals.
 The single value $U(z)$ does not enter the integral.
 \end{proof}
 

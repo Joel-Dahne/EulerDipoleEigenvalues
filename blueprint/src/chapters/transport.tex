@@ -1208,6 +1208,52 @@ Thus $R=1/g$ is smooth, $|R|\le Bz$ and
 $|R'|=|g'/g^2|\le H$, with constants depending only on $\lambda$.
 \end{proof}
 
+\begin{lemma}[First-derivative mass estimate on a complete cell]
+\label{lem:phase-cell-mass-estimates}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.phase_cell_mass_estimates}
+\leanok
+For every real $\lambda\ne0$ there are $K>0$ and $0<r<1$, independent
+of the character and numerator, with the following property.
+Let $\kappa\in\C$ and
+\[
+ 0<a<z<b<r,\quad D(z)=0,\quad
+ |\Phi_\lambda(a)-\Phi_\lambda(z)|
+ =|\Phi_\lambda(b)-\Phi_\lambda(z)|=\pi .
+\]
+If $N\in H^1(a,b)$ has specified derivative $N_1$ and $N(z)=0$, then
+the ordinary quotient $C=N/D$ satisfies $C/\sqrt h\in L^2(a,b)$ and
+\[
+ \int_a^b |C(h)/\sqrt h|^2\,dh
+ \le K\int_a^b h|N_1(h)|^2\,dh .
+\]
+No second numerator derivative or quotient regularity is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-divisor-inverse-factor, lem:hardy-interior-linear}
+\leanok
+Set $U=N/(h-z)$, assigning its immaterial value at $z$ by totalized
+division. Interior Hardy supplies genuine L2 integrability and
+$\int|U|^2\le8\int|N_1|^2$.
+Let $R$ and $B$ be as in Lemma~\ref{lem:quarter-divisor-inverse-factor}.
+Away from $z$, the ordinary quotient equals $RU$ and
+\[
+ |RU|\le Bz|U|\le B^2h|U|,\qquad
+ |RU/\sqrt h|\le B^2\sqrt b\,|U|.
+\]
+These bounds first establish L2 integrability. Since
+$b\le Bz\le B^2h$ on the cell,
+\[
+ \int|C/\sqrt h|^2
+ \le B^4b\int|U|^2
+ \le 8B^4b\int|N_1|^2
+ \le 8B^6\int h|N_1|^2.
+\]
+Thus one may take $K=8B^6$ on the same collar, for either sign of
+$\lambda$ and every character admitting the displayed central zero.
+\end{proof}
+
 \begin{lemma}[Uniform complete-cell division estimates]
 \label{lem:phase-cell-estimates}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval}
@@ -1283,6 +1329,40 @@ signed phase negates the complex exponential, giving the required resonance.
 Unbounded lattice phases force the physical levels to tend to zero.
 For the covering, take the first index with $e_n<x$; unless $x$ is itself
 an endpoint it lies strictly between two consecutive endpoints.
+\end{proof}
+
+\begin{lemma}[First-derivative phase-cell mass division]
+\label{lem:phase-cell-mass-division}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.phase_cell_mass_division}
+\leanok
+Let $\lambda\ne0$, $\kappa^4=1$ and $h_0>0$.
+Suppose $N$ has compatible local interval H1 data $(N,N_1)$ on
+$(0,h_0)$, vanishes at every divisor zero there, and admits an actual
+integrable majorant $E\in L^1(0,h_0)$ with
+\[
+ h|N_1(h)|^2\le E(h)\quad\hbox{a.e.}
+\]
+Then some $0<\eta<h_0$ is a complete-cell endpoint, the ordinary
+quotient $C=N/D$ satisfies $C/\sqrt h\in L^2(0,\eta)$, and
+$D\ne0$ a.e.\ on this collar.
+There is no assertion of a continuous quotient extension, a quotient
+derivative, or a canonical trace at zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:phase-cell-mass-estimates, lem:complete-phase-cells,
+ lem:quarter-divisor-ae, lem:countable-cell-energy}
+\leanok
+Choose a collar where divisor zeros are null, then a complete-cell
+family below it, the original cutoff and the uniform mass-estimate cutoff.
+On each cell the preceding lemma bounds the quotient's squared mass
+by $K\int h|N_1|^2\le K\int|E|$.
+The nonnegative integrable density $|E|$ is a common energy for
+Lemma~\ref{lem:countable-cell-energy}; hence summation establishes
+genuine global L2 integrability before any totalized global energy
+integral is used. The cells cover $(0,e_0)$ up to countably many
+endpoints. Set $\eta=e_0$.
 \end{proof}
 
 \begin{lemma}[Phase-cell division]
@@ -1621,6 +1701,46 @@ has modulus one. The same specified gradient and continuous forcing
 occur in the weak formula, the coarea energy and the estimate.
 \end{proof}
 
+\begin{lemma}[Zero-saddle scalar quotient mass]
+\label{lem:zero-saddle-quotient-mass}
+\uses{def:transport-pair, def:quarter-character, def:numerator}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_quarterQuotient_memLp}
+\leanok
+Let $(v,f)$ be a transport pair near the closed cell and let $g$ be
+its supplied continuous forcing representative, vanishing at the four
+cell corners. Let $r>0$ and suppose both original fields $v,f$ have
+quarter character $\kappa$, $\kappa^4=1$, on the annulus $0<h<r$.
+There is a complete-cell endpoint $0<\eta<\min(r,1/2)$ such that
+\[
+ \frac{C}{\sqrt h}\in L^2(0,\eta),\qquad
+ C(h)=\frac{N_{\lambda,g}(h)}{D_{\lambda,\kappa}(h)},
+ \qquad D_{\lambda,\kappa}(h)\ne0\quad\hbox{a.e. on }(0,\eta).
+\]
+The statement uses the original continuous $g$, not a replacement
+defined on exceptional orbits. No independent numerator regularity or
+weighted gradient hypothesis is imposed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zero-saddle-numerator-derivative, lem:numerator-zeros,
+ lem:phase-cell-mass-division}
+\leanok
+The original transport pair supplies a first weak gradient and compatible
+local H1 numerator data. On a common collar its derivative estimate gives
+\[
+ h|N_1(h)|^2\le K\mathcal J_{1,0}(h)+K/\sqrt h
+ \quad\hbox{a.e.}
+\]
+The right side is genuinely integrable: coarea supplies the first
+term, and $h^{-1/2}$ is integrable at zero.
+Restrict the two rotation characters to this same collar.
+Numerator cancellation gives the canonical zeros of this same
+continuous-forcing numerator.
+Apply Lemma~\ref{lem:phase-cell-mass-division} with the displayed
+majorant. Its cutoff is below both the original character collar and
+the analytic collar, for either sign of $\lambda$ and all four characters.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
@@ -1632,10 +1752,9 @@ at its four corners, then $v/d\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:numerator-zeros, lem:quarter-divisor-geometry,
- lem:orbit-saddle-distance, lem:period-coarse,
- lem:zero-saddle-numerator-derivative,
- lem:hardy-endpoint, lem:zero-saddle-forcing-decay, lem:zero-saddle-forcing-tails,
+\uses{lem:quarter-endpoint-formula, lem:zero-saddle-quotient-mass,
+ lem:orbit-saddle-distance, lem:orbit-time-integrals, lem:period-coarse,
+ lem:zero-saddle-forcing-decay, lem:zero-saddle-forcing-tails,
  lem:orbit-coordinates-area, lem:reflection-algebra, lem:symmetries-commute}
 Intersect the four rotated neighbourhoods and decompose into quarter
 characters $\kappa\in\{1,-1,i,-i\}$. The projected forcings still vanish
@@ -1647,32 +1766,10 @@ $p_\pm=\gamma_h(\pm L(h))$,
 \[
  |f_h(t)|\le Ce^{-|t|/2},\qquad |f(p_\pm)|\le Ch^{1/4}.
 \]
-Lemma~\ref{lem:zero-saddle-numerator-derivative} supplies the weak
-moving-endpoint derivative
-\[
- N'=\int_{-L}^L\nabla f(\gamma_h)\cdot\partial_h\gamma_h\,e^{-i\lambda t}dt
-       +L'\bigl(f(p_+)e^{-i\lambda L}+f(p_-)e^{i\lambda L}\bigr).
-\]
-and, on a common a.e.\ set of levels, its estimate
-\[
- |N'(h)|^2\le\frac Ch E(h)+Ch^{-3/2},\qquad
- E(h)=\int_{-L}^L|\nabla f(\gamma_h(t))|^2dt.
-\]
-Since $E\in L^1$, this first gives
-\[
- \int_0^{h_0}h|N'(h)|^2\,dh
- \le K\int_0^{h_0}E(h)\,dh+2K\sqrt{h_0}<\infty.
-\]
-Choose $h_0$ at a phase-cell endpoint. On $I_j$, the divisor lower bound,
-endpoint Hardy on either side of $h_j$, and $h\asymp h_j$ give
-\[
- \int_{I_j}\frac{|C(h)|^2}{h}\,dh
- \le C_\lambda h_j\int_{I_j}|N'|^2\,dh
- \le C_\lambda\int_{I_j}h|N'|^2\,dh.
-\]
-Summing disjoint cells gives $C/\sqrt h\in L^2(0,h_0)$.
-This uses the weighted derivative energy directly, without a separate
-geometric remainder series.
+Lemma~\ref{lem:zero-saddle-quotient-mass} gives a smaller complete-cell
+collar with $C/\sqrt h\in L^2$ and $D\ne0$ a.e.
+It uses the integrable $h|N'|^2$ majorant directly; no global $hN''$
+bound or separate geometric remainder series is needed.
 
 Reconstruct $z_h$ from $-L$ for $t\le0$ and from $L$ for $t\ge0$.
 The endpoint formula and Lemma~\ref{lem:zero-saddle-forcing-tails} give

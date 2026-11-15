@@ -199,8 +199,18 @@ weights and local versus global regularity.
    The original transport pair supplies the first weak gradient; coarea gives
    actual integrable fiber energy E, and |N′|² ≤ K E/h + K/(h√h), uniformly in
    every real frequency on one collar. No global numerator H² hypothesis is used.
-   Next: C/√h cell summation and reconstruction (`lem:transport-first-gain-zero`).
-   Using the integrable h|N′|² energy avoids a separate geometric remainder sum.
+   First-derivative mass estimates and cell summation
+   (`lem:phase-cell-mass-estimates`, `lem:phase-cell-mass-division`) are
+   transitively admission-free in `PhaseCellMassEstimates.lean` and
+   `PhaseCellMassDivision.lean`. Interior Hardy now establishes quotient L²
+   before its energy estimate. Only local H¹ and an integrable majorant of
+   h|N′|² are used; no second numerator jet or quotient trace is assumed.
+   Zero-saddle scalar quotient mass (`lem:zero-saddle-quotient-mass`) applies
+   this to the original transport pair and continuous forcing in
+   `ZeroSaddleQuotientMass.lean`, for both signs and every κ⁴ = 1.
+   It gives C/√h ∈ L² and D ≠ 0 a.e. on a smaller complete-cell collar.
+   Next: physical reconstruction and four-character assembly
+   (`lem:transport-first-gain-zero`), which remains admitted.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.
    **Next targets:** the two transport gains with their original transport pairs,

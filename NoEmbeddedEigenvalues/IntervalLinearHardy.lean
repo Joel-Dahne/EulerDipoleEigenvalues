@@ -16,13 +16,14 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 open scoped ENNReal
 
-/-- A prescribed linear quotient of an interval H¹ function vanishing at an
-interior point has energy bounded uniformly in the interval and the zero. -/
-theorem HasIntervalH1.integral_sq_linear_quotient_le {a b z : ℝ} {N D U : ℝ → ℂ}
+/-- A measurable linear quotient at an interior zero has genuine L² energy,
+without assuming its integrability in advance. -/
+theorem HasIntervalH1.hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
     (hN : HasIntervalH1 a b N D) (hz : z ∈ Ioo a b) (hzero : N z = 0)
-    (hU : MemLp U 2 (volume.restrict (Ioo a b)))
+    (hUm : AEStronglyMeasurable U (volume.restrict (Ioo a b)))
     (hfactor : ∀ x ∈ Ioo a b, N x = ((x - z : ℝ) : ℂ) * U x) :
-    (∫ x in Ioo a b, ‖U x‖ ^ 2) ≤ 8 * ∫ x in Ioo a b, ‖D x‖ ^ 2 := by
+    MemLp U 2 (volume.restrict (Ioo a b)) ∧
+      (∫ x in Ioo a b, ‖U x‖ ^ 2) ≤ 8 * ∫ x in Ioo a b, ‖D x‖ ^ 2 := by
   let E := intervalZeroExtension a b D
   have hEi : Integrable E := integrable_intervalZeroExtension hN.memLp_derivative
   let I := ∫⁻ x in Ioo a b, ENNReal.ofReal (‖D x‖ ^ 2)
@@ -107,8 +108,14 @@ theorem HasIntervalH1.integral_sq_linear_quotient_le {a b z : ℝ} {N D U : ℝ 
   have hb : (∫⁻ x in Ioo a b, ENNReal.ofReal (‖U x‖ ^ 2)) ≤ 8 * I := by
     rw [hμ, lintegral_add_measure]
     exact (add_le_add hminus hplus).trans_eq (by ring)
-  have hUi := hU.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
   have hDi := hN.memLp_derivative.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
+  have hDf : I < ⊤ :=
+    (hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun _ ↦ sq_nonneg _)).1 hDi.2
+  have hUi : IntegrableOn (fun x ↦ ‖U x‖ ^ 2) (Ioo a b) :=
+    ⟨hUm.norm.pow 2, (hasFiniteIntegral_iff_ofReal
+      (Eventually.of_forall fun _ ↦ sq_nonneg _)).2
+        (hb.trans_lt (ENNReal.mul_lt_top (by norm_num) hDf))⟩
+  refine ⟨(memLp_two_iff_integrable_sq_norm hUm).2 hUi, ?_⟩
   rw [← ofReal_integral_eq_lintegral_ofReal hUi
       (Eventually.of_forall fun _ ↦ sq_nonneg _),
     show I = ∫⁻ x in Ioo a b, ENNReal.ofReal (‖D x‖ ^ 2) from rfl,
@@ -117,5 +124,14 @@ theorem HasIntervalH1.integral_sq_linear_quotient_le {a b z : ℝ} {N D U : ℝ 
     show (8 : ℝ≥0∞) = ENNReal.ofReal (8 : ℝ) by norm_num,
     ← ENNReal.ofReal_mul (by norm_num : 0 ≤ (8 : ℝ))] at hb
   exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 hb
+
+/-- A prescribed linear quotient of an interval H¹ function vanishing at an
+interior point has energy bounded uniformly in the interval and the zero. -/
+theorem HasIntervalH1.integral_sq_linear_quotient_le {a b z : ℝ} {N D U : ℝ → ℂ}
+    (hN : HasIntervalH1 a b N D) (hz : z ∈ Ioo a b) (hzero : N z = 0)
+    (hU : MemLp U 2 (volume.restrict (Ioo a b)))
+    (hfactor : ∀ x ∈ Ioo a b, N x = ((x - z : ℝ) : ℂ) * U x) :
+    (∫ x in Ioo a b, ‖U x‖ ^ 2) ≤ 8 * ∫ x in Ioo a b, ‖D x‖ ^ 2 :=
+  (hN.hardy_interior hz hzero hU.aestronglyMeasurable hfactor).2
 
 end NoEmbeddedEigenvalues
