@@ -76,6 +76,21 @@ theorem HasIntervalH1.smul {a b : ℝ} {F D : ℝ → ℂ}
     filter_upwards [hF.hasDerivAt_ae] with x hx hxI
     exact (hx hxI).const_smul c
 
+/-- Interval `H¹` data only depend on the values inside the open interval. -/
+theorem HasIntervalH1.congr_Ioo {a b : ℝ} {F G D : ℝ → ℂ} (h : HasIntervalH1 a b F D)
+    (hFG : EqOn F G (Ioo a b)) : HasIntervalH1 a b G D where
+  memLp_value := h.memLp_value.ae_eq ((ae_restrict_iff' measurableSet_Ioo).2
+    (Eventually.of_forall fun x hx ↦ hFG hx))
+  memLp_derivative := h.memLp_derivative
+  locally_absolutelyContinuous c d hc hcd hd := by
+    refine (h.locally_absolutelyContinuous c d hc hcd hd).congr fun x hx ↦ hFG ?_
+    rw [uIcc_of_le hcd] at hx
+    exact ⟨by linarith [hx.1], by linarith [hx.2]⟩
+  hasDerivAt_ae := by
+    filter_upwards [h.hasDerivAt_ae] with x hx hmem
+    exact (hx hmem).congr_of_eventuallyEq
+      (eventually_of_mem (isOpen_Ioo.mem_nhds hmem) fun y hy ↦ (hFG hy).symm)
+
 /-- The canonical continuous extension, anchored at the midpoint. Its values are
     only used on the closed interval; the integral is total outside it. -/
 def intervalH1Extension (a b : ℝ) (F D : ℝ → ℂ) (x : ℝ) : ℂ :=

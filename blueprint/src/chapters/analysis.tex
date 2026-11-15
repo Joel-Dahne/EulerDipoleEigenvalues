@@ -3237,6 +3237,58 @@ is needed: each sliced identity is integrated before varying $t$.
 Compact rectangles containing the test support and the midpoint suffice.
 \end{proof}
 
+\begin{lemma}[Fixed-window parameter integrals in H1]
+\label{lem:fixed-window-h1}
+\uses{def:weak-derivative-local, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.memLp_setIntegral_Icc,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h1,
+ NoEmbeddedEigenvalues.HasIntervalH1.with_deriv}
+\leanok
+Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
+Suppose $F$ is continuous on $Q$, $F,A\in L^2(Q)$, and
+$\partial_hF=A$ weakly. Then
+\[
+ M(h)=\int_l^r F(h,t)\,dt
+\]
+has interval $H^1$ data on $(a,b)$ with specified derivative
+$M_1(h)=\int_l^r A(h,t)\,dt$.
+The ordinary derivative of $M$, defined arbitrarily where it does not
+exist, is also a compatible specified derivative.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:h1-interval-endpoints}
+\leanok
+Cauchy--Schwarz on $[l,r]$ and Fubini give $M,M_1\in L^2(a,b)$.
+On almost every horizontal line the ACL fundamental theorem identifies
+$F(y,t)-F(x,t)$ with $\int_x^y A(h,t)\,dh$ for all interior $x,y$;
+continuity retains the original values of $F$.
+Integrate in $t$ and apply Fubini to obtain
+$M(y)-M(x)=\int_x^y M_1(h)\,dh$.
+The integral primitive is locally absolutely continuous with derivative
+$M_1$ almost everywhere. Thus the ordinary derivative agrees with $M_1$
+almost everywhere on every compact subinterval.
+\end{proof}
+
+\begin{lemma}[Integrable cancellation at differentiable divisor zeros]
+\label{lem:integrable-divisor-cancellation}
+\lean{NoEmbeddedEigenvalues.eq_zero_of_integrable_divisor}
+\leanok
+Let $z\in(a,b)$, let $N$ be continuous at $z$, and let $D$ be
+differentiable there, with $D(z)=0$. If $E\in L^1(a,b)$ and
+$|D(h)||E(h)|=|N(h)|$ almost everywhere, then $N(z)=0$.
+Neither a simple zero nor a value of $E$ at $z$ is required.
+\end{lemma}
+
+\begin{proof}
+\leanok
+If $N(z)\ne0$, then $|N(h)|\ge c>0$ near $z$.
+Differentiability and $D(z)=0$ give $|D(h)|\le C|h-z|$
+there, with $C>0$. The a.e.\ identity implies
+$|E(h)|\ge c/(C|h-z|)$ just to the right of $z$.
+The latter function is not integrable, contradicting $E\in L^1$.
+\end{proof}
+
 \begin{lemma}[An elementary $L^2$ trace estimate]
 \label{lem:trace-l2}
 \uses{def:weak-derivative-local, lem:acl-slicing}

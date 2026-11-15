@@ -115,7 +115,8 @@ theorem ae_orbit_restriction_zero {U : Set (ℝ × ℝ)} {u k : ℝ × ℝ → �
   obtain ⟨b, hhb, hbh⟩ := exists_rat_btwn hhI.2
   exact hh a b ha0 (hah.trans hhb) hbh ⟨hah, hhb⟩
 
-private theorem memLp_actionAngleInv_band {U : Set (ℝ × ℝ)} (hU : IsOpen U)
+/-- L² data pull back to genuine L² functions on compact level/angular bands. -/
+theorem memLp_actionAngleInv_band {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     {u : ℝ × ℝ → ℂ} (hu : MemLp u 2 (volume.restrict U))
     {a b h₀ : ℝ} (ha : 0 < a) (hab : a < b) (hb : b < h₀) (h₀1 : h₀ < 1)
     (hA : orbitAnnulus 0 h₀ ⊆ U) :

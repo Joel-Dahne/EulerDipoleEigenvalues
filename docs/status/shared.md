@@ -154,11 +154,13 @@ weights and local versus global regularity.
    joint a.e. reflection transport retains parity. No admitted elliptic theorem,
    stronger source hypothesis or smaller comparison disk is used.
    **Transport-gain prerequisites:** Quarter-orbit endpoint formula
-   (`lem:quarter-endpoint-formula`) is transitively admission-free, with its
-   original mathematical statement. `OrbitTransportTraces.lean` supplies full-time a.e. congruence
-   and locally L2 endpoints via fixed angular rectangle traces, without raw ray
-   evaluations or new assumptions. Next on the first-gain branch: numerator
-   local H¹/resonant zeros, phase-cell division and zero-saddle forcing estimates.
+   (`lem:quarter-endpoint-formula`) and Numerator vanishes at divisor zeros
+   (`lem:numerator-zeros`) are transitively admission-free with their original
+   statements. Fixed-window integration gives local numerator H¹ from continuous H¹
+   forcing. Local L¹ endpoint integrability forces cancellation, without
+   raw resonant-orbit values or simple-zero geometry.
+   Next on the first-gain branch: phase-cell geometry/division and
+   zero-saddle forcing estimates.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
@@ -335,10 +337,10 @@ prerequisites remain outside this directory; see the
   Invariant-cutoff testing avoids global transport-operator closedness.
   The quotient and representative-change assemblies are proved in Lean.
   Stream-H² expands to explicit local analytic admissions;
-  Hardy–Poisson division and the periodic first gain remain the other two outer
-  quotient admissions. Periodic quotient transport is proved directly on the torus.
-  The periodic first gain includes
-  cell covering beyond the fixed neighbourhood's boundary saddles.
+  Hardy–Poisson division remains an outer quotient admission; the periodic
+  first gain reduces to the positive-cell first gain, with reflected-periodic
+  covering beyond the fixed neighbourhood's boundary saddles.
+  Periodic quotient transport is proved directly on the torus.
   The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace

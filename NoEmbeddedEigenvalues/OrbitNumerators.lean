@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.ScalarDivision
-import NoEmbeddedEigenvalues.OrbitTransportTraces
+import NoEmbeddedEigenvalues.OrbitNumeratorRegularity
+import NoEmbeddedEigenvalues.ResonantCancellation
 
 /-!
 # Quarter-orbit endpoints and resonant zeros
@@ -150,7 +151,42 @@ theorem numerator_zeros {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1)
     (hfκ : HasQuarterCharacterOn κ (orbitAnnulus 0 h₀) f) :
     (∃ N₁ : ℝ → ℂ, HasIntervalH1Loc 0 h₀ (quarterNumerator lam g) N₁) ∧
       ∀ h ∈ Ioo 0 h₀, quarterDivisor lam κ h = 0 → quarterNumerator lam g h = 0 := by
-  sorry
+  have hU := hp.isOrbitUnion.1
+  have hgs : MemSobolevOn 1 U g :=
+    MemSobolevOn.congr_ae_on (MemSobolevOnWith.of_succ hp.memSobolevOn) hU.measurableSet
+      ((ae_restrict_iff' hU.measurableSet).1 hfg)
+  have hNl := quarterNumerator_h1Loc hU hg hgs hh₀1 hA (lam := lam)
+  refine ⟨⟨_, hNl⟩, ?_⟩
+  obtain ⟨Em, Ep, hEL, hprof⟩ := quarter_endpoint_formula hκ hp hh₀ hh₀1 hA hg hfg hvκ hfκ
+  intro h hh hzero
+  let a := h / 2
+  let b := (h + h₀) / 2
+  have ha : 0 < a := by dsimp [a]; linarith [hh.1]
+  have hab : a < b := by dsimp [a, b]; linarith [hh.1, hh.2]
+  have hb : b < h₀ := by dsimp [b]; linarith [hh.2]
+  have hI : h ∈ Ioo a b := by dsimp [a, b]; constructor <;> linarith [hh.1, hh.2]
+  have hN := hNl a b ha hab hb
+  have hNc : ContinuousAt (quarterNumerator lam g) h := by
+    apply ((hN.continuousOn_extension hab).continuousAt
+      (Icc_mem_nhds hI.1 hI.2)).congr
+    filter_upwards [isOpen_Ioo.mem_nhds hI] with x hx
+    exact hN.extension_eq hab hx
+  have hDd : DifferentiableAt ℝ (quarterDivisor lam κ) h := by
+    have hL := (deriv_eighthPeriod_neg hh.1 (hh.2.trans hh₀1)).1
+    exact (differentiableAt_const κ).sub
+      (((differentiableAt_const Complex.I).mul
+        (Complex.ofRealCLM.differentiableAt.comp h (hL.const_mul (2 * lam)))).cexp)
+  apply eq_zero_of_integrable_divisor hI hNc hDd hzero
+    ((hEL a b ha hab hb).1.integrable (by norm_num))
+  filter_upwards [ae_restrict_of_ae_restrict_of_subset (Ioo_subset_Ioo ha.le hb.le) hprof]
+    with x hx
+  obtain ⟨Z, -, -, -, -, -, -, -, hd, -⟩ := hx
+  have he : ‖Complex.I *
+      Complex.exp (Complex.I * ((lam * eighthPeriod x : ℝ) : ℂ))‖ = 1 := by
+    simp only [norm_mul, Complex.norm_I, one_mul, Complex.norm_exp]
+    simp
+  have hn := congrArg norm hd
+  rwa [norm_mul, norm_mul, he, one_mul] at hn
 
 /-- Simple resonances, geometric ratio bounds and uniform full-cell comparisons.
 The cutoff can be chosen arbitrarily small; no exact geometric progression is claimed. -/

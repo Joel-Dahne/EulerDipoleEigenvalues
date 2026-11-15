@@ -952,6 +952,42 @@ The endpoint functions are already locally L2.
 No spatial trace of $v$ on an endpoint ray is assumed.
 \end{proof}
 
+\begin{lemma}[Local H1 regularity of the continuous-forcing numerator]
+\label{lem:numerator-local-h1}
+\uses{def:numerator, def:sobolev-local, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.quarterNumerator_eq_normalized,
+ NoEmbeddedEigenvalues.quarterNumerator_memIntervalH1,
+ NoEmbeddedEigenvalues.quarterNumerator_h1Loc}
+\leanok
+Let $U$ be open and contain the annulus $0<h<h_0<1$.
+If $g\in H^1(U)$ is continuous on $U$, then, for every real $\lambda$,
+\[
+ N(h)=S(h)\int_{-1/8}^{1/8}
+   g(\gamma_h(S(h)\theta))e^{-i\lambda S(h)\theta}\,d\theta
+\]
+has local interval $H^1$ data on $(0,h_0)$ with one compatible specified
+derivative, which can be taken to be $\operatorname{deriv}N$.
+No transport equation or quarter character is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fixed-window-h1, lem:localization-cutoff,
+ lem:action-angle-weak, lem:weak-derivative-product,
+ lem:period-regularity, lem:orbit-coordinates-area}
+\leanok
+The substitution $t=S(h)\theta$ gives the displayed identity.
+On a compact level interval, cut $g$ off in space, identically one on
+the compact annulus. The weak action--angle chain rule gives its weak
+level derivative on a fixed angular rectangle containing $[-1/8,1/8]$.
+The area density $2S(h)$ is bounded above and away from zero there, so
+the pulled-back value and gradient have finite L2 norms.
+The smooth weight $S(h)e^{-i\lambda S(h)\theta}$ and its level derivative
+are bounded on the same compact rectangle. Apply
+Lemma~\ref{lem:fixed-window-h1}. The cutoff does not change the numerator
+there, and the ordinary derivative supplies compatible data on all compact
+level intervals.
+\end{proof}
+
 \begin{lemma}[Numerator vanishes at divisor zeros]
 \label{lem:numerator-zeros}
 \uses{def:numerator, def:quarter-character, def:h1-interval, def:h1-local-interval}
@@ -962,13 +998,19 @@ derivative on $(0,h_0)$ and $N(h)=0$ at every zero of $D$ there.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:period-regularity, lem:coarea,
- lem:lift-sobolev-local}
-On compact level intervals the Sobolev chain rule and moving-endpoint
-formula give $N\in H^1$. The forcing values use its continuous representative.
-If $N(h_j)\ne0$, continuity and $|D(h)|\le C|h-h_j|$ would force
-$|Z_h(-L)|\ge c/|h-h_j|$ a.e. nearby, contradicting the endpoint lemma's
-local $L^2$ bound.
+\uses{lem:quarter-endpoint-formula, lem:numerator-local-h1,
+ lem:integrable-divisor-cancellation, lem:period-regularity}
+\leanok
+Domain-a.e.\ agreement transfers the forcing's Sobolev regularity to
+its continuous representative. Lemma~\ref{lem:numerator-local-h1} gives
+the local H1 derivative and continuity of its canonical numerator.
+Near any interior zero of $D$, the endpoint formula gives
+$|D(h)||E_-(h)|=|N(h)|$ almost everywhere.
+The endpoint function is locally L2, hence locally L1; $D$ is
+differentiable by period smoothness. Apply
+Lemma~\ref{lem:integrable-divisor-cancellation}.
+No endpoint value of the raw transport unknown at the resonant level,
+and no simplicity or enumeration of the divisor zeros, is used.
 \end{proof}
 
 \begin{lemma}[Geometry of quarter-divisor zeros]

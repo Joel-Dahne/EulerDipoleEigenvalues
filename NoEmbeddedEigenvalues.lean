@@ -29,6 +29,7 @@ import NoEmbeddedEigenvalues.FlowBoundaryForm
 import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.IntervalH1Estimates
+import NoEmbeddedEigenvalues.IntervalParameterH1
 import NoEmbeddedEigenvalues.IntervalZeroExtension
 import NoEmbeddedEigenvalues.LiftIntegration
 import NoEmbeddedEigenvalues.LiftTorus
@@ -194,6 +195,8 @@ import NoEmbeddedEigenvalues.Regularity.OddOddGradientCoordinates
 import NoEmbeddedEigenvalues.Regularity.QuarterTime
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.OrbitTransportTraces
+import NoEmbeddedEigenvalues.OrbitNumeratorRegularity
+import NoEmbeddedEigenvalues.ResonantCancellation
 import NoEmbeddedEigenvalues.OrbitNumerators
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderData
