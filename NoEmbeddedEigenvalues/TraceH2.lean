@@ -194,50 +194,6 @@ theorem HasWeakPartialOn.horizontal_integral_eq {a₀ a₁ b₁ b₂ : ℝ}
   · rw [intervalIntegral.integral_symm, hordered d hd c hc hdc b hbJ]
     abel
 
-/-- An integral increment identity with an L² right side gives local absolute
-continuity and the specified a.e. derivative, without smooth approximation. -/
-theorem locally_ac_of_integral_eq {a₀ a₁ : ℝ} {F D : ℝ → ℂ} (ha : a₀ < a₁)
-    (hD : MemLp D 2 (volume.restrict (Ioo a₀ a₁)))
-    (hFTC : ∀ c ∈ Ioo a₀ a₁, ∀ d ∈ Ioo a₀ a₁, (∫ a in c..d, D a) = F d - F c) :
-    (∀ c d, a₀ < c → c ≤ d → d < a₁ → AbsolutelyContinuousOnInterval F c d) ∧
-      ∀ᵐ a ∂(volume.restrict (Ioo a₀ a₁)), HasDerivAt F (D a) a := by
-  let m := (a₀ + a₁) / 2
-  have hm : m ∈ Ioo a₀ a₁ := ⟨by dsimp [m]; linarith, by dsimp [m]; linarith⟩
-  have hi : IntervalIntegrable D volume a₀ a₁ :=
-    (intervalIntegrable_iff_integrableOn_Ioo_of_le ha.le).2 (hD.integrable (by norm_num))
-  let P := fun x ↦ F m + ∫ a in m..x, D a
-  have hPF : EqOn P F (Ioo a₀ a₁) := by
-    intro x hx
-    dsimp [P]
-    rw [hFTC m hm x hx]
-    abel
-  have hmcc : m ∈ uIcc a₀ a₁ := by
-    simpa only [uIcc_of_le ha.le] using Ioo_subset_Icc_self hm
-  have hprim : AbsolutelyContinuousOnInterval (fun x ↦ ∫ a in m..x, D a) a₀ a₁ := by
-    apply (absolutelyContinuous_complex_primitive (integrable_intervalZeroExtension hD)
-      m a₀ a₁).congr
-    intro x hx
-    rw [uIcc_of_le ha.le] at hx hmcc
-    exact intervalIntegral_intervalZeroExtension D hmcc hx
-  have hconst : AbsolutelyContinuousOnInterval (fun _ : ℝ ↦ F m) a₀ a₁ :=
-    (LipschitzWith.const (F m)).lipschitzOnWith.absolutelyContinuousOnInterval
-  have hPac : AbsolutelyContinuousOnInterval P a₀ a₁ := hconst.add hprim
-  refine ⟨?_, ?_⟩
-  · intro c d hc hcd hd
-    have hsub : uIcc c d ⊆ Ioo a₀ a₁ := by
-      rw [uIcc_of_le hcd]
-      exact Icc_subset_Ioo hc hd
-    exact (hPac.mono (by
-      rw [uIcc_of_le ha.le]
-      exact hsub.trans Ioo_subset_Icc_self)).congr (fun x hx ↦ hPF (hsub hx))
-  · filter_upwards [ae_restrict_of_ae hi.ae_hasDerivAt_integral,
-      ae_restrict_mem measurableSet_Ioo] with x hx hxI
-    have hp := (hx (by simpa only [uIcc_of_le ha.le] using Ioo_subset_Icc_self hxI)
-      m hmcc).const_add (F m)
-    apply hp.congr_of_eventuallyEq
-    filter_upwards [isOpen_Ioo.mem_nhds hxI] with y hy
-    exact (hPF hy).symm
-
 /-- Traces of continuous `H²` functions on a line `b = b₀` are absolutely continuous, with
     derivative the trace of `∂_a F = ∂ₓF + ∂_yF`, which is square integrable. The returned
     representative of `Fx + Fy` is also locally absolutely continuous on almost every

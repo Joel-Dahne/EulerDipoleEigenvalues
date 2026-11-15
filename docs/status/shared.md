@@ -36,6 +36,7 @@ The even–even route is admission-free. Available foundations include:
   reflected-cell norm covering in `PeriodicTransportGain.lean`, without parity.
   Periodic quotient transport is admission-free.
 - Interval H¹, endpoint Hardy with constant four and an explicit L² conclusion,
+  H² division by a linear factor with a universal derivative-energy bound,
   and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
@@ -168,10 +169,12 @@ weights and local versus global regularity.
    transitively admission-free. `PeriodDerivativeBounds.lean` differentiates the
    regular quadrature twice and integrates explicit inverse-power bounds, without
    elliptic identities or sharp asymptotics.
-   Endpoint Hardy (`lem:hardy-endpoint`) is also transitively admission-free,
-   with its original statement in `IntervalHardy.lean`.
-   Next on the first-gain branch: Second Hardy division (`lem:hardy-second`),
-   phase-cell division and zero-saddle forcing estimates.
+   Endpoint Hardy (`lem:hardy-endpoint`) and Second Hardy division
+   (`lem:hardy-second`) are transitively admission-free with their original
+   statements. The latter uses Segment averaging preserves H¹
+   (`lem:segment-average-h1`) and the uniform choice K = 1, including endpoint zeros.
+   Next on the first-gain branch: Uniform complete-cell estimates
+   (`lem:phase-cell-estimates`), global phase-cell division and zero-saddle forcing estimates.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
@@ -361,7 +364,8 @@ prerequisites remain outside this directory; see the
   The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   saddle/transport/elliptic inputs rather than a stronger corner premise.
-  Scalar Hardy/phase-cell and explicit saddle-chart interfaces are also stated.
+  Scalar endpoint/second Hardy are proved; phase-cell and explicit saddle-chart
+  interfaces remain separate prerequisites.
   The weighted H¹/corner/edge/gluing, quarter endpoint/resonant-zero and
   weighted/logarithmic numerator interfaces retain explicit quantitative
   bounds and actual fiber-integrability conclusions.

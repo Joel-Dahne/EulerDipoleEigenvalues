@@ -1,14 +1,15 @@
 import NoEmbeddedEigenvalues.IntervalHardy
+import NoEmbeddedEigenvalues.IntervalSecondHardy
 import NoEmbeddedEigenvalues.PeriodDerivativeBounds
 import NoEmbeddedEigenvalues.DipoleFlow
 
 /-!
 # Scalar interfaces for phase-cell division
 
-The interval Hardy statements are wrappers around the primitive averaging mechanism
-in `HardyAverage.lean`. Endpoints always mean canonical H¹ traces. Local H² data use
-specified first and second derivatives, and hence actual continuous numerator values
-at interior resonances.
+Endpoint Hardy uses the primitive averaging mechanism in `HardyAverage.lean`;
+second-order division uses H¹ segment averaging in `IntervalSegmentAverage.lean`.
+Endpoints always mean canonical H¹ traces. Local H² data use specified first and
+second derivatives, and hence actual continuous numerator values at interior resonances.
 
 The phase-cell estimates export uniform constants on complete cells. This quantitative
 interface, not merely qualitative unweighted division, is what logarithmic weighted
@@ -21,16 +22,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
-
-/-- Second Hardy: H² division at an interior point or endpoint, with one universal
-constant (`lem:hardy-second`). No value of the raw numerator at an endpoint is used. -/
-theorem interval_h2_div_sub : ∃ K : ℝ, 0 < K ∧
-    ∀ (a b x₀ : ℝ) (N N₁ N₂ : ℝ → ℂ), a < b → x₀ ∈ Icc a b →
-      HasIntervalH2 a b N N₁ N₂ → intervalH1Extension a b N N₁ x₀ = 0 →
-      ∃ Q Q₁ : ℝ → ℂ, HasIntervalH1 a b Q Q₁ ∧
-        (∀ x ∈ Ioo a b, N x = ((x - x₀ : ℝ) : ℂ) * Q x) ∧
-        (∫ x in Ioo a b, ‖Q₁ x‖ ^ 2) ≤ K * ∫ x in Ioo a b, ‖N₂ x‖ ^ 2 := by
-  sorry
 
 /-- Quarter-orbit phase, including the sign of the real spectral parameter. -/
 def quarterPhase (lam h : ℝ) : ℝ := 2 * lam * eighthPeriod h

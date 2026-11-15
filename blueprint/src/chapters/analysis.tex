@@ -4501,6 +4501,40 @@ The weighted boundary completion uses Lemma~\ref{lem:l2-endpoint-liminf}
 instead of Hardy's inequality to control its endpoint flux.
 \end{remark}
 
+\begin{lemma}[Segment averaging preserves H1]
+\label{lem:segment-average-h1}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.segmentAverage}
+\leanok
+Let $a<b$, $z\in[a,b]$ and $F\in H^1(a,b)$ have specified derivative $D$.
+Writing $\widetilde F$ for its canonical continuous extension, define
+\[
+ A(x)=\int_0^1\widetilde F(tx+(1-t)z)\,dt,\qquad x\in[a,b].
+\]
+Then $A\in H^1(a,b)$ and
+\[
+ \int_a^b|A'(x)|^2\,dx\le\int_a^b|D(x)|^2\,dx.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints, lem:interval-zero-extension-l2}
+\leanok
+Choose a measurable version $M$ of the zero extension of $D$. Set
+$B(x,t)=tM(tx+(1-t)z)$. For $0<t\le1$, dilation and translation give
+\[
+ \int_a^b|B(x,t)|^2\,dx
+ \le t\int_\R|M(s)|^2\,ds\le\int_a^b|D(s)|^2\,ds.
+\]
+Thus $B\in L^2((a,b)\times(0,1))$. Integrating the endpoint fundamental
+theorem on each affine segment and applying Fubini gives the increment identity
+for $A$ with derivative $A_1(x)=\int_0^1B(x,t)\,dt$.
+This identity yields local absolute continuity and the specified a.e.\ derivative;
+boundedness of $\widetilde F$ gives $A\in L^2$.
+Cauchy--Schwarz on the unit averaging interval and Fubini give
+$\int_a^b|A_1|^2\le\int_a^b\int_0^1|B|^2\le\int_a^b|D|^2$.
+\end{proof}
+
 \begin{lemma}[Second Hardy division]
 \label{lem:hardy-second}
 \uses{def:h1-interval, def:h2-interval, lem:h1-interval-endpoints}
@@ -4517,11 +4551,20 @@ Endpoint values of $N$ mean its $H^1$ extension, not a raw assignment.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:hardy-average, lem:h1-interval-endpoints}
-The averaging identity
-$N(x)/(x-x_0)=\int_0^1N'(x_0+t(x-x_0))\,dt$ gives the quotient.
-For its derivative the extra factor $t$ offsets the $t^{-1/2}$ dilation
-cost in $L^2$. The constants are independent of the interval and $x_0$.
+\uses{lem:segment-average-h1, lem:h1-interval-endpoints}
+\leanok
+Apply Lemma~\ref{lem:segment-average-h1} to the first derivative $N_1$,
+using its canonical continuous extension $\widetilde N_1$, and set
+\[
+ Q(x)=\int_0^1\widetilde N_1(tx+(1-t)x_0)\,dt.
+\]
+The endpoint fundamental theorem, the zero canonical value of $N$ at $x_0$,
+and affine substitution give
+\[
+ (x-x_0)Q(x)=\int_{x_0}^x\widetilde N_1(s)\,ds=N(x),\qquad a<x<b.
+\]
+The segment-average bound supplies $K=1$, uniformly in the interval and $x_0$.
+No division at $x_0$ or raw endpoint assignment is used.
 \end{proof}
 
 \begin{lemma}[Angular Hardy]
