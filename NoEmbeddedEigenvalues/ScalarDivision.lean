@@ -1,10 +1,10 @@
-import NoEmbeddedEigenvalues.IntervalHardy
-import NoEmbeddedEigenvalues.IntervalSecondHardy
-import NoEmbeddedEigenvalues.PeriodDerivativeBounds
-import NoEmbeddedEigenvalues.DipoleFlow
+import NoEmbeddedEigenvalues.PhaseCellEstimates
 
 /-!
 # Scalar interfaces for phase-cell division
+
+Quarter scalars are defined in `QuarterScalars.lean`; the complete-cell estimates
+are proved in `PhaseCellEstimates.lean`.
 
 Endpoint Hardy uses the primitive averaging mechanism in `HardyAverage.lean`;
 second-order division uses H¹ segment averaging in `IntervalSegmentAverage.lean`.
@@ -22,53 +22,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
-
-/-- Quarter-orbit phase, including the sign of the real spectral parameter. -/
-def quarterPhase (lam h : ℝ) : ℝ := 2 * lam * eighthPeriod h
-
-/-- The actual divisor, not an abstract function with assumed simple zeros. -/
-def quarterDivisor (lam : ℝ) (κ : ℂ) (h : ℝ) : ℂ :=
-  κ - Complex.exp (Complex.I * (quarterPhase lam h : ℂ))
-
-/-- Quarter-orbit numerator. Analytic uses supply the continuous forcing representative. -/
-def quarterNumerator (lam : ℝ) (f : ℝ × ℝ → ℂ) (h : ℝ) : ℂ :=
-  ∫ t in (-eighthPeriod h)..(eighthPeriod h),
-    f (dipoleOrbit h t) * Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))
-
-/-- Raw quotient, used only off divisor zeros; extension across zeros is separate. -/
-def quarterQuotient (lam : ℝ) (κ : ℂ) (f : ℝ × ℝ → ℂ) (h : ℝ) : ℂ :=
-  quarterNumerator lam f h / quarterDivisor lam κ h
-
-/-- A cell endpoint lies halfway between adjacent resonances, not at a divisor zero. -/
-def IsPhaseCellEndpoint (lam : ℝ) (κ : ℂ) (h : ℝ) : Prop :=
-  Complex.exp (Complex.I * (quarterPhase lam h : ℂ)) = -κ
-
-/-- Local interval H¹ with a compatible specified derivative. -/
-def HasIntervalH1Loc (a b : ℝ) (N N₁ : ℝ → ℂ) : Prop :=
-  ∀ c d, a < c → c < d → d < b → HasIntervalH1 c d N N₁
-
-/-- Local H² on an open interval with compatible specified derivatives. -/
-def HasIntervalH2Loc (a b : ℝ) (N N₁ N₂ : ℝ → ℂ) : Prop :=
-  ∀ c d, a < c → c < d → d < b → HasIntervalH2 c d N N₁ N₂
-
-/-- Uniform complete-cell estimates (`lem:phase-cell-estimates`). The endpoints have
-phase distance π from the central resonance. Constants are uniform over all cells,
-numerators and four quarter characters; they may depend on lam. -/
-theorem phase_cell_estimates {lam : ℝ} (hlam : lam ≠ 0) :
-    ∃ K h₀ : ℝ, 0 < K ∧ 0 < h₀ ∧ h₀ < 1 ∧
-      ∀ (κ : ℂ), κ ^ 4 = 1 → ∀ (a z b : ℝ),
-        0 < a → a < z → z < b → b < h₀ → quarterDivisor lam κ z = 0 →
-        |quarterPhase lam a - quarterPhase lam z| = Real.pi →
-        |quarterPhase lam b - quarterPhase lam z| = Real.pi →
-        ∀ N N₁ N₂ : ℝ → ℂ, HasIntervalH2 a b N N₁ N₂ → N z = 0 →
-          ∃ Q Q₁ : ℝ → ℂ, HasIntervalH1 a b Q Q₁ ∧
-            (∀ h ∈ Ioo a b, quarterDivisor lam κ h * Q h = N h) ∧
-            MemLp (fun h ↦ Q h / (h : ℂ)) 2 (volume.restrict (Ioo a b)) ∧
-            (∫ h in Ioo a b, ‖Q h / (h : ℂ)‖ ^ 2) ≤
-              K * (∫ h in Ioo a b, ‖N₁ h‖ ^ 2) ∧
-            (∫ h in Ioo a b, ‖Q₁ h‖ ^ 2) ≤
-              K * (∫ h in Ioo a b, ‖N₁ h‖ ^ 2 + h ^ 2 * ‖N₂ h‖ ^ 2) := by
-  sorry
 
 /-- Global division after decreasing the upper endpoint to a full-cell boundary
 (`lem:phase-cell-division`). The quotient extends continuously through resonances,

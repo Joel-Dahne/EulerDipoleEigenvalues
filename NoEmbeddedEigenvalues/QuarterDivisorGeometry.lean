@@ -1,4 +1,5 @@
-import NoEmbeddedEigenvalues.ScalarDivision
+import NoEmbeddedEigenvalues.QuarterScalars
+import NoEmbeddedEigenvalues.PeriodDerivativeBounds
 import NoEmbeddedEigenvalues.OrbitCoordinates
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
@@ -188,7 +189,7 @@ private theorem quarterDivisor_deriv_ne_zero {lam : ℝ} (hlam : lam ≠ 0)
   exact mul_ne_zero (Complex.exp_ne_zero _) (mul_ne_zero Complex.I_ne_zero
     (Complex.ofReal_ne_zero.mpr (mul_ne_zero (mul_ne_zero (by norm_num) hlam) hn.ne)))
 
-private theorem phase_chord_lower {x y : ℝ} (hxy : |x - y| ≤ Real.pi) :
+theorem phase_chord_lower {x y : ℝ} (hxy : |x - y| ≤ Real.pi) :
     (2 / Real.pi) * |x - y| ≤
       ‖Complex.exp (Complex.I * (x : ℂ)) - Complex.exp (Complex.I * (y : ℂ))‖ := by
   have he : Complex.exp (Complex.I * (x : ℂ)) - Complex.exp (Complex.I * (y : ℂ)) =
@@ -209,7 +210,7 @@ private theorem phase_chord_lower {x y : ℝ} (hxy : |x - y| ≤ Real.pi) :
   rw [abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 2)] at hs
   linarith
 
-private theorem logarithmic_cell_geometry {F : ℝ → ℝ} {c C r : ℝ} (hc : 0 < c)
+theorem logarithmic_cell_geometry {F : ℝ → ℝ} {c C r : ℝ} (hc : 0 < c)
     (ha : AntitoneOn F (Ioo 0 r))
     (hd : ∀ x ∈ Ioo 0 r, DifferentiableAt ℝ F x)
     (hb : ∀ x ∈ Ioo 0 r, c ≤ -x * deriv F x ∧ -x * deriv F x ≤ C) :

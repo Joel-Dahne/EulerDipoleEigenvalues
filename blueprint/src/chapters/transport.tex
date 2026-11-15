@@ -1057,6 +1057,70 @@ Enlarging a single constant $K>1$ proves all three cell bounds.
 Only ratio bounds, not an exact progression in the level, are asserted.
 \end{proof}
 
+\begin{lemma}[Derivative bounds for the quarter divisor]
+\label{lem:quarter-divisor-derivatives}
+\uses{def:numerator, def:phase-cell-scalars}
+\lean{NoEmbeddedEigenvalues.contDiffOn_quarterDivisor,
+ NoEmbeddedEigenvalues.quarterDivisor_derivative_bounds}
+\leanok
+For every real $\lambda\ne0$ there are $c,C>0$ and $0<r<1$ such that,
+for every $\kappa\in\C$, the actual divisor $D$ is smooth on $(0,1)$ and
+\[
+ c\le h|D'(h)|\le C,\qquad h^2|D''(h)|\le C
+ \quad(0<h<r).
+\]
+The constants do not depend on $\kappa$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:period-derivative-bounds}
+\leanok
+Writing $\Phi=2\lambda L$, differentiation and unit modulus give
+\[
+ |D'|=|\Phi'|,\qquad |D''|\le|\Phi'|^2+|\Phi''|.
+\]
+Use the first and second period derivative bounds, enlarging one common
+upper constant. No bound on the phase value or the character is needed.
+\end{proof}
+
+\begin{lemma}[Smooth inverse divisor factor on complete cells]
+\label{lem:quarter-divisor-inverse-factor}
+\uses{def:numerator, def:phase-cell-scalars}
+\lean{NoEmbeddedEigenvalues.quarterDivisor_inverse_factor}
+\leanok
+For real $\lambda\ne0$ there are $B,H>0$ and $0<r<1$, independent of
+the character, such that every cell
+\[
+ 0<a<z<b<r,\quad D(z)=0,\quad
+ |\Phi_\lambda(a)-\Phi_\lambda(z)|
+ =|\Phi_\lambda(b)-\Phi_\lambda(z)|=\pi
+\]
+admits a smooth function $R$ on $[a,b]$ with
+\[
+ D(h)R(h)=h-z,\qquad z/B\le h\le Bz,\qquad
+ |R(h)|\le Bz,\qquad |R'(h)|\le H .
+\]
+These assertions include the central zero and both cell endpoints.
+No condition on $\kappa$ beyond the displayed zero is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:period-derivative-bounds,
+ lem:quarter-divisor-derivatives, lem:smooth-linear-factor}
+\leanok
+Use the positive phase $P=2|\lambda|L$. Its logarithmic derivative
+bounds and monotonicity give $h\asymp z$ on the entire closed cell.
+Jordan's inequality then gives $|D(h)|\ge|h-z|/(Kz)$, with
+one $K>1$ independent of $\kappa$.
+Lemma~\ref{lem:smooth-linear-factor} writes $D(h)=(h-z)g(h)$.
+Away from $z$ the divisor lower bound gives $|g|\ge1/(Kz)$;
+at $z$, use $g(z)=D'(z)$ and the first derivative lower bound.
+The second derivative bound and $h\asymp z$ give
+$|g'|\le C_\lambda/z^2$.
+Thus $R=1/g$ is smooth, $|R|\le Bz$ and
+$|R'|=|g'/g^2|\le H$, with constants depending only on $\lambda$.
+\end{proof}
+
 \begin{lemma}[Uniform complete-cell division estimates]
 \label{lem:phase-cell-estimates}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval}
@@ -1079,10 +1143,24 @@ The constants are independent of the cell and numerator.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-derivative-bounds, lem:hardy-endpoint, lem:hardy-second}
-The period bounds give $h\asymp z$ and
-$D(h)=(h-z)d(h)/z$, with $|d|\ge c_\lambda$ and
-$|d'|\le C_\lambda/z$. Apply the two Hardy inequalities and the product rule.
+\uses{lem:quarter-divisor-inverse-factor, lem:hardy-interior-linear,
+ lem:hardy-second, lem:h1-smooth-multiplier, lem:h1-interval-endpoints}
+\leanok
+Second Hardy division supplies $U\in H^1(a,b)$ with $N=(h-z)U$ and
+$\int|U'|^2\le J\int|N''|^2$ for a universal $J>0$.
+Interior linear Hardy energy gives $\int|U|^2\le8\int|N'|^2$.
+Take $R$ from Lemma~\ref{lem:quarter-divisor-inverse-factor} and set
+$C=RU$. The smooth product rule gives $C'=R'U+RU'$ and $DC=N$.
+Since $z/B\le h$,
+\[
+ |C/h|\le B^2|U|,\qquad
+ |C'|^2\le2H^2|U|^2+2B^2z^2|U'|^2 .
+\]
+Finally $z^2\le B^2h^2$ converts the second-derivative energy to
+the required weight. One may take
+$K=8B^4+16H^2+2B^4J+1$, with the same collar and constants for
+both signs of $\lambda$ and all four characters.
+
 \end{proof}
 
 \begin{lemma}[Phase-cell division]

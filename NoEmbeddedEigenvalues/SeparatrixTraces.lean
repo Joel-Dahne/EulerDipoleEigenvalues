@@ -579,32 +579,6 @@ theorem contStream_add_two_pi (ω : L2) (p : ℝ × ℝ) :
 
 /-! ### The energy of the arc traces -/
 
-/-- Reflection `u ↦ c - u` of a set integral over an interval. -/
-theorem setLIntegral_Ioo_comp_sub_left (g : ℝ → ℝ≥0∞) (c α β : ℝ) :
-    ∫⁻ u in Ioo (c - β) (c - α), g (c - u) = ∫⁻ a in Ioo α β, g a := by
-  have h := (Measure.measurePreserving_sub_left volume c).setLIntegral_comp_preimage_emb
-    (Homeomorph.subLeft c).measurableEmbedding g (Ioo α β)
-  have hpre : (fun u ↦ c - u) ⁻¹' Ioo α β = Ioo (c - β) (c - α) := by
-    ext u
-    simp only [mem_preimage, mem_Ioo]
-    constructor <;> intro h <;> constructor <;> linarith [h.1, h.2]
-  rw [← h]
-  change _ = ∫⁻ a in (fun u ↦ c - u) ⁻¹' Ioo α β, g (c - a)
-  rw [hpre]
-
-/-- Translation `u ↦ u + c` of a set integral over an interval. -/
-theorem setLIntegral_Ioo_comp_add_right (g : ℝ → ℝ≥0∞) (c α β : ℝ) :
-    ∫⁻ u in Ioo (α - c) (β - c), g (u + c) = ∫⁻ a in Ioo α β, g a := by
-  have h := (measurePreserving_add_right volume c).setLIntegral_comp_preimage_emb
-    (Homeomorph.addRight c).measurableEmbedding g (Ioo α β)
-  have hpre : (fun u ↦ u + c) ⁻¹' Ioo α β = Ioo (α - c) (β - c) := by
-    ext u
-    simp only [mem_preimage, mem_Ioo]
-    constructor <;> intro h <;> constructor <;> linarith [h.1, h.2]
-  rw [← h]
-  change _ = ∫⁻ a in (fun u ↦ u + c) ⁻¹' Ioo α β, g (a + c)
-  rw [hpre]
-
 /-- The energy of the arc trace in diagonal coordinates (`lem:arc-trace-identification`): with
     `f(a) = ψ̃(a, π/2)`, `∫ cosh² s |g'(s)|² ds = ∫_{-π/2}^{π/2} |f'(a)|² da / cos a`. -/
 theorem lintegral_arc_energy_eq {ω : L2} (hω : InSector true true ω) :

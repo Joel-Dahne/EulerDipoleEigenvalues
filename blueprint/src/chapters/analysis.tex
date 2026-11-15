@@ -4501,6 +4501,32 @@ The weighted boundary completion uses Lemma~\ref{lem:l2-endpoint-liminf}
 instead of Hardy's inequality to control its endpoint flux.
 \end{remark}
 
+\begin{lemma}[Interior linear Hardy energy]
+\label{lem:hardy-interior-linear}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le}
+\leanok
+Let $N\in H^1(a,b)$ have specified derivative $D$, and let
+$z\in(a,b)$ with $N(z)=0$. If $U\in L^2(a,b)$ satisfies
+$N(x)=(x-z)U(x)$ throughout $(a,b)$, then
+\[
+ \int_a^b|U(x)|^2\,dx\le8\int_a^b|D(x)|^2\,dx.
+\]
+The constant is independent of the interval, zero and quotient.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:hardy-average, lem:interval-zero-extension-l2, lem:h1-interval-endpoints}
+\leanok
+Let $E$ be the zero extension of $D$. For $\sigma=1,-1$, apply the
+primitive Hardy inequality to $V_\sigma(t)=\sigma E(z+\sigma t)$.
+The fundamental theorem identifies its primitive with $N(z+\sigma t)$
+while the segment stays inside $(a,b)$. Each orientation contributes at
+most $4\int_a^b|D|^2$; translation and reflection preserve this energy.
+Splitting the interval at $z$ gives the stated bound.
+The single value $U(z)$ does not enter the integral.
+\end{proof}
+
 \begin{lemma}[Segment averaging preserves H1]
 \label{lem:segment-average-h1}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
@@ -4567,6 +4593,48 @@ The segment-average bound supplies $K=1$, uniformly in the interval and $x_0$.
 No division at $x_0$ or raw endpoint assignment is used.
 \end{proof}
 
+\begin{lemma}[Bounded smooth interval multipliers]
+\label{lem:h1-smooth-multiplier}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.mul_smooth}
+\leanok
+Let $U\in H^1(a,b)$ have specified derivative $U_1$. Suppose
+$R\in C^\infty([a,b];\C)$, $R'=R_1$ on $(a,b)$ and
+$|R|\le B$, $|R_1|\le H$ there. Then $RU\in H^1(a,b)$ with
+specified derivative $R_1U+RU_1$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Bounded coefficients preserve the two L2 norms.
+On compact subintervals the absolutely continuous product rule applies;
+the specified a.e.\ derivatives give the asserted derivative.
+\end{proof}
+
+\begin{lemma}[Smooth linear factorization]
+\label{lem:smooth-linear-factor}
+\lean{NoEmbeddedEigenvalues.smooth_linear_factor}
+\leanok
+Let $f\in C^\infty((l,r);\C)$, $[a,b]\subset(l,r)$,
+$z\in[a,b]$ and $f(z)=0$. If $M\ge0$ and $|f''|\le M$ on $[a,b]$,
+there is $g\in C^\infty((l,r);\C)$ with
+\[
+ f(x)=(x-z)g(x),\qquad g(z)=f'(z),\qquad
+ |g'(x)|\le M\quad(a\le x\le b).
+\]
+The factorization holds throughout $(l,r)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Set $g(x)=\int_0^1 f'(tx+(1-t)z)\,dt$.
+Smooth differentiation under this fixed compact integral gives
+$g'(x)=\int_0^1 t f''(tx+(1-t)z)\,dt$.
+The derivative bound follows from $0\le t\le1$.
+Affine substitution and the fundamental theorem give
+$(x-z)g(x)=f(x)-f(z)$, including $x=z$.
+\end{proof}
+
 \begin{lemma}[Angular Hardy]
 \label{lem:hardy-angular}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
@@ -4582,11 +4650,11 @@ If $g\in H^1(0,\pi/2)$ has zero canonical traces at both endpoints, then
 \uses{lem:hardy-endpoint, lem:hardy-second, lem:hardy-angular}
 The endpoint, second-order and angular Hardy inequalities above hold.
 This collection retains the original references; phase-cell division
-uses only the first two inequalities.
+uses linear Hardy energy and second-order division, not angular Hardy.
 \end{lemma}
 
 \begin{remark}[Digest note: do not bundle angular Hardy into phase division]
-The unweighted and logarithmic phase-cell arguments need endpoint Hardy
+The unweighted and logarithmic phase-cell arguments need linear Hardy energy
 and second Hardy division. Their former reference to the whole collection
 also pulled angular Hardy into the odd--odd quotient graph. Angular Hardy
 is a separate claim; it is not required by the Hardy/Poisson vorticity

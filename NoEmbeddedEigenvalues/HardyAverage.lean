@@ -21,6 +21,32 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 open scoped ENNReal
 
+/-- Reflection `u ↦ c - u` of a set integral over an interval. -/
+theorem setLIntegral_Ioo_comp_sub_left (g : ℝ → ℝ≥0∞) (c α β : ℝ) :
+    ∫⁻ u in Ioo (c - β) (c - α), g (c - u) = ∫⁻ a in Ioo α β, g a := by
+  have h := (Measure.measurePreserving_sub_left volume c).setLIntegral_comp_preimage_emb
+    (Homeomorph.subLeft c).measurableEmbedding g (Ioo α β)
+  have hpre : (fun u ↦ c - u) ⁻¹' Ioo α β = Ioo (c - β) (c - α) := by
+    ext u
+    simp only [mem_preimage, mem_Ioo]
+    constructor <;> intro h <;> constructor <;> linarith [h.1, h.2]
+  rw [← h]
+  change _ = ∫⁻ a in (fun u ↦ c - u) ⁻¹' Ioo α β, g (c - a)
+  rw [hpre]
+
+/-- Translation `u ↦ u + c` of a set integral over an interval. -/
+theorem setLIntegral_Ioo_comp_add_right (g : ℝ → ℝ≥0∞) (c α β : ℝ) :
+    ∫⁻ u in Ioo (α - c) (β - c), g (u + c) = ∫⁻ a in Ioo α β, g a := by
+  have h := (measurePreserving_add_right volume c).setLIntegral_comp_preimage_emb
+    (Homeomorph.addRight c).measurableEmbedding g (Ioo α β)
+  have hpre : (fun u ↦ u + c) ⁻¹' Ioo α β = Ioo (α - c) (β - c) := by
+    ext u
+    simp only [mem_preimage, mem_Ioo]
+    constructor <;> intro h <;> constructor <;> linarith [h.1, h.2]
+  rw [← h]
+  change _ = ∫⁻ a in (fun u ↦ u + c) ⁻¹' Ioo α β, g (a + c)
+  rw [hpre]
+
 /-- Cauchy–Schwarz, squared, for nonnegative integrals, including infinite values. -/
 theorem lintegral_mul_sq_le {α : Type*} [MeasurableSpace α] {μ : Measure α}
     {f g : α → ℝ≥0∞} (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) :
