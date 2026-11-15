@@ -31,8 +31,10 @@ The even–even route is admission-free. Available foundations include:
 - Eigenfunction transport, resonant vanishing, Melnikov, canonical profiles
   and pairing limits. The generic periodic-to-continuous transport-pair bridge
   is admission-free. The odd–odd stream-H² quotient is assembled from
-  explicit local analytic inputs; Hardy–Poisson division and the periodic first
-  gain remain admitted. Periodic quotient transport is admission-free.
+  explicit local analytic inputs; Hardy–Poisson division remains admitted.
+  Periodic first gain is assembled from the positive-cell first gain and
+  reflected-cell norm covering in `PeriodicTransportGain.lean`, without parity.
+  Periodic quotient transport is admission-free.
 - Interval H¹ and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
@@ -60,8 +62,12 @@ weights and local versus global regularity.
    [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean), from which the
    exclusion is now assembled. Quotient existence is assembled in
    `Regularity/OddOddQuotient.lean`: its stream-H² stage expands to explicit
-   local analytic admissions; Hardy–Poisson division and the periodic first gain
-   remain outer admissions. Periodic quotient transport is proved directly by
+   local analytic admissions; Hardy–Poisson division remains an outer admission.
+   Periodic first gain now reduces to the positive-cell first gain, using the
+   original and reflected torus data and the existing bounded norm cover.
+   Its shared transport-pair bridge and proof are in `PeriodicTransportGain.lean`;
+   the first eigenfunction gain is a direct specialization.
+   Periodic quotient transport is proved directly by
    invariant regularized reciprocals and C¹ torus testing.
    The next local/sector layer is in `Regularity/QuotientLocal.lean` and
    `Regularity/OddOddRegularity.lean`. The weighted third-stream step

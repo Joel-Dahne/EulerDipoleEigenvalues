@@ -2392,14 +2392,12 @@ $U_*$ is the fixed bounded cell neighbourhood (manuscript
 \end{proposition}
 
 \begin{proof}
-\uses{lem:transport-first-gain, lem:transport-pair-eigen,
- lem:symmetries-commute, lem:reflected-cell-weighted-mass}
+\uses{cor:transport-first-gain-periodic, lem:elliptic-torus}
 \leanok
-Apply the positive-cell transport gain to $\omega$ and its first reflected
-eigenfunction, both with their continuous streams on $U_*$.
-The reflected lift agrees a.e.\ with $\widetilde\omega\circ S$.
-The two cell norms give the finite norm on $U_*$ by reflected-periodic
-covering. No parity assumption or four-character decomposition is needed.
+Apply the periodic first transport gain with $\nu=\omega$ and
+$\phi=\Delta^{-1}\omega$. The stream belongs to $H^2$ by torus elliptic
+regularity, and the required transport relation is the eigenfunction
+equation. No parity assumption or four-character decomposition is needed.
 \end{proof}
 
 \begin{lemma}[Uniqueness of the normalized saddle coefficient]

@@ -1243,17 +1243,23 @@ neighbourhood. No parity, elliptic relation or zero saddle value is assumed.
 
 \begin{proof}
 \uses{lem:transport-first-gain, lem:periodic-transport-pair,
- lem:reflection-algebra, lem:cell-neighbourhood}
-The periodic relation supplies transport pairs on bounded invariant
-neighbourhoods of every closed cell, not only the fixed neighbourhood.
-Apply the first gain on the positive cell and its translated/reflected
-copies. Reflections preserve the transport field; translations that
-reverse its sign replace $\lambda$ by $-\lambda$, which is still nonzero.
-Finitely many copies cover the fixed bounded neighbourhood up to the null
-separatrix. Their weighted integrals sum to a finite bound.
-In particular, the fixed neighbourhood's boundary saddles are treated
-using larger neighbourhoods; a transport pair defined only on the fixed
-neighbourhood is not the hypothesis of this corollary.
+ lem:reflection-algebra, lem:symmetries-commute, lem:cell-neighbourhood,
+ lem:reflected-cell-weighted-mass}
+\leanok
+Apply the first gain on the positive cell to the original torus data and
+their first reflection $S_1$. Reflection preserves the transport relation
+with the same $\lambda$; its signed frequency swap preserves the Sobolev
+weight, and its character phase has modulus one, so the reflected forcing
+is still $H^2$. Both pairs are supplied on the fixed invariant neighbourhood
+of the closed positive cell, with continuous forcing representatives.
+
+The reflected raw lift agrees almost everywhere with
+$\widetilde\nu\circ S_1$. The two positive-cell norms therefore give the
+weighted norm on every bounded lift set by
+Lemma~\ref{lem:reflected-cell-weighted-mass}, hence on the full fixed
+neighbourhood. Only $2\pi$-period translations and $S_1$ are needed.
+A pair defined only on the fixed neighbourhood would not suffice:
+the torus relation also supplies data beyond its boundary saddles.
 \end{proof}
 
 \begin{lemma}[Second transport gain]

@@ -145,6 +145,7 @@ import NoEmbeddedEigenvalues.SmoothJetBounds
 import NoEmbeddedEigenvalues.HarmonicSaddleJets
 import NoEmbeddedEigenvalues.SaddleCylinderRemainder
 import NoEmbeddedEigenvalues.SaddleBootstrapMass
+import NoEmbeddedEigenvalues.PeriodicTransportGain
 import NoEmbeddedEigenvalues.SaddleSubcritical
 import NoEmbeddedEigenvalues.SaddleGrowth
 import NoEmbeddedEigenvalues.StreamParity

@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.EigenfunctionTransport
+import NoEmbeddedEigenvalues.PeriodicTransportGain
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 
@@ -224,30 +224,6 @@ theorem dd_quotient_transport {lam : ℝ} {ω ψ ν φ : L2}
     simp [Pi.add_apply, RCLike.inner_apply, L0char, sinYTorus_apply, sinXTorus_apply,
       frequencyComponent, mul_comm, mul_left_comm]
     ring
-
-/-- Periodic first transport gain on the full fixed lift neighbourhood
-(`cor:transport-first-gain-periodic`), including reflection and periodic cell covering.
-No parity, elliptic relation or vanishing saddle value of the forcing is assumed. -/
-theorem transport_first_gain_periodic {lam : ℝ} (hlam : lam ≠ 0) {ν φ : L2}
-    (hφ : MemSobolev 2 φ) (h : HasL0 (ν + φ) ((Complex.I * lam) • ν)) :
-    MemLp (fun p ↦ liftL2 ν p / (saddleDist p : ℂ)) 2
-      (volume.restrict cellNeighbourhood) := by
-  sorry
-
-/-- A periodic weak transport relation gives a transport pair with continuous forcing
-on any bounded open union of orbits (`lem:periodic-transport-pair`). -/
-theorem isTransportPair_continuousRep {lam : ℝ} (hlam : lam ≠ 0) {ν φ : L2}
-    (hφ : MemSobolev 2 φ) (h : HasL0 (ν + φ) ((Complex.I * lam) • ν))
-    {U : Set (ℝ × ℝ)} (hU : IsOrbitUnion U) (hb : Bornology.IsBounded U) :
-    IsTransportPair lam U (liftL2 ν) (fun p ↦ continuousRep φ (torusProj p)) := by
-  have heq : liftL2 φ =ᵐ[volume] (fun p ↦ continuousRep φ (torusProj p)) :=
-    ae_torusProj (coeFn_eq_continuousRep hφ)
-  refine ⟨hlam, hU, memLp_liftL2 ν hb, (memSobolevOn_liftL2 hφ hb).congr_ae heq, ?_⟩
-  refine ((hasWeakL0On_liftL2 h U).congr_value ?_).congr_deriv ?_
-  · filter_upwards [liftL2_add_ae ν φ, heq] with p hp hφp
-    rw [hp, hφp]
-  · filter_upwards [liftL2_smul_ae (Complex.I * lam) ν] with p hp
-    rw [hp, mul_assoc]
 
 /-- Quotient conclusions used by the final exclusion. Weighted corner remainders are
     deliberately not part of this interface. -/

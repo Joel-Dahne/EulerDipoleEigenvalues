@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.Regularity.QuotientLocal
+import NoEmbeddedEigenvalues.PeriodicTransportGain
 import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.Regularity.CylinderInverse
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
@@ -29,27 +29,7 @@ theorem saddle_first_gain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) :
     MemLp (fun p ↦ liftL2 ω p / (saddleDist p : ℂ)) 2
       (volume.restrict cellNeighbourhood) := by
-  have hpos := transport_first_gain
-    (isTransportPair_contStream hlam hω isOrbitUnion_cellNeighbourhood isBounded_cellNeighbourhood)
-    isBounded_cellNeighbourhood closure_cellSquare_subset_cellNeighbourhood
-  have href := transport_first_gain
-    (isTransportPair_contStream hlam hω.reflect₁
-      isOrbitUnion_cellNeighbourhood isBounded_cellNeighbourhood)
-    isBounded_cellNeighbourhood closure_cellSquare_subset_cellNeighbourhood
-  have ht := ae_comp_of_pullback_eq
-    (show pullback S₁ measurePreserving_S₁ ω = reflect₁ ω from rfl)
-  have hlift : ∀ᵐ p : ℝ × ℝ, liftL2 ω (separatrixReflect p) = liftL2 (reflect₁ ω) p := by
-    filter_upwards [ae_torusProj ht] with p hp
-    simpa only [liftL2, separatrixReflect, torusProj, S₁, Real.Angle.coe_sub] using hp
-  have hneg : MemLp (fun p ↦ liftL2 ω (separatrixReflect p) / (saddleDist p : ℂ)) 2
-      (volume.restrict cellSquare) := by
-    apply href.ae_eq
-    filter_upwards [ae_restrict_of_ae hlift] with p hp
-    rw [hp]
-  have hwhole := memLp_saddleDist_of_reflected_cells (t := 1)
-    (by simpa only [Real.rpow_eq_pow, Real.rpow_one] using hpos)
-    (by simpa only [Real.rpow_eq_pow, Real.rpow_one] using hneg) isBounded_cellNeighbourhood
-  simpa only [Real.rpow_eq_pow, Real.rpow_one] using hwhole
+  exact transport_first_gain_periodic hlam (memSobolev_two_invLap ω) hω.2
 
 /-- Weighted vorticity and unique quadratic jet (`prop:saddle-dd`). -/
 theorem saddle_dd {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
