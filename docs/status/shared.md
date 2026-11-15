@@ -24,8 +24,8 @@ The even–even route is admission-free. Available foundations include:
   the affine interface.
   Continuous Hölder representatives, ACL slicing, rectangle traces and
   even–even separatrix traces.
-- Orbit coordinates, area/coarea, orbit restriction, coarse period bounds,
-  saddle-distance/comparison and level-derivative estimates.
+- Orbit coordinates, area/coarea, orbit restriction, coarse period value and
+  first/second derivative bounds, saddle-distance/comparison and level-derivative estimates.
 - Weak action-angle chain rules in both directions, periodization, transversal
   mollification, H¹ commutator and the annular L² virial.
 - Eigenfunction transport, resonant vanishing, Melnikov, canonical profiles
@@ -162,10 +162,13 @@ weights and local versus global regularity.
    Geometry of quarter-divisor zeros (`lem:quarter-divisor-geometry`) now has
    its original-statement proof in `QuarterDivisorGeometry.lean`: a phase lattice
    enumerates all resonances, logarithmic comparison gives uniform level ratios,
-   and Jordan's inequality gives the full-cell divisor bound. Its remaining
-   transitive input is Coarse period derivative bounds (`lem:period-derivative-bounds`).
-   Next on the first-gain branch: period derivative bounds, Hardy/phase-cell
-   division and zero-saddle forcing estimates.
+   and Jordan's inequality gives the full-cell divisor bound. This geometry and
+   Coarse period derivative bounds (`lem:period-derivative-bounds`) are now
+   transitively admission-free. `PeriodDerivativeBounds.lean` differentiates the
+   regular quadrature twice and integrates explicit inverse-power bounds, without
+   elliptic identities or sharp asymptotics.
+   Next on the first-gain branch: endpoint/second Hardy, phase-cell division
+   and zero-saddle forcing estimates.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
@@ -180,8 +183,8 @@ weights and local versus global regularity.
    C times inverse square-root radius, and the first-derivative norm is supplied.
    The current Lean forcing assembly still uses the full saddle jet; wiring the
    shorter route would remove its second-transport-gain dependency.
-   Generic numerator differentiation and five scalar/orbit inputs are explicit
-   outside-section prerequisites. The weighted-gradient and third-stream
+   Generic numerator differentiation and the remaining scalar/orbit inputs are
+   explicit outside-section prerequisites. The weighted-gradient and third-stream
    assemblies still depend on their recorded transport and elliptic/Taylor inputs.
    No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
@@ -373,9 +376,8 @@ prerequisites remain outside this directory; see the
   open; inverse Hausdorff–Young or a compact-support Sobolev inequality are
   candidate approaches.
 - [Period estimates](../../blueprint/src/chapters/geometry.tex): coarse
-  derivative bounds from the regular integral suffice for the transport
-  gains; they are stated in `ScalarDivision.lean` and still need Lean proofs.
-  Smoothness and strict decrease were already proved in `Period.lean`.
+  first/second derivative bounds from the regular integral are admission-free in
+  `PeriodDerivativeBounds.lean`, as are smoothness and strict decrease in `Period.lean`.
   The odd–odd finite parts now use only
   the leading value asymptotic, stated separately in `Period.lean`, with a direct
   blueprint derivation from the defining integral. The elliptic identity and sharp remainders are off all

@@ -227,6 +227,7 @@ import NoEmbeddedEigenvalues.SaddleChartPullback
 import NoEmbeddedEigenvalues.SaddleLogarithmicMass
 import NoEmbeddedEigenvalues.SaddleDistance
 import NoEmbeddedEigenvalues.Period
+import NoEmbeddedEigenvalues.PeriodDerivativeBounds
 import NoEmbeddedEigenvalues.ResonantVanishing
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.SeparatrixArc

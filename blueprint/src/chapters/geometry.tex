@@ -1585,18 +1585,31 @@ No elliptic-integral identity or sharp remainder estimate is needed.
 
 \begin{proof}
 \uses{lem:period-integral, lem:period-regularity}
+\leanok
 Use $L=\int_0^1Q^{-1/2}\,dt$, where
 $Q=AB$, $A=1-(1-h)t^2$, $B=1+h-t^2$.
-For $0<h<1/2$, $B/2\le A\le B$, $B/2\le Q_h=t^2B+A\le2B$,
-and $Q_{hh}=2t^2$. Thus
+Set $R=\sqrt Q$ and $S=Q_h=t^2B+A$. Direct differentiation gives
 \[
- -\partial_h(Q^{-1/2})\asymp B^{-2},\qquad
- |\partial_h^2(Q^{-1/2})|\le C B^{-3}.
+ \partial_h(Q^{-1/2})=-\frac{S}{2R^3},\qquad
+ \partial_h^2(Q^{-1/2})=\frac{3S^2-4t^2R^2}{4R^5}.
 \]
-Since $h+1-t\le B\le2(h+1-t)$,
-$\int_0^1B^{-2}\,dt\asymp h^{-1}$ and
-$\int_0^1B^{-3}\,dt\le C h^{-2}$.
-Differentiate under the integral as in the period-regularity proof.
+For $0<h<1/2$, $B/2\le A\le B$ and $B/2\le S\le2B$.
+Writing $H=h+1-t$, we have $H\le B\le2H$, hence
+$H/2\le R\le2H$ and $H/2\le S\le4H$. Consequently
+\[
+ \frac{1}{32H^2}\le-\partial_h(Q^{-1/2})\le\frac{16}{H^2},
+ \qquad |\partial_h^2(Q^{-1/2})|\le\frac{512}{H^3}.
+\]
+Both differentiated integrands are smooth on the open set $Q>0$,
+which contains each compact vertical segment under consideration;
+the fixed-interval differentiation rule therefore identifies both derivatives
+of $L$. Finally,
+\[
+ \int_0^1H^{-2}\,dt=\frac1h-\frac1{h+1},\qquad
+ \int_0^1H^{-3}\,dt=\frac1{2h^2}-\frac1{2(h+1)^2}.
+\]
+Multiplication by $h$ and $h^2$ gives the stated bounds with
+$c=1/64$, $C=512$ and $h_0=1/2$.
 \end{proof}
 
 \begin{lemma}[Coarse logarithmic bounds for the period]

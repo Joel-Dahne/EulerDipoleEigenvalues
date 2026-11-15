@@ -115,4 +115,21 @@ theorem contDiffAt_integral_unitInterval {P E : Type u} [NormedAddCommGroup P]
   exact (contDiffOn_integral_unitInterval hU isOpen_ball
     (fun q hq ↦ (hb q.1 hq.1 q.2 hq.2).1) hF).contDiffAt (ball_mem_nhds p hε)
 
+/-- Scalar version of the shared differentiation rule. -/
+theorem hasDerivAt_integral_smooth {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
+    (hU : IsOpen U) (hF : ContDiffOn ℝ ∞ F U) {h : ℝ}
+    (hh : {h} ×ˢ Icc (0 : ℝ) 1 ⊆ U) :
+    HasDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t))
+      (∫ t in (0 : ℝ)..1, fderiv ℝ F (h, t) (1, 0)) h := by
+  let G : ℝ × ℝ → ℝ →L[ℝ] ℝ :=
+    fun q ↦ (fderiv ℝ F q).comp (ContinuousLinearMap.inl ℝ ℝ ℝ)
+  have hG : ContDiffOn ℝ ∞ G U :=
+    (hF.fderiv_of_isOpen hU (by simp)).clm_comp contDiffOn_const
+  have hi : IntervalIntegrable (fun t ↦ G (h, t)) MeasureTheory.volume 0 1 :=
+    (hG.continuousOn.comp (by fun_prop)
+      (fun t ht ↦ hh ⟨by simp, ht⟩)).intervalIntegrable_of_Icc zero_le_one
+  have hd := (hasFDerivAt_integral_unitInterval hU hF hh).hasDerivAt
+  rw [ContinuousLinearMap.intervalIntegral_apply hi] at hd
+  exact hd
+
 end NoEmbeddedEigenvalues

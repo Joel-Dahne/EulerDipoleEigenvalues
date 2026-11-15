@@ -265,25 +265,8 @@ theorem orbitFrequency_pos {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : 0 < orbitFreque
 open Filter Topology Set Metric
 open scoped ContDiff
 
-/-- Scalar version of the shared differentiation rule. -/
-private theorem hasDerivAt_integral_smooth {F : ℝ × ℝ → ℝ} {U : Set (ℝ × ℝ)}
-    (hU : IsOpen U) (hF : ContDiffOn ℝ ∞ F U) {h : ℝ}
-    (hh : {h} ×ˢ Icc (0 : ℝ) 1 ⊆ U) :
-    HasDerivAt (fun x ↦ ∫ t in (0 : ℝ)..1, F (x, t))
-      (∫ t in (0 : ℝ)..1, fderiv ℝ F (h, t) (1, 0)) h := by
-  let G : ℝ × ℝ → ℝ →L[ℝ] ℝ :=
-    fun q ↦ (fderiv ℝ F q).comp (ContinuousLinearMap.inl ℝ ℝ ℝ)
-  have hG : ContDiffOn ℝ ∞ G U :=
-    (hF.fderiv_of_isOpen hU (by simp)).clm_comp contDiffOn_const
-  have hi : IntervalIntegrable (fun t ↦ G (h, t)) MeasureTheory.volume 0 1 :=
-    (hG.continuousOn.comp (by fun_prop)
-      (fun t ht ↦ hh ⟨by simp, ht⟩)).intervalIntegrable_of_Icc zero_le_one
-  have hd := (hasFDerivAt_integral_unitInterval hU hF hh).hasDerivAt
-  rw [ContinuousLinearMap.intervalIntegral_apply hi] at hd
-  exact hd
-
 /-- The squared denominator in the regular quadrature. -/
-private def periodDenom (q : ℝ × ℝ) : ℝ :=
+def periodDenom (q : ℝ × ℝ) : ℝ :=
   (1 - (1 - q.1) * q.2 ^ 2) * (1 + q.1 - q.2 ^ 2)
 
 private theorem period_radicands_pos {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
@@ -294,18 +277,21 @@ private theorem period_radicands_pos {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
   · nlinarith [mul_le_mul_of_nonneg_left ht2 (by linarith [hh.2] : (0 : ℝ) ≤ 1 - h), hh.1]
   · linarith [hh.1]
 
-private theorem periodDenom_pos {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+/-- The regular squared denominator is positive on every physical vertical segment. -/
+theorem periodDenom_pos {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
     (ht : t ∈ Icc (0 : ℝ) 1) : 0 < periodDenom (h, t) := by
   obtain ⟨hA, hB⟩ := period_radicands_pos hh ht
   exact mul_pos hA hB
 
-private theorem contDiffOn_periodIntegrand :
+/-- Smoothness of the regular integrand wherever its squared denominator is positive. -/
+theorem contDiffOn_periodIntegrand :
     ContDiffOn ℝ ∞ (fun q ↦ 1 / √(periodDenom q)) {q | 0 < periodDenom q} := by
   have hQ : ContDiff ℝ ∞ periodDenom := by unfold periodDenom; fun_prop
   exact contDiffOn_const.div (hQ.contDiffOn.sqrt (fun q hq ↦ ne_of_gt hq))
     (fun q hq ↦ (sqrt_pos.2 hq).ne')
 
-private theorem eighthPeriod_eq_regular {h : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+/-- The fixed-interval quadrature with a single squared denominator. -/
+theorem eighthPeriod_eq_regular {h : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
     eighthPeriod h = ∫ t in (0 : ℝ)..1, 1 / √(periodDenom (h, t)) := by
   rw [eighthPeriod_eq hh.1 hh.2]
   apply integral_congr

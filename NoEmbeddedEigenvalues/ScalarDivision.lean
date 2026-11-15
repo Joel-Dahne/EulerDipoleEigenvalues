@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.HardyAverage
 import NoEmbeddedEigenvalues.IntervalH1
-import NoEmbeddedEigenvalues.Period
+import NoEmbeddedEigenvalues.PeriodDerivativeBounds
 import NoEmbeddedEigenvalues.DipoleFlow
 
 /-!
@@ -39,14 +39,6 @@ theorem interval_h2_div_sub : ∃ K : ℝ, 0 < K ∧
       ∃ Q Q₁ : ℝ → ℂ, HasIntervalH1 a b Q Q₁ ∧
         (∀ x ∈ Ioo a b, N x = ((x - x₀ : ℝ) : ℂ) * Q x) ∧
         (∫ x in Ioo a b, ‖Q₁ x‖ ^ 2) ≤ K * ∫ x in Ioo a b, ‖N₂ x‖ ^ 2 := by
-  sorry
-
-/-- Coarse period derivative bounds; smoothness and strict decrease are already in
-`Period.lean` (`lem:period-derivative-bounds`). -/
-theorem eighthPeriod_derivative_bounds : ∃ c C h₀ : ℝ,
-    0 < c ∧ 0 < C ∧ 0 < h₀ ∧ h₀ < 1 ∧ ∀ h ∈ Ioo 0 h₀,
-      c ≤ -h * deriv eighthPeriod h ∧ -h * deriv eighthPeriod h ≤ C ∧
-      h ^ 2 * |deriv (deriv eighthPeriod) h| ≤ C := by
   sorry
 
 /-- Quarter-orbit phase, including the sign of the real spectral parameter. -/
