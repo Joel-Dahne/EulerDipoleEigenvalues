@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.OrbitNumeratorRegularity
 import NoEmbeddedEigenvalues.ResonantCancellation
+import NoEmbeddedEigenvalues.QuarterDivisorGeometry
 
 /-!
 # Quarter-orbit endpoints and resonant zeros
@@ -187,21 +188,5 @@ theorem numerator_zeros {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1)
     simp
   have hn := congrArg norm hd
   rwa [norm_mul, norm_mul, he, one_mul] at hn
-
-/-- Simple resonances, geometric ratio bounds and uniform full-cell comparisons.
-The cutoff can be chosen arbitrarily small; no exact geometric progression is claimed. -/
-theorem quarter_divisor_geometry {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ ^ 4 = 1)
-    {η : ℝ} (hη : 0 < η) :
-    ∃ ρ K qlower qupper : ℝ, 0 < ρ ∧ ρ < η ∧ ρ < 1 ∧ 1 < K ∧
-      0 < qlower ∧ qlower ≤ qupper ∧ qupper < 1 ∧
-      (∀ h ∈ Ioo 0 ρ, quarterDivisor lam κ h = 0 → deriv (quarterDivisor lam κ) h ≠ 0) ∧
-      (∃ hs : ℕ → ℝ,
-        (∀ n, hs n ∈ Ioo 0 ρ ∧ quarterDivisor lam κ (hs n) = 0 ∧
-          qlower ≤ hs (n + 1) / hs n ∧ hs (n + 1) / hs n ≤ qupper) ∧
-        (∀ h ∈ Ioo 0 ρ, quarterDivisor lam κ h = 0 ↔ ∃ n, h = hs n)) ∧
-      (∀ z ∈ Ioo 0 ρ, quarterDivisor lam κ z = 0 → ∀ h ∈ Ioo 0 ρ,
-        |quarterPhase lam h - quarterPhase lam z| ≤ Real.pi →
-          z / K ≤ h ∧ h ≤ K * z ∧ |h - z| / (K * z) ≤ ‖quarterDivisor lam κ h‖) := by
-  sorry
 
 end NoEmbeddedEigenvalues

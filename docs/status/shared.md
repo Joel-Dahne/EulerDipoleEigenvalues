@@ -159,8 +159,13 @@ weights and local versus global regularity.
    statements. Fixed-window integration gives local numerator H¹ from continuous H¹
    forcing. Local L¹ endpoint integrability forces cancellation, without
    raw resonant-orbit values or simple-zero geometry.
-   Next on the first-gain branch: phase-cell geometry/division and
-   zero-saddle forcing estimates.
+   Geometry of quarter-divisor zeros (`lem:quarter-divisor-geometry`) now has
+   its original-statement proof in `QuarterDivisorGeometry.lean`: a phase lattice
+   enumerates all resonances, logarithmic comparison gives uniform level ratios,
+   and Jordan's inequality gives the full-cell divisor bound. Its remaining
+   transitive input is Coarse period derivative bounds (`lem:period-derivative-bounds`).
+   Next on the first-gain branch: period derivative bounds, Hardy/phase-cell
+   division and zero-saddle forcing estimates.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.

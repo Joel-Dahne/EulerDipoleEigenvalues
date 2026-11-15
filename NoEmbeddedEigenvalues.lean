@@ -198,6 +198,7 @@ import NoEmbeddedEigenvalues.OrbitTransportTraces
 import NoEmbeddedEigenvalues.OrbitNumeratorRegularity
 import NoEmbeddedEigenvalues.ResonantCancellation
 import NoEmbeddedEigenvalues.OrbitNumerators
+import NoEmbeddedEigenvalues.QuarterDivisorGeometry
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderData
 import NoEmbeddedEigenvalues.Regularity.CylinderParity

@@ -1032,10 +1032,29 @@ This geometry is independent of any transport pair or numerator.
 
 \begin{proof}
 \uses{lem:period-regularity, lem:period-coarse, lem:period-derivative-bounds}
-Integrate $c/h\le-L'(h)\le C/h$ between consecutive phase values.
-Strict monotonicity, divergence at zero and nonvanishing derivative give
-enumeration and simplicity. The sine bound on a complete phase cell gives
-the last inequality. Only ratio bounds, not an exact progression, are asserted.
+\leanok
+Use the positive phase $P(h)=2|\lambda|L(h)$. For either sign of $\lambda$,
+the divisor zeros correspond to one arithmetic lattice
+$P(h)=\theta+2\pi k$, $k\in\mathbb Z$; the phase $\theta$ depends on $\kappa$.
+Choose the upper cutoff halfway between lattice values. Strict decrease,
+continuity and divergence at zero give exactly one level for each subsequent
+lattice value and exhaust all zeros below the cutoff. The derivative
+$-e^{i\Phi_\lambda}i\Phi_\lambda'$ never vanishes on $(0,1)$.
+
+Write $a=2|\lambda|c$ and $A=2|\lambda|C$. Monotonicity of
+$P+a\log h$ and $P+A\log h$ gives, for $0<x\le y$ in the small collar,
+\[
+ a\log(y/x)\le P(x)-P(y)\le A\log(y/x).
+\]
+Consecutive zeros have phase difference $2\pi$, so one may take
+$q_-=e^{-2\pi/a}$ and $q_+=e^{-2\pi/A}$.
+For phase difference at most $\pi$, the same comparison gives
+$h\asymp z$ and
+$a|h-z|\le \max(h,z)|P(h)-P(z)|$.
+Finally, Jordan's sine inequality gives
+$|D(h)|\ge(2/\pi)|P(h)-P(z)|$ when $D(z)=0$.
+Enlarging a single constant $K>1$ proves all three cell bounds.
+Only ratio bounds, not an exact progression in the level, are asserted.
 \end{proof}
 
 \begin{lemma}[Uniform complete-cell division estimates]
