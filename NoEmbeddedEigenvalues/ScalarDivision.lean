@@ -1,5 +1,4 @@
-import NoEmbeddedEigenvalues.HardyAverage
-import NoEmbeddedEigenvalues.IntervalH1
+import NoEmbeddedEigenvalues.IntervalHardy
 import NoEmbeddedEigenvalues.PeriodDerivativeBounds
 import NoEmbeddedEigenvalues.DipoleFlow
 
@@ -22,14 +21,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
-
-/-- Endpoint Hardy with an explicit integrability conclusion (`lem:hardy-endpoint`). -/
-theorem HasIntervalH1.hardy_endpoint {η : ℝ} (hη : 0 < η) {F D : ℝ → ℂ}
-    (hF : HasIntervalH1 0 η F D) (h0 : intervalH1Extension 0 η F D 0 = 0) :
-    MemLp (fun x ↦ F x / (x : ℂ)) 2 (volume.restrict (Ioo 0 η)) ∧
-      (∫ x in Ioo 0 η, ‖F x / (x : ℂ)‖ ^ 2) ≤
-        4 * ∫ x in Ioo 0 η, ‖D x‖ ^ 2 := by
-  sorry
 
 /-- Second Hardy: H² division at an interior point or endpoint, with one universal
 constant (`lem:hardy-second`). No value of the raw numerator at an endpoint is used. -/

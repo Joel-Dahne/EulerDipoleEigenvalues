@@ -35,7 +35,8 @@ The even–even route is admission-free. Available foundations include:
   Periodic first gain is assembled from the positive-cell first gain and
   reflected-cell norm covering in `PeriodicTransportGain.lean`, without parity.
   Periodic quotient transport is admission-free.
-- Interval H¹ and weighted boundary positivity by exhaustion. Abstract
+- Interval H¹, endpoint Hardy with constant four and an explicit L² conclusion,
+  and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
   General smooth-density theory is not required by these results.
@@ -167,8 +168,10 @@ weights and local versus global regularity.
    transitively admission-free. `PeriodDerivativeBounds.lean` differentiates the
    regular quadrature twice and integrates explicit inverse-power bounds, without
    elliptic identities or sharp asymptotics.
-   Next on the first-gain branch: endpoint/second Hardy, phase-cell division
-   and zero-saddle forcing estimates.
+   Endpoint Hardy (`lem:hardy-endpoint`) is also transitively admission-free,
+   with its original statement in `IntervalHardy.lean`.
+   Next on the first-gain branch: Second Hardy division (`lem:hardy-second`),
+   phase-cell division and zero-saddle forcing estimates.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.

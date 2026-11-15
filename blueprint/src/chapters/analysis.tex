@@ -4473,7 +4473,8 @@ If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then $F/x\in L^2(0,\eta)
 \end{lemma}
 
 \begin{proof}
-\uses{lem:h1-interval-endpoints, lem:hardy-average}
+\uses{lem:h1-interval-endpoints, lem:interval-zero-extension-l2, lem:hardy-average}
+\leanok
 Let $D=F'$ be the specified a.e. derivative, extended by zero off
 $(0,\eta)$. Choose a measurable version of this extension.
 It lies in $L^1(\R)\cap L^2(\R)$ because the interval is bounded.

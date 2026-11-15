@@ -29,6 +29,7 @@ import NoEmbeddedEigenvalues.FlowBoundaryForm
 import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.IntervalH1Estimates
+import NoEmbeddedEigenvalues.IntervalHardy
 import NoEmbeddedEigenvalues.IntervalParameterH1
 import NoEmbeddedEigenvalues.IntervalZeroExtension
 import NoEmbeddedEigenvalues.LiftIntegration
