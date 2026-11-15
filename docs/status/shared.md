@@ -186,8 +186,15 @@ weights and local versus global regularity.
    boundary neighborhoods supply local H¹ without raw endpoint assignments.
    Countable energy summation, local-to-global H¹ and reciprocal-distance
    integrability give the global quotient and canonical zero trace.
-   Next on the first-gain branch: zero-saddle forcing estimates. Logarithmically
-   weighted phase-cell division (`lem:log-phase-cell-division`) remains open.
+   Zero-saddle forcing decay (`lem:zero-saddle-forcing-decay`) and its two
+   oscillatory tails (`lem:zero-saddle-forcing-tails`) are transitively
+   admission-free in `ZeroSaddleForcing.lean`, including actual tail integrability
+   and uniformity in every real frequency. The corner-distance bounds identify
+   the specific zero forcing value, not merely the nearest saddle distance.
+   Next on the first-gain branch: the weak moving-endpoint numerator derivative
+   estimate and C/√h cell summation, then reconstruction. The first gain does not
+   require a global hN″ bound. Logarithmically weighted phase-cell division
+   (`lem:log-phase-cell-division`) remains open.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.

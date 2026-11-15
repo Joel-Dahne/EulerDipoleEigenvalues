@@ -1809,10 +1809,18 @@ No differentiable dependence on the initial point is used.
 \label{lem:orbit-saddle-distance}
 \uses{def:period, def:dipole-flow, def:cell-arcs}
 \lean{NoEmbeddedEigenvalues.saddleDist_dipoleOrbit,
-  NoEmbeddedEigenvalues.saddleDist_dipoleOrbit_endpoints}
+  NoEmbeddedEigenvalues.saddleDist_dipoleOrbit_endpoints,
+  NoEmbeddedEigenvalues.dist_dipoleOrbit_pos_saddle_le_cos,
+  NoEmbeddedEigenvalues.dist_dipoleOrbit_saddle_le_cos,
+  NoEmbeddedEigenvalues.dist_dipoleOrbit_saddle_le,
+  NoEmbeddedEigenvalues.dist_dipoleOrbit_saddle_endpoints_le}
 \leanok
 For small $h$ and $|t|\le L(h)$, $ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$; in particular
 both endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a saddle.
+For $P(t)=(\pi,0)$ when $t<0$ and $P(t)=(0,-\pi)$ when $t\ge0$,
+the same upper estimates also hold for the actual distance
+$\operatorname{dist}(\gamma_h(t),P(t))$, with constants $\pi e^2$ along
+the quarter and $\pi$ at its endpoints.
 \end{lemma}
 
 \begin{proof}

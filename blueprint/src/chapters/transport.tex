@@ -1370,6 +1370,83 @@ $\Gamma_k(h,t)=R^k\gamma_h(t)$ for $k=0,1,2,3$.
 Thus $v_k=v\circ\Gamma_k$ denotes the separately recentered quarter profile.
 \end{definition}
 
+\begin{lemma}[Zero-saddle forcing decay]
+\label{lem:zero-saddle-forcing-decay}
+\uses{def:sobolev-local, def:period, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.zero_saddle_forcing_decay,
+ NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_forcing_decay}
+\leanok
+Let $U$ be open and contain the closed base separatrix segment joining
+$(\pi,0)$ and $(0,-\pi)$. Suppose $g\in H^2(U)$ is continuous and
+vanishes at those two endpoints. There are $C>0$ and $0<h_0<1/2$ such
+that, for every $0<h<h_0$,
+\[
+ |g(\gamma_h(t))|\le Ce^{-|t|/2}\quad(|t|\le L(h)),\qquad
+ |g(\gamma_h(t))|\le Ch^{1/4}\quad(|t|=L(h)).
+\]
+In particular this applies to the continuous forcing representative of
+a transport pair near the closed cell whose forcing vanishes at the
+four corners. No rotation character is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sobolev-holder, lem:local-to-global, lem:orbit-comparison,
+ lem:orbit-saddle-distance}
+\leanok
+Localize on an injectively projecting neighborhood of the closed
+segment and periodize. The torus embedding gives a uniform one-half
+H\"older estimate for the original continuous function there.
+The $O(\sqrt h)$ orbit comparison puts the whole quarter inside this
+neighborhood for small $h$.
+Let $P(t)$ be the corner selected by the sign of $t$. It lies on the
+segment and $g(P(t))=0$, so
+\[
+ |g(\gamma_h(t))|
+ \le C_H\sqrt{\operatorname{dist}(\gamma_h(t),P(t))}.
+\]
+Apply the designated-corner upper bounds from
+Lemma~\ref{lem:orbit-saddle-distance}: the distance is at most
+$\pi e^2e^{-|t|}$, and at the endpoints at most $\pi\sqrt h$.
+For a transport pair, a.e.\ agreement transfers H2 to the supplied
+continuous forcing representative; both relevant corners are in the
+closed cell.
+\end{proof}
+
+\begin{lemma}[Oscillatory tails of zero-saddle forcing]
+\label{lem:zero-saddle-forcing-tails}
+\uses{def:transport-pair, def:period, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.forcing_decay_tail_bounds,
+ NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_forcing_tails}
+\leanok
+Let $L,C\ge0$ and $F:[-L,L]\to\C$ be continuous with
+$|F(s)|\le Ce^{-|s|/2}$. For every real $\mu$, both tail integrands
+below are integrable and
+\[
+ \left|\int_{-L}^t F(s)e^{-i\mu s}\,ds\right|
+ \le2Ce^{t/2}\quad(-L\le t\le0),\qquad
+ \left|\int_t^L F(s)e^{-i\mu s}\,ds\right|
+ \le2Ce^{-t/2}\quad(0\le t\le L).
+\]
+For the continuous forcing of a transport pair near the closed cell,
+vanishing at the four corners, there are a common constant and small
+level collar for these two estimates with $F=g\circ\gamma_h$,
+uniformly in $h$ and every real $\mu$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zero-saddle-forcing-decay, lem:period-orbit, lem:dipole-flow}
+\leanok
+The oscillatory factor has modulus one. Continuity gives actual
+integrability before applying the norm-of-integral estimate.
+On the negative half the dominating profile is $Ce^{s/2}$, whose
+integral is $2C(e^{t/2}-e^{-L/2})$.
+On the positive half it is $Ce^{-s/2}$, whose integral is
+$2C(e^{-t/2}-e^{-L/2})$. Drop the nonnegative subtracted terms.
+For a transport pair, Lemma~\ref{lem:zero-saddle-forcing-decay} supplies
+the profile, and the smooth orbit stays in the cell, hence in the
+forcing's continuity domain. The bounds use no sign of $\mu$.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
@@ -1384,15 +1461,15 @@ at its four corners, then $v/d\in L^2(\Cell)$.
 \uses{lem:quarter-endpoint-formula, lem:numerator-zeros, lem:quarter-divisor-geometry,
  lem:orbit-saddle-distance, lem:orbit-level-derivatives,
  lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
- lem:hardy-endpoint, lem:sobolev-holder, lem:local-to-global,
+ lem:hardy-endpoint, lem:zero-saddle-forcing-decay, lem:zero-saddle-forcing-tails,
  lem:orbit-coordinates-area, lem:reflection-algebra, lem:symmetries-commute}
 Intersect the four rotated neighbourhoods and decompose into quarter
 characters $\kappa\in\{1,-1,i,-i\}$. The projected forcings still vanish
 at the corners. Work with one character and the base quarter; rotations
 supply the other quarters.
 
-Localizing the $H^2$ forcing near the closed square gives a uniform
-$1/2$-H\"older bound. Thus, with $p_\pm=\gamma_h(\pm L(h))$,
+Lemma~\ref{lem:zero-saddle-forcing-decay} gives, with
+$p_\pm=\gamma_h(\pm L(h))$,
 \[
  |f_h(t)|\le Ce^{-|t|/2},\qquad |f(p_\pm)|\le Ch^{1/4}.
 \]
@@ -1418,7 +1495,7 @@ Coarea makes $E$ integrable, and geometric spacing makes
 $\sum_jh_j^{1/2}<\infty$. Thus $C/\sqrt h\in L^2(0,h_0)$.
 
 Reconstruct $z_h$ from $-L$ for $t\le0$ and from $L$ for $t\ge0$.
-The endpoint formula and the exponential forcing bound give
+The endpoint formula and Lemma~\ref{lem:zero-saddle-forcing-tails} give
 $|v_h(t)|\le C_\lambda|C(h)|+Ce^{-|t|/2}$. Consequently
 \[
  \int_{-L}^L\frac{|v_h|^2}{d^2}dt

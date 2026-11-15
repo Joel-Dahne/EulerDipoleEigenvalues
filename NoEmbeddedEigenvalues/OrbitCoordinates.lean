@@ -1425,10 +1425,10 @@ private theorem orbit_half_quarter_bounds {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
   · simpa only [orbitA_eighthPeriod h0 h1] using hantiA ht hL ht.2
   · simpa only [orbitB_eighthPeriod h0 h1] using hantiB ht hL ht.2
 
-/-- The geometric comparison on the positive half-quarter, in the product norm. -/
-private theorem saddleDist_le_cos_orbitA {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+/-- Distance to the designated corner on the positive half-quarter, in the product norm. -/
+theorem dist_dipoleOrbit_pos_saddle_le_cos {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
     (ht : t ∈ Icc 0 (eighthPeriod h)) :
-    saddleDist (dipoleOrbit h t) ≤ π * cos (orbitA h t) := by
+    dist (dipoleOrbit h t) (0, -π) ≤ π * cos (orbitA h t) := by
   obtain ⟨ha0, ha, hb, hb1⟩ := orbit_half_quarter_bounds h0 h1 ht
   have ha1 := (abs_lt.1 (abs_orbitA_lt h0 h1 t)).1
   have hab : -orbitA h t ≤ orbitB h t := by linarith
@@ -1437,14 +1437,19 @@ private theorem saddleDist_le_cos_orbitA {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
     have := (mul_le_mul_of_nonneg_left hc pi_pos.le)
     field_simp at this
     nlinarith
-  apply (Metric.infDist_le_dist_of_mem
-    (show (0, -π) ∈ saddleSet from ⟨0, -1, by decide, by simp⟩)).trans
   rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
   have hx : (dipoleOrbit h t).1 = orbitA h t + orbitB h t := dipoleOrbit_fst h t
   have hy : (dipoleOrbit h t).2 = orbitA h t - orbitB h t := by
     simp [orbitA, orbitB, diagCoord]; ring
   rw [hx, hy]
   apply max_le <;> rw [abs_le] <;> constructor <;> linarith
+
+private theorem saddleDist_le_cos_orbitA {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : t ∈ Icc 0 (eighthPeriod h)) :
+    saddleDist (dipoleOrbit h t) ≤ π * cos (orbitA h t) :=
+  (Metric.infDist_le_dist_of_mem
+    (show (0, -π) ∈ saddleSet from ⟨0, -1, by decide, by simp⟩)).trans
+      (dist_dipoleOrbit_pos_saddle_le_cos h0 h1 ht)
 
 /-- A bounded exponential correction gives the exact unit decay rate, without a period bound. -/
 private theorem cos_orbitA_exp_bounds {h t : ℝ} (h0 : 0 < h) (h1 : h < 1 / 2)
@@ -1524,6 +1529,44 @@ private theorem cos_orbitA_exp_bounds {h t : ℝ} (h0 : 0 < h) (h1 : h < 1 / 2)
       cos (orbitA h t) * (exp t * exp (-2) * exp (2 - t)) by ring, he, mul_one,
       one_mul, he'] at this
     exact this
+
+/-- Distance to the corner selected by the sign of time, not merely to the saddle set. -/
+theorem dist_dipoleOrbit_saddle_le_cos {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : |t| ≤ eighthPeriod h) :
+    dist (dipoleOrbit h t) (if t < 0 then (π, 0) else (0, -π)) ≤
+      π * cos (orbitA h |t|) := by
+  by_cases ht0 : t < 0
+  · rw [ite_eq_left ht0, abs_of_neg ht0]
+    have hiso : Isometry reflA := Isometry.of_dist_eq fun p q ↦ by
+      simp [reflA_apply, Prod.dist_eq, max_comm]
+    have he : dipoleOrbit h t = reflA (dipoleOrbit h (-t)) := by
+      simpa only [neg_neg] using dipoleOrbit_neg h (-t)
+    calc dist (dipoleOrbit h t) (π, 0) =
+          dist (reflA (dipoleOrbit h (-t))) (reflA (0, -π)) := by
+            rw [he]; simp only [reflA_apply, neg_neg, neg_zero]
+         _ = dist (dipoleOrbit h (-t)) (0, -π) := hiso.dist_eq _ _
+         _ ≤ _ := dist_dipoleOrbit_pos_saddle_le_cos h0 h1
+           ⟨by linarith, by simpa only [abs_of_neg ht0] using ht⟩
+  · rw [ite_eq_right ht0, abs_of_nonneg (le_of_not_gt ht0)]
+    exact dist_dipoleOrbit_pos_saddle_le_cos h0 h1
+      ⟨le_of_not_gt ht0, by simpa only [abs_of_nonneg (le_of_not_gt ht0)] using ht⟩
+
+/-- The designated quarter corner is at exponentially small distance along each half-quarter. -/
+theorem dist_dipoleOrbit_saddle_le {h t : ℝ} (h0 : 0 < h) (h1 : h < 1 / 2)
+    (ht : |t| ≤ eighthPeriod h) :
+    dist (dipoleOrbit h t) (if t < 0 then (π, 0) else (0, -π)) ≤
+      (π * exp 2) * exp (-|t|) := by
+  have hc := (cos_orbitA_exp_bounds h0 h1 ⟨abs_nonneg t, ht⟩).2
+  have hp := mul_le_mul_of_nonneg_left hc pi_pos.le
+  exact (dist_dipoleOrbit_saddle_le_cos h0 (by linarith) ht).trans
+    (by simpa only [mul_assoc] using hp)
+
+/-- The designated endpoint corner is at distance at most π√h. -/
+theorem dist_dipoleOrbit_saddle_endpoints_le {h t : ℝ} (h0 : 0 < h) (h1 : h < 1)
+    (ht : |t| = eighthPeriod h) :
+    dist (dipoleOrbit h t) (if t < 0 then (π, 0) else (0, -π)) ≤ π * √h := by
+  have hb := dist_dipoleOrbit_saddle_le_cos h0 h1 ht.le
+  rwa [ht, orbitA_eighthPeriod h0 h1, cos_neg, cos_arccos_sqrt h0 h1] at hb
 
 /-- Reflection in the arc midpoint preserves the saddle lattice and its distance. -/
 private theorem saddleDist_reflA (p : ℝ × ℝ) : saddleDist (reflA p) = saddleDist p := by
