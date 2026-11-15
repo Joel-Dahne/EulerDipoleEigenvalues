@@ -91,6 +91,18 @@ theorem HasIntervalH1.congr_Ioo {a b : ℝ} {F G D : ℝ → ℂ} (h : HasInterv
     exact (hx hmem).congr_of_eventuallyEq
       (eventually_of_mem (isOpen_Ioo.mem_nhds hmem) fun y hy ↦ (hFG hy).symm)
 
+/-- The ordinary derivative is a compatible specified derivative for H¹ data. -/
+theorem HasIntervalH1.with_deriv {a b : ℝ} {F D : ℝ → ℂ}
+    (h : HasIntervalH1 a b F D) : HasIntervalH1 a b F (deriv F) := by
+  have he : D =ᵐ[volume.restrict (Ioo a b)] deriv F := by
+    filter_upwards [ae_restrict_of_ae h.hasDerivAt_ae,
+      ae_restrict_mem measurableSet_Ioo] with x hx hxI
+    exact (hx hxI).deriv.symm
+  exact ⟨h.memLp_value, h.memLp_derivative.ae_eq he,
+    h.locally_absolutelyContinuous, h.hasDerivAt_ae.mono fun x hx hxI ↦ by
+      simpa only [(hx hxI).deriv] using hx hxI⟩
+
+
 /-- The canonical continuous extension, anchored at the midpoint. Its values are
     only used on the closed interval; the integral is total outside it. -/
 def intervalH1Extension (a b : ℝ) (F D : ℝ → ℂ) (x : ℝ) : ℂ :=

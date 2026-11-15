@@ -50,4 +50,21 @@ theorem HasIntervalH1.mul_smooth {a b B H : ℝ} {U U₁ R R₁ : ℝ → ℂ}
   · filter_upwards [hU.hasDerivAt_ae] with x hx hxI
     exact (hdR x hxI).mul (hx hxI)
 
+/-- A smooth coefficient on an open neighborhood of the closed interval is an
+H¹ multiplier; compactness supplies the coefficient and derivative bounds. -/
+theorem HasIntervalH1.mul_contDiffOn_open {a b : ℝ} {U U₁ R : ℝ → ℂ}
+    (hU : HasIntervalH1 a b U U₁) {S : Set ℝ} (hS : IsOpen S)
+    (hR : ContDiffOn ℝ ∞ R S) (hsub : Icc a b ⊆ S) :
+    HasIntervalH1 a b (fun x ↦ R x * U x)
+      (fun x ↦ deriv R x * U x + R x * U₁ x) := by
+  obtain ⟨B, hB⟩ := isCompact_Icc.exists_bound_of_continuousOn (hR.continuousOn.mono hsub)
+  obtain ⟨H, hH⟩ := isCompact_Icc.exists_bound_of_continuousOn
+    ((hR.continuousOn_deriv_of_isOpen hS (by simp)).mono hsub)
+  apply hU.mul_smooth (hR.mono hsub) ?_
+    (fun x hx ↦ hB x (Ioo_subset_Icc_self hx))
+    (fun x hx ↦ hH x (Ioo_subset_Icc_self hx))
+  intro x hx
+  exact ((hR.contDiffAt (hS.mem_nhds (hsub (Ioo_subset_Icc_self hx)))).differentiableAt
+    (by simp)).hasDerivAt
+
 end NoEmbeddedEigenvalues

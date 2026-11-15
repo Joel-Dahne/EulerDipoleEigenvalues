@@ -1163,6 +1163,41 @@ both signs of $\lambda$ and all four characters.
 
 \end{proof}
 
+\begin{lemma}[Complete phase cells accumulating at zero]
+\label{lem:complete-phase-cells}
+\uses{def:numerator, def:phase-cell-scalars}
+\lean{NoEmbeddedEigenvalues.exists_complete_phase_cells,
+ NoEmbeddedEigenvalues.descending_cells_disjoint,
+ NoEmbeddedEigenvalues.mem_descending_cell_or_endpoint,
+ NoEmbeddedEigenvalues.descending_cells_ae_cover}
+\leanok
+For real $\lambda\ne0$, $\kappa^4=1$ and every $\eta>0$, there are
+strictly decreasing positive phase-cell endpoints $e_n<\eta$, tending
+to zero, and central resonances $e_{n+1}<z_n<e_n$ such that
+\[
+ D(e_n)\ne0,\quad D(z_n)=0,\quad
+ |\Phi_\lambda(e_{n+1})-\Phi_\lambda(z_n)|
+ =|\Phi_\lambda(e_n)-\Phi_\lambda(z_n)|=\pi.
+\]
+The open cells $(e_{n+1},e_n)$ are disjoint. Every point of $(0,e_0)$
+is either in a cell or is an endpoint; thus the cells cover it
+up to a countable null set.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:period-coarse}
+\leanok
+Use the positive phase $P=2|\lambda|L$ and the phase lattice for
+the character $-\kappa$. Continuity, strict decrease and divergence at
+zero enumerate its endpoint levels with successive phase increments $2\pi$.
+The intermediate value theorem gives a central level at phase distance
+$\pi$ from each endpoint. An increment of either $\pi$ or $-\pi$ in the
+signed phase negates the complex exponential, giving the required resonance.
+Unbounded lattice phases force the physical levels to tend to zero.
+For the covering, take the first index with $e_n<x$; unless $x$ is itself
+an endpoint it lies strictly between two consecutive endpoints.
+\end{proof}
+
 \begin{lemma}[Phase-cell division]
 \label{lem:phase-cell-division}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval,
@@ -1176,15 +1211,28 @@ $C/h,C'\in L^2(0,h_0)$, and $C$ has trace zero at $h=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:phase-cell-estimates, lem:period-regularity, lem:period-coarse}
-Choose the upper cutoff at a complete-cell endpoint below the cutoff of
-Lemma~\ref{lem:phase-cell-estimates}; monotonicity and $L(h)\to\infty$
-give arbitrarily small such endpoints. Sum the two uniform cell estimates.
-The quotient extensions agree at common boundaries, where $D\ne0$,
-so their weak derivatives have no jumps. Thus $C/h,C'\in L^2$, and
-$C\in L^2$ follows from $h$ being bounded above.
-Consequently $C\in H^1$, and its canonical endpoint trace is zero because
-$C/h\in L^2$.
+\uses{lem:phase-cell-estimates, lem:complete-phase-cells,
+ lem:countable-cell-energy, lem:h1-local-global, lem:h1-div-zero-trace,
+ lem:h1-smooth-multiplier, lem:quarter-divisor-derivatives}
+\leanok
+Choose the complete-cell family below both the original cutoff and the
+cutoff of Lemma~\ref{lem:phase-cell-estimates}.
+Use its interval H1 quotient inside each open cell and ordinary division
+$N/D$ at the nonresonant boundaries. The cell factorization gives $DC=N$
+everywhere in the collar.
+Inside a cell this is the constructed H1 representative. Near a boundary,
+$D$ stays nonzero and the same representative equals the smooth multiplier
+$1/D$ times $N$, proving local H1 across the boundary without using raw
+cell endpoint values.
+
+Apply Lemma~\ref{lem:countable-cell-energy} to $C/h$ and the ordinary
+derivative of $C$, with common energy $|N'|^2+h^2|N''|^2$.
+The cell derivatives agree a.e.\ with that ordinary derivative.
+The cells cover the collar up to their countable endpoint set, so
+$C/h,C'\in L^2$ there. Boundedness of $h$ gives $C\in L^2$.
+Lemma~\ref{lem:h1-local-global} now supplies H1 on the entire collar,
+and Lemma~\ref{lem:h1-div-zero-trace} forces its canonical trace at zero
+to vanish.
 \end{proof}
 
 \begin{lemma}[Logarithmically weighted phase-cell division]

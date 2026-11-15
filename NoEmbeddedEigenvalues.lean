@@ -30,6 +30,9 @@ import NoEmbeddedEigenvalues.Fourier
 import NoEmbeddedEigenvalues.IntervalH1
 import NoEmbeddedEigenvalues.IntervalH1Estimates
 import NoEmbeddedEigenvalues.IntervalH1Multipliers
+import NoEmbeddedEigenvalues.IntervalH1LocalToGlobal
+import NoEmbeddedEigenvalues.CountableCellEnergy
+import NoEmbeddedEigenvalues.DescendingIntervalPartition
 import NoEmbeddedEigenvalues.IntervalLinearHardy
 import NoEmbeddedEigenvalues.IntervalHardy
 import NoEmbeddedEigenvalues.IntervalSecondHardy
@@ -208,6 +211,8 @@ import NoEmbeddedEigenvalues.QuarterDivisorCalculus
 import NoEmbeddedEigenvalues.QuarterDivisorFactor
 import NoEmbeddedEigenvalues.QuarterScalars
 import NoEmbeddedEigenvalues.PhaseCellEstimates
+import NoEmbeddedEigenvalues.PhaseCellDivision
+import NoEmbeddedEigenvalues.QuarterPhaseCells
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderData
 import NoEmbeddedEigenvalues.Regularity.CylinderParity

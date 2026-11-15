@@ -77,15 +77,4 @@ theorem HasWeakPartialOn.setIntegral_h1 {a b c d l r : ℝ}
   exact ⟨memLp_setIntegral_Icc hlr hFs, hDL, hac,
     (ae_restrict_iff' measurableSet_Ioo).1 hder⟩
 
-/-- The ordinary derivative is a compatible specified derivative for H¹ data. -/
-theorem HasIntervalH1.with_deriv {a b : ℝ} {F D : ℝ → ℂ}
-    (h : HasIntervalH1 a b F D) : HasIntervalH1 a b F (deriv F) := by
-  have he : D =ᵐ[volume.restrict (Ioo a b)] deriv F := by
-    filter_upwards [ae_restrict_of_ae h.hasDerivAt_ae,
-      ae_restrict_mem measurableSet_Ioo] with x hx hxI
-    exact (hx hxI).deriv.symm
-  exact ⟨h.memLp_value, h.memLp_derivative.ae_eq he,
-    h.locally_absolutelyContinuous, h.hasDerivAt_ae.mono fun x hx hxI ↦ by
-      simpa only [(hx hxI).deriv] using hx hxI⟩
-
 end NoEmbeddedEigenvalues

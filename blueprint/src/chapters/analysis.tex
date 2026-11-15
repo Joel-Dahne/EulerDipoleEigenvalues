@@ -4596,12 +4596,14 @@ No division at $x_0$ or raw endpoint assignment is used.
 \begin{lemma}[Bounded smooth interval multipliers]
 \label{lem:h1-smooth-multiplier}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.mul_smooth}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.mul_smooth,
+ NoEmbeddedEigenvalues.HasIntervalH1.mul_contDiffOn_open}
 \leanok
 Let $U\in H^1(a,b)$ have specified derivative $U_1$. Suppose
 $R\in C^\infty([a,b];\C)$, $R'=R_1$ on $(a,b)$ and
 $|R|\le B$, $|R_1|\le H$ there. Then $RU\in H^1(a,b)$ with
-specified derivative $R_1U+RU_1$.
+specified derivative $R_1U+RU_1$. In particular this applies to any $R$
+smooth on an open neighborhood of $[a,b]$, using $R_1=R'$.
 \end{lemma}
 
 \begin{proof}
@@ -4609,6 +4611,70 @@ specified derivative $R_1U+RU_1$.
 Bounded coefficients preserve the two L2 norms.
 On compact subintervals the absolutely continuous product rule applies;
 the specified a.e.\ derivatives give the asserted derivative.
+For the neighborhood version, compactness bounds both $R$ and its derivative.
+\end{proof}
+
+\begin{lemma}[Countable cell energy summation]
+\label{lem:countable-cell-energy}
+\lean{NoEmbeddedEigenvalues.memLp_two_of_cell_energy}
+\leanok
+Let $(S_n)_{n\ge0}$ be pairwise disjoint measurable sets in a measure
+space, $G$ integrable on $S=\bigcup_nS_n$ with $G(x)\ge0$ for every
+$x\in S$, and $K\ge0$. If $F\in L^2(S_n;\C)$ for every $n$ and
+\[
+ \int_{S_n}|F|^2\le K\int_{S_n}G,
+\]
+then $F\in L^2(S;\C)$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The countable local measurability statements give measurability on $S$.
+Convert each finite cell integral to a nonnegative integral and sum over
+the disjoint family. The resulting nonnegative integral is at most
+$K\int_SG<\infty$, proving the global L2 norm is finite.
+\end{proof}
+
+\begin{lemma}[Local interval H1 data with global finite energy]
+\label{lem:h1-local-global}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.hasIntervalH1_of_local}
+\leanok
+Let $a<b$ and $F,D\in L^2(a,b)$. Suppose every $x\in(a,b)$ lies
+in an interval $(c,d)\subset(a,b)$, allowing $c=a$ or $d=b$, on which
+the same representative $F$ is interval H1 with specified derivative $D$.
+Then $F$ is interval H1 on $(a,b)$ with derivative $D$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints, lem:interval-zero-extension-l2}
+\leanok
+Subtract a fixed integral primitive of $D$ from $F$.
+On each local interval the fundamental theorem says this difference is
+constant. Connectedness of $(a,b)$ makes it constant globally, giving
+the global integral-increment identity.
+The primitive is locally absolutely continuous and has a.e.\ derivative $D$.
+Together with the supplied L2 norms, this gives interval H1.
+\end{proof}
+
+\begin{lemma}[Reciprocal-distance energy forces zero endpoint trace]
+\label{lem:h1-div-zero-trace}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.trace_zero_of_div_memLp}
+\leanok
+If $b>0$, $F\in H^1(0,b)$ and $F(x)/x\in L^2(0,b)$, then the
+canonical H1 trace of $F$ at zero is zero.
+No assertion about the raw value $F(0)$ is made.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints}
+\leanok
+If the canonical trace were nonzero, continuity of the canonical
+extension would give $|F(x)|\ge m>0$ for small positive $x$.
+Then $1/x\le |F(x)/x|/m$.
+The quotient is locally L1 by its L2 norm on a finite interval,
+contradicting nonintegrability of $1/x$ at zero.
 \end{proof}
 
 \begin{lemma}[Smooth linear factorization]

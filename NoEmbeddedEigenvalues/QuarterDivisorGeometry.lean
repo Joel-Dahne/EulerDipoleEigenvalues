@@ -78,7 +78,8 @@ private theorem logarithmic_ratio_bounds {F : ℝ → ℝ} {c C r T x y : ℝ}
     rw [neg_div]
     linarith
 
-private theorem phase_lattice_enumeration {F : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
+/-- An unbounded monotone phase enumerates every lattice level below a suitable cutoff. -/
+theorem phase_lattice_enumeration {F : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
     (hc : ContinuousOn F (Ioo 0 r)) (ha : StrictAntiOn F (Ioo 0 r))
     (htop : Tendsto F (𝓝[>] 0) atTop) (θ : ℝ) {T : ℝ} (hT : 0 < T) :
     ∃ ρ : ℝ, ρ ∈ Ioo 0 r ∧ ∃ hs : ℕ → ℝ,
@@ -147,7 +148,8 @@ private theorem exp_I_eq_iff {x y : ℝ} :
     push_cast
     ring
 
-private theorem positive_phase_lattice {lam : ℝ} (hlam : lam ≠ 0)
+/-- Divisor resonances form a lattice in the positive phase for either sign of λ. -/
+theorem positive_phase_lattice {lam : ℝ} (hlam : lam ≠ 0)
     {κ : ℂ} (hκ : κ ^ 4 = 1) : ∃ θ : ℝ, ∀ h : ℝ,
       quarterDivisor lam κ h = 0 ↔
         ∃ k : ℤ, quarterPhase |lam| h = θ + k * (2 * Real.pi) := by

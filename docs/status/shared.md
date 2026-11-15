@@ -38,6 +38,7 @@ The even–even route is admission-free. Available foundations include:
 - Interval H¹, endpoint Hardy with constant four and an explicit L² conclusion,
   H² division by a linear factor with a universal derivative-energy bound,
   uniform complete-cell quotient and weighted derivative estimates,
+  global phase-cell division with a canonical zero trace,
   and weighted boundary positivity by exhaustion. Abstract
   canonical profiles have weighted interval regularity and identified
   forcing/endpoints; even H² torus functions have the needed arc energy.
@@ -179,8 +180,14 @@ weights and local versus global regularity.
    admissions. The smooth inverse divisor factor has a common collar and bounds
    independent of the character;
    the derivative estimate uses exactly N′ and hN″.
-   Next on the first-gain branch: Phase-cell division (`lem:phase-cell-division`)
-   and zero-saddle forcing estimates.
+   Phase-cell division (`lem:phase-cell-division`) is also transitively
+   admission-free with its original statement in `PhaseCellDivision.lean`.
+   Complete cells cover the collar up to countably many endpoints; nonresonant
+   boundary neighborhoods supply local H¹ without raw endpoint assignments.
+   Countable energy summation, local-to-global H¹ and reciprocal-distance
+   integrability give the global quotient and canonical zero trace.
+   Next on the first-gain branch: zero-saddle forcing estimates. Logarithmically
+   weighted phase-cell division (`lem:log-phase-cell-division`) remains open.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
@@ -315,8 +322,8 @@ weights and local versus global regularity.
    remain open; statement markers are not a compatibility audit.
    See [odd–odd status](odd-odd.md). The saddle and ordinary across-separatrix
    H¹/H³ assemblies reach the primitive analytic frontier listed above.
-2. **Shared interface review:** check global assembly from the uniform complete-cell
-   estimates needed for logarithmic summation, canonical interval traces and
+2. **Shared interface review:** check logarithmically weighted summation from the
+   uniform complete-cell estimates, canonical interval traces and
    compatibility of Cartesian/orthonormal saddle quadratics. Orbit numerators must use the
    continuous forcing representative, not raw values on exceptional orbits.
    Check real cylinder exponents, finite harmonic jets, one-sided trace
@@ -370,9 +377,9 @@ prerequisites remain outside this directory; see the
   The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   saddle/transport/elliptic inputs rather than a stronger corner premise.
-  Scalar endpoint/second Hardy and uniform complete-cell estimates are proved;
-  global phase-cell division and explicit saddle-chart interfaces remain separate
-  prerequisites.
+  Scalar endpoint/second Hardy, uniform complete-cell estimates and global
+  phase-cell division are proved. Logarithmic division and explicit saddle-chart
+  interfaces remain separate prerequisites.
   The weighted H¹/corner/edge/gluing, quarter endpoint/resonant-zero and
   weighted/logarithmic numerator interfaces retain explicit quantitative
   bounds and actual fiber-integrability conclusions.
