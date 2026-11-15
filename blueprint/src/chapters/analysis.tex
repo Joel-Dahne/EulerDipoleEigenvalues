@@ -3270,6 +3270,42 @@ $M_1$ almost everywhere. Thus the ordinary derivative agrees with $M_1$
 almost everywhere on every compact subinterval.
 \end{proof}
 
+\begin{lemma}[Boundary flux for fixed-window parameter integrals]
+\label{lem:fixed-window-flux}
+\uses{def:weak-derivative-local, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.congr_derivative,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.ae_vertical_integral_eq,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h1_flux}
+\leanok
+Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
+Suppose $F,P$ are continuous on $Q$, the five fields
+$F,D,H,P,B$ belong to $L^2(Q)$, and
+\[
+ \partial_hF=D,\qquad \partial_tP=B
+ \quad\hbox{weakly},\qquad D(h,t)=H(h,t)+\beta(h)B(h,t)
+ \quad\hbox{on }Q.
+\]
+Then $M(h)=\int_l^rF(h,t)\,dt$ has interval $H^1$ data with derivative
+\[
+ M_1(h)=\int_l^rH(h,t)\,dt+\beta(h)(P(h,r)-P(h,l)).
+\]
+No separate regularity of $\beta$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fixed-window-h1, lem:acl-slicing, lem:trace-l2,
+ lem:h1-interval-endpoints}
+\leanok
+Fixed-window differentiation supplies derivative $\int_l^rD$.
+Vertical ACL slicing and continuity identify the original values of $P$,
+so $\int_l^rB=P(h,r)-P(h,l)$ on almost every level.
+The window endpoints are interior to the rectangle; no arbitrary raw
+boundary assignment is used. Actual $L^2$ sections of $H,B$ give
+integrability before splitting $\int D$.
+The displayed derivative agrees a.e.\ with $\int D$, hence inherits
+its $L^2$ norm and weak derivative identity even for arbitrary $\beta$.
+\end{proof}
+
 \begin{lemma}[Integrable cancellation at differentiable divisor zeros]
 \label{lem:integrable-divisor-cancellation}
 \lean{NoEmbeddedEigenvalues.eq_zero_of_integrable_divisor}

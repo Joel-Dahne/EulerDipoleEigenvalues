@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.QuarterMeasureTransport
+import NoEmbeddedEigenvalues.QuarterFiberIntegrals
 import NoEmbeddedEigenvalues.QuarterCellCover
 
 /-!
@@ -67,18 +67,7 @@ theorem integrable_quarter_fiberIntegral {b : ℝ} {F : ℝ × ℝ → ℝ}
     (hF : IntegrableOn F (quarterOrbitStrip b)) :
     IntegrableOn (fun h ↦ ∫ t in Ioo (-eighthPeriod h) (eighthPeriod h), F (h, t))
       (Ioo 0 b) := by
-  have hi : Integrable ((quarterOrbitStrip b).indicator F)
-      ((volume : Measure ℝ).prod volume) := by
-    rw [← Measure.volume_eq_prod]
-    exact hF.integrable_indicator (measurableSet_quarterOrbitStrip b)
-  apply hi.integral_prod_left.integrableOn.congr
-  filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
-  have he : (fun t ↦ (quarterOrbitStrip b).indicator F (h, t)) =
-      (Ioo (-eighthPeriod h) (eighthPeriod h)).indicator (fun t ↦ F (h, t)) := by
-    funext t
-    simp only [quarterOrbitStrip, mem_ofPred_eq, hh.1, hh.2, true_and, mem_Ioo,
-      indicator_apply]
-  rw [he, integral_indicator measurableSet_Ioo]
+  exact (integrable_quarterStrip_sections hF).1
 
 /-- Logarithmic local spatial L² controls the logarithmically weighted quarter
 jet mass on any strip whose image is in the supplied spatial domain. -/

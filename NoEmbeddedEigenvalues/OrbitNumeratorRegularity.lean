@@ -45,7 +45,8 @@ theorem quarterNumerator_eq_normalized (lam : ℝ) (g : ℝ × ℝ → ℂ) (h :
   dsimp [F, actionAngleInv]
   ring
 
-private theorem memLp_mul_on_compact {K R : Set (ℝ × ℝ)} (hK : IsCompact K)
+/-- A coefficient continuous on a compact set preserves L² on each measurable subset. -/
+theorem memLp_mul_on_compact {K R : Set (ℝ × ℝ)} (hK : IsCompact K)
     (hR : MeasurableSet R) (hRK : R ⊆ K) {C F : ℝ × ℝ → ℂ}
     (hC : ContinuousOn C K) (hF : MemLp F 2 (volume.restrict R)) :
     MemLp (fun q ↦ C q * F q) 2 (volume.restrict R) := by

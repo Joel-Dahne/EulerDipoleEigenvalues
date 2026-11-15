@@ -191,10 +191,18 @@ weights and local versus global regularity.
    admission-free in `ZeroSaddleForcing.lean`, including actual tail integrability
    and uniformity in every real frequency. The corner-distance bounds identify
    the specific zero forcing value, not merely the nearest saddle distance.
-   Next on the first-gain branch: the weak moving-endpoint numerator derivative
-   estimate and C/√h cell summation, then reconstruction. The first gain does not
-   require a global hN″ bound. Logarithmically weighted phase-cell division
-   (`lem:log-phase-cell-division`) remains open.
+   The weak moving-endpoint formula (`lem:numerator-moving-endpoints`) and
+   zero-saddle numerator derivative estimate (`lem:zero-saddle-numerator-derivative`)
+   are transitively admission-free in `OrbitNumeratorDerivative.lean` and
+   `ZeroSaddleNumerator.lean`. Period variation cancels as an angular divergence,
+   leaving the fixed-time level contraction and the two continuous endpoint values.
+   The original transport pair supplies the first weak gradient; coarea gives
+   actual integrable fiber energy E, and |N′|² ≤ K E/h + K/(h√h), uniformly in
+   every real frequency on one collar. No global numerator H² hypothesis is used.
+   Next: C/√h cell summation and reconstruction (`lem:transport-first-gain-zero`).
+   Using the integrable h|N′|² energy avoids a separate geometric remainder sum.
+   Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
+   remains open.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
@@ -209,8 +217,8 @@ weights and local versus global regularity.
    C times inverse square-root radius, and the first-derivative norm is supplied.
    The current Lean forcing assembly still uses the full saddle jet; wiring the
    shorter route would remove its second-transport-gain dependency.
-   Generic numerator differentiation and the remaining scalar/orbit inputs are
-   explicit outside-section prerequisites. The weighted-gradient and third-stream
+   Weighted second-numerator differentiation and the remaining scalar/orbit inputs
+   are explicit outside-section prerequisites. The weighted-gradient and third-stream
    assemblies still depend on their recorded transport and elliptic/Taylor inputs.
    No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
