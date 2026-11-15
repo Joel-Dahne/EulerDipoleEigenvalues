@@ -153,6 +153,12 @@ weights and local versus global regularity.
    smoothing and pointwise overlap compatibility give its smooth representative;
    joint a.e. reflection transport retains parity. No admitted elliptic theorem,
    stronger source hypothesis or smaller comparison disk is used.
+   **Transport-gain prerequisites:** Quarter-orbit endpoint formula
+   (`lem:quarter-endpoint-formula`) is transitively admission-free, with its
+   original mathematical statement. `OrbitTransportTraces.lean` supplies full-time a.e. congruence
+   and locally L2 endpoints via fixed angular rectangle traces, without raw ray
+   evaluations or new assumptions. Next on the first-gain branch: numerator
+   local H¹/resonant zeros, phase-cell division and zero-saddle forcing estimates.
    **Next targets:** the two transport gains with their original transport pairs,
    continuous forcing representatives and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.

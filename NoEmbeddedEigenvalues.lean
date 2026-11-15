@@ -193,6 +193,7 @@ import NoEmbeddedEigenvalues.Regularity.OddOddQuarters
 import NoEmbeddedEigenvalues.Regularity.OddOddGradientCoordinates
 import NoEmbeddedEigenvalues.Regularity.QuarterTime
 import NoEmbeddedEigenvalues.QuarterCoordinates
+import NoEmbeddedEigenvalues.OrbitTransportTraces
 import NoEmbeddedEigenvalues.OrbitNumerators
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.Regularity.CylinderData

@@ -25,8 +25,10 @@ Proof work is now outside the odd–odd chapter:
   is assembled from stream H², Hardy–Poisson vorticity division, periodic
   quotient transport and the periodic first transport gain. Stream H²
   (`prop:dd-stream-quotient-h2`) is itself assembled from local analytic inputs;
-  those proofs, Hardy–Poisson division and the periodic first gain remain
-  admitted. The weighted third-stream step (`lem:dd-weighted-third-stream`)
+  those proofs and Hardy–Poisson division remain admitted. The periodic first
+  gain is assembled from the general positive-cell first gain; its frontier
+  and the endpoint/numerator prerequisites are recorded in shared status.
+  The weighted third-stream step (`lem:dd-weighted-third-stream`)
   now has an assembly proof from the saddle jet, weighted gradient and two
   explicit outside-section elliptic/Taylor corollaries; see
   [shared status](shared.md#next-session) for that frontier.

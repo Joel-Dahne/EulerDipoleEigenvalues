@@ -865,6 +865,60 @@ transverse trace on every compact radial interval and symmetric normal
 rectangle compactly contained in the specified open neighbourhood.
 \end{definition}
 
+\begin{lemma}[Planar a.e. congruence on full orbit restrictions]
+\label{lem:orbit-ae-congruence}
+\uses{def:orbit-coordinates, def:period}
+\lean{NoEmbeddedEigenvalues.ae_orbit_congr}
+\leanok
+Let $0<h_0\le1$. If $u=v$ almost everywhere on the orbit annulus
+$0<h<h_0$, then for almost every such $h$,
+$u(\gamma_h(t))=v(\gamma_h(t))$ for almost every $t\in\R$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates-area, lem:period-orbit}
+\leanok
+Enclose the planar exceptional set in a measurable null set. The
+action--angle area formula and positivity of $2S(h)$ make its pullback
+null on almost every fundamental angular interval.
+Integer angular translations and periodicity extend the equality to
+the whole real angular lift. Finally rescale $t=S(h)\theta$.
+No assertion is made at a prescribed exceptional level.
+\end{proof}
+
+\begin{lemma}[Locally L2 endpoints of weak transport representatives]
+\label{lem:orbit-l2-endpoints}
+\uses{def:transport-pair, def:orbit-coordinates, def:period}
+\lean{NoEmbeddedEigenvalues.exists_l2_orbit_endpoints,
+ NoEmbeddedEigenvalues.orbit_endpoint_functions}
+\leanok
+Let $U$ be open, $u,k\in L^2(U)$ and $L_0u=k$ weakly.
+Suppose $0<h_0<1$ and the annulus $0<h<h_0$ lies in $U$.
+There are locally square-integrable functions $E_\pm$ of $h$ such that
+almost every level has a periodic locally absolutely continuous
+representative $Z_h$ of $u\circ\gamma_h$, with
+$Z_h'=k\circ\gamma_h$ almost everywhere and
+$Z_h(\pm L(h))=E_\pm(h)$.
+On each compact level interval the endpoint functions agree almost
+everywhere with those of every locally absolutely continuous orbit
+representative of the same raw pullback.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea, lem:coarea-level-cutoff, lem:action-angle-transport,
+ lem:trace-l2, lem:period-regularity, lem:orbit-coordinates-area}
+\leanok
+A level cutoff equal to one on a compact level interval gives the angular
+weak derivative $S(h)k\circ\gamma_h$.
+The area density $2S(h)$ is bounded above and away from zero there, so
+both the value and this derivative have actual rectangle L2 norms.
+The fixed-section trace theorem at $\theta=\pm1/8$ supplies L2 endpoints.
+Continuity identifies them with every ACL orbit representative.
+A countable exhaustion supplies full-time periodic representatives; choose
+one per good level. Their endpoint functions are locally L2 because they
+agree almost everywhere with these rectangle traces.
+\end{proof}
+
 \begin{lemma}[Quarter-orbit endpoint formula]
 \label{lem:quarter-endpoint-formula}
 \uses{def:numerator, def:quarter-character}
@@ -883,22 +937,18 @@ $Z_h(\pm L(h))$ are locally square integrable in $h\in(0,h_0)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:coarea, lem:transport-unknown,
- lem:period-orbit, lem:orbit-coordinates-area}
-Orbit restriction on a countable exhaustion by compact level annuli gives
-$Z_h'=i(\lambda Z_h+f_h)=-iv_h$ almost everywhere.
-Coarea transfers the quarter character of $z=-(v+f)/\lambda$ to almost
-every orbit. Its absolutely continuous representative therefore satisfies
-the character relation at every time. Integrating
-$(e^{-i\lambda t}Z_h)'=if_he^{-i\lambda t}$ on $[-L,L]$ gives the formula.
-
-On any compact level interval the lengths $2L(h)$ have positive lower and
-finite upper bounds. The one-dimensional trace estimate gives
-\[
- |Z_h(-L)|^2+|Z_h(L)|^2
- \le C\int_{-L}^L(|Z_h|^2+|v_h|^2)dt.
-\]
-The right side is integrable in $h$ by coarea, since $z,v\in L^2$.
+\uses{lem:orbit-l2-endpoints, lem:orbit-ae-congruence,
+ lem:transport-unknown, lem:period-orbit, lem:transport-boundary-estimate}
+\leanok
+Apply Lemma~\ref{lem:orbit-l2-endpoints} to
+$z=-(v+f)/\lambda$ and $L_0z=-iv$.
+Lemma~\ref{lem:orbit-ae-congruence} transfers both the forcing's a.e.\
+agreement with its continuous representative and the quarter character of
+$z$ to almost every full-time orbit. Continuity of $Z_h$ then makes
+$Z_h(t+2L)=\kappa Z_h(t)$ valid at every time.
+The integrating-factor identity on $[-L,L]$ gives
+$D E_-=ie^{i\lambda L}N$; its prefactor has modulus one.
+The endpoint functions are already locally L2.
 No spatial trace of $v$ on an endpoint ray is assumed.
 \end{proof}
 

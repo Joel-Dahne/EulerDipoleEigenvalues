@@ -581,7 +581,8 @@ private theorem memLp_cutoff_actionMeasure {χ : ℝ → ℝ} (hχ : ContDiff �
     simpa only [mul_assoc] using
       mul_le_mul_of_nonneg_right (hbound q.1 hs) (sq_nonneg ‖u (actionParam q)‖)
 
-private theorem memLp_cutoff_actionInput {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
+/-- A compact level cutoff gives actual L² data on a fundamental angular strip. -/
+theorem memLp_cutoff_actionInput {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
     (hχs : tsupport χ ⊆ Ioo 0 1) {u : ℝ × ℝ → ℂ}
     (hu : MemLp u 2 (volume.restrict cellSquare)) :
     MemLp (fun q : ℝ × ℝ ↦ (χ q.1 : ℂ) * u (actionAngleInv q)) 2
