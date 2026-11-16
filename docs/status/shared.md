@@ -209,8 +209,16 @@ weights and local versus global regularity.
    this to the original transport pair and continuous forcing in
    `ZeroSaddleQuotientMass.lean`, for both signs and every κ⁴ = 1.
    It gives C/√h ∈ L² and D ≠ 0 a.e. on a smaller complete-cell collar.
-   Next: physical reconstruction and four-character assembly
-   (`lem:transport-first-gain-zero`), which remains admitted.
+   Endpoint reconstruction and first weighted mass on the base quarter
+   (`lem:transport-endpoint-decay`, `lem:quarter-first-mass`,
+   `lem:zero-saddle-quarter-mass`) are transitively admission-free in
+   `QuarterFirstMass.lean` and `ZeroSaddleReconstruction.lean`.
+   Canonical ACL endpoints bound the homogeneous amplitude; two forcing tails
+   give exponential decay. Exact time moments avoid a logarithmic loss.
+   The resulting v/d norm is for the original raw pullback in dh dt, with
+   actual fiber integrability and no assigned raw endpoint values.
+   Next: rotation-character decomposition, four-quarter area globalization
+   and the interior complement (`lem:transport-first-gain-zero`), still admitted.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.
    **Next targets:** the two transport gains with their original transport pairs,

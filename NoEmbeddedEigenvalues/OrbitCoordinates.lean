@@ -2266,7 +2266,8 @@ theorem norm_fderiv_quarterTimeCoord_le : ∃ C h₀ : ℝ, 0 < h₀ ∧ h₀ < 
 
 /-! ### Flow-time integrals of powers of the saddle distance -/
 
-private theorem integral_exp_mul_abs {a L : ℝ} (ha : a ≠ 0) (hL : 0 ≤ L) :
+/-- The exponential moment of absolute time on a symmetric interval. -/
+theorem integral_exp_mul_abs {a L : ℝ} (ha : a ≠ 0) (hL : 0 ≤ L) :
     ∫ t in (-L)..L, exp (a * |t|) = 2 * (exp (a * L) - 1) / a := by
   have hc : Continuous (fun t : ℝ ↦ exp (a * |t|)) := by fun_prop
   have hsplit := intervalIntegral.integral_add_adjacent_intervals (μ := volume)

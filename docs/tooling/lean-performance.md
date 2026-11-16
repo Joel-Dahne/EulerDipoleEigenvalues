@@ -50,6 +50,15 @@ The initial small-module check reused existing snapshots, so this experiment
 also does not measure a new module's cold-open cost. A permanent split needs
 review of dependencies and private helper visibility.
 
+## Build concurrency
+
+Use default concurrency unless a problem occurs. A broad rebuild after an
+`OrbitCoordinates.lean` change exhausted the 12 GB VM's memory while spawning
+Lean processes, even with the language server stopped. Retrying the remaining
+build with `LEAN_NUM_THREADS=2` succeeded. This supports reducing concurrency
+for an affected broad build, not imposing one thread on routine checks.
+The subsequent cached build and admission audit passed with default concurrency.
+
 ## Synchronization and reporting
 
 Source inspection of these versions establishes:

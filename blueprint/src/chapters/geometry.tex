@@ -1987,6 +1987,23 @@ rotation invariance, without admitted dependencies; the former global
 statement remains false.
 \end{remark}
 
+\begin{lemma}[Symmetric exponential time moment]
+\label{lem:exponential-time-moment}
+\lean{NoEmbeddedEigenvalues.integral_exp_mul_abs}
+\leanok
+For real $a\ne0$ and $L\ge0$,
+\[
+ \int_{-L}^L e^{a|t|}\,dt=\frac{2(e^{aL}-1)}a.
+\]
+\end{lemma}
+
+\begin{proof}
+\leanok
+Split at zero and reflect the negative half. Each half is
+$\int_0^L e^{at}\,dt=(e^{aL}-1)/a$.
+Continuity supplies integrability on both intervals.
+\end{proof}
+
 \begin{lemma}[Flow-time integrals of the saddle distance]
 \label{lem:orbit-time-integrals}
 \uses{def:period, def:dipole-flow, def:cell-arcs}
@@ -1998,16 +2015,13 @@ $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:orbit-saddle-distance, lem:period-coarse}
+\uses{lem:orbit-saddle-distance, lem:period-coarse, lem:exponential-time-moment}
 \leanok
 Write $c e^{-|t|}\le d(\gamma_h(t))\le B e^{-|t|}$ on the quarter.
 The distance is continuous and strictly positive there, so all the powers
-under consideration are integrable. Splitting at zero and reflecting gives,
-for $a\ne0$ and $L\ge0$,
-\[
-  \int_{-L}^L e^{a|t|}\,dt=\frac{2(e^{aL}-1)}a.
-\]
-For $q>0$, monotonicity of negative powers therefore gives
+under consideration are integrable.
+For $q>0$, monotonicity of negative powers and
+Lemma~\ref{lem:exponential-time-moment} give
 \[
   \int_{-L}^L d^{-q}\,dt
   \le \frac{2c^{-q}}q(e^{qL}-1)

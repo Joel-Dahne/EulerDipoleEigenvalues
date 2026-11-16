@@ -1648,6 +1648,77 @@ sections. No globally measurable representative is substituted
 on exceptional orbits.
 \end{proof}
 
+\begin{lemma}[Endpoint reconstruction preserves forcing decay]
+\label{lem:transport-endpoint-decay}
+\lean{NoEmbeddedEigenvalues.norm_transport_le_endpoints_of_decay}
+\leanok
+Let $\lambda\in\R$, $L,C\ge0$, and let $F$ be continuous on $[-L,L]$
+with $|F(t)|\le Ce^{-|t|/2}$.
+Suppose $W:\R\to\C$ is locally absolutely continuous,
+$W'=i(\lambda W+F)$ a.e., and $|W(-L)|,|W(L)|\le A$.
+Then
+\[
+ |W(t)|\le A+2Ce^{-|t|/2}\qquad(|t|\le L).
+\]
+No sign or nonvanishing condition on $\lambda$ is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-boundary-estimate, lem:zero-saddle-forcing-tails}
+\leanok
+The integrating factor has modulus one, so integrating from $a$ to $t$
+gives
+\[
+ |W(t)|\le |W(a)|+
+ \left|\int_a^t F(s)e^{-i\lambda s}\,ds\right|.
+\]
+Use $a=-L$ when $t\le0$ and $a=L$ when $t\ge0$.
+Reverse the latter integral and apply the corresponding forcing-tail bound.
+The endpoint values are those of this specified ACL function.
+\end{proof}
+
+\begin{lemma}[First weighted mass from an exponential quarter bound]
+\label{lem:quarter-first-mass}
+\uses{def:cell-separatrix-collar, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.memLp_quarter_div_saddleDist_of_exp_bound}
+\leanok
+Let $0<b<1$, $c>0$, $\alpha,\beta\ge0$, and suppose
+\[
+ c e^{-|t|}\le d(\gamma_h(t))
+ \qquad(0<h<b,\ |t|\le L(h)).
+\]
+Let $V$ be a.e.\ strongly measurable on $Q_b$, and let
+$q/\sqrt h\in L^2(0,b)$. If for a.e.\ $h$ and a.e.\ $t\in(-L(h),L(h))$
+\[
+ |V(h,t)|\le\alpha|q(h)|+\beta e^{-|t|/2},
+\]
+then $V(h,t)/d(\gamma_h(t))\in L^2(Q_b,dh\,dt)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-fiber-summation, lem:exponential-time-moment, lem:period-coarse}
+\leanok
+The distance lower bound and $|x+y|^2\le2|x|^2+2|y|^2$ give
+\[
+ |V/d|^2
+ \le \frac{2\alpha^2|q(h)|^2}{c^2}e^{2|t|}
+       +\frac{2\beta^2}{c^2}e^{|t|}\quad\hbox{a.e.}
+\]
+For each good level the right side is continuous and integrable on its
+finite time window; domination establishes genuine square integrability
+of the raw weighted profile there.
+The exact exponential moments and $e^{L(h)}\sqrt h\le e^2$ yield
+\[
+ \int_{-L(h)}^{L(h)}|V/d|^2\,dt
+ \le \frac{2\alpha^2e^4}{c^2}|q(h)/\sqrt h|^2
+      +\frac{4\beta^2e^2}{c^2\sqrt h}.
+\]
+The right side is an actual integrable level function.
+Apply Lemma~\ref{lem:quarter-fiber-summation}.
+Estimating by exponential moments, rather than interval length times
+a supremum, avoids a logarithmic loss on the amplitude energy.
+\end{proof}
+
 \begin{lemma}[Zero-saddle numerator derivative estimate]
 \label{lem:zero-saddle-numerator-derivative}
 \uses{def:transport-pair, def:numerator-derivative, def:sobolev-local,
@@ -1741,6 +1812,56 @@ majorant. Its cutoff is below both the original character collar and
 the analytic collar, for either sign of $\lambda$ and all four characters.
 \end{proof}
 
+\begin{lemma}[Zero-saddle first mass on the base quarter]
+\label{lem:zero-saddle-quarter-mass}
+\uses{def:transport-pair, def:quarter-character, def:cell-separatrix-collar,
+ def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_quarter_memLp}
+\leanok
+Let $(v,f)$ be a transport pair near the closed cell with supplied continuous
+forcing representative $g$ vanishing at the four cell corners.
+Suppose $r>0$ and both original fields $v,f$ have quarter character
+$\kappa$, $\kappa^4=1$, on $0<h<r$.
+There is $0<\eta<\min(r,1/2)$ such that
+\[
+ (h,t)\longmapsto
+ \frac{v(\gamma_h(t))}{d(\gamma_h(t))}
+ \quad\hbox{belongs to }L^2(Q_\eta,dh\,dt).
+\]
+The conclusion concerns the original spatial representative a.e.
+No endpoint values of that raw representative are prescribed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zero-saddle-quotient-mass, lem:quarter-endpoint-formula,
+ lem:zero-saddle-forcing-decay, lem:transport-endpoint-decay,
+ lem:quarter-first-mass, lem:orbit-saddle-distance, lem:orbit-ae-congruence,
+ lem:quarter-l2-pullback, lem:period-orbit, lem:dipole-flow}
+\leanok
+Take a common collar for quotient mass, forcing decay and the distance
+lower bound. The endpoint formula supplies, for a.e.\ level, an ACL
+representative $Z_h$ of $z\circ\gamma_h$, with
+\[
+ Z_h'=i(\lambda Z_h+g\circ\gamma_h),\qquad
+ |Z_h(-L)|=|C(h)|=|Z_h(L)|.
+\]
+Here the first endpoint equality holds off the null resonance set and
+the second uses $Z_h(L)=\kappa Z_h(-L)$ and $|\kappa|=1$.
+Lemma~\ref{lem:transport-endpoint-decay} gives
+$|Z_h(t)|\le |C(h)|+2M e^{-|t|/2}$.
+Coarea transfers the original equality $f=g$ to a.e.\ time on these
+same good orbits. Since $z=-(v+f)/\lambda$ and $\lambda\ne0$,
+\[
+ |v(\gamma_h(t))|
+ \le |\lambda|\,|C(h)|+(2|\lambda|+1)M e^{-|t|/2}
+ \quad\hbox{for a.e. }t.
+\]
+The original $v\in L^2$ supplies joint measurability of its raw pullback.
+Apply Lemma~\ref{lem:quarter-first-mass} with $\alpha=|\lambda|$,
+$\beta=(2|\lambda|+1)M$ and the scalar quotient mass.
+Both signs of $\lambda$ and all four characters are covered.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
@@ -1752,35 +1873,20 @@ at its four corners, then $v/d\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:zero-saddle-quotient-mass,
- lem:orbit-saddle-distance, lem:orbit-time-integrals, lem:period-coarse,
- lem:zero-saddle-forcing-decay, lem:zero-saddle-forcing-tails,
- lem:orbit-coordinates-area, lem:reflection-algebra, lem:symmetries-commute}
+\uses{lem:zero-saddle-quarter-mass, lem:orbit-coordinates-area,
+ lem:reflection-algebra, lem:symmetries-commute}
 Intersect the four rotated neighbourhoods and decompose into quarter
 characters $\kappa\in\{1,-1,i,-i\}$. The projected forcings still vanish
 at the corners. Work with one character and the base quarter; rotations
 supply the other quarters.
 
-Lemma~\ref{lem:zero-saddle-forcing-decay} gives, with
-$p_\pm=\gamma_h(\pm L(h))$,
-\[
- |f_h(t)|\le Ce^{-|t|/2},\qquad |f(p_\pm)|\le Ch^{1/4}.
-\]
-Lemma~\ref{lem:zero-saddle-quotient-mass} gives a smaller complete-cell
-collar with $C/\sqrt h\in L^2$ and $D\ne0$ a.e.
-It uses the integrable $h|N'|^2$ majorant directly; no global $hN''$
-bound or separate geometric remainder series is needed.
-
-Reconstruct $z_h$ from $-L$ for $t\le0$ and from $L$ for $t\ge0$.
-The endpoint formula and Lemma~\ref{lem:zero-saddle-forcing-tails} give
-$|v_h(t)|\le C_\lambda|C(h)|+Ce^{-|t|/2}$. Consequently
-\[
- \int_{-L}^L\frac{|v_h|^2}{d^2}dt
- \le C_\lambda\frac{|C(h)|^2}{h}+Ch^{-1/2}.
-\]
-For the last term use $d\asymp e^{-|t|}$ and $e^L\le C/\sqrt h$.
-Both terms are integrable in $h$; coarea gives the conclusion near the
-cell's corners. Away from them $d$ is bounded below and $v\in L^2$.
+Lemma~\ref{lem:zero-saddle-quarter-mass} gives $v/d\in L^2$ on the base
+quarter strip for each character, using the original forcing and ACL
+endpoint reconstruction. Rotate to the four quarters and use their
+constant-Jacobian area formula to obtain the norm on a common physical
+collar. Summing the four character components gives the original unknown.
+Outside this collar the distance to the saddles is bounded below, so
+the original $L^2$ norm controls $v/d$ there.
 \end{proof}
 
 \begin{lemma}[First transport gain]
