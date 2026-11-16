@@ -1862,6 +1862,41 @@ $\beta=(2|\lambda|+1)M$ and the scalar quotient mass.
 Both signs of $\lambda$ and all four characters are covered.
 \end{proof}
 
+\begin{lemma}[Zero-saddle first mass for one quarter character]
+\label{lem:zero-saddle-character-mass}
+\uses{def:transport-pair, def:quarter-character, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_character_memLp}
+\leanok
+Let $(v,f)$ be a transport pair near the closed cell and let $g$ be its
+supplied continuous forcing representative, zero at the four cell corners.
+Suppose both original fields $v,f$ have quarter character $\kappa$,
+$\kappa^4=1$, on an annulus $0<h<r$ with $r>0$.
+Then
+\[
+ v/d\in L^2(\Cell,dp).
+\]
+No character is imposed on raw values outside that annulus, and no
+boundedness assumption on the transport neighbourhood is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:zero-saddle-quarter-mass, lem:quarter-character-cell-mass,
+ lem:cell-interior-mass, lem:collar-rotation-character,
+ lem:quarter-rotation-character}
+\leanok
+Lemma~\ref{lem:zero-saddle-quarter-mass} gives a base-quarter norm below
+some $0<b<\min(r,1/2)$.
+On the corresponding physical collar, the original character identity
+and $d(Rp)=d(p)$ give $(v/d)(Rp)=\kappa(v/d)(p)$ a.e.
+Here only the unconditional distance identity from
+Lemma~\ref{lem:quarter-rotation-character} is used, not its restriction
+to torus characters $\pm1$.
+Apply Lemma~\ref{lem:quarter-character-cell-mass} to $F=v/d$.
+The original $v\in L^2(\Cell)$ then handles the interior complement
+by Lemma~\ref{lem:cell-interior-mass}.
+Both signs of $\lambda$ and all four fourth-root characters are included.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
@@ -1873,20 +1908,16 @@ at its four corners, then $v/d\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:zero-saddle-quarter-mass, lem:orbit-coordinates-area,
- lem:reflection-algebra, lem:symmetries-commute}
+\uses{lem:zero-saddle-character-mass, lem:reflection-algebra,
+ lem:symmetries-commute}
 Intersect the four rotated neighbourhoods and decompose into quarter
-characters $\kappa\in\{1,-1,i,-i\}$. The projected forcings still vanish
-at the corners. Work with one character and the base quarter; rotations
-supply the other quarters.
-
-Lemma~\ref{lem:zero-saddle-quarter-mass} gives $v/d\in L^2$ on the base
-quarter strip for each character, using the original forcing and ACL
-endpoint reconstruction. Rotate to the four quarters and use their
-constant-Jacobian area formula to obtain the norm on a common physical
-collar. Summing the four character components gives the original unknown.
-Outside this collar the distance to the saddles is bounded below, so
-the original $L^2$ norm controls $v/d$ there.
+characters $\kappa\in\{1,-1,i,-i\}$. Rotation and linearity preserve the
+transport pair, and each projected continuous forcing still vanishes
+at the corners.
+Lemma~\ref{lem:zero-saddle-character-mass} gives a full-cell $v_\kappa/d$
+norm for each character. Sum the four components to recover the original
+$v/d$. Their collars may be different: each norm has already been
+extended to the whole physical cell, so no common cutoff is needed.
 \end{proof}
 
 \begin{lemma}[First transport gain]
@@ -2951,6 +2982,115 @@ It follows that $|a(p)|<\arccos\sqrt{h(p)}$.
 The first orbit coordinate traverses precisely this open interval
 on $(-L,L)$; positivity and conservation identify its second coordinate.
 Rotate any point off the axes into this quadrant. Both axes are null by Fubini.
+\end{proof}
+
+\begin{lemma}[Physical-area $L^2$ from the base quarter]
+\label{lem:quarter-l2-pushforward}
+\uses{def:quarter-image, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.memLp_of_comp_quarterOrbitStrip}
+\leanok
+For $b\le1$ and an arbitrary raw function $F:\R^2\to\C$, if
+$(h,t)\mapsto F(\gamma_h(t))$ belongs to $L^2(Q_b,dh\,dt)$,
+then $F\in L^2(V_b,dp)$.
+There is no global measurability hypothesis on $F$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-open-chart, lem:smooth-chart-tests}
+\leanok
+The actual quarter chart has determinant two.
+The reverse $L^2$ change-of-variables theorem gives a finite norm
+and a.e.\ strong measurability on its target.
+The orbit map after its canonical inverse recovers the same raw $F$
+at every target point.
+\end{proof}
+
+\begin{lemma}[Rotation characters on a restricted cell collar]
+\label{lem:collar-rotation-character}
+\uses{def:quarter-character, def:cell-separatrix-collar, def:orbit-coordinates}
+\lean{NoEmbeddedEigenvalues.measurePreserving_rotLift,
+ NoEmbeddedEigenvalues.preimage_rotLift_cellSeparatrixStrip,
+ NoEmbeddedEigenvalues.cellSeparatrixStrip_eq_orbitAnnulus,
+ NoEmbeddedEigenvalues.HasQuarterCharacterOn.iterate_cell_collar}
+\leanok
+Rotation $R$ preserves planar volume and every collar
+$A_\varepsilon=V_\varepsilon^{\rm cell}$.
+For $b\le1$, $A_{2b}$ is exactly the orbit annulus $0<h<b$.
+If $F(Rp)=\kappa F(p)$ a.e.\ on $A_\varepsilon$, then, for every
+nonnegative integer $k$,
+\[
+ F(R^kp)=\kappa^kF(p)\quad\hbox{a.e.\ on }A_\varepsilon.
+\]
+Here $\kappa$ is any complex number; no identity outside the collar
+or global measurability of $F$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-cell-cover, lem:compact-cell-collar}
+\leanok
+Rotation is a coordinate swap followed by a sign change, so it
+preserves product Lebesgue measure. It preserves the cell and the
+stream level, hence $R^{-1}A_\varepsilon=A_\varepsilon$.
+Restrict this measure-preserving map to the measurable collar.
+Each pullback therefore preserves its a.e.\ good set; induction gives
+the character power on the same restricted measure.
+Finally $\Psi=2h$ and the cell center has $h=1$, so the collar below
+$b\le1$ excludes the center, exactly as the orbit annulus does.
+\end{proof}
+
+\begin{lemma}[Physical cell-collar mass from one quarter character]
+\label{lem:quarter-character-cell-mass}
+\uses{def:quarter-character, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.memLp_cell_collar_of_quarter_character}
+\leanok
+Let $b\le1$, $\kappa\ne0$, and let $F:\R^2\to\C$ be a raw function.
+Suppose $F(Rp)=\kappa F(p)$ a.e.\ on $A=V_{2b}^{\rm cell}$ and
+$F\circ\gamma\in L^2(Q_b,dh\,dt)$.
+Then $F\in L^2(A,dp)$.
+No global measurability of $F$ or character identity outside $A$
+is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-l2-pushforward, lem:collar-rotation-character,
+ lem:quarter-cell-cover}
+\leanok
+First descend the norm to $V_b$. On each $A\cap R^{-k}V_b$,
+pull it back by the volume-preserving rotation $R^k$.
+The iterated collar character identifies this pullback a.e.\ with
+$\kappa^kF$. Multiplication by the fixed nonzero scalar
+$\kappa^{-k}$ supplies both measurability and a finite norm of $F$ there.
+Finite union preserves these properties. The union covers $A$
+up to null axes, so restriction gives the asserted norm.
+No weak derivative is glued across those null seams.
+\end{proof}
+
+\begin{lemma}[Interior complement of a first mass collar]
+\label{lem:cell-interior-mass}
+\uses{def:cell-arcs, def:cell-separatrix-collar, def:orbit-coordinates}
+\lean{NoEmbeddedEigenvalues.levelCoord_le_saddleDist,
+ NoEmbeddedEigenvalues.memLp_div_saddleDist_of_cell_collar}
+\leanok
+For every $p\in\Cell$, $h(p)\le d(p)$.
+Consequently, if $b>0$, $F\in L^2(\Cell)$ and
+$F/d\in L^2(V_{2b}^{\rm cell})$, then $F/d\in L^2(\Cell)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-saddle-distance, lem:cell-square}
+\leanok
+In diagonal coordinates, positivity in the cell and $\cos b(p)\le1$
+give
+\[
+ h(p)=\cos a(p)\cos b(p)\le\cos a(p)\le d(p).
+\]
+The last inequality is the all-point lower distance bound from
+Lemma~\ref{lem:orbit-saddle-distance}.
+Outside the collar the positive stream level satisfies $h\ge b$,
+so $d\ge b>0$ and $|F/d|\le b^{-1}|F|$.
+The quotient is a.e.\ strongly measurable on the cell because $F$ is
+and $d$ is continuous. Domination gives its actual $L^2$ norm on the
+complement; combine with the supplied collar norm.
 \end{proof}
 
 \begin{lemma}[A uniform cell collar inside a separatrix neighbourhood]

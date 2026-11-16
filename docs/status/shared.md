@@ -199,26 +199,21 @@ weights and local versus global regularity.
    The original transport pair supplies the first weak gradient; coarea gives
    actual integrable fiber energy E, and |N′|² ≤ K E/h + K/(h√h), uniformly in
    every real frequency on one collar. No global numerator H² hypothesis is used.
-   First-derivative mass estimates and cell summation
-   (`lem:phase-cell-mass-estimates`, `lem:phase-cell-mass-division`) are
-   transitively admission-free in `PhaseCellMassEstimates.lean` and
-   `PhaseCellMassDivision.lean`. Interior Hardy now establishes quotient L²
-   before its energy estimate. Only local H¹ and an integrable majorant of
-   h|N′|² are used; no second numerator jet or quotient trace is assumed.
-   Zero-saddle scalar quotient mass (`lem:zero-saddle-quotient-mass`) applies
-   this to the original transport pair and continuous forcing in
-   `ZeroSaddleQuotientMass.lean`, for both signs and every κ⁴ = 1.
-   It gives C/√h ∈ L² and D ≠ 0 a.e. on a smaller complete-cell collar.
-   Endpoint reconstruction and first weighted mass on the base quarter
-   (`lem:transport-endpoint-decay`, `lem:quarter-first-mass`,
-   `lem:zero-saddle-quarter-mass`) are transitively admission-free in
-   `QuarterFirstMass.lean` and `ZeroSaddleReconstruction.lean`.
-   Canonical ACL endpoints bound the homogeneous amplitude; two forcing tails
-   give exponential decay. Exact time moments avoid a logarithmic loss.
-   The resulting v/d norm is for the original raw pullback in dh dt, with
-   actual fiber integrability and no assigned raw endpoint values.
-   Next: rotation-character decomposition, four-quarter area globalization
-   and the interior complement (`lem:transport-first-gain-zero`), still admitted.
+   **Zero-saddle character first gain is admission-free.**
+   `ZeroSaddleCellMass.lean` proves the full physical-cell v/d norm for any
+   supplied κ⁴ = 1 character (`lem:zero-saddle-character-mass`), both frequency
+   signs and the original continuous forcing representative.
+   Interior Hardy and first-derivative cell summation give C/√h ∈ L² from
+   local H¹ and an integrable h|N′|² majorant, without a second numerator jet
+   or quotient trace. Canonical ACL endpoint reconstruction and exact
+   exponential time moments avoid a logarithmic loss, with actual fiber
+   integrability and no assigned raw endpoint values.
+   The generic area/covering layer is in `QuarterCellMass.lean`: rotations
+   preserve a.e. characters on the supplied collar, without global
+   measurability of raw functions; h ≤ d controls the interior complement.
+   **Next:** construct the four projected transport pairs on a rotation-invariant
+   neighbourhood and recombine (`lem:transport-first-gain-zero`), still admitted.
+   No common collar is needed once each component has its full-cell norm.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.
    **Next targets:** the two transport gains with their original transport pairs,
