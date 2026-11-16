@@ -32,8 +32,8 @@ The even–even route is admission-free. Available foundations include:
   and pairing limits. The generic periodic-to-continuous transport-pair bridge
   is admission-free. The odd–odd stream-H² quotient is assembled from
   explicit local analytic inputs; Hardy–Poisson division remains admitted.
-  Periodic first gain is assembled from the positive-cell first gain and
-  reflected-cell norm covering in `PeriodicTransportGain.lean`, without parity.
+  First transport gain (`lem:transport-first-gain`) and Periodic first transport
+  gain (`cor:transport-first-gain-periodic`) are admission-free, without parity.
   Periodic quotient transport is admission-free.
 - Interval H¹, endpoint Hardy with constant four and an explicit L² conclusion,
   H² division by a linear factor with a universal derivative-energy bound,
@@ -67,10 +67,10 @@ weights and local versus global regularity.
    exclusion is now assembled. Quotient existence is assembled in
    `Regularity/OddOddQuotient.lean`: its stream-H² stage expands to explicit
    local analytic admissions; Hardy–Poisson division remains an outer admission.
-   Periodic first gain now reduces to the positive-cell first gain, using the
-   original and reflected torus data and the existing bounded norm cover.
-   Its shared transport-pair bridge and proof are in `PeriodicTransportGain.lean`;
-   the first eigenfunction gain is a direct specialization.
+   First transport gain (`lem:transport-first-gain`), its periodic corollary
+   (`cor:transport-first-gain-periodic`) and First eigenfunction saddle gain
+   (`prop:saddle-first-gain`) are transitively admission-free.
+   The periodic bridge and reflected-cell assembly are in `PeriodicTransportGain.lean`.
    Periodic quotient transport is proved directly by
    invariant regularized reciprocals and C¹ torus testing.
    The next local/sector layer is in `Regularity/QuotientLocal.lean` and
@@ -141,8 +141,8 @@ weights and local versus global regularity.
    without explicit corner classification or vorticity H¹. Reflected-periodic
    bounded covering supplies the d² norm and the critical input at every saddle.
    Weak uniqueness retains the canonical quadratic remainder jet.
-   **Remaining saddle frontier:** First and Second transport gain
-   (`lem:transport-first-gain`, `lem:transport-second-gain`).
+   **Remaining saddle frontier:** Second transport gain
+   (`lem:transport-second-gain`).
    **Cylinder inverse is admission-free** (`lem:cylinder-inverse`), as is its
    odd–odd application, with their unchanged statements and original data.
    Full-lift weak inversion preserves the actual nil integral and every
@@ -199,32 +199,32 @@ weights and local versus global regularity.
    The original transport pair supplies the first weak gradient; coarea gives
    actual integrable fiber energy E, and |N′|² ≤ K E/h + K/(h√h), uniformly in
    every real frequency on one collar. No global numerator H² hypothesis is used.
-   **First transport gain with zero saddle values is admission-free**
-   (`lem:transport-first-gain-zero`), with its verbatim original statement in
-   `ZeroSaddleTransportGain.lean`; `WeightedTransport.lean` reexports it.
-   A rotation-invariant neighbourhood retains the original transport pair.
-   Four pointwise complex character projections preserve its frequency,
-   forcing H², supplied continuous representative and corner zeros.
-   Zero-saddle first mass for one quarter character
-   (`lem:zero-saddle-character-mass`) supplies the four full-cell norms;
-   finite addition recovers the original v/d. Both frequency signs and all
-   four characters are covered, without raw endpoint assignments or a common
-   collar. The scalar branch needs only local numerator H¹ and integrable
-   h|N′|² energy, not the stronger second-jet division hypotheses.
-   **Next:** the nonzero-saddle forcing reduction for First transport gain
-   (`lem:transport-first-gain`), still admitted. Its completion would also close
-   the admission frontier of the periodic first gain.
+   **First transport gain is admission-free** (`lem:transport-first-gain`),
+   with its verbatim original statement in `FirstTransportGain.lean`;
+   `Regularity/QuotientLocal.lean` reexports it. Local H² has a continuous
+   representative on the original open domain. Quadratic interpolation of
+   its four saddle values generates a smooth transport pair with genuine v/d
+   mass: |sin x|, |sin y| ≤ d control the correction. Subtract this pair and
+   apply First transport gain with zero saddle values (`lem:transport-first-gain-zero`).
+   Its four complex-character norms recombine without raw endpoint assignments
+   or a common collar, for either frequency sign. Only local numerator H¹ and
+   integrable h|N′|² energy are needed, not the second-jet division hypotheses.
+   Periodic first transport gain (`cor:transport-first-gain-periodic`) and
+   First eigenfunction saddle gain (`prop:saddle-first-gain`) now also have
+   zero transitive admissions.
+   **Next:** Second transport gain (`lem:transport-second-gain`) with its
+   original continuous forcing, specified weak derivatives and weighted norms.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.
-   **Next targets:** the two transport gains with their original transport pairs,
-   continuous forcing representatives and weighted derivative hypotheses.
+   **Next targets:** Second transport gain and the weighted H¹/trace inputs,
+   with their original transport pairs and weighted derivative hypotheses.
    Prioritize the odd–odd applications at exponents three halves and three.
    Their finite Taylor extraction is proved separately. Keep common interfaces
    generic; leave the mixed linear-jet corollary deferred.
-   **Ordinary separatrix frontier:** the two transport gains above plus Weighted
+   **Ordinary separatrix frontier:** Second transport gain plus Weighted
    transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these five inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these four inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -392,16 +392,16 @@ prerequisites remain outside this directory; see the
   Invariant-cutoff testing avoids global transport-operator closedness.
   The quotient and representative-change assemblies are proved in Lean.
   Stream-H² expands to explicit local analytic admissions;
-  Hardy–Poisson division remains an outer quotient admission; the periodic
-  first gain reduces to the positive-cell first gain, with reflected-periodic
+  Hardy–Poisson division remains an outer quotient admission. First transport
+  gain and its periodic corollary are admission-free, with reflected-periodic
   covering beyond the fixed neighbourhood's boundary saddles.
   Periodic quotient transport is proved directly on the torus.
   The weighted-forcing H¹ route only needs
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
-  H¹ gluing has an explicit cutoff proof. Both transport gains remain admitted;
-  the saddle jet depends on them; cylinder inversion is admission-free.
+  H¹ gluing has an explicit cutoff proof. The saddle jet's remaining transport
+  input is Second transport gain; first gain and cylinder inversion are admission-free.
   The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   saddle/transport/elliptic inputs rather than a stronger corner premise.

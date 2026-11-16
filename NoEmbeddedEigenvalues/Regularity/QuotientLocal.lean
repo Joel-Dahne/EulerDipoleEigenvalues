@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.EigenfunctionTransport
 import NoEmbeddedEigenvalues.TraceL2
 import NoEmbeddedEigenvalues.LocalJets
 import NoEmbeddedEigenvalues.WeightedTransport
+import NoEmbeddedEigenvalues.FirstTransportGain
 
 /-!
 # Local analytic interfaces for the quotient construction
@@ -106,13 +107,6 @@ theorem elliptic_dyadic : ∃ C : ℝ, 0 < C ∧ ∀ (c : ℝ × ℝ) (r : ℝ),
       RadialJetLp 3 0 A c D ∧
         radialJetEnergy 3 0 A c D ≤ C * (radialJetEnergy 1 0 B c G +
           r⁻¹ ^ 2 * radialJetEnergy 0 0 B c G + r⁻¹ ^ 6 * radialJetEnergy 0 0 B c D) := by
-  sorry
-
-/-- First transport gain on the positive cell (`lem:transport-first-gain`). -/
-theorem transport_first_gain {lam : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hb : Bornology.IsBounded U)
-    (hcell : closure cellSquare ⊆ U) :
-    MemLp (fun p ↦ v p / (saddleDist p : ℂ)) 2 (volume.restrict cellSquare) := by
   sorry
 
 /-- Second transport gain (`lem:transport-second-gain`), with an actual continuous

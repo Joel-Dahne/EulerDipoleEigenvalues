@@ -2049,6 +2049,73 @@ already been extended to the whole cell, so no common cutoff is needed.
 Both signs of $\lambda$ are included.
 \end{proof}
 
+\begin{lemma}[Smooth transport pairs with first weighted mass]
+\label{lem:smooth-transport-pair}
+\uses{def:transport-pair, def:cell-arcs, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.classicalL0_eq_zero_of_mem_saddleSet,
+ NoEmbeddedEigenvalues.memLp_classicalL0_div_saddleDist,
+ NoEmbeddedEigenvalues.exists_smooth_transport_pair}
+\leanok
+For a $C^1$ profile $P:\R^2\to\C$ and bounded open $U$,
+$L_0P/d\in L^2(U)$. Also $L_0P(Q)=0$ at every lifted saddle $Q$,
+even without regularity of $P$.
+If $P$ is globally smooth, $\lambda\ne0$, and $U$ is a bounded open
+union of orbits, there is a smooth transport pair $(v_*,f_*)$ on $U$
+with frequency $\lambda$ such that
+\[
+ v_*/d\in L^2(U),\qquad f_*(Q)=P(Q)
+ \quad\hbox{at every lifted saddle }Q.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-transport-weights, lem:weak-derivative-classical,
+ lem:weak-gradient-transport}
+\leanok
+Each sine coefficient has absolute value at most $d$, so
+\[
+ |L_0P/d|\le |\partial_xP|+|\partial_yP|.
+\]
+This includes the totalized value at $d=0$.
+The two continuous derivatives have genuine $L^2$ norms on bounded $U$.
+For smooth $P$, take
+\[
+ v_*=-\frac{i}{\lambda}L_0P,\qquad f_*=P-v_*.
+\]
+Both fields are smooth; boundedness gives $v_*\in L^2(U)$ and
+$f_*\in H^2(U)$ through the classical weak derivatives.
+Since $v_*+f_*=P$ and $L_0P=i\lambda v_*$, the pair satisfies the
+original weak equation. The velocity vanishes at every saddle, so
+$v_*(Q)=0$ and $f_*(Q)=P(Q)$. No sign of $\lambda$ is preferred.
+\end{proof}
+
+\begin{lemma}[Smooth interpolation of cell-saddle values]
+\label{lem:saddle-value-interpolation}
+\uses{def:cells, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.eq_corner_of_mem_saddleSet_closure_cellSquare,
+ NoEmbeddedEigenvalues.exists_smooth_saddle_interpolant}
+\leanok
+For any raw $g:\R^2\to\C$, there is a globally smooth $P:\R^2\to\C$
+with $P(Q)=g(Q)$ at every saddle in the closed cell.
+No regularity, periodicity or parity of $g$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-square}
+\leanok
+A lifted saddle has coordinates $(m\pi,n\pi)$ with $m+n$ odd.
+The closed-cell inequalities give $|m+n|\le1$ and $|m-n|\le1$, so
+it is one of $(\pm\pi,0),(0,\pm\pi)$.
+The coordinate polynomials
+\[
+ X_\pm(x,y)=\frac{x(x\pm\pi)}{2\pi^2},\qquad
+ Y_\pm(x,y)=\frac{y(y\pm\pi)}{2\pi^2}
+\]
+take value one at their corresponding saddle and zero at the other three.
+Multiply these four polynomials by the corresponding values of $g$ and sum.
+This quadratic interpolation needs no cutoff or neighbourhood size.
+\end{proof}
+
 \begin{lemma}[First transport gain]
 \label{lem:transport-first-gain}
 \uses{def:transport-pair, def:cell-arcs}
@@ -2060,20 +2127,20 @@ between $v$ and $f$, or vanishing saddle value of $f$, is required.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-first-gain-zero, lem:transport-unknown}
-Choose disjoint smooth cutoffs $\rho_P$ supported near the four corners
-inside the given neighbourhood, with $\rho_P=1$ on smaller neighbourhoods.
-For the continuous saddle values $c_P=f(P)$ put
-\[
- z_*=-\lambda^{-1}\sum_Pc_P\rho_P,\qquad
- v_*=-Hz_*,\qquad f_*=(H-\lambda)z_*.
-\]
-These are smooth with compact support. Where $\rho_P=1$, $z_*$ is constant,
-so $v_*=0$ and $f_*=c_P$. Moreover
-$H(v_*+f_*)=H(-\lambda z_*)=\lambda v_*$.
-Thus $(v-v_*,f-f_*)$ is a transport pair whose forcing vanishes at every
-corner. Lemma~\ref{lem:transport-first-gain-zero} applies, and
-$v_*/d\in L^2$ because $v_*$ vanishes near the corners.
+\uses{lem:local-h2-continuous-representative, lem:saddle-value-interpolation,
+ lem:smooth-transport-pair, lem:transport-pair-rotation,
+ lem:transport-first-gain-zero}
+\leanok
+Choose the continuous representative $g$ of the original $H^2$ forcing
+on $U$. Interpolate its four saddle values by the smooth quadratic $P$
+of Lemma~\ref{lem:saddle-value-interpolation}.
+Lemma~\ref{lem:smooth-transport-pair} supplies a smooth pair $(v_*,f_*)$
+on the same original $U$, with $f_*(Q)=g(Q)$ at every cell saddle and
+$v_*/d\in L^2(U)$.
+By linearity, $(v-v_*,f-f_*)$ is a transport pair. Its supplied continuous
+forcing representative is $g-f_*$ and vanishes at every corner.
+Apply Lemma~\ref{lem:transport-first-gain-zero} to this pair, and add
+back the genuine norm of $v_*/d$, restricted from $U$ to the cell.
 \end{proof}
 
 \begin{remark}[Digest note: removing nonzero saddle values]
@@ -2082,6 +2149,11 @@ construction above instead subtracts an actual smooth transport pair on
 the original neighbourhood. It preserves the $H^2$ forcing and $L^2$
 unknown hypotheses explicitly and avoids any assumption that an arbitrary
 time-profile subtraction extends smoothly through a saddle.
+Disjoint cutoffs are unnecessary for this first mass norm: the velocity
+coefficients are bounded by $d$, so any smooth profile on the bounded
+neighbourhood has $L_0P/d\in L^2$. Quadratic interpolation of the four
+saddle values therefore suffices, without requiring the correction unknown
+to vanish on whole corner neighbourhoods.
 Neither argument needs an elliptic relation or a Melnikov statement for
 the $\pm i$ characters; the resonant-zero input here is the local endpoint
 formula, not the separatrix Melnikov limit.

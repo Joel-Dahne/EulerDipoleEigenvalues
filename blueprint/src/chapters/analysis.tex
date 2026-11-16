@@ -1653,6 +1653,33 @@ $\pi(K)$ every term vanishes. For $p\in U$ and $n\ne0$, injectivity of $\pi$ on 
 $p+2\pi n\in U$, so the sum reduces to $F(p)$. Injectivity is used only here.
 \end{proof}
 
+\begin{lemma}[Continuous representative of local $H^2$ data]
+\label{lem:local-h2-continuous-representative}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.exists_continuousOn_rep_of_memSobolevLocOn_two}
+\leanok
+If $U\subset\R^2$ is open and $f\in H^2_{\mathrm{loc}}(U)$, there is
+$g:\R^2\to\C$ continuous on $U$ with $f=g$ a.e.\ on $U$.
+Neither a regular boundary nor agreement or measurability outside $U$
+is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:local-to-global, lem:continuous-representative,
+ lem:lift-representatives}
+\leanok
+About each $p\in U$ choose an open patch inside $U$ on which the torus
+projection is injective, and a compact smooth cutoff $\chi$ in that patch
+with $\chi(p)=1$. Localization and periodization give a continuous torus
+representative $H$ for $\chi f$. On the open subpatch $\chi\ne0$,
+$H\circ\pi/\chi$ is continuous and equals $f$ a.e.
+Two such representatives agree everywhere on their open overlap: their
+continuous difference vanishes a.e., and every nonempty open set has
+positive area. Their pointwise values therefore glue to a continuous
+function on $U$. A countable subcover, used separately, gives the a.e.
+agreement with the original raw $f$ on all of $U$.
+\end{proof}
+
 \begin{lemma}[Periodic Sobolev reconstruction]
 \label{lem:periodic-sobolev-reconstruction}
 \uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift}

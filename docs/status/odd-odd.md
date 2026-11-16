@@ -25,9 +25,9 @@ Proof work is now outside the odd–odd chapter:
   is assembled from stream H², Hardy–Poisson vorticity division, periodic
   quotient transport and the periodic first transport gain. Stream H²
   (`prop:dd-stream-quotient-h2`) is itself assembled from local analytic inputs;
-  those proofs and Hardy–Poisson division remain admitted. The periodic first
-  gain is assembled from the general positive-cell first gain; its frontier
-  and the endpoint/numerator prerequisites are recorded in shared status.
+  those proofs and Hardy–Poisson division remain admitted. First transport gain
+  (`lem:transport-first-gain`) and Periodic first transport gain
+  (`cor:transport-first-gain-periodic`) are now transitively admission-free.
   The weighted third-stream step (`lem:dd-weighted-third-stream`)
   now has an assembly proof from the saddle jet, weighted gradient and two
   explicit outside-section elliptic/Taylor corollaries; see
@@ -56,10 +56,11 @@ Proof work is now outside the odd–odd chapter:
   depending only on Odd–odd saddle estimates (`prop:saddle-dd`). Its quadratic
   mass and continuous-stream parity helpers are admission-free; no ordinary
   separatrix H¹/H³ or logarithmic forcing is used. The ordinary separatrix parent
-  now reaches five primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
-  and the first eigenfunction saddle gain have assembly proofs with unchanged
-  statements, canonical Fourier remainder jets and the unique normalized quadratic.
-  The saddle bootstrap now reaches only the two transport gains.
+  now reaches four primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
+  retain their assembly proof with unchanged statement, canonical Fourier remainder
+  jets and the unique normalized quadratic. First eigenfunction saddle gain
+  (`prop:saddle-first-gain`) is transitively admission-free. The saddle bootstrap
+  now reaches only Second transport gain (`lem:transport-second-gain`).
   **Weak full-cylinder inversion is admission-free**
   (`lem:cylinder-weak-inverse`), retaining its original hypotheses and actual nil
   integral. Finite-mass spectral cutoffs make every ordered derivative spectrum
@@ -79,10 +80,9 @@ Proof work is now outside the odd–odd chapter:
   give a genuine smooth representative of the raw weak-harmonic difference.
   Cylinder inverse (`lem:cylinder-inverse`) and its odd–odd application now
   have zero transitive admissions, with their original statements and data.
-  Ordinary separatrix H¹/H³ and logarithmic forcing reach the two transport
-  gains plus Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
-  **Next targets:** First and Second transport gain
-  (`lem:transport-first-gain`, `lem:transport-second-gain`).
+  Ordinary separatrix H¹/H³ and logarithmic forcing reach Second transport gain
+  plus Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
+  **Next target:** Second transport gain (`lem:transport-second-gain`).
   See shared status for the precise frontier.
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is proved. Keep the shared interfaces generic and defer
