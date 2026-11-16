@@ -1897,6 +1897,132 @@ by Lemma~\ref{lem:cell-interior-mass}.
 Both signs of $\lambda$ and all four fourth-root characters are included.
 \end{proof}
 
+\begin{lemma}[Rotation and linearity of transport pairs]
+\label{lem:transport-pair-rotation}
+\uses{def:transport-pair, def:reflections, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.rotLift_dipoleFlow,
+ NoEmbeddedEigenvalues.IsOrbitUnion.preimage_rotLift,
+ NoEmbeddedEigenvalues.IsOrbitUnion.inter,
+ NoEmbeddedEigenvalues.classicalL0_comp_rotLift,
+ NoEmbeddedEigenvalues.HasWeakL0On.comp_rotLift,
+ NoEmbeddedEigenvalues.HasWeakL0On.add,
+ NoEmbeddedEigenvalues.IsTransportPair.mono,
+ NoEmbeddedEigenvalues.IsTransportPair.comp_rotLift,
+ NoEmbeddedEigenvalues.IsTransportPair.const_mul,
+ NoEmbeddedEigenvalues.IsTransportPair.add}
+\leanok
+The quarter rotation $R(x,y)=(y,-x)$ commutes with the dipole flow and,
+for differentiable $\phi$, with $L_0$:
+\[
+ R\varphi_t(p)=\varphi_t(Rp),\qquad
+ L_0(\phi\circ R)=(L_0\phi)\circ R.
+\]
+If $(v,f)$ is a transport pair on $U$, then $(v\circ R,f\circ R)$ is
+one on $R^{-1}U$, with the same real frequency $\lambda$.
+Restriction to a smaller open union of orbits, complex scalar multiples,
+and addition of pairs on the same domain also preserve transport pairs.
+Open unions of orbits are closed under binary intersections and rotation
+preimages. In particular, the original $H^2$ forcing hypothesis is retained,
+without stronger smoothness or a choice of new spatial representatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-flow, lem:affine-jet-pullback, lem:weak-derivative-basic,
+ lem:collar-rotation-character}
+\leanok
+Since $Y(Rp)=RY(p)$, the rotated trajectory solves the same initial-value
+problem as the trajectory from $Rp$; uniqueness gives the flow identity.
+The affine chain rule gives
+$\partial_x(\phi\circ R)=-(\partial_y\phi)\circ R$ and
+$\partial_y(\phi\circ R)=(\partial_x\phi)\circ R$.
+The two sign changes give the displayed $L_0$ identity.
+For weak transport, pull back a test function by $R^{-1}$ and change
+variables by the volume-preserving rotation. Local integrability and the
+actual test support are preserved. The affine weak-jet pullback preserves
+$H^2$ on the preimage domain. Linearity follows from genuine integrability
+against the compactly supported tests and the linear Sobolev operations;
+restriction uses the original fields on the smaller domain.
+\end{proof}
+
+\begin{lemma}[Rotation-invariant transport neighbourhood]
+\label{lem:transport-rotation-neighbourhood}
+\uses{def:transport-pair, def:cell-arcs, def:reflections}
+\lean{NoEmbeddedEigenvalues.rotLift_mem_closure_cellSquare,
+ NoEmbeddedEigenvalues.rotLift_mem_saddleSet,
+ NoEmbeddedEigenvalues.exists_rotationInvariant_transport_neighbourhood}
+\leanok
+Rotation preserves the closed cell and its boundary saddles.
+If $U$ is a bounded open union of orbits containing the closed cell,
+there is a bounded open union of orbits $V$ such that
+\[
+ \overline\Cell\subset V\subset U,\qquad R^{-1}V=V.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-pair-rotation, lem:quarter-cell-cover}
+\leanok
+Take $V=\bigcap_{j=0}^3 R^{-j}U$.
+Rotation preserves the open cell, hence its closure by continuity.
+It also maps the saddle lattice into itself. Thus the closed cell lies
+in every set in this intersection. Finite intersections preserve the
+open-orbit property, $R^4=\mathrm{id}$ gives $R^{-1}V=V$, and $V\subset U$
+gives boundedness.
+\end{proof}
+
+\begin{definition}[Quarter-character projection of a raw field]
+\label{def:transport-quarter-projection}
+\uses{def:reflections}
+\lean{NoEmbeddedEigenvalues.quarterCharacterProjection}
+\leanok
+For any complex number $\kappa$ and raw field $F:\R^2\to\C$, define
+\[
+ P_\kappa F(p)=\frac14\bigl(F(p)+\kappa^3F(Rp)
+       +\kappa^2F(R^2p)+\kappa F(R^3p)\bigr).
+\]
+\end{definition}
+
+\begin{lemma}[Quarter-character projections of transport pairs]
+\label{lem:transport-quarter-projections}
+\uses{def:transport-quarter-projection, def:transport-pair,
+ def:quarter-character, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterCharacterProjection_rotLift,
+ NoEmbeddedEigenvalues.quarterCharacterProjection_sum,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterCharacterProjection,
+ NoEmbeddedEigenvalues.continuousOn_quarterCharacterProjection,
+ NoEmbeddedEigenvalues.quarterCharacterProjection_congr_ae,
+ NoEmbeddedEigenvalues.quarterCharacterProjection_zero_at_saddles}
+\leanok
+If $\kappa^4=1$, then $P_\kappa F(Rp)=\kappa P_\kappa F(p)$ everywhere,
+and, for every raw $F$,
+\[
+ P_1F+P_{-1}F+P_iF+P_{-i}F=F
+ \quad\hbox{pointwise}.
+\]
+Let $(v,f)$ be a transport pair on a rotation-invariant $U$.
+For every complex $\kappa$, $(P_\kappa v,P_\kappa f)$ is a transport pair
+on $U$ with the same frequency. If $g$ is continuous on $U$ and equals $f$
+a.e.\ there, then $P_\kappa g$ is continuous on $U$ and equals $P_\kappa f$
+a.e.\ there. Zeros of $g$ at all four cell saddles persist under projection.
+No global measurability or a.e.\ equality outside $U$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-pair-rotation, lem:transport-rotation-neighbourhood,
+ lem:collar-rotation-character}
+\leanok
+Expand the four-term formula. The character identity uses only
+$R^4=\mathrm{id}$ and $\kappa^4=1$; summing the four explicit characters
+cancels every nonidentity rotation. Rotation and linearity preserve the
+transport pair on the same invariant domain. The same finite sum of the
+original continuous forcing is continuous, since $R(U)=U$.
+Restrict volume preservation to $U$ before pulling back each a.e.\ equality
+$f=g$. This identifies the projected raw forcing with the projected supplied
+representative without making assignments on exceptional orbits.
+Finally each rotated boundary saddle is again a boundary saddle, so every
+term in its projected continuous forcing value is zero.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
@@ -1908,16 +2034,19 @@ at its four corners, then $v/d\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:zero-saddle-character-mass, lem:reflection-algebra,
- lem:symmetries-commute}
-Intersect the four rotated neighbourhoods and decompose into quarter
-characters $\kappa\in\{1,-1,i,-i\}$. Rotation and linearity preserve the
-transport pair, and each projected continuous forcing still vanishes
-at the corners.
-Lemma~\ref{lem:zero-saddle-character-mass} gives a full-cell $v_\kappa/d$
-norm for each character. Sum the four components to recover the original
-$v/d$. Their collars may be different: each norm has already been
-extended to the whole physical cell, so no common cutoff is needed.
+\uses{lem:transport-rotation-neighbourhood, lem:transport-pair-rotation,
+ lem:transport-quarter-projections, lem:zero-saddle-character-mass}
+\leanok
+Choose the invariant neighbourhood $V\subset U$ and restrict the original
+pair and its supplied forcing to $V$.
+For each $\kappa\in\{1,-1,i,-i\}$, the projected pair has a continuous
+forcing representative zero at all four corners and the required character
+on every annulus. Lemma~\ref{lem:zero-saddle-character-mass} therefore gives
+$P_\kappa v/d\in L^2(\Cell)$.
+Finite addition of these genuine norms and the pointwise projection sum
+recover the original $v/d$. The component collars may differ: each norm has
+already been extended to the whole cell, so no common cutoff is needed.
+Both signs of $\lambda$ are included.
 \end{proof}
 
 \begin{lemma}[First transport gain]

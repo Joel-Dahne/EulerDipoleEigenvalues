@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.Transport
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.WeightedNumerators
+import NoEmbeddedEigenvalues.ZeroSaddleTransportGain
 
 /-!
 # Weighted cellwise transport regularity interfaces
@@ -21,16 +22,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set
-
-/-- The first gain when the continuous forcing vanishes at the four cell saddles
-(`lem:transport-first-gain-zero`). No pointwise representative of v is used. -/
-theorem transport_first_gain_zero {lam : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hb : Bornology.IsBounded U)
-    (hcell : closure cellSquare ⊆ U) {g : ℝ × ℝ → ℂ}
-    (hg : ContinuousOn g U) (hfg : f =ᵐ[volume.restrict U] g)
-    (hzero : ∀ P ∈ saddleSet, P ∈ closure cellSquare → g P = 0) :
-    MemLp (fun p ↦ v p / (saddleDist p : ℂ)) 2 (volume.restrict cellSquare) := by
-  sorry
 
 /-- Weighted forcing gives the second mass gain and cellwise physical H¹, together
 with weak recentered quarter derivatives (`lem:weighted-transport-h1`). -/

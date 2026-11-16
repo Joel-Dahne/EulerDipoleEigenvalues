@@ -199,21 +199,21 @@ weights and local versus global regularity.
    The original transport pair supplies the first weak gradient; coarea gives
    actual integrable fiber energy E, and |N′|² ≤ K E/h + K/(h√h), uniformly in
    every real frequency on one collar. No global numerator H² hypothesis is used.
-   **Zero-saddle character first gain is admission-free.**
-   `ZeroSaddleCellMass.lean` proves the full physical-cell v/d norm for any
-   supplied κ⁴ = 1 character (`lem:zero-saddle-character-mass`), both frequency
-   signs and the original continuous forcing representative.
-   Interior Hardy and first-derivative cell summation give C/√h ∈ L² from
-   local H¹ and an integrable h|N′|² majorant, without a second numerator jet
-   or quotient trace. Canonical ACL endpoint reconstruction and exact
-   exponential time moments avoid a logarithmic loss, with actual fiber
-   integrability and no assigned raw endpoint values.
-   The generic area/covering layer is in `QuarterCellMass.lean`: rotations
-   preserve a.e. characters on the supplied collar, without global
-   measurability of raw functions; h ≤ d controls the interior complement.
-   **Next:** construct the four projected transport pairs on a rotation-invariant
-   neighbourhood and recombine (`lem:transport-first-gain-zero`), still admitted.
-   No common collar is needed once each component has its full-cell norm.
+   **First transport gain with zero saddle values is admission-free**
+   (`lem:transport-first-gain-zero`), with its verbatim original statement in
+   `ZeroSaddleTransportGain.lean`; `WeightedTransport.lean` reexports it.
+   A rotation-invariant neighbourhood retains the original transport pair.
+   Four pointwise complex character projections preserve its frequency,
+   forcing H², supplied continuous representative and corner zeros.
+   Zero-saddle first mass for one quarter character
+   (`lem:zero-saddle-character-mass`) supplies the four full-cell norms;
+   finite addition recovers the original v/d. Both frequency signs and all
+   four characters are covered, without raw endpoint assignments or a common
+   collar. The scalar branch needs only local numerator H¹ and integrable
+   h|N′|² energy, not the stronger second-jet division hypotheses.
+   **Next:** the nonzero-saddle forcing reduction for First transport gain
+   (`lem:transport-first-gain`), still admitted. Its completion would also close
+   the admission frontier of the periodic first gain.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.
    **Next targets:** the two transport gains with their original transport pairs,
