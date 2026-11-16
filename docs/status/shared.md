@@ -212,8 +212,19 @@ weights and local versus global regularity.
    Periodic first transport gain (`cor:transport-first-gain-periodic`) and
    First eigenfunction saddle gain (`prop:saddle-first-gain`) now also have
    zero transitive admissions.
-   **Next:** Second transport gain (`lem:transport-second-gain`) with its
-   original continuous forcing, specified weak derivatives and weighted norms.
+   **Second-gain mass infrastructure is admission-free:** Second-mass estimate
+   on a complete cell (`lem:phase-cell-second-mass-estimates`) and Second-mass
+   phase-cell division (`lem:phase-cell-second-mass-division`) give C/h ∈ L²
+   from local numerator H¹, resonant cancellation and N′ ∈ L². No N″,
+   quotient derivative or trace is needed. Second weighted mass from an
+   exponential quarter bound (`lem:quarter-second-mass`) turns this amplitude
+   and an exp(-(2-δ)|t|) remainder into actual raw-profile v/d² mass,
+   with an integrable h^(-δ) remainder for every 0 < δ < 1.
+   **Next:** Second transport gain (`lem:transport-second-gain`) remains admitted.
+   Derive N′ ∈ L² from the original specified weighted weak gradient and
+   continuous forcing values, reconstruct using canonical ACL endpoints,
+   preserve these weighted hypotheses under the four character projections,
+   and assemble the full physical-cell norm. The original statement is unchanged.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.
    **Next targets:** Second transport gain and the weighted H¹/trace inputs,

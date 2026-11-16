@@ -177,6 +177,7 @@ import NoEmbeddedEigenvalues.QuarterReconstruction
 import NoEmbeddedEigenvalues.QuarterMeasureTransport
 import NoEmbeddedEigenvalues.QuarterFiberIntegrals
 import NoEmbeddedEigenvalues.QuarterFirstMass
+import NoEmbeddedEigenvalues.QuarterSecondMass
 import NoEmbeddedEigenvalues.QuarterRotation
 import NoEmbeddedEigenvalues.QuarterTimeDerivative
 import NoEmbeddedEigenvalues.SaddleTransportWeights
@@ -218,6 +219,7 @@ import NoEmbeddedEigenvalues.QuarterScalars
 import NoEmbeddedEigenvalues.PhaseCellEstimates
 import NoEmbeddedEigenvalues.PhaseCellMassEstimates
 import NoEmbeddedEigenvalues.PhaseCellMassDivision
+import NoEmbeddedEigenvalues.PhaseCellSecondMass
 import NoEmbeddedEigenvalues.PhaseCellDivision
 import NoEmbeddedEigenvalues.QuarterPhaseCells
 import NoEmbeddedEigenvalues.WeightedNumerators

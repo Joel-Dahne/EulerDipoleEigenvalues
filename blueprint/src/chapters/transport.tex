@@ -1254,6 +1254,45 @@ Thus one may take $K=8B^6$ on the same collar, for either sign of
 $\lambda$ and every character admitting the displayed central zero.
 \end{proof}
 
+\begin{lemma}[Second-mass estimate on a complete cell]
+\label{lem:phase-cell-second-mass-estimates}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.phase_cell_second_mass_estimates}
+\leanok
+For every real $\lambda\ne0$ there are $K>0$ and $0<r<1$, independent
+of the character and numerator, with the following property.
+Let $\kappa\in\C$ and
+\[
+ 0<a<z<b<r,\quad D(z)=0,\quad
+ |\Phi_\lambda(a)-\Phi_\lambda(z)|
+ =|\Phi_\lambda(b)-\Phi_\lambda(z)|=\pi.
+\]
+If $N\in H^1(a,b)$ has specified derivative $N_1$ and $N(z)=0$, then
+the ordinary quotient $C=N/D$ satisfies $C/h\in L^2(a,b)$ and
+\[
+ \int_a^b |C(h)/h|^2\,dh
+ \le K\int_a^b |N_1(h)|^2\,dh.
+\]
+No second numerator derivative, quotient derivative or endpoint trace is
+required. The character need only satisfy the displayed central zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-divisor-inverse-factor, lem:hardy-interior-linear}
+\leanok
+Set $U=N/(h-z)$. Interior Hardy establishes its actual L2 integrability
+and $\int|U|^2\le8\int|N_1|^2$.
+For the inverse divisor factor, $DR=h-z$ and
+$|R(h)|\le Bz\le B^2h$ throughout the closed cell.
+Hence $|RU/h|\le B^2|U|$, first giving a genuine L2 norm and then
+\[
+ \int|RU/h|^2\le B^4\int|U|^2\le8B^4\int|N_1|^2.
+\]
+Away from the single central point, $D\ne0$ by $DR=h-z$, and
+$N/D=RU$. Its totalized value at that point does not affect either
+integrability or the energy. Take $K=8B^4$ on the same collar.
+\end{proof}
+
 \begin{lemma}[Uniform complete-cell division estimates]
 \label{lem:phase-cell-estimates}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval}
@@ -1363,6 +1402,38 @@ Lemma~\ref{lem:countable-cell-energy}; hence summation establishes
 genuine global L2 integrability before any totalized global energy
 integral is used. The cells cover $(0,e_0)$ up to countably many
 endpoints. Set $\eta=e_0$.
+\end{proof}
+
+\begin{lemma}[Second-mass phase-cell division]
+\label{lem:phase-cell-second-mass-division}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.phase_cell_second_mass_division}
+\leanok
+Let $\lambda\ne0$, $\kappa^4=1$ and $h_0>0$.
+Suppose $N$ has compatible local interval H1 data $(N,N_1)$ on
+$(0,h_0)$, vanishes at every divisor zero there, and
+$N_1\in L^2(0,h_0)$.
+Then some $0<\eta<h_0$ is a complete-cell endpoint, the ordinary
+quotient $C=N/D$ satisfies $C/h\in L^2(0,\eta)$, and
+$D\ne0$ a.e.\ on this collar.
+No quotient derivative, continuous extension or canonical trace at zero
+is asserted.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:phase-cell-second-mass-estimates, lem:complete-phase-cells,
+ lem:quarter-divisor-ae, lem:countable-cell-energy}
+\leanok
+Choose complete cells below both the original cutoff and the uniform
+second-mass cutoff, inside a collar where divisor zeros are null.
+The preceding lemma bounds each cell's squared mass by
+$K\int|N_1|^2$ and supplies its genuine L2 norm.
+The single nonnegative integrable density $|N_1|^2$ allows
+Lemma~\ref{lem:countable-cell-energy} to sum these estimates.
+The cells cover $(0,e_0)$ up to their countably many endpoints.
+Set $\eta=e_0$. This is a first-derivative mass argument, distinct from
+the H2 division theorem below which also constructs a quotient derivative
+and canonical zero trace.
 \end{proof}
 
 \begin{lemma}[Phase-cell division]
@@ -1717,6 +1788,50 @@ The right side is an actual integrable level function.
 Apply Lemma~\ref{lem:quarter-fiber-summation}.
 Estimating by exponential moments, rather than interval length times
 a supremum, avoids a logarithmic loss on the amplitude energy.
+\end{proof}
+
+\begin{lemma}[Second weighted mass from an exponential quarter bound]
+\label{lem:quarter-second-mass}
+\uses{def:cell-separatrix-collar, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.memLp_quarter_div_saddleDist_sq_of_exp_bound}
+\leanok
+Let $0<b<1$, $c>0$, $\alpha,\beta\ge0$, $0<\delta<1$, and suppose
+\[
+ c e^{-|t|}\le d(\gamma_h(t))
+ \qquad(0<h<b,\ |t|\le L(h)).
+\]
+Let $V$ be a.e.\ strongly measurable on $Q_b$, and let
+$q/h\in L^2(0,b)$. If for a.e.\ $h$ and a.e.\ $t\in(-L(h),L(h))$
+\[
+ |V(h,t)|\le\alpha|q(h)|+\beta e^{-(2-\delta)|t|},
+\]
+then $V(h,t)/d(\gamma_h(t))^2\in L^2(Q_b,dh\,dt)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-fiber-summation, lem:exponential-time-moment, lem:period-coarse}
+\leanok
+The distance bound gives
+\[
+ |V/d^2|^2
+ \le \frac{2\alpha^2|q(h)|^2}{c^4}e^{4|t|}
+       +\frac{2\beta^2}{c^4}e^{2\delta|t|}\quad\hbox{a.e.}
+\]
+Both majorants are continuous and integrable on each finite time window.
+They establish genuine square integrability of the raw weighted profile
+before its energy integral is used.
+Exact time moments and $e^{L(h)}\sqrt h\le e^2$ give
+\[
+ \int_{-L(h)}^{L(h)}|V/d^2|^2\,dt
+ \le \frac{2\alpha^2e^8}{c^4}|q(h)/h|^2
+      +\frac{2\beta^2e^{4\delta}}{\delta c^4}h^{-\delta}.
+\]
+Indeed $\int e^{4|t|}\le e^8/h^2$ and
+$\int e^{2\delta|t|}\le e^{4\delta}h^{-\delta}/\delta$ on the window.
+The latter uses $\delta>0$; its level integral is finite because
+$\delta<1$. The two terms therefore form an actual integrable level
+majorant. Apply Lemma~\ref{lem:quarter-fiber-summation}.
+Neither a jointly selected ACL family nor raw endpoint values are needed.
 \end{proof}
 
 \begin{lemma}[Zero-saddle numerator derivative estimate]
@@ -2204,11 +2319,11 @@ $v/d^2\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:numerator-zeros, lem:quarter-divisor-geometry,
- lem:orbit-saddle-distance, lem:orbit-level-derivatives,
+\uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
+ lem:numerator-moving-endpoints, lem:phase-cell-second-mass-division,
+ lem:quarter-second-mass, lem:orbit-saddle-distance, lem:orbit-level-derivatives,
  lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
- lem:hardy-endpoint, lem:orbit-coordinates-area,
- lem:reflection-algebra, lem:symmetries-commute}
+ lem:orbit-coordinates-area, lem:transport-quarter-projections}
 Decompose into quarter characters as above; the weighted hypotheses are
 preserved by rotation. In the differentiated numerator, Cauchy--Schwarz
 with complementary weight $d^{2-2\delta}$ gives
@@ -2218,7 +2333,8 @@ with complementary weight $d^{2-2\delta}$ gives
 \]
 Here $\int d^{2-2\delta}dt$ is bounded since $\delta<1$; the endpoint term
 uses $|f(p_\pm)|\le Ch^{1-\delta/2}$. By coarea and $\delta<1$,
-$N'\in L^2(0,h_0)$. On a phase cell the divisor bound and Hardy give
+$N'\in L^2(0,h_0)$. Lemma~\ref{lem:phase-cell-second-mass-division}
+sums the complete-cell estimates
 \[
  \int_{I_j}\frac{|C(h)|^2}{h^2}dh
  \le C_\lambda\int_{I_j}|N'|^2dh.
@@ -2230,8 +2346,11 @@ Reconstruction from the nearer endpoint therefore yields
  \le C_\lambda\frac{|C(h)|^2}{h^2}+Ch^{-\delta}.
 \]
 Indeed the squared tail times $d^{-4}$ is bounded by $Ce^{2\delta|t|}$,
-whose integral is $O(h^{-\delta})$. Sum over the phase cells and use
-coarea. Both terms are integrable because $0<\delta<1$.
+whose integral is $O(h^{-\delta})$.
+Once the canonical reconstruction bound is transferred a.e.\ to the original
+raw profile, Lemma~\ref{lem:quarter-second-mass} supplies its genuine L2 norm.
+Use coarea and the finite quarter-character sum to recover the physical-cell
+norm. Both level terms are integrable because $0<\delta<1$.
 \end{proof}
 
 \section{Transport with weighted forcing}
