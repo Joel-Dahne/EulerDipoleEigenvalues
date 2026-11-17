@@ -220,10 +220,20 @@ weights and local versus global regularity.
    exponential quarter bound (`lem:quarter-second-mass`) turns this amplitude
    and an exp(-(2-δ)|t|) remainder into actual raw-profile v/d² mass,
    with an integrable h^(-δ) remainder for every 0 < δ < 1.
+   **Subcritical first numerator derivative is admission-free**
+   (`lem:subcritical-numerator-derivative`). The original specified first weak
+   gradient gives integrable weighted fiber energy Eδ, compatible local H¹
+   and actual global L² of N′, with |N′|² ≤ K Eδ + K h^(-δ).
+   One collar and majorant work for every real frequency, without second
+   numerator derivatives or gradient-ray traces. Weak uniqueness supplies the
+   original gradient's unweighted L² norm; it is not replaced by a new jet.
+   **Subcritical scalar quotient mass is admission-free**
+   (`lem:subcritical-quotient-mass`): resonant cancellation and second-mass
+   division now give C/h ∈ L² for the original forcing and each supplied
+   fourth-root character. This uses the exact Fin 2 first-gradient hypotheses.
    **Next:** Second transport gain (`lem:transport-second-gain`) remains admitted.
-   Derive N′ ∈ L² from the original specified weighted weak gradient and
-   continuous forcing values, reconstruct using canonical ACL endpoints,
-   preserve these weighted hypotheses under the four character projections,
+   Reconstruct from canonical ACL endpoints with the exp(-(2-δ)|t|) forcing
+   bound, preserve the weighted hypotheses under four character projections,
    and assemble the full physical-cell norm. The original statement is unchanged.
    Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
    remains open.

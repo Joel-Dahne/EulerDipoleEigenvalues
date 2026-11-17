@@ -1608,6 +1608,52 @@ $\Gamma_k(h,t)=R^k\gamma_h(t)$ for $k=0,1,2,3$.
 Thus $v_k=v\circ\Gamma_k$ denotes the separately recentered quarter profile.
 \end{definition}
 
+\begin{lemma}[Global cell bound from corner forcing growth]
+\label{lem:cell-forcing-growth}
+\uses{def:cells, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.exists_cell_forcing_rpow_bound}
+\leanok
+Let $U\subset\R^2$ be bounded and contain the closed cell, and let $g$
+be continuous on $U$. For $s>0$, suppose there are $C,\epsilon>0$ with
+$|g(p)|\le Cd(p)^s$ for $p\in\Cell$ with $d(p)<\epsilon$.
+Then there is $K>0$ with $|g(p)|\le Kd(p)^s$ on the whole cell.
+No growth bound away from the corners is assumed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The closed cell is compact and lies in the continuity domain, so
+$|g|\le M$ there. On $d\ge\epsilon$, use
+$|g|\le |M|\le |M|d^s/\epsilon^s$.
+Take $K=\max(C,|M|/\epsilon^s)+1$ and combine with the supplied
+near-corner bound. This retains the original continuous representative.
+\end{proof}
+
+\begin{lemma}[Orbit bounds from pointwise forcing growth]
+\label{lem:subcritical-forcing-orbit-bounds}
+\uses{def:period, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.forcing_rpow_orbit_bounds}
+\leanok
+Let $s,K>0$ and suppose $|g(p)|\le Kd(p)^s$ on $\Cell$.
+There are $M>0$ and $0<h_0<1/2$ such that
+\[
+ |g(\gamma_h(t))|\le Me^{-s|t|}\quad(|t|\le L(h)),\qquad
+ |g(\gamma_h(t))|\le Mh^{s/2}\quad(|t|=L(h))
+\]
+for every $0<h<h_0$. No continuity, character or frequency hypothesis
+is needed beyond the displayed pointwise growth bound.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-saddle-distance, lem:orbit-coordinates-inverse}
+\leanok
+The orbit lies in the cell. Its distance satisfies
+$d(\gamma_h(t))\le Be^{-|t|}$ on a small quarter collar and
+$d(\gamma_h(\pm L(h)))\le\pi\sqrt h$ at the endpoints.
+Raise these nonnegative bounds to $s$ and multiply by $K$.
+One may use the common constant $M=K(|B|^s+\pi^s)+1$.
+\end{proof}
+
 \begin{lemma}[Zero-saddle forcing decay]
 \label{lem:zero-saddle-forcing-decay}
 \uses{def:sobolev-local, def:period, def:cell-arcs}
@@ -1717,6 +1763,68 @@ giving both fiber integrability and the integrable level mass.
 The same argument for the L2 zero extension gives the actual L2
 sections. No globally measurable representative is substituted
 on exceptional orbits.
+\end{proof}
+
+\begin{lemma}[Weighted quarter-gradient energy]
+\label{lem:weighted-quarter-gradient}
+\uses{def:quarter-jet-data, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterWeightedGradient_energy_integrable}
+\leanok
+Let $0<b\le1$, $s\in\R$, and suppose
+$D_{[j]}/d^s\in L^2(\Cell)$ for $j=0,1$.
+Then $E_s=\mathcal J_{1,s}\in L^1(0,b)$.
+On almost every level its density is genuinely integrable, and each
+raw weighted component
+$D_{[j]}(\gamma_h(t))/d(\gamma_h(t))^s$ lies in
+$L^2([-L(h),L(h)])$.
+No global measurability outside the cell or weak second jet is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-l2-pullback, lem:quarter-gradient-energy}
+\leanok
+Pull back the two actual weighted L2 functions to the joint strip.
+The sum of their squared norms is precisely $\rho_{1,s}$ and is
+integrable there. Fiber summation gives its integrable level energy;
+L2 slicing gives the two weighted sections. The two endpoints have
+measure zero, so the same norms hold on the closed time window.
+\end{proof}
+
+\begin{lemma}[Weighted fixed-time numerator bound]
+\label{lem:weighted-numerator-bulk}
+\uses{def:quarter-jet-data, def:period, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.norm_integral_mul_sq_le,
+ NoEmbeddedEigenvalues.norm_add_sq_le,
+ NoEmbeddedEigenvalues.continuous_orbit_level_derivative,
+ NoEmbeddedEigenvalues.quarterForcingLevelDerivative_weighted_integral_bound}
+\leanok
+Fix $0<h<1$, $s\in\R$, $C\ge0$ and $A\in\R$.
+Suppose the weighted components $D_{[j]}\circ\gamma_h/d^s$ have
+actual L2 norms on $[-L,L]$, $d>0$ there, and
+\[
+ |\partial_h\gamma_h(t)|\le C/d(\gamma_h(t)),\qquad
+ \int_{-L}^{L}d(\gamma_h(t))^{2s-2}\,dt\le A.
+\]
+For every real $\mu$ the oscillatory bulk integrand is genuinely integrable,
+and
+\[
+ \left|\int_{-L}^{L}G_D(h,t)e^{-i\mu t}\,dt\right|^2
+ \le 2C^2A\,\mathcal J_{1,s}(h).
+\]
+No derivative or pointwise endpoint value of $D$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-regularity, lem:dipole-flow}
+\leanok
+Pair $F_j=D_{[j]}\circ\gamma_h/d^s$ with
+$w_j=d^s\partial_h\gamma_{h,j}e^{-i\mu t}$.
+Positivity of $d$ and smoothness of the orbit-level vector make $w_j$
+continuous on the compact time window, hence L2. Thus $w_jF_j$ is
+actually integrable. The coordinate norm bound gives
+$|w_j|\le Cd^{s-1}$, so $\int|w_j|^2\le C^2A$.
+Apply integral Cauchy--Schwarz to each component and
+$|x+y|^2\le2(|x|^2+|y|^2)$ to their sum. The phases all have modulus one.
 \end{proof}
 
 \begin{lemma}[Endpoint reconstruction preserves forcing decay]
@@ -1885,6 +1993,109 @@ $K=4C^2A+8B^2M^2+1$, taking nonnegative geometric constants.
 All collars are chosen before $h$ and $\mu$; every oscillatory phase
 has modulus one. The same specified gradient and continuous forcing
 occur in the weak formula, the coarea energy and the estimate.
+\end{proof}
+
+\begin{lemma}[Subcritical first numerator derivative]
+\label{lem:subcritical-numerator-derivative}
+\uses{def:transport-pair, def:numerator-derivative, def:quarter-jet-data,
+ def:sobolev-local, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc.aestronglyMeasurable_derivative,
+ NoEmbeddedEigenvalues.quarterNumeratorDerivative_subcritical_sq_le,
+ NoEmbeddedEigenvalues.IsTransportPair.subcritical_numerator_estimates,
+ NoEmbeddedEigenvalues.IsTransportPair.subcritical_numerator_estimates_of_first_gradient}
+\leanok
+Let $(v,f)$ be a transport pair on bounded $U$ containing the closed cell,
+and let $g$ be its supplied continuous forcing representative.
+Let $\delta<1$, suppose $|g|\le Cd^{2-\delta}$ near the cell corners,
+and let $D_j$ be the original specified weak partial derivatives of $f$
+on $U$, with $D_j/d^{2-\delta}\in L^2(\Cell)$.
+Use $D_{[j]}=D_j$; the unused list entries may be set to zero.
+There are $K>0$ and $0<h_0<1/2$, independent of the real frequency $\mu$,
+such that $E_\delta=\mathcal J_{1,2-\delta}\in L^1(0,h_0)$ and the
+candidate $N_{1,\mu}$ of Definition~\ref{def:numerator-derivative}
+is a specified local weak derivative of $N_{\mu,g}$, with
+\[
+ N_{\mu,g}\in H^1_{\mathrm{loc}}(0,h_0),\qquad
+ N_{1,\mu}\in L^2(0,h_0).
+\]
+On one common a.e.\ set of levels the weighted fiber density and every
+oscillatory bulk integrand are genuinely integrable, and for every real $\mu$
+\[
+ |N_{1,\mu}(h)|^2\le K E_\delta(h)+K h^{-\delta}.
+\]
+The supplied first gradient is not replaced. No quarter character, second
+numerator derivative or gradient-ray trace is assumed. Positivity of
+$\delta$ is needed only in the subsequent second-mass reconstruction,
+not for this numerator estimate.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cell-forcing-growth, lem:subcritical-forcing-orbit-bounds,
+ lem:weighted-quarter-gradient, lem:weighted-numerator-bulk,
+ lem:numerator-moving-endpoints, lem:weak-derivative-unique, lem:sobolev-congr-ae,
+ lem:orbit-level-derivatives, lem:orbit-saddle-distance,
+ lem:orbit-time-integrals, lem:period-derivative-bounds}
+\leanok
+Transfer H2 to the original continuous $g$. Weak uniqueness identifies each
+supplied $D_j$ with the corresponding L2 derivative supplied by H2 on $U$;
+a.e.\ congruence makes it also a weak derivative of $g$.
+Thus the weak moving-endpoint formula uses exactly this gradient and the
+original continuous endpoint values, giving compatible local H1 data.
+
+The weighted energy is integrable by
+Lemma~\ref{lem:weighted-quarter-gradient}.
+Since $2-2\delta>0$, the complementary time moment is uniformly bounded
+on a small collar. Lemma~\ref{lem:weighted-numerator-bulk}, with
+$s=2-\delta$, bounds the bulk square by $2C_V^2A E_\delta$.
+The original pointwise growth extends to the cell and gives endpoint bounds
+$Mh^{(2-\delta)/2}$. With $|L'|\le B/h$, the squared endpoint flux is
+at most $4B^2M^2h^{-\delta}$, since
+$(h^{(2-\delta)/2})^2/h^2=h^{-\delta}$.
+The two-term square bound gives the asserted estimate, for example with
+$K=4|C_V|^2|A|+8B^2M^2+1$.
+
+Choose the common collar before $h$ and $\mu$. Local interval H1 data
+make the specified derivative a.e.\ strongly measurable on each compact
+subinterval; a countable open subcover gives measurability on the whole
+collar. Finally $KE_\delta+Kh^{-\delta}$ is actually integrable because
+$\delta<1$. Domination establishes the genuine global L2 derivative norm,
+not merely an inequality between totalized energy integrals.
+\end{proof}
+
+\begin{lemma}[Subcritical scalar quotient mass]
+\label{lem:subcritical-quotient-mass}
+\uses{def:transport-pair, def:quarter-character, def:numerator, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.subcritical_quarterQuotient_memLp}
+\leanok
+Let $(v,f)$ be a transport pair on bounded $U$ containing the closed cell,
+with its original continuous forcing representative $g$.
+Let $\delta<1$ and assume the pointwise forcing growth and specified
+weighted first-gradient hypotheses of
+Lemma~\ref{lem:subcritical-numerator-derivative}.
+If the original fields $v,f$ have quarter character $\kappa$, $\kappa^4=1$,
+on $0<h<r$ with $r>0$, there is a complete-cell endpoint
+$0<\eta<\min(r,1/2)$ such that
+\[
+ C/h\in L^2(0,\eta),\qquad C=N_{\lambda,g}/D_{\lambda,\kappa},\qquad
+ D_{\lambda,\kappa}\ne0\quad\hbox{a.e. on }(0,\eta).
+\]
+This is the ordinary quotient of the original continuous forcing's numerator.
+No second numerator derivative, quotient derivative, or independently assumed
+scalar regularity is needed. Physical reconstruction is a separate step.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:subcritical-numerator-derivative, lem:numerator-zeros,
+ lem:phase-cell-second-mass-division}
+\leanok
+The subcritical estimate supplies a common collar $h_0<1/2$, compatible
+local H1 data for $N_{\lambda,g}$, and an actual L2 first derivative made
+from the original specified first gradient.
+Set $b=\min(r,h_0)$ and restrict the two original character identities to
+that annulus. Resonant cancellation gives $N=0$ at every divisor zero
+in $(0,b)$. Apply Lemma~\ref{lem:phase-cell-second-mass-division} with
+exactly this derivative and its restricted L2 norm, giving $\eta<b$.
+Neither the forcing representative nor the weak gradient is changed.
 \end{proof}
 
 \begin{lemma}[Zero-saddle scalar quotient mass]
@@ -2320,13 +2531,13 @@ $v/d^2\in L^2(\Cell)$.
 
 \begin{proof}
 \uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
- lem:numerator-moving-endpoints, lem:phase-cell-second-mass-division,
- lem:quarter-second-mass, lem:orbit-saddle-distance, lem:orbit-level-derivatives,
- lem:orbit-time-integrals, lem:period-coarse, lem:period-derivative-bounds,
- lem:orbit-coordinates-area, lem:transport-quarter-projections}
+ lem:subcritical-numerator-derivative, lem:phase-cell-second-mass-division,
+ lem:subcritical-quotient-mass, lem:quarter-second-mass, lem:cell-forcing-growth, lem:subcritical-forcing-orbit-bounds,
+ lem:orbit-saddle-distance, lem:orbit-coordinates-area, lem:transport-quarter-projections}
 Decompose into quarter characters as above; the weighted hypotheses are
-preserved by rotation. In the differentiated numerator, Cauchy--Schwarz
-with complementary weight $d^{2-2\delta}$ gives
+preserved by rotation. Apply Lemma~\ref{lem:subcritical-numerator-derivative}
+to each component with its specified weak gradient. Its complementary-weight
+Cauchy--Schwarz estimate gives
 \[
  |N'(h)|^2\le CE_\delta(h)+Ch^{-\delta},\qquad
  E_\delta(h)=\int_{-L}^L\frac{|\nabla f(\gamma_h(t))|^2}{d^{4-2\delta}}dt.
@@ -2339,6 +2550,8 @@ sums the complete-cell estimates
  \int_{I_j}\frac{|C(h)|^2}{h^2}dh
  \le C_\lambda\int_{I_j}|N'|^2dh.
 \]
+Together with resonant cancellation, this gives the original-forcing scalar
+mass of Lemma~\ref{lem:subcritical-quotient-mass}.
 The pointwise forcing bound gives tails $Ce^{-(2-\delta)|t|}$.
 Reconstruction from the nearer endpoint therefore yields
 \[
