@@ -228,16 +228,16 @@ weights and local versus global regularity.
    good-level set. Recursive H² gives the original ordered jet's finite norms.
    The pair constructs second entries when only the first gradient is supplied,
    retaining that gradient exactly (`lem:transport-second-bulk-data`); no Hessian
-   or scalar regularity premise is added. These are bulk candidate estimates,
-   not yet the numerator's second derivative. Local H² uses fixed-window weak
-   differentiation and genuine ACL averages, without gradient-ray values.
-   Canonical rough-window flux and weak second scalar flux are proved
-   (`lem:rough-window-flux`, `lem:second-window-flux`). The original forcing's
-   actual endpoint values have local H¹ derivatives from the supplied gradient
-   (`lem:orbit-tangential-trace`), with no new collar restriction. These use
-   normalized-angle traces; their affine-ray identification or weighted energy
-   is not inferred. Next specialize the flux to the fixed-time second bulk,
-   control its canonical endpoint terms and obtain hN″ L², then assemble
+   or scalar regularity premise is added. The actual second weak moving-endpoint
+   formula is proved (`lem:numerator-second-moving-endpoints`), identifying N″
+   with this fixed-time second bulk and canonical normalized-angle endpoint terms.
+   It retains the original continuous numerator, its ordinary first derivative,
+   and every ordered jet entry; no mixed weak entries are commuted. The pair
+   constructs the jet while keeping the supplied first gradient exactly, on any
+   existing collar for every real frequency. The first bulk is only equated a.e.
+   to its continuous scalar representative (`lem:first-bulk-moving-endpoints`).
+   No global weighted endpoint norm or affine-ray trace comparison is inferred.
+   Next control these canonical endpoint terms to obtain hN″ L², then assemble
    spatial weak-gradient/H¹/gluing.
    Target these scalar data directly rather than the full logarithmic package;
    the full angular corner trace remains separate.

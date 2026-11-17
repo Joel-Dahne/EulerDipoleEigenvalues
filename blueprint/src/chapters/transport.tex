@@ -1030,8 +1030,8 @@ regularity to the same continuous representative.
 \begin{remark}
 Compact level bounds do not control their constants as $h\downarrow0$.
 This proves local H2, not the global weighted second-derivative norm.
-The latter still requires the fixed-time bulk cancellation and canonical
-endpoint terms.
+The global norm requires the fixed-time bulk estimate and weighted control
+of the canonical endpoint terms in Lemma~\ref{lem:numerator-second-moving-endpoints}.
 \end{remark}
 
 \begin{definition}[Normalized action--angle gradient contraction]
@@ -3858,10 +3858,234 @@ No generic existence equivalence for weak jets is used.
 
 \begin{remark}
 These are bulk estimates, not numerator regularity assertions.
-The identity placing $G_{2,D}$ in a weak second moving-endpoint
-formula and the canonical endpoint terms are separate from these norms.
+Lemma~\ref{lem:numerator-second-moving-endpoints} places $G_{2,D}$ in the
+actual weak second moving-endpoint formula. The canonical endpoint terms
+and their weighted norms are separate from the fixed-time bulk bounds.
 For example, constant forcing has zero fixed-time bulk, while its
 zero-frequency quarter integral is $2L(h)f$ and varies with the period.
+\end{remark}
+
+\begin{lemma}[Level identity under time rescaling]
+\label{lem:time-rescaling-level}
+\lean{NoEmbeddedEigenvalues.timeRescaling_level_identity}
+\leanok
+Let $E$ be a real normed space, $S$ be differentiable at $h$ with derivative
+$s$, and $F:\R^2\to E$ be differentiable at $(h,\theta S(h))$.
+For $R(x,u)=(x,uS(x))$,
+\[
+ S(h)\partial_h(F\circ R)(h,\theta)
+ =S(h)\partial_hF(h,\theta S(h))
+   +\theta s\,\partial_\theta(F\circ R)(h,\theta).
+\]
+No nonvanishing or sign condition on $S(h)$ is required.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Write the three derivatives as the same Fr\'echet derivative of $F$
+applied to $(1,\theta s)$, $(1,0)$ and $(0,S(h))$.
+Linearity and
+$S(h)(1,\theta s)=S(h)(1,0)+\theta s(0,S(h))$
+give the identity without division.
+\end{proof}
+
+\begin{definition}[Canonical first-bulk endpoint potential]
+\label{def:first-bulk-endpoint-trace}
+\uses{def:quarter-jet-data, def:period, def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.quarterFirstBulkTrace}
+\leanok
+For any supplied family $D$ and real frequency $\mu$, put
+\[
+ \mathcal T_{\mu,D,\theta}(h)=
+ \tau_{s=0}\left[(\theta+s)e^{-i\mu(\theta+s)S(h)}
+       G_D(h,(\theta+s)S(h))\right].
+\]
+The normal variable is normalized angle. This is the section-germ trace
+of the entire rough potential, not its raw value on the endpoint curve.
+\end{definition}
+
+\begin{lemma}[Weak moving-endpoint derivative of the first bulk]
+\label{lem:first-bulk-moving-endpoints}
+\uses{def:first-bulk-endpoint-trace, def:second-level-bulk,
+ def:weak-derivative-local, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.quarterFirstBulk_hasIntervalH1_rep,
+ NoEmbeddedEigenvalues.quarterFirstBulk_hasIntervalH1_of_ae_eq}
+\leanok
+Let open $U$ contain the cell. Suppose
+$D_{[j]},D_{[i,j]}\in L^2(U)$ and
+$\partial_iD_{[j]}=D_{[i,j]}$ weakly for every ordered pair.
+Write
+\[
+ \mathcal B_{1,\mu,D}(h)=\int_{-L(h)}^{L(h)}
+     G_D(h,t)e^{-i\mu t}\,dt .
+\]
+On every $0<a<b<h_0<1$ there is a representative
+$A=\mathcal B_{1,\mu,D}$ a.e. with
+\[
+ \operatorname{HasIntervalH1}\left(a,b;A,\
+ \mathcal B_{2,\mu,D}+S'
+   (\mathcal T_{\mu,D,1/8}-\mathcal T_{\mu,D,-1/8})\right).
+\]
+Any supplied continuous representative of the raw first bulk has this same
+H1 pair. No planar continuity or symmetry of the ordered second entries is
+assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:time-rescaling-level, lem:orbit-level-vectors-smooth,
+ lem:action-angle-weak-level, lem:action-angle-weak-angular,
+ lem:weak-derivative-product, lem:coarea, lem:rough-window-flux,
+ lem:numerator-moving-endpoints}
+\leanok
+Set $V(h,t)=\partial_h\gamma_h(t)$, $W=\partial_hV$ and
+$U_D(h,\theta)=G_D(h,\theta S(h))$.
+Apply the time-rescaling identity separately to $\gamma$ and $V$.
+Together with the weak chain and product rules these give
+\[
+ \partial_h\!\left(Se^{-i\mu S\theta}U_D\right)
+ =Se^{-i\mu S\theta}G_{2,D}(h,S\theta)
+   +S'\partial_\theta\!\left(\theta e^{-i\mu S\theta}U_D\right).
+\]
+Each original ordered Hessian entry stays in its position.
+On a compact band, the geometric and phase coefficients and their derivatives
+are bounded. Coarea supplies actual L2 pullbacks of both jet orders.
+The weak derivatives and the transverse potential therefore have genuine
+L2 norms; the decomposition also supplies the second bulk's compact-band norm.
+Apply the rough-window flux lemma on $[-1/8,1/8]$ and change variables
+back to time in both bulk integrals.
+\end{proof}
+
+\begin{definition}[Numerator endpoint coefficients and flux]
+\label{def:numerator-endpoint-flux}
+\uses{def:numerator, def:period, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterEndpointCoefficient,
+ NoEmbeddedEigenvalues.quarterNumeratorEndpointFlux}
+\leanok
+For $\varepsilon\in\{-1,1\}$ put
+\[
+ p_\varepsilon(h)=\gamma_h(\varepsilon L(h)),\qquad
+ r_{\mu,\varepsilon}(h)=L'(h)e^{-i\mu\varepsilon L(h)},\qquad
+ E_\mu(h)=\sum_{\varepsilon=\pm1}
+    r_{\mu,\varepsilon}(h)g(p_\varepsilon(h)).
+\]
+\end{definition}
+
+\begin{definition}[Canonical second moving-endpoint candidate]
+\label{def:numerator-second-derivative}
+\uses{def:numerator-endpoint-flux, def:action-angle-pullback-gradient,
+ def:interior-section-trace, def:first-bulk-endpoint-trace, def:second-level-bulk}
+\lean{NoEmbeddedEigenvalues.quarterNumeratorEndpointDerivative,
+ NoEmbeddedEigenvalues.quarterNumeratorSecondDerivative}
+\leanok
+For the supplied first entries $D_1=(D_{[0]},D_{[1]})$, set
+\[
+ T_{\varepsilon,D}(h)=\tau_{s=0}
+   [\mathcal A_h(D_1)(h,\varepsilon/8+s)],
+ \qquad
+ E_{1,\mu,D}(h)=\sum_{\varepsilon=\pm1}
+ \left(r_{\mu,\varepsilon}'(h)g(p_\varepsilon(h))
+       +r_{\mu,\varepsilon}(h)T_{\varepsilon,D}(h)\right).
+\]
+Define
+\[
+ \mathcal C_{\mu,g,D}(h)=\mathcal B_{2,\mu,D}(h)
+   +S'(h)(\mathcal T_{\mu,D,1/8}(h)-\mathcal T_{\mu,D,-1/8}(h))
+   +E_{1,\mu,D}(h).
+\]
+These are definitions; no weak identity or weighted norm is asserted here.
+\end{definition}
+
+\begin{lemma}[Canonical derivative of the numerator endpoint flux]
+\label{lem:numerator-endpoint-flux-derivative}
+\uses{def:transport-pair, def:sobolev-local, def:h1-interval,
+ def:numerator-endpoint-flux, def:numerator-second-derivative,
+ def:numerator-derivative}
+\lean{NoEmbeddedEigenvalues.quarterNumeratorDerivative_eq_bulk_add_endpoints,
+ NoEmbeddedEigenvalues.contDiffOn_quarterEndpointCoefficient,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterNumeratorEndpointFlux_hasIntervalH1}
+\leanok
+For the original transport pair, continuous forcing representative $g$,
+and supplied weak first entries $D_{[j]}$, the coefficients $r_{\mu,\varepsilon}$
+are smooth on $(0,1)$ and the original first candidate splits exactly as
+$N_{1,\mu}=\mathcal B_{1,\mu,D}+E_\mu$.
+On each $0<a<b<h_0<1$,
+\[
+ \operatorname{HasIntervalH1}(a,b;E_\mu,E_{1,\mu,D}).
+\]
+No continuous gradient is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:orbit-tangential-trace, lem:h1-smooth-multiplier}
+\leanok
+The endpoint scalar coefficient and its derivative are bounded on each
+compact level interval. Multiply the actual endpoint-value H1 pairs by
+these smooth coefficients and add them.
+The phase at negative time is $e^{i\mu L}$, so elementary complex algebra
+also gives the exact first-candidate splitting.
+\end{proof}
+
+\begin{lemma}[Second weak moving-endpoint numerator formula]
+\label{lem:numerator-second-moving-endpoints}
+\uses{def:transport-pair, def:sobolev-local, def:local-weak-jets,
+ def:numerator-second-derivative, def:numerator, def:h1-interval,
+ def:h2-interval, def:h2-local-interval}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_hasIntervalH2_derivative,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_hasIntervalH2_derivative_of_rep_jet,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_second_derivative_h2Loc,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_second_derivative_ae,
+ NoEmbeddedEigenvalues.IsTransportPair.exists_quarterNumerator_second_derivative_with_rep,
+ NoEmbeddedEigenvalues.IsTransportPair.exists_quarterNumerator_second_derivative}
+\leanok
+Let the original transport pair be defined on $U$ containing the closed cell,
+and retain its continuous forcing representative $g$ and any supplied true
+second weak jet $D$ of either the original forcing or $g$.
+For every $0<h_0<1$ and every real $\mu$,
+\[
+ \operatorname{HasIntervalH2Loc}
+   (0,h_0;N_\mu,N_\mu',\mathcal C_{\mu,g,D}).
+\]
+On each compact interior interval, the ordinary $N_\mu''$ equals
+$\mathcal C_{\mu,g,D}$ a.e.
+If only the original first gradient was supplied, one can construct a second
+jet retaining those entries as functions, and the continuous representative
+if needed. The same representative and jet work for every real frequency
+and every collar below level one.
+No Hessian, scalar regularity, boundedness of $U$, forcing growth or weighted
+norm is an extra input. In particular any existing all-frequency weighted
+numerator collar can be reused unchanged.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:numerator-local-h2, lem:numerator-moving-endpoints,
+ lem:numerator-endpoint-flux-derivative, lem:first-bulk-moving-endpoints,
+ lem:interval-h1-continuous-derivative, lem:specified-jet-lp,
+ lem:specified-first-jet-extension, lem:local-h2-continuous-representative}
+\leanok
+The original H2 forcing supplies genuine finite norms for the given ordered jet.
+On a compact level interval, local numerator H2 makes $N_\mu'$ continuous,
+and the first moving-endpoint formula gives
+$N_\mu'-E_\mu=\mathcal B_{1,\mu,D}$ a.e.
+This difference is a continuous scalar representative, even if the raw first
+bulk has exceptional-level values.
+Apply its weak moving-endpoint derivative, then add the canonical H1 pair
+for $E_\mu$. The value function is exactly the same $N_\mu'$ at every
+interior point. Together with the original first H1 pair this proves the
+displayed H2 data and the a.e. second-derivative identity.
+For a jet of $g$, temporarily replace only its nil entry by $f$ and transfer
+the first weak identities by a.e. congruence. Every nonempty entry remains
+pointwise unchanged, so the displayed second candidate is exactly the supplied one.
+The supplied-gradient extension and continuous-representative construction
+provide the original-input producer; neither shrinks the collar.
+\end{proof}
+
+\begin{remark}[Local identity versus the weighted second norm]
+All gradient boundary terms in this formula are normalized-angle germ traces.
+No raw weak-gradient values on rays are used.
+The identity identifies the genuine fixed-time second bulk as one part of
+$N_\mu''$; it does not by itself bound the endpoint terms as $h\downarrow0$.
+Their critical weighted control, or the trace-chart comparison needed to use
+the affine-ray energy, is separate from this local differentiation theorem.
 \end{remark}
 
 \begin{lemma}[Weighted numerator estimates]
@@ -3894,17 +4118,16 @@ already supplied by $H^2$, not extra regularity.
   lem:weighted-first-numerator, lem:weighted-endpoint-value-transport,
   lem:weighted-numerators-h1, lem:weighted-half-numerator,
   lem:weighted-numerator-subinterval, lem:second-numerator-bulk,
-  lem:weighted-numerator-local-h2, lem:second-window-flux,
+  lem:weighted-numerator-local-h2, lem:numerator-second-moving-endpoints,
   lem:orbit-tangential-trace}
 Obtain the full and half first-numerator data and local numerator H2 from
 Lemma~\ref{lem:weighted-numerator-local-h2}, and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
 Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
 spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.
-On compact level intervals, canonical weak flux is available from
-Lemma~\ref{lem:second-window-flux}, and differentiation of the actual endpoint
-values from Lemma~\ref{lem:orbit-tangential-trace}.
-The latter uses normalized-angle traces: changing to another transverse chart
+On compact level intervals, the actual second weak derivative is given by
+Lemma~\ref{lem:numerator-second-moving-endpoints}.
+It uses normalized-angle traces: changing to another transverse chart
 requires identification of the canonical trace families.
 In the formulas below, gradient values at $p_\pm$ mean Sobolev traces,
 not arbitrary point values.
