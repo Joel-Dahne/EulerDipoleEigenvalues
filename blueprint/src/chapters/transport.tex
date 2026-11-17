@@ -4079,13 +4079,191 @@ The supplied-gradient extension and continuous-representative construction
 provide the original-input producer; neither shrinks the collar.
 \end{proof}
 
+\begin{lemma}[Tangential derivatives of the continuous forcing on endpoint rays]
+\label{lem:quarter-ray-tangential-derivative}
+\uses{def:quarter-endpoint-rays, def:canonical-quarter-gradient-trace,
+ def:sobolev-local, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.quarterEndpointRay_hasIntervalH1}
+\leanok
+Let open $U$ contain the closed cell, let $g\in H^2(U)$ be continuous,
+and retain specified weak first derivatives $D_0,D_1$.
+Write $G_{+,j}$ and $G_{-,j}$ for their canonical affine endpoint-ray traces.
+For every $0<a<b<1/2$, the original ray values have interval H1 pairs
+\[
+ \bigl(r\mapsto g(0,-\pi+r),\ G_{+,1}\bigr),\qquad
+ \bigl(r\mapsto g(\pi-r,0),\ -G_{-,0}\bigr).
+\]
+No continuous gradient or raw gradient-ray value is used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:tangential-interior-trace, lem:quarter-ray-affine-chart,
+ lem:affine-jet-pullback, lem:weak-jet-regularity, lem:quarter-endpoint-cones}
+\leanok
+Pull back to the affine ray chart on
+$(a,b)\times(-a/2,a/2)$, which lies inside the cell.
+For the positive ray, apply tangential trace differentiation to $g$,
+whose radial weak derivative is $D_1$.
+For the negative ray, apply it to $-g$ so that the radial weak derivative
+is the unscaled $D_0$, then multiply the scalar H1 pair by $-1$.
+H2 supplies the indicated transverse derivative of each original first entry
+and all three finite norms. No mixed entries are commuted.
+\end{proof}
+
+\begin{definition}[Canonical normalized endpoint level trace]
+\label{def:quarter-endpoint-level-trace}
+\uses{def:action-angle-pullback-gradient, def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.quarterEndpointLevelTrace}
+\leanok
+For the supplied Cartesian first gradient $D$, define
+\[
+ \mathscr T_D^\varepsilon(h)=
+ \tau_{s=0}\bigl[\mathcal A_h(D)(h,\varepsilon/8+s)\bigr],
+ \qquad \varepsilon\in\{-1,1\}.
+\]
+This is the trace of the normalized level contraction, including period drift.
+\end{definition}
+
+\begin{lemma}[Tangential endpoint traces agree by scalar differentiation]
+\label{lem:endpoint-tangential-trace-identity}
+\uses{def:transport-pair, def:sobolev-local, def:quarter-endpoint-level-trace,
+ def:canonical-quarter-gradient-trace, def:quarter-endpoint-rays}
+\lean{NoEmbeddedEigenvalues.ae_quarterEndpointRadius,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterEndpointLevelTrace_eq_ae}
+\leanok
+For the original pair, continuous forcing representative $g$, and supplied weak
+first gradient $D$, put $r(h)=2\arcsin\sqrt h$.
+If $b<1$ and $r(b)<1/2$, then almost everywhere on $(0,b)$,
+\[
+ \mathscr T_D^+(h)=r'(h)G_{+,1}(r(h)),\qquad
+ \mathscr T_D^-(h)=-r'(h)G_{-,0}(r(h)),
+ \qquad r'(h)=\frac1{\sqrt h\sqrt{1-h}}.
+\]
+Only the tangential contraction is identified, not the individual gradient
+traces in different transverse charts.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-ray-tangential-derivative, lem:orbit-tangential-trace,
+ lem:local-h1-classical-derivative, lem:nondegenerate-scalar-ae,
+ lem:weighted-endpoint-value-transport, lem:sobolev-congr-ae}
+\leanok
+Both descriptions differentiate the same original continuous endpoint value:
+$g(\gamma_h(\varepsilon L(h)))=g(q_\varepsilon(r(h)))$, where
+$q_+(r)=(0,-\pi+r)$ and $q_-(r)=(\pi-r,0)$.
+The radius is injective with strictly positive derivative on $(0,b)$.
+Change of variables pulls back the affine ray's exceptional derivative set;
+compatible local H1 data give the normalized derivative almost everywhere.
+The scalar chain rule and uniqueness of the classical derivative give the
+two identities. Thus no general covariance theorem for transverse traces is needed.
+\end{proof}
+
+\begin{lemma}[Critical L2 norm of the normalized endpoint-value derivative]
+\label{lem:weighted-endpoint-tangential-trace}
+\uses{def:transport-pair, def:sobolev-local, def:quarter-endpoint-level-trace}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.quarterEndpointLevelTrace_memLp}
+\leanok
+Under the original pair and supplied-gradient hypotheses, retain a continuous
+forcing representative and suppose $D_j/d^{3/2}\in L^2$ on the cell.
+For every $0<b\le1/256$,
+\[
+ \mathscr T_D^+,\ \mathscr T_D^-\in L^2(0,b).
+\]
+The forcing-value weight $f/d^2$ is unnecessary for this conclusion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:endpoint-tangential-trace-identity, lem:weighted-gradient-ray-traces}
+\leanok
+The affine gradient traces satisfy $G_{\varepsilon,j}(r(h))/\sqrt h\in L^2$.
+The remaining factor $1/\sqrt{1-h}$ is measurable and bounded by two.
+Multiply these genuine L2 functions by that bounded coefficient, including
+the minus sign on the negative ray, and transfer by the a.e. scalar identity.
+\end{proof}
+
+\begin{lemma}[Weighted bounds for endpoint scalar coefficients]
+\label{lem:endpoint-coefficient-bounds}
+\uses{def:numerator-endpoint-flux}
+\lean{NoEmbeddedEigenvalues.hasDerivAt_quarterEndpointCoefficient,
+ NoEmbeddedEigenvalues.quarterEndpointCoefficient_weighted_bounds}
+\leanok
+The coefficient $r_{\mu,\varepsilon}=L'e^{-i\mu\varepsilon L}$ satisfies
+\[
+ r_{\mu,\varepsilon}'=
+ \bigl(L''-i\mu\varepsilon(L')^2\bigr)e^{-i\mu\varepsilon L}
+ \quad(0<h<1).
+\]
+There is $0<b<1/2$ such that for every real $\mu$ there is $K_\mu\ge0$
+with
+\[
+ |h r_{\mu,\varepsilon}(h)|\le K_\mu,\qquad
+ |h^2r_{\mu,\varepsilon}'(h)|\le K_\mu
+\]
+for every $h\in(0,b)$ and $\varepsilon=\pm1$.
+The collar is independent of frequency.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:period-derivative-bounds}
+\leanok
+Differentiate the smooth coefficient, retaining the derivative of its phase.
+If $h|L'|\le C$ and $h^2|L''|\le C$, take
+$K_\mu=C+C^2|\mu|$ and restrict the period-bound collar to $h<1/256$.
+The phase has unit norm for either sign.
+\end{proof}
+
+\begin{lemma}[Weighted derivative of the numerator endpoint-value flux]
+\label{lem:weighted-numerator-endpoint-derivative}
+\uses{def:transport-pair, def:sobolev-local, def:numerator-second-derivative,
+ def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_endpoint_derivative,
+ NoEmbeddedEigenvalues.IsTransportPair.exists_weighted_numerator_endpoint_data}
+\leanok
+For the original pair and any continuous forcing representative $g$, retain
+the supplied weak first entries $D_{[j]}$ and suppose
+$f/d^2,D_{[j]}/d^{3/2}\in L^2$ on the cell.
+There is $0<b<1/2$, independent of frequency, such that for every real $\mu$,
+\[
+ h E_{1,\mu,D}\in L^2(0,b).
+\]
+No second-jet premise is needed for this norm.
+If only the original first gradient was given, the pair can construct $g$
+and a true second jet of the original forcing, retaining those first entries
+as functions; one representative, jet and collar work for all real frequencies.
+An already supplied continuous representative can be retained.
+This concerns the endpoint-value flux, not the first-bulk boundary potential.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-endpoint-tangential-trace, lem:endpoint-coefficient-bounds,
+ lem:weighted-endpoint-value-transport, lem:numerator-second-moving-endpoints}
+\leanok
+Put $u_\varepsilon(h)=g(\gamma_h(\varepsilon L(h)))$ and
+$D_1=(D_{[0]},D_{[1]})$. The endpoint-value estimate gives $u_\varepsilon/h\in L^2$.
+For each endpoint write
+\[
+ h\bigl(r_{\mu,\varepsilon}'u_\varepsilon
+       +r_{\mu,\varepsilon}\mathscr T_{D_1}^\varepsilon\bigr)
+ = (h^2r_{\mu,\varepsilon}')\,\frac{u_\varepsilon}h
+       +(hr_{\mu,\varepsilon})\,\mathscr T_{D_1}^\varepsilon .
+\]
+Each term is a bounded measurable coefficient times an actual L2 function.
+Add both endpoints. Transfer the forcing-value norm from $f$ to $g$ by a.e.
+congruence on the cell. The standing H2 forcing supplies the representative
+and second jet when needed, preserving every supplied first entry.
+\end{proof}
+
 \begin{remark}[Local identity versus the weighted second norm]
 All gradient boundary terms in this formula are normalized-angle germ traces.
 No raw weak-gradient values on rays are used.
 The identity identifies the genuine fixed-time second bulk as one part of
 $N_\mu''$; it does not by itself bound the endpoint terms as $h\downarrow0$.
-Their critical weighted control, or the trace-chart comparison needed to use
-the affine-ray energy, is separate from this local differentiation theorem.
+Lemma~\ref{lem:weighted-numerator-endpoint-derivative} controls $hE_{1,\mu,D}$
+by identifying the tangential derivative of the actual endpoint value.
+The first-bulk boundary potentials $\mathcal T_{\mu,D,\pm1/8}$ are different:
+they involve the fixed-time level vector and are not covered by that tangential
+identification. Their weighted norm is needed in addition to the second bulk
+and endpoint-value estimates before asserting global $hN_\mu''\in L^2$.
 \end{remark}
 
 \begin{lemma}[Weighted numerator estimates]
@@ -4119,7 +4297,7 @@ already supplied by $H^2$, not extra regularity.
   lem:weighted-numerators-h1, lem:weighted-half-numerator,
   lem:weighted-numerator-subinterval, lem:second-numerator-bulk,
   lem:weighted-numerator-local-h2, lem:numerator-second-moving-endpoints,
-  lem:orbit-tangential-trace}
+  lem:weighted-numerator-endpoint-derivative, lem:orbit-tangential-trace}
 Obtain the full and half first-numerator data and local numerator H2 from
 Lemma~\ref{lem:weighted-numerator-local-h2}, and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.

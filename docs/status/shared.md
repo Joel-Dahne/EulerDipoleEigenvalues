@@ -236,9 +236,16 @@ weights and local versus global regularity.
    constructs the jet while keeping the supplied first gradient exactly, on any
    existing collar for every real frequency. The first bulk is only equated a.e.
    to its continuous scalar representative (`lem:first-bulk-moving-endpoints`).
-   No global weighted endpoint norm or affine-ray trace comparison is inferred.
-   Next control these canonical endpoint terms to obtain hN″ L², then assemble
-   spatial weak-gradient/H¹/gluing.
+   The normalized endpoint-value derivative now has a genuine global L² norm
+   (`lem:weighted-endpoint-tangential-trace`): scalar derivative uniqueness
+   identifies its tangential contraction with the radius Jacobian times the
+   affine tangential gradient trace, without general trace-chart covariance.
+   The complete endpoint-value contribution hE₁ is L² on one all-frequency collar
+   (`lem:weighted-numerator-endpoint-derivative`), with the original forcing and
+   gradient; the original-input producer also retains the true ordered jet.
+   Next bound the distinct first-bulk boundary potentials to obtain hN″ L²,
+   then assemble spatial weak-gradient/H¹/gluing. Individual gradient traces
+   in the two transverse charts have not been identified.
    Target these scalar data directly rather than the full logarithmic package;
    the full angular corner trace remains separate.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge

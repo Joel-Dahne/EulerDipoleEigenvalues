@@ -5194,6 +5194,41 @@ the disjoint family. The resulting nonnegative integral is at most
 $K\int_SG<\infty$, proving the global L2 norm is finite.
 \end{proof}
 
+\begin{lemma}[Local interval H1 gives the classical derivative almost everywhere]
+\label{lem:local-h1-classical-derivative}
+\uses{def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc.hasDerivAt_ae}
+\leanok
+Compatible local interval H1 data $(F,D)$ on $(a,b)$ give
+$\operatorname{HasDerivAt}F(D(x))\,x$ for almost every $x\in(a,b)$.
+No global value or derivative norm is required.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The assertion holds on every compact interior interval.
+A countable interval cover globalizes its exceptional set.
+\end{proof}
+
+\begin{lemma}[Nondegenerate scalar parameters preserve almost-everywhere properties]
+\label{lem:nondegenerate-scalar-ae}
+\lean{NoEmbeddedEigenvalues.ae_comp_of_hasDerivWithinAt_ne_zero}
+\leanok
+Let $s,t\subset\R$ with $s$ measurable, and let $r,r_1:\R\to\R$
+be measurable. Suppose $r$ is injective on $s$, $r(s)\subset t$, and at
+each $x\in s$ it has derivative $r_1(x)\ne0$ within $s$.
+If a property $P$ holds almost everywhere on $t$, then $P(r(x))$ holds
+almost everywhere on $s$. The predicate $P$ need not be measurable.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Change of variables identifies the pushforward of
+$|r_1|\,dx$ on $s$ with Lebesgue measure on $r(s)$.
+Pull back the almost-everywhere assertion under that measure.
+The strictly positive density removes the weight without changing null sets.
+\end{proof}
+
 \begin{lemma}[Finite derivative globalizes local interval H1]
 \label{lem:h1-local-finite-derivative}
 \uses{def:h1-interval}
