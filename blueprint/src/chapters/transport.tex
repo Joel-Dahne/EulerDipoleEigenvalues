@@ -2988,6 +2988,193 @@ the five integrable masses as majorants. The unweighted $L^2$ data give
 measurability. No logarithmic weight is differentiated.
 \end{proof}
 
+\begin{lemma}[Quarter endpoint cones and moving endpoints]
+\label{lem:quarter-endpoint-cones}
+\uses{def:cartesian-ray-cone, def:quarter-endpoint-rays, def:orbit-coordinates,
+ def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterEndpointChart_cone,
+ NoEmbeddedEigenvalues.dipoleOrbit_quarterEndpointRay}
+\leanok
+For either endpoint chart $\Phi_\sigma$ and $(r,t)\in\mathcal C_{1/2}$,
+\[
+ \Phi_\sigma(r,t)\in\Cell,\qquad d(\Phi_\sigma(r,t))=r.
+\]
+For $0<h<1$, the moving endpoints satisfy
+\[
+ \gamma_h(-L(h))=\mathcal R_-(r(h)),\qquad
+ \gamma_h(L(h))=\mathcal R_+(r(h)),\qquad r(h)=2\arcsin\sqrt h,
+\]
+where $\mathcal R_\sigma$ are the fixed endpoint rays.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:saddle-distance-comparison, lem:period-orbit}
+\leanok
+The chart centers are $(\pi,0)$ and $(0,-\pi)$.
+In the product metric the distance to that center is
+$\max(r,|t|)=r<1/2<\pi/2$, so it realizes the saddle-distance infimum.
+The diagonal cell inequalities follow from $|t|<r<1/2$.
+For the orbit endpoints, use their diagonal coordinates
+$(\pm\arccos\sqrt h,\arccos\sqrt h)$ and
+$\arccos x=\pi/2-\arcsin x$.
+\end{proof}
+
+\begin{lemma}[Weighted forcing values on the quarter rays]
+\label{lem:weighted-quarter-ray-values}
+\uses{def:quarter-endpoint-rays, def:weak-derivative-local, def:sobolev-local,
+ def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.weighted_quarter_ray_values}
+\leanok
+Let open $U$ contain the closed cell, let $g$ be continuous on $U$,
+and specify its weak Cartesian derivatives $D_j$ there.
+If $g/d^2,D_j/d^{3/2}\in L^2(\Cell)$, then for both fixed rays
+\[
+ \frac{g(\mathcal R_\sigma(r))}{r\sqrt r}\in L^2(0,1/2).
+\]
+No gradient value on a ray is evaluated.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-endpoint-cones, lem:quarter-ray-affine-chart,
+ lem:affine-jet-pullback, lem:weighted-cone-trace}
+\leanok
+Pull back to the volume-preserving Cartesian endpoint chart.
+The weak transverse derivative is $D_1\circ\Phi_-$ or
+$D_0\circ\Phi_+$, with its original representative.
+On the cone $d\circ\Phi_\sigma=r$, so the forcing's weighted value
+norm is exactly the one required by Lemma~\ref{lem:weighted-cone-trace}.
+Multiplication of $D_j/r^{3/2}$ by $\sqrt r\le1$ gives its actual
+$D_j/r$ norm. Apply that lemma to the continuous pullback.
+\end{proof}
+
+\begin{lemma}[Weighted endpoint value transport]
+\label{lem:weighted-endpoint-value-transport}
+\uses{def:quarter-endpoint-rays, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.memLp_endpoint_value_of_ray,
+ NoEmbeddedEigenvalues.weighted_quarter_endpoint_values}
+\leanok
+If $B$ is continuous on $(0,\rho)$,
+$B(r)/(r\sqrt r)\in L^2(0,\rho)$,
+$b<1$ and $r(b)<\rho$, then $B(r(h))/h\in L^2(0,b)$.
+In particular, under Lemma~\ref{lem:weighted-quarter-ray-values}' hypotheses,
+for every $0<b\le1/256$ and either endpoint,
+\[
+ g(\mathcal R_\sigma(r(h)))/h\in L^2(0,b).
+\]
+The same collar works for both endpoints and all real frequencies.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-quarter-ray-values}
+\leanok
+The radius map is injective on $(0,1)$, with
+$r'(h)=1/(\sqrt h\sqrt{1-h})>0$ and $r(h)\le4\sqrt h$.
+Thus $r(h)^3\le64h^2r'(h)$.
+The one-dimensional Jacobian theorem transports the actual radial density
+$|B(r)|^2/r^3$ to an integrable majorant of $|B(r(h))|^2/h^2$.
+Continuity supplies level-side measurability, without presupposing
+the endpoint norm being proved.
+For $b\le1/256$, the radius bound gives $r(b)\le1/4<1/2$;
+apply the first assertion to each continuous forcing ray.
+\end{proof}
+
+\begin{lemma}[First numerator from weighted L2 forcing]
+\label{lem:weighted-first-numerator}
+\uses{def:transport-pair, def:numerator-derivative, def:quarter-jet-data,
+ def:weak-derivative-local, def:sobolev-local, def:h1-interval,
+ def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.quarterNumeratorDerivative_weighted_sq_le,
+ NoEmbeddedEigenvalues.IsTransportPair.weighted_first_numerator_estimates}
+\leanok
+Let $(v,f)$ be a transport pair on an open orbit neighbourhood containing
+the closed cell. Specify a continuous $g=f$ a.e.\ on that neighbourhood
+and the original weak Cartesian derivatives $D_j$ of $f$.
+Assume $f/d^2,D_j/d^{3/2}\in L^2(\Cell)$.
+Use $J_{[j]}=D_j$, with the unused list entries zero.
+There is $0<h_0<1/2$, independent of the real frequency $\mu$,
+such that the exact candidate $N_{1,\mu}$ of
+Definition~\ref{def:numerator-derivative} gives compatible local
+interval H1 data for $N_{\mu,g}$ on $(0,h_0)$ and
+$N_{1,\mu}\in L^2(0,h_0)$.
+Boundedness of the neighbourhood, quarter characters, a pointwise
+forcing bound and second numerator derivatives are not needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-endpoint-value-transport, lem:quarter-endpoint-cones,
+ lem:weighted-quarter-gradient, lem:weighted-numerator-bulk,
+ lem:numerator-moving-endpoints, lem:weak-derivative-unique,
+ lem:orbit-level-derivatives, lem:orbit-time-integrals,
+ lem:period-derivative-bounds}
+\leanok
+Transfer the forcing norm to the supplied continuous $g$ by a.e. agreement.
+Unweighted H2 and weak uniqueness give the original $D_j$ their unweighted
+L2 norms on the same neighbourhood; no derivative is replaced.
+The moving-endpoint formula supplies the specified local H1 data.
+
+Choose a collar below $1/256$ and the uniform geometric cutoffs.
+Weighted Cauchy--Schwarz bounds the bulk first derivative by
+$2C^2A\mathcal J_{1,3/2}$, where
+$|\partial_h\gamma|\le C/d$ and $\int d\,dt\le A$.
+The endpoint contribution has squared norm at most $2B^2P_g$,
+where $|L'|\le B/h$ and $P_g$ is the endpoint value energy.
+Consequently
+\[
+ |N_{1,\mu}|^2\le4C^2A\mathcal J_{1,3/2}+4B^2P_g .
+\]
+This bound holds on one common a.e. set for every real $\mu$.
+Both terms are genuinely integrable by the weighted-gradient and
+continuous endpoint-value results.
+A countable cover by compact interior intervals, on each of which the
+specified derivative is L2, supplies its global a.e. measurability.
+Domination then gives the actual derivative L2 norm. No half numerator or gradient-ray trace
+is used in this first-numerator step.
+\end{proof}
+
+\begin{lemma}[Second mass from weighted L2 forcing]
+\label{lem:weighted-transport-second-mass}
+\uses{def:transport-pair, def:weak-derivative-local, def:sobolev-local,
+ def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.weighted_transport_second_mass_with_rep,
+ NoEmbeddedEigenvalues.weighted_transport_second_mass}
+\leanok
+Let $(v,f)$ be a transport pair on a bounded open orbit neighbourhood
+containing the closed cell. Specify the original weak Cartesian
+derivatives $D_j$ of $f$ on that neighbourhood.
+If $f/d^2,D_j/d^{3/2}\in L^2(\Cell)$, then
+\[
+ v/d^2\in L^2(\Cell).
+\]
+A supplied continuous forcing representative may be retained throughout;
+otherwise use the continuous representative furnished by H2.
+There is no additional scalar-data, pointwise growth, parity or trace premise.
+Both signs of the nonzero real frequency are covered.
+This is the mass conclusion, not the spatial H1 or weak-quarter-gradient
+conclusion, of Lemma~\ref{lem:weighted-transport-h1}.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:local-h2-continuous-representative, lem:transport-rotation-neighbourhood,
+ lem:transport-quarter-projections, lem:weighted-quarter-projections,
+ lem:weighted-first-numerator, lem:weighted-transport-mass-data}
+\leanok
+Restrict to a rotation-invariant neighbourhood still containing the closed
+cell. Project the raw pair and the same continuous forcing.
+The supplied first gradient projects by the actual Cartesian chain rule;
+restricted rotations and finite L2 linearity preserve its weighted norms.
+Distance invariance also preserves the projected forcing's $d^{-2}$ norm.
+
+For each fourth-root character apply
+Lemma~\ref{lem:weighted-first-numerator} to the projected pair.
+It produces exactly the compatible first-numerator data consumed by
+Lemma~\ref{lem:weighted-transport-mass-data}.
+That lemma performs resonant cancellation, scalar mass division, canonical
+endpoint reconstruction, raw-profile summation, physical-cell extension
+and pointwise four-character recombination.
+Thus no first-numerator norm is left as an input.
+The component collars need not agree.
+\end{proof}
+
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local,
@@ -3013,7 +3200,11 @@ already supplied by $H^2$, not extra regularity.
 \begin{proof}
 \uses{lem:weighted-corner-trace, lem:trace-h2, lem:trace-l2,
   lem:period-derivative-bounds, lem:period-orbit, lem:coarea,
-  lem:orbit-level-derivatives, lem:orbit-time-integrals}
+  lem:orbit-level-derivatives, lem:orbit-time-integrals,
+  lem:weighted-first-numerator, lem:weighted-endpoint-value-transport}
+Obtain the first-numerator and continuous endpoint-value estimates from
+Lemmas~\ref{lem:weighted-first-numerator} and
+\ref{lem:weighted-endpoint-value-transport}.
 Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
 spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.
 On compact level intervals the Sobolev chain rule and the traces on the
@@ -4490,18 +4681,20 @@ follows from $f\in H^2$ on the given neighbourhood.
 
 \begin{proof}
 \uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
-  lem:transport-saddle-endpoint-energy, lem:transport-weighted-endpoint-energy,
-  lem:weighted-character-mass, lem:weighted-transport-mass-data,
+  lem:weighted-transport-second-mass,
   lem:sobolev-weak-jets, lem:weak-derivative-unique,
   lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
   lem:reflection-algebra, lem:symmetries-commute,
   lem:orbit-saddle-distance, lem:orbit-time-integrals,
   lem:orbit-coordinate-gradients, lem:orbit-level-derivatives, lem:coarea}
-Choose a second weak jet of the forcing; its first entries agree a.e.
+Lemma~\ref{lem:weighted-transport-second-mass} proves the mass conclusion
+from the original weighted hypotheses, using only first-numerator data.
+For the H1 and weak-gradient conclusions, choose a second weak jet of the
+forcing; its first entries agree a.e.
 with the supplied gradient by weak-derivative uniqueness.
 Decompose into the four quarter characters. Rotations preserve the
 weighted hypotheses. Numerator vanishing and phase-cell division give
-$C/h,C'\in L^2$. With $B$ from the preceding lemma,
+$C/h,C'\in L^2$. With $B$ from Lemma~\ref{lem:weighted-numerator-estimates},
 \[
  A(h)=z_h(0)=ie^{2i\lambda L(h)}C(h)+iB(h)
 \]
@@ -4509,35 +4702,12 @@ has $A'\in L^2$, since $L'C$ is controlled by $C/h$. Also $A\in L^2$:
 $B'$ is square integrable on a bounded interval, so $B$ is bounded
 once its value at one interior level is fixed.
 
-For the weighted vorticity estimate reconstruct from the nearer endpoint.
-The zero-endpoint case of Lemma~\ref{lem:transport-weighted-endpoint-energy}
-with exponent $a=2$, applied to the zero-started oscillatory primitive
-with canonical forcing $-if_h$, gives
-\[
- \int_{-L}^0 e^{-4t}\left|\int_{-L}^t
-          e^{i\lambda(t-u)}f_h(u)\,du\right|^2dt
- \le\frac14\int_{-L}^0 e^{-4t}|f_h(t)|^2dt .
-\]
-The positive half has the analogous estimate with integration from $L$.
-Since $d\asymp e^{-|t|}$ and both canonical endpoint values of $z_h$
-have modulus $|C|$, Lemma~\ref{lem:transport-saddle-endpoint-energy} gives
-\[
- \int_{-L}^L\frac{|v_h|^2}{d^4}\,dt
- \le C_\lambda\left(\frac{|C(h)|^2}{h^2}
-                   +\int_{-L}^L\frac{|f_h|^2}{d^4}\,dt\right).
-\]
-Lemma~\ref{lem:weighted-character-mass} supplies the actual raw-profile
-transfer, $h$-summation and full-cell extension.
-Lemma~\ref{lem:weighted-transport-mass-data} recombines the characters.
-This proves $v/d^2\in L^2$ from the first-numerator data, without a pointwise
-forcing bound, a subcritical exponent or a second numerator derivative.
-
 For the level derivative use midpoint reconstruction:
 \[
  \partial_hz_h(t)=e^{i\lambda t}A'(h)
        +i\int_0^t e^{i\lambda(t-u)}\partial_hf_h(u)\,du .
 \]
-The preceding lemma's subinterval estimate and $\int d^2\,dt\le C$
+Lemma~\ref{lem:weighted-numerator-estimates}' subinterval estimate and $\int d^2\,dt\le C$
 control $d\,\partial_hz_h$ in $L^2(dh\,dt)$.
 Since $d|\partial_hf_h|\le C|\nabla f_h|$, the same holds for
 $d\,\partial_hv_h$.

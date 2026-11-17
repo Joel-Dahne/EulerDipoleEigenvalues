@@ -213,15 +213,19 @@ weights and local versus global regularity.
    collar, raw endpoint values, gradient-ray traces or second numerator derivatives.
    Periodic first transport gain (`cor:transport-first-gain-periodic`) and
    First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
-   **Weighted reconstruction:** Raw quarter summation, physical-cell extension
-   and four-character mass assembly are proved from actual forcing/d² L² and
-   supplied first-numerator L² data (`lem:weighted-transport-mass-data`).
-   Canonical endpoint energy gives the uniform majorant without pointwise
-   forcing decay, second numerator derivatives, a common character collar or
-   jointly measurable ACL choices. Both frequency signs are covered.
+   **Weighted forcing mass:** Second mass from weighted L2 forcing
+   (`lem:weighted-transport-second-mass`) proves v/d² L² with the original
+   forcing/d² and supplied gradient/d^(3/2) hypotheses. Shrinking Cartesian
+   rectangle traces produce the continuous forcing's actual endpoint norm;
+   the exact first numerator derivative is L² on one collar for all real
+   frequencies. No scalar norm, pointwise decay, second numerator derivative
+   or gradient-ray trace is assumed. Raw-profile summation and four-character
+   assembly cover both frequency signs without a common component collar.
    Cellwise H¹ from weighted forcing (`lem:weighted-transport-h1`) remains
-   admitted: producing the scalar regularity from the original weighted
-   hypotheses, and weak-gradient/gluing assembly, are still needed.
+   admitted: the stronger scalar data and spatial weak-gradient/gluing
+   assembly are still needed; its mass conclusion is proved separately.
+   For ordinary H¹, target local numerator H² and hN″, B′ L² directly,
+   rather than the full quantitative/logarithmic numerator package.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
    zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
    (`lem:elliptic-local`). Weighted numerator estimates

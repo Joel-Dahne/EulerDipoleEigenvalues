@@ -3945,6 +3945,86 @@ contained in $V$. It is taken from below for $t_*=\pi/2$ and from above
 for $t_*=-\pi/2$.
 \end{definition}
 
+\begin{definition}[Cartesian interior-ray cone]
+\label{def:cartesian-ray-cone}
+\lean{NoEmbeddedEigenvalues.cartesianRayCone}
+\leanok
+For $R>0$ put
+\[
+ \mathcal C_R=\{(r,t):0<r<R,\ |t|<r\}.
+\]
+The interior ray is $t=0$; the radial variable is the first Cartesian
+coordinate, not Euclidean distance off that ray.
+\end{definition}
+
+\begin{lemma}[Weighted rectangle trace on a radial band]
+\label{lem:weighted-band-trace}
+\uses{def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.weighted_band_trace}
+\leanok
+Let $a>0$, $S_a=(a,2a)\times(-a,a)$, and suppose $F$ is continuous
+on $S_a$, with specified weak transverse derivative $\partial_t F=D$.
+If $F/r^2,D/r\in L^2(S_a)$, then
+$F(r,0)/(r\sqrt r)\in L^2(a,2a)$ and
+\[
+ \int_a^{2a}\frac{|F(r,0)|^2}{r^3}\,dr
+ \le16\int_{S_a}\left(\frac{|F|^2}{r^4}
+                         +\frac{|D|^2}{r^2}\right)\,dr\,dt.
+\]
+The constant is independent of $a$. Only continuous forcing values,
+not values of arbitrary weak representatives, are evaluated on the ray.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:interior-section-trace}
+\leanok
+On the bounded rectangle the weighted norms give actual unweighted L2 norms.
+The elementary trace estimate is
+\[
+ \int_a^{2a}|F(r,0)|^2dr
+ \le a^{-1}\int_{S_a}|F|^2+4a\int_{S_a}|D|^2.
+\]
+The Lean helper
+\texttt{HasWeakPartialOn.continuous\_rectangle\_trace} first identifies
+the canonical ACL trace with the continuous forcing on almost every section.
+The radial multiplier $(r\sqrt r)^{-1}$ is bounded on this band,
+so its actual trace L2 norm exists before its energy is compared.
+Use $r^{-3}\le a^{-3}$ on the trace and $r<2a$ in the bulk.
+The resulting coefficients $a^{-4}$ and $4a^{-2}$ are bounded by
+$16r^{-4}$ and $16r^{-2}$.
+\end{proof}
+
+\begin{lemma}[Weighted interior-ray trace in a cone]
+\label{lem:weighted-cone-trace}
+\uses{def:cartesian-ray-cone, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.weighted_cone_trace}
+\leanok
+Let $R>0$ and let $F$ be continuous on $\mathcal C_R$, with specified
+weak transverse derivative $\partial_tF=D$.
+If $F/r^2,D/r\in L^2(\mathcal C_R)$, then
+$F(r,0)/(r\sqrt r)\in L^2(0,R)$ and
+\[
+ \int_0^R\frac{|F(r,0)|^2}{r^3}\,dr
+ \le16\int_{\mathcal C_R}\left(\frac{|F|^2}{r^4}
+                                  +\frac{|D|^2}{r^2}\right)\,dr\,dt.
+\]
+No pointwise growth hypothesis or trace at the cone vertex is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-band-trace, lem:countable-cell-energy}
+\leanok
+Set $e_n=R2^{-n}$ and use disjoint radial bands
+$(e_{n+1},e_n)$ with transverse windows $(-e_{n+1},e_{n+1})$.
+Each rectangle lies in the cone. Zero-extend its nonnegative weighted
+bulk density from the whole cone and integrate in the transverse variable.
+Fubini gives one genuinely integrable radial majorant.
+The band estimate and Lemma~\ref{lem:countable-cell-energy}
+establish global L2 before any global Bochner energy is compared.
+The bands omit only countably many radii; summing the actual integrals
+then gives the stated bound.
+\end{proof}
+
 \begin{lemma}[Weighted trace at a corner]
 \label{lem:weighted-corner-trace}
 \uses{def:sobolev-local, def:local-weak-jets, def:corner-crossing-traces}
