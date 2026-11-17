@@ -1873,6 +1873,53 @@ sections. No globally measurable representative is substituted
 on exceptional orbits.
 \end{proof}
 
+\begin{lemma}[Actual quarter-jet energy at every order]
+\label{lem:quarter-jet-energy}
+\uses{def:quarter-jet-data, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterJet_energy_integrable}
+\leanok
+Let $b\le1$, $k\in\N$ and $s\in\R$.
+If $D_w/d^s\in L^2(\Cell)$ for every $|w|=k$, then
+$\mathcal J_{k,s}\in L^1(0,b)$.
+On one full-measure set of levels the density is genuinely integrable
+and every original time section
+$D_w(\gamma_h(t))/d(\gamma_h(t))^s$ belongs to
+$L^2([-L(h),L(h)])$, $|w|=k$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-l2-pullback, lem:quarter-gradient-energy}
+\leanok
+Pull each original entry to the joint strip and sum its integrable
+square norm over the finitely many words of length $k$.
+Zero extension and Fubini give actual density integrability and the
+integrable level energy. Countable intersection over words gives all
+sections on the same good-level set; interval endpoints are null.
+\end{proof}
+
+\begin{lemma}[Measurability of raw moving-strip integrals]
+\label{lem:quarter-strip-measurable-integrals}
+\uses{def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterStrip_integral}
+\leanok
+Let $b\le1$ and let $F$ be a.e.\ strongly measurable on $Q_b$.
+Then $h\mapsto\int_{-L(h)}^{L(h)}F(h,t)\,dt$ is a.e.\ strongly measurable
+on $(0,b)$, and almost every raw time section is a.e.\ strongly measurable
+on $[-L(h),L(h)]$.
+This asserts no integrability of these totalized integrals.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity, lem:period-orbit}
+\leanok
+Zero-extend the original field off the measurable strip.
+Product-measure a.e. measurability gives a.e. measurable sections and
+integrals without a global L1 hypothesis.
+For $0<h<b$, its time section is exactly the zero extension from
+$(-L(h),L(h))$. Positivity of the period converts its set integral
+to the signed interval integral; endpoints are null.
+\end{proof}
+
 \begin{lemma}[Weighted quarter-gradient energy]
 \label{lem:weighted-quarter-gradient}
 \uses{def:quarter-jet-data, def:cell-separatrix-collar}
@@ -3504,6 +3551,167 @@ Thus no first-numerator norm is left as an input.
 The component collars need not agree.
 \end{proof}
 
+\begin{definition}[Formal second level contraction and its bulk integral]
+\label{def:second-level-bulk}
+\uses{def:quarter-jet-data, def:dipole-flow, def:period}
+\lean{NoEmbeddedEigenvalues.quarterForcingSecondLevelDerivative,
+ NoEmbeddedEigenvalues.quarterSecondBulk}
+\leanok
+For the original ordered family $D$, put $V=\partial_h\gamma_h(t)$,
+$W=\partial_h^2\gamma_h(t)$ and
+\[
+ G_{2,D}(h,t)=
+ \sum_j W_jD_{[j]}(\gamma_h(t))+
+ \sum_{i,j}V_iV_jD_{[i,j]}(\gamma_h(t)),\qquad
+ \mathcal B_{2,\mu,D}(h)=\int_{-L(h)}^{L(h)}G_{2,D}(h,t)e^{-i\mu t}\,dt.
+\]
+These are definitions only. No weak second differentiation or
+moving-endpoint identity is asserted.
+\end{definition}
+
+\begin{lemma}[Pointwise second-level density bound]
+\label{lem:second-level-density-bound}
+\uses{def:second-level-bulk, def:quarter-jet-data}
+\lean{NoEmbeddedEigenvalues.quarterForcingSecondLevelDerivative_sq_le_density}
+\leanok
+At a point $(h,t)$ with $d=d(\gamma_h(t))>0$, suppose $C\ge1$,
+$|V|\le C/d$ and $|W|\le C/d^2$. Then
+\[
+ |G_{2,D}(h,t)|^2\le \frac{6C^4}{d^4}
+       \bigl(\rho_{1,0}(h,t)+\rho_{2,0}(h,t)\bigr).
+\]
+The four second-order entries remain ordered and are not commuted.
+\end{lemma}
+
+\begin{proof}
+\leanok
+There are two first-order and four second-order summands.
+Each coefficient has norm at most $C^2/d^2$, since $C\ge1$.
+The square norm of their sum is at most six times the sum of
+their squared norms, by finite Cauchy--Schwarz and the triangle inequality.
+That sum is exactly the specified pair of jet densities.
+\end{proof}
+
+\begin{lemma}[Joint measurability of the second level contraction]
+\label{lem:second-level-measurable}
+\uses{def:second-level-bulk, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterSecondLevelDerivative}
+\leanok
+If every $D_w$, $|w|\le2$, has its actual L2 norm on $\Cell$,
+then $G_{2,D}$ is jointly a.e.\ strongly measurable on $Q_b$ for $b\le1$.
+No globally measurable representative outside the cell is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-l2-pullback, lem:orbit-level-vectors-smooth}
+\leanok
+Each original raw jet entry has a.e. measurable pullback on the joint strip.
+The geometric coefficients are smooth on $0<h<1$.
+Finite products and sums preserve a.e. measurability on this same strip.
+\end{proof}
+
+\begin{lemma}[Actual second fixed-time bulk bound]
+\label{lem:second-numerator-bulk-bound}
+\uses{def:second-level-bulk, def:quarter-jet-data, def:period}
+\lean{NoEmbeddedEigenvalues.quarterForcingSecondLevelDerivative_integral_bound}
+\leanok
+Let $0<h<1$ and $C\ge1$. Suppose the first and second unweighted
+densities are integrable on the quarter-time interval,
+$G_{2,D}(h,\cdot)$ is a.e.\ strongly measurable there,
+$d>0$, $|V|\le C/d$, $|W|\le C/d^2$, and
+\[
+ \int_{-L(h)}^{L(h)}d^{-4}\,dt\le A/h^2.
+\]
+Then for every real $\mu$, the bulk integrand is genuinely integrable and
+\[
+ h^2|\mathcal B_{2,\mu,D}(h)|^2
+ \le6C^4A\bigl(\mathcal J_{1,0}(h)+\mathcal J_{2,0}(h)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:second-level-density-bound, lem:square-density-cauchy-schwarz,
+ lem:period-orbit}
+\leanok
+The phase has unit norm.
+Apply the square-density Cauchy--Schwarz lemma with
+$W=6C^4d^{-4}$ and $E=\rho_{1,0}+\rho_{2,0}$.
+The weight is integrable since the distance is positive and continuous
+on this compact time interval.
+Only after obtaining genuine complex integrability compare its integral.
+The inverse-fourth moment cancels the factor $h^2$.
+\end{proof}
+
+\begin{lemma}[Uniform second fixed-time bulk estimates]
+\label{lem:second-numerator-bulk}
+\uses{def:second-level-bulk, def:quarter-jet-data,
+ def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.second_numerator_bulk_estimates,
+ NoEmbeddedEigenvalues.MemSobolevOn.second_numerator_bulk_estimates}
+\leanok
+Suppose every $D_w$, $|w|\le2$, has an actual L2 norm on $\Cell$.
+There are $0<b<1/2$ and $K>0$ such that
+$\mathcal H=\mathcal J_{1,0}+\mathcal J_{2,0}\in L^1(0,b)$ and
+\[
+ h\mathcal B_{2,\mu,D}\in L^2(0,b)\qquad(\mu\in\R).
+\]
+On one full-measure set of levels both densities are genuinely
+integrable and, simultaneously for every $\mu$, the bulk integrand is
+integrable and $h^2|\mathcal B_{2,\mu,D}|^2\le K\mathcal H$.
+The same conclusion holds for any supplied second weak jet of
+$f\in H^2(U)$ on open $U\supset\Cell$, with those original ordered entries.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-jet-energy, lem:second-level-measurable,
+ lem:quarter-strip-measurable-integrals, lem:second-numerator-bulk-bound,
+ lem:orbit-level-derivatives, lem:orbit-time-integrals, lem:orbit-saddle-distance,
+ lem:specified-jet-lp}
+\leanok
+Choose one collar for the two geometric derivative bounds,
+the inverse-fourth time moment and positive saddle distance.
+Take $C=\max(1,C_0)$, $A=\max(0,A_0)$ and $K=6C^4A+1$.
+Fubini supplies both jet densities and raw a.e. measurable sections on
+one good-level set, independent of frequency.
+The bulk estimate holds there for every unit-modulus oscillatory phase.
+Joint measurability supplies the raw integral's level measurability;
+the genuinely integrable majorant $K\mathcal H$ proves its h-scaled L2 norm.
+For a supplied weak jet, Sobolev membership gives its finite norms by
+Lemma~\ref{lem:specified-jet-lp}, followed by restriction to the cell.
+\end{proof}
+
+\begin{lemma}[Transport pairs construct their second bulk data]
+\label{lem:transport-second-bulk-data}
+\uses{def:transport-pair, def:local-weak-jets, def:sobolev-local,
+ def:second-level-bulk, lem:second-numerator-bulk}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.exists_second_numerator_bulk_data}
+\leanok
+Let the original transport pair be defined on $U$ containing the closed
+cell, and retain supplied weak first derivatives $\partial_jf=D_j$.
+There is a specified second jet $J$ of the original forcing with
+$J_{[j]}=D_j$ as functions, and the entire conclusion of
+Lemma~\ref{lem:second-numerator-bulk} holds for $J$.
+No Hessian, ray values, forcing growth, boundedness of $U$ or weighted
+norm is added as a hypothesis for this bulk step.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:specified-first-jet-extension, lem:second-numerator-bulk}
+\leanok
+Use the pair's standing H2 forcing regularity on its open domain.
+Extend the given first gradient by the specified-jet construction,
+then apply the proved bulk estimate to that same jet.
+No generic existence equivalence for weak jets is used.
+\end{proof}
+
+\begin{remark}
+These are bulk estimates, not numerator regularity assertions.
+The identity placing $G_{2,D}$ in a weak second moving-endpoint
+formula and the canonical endpoint terms are separate from these norms.
+For example, constant forcing has zero fixed-time bulk, while its
+zero-frequency quarter integral is $2L(h)f$ and varies with the period.
+\end{remark}
+
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local,
@@ -3533,7 +3741,7 @@ already supplied by $H^2$, not extra regularity.
   lem:orbit-level-derivatives, lem:orbit-time-integrals,
   lem:weighted-first-numerator, lem:weighted-endpoint-value-transport,
   lem:weighted-numerators-h1, lem:weighted-half-numerator,
-  lem:weighted-numerator-subinterval}
+  lem:weighted-numerator-subinterval, lem:second-numerator-bulk}
 Obtain the full and half first-numerator data from
 Lemma~\ref{lem:weighted-numerators-h1} and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
@@ -3583,8 +3791,10 @@ $|L'|\le C/h$, $|L''|\le C/h^2$ yields
        +C\sum_\pm\left(\frac{|\nabla f(p_\pm)|^2}{h}
                       +\frac{|f(p_\pm)|^2}{h^2}\right).
 \]
-The interior term is integrable by $H^2$ and coarea; the ray traces
-control both endpoint terms.
+The fixed-time bulk is controlled, with actual integrability and the original
+ordered jet, by Lemma~\ref{lem:second-numerator-bulk}.
+The ray traces control both endpoint terms. The bulk estimate does not itself
+supply the weak differentiation identity used above.
 \end{proof}
 
 \begin{definition}[Joint level-reconstruction candidate]

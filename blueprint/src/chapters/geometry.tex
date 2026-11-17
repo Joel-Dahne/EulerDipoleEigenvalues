@@ -1873,6 +1873,27 @@ integral lemma below. Both the exponential comparison and the endpoint
 comparison are proved in Lean without admitted dependencies.
 \end{remark}
 
+\begin{lemma}[Joint smoothness of the level variation vectors]
+\label{lem:orbit-level-vectors-smooth}
+\uses{def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.contDiffAt_orbit_level_derivative,
+ NoEmbeddedEigenvalues.contDiffAt_orbit_level_second_derivative}
+\leanok
+The two vectors
+$V(h,t)=\partial_h\gamma_h(t)$ and $W(h,t)=\partial_h^2\gamma_h(t)$
+are jointly smooth on $(0,1)\times\R$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-chart, lem:period-regularity}
+\leanok
+The orbit map is jointly smooth at every interior level.
+Its level derivative is the first Fréchet derivative applied to $(1,0)$.
+Apply the same argument to this vector field for the second derivative.
+On a neighborhood contained in $0<h<1$ these coincide with the actual
+iterated scalar derivatives, so smoothness transfers to the specified vectors.
+\end{proof}
+
 \begin{lemma}[Derivatives in the level]
 \label{lem:orbit-level-derivatives}
 \uses{def:period, def:dipole-flow}

@@ -1756,6 +1756,48 @@ with the same outer-derivative-first convention.
 Every norm is on the original domain $U$.
 \end{proof}
 
+\begin{lemma}[Finite norms of the original specified jet]
+\label{lem:specified-jet-lp}
+\uses{def:local-weak-jets, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.memLp_weakJet}
+\leanok
+Let $U$ be open, $f\in H^n(U)$, and let $D$ be a specified order-$n$
+weak jet of $f$ there. Then every original $D_w$, $|w|\le n$,
+belongs to $L^2(U)$. No new jet or commutation of ordered entries is used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-unique}
+\leanok
+Induct on the Sobolev order and peel off the innermost index:
+write a nonempty word as $w[j]$.
+The recursive Sobolev witness for $\partial_jf$ agrees a.e. with
+$D_{[j]}$ by weak uniqueness, so the latter has the same Sobolev regularity.
+Its specified jet is $v\mapsto D_{v[j]}$. Apply induction to this family.
+The nil entry is exactly $f$.
+\end{proof}
+
+\begin{lemma}[Extend the supplied first gradient to a second jet]
+\label{lem:specified-first-jet-extension}
+\uses{def:local-weak-jets, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.exists_weakJet_two_with_first}
+\leanok
+Let $U$ be open, $f\in H^2(U)$, and retain given weak partials
+$\partial_jf=D_j$.
+There is a specified second weak jet $J$ of the original $f$ with
+$J_{[j]}=D_j$ as functions, not merely a.e.
+No second derivatives are assumed as additional inputs.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-unique}
+\leanok
+Identify each original $D_j$ with the H1 witness supplied by H2.
+Choose its weak first partials $E_{j,i}$ and set
+$J_\varnothing=f$, $J_{[j]}=D_j$, and $J_{[i,j]}=E_{j,i}$.
+The word head is the outer derivative. Entries beyond order two are immaterial.
+\end{proof}
+
 \begin{lemma}[Point removal for a finite specified weak jet]
 \label{lem:weak-jet-point-removal}
 \uses{def:local-weak-jets, def:sobolev-local}
@@ -4866,6 +4908,27 @@ Bounded coefficients preserve the two L2 norms.
 On compact subintervals the absolutely continuous product rule applies;
 the specified a.e.\ derivatives give the asserted derivative.
 For the neighborhood version, compactness bounds both $R$ and its derivative.
+\end{proof}
+
+\begin{lemma}[Cauchy--Schwarz from a square-density majorant]
+\label{lem:square-density-cauchy-schwarz}
+\lean{NoEmbeddedEigenvalues.norm_integral_sq_le_of_sq_le_mul}
+\leanok
+Let $F$ be an a.e.\ strongly measurable complex field on a measure space,
+and let $W,E$ be integrable real fields, nonnegative a.e.
+If $|F|^2\le WE$ a.e., then $F$ is genuinely integrable and
+\[
+ \left|\int F\right|^2\le\left(\int W\right)\left(\int E\right).
+\]
+No integrability of the product $WE$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The complex casts of $\sqrt W$ and $\sqrt E$ have actual L2 norms.
+Their product is integrable, and the square inequality bounds $|F|$
+by its norm. Domination first gives integrability of $F$.
+Integral Cauchy--Schwarz and the triangle inequality then give the bound.
 \end{proof}
 
 \begin{lemma}[Countable cell energy summation]

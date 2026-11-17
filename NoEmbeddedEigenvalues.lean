@@ -139,6 +139,7 @@ import NoEmbeddedEigenvalues.Regularity.OddOddLogSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddLogarithmic
 import NoEmbeddedEigenvalues.Regularity.OddOddRegularity
 import NoEmbeddedEigenvalues.LocalJets
+import NoEmbeddedEigenvalues.SpecifiedJetLp
 import NoEmbeddedEigenvalues.WeakJetOperations
 import NoEmbeddedEigenvalues.WeakPointRemoval
 import NoEmbeddedEigenvalues.RadialWeakMultiplier
@@ -228,6 +229,7 @@ import NoEmbeddedEigenvalues.ZeroSaddleForcing
 import NoEmbeddedEigenvalues.ZeroSaddleNumerator
 import NoEmbeddedEigenvalues.QuarterNumeratorBounds
 import NoEmbeddedEigenvalues.WeightedQuarterGradient
+import NoEmbeddedEigenvalues.SecondNumeratorBulk
 import NoEmbeddedEigenvalues.SubcriticalForcing
 import NoEmbeddedEigenvalues.SubcriticalNumerator
 import NoEmbeddedEigenvalues.SubcriticalQuotientMass

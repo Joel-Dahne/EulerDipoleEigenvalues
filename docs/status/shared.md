@@ -213,27 +213,25 @@ weights and local versus global regularity.
    collar, raw endpoint values, gradient-ray traces or second numerator derivatives.
    Periodic first transport gain (`cor:transport-first-gain-periodic`) and
    First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
-   **Weighted forcing mass:** Second mass from weighted L2 forcing
-   (`lem:weighted-transport-second-mass`) proves v/d² L² with the original
-   forcing/d² and supplied gradient/d^(3/2) hypotheses. Shrinking Cartesian
-   rectangle traces produce the continuous forcing's actual endpoint norm;
-   the exact full and half first numerator derivatives are L² on one collar
-   for all real frequencies. Compatible local H¹ and these derivative norms
-   give both numerators actual global interval H¹ (`lem:weighted-numerators-h1`),
-   without prescribing raw endpoint values or asserting zero canonical traces.
-   No scalar norm, pointwise decay, second numerator derivative or gradient-ray
-   trace is assumed. Canonical gradient endpoint energy is now proved directly
-   (`lem:weighted-gradient-endpoint-energy`): H² and weak uniqueness retain the
-   supplied gradient, Cartesian cone traces give T/√r L², and the radius Jacobian
-   gives T(r(h))/√h L², including measurability of this composition. No raw weak
-   gradient is evaluated on a ray; the full angular corner trace remains separate. Raw-profile summation and four-character
-   assembly cover both frequency signs without a common component collar.
-   Cellwise H¹ from weighted forcing (`lem:weighted-transport-h1`) remains
-   admitted: local numerator H², hN″ L² and spatial weak-gradient/gluing
-   assembly are still needed; its mass conclusion and all first-order full/half
-   data and the needed canonical gradient endpoint energy are proved separately.
-   Next build weak second moving-endpoint differentiation and its bulk estimate;
-   target those scalar data directly rather than the full logarithmic package.
+   **Weighted forcing route:** Cellwise H¹ from weighted forcing
+   (`lem:weighted-transport-h1`) remains admitted. Its original-hypothesis
+   second mass (`lem:weighted-transport-second-mass`) and full/half numerator
+   H¹ (`lem:weighted-numerators-h1`) are proved, with compatible first derivatives
+   on one collar for every real frequency. No raw endpoint prescription or zero
+   canonical trace is inferred. Canonical gradient endpoint energy is proved
+   (`lem:weighted-gradient-endpoint-energy`), including measurability of the
+   radius pullback; no raw weak gradient is evaluated on a ray.
+   **Second fixed-time bulk** (`lem:second-numerator-bulk`) has actual h-scaled
+   L² mass and a common pointwise energy bound for every real frequency on one
+   good-level set. Recursive H² gives the original ordered jet's finite norms.
+   The pair constructs second entries when only the first gradient is supplied,
+   retaining that gradient exactly (`lem:transport-second-bulk-data`); no Hessian
+   or scalar regularity premise is added. These are bulk candidate estimates,
+   not yet a numerator second derivative. Next prove the weak second
+   moving-endpoint identity and assemble its canonical endpoint terms to obtain
+   local numerator H² and hN″ L², then spatial weak-gradient/H¹/gluing.
+   Target these scalar data directly rather than the full logarithmic package;
+   the full angular corner trace remains separate.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
    zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
    (`lem:elliptic-local`). Weighted numerator estimates
