@@ -1034,6 +1034,75 @@ The latter still requires the fixed-time bulk cancellation and canonical
 endpoint terms.
 \end{remark}
 
+\begin{definition}[Normalized action--angle gradient contraction]
+\label{def:action-angle-pullback-gradient}
+\uses{def:action-angle}
+\lean{NoEmbeddedEigenvalues.actionAnglePullbackGradient}
+\leanok
+For a supplied Cartesian field $D=(D_x,D_y)$ and $P=\operatorname{actionAngleInv}$,
+put
+\[
+ \mathcal A_j(D)(q)=
+   (\partial_jP_x)(q)D_x(P(q))+(\partial_jP_y)(q)D_y(P(q)),
+ \qquad j\in\{h,\theta\}.
+\]
+This is a formal contraction; no derivative identity is part of the definition.
+\end{definition}
+
+\begin{lemma}[Canonical tangential derivatives at orbit endpoints]
+\label{lem:orbit-tangential-trace}
+\uses{def:action-angle-pullback-gradient, def:interior-section-trace,
+ def:transport-pair, def:sobolev-local, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.normalizedOrbitTrace_hasIntervalH1,
+ NoEmbeddedEigenvalues.IsTransportPair.normalizedOrbitTrace_hasIntervalH1,
+ NoEmbeddedEigenvalues.IsTransportPair.normalizedOrbitTrace_h1Loc,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterEndpoint_forcing_h1Loc}
+\leanok
+Let $U$ be open, contain the cell, and let $g\in H^2(U)$ be continuous
+with specified Cartesian weak derivatives $D$.
+For $0<h_0<1$ and $-1/4<\theta<3/4$,
+\[
+ \operatorname{HasIntervalH1Loc}\left(0,h_0;\
+ h\mapsto g(P(h,\theta)),\
+ h\mapsto\tau_{s=0}\bigl[\mathcal A_h(D)(h,\theta+s)\bigr]\right).
+\]
+In particular $\theta=\varepsilon/8$ gives the original physical endpoint
+value $g(\gamma_h(\varepsilon L(h)))$ for either $\varepsilon=-1$ or $1$.
+The original transport pair supplies these data for its continuous forcing
+representative, retaining its supplied first gradient exactly.
+No extra Hessian, weighted norm or forcing-growth premise is requested.
+The assertion holds on any collar below level one and hence does not shrink
+the existing all-frequency numerator collar.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:tangential-interior-trace, lem:weak-jet-regularity,
+ lem:action-angle-weak-level, lem:action-angle-weak-angular,
+ lem:weak-derivative-product, lem:coarea, lem:action-angle-chart}
+\leanok
+On each compact level band, coarea gives L2 pullbacks of the forcing and
+its supplied first derivatives. Weak uniqueness transfers H1 regularity
+to those same derivatives; their ordered second weak entries have finite norms.
+The weak chain rule gives $\partial_h(g\circ P)=\mathcal A_h(D)$.
+Differentiate this contraction weakly in the transverse angle:
+the smooth chart coefficients and all ordered second entries give a genuine
+L2 mixed derivative. No mixed entries are commuted.
+Apply tangential differentiation of continuous interior traces.
+For a pair, a.e. congruence transfers its forcing H2 regularity to $g$
+and retains every $D_j$. Finally $S=8L$ identifies the two physical endpoints.
+\end{proof}
+
+\begin{remark}[Scope of the endpoint differentiation]
+At fixed normalized angle,
+$\partial_hP=\partial_h\gamma_h(S\theta)+\theta S'\partial_t\gamma_h(S\theta)$.
+Thus the traced contraction includes period drift; it is not the fixed-time
+level contraction alone.
+The normal variable here is normalized angle, not the affine normal variable
+used in the ray trace family. No equality between gradient traces in these
+different charts is asserted. These are local H1 derivatives, not their critical
+weighted norms near $h=0$ or the full moving-endpoint second derivative formula.
+\end{remark}
+
 \begin{definition}[Quarter-jet densities and level contraction]
 \label{def:quarter-jet-data}
 \uses{def:period, def:cell-arcs}
@@ -3825,15 +3894,20 @@ already supplied by $H^2$, not extra regularity.
   lem:weighted-first-numerator, lem:weighted-endpoint-value-transport,
   lem:weighted-numerators-h1, lem:weighted-half-numerator,
   lem:weighted-numerator-subinterval, lem:second-numerator-bulk,
-  lem:weighted-numerator-local-h2}
+  lem:weighted-numerator-local-h2, lem:second-window-flux,
+  lem:orbit-tangential-trace}
 Obtain the full and half first-numerator data and local numerator H2 from
 Lemma~\ref{lem:weighted-numerator-local-h2}, and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
 Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
 spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.
-On compact level intervals the Sobolev chain rule and the traces on the
-endpoint curves justify two weak differentiations. In the formulas below,
-gradient values at $p_\pm$ mean Sobolev traces, not arbitrary point values.
+On compact level intervals, canonical weak flux is available from
+Lemma~\ref{lem:second-window-flux}, and differentiation of the actual endpoint
+values from Lemma~\ref{lem:orbit-tangential-trace}.
+The latter uses normalized-angle traces: changing to another transverse chart
+requires identification of the canonical trace families.
+In the formulas below, gradient values at $p_\pm$ mean Sobolev traces,
+not arbitrary point values.
 
 The endpoint curves are fixed rays from their saddles, with
 $r=2\arcsin\sqrt h$, hence $h=\sin^2(r/2)$ and $dh\asymp r\,dr$.

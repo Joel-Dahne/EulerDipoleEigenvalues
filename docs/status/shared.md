@@ -231,8 +231,13 @@ weights and local versus global regularity.
    or scalar regularity premise is added. These are bulk candidate estimates,
    not yet the numerator's second derivative. Local H² uses fixed-window weak
    differentiation and genuine ACL averages, without gradient-ray values.
-   Next identify its second derivative by a weak moving-endpoint/flux formula
-   and control the canonical endpoint terms to obtain hN″ L², then assemble
+   Canonical rough-window flux and weak second scalar flux are proved
+   (`lem:rough-window-flux`, `lem:second-window-flux`). The original forcing's
+   actual endpoint values have local H¹ derivatives from the supplied gradient
+   (`lem:orbit-tangential-trace`), with no new collar restriction. These use
+   normalized-angle traces; their affine-ray identification or weighted energy
+   is not inferred. Next specialize the flux to the fixed-time second bulk,
+   control its canonical endpoint terms and obtain hN″ L², then assemble
    spatial weak-gradient/H¹/gluing.
    Target these scalar data directly rather than the full logarithmic package;
    the full angular corner trace remains separate.

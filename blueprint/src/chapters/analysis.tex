@@ -3935,6 +3935,156 @@ The rectangle trace estimate supplies actual $L^2$ membership.
 Exceptional sections may use the fallback value without changing any trace.
 \end{proof}
 
+\begin{lemma}[Interior traces at arbitrary transverse points]
+\label{lem:interior-trace-at}
+\uses{def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.interiorSectionTrace_eq_at,
+ NoEmbeddedEigenvalues.HasACLSectionsOn.ae_interiorSectionTrace_eq}
+\leanok
+For $t\in(c,d)$, write
+$\tau_t f=\tau(s\mapsto f(t+s))$.
+If $g$ is continuous on $(c,d)$ and agrees a.e.\ there with $f$,
+then $\tau_t f=g(t)$.
+Consequently, if one planar ACL representative $G$ agrees a.e.\ with $F$
+on $(a,b)\times(c,d)$, then, on one good-level set,
+\[
+ \tau_t(F(x,\cdot))=G(x,t)\qquad\hbox{for every }t\in(c,d).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interior-section-trace, lem:acl-slicing}
+\leanok
+Translate the interval to $(c-t,d-t)$ using invariance of Lebesgue measure.
+The translated continuous representative has its prescribed value at zero.
+For the planar assertion, Fubini gives a.e. section equality and ACL gives
+continuity on the whole transverse interval.
+Apply uniqueness of the germ at every interior point on this same set of levels;
+no uncountable intersection of exceptional sets is taken.
+\end{proof}
+
+\begin{lemma}[Canonical transverse L2 traces and weak FTC]
+\label{lem:canonical-transverse-trace}
+\uses{def:weak-derivative-local, def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.memLp_interiorSectionTrace,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.ae_vertical_integral_eq_trace}
+\leanok
+Let $Q=(a,b)\times(c,d)$, $a<b$, $c<d$.
+If $F,D\in L^2(Q)$ and $\partial_\theta F=D$ weakly, then for each
+$t\in(c,d)$ the canonical function $x\mapsto\tau_t(F(x,\cdot))$ belongs
+to $L^2(a,b)$. Moreover, on one good-level set, for every $l,r\in(c,d)$,
+\[
+ \int_l^rD(x,\theta)\,d\theta
+   =\tau_r(F(x,\cdot))-\tau_l(F(x,\cdot)).
+\]
+No continuity of the planar field is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interior-trace-at, lem:acl-slicing, lem:trace-l2}
+\leanok
+The ACL representative has actual L2 traces and an interval fundamental theorem.
+Its values at all interior points are the germ traces of the original field.
+A.e. equality with the measurable ACL trace supplies genuine complex L2
+membership, not merely integrability of a squared norm.
+\end{proof}
+
+\begin{lemma}[Rough fixed-window flux with canonical boundary values]
+\label{lem:rough-window-flux}
+\uses{def:weak-derivative-local, def:h1-interval, def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_setIntegral_h1_flux_rep,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h1_flux_of_ae_eq}
+\leanok
+Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
+Suppose $F,D,H,P,B\in L^2(Q)$,
+$\partial_hF=D$, $\partial_\theta P=B$ weakly, and
+$D(h,\theta)=H(h,\theta)+\beta(h)B(h,\theta)$ a.e.
+There is a representative $A$ of the raw window average of $F$ a.e.\ with
+\[
+ \operatorname{HasIntervalH1}(a,b;A,C),\qquad
+ C(h)=\int_l^rH(h,\theta)\,d\theta+
+       \beta(h)\bigl[\tau_r(P(h,\cdot))-\tau_l(P(h,\cdot))\bigr].
+\]
+Any supplied continuous scalar representative of that a.e. average has the
+same H1 pair. Neither planar field is assumed continuous; the coefficient
+$\beta$ can be arbitrary.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fixed-window-h1-rough, lem:canonical-transverse-trace,
+ lem:interval-h1-continuous-derivative}
+\leanok
+Construct the H1 representative with raw averaged derivative $D$.
+Fubini transfers the a.e. decomposition to almost every section.
+First prove the actual integrability of $H$ and $B$ on the window, then
+split the integral and apply the canonical transverse FTC.
+The derivative is therefore the displayed flux a.e.; its actual L2 norm
+comes from the original averaged derivative.
+Two continuous scalar representatives agreeing a.e. agree throughout
+the interior, so the supplied value representative is retained.
+\end{proof}
+
+\begin{lemma}[Second weak parameter derivative in canonical flux form]
+\label{lem:second-window-flux}
+\uses{def:weak-derivative-local, def:h1-interval, def:h2-interval,
+ def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h2_flux}
+\leanok
+On the same rectangle and window, let $F$ be continuous.
+Suppose $F,D,E,H,P,B\in L^2(Q)$,
+$\partial_hF=D$, $\partial_hD=E$, $\partial_\theta P=B$ weakly,
+and $E=H+\beta B$ a.e.
+For the original $N(h)=\int_l^rF(h,\theta)\,d\theta$, one has
+\[
+ \operatorname{HasIntervalH2}(a,b;N,N',C),\qquad
+ C(h)=\int_l^rH(h,\theta)\,d\theta+
+ \beta(h)\bigl[\tau_r(P(h,\cdot))-\tau_l(P(h,\cdot))\bigr].
+\]
+In particular $C$ is the weak second derivative of the original integral,
+not just a formal integral expression.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fixed-window-h1, lem:fixed-window-h2,
+ lem:interval-h2-canonical-derivatives, lem:rough-window-flux}
+\leanok
+Fixed-window H2 makes the ordinary $N'$ an H1, hence continuous,
+representative. The first differentiation identifies it a.e. with the raw
+average of $D$. Apply the rough flux lemma to this same scalar representative.
+No continuity of $D$ or $P$ is introduced.
+\end{proof}
+
+\begin{lemma}[Tangential differentiation of continuous interior traces]
+\label{lem:tangential-interior-trace}
+\uses{def:weak-derivative-local, def:h1-interval, def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.trace_hasIntervalH1}
+\leanok
+Let $Q=(a,b)\times(c,d)$ with $a<b$, $c<d$, and $t\in(c,d)$.
+If $F$ is continuous, $F,D,E\in L^2(Q)$,
+$\partial_hF=D$ and $\partial_\theta D=E$ weakly, then
+\[
+ \operatorname{HasIntervalH1}
+   (a,b;\ h\mapsto F(h,t),\ h\mapsto\tau_t(D(h,\cdot))).
+\]
+No value norm on the line, continuous gradient, or opposite ordering of the
+mixed derivative is an additional premise.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2, lem:canonical-transverse-trace}
+\leanok
+Choose one measurable transverse ACL representative $G$ of $D$.
+The horizontal FTC for $F$ initially holds on almost every transverse line.
+The integral of $G$ over any fixed tangential interval is continuous in the
+transverse parameter, by the L2 trace estimate.
+Continuity of $F$ therefore extends that increment identity to every interior
+line. Its derivative is the canonical trace, which is genuinely L2.
+An integral primitive agrees with the original line values throughout $(a,b)$;
+its continuous extension to $[a,b]$ supplies their finite L2 norm.
+The interval fundamental theorem gives H1 without assigning gradient values
+on a null line.
+\end{proof}
+
 \begin{definition}[Diagonal trace chart]
 \label{def:diagonal-trace-chart}
 \uses{def:cells}
