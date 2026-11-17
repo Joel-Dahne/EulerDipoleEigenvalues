@@ -220,14 +220,20 @@ weights and local versus global regularity.
    the exact full and half first numerator derivatives are L² on one collar
    for all real frequencies. Compatible local H¹ and these derivative norms
    give both numerators actual global interval H¹ (`lem:weighted-numerators-h1`),
-   without prescribing raw endpoint values or asserting zero canonical traces. No scalar norm, pointwise decay, second numerator derivative
-   or gradient-ray trace is assumed. Raw-profile summation and four-character
+   without prescribing raw endpoint values or asserting zero canonical traces.
+   No scalar norm, pointwise decay, second numerator derivative or gradient-ray
+   trace is assumed. Canonical gradient endpoint energy is now proved directly
+   (`lem:weighted-gradient-endpoint-energy`): H² and weak uniqueness retain the
+   supplied gradient, Cartesian cone traces give T/√r L², and the radius Jacobian
+   gives T(r(h))/√h L², including measurability of this composition. No raw weak
+   gradient is evaluated on a ray; the full angular corner trace remains separate. Raw-profile summation and four-character
    assembly cover both frequency signs without a common component collar.
    Cellwise H¹ from weighted forcing (`lem:weighted-transport-h1`) remains
    admitted: local numerator H², hN″ L² and spatial weak-gradient/gluing
    assembly are still needed; its mass conclusion and all first-order full/half
-   data are proved separately. Target those second-order scalar data directly,
-   rather than the full quantitative/logarithmic numerator package.
+   data and the needed canonical gradient endpoint energy are proved separately.
+   Next build weak second moving-endpoint differentiation and its bulk estimate;
+   target those scalar data directly rather than the full logarithmic package.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
    zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
    (`lem:elliptic-local`). Weighted numerator estimates

@@ -3189,6 +3189,146 @@ For $b\le1/256$, the radius bound gives $r(b)\le1/4<1/2$;
 apply the first assertion to each continuous forcing ray.
 \end{proof}
 
+\begin{definition}[Canonical quarter-gradient trace choice]
+\label{def:canonical-quarter-gradient-trace}
+\uses{def:interior-section-trace, def:quarter-endpoint-rays}
+\lean{NoEmbeddedEigenvalues.quarterGradientTrace}
+\leanok
+For any supplied Cartesian family $D_j:\R^2\to\C$, define
+\[
+ T_{\sigma,j}=T_{C_\sigma}(D_j),\qquad \sigma\in\{-,+\},\quad j\in\{0,1\},
+\]
+where $C_\sigma$ is the base-quarter endpoint chart.
+This is the interior-section choice, not evaluation of $D_j$ on the ray.
+Its trace property and finite norms are separate assertions.
+\end{definition}
+
+\begin{lemma}[Weighted H1 fields have canonical quarter-ray mass]
+\label{lem:weighted-h1-ray-traces}
+\uses{def:quarter-endpoint-rays, def:interior-section-trace, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.weighted_quarter_ray_trace}
+\leanok
+Let open $U$ contain the closed cell, $F\in H^1(U)$, and
+$F/d^{3/2}\in L^2(\Cell)$.
+For each base-quarter endpoint chart $C_\sigma$, the choice
+$T=T_{C_\sigma}F$ is a canonical quarter-ray trace on every admissible
+window of radius $1/2$, and
+\[
+ T/\sqrt r\in L^2(0,1/2).
+\]
+No continuous representative or pointwise growth of $F$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-ray-interior-trace, lem:quarter-endpoint-cones,
+ lem:canonical-weighted-cone-trace, lem:affine-jet-pullback}
+\leanok
+Global H1 gives the trace property on all admissible windows, not only
+windows inside the cone.
+Pull the field and its supplied weak derivatives through the affine,
+volume-preserving endpoint chart.
+On $\mathcal C_{1/2}$ the image lies in the cell and $d=r$.
+The bounded multiplier $\sqrt r$ turns the pulled-back $F/d^{3/2}$ norm
+into actual $F/r$ L2. The transverse derivative is unweighted L2 by H1.
+Apply the canonical cone estimate. Its trace is definitionally the
+same interior-section choice as the all-window quarter-ray trace.
+\end{proof}
+
+\begin{lemma}[Gradient endpoint change of variables without continuity]
+\label{lem:gradient-endpoint-change-variables}
+\uses{def:quarter-endpoint-rays}
+\lean{NoEmbeddedEigenvalues.memLp_endpoint_gradient_of_ray}
+\leanok
+Let $b<1$, $r(h)=2\arcsin\sqrt h$, and $r(b)<\rho$.
+For any complex function $T$, if $T/\sqrt r\in L^2(0,\rho)$, then
+\[
+ T(r(h))/\sqrt h\in L^2(0,b).
+\]
+No continuity of $T$ or separate measurability of its composition is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:log-endpoint-change-variables}
+\leanok
+On $(0,b)$ the map is injective, with positive Jacobian
+$r'=1/(\sqrt h\sqrt{1-h})$.
+The complex radial field $T/\sqrt r$ is L1 on its finite interval.
+Change variables in this complex integral to obtain actual integrability
+of $r'(h)T(r(h))/\sqrt{r(h)}$.
+Division by the nonzero Jacobian and multiplication by measurable
+coefficients give a.e. measurability of $T(r(h))/\sqrt h$ itself.
+Separately change variables in the actual radial square density.
+Since $r(h)\le4\sqrt h\le4hr'(h)$,
+\[
+ \frac{|T(r(h))|^2}{h}
+ \le4r'(h)\frac{|T(r(h))|^2}{r(h)}.
+\]
+Domination now proves actual square integrability.
+The complex step is needed: measurability of a squared norm alone would
+not give measurability of its complex-valued representative.
+\end{proof}
+
+\begin{lemma}[Weighted canonical gradient endpoint traces]
+\label{lem:weighted-gradient-ray-traces}
+\uses{def:canonical-quarter-gradient-trace, def:quarter-endpoint-rays,
+ def:sobolev-local, def:transport-pair}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.weighted_gradient_endpoint_traces,
+ NoEmbeddedEigenvalues.IsTransportPair.weighted_gradient_endpoint_traces}
+\leanok
+Let open $U$ contain the closed cell, let $f\in H^2(U)$, and retain
+specified weak partials $\partial_jf=D_j$ with
+$D_j/d^{3/2}\in L^2(\Cell)$.
+For every $0<b\le1/256$, the choices $T_{\sigma,j}$ are canonical
+quarter-ray traces of the original $D_j$ on every admissible window
+of radius $1/2$, and
+\[
+ T_{\sigma,j}/\sqrt r\in L^2(0,1/2),\qquad
+ T_{\sigma,j}(r(h))/\sqrt h\in L^2(0,b).
+\]
+In particular this follows from the original transport pair and supplied
+weighted gradient hypotheses. No boundedness of $U$, continuous gradient,
+forcing-value weight, frequency sign, character or extra ray data is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-unique, lem:weighted-h1-ray-traces,
+ lem:gradient-endpoint-change-variables}
+\leanok
+H2 supplies an H1 representative of each first weak derivative.
+Weak uniqueness identifies it a.e. with the original supplied $D_j$,
+so that same raw $D_j$ has H1 data on $U$.
+Apply the weighted H1 ray result to each component.
+The fixed cutoff gives $r(b)\le4\sqrt b\le1/4<1/2$.
+The change-of-variables lemma gives every moving-endpoint norm.
+For a transport pair use its standing H2 forcing regularity; no new
+Sobolev or trace premise is introduced.
+\end{proof}
+
+\begin{lemma}[Actual canonical endpoint-gradient energy]
+\label{lem:weighted-gradient-endpoint-energy}
+\uses{def:weighted-numerator-data, def:canonical-quarter-gradient-trace,
+ def:sobolev-local, def:transport-pair, lem:weighted-gradient-ray-traces}
+\lean{NoEmbeddedEigenvalues.quarterEndpointGradientEnergy_integrable,
+ NoEmbeddedEigenvalues.IsTransportPair.weighted_gradient_endpoint_energy}
+\leanok
+Under the original transport-pair and weighted-gradient hypotheses of
+Lemma~\ref{lem:weighted-gradient-ray-traces}, for $0<b\le1/256$,
+\[
+ Q_T(h)=\frac{\sum_\sigma\sum_{j=0}^1|T_{\sigma,j}(r(h))|^2}{h}
+ \in L^1(0,b).
+\]
+More generally, actual L2 norms of the four components
+$T_{\sigma,j}(r(h))/\sqrt h$ imply integrability of this specified energy.
+No totalized integral is used in place of a finite norm.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-gradient-ray-traces}
+\leanok
+Sum the four actual integrable squared norms.
+For $h>0$, $|\sqrt h|^2=h$ identifies that sum a.e. with $Q_T$.
+\end{proof}
+
 \begin{lemma}[First numerator from weighted L2 forcing]
 \label{lem:weighted-first-numerator}
 \uses{def:transport-pair, def:numerator-derivative, def:quarter-jet-data,
@@ -3387,11 +3527,13 @@ already supplied by $H^2$, not extra regularity.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weighted-corner-trace, lem:trace-h2, lem:trace-l2,
+\uses{lem:weighted-gradient-ray-traces, lem:weighted-gradient-endpoint-energy,
+  lem:trace-h2, lem:trace-l2,
   lem:period-derivative-bounds, lem:period-orbit, lem:coarea,
   lem:orbit-level-derivatives, lem:orbit-time-integrals,
   lem:weighted-first-numerator, lem:weighted-endpoint-value-transport,
-  lem:weighted-numerators-h1}
+  lem:weighted-numerators-h1, lem:weighted-half-numerator,
+  lem:weighted-numerator-subinterval}
 Obtain the full and half first-numerator data from
 Lemma~\ref{lem:weighted-numerators-h1} and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
@@ -3403,15 +3545,18 @@ gradient values at $p_\pm$ mean Sobolev traces, not arbitrary point values.
 
 The endpoint curves are fixed rays from their saddles, with
 $r=2\arcsin\sqrt h$, hence $h=\sin^2(r/2)$ and $dh\asymp r\,dr$.
-The hypotheses imply $f/r^2,\nabla f/r\in L^2$ there, so $f/r\in H^1$
-and $(f/r)/r\in L^2$. Also each component of $\nabla f$ is in $H^1$
-and its quotient by $r$ is in $L^2$. Apply
-Lemma~\ref{lem:weighted-corner-trace} to $f/r$ and these components to get
+The continuous forcing norm follows from
+Lemma~\ref{lem:weighted-endpoint-value-transport}; the supplied gradient
+has the canonical ray norms of Lemma~\ref{lem:weighted-gradient-ray-traces}.
+Together these give
 \[
  \int_{\rm ray}\left(\frac{|f|^2}{r^3}
                     +\frac{|\nabla f|^2}{r}\right)\,dr<\infty .
 \]
-Thus $|f(p_\pm)|^2/h^2$ and $|\nabla f(p_\pm)|^2/h$ are integrable in $h$.
+Thus $|f(p_\pm)|^2/h^2$ and $|\nabla f(p_\pm)|^2/h$ are integrable in $h$,
+with the latter energy established by
+Lemma~\ref{lem:weighted-gradient-endpoint-energy}. This finite-ray argument
+does not require the uniform angular corner-trace theorem.
 
 For any subinterval $J\subset[-L,L]$, Cauchy--Schwarz and
 $|\partial_h\gamma_h|\le C/d$ give

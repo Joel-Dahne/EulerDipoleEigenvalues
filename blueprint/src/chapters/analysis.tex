@@ -4025,6 +4025,114 @@ The bands omit only countably many radii; summing the actual integrals
 then gives the stated bound.
 \end{proof}
 
+\begin{lemma}[Summing cone estimates on radial bands]
+\label{lem:cone-band-energy}
+\uses{def:cartesian-ray-cone}
+\lean{NoEmbeddedEigenvalues.memLp_two_of_cone_band_energy}
+\leanok
+Let $R>0$, $K\ge0$, and let $G\ge0$ be integrable on $\mathcal C_R$.
+Suppose for every $a>0$ with $2a\le R$, the same $W$ belongs to
+$L^2(a,2a)$ and
+\[
+ \int_a^{2a}|W|^2\le K\int_{(a,2a)\times(-a,a)}G.
+\]
+Then $W\in L^2(0,R)$ and
+$\int_0^R|W|^2\le K\int_{\mathcal C_R}G$.
+No global measurability of $W$ is assumed separately.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:countable-cell-energy}
+\leanok
+Zero-extend $G$ from the cone and set $E(r)=\int_\R 1_{\mathcal C_R}G(r,t)\,dt$.
+Fubini gives an actual integrable nonnegative radial density.
+Use $a_n=R2^{-n-1}$: the radial bands are disjoint and omit only
+countably many points of $(0,R)$. Each rectangle energy is bounded by
+$\int_{a_n}^{2a_n}E$.
+Countable cell energy first gives global L2, including a.e. measurability.
+Only then sum the actual square integrals, without a measurable choice of
+fiberwise ACL representatives.
+\end{proof}
+
+\begin{lemma}[Canonical interior rectangle trace estimate]
+\label{lem:canonical-rectangle-trace}
+\uses{def:interior-section-trace, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.canonical_rectangle_trace}
+\leanok
+Let $a<b$, $w>0$, and $S=(a,b)\times(-w,w)$.
+If $\partial_tF=D$ weakly and $F,D\in L^2(S)$, the canonical interior
+choice $T=T_{\mathrm{id}}F$ belongs to $L^2(a,b)$ and
+\[
+ \int_a^b|T|^2\le w^{-1}\int_S|F|^2+4w\int_S|D|^2.
+\]
+No continuity of the planar representative or raw value $F(r,0)$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:interior-section-trace}
+\leanok
+Construct the canonical ACL rectangle trace with its actual L2 estimate.
+On almost every section, its continuous representative supplies a germ
+and has the same value as the single interior-section choice.
+Transfer both the L2 norm and its energy through this a.e. equality.
+\end{proof}
+
+\begin{lemma}[Canonical weighted trace on a radial band]
+\label{lem:canonical-weighted-band-trace}
+\uses{def:interior-section-trace, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.canonical_weighted_band_trace}
+\leanok
+For $a>0$ and $S_a=(a,2a)\times(-a,a)$, suppose
+$\partial_tF=D$ weakly, $F/r\in L^2(S_a)$ and $D\in L^2(S_a)$.
+Then $T=T_{\mathrm{id}}F$ satisfies $T/\sqrt r\in L^2(a,2a)$ and
+\[
+ \int_a^{2a}\frac{|T|^2}{r}\,dr
+ \le4\int_{S_a}\left(\frac{|F|^2}{r^2}+|D|^2\right)\,dr\,dt.
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-rectangle-trace}
+\leanok
+Multiply $F/r$ by the bounded coordinate to obtain actual unweighted L2.
+The rectangle trace estimate gives its canonical trace; the bounded
+multiplier $r^{-1/2}$ gives actual weighted trace L2 on this band.
+Using $r>a$, multiply the rectangle estimate by $1/a$.
+Its coefficients become $a^{-2}$ and $4$; now
+$a^{-2}\le4r^{-2}$ since $r<2a$.
+\end{proof}
+
+\begin{lemma}[Canonical weighted interior-ray trace in a cone]
+\label{lem:canonical-weighted-cone-trace}
+\uses{def:cartesian-ray-cone, def:interior-section-trace,
+ def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.canonical_weighted_cone_trace}
+\leanok
+Let $R>0$, $\partial_tF=D$ weakly on $\mathcal C_R$,
+$F/r\in L^2(\mathcal C_R)$ and $D\in L^2(\mathcal C_R)$.
+The same canonical choice $T=T_{\mathrm{id}}F$ has
+$T/\sqrt r\in L^2(0,R)$ and
+\[
+ \int_0^R\frac{|T|^2}{r}\,dr
+ \le4\int_{\mathcal C_R}\left(\frac{|F|^2}{r^2}+|D|^2\right)\,dr\,dt.
+\]
+No vertex trace, continuous planar representative or raw ray assignment is used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-weighted-band-trace, lem:cone-band-energy}
+\leanok
+Restrict the weak derivative and both actual norms to each radius-sized
+rectangle. Apply the band estimate to the same interior-section choice,
+then sum with its genuinely integrable nonnegative bulk density.
+\end{proof}
+
+\begin{remark}
+This concerns an interior ray in a Cartesian cone. It does not include
+the boundary rays and uniform angular assertion of
+Lemma~\ref{lem:weighted-corner-trace}.
+\end{remark}
+
 \begin{lemma}[Weighted trace at a corner]
 \label{lem:weighted-corner-trace}
 \uses{def:sobolev-local, def:local-weak-jets, def:corner-crossing-traces}
