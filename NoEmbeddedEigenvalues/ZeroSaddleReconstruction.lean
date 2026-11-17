@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.QuarterFirstMass
+import NoEmbeddedEigenvalues.ExponentialTransportDecay
 import NoEmbeddedEigenvalues.ZeroSaddleQuotientMass
 
 /-!
@@ -16,33 +17,6 @@ No raw endpoint values of the spatial unknown are used.
 noncomputable section
 namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter Real
-
-private theorem norm_transport_le_endpoint {lam a b : ℝ} {W F : ℝ → ℂ}
-    (hac : AbsolutelyContinuousOnInterval W a b) (hF : IntervalIntegrable F volume a b)
-    (hd : ∀ᵐ t, HasDerivAt W (Complex.I * ((lam : ℂ) * W t + F t)) t) :
-    ‖W b‖ ≤ ‖W a‖ +
-      ‖∫ s in a..b, F s * Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ))‖ := by
-  have hi := transport_integratingFactor hac hF (hd.mono fun _ ht _ ↦ ht)
-  have hint : (∫ s in a..b, Complex.exp (-(Complex.I * (lam : ℂ) * (s : ℂ))) * F s) =
-      ∫ s in a..b, F s * Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ)) := by
-    apply intervalIntegral.integral_congr
-    intro s _
-    dsimp only
-    rw [show -(Complex.I * (lam : ℂ) * (s : ℂ)) =
-      -Complex.I * ((lam * s : ℝ) : ℂ) by push_cast; ring, mul_comm]
-  rw [hint] at hi
-  calc ‖W b‖ = ‖Complex.exp (-(Complex.I * (lam : ℂ) * (b : ℂ))) * W b‖ := by
-        rw [norm_mul, norm_exp_neg_I_mul, one_mul]
-       _ = ‖(Complex.exp (-(Complex.I * (lam : ℂ) * (b : ℂ))) * W b -
-          Complex.exp (-(Complex.I * (lam : ℂ) * (a : ℂ))) * W a) +
-          Complex.exp (-(Complex.I * (lam : ℂ) * (a : ℂ))) * W a‖ := by
-        rw [sub_add_cancel]
-       _ ≤ ‖Complex.exp (-(Complex.I * (lam : ℂ) * (b : ℂ))) * W b -
-          Complex.exp (-(Complex.I * (lam : ℂ) * (a : ℂ))) * W a‖ +
-          ‖Complex.exp (-(Complex.I * (lam : ℂ) * (a : ℂ))) * W a‖ := norm_add_le _ _
-       _ = _ := by
-        rw [hi, norm_mul, Complex.norm_I, one_mul, norm_mul, norm_exp_neg_I_mul, one_mul]
-        ring
 
 /-- Integrating from the nearer endpoint preserves exponential forcing decay,
 for either sign of the real transport frequency. The endpoints belong to the

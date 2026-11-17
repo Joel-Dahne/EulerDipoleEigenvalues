@@ -68,7 +68,6 @@ $y$-derivative identity with $\sin x\,\varphi$, then subtract.
 The crossed coefficients have zero derivative in their respective
 directions, so there is no zeroth-order term.
 \end{proof}
-
 \begin{lemma}[The transport unknown]
 \label{lem:transport-unknown}
 \uses{def:transport-pair}
@@ -1696,6 +1695,34 @@ continuous forcing representative; both relevant corners are in the
 closed cell.
 \end{proof}
 
+\begin{lemma}[Oscillatory tails with arbitrary exponential rate]
+\label{lem:exponential-forcing-tails}
+\lean{NoEmbeddedEigenvalues.oscillatory_integral_exp_bound,
+ NoEmbeddedEigenvalues.forcing_exp_decay_tail_bounds}
+\leanok
+Let $L,C\ge0$, $a>0$, and $F:[-L,L]\to\C$ be continuous with
+$|F(t)|\le Ce^{-a|t|}$. For every real $\mu$ the two oscillatory tail
+integrands are genuinely integrable, and
+\[
+ \left|\int_{-L}^t F(s)e^{-i\mu s}\,ds\right|
+ \le \frac Ca e^{at}\quad(-L\le t\le0),\qquad
+ \left|\int_t^L F(s)e^{-i\mu s}\,ds\right|
+ \le \frac Ca e^{-at}\quad(0\le t\le L).
+\]
+The bounds have no dependence on the sign or magnitude of $\mu$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Continuity first supplies actual interval integrability.
+The phase has modulus one, so the norm of each integral is at most
+the integral of its exponential envelope.
+Use antiderivatives $(C/a)e^{as}$ on the negative half and
+$-(C/a)e^{-as}$ on the positive half.
+The exact tails are $(C/a)(e^{at}-e^{-aL})$ and
+$(C/a)(e^{-at}-e^{-aL})$; drop the nonnegative endpoint terms.
+\end{proof}
+
 \begin{lemma}[Oscillatory tails of zero-saddle forcing]
 \label{lem:zero-saddle-forcing-tails}
 \uses{def:transport-pair, def:period, def:cell-arcs}
@@ -1825,6 +1852,34 @@ actually integrable. The coordinate norm bound gives
 $|w_j|\le Cd^{s-1}$, so $\int|w_j|^2\le C^2A$.
 Apply integral Cauchy--Schwarz to each component and
 $|x+y|^2\le2(|x|^2+|y|^2)$ to their sum. The phases all have modulus one.
+\end{proof}
+
+\begin{lemma}[Endpoint reconstruction at any positive exponential rate]
+\label{lem:transport-endpoint-exponential-decay}
+\lean{NoEmbeddedEigenvalues.norm_transport_le_endpoint,
+ NoEmbeddedEigenvalues.norm_transport_le_endpoints_of_exp_decay}
+\leanok
+Let $\lambda\in\R$, $L,C\ge0$ and $a>0$.
+Suppose $F$ is continuous on $[-L,L]$ with $|F(t)|\le Ce^{-a|t|}$,
+and $W:\R\to\C$ is locally absolutely continuous with
+$W'=i(\lambda W+F)$ a.e. and $|W(-L)|,|W(L)|\le A$.
+Then
+\[
+ |W(t)|\le A+\frac Ca e^{-a|t|}\qquad(|t|\le L).
+\]
+The endpoint values belong to this specified ACL function.
+No sign or nonvanishing condition on $\lambda$ is imposed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-boundary-estimate, lem:exponential-forcing-tails}
+\leanok
+The integrating factor has modulus one. Integrating from $-L$ when $t\le0$
+and from $L$ when $t\ge0$ bounds $|W(t)|$ by the nearer endpoint norm
+plus the corresponding forcing tail.
+Reverse the positive-half integral and apply
+Lemma~\ref{lem:exponential-forcing-tails}.
+The full decay rate $a$, not a fixed weaker exponent, is retained.
 \end{proof}
 
 \begin{lemma}[Endpoint reconstruction preserves forcing decay]
@@ -2098,6 +2153,88 @@ exactly this derivative and its restricted L2 norm, giving $\eta<b$.
 Neither the forcing representative nor the weak gradient is changed.
 \end{proof}
 
+\begin{lemma}[Subcritical base-quarter second mass]
+\label{lem:subcritical-quarter-mass}
+\uses{def:transport-pair, def:quarter-character, def:cell-separatrix-collar,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.subcritical_quarter_memLp}
+\leanok
+Assume the transport-pair, bounded-domain, original continuous forcing and
+specified weighted first-gradient hypotheses of
+Lemma~\ref{lem:subcritical-numerator-derivative}, now with $0<\delta<1$.
+Let $r>0$ and suppose both original fields $v,f$ have quarter character
+$\kappa$, $\kappa^4=1$, on $0<h<r$.
+There is $0<\eta<\min(r,1/2)$ such that the original raw unknown satisfies
+\[
+ \frac{v(\gamma_h(t))}{d(\gamma_h(t))^2}\in L^2(Q_\eta,dh\,dt).
+\]
+Neither raw endpoint values nor a jointly measurable choice of canonical
+orbit representatives is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:subcritical-quotient-mass, lem:cell-forcing-growth,
+ lem:subcritical-forcing-orbit-bounds, lem:quarter-endpoint-formula,
+ lem:orbit-ae-congruence, lem:transport-endpoint-exponential-decay,
+ lem:quarter-l2-pullback, lem:quarter-second-mass, lem:orbit-saddle-distance}
+\leanok
+Intersect the scalar quotient collar, the forcing-decay collar and the
+distance-comparison collar. The scalar result gives $q/h\in L^2$, with
+$q=N_{\lambda,g}/D_{\lambda,\kappa}$ and $D\ne0$ a.e.
+The original continuous forcing satisfies
+$|g(\gamma_h(t))|\le Me^{-(2-\delta)|t|}$.
+
+For a good level, the endpoint formula identifies a canonical ACL unknown
+$Z_h$, with $Z_h'=i(\lambda Z_h+g\circ\gamma_h)$.
+The endpoint identity and $|\kappa|=1$ give
+$|Z_h(-L)|=|q(h)|=|Z_h(L)|$.
+Lemma~\ref{lem:transport-endpoint-exponential-decay}, with $a=2-\delta$,
+then yields
+\[
+ |Z_h(t)|\le |q(h)|+\frac M{2-\delta}e^{-(2-\delta)|t|}.
+\]
+Transfer the orbitwise a.e. identities for the raw transport unknown and
+the original forcing representative before using
+$v=-(\lambda Z_h+g\circ\gamma_h)$. Thus on a common a.e. set of levels,
+for a.e. time,
+\[
+ |v(\gamma_h(t))|
+ \le |\lambda|\,|q(h)|+
+      \left(\frac{|\lambda|}{2-\delta}+1\right)M e^{-(2-\delta)|t|}.
+\]
+The raw pullback is jointly a.e. strongly measurable by its actual unweighted
+L2 norm. Apply Lemma~\ref{lem:quarter-second-mass} to this raw profile and
+the distance lower bound, rather than to a choice of $Z_h$ across levels.
+\end{proof}
+
+\begin{lemma}[Subcritical second mass for one quarter character]
+\label{lem:subcritical-character-mass}
+\uses{def:transport-pair, def:quarter-character, def:cell-arcs, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.subcritical_character_memLp}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:subcritical-quarter-mass},
+the original raw unknown has genuine full physical-cell mass
+\[
+ v/d^2\in L^2(\Cell).
+\]
+Every fourth-root character and either sign of the nonzero real transport
+frequency are covered. No common collar for different characters is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:subcritical-quarter-mass, lem:quarter-character-cell-mass,
+ lem:cell-interior-mass, lem:transport-first-gain, lem:quarter-rotation-character}
+\leanok
+Distance invariance makes $v/d^2$ a character on the smaller physical collar.
+The reverse quarter chart and finite rotation cover transfer its base-quarter
+mass to the full collar, missing only null axes.
+First transport gain supplies the actual cell L2 norm of $v/d$.
+Apply Lemma~\ref{lem:cell-interior-mass} to this function: on the collar
+its quotient by $d$ is precisely $v/d^2$.
+This extends the second mass to the whole cell.
+No trace or pointwise assignment of the original spatial unknown is used.
+\end{proof}
+
 \begin{lemma}[Zero-saddle scalar quotient mass]
 \label{lem:zero-saddle-quotient-mass}
 \uses{def:transport-pair, def:quarter-character, def:numerator}
@@ -2349,6 +2486,43 @@ Finally each rotated boundary saddle is again a boundary saddle, so every
 term in its projected continuous forcing value is zero.
 \end{proof}
 
+\begin{lemma}[Weighted first derivatives and growth under quarter projections]
+\label{lem:weighted-quarter-projections}
+\uses{def:transport-quarter-projection, def:cell-arcs, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.exists_weightedGradient_quarterCharacterProjection,
+ NoEmbeddedEigenvalues.quarterCharacterProjection_rpow_bound}
+\leanok
+Let $U$ be open and rotation invariant, and let $s\in\R$.
+Suppose $D_j$ are specified weak first derivatives of $F$ on $U$ with
+$D_j/d^s\in L^2(\Cell)$.
+For every $\kappa\in\C$, the projected raw function $P_\kappa F$ has
+weak first derivatives $E_j$ on $U$, constructed from this same gradient,
+with $E_j/d^s\in L^2(\Cell)$.
+Independently, if $|\kappa|=1$ and the pointwise field $g$ satisfies
+$|g(p)|\le Kd(p)^s$ on the cell, then
+$|P_\kappa g(p)|\le Kd(p)^s$ there with exactly the same constant.
+No second weak jet or gradient endpoint values are required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-gradient-rotation, lem:quarter-cell-cover,
+ lem:quarter-rotation-character, lem:weak-derivative-basic}
+\leanok
+For the actual rotation $R(x,y)=(y,-x)$, the Cartesian chain rule gives
+\[
+ \partial_x(F\circ R)=-D_1\circ R,\qquad
+ \partial_y(F\circ R)=D_0\circ R.
+\]
+Restricted volume preservation and $d\circ R=d$ preserve the weighted cell
+norms. Iterate these derivative rows three times, then use the same finite
+complex linear combination as in $P_\kappa$.
+Weak derivatives and weighted L2 membership are closed under addition
+and multiplication by complex constants.
+For the pointwise bound, all four rotated points remain in the cell.
+Each Fourier coefficient has modulus one when $|\kappa|=1$.
+The triangle inequality and the factor $1/4$ retain the same constant $K$.
+\end{proof}
+
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
@@ -2530,41 +2704,36 @@ $v/d^2\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:numerator-zeros,
- lem:subcritical-numerator-derivative, lem:phase-cell-second-mass-division,
- lem:subcritical-quotient-mass, lem:quarter-second-mass, lem:cell-forcing-growth, lem:subcritical-forcing-orbit-bounds,
- lem:orbit-saddle-distance, lem:orbit-coordinates-area, lem:transport-quarter-projections}
-Decompose into quarter characters as above; the weighted hypotheses are
-preserved by rotation. Apply Lemma~\ref{lem:subcritical-numerator-derivative}
-to each component with its specified weak gradient. Its complementary-weight
-Cauchy--Schwarz estimate gives
-\[
- |N'(h)|^2\le CE_\delta(h)+Ch^{-\delta},\qquad
- E_\delta(h)=\int_{-L}^L\frac{|\nabla f(\gamma_h(t))|^2}{d^{4-2\delta}}dt.
-\]
-Here $\int d^{2-2\delta}dt$ is bounded since $\delta<1$; the endpoint term
-uses $|f(p_\pm)|\le Ch^{1-\delta/2}$. By coarea and $\delta<1$,
-$N'\in L^2(0,h_0)$. Lemma~\ref{lem:phase-cell-second-mass-division}
-sums the complete-cell estimates
-\[
- \int_{I_j}\frac{|C(h)|^2}{h^2}dh
- \le C_\lambda\int_{I_j}|N'|^2dh.
-\]
-Together with resonant cancellation, this gives the original-forcing scalar
-mass of Lemma~\ref{lem:subcritical-quotient-mass}.
-The pointwise forcing bound gives tails $Ce^{-(2-\delta)|t|}$.
-Reconstruction from the nearer endpoint therefore yields
-\[
- \int_{-L}^L\frac{|v_h|^2}{d^4}dt
- \le C_\lambda\frac{|C(h)|^2}{h^2}+Ch^{-\delta}.
-\]
-Indeed the squared tail times $d^{-4}$ is bounded by $Ce^{2\delta|t|}$,
-whose integral is $O(h^{-\delta})$.
-Once the canonical reconstruction bound is transferred a.e.\ to the original
-raw profile, Lemma~\ref{lem:quarter-second-mass} supplies its genuine L2 norm.
-Use coarea and the finite quarter-character sum to recover the physical-cell
-norm. Both level terms are integrable because $0<\delta<1$.
+\uses{lem:transport-rotation-neighbourhood, lem:transport-quarter-projections,
+ lem:cell-forcing-growth, lem:weighted-quarter-projections,
+ lem:subcritical-character-mass}
+\leanok
+First extend the original continuous forcing's corner growth to the whole
+cell, without adding a bound away from the corners.
+Choose a bounded rotation-invariant open union of orbits inside $U$ still
+containing the closed cell, and restrict the original pair and its supplied
+weak gradient to it.
+
+For each $\kappa\in\{1,-1,i,-i\}$, project the two raw fields and the
+supplied continuous forcing by exactly the same formula.
+Restricted volume preservation retains their a.e. agreement and the original
+real frequency. Lemma~\ref{lem:weighted-quarter-projections} constructs the
+projected weak gradient from the supplied one and retains its weighted cell
+norms. Since $|\kappa|=1$, the global forcing growth constant is retained too.
+
+Apply Lemma~\ref{lem:subcritical-character-mass} to each projected pair.
+Each projected original unknown has its own full-cell $d^{-2}$ norm.
+The four projections sum pointwise to the original raw $v$; add the four
+L2 functions and divide by the same $d^2$.
+Different character collars need not coincide.
+Neither a second numerator derivative nor any raw endpoint assignment is used.
 \end{proof}
+
+\begin{remark}
+The pointwise forcing bound is imposed on the supplied continuous representative.
+The weighted weak gradient is the specified gradient of the original raw forcing;
+a.e.\ congruence identifies its weak derivative role without changing that gradient.
+\end{remark}
 
 \section{Transport with weighted forcing}
 

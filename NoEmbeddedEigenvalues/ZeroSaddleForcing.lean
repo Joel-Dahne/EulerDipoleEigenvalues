@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.Melnikov
+import NoEmbeddedEigenvalues.ExponentialTransportDecay
 
 /-!
 # Pointwise forcing estimates from zero saddle values
@@ -113,35 +114,6 @@ theorem IsTransportPair.zero_saddle_forcing_decay {lam : ℝ} {U : Set (ℝ × �
       (arcSegment_subset_closure_cellSquare saddle_neg_mem_arcSegment)
   · exact hz (0, -π) ⟨0, -1, by decide, by simp⟩
       (arcSegment_subset_closure_cellSquare saddle_pos_mem_arcSegment)
-
-private theorem oscillatory_integral_exp_bound {a b C k : ℝ} {F : ℝ → ℂ}
-    (hab : a ≤ b) (hk : k ≠ 0) (hF : ContinuousOn F (Icc a b))
-    (hbound : ∀ s ∈ Icc a b, ‖F s‖ ≤ C * exp (k * s)) (lam : ℝ) :
-    IntervalIntegrable (fun s ↦ F s * Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ)))
-      volume a b ∧
-    ‖∫ s in a..b, F s * Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ))‖ ≤
-      C / k * (exp (k * b) - exp (k * a)) := by
-  have hc : ContinuousOn (fun s ↦ F s *
-      Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ))) (Icc a b) := hF.mul (by fun_prop)
-  have hd (s : ℝ) : HasDerivAt (fun x ↦ C / k * exp (k * x)) (C * exp (k * s)) s := by
-    convert! (((hasDerivAt_id s).const_mul k).exp.const_mul (C / k)) using 1
-    dsimp
-    field_simp
-  have hei : IntervalIntegrable (fun s ↦ C * exp (k * s)) volume a b :=
-    (show Continuous (fun s ↦ C * exp (k * s)) from by fun_prop).intervalIntegrable _ _
-  have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt (fun s _ ↦ hd s) hei
-  refine ⟨hc.intervalIntegrable_of_Icc hab, ?_⟩
-  have hn : ‖∫ s in a..b, F s * Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ))‖ ≤
-      ∫ s in a..b, C * exp (k * s) := by
-    apply intervalIntegral.norm_integral_le_of_norm_le hab _ hei
-    exact Eventually.of_forall fun s hs ↦ by
-      have hn : ‖Complex.exp (-Complex.I * ((lam * s : ℝ) : ℂ))‖ = 1 := by
-        rw [Complex.norm_exp]; simp
-      rw [norm_mul, hn, mul_one]
-      exact hbound s ⟨hs.1.le, hs.2⟩
-  rw [hi] at hn
-  convert hn using 1
-  ring
 
 /-- Oscillatory forcing tails are bounded by the same exponential profile,
 with factor two, uniformly in the real oscillation frequency. Integrability

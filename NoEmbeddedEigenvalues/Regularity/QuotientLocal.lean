@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.TraceL2
 import NoEmbeddedEigenvalues.LocalJets
 import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.FirstTransportGain
+import NoEmbeddedEigenvalues.SecondTransportGain
 
 /-!
 # Local analytic interfaces for the quotient construction
@@ -109,20 +110,5 @@ theorem elliptic_dyadic : ∃ C : ℝ, 0 < C ∧ ∀ (c : ℝ × ℝ) (r : ℝ),
           r⁻¹ ^ 2 * radialJetEnergy 0 0 B c G + r⁻¹ ^ 6 * radialJetEnergy 0 0 B c D) := by
   sorry
 
-/-- Second transport gain (`lem:transport-second-gain`), with an actual continuous
-forcing representative and weak derivatives rather than pointwise derivatives. -/
-theorem transport_second_gain {lam δ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hb : Bornology.IsBounded U)
-    (hcell : closure cellSquare ⊆ U) (hδ0 : 0 < δ) (hδ1 : δ < 1)
-    {g : ℝ × ℝ → ℂ} (hg : ContinuousOn g U) (hfg : f =ᵐ[volume.restrict U] g)
-    (hbound : ∃ C ε : ℝ, 0 < C ∧ 0 < ε ∧ ∀ p ∈ cellSquare,
-      saddleDist p < ε → ‖g p‖ ≤ C * Real.rpow (saddleDist p) (2 - δ))
-    {D : Fin 2 → ℝ × ℝ → ℂ}
-    (hD : ∀ j, HasWeakPartialOn U j f (D j))
-    (hw : ∀ j, MemLp (fun p ↦ D j p / (Real.rpow (saddleDist p) (2 - δ) : ℂ)) 2
-      (volume.restrict cellSquare)) :
-    MemLp (fun p ↦ v p / ((saddleDist p) ^ 2 : ℂ)) 2
-      (volume.restrict cellSquare) := by
-  sorry
 
 end NoEmbeddedEigenvalues

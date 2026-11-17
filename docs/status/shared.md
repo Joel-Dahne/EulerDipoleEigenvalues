@@ -141,8 +141,8 @@ weights and local versus global regularity.
    without explicit corner classification or vorticity H¹. Reflected-periodic
    bounded covering supplies the d² norm and the critical input at every saddle.
    Weak uniqueness retains the canonical quadratic remainder jet.
-   **Remaining saddle frontier:** Second transport gain
-   (`lem:transport-second-gain`).
+   **Saddle frontier closed:** First and Second transport gains,
+   Odd–odd saddle estimates and the weighted forcing endpoint are admission-free.
    **Cylinder inverse is admission-free** (`lem:cylinder-inverse`), as is its
    odd–odd application, with their unchanged statements and original data.
    Full-lift weak inversion preserves the actual nil integral and every
@@ -199,53 +199,31 @@ weights and local versus global regularity.
    The original transport pair supplies the first weak gradient; coarea gives
    actual integrable fiber energy E, and |N′|² ≤ K E/h + K/(h√h), uniformly in
    every real frequency on one collar. No global numerator H² hypothesis is used.
-   **First transport gain is admission-free** (`lem:transport-first-gain`),
-   with its verbatim original statement in `FirstTransportGain.lean`;
-   `Regularity/QuotientLocal.lean` reexports it. Local H² has a continuous
-   representative on the original open domain. Quadratic interpolation of
-   its four saddle values generates a smooth transport pair with genuine v/d
-   mass: |sin x|, |sin y| ≤ d control the correction. Subtract this pair and
-   apply First transport gain with zero saddle values (`lem:transport-first-gain-zero`).
-   Its four complex-character norms recombine without raw endpoint assignments
-   or a common collar, for either frequency sign. Only local numerator H¹ and
-   integrable h|N′|² energy are needed, not the second-jet division hypotheses.
+   **Both transport gains are admission-free** (`lem:transport-first-gain`,
+   `lem:transport-second-gain`), with their verbatim original statements in
+   `FirstTransportGain.lean` and `SecondTransportGain.lean`, reexported by
+   `Regularity/QuotientLocal.lean`. The first gain uses smooth saddle-value
+   interpolation and zero-saddle character norms. The second retains the
+   original continuous forcing and supplied weak first gradient: weighted
+   fiber energy gives actual N′ ∈ L² and C/h ∈ L²; canonical nearer-endpoint
+   reconstruction preserves exp(-(2-δ)|t|) decay and gives raw v/d² mass.
+   Cartesian rotation and finite linearity preserve the specified weighted
+   gradient in every projection. Full physical-cell character norms recombine
+   for all four complex characters and either frequency sign, without a common
+   collar, raw endpoint values, gradient-ray traces or second numerator derivatives.
    Periodic first transport gain (`cor:transport-first-gain-periodic`) and
-   First eigenfunction saddle gain (`prop:saddle-first-gain`) now also have
-   zero transitive admissions.
-   **Second-gain mass infrastructure is admission-free:** Second-mass estimate
-   on a complete cell (`lem:phase-cell-second-mass-estimates`) and Second-mass
-   phase-cell division (`lem:phase-cell-second-mass-division`) give C/h ∈ L²
-   from local numerator H¹, resonant cancellation and N′ ∈ L². No N″,
-   quotient derivative or trace is needed. Second weighted mass from an
-   exponential quarter bound (`lem:quarter-second-mass`) turns this amplitude
-   and an exp(-(2-δ)|t|) remainder into actual raw-profile v/d² mass,
-   with an integrable h^(-δ) remainder for every 0 < δ < 1.
-   **Subcritical first numerator derivative is admission-free**
-   (`lem:subcritical-numerator-derivative`). The original specified first weak
-   gradient gives integrable weighted fiber energy Eδ, compatible local H¹
-   and actual global L² of N′, with |N′|² ≤ K Eδ + K h^(-δ).
-   One collar and majorant work for every real frequency, without second
-   numerator derivatives or gradient-ray traces. Weak uniqueness supplies the
-   original gradient's unweighted L² norm; it is not replaced by a new jet.
-   **Subcritical scalar quotient mass is admission-free**
-   (`lem:subcritical-quotient-mass`): resonant cancellation and second-mass
-   division now give C/h ∈ L² for the original forcing and each supplied
-   fourth-root character. This uses the exact Fin 2 first-gradient hypotheses.
-   **Next:** Second transport gain (`lem:transport-second-gain`) remains admitted.
-   Reconstruct from canonical ACL endpoints with the exp(-(2-δ)|t|) forcing
-   bound, preserve the weighted hypotheses under four character projections,
-   and assemble the full physical-cell norm. The original statement is unchanged.
-   Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
-   remains open.
-   **Next targets:** Second transport gain and the weighted H¹/trace inputs,
-   with their original transport pairs and weighted derivative hypotheses.
-   Prioritize the odd–odd applications at exponents three halves and three.
-   Their finite Taylor extraction is proved separately. Keep common interfaces
-   generic; leave the mixed linear-jet corollary deferred.
-   **Ordinary separatrix frontier:** Second transport gain plus Weighted
-   transport H¹ (`lem:weighted-transport-h1`), Whole-edge zero trace
+   First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
+   **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
+   zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
+   (`lem:elliptic-local`). Weighted numerator estimates
+   (`lem:weighted-numerator-estimates`) and logarithmic phase-cell division
+   (`lem:log-phase-cell-division`) remain separate admitted stronger inputs.
+   Prioritize the odd–odd applications at exponents three halves and three;
+   their finite Taylor extraction is proved. Leave mixed linear-jet extraction deferred.
+   **Ordinary separatrix frontier:** Weighted transport H¹
+   (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these four inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these three inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -421,11 +399,12 @@ prerequisites remain outside this directory; see the
   `f/d², ∇f/d^(3/2) ∈ L²`, covering both the odd–odd quadratic jet and mixed
   zero-jet remainder. Zero forcing on an edge and a weighted corner trace
   force zero vorticity trace, without a midpoint condition. Crossing-edge
-  H¹ gluing has an explicit cutoff proof. The saddle jet's remaining transport
-  input is Second transport gain; first gain and cylinder inversion are admission-free.
+  H¹ gluing has an explicit cutoff proof. Both transport gains, cylinder
+  inversion and the saddle jet are admission-free; weighted transport H¹,
+  zero trace and elliptic H³ remain.
   The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
-  saddle/transport/elliptic inputs rather than a stronger corner premise.
+  weighted transport, trace and elliptic inputs rather than a stronger corner premise.
   Scalar endpoint/second Hardy, uniform complete-cell estimates and global
   phase-cell division are proved. Logarithmic division and explicit saddle-chart
   interfaces remain separate prerequisites.

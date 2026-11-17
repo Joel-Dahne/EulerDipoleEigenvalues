@@ -52,15 +52,13 @@ Proof work is now outside the odd–odd chapter:
   gradient for point removal. Odd reflection and canonical window restriction
   give zero traces on every admissible window, including normal endpoints.
   These generic layers have zero admissions. Weighted forcing
-  (`lem:dd-weighted-forcing`) now also has a proof with its original statement,
-  depending only on Odd–odd saddle estimates (`prop:saddle-dd`). Its quadratic
-  mass and continuous-stream parity helpers are admission-free; no ordinary
-  separatrix H¹/H³ or logarithmic forcing is used. The ordinary separatrix parent
-  now reaches four primitive inputs. Odd–odd saddle estimates (`prop:saddle-dd`)
-  retain their assembly proof with unchanged statement, canonical Fourier remainder
-  jets and the unique normalized quadratic. First eigenfunction saddle gain
-  (`prop:saddle-first-gain`) is transitively admission-free. The saddle bootstrap
-  now reaches only Second transport gain (`lem:transport-second-gain`).
+  (`lem:dd-weighted-forcing`) and Odd–odd saddle estimates (`prop:saddle-dd`)
+  are admission-free with their original statements, canonical Fourier remainder
+  jets and the unique normalized quadratic. Neither ordinary separatrix H¹/H³
+  nor logarithmic forcing is used by the weighted forcing.
+  Both transport gains (`lem:transport-first-gain`, `lem:transport-second-gain`)
+  and First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
+  The ordinary separatrix parent now reaches three primitive inputs.
   **Weak full-cylinder inversion is admission-free**
   (`lem:cylinder-weak-inverse`), retaining its original hypotheses and actual nil
   integral. Finite-mass spectral cutoffs make every ordered derivative spectrum
@@ -80,9 +78,10 @@ Proof work is now outside the odd–odd chapter:
   give a genuine smooth representative of the raw weak-harmonic difference.
   Cylinder inverse (`lem:cylinder-inverse`) and its odd–odd application now
   have zero transitive admissions, with their original statements and data.
-  Ordinary separatrix H¹/H³ and logarithmic forcing reach Second transport gain
-  plus Weighted transport H¹, Whole-edge zero trace and Interior elliptic H³.
-  **Next target:** Second transport gain (`lem:transport-second-gain`).
+  Ordinary separatrix H¹/H³ and logarithmic forcing reach Weighted transport H¹,
+  Whole-edge zero trace and Interior elliptic H³.
+  **Next targets:** Weighted transport H¹ (`lem:weighted-transport-h1`) and
+  Whole-edge zero trace (`lem:transport-zero-edge-trace`).
   See shared status for the precise frontier.
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is proved. Keep the shared interfaces generic and defer
