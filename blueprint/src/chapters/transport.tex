@@ -4189,6 +4189,130 @@ All weak identities were already valid on $U$; neither the null level set
 nor seams are used to glue them.
 \end{proof}
 
+\begin{lemma}[Damped transport energy]
+\label{lem:damped-transport-energy}
+\lean{NoEmbeddedEigenvalues.damped_transport_energy}
+\leanok
+Let $\alpha\le\beta$, $a>0$, $\mu\in\R$, and let $W$ be absolutely
+continuous on $[\alpha,\beta]$. If $G\in L^2([\alpha,\beta])$ and
+\[
+ W'=i\mu W-aW+G\quad\hbox{a.e. on }[\alpha,\beta],
+\]
+then $|W|^2$ is genuinely integrable and
+\[
+ \int_\alpha^\beta |W|^2
+ \le \frac{|W(\alpha)|^2}{a}+\frac1{a^2}\int_\alpha^\beta |G|^2.
+\]
+The constant is independent of the real frequency $\mu$.
+Endpoint values belong to the specified absolutely continuous function.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Absolute continuity first makes $W$ continuous and its squared norm integrable
+on the compact interval. Write $E=(\Re W)^2+(\Im W)^2$.
+The two real components are absolutely continuous, as is $E$.
+The frequency terms cancel in
+\[
+ E'=-2aE+2\Re(G\overline W)
+ \le -aE+|G|^2/a .
+\]
+The inequality follows from
+$(a\Re W-\Re G)^2+(a\Im W-\Im G)^2\ge0$.
+Integrate the actual derivative of $E$ by the absolute-continuity fundamental
+theorem, and discard the nonnegative terminal energy $E(\beta)$.
+\end{proof}
+
+\begin{lemma}[Exponential-weighted endpoint energy]
+\label{lem:transport-weighted-endpoint-energy}
+\lean{NoEmbeddedEigenvalues.transport_left_weighted_energy,
+ NoEmbeddedEigenvalues.transport_right_weighted_energy,
+ NoEmbeddedEigenvalues.transport_weighted_endpoint_energy}
+\leanok
+Let $a>0$, $\mu\in\R$, and suppose the specified locally absolutely continuous
+function $W$ solves $W'=i(\mu W+F)$ a.e.
+On any $[\alpha,\beta]$, $\alpha\le\beta$, genuine weighted L2 of the forcing gives
+\[
+ \int_\alpha^\beta e^{-2at}|W(t)|^2dt
+ \le \frac{e^{-2a\alpha}|W(\alpha)|^2}{a}
+       +\frac1{a^2}\int_\alpha^\beta e^{-2at}|F(t)|^2dt .
+\]
+The right-endpoint counterpart has weight $e^{2at}$ and boundary term
+$e^{2a\beta}|W(\beta)|^2/a$.
+In particular, if $L\ge0$, $|W(-L)|,|W(L)|\le A$ and
+$e^{a|t|}F\in L^2([-L,L])$, then the weighted density
+$e^{2a|t|}|W|^2$ is genuinely integrable and
+\[
+ \int_{-L}^L e^{2a|t|}|W(t)|^2dt
+ \le \frac{2e^{2aL}A^2}{a}
+       +\frac1{a^2}\int_{-L}^L e^{2a|t|}|F(t)|^2dt .
+\]
+No pointwise forcing envelope or sign restriction on $\mu$ is imposed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:damped-transport-energy}
+\leanok
+For the left estimate, set $Y(t)=e^{-at}W(t)$.
+The new equation is $Y'=i\mu Y-aY+ie^{-at}F$.
+Apply Lemma~\ref{lem:damped-transport-energy}.
+For the right estimate reflect $t\mapsto-t$: this preserves interval volume
+and absolute continuity, and reverses the frequency and forcing.
+Split $[-L,L]$ at zero, apply the two estimates with the respective
+canonical endpoints, and add actual integrable densities.
+When the chosen endpoint value is zero, the forcing coefficient is
+exactly $a^{-2}$; at $a=2$ it is $1/4$.
+\end{proof}
+
+\begin{lemma}[Saddle-weighted canonical endpoint energy]
+\label{lem:transport-saddle-endpoint-energy}
+\lean{NoEmbeddedEigenvalues.transport_saddle_endpoint_energy,
+ NoEmbeddedEigenvalues.transport_saddle_vorticity_energy}
+\leanok
+Let $L\ge0$, $c>0$, $\mu\in\R$ and let the measurable real function $d$ satisfy
+\[
+ ce^{-|t|}\le d(t)\le Ce^{-|t|}\qquad (|t|\le L).
+\]
+Suppose the specified locally absolutely continuous $W$ solves
+$W'=i(\mu W+F)$ a.e., $|W(-L)|,|W(L)|\le A$, and
+$F/d^2\in L^2([-L,L])$.
+Then $W/d^2\in L^2([-L,L])$ and
+\[
+ \int_{-L}^L |W/d^2|^2dt
+ \le \frac{e^{4L}A^2}{c^4}
+       +\frac{C^4}{4c^4}\int_{-L}^L |F/d^2|^2dt .
+\]
+For the canonical reconstruction $v_*:=-(\mu W+F)$, one also has genuine
+$v_*/d^2\in L^2([-L,L])$, with
+\[
+ \int_{-L}^L |v_*/d^2|^2dt
+ \le \frac{2\mu^2e^{4L}}{c^4}A^2+
+       \left(\frac{\mu^2C^4}{2c^4}+2\right)
+         \int_{-L}^L |F/d^2|^2dt .
+\]
+No raw spatial values or jointly measurable selection of orbitwise ACL
+representatives is asserted by this fiber estimate.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-weighted-endpoint-energy}
+\leanok
+The distance bounds imply $d>0$ and
+\[
+ c^4\le e^{4|t|}d^4\le C^4.
+\]
+Recover forcing measurability from the specified weighted L2 representative,
+and prove $e^{2|t|}F\in L^2$ by domination by $C^4|F/d^2|^2$.
+Apply Lemma~\ref{lem:transport-weighted-endpoint-energy} with $a=2$.
+The lower distance bound gives an integrable majorant
+$c^{-4}e^{4|t|}|W|^2$ for $|W/d^2|^2$, establishing actual L2 membership
+before comparison of its integrals.
+Finally use the identity defining $v_*$, finite L2 linearity, and
+$|\mu W+F|^2\le2\mu^2|W|^2+2|F|^2$.
+Transfer from this canonical function to an original raw profile is a separate
+a.e. obligation when applying the estimate.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
@@ -4211,6 +4335,7 @@ follows from $f\in H^2$ on the given neighbourhood.
 
 \begin{proof}
 \uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
+  lem:transport-saddle-endpoint-energy, lem:transport-weighted-endpoint-energy,
   lem:sobolev-weak-jets, lem:weak-derivative-unique,
   lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
   lem:reflection-algebra, lem:symmetries-commute,
@@ -4229,15 +4354,17 @@ $B'$ is square integrable on a bounded interval, so $B$ is bounded
 once its value at one interior level is fixed.
 
 For the weighted vorticity estimate reconstruct from the nearer endpoint.
-Weighted Cauchy--Schwarz followed by Fubini gives
+The zero-endpoint case of Lemma~\ref{lem:transport-weighted-endpoint-energy}
+with exponent $a=2$, applied to the zero-started oscillatory primitive
+with canonical forcing $-if_h$, gives
 \[
  \int_{-L}^0 e^{-4t}\left|\int_{-L}^t
           e^{i\lambda(t-u)}f_h(u)\,du\right|^2dt
  \le\frac14\int_{-L}^0 e^{-4t}|f_h(t)|^2dt .
 \]
 The positive half has the analogous estimate with integration from $L$.
-Since $d\asymp e^{-|t|}$ and both endpoint values of $z_h$ have
-modulus $|C|$, variation of constants and $v_h=-\lambda z_h-f_h$ give
+Since $d\asymp e^{-|t|}$ and both canonical endpoint values of $z_h$
+have modulus $|C|$, Lemma~\ref{lem:transport-saddle-endpoint-energy} gives
 \[
  \int_{-L}^L\frac{|v_h|^2}{d^4}\,dt
  \le C_\lambda\left(\frac{|C(h)|^2}{h^2}
