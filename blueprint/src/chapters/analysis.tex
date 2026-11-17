@@ -4781,6 +4781,33 @@ the disjoint family. The resulting nonnegative integral is at most
 $K\int_SG<\infty$, proving the global L2 norm is finite.
 \end{proof}
 
+\begin{lemma}[Finite derivative globalizes local interval H1]
+\label{lem:h1-local-finite-derivative}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.hasIntervalH1_of_local_derivative}
+\leanok
+Let $a<b$ and $D\in L^2(a,b)$.
+Suppose every $x\in(a,b)$ lies in an interval $(c,d)\subset(a,b)$,
+allowing $c=a$ or $d=b$, on which the same representative $F$ is
+interval H1 with specified derivative $D$.
+Then $F$ is interval H1 on $(a,b)$ with derivative $D$.
+In particular, its value is automatically L2 and its canonical extension
+is bounded on $[a,b]$. No raw endpoint value is prescribed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints, lem:interval-zero-extension-l2}
+\leanok
+Fix the midpoint $m$ and set $P(x)=F(m)+\int_m^xD$.
+The local fundamental theorem makes $F-P$ locally constant.
+Connectedness makes it globally constant, and its value at $m$ is zero.
+The globally integrable derivative gives $P$ a continuous extension to
+$[a,b]$, hence a bound and an actual L2 norm there.
+Transfer that norm to the original $F$ on the open interval.
+Its global integral-increment identity gives local absolute continuity
+and the specified a.e. derivative.
+\end{proof}
+
 \begin{lemma}[Local interval H1 data with global finite energy]
 \label{lem:h1-local-global}
 \uses{def:h1-interval}
@@ -4793,7 +4820,7 @@ Then $F$ is interval H1 on $(a,b)$ with derivative $D$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:h1-interval-endpoints, lem:interval-zero-extension-l2}
+\uses{lem:h1-local-finite-derivative}
 \leanok
 Subtract a fixed integral primitive of $D$ from $F$.
 On each local interval the fundamental theorem says this difference is

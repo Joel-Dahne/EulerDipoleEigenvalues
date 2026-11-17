@@ -3,7 +3,8 @@ import NoEmbeddedEigenvalues.QuarterNumeratorBounds
 /-!
 # Weighted first-gradient energy and fixed-time numerator bounds
 
-Blueprint: `lem:weighted-quarter-gradient`, `lem:weighted-numerator-bulk`.
+Blueprint: `lem:weighted-quarter-gradient`, `lem:weighted-numerator-subinterval`,
+`lem:weighted-numerator-bulk`.
 
 The specified gradient divided by d^s has genuine L² orbit sections and an
 integrable level energy. Pair it with d^s times the orbit-level vector.
@@ -47,8 +48,9 @@ theorem quarterWeightedGradient_energy_integrable {b s : ℝ} (hb : b ≤ 1)
   exact hG j
 
 /-- Weighted Cauchy–Schwarz for the actual fixed-time level derivative.
-The complementary time moment and genuine integrability are explicit. -/
-theorem quarterForcingLevelDerivative_weighted_integral_bound
+The same full-quarter energy controls every measurable time subset; the
+complementary time moment and genuine integrability are explicit. -/
+theorem quarterForcingLevelDerivative_weighted_setIntegral_bound
     {D : List (Fin 2) → ℝ × ℝ → ℂ} {h s C A : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
     (hC : 0 ≤ C)
     (hG : ∀ j : Fin 2, MemLp (fun t ↦ D [j] (dipoleOrbit h t) /
@@ -59,10 +61,12 @@ theorem quarterForcingLevelDerivative_weighted_integral_bound
     (hV : ∀ t ∈ Icc (-eighthPeriod h) (eighthPeriod h),
       ‖deriv (fun x ↦ dipoleOrbit x t) h‖ ≤ C / saddleDist (dipoleOrbit h t))
     (hMoment : (∫ t in (-eighthPeriod h)..eighthPeriod h,
-      Real.rpow (saddleDist (dipoleOrbit h t)) (2 * s - 2)) ≤ A) (lam : ℝ) :
-    IntervalIntegrable (fun t ↦ quarterForcingLevelDerivative D (h, t) *
-      Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))) volume (-eighthPeriod h) (eighthPeriod h) ∧
-    ‖∫ t in (-eighthPeriod h)..eighthPeriod h, quarterForcingLevelDerivative D (h, t) *
+      Real.rpow (saddleDist (dipoleOrbit h t)) (2 * s - 2)) ≤ A)
+    (lam : ℝ) (S : Set ℝ) (hSm : MeasurableSet S)
+    (hS : S ⊆ Icc (-eighthPeriod h) (eighthPeriod h)) :
+    IntegrableOn (fun t ↦ quarterForcingLevelDerivative D (h, t) *
+      Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))) S ∧
+    ‖∫ t in S, quarterForcingLevelDerivative D (h, t) *
       Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))‖ ^ 2 ≤
       (2 * C ^ 2 * A) * quarterJetEnergy 1 s D h := by
   let L := eighthPeriod h
@@ -146,7 +150,8 @@ theorem quarterForcingLevelDerivative_weighted_integral_bound
       Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))) volume (-L) L := by
     apply (intervalIntegrable_iff_integrableOn_Icc_of_le (by linarith : -L ≤ L)).2
     exact ((hwi 0).add (hwi 1)).congr_fun (fun t ht ↦ (he t ht).symm) measurableSet_Icc
-  refine ⟨hIntegral, ?_⟩
+  refine ⟨((intervalIntegrable_iff_integrableOn_Icc_of_le
+    (by linarith : -L ≤ L)).1 hIntegral).mono_set hS, ?_⟩
   have hE : quarterJetEnergy 1 s D h = (∫ t in Icc (-L) L, ‖F 0 t‖ ^ 2) +
       ∫ t in Icc (-L) L, ‖F 1 t‖ ^ 2 := by
     unfold quarterJetEnergy
@@ -154,16 +159,50 @@ theorem quarterForcingLevelDerivative_weighted_integral_bound
     rw [← integral_Icc_eq_integral_Ioo,
       integral_add ((hG 0).integrable_norm_pow (by norm_num))
         ((hG 1).integrable_norm_pow (by norm_num))]
-  rw [intervalIntegral.integral_of_le (by linarith : -eighthPeriod h ≤ eighthPeriod h),
-    ← integral_Icc_eq_integral_Ioc,
-    setIntegral_congr_fun measurableSet_Icc he, integral_add (hwi 0) (hwi 1)]
-  have hb (j : Fin 2) := (norm_integral_mul_sq_le (hwL j) (hG j)).trans
-    (mul_le_mul_of_nonneg_right (hwbound j) (integral_nonneg (fun _ ↦ sq_nonneg _)))
-  have hs := (norm_add_sq_le (∫ t in Icc (-L) L, w 0 t * F 0 t)
-    (∫ t in Icc (-L) L, w 1 t * F 1 t)).trans
+  rw [setIntegral_congr_fun hSm (fun t ht ↦ he t (hS ht)),
+    integral_add ((hwi 0).mono_set hS) ((hwi 1).mono_set hS)]
+  have hsmall (G : ℝ → ℂ) (hGL : MemLp G 2 (volume.restrict (Icc (-L) L))) :
+      (∫ t in S, ‖G t‖ ^ 2) ≤ ∫ t in Icc (-L) L, ‖G t‖ ^ 2 :=
+    setIntegral_mono_set (hGL.integrable_norm_pow (by norm_num))
+      (Eventually.of_forall fun _ ↦ sq_nonneg _) (Eventually.of_forall hS)
+  have hb (j : Fin 2) :=
+    (norm_integral_mul_sq_le
+      ((hwL j).mono_measure (Measure.restrict_mono_set _ hS))
+      ((hG j).mono_measure (Measure.restrict_mono_set _ hS))).trans
+      ((mul_le_mul (hsmall _ (hwL j)) (hsmall _ (hG j))
+        (integral_nonneg fun _ ↦ sq_nonneg _) (integral_nonneg fun _ ↦ sq_nonneg _)).trans
+        (mul_le_mul_of_nonneg_right (hwbound j) (integral_nonneg fun _ ↦ sq_nonneg _)))
+  have hs := (norm_add_sq_le (∫ t in S, w 0 t * F 0 t)
+    (∫ t in S, w 1 t * F 1 t)).trans
       (mul_le_mul_of_nonneg_left (add_le_add (hb 0) (hb 1)) (by norm_num : (0 : ℝ) ≤ 2))
   rw [hE]
   convert hs using 1
   ring
+
+/-- Weighted Cauchy–Schwarz for the actual fixed-time level derivative.
+The complementary time moment and genuine integrability are explicit. -/
+theorem quarterForcingLevelDerivative_weighted_integral_bound
+    {D : List (Fin 2) → ℝ × ℝ → ℂ} {h s C A : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (hC : 0 ≤ C)
+    (hG : ∀ j : Fin 2, MemLp (fun t ↦ D [j] (dipoleOrbit h t) /
+      (Real.rpow (saddleDist (dipoleOrbit h t)) s : ℂ)) 2
+      (volume.restrict (Icc (-eighthPeriod h) (eighthPeriod h))))
+    (hd : ∀ t ∈ Icc (-eighthPeriod h) (eighthPeriod h),
+      0 < saddleDist (dipoleOrbit h t))
+    (hV : ∀ t ∈ Icc (-eighthPeriod h) (eighthPeriod h),
+      ‖deriv (fun x ↦ dipoleOrbit x t) h‖ ≤ C / saddleDist (dipoleOrbit h t))
+    (hMoment : (∫ t in (-eighthPeriod h)..eighthPeriod h,
+      Real.rpow (saddleDist (dipoleOrbit h t)) (2 * s - 2)) ≤ A) (lam : ℝ) :
+    IntervalIntegrable (fun t ↦ quarterForcingLevelDerivative D (h, t) *
+      Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))) volume (-eighthPeriod h) (eighthPeriod h) ∧
+    ‖∫ t in (-eighthPeriod h)..eighthPeriod h, quarterForcingLevelDerivative D (h, t) *
+      Complex.exp (-Complex.I * ((lam * t : ℝ) : ℂ))‖ ^ 2 ≤
+      (2 * C ^ 2 * A) * quarterJetEnergy 1 s D h := by
+  obtain ⟨hi, hb⟩ := quarterForcingLevelDerivative_weighted_setIntegral_bound hh hC hG hd hV
+    hMoment lam (Icc (-eighthPeriod h) (eighthPeriod h)) measurableSet_Icc Subset.rfl
+  have hL := eighthPeriod_pos hh.1 hh.2
+  refine ⟨(intervalIntegrable_iff_integrableOn_Icc_of_le (by linarith)).2 hi, ?_⟩
+  rwa [intervalIntegral.integral_of_le (by linarith : -eighthPeriod h ≤ eighthPeriod h),
+    ← integral_Icc_eq_integral_Ioc]
 
 end NoEmbeddedEigenvalues

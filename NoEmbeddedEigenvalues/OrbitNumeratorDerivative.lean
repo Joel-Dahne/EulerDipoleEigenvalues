@@ -4,7 +4,7 @@ import NoEmbeddedEigenvalues.WeightedNumerators
 /-!
 # The weak moving-endpoint derivative of the quarter numerator
 
-Blueprint: `lem:numerator-moving-endpoints`.
+Blueprint: `lem:orbit-window-flux`, `lem:numerator-moving-endpoints`.
 
 Normalized orbit time makes the integration window fixed. The change of
 period contributes a transverse divergence; its integral is exactly the two
@@ -163,16 +163,28 @@ private theorem endpoint_flux_eq (lam : ℝ) (g : ℝ × ℝ → ℂ) {h : ℝ}
   push_cast
   ring
 
-/-- The actual continuous forcing numerator has the moving-endpoint derivative
-on each compact level interval. Only its specified first weak gradient is used. -/
-theorem quarterNumerator_hasIntervalH1_derivative {lam : ℝ} {U : Set (ℝ × ℝ)}
+/-- A fixed angular subwindow has the same weak level derivative and angular
+boundary flux. The continuous forcing is evaluated only at the window ends. -/
+theorem normalizedOrbitWindow_hasIntervalH1_flux {lam : ℝ} {U : Set (ℝ × ℝ)}
     (hU : IsOpen U) {g : ℝ × ℝ → ℂ} (hg : ContinuousOn g U)
     (hgL : MemLp g 2 (volume.restrict U))
     {D : List (Fin 2) → ℝ × ℝ → ℂ}
     (hD : ∀ j, HasWeakPartialOn U j g (D [j]))
     (hDL : ∀ j, MemLp (D [j]) 2 (volume.restrict U)) (hcell : cellSquare ⊆ U)
-    {a b h₀ : ℝ} (ha : 0 < a) (hab : a < b) (hb : b < h₀) (hh₀ : h₀ < 1) :
-    HasIntervalH1 a b (quarterNumerator lam g) (quarterNumeratorDerivative lam g D) := by
+    {a b h₀ l r : ℝ} (ha : 0 < a) (hab : a < b) (hb : b < h₀) (hh₀ : h₀ < 1)
+    (hl : -1 / 4 < l) (hlr : l ≤ r) (hr : r < 3 / 4) :
+    HasIntervalH1 a b
+      (fun h ↦ ∫ θ in Icc l r, (orbitPeriod h : ℂ) *
+        Complex.exp (-Complex.I * ((lam * (θ * orbitPeriod h) : ℝ) : ℂ)) *
+          g (actionAngleInv (h, θ)))
+      (fun h ↦ (∫ θ in Icc l r, (orbitPeriod h : ℂ) *
+        Complex.exp (-Complex.I * ((lam * (θ * orbitPeriod h) : ℝ) : ℂ)) *
+          quarterForcingLevelDerivative D (h, θ * orbitPeriod h)) +
+        ((deriv orbitPeriod h : ℝ) : ℂ) *
+          ((r : ℂ) * Complex.exp (-Complex.I * ((lam * (r * orbitPeriod h) : ℝ) : ℂ)) *
+              g (actionAngleInv (h, r)) -
+           (l : ℂ) * Complex.exp (-Complex.I * ((lam * (l * orbitPeriod h) : ℝ) : ℂ)) *
+              g (actionAngleInv (h, l)))) := by
   let K : Set (ℝ × ℝ) := Icc a b ×ˢ Icc (-1 / 4 : ℝ) (3 / 4)
   let R : Set (ℝ × ℝ) := Ioo a b ×ˢ Ioo (-1 / 4 : ℝ) (3 / 4)
   have hK : IsCompact K := isCompact_Icc.prod isCompact_Icc
@@ -227,8 +239,7 @@ theorem quarterNumerator_hasIntervalH1_derivative {lam : ℝ} {U : Set (ℝ × �
     linear_combination orbit_flux_identity lam D (hRs hq)
   have hx := (hG 0).mul_contDiffOn hRo (hW.mono hRs)
   have ht := (hG 1).mul_contDiffOn hRo (hPW.mono hRs)
-  have hN := hx.setIntegral_h1_flux hab (by norm_num) (l := (-1 / 8 : ℝ)) (r := 1 / 8)
-    (by norm_num) (by norm_num) (by norm_num)
+  have hN := hx.setIntegral_h1_flux hab (by norm_num) hl hlr hr
     ((hW.continuousOn.mono hRs).mul hgc) ((hPW.continuousOn.mono hRs).mul hgc)
     (hM _ _ hW (hP _ hgL)) hAL hHL (hM _ _ hPW (hP _ hgL)) hBL ht
     (β := fun h ↦ ((deriv orbitPeriod h : ℝ) : ℂ)) (by
@@ -236,6 +247,30 @@ theorem quarterNumerator_hasIntervalH1_derivative {lam : ℝ} {U : Set (ℝ × �
       dsimp only [A, B, H]
       rw [weight_flux_identity lam (hRs hq), orbit_flux_identity lam D (hRs hq)]
       ring)
+  simpa only [Pi.mul_apply, weight, fluxWeight, phase, H, Function.comp_apply] using hN
+
+/-- The actual continuous forcing numerator has the moving-endpoint derivative
+on each compact level interval. Only its specified first weak gradient is used. -/
+theorem quarterNumerator_hasIntervalH1_derivative {lam : ℝ} {U : Set (ℝ × ℝ)}
+    (hU : IsOpen U) {g : ℝ × ℝ → ℂ} (hg : ContinuousOn g U)
+    (hgL : MemLp g 2 (volume.restrict U))
+    {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : ∀ j, HasWeakPartialOn U j g (D [j]))
+    (hDL : ∀ j, MemLp (D [j]) 2 (volume.restrict U)) (hcell : cellSquare ⊆ U)
+    {a b h₀ : ℝ} (ha : 0 < a) (hab : a < b) (hb : b < h₀) (hh₀ : h₀ < 1) :
+    HasIntervalH1 a b (quarterNumerator lam g) (quarterNumeratorDerivative lam g D) := by
+  have hN := normalizedOrbitWindow_hasIntervalH1_flux (lam := lam) hU hg hgL hD hDL hcell
+    ha hab hb hh₀ (l := (-1 / 8 : ℝ)) (r := 1 / 8)
+    (by norm_num) (by norm_num) (by norm_num)
+  let H : ℝ × ℝ → ℂ := fun q ↦ weight lam q *
+    quarterForcingLevelDerivative D (q.1, q.2 * orbitPeriod q.1)
+  change HasIntervalH1 a b
+    (fun h ↦ ∫ θ in Icc (-1 / 8 : ℝ) (1 / 8),
+      weight lam (h, θ) * (g ∘ actionAngleInv) (h, θ))
+    (fun h ↦ (∫ θ in Icc (-1 / 8 : ℝ) (1 / 8), H (h, θ)) +
+      ((deriv orbitPeriod h : ℝ) : ℂ) *
+        (fluxWeight lam (h, 1 / 8) * g (actionAngleInv (h, 1 / 8)) -
+         fluxWeight lam (h, -1 / 8) * g (actionAngleInv (h, -1 / 8)))) at hN
   have hNv := hN.congr_Ioo (G := quarterNumerator lam g) (by
     intro h hh
     rw [quarterNumerator_eq_normalized]
@@ -251,7 +286,6 @@ theorem quarterNumerator_hasIntervalH1_derivative {lam : ℝ} {U : Set (ℝ × �
     intro θ _
     dsimp only [H, weight, phase]
     ring
-  simp only [Pi.mul_apply, Function.comp_apply]
   rw [hH, endpoint_flux_eq lam g ⟨ha.trans hh.1, hh.2.trans (hb.trans hh₀)⟩]
   rfl
 

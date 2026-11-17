@@ -5,11 +5,13 @@ import Mathlib.Analysis.SpecialFunctions.NonIntegrable
 /-!
 # Local interval H¹ data and global finite energy
 
-Blueprint: `lem:h1-local-global`, `lem:h1-div-zero-trace`.
+Blueprint: `lem:h1-local-finite-derivative`, `lem:h1-local-global`,
+`lem:h1-div-zero-trace`.
 
-Compatible local H¹ data globalize once the value and specified derivative
-have global L² norms. Subtracting the integral primitive gives a locally
-constant function on an interval, so local increment identities globalize.
+Compatible local H¹ data globalize once the specified derivative has a global
+L² norm. The value norm follows from the bounded integral primitive.
+Subtracting that primitive gives a locally constant function on an interval,
+so local increment identities globalize.
 -/
 
 noncomputable section
@@ -17,10 +19,9 @@ namespace NoEmbeddedEigenvalues
 open Set Filter MeasureTheory
 open scoped Topology
 
-/-- Local interval H¹ data with the same representative and derivative glue
-without jumps, provided the two global L² norms are finite. -/
-theorem hasIntervalH1_of_local {a b : ℝ} {F D : ℝ → ℂ} (hab : a < b)
-    (hF : MemLp F 2 (volume.restrict (Ioo a b)))
+/-- On a bounded connected interval, compatible local H¹ and a globally L²
+specified derivative already force the value to be L² as well. -/
+theorem hasIntervalH1_of_local_derivative {a b : ℝ} {F D : ℝ → ℂ} (hab : a < b)
     (hD : MemLp D 2 (volume.restrict (Ioo a b)))
     (hloc : ∀ x ∈ Ioo a b, ∃ c d : ℝ,
       a ≤ c ∧ d ≤ b ∧ x ∈ Ioo c d ∧ HasIntervalH1 c d F D) :
@@ -59,8 +60,39 @@ theorem hasIntervalH1_of_local {a b : ℝ} {F D : ℝ → ℂ} (hab : a < b)
     have hp := hinc c d (Ioo_subset_Icc_self hc) (Ioo_subset_Icc_self hd)
     dsimp only [L] at he
     linear_combination he - hp
+  have hmI : m ∈ Ioo a b := ⟨by dsimp [m]; linarith, by dsimp [m]; linarith⟩
+  have hPF : EqOn P F (Ioo a b) := by
+    intro x hx
+    have he := hL.apply_eq_of_preconnectedSpace ⟨x, hx⟩ ⟨m, hmI⟩
+    have hmP : P m = F m := by simp [P, intervalH1Extension, m]
+    dsimp only [L] at he
+    rw [hmP, sub_self] at he
+    exact (sub_eq_zero.mp he).symm
+  have hPc : ContinuousOn P (Icc a b) := by
+    have hu : IntervalIntegrable D volume a b :=
+      (intervalIntegrable_iff_integrableOn_Icc_of_le hab.le).2 hi
+    have hmU : m ∈ uIcc a b := by simpa only [uIcc_of_le hab.le] using hm
+    have hc := intervalIntegral.continuousOn_primitive_interval' hu hmU
+    exact continuousOn_const.add (by simpa only [uIcc_of_le hab.le] using hc)
+  obtain ⟨M, hM⟩ := isCompact_Icc.exists_bound_of_continuousOn hPc
+  have hPL : MemLp P 2 (volume.restrict (Ioo a b)) :=
+    MemLp.of_bound ((hPc.mono Ioo_subset_Icc_self).aestronglyMeasurable measurableSet_Ioo) M
+      ((ae_restrict_mem measurableSet_Ioo).mono fun x hx ↦ hM x (Ioo_subset_Icc_self hx))
+  have hF : MemLp F 2 (volume.restrict (Ioo a b)) :=
+    hPL.ae_eq ((ae_restrict_mem measurableSet_Ioo).mono fun x hx ↦ hPF hx)
   obtain ⟨hac, hder⟩ := locally_ac_of_integral_eq hab hD hFTC
   exact ⟨hF, hD, hac, (ae_restrict_iff' measurableSet_Ioo).1 hder⟩
+
+/-- Local interval H¹ data with the same representative and derivative glue
+without jumps, provided the two global L² norms are finite. -/
+theorem hasIntervalH1_of_local {a b : ℝ} {F D : ℝ → ℂ} (hab : a < b)
+    (hF : MemLp F 2 (volume.restrict (Ioo a b)))
+    (hD : MemLp D 2 (volume.restrict (Ioo a b)))
+    (hloc : ∀ x ∈ Ioo a b, ∃ c d : ℝ,
+      a ≤ c ∧ d ≤ b ∧ x ∈ Ioo c d ∧ HasIntervalH1 c d F D) :
+    HasIntervalH1 a b F D := by
+  have h := hasIntervalH1_of_local_derivative hab hD hloc
+  exact ⟨hF, h.memLp_derivative, h.locally_absolutelyContinuous, h.hasDerivAt_ae⟩
 
 /-- Finite reciprocal-distance L² energy forces the canonical left trace to vanish. -/
 theorem HasIntervalH1.trace_zero_of_div_memLp {b : ℝ} {F D : ℝ → ℂ}

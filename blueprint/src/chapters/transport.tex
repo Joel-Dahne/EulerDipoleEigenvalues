@@ -1027,6 +1027,43 @@ This is a candidate derivative; regularity and actual integrability of
 its bulk term are separate assertions.
 \end{definition}
 
+\begin{lemma}[Weak flux formula on a fixed angular window]
+\label{lem:orbit-window-flux}
+\uses{def:quarter-jet-data, def:period, def:sobolev-local, def:h1-interval,
+ def:orbit-coordinates}
+\lean{NoEmbeddedEigenvalues.normalizedOrbitWindow_hasIntervalH1_flux}
+\leanok
+Let open $U$ contain the cell, let $g$ be continuous on $U$, and suppose
+$g,D_{[0]},D_{[1]}\in L^2(U)$ with $\partial_jg=D_{[j]}$ weakly.
+Fix $-1/4<l\le r<3/4$ and a real frequency $\mu$.
+Write $S(h)=8L(h)$, $u(h,\theta)=g(\gamma_h(S(h)\theta))$, and
+\[
+ A_{l,r}(h)=\int_l^r S(h)e^{-i\mu S(h)\theta}u(h,\theta)\,d\theta .
+\]
+On each compact level interval inside $(0,h_0)$, $h_0<1$, this has
+interval H1 data with specified derivative
+\[
+ \int_l^r S e^{-i\mu S\theta}G_D(h,S\theta)\,d\theta+
+ S'\bigl[r e^{-i\mu Sr}u(h,r)-l e^{-i\mu Sl}u(h,l)\bigr].
+\]
+Only the singleton entries of the supplied gradient are used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fixed-window-flux, lem:action-angle-weak,
+ lem:weak-derivative-product, lem:action-angle-chart,
+ lem:period-regularity, lem:orbit-coordinates-area}
+\leanok
+Put $W=S e^{-i\mu S\theta}$ and $P=\theta e^{-i\mu S\theta}$.
+Weak pullback and multiplication give
+$\partial_h(Wu)=W G_D+S'\partial_\theta(Pu)$.
+All these fields are genuinely L2 on a compact angular rectangle:
+coarea pulls back the original L2 fields and the smooth coefficients
+are bounded there. Lemma~\ref{lem:fixed-window-flux} integrates the
+angular divergence to the continuous values at $l,r$.
+No gradient is evaluated on an endpoint curve.
+\end{proof}
+
 \begin{lemma}[Weak moving-endpoint numerator formula]
 \label{lem:numerator-moving-endpoints}
 \uses{def:numerator-derivative, def:sobolev-local,
@@ -1045,7 +1082,7 @@ Only the singleton entries of $D$ are used.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:fixed-window-flux, lem:numerator-local-h1,
+\uses{lem:orbit-window-flux, lem:fixed-window-flux, lem:numerator-local-h1,
  lem:action-angle-weak, lem:weak-derivative-product,
  lem:action-angle-chart, lem:period-regularity, lem:orbit-coordinates-area}
 \leanok
@@ -1097,6 +1134,50 @@ differentiable by period smoothness. Apply
 Lemma~\ref{lem:integrable-divisor-cancellation}.
 No endpoint value of the raw transport unknown at the resonant level,
 and no simplicity or enumeration of the divisor zeros, is used.
+\end{proof}
+
+\begin{definition}[Half numerator and its derivative candidate]
+\label{def:half-numerator-derivative}
+\uses{def:period, def:quarter-jet-data}
+\lean{NoEmbeddedEigenvalues.quarterHalfNumerator,
+ NoEmbeddedEigenvalues.quarterHalfNumeratorDerivative}
+\leanok
+For continuous $g$ and the supplied family $D$, put
+\[
+ \begin{aligned}
+ B_\mu(h)&=\int_{-L}^{0}g(\gamma_h(t))e^{-i\mu t}\,dt,\\
+ B_{1,\mu}(h)&=\int_{-L}^{0}G_D(h,t)e^{-i\mu t}\,dt+
+             L'(h)g(\gamma_h(-L))e^{i\mu L}.
+ \end{aligned}
+\]
+This is a candidate weak derivative, not a regularity assertion.
+\end{definition}
+
+\begin{lemma}[Weak moving-endpoint half-numerator formula]
+\label{lem:half-numerator-moving-endpoints}
+\uses{def:half-numerator-derivative, def:sobolev-local,
+ def:h1-interval, def:h1-local-interval, lem:orbit-window-flux}
+\lean{NoEmbeddedEigenvalues.quarterHalfIntervalIntegral_eq_normalized,
+ NoEmbeddedEigenvalues.quarterHalfNumerator_eq_normalized,
+ NoEmbeddedEigenvalues.quarterHalfNumerator_hasIntervalH1_derivative,
+ NoEmbeddedEigenvalues.quarterHalfNumerator_derivative_h1Loc}
+\leanok
+Under the forcing and weak-gradient hypotheses of
+Lemma~\ref{lem:orbit-window-flux}, for every
+$h_0<1$ the original half numerator
+$B_\mu(h)=\int_{-L(h)}^0g(\gamma_h(t))e^{-i\mu t}\,dt$
+has compatible local interval H1 data $(B_\mu,B_{1,\mu})$ on $(0,h_0)$.
+There is no zero-midpoint, zero-endpoint or quarter-character premise.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-window-flux, lem:period-regularity}
+\leanok
+Normalize to $l=-1/8$, $r=0$ and apply the angular-window formula.
+At $r=0$ the flux vanishes because of its factor $r$, not because $g$
+vanishes there. At $l=-1/8$ it is $L'g(\gamma_h(-L))e^{i\mu L}$,
+since $S'=8L'$. Linear change of variables identifies the bulk with
+the actual integral on $[-L,0]$.
 \end{proof}
 
 \begin{lemma}[Geometry of quarter-divisor zeros]
@@ -1817,6 +1898,36 @@ L2 slicing gives the two weighted sections. The two endpoints have
 measure zero, so the same norms hold on the closed time window.
 \end{proof}
 
+\begin{lemma}[Weighted bulk bound on arbitrary time subsets]
+\label{lem:weighted-numerator-subinterval}
+\uses{def:quarter-jet-data, def:period, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.quarterForcingLevelDerivative_weighted_setIntegral_bound}
+\leanok
+Fix $0<h<1$, $s\in\R$, $C\ge0$ and $A\in\R$.
+Suppose $D_{[j]}\circ\gamma_h/d^s\in L^2[-L,L]$, $d>0$ there,
+$|\partial_h\gamma_h|\le C/d$, and $\int_{-L}^Ld^{2s-2}\,dt\le A$.
+For every measurable $J\subset[-L,L]$ and real $\mu$, the bulk integrand
+is genuinely integrable on $J$, and
+\[
+ \left|\int_JG_D(h,t)e^{-i\mu t}\,dt\right|^2
+ \le2C^2A\,\mathcal J_{1,s}(h).
+\]
+The majorant is independent of the subset and the frequency.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:action-angle-regularity, lem:dipole-flow}
+\leanok
+Pair $F_j=D_{[j]}\circ\gamma_h/d^s$ with
+$w_j=d^s\partial_h\gamma_{h,j}e^{-i\mu t}$.
+The weights are continuous and L2 on the whole compact time window,
+so their products with $F_j$ are integrable on every measurable subset.
+Cauchy--Schwarz on $J$, followed by monotonicity of the actual nonnegative
+square integrals, bounds their product by the full-window norms.
+Use $\int|w_j|^2\le C^2A$ and the two-term square-norm inequality.
+This avoids a time-window length factor.
+\end{proof}
+
 \begin{lemma}[Weighted fixed-time numerator bound]
 \label{lem:weighted-numerator-bulk}
 \uses{def:quarter-jet-data, def:period, def:cell-arcs}
@@ -1842,7 +1953,7 @@ No derivative or pointwise endpoint value of $D$ is required.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:action-angle-regularity, lem:dipole-flow}
+\uses{lem:weighted-numerator-subinterval, lem:action-angle-regularity, lem:dipole-flow}
 \leanok
 Pair $F_j=D_{[j]}\circ\gamma_h/d^s$ with
 $w_j=d^s\partial_h\gamma_{h,j}e^{-i\mu t}$.
@@ -3127,8 +3238,86 @@ Both terms are genuinely integrable by the weighted-gradient and
 continuous endpoint-value results.
 A countable cover by compact interior intervals, on each of which the
 specified derivative is L2, supplies its global a.e. measurability.
-Domination then gives the actual derivative L2 norm. No half numerator or gradient-ray trace
-is used in this first-numerator step.
+Domination then gives the actual derivative L2 norm. No half-numerator estimate
+or gradient-ray trace is required as an input to this first-numerator step.
+\end{proof}
+
+\begin{lemma}[Weighted first derivatives of both numerators]
+\label{lem:weighted-half-numerator}
+\uses{def:transport-pair, def:numerator-derivative,
+ def:half-numerator-derivative, def:sobolev-local,
+ def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.quarterHalfNumeratorDerivative_weighted_sq_le,
+ NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_first_derivatives}
+\leanok
+Let $(v,f)$ be a transport pair on an open orbit neighbourhood containing
+the closed cell. Retain a supplied continuous representative $g=f$ a.e.
+and the original weak Cartesian gradient $D_j$.
+Suppose $f/d^2,D_j/d^{3/2}\in L^2(\Cell)$ and use $J_{[j]}=D_j$,
+with the unused entries zero.
+There is one $0<h_0<1/2$ such that, for every real $\mu$, both
+$(N_{\mu,g},N_{1,\mu})$ and $(B_\mu,B_{1,\mu})$ are compatible local
+interval H1 data, and
+\[
+ N_{1,\mu},\ B_{1,\mu}\in L^2(0,h_0).
+\]
+No boundedness of the neighbourhood, pointwise forcing growth, gradient-ray
+value, second numerator derivative or zero-midpoint premise is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-first-numerator, lem:half-numerator-moving-endpoints,
+ lem:weighted-numerator-subinterval, lem:weighted-quarter-gradient,
+ lem:weighted-endpoint-value-transport, lem:quarter-endpoint-cones,
+ lem:period-derivative-bounds, lem:orbit-level-derivatives,
+ lem:orbit-time-integrals, lem:weak-derivative-unique}
+\leanok
+Apply the subset bulk estimate to $[-L,0]$ with $s=3/2$.
+If $|L'|\le C_L/h$, its single endpoint term has squared norm at most
+$C_L^2P_g$. Thus
+\[
+ |B_{1,\mu}|^2\le4C^2A\,\mathcal J_{1,3/2}+2C_L^2P_g .
+\]
+The full derivative has the same bound with endpoint coefficient $4C_L^2$.
+The weighted-gradient and continuous endpoint-value results give actual
+integrable energies on one geometric collar.
+A common constant times $\mathcal J_{1,3/2}+P_g$ dominates both derivatives
+on the same a.e. set for every $\mu$.
+Their compatible local H1 data give a.e. measurability; domination then gives
+both genuine L2 norms without any pointwise forcing envelope.
+\end{proof}
+
+\begin{lemma}[Global H1 regularity of the weighted numerators]
+\label{lem:weighted-numerators-h1}
+\uses{def:transport-pair, def:numerator-derivative,
+ def:half-numerator-derivative, def:sobolev-local, def:h1-interval,
+ lem:weighted-half-numerator}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerators_h1}
+\leanok
+Under the original weighted hypotheses of
+Lemma~\ref{lem:weighted-half-numerator}, there is one $0<h_0<1/2$ such that,
+for every real $\mu$,
+\[
+ N_{\mu,g},\ B_\mu\in H^1(0,h_0)
+\]
+with the specified derivatives $N_{1,\mu},B_{1,\mu}$.
+The same continuous forcing and original weak gradient are retained.
+The value norms follow from the derivative norms; none is assumed.
+Traces mean canonical interval extensions, with no assertion of zero trace
+or agreement with raw endpoint assignments. No H2 conclusion is made.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-half-numerator, lem:h1-local-finite-derivative}
+\leanok
+Keep the common collar and both specified derivatives from
+Lemma~\ref{lem:weighted-half-numerator}.
+Around $x\in(0,h_0)$ use the compact interior interval with endpoints
+$x/2$ and $(x+h_0)/2$. The local H1 data on these intervals and each
+global derivative L2 norm meet exactly the hypotheses of
+Lemma~\ref{lem:h1-local-finite-derivative}.
+Apply it to the full and half numerators separately, without shrinking
+the collar or changing a representative.
 \end{proof}
 
 \begin{lemma}[Second mass from weighted L2 forcing]
@@ -3201,10 +3390,11 @@ already supplied by $H^2$, not extra regularity.
 \uses{lem:weighted-corner-trace, lem:trace-h2, lem:trace-l2,
   lem:period-derivative-bounds, lem:period-orbit, lem:coarea,
   lem:orbit-level-derivatives, lem:orbit-time-integrals,
-  lem:weighted-first-numerator, lem:weighted-endpoint-value-transport}
-Obtain the first-numerator and continuous endpoint-value estimates from
-Lemmas~\ref{lem:weighted-first-numerator} and
-\ref{lem:weighted-endpoint-value-transport}.
+  lem:weighted-first-numerator, lem:weighted-endpoint-value-transport,
+  lem:weighted-numerators-h1}
+Obtain the full and half first-numerator data from
+Lemma~\ref{lem:weighted-numerators-h1} and the continuous endpoint-value
+estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
 Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
 spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.
 On compact level intervals the Sobolev chain rule and the traces on the
@@ -4681,7 +4871,7 @@ follows from $f\in H^2$ on the given neighbourhood.
 
 \begin{proof}
 \uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
-  lem:weighted-transport-second-mass,
+  lem:weighted-transport-second-mass, lem:weighted-numerators-h1,
   lem:sobolev-weak-jets, lem:weak-derivative-unique,
   lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
   lem:reflection-algebra, lem:symmetries-commute,
@@ -4693,14 +4883,16 @@ For the H1 and weak-gradient conclusions, choose a second weak jet of the
 forcing; its first entries agree a.e.
 with the supplied gradient by weak-derivative uniqueness.
 Decompose into the four quarter characters. Rotations preserve the
-weighted hypotheses. Numerator vanishing and phase-cell division give
-$C/h,C'\in L^2$. With $B$ from Lemma~\ref{lem:weighted-numerator-estimates},
+weighted hypotheses. Lemma~\ref{lem:weighted-numerators-h1} supplies
+the first-order full and half data; the second-order data of
+Lemma~\ref{lem:weighted-numerator-estimates}, numerator vanishing and
+phase-cell division give $C/h,C'\in L^2$. With the same half numerator $B$,
 \[
  A(h)=z_h(0)=ie^{2i\lambda L(h)}C(h)+iB(h)
 \]
 has $A'\in L^2$, since $L'C$ is controlled by $C/h$. Also $A\in L^2$:
-$B'$ is square integrable on a bounded interval, so $B$ is bounded
-once its value at one interior level is fixed.
+the half numerator is H1 by Lemma~\ref{lem:weighted-numerators-h1},
+hence bounded through its canonical continuous interval extension.
 
 For the level derivative use midpoint reconstruction:
 \[

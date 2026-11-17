@@ -217,14 +217,16 @@ weights and local versus global regularity.
    (`lem:weighted-transport-second-mass`) proves v/d² L² with the original
    forcing/d² and supplied gradient/d^(3/2) hypotheses. Shrinking Cartesian
    rectangle traces produce the continuous forcing's actual endpoint norm;
-   the exact first numerator derivative is L² on one collar for all real
-   frequencies. No scalar norm, pointwise decay, second numerator derivative
+   the exact full and half first numerator derivatives are L² on one collar
+   for all real frequencies. Compatible local H¹ and these derivative norms
+   give both numerators actual global interval H¹ (`lem:weighted-numerators-h1`),
+   without prescribing raw endpoint values or asserting zero canonical traces. No scalar norm, pointwise decay, second numerator derivative
    or gradient-ray trace is assumed. Raw-profile summation and four-character
    assembly cover both frequency signs without a common component collar.
    Cellwise H¹ from weighted forcing (`lem:weighted-transport-h1`) remains
-   admitted: the stronger scalar data and spatial weak-gradient/gluing
-   assembly are still needed; its mass conclusion is proved separately.
-   For ordinary H¹, target local numerator H² and hN″, B′ L² directly,
+   admitted: local numerator H², hN″ L² and spatial weak-gradient/gluing
+   assembly are still needed; its mass conclusion and all first-order full/half
+   data are proved separately. Target those second-order scalar data directly,
    rather than the full quantitative/logarithmic numerator package.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
    zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
