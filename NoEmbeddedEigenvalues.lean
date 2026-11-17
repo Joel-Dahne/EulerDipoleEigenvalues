@@ -38,6 +38,7 @@ import NoEmbeddedEigenvalues.IntervalHardy
 import NoEmbeddedEigenvalues.IntervalSecondHardy
 import NoEmbeddedEigenvalues.IntervalSegmentAverage
 import NoEmbeddedEigenvalues.IntervalParameterH1
+import NoEmbeddedEigenvalues.IntervalParameterH2
 import NoEmbeddedEigenvalues.IntervalIntegralFlux
 import NoEmbeddedEigenvalues.IntervalZeroExtension
 import NoEmbeddedEigenvalues.LiftIntegration
@@ -210,6 +211,7 @@ import NoEmbeddedEigenvalues.Regularity.QuarterTime
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.OrbitTransportTraces
 import NoEmbeddedEigenvalues.OrbitNumeratorRegularity
+import NoEmbeddedEigenvalues.OrbitNumeratorH2
 import NoEmbeddedEigenvalues.OrbitNumeratorDerivative
 import NoEmbeddedEigenvalues.OrbitHalfNumeratorDerivative
 import NoEmbeddedEigenvalues.ResonantCancellation
@@ -243,6 +245,7 @@ import NoEmbeddedEigenvalues.WeightedEndpointValues
 import NoEmbeddedEigenvalues.WeightedEndpointGradients
 import NoEmbeddedEigenvalues.WeightedFirstNumerator
 import NoEmbeddedEigenvalues.WeightedNumeratorH1
+import NoEmbeddedEigenvalues.WeightedNumeratorH2
 import NoEmbeddedEigenvalues.WeightedTransportSecondMass
 import NoEmbeddedEigenvalues.SubcriticalReconstruction
 import NoEmbeddedEigenvalues.SubcriticalCellMass

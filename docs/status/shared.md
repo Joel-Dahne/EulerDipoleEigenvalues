@@ -216,9 +216,11 @@ weights and local versus global regularity.
    **Weighted forcing route:** Cellwise H¹ from weighted forcing
    (`lem:weighted-transport-h1`) remains admitted. Its original-hypothesis
    second mass (`lem:weighted-transport-second-mass`) and full/half numerator
-   H¹ (`lem:weighted-numerators-h1`) are proved, with compatible first derivatives
-   on one collar for every real frequency. No raw endpoint prescription or zero
-   canonical trace is inferred. Canonical gradient endpoint energy is proved
+   H¹ (`lem:weighted-numerators-h1`) are proved. Local full-numerator H² is
+   proved on that same all-frequency collar (`lem:weighted-numerator-local-h2`).
+   Its ordinary first derivative agrees a.e. with the supplied-gradient candidate;
+   the half derivative is retained unchanged. No raw endpoint prescription or
+   zero canonical trace is inferred. Canonical gradient endpoint energy is proved
    (`lem:weighted-gradient-endpoint-energy`), including measurability of the
    radius pullback; no raw weak gradient is evaluated on a ray.
    **Second fixed-time bulk** (`lem:second-numerator-bulk`) has actual h-scaled
@@ -227,9 +229,11 @@ weights and local versus global regularity.
    The pair constructs second entries when only the first gradient is supplied,
    retaining that gradient exactly (`lem:transport-second-bulk-data`); no Hessian
    or scalar regularity premise is added. These are bulk candidate estimates,
-   not yet a numerator second derivative. Next prove the weak second
-   moving-endpoint identity and assemble its canonical endpoint terms to obtain
-   local numerator H² and hN″ L², then spatial weak-gradient/H¹/gluing.
+   not yet the numerator's second derivative. Local H² uses fixed-window weak
+   differentiation and genuine ACL averages, without gradient-ray values.
+   Next identify its second derivative by a weak moving-endpoint/flux formula
+   and control the canonical endpoint terms to obtain hN″ L², then assemble
+   spatial weak-gradient/H¹/gluing.
    Target these scalar data directly rather than the full logarithmic package;
    the full angular corner trace remains separate.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge

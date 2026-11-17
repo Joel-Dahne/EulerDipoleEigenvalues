@@ -987,6 +987,53 @@ there, and the ordinary derivative supplies compatible data on all compact
 level intervals.
 \end{proof}
 
+\begin{lemma}[Local H2 regularity of the continuous-forcing numerator]
+\label{lem:numerator-local-h2}
+\uses{def:numerator, def:sobolev-local, def:h1-interval,
+ def:h2-interval, def:h2-local-interval, def:transport-pair}
+\lean{NoEmbeddedEigenvalues.quarterNumerator_memIntervalH2,
+ NoEmbeddedEigenvalues.quarterNumerator_h2Loc,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_h2Loc}
+\leanok
+Let $U$ be open and contain the annulus $0<h<h_0<1$.
+If $g\in H^2(U)$ is continuous, its original numerator $N_\mu$ satisfies
+\[
+ \operatorname{HasIntervalH2Loc}(0,h_0;N_\mu,N_\mu',(N_\mu')')
+ \qquad(\mu\in\R).
+\]
+In particular this applies to the continuous forcing representative of the
+original transport pair. No ray traces, forcing-growth or weighted norm
+hypothesis is needed for this local assertion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:numerator-local-h1, lem:fixed-window-h2,
+ lem:interval-h2-canonical-derivatives, lem:weak-derivative-product,
+ lem:action-angle-chart, lem:action-angle-weak-level, lem:period-regularity,
+ lem:localization-cutoff, lem:coarea}
+\leanok
+On a compact level interval, normalize time to the fixed angular window
+$[-1/8,1/8]$. A compact spatial cutoff equal to one on the image of a larger
+closed rectangle gives global H2 data without changing the original integral.
+The weak action--angle chain rule and smooth product rule give two weak level
+derivatives of $S(h)e^{-i\mu S(h)\theta}g(P(h,\theta))$.
+Every term is a smooth coefficient times an original localized first or ordered
+second weak derivative. Compactness bounds these coefficients, and the area
+formula gives genuine L2 pullbacks.
+Fixed-window H2 retains the continuous value function.
+Ordinary derivatives supply the same first and second functions on overlapping
+intervals, independently of the cutoff.
+For a transport pair, a.e. congruence transfers its standing forcing H2
+regularity to the same continuous representative.
+\end{proof}
+
+\begin{remark}
+Compact level bounds do not control their constants as $h\downarrow0$.
+This proves local H2, not the global weighted second-derivative norm.
+The latter still requires the fixed-time bulk cancellation and canonical
+endpoint terms.
+\end{remark}
+
 \begin{definition}[Quarter-jet densities and level contraction]
 \label{def:quarter-jet-data}
 \uses{def:period, def:cell-arcs}
@@ -3551,6 +3598,42 @@ Thus no first-numerator norm is left as an input.
 The component collars need not agree.
 \end{proof}
 
+\begin{lemma}[Weighted first data and local H2 on one collar]
+\label{lem:weighted-numerator-local-h2}
+\uses{def:transport-pair, def:numerator-derivative, def:half-numerator-derivative,
+ def:sobolev-local, def:h1-interval, def:h2-interval, def:h2-local-interval,
+ lem:weighted-numerators-h1}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_local_h2,
+ NoEmbeddedEigenvalues.IsTransportPair.exists_weighted_numerator_local_h2}
+\leanok
+Under the original weighted forcing and supplied first-gradient hypotheses,
+there is one $0<h_0<1/2$ such that, for every real $\mu$,
+\[
+ \operatorname{HasIntervalH2Loc}(0,h_0;N_\mu,N_\mu',(N_\mu')'),\qquad
+ \operatorname{HasIntervalH1}(0,h_0;N_\mu,N_\mu'),
+\]
+and the original half numerator retains
+$\operatorname{HasIntervalH1}(0,h_0;B_\mu,B_{1,\mu})$.
+The supplied-gradient candidate $N_{1,\mu}$ agrees a.e. with $N_\mu'$
+on this same collar; no pointwise equality at exceptional levels is asserted.
+The continuous forcing representative can either be retained as supplied or
+constructed from the original pair, with the same Cartesian derivatives.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-numerators-h1, lem:numerator-local-h2,
+ lem:local-h2-continuous-representative}
+\leanok
+Use exactly the all-frequency collar from global first-order numerator data.
+The cell containment gives the annulus containment on that collar.
+Local H2 uses no smaller radius.
+The existing global H1 data also hold with the ordinary derivative;
+their a.e. differentiation identity identifies it with $N_{1,\mu}$.
+Keep the original half-numerator derivative unchanged.
+If no continuous forcing was supplied, obtain it from local H2 and apply this
+same construction; no Sobolev, Hessian or ray premise is added.
+\end{proof}
+
 \begin{definition}[Formal second level contraction and its bulk integral]
 \label{def:second-level-bulk}
 \uses{def:quarter-jet-data, def:dipole-flow, def:period}
@@ -3741,9 +3824,10 @@ already supplied by $H^2$, not extra regularity.
   lem:orbit-level-derivatives, lem:orbit-time-integrals,
   lem:weighted-first-numerator, lem:weighted-endpoint-value-transport,
   lem:weighted-numerators-h1, lem:weighted-half-numerator,
-  lem:weighted-numerator-subinterval, lem:second-numerator-bulk}
-Obtain the full and half first-numerator data from
-Lemma~\ref{lem:weighted-numerators-h1} and the continuous endpoint-value
+  lem:weighted-numerator-subinterval, lem:second-numerator-bulk,
+  lem:weighted-numerator-local-h2}
+Obtain the full and half first-numerator data and local numerator H2 from
+Lemma~\ref{lem:weighted-numerator-local-h2}, and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
 Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
 spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.

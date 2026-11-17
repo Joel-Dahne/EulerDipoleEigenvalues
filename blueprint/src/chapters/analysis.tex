@@ -3339,6 +3339,98 @@ $M_1$ almost everywhere. Thus the ordinary derivative agrees with $M_1$
 almost everywhere on every compact subinterval.
 \end{proof}
 
+\begin{lemma}[Rough fixed-window integrals have H1 representatives]
+\label{lem:fixed-window-h1-rough}
+\uses{def:weak-derivative-local, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_setIntegral_h1_rep}
+\leanok
+Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
+If $F,D\in L^2(Q)$ and $\partial_hF=D$ weakly, there is $A$ with
+\[
+ A(h)=\int_l^r F(h,\theta)\,d\theta\quad\hbox{a.e.},\qquad
+ \operatorname{HasIntervalH1}\left(a,b;A,\int_l^r D(\,\cdot\,,\theta)\,d\theta\right).
+\]
+No continuity of $F$, or agreement at exceptional parameter lines, is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2, lem:fixed-window-h1}
+\leanok
+Swap coordinates and construct one jointly measurable horizontal ACL
+representative $G(\theta,h)$ of the original field.
+Its canonical trace estimate makes $G(\cdot,h)$ genuinely integrable on
+the window for every interior $h$.
+Set $A(h)=\int_l^rG(\theta,h)\,d\theta$.
+Product-measure a.e. equality proves agreement with the original raw average
+a.e., hence its actual L2 norm.
+Integrate the horizontal ACL fundamental theorem, using Fubini and these
+finite section norms, to obtain the increment identity at every pair of
+interior parameters. The integral primitive gives H1 with the specified
+raw averaged derivative.
+\end{proof}
+
+\begin{lemma}[Fixed-window parameter integrals in H2]
+\label{lem:fixed-window-h2}
+\uses{def:weak-derivative-local, def:h1-interval, def:h2-interval}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h2}
+\leanok
+On the same rectangle and window, suppose $F$ is continuous,
+$F,D,E\in L^2(Q)$, and $\partial_hF=D$, $\partial_hD=E$ weakly.
+Then the original function $h\mapsto\int_l^rF(h,\theta)\,d\theta$
+belongs to interval H2 on $(a,b)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:fixed-window-h1, lem:fixed-window-h1-rough}
+\leanok
+The continuous potential has its original average in H1 with weak
+derivative the raw average of $D$.
+That derivative has an H1 representative by the rough fixed-window lemma.
+Replace only the scalar derivative a.e.; retain the original value function.
+\end{proof}
+
+\begin{lemma}[Continuous interval derivatives give pointwise derivatives]
+\label{lem:interval-h1-continuous-derivative}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.continuousOn_Ioo,
+ NoEmbeddedEigenvalues.HasIntervalH1.hasDerivAt_of_continuous}
+\leanok
+Let $a<b$. An interval H1 representative is continuous in the interior.
+If $\operatorname{HasIntervalH1}(a,b;F,D)$ and $D$ is continuous there,
+then $F$ has derivative $D(x)$ at every $x\in(a,b)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints}
+\leanok
+Restrict the canonical continuous extension to the interior.
+For the second assertion, the H1 fundamental theorem identifies $F$ locally
+with $F(x)+\int_x^yD$. Continuity of $D$ gives its derivative at $x$.
+No raw endpoint value is used.
+\end{proof}
+
+\begin{lemma}[Ordinary derivatives are compatible interval H2 data]
+\label{lem:interval-h2-canonical-derivatives}
+\uses{def:h1-interval, def:h2-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH2.with_deriv}
+\leanok
+For $a<b$, if $\operatorname{HasIntervalH2}(a,b;F,D,E)$, then
+\[
+ \operatorname{HasIntervalH2}(a,b;F,F', (F')').
+\]
+The original value representative is unchanged; derivatives are the ordinary
+totalized scalar derivatives, with actual differentiability a.e.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interval-h1-continuous-derivative}
+\leanok
+The H1 representative $D$ is continuous, so $F'=D$ at every interior point.
+Transfer its H1 data pointwise, then replace its weak derivative by the ordinary
+derivative a.e. The first H1 pair similarly uses the ordinary derivative of $F$.
+Thus different local constructions give the same derivative functions.
+\end{proof}
+
 \begin{lemma}[Boundary flux for fixed-window parameter integrals]
 \label{lem:fixed-window-flux}
 \uses{def:weak-derivative-local, def:h1-interval}
