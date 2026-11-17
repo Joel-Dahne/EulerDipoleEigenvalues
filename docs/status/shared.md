@@ -213,14 +213,15 @@ weights and local versus global regularity.
    collar, raw endpoint values, gradient-ray traces or second numerator derivatives.
    Periodic first transport gain (`cor:transport-first-gain-periodic`) and
    First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
-   **Weighted reconstruction:** Saddle-weighted canonical endpoint energy
-   (`lem:transport-saddle-endpoint-energy`) gives genuine fiber v/d² mass from
-   actual forcing/d² L², without pointwise forcing decay or a frequency sign
-   restriction. Exponential conjugation gives damping; its energy identity
-   avoids a nested Volterra/Fubini estimate.
+   **Weighted reconstruction:** Raw quarter summation, physical-cell extension
+   and four-character mass assembly are proved from actual forcing/d² L² and
+   supplied first-numerator L² data (`lem:weighted-transport-mass-data`).
+   Canonical endpoint energy gives the uniform majorant without pointwise
+   forcing decay, second numerator derivatives, a common character collar or
+   jointly measurable ACL choices. Both frequency signs are covered.
    Cellwise H¹ from weighted forcing (`lem:weighted-transport-h1`) remains
-   admitted: scalar regularity, raw-profile summation and weak-gradient/gluing
-   assembly are still needed.
+   admitted: producing the scalar regularity from the original weighted
+   hypotheses, and weak-gradient/gluing assembly, are still needed.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
    zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
    (`lem:elliptic-local`). Weighted numerator estimates

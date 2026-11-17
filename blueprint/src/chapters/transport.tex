@@ -4313,6 +4313,161 @@ Transfer from this canonical function to an original raw profile is a separate
 a.e. obligation when applying the estimate.
 \end{proof}
 
+\begin{lemma}[Weighted base-quarter mass from the scalar quotient]
+\label{lem:weighted-quarter-mass}
+\uses{def:transport-pair, def:quarter-character, def:numerator,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_quarter_memLp_of_quotient}
+\leanok
+Let $(v,f)$ be a transport pair on an open orbit neighbourhood containing
+the closed cell, and let $g$ be the supplied continuous forcing
+representative, equal to $f$ a.e.\ on that neighbourhood.
+Assume actual $f/d^2\in L^2(\Cell)$.
+Suppose $r>0$, $\kappa^4=1$, and the original raw fields $v,f$
+have quarter character $\kappa$ on $0<h<r$.
+If the ordinary quotient
+\[
+ q(h)=N_{\lambda,g}(h)/D_{\lambda,\kappa}(h)
+ \quad\hbox{satisfies}\quad q/h\in L^2(0,r),
+\]
+then some $0<b<\min(r,1/2)$ satisfies
+\[
+ (v\circ\gamma)/ (d\circ\gamma)^2\in L^2(Q_b,dh\,dt).
+\]
+Boundedness of the neighbourhood is not required for this quarter conclusion.
+The scalar norm is an explicit input: it is not inferred here from the
+forcing norm alone.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transport-saddle-endpoint-energy, lem:quarter-endpoint-formula,
+ lem:quarter-divisor-ae, lem:orbit-ae-congruence, lem:quarter-l2-pullback,
+ lem:quarter-gradient-energy, lem:quarter-fiber-summation,
+ lem:orbit-saddle-distance, lem:period-coarse}
+\leanok
+Choose a smaller collar where the uniform distance comparison holds and
+the divisor is nonzero a.e. Transfer the original forcing mass to $g$
+and then pull it back by coarea.
+Zero-extension Fubini supplies genuine integrability of its level density
+\[
+ E(h)=\int_{-L(h)}^{L(h)}
+       |g(\gamma_h(t))/d(\gamma_h(t))^2|^2\,dt,
+\]
+as well as actual weighted L2 forcing on almost every time interval.
+
+On each good level the endpoint formula supplies a canonical ACL $Z_h$
+with both endpoint norms equal to $|q(h)|$.
+Apply Lemma~\ref{lem:transport-saddle-endpoint-energy} to the canonical
+reconstruction $-(\lambda Z_h+g\circ\gamma_h)$.
+The orbitwise a.e. identities for $Z_h$ and the original forcing identify
+this with the raw $v\circ\gamma_h$ a.e.\ in time.
+Thus the raw weighted fiber is genuinely L2 before its integral is compared.
+The period bound $e^{L(h)}\sqrt h\le e^2$ gives
+$e^{4L(h)}\le e^8/h^2$. Hence, if
+$ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$,
+\[
+ \int_{-L(h)}^{L(h)}|v(\gamma_h(t))/d(\gamma_h(t))^2|^2dt
+ \le \frac{2\lambda^2e^8}{c^4}|q(h)/h|^2+
+       \left(\frac{\lambda^2C^4}{2c^4}+2\right)E(h).
+\]
+This is an actual integrable level majorant, with no logarithmic loss.
+The original raw pullback is jointly measurable by its unweighted L2 norm;
+division by the continuous distance preserves this measurability.
+Apply Lemma~\ref{lem:quarter-fiber-summation} to that raw function.
+No jointly measurable choice of $Z_h$ is made.
+\end{proof}
+
+\begin{lemma}[Weighted physical-cell mass for one quarter character]
+\label{lem:weighted-character-mass}
+\uses{def:transport-pair, def:quarter-character, def:numerator,
+ def:cell-arcs, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_character_memLp_of_quotient,
+ NoEmbeddedEigenvalues.IsTransportPair.weighted_character_memLp_of_numerator}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:weighted-quarter-mass},
+$v/d^2\in L^2(\Cell)$. Boundedness of the ambient neighbourhood is not needed.
+Alternatively, instead of assuming $q/h\in L^2(0,r)$, it suffices to specify
+compatible local interval H1 data $(N_{\lambda,g},N_1)$ on $(0,r)$ and
+an actual $N_1\in L^2(0,r)$.
+No second numerator derivative, quotient derivative or raw endpoint
+assignment is required. Both signs of $\lambda$ and all four quarter
+characters are covered.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-quarter-mass, lem:quarter-character-cell-mass,
+ lem:quarter-rotation-character, lem:cell-interior-mass,
+ lem:numerator-zeros,
+ lem:phase-cell-second-mass-division}
+\leanok
+Distance invariance preserves the character of $v/d^2$.
+The reverse quarter chart and finite rotated cover turn base-quarter
+mass into full physical-collar mass.
+On its complement, Lemma~\ref{lem:cell-interior-mass} gives
+$d\ge h\ge b>0$, so $|v/d^2|\le b^{-2}|v|$.
+The original unweighted cell L2 norm supplies the genuine weighted norm
+there; unite the two regions. The Lean helper
+\texttt{memLp\_div\_saddleDist\_sq\_of\_cell\_collar} proves this extension
+for any raw cell L2 function. No First transport gain is used.
+
+For the first-numerator formulation, restrict the compatible H1 data,
+its specified derivative norm and the two raw characters to
+$0<h<\min(r,1/2)$.
+Resonant cancellation supplies $N=0$ at every divisor zero.
+Lemma~\ref{lem:phase-cell-second-mass-division} gives the ordinary
+$q/h$ norm on a smaller complete-cell collar. Apply the quotient formulation
+there. This uses only the first numerator derivative.
+\end{proof}
+
+\begin{remark}
+The Lean specialization
+\texttt{WeightedQuarterNumeratorData.character\_memLp} checks compatibility
+with the existing supplied numerator-data interface: only its local H1
+first-numerator data and \texttt{first\_lp} field are used.
+The second derivative, half numerator and gradient-ray traces are not used
+for this mass step. This specialization does not construct the supplied data.
+\end{remark}
+
+\begin{lemma}[Weighted transport mass from first numerator data]
+\label{lem:weighted-transport-mass-data}
+\uses{def:transport-pair, def:transport-quarter-projection, def:numerator,
+ def:cell-arcs, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.weighted_transport_mass_of_first_numerators}
+\leanok
+Let $(v,f)$ be a transport pair on a bounded open orbit neighbourhood
+containing the closed cell, and specify a continuous representative $g=f$
+a.e.\ on that neighbourhood. Suppose actual $f/d^2\in L^2(\Cell)$.
+For each $\kappa^4=1$, suppose there are $r_\kappa>0$ and a specified
+$N_{1,\kappa}\in L^2(0,r_\kappa)$ giving compatible local interval H1
+data for $N_{\lambda,\Pi_\kappa g}$ on that interval.
+Then the original raw unknown satisfies $v/d^2\in L^2(\Cell)$.
+
+The first-numerator data are explicit inputs. Their existence, and any
+weak-gradient or H1 conclusion for $v$, are not asserted by this lemma.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-character-mass, lem:transport-rotation-neighbourhood,
+ lem:transport-quarter-projections, lem:quarter-rotation-character}
+\leanok
+Restrict the original pair to a bounded rotation-invariant orbit
+neighbourhood still containing the closed cell.
+Project the original raw fields and supplied continuous forcing identically.
+Restricted measure-preserving rotations and finite Lp linearity preserve
+the weighted forcing norm, since $d\circ R=d$.
+The projections commute pointwise with division by any natural power of $d$;
+the Lean helpers are \texttt{memLp\_quarterCharacterProjection} and
+\texttt{memLp\_quarterCharacterProjection\_div\_saddleDist\_pow}.
+No forcing representative or derivative is replaced.
+
+The supplied first-numerator data and the exact projection character give
+full-cell mass for each of $1,-1,i,-i$ by
+Lemma~\ref{lem:weighted-character-mass}.
+Add the four actual L2 functions and use their pointwise Fourier
+recombination to recover the original raw $v/d^2$.
+The component collars may differ.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
@@ -4336,6 +4491,7 @@ follows from $f\in H^2$ on the given neighbourhood.
 \begin{proof}
 \uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
   lem:transport-saddle-endpoint-energy, lem:transport-weighted-endpoint-energy,
+  lem:weighted-character-mass, lem:weighted-transport-mass-data,
   lem:sobolev-weak-jets, lem:weak-derivative-unique,
   lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
   lem:reflection-algebra, lem:symmetries-commute,
@@ -4370,8 +4526,11 @@ have modulus $|C|$, Lemma~\ref{lem:transport-saddle-endpoint-energy} gives
  \le C_\lambda\left(\frac{|C(h)|^2}{h^2}
                    +\int_{-L}^L\frac{|f_h|^2}{d^4}\,dt\right).
 \]
-Integrate in $h$. This proves $v/d^2\in L^2$ without a pointwise
-forcing bound or a subcritical exponent.
+Lemma~\ref{lem:weighted-character-mass} supplies the actual raw-profile
+transfer, $h$-summation and full-cell extension.
+Lemma~\ref{lem:weighted-transport-mass-data} recombines the characters.
+This proves $v/d^2\in L^2$ from the first-numerator data, without a pointwise
+forcing bound, a subcritical exponent or a second numerator derivative.
 
 For the level derivative use midpoint reconstruction:
 \[
