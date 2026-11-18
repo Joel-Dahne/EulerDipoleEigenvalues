@@ -6666,6 +6666,107 @@ seam gluing; the stronger logarithmic numerator package is not used.
 Whole-edge zero trace and elliptic H3 are separate conclusions.
 \end{proof}
 
+\begin{lemma}[Bulk transport in diagonal trace charts]
+\label{lem:diagonal-boundary-transport}
+\uses{def:diagonal-trace-chart, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.diagonalTraceChart_partials}
+\leanok
+Let $U$ be open, let $L_0F=R$ weakly there, and suppose both specified
+Cartesian weak partials of $F$ are in $L^2(U)$.
+For $C=\Xi_j$, the diagonal trace chart, the pullback $F\circ C$ has
+specified tangential and normal weak partials $A,B\in L^2(C^{-1}U)$
+satisfying
+\[
+ \sigma_j(\sin t\cos s\,A-\sin s\cos t\,B)=R\circ C
+ \quad\text{a.e.},\qquad \sigma_0=1,\ \sigma_1=-1 .
+\]
+\end{lemma}
+\begin{proof}
+\uses{lem:weak-gradient-transport, lem:weak-derivative-unique,
+ lem:diagonal-h1-pullback, lem:affine-jet-pullback}
+\leanok
+Use uniqueness to identify the weak transport derivative with the
+Cartesian velocity times the specified Cartesian gradient. Pull
+this a.e. identity back to the chart using null-set preservation.
+The weak chain rule produces the sum and difference of the very same
+partial derivatives, and the trigonometric addition formulas give
+the displayed coefficients. The swap exchanges the two derivatives.
+\end{proof}
+
+\begin{lemma}[Boundary weak ODE with a vanishing normal coefficient]
+\label{lem:boundary-transport-ode}
+\uses{def:canonical-transverse-trace, def:weak-derivative-local, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.boundary_weak_tangent}
+\leanok
+On $Q=(a,b)\times(0,w)$, suppose $F,R$ have canonical
+left-normal traces $T_F,T_R$ and specified weak normal partials in $L^2(Q)$.
+Suppose $A=\partial_s F$ weakly with $A\in L^2(Q)$ and
+\[
+ c(u) A(s,u)=R(s,u)+uN(s,u)\quad\text{a.e.},
+ \qquad N\in L^1(Q),
+\]
+where $c$ is continuous at zero and $c(0)=1$.
+Then $T_F$ has an interval $H^1(a,b)$ representative whose derivative is $T_R$.
+\end{lemma}
+\begin{proof}
+\uses{lem:trace-pairing-convergence, lem:acl-slicing,
+ lem:interval-trace-integration, lem:transverse-trace-window-consistency}
+\leanok
+For a smooth compactly supported tangential test $\beta$, use horizontal
+ACL integration by parts and the a.e. equation. The residual formed from
+the canonical trace pairings at height $u$ equals
+$-u\int N(s,u)\beta(s)\,ds$ for almost every $u$.
+Its modulus is bounded by $uM(u)$ for an integrable $M$, by Fubini.
+Trace-pairing convergence identifies the residual's limit at zero.
+If the limit were nonzero, then $M$ would dominate a positive constant times
+$1/u$ almost everywhere near zero, contradicting integrability.
+The resulting tangential weak identity yields the one-dimensional AC
+representative by the weak FTC. The value and specified derivative have the
+trace $L^2$ norms. No normal derivative trace is used.
+\end{proof}
+
+\begin{lemma}[Modulus conservation for an imaginary derivative coefficient]
+\label{lem:imaginary-derivative-modulus}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.norm_eq_of_imaginary_derivative}
+\leanok
+If $T$ is the interval $H^1(a,b)$ representative with specified
+derivative $D$, and $D=i\alpha T$ almost everywhere with $\alpha$ real,
+then $|T|$ is constant on $(a,b)$.
+\end{lemma}
+\begin{proof}
+\uses{lem:h1-interval-endpoints}
+\leanok
+On every compact subinterval, $T\overline T$ is absolutely continuous.
+Its a.e. derivative vanishes, since the two product-rule terms with
+coefficients $i\alpha$ and $-i\alpha$ cancel. The FTC gives equality of its
+values, and taking nonnegative square roots preserves equality.
+\end{proof}
+
+\begin{lemma}[Local constant modulus for zero-forcing boundary transport]
+\label{lem:boundary-mode-modulus}
+\uses{def:canonical-transverse-trace, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.boundary_mode,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.exists_norm_eq_of_boundary_mode}
+\leanok
+Suppose $F,V,R$ on $(a,b)\times(0,w)$ have canonical left-normal traces
+$T_F,T_V,T_R$. Suppose $F=V+g$ and $R=i\alpha(s)V$ almost everywhere,
+with $\alpha$ real. Assume that $g$ is continuous in the normal variable
+up to both ends for each $s\in(a,b)$ and $g(s,0)=0$.
+Then $T_F=T_V$ and $T_R=i\alpha T_V$ almost everywhere. If $T_F$ has
+an interval $H^1(a,b)$ representative with derivative $T_R$, then
+$|T_V|$ has one constant value almost everywhere on $(a,b)$.
+\end{lemma}
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2, lem:imaginary-derivative-modulus}
+\leanok
+On almost every normal section, continuity of the joint ACL
+representatives identifies the two bulk relations on the entire open
+section. Take canonical one-sided limits in those same relations.
+Substitute the resulting a.e. identities in the given interval equation
+and apply modulus conservation to its $H^1$ representative.
+\end{proof}
+
 \begin{lemma}[Zero edge trace from zero forcing]
 \label{lem:transport-zero-edge-trace}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
@@ -6682,7 +6783,8 @@ cellwise trace of $v$ on that edge is zero.
 \begin{proof}
 \uses{lem:transport-unknown, lem:trace-l2, lem:l2-trace-continuity,
  lem:boundary-weighted-cone-trace, lem:critical-boundary-mode,
- lem:diagonal-h1-pullback, lem:affine-jet-pullback,
+ lem:diagonal-boundary-transport, lem:boundary-transport-ode,
+ lem:boundary-mode-modulus, lem:affine-jet-pullback,
  lem:dipole-identities, lem:separatrix-lines, lem:separatrix-arc}
 The transport unknown $z=-(v+f)/\lambda$ is cellwise $H^1$.
 Choose orthonormal coordinates $(\xi,\eta)$ on a regular edge segment,
@@ -6743,18 +6845,24 @@ The weak equation gives
  E(u)=\sin u\int \partial_uF(s,u)\tan s\,\varphi(s)\,ds
  \quad\hbox{a.e.}
 \]
-The normal pairings make $E\in H^1(0,w)$, while Cauchy--Schwarz and
-$|\sin u|\le u$ give $E/u\in L^2(0,w)$.
-Lemma~\ref{lem:h1-div-zero-trace} therefore gives zero canonical trace of $E$.
-Strong trace continuity from Lemma~\ref{lem:l2-trace-continuity} identifies it as
+Use canonical trace pairings in $E$; at almost every interior height they
+agree with the displayed integrals. Fubini and $|\sin u|\le u$
+bound $|E(u)|$ by $u$ times an integrable majorant.
+By Lemma~\ref{lem:boundary-transport-ode}, the limit must then vanish:
+a nonzero limit would force a nonintegrable $1/u$ lower bound for the majorant.
+Strong trace-pairing convergence identifies the limit identity as
 \[
  \int TF\,\varphi'
    +\sigma\int TR\,\frac{\varphi}{\cos s}=0.
 \]
 Thus the boundary weak ODE needs no trace of the normal derivative
-$\partial_uF$. The joint ACL representatives retain the original two a.e.
-classes; no fibrewise family, raw boundary values or extra mixed derivatives
-are needed.
+$\partial_uF$. To apply the rectangle result, absorb the regular factor
+$\sigma/\cos s$ into $R$ and include $\sin u/u$ in the flux coefficient.
+With zero forcing trace, Lemma~\ref{lem:boundary-mode-modulus} gives local
+constant modulus without changing to flow time. Trace uniqueness on overlapping
+regular rectangles identifies the constants. The joint ACL representatives
+retain the original a.e. classes; no fibrewise family, raw boundary values
+or extra mixed derivatives are needed.
 \end{remark}
 
 \begin{remark}[Digest note: a whole edge, not just a regular segment]

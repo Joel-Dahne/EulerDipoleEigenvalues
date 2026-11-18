@@ -3672,6 +3672,22 @@ and Fubini. Squeeze the nonnegative squared difference by
 $|t-s|$ times that fixed finite energy.
 \end{proof}
 
+\begin{lemma}[Convergence of canonical trace pairings]
+\label{lem:trace-pairing-convergence}
+\uses{def:canonical-transverse-trace}
+\lean{NoEmbeddedEigenvalues.HasACLSectionsOn.tendsto_trace_pairing}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:l2-trace-continuity}, let
+$\beta\in L^2(I)$ be fixed. Then $\int_I T_u\beta\to\int_I T_t\beta$
+as $u\to t$ within the closed normal interval.
+\end{lemma}
+\begin{proof}
+\uses{lem:l2-trace-continuity}
+\leanok
+The products are integrable by H\"older. Cauchy--Schwarz bounds the
+difference by $\|T_u-T_t\|_2\|\beta\|_2$, which tends to zero.
+\end{proof}
+
 \begin{definition}[Logarithmic level weight]
 \label{def:log-level-weight}
 \uses{def:dipole, def:cells}

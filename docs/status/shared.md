@@ -283,11 +283,15 @@ weights and local versus global regularity.
    `Analysis/BoundaryConeTrace.lean`. The latter excludes a common nonzero
    modulus even with separate canonical trace witnesses on each band; no joint
    ACL family or general polar corner-trace theorem is used.
-   Remaining producers: derive the boundary weak ODE from the original transport
-   pair, prove its common modulus on the whole edge, and transport the original
-   v/d norm and H¹ gradient into a physical corner half-cone. Retain every
-   admissible endpoint window. The blueprint records a weak-test/Hardy route
-   needing no trace of the normal derivative; its Lean implementation is open.
+   The generic boundary weak ODE (`lem:boundary-transport-ode`) and local
+   modulus conservation (`lem:boundary-mode-modulus`) are proved. Strong trace
+   pairing convergence and integrability rule out a nonzero limiting residual
+   without a trace of the normal derivative. The specified Cartesian partials
+   give the bulk equation in both diagonal charts (`lem:diagonal-boundary-transport`).
+   Remaining: normalize the inward coordinate and regular tangential speed to
+   apply the ODE to the original pair, identify the modulus across overlapping
+   edge windows, and carry the original v/d and H¹ norms into a physical corner
+   half-cone. The conclusion must still cover every admissible endpoint window.
    Weighted numerator estimates
    (`lem:weighted-numerator-estimates`) and logarithmic phase-cell division
    (`lem:log-phase-cell-division`) remain separate admitted stronger inputs.

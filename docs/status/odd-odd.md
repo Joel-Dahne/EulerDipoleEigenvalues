@@ -87,8 +87,9 @@ Proof work is now outside the odd–odd chapter:
   **Next targets:** Whole-edge zero trace (`lem:transport-zero-edge-trace`) and
   Interior elliptic H³ (`lem:elliptic-local`). The edge theorem still has its
   own admission. Its generic strong trace convergence and critical one-sided
-  corner-mode exclusion are admission-free; the boundary ODE and physical
-  canonical-trace producers remain. See shared status for the precise frontier.
+  corner-mode exclusion are admission-free, as are the generic boundary ODE
+  and local modulus step. The physical edge assembly remains.
+  See shared status for the precise frontier.
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is proved. Keep the shared interfaces generic and defer
   mixed linear-jet extraction.

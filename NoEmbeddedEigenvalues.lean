@@ -5,6 +5,7 @@ import NoEmbeddedEigenvalues.BernsteinCertificates
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalACL
 import NoEmbeddedEigenvalues.DiagonalH1
+import NoEmbeddedEigenvalues.DiagonalBoundaryTransport
 import NoEmbeddedEigenvalues.DiagonalH1Inverse
 import NoEmbeddedEigenvalues.DiagonalCalculus
 import NoEmbeddedEigenvalues.Derivatives
@@ -263,6 +264,7 @@ import NoEmbeddedEigenvalues.Analysis.WeightedConeTrace
 import NoEmbeddedEigenvalues.Analysis.CanonicalConeTrace
 import NoEmbeddedEigenvalues.Analysis.BoundaryConeTrace
 import NoEmbeddedEigenvalues.Analysis.BoundaryTraceContinuity
+import NoEmbeddedEigenvalues.Analysis.BoundaryTransportODE
 import NoEmbeddedEigenvalues.WeightedEndpointValues
 import NoEmbeddedEigenvalues.WeightedEndpointGradients
 import NoEmbeddedEigenvalues.WeightedFirstNumerator
