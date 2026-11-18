@@ -3064,20 +3064,22 @@ to $H^2(D)$. Its continuous representative has value zero at the origin.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:local-to-global, lem:sobolev-holder}
-Choose a smooth radial $\eta_\epsilon$ equal to zero on $r<\epsilon$
-and one on $r>2\epsilon$, with
-$|D^j\eta_\epsilon|\le C\epsilon^{-j}$ for $j=1,2$.
-On the transition annulus,
+\uses{lem:weak-point-removal, lem:local-h2-continuous-representative}
+\leanok
+Because the radius is bounded on $D$, the weighted bounds give ordinary
+$L^2(D)$ bounds for $V$ and its specified first and second derivatives.
+Apply isolated-point removal to each of the weak partial identities,
+first for $V$ and then for each first derivative. These same witnesses
+therefore give $H^2(D)$, and the local embedding gives a continuous
+representative $g$ on $D$.
+
+If $g(0)\ne 0$, continuity gives $|g|\ge c>0$ on every sufficiently
+small square $(-s,s)^2$ centered at zero. There $r\le 2s$, so
 \[
- \|V D^2\eta_\epsilon\|_2\le C\|V/r^2\|_{2,\mathrm{ann}},\qquad
- \|\nabla V\otimes\nabla\eta_\epsilon\|_2
-       \le C\|\nabla V/r\|_{2,\mathrm{ann}}.
+ (2s)^2 c^2 \le (2s)^4\int_D |g/r^2|^2.
 \]
-Both tails tend to zero; the lower derivatives and Hessian tails do too.
-Consequently $\eta_\epsilon V$ converges in $H^2$ to $V$, excluding
-point-supported derivative defects. Localize and use the continuous
-$H^2$ representative. A nonzero value at zero would contradict $V/r^2\in L^2$.
+The integral is finite by a.e. agreement with $V$. Dividing by $(2s)^2$
+and letting $s$ tend to zero gives a contradiction.
 \end{proof}
 
 \begin{lemma}[Coordinate Hardy bounds for even H2 functions]

@@ -18,39 +18,6 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set
 open scoped ContDiff
 
-private theorem isOpen_localDisk (c : ℝ × ℝ) (r : ℝ) : IsOpen (localDisk c r) := by
-  apply isOpen_lt _ continuous_const
-  unfold localRadius
-  fun_prop
-
-private theorem memLp_of_radial {c : ℝ × ℝ} {r : ℝ} {s : ℕ} {f : ℝ × ℝ → ℂ}
-    (hf : MemLp (fun p ↦ f p / (localRadius c p ^ s : ℂ)) 2
-      (volume.restrict (localDisk c r))) : MemLp f 2 (volume.restrict (localDisk c r)) := by
-  have hc : Continuous (fun p ↦ (localRadius c p ^ s : ℂ)) := by
-    unfold localRadius
-    fun_prop
-  have hb : MemLp (fun p ↦ (localRadius c p ^ s : ℂ)) ⊤
-      (volume.restrict (localDisk c r)) := by
-    apply memLp_top_of_bound hc.aestronglyMeasurable (r ^ s)
-    filter_upwards [ae_restrict_mem (isOpen_localDisk c r).measurableSet] with p hp
-    have hrp : 0 ≤ localRadius c p := Real.sqrt_nonneg _
-    rw [norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hrp]
-    exact pow_le_pow_left₀ hrp (le_of_lt hp) s
-  have hn : ∀ᵐ p ∂(volume.restrict (localDisk c r)), p ≠ c :=
-    ae_restrict_of_ae (by
-      rw [ae_iff]
-      simp [Measure.volume_eq_prod])
-  apply (hb.mul hf).ae_eq
-  filter_upwards [hn] with p hp
-  have hr : localRadius c p ≠ 0 := by
-    intro hz
-    have hz' : (p.1 - c.1) ^ 2 + (p.2 - c.2) ^ 2 = 0 :=
-      (Real.sqrt_eq_zero (by positivity)).mp hz
-    have hx : p.1 = c.1 := by nlinarith [sq_nonneg (p.2 - c.2)]
-    have hy : p.2 = c.2 := by nlinarith [sq_nonneg (p.1 - c.1)]
-    exact hp (Prod.ext hx hy)
-  exact mul_div_cancel₀ _ (pow_ne_zero s (Complex.ofReal_ne_zero.mpr hr))
-
 private theorem sobolev_of_weighted_jet {n : ℕ} {c : ℝ × ℝ} {r : ℝ}
     {f : ℝ × ℝ → ℂ} {D : List (Fin 2) → ℝ × ℝ → ℂ}
     (hD : HasWeakJetOn n (localDisk c r) f D)
@@ -58,7 +25,7 @@ private theorem sobolev_of_weighted_jet {n : ℕ} {c : ℝ × ℝ} {r : ℝ}
     MemSobolevOn n (localDisk c r) f := by
   apply memSobolevOn_iff_exists_weakJet.mpr
   refine ⟨D, hD, fun w hw' ↦ ?_⟩
-  exact memLp_of_radial (hw w.length hw' w rfl)
+  exact memLp_of_div_localRadius_pow (hw w.length hw' w rfl)
 
 private theorem loc_comp_symm {A : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ)} {c : ℝ × ℝ}
     (hm : MeasurePreserving (planeAffine A c)) {k : ℕ} {U : Set (ℝ × ℝ)}

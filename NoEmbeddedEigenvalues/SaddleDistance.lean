@@ -56,22 +56,6 @@ theorem saddleDist_eq_dist {c p : ℝ × ℝ} (hc : c ∈ saddleSet)
     rw [dist_comm c p] at ht
     linarith
 
-/-- A uniform comparison between the Euclidean and product-metric radii. -/
-theorem localRadius_le_two_dist (c p : ℝ × ℝ) : localRadius c p ≤ 2 * dist p c := by
-  have hr : 0 ≤ localRadius c p := Real.sqrt_nonneg _
-  have hs : localRadius c p ^ 2 = (p.1 - c.1) ^ 2 + (p.2 - c.2) ^ 2 :=
-    Real.sq_sqrt (by positivity)
-  have hx : |p.1 - c.1| ≤ dist p c := by
-    rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
-    exact le_max_left _ _
-  have hy : |p.2 - c.2| ≤ dist p c := by
-    rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
-    exact le_max_right _ _
-  have hx2 := sq_le_sq₀ (abs_nonneg _) dist_nonneg |>.mpr hx
-  have hy2 := sq_le_sq₀ (abs_nonneg _) dist_nonneg |>.mpr hy
-  rw [sq_abs] at hx2 hy2
-  nlinarith [dist_nonneg (x := p) (y := c)]
-
 /-- The fixed-saddle Euclidean radius is controlled by saddle distance near c. -/
 theorem localRadius_le_two_saddleDist {c p : ℝ × ℝ} (hc : c ∈ saddleSet)
     (hp : dist p c < Real.pi / 2) : localRadius c p ≤ 2 * saddleDist p := by

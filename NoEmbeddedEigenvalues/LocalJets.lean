@@ -22,6 +22,60 @@ def localRadius (c p : ℝ × ℝ) : ℝ :=
 /-- An open Euclidean disk. -/
 def localDisk (c : ℝ × ℝ) (ρ : ℝ) : Set (ℝ × ℝ) := {p | localRadius c p < ρ}
 
+/-- Euclidean disks are open in the product topology. -/
+theorem isOpen_localDisk (c : ℝ × ℝ) (r : ℝ) : IsOpen (localDisk c r) := by
+  apply isOpen_lt _ continuous_const
+  unfold localRadius
+  fun_prop
+
+/-- The Euclidean radius is nonzero away from its center. -/
+theorem localRadius_ne_zero {c p : ℝ × ℝ} (hp : p ≠ c) : localRadius c p ≠ 0 := by
+  intro hz
+  have hs : (p.1 - c.1) ^ 2 + (p.2 - c.2) ^ 2 = 0 :=
+    (Real.sqrt_eq_zero (by positivity)).mp hz
+  have hx : p.1 = c.1 := by nlinarith [sq_nonneg (p.2 - c.2)]
+  have hy : p.2 = c.2 := by nlinarith [sq_nonneg (p.1 - c.1)]
+  exact hp (Prod.ext hx hy)
+
+/-- Restore a nonnegative integer power of the radius on a bounded disk.
+The value at the center does not affect the norm. -/
+theorem memLp_of_div_localRadius_pow {c : ℝ × ℝ} {r : ℝ} {s : ℕ} {f : ℝ × ℝ → ℂ}
+    (hf : MemLp (fun p ↦ f p / (localRadius c p ^ s : ℂ)) 2
+      (volume.restrict (localDisk c r))) : MemLp f 2 (volume.restrict (localDisk c r)) := by
+  have hc : Continuous (fun p ↦ (localRadius c p ^ s : ℂ)) := by
+    unfold localRadius
+    fun_prop
+  have hb : MemLp (fun p ↦ (localRadius c p ^ s : ℂ)) ⊤
+      (volume.restrict (localDisk c r)) := by
+    apply memLp_top_of_bound hc.aestronglyMeasurable (r ^ s)
+    filter_upwards [ae_restrict_mem (isOpen_localDisk c r).measurableSet] with p hp
+    have hrp : 0 ≤ localRadius c p := Real.sqrt_nonneg _
+    rw [norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hrp]
+    exact pow_le_pow_left₀ hrp (le_of_lt hp) s
+  have hn : ∀ᵐ p ∂(volume.restrict (localDisk c r)), p ≠ c :=
+    ae_restrict_of_ae (by
+      rw [ae_iff]
+      simp [Measure.volume_eq_prod])
+  apply (hb.mul hf).ae_eq
+  filter_upwards [hn] with p hp
+  exact mul_div_cancel₀ _ (pow_ne_zero s (Complex.ofReal_ne_zero.mpr (localRadius_ne_zero hp)))
+
+/-- A uniform comparison between the Euclidean and product-metric radii. -/
+theorem localRadius_le_two_dist (c p : ℝ × ℝ) : localRadius c p ≤ 2 * dist p c := by
+  have hr : 0 ≤ localRadius c p := Real.sqrt_nonneg _
+  have hs : localRadius c p ^ 2 = (p.1 - c.1) ^ 2 + (p.2 - c.2) ^ 2 :=
+    Real.sq_sqrt (by positivity)
+  have hx : |p.1 - c.1| ≤ dist p c := by
+    rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
+    exact le_max_left _ _
+  have hy : |p.2 - c.2| ≤ dist p c := by
+    rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
+    exact le_max_right _ _
+  have hx2 := sq_le_sq₀ (abs_nonneg _) dist_nonneg |>.mpr hx
+  have hy2 := sq_le_sq₀ (abs_nonneg _) dist_nonneg |>.mpr hy
+  rw [sq_abs] at hx2 hy2
+  nlinarith [dist_nonneg (x := p) (y := c)]
+
 /-- A specified weak jet: the head of the word is the outer derivative. -/
 def HasWeakJetOn (n : ℕ) (U : Set (ℝ × ℝ)) (f : ℝ × ℝ → ℂ)
     (D : List (Fin 2) → ℝ × ℝ → ℂ) : Prop :=
