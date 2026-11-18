@@ -2371,11 +2371,18 @@ ordered coordinate derivatives of orders $0\le k\le3$,
 \end{lemma}
 
 \begin{proof}
-\uses{lem:saddle-dipole-factorization, lem:saddle-factor-regular,
- lem:saddle-chart-orthogonal}
-Taylor expansion of the explicit smooth sine factors gives the derivative
-bounds, including their vanishing jets at zero. A value-only big-O bound
-is not being differentiated.
+\uses{lem:saddle-dipole-factorization, lem:classical-jet-flat-bounds}
+\leanok
+Write $s(t)=\sqrt2\sin(t/\sqrt2)$, so that $\Psi\circ\Xi_P=s(u)s(v)$.
+The derivatives of $s$ through order two agree at zero with those of $t$.
+A pure third derivative of either product still contains an undifferentiated
+factor vanishing at zero. Hence all ordered jets of the difference vanish
+through order three, and the finite Taylor bounds give the stated powers.
+The sine addition formulas give the squared gradient in the chart as
+$X^2+Y^2$, where $X=s'(u)s(v)$ and $Y=s(u)s'(v)$.
+Both components are bounded in magnitude by $r$. Their differences from
+$v$ and $u$ are $O(r^3)$ by the first-derivative estimates, so factoring
+the differences of squares gives the fourth-order gradient bound.
 \end{proof}
 
 \begin{lemma}[Harmonicity of the normalized quadratic]

@@ -453,10 +453,12 @@ can be added here as they are formalized.
   public statement and all derivative witnesses are retained.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
-  saddle charts and sinc factor, exact factorization, differentiated Taylor
-  bounds and quadratic compatibility. The raw chart parity theorem lives in
-  `SaddleChartPullback.lean`, after its measure transport.
-  Independent of the eigenfunction regularity modules.
+  saddle charts and sinc factor, exact factorization and quadratic compatibility.
+  The raw chart parity theorem lives in `SaddleChartPullback.lean`, after its
+  measure transport.
+- `Regularity/SaddleNormalFormDerivatives.lean`: matches the ordered sine-product
+  jets with the quadratic through order three and applies the finite Taylor
+  bounds; the first derivative estimates also bound the squared gradient defect.
 - `SaddleStreamCoordinates.lean`: finite H² and the fixed Fourier weak jet in
   saddle coordinates, actual charted Poisson and continuous-stream a.e. parity.
   The cylinder specialization keeps the physical weighted vorticity norm explicit

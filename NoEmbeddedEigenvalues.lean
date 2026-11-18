@@ -318,6 +318,7 @@ import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
+import NoEmbeddedEigenvalues.Regularity.SaddleNormalFormDerivatives
 import NoEmbeddedEigenvalues.SaddleChartPullback
 import NoEmbeddedEigenvalues.SaddleLogarithmicMass
 import NoEmbeddedEigenvalues.SaddleDistance

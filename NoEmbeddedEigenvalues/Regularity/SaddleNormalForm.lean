@@ -174,15 +174,4 @@ theorem saddleQuadratic_comp_chart {P : ℝ × ℝ} (hP : P ∈ saddleSet) (a : 
   simp only [hsq, hsqrt]
   ring
 
-/-- Value, gradient-square and differentiated Taylor bounds for the explicit dipole
-(`lem:saddle-normal-form-derivatives`). The constants do not depend on the point q. -/
-theorem saddle_normal_form_derivatives {P : ℝ × ℝ} (hP : P ∈ saddleSet) :
-    ∃ ρ C : ℝ, 0 < ρ ∧ 0 < C ∧ ∀ q ∈ localDisk 0 ρ,
-      (∀ w : List (Fin 2), w.length ≤ 3 →
-        |classicalRealJet w (fun v ↦ dipoleLift (saddleOrthoChart P v) - v.1 * v.2) q| ≤
-          C * localRadius 0 q ^ (4 - w.length)) ∧
-      |gradSq dipoleLift (saddleOrthoChart P q) - localRadius 0 q ^ 2| ≤
-        C * localRadius 0 q ^ 4 := by
-  sorry
-
 end NoEmbeddedEigenvalues
