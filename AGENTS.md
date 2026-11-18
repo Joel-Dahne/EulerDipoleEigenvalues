@@ -2,6 +2,13 @@
 
 Guidance for AI agents (and humans) working in this repository.
 
+## Name results by their blueprint labels
+
+Use the exact blueprint label (e.g. `lem:elliptic-local`) when referring to a
+graph node in explanations, plans, progress updates, final summaries, or status
+pages. The label alone is enough; the title is optional. Use Lean names for
+code, commands, and diagnostics, not in place of labels in user-facing reports.
+
 ## Project
 
 Formalization in Lean 4 + Mathlib of the paper *Absence of nonzero embedded
@@ -11,17 +18,10 @@ dipole* (Joel Dahne, Hao Jia). The dipole is the stream function
 and explicit comparison functions whose signs are certified by exact
 arithmetic.
 
-The project has three goals of equal weight, pursued together:
-
-1. **Formalize** the result in Lean.
-2. **Digest** the result. The manuscript was mostly AI-generated, and the
-   authors do not yet fully own the argument. The aim is to understand why
-   each step works, find gaps and errors, and find simpler routes.
-3. **Improve the manuscript**, which is currently very rough, into a
-   well-presented paper (`Manuscript/manuscript.tex`).
-
-The blueprint links all three: small nodes make the argument easier to digest
-and formalize, and the settled structure feeds back into the paper.
+**Current priority: complete the Lean formalization of the main theorem
+without admissions.** Defer a standalone review of the argument and a rewrite
+of the manuscript until then. As part of formalizing, investigate gaps and
+errors, look for simpler proofs, and record what you learn in the blueprint.
 
 - `Manuscript/eigenvalues.tex` is the unchanged original reference. In this
   repository "the manuscript" means this file. It is **not** a trusted source.
@@ -40,29 +40,24 @@ and formalize, and the settled structure feeds back into the paper.
   derivation), and keep sanity checks clearly separate from proofs.
 - When explaining a step, give the mechanism (why it works, what the key
   cancellation or sign is), not only a restatement.
-- In explanations, plans and progress reports, prefer the Blueprint node's
-  title and label over its Lean declaration name when both exist. Include
-  the label (e.g. `thm:ee-exclusion`) so the node is easy to find in the graph.
-  Add the Lean name in parentheses only when useful for locating code; use
-  exact Lean names when discussing code or diagnostics.
 - Record problems as digest notes (see below) instead of quietly fixing them
   in the blueprint, so the authors see what changed and why.
-- Look out for simplifications and better structure: unused generality, results
-  proved twice, notation clashes, and arguments that become shorter in a
-  different order. These are candidates for the paper.
+- Prefer simpler proof routes when they help the formalization. Look for
+  unnecessary hypotheses, duplicated arguments, and dependencies that can be
+  avoided.
 - Scratch computations (SymPy, numerics) belong in a scratch directory. Do not
   add them to the repository unless asked; verification scripts for the
   certificates are an exception, once they are planned.
-- Never edit `eigenvalues.tex`. Do not edit `manuscript.tex` on your own
-  initiative: changes go into the blueprint first and are brought into the
-  reworked manuscript once a chapter has settled and the authors agree.
+- Never edit `eigenvalues.tex`. Record mathematical changes in the blueprint
+  first. Leave `manuscript.tex` alone unless the authors request edits.
 
 ## Navigation and audit boundary
 
-Read `STATUS.md` and the relevant topic page at the start of a session.
-Use [the architecture guide](docs/architecture.md) on demand for the module
-map, blueprint layout and verification tools; do not load the full map for
-unrelated work. Module docstrings describe implementation details.
+Start with [STATUS.md](STATUS.md) and the relevant topic page. Use the
+[blueprint graph](blueprint/README.md#building) and
+[generated report](docs/status/generated.md) to find unfinished prerequisites.
+Consult [the architecture guide](docs/architecture.md) as needed for the module
+map and verification tools.
 
 - `NoEmbeddedEigenvalues.lean` imports every library module. Add new modules
   there; declarations belong to namespace `NoEmbeddedEigenvalues` regardless
@@ -76,101 +71,53 @@ unrelated work. Module docstrings describe implementation details.
 - `lakefile.toml` and `lean-toolchain`: Lean and Mathlib `v4.34.1`.
 - `justfile`: build recipes; run `just` to list them.
 
-## Building
+## Building and verification
 
-```sh
-just check-blueprint # fast source label/reference/dependency checks
-just test-blueprint  # checker/report regression tests
-just status-blueprint # regenerate sector counts and unfinished-node report
-just web             # source checks + website, sector graphs and status report
-just serve           # serve it at http://localhost:8000 (needs only python3)
-just graph thm:ee-exclusion  # graph of a node and all it depends on (after just web)
-just pdf             # blueprint PDF in blueprint/print
-just build           # lake build
-just manuscript      # reworked manuscript PDF, rebuilt on change (needs xelatex, latexmk)
-just manuscript eigenvalues  # same for the original manuscript
-```
-
-Task-specific audits:
-- `just challenge` (~2 min): run only after changes to `Challenge.lean`,
+- Use `just check-blueprint` for source consistency checks and
+  `just test-blueprint` for checker/report regression tests.
+- Use `just web`, not `leanblueprint web`: the recipe handles read-only plasTeX
+  assets and regenerates the graphs and status report. Use `just status-blueprint`
+  when only the report is needed. See the [blueprint build guide](blueprint/README.md#building)
+  for serving and custom graphs. Run `just pdf` and `just manuscript` on a host
+  with the required TeX tools, not the standard agent VM.
+- Run `just build` at integration checkpoints, not for each edit. On a fresh
+  checkout, first fetch Mathlib's build cache with `lake exe cache get`.
+- Run `just sorries NAME...` for actual transitive admissions, on request or
+  when needed to establish admission-freedom or inspect a dependency frontier.
+  `NAME` is a Lean declaration name, not a blueprint label.
+- Run `just challenge` **only** after changes to `Challenge.lean`,
   `Solution.lean`, comparator configuration/checker or Lean/Mathlib versions,
-  or when the user explicitly requests this audit. It is not a routine build or
-  commit check. Ordinary library proof changes, proof completion and agent-selected
-  milestones are not triggers. Use targeted `just sorries` when admission analysis
-  is needed instead.
-- `just sorries NAME...` (~50 s): actual transitive Lean admissions, on request
-  or when needed to establish admission-freedom or inspect a dependency frontier.
+  or when the user explicitly requests it. It is not a routine build or commit
+  check.
 
-Agents usually run in a VM that has `just`, `leanblueprint` and `kpsewhich`
-installed system-wide; there, run `just web` directly. The user runs
-`just serve` on the host to look at the result. `just web` also regenerates
-all three sector subgraphs, linked from the index and chapter sidebars;
-a separate `just graph` is needed only for custom views. The VM has no
-`xelatex`/`latexmk`, so `just pdf` and `just manuscript`
-are for the host.
+### Memory on the VM
 
-Gotchas:
+Start broad rebuilds on the 12 GB VM with `LEAN_NUM_THREADS=2 just build`.
+Use the same prefix for `just sorries` or `just challenge` if they will trigger
+such a rebuild. If memory is still tight, retry with `LEAN_NUM_THREADS=1`.
+Avoid overlapping heavy builds or audits with active Lean language-server
+workers; reducing build concurrency does not free their memory.
 
-- Run `just web`, not `leanblueprint web`: the recipe checks source consistency,
-  then makes `blueprint/web` writable, because plasTeX copies read-only files
-  out of the Nix store and a second build would fail on them.
-- Messages that `gs`, `pdflatex`, `dvisvgm` or `pdf2svg` were not found are
-  harmless: they come from plasTeX's image converters, which this blueprint
-  does not use. `graphviz` is not needed either; the graph is rendered in the
-  browser.
-- Lean and Mathlib come from `elan`/`lake`; run `lake exe cache get` before the
-  first `lake build` to download Mathlib's build cache.
+This is a per-command setting, not a global cap on routine checks. A retry at
+2 threads succeeded after a broad build ran out of memory; the effect on build
+time has not been measured. See [Lean performance notes](docs/tooling/lean-performance.md#build-concurrency).
 
 ## Working with Lean
 
-Use the `lean-lsp` MCP server (provided by the VM's `lean-lsp-mcp`) rather
-than repeated `lake build` or `lake env lean`. It keeps a Lean language server
-running and reuses unchanged imports and source prefixes. Edit latency depends
-on the invalidated work.
+Use the persistent `lean-lsp` MCP server for edits and rechecks, rather than
+repeated `lake build`, `lake env lean`, or `lean_multi_attempt`. In Pi, if
+`lean-lsp` tools are available, use them directly; no setup reading is needed.
+Consult [Pi troubleshooting](docs/tooling/pi.md) only if the tools are missing,
+the server won't connect, or you're changing its configuration.
 
-Tool-specific setup notes live in `docs/tooling/`. When using Pi, read
-[the Pi setup notes](docs/tooling/pi.md) for its stdio Lean MCP configuration.
-
-Costs measured in the VM (4 cores, 12 GB):
-
-| Operation | Time |
-|---|---|
-| Any new Lean process with `import Mathlib` (`lake env lean`, a module in `lake build`, opening a file in the server) | ~50 s, ~6.5 GB |
-| Same with a single targeted Mathlib import | ~15 s, ~2.4 GB |
-| Diagnostics in an open file | ~0.2 s unchanged; edits can take seconds |
-| `lean_multi_attempt` | ~60 s (reloads Mathlib) |
-
-Almost all of the 50 s is spent loading Mathlib's `.olean` files over the
-`virtiofs` share, not computing, and it is paid again by every new process.
-
-Module layout (older code may not follow these conventions):
-
-- Keep new modules focused on one blueprint node or a small coherent group;
-  small actively edited files keep diagnostic checks fast.
-- Use topic subdirectories roughly following blueprint chapters (e.g.
-  `Analysis/`, `Geometry/`, `OddOdd/`), with shared infrastructure in its natural topic.
-- When a node needs a large file, look for meaningful intermediate results to
-  expose as smaller blueprint nodes. Keep technical Lean helpers with the result
-  they support.
-
-Workflow:
-
-1. Write the statement with `sorry`, then use `lean_diagnostic_messages` and
-   `lean_goal` to check it and inspect goals. Read goals instead of guessing.
-2. Fill the proof step by step, editing the file and rechecking diagnostics.
-   Prefer editing and rechecking over `lean_multi_attempt`, which is slow here.
-3. Find lemmas with `lean_local_search` (ripgrep over the project and
-   Mathlib sources; it matches declaration names, not prefixes like
-   `Real.Angle.cos_`, so use `rg` in `.lake/packages/mathlib` for those),
-   `lean_loogle`, `lean_leansearch` or `lean_leanfinder`, rather than
-   guessing names. The last three are remote services with rate limits.
-   Prefer targeted Mathlib imports while the file is small: they load in
-   ~15 s instead of ~50 s.
-4. Run `lake build` only at checkpoints, such as before a commit.
-
-Memory: each process that imports Mathlib takes about 6.5 GB, so two at once
-may not fit in 12 GB (untested). Avoid running `lake build` while the language
-server has a file open, and keep work in one file at a time where possible.
+- Keep new modules focused on a blueprint node or a small coherent group.
+  If a file grows large, look for meaningful intermediate results. Keep
+  technical helpers near the result they support.
+- Prefer targeted Mathlib imports to `import Mathlib` where practical.
+- Look up lemma names rather than guessing. Use `lean_local_search` for
+  names, `rg` in `.lake/packages/mathlib` for prefixes, and the remote
+  `lean_loogle`, `lean_leansearch`, or `lean_leanfinder` when local search
+  is insufficient.
 
 ## Blueprint conventions
 
@@ -218,31 +165,19 @@ server has a file open, and keep work in one file at a time where possible.
 
 ## Workflow
 
-1. Digest a manuscript argument into small blueprint nodes; record doubts as
-   digest notes.
-2. State in Lean with `sorry`; add `\lean{...}` and `\leanok` to the statement.
-   The Lean statement must be reviewed carefully by a human, since Lean cannot
-   check that it says the right thing.
-3. Prove in Lean; add `\leanok` to the proof.
-4. Feed changes in statements or structure back into the blueprint and, once a
-   chapter has settled, into the reworked manuscript (`manuscript.tex`).
+1. Use the blueprint to break the proof into precise steps for Lean. Record
+   gaps or doubts as digest notes.
+2. State the result in Lean with `sorry` and check it with
+   `lean_diagnostic_messages`. Add `\lean{...}` and the statement's `\leanok`.
+3. Inspect goals with `lean_goal`; fill the proof and recheck diagnostics as
+   you go. Add `\leanok` to the completed proof and reflect any statement or
+   dependency changes in the blueprint.
 
-## Status
+## Status updates
 
-Read `STATUS.md` at the start of a work session, then the relevant pages in
-`docs/status/`. Update the affected topic pages at the end; change the root
-status only when project-wide priorities, constraints or overall state change.
-Keep these files as short current snapshots, not logs or inventories of completed
-lemmas. Shared infrastructure belongs in `docs/status/shared.md`; sector pages
-should link there rather than duplicate its backlog. Per-node progress belongs
-in the blueprint, mathematical gaps in its digest notes, implementation details
-in module documentation, and history in Git. Do not hand-maintain graph counts:
-use `just status-blueprint` to refresh `docs/status/generated.md`. Its markers
-are not an audit of Lean declarations or axioms.
-Keep docstrings and blueprint prose focused on stable mathematical content,
-not temporary progress claims such as “still admitted” or lists of remaining
-prerequisites. Use blueprint status markers, generated reports and topic status
-pages for progress. When closing a gap, remove obsolete warnings and retain
-only the mathematical explanation of the resolution.
-
-This file is for guidance that stays valid across sessions.
+Keep per-node progress in blueprint markers. Refresh `docs/status/generated.md`
+with `just status-blueprint`; don't copy counts into handwritten files. Update
+`STATUS.md` or a topic page only when its overview or durable blockers change.
+Use digest notes for mathematical gaps, module docs for implementation details,
+and Git for history. Remove obsolete warnings when closing a gap; keep the
+mathematical explanation, not temporary proof-status claims.

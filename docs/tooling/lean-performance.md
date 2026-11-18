@@ -52,12 +52,17 @@ review of dependencies and private helper visibility.
 
 ## Build concurrency
 
-Use default concurrency unless a problem occurs. A broad rebuild after an
-`OrbitCoordinates.lean` change exhausted the 12 GB VM's memory while spawning
-Lean processes, even with the language server stopped. Retrying the remaining
-build with `LEAN_NUM_THREADS=2` succeeded. This supports reducing concurrency
-for an affected broad build, not imposing one thread on routine checks.
+A broad rebuild after an `OrbitCoordinates.lean` change exhausted the 12 GB
+VM's memory while spawning Lean processes, even with the language server
+stopped. Retrying the remaining build with `LEAN_NUM_THREADS=2` succeeded.
 The subsequent cached build and admission audit passed with default concurrency.
+This was not a timing comparison: the retry reused work from the first build.
+
+On that VM, start broad rebuilds with `LEAN_NUM_THREADS=2 just build` and
+try `1` if memory is still tight. Leave routine checks alone. If weighing more
+RAM against lower concurrency, compare elapsed time and peak memory on the same
+representative rebuild with equivalent starting artifacts; a cached build
+won't answer that question.
 
 ## Synchronization and reporting
 

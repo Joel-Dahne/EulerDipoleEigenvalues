@@ -6,8 +6,7 @@ license: CC-BY-4.0
 
 # Targeted Lean performance diagnosis
 
-Follow [project policy](../../../AGENTS.md) and the
-[Lean-LSP setup](../../../docs/tooling/pi.md). Optimize the workflow actually
+Follow [project policy](../../../AGENTS.md). Optimize the workflow actually
 being used, usually edits in an already open file. A clean build and a warm
 language-server recheck measure different things.
 

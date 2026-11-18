@@ -1,4 +1,7 @@
-# Pi tooling
+# Pi MCP setup and troubleshooting
+
+Skip this page if the `lean-lsp` tools are working. It is for setup changes
+and connection problems, not routine Lean work.
 
 Each Pi session starts its own `lean-lsp-mcp` server over stdio using
 [`.pi/mcp.json`](../../.pi/mcp.json). Start Pi from the repository root so
