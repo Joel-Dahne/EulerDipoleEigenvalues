@@ -154,6 +154,17 @@ theorem saddle_dipole_factorization {P : ℝ × ℝ} (hP : P ∈ saddleSet) (q :
     rw [sub_div, add_div, Real.cos_sub, Real.cos_add]
     ring
 
+/-- Near a saddle, the inverse image of the separatrix in the normalized chart
+is exactly the union of the coordinate axes (`lem:saddle-normal-form`). -/
+theorem saddleOrthoChart_mem_separatrix_iff {P : ℝ × ℝ} (hP : P ∈ saddleSet) :
+    ∃ ρ : ℝ, 0 < ρ ∧ ∀ q ∈ localDisk 0 ρ,
+      torusProj (saddleOrthoChart P q) ∈ separatrix ↔ q.1 = 0 ∨ q.2 = 0 := by
+  obtain ⟨ρ, hρ, hpos⟩ := saddleFactor_regular.2.2.2
+  refine ⟨ρ, hρ, fun q hq ↦ ?_⟩
+  change Ψ (torusProj (saddleOrthoChart P q)) = 0 ↔ _
+  rw [Ψ_torusProj, saddle_dipole_factorization hP, mul_eq_zero, mul_eq_zero,
+    or_iff_left (hpos q hq).ne']
+
 /-- The Cartesian normalization uses exactly the uv coefficient in the chart
 (`lem:saddle-quadratic-chart`), with no extra sign or factor of two. -/
 theorem saddleQuadratic_comp_chart {P : ℝ × ℝ} (hP : P ∈ saddleSet) (a : ℂ)

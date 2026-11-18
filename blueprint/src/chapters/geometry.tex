@@ -2309,10 +2309,11 @@ coordinate, and continuity at zero gives a positive neighbourhood.
 
 \begin{lemma}[Saddle normal form]
 \label{lem:saddle-normal-form}
-\uses{def:saddle-ortho-chart, lem:dipole-critical-points, lem:separatrix-lines}
+\uses{def:saddle-ortho-chart, def:local-plane-geometry, def:cells, def:torus-of-lift}
 \lean{NoEmbeddedEigenvalues.saddleFactor_regular,
  NoEmbeddedEigenvalues.saddleOrthoChart_orthogonal,
  NoEmbeddedEigenvalues.saddle_dipole_factorization,
+ NoEmbeddedEigenvalues.saddleOrthoChart_mem_separatrix_iff,
  NoEmbeddedEigenvalues.saddle_normal_form_derivatives}
 \leanok
 The chart and inverse-coordinate formulas are mutually inverse and
@@ -2326,12 +2327,14 @@ $|\nabla\Psi|^2\circ\Xi_P=u^2+v^2+O(r^4)$.
 
 \begin{proof}
 \uses{lem:saddle-chart-orthogonal, lem:saddle-dipole-factorization,
- lem:saddle-factor-regular, lem:saddle-normal-form-derivatives}
-Since $s=\pm1$, the affine chart matrix is orthogonal.
-The cosine identities at the saddle give
-$\Psi\circ\Xi_P=2\sin(u/\sqrt2)\sin(v/\sqrt2)=uv\,m$.
-The extended sine ratios are smooth, even and $1+O(r^2)$.
-The same explicit formulas give the gradient-square expansion.
+ lem:saddle-factor-regular, lem:saddle-normal-form-derivatives,
+ lem:separatrix-lines}
+\leanok
+The chart identities and factorization hold globally. On the disk where
+$m>0$, the lifted stream function equals the torus stream function at the
+projected point, and $uv\,m=0$ holds exactly when $u=0$ or $v=0$.
+Use the order-zero Taylor estimate and the gradient-square estimate on a
+smaller disk if needed.
 \end{proof}
 
 \begin{lemma}[Compatibility of the normalized saddle quadratic]
