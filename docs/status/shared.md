@@ -214,9 +214,10 @@ weights and local versus global regularity.
    Periodic first transport gain (`cor:transport-first-gain-periodic`) and
    First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
    **Weighted forcing route:** Cellwise H¹ from weighted forcing
-   (`lem:weighted-transport-h1`) remains admitted. Its original-hypothesis
-   second mass (`lem:weighted-transport-second-mass`) and full/half numerator
-   H¹ (`lem:weighted-numerators-h1`) are proved. Local full-numerator H² is
+   (`lem:weighted-transport-h1`) has an assembly proof with its unchanged
+   statement. Its original-hypothesis second mass
+   (`lem:weighted-transport-second-mass`) and full/half numerator H¹
+   (`lem:weighted-numerators-h1`) are proved. Local full-numerator H² is
    proved on that same all-frequency collar (`lem:weighted-numerator-local-h2`).
    Its ordinary first derivative agrees a.e. with the supplied-gradient candidate;
    the half derivative is retained unchanged. No raw endpoint prescription or
@@ -243,9 +244,16 @@ weights and local versus global regularity.
    The complete endpoint-value contribution hE₁ is L² on one all-frequency collar
    (`lem:weighted-numerator-endpoint-derivative`), with the original forcing and
    gradient; the original-input producer also retains the true ordered jet.
-   Next bound the distinct first-bulk boundary potentials to obtain hN″ L²,
-   then assemble spatial weak-gradient/H¹/gluing. Individual gradient traces
-   in the two transverse charts have not been identified.
+   The top-down assembly exposes three admitted inputs: global hN″ L²
+   (`lem:weighted-numerator-second-norm`), single-character weak quarter
+   reconstruction (`lem:weighted-character-quarter-derivatives`), and physical
+   H¹ seam gluing (`lem:transport-quarter-h1-gluing`). Ordinary scalar division
+   (`lem:quarter-h1-scalar-data`) is admission-free for a supplied second norm;
+   four-character recombination (`lem:weighted-transport-quarter-assembly`)
+   restricts actual joint fields to one common collar. Neither assembly uses the
+   stronger logarithmic numerator package. The next bottom-up estimate remains
+   the distinct first-bulk boundary potentials. Individual gradient traces in
+   the two transverse charts have not been identified.
    Target these scalar data directly rather than the full logarithmic package;
    the full angular corner trace remains separate.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
@@ -258,7 +266,8 @@ weights and local versus global regularity.
    **Ordinary separatrix frontier:** Weighted transport H¹
    (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach these three inputs.
+   Weighted transport H¹ expands into the three inputs above, so ordinary
+   separatrix H¹/H³ and logarithmic forcing each reach five primitive inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -267,7 +276,7 @@ weights and local versus global regularity.
    Weighted second-numerator differentiation and the remaining scalar/orbit inputs
    are explicit outside-section prerequisites. The weighted-gradient and third-stream
    assemblies still depend on their recorded transport and elliptic/Taylor inputs.
-   No new admissions were introduced. Rotations after spatial reconstruction avoid differentiated
+   Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on
    this assembly route.
    The scalar/geometry batch is now

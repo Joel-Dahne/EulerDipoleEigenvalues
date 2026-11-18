@@ -4,6 +4,7 @@ import NoEmbeddedEigenvalues.Transport
 import NoEmbeddedEigenvalues.QuarterCoordinates
 import NoEmbeddedEigenvalues.WeightedNumerators
 import NoEmbeddedEigenvalues.ZeroSaddleTransportGain
+import NoEmbeddedEigenvalues.WeightedTransportH1Assembly
 
 /-!
 # Weighted cellwise transport regularity interfaces
@@ -45,7 +46,11 @@ theorem weighted_transport_h1 {lam : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × �
             (volume.restrict (quarterOrbitStrip h₀)) ∧
           MemLp (fun q ↦ B k q / (saddleDist (recenteredQuarterMap k q) : ℂ)) 2
             (volume.restrict (quarterOrbitStrip h₀)) := by
-  sorry
+  refine ⟨weighted_transport_second_mass hp hb hcell hD hf hDf, ?_⟩
+  obtain ⟨b, hpos, hhalf, A, B, hAB⟩ :=
+    weighted_transport_quarter_derivatives hp hb hcell hD hf hDf
+  exact ⟨b, hpos, hhalf,
+    hp.cell_h1_of_weighted_quarter_derivatives hcell hpos hhalf hAB, A, B, hAB⟩
 
 /-- Zero forcing on one whole regular edge forces its canonical cellwise trace
 of v to vanish (`lem:transport-zero-edge-trace`). H¹ and the mass weight are inputs,

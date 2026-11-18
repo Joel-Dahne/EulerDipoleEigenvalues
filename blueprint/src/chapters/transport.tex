@@ -5763,6 +5763,217 @@ recombination to recover the original raw $v/d^2$.
 The component collars may differ.
 \end{proof}
 
+\begin{definition}[Ordinary quarter scalar H1 data]
+\label{def:quarter-h1-scalar-data}
+\uses{def:numerator, def:half-numerator-derivative, def:h1-interval,
+ lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasQuarterH1ScalarData}
+\leanok
+For a continuous forcing representative $g$, ordinary scalar data on $(0,b)$
+mean that there are $Q,Q_1$ such that
+\[
+ \operatorname{HasIntervalH1}(0,b;Q,Q_1),\qquad
+ D_{\lambda,\kappa}Q=N_{\lambda,g}\quad(0<h<b),\qquad Q/h\in L^2(0,b),
+\]
+the canonical interval extension of $Q$ has value zero at $0$, and the
+original half numerator
+$B(h)=\int_{-L(h)}^0g(\gamma_h(t))e^{-i\lambda t}\,dt$
+has interval H1 data $(B,B')$.
+This does not prescribe $Q(0)$ or replace the original half numerator.
+No logarithmic or pointwise energy bounds are part of this definition.
+\end{definition}
+
+\begin{definition}[Weighted weak recentered quarter data]
+\label{def:weighted-quarter-derivative-data}
+\uses{def:cell-separatrix-collar, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives}
+\leanok
+For the same raw spatial field $v$, joint fields $A_k,B_k$ are weighted
+weak quarter data on $Q_b$ if, for every $k\in\{0,1,2,3\}$,
+\[
+ \partial_h(v\circ\Gamma_k)=A_k,\qquad
+ \partial_t(v\circ\Gamma_k)=B_k
+\]
+weakly on $Q_b$, and
+\[
+ (d\circ\Gamma_k)A_k,\quad B_k/(d\circ\Gamma_k)\in L^2(Q_b,dh\,dt).
+\]
+The fields are functions of both coordinates, not selections of separate
+fiberwise derivatives. No unweighted global quarter-coordinate H1 norm is asserted.
+\end{definition}
+
+\begin{lemma}[Restriction and addition of weighted weak quarter data]
+\label{lem:weighted-quarter-data-algebra}
+\uses{def:weighted-quarter-derivative-data}
+\lean{NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.mono,
+ NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.add}
+\leanok
+Weighted weak quarter data restrict from $Q_b$ to $Q_c$ whenever $c\le b$,
+keeping the original joint fields.
+On one common domain the data for $v$ and $w$ add to data for $v+w$,
+with the sums of the specified weak derivatives.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Restrict both weak identities and both finite norms.
+For addition, use linearity of weak differentiation and the sum of the
+actual L2 functions; the distance weights distribute over the sums.
+\end{proof}
+
+\begin{lemma}[Global weighted second numerator norm]
+\label{lem:weighted-numerator-second-norm}
+\uses{def:transport-pair, def:sobolev-local, def:numerator}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_second_norm}
+\leanok
+Let the original pair be defined on an orbit neighbourhood containing the
+closed cell. Retain any continuous forcing representative $g=f$ a.e. and the
+supplied Cartesian weak first gradient $D$.
+If $f/d^2,D_j/d^{3/2}\in L^2(\Cell)$, then there is $0<r<1/2$ such that,
+for every real $\mu$,
+\[
+ h\,\frac{d^2}{dh^2}N_{\mu,g}(h)\in L^2(0,r).
+\]
+The derivatives are the ordinary derivatives of the original continuous
+numerator; local H2 is available separately. The collar is independent of
+frequency. No quarter character, Hessian premise or forcing growth bound is added.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:numerator-second-moving-endpoints, lem:second-numerator-bulk,
+ lem:weighted-numerator-endpoint-derivative}
+The local second formula identifies the actual second derivative with the
+fixed-time second bulk, the first-bulk boundary flux and the endpoint-value
+flux derivative. The first and last contributions have genuine h-weighted L2
+norms. Thus the global norm reduces to controlling the distinct first-bulk
+boundary potentials.
+\end{proof}
+
+\begin{lemma}[Ordinary scalar division from the second numerator norm]
+\label{lem:quarter-h1-scalar-data}
+\uses{def:transport-pair, def:sobolev-local, def:quarter-character,
+ def:h1-interval, def:quarter-h1-scalar-data}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.quarter_h1_scalar_data_of_second_norm}
+\leanok
+Under the original weighted forcing and supplied-gradient hypotheses, retain
+$g=f$ a.e. continuous and suppose both raw fields have the same quarter
+character $\kappa$ a.e. on the cell, with $\kappa^4=1$.
+Given $r>0$ and the actual norm $hN_{\lambda,g}''\in L^2(0,r)$,
+there are $0<b<\min(r,1/2)$ and ordinary scalar data on $(0,b)$
+for this same $g,\lambda,\kappa$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-numerator-local-h2, lem:numerator-zeros, lem:phase-cell-division}
+\leanok
+Intersect the second-norm collar with the established all-frequency first-data
+collar. On it, the original full numerator has local H2 and an L2 first
+derivative, while the original half numerator has global H1.
+Resonant cancellation applies to the given character fields.
+Phase-cell division supplies $Q,Q_1$, their exact numerator factorization,
+the actual $Q/h$ norm and canonical zero trace on a smaller complete-cell collar.
+Restrict the half numerator there and use its ordinary derivative.
+This proof accepts the second norm as an explicit premise; it does not invoke
+its producer or the logarithmic numerator package.
+\end{proof}
+
+\begin{lemma}[Weighted weak quarter derivatives for a single character]
+\label{lem:weighted-character-quarter-derivatives}
+\uses{def:transport-pair, def:sobolev-local, def:quarter-character,
+ def:h1-interval, def:quarter-h1-scalar-data, def:weighted-quarter-derivative-data}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_character_quarter_derivatives}
+\leanok
+Under the original weighted forcing and supplied-gradient hypotheses,
+let the raw pair have character $\kappa$ a.e. on the cell, $\kappa^4=1$.
+Retain the same continuous forcing representative $g$.
+Given ordinary scalar data on $0<r<1/2$, there are $0<b<r$ and joint
+weighted weak quarter data for the original $v$ on all four recentered
+quarters $Q_b$.
+No spatial H1 or seam-matching hypothesis is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-endpoint-formula, lem:period-derivative-bounds,
+ lem:weighted-numerator-subinterval, lem:quarter-reconstruction-weak,
+ lem:quarter-profile-ae, lem:weighted-character-mass, lem:orbit-level-derivatives,
+ lem:orbit-time-integrals}
+Write the midpoint amplitude as
+$a=i e^{2i\lambda L}Q+iB$.
+The scalar H1 norms and $hL'$ bound give a genuine L2 derivative of $a$;
+the phase-derivative term is controlled by $Q/h$.
+The weak midpoint primitive rule gives the joint level derivative, with
+the supplied Cartesian gradient contracted against the fixed-time level vector.
+Weighted Cauchy--Schwarz and the orbit distance moments control its d-weighted
+norm without a pointwise forcing-growth assumption.
+The weak transport equation and mass estimate control the time derivative
+divided by d. Identify the reconstruction with the raw profile by joint a.e.
+congruence, then use the character to rotate these derivatives without
+differentiating a time shift.
+This reconstruction and its global weighted estimates form a separate input
+from physical seam gluing.
+\end{proof}
+
+\begin{lemma}[Four-character assembly of weighted weak quarter derivatives]
+\label{lem:weighted-transport-quarter-assembly}
+\uses{def:transport-pair, def:sobolev-local, def:weighted-quarter-derivative-data}
+\lean{NoEmbeddedEigenvalues.weighted_transport_quarter_derivatives}
+\leanok
+For the original pair on a bounded orbit neighbourhood containing the closed
+cell, and its supplied weak gradient with
+$f/d^2,D_j/d^{3/2}\in L^2(\Cell)$, there are $0<b<1/2$ and weighted
+weak quarter data for the same raw $v$ on all four $Q_b$.
+No additional scalar or trace premise is imposed on the original pair.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:local-h2-continuous-representative, lem:transport-rotation-neighbourhood,
+ lem:transport-quarter-projections, lem:weighted-quarter-projections,
+ lem:weighted-transport-mass-data,
+ lem:weighted-numerator-second-norm, lem:quarter-h1-scalar-data,
+ lem:weighted-character-quarter-derivatives, lem:weighted-quarter-data-algebra}
+\leanok
+Construct the continuous representative, restrict to a rotation-invariant
+neighbourhood, and project both raw fields and that representative into
+$1,-1,i,-i$. The exact Cartesian derivative rows produce the projected
+weighted gradients. For each character apply the second-norm input, the
+ordinary scalar division bridge, and the single-character weak reconstruction
+input. These applications retain the same projected continuous numerator
+and weak first gradient throughout.
+Take the minimum of the four positive collars, restrict the actual joint
+derivative fields, and add. Pointwise Fourier recombination identifies their
+value field with the original raw $v$.
+\end{proof}
+
+\begin{lemma}[Physical H1 from weighted quarters and weak transport]
+\label{lem:transport-quarter-h1-gluing}
+\uses{def:transport-pair, def:sobolev-local, def:weighted-quarter-derivative-data,
+ def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.cell_h1_of_weighted_quarter_derivatives}
+\leanok
+Let the original pair be defined on an orbit neighbourhood containing the
+closed cell. If $0<b<1/2$ and the same raw $v$ has weighted weak quarter
+data on all four $Q_b$, then
+\[
+ v\in H^1(V_{2b}).
+\]
+The collar is unchanged. No zero forcing trace, supplied seam trace equality,
+reflection parity or elliptic relation is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-spatial-reconstruction, lem:orbit-coordinate-gradients,
+ lem:orbit-level-derivatives, lem:coarea}
+The inverse frame and constant-Jacobian charts convert the two weighted quarter
+norms into finite physical gradient norms.
+Across each interior quarter ray the transport vector is transverse.
+The global weak equation for $v+f$ has an L2 right-hand side, so it has no
+surface jump there. Since the forcing is globally H2, the canonical traces of
+$v$ from the two quarters agree. Prove this compatibility on regular local
+windows and glue the weak identities, then sum the finite physical norms.
+The rays being null only identifies norms; it does not establish weak gluing.
+The separatrix and saddle vertices are not in the positive-level domain $V_{2b}$.
+\end{proof}
+
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
@@ -5784,46 +5995,17 @@ follows from $f\in H^2$ on the given neighbourhood.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:weighted-numerator-estimates, lem:numerator-zeros,
-  lem:weighted-transport-second-mass, lem:weighted-numerators-h1,
-  lem:sobolev-weak-jets, lem:weak-derivative-unique,
-  lem:phase-cell-division, lem:period-derivative-bounds, lem:transport-unknown,
-  lem:reflection-algebra, lem:symmetries-commute,
-  lem:orbit-saddle-distance, lem:orbit-time-integrals,
-  lem:orbit-coordinate-gradients, lem:orbit-level-derivatives, lem:coarea}
-Lemma~\ref{lem:weighted-transport-second-mass} proves the mass conclusion
-from the original weighted hypotheses, using only first-numerator data.
-For the H1 and weak-gradient conclusions, choose a second weak jet of the
-forcing; its first entries agree a.e.
-with the supplied gradient by weak-derivative uniqueness.
-Decompose into the four quarter characters. Rotations preserve the
-weighted hypotheses. Lemma~\ref{lem:weighted-numerators-h1} supplies
-the first-order full and half data; the second-order data of
-Lemma~\ref{lem:weighted-numerator-estimates}, numerator vanishing and
-phase-cell division give $C/h,C'\in L^2$. With the same half numerator $B$,
-\[
- A(h)=z_h(0)=ie^{2i\lambda L(h)}C(h)+iB(h)
-\]
-has $A'\in L^2$, since $L'C$ is controlled by $C/h$. Also $A\in L^2$:
-the half numerator is H1 by Lemma~\ref{lem:weighted-numerators-h1},
-hence bounded through its canonical continuous interval extension.
-
-For the level derivative use midpoint reconstruction:
-\[
- \partial_hz_h(t)=e^{i\lambda t}A'(h)
-       +i\int_0^t e^{i\lambda(t-u)}\partial_hf_h(u)\,du .
-\]
-Lemma~\ref{lem:weighted-numerator-estimates}' subinterval estimate and $\int d^2\,dt\le C$
-control $d\,\partial_hz_h$ in $L^2(dh\,dt)$.
-Since $d|\partial_hf_h|\le C|\nabla f_h|$, the same holds for
-$d\,\partial_hv_h$.
-Finally $\partial_tv_h=i\lambda v_h-\partial_tf_h$ and
-$|\partial_tf_h|\le Cd|\nabla f_h|$ give
-$d^{-1}\partial_tv_h\in L^2$.
-The inverse-coordinate bounds give the physical weak gradient in $L^2$.
-At adjacent quarter boundaries the traces match by orbitwise absolute
-continuity of $z$ and $v=-\lambda z-f$; thus the quarters glue in $H^1$.
-Sum the four character components. No assertion of zero edge trace is made.
+\uses{lem:weighted-transport-second-mass, lem:weighted-transport-quarter-assembly,
+ lem:transport-quarter-h1-gluing}
+\leanok
+Apply the original-hypothesis second-mass theorem.
+The four-character assembly supplies actual weighted weak quarter derivatives
+on one common positive collar. Apply the physical H1 gluing input on exactly
+that collar and retain the same joint derivative fields.
+No new premise is added to the original statement. The argument separates
+global $hN''$ control, single-character weak quarter reconstruction and physical
+seam gluing; the stronger logarithmic numerator package is not used.
+Whole-edge zero trace and elliptic H3 are separate conclusions.
 \end{proof}
 
 \begin{lemma}[Zero edge trace from zero forcing]
