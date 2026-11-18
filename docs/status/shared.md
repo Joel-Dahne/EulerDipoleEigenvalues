@@ -277,7 +277,18 @@ weights and local versus global regularity.
    The stronger logarithmic numerator package and full angular corner trace
    remain separate.
    **Next:** Whole-edge zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
-   (`lem:elliptic-local`). Weighted numerator estimates
+   (`lem:elliptic-local`). The edge theorem itself remains admitted. Its generic
+   endpoint-safe L² trace convergence and critical one-sided Cartesian trace
+   estimates are admission-free in `Analysis/BoundaryTraceContinuity.lean` and
+   `Analysis/BoundaryConeTrace.lean`. The latter excludes a common nonzero
+   modulus even with separate canonical trace witnesses on each band; no joint
+   ACL family or general polar corner-trace theorem is used.
+   Remaining producers: derive the boundary weak ODE from the original transport
+   pair, prove its common modulus on the whole edge, and transport the original
+   v/d norm and H¹ gradient into a physical corner half-cone. Retain every
+   admissible endpoint window. The blueprint records a weak-test/Hardy route
+   needing no trace of the normal derivative; its Lean implementation is open.
+   Weighted numerator estimates
    (`lem:weighted-numerator-estimates`) and logarithmic phase-cell division
    (`lem:log-phase-cell-division`) remain separate admitted stronger inputs.
    Prioritize the odd–odd applications at exponents three halves and three;

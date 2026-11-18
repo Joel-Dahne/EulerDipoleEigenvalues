@@ -3622,6 +3622,56 @@ then proves its square integrability. Uniqueness in
 Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
 \end{proof}
 
+\begin{lemma}[Distance-sensitive interval trace increment]
+\label{lem:interval-trace-increment}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.extension_sub_sq_le_distance}
+\leanok
+If $F\in H^1(a,b)$ has derivative $D$ and canonical extension
+$\widetilde F$, then for all $s,t\in[a,b]$,
+\[
+ |\widetilde F(t)-\widetilde F(s)|^2
+ \le |t-s|\int_a^b|D|^2.
+\]
+The distance between the trace points, rather than the full interval length,
+is retained.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-endpoint-estimates}
+\leanok
+Apply endpoint Cauchy--Schwarz on the interval joining $s,t$ and bound its
+nonnegative derivative energy by the full interval energy. Reverse the points
+when necessary.
+\end{proof}
+
+\begin{lemma}[Strong L2 continuity up to the normal endpoints]
+\label{lem:l2-trace-continuity}
+\uses{def:canonical-transverse-trace, lem:acl-slicing}
+\lean{NoEmbeddedEigenvalues.HasACLSectionsOn.trace_sub_sq_le,
+ NoEmbeddedEigenvalues.HasACLSectionsOn.tendsto_trace_sq}
+\leanok
+Let $G$ be one measurable joint transverse ACL field on $I\times(a,b)$,
+with derivative $D$ and $G,D\in L^2$. Its canonical traces $T_t$ satisfy,
+for every $s,t\in[a,b]$,
+\[
+ T_t-T_s\in L^2(I),\qquad
+ \int_I|T_t-T_s|^2\le |t-s|\int_{I\times(a,b)}|D|^2.
+\]
+Consequently the integral on the left tends to zero as $t\to s$ within
+$[a,b]$, including at either endpoint. These are traces of the same joint
+field, not arbitrary raw boundary sections.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interval-trace-increment, lem:trace-l2}
+\leanok
+The ordinary trace theorem first supplies genuine L2 norms for both traces.
+Integrate the section increment estimate using the finite derivative energy
+and Fubini. Squeeze the nonnegative squared difference by
+$|t-s|$ times that fixed finite energy.
+\end{proof}
+
 \begin{definition}[Logarithmic level weight]
 \label{def:log-level-weight}
 \uses{def:dipole, def:cells}
@@ -4511,6 +4561,145 @@ This concerns an interior ray in a Cartesian cone. It does not include
 the boundary rays and uniform angular assertion of
 Lemma~\ref{lem:weighted-corner-trace}.
 \end{remark}
+
+\begin{definition}[Cartesian half-cone at a boundary]
+\label{def:cartesian-half-cone}
+\lean{NoEmbeddedEigenvalues.cartesianHalfCone}
+\leanok
+For $R>0$ put
+\[
+ \mathcal H_R=\{(r,u):0<r<R,\ 0<u<r\}.
+\]
+The side $u=0$ is the boundary, and $r$ is tangential distance to its endpoint.
+\end{definition}
+
+\begin{lemma}[One-sided trace energy with a specified derivative]
+\label{lem:one-sided-trace-energy}
+\uses{def:canonical-transverse-trace, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.l2_estimate_of_weak_snd}
+\leanok
+Let $T$ be a canonical trace of $F$ in a chart $\Xi$ on
+$(l,r)\times(a,b)$ at $t\in[a,b]$.
+If the specified weak normal derivative of $F\circ\Xi$ is $D\in L^2$, then
+\[
+ T\in L^2(l,r),\qquad
+ \int_l^r|T|^2
+ \le \frac{2}{b-a}\int|F\circ\Xi|^2+2(b-a)\int|D|^2.
+\]
+The bulk integrals are on the original rectangle, and normal endpoints
+are included.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:transverse-trace-window-consistency, lem:trace-l2}
+\leanok
+Replace the trace construction's derivative witness by $D$ using weak uniqueness.
+Apply the ACL trace estimate. Almost-everywhere identification retains both
+the original planar value and the supplied trace.
+\end{proof}
+
+\begin{lemma}[Summing one-sided cone band energies]
+\label{lem:half-cone-band-energy}
+\uses{def:cartesian-half-cone}
+\lean{NoEmbeddedEigenvalues.memLp_two_of_half_cone_band_energy}
+\leanok
+Let $R>0$, $K\ge0$, and $E\ge0$ be integrable on $\mathcal H_R$.
+Suppose the same $W$ belongs to $L^2(a,2a)$ for each $a>0$, $2a\le R$,
+with
+\[
+ \int_a^{2a}|W|^2
+ \le K\int_{(a,2a)\times(0,a)}E.
+\]
+Then $W\in L^2(0,R)$ and
+$\int_0^R|W|^2\le K\int_{\mathcal H_R}E$.
+No global measurability premise on the raw $W$ is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:cone-band-energy}
+\leanok
+Extend the genuinely integrable density by zero to the symmetric cone.
+Its intersection with each symmetric band rectangle is exactly the one-sided
+band rectangle. The existing disjoint-band summation gives membership
+and the bound, including measurability up to null sets.
+\end{proof}
+
+\begin{lemma}[Critical one-sided trace on a radial band]
+\label{lem:boundary-weighted-band-trace}
+\uses{def:canonical-transverse-trace, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.boundary_weighted_band_trace}
+\leanok
+Let $a>0$, $B_a=(a,2a)\times(0,a)$, and let $T$ be a canonical endpoint
+trace at $u=0$ of the same raw $F$.
+If $\partial_uF=D$ weakly, $F/r\in L^2(B_a)$ and $D\in L^2(B_a)$, then
+\[
+ T/\sqrt r\in L^2(a,2a),\qquad
+ \int_a^{2a}\frac{|T|^2}{r}
+ \le8\int_{B_a}\left(\frac{|F|^2}{r^2}+|D|^2\right).
+\]
+The constant is independent of the scale $a$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:one-sided-trace-energy}
+\leanok
+Unweight the bulk value on the bounded band and obtain the actual trace L2 norm.
+The factor $r^{-1/2}$ is bounded there. Multiply the endpoint energy estimate
+by $a^{-1}$ and use $a<r<2a$ to bound $2a^{-2}\le8r^{-2}$.
+Only canonical traces are evaluated.
+\end{proof}
+
+\begin{lemma}[Critical one-sided trace in a Cartesian half-cone]
+\label{lem:boundary-weighted-cone-trace}
+\uses{def:cartesian-half-cone, def:canonical-transverse-trace,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.boundary_weighted_cone_trace}
+\leanok
+Let $R>0$, $\partial_uF=D$ weakly on $\mathcal H_R$,
+and $F/r,D\in L^2(\mathcal H_R)$.
+If the same $T$ is a canonical endpoint trace on every
+$(a,2a)\times(0,a)$ with $a>0$, $2a\le R$, then
+\[
+ T/\sqrt r\in L^2(0,R),\qquad
+ \int_0^R\frac{|T|^2}{r}
+ \le8\int_{\mathcal H_R}\left(\frac{|F|^2}{r^2}+|D|^2\right).
+\]
+No continuous planar representative or vertex value is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-weighted-band-trace, lem:half-cone-band-energy}
+\leanok
+Restrict the actual weak derivative and both finite norms to each band.
+Sum the scale-independent estimates against the common integrable energy.
+\end{proof}
+
+\begin{lemma}[Critical boundary mass excludes a constant-modulus mode]
+\label{lem:critical-boundary-mode}
+\uses{def:cartesian-half-cone, def:canonical-transverse-trace,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.constant_modulus_eq_zero_of_critical_memLp,
+ NoEmbeddedEigenvalues.constant_modulus_boundary_trace_eq_zero}
+\leanok
+If $R>0$, $T/\sqrt r\in L^2(0,R)$ and $|T|=c$ almost everywhere,
+then $c=0$.
+More generally, suppose $\partial_uF=D$ weakly on $\mathcal H_R$ and
+$F/r,D\in L^2(\mathcal H_R)$.
+If on every band $(a,2a)\times(0,a)$ there exists a canonical endpoint trace
+$T_a$ with $|T_a|=|z|$ a.e., for one common $z\in\C$, then $z=0$.
+The witnesses may differ from band to band; no joint family is selected.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:boundary-weighted-band-trace, lem:half-cone-band-energy}
+\leanok
+For the first assertion, the actual squared weighted norm makes $c^2/r$
+integrable. If $c\ne0$ this contradicts nonintegrability of $r^{-1}$ at zero.
+For the second, apply each band estimate to its given canonical trace, then
+transfer just its squared norm to the measurable constant function $z$.
+Half-cone summation gives $z/\sqrt r\in L^2(0,R)$, so the first assertion
+forces $|z|=0$. This is a norm argument, not weak gluing.
+\end{proof}
 
 \begin{lemma}[Weighted trace at a corner]
 \label{lem:weighted-corner-trace}

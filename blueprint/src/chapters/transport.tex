@@ -6680,7 +6680,9 @@ cellwise trace of $v$ on that edge is zero.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-unknown, lem:weighted-corner-trace, lem:trace-l2,
+\uses{lem:transport-unknown, lem:trace-l2, lem:l2-trace-continuity,
+ lem:boundary-weighted-cone-trace, lem:critical-boundary-mode,
+ lem:diagonal-h1-pullback, lem:affine-jet-pullback,
  lem:dipole-identities, lem:separatrix-lines, lem:separatrix-arc}
 The transport unknown $z=-(v+f)/\lambda$ is cellwise $H^1$.
 Choose orthonormal coordinates $(\xi,\eta)$ on a regular edge segment,
@@ -6708,13 +6710,52 @@ $(Tz)'=-iTv$ and $Tv=-\lambda Tz-Tf=-\lambda Tz$.
 Consequently $Tz$ is locally absolutely continuous and
 $Tv(t)=ce^{i\lambda t}$ along the whole edge.
 
-Near an endpoint, apply Lemma~\ref{lem:weighted-corner-trace} to $v$ in the
-adjacent saddle quadrant. Since $v/r\in L^2$, its edge trace satisfies
-$\int|Tv|^2dr/r<\infty$. The explicit separatrix flow has
-$dt\asymp dr/r$ near that endpoint, so $Tv$ is square integrable on an
-infinite time half-line. Because $\lambda$ is real, the modulus of
-$ce^{i\lambda t}$ is constant; hence $c=0$.
+Near one endpoint, take a thin diagonal-affine Cartesian half-cone contained
+in $V_\epsilon$. Saddle distance is bounded above by a constant times its
+radial coordinate $r$, so the supplied $v/d$ norm gives $v/r\in L^2$;
+the normal derivative has its ordinary H1 norm.
+Lemma~\ref{lem:boundary-weighted-cone-trace} gives
+$\int|Tv|^2dr/r<\infty$ for the canonical endpoint trace.
+Because $\lambda$ is real, $|ce^{i\lambda t}|=|c|$.
+Lemma~\ref{lem:critical-boundary-mode} forces $c=0$.
+Only this one-sided Cartesian estimate is needed, not a uniform angular
+polar-trace theorem.
 \end{proof}
+
+\begin{remark}[A weak-test route to the boundary equation]
+One can avoid the averaged normal flux. In diagonal tangential coordinate $s$
+and inward normal coordinate $u$, a chosen edge has
+\[
+ L_0=\sigma(\cos s\cos u\,\partial_s+\sin s\sin u\,\partial_u),
+ \qquad \sigma\in\{-1,1\}.
+\]
+Put $F=v+f$ and $R=i\lambda v$, so $L_0F=R$ weakly.
+On a compact regular tangential interval, both have normal H1 regularity.
+Choose joint measurable normal ACL representatives $\widehat F,\widehat R$
+of these two a.e. classes. For a smooth compactly supported tangential
+test $\varphi$, set
+\[
+ E(u)=\cos u\int \widehat F(s,u)\varphi'(s)\,ds
+       +\sigma\int \widehat R(s,u)\frac{\varphi(s)}{\cos s}\,ds .
+\]
+The weak equation gives
+\[
+ E(u)=\sin u\int \partial_uF(s,u)\tan s\,\varphi(s)\,ds
+ \quad\hbox{a.e.}
+\]
+The normal pairings make $E\in H^1(0,w)$, while Cauchy--Schwarz and
+$|\sin u|\le u$ give $E/u\in L^2(0,w)$.
+Lemma~\ref{lem:h1-div-zero-trace} therefore gives zero canonical trace of $E$.
+Strong trace continuity from Lemma~\ref{lem:l2-trace-continuity} identifies it as
+\[
+ \int TF\,\varphi'
+   +\sigma\int TR\,\frac{\varphi}{\cos s}=0.
+\]
+Thus the boundary weak ODE needs no trace of the normal derivative
+$\partial_uF$. The joint ACL representatives retain the original two a.e.
+classes; no fibrewise family, raw boundary values or extra mixed derivatives
+are needed.
+\end{remark}
 
 \begin{remark}[Digest note: a whole edge, not just a regular segment]
 The zero-trace statement requires zero forcing along the whole open edge.
