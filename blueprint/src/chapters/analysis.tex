@@ -3672,6 +3672,48 @@ and Fubini. Squeeze the nonnegative squared difference by
 $|t-s|$ times that fixed finite energy.
 \end{proof}
 
+\begin{lemma}[Canonical trace from a specified normal derivative]
+\label{lem:canonical-trace-from-partial}
+\uses{def:canonical-transverse-trace, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_transverse_trace,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.exists_left_trace}
+\leanok
+On an open rectangle with positive side lengths, a value and its
+specified weak normal derivative in $L^2$ give a canonical trace at
+every point of the closed normal interval, including its endpoints.
+\end{lemma}
+\begin{proof}
+\uses{lem:trace-l2}
+\leanok
+Take the trace of a measurable normal ACL representative at the point.
+The trace estimate uses the given value and derivative classes.
+\end{proof}
+
+\begin{lemma}[Comparison of canonical traces across inward windows]
+\label{lem:one-sided-trace-comparison}
+\uses{def:canonical-transverse-trace}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq_inward,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.congr_trace}
+\leanok
+Suppose two rectangles have canonical traces, the first at its left
+normal endpoint $u=0$, the second at normal coordinate $t$.
+On a common inward subwindow of the first rectangle, suppose
+$V(s,u)=W(k(s),\varphi(u))$, where the product map takes that subwindow
+into the second rectangle, $k,\varphi$ preserve line measure,
+$\varphi$ is continuous and $\varphi(0)=t$.
+The two traces agree almost everywhere after the tangential pullback by $k$.
+The canonical trace is unchanged by replacing it by an a.e.-equal function.
+\end{lemma}
+\begin{proof}
+\uses{lem:acl-slicing, lem:trace-l2}
+\leanok
+Pull back the a.e. equality of the bulk fields and their ACL
+representatives using the product map. On almost every section,
+continuity extends the equality to the open common subwindow.
+Take the one-sided limit there. The trace witnesses are unchanged
+when their reported endpoint classes agree almost everywhere.
+\end{proof}
+
 \begin{lemma}[Convergence of canonical trace pairings]
 \label{lem:trace-pairing-convergence}
 \uses{def:canonical-transverse-trace}

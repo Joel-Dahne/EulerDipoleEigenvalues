@@ -276,31 +276,22 @@ weights and local versus global regularity.
    evaluation, global inverse-velocity norm or jointly selected ACL family is used.
    The stronger logarithmic numerator package and full angular corner trace
    remain separate.
-   **Next:** Whole-edge zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
-   (`lem:elliptic-local`). The edge theorem itself remains admitted. Its generic
-   endpoint-safe L² trace convergence and critical one-sided Cartesian trace
-   estimates are admission-free in `Analysis/BoundaryTraceContinuity.lean` and
-   `Analysis/BoundaryConeTrace.lean`. The latter excludes a common nonzero
-   modulus even with separate canonical trace witnesses on each band; no joint
-   ACL family or general polar corner-trace theorem is used.
-   The generic boundary weak ODE (`lem:boundary-transport-ode`) and local
-   modulus conservation (`lem:boundary-mode-modulus`) are proved. Strong trace
-   pairing convergence and integrability rule out a nonzero limiting residual
-   without a trace of the normal derivative. The specified Cartesian partials
-   give the bulk equation in both diagonal charts (`lem:diagonal-boundary-transport`).
-   Remaining: normalize the inward coordinate and regular tangential speed to
-   apply the ODE to the original pair, identify the modulus across overlapping
-   edge windows, and carry the original v/d and H¹ norms into a physical corner
-   half-cone. The conclusion must still cover every admissible endpoint window.
+   **Whole-edge zero trace** (`lem:transport-zero-edge-trace`) is admission-free
+   with its original statement. The inward normal chart gives a constant
+   modulus on each regular window, and trace uniqueness identifies it across
+   the edge. The original v/d and H¹ norms on the translated Cartesian
+   half-cone exclude a nonzero modulus. A common inward subwindow identifies the
+   zero trace on every original admissible endpoint window; there is no
+   assumption of raw boundary values or stronger polar traces.
+   **Next:** Interior elliptic H³ (`lem:elliptic-local`).
    Weighted numerator estimates
    (`lem:weighted-numerator-estimates`) and logarithmic phase-cell division
    (`lem:log-phase-cell-division`) remain separate admitted stronger inputs.
    Prioritize the odd–odd applications at exponents three halves and three;
    their finite Taylor extraction is proved. Leave mixed linear-jet extraction deferred.
-   **Ordinary separatrix frontier:** Whole-edge zero trace
-   (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Ordinary separatrix H¹/H³ and logarithmic forcing each reach exactly those
-   two primitive inputs.
+   **Ordinary separatrix frontier:** Interior elliptic H³ (`lem:elliptic-local`)
+   is the only remaining primitive input for ordinary separatrix H¹/H³
+   and logarithmic forcing.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.

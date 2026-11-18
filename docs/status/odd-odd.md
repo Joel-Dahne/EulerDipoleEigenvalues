@@ -61,8 +61,8 @@ Proof work is now outside the odd–odd chapter:
   Cellwise H¹ regularity from weighted forcing (`lem:weighted-transport-h1`)
   is admission-free with its original statement. Physical quarter gluing keeps
   the supplied collar and uses the global weak equation, not null seams alone.
-  The ordinary separatrix parent reaches two primitive inputs, detailed in
-  [shared status](shared.md#next-session).
+  The ordinary separatrix parent reaches only Interior elliptic H³
+  (`lem:elliptic-local`); see [shared status](shared.md#next-session).
   **Weak full-cylinder inversion is admission-free**
   (`lem:cylinder-weak-inverse`), retaining its original hypotheses and actual nil
   integral. Finite-mass spectral cutoffs make every ordered derivative spectrum
@@ -82,14 +82,9 @@ Proof work is now outside the odd–odd chapter:
   give a genuine smooth representative of the raw weak-harmonic difference.
   Cylinder inverse (`lem:cylinder-inverse`) and its odd–odd application now
   have zero transitive admissions, with their original statements and data.
-  Ordinary separatrix H¹/H³ and logarithmic forcing reach only Whole-edge zero
-  trace and Interior elliptic H³.
-  **Next targets:** Whole-edge zero trace (`lem:transport-zero-edge-trace`) and
-  Interior elliptic H³ (`lem:elliptic-local`). The edge theorem still has its
-  own admission. Its generic strong trace convergence and critical one-sided
-  corner-mode exclusion are admission-free, as are the generic boundary ODE
-  and local modulus step. The physical edge assembly remains.
-  See shared status for the precise frontier.
+  Whole-edge zero trace (`lem:transport-zero-edge-trace`) is admission-free
+  on every admissible original window. Ordinary separatrix H¹/H³ and logarithmic
+  forcing now reach only **Interior elliptic H³** (`lem:elliptic-local`).
   Prioritize the odd–odd applications at three halves and three; their finite
   Taylor extraction is proved. Keep the shared interfaces generic and defer
   mixed linear-jet extraction.

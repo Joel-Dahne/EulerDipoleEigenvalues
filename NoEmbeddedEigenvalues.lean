@@ -264,6 +264,7 @@ import NoEmbeddedEigenvalues.Analysis.WeightedConeTrace
 import NoEmbeddedEigenvalues.Analysis.CanonicalConeTrace
 import NoEmbeddedEigenvalues.Analysis.BoundaryConeTrace
 import NoEmbeddedEigenvalues.Analysis.BoundaryTraceContinuity
+import NoEmbeddedEigenvalues.Analysis.BoundaryTraceCompare
 import NoEmbeddedEigenvalues.Analysis.BoundaryTransportODE
 import NoEmbeddedEigenvalues.WeightedEndpointValues
 import NoEmbeddedEigenvalues.WeightedEndpointGradients
@@ -304,6 +305,8 @@ import NoEmbeddedEigenvalues.OddOddSobolevTraces
 import NoEmbeddedEigenvalues.RegularEdgeCover
 import NoEmbeddedEigenvalues.SaddlePointRemoval
 import NoEmbeddedEigenvalues.TraceWindowRestriction
+import NoEmbeddedEigenvalues.EdgeWindowTransport
+import NoEmbeddedEigenvalues.EdgeCornerTransport
 import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision

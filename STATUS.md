@@ -27,8 +27,9 @@ checked in Lean, without a stronger corner hypothesis. Weighted forcing is
 assembled from the saddle jet. First and Second transport gains, the periodic
 first-gain corollary and the saddle bootstrap are admission-free. Weighted transport
 H¹ is admission-free with its original forcing hypotheses and representatives.
-The separate whole-edge zero trace and interior elliptic H³ steps remain proof work. See the
-[next-session plan](docs/status/shared.md#next-session).
+Whole-edge zero trace is admission-free with its original hypotheses.
+Interior elliptic H³ is the remaining input on the ordinary separatrix route.
+See the [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
 
@@ -66,7 +67,7 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and 11 below `dd_stream_quotient_h2`.
+zero below `correctedBoundaryForm_nonneg` and 10 below `dd_stream_quotient_h2`.
 Odd–odd saddle estimates (`prop:saddle-dd`) are admission-free with their
 original statement, as are First transport gain (`lem:transport-first-gain`),
 Second transport gain (`lem:transport-second-gain`), Periodic first transport
@@ -84,9 +85,11 @@ Smooth harmonic comparison (`lem:weak-poisson-harmonic-comparison`) is
 admission-free on the same whole disk, with its original statement and parity.
 Cylinder inverse and its odd–odd application now have zero transitive admissions.
 Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) and logarithmic forcing
-(`lem:dd-log-forcing`) each reach Whole-edge zero trace
-(`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`):
-two primitive inputs. Cellwise H¹ regularity from weighted forcing
+(`lem:dd-log-forcing`) each reach only Interior elliptic H³ (`lem:elliptic-local`).
+Whole-edge zero trace (`lem:transport-zero-edge-trace`) is admission-free:
+the critical corner mass excludes the common boundary modulus, with no
+restriction on the original admissible trace windows.
+Cellwise H¹ regularity from weighted forcing
 (`lem:weighted-transport-h1`) is admission-free with its unchanged statement.
 Physical quarter gluing (`lem:transport-quarter-h1-gluing`) preserves the supplied
 collar: tangential cutoffs and global weak transport recover the normal partials,

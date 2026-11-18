@@ -6767,6 +6767,131 @@ Substitute the resulting a.e. identities in the given interval equation
 and apply modulus conservation to its $H^1$ representative.
 \end{proof}
 
+\begin{definition}[Inward physical edge chart]
+\label{def:edge-inward-chart}
+\uses{def:diagonal-trace-chart}
+\lean{NoEmbeddedEigenvalues.edgeSideSign, NoEmbeddedEigenvalues.edgeInward,
+ NoEmbeddedEigenvalues.inwardEdgeChart}
+\leanok
+For an edge with normal coordinate $\eta\pi/2$, $\eta\in\{-1,1\}$,
+put $E_\eta(s,u)=(s,\eta(\pi/2-u))$ and $C_{j,\eta}=\Xi_j\circ E_\eta$.
+\end{definition}
+
+\begin{lemma}[Inward chart pullback and a flat collar strip]
+\label{lem:edge-inward-pullback}
+\uses{def:edge-inward-chart, def:cell-separatrix-collar, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.edgeInward_apply,
+ NoEmbeddedEigenvalues.measurePreserving_edgeInward,
+ NoEmbeddedEigenvalues.continuous_inwardEdgeChart,
+ NoEmbeddedEigenvalues.memLp_comp_inwardEdgeChart,
+ NoEmbeddedEigenvalues.MemSobolevOn.comp_inwardEdgeChart,
+ NoEmbeddedEigenvalues.inwardEdgeChart_mem_collar}
+\leanok
+$E_\eta$ preserves area. The continuous physical chart $C_{j,\eta}$
+pulls back $L^2$ and $H^1$ on any open set to its preimage.
+For $|s|<\pi/2$, $0<u<\pi$ and $2u<\epsilon$, the image is in $V_\epsilon$.
+\end{lemma}
+\begin{proof}
+\uses{lem:affine-jet-pullback, lem:diagonal-h1-pullback, lem:dipole-identities}
+\leanok
+Use the diagonal map followed in the pullback by a translation and,
+on the positive side, a normal reversal. The level is $2\cos s\sin u$,
+which is positive and at most $2u$ in the indicated strip.
+\end{proof}
+
+\begin{lemma}[Constant modulus on a physical edge window]
+\label{lem:edge-window-modulus}
+\uses{def:transport-pair, def:edge-inward-chart, def:canonical-transverse-trace,
+ def:cell-separatrix-collar, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.edge_window_modulus,
+ NoEmbeddedEigenvalues.IsTransportPair.inward_edge_window_modulus}
+\leanok
+Under the hypotheses of the zero edge trace lemma except for the weighted
+mass and the positive cutoff, take a regular window $(a,b)\times(0,w)$
+in the inward chart whose image is in the supplied collar. Here $a<b$,
+$w>0$ and $[a,b]\subset(-\pi/2,\pi/2)$. The canonical inward trace of $v$
+exists and has constant modulus almost everywhere on $(a,b)$.
+\end{lemma}
+\begin{proof}
+\uses{lem:diagonal-boundary-transport, lem:edge-inward-pullback,
+ lem:boundary-transport-ode, lem:boundary-mode-modulus,
+ lem:canonical-trace-from-partial}
+\leanok
+The same weak partials of $F=v+f$ in the inward coordinates satisfy
+$L_0F=i\lambda v$ with coefficients
+$\sigma(\cos s\cos u,\sin s\sin u)$ for a sign $\sigma$.
+Divide by the regular factor $\sigma\cos s$ only on this compact tangential
+window. The right-hand side is $i(\sigma\lambda/\cos s)v$ and the normal
+term is $u$ times an $L^2$ field, since $|\sin u/u|\le1$ there.
+Apply the weak boundary ODE and identify the traces using the continuous
+forcing representative. The modulus law now applies.
+\end{proof}
+
+\begin{lemma}[One modulus on all regular edge windows]
+\label{lem:common-edge-modulus}
+\uses{def:canonical-transverse-trace}
+\lean{NoEmbeddedEigenvalues.common_edge_window_modulus}
+\leanok
+Suppose for a fixed positive normal width every compact regular edge interval
+has a canonical inward trace of the same bulk field with constant modulus.
+Then there is a single modulus valid on every such interval.
+\end{lemma}
+\begin{proof}
+\uses{lem:one-sided-trace-comparison}
+\leanok
+Enclose a fixed reference interval and the given interval in a larger
+regular interval. Trace uniqueness identifies both with the larger trace
+on their respective intervals. The reference interval has positive measure,
+so its modulus is the common one.
+\end{proof}
+
+\begin{definition}[Tangential translation at the left saddle]
+\label{def:edge-corner-shift}
+\lean{NoEmbeddedEigenvalues.edgeCornerShift}
+\leanok
+In the inward coordinates put $J(r,u)=(r-\pi/2,u)$.
+\end{definition}
+
+\begin{lemma}[Saddle distance in the inward half-cone]
+\label{lem:edge-corner-distance}
+\uses{def:edge-corner-shift, def:edge-inward-chart, lem:saddle-distance-comparison}
+\lean{NoEmbeddedEigenvalues.edgeCornerShift_apply,
+ NoEmbeddedEigenvalues.measurePreserving_edgeCornerShift,
+ NoEmbeddedEigenvalues.saddleDist_inwardEdge_corner_le}
+\leanok
+$J$ preserves area, and for $0<u<r$ the saddle distance of
+$C_{j,\eta}(J(r,u))$ is at most $3r$.
+\end{lemma}
+\begin{proof}
+\uses{lem:affine-jet-pullback}
+\leanok
+The translation and the diagonal chart send the origin to a saddle.
+Both Cartesian displacements are bounded in absolute value by $r+u$.
+Distance to this saddle bounds the infimum distance.
+\end{proof}
+
+\begin{lemma}[Critical mass excludes the common physical edge mode]
+\label{lem:edge-corner-mode-exclusion}
+\uses{def:edge-inward-chart, def:canonical-transverse-trace,
+ def:cell-separatrix-collar, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.inward_edge_common_modulus_eq_zero}
+\leanok
+Let $0<w<\pi$ and $2w\le\epsilon$. If $v\in H^1(V_\epsilon)$,
+$v/d\in L^2(V_\epsilon)$, and the canonical inward traces on all regular
+windows of width $w$ have a common modulus, that modulus is zero.
+\end{lemma}
+\begin{proof}
+\uses{lem:edge-corner-distance, lem:edge-inward-pullback,
+ lem:one-sided-trace-comparison, lem:critical-boundary-mode}
+\leanok
+The translated half-cone $0<u<r<w$ lies in the collar. Pull back the
+specified weak normal partial and the mass. Because $d\le3r$, the
+pulled-back value divided by $r$ is in $L^2$.
+On every dyadic band, trace comparison identifies its canonical trace with
+the translated regular-window trace. The critical trace estimate rules
+out a nonzero common modulus.
+\end{proof}
+
 \begin{lemma}[Zero edge trace from zero forcing]
 \label{lem:transport-zero-edge-trace}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
@@ -6781,89 +6906,25 @@ cellwise trace of $v$ on that edge is zero.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:transport-unknown, lem:trace-l2, lem:l2-trace-continuity,
- lem:boundary-weighted-cone-trace, lem:critical-boundary-mode,
- lem:diagonal-boundary-transport, lem:boundary-transport-ode,
- lem:boundary-mode-modulus, lem:affine-jet-pullback,
- lem:dipole-identities, lem:separatrix-lines, lem:separatrix-arc}
-The transport unknown $z=-(v+f)/\lambda$ is cellwise $H^1$.
-Choose orthonormal coordinates $(\xi,\eta)$ on a regular edge segment,
-with the cell on $\eta>0$ and the edge at $\eta=0$. Write $Y_\xi,Y_\eta$
-for the transport field components. Since $Y_\eta(\xi,0)=0$ and
-$\Div Y=0$, the equation is
-\[
- \partial_\xi(Y_\xi z)+\partial_\eta(Y_\eta z)=-iv.
-\]
-Average over $0<\eta<\epsilon$ and let $\epsilon\to0$ outside the slicing
-null set. The $H^1$ trace estimate gives local $L^2(d\xi)$ convergence
-of the averages and the sections. The averaged normal flux
-$Y_\eta(\xi,\epsilon)z(\xi,\epsilon)/\epsilon$ tends to
-$(\partial_\eta Y_\eta)(\xi,0)Tz$, since
-$Y_\eta(\xi,\epsilon)/\epsilon\to\partial_\eta Y_\eta(\xi,0)$.
-Thus
-\[
- \partial_\xi(Y_\xi(\xi,0)Tz)
-       +(\partial_\eta Y_\eta)(\xi,0)Tz=-iTv.
-\]
-The zeroth-order terms cancel by $\Div Y=0$, giving
-$Y_\xi(\xi,0)\partial_\xi(Tz)=-iTv$.
-Parametrizing the edge by flow time yields
-$(Tz)'=-iTv$ and $Tv=-\lambda Tz-Tf=-\lambda Tz$.
-Consequently $Tz$ is locally absolutely continuous and
-$Tv(t)=ce^{i\lambda t}$ along the whole edge.
+\uses{lem:edge-inward-pullback, lem:edge-window-modulus,
+ lem:common-edge-modulus, lem:edge-corner-mode-exclusion,
+ lem:canonical-trace-from-partial, lem:one-sided-trace-comparison,
+ lem:diagonal-h1-pullback}
+\leanok
+Take a shared inward width $w=\min(\epsilon/4,\pi/2)$.
+Every compact regular interval has a window of this width contained in the
+collar. The local boundary ODE gives constant modulus on each window,
+and trace comparison through a larger regular interval identifies one
+modulus for the whole edge. The translated half-cone at the left saddle
+excludes this modulus by the critical weighted trace estimate.
 
-Near one endpoint, take a thin diagonal-affine Cartesian half-cone contained
-in $V_\epsilon$. Saddle distance is bounded above by a constant times its
-radial coordinate $r$, so the supplied $v/d$ norm gives $v/r\in L^2$;
-the normal derivative has its ordinary H1 norm.
-Lemma~\ref{lem:boundary-weighted-cone-trace} gives
-$\int|Tv|^2dr/r<\infty$ for the canonical endpoint trace.
-Because $\lambda$ is real, $|ce^{i\lambda t}|=|c|$.
-Lemma~\ref{lem:critical-boundary-mode} forces $c=0$.
-Only this one-sided Cartesian estimate is needed, not a uniform angular
-polar-trace theorem.
+For an arbitrary admissible rectangle in the original diagonal chart,
+construct its canonical trace by slicing the original H1 pullback.
+Its normal interval and the inward window have a common inward
+subwindow after translation or reversal. Their canonical traces agree there
+by one-sided limit uniqueness. Thus the trace of the entire original
+rectangle is zero, not just the trace of a shortened rectangle.
 \end{proof}
-
-\begin{remark}[A weak-test route to the boundary equation]
-One can avoid the averaged normal flux. In diagonal tangential coordinate $s$
-and inward normal coordinate $u$, a chosen edge has
-\[
- L_0=\sigma(\cos s\cos u\,\partial_s+\sin s\sin u\,\partial_u),
- \qquad \sigma\in\{-1,1\}.
-\]
-Put $F=v+f$ and $R=i\lambda v$, so $L_0F=R$ weakly.
-On a compact regular tangential interval, both have normal H1 regularity.
-Choose joint measurable normal ACL representatives $\widehat F,\widehat R$
-of these two a.e. classes. For a smooth compactly supported tangential
-test $\varphi$, set
-\[
- E(u)=\cos u\int \widehat F(s,u)\varphi'(s)\,ds
-       +\sigma\int \widehat R(s,u)\frac{\varphi(s)}{\cos s}\,ds .
-\]
-The weak equation gives
-\[
- E(u)=\sin u\int \partial_uF(s,u)\tan s\,\varphi(s)\,ds
- \quad\hbox{a.e.}
-\]
-Use canonical trace pairings in $E$; at almost every interior height they
-agree with the displayed integrals. Fubini and $|\sin u|\le u$
-bound $|E(u)|$ by $u$ times an integrable majorant.
-By Lemma~\ref{lem:boundary-transport-ode}, the limit must then vanish:
-a nonzero limit would force a nonintegrable $1/u$ lower bound for the majorant.
-Strong trace-pairing convergence identifies the limit identity as
-\[
- \int TF\,\varphi'
-   +\sigma\int TR\,\frac{\varphi}{\cos s}=0.
-\]
-Thus the boundary weak ODE needs no trace of the normal derivative
-$\partial_uF$. To apply the rectangle result, absorb the regular factor
-$\sigma/\cos s$ into $R$ and include $\sin u/u$ in the flux coefficient.
-With zero forcing trace, Lemma~\ref{lem:boundary-mode-modulus} gives local
-constant modulus without changing to flow time. Trace uniqueness on overlapping
-regular rectangles identifies the constants. The joint ACL representatives
-retain the original a.e. classes; no fibrewise family, raw boundary values
-or extra mixed derivatives are needed.
-\end{remark}
 
 \begin{remark}[Digest note: a whole edge, not just a regular segment]
 The zero-trace statement requires zero forcing along the whole open edge.
