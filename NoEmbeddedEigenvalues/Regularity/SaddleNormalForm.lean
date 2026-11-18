@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.LocalJets
 import NoEmbeddedEigenvalues.DipoleCalculus
 import NoEmbeddedEigenvalues.OrbitCoordinates
 import NoEmbeddedEigenvalues.Sectors
+import Mathlib.Analysis.Analytic.IsolatedZeros
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
 
 /-!
@@ -46,12 +47,40 @@ def classicalRealJet : List (Fin 2) → (ℝ × ℝ → ℝ) → ℝ × ℝ → 
   | [], f => f
   | j :: w, f => coordPartial j (classicalRealJet w f)
 
+/-- The product metric is bounded by the Euclidean radius. -/
+theorem dist_le_localRadius (c p : ℝ × ℝ) : dist p c ≤ localRadius c p := by
+  simp only [Prod.dist_eq, Real.dist_eq, max_le_iff, localRadius]
+  exact ⟨Real.abs_le_sqrt (le_add_of_nonneg_right (sq_nonneg _)),
+    Real.abs_le_sqrt (le_add_of_nonneg_left (sq_nonneg _))⟩
+
+open Filter in
+private theorem contDiff_sinc : ContDiff ℝ ∞ Real.sinc := by
+  rw [contDiff_iff_contDiffAt]
+  intro x
+  suffices h : AnalyticAt ℝ Real.sinc x from h.contDiffAt
+  rcases eq_or_ne x 0 with rfl | hx
+  · rw [Real.sinc_eq_dslope]
+    obtain ⟨p, hp⟩ := Real.analyticAt_sin (x := 0)
+    exact hp.has_fpower_series_dslope_fslope.analyticAt
+  · refine (Real.analyticAt_sin.div analyticAt_id hx).congr ?_
+    filter_upwards [eventually_ne_nhds hx] with y hy using (Real.sinc_of_ne_zero hy).symm
+
 /-- The sinc factor is smooth, even, normalized and locally positive. -/
 theorem saddleFactor_regular :
     ContDiff ℝ ∞ saddleFactor ∧ saddleFactor 0 = 1 ∧
       (∀ j q, saddleFactor (axisReflect j q) = saddleFactor q) ∧
       ∃ ρ : ℝ, 0 < ρ ∧ ∀ q ∈ localDisk 0 ρ, 0 < saddleFactor q := by
-  sorry
+  have hs : ContDiff ℝ ∞ saddleFactor := by
+    unfold saddleFactor
+    exact (contDiff_sinc.comp (by fun_prop)).mul (contDiff_sinc.comp (by fun_prop))
+  have hzero : saddleFactor 0 = 1 := by simp [saddleFactor]
+  refine ⟨hs, hzero, ?_, ?_⟩
+  · intro j q
+    fin_cases j <;> simp [axisReflect, saddleFactor, neg_div]
+  · have hpos : (0 : ℝ × ℝ) ∈ {q | 0 < saddleFactor q} := by simp [hzero]
+    obtain ⟨ρ, hρ, hsub⟩ := Metric.mem_nhds_iff.mp
+      ((isOpen_lt continuous_const hs.continuous).mem_nhds hpos)
+    exact ⟨ρ, hρ, fun q hq ↦ hsub ((dist_le_localRadius 0 q).trans_lt hq)⟩
 
 /-- Affine inverse and Euclidean orthogonality of the saddle chart. -/
 theorem saddleOrthoChart_orthogonal {P : ℝ × ℝ} (hP : P ∈ saddleSet) :

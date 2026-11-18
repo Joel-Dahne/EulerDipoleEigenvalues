@@ -51,15 +51,6 @@ theorem saddleQuadratic_harmonic (c : ℝ × ℝ) (a : ℂ) (p : ℝ × ℝ) :
   rw [hxx, hyy]
   ring
 
-/-- The product metric is bounded by the Euclidean radius. -/
-theorem dist_le_localRadius (c p : ℝ × ℝ) : dist p c ≤ localRadius c p := by
-  have hr : 0 ≤ localRadius c p := Real.sqrt_nonneg _
-  have hs : localRadius c p ^ 2 = (p.1 - c.1) ^ 2 + (p.2 - c.2) ^ 2 :=
-    Real.sq_sqrt (by positivity)
-  rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
-  apply max_le <;> rw [abs_le] <;> constructor <;> nlinarith [sq_nonneg (p.1 - c.1),
-    sq_nonneg (p.2 - c.2)]
-
 /-- Distance to the saddle lattice is at most distance to any fixed saddle. -/
 theorem saddleDist_le_localRadius {c : ℝ × ℝ} (hc : c ∈ saddleSet) (p : ℝ × ℝ) :
     saddleDist p ≤ localRadius c p :=

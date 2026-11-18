@@ -2298,8 +2298,13 @@ and is positive on a sufficiently small Euclidean disk.
 \end{lemma}
 
 \begin{proof}
-Each extended sine quotient is smooth and even and has value one at zero.
-Continuity gives a positive neighbourhood.
+\leanok
+At zero, the extended divided difference of sine has the power series
+obtained by removing the constant term and shifting the coefficients by one.
+Away from zero, $\operatorname{sinc}$ is the analytic quotient $\sin t/t$.
+The oddness of sine makes $\operatorname{sinc}$ even, and its extended value
+at zero is one. Thus the product defining $m$ is smooth and even in each
+coordinate, and continuity at zero gives a positive neighbourhood.
 \end{proof}
 
 \begin{lemma}[Saddle normal form]
