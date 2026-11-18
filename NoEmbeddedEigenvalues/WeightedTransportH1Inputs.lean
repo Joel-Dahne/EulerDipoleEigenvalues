@@ -4,6 +4,7 @@ import NoEmbeddedEigenvalues.WeightedNumeratorH2
 import NoEmbeddedEigenvalues.PhaseCellDivision
 import NoEmbeddedEigenvalues.WeightedTransportH1Data
 import NoEmbeddedEigenvalues.WeightedCharacterQuarterDerivatives
+import NoEmbeddedEigenvalues.WeightedQuarterPhysicalH1
 
 /-!
 # Ordinary weighted transport H¹: scalar and spatial interfaces
@@ -77,15 +78,5 @@ theorem IsTransportPair.quarter_h1_scalar_data_of_second_norm
     Q, Q₁, hQ, hfac, hQh, hQzero,
     restrict_interval_h1 (hBoth lam).2.2.1.with_deriv hbs⟩
 
-/-- Physical inverse-frame reconstruction and no-jump gluing at the interior
-quarter rays. The weak transport identity supplies seam compatibility; no zero
-forcing/trace or elliptic hypothesis is added (`lem:transport-quarter-h1-gluing`). -/
-theorem IsTransportPair.cell_h1_of_weighted_quarter_derivatives
-    {lam : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hcell : closure cellSquare ⊆ U)
-    {b : ℝ} (hb : 0 < b) (hbh : b < 1 / 2)
-    {A B : Fin 4 → ℝ × ℝ → ℂ} (hAB : HasWeightedQuarterDerivatives b v A B) :
-    MemSobolevOn 1 (cellSeparatrixStrip (2 * b)) v := by
-  sorry
 
 end NoEmbeddedEigenvalues

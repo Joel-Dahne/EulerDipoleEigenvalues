@@ -265,24 +265,27 @@ weights and local versus global regularity.
    this route does not need that comparison.
    Ordinary scalar division (`lem:quarter-h1-scalar-data`) and four-character
    weighted weak quarter data (`lem:weighted-transport-quarter-assembly`) are
-   therefore admission-free under the original inputs. Weighted transport H¹
-   now reaches only physical H¹ seam gluing (`lem:transport-quarter-h1-gluing`).
-   Preserve the same collar and derive canonical seam compatibility from global
-   weak transport; null seams alone do not justify weak gluing.
+   admission-free under the original inputs. **Cellwise H¹ regularity from weighted
+   forcing** (`lem:weighted-transport-h1`) is now admission-free too, with the
+   original statement. Physical quarter gluing (`lem:transport-quarter-h1-gluing`)
+   preserves the same collar: compactness extends the small-level inverse-frame
+   bound to every supplied b < 1/2, giving actual full-collar gradient norms.
+   Tangential cutoffs extend one partial across each axis; the global weak
+   transport equation for v+f determines the missing normal partial locally.
+   Subtract the same H¹ forcing. No separately assumed trace equality, raw ray
+   evaluation, global inverse-velocity norm or jointly selected ACL family is used.
    The stronger logarithmic numerator package and full angular corner trace
    remain separate.
-   **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
-   zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
+   **Next:** Whole-edge zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
    (`lem:elliptic-local`). Weighted numerator estimates
    (`lem:weighted-numerator-estimates`) and logarithmic phase-cell division
    (`lem:log-phase-cell-division`) remain separate admitted stronger inputs.
    Prioritize the odd–odd applications at exponents three halves and three;
    their finite Taylor extraction is proved. Leave mixed linear-jet extraction deferred.
-   **Ordinary separatrix frontier:** Weighted transport H¹
-   (`lem:weighted-transport-h1`), Whole-edge zero trace
+   **Ordinary separatrix frontier:** Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Weighted transport H¹ reaches only physical H¹ seam gluing, so ordinary
-   separatrix H¹/H³ and logarithmic forcing each reach three primitive inputs.
+   Ordinary separatrix H¹/H³ and logarithmic forcing each reach exactly those
+   two primitive inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
@@ -291,23 +294,15 @@ weights and local versus global regularity.
    Stronger logarithmic scalar/orbit inputs remain explicit outside-section
    prerequisites. The weighted-gradient and third-stream
    assemblies still depend on their recorded transport and elliptic/Taylor inputs.
-   Rotations after spatial reconstruction avoid differentiated
-   time shifts; the separate four-quarter derivative family is not needed on
-   this assembly route.
-   The scalar/geometry batch is now
-   stated in `ScalarDivision.lean` and `Regularity/SaddleNormalForm.lean`; cylinder
-   reconstruction and weighted transport/gluing remain analytic inputs in
-   `Regularity/CylinderParticular.lean`, `WeightedTraces.lean` and
-   `WeightedTransport.lean`. The endpoint/resonant-zero,
-   weighted numerator and logarithmic interfaces are now stated too, covering
-   the quotient branch's result nodes. The stream-H² congruence, local gluing,
-   affine pullback and periodic reconstruction bridges are now admission-free:
-   `SobolevLocal.lean`, `SobolevGluing.lean`, `AffineJets.lean`,
-   `SaddleChartPullback.lean` and `PeriodicSobolev.lean`. Local smooth multiplication
-   is proved in `SobolevMultipliers.lean`. `Regularity/StreamQuotientAssembly.lean` now
-   assembles `dd_stream_quotient_h2`, with no `sorry` of its own and no stronger
-   hypotheses. Next proof work is its recorded local analytic frontier or the
-   other quotient stages, not a remaining generic gluing interface.
+   On those stronger routes, rotations after spatial reconstruction avoid
+   differentiated time shifts; the separate four-quarter derivative family is
+   not needed there. The ordinary H¹ route instead uses its proved four-quarter
+   weak data.
+   Generic stream-H² congruence, local gluing, affine pullback, smooth
+   multiplication and periodic reconstruction are admission-free. The stream-H²
+   assembly has no admission of its own and no stronger hypotheses. Next proof
+   work is its recorded local analytic frontier or the other quotient stages,
+   not a remaining generic gluing interface.
    `dd_character_virial_limit` is assembled without its own `sorry`, from two
    admissions: local H² smooth approximation and the leading period value
    asymptotic. `OddOddGradientTraces.lean` proves the unchanged even-H² gradient

@@ -26,8 +26,8 @@ The local/global stream-quotient and ordinary separatrix H¹/H³ assemblies are
 checked in Lean, without a stronger corner hypothesis. Weighted forcing is
 assembled from the saddle jet. First and Second transport gains, the periodic
 first-gain corollary and the saddle bootstrap are admission-free. Weighted transport
-H¹ now reaches only physical H¹ seam gluing; that input and the separate trace
-and elliptic steps remain proof work. See the
+H¹ is admission-free with its original forcing hypotheses and representatives.
+The separate whole-edge zero trace and interior elliptic H³ steps remain proof work. See the
 [next-session plan](docs/status/shared.md#next-session).
 
 ## Overall state
@@ -66,7 +66,7 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and 12 below `dd_stream_quotient_h2`.
+zero below `correctedBoundaryForm_nonneg` and 11 below `dd_stream_quotient_h2`.
 Odd–odd saddle estimates (`prop:saddle-dd`) are admission-free with their
 original statement, as are First transport gain (`lem:transport-first-gain`),
 Second transport gain (`lem:transport-second-gain`), Periodic first transport
@@ -84,13 +84,14 @@ Smooth harmonic comparison (`lem:weak-poisson-harmonic-comparison`) is
 admission-free on the same whole disk, with its original statement and parity.
 Cylinder inverse and its odd–odd application now have zero transitive admissions.
 Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) and logarithmic forcing
-(`lem:dd-log-forcing`) each reach physical H¹ seam gluing
-(`lem:transport-quarter-h1-gluing`), Whole-edge zero trace and Interior elliptic
-H³: three primitive inputs. Global ordinary second numerator norm
-(`lem:weighted-numerator-second-norm`) and four-character weighted weak quarter
-assembly (`lem:weighted-transport-quarter-assembly`) are admission-free with the
-original forcing inputs. The weighted-transport H¹ assembly retains its original
-statement and now has only the seam-gluing admission.
+(`lem:dd-log-forcing`) each reach Whole-edge zero trace
+(`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`):
+two primitive inputs. Cellwise H¹ regularity from weighted forcing
+(`lem:weighted-transport-h1`) is admission-free with its unchanged statement.
+Physical quarter gluing (`lem:transport-quarter-h1-gluing`) preserves the supplied
+collar: tangential cutoffs and global weak transport recover the normal partials,
+without separately assuming matching traces. The ordinary numerator norm and
+four-character weighted weak quarter assembly remain admission-free.
 The bounded periodic norm, physical weak-gradient transport,
 compact pointwise growth, quadratic mass, seam gluing, point removal and
 canonical trace layers are admission-free.

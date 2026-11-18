@@ -1965,6 +1965,30 @@ all these estimates are proved in Lean without admitted dependencies;
 a general ODE parameter-dependence theorem is not required.
 \end{proof}
 
+\begin{lemma}[Level variation on a specified quarter collar]
+\label{lem:orbit-level-distance-collar}
+\uses{def:period, def:dipole-flow, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.orbit_level_variation_mul_distance_bound}
+\leanok
+For every $0<b<1/2$ there is a finite $C_b$ such that
+\[
+ |\partial_h\gamma_h(t)|\,d(\gamma_h(t))\le C_b
+ \qquad(0<h<b,\ |t|<L(h)).
+\]
+The bound holds on the specified collar, without shrinking $b$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-level-derivatives, lem:orbit-level-vectors-smooth,
+ lem:period-regularity}
+\leanok
+The small-level estimate gives the bound for $h<\delta$.
+Choose $0<a<\min(\delta,b)$. Continuity bounds $L$ on $[a,b]$, so the
+remaining quarter points lie in a compact level/time rectangle.
+Joint smoothness of the level variation and continuity of saddle distance
+bound their product on this rectangle. Take the maximum of the two constants.
+\end{proof}
+
 \begin{definition}[Recentered quarter-orbit times]
 \label{def:quarter-orbit-time}
 \uses{def:orbit-coordinates, def:cell-arcs}

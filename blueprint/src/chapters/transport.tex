@@ -68,6 +68,67 @@ $y$-derivative identity with $\sin x\,\varphi$, then subtract.
 The crossed coefficients have zero derivative in their respective
 directions, so there is no zeroth-order term.
 \end{proof}
+\begin{lemma}[Recovering a weak partial from transverse transport]
+\label{lem:transport-transverse-partial}
+\uses{def:transport-pair, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.partial_of_transverse}
+\leanok
+Let $W$ be open, $F,D_0,D_1\in L^1_{\rm loc}(W)$, and suppose
+\[
+ L_0F=\sin y\,D_0-\sin x\,D_1\quad\hbox{weakly on }W.
+\]
+For $j\in\{0,1\}$ put $\bar j=1-j$ and
+$c_0=\sin y$, $c_1=-\sin x$.
+If $\partial_{\bar j}F=D_{\bar j}$ weakly on $W$ and $c_j$ is nonzero
+throughout $W$, then $\partial_jF=D_j$ weakly there.
+No uniform lower bound for $|c_j|$ is needed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-derivative-product, lem:weak-derivative-basic}
+\leanok
+Test the known partial with $c_{\bar j}\varphi$ and subtract it from
+the transport identity. The crossed coefficients have zero coordinate
+derivative, so the result is
+$\partial_j(c_jF)=c_jD_j$.
+All compactly supported products are genuinely integrable.
+Multiply this weak identity by the locally smooth $c_j^{-1}$.
+Its $j$th partial is zero, and cancellation on $W$ gives the original
+functions $F,D_j$. This division is used only for the local weak identity,
+not to estimate a global norm.
+\end{proof}
+
+\begin{lemma}[No-jump H1 gluing at Cartesian axes]
+\label{lem:transport-axis-h1-gluing}
+\uses{def:transport-pair, def:weak-derivative-local, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.h1_of_off_axes}
+\leanok
+Let $W$ be open, $0\notin W$, and suppose each coordinate's only sine zero
+on $W$ is zero: $\sin p_j=0$ implies $p_j=0$ for $p\in W$.
+Suppose $L_0F=R$ weakly on all of $W$, with $F,D_0,D_1\in L^2(W)$.
+If the same $D_j$ are weak partials of $F$ off the two Cartesian axes,
+then $F\in H^1(W)$.
+The global transport identity is essential; null axes alone do not remove
+a normal jump.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weak-gradient-transport, lem:weak-derivative-unique,
+ lem:weak-transverse-line-removal, lem:transport-transverse-partial,
+ lem:weak-partial-locality}
+\leanok
+Weak transport uniqueness off the axes identifies
+$R=\sin y\,D_0-\sin x\,D_1$ there. Nullity extends this a.e. equality of
+integrable right-hand-side functions to $W$, preserving the given global
+weak equation.
+Transverse cutoffs extend $\partial_xF=D_0$ to $W\setminus\{x=0\}$ and
+$\partial_yF=D_1$ to $W\setminus\{y=0\}$.
+On the first open set $-\sin x$ is nonzero, so transverse transport recovers
+the missing $y$ partial; on the second, $\sin y$ recovers the $x$ partial.
+These two open sets cover $W$. Weak locality glues the specified identities.
+Their full-domain L2 norms were supplied before this argument.
+\end{proof}
+
 \begin{lemma}[The transport unknown]
 \label{lem:transport-unknown}
 \uses{def:transport-pair}
@@ -6420,6 +6481,121 @@ derivative fields, and add. Pointwise Fourier recombination identifies their
 value field with the original raw $v$.
 \end{proof}
 
+\begin{lemma}[Ordinary inverse-frame norms on the same collar]
+\label{lem:ordinary-quarter-gradient-norm}
+\uses{def:quarter-inverse-frame, def:quarter-image, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.quarterInverseGradient_ordinary_memLp,
+ NoEmbeddedEigenvalues.memLp_quarterSpatialGradient_ordinary}
+\leanok
+Let $0<b<1/2$. If
+$(d\circ\Gamma_0)H,T/(d\circ\Gamma_0)\in L^2(Q_b)$, then the ordinary
+inverse-frame candidates satisfy
+\[
+ \mathcal C_j(H,T)\in L^2(Q_b),\qquad
+ \mathcal C_j(H,T)\circ C\in L^2(\Gamma_0(Q_b)).
+\]
+Here $C$ is the canonical inverse orbit chart.
+More generally the second norm follows directly from the first for every
+$b\le1$. No weak-derivative identification is asserted without the weak data.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-level-distance-collar, lem:quarter-inverse-frame-algebra,
+ lem:quarter-open-chart, lem:smooth-chart-tests}
+\leanok
+Write the candidate as
+\[
+ \frac{a_j}{d}\,(dH)+(b_jd)\,\frac{T}{d}.
+\]
+The sine bound gives $|a_j/d|\le1$, and the whole-collar level-variation
+bound gives bounded $b_jd$.
+Distance is positive in the cell: the positive diagonal cosine is bounded
+above by saddle distance. Thus cancellation retains the actual candidate.
+Bounded multiplication gives a genuine L2 norm. The determinant-two chart
+transports it to the physical image. The collar is never shrunk.
+\end{proof}
+
+\begin{definition}[Rotated physical quarter images]
+\label{def:rotated-quarter-image}
+\uses{def:quarter-image, def:cell-arcs}
+\lean{NoEmbeddedEigenvalues.rotatedQuarterImage}
+\leanok
+For $b\le1$ and $k=0,\ldots,3$, define the physical quarter image by
+$\mathcal V_{k,b}=R^k(\Gamma_0(Q_b))$.
+\end{definition}
+
+\begin{lemma}[Ordinary H1 on each physical quarter]
+\label{lem:weighted-quarter-physical-h1}
+\uses{def:rotated-quarter-image, def:weighted-quarter-derivative-data,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.isOpen_rotatedQuarterImage,
+ NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.physical_quarters}
+\leanok
+The images $\mathcal V_{k,b}$ are open for $b\le1$.
+Let $U$ be open and contain the cell, $v\in L^2(U)$, and $0<b<1/2$.
+If the same raw $v$ has weighted weak quarter data on all four $Q_b$,
+then $v\in H^1(\mathcal V_{k,b})$ for every $k$.
+Neither a transport equation nor a rotation character is needed for this step.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ordinary-quarter-gradient-norm, lem:quarter-spatial-reconstruction,
+ lem:affine-jet-pullback, lem:quarter-cell-cover}
+\leanok
+For each $k$, apply the base-quarter weak reconstruction to $v\circ R^k$.
+Rotation invariance of distance gives exactly the two supplied weights.
+The ordinary inverse-frame estimates give finite derivative norms on the same
+quarter, and the original value norm pulls back from $U$.
+The inverse volume-preserving affine rotation transfers this H1 function
+to $\mathcal V_{k,b}$, with value exactly the original raw $v$.
+\end{proof}
+
+\begin{lemma}[Physical quarter cover off the axes]
+\label{lem:rotated-quarter-point-cover}
+\uses{def:rotated-quarter-image, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.exists_mem_rotatedQuarterImage}
+\leanok
+For $b\le1$, every $p\in V_{2b}$ with both Cartesian coordinates nonzero
+belongs to some $\mathcal V_{k,b}$.
+This is a pointwise open cover away from the axes, not a weak gluing result.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-cell-cover}
+\leanok
+The Cartesian quadrant cover places some $R^m p$ in the base quarter.
+Use $R^4=\mathrm{id}$ to put $p$ in the physical image for $k=-m$ modulo four.
+\end{proof}
+
+\begin{lemma}[One off-axis gradient with full collar norms]
+\label{lem:weighted-quarter-off-axis-gradient}
+\uses{def:weighted-quarter-derivative-data, def:cell-separatrix-collar,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.exists_off_axis_gradient}
+\leanok
+Let $U$ be open and contain the cell, $v\in L^2(U)$, and $0<b<1/2$.
+If $v$ has the supplied weighted weak quarter data, then there are specified
+$D_j$ such that
+\[
+ \partial_jv=D_j\quad\hbox{weakly on }
+ V_{2b}\setminus\{xy=0\},\qquad D_j\in L^2(V_{2b}).
+\]
+Only the norms extend through the axes in this assertion.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:weighted-quarter-physical-h1, lem:rotated-quarter-point-cover,
+ lem:sobolev-local-gluing, lem:local-h1-specified-gradient,
+ lem:weak-derivative-unique}
+\leanok
+The open physical-quarter cover supplies local H1 off the axes.
+Choose one globally measurable weak gradient there.
+On each quarter overlap, weak uniqueness identifies it a.e. with the actual
+quarter gradient, whose L2 norm is finite.
+Finite union summation and the nullity of the axes give its genuine full-collar
+norm. No weak identity has been extended through a seam at this stage.
+\end{proof}
+
 \begin{lemma}[Physical H1 from weighted quarters and weak transport]
 \label{lem:transport-quarter-h1-gluing}
 \uses{def:transport-pair, def:sobolev-local, def:weighted-quarter-derivative-data,
@@ -6437,17 +6613,23 @@ reflection parity or elliptic relation is required.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-spatial-reconstruction, lem:orbit-coordinate-gradients,
- lem:orbit-level-derivatives, lem:coarea}
-The inverse frame and constant-Jacobian charts convert the two weighted quarter
-norms into finite physical gradient norms.
-Across each interior quarter ray the transport vector is transverse.
-The global weak equation for $v+f$ has an L2 right-hand side, so it has no
-surface jump there. Since the forcing is globally H2, the canonical traces of
-$v$ from the two quarters agree. Prove this compatibility on regular local
-windows and glue the weak identities, then sum the finite physical norms.
-The rays being null only identifies norms; it does not establish weak gluing.
-The separatrix and saddle vertices are not in the positive-level domain $V_{2b}$.
+\uses{lem:weighted-quarter-off-axis-gradient, lem:transport-axis-h1-gluing,
+ lem:weak-derivative-basic}
+\leanok
+The quarter data supply one off-axis gradient of $v$ with genuine full-collar
+L2 norms. The standing H2 forcing has an actual H1 gradient there.
+Add these fields to obtain specified off-axis derivatives of $F=v+f$,
+retaining their finite full-domain norms.
+The original global weak transport equation holds on $V_{2b}$.
+This domain excludes the origin, and its Cartesian coordinates lie strictly
+between $-\pi$ and $\pi$, so every nonzero coordinate has nonzero sine.
+The no-jump axis lemma gives $F\in H^1(V_{2b})$; subtract the same H1 forcing.
+
+This directly proves the weak gluing rather than assuming or separately
+constructing matching seam traces. Sine inversion is local to the weak identity;
+no inverse-velocity global norm is used.
+The collar is unchanged, and no raw line values are evaluated.
+The separatrix and saddle vertices are outside this positive-level domain.
 \end{proof}
 
 \begin{lemma}[Cellwise $H^1$ regularity from weighted forcing]
