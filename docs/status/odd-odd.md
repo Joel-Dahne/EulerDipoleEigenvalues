@@ -5,8 +5,9 @@
 
 Odd–odd exclusion (`thm:dd-exclusion`) is assembled in
 [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean) with no admission of
-its own. The odd–odd and separatrix transport chapters have no unfinished
-nodes on this route. The exclusion still depends on admitted prerequisites.
+its own. The geometry, odd–odd, and separatrix transport chapters have no
+unfinished nodes on this route. The exclusion still depends on admitted
+prerequisites.
 
 The remaining work serves three parts of the argument:
 

@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.SaddleDistance
+import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 import NoEmbeddedEigenvalues.TransversalMollifier
 import NoEmbeddedEigenvalues.RadialWeakMultiplier
 
@@ -57,22 +57,22 @@ private theorem norm_fderiv_le_coordPartial {f : ℝ × ℝ → ℂ} {q : ℝ ×
 
 /-- A bounded top jet and vanishing lower jets give a quantitative Taylor bound.
 The constant and radius are uniform in the point. -/
-theorem norm_le_pow_of_flat_jet {R B : ℝ} (hB : 0 ≤ B) (n : ℕ)
-    {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f (Metric.ball 0 R))
-    (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f 0 = 0)
-    (hb : ∀ w : List (Fin 2), w.length = n → ∀ p ∈ Metric.ball 0 R,
+theorem norm_le_pow_of_flat_jet {c : ℝ × ℝ} {R B : ℝ} (hB : 0 ≤ B) (n : ℕ)
+    {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f (Metric.ball c R))
+    (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f c = 0)
+    (hb : ∀ w : List (Fin 2), w.length = n → ∀ p ∈ Metric.ball c R,
       ‖classicalComplexJet w f p‖ ≤ B) :
-    ∀ p ∈ Metric.ball 0 R, ‖f p‖ ≤ (2 ^ n * B) * ‖p‖ ^ n := by
+    ∀ p ∈ Metric.ball c R, ‖f p‖ ≤ (2 ^ n * B) * dist p c ^ n := by
   induction n generalizing f with
   | zero =>
     intro p hp
     simpa only [classicalComplexJet, pow_zero, one_mul, mul_one] using hb [] rfl p hp
   | succ n ih =>
     intro p hp
-    have hpR : ‖p‖ < R := by simpa only [Metric.mem_ball, dist_zero_right] using hp
-    have hf0 : f 0 = 0 := hz [] (by simp)
-    have hd (j : Fin 2) (q : ℝ × ℝ) (hq : q ∈ Metric.ball 0 R) :
-        ‖coordPartial j f q‖ ≤ (2 ^ n * B) * ‖q‖ ^ n := by
+    have hpR : dist p c < R := hp
+    have hf0 : f c = 0 := hz [] (by simp)
+    have hd (j : Fin 2) (q : ℝ × ℝ) (hq : q ∈ Metric.ball c R) :
+        ‖coordPartial j f q‖ ≤ (2 ^ n * B) * dist q c ^ n := by
       apply ih (contDiffOn_coordPartial Metric.isOpen_ball hf j) _ _ q hq
       · intro w hw
         simpa only [classicalComplexJet_append, classicalComplexJet] using
@@ -80,39 +80,40 @@ theorem norm_le_pow_of_flat_jet {R B : ℝ} (hB : 0 ≤ B) (n : ℕ)
       · intro w hw x hx
         simpa only [classicalComplexJet_append, classicalComplexJet] using
           hb (w ++ [j]) (by simp only [List.length_append, List.length_singleton]; omega) x hx
-    have hsub : Metric.closedBall (0 : ℝ × ℝ) ‖p‖ ⊆ Metric.ball 0 R := by
+    have hsub : Metric.closedBall c (dist p c) ⊆ Metric.ball c R := by
       intro q hq
       exact lt_of_le_of_lt hq hpR
-    have hdiff (q : ℝ × ℝ) (hq : q ∈ Metric.closedBall 0 ‖p‖) :
+    have hdiff (q : ℝ × ℝ) (hq : q ∈ Metric.closedBall c (dist p c)) :
         DifferentiableAt ℝ f q :=
       (hf.contDiffAt (Metric.isOpen_ball.mem_nhds (hsub hq))).differentiableAt (by simp)
-    have hder (q : ℝ × ℝ) (hq : q ∈ Metric.closedBall 0 ‖p‖) :
-        ‖fderiv ℝ f q‖ ≤ 2 * ((2 ^ n * B) * ‖p‖ ^ n) := by
+    have hder (q : ℝ × ℝ) (hq : q ∈ Metric.closedBall c (dist p c)) :
+        ‖fderiv ℝ f q‖ ≤ 2 * ((2 ^ n * B) * dist p c ^ n) := by
       apply norm_fderiv_le_coordPartial (hdiff q hq) (by positivity)
       intro j
       exact (hd j q (hsub hq)).trans (mul_le_mul_of_nonneg_left
-        (pow_le_pow_left₀ (norm_nonneg q) (by simpa using hq) n) (by positivity))
-    have he := (convex_closedBall (0 : ℝ × ℝ) ‖p‖).norm_image_sub_le_of_norm_fderiv_le
-      hdiff hder (Metric.mem_closedBall_self (norm_nonneg p))
-      (show p ∈ Metric.closedBall 0 ‖p‖ by simp)
-    simpa only [hf0, sub_zero, pow_succ, mul_assoc, mul_left_comm, mul_comm] using he
+        (pow_le_pow_left₀ dist_nonneg hq n) (by positivity))
+    have he := (convex_closedBall c (dist p c)).norm_image_sub_le_of_norm_fderiv_le
+      hdiff hder (Metric.mem_closedBall_self dist_nonneg)
+      (Metric.mem_closedBall.mpr (le_refl (dist p c)))
+    simpa only [hf0, sub_zero, ← dist_eq_norm, pow_succ, mul_assoc, mul_left_comm, mul_comm]
+      using he
 
 /-- One bounded top jet on one precompact neighbourhood, uniformly over words. -/
 theorem exists_bound_top_classicalJet {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    (h0 : (0 : ℝ × ℝ) ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U) (n : ℕ) :
-    ∃ R B : ℝ, 0 < R ∧ 0 < B ∧ Metric.ball 0 R ⊆ U ∧
-      ∀ w : List (Fin 2), w.length = n → ∀ p ∈ Metric.ball 0 R,
+    {c : ℝ × ℝ} (hc : c ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U) (n : ℕ) :
+    ∃ R B : ℝ, 0 < R ∧ 0 < B ∧ Metric.ball c R ⊆ U ∧
+      ∀ w : List (Fin 2), w.length = n → ∀ p ∈ Metric.ball c R,
         ‖classicalComplexJet w f p‖ ≤ B := by
-  obtain ⟨r, hr, hsub⟩ := Metric.mem_nhds_iff.mp (hU.mem_nhds h0)
-  have hs : Metric.closedBall (0 : ℝ × ℝ) (r / 2) ⊆ U := by
+  obtain ⟨r, hr, hsub⟩ := Metric.mem_nhds_iff.mp (hU.mem_nhds hc)
+  have hs : Metric.closedBall c (r / 2) ⊆ U := by
     intro p hp
     exact hsub (lt_of_le_of_lt hp (half_lt_self hr))
   let G (p : ℝ × ℝ) : (Fin n → Fin 2) → ℂ :=
     fun v ↦ classicalComplexJet (List.ofFn v) f p
-  have hg : ContinuousOn G (Metric.closedBall 0 (r / 2)) :=
+  have hg : ContinuousOn G (Metric.closedBall c (r / 2)) :=
     continuousOn_pi.mpr fun v ↦
       ((contDiffOn_classicalComplexJet hU hf (List.ofFn v)).continuousOn).mono hs
-  obtain ⟨B, hb⟩ := (isCompact_closedBall (0 : ℝ × ℝ) (r / 2)).exists_bound_of_continuousOn hg
+  obtain ⟨B, hb⟩ := (isCompact_closedBall c (r / 2)).exists_bound_of_continuousOn hg
   refine ⟨r / 2, max B 1, by linarith, by positivity,
     fun p hp ↦ hs (Metric.ball_subset_closedBall hp), ?_⟩
   intro w hw p hp
@@ -127,12 +128,12 @@ theorem exists_bound_top_classicalJet {U : Set (ℝ × ℝ)} (hU : IsOpen U)
 
 /-- All differentiated Taylor bounds share one constant and one neighbourhood. -/
 theorem exists_classicalJet_flat_bounds {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    (h0 : (0 : ℝ × ℝ) ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U)
-    (n : ℕ) (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f 0 = 0) :
-    ∃ R C : ℝ, 0 < R ∧ 0 < C ∧ Metric.ball 0 R ⊆ U ∧
-      ∀ w : List (Fin 2), w.length ≤ n → ∀ p ∈ Metric.ball 0 R,
-        ‖classicalComplexJet w f p‖ ≤ C * ‖p‖ ^ (n - w.length) := by
-  obtain ⟨R, B, hR, hB, hsub, hb⟩ := exists_bound_top_classicalJet hU h0 hf n
+    {c : ℝ × ℝ} (hc : c ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U)
+    (n : ℕ) (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f c = 0) :
+    ∃ R C : ℝ, 0 < R ∧ 0 < C ∧ Metric.ball c R ⊆ U ∧
+      ∀ w : List (Fin 2), w.length ≤ n → ∀ p ∈ Metric.ball c R,
+        ‖classicalComplexJet w f p‖ ≤ C * dist p c ^ (n - w.length) := by
+  obtain ⟨R, B, hR, hB, hsub, hb⟩ := exists_bound_top_classicalJet hU hc hf n
   refine ⟨R, 2 ^ n * B, hR, by positivity, hsub, ?_⟩
   intro w hw p hp
   have hf' := contDiffOn_classicalComplexJet Metric.isOpen_ball (hf.mono hsub) w
@@ -144,26 +145,23 @@ theorem exists_classicalJet_flat_bounds {U : Set (ℝ × ℝ)} (hU : IsOpen U)
       rw [← classicalComplexJet_append]
       exact hb (v ++ w) (by simp only [List.length_append]; omega) q hq) p hp
   apply he.trans
-  apply mul_le_mul_of_nonneg_right _ (pow_nonneg (norm_nonneg p) _)
+  apply mul_le_mul_of_nonneg_right _ (pow_nonneg dist_nonneg _)
   exact mul_le_mul_of_nonneg_right
     (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) (Nat.sub_le n w.length)) hB.le
 
 /-- Euclidean-radius form of the finite Taylor bounds, on a genuine disk. -/
 theorem exists_radial_classicalJet_flat_bounds {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    (h0 : (0 : ℝ × ℝ) ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U)
-    (n : ℕ) (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f 0 = 0) :
-    ∃ R C : ℝ, 0 < R ∧ 0 < C ∧ localDisk 0 R ⊆ U ∧
-      ∀ w : List (Fin 2), w.length ≤ n → ∀ p ∈ localDisk 0 R,
-        ‖classicalComplexJet w f p‖ ≤ C * localRadius 0 p ^ (n - w.length) := by
-  obtain ⟨R, C, hR, hC, hsub, hb⟩ := exists_classicalJet_flat_bounds hU h0 hf n hz
-  have hnorm (p : ℝ × ℝ) : ‖p‖ ≤ localRadius 0 p := by
-    simpa only [dist_zero_right] using dist_le_localRadius 0 p
-  have hs : localDisk 0 R ⊆ Metric.ball 0 R := by
-    intro p hp
-    simpa only [Metric.mem_ball, dist_zero_right] using (hnorm p).trans_lt hp
+    {c : ℝ × ℝ} (hc : c ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U)
+    (n : ℕ) (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f c = 0) :
+    ∃ R C : ℝ, 0 < R ∧ 0 < C ∧ localDisk c R ⊆ U ∧
+      ∀ w : List (Fin 2), w.length ≤ n → ∀ p ∈ localDisk c R,
+        ‖classicalComplexJet w f p‖ ≤ C * localRadius c p ^ (n - w.length) := by
+  obtain ⟨R, C, hR, hC, hsub, hb⟩ := exists_classicalJet_flat_bounds hU hc hf n hz
+  have hs : localDisk c R ⊆ Metric.ball c R :=
+    fun p hp ↦ (dist_le_localRadius c p).trans_lt hp
   refine ⟨R, C, hR, hC, hs.trans hsub, fun w hw p hp ↦ ?_⟩
   exact (hb w hw p (hs hp)).trans (mul_le_mul_of_nonneg_left
-    (pow_le_pow_left₀ (norm_nonneg p) (hnorm p) _) hC.le)
+    (pow_le_pow_left₀ dist_nonneg (dist_le_localRadius c p) _) hC.le)
 
 /-- Local smoothness suffices for the actual classical weak derivative. -/
 theorem hasWeakPartialOn_of_contDiffOn {U : Set (ℝ × ℝ)} (hU : IsOpen U)
@@ -188,40 +186,40 @@ theorem classicalComplexJet_weakOn {U : Set (ℝ × ℝ)} (hU : IsOpen U)
 /-- A smooth flat jet has genuine finite radial L² mass, not merely totalized
 energies. All entries use the same positive-radius disk. -/
 theorem exists_radial_classicalJet_flat_memLp {U : Set (ℝ × ℝ)} (hU : IsOpen U)
-    (h0 : (0 : ℝ × ℝ) ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U)
-    (n : ℕ) (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f 0 = 0) :
-    ∃ R : ℝ, 0 < R ∧ localDisk 0 R ⊆ U ∧
-      HasWeakJetOn n (localDisk 0 R) f (fun w ↦ classicalComplexJet w f) ∧
-      ∀ k ≤ n, RadialJetLp k (n - k) (localDisk 0 R) 0
+    {c : ℝ × ℝ} (hc : c ∈ U) {f : ℝ × ℝ → ℂ} (hf : ContDiffOn ℝ ∞ f U)
+    (n : ℕ) (hz : ∀ w : List (Fin 2), w.length < n → classicalComplexJet w f c = 0) :
+    ∃ R : ℝ, 0 < R ∧ localDisk c R ⊆ U ∧
+      HasWeakJetOn n (localDisk c R) f (fun w ↦ classicalComplexJet w f) ∧
+      ∀ k ≤ n, RadialJetLp k (n - k) (localDisk c R) c
         (fun w ↦ classicalComplexJet w f) := by
-  obtain ⟨R, C, hR, hC, hsub, hb⟩ := exists_radial_classicalJet_flat_bounds hU h0 hf n hz
-  have hV : IsOpen (localDisk 0 R) := by
+  obtain ⟨R, C, hR, hC, hsub, hb⟩ := exists_radial_classicalJet_flat_bounds hU hc hf n hz
+  have hV : IsOpen (localDisk c R) := by
     apply isOpen_lt _ continuous_const
     unfold localRadius
     fun_prop
-  have : IsFiniteMeasure (volume.restrict (localDisk 0 R)) := by
+  have : IsFiniteMeasure (volume.restrict (localDisk c R)) := by
     apply isFiniteMeasure_restrict.mpr
-    exact (Metric.isBounded_ball.subset (show localDisk 0 R ⊆ Metric.ball 0 R from
-      fun p hp ↦ (dist_le_localRadius 0 p).trans_lt hp)).measure_lt_top.ne
+    exact (Metric.isBounded_ball.subset (show localDisk c R ⊆ Metric.ball c R from
+      fun p hp ↦ (dist_le_localRadius c p).trans_lt hp)).measure_lt_top.ne
   refine ⟨R, hR, hsub, classicalComplexJet_weakOn hV (hf.mono hsub) n, ?_⟩
   intro k hk w hw
   have hcont := (contDiffOn_classicalComplexJet hU hf w).continuousOn.mono hsub
   have hm := hcont.aestronglyMeasurable (μ := volume) hV.measurableSet
-  have hden : Measurable (fun p ↦ (localRadius 0 p ^ (n - k) : ℂ)) := by
+  have hden : Measurable (fun p ↦ (localRadius c p ^ (n - k) : ℂ)) := by
     unfold localRadius
     fun_prop
-  have hc : MemLp (fun _ : ℝ × ℝ ↦ C) 2 (volume.restrict (localDisk 0 R)) :=
+  have hconst : MemLp (fun _ : ℝ × ℝ ↦ C) 2 (volume.restrict (localDisk c R)) :=
     memLp_const _
-  apply hc.mono' (hm.aemeasurable.div hden.aemeasurable).aestronglyMeasurable
+  apply hconst.mono' (hm.aemeasurable.div hden.aemeasurable).aestronglyMeasurable
   filter_upwards [ae_restrict_mem hV.measurableSet] with p hp
   dsimp only [Pi.div_apply]
   rw [norm_div, norm_pow, Complex.norm_real, Real.norm_eq_abs,
-    abs_of_nonneg (show 0 ≤ localRadius 0 p from Real.sqrt_nonneg _)]
-  by_cases hr : localRadius 0 p ^ (n - k) = 0
+    abs_of_nonneg (show 0 ≤ localRadius c p from Real.sqrt_nonneg _)]
+  by_cases hr : localRadius c p ^ (n - k) = 0
   · simp only [hr, div_zero]
     exact hC.le
-  · have hrpos : 0 < localRadius 0 p ^ (n - k) :=
-      lt_of_le_of_ne (pow_nonneg (show 0 ≤ localRadius 0 p from Real.sqrt_nonneg _) _)
+  · have hrpos : 0 < localRadius c p ^ (n - k) :=
+      lt_of_le_of_ne (pow_nonneg (show 0 ≤ localRadius c p from Real.sqrt_nonneg _) _)
         (Ne.symm hr)
     apply (div_le_iff₀ hrpos).mpr
     simpa only [hw] using hb w (by omega) p hp

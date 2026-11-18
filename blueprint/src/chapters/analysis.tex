@@ -2485,12 +2485,12 @@ A countable subcover gives its joint a.e.\ agreement on the whole domain.
  NoEmbeddedEigenvalues.exists_classicalJet_flat_bounds,
  NoEmbeddedEigenvalues.exists_radial_classicalJet_flat_bounds}
 \leanok
-Let $f$ be smooth on an open neighbourhood $U$ of zero and let its ordered
-classical jets of orders less than $n$ vanish at zero.
-There are $R,C>0$, with $D_R(0)\subset U$, such that simultaneously for
-every word $w$ with $|w|\le n$ and every $p\in D_R(0)$,
+Let $f$ be smooth on an open neighbourhood $U$ of $c$ and let its ordered
+classical jets of orders less than $n$ vanish at $c$.
+There are $R,C>0$, with $D_R(c)\subset U$, such that simultaneously for
+every word $w$ with $|w|\le n$ and every $p\in D_R(c)$,
 \[
- |\partial_w f(p)|\le C r_0(p)^{n-|w|}.
+ |\partial_w f(p)|\le C r_c(p)^{n-|w|}.
 \]
 No analyticity is required.
 \end{lemma}
@@ -2503,7 +2503,7 @@ $U$. Repeated mean-value inequalities give the estimate for each lower entry.
 For the product norm, coordinate bounds $|\partial_j g|\le B$ imply
 $\|Dg\|\le2B$; induction gives the constant $2^n B$.
 Apply this to every differentiated function, using concatenation of words.
-Finally $\|p\|\le r_0(p)$ gives the Euclidean disk bound.
+Finally $\operatorname{dist}(p,c)\le r_c(p)$ gives the Euclidean disk bound.
 No value-only big-O estimate is differentiated.
 \end{proof}
 
@@ -2533,7 +2533,7 @@ Apply this to each smooth classical jet entry.
 \leanok
 Under the flat-jet hypotheses of Lemma~\ref{lem:classical-jet-flat-bounds},
 one positive-radius disk has the classical specified weak jet and
-$\partial^k f/r_0^{n-k}\in L^2(D_R(0))$, $0\le k\le n$.
+$\partial^k f/r_c^{n-k}\in L^2(D_R(c))$, $0\le k\le n$.
 These are actual finite norms, not only finite-valued totalized energies.
 \end{lemma}
 
@@ -2541,7 +2541,7 @@ These are actual finite norms, not only finite-valued totalized energies.
 \uses{lem:classical-jet-flat-bounds, lem:local-classical-weak-jet}
 \leanok
 Each quotient is bounded and measurable on the finite-measure disk.
-Its assigned value at zero does not affect integrability.
+Its assigned value at the center does not affect integrability.
 The weak identities hold on the whole disk, independently of this null-set
 observation.
 \end{proof}

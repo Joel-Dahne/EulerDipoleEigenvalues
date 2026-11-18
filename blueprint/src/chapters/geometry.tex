@@ -2424,7 +2424,8 @@ Each coordinate displacement is at most its Euclidean radius.
 
 \begin{lemma}[Cartesian saddle Taylor correction]
 \label{lem:saddle-taylor-correction}
-\uses{def:saddle-quadratic, def:local-weak-jets, def:sobolev-local}
+\uses{def:saddle-quadratic, def:cell-arcs, def:dipole,
+ def:local-weak-jets, def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.saddle_taylor_correction}
 \leanok
 For each saddle $P$ and $a\in\C$, the smooth function
@@ -2433,15 +2434,19 @@ with $D^kT/r^{4-k}\in L^2$ for every $0\le k\le3$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:saddle-normal-form-derivatives, lem:saddle-quadratic-chart,
- lem:saddle-chart-orthogonal, lem:weak-derivative-classical}
-In the orthonormal chart, $T\circ\Xi_P=a(uv-\Psi\circ\Xi_P)$.
-The differentiated Taylor estimates bound its order-$k$ derivatives
-by $Cr^{4-k}$. Transform the derivative indices by the constant
-orthogonal matrix to obtain the Cartesian estimates.
-Classical derivatives are weak derivatives. After division by their
-radius powers the entries are bounded off the null center, hence
-square integrable on a finite disk.
+\uses{lem:dipole-critical-points, lem:saddle-dipole-factorization,
+ lem:flat-jet-radial-mass}
+\leanok
+Write $(X,Y)=p-P$ and $g(t)=1-t^2/2-\cos t$. The sines vanish at the
+saddle, and its two cosines are opposite, so
+\[
+ T(p)=a\cos(P_x)\bigl(g(X)-g(Y)\bigr).
+\]
+The function $g$ and its first three derivatives vanish at zero. Pure
+Cartesian derivatives inherit this vanishing, and mixed derivatives vanish
+identically because each summand depends on just one coordinate. Apply the
+flat-jet radial mass lemma with center $P$ and order four, and retain the
+weak jet and weighted norms through order three.
 \end{proof}
 
 \begin{lemma}[Odd--odd parity in saddle coordinates]
