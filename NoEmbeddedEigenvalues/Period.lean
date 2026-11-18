@@ -9,7 +9,8 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 /-!
 # The period function of the dipole orbits
 
-Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`, `lem:period-regularity`.
+Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`, `lem:period-regularity`,
+`lem:period-leading-asymptotic`.
 The elliptic-integral formula and sharp asymptotics remain stated.
 Coarse logarithmic and exponential bounds are proved in `OrbitCoordinates.lean`, after
 constructing the flow and proving the half-quarter endpoint estimates.
@@ -145,6 +146,14 @@ theorem eighthPeriod_le_inv {h : ℝ} (h0 : 0 < h) (h1 : h < 1) : eighthPeriod h
           (hcont.intervalIntegrable_of_Icc zero_le_one) intervalIntegrable_const hb
     _ = 1 / h := by simp
 
+private theorem integral_periodLogModel {h : ℝ} (h0 : 0 < h) :
+    (∫ t in (0 : ℝ)..1, 1 / (-2 * t + (2 + h))) = log ((2 + h) / h) / 2 := by
+  rw [intervalIntegral.integral_comp_mul_add (f := fun x ↦ 1 / x) (by norm_num : (-2 : ℝ) ≠ 0),
+    integral_one_div_of_pos (by linarith) (by linarith)]
+  rw [smul_eq_mul, mul_zero, zero_add, mul_one, show -2 + (2 + h) = h by ring,
+    show h / (2 + h) = ((2 + h) / h)⁻¹ by field_simp, log_inv]
+  ring
+
 /-- `L(h) ≥ ½ log(1/h)`. In the second formula for `L(h)` both square roots are at most
 `√(1 - t² + h)`, and `1 - t² + h ≤ 2(1 - t) + h` on `[0, 1]`, so
 `L(h) ≥ ∫₀¹ dt / (2(1 - t) + h) = ½ log((2 + h)/h)`. -/
@@ -164,16 +173,10 @@ theorem log_le_eighthPeriod {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
   have hD : ∀ t ∈ Set.Icc (0 : ℝ) 1, 0 < -2 * t + (2 + h) := fun t ht ↦ by linarith [ht.2]
   have hcont' : ContinuousOn (fun t : ℝ ↦ 1 / (-2 * t + (2 + h))) (Set.Icc 0 1) :=
     continuousOn_const.div (by fun_prop) fun t ht ↦ (hD t ht).ne'
-  have hval : ∫ t in (0 : ℝ)..1, 1 / (-2 * t + (2 + h)) = log ((2 + h) / h) / 2 := by
-    rw [intervalIntegral.integral_comp_mul_add (f := fun x ↦ 1 / x) (by norm_num : (-2 : ℝ) ≠ 0),
-      integral_one_div_of_pos (by linarith) (by linarith)]
-    rw [smul_eq_mul, mul_zero, zero_add, mul_one, show -2 + (2 + h) = h by ring,
-      show h / (2 + h) = ((2 + h) / h)⁻¹ by field_simp, log_inv]
-    ring
   calc log (1 / h) / 2 ≤ log ((2 + h) / h) / 2 := by
         refine div_le_div_of_nonneg_right (log_le_log (by positivity) ?_) (by norm_num)
         exact div_le_div_of_nonneg_right (by linarith) h0.le
-    _ = ∫ t in (0 : ℝ)..1, 1 / (-2 * t + (2 + h)) := hval.symm
+    _ = ∫ t in (0 : ℝ)..1, 1 / (-2 * t + (2 + h)) := (integral_periodLogModel h0).symm
     _ ≤ ∫ t in (0 : ℝ)..1, 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)) := by
       refine intervalIntegral.integral_mono_on zero_le_one
         (hcont'.intervalIntegrable_of_Icc zero_le_one)
@@ -385,25 +388,140 @@ theorem orbitPeriod_strictAntiOn : StrictAntiOn orbitPeriod (Ioo 0 1) := by
   intro h hh k hk hhk
   exact mul_lt_mul_of_pos_left (eighthPeriod_strictAntiOn hh hk hhk) (by norm_num)
 
-/-! ### Further period estimates (stated) -/
+/-! ### Further period estimates -/
 
 /-- `S(h) = 4 K(1 - h²)` with `K(m) = ∫₀^{π/2} (1 - m sin² θ)^{-1/2} dθ`. -/
 theorem orbitPeriod_eq_ellipticK {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
     orbitPeriod h = 4 * ∫ θ in (0 : ℝ)..π / 2, 1 / √(1 - (1 - h ^ 2) * sin θ ^ 2) := by
   sorry
 
-open Filter Topology in
-/-- Leading value asymptotic from the defining integral, without a sharp remainder
-    or any claim about its derivative (`lem:period-leading-asymptotic`). -/
+/-- The remainder after subtracting the integrable logarithmic model at each `h > 0`. -/
+private def periodLogRemainder (h t : ℝ) : ℝ :=
+  1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)) - 1 / (-2 * t + (2 + h))
+
+private theorem periodLogRemainder_bounds {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
+    (ht : t ∈ Icc (0 : ℝ) 1) : 0 ≤ periodLogRemainder h t ∧ periodLogRemainder h t ≤ 1 := by
+  let A := 1 - (1 - h) * t ^ 2
+  let B := 1 + h - t ^ 2
+  let M := -2 * t + (2 + h)
+  obtain ⟨hA, hB⟩ : 0 < A ∧ 0 < B := period_radicands_pos hh ht
+  have ht2 : t ^ 2 ≤ 1 := by nlinarith [ht.1, ht.2]
+  have hAB : A ≤ B := by
+    dsimp [A, B]
+    nlinarith only [mul_nonneg hh.1.le (sub_nonneg.mpr ht2)]
+  have hBM : B ≤ M := by dsimp [B, M]; nlinarith only [sq_nonneg (1 - t)]
+  have hM := hB.trans_le hBM
+  have hprodA : A ≤ √A * √B := calc
+    A = √A * √A := (mul_self_sqrt hA.le).symm
+    _ ≤ _ := mul_le_mul_of_nonneg_left (sqrt_le_sqrt hAB) (sqrt_nonneg A)
+  have hprodM : √A * √B ≤ M := calc
+    √A * √B ≤ √B * √B := mul_le_mul_of_nonneg_right (sqrt_le_sqrt hAB) (sqrt_nonneg B)
+    _ = B := mul_self_sqrt hB.le
+    _ ≤ M := hBM
+  change 0 ≤ 1 / (√A * √B) - 1 / M ∧ 1 / (√A * √B) - 1 / M ≤ 1
+  refine ⟨sub_nonneg.mpr (one_div_le_one_div_of_le (hA.trans_le hprodA) hprodM), ?_⟩
+  have hgap : M - A ≤ A * M := calc
+    M - A ≤ (1 - t ^ 2) * M := by
+      dsimp [A, M]
+      have h : 0 ≤ (1 - t) ^ 2 * (1 + 2 * t) :=
+        mul_nonneg (sq_nonneg _) (by linarith [ht.1])
+      nlinarith only [h]
+    _ ≤ A * M := by
+      apply mul_le_mul_of_nonneg_right _ hM.le
+      dsimp [A]
+      nlinarith only [mul_nonneg hh.1.le (sq_nonneg t)]
+  calc
+    1 / (√A * √B) - 1 / M ≤ 1 / A - 1 / M := by
+      exact sub_le_sub_right (one_div_le_one_div_of_le hA hprodA) _
+    _ = (M - A) / (A * M) := by field_simp
+    _ ≤ 1 := (div_le_one (mul_pos hA hM)).2 hgap
+
+open Filter Topology MeasureTheory in
+private theorem tendsto_integral_periodLogRemainder :
+    Tendsto (fun h ↦ ∫ t in (0 : ℝ)..1, periodLogRemainder h t) (𝓝[>] 0) (𝓝 (log 2 / 2)) := by
+  have hc : ContinuousWithinAt (fun h ↦ ∫ t in (0 : ℝ)..1, periodLogRemainder h t) (Ioi 0) 0 := by
+    refine continuousWithinAt_of_dominated_interval (bound := fun _ ↦ 1)
+      (Eventually.of_forall fun h ↦ (by unfold periodLogRemainder; fun_prop :
+        Measurable (periodLogRemainder h)).aestronglyMeasurable)
+      ?_ intervalIntegrable_const ?_
+    · filter_upwards [Ioo_mem_nhdsGT zero_lt_one] with h hh
+      refine Eventually.of_forall fun t ht ↦ ?_
+      rw [uIoc_of_le zero_le_one] at ht
+      obtain ⟨h₀, h₁⟩ := periodLogRemainder_bounds hh (Ioc_subset_Icc_self ht)
+      rwa [Real.norm_eq_abs, abs_of_nonneg h₀]
+    · filter_upwards [volume.ae_ne (1 : ℝ)] with t ht1 ht
+      rw [uIoc_of_le zero_le_one] at ht
+      have htlt := lt_of_le_of_ne ht.2 ht1
+      have htq : 0 < 1 - t ^ 2 := by
+        nlinarith [mul_pos (sub_pos.mpr htlt) (by linarith [ht.1] : 0 < 1 + t)]
+      unfold periodLogRemainder
+      apply ContinuousAt.continuousWithinAt
+      apply ContinuousAt.sub
+      · apply ContinuousAt.div continuousAt_const (by fun_prop)
+        simpa using (sqrt_pos.2 htq).ne'
+      · exact continuousAt_const.div (by fun_prop) (by simp; linarith)
+  have hval : (∫ t in (0 : ℝ)..1, periodLogRemainder 0 t) = log 2 / 2 := calc
+    _ = ∫ t in (0 : ℝ)..1, (1 / 2) * (1 / (t + 1)) := by
+      apply integral_congr_Ioo_of_le zero_le_one
+      intro t ht
+      have htq : 0 < 1 - t ^ 2 := by
+        nlinarith [mul_pos (sub_pos.mpr ht.2) (by linarith [ht.1] : 0 < 1 + t)]
+      have hdiff : 1 - t ≠ 0 := (sub_pos.mpr ht.2).ne'
+      have htadd : t + 1 ≠ 0 := by linarith [ht.1]
+      change 1 / (√(1 - (1 - 0) * t ^ 2) * √(1 + 0 - t ^ 2)) -
+        1 / (-2 * t + (2 + 0)) = (1 / 2) * (1 / (t + 1))
+      simp only [sub_zero, one_mul, add_zero, mul_self_sqrt htq.le]
+      rw [show 1 - t ^ 2 = (1 - t) * (t + 1) by ring, show -2 * t + 2 = 2 * (1 - t) by ring]
+      field_simp
+      ring
+    _ = log 2 / 2 := by
+      rw [intervalIntegral.integral_const_mul, integral_comp_add_right (f := fun x ↦ 1 / x),
+        integral_one_div_of_pos (by norm_num) (by norm_num)]
+      norm_num [div_eq_mul_inv, mul_comm]
+  rw [← hval]
+  exact hc
+
+/-- Leading value asymptotic from the fixed-interval quadrature, without a sharp
+remainder or any claim about its derivative (`lem:period-leading-asymptotic`). -/
 theorem eighthPeriod_leading_asymptotic :
     Tendsto (fun h ↦ eighthPeriod h - log (4 / h) / 2) (𝓝[>] 0) (𝓝 0) := by
-  sorry
+  have hlog : Tendsto (fun h : ℝ ↦ log (2 + h) / 2 - log 4 / 2) (𝓝[>] 0)
+      (𝓝 (log 2 / 2 - log 4 / 2)) := by
+    have hc : ContinuousAt (fun h : ℝ ↦ log (2 + h) / 2 - log 4 / 2) 0 := by
+      fun_prop (disch := norm_num)
+    simpa using hc.continuousWithinAt.tendsto (s := Ioi 0)
+  have hsum := tendsto_integral_periodLogRemainder.add hlog
+  have hfour : log 4 = log 2 + log 2 := by
+    rw [show (4 : ℝ) = 2 * 2 by norm_num, log_mul (by norm_num) (by norm_num)]
+  rw [show log 2 / 2 + (log 2 / 2 - log 4 / 2) = 0 by rw [hfour]; ring] at hsum
+  refine hsum.congr' ?_
+  filter_upwards [Ioo_mem_nhdsGT zero_lt_one] with h hh
+  have hF : IntervalIntegrable (fun t ↦ 1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)))
+      MeasureTheory.volume 0 1 := by
+    apply ContinuousOn.intervalIntegrable_of_Icc zero_le_one
+    refine continuousOn_const.div (by fun_prop) fun t ht ↦ ?_
+    obtain ⟨hA, hB⟩ := period_radicands_pos hh ht
+    exact (mul_pos (sqrt_pos.2 hA) (sqrt_pos.2 hB)).ne'
+  have hM : IntervalIntegrable (fun t ↦ 1 / (-2 * t + (2 + h))) MeasureTheory.volume 0 1 := by
+    apply ContinuousOn.intervalIntegrable_of_Icc zero_le_one
+    refine continuousOn_const.div (by fun_prop) fun t ht ↦ ?_
+    linarith [hh.1, ht.2]
+  change (∫ t in (0 : ℝ)..1, periodLogRemainder h t) + (log (2 + h) / 2 - log 4 / 2) =
+    eighthPeriod h - log (4 / h) / 2
+  unfold periodLogRemainder
+  rw [eighthPeriod_eq hh.1 hh.2, integral_sub hF hM,
+    integral_periodLogModel hh.1, log_div (by linarith [hh.1]) hh.1.ne',
+    log_div (by norm_num : (4 : ℝ) ≠ 0) hh.1.ne']
+  ring
 
-open Filter Topology in
 /-- The corresponding leading value asymptotic for the full orbit period. -/
 theorem orbitPeriod_leading_asymptotic :
     Tendsto (fun h ↦ orbitPeriod h - 4 * log (4 / h)) (𝓝[>] 0) (𝓝 0) := by
-  sorry
+  have h := eighthPeriod_leading_asymptotic.const_mul 8
+  rw [mul_zero] at h
+  refine h.congr' (Eventually.of_forall fun h ↦ ?_)
+  unfold orbitPeriod
+  ring
 
 /-- `L(h) = ½ log(4/h) + O(h² log(1/h))` and `L'(h) = -1/(2h) + O(h log(1/h))` as `h → 0`. -/
 theorem eighthPeriod_asymptotics : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Set.Ioo 0 h₀,

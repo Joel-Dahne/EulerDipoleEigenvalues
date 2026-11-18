@@ -1718,23 +1718,24 @@ As $h\to0^+$,
 \end{lemma}
 
 \begin{proof}
-In the defining integral for $L$, substitute $t=\cos a$ and put
-$A(t)=(1-t^2)^{-1/2}-1$. Then
+\uses{lem:period-integral}
+\leanok
+In the fixed-interval quadrature, put $A=1-(1-h)t^2$, $B=1+h-t^2$,
+and $M=2(1-t)+h$. On $[0,1]$ we have $0<A\le B\le M$, so
 \[
- L(h)=\tfrac12\log(1/h)
- +\int_{\sqrt h}^1\frac{A(t)}{\sqrt{t^2-h^2}}\,dt+R(h),\qquad
- R(h)=\int_{\sqrt h}^1\left(\frac1{\sqrt{t^2-h^2}}-\frac1t\right)dt.
+  0\le \frac1{\sqrt A\sqrt B}-\frac1M
+  \le \frac1A-\frac1M\le 1.
 \]
-For $h\le1/2$ and $t\ge\sqrt h$, the integrand of $R$ lies between $0$
-and $Ch^2/t^3$, so $R(h)=O(h)$. The other integrand, extended by zero
-below $\sqrt h$, is bounded by $\sqrt2 A(t)/t$. This is integrable, and
+For the last bound, $M-A=(1-t)^2+h(1-t^2)\le (1-t^2)M\le AM$.
+For $t<1$ the difference converges to $1/(1-t^2)-1/(2(1-t))=1/(2(1+t))$.
+Dominated convergence gives
 \[
- \int_0^1\frac{A(t)}t\,dt
- =\int_0^{\pi/2}\frac{1-\cos\theta}{\sin\theta}\,d\theta=\log2.
+  L(h)-\tfrac12\log((2+h)/h)\longrightarrow \tfrac12\log 2,
 \]
-Dominated convergence gives $L(h)-\tfrac12\log(1/h)\to\log2$.
-This uses neither the elliptic-integral identity nor a differentiated
-asymptotic remainder.
+using the explicit integrals of $1/M$ and of the limiting difference.
+Combining the logarithms gives the assertion for $L$, and $S=8L$ gives
+that for $S$. This uses neither the elliptic-integral identity nor a
+sharp remainder estimate.
 \end{proof}
 
 \begin{lemma}[Sharp separatrix asymptotics of the period]
