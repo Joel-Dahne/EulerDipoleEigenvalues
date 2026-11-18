@@ -1728,7 +1728,7 @@ $\sqrt\Lambda\,A_1\in L^2(0,b)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:period-regularity}
+\uses{lem:ordinary-midpoint-gain, lem:period-regularity}
 \leanok
 On compact subintervals the phase is $C^1$, so absolute continuity and
 the product rule give the displayed derivative.
@@ -4435,16 +4435,10 @@ $L_0F=D$ weakly on $U$. Then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-l2-pullback, lem:coarea, lem:acl-weak-converse,
- lem:quarter-primitive-weak, lem:weak-partial-locality}
+\uses{lem:quarter-time-raw}
 \leanok
-Cover the strip by bounded interior rectangles, with level intervals
-compactly contained in $(0,b)$.
-The $L^2$ pullback lemma supplies integrable data on each rectangle.
-Orbit restriction gives a.e.\ ACL representatives with the specified
-time derivative on each such level interval.
-The ACL weak converse identifies the weak time derivative of the raw
-pullback. Locality glues the rectangular identities.
+Apply the raw L2 version, which retains both supplied functions.
+Their additional global measurability is not needed.
 \end{proof}
 
 \begin{lemma}[Saddle weights for the forcing transport derivative]
@@ -5877,6 +5871,304 @@ This proof accepts the second norm as an explicit premise; it does not invoke
 its producer or the logarithmic numerator package.
 \end{proof}
 
+\begin{lemma}[Ordinary midpoint gain]
+\label{lem:ordinary-midpoint-gain}
+\uses{def:quarter-midpoint, def:h1-interval, def:h1-local-interval}
+\lean{NoEmbeddedEigenvalues.quarterMidpoint_h1Loc, NoEmbeddedEigenvalues.midpoint_gain}
+\leanok
+Let $b<1$, $Q\in H^1(0,b)$ with specified derivative $Q_1$, and let the
+original half numerator have compatible local interval H1 data $(B,B_1)$.
+Then the midpoint $a=iMQ+iB$, $M=e^{2i\lambda L}$, has local interval H1
+with the same specified derivative
+\[
+ a_1=iM(Q_1+2i\lambda L'Q)+iB_1 .
+\]
+If $|hL'|\le K$ on $(0,b)$ and $Q/h,B_1\in L^2(0,b)$, then
+$a_1\in L^2(0,b)$. Neither a logarithmic weight nor a replacement of the
+supplied derivatives is used.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:period-regularity}
+\leanok
+The smooth phase and local interval product rule give the derivative.
+Write $L'Q=(hL')(Q/h)$: both $iM$ and $2i\lambda hL'$ are bounded measurable
+multipliers. Apply them to the actual L2 functions $Q_1,Q/h,B_1$ and add.
+\end{proof}
+
+\begin{lemma}[Global ordinary midpoint H1 on a smaller collar]
+\label{lem:ordinary-midpoint-collar}
+\uses{def:quarter-midpoint, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.ordinary_midpoint_h1}
+\leanok
+For $0<r<1$, suppose the original quotient and half numerator have interval
+H1 data $(Q,Q_1)$ and $(B,B_1)$ on $(0,r)$, and $Q/h\in L^2(0,r)$.
+There is $0<b<r$ such that the same midpoint $a$ has global interval H1
+data $(a,a_1)$ on $(0,b)$, with the derivative from
+Lemma~\ref{lem:ordinary-midpoint-gain}.
+No value at the raw level $h=0$ is prescribed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ordinary-midpoint-gain, lem:period-derivative-bounds,
+ lem:h1-local-finite-derivative}
+\leanok
+Choose a smaller collar where $|hL'|$ is uniformly bounded.
+The ordinary midpoint gain gives local H1 and an actual L2 derivative.
+Local finite-derivative globalization supplies the value norm and global H1
+without changing either scalar function.
+\end{proof}
+
+\begin{definition}[Fixed-time quarter forward gradient]
+\label{def:quarter-forward-gradient}
+\uses{def:period, def:transport-pair}
+\lean{NoEmbeddedEigenvalues.quarterForwardVector,
+ NoEmbeddedEigenvalues.quarterPullbackDerivative}
+\leanok
+For $\gamma(h,t)=\gamma_h(t)$ put
+$V_0(h,t)=\partial_h\gamma_h(t)$ and
+$V_1(h,t)=X(\gamma_h(t))$, where $X$ is the transport velocity.
+For specified Cartesian fields $D_0,D_1$ define
+\[
+ \mathcal G_j(h,t)=(V_j)_0(h,t)D_0(\gamma_h(t))
+                    +(V_j)_1(h,t)D_1(\gamma_h(t)).
+\]
+These are contractions of the supplied raw fields, with no pointwise
+differentiability claim about the forcing.
+\end{definition}
+
+\begin{lemma}[Forward weak gradient on the fixed-time quarter]
+\label{lem:quarter-forward-weak}
+\uses{def:quarter-forward-gradient, def:quarter-image, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_quarterOrbit}
+\leanok
+Let $b\le1$ and let $U$ contain the actual quarter image.
+Suppose $\partial_jF=D_j$ weakly on $U$ and
+$F,D_0,D_1\in L^2(\Cell)$.
+Then the same raw pullback has
+\[
+ \partial_j(F\circ\gamma)=\mathcal G_j
+ \quad\hbox{weakly on }Q_b,\qquad j=0,1 .
+\]
+The first derivative is at fixed physical time, not normalized angle.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-open-chart, lem:oriented-weak-chart,
+ lem:quarter-gradient-energy, lem:orbit-level-vectors-smooth}
+\leanok
+Use the inverse quarter chart. Its determinant is $1/2$ and its cofactor
+rows are the forward coordinate vectors divided by two.
+This follows from the two-by-two inverse identity and the forward determinant two.
+The positive-orientation weak chain rule cancels that factor and gives the
+displayed contractions. Coarea supplies raw L2 pullbacks of $F,D_j$.
+Multiplication by the locally smooth coordinate vectors gives the required
+local integrability of the derivative candidates.
+\end{proof}
+
+\begin{lemma}[Joint raw congruence and character on recentered quarters]
+\label{lem:quarter-raw-congruence}
+\uses{def:cell-separatrix-collar, def:quarter-character}
+\lean{NoEmbeddedEigenvalues.ae_eq_comp_quarterOrbitStrip_of_memLp,
+ NoEmbeddedEigenvalues.HasQuarterCharacterOn.recentered_ae}
+\leanok
+Let $b\le1$. If raw $F,G\in L^2(\Cell)$ agree a.e. on a set containing
+the annulus $0<h<b$, then $F\circ\gamma=G\circ\gamma$ jointly a.e. on $Q_b$.
+If a raw $F\in L^2(\Cell)$ has character $\kappa$ a.e. on the cell, then
+for every $k\in\{0,1,2,3\}$,
+\[
+ F(\Gamma_k(h,t))=\kappa^k F(\gamma_h(t))
+ \quad\hbox{jointly a.e. on }Q_b .
+\]
+No globally measurable choice of either raw field is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-ae-congruence, lem:quarter-gradient-energy,
+ lem:quarter-profile-ae, lem:quarter-rotation-character,
+ lem:quarter-character-cell-mass}
+\leanok
+Coarea gives almost-everywhere congruence on almost every fiber and supplies
+jointly a.e. measurable L2 pullbacks. The joint congruence lemma then applies.
+For characters, first iterate the raw character on a rotation-invariant
+physical collar. Restricted measure-preserving rotations supply the L2 norms
+of the iterates. Pull back that restricted a.e. identity by the first part.
+No time shift is differentiated.
+\end{proof}
+
+\begin{lemma}[Weak quarter time for raw L2 representatives]
+\label{lem:quarter-time-raw}
+\uses{def:transport-pair, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.HasWeakL0On.quarter_time_of_memLp}
+\leanok
+Let $b<1$ and let $U$ contain the annulus $0<h<b$.
+If the raw fields $F,D$ belong to $L^2(\Cell)$ and $L_0F=D$ weakly on $U$,
+then
+\[
+ \partial_t(F\circ\gamma)=D\circ\gamma
+ \quad\hbox{weakly on }Q_b .
+\]
+Their chosen values outside the cell need not be measurable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:coarea, lem:quarter-gradient-energy, lem:quarter-primitive-weak,
+ lem:acl-weak-converse, lem:weak-partial-locality}
+\leanok
+The raw coarea bridge gives actual L2 pullbacks. On each midpoint-containing
+rectangle inside $Q_b$, orbit restriction gives ACL representatives on almost
+every time fiber. Rectangular weak testing uses the original jointly integrable
+fields; local weak identities glue. There is no joint selection of ACL witnesses.
+\end{proof}
+
+\begin{lemma}[Ordinary weighted quarter forcing data]
+\label{lem:ordinary-quarter-forcing-data}
+\uses{def:quarter-jet-data, def:numerator-derivative}
+\lean{NoEmbeddedEigenvalues.ordinary_quarter_forcing_data}
+\leanok
+Let $0<r<1$. Suppose the specified singleton entries satisfy
+$J_{[j]}/d^{3/2}\in L^2(\Cell)$ and the fixed-time level field
+$G_J(h,t)=\sum_{j=0}^1(\partial_h\gamma_h(t))_jJ_{[j]}(\gamma_h(t))$
+is a.e. strongly measurable on $Q_r$.
+There are $0<b<r$, a finite distance-square moment bound $C$, and an
+actual integrable $E\ge0$ on $(0,b)$ such that
+\[
+ d\circ\gamma\in L^\infty(Q_b),\qquad G_J\in L^2(Q_b),\qquad
+ \int_{-L(h)}^{L(h)}d(\gamma_h(t))^2\,dt\le C .
+\]
+On one good-level set, for every real $\mu$ and every $-L(h)<t<L(h)$,
+the signed integral
+\[
+ I_\mu(h,t)=\int_0^tG_J(h,u)e^{-i\mu u}\,du
+\]
+is genuinely Bochner integrable and $|I_\mu(h,t)|^2\le E(h)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-level-derivatives, lem:orbit-saddle-distance,
+ lem:orbit-time-integrals, lem:weighted-numerator-subinterval,
+ lem:quarter-gradient-energy}
+\leanok
+Intersect the collars for the fixed-time vector bound, saddle-distance bounds
+and the positive moments of orders one and two.
+The pointwise estimate $|G_J|^2\le 2C_V^2d\,\rho_{1,3/2}$ gives actual L2
+of $G_J$, since $d$ is bounded and the density is integrable.
+Weighted Cauchy--Schwarz with the distance-one moment gives
+$E=2C_V^2C_dJ_{1,3/2}$, an integrable level energy.
+Apply the subset estimate separately to $[0,t]$ and $[t,0]$.
+It proves integrability as well as the bound; its good-level set and constant
+do not depend on frequency.
+\end{proof}
+
+\begin{lemma}[Raw representative identified by midpoint reconstruction]
+\label{lem:quarter-reconstruction-raw-ae}
+\uses{def:transport-pair, def:sobolev-local, def:quarter-character,
+ def:quarter-midpoint, def:quarter-reconstruction, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.quarter_midpoint_reconstruction_with_rep,
+ NoEmbeddedEigenvalues.IsTransportPair.quarterReconstruction_ae}
+\leanok
+Retain a transport pair on a neighbourhood containing the closed cell,
+its continuous forcing representative $g=f$ a.e., and $0<b<1$.
+Suppose the raw fields $v,f$ have character $\kappa$ on the annulus,
+$\kappa^4=1$, the same $Q$ satisfies $D_{\lambda,\kappa}Q=N_{\lambda,g}$
+on $(0,b)$, and the divisor is nonzero a.e. there.
+The orbitwise ACL unknown has midpoint $a=i e^{2i\lambda L}Q+iB$ and the
+variation-of-constants reconstruction with the original continuous $g$.
+If $a$ has interval H1 data on $(0,b)$, that reconstruction agrees
+jointly a.e. on $Q_b$ with the raw unknown $-(v+f)/\lambda$.
+No pointwise values of the raw fields on the midpoint ray are assigned.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-endpoint-formula, lem:quarter-profile-ae,
+ lem:quarter-gradient-energy}
+\leanok
+The endpoint formula gives the canonical ACL witnesses.
+The exact quotient factorization identifies their negative endpoint where the
+divisor is nonzero. Integrating from that endpoint to zero gives the stated
+midpoint; integrating from zero gives the reconstruction.
+Continuity of $g$ on the orbit neighbourhood suffices for its actual time integrals.
+The amplitude H1 data and coarea supply joint a.e. measurability of the
+explicit reconstruction and raw unknown. Fiberwise equality therefore
+upgrades to joint a.e. equality, without selecting the ACL witnesses jointly.
+\end{proof}
+
+\begin{lemma}[Distance-weighted level reconstruction without logarithmic loss]
+\label{lem:quarter-weighted-level-bound}
+\uses{def:quarter-reconstruction-level, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.memLp_saddleDist_mul_of_level_bound,
+ NoEmbeddedEigenvalues.quarterReconstructionLevel_weighted_memLp}
+\leanok
+Let $b<1$ and suppose the distance-square time moment is at most $C$ on $(0,b)$.
+A jointly a.e. strongly measurable field $F$ with
+$|F(h,t)|^2\le E(h)$ a.e., for an actual integrable $E\ge0$, satisfies
+$dF\in L^2(Q_b)$.
+In particular, if $A_1\in L^2(0,b)$, the raw $G$ is jointly a.e. strongly
+measurable, and all signed midpoint integrals are genuinely integrable on
+one good-level set with squared norm at most $E(h)$, then
+\[
+ d\,\mathcal R_\lambda[A_1,G]\in L^2(Q_b).
+\]
+No logarithmic level weight is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:quarter-primitive-measurable}
+\leanok
+The explicit primitive is jointly a.e. measurable.
+Unit phase and $|z+w|^2\le2(|z|^2+|w|^2)$ bound the reconstruction square by
+$2|A_1(h)|^2+2E(h)$. Multiply by $d^2$ and integrate in time using the uniform
+moment. This gives a genuine integrable majorant in $h$, rather than the
+period-length majorant that would cost a logarithm.
+\end{proof}
+
+\begin{lemma}[Weighted raw derivatives on the base character quarter]
+\label{lem:weighted-character-base-derivatives}
+\uses{def:transport-pair, def:sobolev-local, def:quarter-character,
+ def:h1-interval, def:quarter-h1-scalar-data, def:weighted-quarter-derivative-data}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_character_base_derivatives}
+\leanok
+Under the original weighted forcing and supplied-gradient hypotheses,
+let the raw pair have character $\kappa$ on the cell, $\kappa^4=1$, and retain
+the same continuous forcing representative $g$.
+Given ordinary scalar data on $0<r<1/2$, there are $0<b<r$ and joint weak
+derivatives $H=\partial_h(v\circ\gamma)$, $T=\partial_t(v\circ\gamma)$ on $Q_b$
+with actual $dH,T/d\in L^2(Q_b)$.
+Neither physical seam gluing nor spatial H1 is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ordinary-midpoint-collar, lem:specified-jet-lp,
+ lem:specified-first-jet-extension, lem:quarter-forward-weak,
+ lem:quarter-raw-congruence, lem:ordinary-quarter-forcing-data,
+ lem:quarter-reconstruction-raw-ae, lem:quarter-reconstruction-weak,
+ lem:quarter-weighted-level-bound, lem:quarter-time-raw,
+ lem:weighted-character-mass, lem:quarter-divisor-geometry,
+ lem:saddle-transport-weights}
+\leanok
+Standing H2 supplies the original first entries' unweighted norms, keeping
+the supplied gradient exactly as functions. Form the midpoint and choose
+a smaller collar where the divisor is nonzero a.e. and the forcing data apply.
+The forward weak rule retains the specified fixed-time forcing derivative.
+The same derivative applies to the continuous forcing pullback by joint
+a.e. congruence. Weak midpoint reconstruction and its raw identification give
+\[
+ H=-\lambda\,\mathcal R_\lambda[a_1,G_J]-G_J .
+\]
+The distance-weighted reconstruction estimate and actual $G_J$ norm imply
+$dH\in L^2$.
+
+Pull the original weak transport identity back in time and subtract the
+forcing time derivative:
+$T=i\lambda(v\circ\gamma)-\mathcal G_1$.
+The given quotient factorization identifies $Q=N/D$ a.e., so the weighted
+character mass theorem gives actual $v/d^2$ mass. Bounded distance gives
+$(v\circ\gamma)/d\in L^2$. Each velocity coefficient satisfies $|\sin x_j|\le d$,
+so $\mathcal G_1/d\in L^2$ from the supplied first entries' unweighted norms.
+Thus $T/d\in L^2$. All fields are the explicit joint raw functions;
+the identities are weak identities, not only fiberwise classical derivatives.
+\end{proof}
+
 \begin{lemma}[Weighted weak quarter derivatives for a single character]
 \label{lem:weighted-character-quarter-derivatives}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-character,
@@ -5893,24 +6185,16 @@ No spatial H1 or seam-matching hypothesis is assumed.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:quarter-endpoint-formula, lem:period-derivative-bounds,
- lem:weighted-numerator-subinterval, lem:quarter-reconstruction-weak,
- lem:quarter-profile-ae, lem:weighted-character-mass, lem:orbit-level-derivatives,
- lem:orbit-time-integrals}
-Write the midpoint amplitude as
-$a=i e^{2i\lambda L}Q+iB$.
-The scalar H1 norms and $hL'$ bound give a genuine L2 derivative of $a$;
-the phase-derivative term is controlled by $Q/h$.
-The weak midpoint primitive rule gives the joint level derivative, with
-the supplied Cartesian gradient contracted against the fixed-time level vector.
-Weighted Cauchy--Schwarz and the orbit distance moments control its d-weighted
-norm without a pointwise forcing-growth assumption.
-The weak transport equation and mass estimate control the time derivative
-divided by d. Identify the reconstruction with the raw profile by joint a.e.
-congruence, then use the character to rotate these derivatives without
-differentiating a time shift.
-This reconstruction and its global weighted estimates form a separate input
-from physical seam gluing.
+\uses{lem:weighted-character-base-derivatives, lem:quarter-raw-congruence,
+ lem:quarter-rotation-character}
+\leanok
+Use the base-quarter weak fields $H,T$ and their actual weighted norms.
+Joint raw character congruence identifies $v\circ\Gamma_k$ with
+$\kappa^k(v\circ\gamma)$ a.e. on the same strip.
+Constant multiplication therefore gives the weak fields
+$A_k=\kappa^kH$, $B_k=\kappa^kT$.
+Distance is rotation invariant, so their weighted norms are finite as well.
+No differentiated time shift or physical seam gluing enters this step.
 \end{proof}
 
 \begin{lemma}[Four-character assembly of weighted weak quarter derivatives]

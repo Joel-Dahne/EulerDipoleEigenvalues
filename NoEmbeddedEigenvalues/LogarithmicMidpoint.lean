@@ -2,7 +2,7 @@ import NoEmbeddedEigenvalues.LogarithmicWeights
 import Mathlib.Analysis.Calculus.ContDiff.RCLike
 
 /-!
-# Logarithmic control of the midpoint coefficient
+# Ordinary and logarithmic control of the midpoint coefficient
 
 The phase derivative costs Q/h, not a derivative of the logarithmic weight.
 All derivative representatives are specified explicitly. Local H¹ is retained:
@@ -83,6 +83,71 @@ private theorem phase_deriv (lam : ℝ) {h : ℝ} (hh : h ∈ Ioo 0 1) :
     (by simp)).hasDerivAt
   exact (hd.ofReal_comp.const_mul (2 * Complex.I * (lam : ℂ))).cexp
 
+/-- Local interval H¹ of the exact midpoint, retaining both supplied derivatives. -/
+theorem quarterMidpoint_h1Loc {lam b : ℝ} (hb : b < 1)
+    {Q Q₁ B₁ : ℝ → ℂ} {g : ℝ × ℝ → ℂ}
+    (hQ : HasIntervalH1 0 b Q Q₁)
+    (hB : HasIntervalH1Loc 0 b (quarterHalfNumerator lam g) B₁) :
+    HasIntervalH1Loc 0 b (quarterMidpoint lam Q g)
+      (quarterMidpointDerivative lam Q Q₁ B₁) := by
+  let M : ℝ → ℂ := fun h ↦ Complex.I * quarterMidpointPhase lam h
+  intro c d hc hcd hd
+  have hcdsub : Icc c d ⊆ Ioo 0 1 := fun _ hx ↦ ⟨hc.trans_le hx.1, hx.2.trans_lt (hd.trans hb)⟩
+  have hm : ContDiffOn ℝ 1 M (Icc c d) :=
+    contDiffOn_const.mul ((phase_contDiff lam).mono hcdsub)
+  have hm₁ : ContinuousOn (fun h ↦ M h *
+      (2 * Complex.I * (lam : ℂ) * ((deriv eighthPeriod h : ℝ) : ℂ))) (Icc c d) := by
+    exact hm.continuousOn.mul (continuousOn_const.mul
+      (Complex.continuous_ofReal.comp_continuousOn (period_deriv_continuous.mono hcdsub)))
+  have hmder (h : ℝ) (hh : h ∈ Ioo c d) : HasDerivAt M
+      (M h * (2 * Complex.I * (lam : ℂ) * ((deriv eighthPeriod h : ℝ) : ℂ))) h := by
+    simpa only [M, mul_assoc] using
+      (phase_deriv lam (hcdsub (Ioo_subset_Icc_self hh))).const_mul Complex.I
+  have hh := interval_mul_c1 (interval_restrict hQ hc.le hd.le) hm hm₁ hmder
+  convert hh.add ((hB c d hc hcd hd).smul Complex.I) using 1
+  · rfl
+  · funext h
+    dsimp [quarterMidpointDerivative, M]
+    ring
+
+/-- Ordinary midpoint gain: the phase derivative costs Q/h, without a logarithmic
+weight or a change of the supplied scalar derivative representatives. -/
+theorem midpoint_gain {lam b K : ℝ} (hb : b < 1)
+    {Q Q₁ B₁ : ℝ → ℂ} {g : ℝ × ℝ → ℂ}
+    (hQ : HasIntervalH1 0 b Q Q₁)
+    (hB : HasIntervalH1Loc 0 b (quarterHalfNumerator lam g) B₁)
+    (hK : ∀ h ∈ Ioo 0 b, |h * deriv eighthPeriod h| ≤ K)
+    (hQh : MemLp (fun h ↦ Q h / (h : ℂ)) 2 (volume.restrict (Ioo 0 b)))
+    (hB₁ : MemLp B₁ 2 (volume.restrict (Ioo 0 b))) :
+    HasIntervalH1Loc 0 b (quarterMidpoint lam Q g) (quarterMidpointDerivative lam Q Q₁ B₁) ∧
+      MemLp (quarterMidpointDerivative lam Q Q₁ B₁) 2 (volume.restrict (Ioo 0 b)) := by
+  refine ⟨quarterMidpoint_h1Loc hb hQ hB, ?_⟩
+  have hsub : Ioo 0 b ⊆ Ioo 0 1 := fun _ hh ↦ ⟨hh.1, hh.2.trans hb⟩
+  let M : ℝ → ℂ := fun h ↦ Complex.I * quarterMidpointPhase lam h
+  let R : ℝ → ℂ := fun h ↦ (2 * Complex.I * (lam : ℂ)) * ((h * deriv eighthPeriod h : ℝ) : ℂ)
+  have hMc : ContinuousOn M (Ioo 0 b) :=
+    continuousOn_const.mul ((phase_contDiff lam).continuousOn.mono hsub)
+  have hRc : ContinuousOn R (Ioo 0 b) := continuousOn_const.mul
+    (Complex.continuous_ofReal.comp_continuousOn
+      (continuousOn_id.mul (period_deriv_continuous.mono hsub)))
+  have hMtop : MemLp M ⊤ (volume.restrict (Ioo 0 b)) := by
+    apply memLp_top_of_bound (hMc.aestronglyMeasurable measurableSet_Ioo) 1
+    exact Eventually.of_forall fun h ↦ by
+      simp [M, quarterMidpointPhase, Complex.norm_exp]
+  have hRtop : MemLp R ⊤ (volume.restrict (Ioo 0 b)) := by
+    apply memLp_top_of_bound (hRc.aestronglyMeasurable measurableSet_Ioo)
+      (‖2 * Complex.I * (lam : ℂ)‖ * K)
+    filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
+    simp only [R, norm_mul, Complex.norm_real, Real.norm_eq_abs]
+    exact mul_le_mul_of_nonneg_left (by simpa only [abs_mul] using hK h hh) (by positivity)
+  have hs := hQ.memLp_derivative.add (hRtop.mul hQh)
+  have hf := (hMtop.mul hs).add (hB₁.const_mul Complex.I)
+  apply hf.ae_eq
+  filter_upwards [ae_restrict_mem measurableSet_Ioo] with h hh
+  dsimp [M, R, quarterMidpointDerivative]
+  push_cast
+  field_simp [Complex.ofReal_ne_zero.mpr hh.1.ne']
+
 /-- The logarithmic midpoint gain (`lem:log-midpoint-gain`). -/
 theorem log_midpoint_gain {lam b K : ℝ} (hb : b < 1)
     {Q Q₁ B₁ : ℝ → ℂ} {g : ℝ × ℝ → ℂ}
@@ -107,24 +172,7 @@ theorem log_midpoint_gain {lam b K : ℝ} (hb : b < 1)
     (Complex.continuous_ofReal.comp_continuousOn
       (continuousOn_id.mul (period_deriv_continuous.mono hsub)))
   constructor
-  · intro c d hc hcd hd
-    have hcdsub : Icc c d ⊆ Ioo 0 1 := fun _ hx ↦ ⟨hc.trans_le hx.1, hx.2.trans_lt (hd.trans hb)⟩
-    have hm : ContDiffOn ℝ 1 M (Icc c d) :=
-      contDiffOn_const.mul ((phase_contDiff lam).mono hcdsub)
-    have hm₁ : ContinuousOn (fun h ↦ M h *
-        (2 * Complex.I * (lam : ℂ) * ((deriv eighthPeriod h : ℝ) : ℂ))) (Icc c d) := by
-      exact hm.continuousOn.mul (continuousOn_const.mul
-        (Complex.continuous_ofReal.comp_continuousOn (period_deriv_continuous.mono hcdsub)))
-    have hmder (h : ℝ) (hh : h ∈ Ioo c d) : HasDerivAt M
-        (M h * (2 * Complex.I * (lam : ℂ) * ((deriv eighthPeriod h : ℝ) : ℂ))) h := by
-      simpa only [M, mul_assoc] using
-        (phase_deriv lam (hcdsub (Ioo_subset_Icc_self hh))).const_mul Complex.I
-    have hh := interval_mul_c1 (interval_restrict hQ hc.le hd.le) hm hm₁ hmder
-    convert hh.add ((hB c d hc hcd hd).smul Complex.I) using 1
-    · rfl
-    · funext h
-      dsimp [quarterMidpointDerivative, M]
-      ring
+  · exact quarterMidpoint_h1Loc hb hQ hB
   · have hphase (h : ℝ) : ‖quarterMidpointPhase lam h‖ = 1 := by
       rw [quarterMidpointPhase, Complex.norm_exp]
       simp
@@ -153,23 +201,23 @@ theorem log_midpoint_gain {lam b K : ℝ} (hb : b < 1)
 
 /-- The scalar midpoint is the value of an orbitwise ACL representative
 (`lem:quarter-midpoint-reconstruction`), not a raw spatial trace. -/
-theorem quarter_midpoint_reconstruction {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1)
-    {U : Set (ℝ × ℝ)} {v g : ℝ × ℝ → ℂ} (hp : IsTransportPair lam U v g)
+theorem quarter_midpoint_reconstruction_with_rep {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1)
+    {U : Set (ℝ × ℝ)} {v f g : ℝ × ℝ → ℂ} (hp : IsTransportPair lam U v f)
     {b : ℝ} (hb : 0 < b) (hb1 : b < 1) (hA : orbitAnnulus 0 b ⊆ U)
-    (hg : Continuous g) (hvκ : HasQuarterCharacterOn κ (orbitAnnulus 0 b) v)
-    (hgκ : HasQuarterCharacterOn κ (orbitAnnulus 0 b) g) {Q : ℝ → ℂ}
+    (hg : ContinuousOn g U) (hfg : f =ᵐ[volume.restrict U] g)
+    (hvκ : HasQuarterCharacterOn κ (orbitAnnulus 0 b) v)
+    (hfκ : HasQuarterCharacterOn κ (orbitAnnulus 0 b) f) {Q : ℝ → ℂ}
     (hdiv : ∀ h ∈ Ioo 0 b, quarterDivisor lam κ h * Q h = quarterNumerator lam g h)
     (hne : ∀ᵐ h ∂(volume.restrict (Ioo 0 b)), quarterDivisor lam κ h ≠ 0) :
     ∀ᵐ h ∂(volume.restrict (Ioo 0 b)), ∃ Z : ℝ → ℂ,
-      (∀ᵐ t, Z t = transportUnknown lam v g (dipoleOrbit h t)) ∧
+      (∀ᵐ t, Z t = transportUnknown lam v f (dipoleOrbit h t)) ∧
       (∀ a b, AbsolutelyContinuousOnInterval Z a b) ∧
       (∀ᵐ t, HasDerivAt Z (Complex.I * ((lam : ℂ) * Z t + g (dipoleOrbit h t))) t) ∧
       Z 0 = quarterMidpoint lam Q g h ∧
       ∀ t, Z t = Complex.exp (Complex.I * ((lam * t : ℝ) : ℂ)) * quarterMidpoint lam Q g h +
         Complex.I * ∫ u in 0..t,
           Complex.exp (Complex.I * ((lam * (t - u) : ℝ) : ℂ)) * g (dipoleOrbit h u) := by
-  obtain ⟨Em, Ep, _, hprof⟩ := quarter_endpoint_formula hκ hp hb hb1 hA hg.continuousOn
-    (Eventually.of_forall fun _ ↦ rfl) hvκ hgκ
+  obtain ⟨Em, Ep, _, hprof⟩ := quarter_endpoint_formula hκ hp hb hb1 hA hg hfg hvκ hfκ
   filter_upwards [hprof, hne, ae_restrict_mem measurableSet_Ioo] with h hZ hn hh
   obtain ⟨Z, hzeq, _, hac, hode, hzm, _, _, hEm, _⟩ := hZ
   have hEmQ : Em h =
@@ -178,9 +226,14 @@ theorem quarter_midpoint_reconstruction {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1
     rw [hEm, ← hdiv h hh]
     ring
   have hcont : Continuous (fun t ↦ g (dipoleOrbit h t)) := by
-    apply hg.comp
-    exact continuous_iff_continuousAt.2 fun t ↦
-      (hasDerivAt_dipoleFlow (Real.arccos h, -Real.arccos h) t).continuousAt
+    apply hg.comp_continuous
+      (continuous_iff_continuousAt.2 fun t ↦ (hasDerivAt_dipoleFlow _ t).continuousAt)
+    intro t
+    have hm : dipoleOrbit h t ∈ puncturedCell := by
+      simpa only [actionAngleInv,
+        div_mul_cancel₀ t (orbitPeriod_pos hh.1 (hh.2.trans hb1)).ne'] using
+        actionAngleInv_mem_puncturedCell hh.1 (hh.2.trans hb1) (t / orbitPeriod h)
+    exact hA ⟨hm, (levelCoord_dipoleOrbit hh.1 (hh.2.trans hb1) t).symm ▸ hh⟩
   have hint := transport_integratingFactor (hac (-eighthPeriod h) 0)
     (hcont.intervalIntegrable _ _) (hode.mono fun _ ht _ ↦ ht)
   have hexp : Complex.exp (Complex.I * ((lam * eighthPeriod h : ℝ) : ℂ)) *
@@ -232,5 +285,25 @@ theorem quarter_midpoint_reconstruction {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1
   rw [← hconv]
   change Z t = e * quarterMidpoint lam Q g h + _
   linear_combination e * ht - he * Z t
+
+/-- The scalar midpoint is the value of an orbitwise ACL representative
+(`lem:quarter-midpoint-reconstruction`), not a raw spatial trace. -/
+theorem quarter_midpoint_reconstruction {lam : ℝ} {κ : ℂ} (hκ : κ ^ 4 = 1)
+    {U : Set (ℝ × ℝ)} {v g : ℝ × ℝ → ℂ} (hp : IsTransportPair lam U v g)
+    {b : ℝ} (hb : 0 < b) (hb1 : b < 1) (hA : orbitAnnulus 0 b ⊆ U)
+    (hg : Continuous g) (hvκ : HasQuarterCharacterOn κ (orbitAnnulus 0 b) v)
+    (hgκ : HasQuarterCharacterOn κ (orbitAnnulus 0 b) g) {Q : ℝ → ℂ}
+    (hdiv : ∀ h ∈ Ioo 0 b, quarterDivisor lam κ h * Q h = quarterNumerator lam g h)
+    (hne : ∀ᵐ h ∂(volume.restrict (Ioo 0 b)), quarterDivisor lam κ h ≠ 0) :
+    ∀ᵐ h ∂(volume.restrict (Ioo 0 b)), ∃ Z : ℝ → ℂ,
+      (∀ᵐ t, Z t = transportUnknown lam v g (dipoleOrbit h t)) ∧
+      (∀ a b, AbsolutelyContinuousOnInterval Z a b) ∧
+      (∀ᵐ t, HasDerivAt Z (Complex.I * ((lam : ℂ) * Z t + g (dipoleOrbit h t))) t) ∧
+      Z 0 = quarterMidpoint lam Q g h ∧
+      ∀ t, Z t = Complex.exp (Complex.I * ((lam * t : ℝ) : ℂ)) * quarterMidpoint lam Q g h +
+        Complex.I * ∫ u in 0..t,
+          Complex.exp (Complex.I * ((lam * (t - u) : ℝ) : ℂ)) * g (dipoleOrbit h u) := by
+  exact quarter_midpoint_reconstruction_with_rep hκ hp hb hb1 hA hg.continuousOn
+    (Eventually.of_forall fun _ ↦ rfl) hvκ hgκ hdiv hne
 
 end NoEmbeddedEigenvalues

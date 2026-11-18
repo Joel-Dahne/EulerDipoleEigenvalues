@@ -26,7 +26,7 @@ The local/global stream-quotient and ordinary separatrix H¹/H³ assemblies are
 checked in Lean, without a stronger corner hypothesis. Weighted forcing is
 assembled from the saddle jet. First and Second transport gains, the periodic
 first-gain corollary and the saddle bootstrap are admission-free. Weighted transport
-H¹ has an assembly proof from three explicit analytic inputs; those inputs and
+H¹ has an assembly proof from two explicit analytic inputs; those inputs and
 the separate trace and elliptic steps remain proof work. See the
 [next-session plan](docs/status/shared.md#next-session).
 
@@ -66,7 +66,7 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and 14 below `dd_stream_quotient_h2`.
+zero below `correctedBoundaryForm_nonneg` and 13 below `dd_stream_quotient_h2`.
 Odd–odd saddle estimates (`prop:saddle-dd`) are admission-free with their
 original statement, as are First transport gain (`lem:transport-first-gain`),
 Second transport gain (`lem:transport-second-gain`), Periodic first transport
@@ -84,11 +84,12 @@ Smooth harmonic comparison (`lem:weak-poisson-harmonic-comparison`) is
 admission-free on the same whole disk, with its original statement and parity.
 Cylinder inverse and its odd–odd application now have zero transitive admissions.
 Ordinary separatrix H¹/H³ (`prop:dd-separatrix-h1`) and logarithmic forcing
-(`lem:dd-log-forcing`) each reach the three weighted-transport H¹ inputs
+(`lem:dd-log-forcing`) each reach the two weighted-transport H¹ inputs
 listed in [shared status](docs/status/shared.md#next-session), Whole-edge zero
-trace and Interior elliptic H³: five primitive inputs. The weighted-transport
-assembly retains its original statement; its former single admission has been
-split into three explicit obligations.
+trace and Interior elliptic H³: four primitive inputs. Single-character weighted
+weak quarter derivatives (`lem:weighted-character-quarter-derivatives`) are
+admission-free for supplied ordinary scalar data. The weighted-transport
+assembly retains its original statement.
 The bounded periodic norm, physical weak-gradient transport,
 compact pointwise growth, quadratic mass, seam gluing, point removal and
 canonical trace layers are admission-free.

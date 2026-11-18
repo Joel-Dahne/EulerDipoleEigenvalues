@@ -58,8 +58,8 @@ Proof work is now outside the odd–odd chapter:
   nor logarithmic forcing is used by the weighted forcing.
   Both transport gains (`lem:transport-first-gain`, `lem:transport-second-gain`)
   and First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
-  The ordinary separatrix parent reaches five primitive inputs; weighted
-  transport H¹ expands into three inputs detailed in [shared status](shared.md#next-session).
+  The ordinary separatrix parent reaches four primitive inputs; weighted
+  transport H¹ expands into two inputs detailed in [shared status](shared.md#next-session).
   **Weak full-cylinder inversion is admission-free**
   (`lem:cylinder-weak-inverse`), retaining its original hypotheses and actual nil
   integral. Finite-mass spectral cutoffs make every ordered derivative spectrum

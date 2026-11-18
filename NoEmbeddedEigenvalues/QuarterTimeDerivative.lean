@@ -1,11 +1,12 @@
 import NoEmbeddedEigenvalues.QuarterMeasureTransport
+import NoEmbeddedEigenvalues.QuarterFiberIntegrals
 import NoEmbeddedEigenvalues.ACLWeakDerivative
 import NoEmbeddedEigenvalues.WeakQuarterReconstruction
 
 /-!
 # Weak transport becomes a weak time derivative on a quarter strip
 
-Blueprint: `lem:quarter-time-pullback`.
+Blueprint: `lem:quarter-time-pullback`, `lem:quarter-time-raw`.
 
 The orbit restriction theorem supplies one-dimensional ACL representatives.
 Rectangular testing lifts their derivative identities to the single raw
@@ -18,16 +19,15 @@ open MeasureTheory Set Filter
 
 /-- The weak transport derivative pulls back to the actual weak time derivative.
 The spatial data are L² only on the bounded cell, not on the whole plane. -/
-theorem HasWeakL0On.quarter_time {b : ℝ} (hb : b < 1)
+theorem HasWeakL0On.quarter_time_of_memLp {b : ℝ} (hb : b < 1)
     {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ → ℂ}
     (hA : orbitAnnulus 0 b ⊆ U) (hd : HasWeakL0On U F D)
-    (hmF : Measurable F) (hmD : Measurable D)
     (hF : MemLp F 2 (volume.restrict cellSquare))
     (hD : MemLp D 2 (volume.restrict cellSquare)) :
     HasWeakPartialOn (quarterOrbitStrip b) 1
       (fun q ↦ F (dipoleOrbit q.1 q.2)) (fun q ↦ D (dipoleOrbit q.1 q.2)) := by
-  have hFp := memLp_comp_quarterOrbitStrip hb.le hmF hF
-  have hDp := memLp_comp_quarterOrbitStrip hb.le hmD hD
+  have hFp := memLp_comp_quarterOrbitStrip_of_memLp hb.le hF
+  have hDp := memLp_comp_quarterOrbitStrip_of_memLp hb.le hD
   apply hasWeakPartialOn_of_locally
   intro q hq
   obtain ⟨a₀, c₀, m, hm, hqR, hRQ⟩ := quarterStrip_midpoint_rectangle hb.le hq
@@ -55,5 +55,18 @@ theorem HasWeakL0On.quarter_time {b : ℝ} (hb : b < 1)
   filter_upwards [hsec] with h hh
   obtain ⟨G, hGF, _, hAC, hder⟩ := hh
   exact ⟨G, hGF, hAC, hder⟩
+
+/-- The weak transport derivative pulls back to the actual weak time derivative.
+The spatial data are L² only on the bounded cell, not on the whole plane. -/
+theorem HasWeakL0On.quarter_time {b : ℝ} (hb : b < 1)
+    {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ → ℂ}
+    (hA : orbitAnnulus 0 b ⊆ U) (hd : HasWeakL0On U F D)
+    (hmF : Measurable F) (hmD : Measurable D)
+    (hF : MemLp F 2 (volume.restrict cellSquare))
+    (hD : MemLp D 2 (volume.restrict cellSquare)) :
+    HasWeakPartialOn (quarterOrbitStrip b) 1
+      (fun q ↦ F (dipoleOrbit q.1 q.2)) (fun q ↦ D (dipoleOrbit q.1 q.2)) := by
+  clear hmF hmD
+  exact hd.quarter_time_of_memLp hb hA hF hD
 
 end NoEmbeddedEigenvalues

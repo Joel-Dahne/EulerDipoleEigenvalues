@@ -1,12 +1,14 @@
 import NoEmbeddedEigenvalues.WeakChartTransport
 
 /-!
-# Weak transport through a variable negative-Jacobian chart
+# Weak transport through variable-Jacobian charts of fixed orientation
+
+Blueprint: `lem:oriented-weak-chart`, `lem:negative-jacobian-weak-partial`.
 
 The cofactor column is divergence-free even when the Jacobian varies. Testing
 against this column times a pulled-back test cancels its differentiated terms.
 The signed determinant on the source matches the absolute area Jacobian with
-one common minus sign on both integrals. Local integrability of the specified
+one common orientation factor on both integrals. Local integrability of the specified
 physical entries is supplied separately; it is not inferred from an equality
 of totalized integrals.
 -/
@@ -20,13 +22,13 @@ local instance : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
   rw [Measure.volume_eq_prod]
   infer_instance
 
-/-- A variable negative-Jacobian chart transports the specified weak pair.
+/-- A chart with constant orientation transports the specified weak pair.
 The target functions and their local integrability are retained, rather than
 replaced by inverse-coordinate representatives. -/
-theorem HasWeakPartialOn.of_comp_chart_neg
+theorem HasWeakPartialOn.of_comp_chart_oriented
     {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
     (he : ContDiffOn ℝ ∞ e e.source)
-    (hdet : ∀ q ∈ e.source, (fderiv ℝ e q).det < 0)
+    (σ : ℝ) (hdet : ∀ q ∈ e.source, |(fderiv ℝ e q).det| = σ * (fderiv ℝ e q).det)
     {f d F : ℝ × ℝ → ℂ} {G : Fin 2 → ℝ × ℝ → ℂ}
     (hg : ∀ i, HasWeakPartialOn e.source i F (G i))
     (hf : LocallyIntegrableOn f e.target) (hd : LocallyIntegrableOn d e.target)
@@ -85,31 +87,68 @@ theorem HasWeakPartialOn.of_comp_chart_neg
       _ = _ := by rw [chartCofactor_divergence he j hq,
         chartTest_cofactor_chain_det he hφ j hq]; ring
   have hleft :
-      (∫ q, F q * coordPartial 0 (τ 0) q) +
-        (∫ q, F q * coordPartial 1 (τ 1) q) =
-          -(∫ p, f p * coordPartial j φ p) := by
+      (σ : ℂ) * ((∫ q, F q * coordPartial 0 (τ 0) q) +
+        (∫ q, F q * coordPartial 1 (τ 1) q)) =
+          ∫ p, f p * coordPartial j φ p := by
     rw [hzero F (hτd 0), hzero F (hτd 1),
       ← integral_add (hi 0).integrableOn (hi 1).integrableOn,
-      hchange f hφd, ← integral_neg]
+      ← integral_const_mul, hchange f hφd]
     apply setIntegral_congr_fun e.open_source.measurableSet
     intro q hq
     dsimp only
-    rw [← mul_add, hsum hq, hv q hq, abs_of_neg (hdet q hq), Complex.ofReal_neg]
+    rw [← mul_add, hsum hq, hv q hq, hdet q hq, Complex.ofReal_mul]
     ring
   have hright :
-      (∫ q, G 0 q * τ 0 q) + (∫ q, G 1 q * τ 1 q) =
-        -(∫ p, d p * φ p) := by
+      (σ : ℂ) * ((∫ q, G 0 q * τ 0 q) + (∫ q, G 1 q * τ 1 q)) =
+        ∫ p, d p * φ p := by
     rw [hzero (G 0) (hτ 0), hzero (G 1) (hτ 1),
       ← integral_add (hk 0).integrableOn (hk 1).integrableOn,
-      hchange d hφ, ← integral_neg]
+      ← integral_const_mul, hchange d hφ]
     apply setIntegral_congr_fun e.open_source.measurableSet
     intro q hq
     dsimp only [τ, ψ]
-    rw [chartTest_eq e φ hq, abs_of_neg (hdet q hq), Complex.ofReal_neg]
-    linear_combination -φ (e q) * hgval q hq
+    rw [chartTest_eq e φ hq, hdet q hq, Complex.ofReal_mul]
+    linear_combination -(σ : ℂ) * φ (e q) * hgval q hq
   have hw := congrArg₂ (· + ·) ((hg 0).2.2 (τ 0) (hτ 0))
     ((hg 1).2.2 (τ 1) (hτ 1))
-  rw [← neg_add, hleft, hright, neg_neg] at hw
-  exact neg_eq_iff_eq_neg.mp hw
+  rw [← neg_add] at hw
+  rw [← hleft, hw, mul_neg, hright]
+
+/-- A variable negative-Jacobian chart transports the specified weak pair.
+The target functions and their local integrability are retained, rather than
+replaced by inverse-coordinate representatives. -/
+theorem HasWeakPartialOn.of_comp_chart_neg
+    {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
+    (he : ContDiffOn ℝ ∞ e e.source)
+    (hdet : ∀ q ∈ e.source, (fderiv ℝ e q).det < 0)
+    {f d F : ℝ × ℝ → ℂ} {G : Fin 2 → ℝ × ℝ → ℂ}
+    (hg : ∀ i, HasWeakPartialOn e.source i F (G i))
+    (hf : LocallyIntegrableOn f e.target) (hd : LocallyIntegrableOn d e.target)
+    (j : Fin 2) (hv : ∀ q ∈ e.source, f (e q) = F q)
+    (hgval : ∀ q ∈ e.source, ((fderiv ℝ e q).det : ℂ) * d (e q) =
+      chartCofactor e j 0 q * G 0 q + chartCofactor e j 1 q * G 1 q) :
+    HasWeakPartialOn e.target j f d := by
+  apply HasWeakPartialOn.of_comp_chart_oriented he (-1) _ hg hf hd j hv hgval
+  intro q hq
+  rw [abs_of_neg (hdet q hq)]
+  ring
+
+/-- A variable positive-Jacobian chart transports the specified weak pair.
+The target functions and their local integrability are retained, rather than
+replaced by inverse-coordinate representatives. -/
+theorem HasWeakPartialOn.of_comp_chart_pos
+    {e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)}
+    (he : ContDiffOn ℝ ∞ e e.source)
+    (hdet : ∀ q ∈ e.source, 0 < (fderiv ℝ e q).det)
+    {f d F : ℝ × ℝ → ℂ} {G : Fin 2 → ℝ × ℝ → ℂ}
+    (hg : ∀ i, HasWeakPartialOn e.source i F (G i))
+    (hf : LocallyIntegrableOn f e.target) (hd : LocallyIntegrableOn d e.target)
+    (j : Fin 2) (hv : ∀ q ∈ e.source, f (e q) = F q)
+    (hgval : ∀ q ∈ e.source, ((fderiv ℝ e q).det : ℂ) * d (e q) =
+      chartCofactor e j 0 q * G 0 q + chartCofactor e j 1 q * G 1 q) :
+    HasWeakPartialOn e.target j f d := by
+  apply HasWeakPartialOn.of_comp_chart_oriented he 1 _ hg hf hd j hv hgval
+  intro q hq
+  rw [abs_of_pos (hdet q hq), one_mul]
 
 end NoEmbeddedEigenvalues

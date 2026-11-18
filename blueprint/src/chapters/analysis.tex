@@ -522,6 +522,37 @@ The chain rule and the two-by-two adjugate identity give the second formula.
 Only smooth chart derivatives commute here, not supplied weak derivatives.
 \end{proof}
 
+\begin{lemma}[Specified weak pair through an oriented variable Jacobian]
+\label{lem:oriented-weak-chart}
+\uses{def:smooth-chart-cofactor, def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.of_comp_chart_oriented,
+ NoEmbeddedEigenvalues.HasWeakPartialOn.of_comp_chart_pos}
+\leanok
+Let $e:S\to V$ be a smooth open plane chart and suppose
+$|\det De|=\sigma\det De$ on $S$, for a fixed real $\sigma$.
+Suppose $\partial_iF=G_i$ weakly on $S$, while the specified physical
+$f,d$ are locally integrable on $V$ and satisfy
+\[
+ f\circ e=F,\qquad
+ (\det De)(d\circ e)=C_{j0}G_0+C_{j1}G_1 .
+\]
+Then $\partial_jf=d$ weakly on $V$ with those same representatives.
+In particular this applies to a positive variable Jacobian with $\sigma=1$;
+no constant determinant or global measurability is required.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:smooth-chart-test-pullback, lem:smooth-chart-cofactor-calculus,
+ lem:weak-derivative-basic}
+\leanok
+Test the two source identities against the cofactor column times the
+pulled-back test. Cofactor divergence cancels, leaving the signed Jacobian.
+The source identity multiplied by $\sigma$ equals the physical identity by
+change of variables. The same factor occurs on both integrals, so the weak
+identity transfers. Compact tests and the supplied local integrability justify
+all integrals.
+\end{proof}
+
 \begin{lemma}[Specified weak pair through a negative variable Jacobian]
 \label{lem:negative-jacobian-weak-partial}
 \uses{def:smooth-chart-cofactor, def:weak-derivative-local}
@@ -539,15 +570,11 @@ Local integrability is an input, not inferred from an integral-value identity.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:smooth-chart-test-pullback, lem:smooth-chart-cofactor-calculus,
- lem:weak-derivative-basic}
+\uses{lem:oriented-weak-chart}
 \leanok
-Test the two source weak identities against $C_{j0}\phi^e,C_{j1}\phi^e$.
-All source integrals are genuinely finite by local integrability and compact
-support. Cofactor divergence cancels the differentiated coefficients.
-Change variables on both sides; since $|\det De|=-\det De$, the same minus
-sign appears on both physical integrals and cancels.
-The physical local integrability hypotheses also justify the target integrals.
+Apply the oriented rule with $\sigma=-1$.
+The negative-Jacobian hypothesis gives $|\det De|=-\det De$ throughout the source;
+the same original functions and local integrability data are retained.
 \end{proof}
 
 \begin{lemma}[Weak gradient reconstructed through a chart]

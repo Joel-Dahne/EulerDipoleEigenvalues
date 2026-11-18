@@ -244,14 +244,21 @@ weights and local versus global regularity.
    The complete endpoint-value contribution hE₁ is L² on one all-frequency collar
    (`lem:weighted-numerator-endpoint-derivative`), with the original forcing and
    gradient; the original-input producer also retains the true ordered jet.
-   The top-down assembly exposes three admitted inputs: global hN″ L²
-   (`lem:weighted-numerator-second-norm`), single-character weak quarter
-   reconstruction (`lem:weighted-character-quarter-derivatives`), and physical
-   H¹ seam gluing (`lem:transport-quarter-h1-gluing`). Ordinary scalar division
+   Single-character weighted weak quarter derivatives
+   (`lem:weighted-character-quarter-derivatives`) are admission-free for supplied
+   ordinary scalar data. The midpoint gain uses Q/h; the inner distance-one and
+   outer distance-square moments give genuine weighted reconstruction norms
+   without a logarithmic loss. The actual weak forward rule and raw time pullback
+   retain the supplied Cartesian entries and the same raw v. Joint restricted
+   character congruence transfers these fields to all four quarters without
+   differentiated time shifts or a jointly selected ACL family.
+   The assembly now reaches only global hN″ L²
+   (`lem:weighted-numerator-second-norm`) and physical H¹ seam gluing
+   (`lem:transport-quarter-h1-gluing`). Ordinary scalar division
    (`lem:quarter-h1-scalar-data`) is admission-free for a supplied second norm;
    four-character recombination (`lem:weighted-transport-quarter-assembly`)
-   restricts actual joint fields to one common collar. Neither assembly uses the
-   stronger logarithmic numerator package. The next bottom-up estimate remains
+   reaches only that second-norm input. The stronger logarithmic numerator
+   package is not used by this route. The next bottom-up estimate remains
    the distinct first-bulk boundary potentials. Individual gradient traces in
    the two transverse charts have not been identified.
    Target these scalar data directly rather than the full logarithmic package;
@@ -266,8 +273,8 @@ weights and local versus global regularity.
    **Ordinary separatrix frontier:** Weighted transport H¹
    (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Weighted transport H¹ expands into the three inputs above, so ordinary
-   separatrix H¹/H³ and logarithmic forcing each reach five primitive inputs.
+   Weighted transport H¹ expands into the two inputs above, so ordinary
+   separatrix H¹/H³ and logarithmic forcing each reach four primitive inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
