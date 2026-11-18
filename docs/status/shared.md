@@ -289,6 +289,13 @@ weights and local versus global regularity.
    transfers the cell energies by comparing the weight to its right-endpoint
    value; it does not differentiate the weight. Weighted numerator estimates
    (`lem:weighted-numerator-estimates`) remain a separate admitted input.
+   The simultaneous full/half first bounds and the pointwise endpoint-value
+   flux derivative bound are proved. The quantitative assembly is proved
+   conditional on one pointwise energy bound for the first-bulk boundary term.
+   To supply it, compare the normalized-angle trace of the fixed-time level
+   derivative with the canonical affine gradient on the ray. A global unweighted
+   boundary norm alone does not give the pointwise bound needed by logarithmic
+   summation.
    Prioritize the odd–odd applications at exponents three halves and three;
    their finite Taylor extraction is proved. Leave mixed linear-jet extraction deferred.
    **Ordinary separatrix frontier:** Interior elliptic H³ (`lem:elliptic-local`)

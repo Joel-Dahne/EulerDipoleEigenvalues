@@ -4359,6 +4359,78 @@ identification. Their weighted norm is needed in addition to the second bulk
 and endpoint-value estimates before asserting global $hN_\mu''\in L^2$.
 \end{remark}
 
+\begin{lemma}[Simultaneous first numerator and subinterval estimates]
+\label{lem:weighted-first-numerator-fiber-bounds}
+\uses{def:weighted-numerator-data, def:numerator}
+\lean{NoEmbeddedEigenvalues.weighted_first_numerator_fiber_bounds}
+\leanok
+A specified gradient divided by $d^{3/2}$ in $L^2$ on the cell gives one
+small level interval and one constant, independent of the frequency.
+For almost every level, the weighted gradient energy and fixed-time forcing
+derivative are genuinely integrable on the fiber. The squared derivative
+integral on every ordered subinterval is bounded by the full weighted
+gradient energy times the constant. The sum of the squared full and half
+first-derivative candidates is bounded by the same constant times the
+weighted gradient plus endpoint-value energy.
+\end{lemma}
+\begin{proof}
+\uses{lem:weighted-numerator-subinterval, lem:weighted-first-numerator,
+ lem:weighted-quarter-gradient, lem:period-derivative-bounds,
+ lem:orbit-level-derivatives, lem:orbit-time-integrals}
+\leanok
+Choose one cutoff for the period bound, level vector and positive distance
+moment. Use the actual weighted gradient sections and apply weighted
+Cauchy--Schwarz to each subinterval of a good fiber, with no further
+exceptional set. Add the full and half estimates with a common constant.
+\end{proof}
+
+\begin{lemma}[Pointwise energy bound for the endpoint-value flux derivative]
+\label{lem:numerator-endpoint-flux-energy}
+\uses{def:transport-pair, def:weighted-numerator-data, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.quarterNumeratorEndpointDerivative_sq_le}
+\leanok
+For the supplied weak gradient and continuous forcing, the squared norm of
+the derivative of the endpoint-value flux multiplied by $h$ is bounded
+almost everywhere on a small collar by a constant times the sum of the
+canonical affine-gradient and endpoint-value energies.
+\end{lemma}
+\begin{proof}
+\uses{lem:weighted-endpoint-tangential-trace, lem:weighted-numerator-endpoint-derivative}
+\leanok
+The differentiated scalar coefficient costs $h^{-2}$ and multiplies the
+continuous endpoint value. The undifferentiated coefficient costs $h^{-1}$
+and multiplies the derivative along the moving endpoint. The latter is the
+tangential affine-gradient trace times the radius Jacobian, bounded by
+$2/\sqrt h$ on this collar. Square and sum both endpoints. Only the
+tangential derivative of the forcing value is compared across charts.
+\end{proof}
+
+\begin{lemma}[Quantitative numerator assembly from a boundary energy bound]
+\label{lem:weighted-numerator-assembly}
+\uses{def:transport-pair, def:sobolev-local, def:weighted-numerator-data}
+\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_data_of_boundary_bound}
+\leanok
+Under the weighted forcing and specified jet hypotheses of the numerator
+estimates, suppose the squared norm of the canonical first-bulk boundary
+potential difference multiplied by $hS'(h)$ is bounded by a constant
+times the affine endpoint-gradient energy on a small collar.
+Then the full weighted numerator data exist on one smaller collar.
+\end{lemma}
+\begin{proof}
+\uses{lem:weighted-first-numerator-fiber-bounds, lem:numerator-endpoint-flux-energy,
+ lem:numerator-second-moving-endpoints, lem:second-numerator-bulk,
+ lem:weighted-gradient-endpoint-energy, lem:weighted-endpoint-value-transport,
+ lem:weighted-gradient-ray-traces, lem:quarter-forward-weak}
+\leanok
+Use the actual first scalar derivative and identify it almost everywhere
+with the computed first candidate. The local weak second derivative is the
+sum of the fixed-time second bulk, the first-bulk boundary contribution,
+and the derivative of the endpoint-value flux. Add their squared
+majorants and use the actual fiber, endpoint and level integrability.
+The specified physical jet produces the weak level partial of the same
+bulk forcing; the affine ray traces are unchanged on all admissible windows.
+\end{proof}
+
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local,
@@ -4390,7 +4462,9 @@ already supplied by $H^2$, not extra regularity.
   lem:weighted-numerators-h1, lem:weighted-half-numerator,
   lem:weighted-numerator-subinterval, lem:second-numerator-bulk,
   lem:weighted-numerator-local-h2, lem:numerator-second-moving-endpoints,
-  lem:weighted-numerator-endpoint-derivative, lem:orbit-tangential-trace}
+  lem:weighted-numerator-endpoint-derivative, lem:orbit-tangential-trace,
+  lem:weighted-first-numerator-fiber-bounds, lem:numerator-endpoint-flux-energy,
+  lem:weighted-numerator-assembly}
 Obtain the full and half first-numerator data and local numerator H2 from
 Lemma~\ref{lem:weighted-numerator-local-h2}, and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
