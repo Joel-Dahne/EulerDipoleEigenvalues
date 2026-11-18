@@ -40,8 +40,10 @@ Proof work is now outside the odd–odd chapter:
   Logarithmic numerator bounds (`lem:dd-log-numerators`) now also have a proof
   of their own, retaining the same derivative and trace witnesses. The generic
   compact-localization, canonical-trace uniqueness and logarithmic mass-summation
-  layers and the canonical stream weak jet are admission-free. The expanded
-  analytic frontier is recorded in the root validation baseline.
+  layers and the canonical stream weak jet are admission-free.
+  Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
+  is also admission-free, retaining the same canonical quotient and zero trace
+  conclusion. The expanded analytic frontier is recorded in the root validation baseline.
   Logarithmic forcing (`lem:dd-log-forcing`) has a proof of its own, retaining
   the whole lifted neighbourhood, all eight canonical ray traces and one common
   radius. It uses the saddle jet, ordinary separatrix H¹/H³ and saddle

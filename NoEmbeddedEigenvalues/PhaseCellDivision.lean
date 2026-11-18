@@ -1,7 +1,7 @@
 import NoEmbeddedEigenvalues.PhaseCellEstimates
 import NoEmbeddedEigenvalues.QuarterPhaseCells
 import NoEmbeddedEigenvalues.IntervalH1LocalToGlobal
-import NoEmbeddedEigenvalues.CountableCellEnergy
+import NoEmbeddedEigenvalues.WeightedCellEnergy
 import NoEmbeddedEigenvalues.DescendingIntervalPartition
 
 /-!
@@ -20,26 +20,39 @@ namespace NoEmbeddedEigenvalues
 open Set MeasureTheory Filter
 open scoped Topology ContDiff
 
-/-- Global division after decreasing the upper endpoint to a full-cell boundary
-(`lem:phase-cell-division`). The quotient extends continuously through resonances,
-and its zero-endpoint value is the canonical H¹ trace. -/
-theorem phase_cell_division {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ ^ 4 = 1)
-    {h₀ : ℝ} (hh₀ : 0 < h₀) (hh₀1 : h₀ < 1) {N N₁ N₂ : ℝ → ℂ}
-    (hN : HasIntervalH2Loc 0 h₀ N N₁ N₂)
+/-- Global division with a measurable weight comparable to a constant on each
+small complete cell. The same local quotient construction works without
+differentiating the weight (`lem:comparable-weight-phase-division`). -/
+theorem phase_cell_division_of_comparable_weight {lam : ℝ} (hlam : lam ≠ 0)
+    {κ : ℂ} (hκ : κ ^ 4 = 1) {h₀ rW A : ℝ} (hh₀ : 0 < h₀) (hh₀1 : h₀ < 1)
+    (hrW : 0 < rW) (hA : 0 ≤ A) {W : ℝ → ℝ}
+    (hW : Measurable W) (hW1 : ∀ h ∈ Ioo 0 h₀, 1 ≤ W h)
+    (hWcell : ∀ a z b : ℝ, 0 < a → a < z → z < b → b < rW →
+      quarterDivisor lam κ z = 0 →
+      |quarterPhase lam a - quarterPhase lam z| = Real.pi →
+      |quarterPhase lam b - quarterPhase lam z| = Real.pi →
+      ∃ w : ℝ, 0 ≤ w ∧ ∀ h ∈ Ioo a b, w ≤ W h ∧ W h ≤ A * w)
+    {N N₁ N₂ : ℝ → ℂ} (hN : HasIntervalH2Loc 0 h₀ N N₁ N₂)
     (hzero : ∀ h ∈ Ioo 0 h₀, quarterDivisor lam κ h = 0 → N h = 0)
-    (hN₁ : MemLp N₁ 2 (volume.restrict (Ioo 0 h₀)))
-    (hN₂ : MemLp (fun (h : ℝ) ↦ (h : ℂ) * N₂ h) 2 (volume.restrict (Ioo 0 h₀))) :
+    (hWN₁ : MemLp (fun h ↦ (Real.sqrt (W h) : ℂ) * N₁ h) 2
+      (volume.restrict (Ioo 0 h₀)))
+    (hWN₂ : MemLp (fun h ↦ (Real.sqrt (W h) : ℂ) * ((h : ℂ) * N₂ h)) 2
+      (volume.restrict (Ioo 0 h₀))) :
     ∃ h₁ : ℝ, 0 < h₁ ∧ h₁ < h₀ ∧ IsPhaseCellEndpoint lam κ h₁ ∧
       ∃ Q Q₁ : ℝ → ℂ, HasIntervalH1 0 h₁ Q Q₁ ∧
         (∀ h ∈ Ioo 0 h₁, quarterDivisor lam κ h * Q h = N h) ∧
-        MemLp (fun h ↦ Q h / (h : ℂ)) 2 (volume.restrict (Ioo 0 h₁)) ∧
+        MemLp (fun h ↦ (Real.sqrt (W h) : ℂ) * (Q h / (h : ℂ))) 2
+          (volume.restrict (Ioo 0 h₁)) ∧
+        MemLp (fun h ↦ (Real.sqrt (W h) : ℂ) * Q₁ h) 2 (volume.restrict (Ioo 0 h₁)) ∧
         intervalH1Extension 0 h₁ Q Q₁ 0 = 0 := by
   classical
-  obtain ⟨K, r, hK, hr, hr1, hest⟩ := phase_cell_estimates hlam
-  obtain ⟨e, z, he, het, hep, hzp⟩ := exists_complete_phase_cells hlam hκ (lt_min hh₀ hr)
+  obtain ⟨K, r, hK, hr, _, hest⟩ := phase_cell_estimates hlam
+  obtain ⟨e, z, he, het, hep, hzp⟩ :=
+    exists_complete_phase_cells hlam hκ (lt_min hh₀ (lt_min hr hrW))
   let s := fun n ↦ Ioo (e (n + 1)) (e n)
   have heh₀ (n : ℕ) : e n < h₀ := (hep n).2.1.trans_le (min_le_left _ _)
-  have her (n : ℕ) : e n < r := (hep n).2.1.trans_le (min_le_right _ _)
+  have her (n : ℕ) : e n < r :=
+    (hep n).2.1.trans_le ((min_le_right _ _).trans (min_le_left _ _))
   have hNc (n : ℕ) : HasIntervalH2 (e (n + 1)) (e n) N N₁ N₂ :=
     hN _ _ (hep (n + 1)).1 (he (Nat.lt_succ_self n)) (heh₀ n)
   have hcell (n : ℕ) := hest κ hκ (e (n + 1)) (z n) (e n)
@@ -83,6 +96,10 @@ theorem phase_cell_division {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ 
     intro x hx
     obtain ⟨n, hn⟩ := mem_iUnion.1 hx
     exact ⟨(hep (n + 1)).1.trans hn.1, hn.2.trans (heh₀ n)⟩
+  have hW₀ : ∀ᵐ x ∂(volume.restrict (Ioo 0 h₀)), 1 ≤ W x :=
+    (ae_restrict_mem measurableSet_Ioo).mono hW1
+  have hN₁ := memLp_of_sqrt_weight_ge_one hW hW₀ hWN₁
+  have hN₂ := memLp_of_sqrt_weight_ge_one hW hW₀ hWN₂
   let G := fun x ↦ ‖N₁ x‖ ^ 2 + x ^ 2 * ‖N₂ x‖ ^ 2
   have hN₁i := hN₁.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
   have hWi : IntegrableOn (fun x ↦ x ^ 2 * ‖N₂ x‖ ^ 2) (Ioo 0 h₀) volume := by
@@ -98,9 +115,37 @@ theorem phase_cell_division {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ 
     apply (hql n).ae_eq
     filter_upwards [ae_restrict_mem measurableSet_Ioo] with x hx
     rw [hQon n hx]
-  have hQhU : MemLp (fun x ↦ Q x / (x : ℂ)) 2 (volume.restrict (⋃ n, s n)) := by
-    apply memLp_two_of_cell_energy (fun _ ↦ measurableSet_Ioo) hdis hK.le hGi
-      (fun x _ ↦ hGpos x) hQhc
+  have hGweighted : IntegrableOn (fun x ↦ W x * G x) (Ioo 0 h₀) := by
+    apply ((hWN₁.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)).add
+      (hWN₂.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0))).congr
+    filter_upwards [ae_restrict_mem measurableSet_Ioo] with x hx
+    simp only [norm_mul, mul_pow, Complex.norm_real, Real.norm_eq_abs, sq_abs,
+      Real.sq_sqrt (zero_le_one.trans (hW1 x hx)), G, Pi.add_apply]
+    ring
+  have hWcell' (n : ℕ) : ∃ w : ℝ, 0 ≤ w ∧
+      ∀ᵐ x ∂(volume.restrict (s n)), w ≤ W x ∧ W x ≤ A * w := by
+    have hen : e n < rW :=
+      (hep n).2.1.trans_le ((min_le_right _ _).trans (min_le_right _ _))
+    obtain ⟨w, hw, hcomp⟩ := hWcell _ _ _ (hep (n + 1)).1 (hzp n).1 (hzp n).2.1 hen
+      (hzp n).2.2.1 (hzp n).2.2.2.1 (hzp n).2.2.2.2
+    exact ⟨w, hw, (ae_restrict_mem measurableSet_Ioo).mono hcomp⟩
+  have hweighted (F : ℝ → ℂ) (hF : ∀ n, MemLp F 2 (volume.restrict (s n)))
+      (hE : ∀ n, (∫ x in s n, ‖F x‖ ^ 2) ≤ K * ∫ x in s n, G x) :
+      MemLp (fun x ↦ (Real.sqrt (W x) : ℂ) * F x) 2 (volume.restrict (Ioo 0 (e 0))) := by
+    rw [← hμ]
+    have hWGi := hGweighted.mono_set hsub
+    have hlocal (n : ℕ) :
+        MemLp (fun x ↦ (Real.sqrt (W x) : ℂ) * F x) 2 (volume.restrict (s n)) ∧
+          (∫ x in s n, ‖(Real.sqrt (W x) : ℂ) * F x‖ ^ 2) ≤
+            A * K * ∫ x in s n, W x * G x := by
+      obtain ⟨w, hw, hcomp⟩ := hWcell' n
+      exact sqrt_weight_cell_energy hW hw hA hK.le hcomp
+        (Filter.Eventually.of_forall hGpos) (hGi.mono_set (subset_iUnion s n))
+        (hWGi.mono_set (subset_iUnion s n)) (hF n) (hE n)
+    exact memLp_two_of_cell_energy (fun _ ↦ measurableSet_Ioo) hdis (mul_nonneg hA hK.le)
+      hWGi (fun x hx ↦ mul_nonneg (zero_le_one.trans (hW1 x (hsub hx))) (hGpos x))
+      (fun n ↦ (hlocal n).1) (fun n ↦ (hlocal n).2)
+  have hQhW := hweighted _ hQhc (by
     intro n
     have hEq : (fun x ↦ ‖Q x / (x : ℂ)‖ ^ 2) =ᵐ[volume.restrict (s n)]
         (fun x ↦ ‖q n x / (x : ℂ)‖ ^ 2) := by
@@ -112,18 +157,18 @@ theorem phase_cell_division {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ 
     apply integral_mono ((hNc n).1.memLp_derivative.integrable_norm_pow
       (by norm_num : (2 : ℕ) ≠ 0)) (hGi.mono_set (subset_iUnion s n))
     intro x
-    exact le_add_of_nonneg_right (mul_nonneg (sq_nonneg _) (sq_nonneg _))
-  have hQdU : MemLp (deriv Q) 2 (volume.restrict (⋃ n, s n)) := by
-    apply memLp_two_of_cell_energy (fun _ ↦ measurableSet_Ioo) hdis hK.le hGi
-      (fun x _ ↦ hGpos x) (fun n ↦ (hQdc n).memLp_derivative)
+    exact le_add_of_nonneg_right (mul_nonneg (sq_nonneg _) (sq_nonneg _)))
+  have hQdW := hweighted (deriv Q) (fun n ↦ (hQdc n).memLp_derivative) (by
     intro n
-    calc (∫ x in s n, ‖deriv Q x‖ ^ 2) = ∫ x in s n, ‖q₁ n x‖ ^ 2 :=
-           integral_congr_ae ((hdeq n).fun_comp (fun v : ℂ ↦ ‖v‖ ^ 2))
-         _ ≤ _ := hqd n
-  have hQhL : MemLp (fun x ↦ Q x / (x : ℂ)) 2 (volume.restrict (Ioo 0 (e 0))) := by
-    rw [← hμ]; exact hQhU
-  have hQdL : MemLp (deriv Q) 2 (volume.restrict (Ioo 0 (e 0))) := by
-    rw [← hμ]; exact hQdU
+    calc
+      (∫ x in s n, ‖deriv Q x‖ ^ 2) = ∫ x in s n, ‖q₁ n x‖ ^ 2 :=
+        integral_congr_ae ((hdeq n).fun_comp (fun v : ℂ ↦ ‖v‖ ^ 2))
+      _ ≤ _ := hqd n)
+  have hWe : ∀ᵐ h ∂(volume.restrict (Ioo 0 (e 0))), 1 ≤ W h :=
+    (ae_restrict_mem measurableSet_Ioo).mono
+      (fun h hh ↦ hW1 h ⟨hh.1, hh.2.trans (heh₀ 0)⟩)
+  have hQhL := memLp_of_sqrt_weight_ge_one hW hWe hQhW
+  have hQdL := memLp_of_sqrt_weight_ge_one hW hWe hQdW
   have hQm : AEStronglyMeasurable Q (volume.restrict (Ioo 0 (e 0))) := by
     rw [← hμ]
     exact AEStronglyMeasurable.iUnion fun n ↦ (hQc n).memLp_value.aestronglyMeasurable
@@ -180,7 +225,29 @@ theorem phase_cell_division {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ 
           (hball (hnear y (Ioo_subset_Icc_self hy))).2).symm)
       exact ⟨c, d, hcp.1.1.le, hdp.1.2.le, hxc, hreg.with_deriv⟩
   exact ⟨e 0, (hep 0).1, heh₀ 0, (hep 0).2.2.1, Q, deriv Q, hQglobal,
-    hQfac, hQhL, hQglobal.trace_zero_of_div_memLp (hep 0).1 hQhL⟩
+    hQfac, hQhW, hQdW, hQglobal.trace_zero_of_div_memLp (hep 0).1 hQhL⟩
+
+/-- Global division after decreasing the upper endpoint to a full-cell boundary
+(`lem:phase-cell-division`). The quotient extends continuously through resonances,
+and its zero-endpoint value is the canonical H¹ trace. -/
+theorem phase_cell_division {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ} (hκ : κ ^ 4 = 1)
+    {h₀ : ℝ} (hh₀ : 0 < h₀) (hh₀1 : h₀ < 1) {N N₁ N₂ : ℝ → ℂ}
+    (hN : HasIntervalH2Loc 0 h₀ N N₁ N₂)
+    (hzero : ∀ h ∈ Ioo 0 h₀, quarterDivisor lam κ h = 0 → N h = 0)
+    (hN₁ : MemLp N₁ 2 (volume.restrict (Ioo 0 h₀)))
+    (hN₂ : MemLp (fun (h : ℝ) ↦ (h : ℂ) * N₂ h) 2 (volume.restrict (Ioo 0 h₀))) :
+    ∃ h₁ : ℝ, 0 < h₁ ∧ h₁ < h₀ ∧ IsPhaseCellEndpoint lam κ h₁ ∧
+      ∃ Q Q₁ : ℝ → ℂ, HasIntervalH1 0 h₁ Q Q₁ ∧
+        (∀ h ∈ Ioo 0 h₁, quarterDivisor lam κ h * Q h = N h) ∧
+        MemLp (fun h ↦ Q h / (h : ℂ)) 2 (volume.restrict (Ioo 0 h₁)) ∧
+        intervalH1Extension 0 h₁ Q Q₁ 0 = 0 := by
+  obtain ⟨h₁, hh₁, hlt, hend, Q, Q₁, hQ, hfac, hmass, _, htrace⟩ :=
+    phase_cell_division_of_comparable_weight hlam hκ (A := 1) hh₀ hh₀1 hh₀ zero_le_one
+      (W := fun _ ↦ 1) measurable_const (fun _ _ ↦ le_rfl)
+      (fun _ _ _ _ _ _ _ _ _ _ ↦ ⟨1, zero_le_one, fun _ _ ↦ by simp⟩) hN hzero
+      (by simpa using hN₁) (by simpa using hN₂)
+  exact ⟨h₁, hh₁, hlt, hend, Q, Q₁, hQ, hfac, by simpa using hmass, htrace⟩
+
 
 
 end NoEmbeddedEigenvalues

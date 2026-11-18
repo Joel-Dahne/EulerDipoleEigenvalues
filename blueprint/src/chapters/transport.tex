@@ -1693,6 +1693,59 @@ the H2 division theorem below which also constructs a quotient derivative
 and canonical zero trace.
 \end{proof}
 
+\begin{lemma}[Phase-cell division for comparable weights]
+\label{lem:comparable-weight-phase-division}
+\uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval,
+ def:h2-local-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.phase_cell_division_of_comparable_weight}
+\leanok
+In the phase-cell division problem, suppose $W\ge1$ is measurable and
+on every sufficiently small complete cell $I$ there is a constant $w_I\ge0$
+such that $w_I\le W\le A w_I$ with the same $A\ge0$ for all cells.
+Replace the two input norms by those of $\sqrt W N'$ and $\sqrt W hN''$.
+Then the $H^1$ quotient after shrinking to a complete-cell endpoint still
+satisfies the pointwise factorization and has canonical zero trace, with
+$\sqrt W C/h,\sqrt W C'\in L^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:phase-cell-estimates, lem:complete-phase-cells, lem:cell-weight-transfer,
+ lem:countable-cell-energy, lem:h1-local-global, lem:h1-div-zero-trace,
+ lem:h1-smooth-multiplier, lem:quarter-divisor-derivatives}
+\leanok
+Choose complete cells below the original cutoff and both uniform cutoffs.
+Use the interval $H^1$ quotient on each open cell and ordinary division
+at nonresonant boundaries. The factorization $DC=N$ holds everywhere;
+near each boundary $D\ne0$, so the same representative equals the smooth
+multiplier $1/D$ times $N$ and is locally $H^1$ across that boundary.
+The cell derivatives agree almost everywhere with the ordinary derivative
+of the patched quotient.
+
+Transfer both cell estimates to $W$ with the same factor $A$ and sum using
+the integrable density $W(|N'|^2+h^2|N''|^2)$. The cells cover the collar up
+to countably many endpoints. Removing the weight gives $C/h,C'\in L^2$;
+boundedness of $h$ gives $C\in L^2$. Globalize local $H^1$ with these norms
+and use $C/h\in L^2$ to force the canonical zero trace.
+\end{proof}
+
+\begin{lemma}[Logarithmic weight comparison on complete phase cells]
+\label{lem:log-phase-weight-comparison}
+\uses{def:log-level-weight, def:phase-cell-scalars}
+\lean{NoEmbeddedEigenvalues.logLevelWeight_phase_cell_comparable}
+\leanok
+On every sufficiently small complete cell $(a,b)$, the logarithmic
+weight satisfies $1\le \Lambda(b)\le\Lambda(h)\le A\Lambda(b)$
+for $a<h<b$, with the same $A$ for all cells.
+\end{lemma}
+\begin{proof}
+\uses{lem:quarter-divisor-inverse-factor}
+\leanok
+The interval geometry in the inverse-factor lemma bounds $b/h\le B^2$
+by comparing both levels to the central resonance. Hence
+$\Lambda(h)-\Lambda(b)=\log(b/h)$ lies between zero and
+$|\log B^2|$. Since $\Lambda(b)\ge1$, this gives the desired comparison.
+\end{proof}
+
 \begin{lemma}[Phase-cell division]
 \label{lem:phase-cell-division}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval,
@@ -1706,28 +1759,9 @@ $C/h,C'\in L^2(0,h_0)$, and $C$ has trace zero at $h=0$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:phase-cell-estimates, lem:complete-phase-cells,
- lem:countable-cell-energy, lem:h1-local-global, lem:h1-div-zero-trace,
- lem:h1-smooth-multiplier, lem:quarter-divisor-derivatives}
+\uses{lem:comparable-weight-phase-division}
 \leanok
-Choose the complete-cell family below both the original cutoff and the
-cutoff of Lemma~\ref{lem:phase-cell-estimates}.
-Use its interval H1 quotient inside each open cell and ordinary division
-$N/D$ at the nonresonant boundaries. The cell factorization gives $DC=N$
-everywhere in the collar.
-Inside a cell this is the constructed H1 representative. Near a boundary,
-$D$ stays nonzero and the same representative equals the smooth multiplier
-$1/D$ times $N$, proving local H1 across the boundary without using raw
-cell endpoint values.
-
-Apply Lemma~\ref{lem:countable-cell-energy} to $C/h$ and the ordinary
-derivative of $C$, with common energy $|N'|^2+h^2|N''|^2$.
-The cell derivatives agree a.e.\ with that ordinary derivative.
-The cells cover the collar up to their countable endpoint set, so
-$C/h,C'\in L^2$ there. Boundedness of $h$ gives $C\in L^2$.
-Lemma~\ref{lem:h1-local-global} now supplies H1 on the entire collar,
-and Lemma~\ref{lem:h1-div-zero-trace} forces its canonical trace at zero
-to vanish.
+Apply comparable-weight phase-cell division with $W=1$.
 \end{proof}
 
 \begin{lemma}[Logarithmically weighted phase-cell division]
@@ -1748,14 +1782,12 @@ After decreasing $h_0<1$ to a phase-cell endpoint, $C=N/D$ satisfies
 \end{lemma}
 
 \begin{proof}
-\uses{lem:phase-cell-division, lem:phase-cell-estimates, lem:quarter-divisor-geometry}
-On $I_j$, $h\asymp h_j$, so
-$|\Lambda(h)-\Lambda(h_j)|\le C$ and
-$\Lambda(h)\asymp\Lambda(h_j)$ uniformly, since $\Lambda\ge1$.
-Multiply the two uniform cell estimates of
-Lemma~\ref{lem:phase-cell-estimates} by $\Lambda(h_j)$, replace this constant
-weight by $\Lambda(h)$ on both sides, and sum. No derivative of $\Lambda$
-and no new weighted Hardy inequality are required.
+\uses{lem:comparable-weight-phase-division, lem:log-phase-weight-comparison}
+\leanok
+For $\Lambda(h)=1+\log(1/h)$ the cell comparison supplies the constant
+$\Lambda(b)$ on each complete cell $(a,b)$. Apply comparable-weight
+division using these constants. This preserves the $H^1$ extension and
+its canonical zero trace without differentiating $\Lambda$.
 \end{proof}
 
 \begin{definition}[Quarter midpoint coefficients]

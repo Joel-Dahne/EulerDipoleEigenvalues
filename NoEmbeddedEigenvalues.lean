@@ -33,6 +33,7 @@ import NoEmbeddedEigenvalues.IntervalH1Estimates
 import NoEmbeddedEigenvalues.IntervalH1Multipliers
 import NoEmbeddedEigenvalues.IntervalH1LocalToGlobal
 import NoEmbeddedEigenvalues.CountableCellEnergy
+import NoEmbeddedEigenvalues.WeightedCellEnergy
 import NoEmbeddedEigenvalues.DescendingIntervalPartition
 import NoEmbeddedEigenvalues.IntervalLinearHardy
 import NoEmbeddedEigenvalues.IntervalHardy

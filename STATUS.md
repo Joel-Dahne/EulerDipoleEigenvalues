@@ -67,7 +67,7 @@ Graph counts are deliberately not duplicated in these hand-maintained summaries.
 A full Lean build passes. Challenge/Solution statements agree; the comparison
 still reports the main theorem's admissions, as expected. The transitive audit
 finds zero admissions for `even_even_exclusion`, two below `dd_picone_current`,
-zero below `correctedBoundaryForm_nonneg` and 10 below `dd_stream_quotient_h2`.
+zero below `correctedBoundaryForm_nonneg` and nine below `dd_stream_quotient_h2`.
 Odd–odd saddle estimates (`prop:saddle-dd`) are admission-free with their
 original statement, as are First transport gain (`lem:transport-first-gain`),
 Second transport gain (`lem:transport-second-gain`), Periodic first transport
@@ -98,6 +98,9 @@ four-character weighted weak quarter assembly remain admission-free.
 The bounded periodic norm, physical weak-gradient transport,
 compact pointwise growth, quadratic mass, seam gluing, point removal and
 canonical trace layers are admission-free.
+Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`) is
+admission-free with its original statement. Logarithmic midpoint gain reaches
+only Interior elliptic H³ and Weighted numerator estimates.
 Weighted-gradient, third-stream and logarithmic numerator assemblies remain
 conditional on their recorded analytic inputs, without admissions of their own.
 The saddle coefficient uniqueness and canonical cylinder-input layers are

@@ -5515,6 +5515,26 @@ by its norm. Domination first gives integrability of $F$.
 Integral Cauchy--Schwarz and the triangle inequality then give the bound.
 \end{proof}
 
+\begin{lemma}[Transfer of cell energies to a comparable weight]
+\label{lem:cell-weight-transfer}
+\lean{NoEmbeddedEigenvalues.sqrt_weight_cell_energy,
+ NoEmbeddedEigenvalues.memLp_of_sqrt_weight_ge_one}
+\leanok
+On a measured cell, let $W$ be measurable with $0\le w\le W\le Aw$ almost
+everywhere for constants $w,A\ge0$. If $F\in L^2$, $G$ is nonnegative and
+both $G$ and $WG$ are integrable, then
+$\int|F|^2\le K\int G$, $K\ge0$, implies $\sqrt W F\in L^2$ and
+$\int W|F|^2\le AK\int WG$. On any measured set where $W\ge1$ almost
+everywhere, $\sqrt W F\in L^2$ implies $F\in L^2$.
+\end{lemma}
+\begin{proof}
+\leanok
+The upper bound on $W$ gives integrability of $W|F|^2$ and transfers the
+left-hand side with factor $Aw$. The bound $wG\le WG$ transfers the
+right-hand side. For removal of the weight, division by the nonzero
+measurable square root recovers measurability and $|F|\le|\sqrt W F|$.
+\end{proof}
+
 \begin{lemma}[Countable cell energy summation]
 \label{lem:countable-cell-energy}
 \lean{NoEmbeddedEigenvalues.memLp_two_of_cell_energy}

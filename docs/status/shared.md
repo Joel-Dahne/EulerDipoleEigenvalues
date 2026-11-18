@@ -284,9 +284,11 @@ weights and local versus global regularity.
    zero trace on every original admissible endpoint window; there is no
    assumption of raw boundary values or stronger polar traces.
    **Next:** Interior elliptic H³ (`lem:elliptic-local`).
-   Weighted numerator estimates
-   (`lem:weighted-numerator-estimates`) and logarithmic phase-cell division
-   (`lem:log-phase-cell-division`) remain separate admitted stronger inputs.
+   **Logarithmically weighted phase-cell division** (`lem:log-phase-cell-division`)
+   is admission-free with its original statement. A common quotient construction
+   transfers the cell energies by comparing the weight to its right-endpoint
+   value; it does not differentiate the weight. Weighted numerator estimates
+   (`lem:weighted-numerator-estimates`) remain a separate admitted input.
    Prioritize the odd–odd applications at exponents three halves and three;
    their finite Taylor extraction is proved. Leave mixed linear-jet extraction deferred.
    **Ordinary separatrix frontier:** Interior elliptic H³ (`lem:elliptic-local`)
@@ -465,8 +467,8 @@ prerequisites remain outside this directory; see the
   The weighted-gradient and whole-lift ordinary
   separatrix H¹/H³ endpoints have assembly proofs, with explicit remaining
   weighted transport, trace and elliptic inputs rather than a stronger corner premise.
-  Scalar endpoint/second Hardy, uniform complete-cell estimates and global
-  phase-cell division are proved. Logarithmic division and explicit saddle-chart
+  Scalar endpoint/second Hardy, uniform complete-cell estimates and both
+  global phase-cell division theorems are proved. Explicit saddle-chart
   interfaces remain separate prerequisites.
   The weighted H¹/corner/edge/gluing, quarter endpoint/resonant-zero and
   weighted/logarithmic numerator interfaces retain explicit quantitative
