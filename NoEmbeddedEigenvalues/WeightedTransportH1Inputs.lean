@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.EndpointTangentialTrace
+import NoEmbeddedEigenvalues.WeightedNumeratorSecondNorm
 import NoEmbeddedEigenvalues.WeightedNumeratorH2
 import NoEmbeddedEigenvalues.PhaseCellDivision
 import NoEmbeddedEigenvalues.WeightedTransportH1Data
@@ -32,22 +33,6 @@ private theorem restrict_interval_h1 {b c : ℝ} {F G : ℝ → ℂ}
     h.memLp_derivative.mono_measure (Measure.restrict_mono_set _ hs),
     fun a d ha had hd ↦ h.locally_absolutelyContinuous a d ha had (hd.trans_le hcb),
     h.hasDerivAt_ae.mono fun x hx hxI ↦ hx (hs hxI)⟩
-
-/-- Global control of the actual ordinary second numerator derivative under the
-original weighted forcing inputs (`lem:weighted-numerator-second-norm`).
-This is the ordinary scalar derivative, not only the fixed-time bulk term. -/
-theorem IsTransportPair.weighted_numerator_second_norm
-    {lam : ℝ} {U : Set (ℝ × ℝ)} {v f g : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hcell : closure cellSquare ⊆ U)
-    (hg : ContinuousOn g U) (hfg : f =ᵐ[volume.restrict U] g)
-    {D : Fin 2 → ℝ × ℝ → ℂ} (hD : ∀ j, HasWeakPartialOn U j f (D j))
-    (hf : MemLp (fun p ↦ f p / (saddleDist p ^ 2 : ℂ)) 2 (volume.restrict cellSquare))
-    (hDf : ∀ j, MemLp (fun p ↦ D j p / (Real.rpow (saddleDist p) (3 / 2) : ℂ)) 2
-      (volume.restrict cellSquare)) :
-    ∃ r : ℝ, 0 < r ∧ r < 1 / 2 ∧ ∀ μ : ℝ,
-      MemLp (fun h : ℝ ↦ (h : ℂ) * deriv (deriv (quarterNumerator μ g)) h) 2
-        (volume.restrict (Ioo 0 r)) := by
-  sorry
 
 /-- First-order/local H² data and resonant cancellation turn a supplied second
 norm into ordinary quotient and half-numerator H¹ data.

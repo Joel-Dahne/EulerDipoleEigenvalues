@@ -58,8 +58,10 @@ Proof work is now outside the odd–odd chapter:
   nor logarithmic forcing is used by the weighted forcing.
   Both transport gains (`lem:transport-first-gain`, `lem:transport-second-gain`)
   and First eigenfunction saddle gain (`prop:saddle-first-gain`) are admission-free.
-  The ordinary separatrix parent reaches four primitive inputs; weighted
-  transport H¹ expands into two inputs detailed in [shared status](shared.md#next-session).
+  The ordinary separatrix parent reaches three primitive inputs; weighted
+  transport H¹ reaches only physical H¹ seam gluing, detailed in
+  [shared status](shared.md#next-session). Global ordinary second numerator norm
+  and the four-character weighted weak quarter assembly are admission-free.
   **Weak full-cylinder inversion is admission-free**
   (`lem:cylinder-weak-inverse`), retaining its original hypotheses and actual nil
   integral. Finite-mass spectral cutoffs make every ordered derivative spectrum
@@ -79,9 +81,9 @@ Proof work is now outside the odd–odd chapter:
   give a genuine smooth representative of the raw weak-harmonic difference.
   Cylinder inverse (`lem:cylinder-inverse`) and its odd–odd application now
   have zero transitive admissions, with their original statements and data.
-  Ordinary separatrix H¹/H³ and logarithmic forcing reach the weighted-transport
-  inputs, Whole-edge zero trace and Interior elliptic H³.
-  **Next targets:** the inputs of Weighted transport H¹ (`lem:weighted-transport-h1`) and
+  Ordinary separatrix H¹/H³ and logarithmic forcing reach physical H¹ seam
+  gluing, Whole-edge zero trace and Interior elliptic H³.
+  **Next targets:** Physical H¹ seam gluing (`lem:transport-quarter-h1-gluing`) and
   Whole-edge zero trace (`lem:transport-zero-edge-trace`).
   See shared status for the precise frontier.
   Prioritize the odd–odd applications at three halves and three; their finite

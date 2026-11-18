@@ -1894,6 +1894,27 @@ On a neighborhood contained in $0<h<1$ these coincide with the actual
 iterated scalar derivatives, so smoothness transfers to the specified vectors.
 \end{proof}
 
+\begin{lemma}[Time equation for the level variation]
+\label{lem:orbit-level-time-equation}
+\uses{def:period, def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.hasDerivAt_orbit_level_time}
+\leanok
+For $0<h<1$ and every real $t$, put $V=\partial_h\gamma_h(t)$.
+The actual fixed-time level variation is differentiable in time and satisfies
+\[
+ \partial_t V=(\cos y\,V_y,-\cos x\,V_x),
+ \qquad (x,y)=\gamma_h(t).
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-level-vectors-smooth, lem:dipole-flow, lem:action-angle-chart}
+\leanok
+Joint orbit smoothness permits interchanging its level and time derivatives.
+Differentiate $\partial_t\gamma_h=X(\gamma_h)$ in $h$.
+Only smooth orbit derivatives commute; no supplied weak forcing entries do.
+\end{proof}
+
 \begin{lemma}[Derivatives in the level]
 \label{lem:orbit-level-derivatives}
 \uses{def:period, def:dipole-flow}

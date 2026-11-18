@@ -252,17 +252,25 @@ weights and local versus global regularity.
    retain the supplied Cartesian entries and the same raw v. Joint restricted
    character congruence transfers these fields to all four quarters without
    differentiated time shifts or a jointly selected ACL family.
-   The assembly now reaches only global hN″ L²
-   (`lem:weighted-numerator-second-norm`) and physical H¹ seam gluing
-   (`lem:transport-quarter-h1-gluing`). Ordinary scalar division
-   (`lem:quarter-h1-scalar-data`) is admission-free for a supplied second norm;
-   four-character recombination (`lem:weighted-transport-quarter-assembly`)
-   reaches only that second-norm input. The stronger logarithmic numerator
-   package is not used by this route. The next bottom-up estimate remains
-   the distinct first-bulk boundary potentials. Individual gradient traces in
-   the two transverse charts have not been identified.
-   Target these scalar data directly rather than the full logarithmic package;
-   the full angular corner trace remains separate.
+   **Global ordinary second numerator norm**
+   (`lem:weighted-numerator-second-norm`) is admission-free with the original
+   forcing weights, continuous representative and supplied first gradient.
+   The first-bulk time derivative has genuine joint L² energy: velocity cancels
+   the inverse-distance level-vector coefficient of each ordered Hessian entry.
+   Unit-time-window traces control the complete first-bulk boundary potentials
+   without logarithmic Hessian weights (`lem:first-bulk-endpoint-energy`).
+   Combining their hS′-weighted norm with the second bulk and hE₁ controls the
+   actual ordinary hN″, on one collar for all real frequencies.
+   Individual gradient traces in the two transverse charts remain unidentified;
+   this route does not need that comparison.
+   Ordinary scalar division (`lem:quarter-h1-scalar-data`) and four-character
+   weighted weak quarter data (`lem:weighted-transport-quarter-assembly`) are
+   therefore admission-free under the original inputs. Weighted transport H¹
+   now reaches only physical H¹ seam gluing (`lem:transport-quarter-h1-gluing`).
+   Preserve the same collar and derive canonical seam compatibility from global
+   weak transport; null seams alone do not justify weak gluing.
+   The stronger logarithmic numerator package and full angular corner trace
+   remain separate.
    **Next:** Weighted transport H¹ (`lem:weighted-transport-h1`), Whole-edge
    zero trace (`lem:transport-zero-edge-trace`) and Interior elliptic H³
    (`lem:elliptic-local`). Weighted numerator estimates
@@ -273,15 +281,15 @@ weights and local versus global regularity.
    **Ordinary separatrix frontier:** Weighted transport H¹
    (`lem:weighted-transport-h1`), Whole-edge zero trace
    (`lem:transport-zero-edge-trace`) and Interior elliptic H³ (`lem:elliptic-local`).
-   Weighted transport H¹ expands into the two inputs above, so ordinary
-   separatrix H¹/H³ and logarithmic forcing each reach four primitive inputs.
+   Weighted transport H¹ reaches only physical H¹ seam gluing, so ordinary
+   separatrix H¹/H³ and logarithmic forcing each reach three primitive inputs.
    **Possible dependency simplification:** ordinary forcing already follows
    mathematically from the subcritical stage: the value quotient is bounded by
    C times inverse square-root radius, and the first-derivative norm is supplied.
    The current Lean forcing assembly still uses the full saddle jet; wiring the
    shorter route would remove its second-transport-gain dependency.
-   Weighted second-numerator differentiation and the remaining scalar/orbit inputs
-   are explicit outside-section prerequisites. The weighted-gradient and third-stream
+   Stronger logarithmic scalar/orbit inputs remain explicit outside-section
+   prerequisites. The weighted-gradient and third-stream
    assemblies still depend on their recorded transport and elliptic/Taylor inputs.
    Rotations after spatial reconstruction avoid differentiated
    time shifts; the separate four-quarter derivative family is not needed on

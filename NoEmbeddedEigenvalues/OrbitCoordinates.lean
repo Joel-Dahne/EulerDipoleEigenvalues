@@ -1822,6 +1822,16 @@ private theorem hasDerivAt_orbitFirstVariation_time {h t : ℝ}
   rw [hv.deriv] at hd
   simpa [orbitFirstVariation, Function.comp_def, neg_mul] using hd
 
+/-- The fixed-time level variation solves the linearized velocity equation.
+Only smooth orbit derivatives commute here. -/
+theorem hasDerivAt_orbit_level_time {h t : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1) :
+    HasDerivAt (fun s ↦ deriv (fun x ↦ dipoleOrbit x s) h)
+      (cos (dipoleOrbit h t).2 * (deriv (fun x ↦ dipoleOrbit x t) h).2,
+        -cos (dipoleOrbit h t).1 * (deriv (fun x ↦ dipoleOrbit x t) h).1) t := by
+  have he (s : ℝ) : deriv (fun x ↦ dipoleOrbit x s) h = orbitFirstVariation (h, s) :=
+    (hasDerivAt_orbit_level (t := s) hh).deriv
+  simpa only [he] using hasDerivAt_orbitFirstVariation_time (t := t) hh
+
 private theorem hasDerivAt_orbitSecondVariation_time {h t : ℝ}
     (hh : h ∈ Ioo (0 : ℝ) 1) :
     HasDerivAt (fun s ↦ orbitSecondVariation (h, s))

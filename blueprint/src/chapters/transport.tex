@@ -5815,6 +5815,191 @@ For addition, use linearity of weak differentiation and the sum of the
 actual L2 functions; the distance weights distribute over the sums.
 \end{proof}
 
+\begin{lemma}[Canonical quarter traces from physical-time energy]
+\label{lem:quarter-clock-trace}
+\uses{def:period, def:cell-separatrix-collar, def:interior-section-trace,
+ def:weak-derivative-local}
+\lean{NoEmbeddedEigenvalues.memLp_quarter_clock_trace}
+\leanok
+Let $F,H\in L^2(Q_r)$ and suppose $S(h)\ge4$ on $(0,r)$.
+On every compact level band, assume the normalized pullbacks
+\[
+ F_n(h,\theta)=F(h,\theta S(h)),\qquad
+ H_n(h,\theta)=S(h)H(h,\theta S(h))
+\]
+are genuinely L2 on the rectangle with $-1/4<\theta<3/4$ and
+$\partial_\theta F_n=H_n$ weakly there.
+Then the canonical traces
+$\operatorname{Tr}_{s=0}F(h,(\pm1/8+s)S(h))$ belong to $L^2(0,r)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:clock-endpoint-trace, lem:local-l2-square-majorant,
+ lem:quarter-gradient-energy, lem:interior-trace-at,
+ lem:canonical-transverse-trace, lem:trace-l2}
+\leanok
+On each band ACL slicing identifies the trace with a genuine interval H1
+representative. The unit-time-window estimate bounds its square by twice
+the actual time-fiber energies of $F$ and $H$.
+Zero-extension Fubini supplies an integrable level majorant and genuine
+fiber integrability. Local L2 traces and the common majorant globalize.
+Only explicit raw fields and canonical traces are global; the local ACL
+witnesses are never selected as a joint family.
+\end{proof}
+
+\begin{definition}[Formal time derivative of the first level contraction]
+\label{def:first-bulk-time-derivative}
+\uses{def:numerator-derivative, def:quarter-jet-data, def:dipole-flow}
+\lean{NoEmbeddedEigenvalues.quarterForcingLevelTimeDerivative}
+\leanok
+For a supplied array $J$, put $p=(x,y)=\gamma_h(t)$ and $V=\partial_h\gamma_h(t)$.
+Define the formal field
+\[
+ H_J(h,t)=\cos y\,V_y J_{[0]}(p)-\cos x\,V_x J_{[1]}(p)
+       +\sum_{i,j=0}^1 V_j X_i(p)J_{[i,j]}(p).
+\]
+This definition makes no weak differentiation assertion.
+The order $[i,j]$ is retained.
+\end{definition}
+
+\begin{lemma}[Physical-time energy of the first bulk]
+\label{lem:first-bulk-time-energy}
+\uses{def:first-bulk-time-derivative, def:quarter-jet-data, def:numerator-derivative}
+\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterFirstLevelDerivative,
+ NoEmbeddedEigenvalues.quarter_first_bulk_time_energy}
+\leanok
+Raw L2 singleton entries make the fixed-time level field $G_J$ jointly
+a.e. strongly measurable on every $Q_b$, $b\le1$.
+Suppose all supplied entries of length at most two are in $L^2(\Cell)$,
+and $J_{[j]}/d^{3/2}\in L^2(\Cell)$.
+For every $0<r<1$ there is $0<b<r$ such that
+$G_J,H_J\in L^2(Q_b)$.
+No weighted Hessian norm is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ordinary-quarter-forcing-data, lem:orbit-level-derivatives,
+ lem:saddle-transport-weights, lem:quarter-gradient-energy}
+\leanok
+Smooth geometric coefficients and the raw L2 pullbacks give joint
+measurability.
+The ordinary forcing data give the $G_J$ norm.
+The linear part of $H_J$ is another level contraction with singleton row
+$(-\cos x\,J_{[1]},\cos y\,J_{[0]})$.
+These entries inherit the same weighted norms because $|\cos|\le1$.
+This auxiliary array is used only for a norm estimate, not as a weak jet of
+a new forcing.
+
+For the Hessian terms, $|V_j|\le C/d$ and $|X_i|\le d$ give
+$|V_jX_i|\le C$. Each ordered Hessian pullback is genuinely L2.
+Bounded multiplication and finite summation therefore control the remaining
+four terms without a logarithmic factor.
+\end{proof}
+
+\begin{lemma}[Raw L2 pullback on compact orbit bands]
+\label{lem:orbit-band-l2-pullback}
+\uses{def:action-angle, def:period}
+\lean{NoEmbeddedEigenvalues.memLp_actionAngleInv_band}
+\leanok
+Let $U$ be open, $u\in L^2(U)$, and $0<a<b<h_0<1$.
+If the annulus $0<h<h_0$ lies in $U$, then the raw pullback
+$u\circ P$ is in L2 on
+$(a,b)\times(-1/4,3/4)$.
+No global measurability of the chosen values outside $U$ is assumed.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-coordinates-area, lem:period-regularity}
+\leanok
+A compact level cutoff equals one on $[a,b]$ and localizes the zero extension
+of the raw function to the cell. The area formula supplies the normalized
+pullback norm: the clock is positive and bounded away from zero on the compact
+level band. Restriction and a.e. equality retain the original raw pullback.
+\end{proof}
+
+\begin{lemma}[Local normalized weak time data for the first bulk]
+\label{lem:first-bulk-clock-data}
+\uses{def:first-bulk-time-derivative, def:weak-derivative-local, def:period}
+\lean{NoEmbeddedEigenvalues.quarter_first_bulk_clock_data}
+\leanok
+Let $U$ be open and contain the cell. Suppose
+$\partial_iJ_{[j]}=J_{[i,j]}$ weakly on $U$, and the singleton and ordered
+second entries are actually L2 on $U$.
+On every $0<a<b<h_0<1$, set
+\[
+ F_n(h,\theta)=G_J(h,\theta S(h)),\qquad
+ H_n(h,\theta)=S(h)H_J(h,\theta S(h)).
+\]
+Both fields are genuinely L2 for $-1/4<\theta<3/4$, and
+$\partial_\theta F_n=H_n$ weakly on that rectangle.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:orbit-level-time-equation, lem:action-angle-weak,
+ lem:orbit-level-vectors-smooth, lem:orbit-band-l2-pullback, lem:weak-derivative-product}
+\leanok
+The weak angular rule pulls back each specified singleton entry with its
+ordered Hessian row. Multiply by the smooth level-vector coefficients.
+The time variational equation differentiates those coefficients, and
+$\partial_\theta\gamma=S X$ gives the Hessian terms.
+Thus the derivative is exactly $S H_J$.
+Compact level bands bound every smooth multiplier, giving actual local L2
+for both candidates. No weak mixed entries commute.
+\end{proof}
+
+\begin{lemma}[L2 energy of the complete first-bulk endpoint potentials]
+\label{lem:first-bulk-endpoint-energy}
+\uses{def:first-bulk-endpoint-trace, def:weak-derivative-local, def:quarter-jet-data}
+\lean{NoEmbeddedEigenvalues.quarter_first_bulk_endpoint_energy}
+\leanok
+Let $U$ be open and contain the cell, with
+$\partial_iJ_{[j]}=J_{[i,j]}$ weakly on $U$.
+Suppose every supplied entry of length at most two is in $L^2(U)$ and
+$J_{[j]}/d^{3/2}\in L^2(\Cell)$.
+There is one $0<b<1/2$ such that, for every real $\mu$ and both
+$\theta=\pm1/8$, the complete canonical potential
+$\mathcal T_{\mu,J,\theta}$ belongs to $L^2(0,b)$.
+No individual gradient trace is identified between two transverse charts.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:first-bulk-time-energy, lem:first-bulk-clock-data,
+ lem:quarter-clock-trace, lem:period-regularity, lem:interior-section-trace}
+\leanok
+Shrink the collar until $S\ge4$ and apply the canonical clock trace theorem
+to $G_J,H_J$.
+The factor $(\theta+s)e^{-i\mu(\theta+s)S}$ is smooth and nonzero at $s=0$.
+Multiplication by it preserves the existence of a continuous section germ,
+so its trace is $\theta e^{-i\mu\theta S}$ times the same canonical trace of $G_J$.
+This remains true on exceptional sections where both canonical choices fall
+back to zero. The scalar multiplier is a.e. measurable with norm at most one.
+The collar and the underlying energy do not depend on frequency.
+\end{proof}
+
+\begin{lemma}[Weighted first-bulk boundary norm]
+\label{lem:weighted-first-bulk-boundary}
+\uses{def:first-bulk-endpoint-trace, def:weak-derivative-local, def:quarter-jet-data}
+\lean{NoEmbeddedEigenvalues.quarter_first_bulk_boundary_weighted_memLp}
+\leanok
+Under the hypotheses of Lemma~\ref{lem:first-bulk-endpoint-energy},
+one smaller $0<b<1/2$ works for every real $\mu$ with
+\[
+ hS'(h)\bigl(\mathcal T_{\mu,J,1/8}(h)
+                 -\mathcal T_{\mu,J,-1/8}(h)\bigr)\in L^2(0,b).
+\]
+This is the distinct first-bulk term in the actual second numerator formula.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:first-bulk-endpoint-energy, lem:endpoint-coefficient-bounds}
+\leanok
+The scalar coefficient estimate at frequency zero gives a bounded measurable
+$hL'$. Since $S'=8L'$, $hS'$ is bounded as well on a common collar.
+Multiply the difference of the two actual L2 canonical potentials by this
+coefficient. No forcing-value endpoint trace substitutes for the first-bulk
+potential.
+\end{proof}
+
 \begin{lemma}[Global weighted second numerator norm]
 \label{lem:weighted-numerator-second-norm}
 \uses{def:transport-pair, def:sobolev-local, def:numerator}
@@ -5835,12 +6020,19 @@ frequency. No quarter character, Hessian premise or forcing growth bound is adde
 
 \begin{proof}
 \uses{lem:numerator-second-moving-endpoints, lem:second-numerator-bulk,
- lem:weighted-numerator-endpoint-derivative}
-The local second formula identifies the actual second derivative with the
-fixed-time second bulk, the first-bulk boundary flux and the endpoint-value
-flux derivative. The first and last contributions have genuine h-weighted L2
-norms. Thus the global norm reduces to controlling the distinct first-bulk
-boundary potentials.
+ lem:weighted-first-bulk-boundary, lem:weighted-numerator-endpoint-derivative,
+ lem:specified-jet-lp, lem:specified-first-jet-extension,
+ lem:local-l2-square-majorant}
+\leanok
+Standing H2 extends the exact supplied first row to one ordered weak jet.
+On one common collar all three contributions have actual h-weighted L2 norms:
+the fixed-time second bulk, the first-bulk boundary flux, and the differentiated
+forcing-value flux. Their sum is the actual second candidate.
+The local second formula identifies this candidate with the ordinary second
+derivative of the retained continuous numerator on every compact level interval.
+The local-to-global square-majorant lemma transfers its actual global norm
+without altering the scalar values or assuming global derivative measurability.
+All radii are chosen before the real frequency.
 \end{proof}
 
 \begin{lemma}[Ordinary scalar division from the second numerator norm]

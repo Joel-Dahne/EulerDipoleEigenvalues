@@ -3513,6 +3513,74 @@ $|E(h)|\ge c/(C|h-z|)$ just to the right of $z$.
 The latter function is not integrable, contradicting $E\in L^1$.
 \end{proof}
 
+\begin{lemma}[Interval trace energy on an interior window]
+\label{lem:interval-window-trace}
+\uses{def:h1-interval}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.restrict_interval,
+ NoEmbeddedEigenvalues.HasIntervalH1.point_sq_le_subinterval}
+\leanok
+Specified interval H1 data $(F,D)$ restrict to smaller open intervals without
+changing either function.
+If $(F,D)$ has interval H1 on $(a,b)$, $a<c<d<b$ and $t_0\in[c,d]$, then
+\[
+ |F(t_0)|^2\le \frac{2}{d-c}\int_c^d|F|^2
+                   +2(d-c)\int_c^d|D|^2 .
+\]
+The evaluation point may be an endpoint of the smaller window.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:h1-interval-endpoints, lem:trace-l2}
+\leanok
+Restrict the same value and derivative functions.
+The original interval representative is continuous on $[c,d]$, so uniqueness
+of the canonical interval extension identifies its endpoint values with $F$.
+Apply the constant-two interval extension estimate on that window.
+\end{proof}
+
+\begin{lemma}[Clock endpoint trace on a unit-time window]
+\label{lem:clock-endpoint-trace}
+\uses{def:h1-interval, def:interior-section-trace}
+\lean{NoEmbeddedEigenvalues.clock_endpoint_trace_sq_le}
+\leanok
+Let $S\ge4$ and suppose $W$ has interval H1 on $(-1/4,3/4)$ with specified
+derivative $S H(S\theta)$, and $W(\theta)=F(S\theta)$ a.e. there.
+For $\theta_0=\pm1/8$,
+\[
+ \left|\operatorname{Tr}_{s=0} F(S(\theta_0+s))\right|^2
+ \le 2\int_{-S/8}^{S/8}|F(t)|^2\,dt+
+      2\int_{-S/8}^{S/8}|H(t)|^2\,dt .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:interval-window-trace, lem:interior-trace-at}
+\leanok
+Use a one-sided angular window of length $1/S$, ending at $\theta_0$ and
+lying inside $[-1/8,1/8]$. Its physical-time length is one.
+The interval trace estimate has coefficients $2S$ and $2/S$.
+The derivative is $SH$, so rescaling time cancels both factors of $S$.
+The H1 data provide genuine squared-energy integrability; the canonical
+section germ, not the raw line value of $F$, supplies the evaluation.
+\end{proof}
+
+\begin{lemma}[Global L2 from local data and a common square majorant]
+\label{lem:local-l2-square-majorant}
+\lean{NoEmbeddedEigenvalues.memLp_two_of_local_sq_bound}
+\leanok
+Let $E\in L^1(0,r)$. Suppose a raw $T$ belongs to $L^2(a,b)$ on every
+$0<a<b<r$, with $|T|^2\le E$ a.e. on each such interval.
+Then $T\in L^2(0,r)$ with its original values.
+No separate global measurability or endpoint-value assumption is needed.
+\end{lemma}
+
+\begin{proof}
+\leanok
+A countable interval subcover globalizes a.e. strong measurability and the
+a.e. square bound. The genuine integrable majorant then gives the global
+L2 norm. No representatives on distinct intervals are selected or patched.
+\end{proof}
+
 \begin{lemma}[An elementary $L^2$ trace estimate]
 \label{lem:trace-l2}
 \uses{def:weak-derivative-local, lem:acl-slicing}
