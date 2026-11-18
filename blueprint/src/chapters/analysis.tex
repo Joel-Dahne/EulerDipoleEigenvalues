@@ -4085,6 +4085,45 @@ The weak identities follow from boundary-term cancellation and tangential
 cutoffs, not from the nullity of the line.
 \end{proof}
 
+\begin{lemma}[Interior traces from shrinking coordinate squares]
+\label{lem:interior-trace-square-averages}
+\uses{def:canonical-transverse-trace, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.tendsto_square_oscillation}
+\leanok
+For a transverse $H^1$ trace $T$ at $t=0$ in a rectangle chart $C$,
+the mean of $|F(C(y,s))-T(x)|$ over the square of radius $\epsilon$
+centered at $(x,0)$ tends to zero for a.e.\ $x$ in the base interval.
+\end{lemma}
+\begin{proof}
+\uses{lem:interval-trace-increment, lem:trace-l2}
+\leanok
+The ACL increment is bounded by $\sqrt{\epsilon}$ times the square root
+of the section's normal derivative energy. Both that square root and
+the trace are integrable on the base interval. Differentiate their
+one-dimensional integrals in the tangential variable and use Fubini
+on the shrinking squares.
+\end{proof}
+
+\begin{lemma}[Interior traces from physical squares]
+\label{lem:interior-trace-physical-averages}
+\uses{def:canonical-transverse-trace, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.tendsto_physical_square_oscillation,
+ NoEmbeddedEigenvalues.eq_of_tendsto_physical_square_oscillation}
+\leanok
+Suppose $F$ is locally integrable in the physical domain and $C$ is smooth
+with nonsingular derivative along the trace line. At almost every base point
+$x$, $T(x)$ is the unique value about which the mean absolute oscillation
+of $F$ tends to zero in physical squares centered at $C(x,0)$.
+\end{lemma}
+\begin{proof}
+\uses{lem:interior-trace-square-averages}
+\leanok
+The local inverse sends each small physical square into a coordinate
+square of comparable radius. The change of variables has bounded Jacobian
+on this patch, so the physical oscillation is bounded by a constant times
+the coordinate oscillation. Uniqueness follows by the triangle inequality.
+\end{proof}
+
 \begin{definition}[Interior trace by continuous section germs]
 \label{def:interior-section-trace}
 \lean{NoEmbeddedEigenvalues.HasContinuousSectionGerm,

@@ -2,7 +2,7 @@ import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.ScalarDivision
 import NoEmbeddedEigenvalues.Transport
 import NoEmbeddedEigenvalues.QuarterCoordinates
-import NoEmbeddedEigenvalues.WeightedNumerators
+import NoEmbeddedEigenvalues.WeightedNumeratorData
 import NoEmbeddedEigenvalues.ZeroSaddleTransportGain
 import NoEmbeddedEigenvalues.WeightedTransportH1Assembly
 import NoEmbeddedEigenvalues.EdgeCornerTransport

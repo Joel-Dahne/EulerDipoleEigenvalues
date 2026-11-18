@@ -4431,6 +4431,49 @@ The specified physical jet produces the weak level partial of the same
 bulk forcing; the affine ray traces are unchanged on all admissible windows.
 \end{proof}
 
+\begin{lemma}[Agreement of normalized and affine quarter traces]
+\label{lem:quarter-endpoint-trace-comparison}
+\uses{def:interior-section-trace, def:quarter-endpoint-rays, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.quarterEndpointTrace_compare}
+\leanok
+An $H^1$ field on an open neighbourhood of the closed cell has canonical
+section germs at the normalized quarter endpoints for a.e.\ level in any
+collar with $h_0<1$ and $r(h_0)<1/2$. Their trace values agree with the
+canonical affine ray traces at $r(h)=2\arcsin\sqrt h$.
+\end{lemma}
+\begin{proof}
+\uses{lem:interior-trace-physical-averages, lem:quarter-ray-interior-trace,
+ lem:interior-section-trace, lem:gradient-endpoint-change-variables}
+\leanok
+On compact regular windows both charts are smooth and nonsingular, and
+their transverse pullbacks have $H^1$ traces. The chart centers agree;
+transport the affine good-radius set through the positive radius
+Jacobian. The two traces have vanishing mean absolute oscillation in
+the same physical squares and hence coincide. A countable window
+cover gives the assertion on the whole collar.
+\end{proof}
+
+\begin{lemma}[Pointwise first-bulk boundary energy]
+\label{lem:first-bulk-boundary-square}
+\uses{def:first-bulk-endpoint-trace, def:canonical-quarter-gradient-trace,
+ def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.quarter_first_bulk_boundary_sq_le}
+\leanok
+For the two supplied first jet entries in $H^1$ on a neighbourhood of
+the closed cell, the squared norm of $hS'(h)$ times the first-bulk boundary
+difference is bounded by a constant times the canonical affine gradient
+energy on a small collar. One bound and collar work for every real frequency.
+\end{lemma}
+\begin{proof}
+\uses{lem:quarter-endpoint-trace-comparison, lem:period-derivative-bounds,
+ lem:orbit-level-derivatives}
+\leanok
+Take the trace of the fixed-time level contraction by using germ addition
+and multiplication by its smooth coefficients. The orbital level vector
+is bounded by $C/d$ and $d\ge\sqrt h$ on either endpoint; the phase has
+unit modulus and $hS'$ is bounded. Square and add the two endpoint bounds.
+\end{proof}
+
 \begin{lemma}[Weighted numerator estimates]
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local,
@@ -4464,7 +4507,8 @@ already supplied by $H^2$, not extra regularity.
   lem:weighted-numerator-local-h2, lem:numerator-second-moving-endpoints,
   lem:weighted-numerator-endpoint-derivative, lem:orbit-tangential-trace,
   lem:weighted-first-numerator-fiber-bounds, lem:numerator-endpoint-flux-energy,
-  lem:weighted-numerator-assembly}
+  lem:weighted-numerator-assembly, lem:first-bulk-boundary-square}
+\leanok
 Obtain the full and half first-numerator data and local numerator H2 from
 Lemma~\ref{lem:weighted-numerator-local-h2}, and the continuous endpoint-value
 estimates from Lemma~\ref{lem:weighted-endpoint-value-transport}.
@@ -4472,10 +4516,9 @@ Write $f_h=f\circ\gamma_h$ and $p_\pm(h)=\gamma_h(\pm L(h))$;
 spatial derivatives such as $\nabla f_h$ mean $(\nabla f)\circ\gamma_h$.
 On compact level intervals, the actual second weak derivative is given by
 Lemma~\ref{lem:numerator-second-moving-endpoints}.
-It uses normalized-angle traces: changing to another transverse chart
-requires identification of the canonical trace families.
-In the formulas below, gradient values at $p_\pm$ mean Sobolev traces,
-not arbitrary point values.
+It uses normalized-angle traces. Lemma~\ref{lem:quarter-endpoint-trace-comparison}
+identifies the individual gradient traces in the two charts. In the formulas
+below, gradient values at $p_\pm$ denote those Sobolev traces, not raw values.
 
 The endpoint curves are fixed rays from their saddles, with
 $r=2\arcsin\sqrt h$, hence $h=\sin^2(r/2)$ and $dh\asymp r\,dr$.
@@ -4519,8 +4562,13 @@ $|L'|\le C/h$, $|L''|\le C/h^2$ yields
 \]
 The fixed-time bulk is controlled, with actual integrability and the original
 ordered jet, by Lemma~\ref{lem:second-numerator-bulk}.
-The ray traces control both endpoint terms. The bulk estimate does not itself
-supply the weak differentiation identity used above.
+The Lean proof controls the two endpoint contributions in the actual
+weak formula separately: Lemma~\ref{lem:first-bulk-boundary-square}
+bounds the first-bulk boundary term, and
+Lemma~\ref{lem:numerator-endpoint-flux-energy} bounds the differentiated
+forcing-value flux. Lemma~\ref{lem:weighted-numerator-assembly} combines
+these pointwise bounds on a common collar with the fiber integrability
+and the actual weak derivatives.
 \end{proof}
 
 \begin{definition}[Joint level-reconstruction candidate]

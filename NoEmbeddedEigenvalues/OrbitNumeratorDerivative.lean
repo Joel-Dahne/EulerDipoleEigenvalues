@@ -1,5 +1,5 @@
 import NoEmbeddedEigenvalues.IntervalIntegralFlux
-import NoEmbeddedEigenvalues.WeightedNumerators
+import NoEmbeddedEigenvalues.WeightedNumeratorData
 
 /-!
 # The weak moving-endpoint derivative of the quarter numerator

@@ -99,8 +99,9 @@ The bounded periodic norm, physical weak-gradient transport,
 compact pointwise growth, quadratic mass, seam gluing, point removal and
 canonical trace layers are admission-free.
 Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`) is
-admission-free with its original statement. Logarithmic midpoint gain reaches
-only Interior elliptic H³ and Weighted numerator estimates.
+admission-free with its original statement, as are Weighted numerator estimates
+(`lem:weighted-numerator-estimates`). Logarithmic midpoint gain now reaches
+only Interior elliptic H³ (`lem:elliptic-local`).
 Weighted-gradient, third-stream and logarithmic numerator assemblies remain
 conditional on their recorded analytic inputs, without admissions of their own.
 The saddle coefficient uniqueness and canonical cylinder-input layers are

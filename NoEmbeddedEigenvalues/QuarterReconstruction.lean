@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.ACLSlicing
 import NoEmbeddedEigenvalues.LogarithmicWeights
-import NoEmbeddedEigenvalues.WeightedNumerators
+import NoEmbeddedEigenvalues.WeightedNumeratorData
 
 /-!
 # Summation of recentered quarter reconstructions

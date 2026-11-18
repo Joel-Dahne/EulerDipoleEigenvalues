@@ -43,7 +43,9 @@ Proof work is now outside the odd–odd chapter:
   layers and the canonical stream weak jet are admission-free.
   Logarithmically weighted phase-cell division (`lem:log-phase-cell-division`)
   is also admission-free, retaining the same canonical quotient and zero trace
-  conclusion. The expanded analytic frontier is recorded in the root validation baseline.
+  conclusion. Weighted numerator estimates are admission-free; logarithmic
+  midpoint gain now reaches only Interior elliptic H³. See the root validation
+  baseline for the other prerequisites.
   Logarithmic forcing (`lem:dd-log-forcing`) has a proof of its own, retaining
   the whole lifted neighbourhood, all eight canonical ray traces and one common
   radius. It uses the saddle jet, ordinary separatrix H¹/H³ and saddle

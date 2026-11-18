@@ -274,8 +274,8 @@ weights and local versus global regularity.
    transport equation for v+f determines the missing normal partial locally.
    Subtract the same H¹ forcing. No separately assumed trace equality, raw ray
    evaluation, global inverse-velocity norm or jointly selected ACL family is used.
-   The stronger logarithmic numerator package and full angular corner trace
-   remain separate.
+   The full angular corner trace is not used in either the ordinary numerator
+   norm or the quantitative logarithmic numerator package.
    **Whole-edge zero trace** (`lem:transport-zero-edge-trace`) is admission-free
    with its original statement. The inward normal chart gives a constant
    modulus on each regular window, and trace uniqueness identifies it across
@@ -288,14 +288,12 @@ weights and local versus global regularity.
    is admission-free with its original statement. A common quotient construction
    transfers the cell energies by comparing the weight to its right-endpoint
    value; it does not differentiate the weight. Weighted numerator estimates
-   (`lem:weighted-numerator-estimates`) remain a separate admitted input.
-   The simultaneous full/half first bounds and the pointwise endpoint-value
-   flux derivative bound are proved. The quantitative assembly is proved
-   conditional on one pointwise energy bound for the first-bulk boundary term.
-   To supply it, compare the normalized-angle trace of the fixed-time level
-   derivative with the canonical affine gradient on the ray. A global unweighted
-   boundary norm alone does not give the pointwise bound needed by logarithmic
-   summation.
+   (`lem:weighted-numerator-estimates`) are admission-free with the original
+   specified jet and all quantitative bounds. The canonical normalized-angle
+   and affine endpoint traces are identified by shrinking physical squares.
+   The resulting pointwise first-bulk boundary bound is separate from the
+   differentiated endpoint-value flux and the global ordinary norm.
+   Logarithmic midpoint gain now reaches only Interior elliptic H³.
    Prioritize the odd–odd applications at exponents three halves and three;
    their finite Taylor extraction is proved. Leave mixed linear-jet extraction deferred.
    **Ordinary separatrix frontier:** Interior elliptic H³ (`lem:elliptic-local`)
