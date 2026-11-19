@@ -2651,17 +2651,36 @@ summands to identify the a.e.\ cylinder decomposition everywhere.
 
 \begin{corollary}[Mixed saddle jet]
 \label{cor:mixed-saddle-jet}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local}
-\notready
-In either mixed sector, at each saddle there is a unique permitted linear
-harmonic $\ell$ such that
-$\int\big(|\psi-\ell|^2r^{-6}+|\nabla(\psi-\ell)|^2r^{-4}+|D^2(\psi-\ell)|^2r^{-2}\big)<\infty$.
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:local-weak-jets,
+  def:saddle-ortho-chart}
+\lean{NoEmbeddedEigenvalues.mixedAxisLinear, NoEmbeddedEigenvalues.mixed_saddle_jet}
+\leanok
+Let $\lambda\ne0$ and let $\omega$ solve the eigenproblem in either mixed
+sector. At each lifted saddle $P$, work in the orthonormal chart $\Xi_P$,
+and let $j$ be the coordinate reversed by the odd reflection. There is a
+disk of positive radius on which a unique coefficient $A\in\C$ gives a
+second weak jet for the remainder $R=\psi\circ\Xi_P-Aq_j$ with
+\[
+  \int\bigl(|R|^2r^{-6}+|\nabla R|^2r^{-4}+|D^2R|^2r^{-2}\bigr)<\infty.
+\]
+Here $r=|q|$ and the integral uses physical area.
 \end{corollary}
 
 \begin{proof}
-\uses{prop:saddle-first-gain, lem:cylinder-inverse}
-Lemma~\ref{lem:cylinder-inverse} with $a=2$; central odd parity restricts the
-angular frequencies to odd integers, so the multiplier has no zero.
+\uses{prop:saddle-first-gain, lem:cylinder-inverse, lem:saddle-chart-parity,
+  lem:stream-weak-second-jet, lem:flat-jet-radial-mass, lem:inverse-square-nonintegrability}
+\leanok
+Localize the first vorticity weight to the saddle disk and pull it into
+$\Xi_P$. This is the physical-area input $\omega/r\in L^2$ for the cylinder
+inverse at $a=2$. The mixed axis parities allow only odd angular degrees,
+so there is no zero multiplier. In the smooth summand the constant and
+quadratic jets vanish, and evenness in the other coordinate leaves just
+the linear derivative along $q_j$. Subtract this linear term; the finite
+Taylor bound supplies the three weighted remainder norms. Add these to the
+particular jet and use weak uniqueness to identify the sum with the Fourier
+stream jet minus the same linear jet. Two admissible coefficients would give
+a constant difference in the $j$-derivative, which cannot have finite
+$r^{-2}$-weighted $L^2$ norm unless it is zero.
 \end{proof}
 
 \section{Odd--odd sector: regularity across the separatrix}

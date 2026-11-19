@@ -291,7 +291,7 @@ The equation and the representative on that annulus give the conclusion.
 
 Throughout this section $(v,f)$ is a transport pair on a neighbourhood of the
 closed positive cell, with $U$ invariant under $R$ and forcing character
-$\kappa\in\{1,-1\}$: $R^*f=\kappa f$. No rotation character of $v$ is needed below. Let
+$\kappa\in\{1,-1,i,-i\}$: $R^*f=\kappa f$. No rotation character of $v$ is needed below. Let
 $g(s)=f(\gamma(s))$ be the trace of $f$ on the arc of
 Definition~\ref{def:separatrix-arc}, with endpoint limits $c_\pm$. Then
 $c_+=\kappa c_-$.
@@ -299,11 +299,12 @@ $c_+=\kappa c_-$.
 \begin{lemma}[Melnikov condition]
 \label{lem:melnikov}
 \uses{def:transport-pair, def:separatrix-arc, def:canonical-profile, def:cells}
-\lean{NoEmbeddedEigenvalues.melnikov}
+\lean{NoEmbeddedEigenvalues.melnikov_character, NoEmbeddedEigenvalues.melnikov,
+  NoEmbeddedEigenvalues.exists_resonant_level_character}
 \leanok
 Let $(v,f)$ be a transport pair on an open union of orbits $U$ containing the
 closed square $|a|,|b|\le\pi/2$, with $U$ invariant under the rotation
-$R(x,y)=(y,-x)$ and $f\circ R=\kappa f$ for $\kappa=\pm1$, and with
+$R(x,y)=(y,-x)$ and $f\circ R=\kappa f$ for $\kappa^4=1$, and with
 $f$ continuous on $U$. Then the arc trace $g=f\circ\gamma$ has $g'\in L^1(\R)$ and
 $\int_\R g'(s)e^{-i\lambda s}\,ds=0$ (manuscript \texttt{(ee:melnikov)}).
 \end{lemma}
@@ -326,8 +327,9 @@ $\tfrac12$-H\"older on a smaller neighbourhood $W$ of the segment.
 
 \emph{Resonant levels.} Since $S$ is continuous and tends to $\infty$
 (Lemma~\ref{lem:period-basic}), the intermediate value theorem gives levels $h\to0$ with
-$kb(h)=\lambda$ and $e^{-2i\lambda L}=\kappa$, $L=L(h)$: take $|k|\equiv0$ or $2\pmod4$
-as $\kappa=1$ or $-1$, of the sign of $\lambda$, so that $2\lambda L=\pi k/2$. At such a
+$kb(h)=\lambda$ and $e^{-2i\lambda L}\kappa=1$, $L=L(h)$: choose the residue
+class of $k$ modulo four so that $e^{-i\pi k/2}=\kappa^{-1}$, and take $k$
+of the sign of $\lambda$ and arbitrarily large absolute value. At such a
 level, $\gamma_h(t+2L)=R\gamma_h(t)$ and the character make the four quarters of the
 resonant mode equal, so resonant vanishing gives
 $\int_{-L}^{L}e^{-i\lambda t}f(\gamma_h(t))\,dt=0$.
@@ -343,9 +345,9 @@ Lemma~\ref{lem:period-coarse}, $L\le C+\tfrac12\log(1/h)$, so this tends to zero
   =[g(t)e^{-i\lambda t}]_{-L}^{L}
      +i\lambda\int_{-L}^{L}g(t)e^{-i\lambda t}\,dt .
 \]
-Since $e^{-i\lambda L}=\kappa e^{i\lambda L}$, the boundary term is
-$e^{i\lambda L}(\kappa g(L)-g(-L))\to e^{i\lambda L}(\kappa c_+-c_-)=0$, where
-$c_+=f(R(\pi,0))=\kappa c_-$; only continuity of $f$ at the saddles is used. Finally
+Since $e^{-i\lambda L}=\kappa^{-1}e^{i\lambda L}$, the boundary term is
+$e^{i\lambda L}(\kappa^{-1}g(L)-g(-L))$ and tends to zero:
+$c_+=f(R(\pi,0))=\kappa c_-$. Only continuity of $f$ at the saddles is used. Finally
 $g'\in L^1$ passes to the full-line integral as $L\to\infty$.
 \end{proof}
 
@@ -632,12 +634,14 @@ Take real parts, bound by the complex norm, and integrate the constant bound.
 \uses{def:period}
 \lean{NoEmbeddedEigenvalues.volume_goodWindows_pos,
   NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow,
+  NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow_fourthRoot,
   NoEmbeddedEigenvalues.exp_orbitPeriod_ne_one_of_goodWindow}
 \leanok
 Let $\lambda\ne0$. The set of levels $h$ with $|\lambda S(h)-2\pi(j+\tfrac12)|<\pi/3$
 for some integer $j$ has positive measure in every interval $(0,\eta)$, and on it
 $|e^{i\lambda S(h)/4}-\kappa|\ge2\sin(\pi/12)$ for $\kappa=\pm1$
-(manuscript \texttt{(ee:good-windows)}). Also $e^{i\lambda S(h)}\ne1$ on these windows.
+(manuscript \texttt{(ee:good-windows)}). For any $\kappa^4=1$ the lower
+bound $1/4$ suffices. Also $e^{i\lambda S(h)}\ne1$ on these windows.
 \end{lemma}
 
 \begin{proof}
@@ -657,7 +661,9 @@ $2\sin(\pi/12)$. In the Lean proof this reads
 $|e^{i\theta}-\kappa|^2=2-2\kappa\cos\theta$ and
 $\cos^2\theta=\tfrac12(1+\cos2\theta)\le\tfrac34$, since $\cos2\theta=\pm\sin(\epsilon/2)$
 with $|\epsilon|<\pi/3$ the distance of $\lambda S$ from the phase centre.
-For full-period nonresonance, $e^{i\lambda S}=1$ would imply
+For all four characters, set $q=e^{i\theta}$. Since $\operatorname{Re}(q^4)
+=-\cos\epsilon\le0$, $1\le |q^4-1|$. Factoring the difference of squares
+twice gives $|q^4-1|\le4|q-\kappa|$. For full-period nonresonance, $e^{i\lambda S}=1$ would imply
 $\lambda S=2\pi n$ for an integer $n$, whose distance from
 $2\pi(j+\tfrac12)$ is at least $\pi$.
 \end{proof}
@@ -779,7 +785,7 @@ $\epsilon_n=Ch_n^{1/4}$ and $\beta_n=De^{-L_n/2}$.
 The endpoint values satisfy $c_+=\kappa c_-$, so the exponential bounds on
 $g-c_\pm$ and $\Omega$ give
 $|z(L_n)-\kappa z(-L_n)|\le\beta_n$.
-The difference equation and the good-window divisor bound $\delta=2\sin(\pi/12)>0$
+The difference equation and the good-window divisor bound $\delta=1/4$
 give, by Lemma~\ref{lem:transport-boundary-estimate},
 \[
  \|w_n\|_\infty\le
@@ -801,7 +807,8 @@ pairing tends to the full integral.
 \begin{lemma}[Limit of the vorticity pairing]
 \label{lem:pairing-limit}
 \uses{def:canonical-profile, def:transport-pair, lem:good-windows, def:cell-arcs, def:level-integral, def:cells}
-\lean{NoEmbeddedEigenvalues.pairing_limit}
+\lean{NoEmbeddedEigenvalues.pairing_limit_character, NoEmbeddedEigenvalues.pairing_limit,
+  NoEmbeddedEigenvalues.pairing_limit_character_of_goodLevels}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:melnikov}, for every null set $N$ there are levels
 $h_j\to0$ outside $N$, in the good windows of Lemma~\ref{lem:good-windows}, such that
@@ -810,7 +817,10 @@ $h_j\to0$ outside $N$, in the good windows of Lemma~\ref{lem:good-windows}, such
   \longrightarrow\sum_{k=0}^{3}\int_\R\operatorname{Re}(\Omega_k\bar g_k)\,ds,
 \]
 where $g_k=f\circ\gamma_k$ are the traces on the four arcs bounding $\Cell$ and $\Omega_k$
-their canonical profiles (manuscript \texttt{(ee:pairing-limit)}).
+their canonical profiles (manuscript \texttt{(ee:pairing-limit)}). The same
+limit holds on any such good sequence with ACL representatives as in
+Lemma~\ref{lem:good-level-transport}; this version allows a common sequence
+for more than one character.
 \end{lemma}
 
 \begin{proof}
@@ -852,18 +862,9 @@ Lemma~\ref{lem:rotation-characters} supplies only $\kappa=\pm1$ on the
 equal-parity sectors. In a mixed sector $(R^*)^2=-I$, so the needed
 characters are $\pm i$; their components need not retain a single mixed
 reflection sector. The transport gains must allow these complex characters.
-Likewise, Lemmas~\ref{lem:melnikov} and~\ref{lem:pairing-limit} assume
-$\kappa=\pm1$, so their citation in Proposition~\ref{prop:mixed-paired-flux}
-needs an extension and recombination of the character components.
-Lemma~\ref{lem:periodic-transport-character} allows complex $\kappa$.
-
-The good windows themselves need not change. If
-$q=e^{i\lambda S(h)/4}$ and $\kappa^4=1$, then
-$|q^4-1|\le4|q-\kappa|$. On the good windows
-$|q^4-1|\ge\sqrt3$, hence $|q-\kappa|\ge\sqrt3/4$ for all four
-characters. The remaining extension must check the resonant phases and
-the endpoint cancellation with $\kappa^{-1}=\bar\kappa$, rather than
-using $\kappa^2=1$.
+Lemmas~\ref{lem:melnikov} and~\ref{lem:pairing-limit} now allow all four
+characters on the same good windows. The mixed application still needs to
+select a common sequence and recombine the two complex-character components.
 \end{remark}
 
 \begin{definition}[Scalar phase and complete-cell endpoints]

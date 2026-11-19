@@ -307,12 +307,15 @@ end Holder
 
 section Resonant
 
-/-- Arbitrarily close to the separatrix there are resonant levels `kb(h) = λ` with
-`e^{-2iλL(h)} = κ`. Only continuity of `S` and `S → ∞` are used, not monotonicity. -/
-theorem exists_resonant_level {lam : ℝ} (hlam : lam ≠ 0) {κ : ℝ} (hκ : κ = 1 ∨ κ = -1)
+/-- Arbitrarily close to the separatrix there are resonant levels in every
+residue class of the absolute angular mode modulo four. -/
+theorem exists_resonant_level_index {lam : ℝ} (hlam : lam ≠ 0) (r : ℕ)
     {η : ℝ} (hη : 0 < η) :
+    let σ : ℤ := if 0 < lam then 1 else -1
     ∃ h, 0 < h ∧ h < η ∧ h < 1 ∧ ∃ k : ℤ, (k : ℝ) * orbitFrequency h = lam ∧
-      Complex.exp (-(2 * I * lam * eighthPeriod h)) = κ := by
+      Complex.exp (-(2 * I * lam * eighthPeriod h)) =
+        Complex.exp (-(I * ((σ * π * r / 2 : ℝ) : ℂ))) := by
+  let σ : ℤ := if 0 < lam then 1 else -1
   have hpi := pi_pos
   set η' := min η (1 / 2) / 2
   have hη'0 : 0 < η' := by positivity
@@ -320,7 +323,6 @@ theorem exists_resonant_level {lam : ℝ} (hlam : lam ≠ 0) {κ : ℝ} (hκ : �
   have hη'1 : η' < 1 := by have := min_le_right η (1 / 2); simp only [η']; linarith
   set μ := |lam|
   have hμ : 0 < μ := abs_pos.2 hlam
-  set r : ℕ := if κ = 1 then 0 else 2
   obtain ⟨m, hm⟩ := exists_nat_gt (orbitPeriod η' * μ / (8 * π))
   set n : ℕ := 4 * (m + 1) + r
   have hn : (4 * ((m : ℝ) + 1)) ≤ n := by simp only [n]; push_cast; linarith [(r.cast_nonneg : (0 : ℝ) ≤ r)]
@@ -340,13 +342,11 @@ theorem exists_resonant_level {lam : ℝ} (hlam : lam ≠ 0) {κ : ℝ} (hκ : �
   obtain ⟨h, hhI, hhT⟩ := intermediate_value_Icc' hh'.le
     (continuousOn_orbitPeriod.mono hsub) ⟨hT, hT'⟩
   refine ⟨h, hh'0'.trans_le hhI.1, hhI.2.trans_lt hη'η, hhI.2.trans_lt hη'1, ?_⟩
-  set σ : ℤ := if 0 < lam then 1 else -1
   have hσμ : lam = σ * μ := by
     simp only [σ, μ]
     split_ifs with h
     · simp [abs_of_pos h]
     · push_cast; rw [abs_of_neg (lt_of_le_of_ne (not_lt.1 h) hlam)]; ring
-  have hσ2 : (σ : ℝ) * σ = 1 := by simp only [σ]; split_ifs <;> norm_num
   have hnpos : (0 : ℝ) < n := lt_of_lt_of_le (by positivity) hn
   refine ⟨σ * n, ?_, ?_⟩
   · simp only [orbitFrequency, hhT, T]
@@ -368,19 +368,73 @@ theorem exists_resonant_level {lam : ℝ} (hlam : lam ≠ 0) {κ : ℝ} (hκ : �
       push_cast at this
       linear_combination (-I) * this
     rw [hc, Complex.exp_add, Complex.exp_int_mul_two_pi_mul_I, one_mul]
-    rcases hκ with rfl | rfl
-    · simp [r]
-    · have hr : r = 2 := by norm_num [r]
-      rw [hr]
-      have : -(I * ((σ * π * ((2 : ℕ) : ℝ) / 2 : ℝ) : ℂ)) = ((σ : ℂ) * (π * I)) * (-1) := by
-        push_cast; ring
-      rw [this]
-      simp only [σ]
-      split_ifs
-      · simp [Complex.exp_neg, Complex.exp_pi_mul_I]
-      · simp [Complex.exp_pi_mul_I]
+
+/-- Resonant levels whose backward quarter phase is the inverse of any of
+the four quarter-rotation characters. -/
+theorem exists_resonant_level_character {lam : ℝ} (hlam : lam ≠ 0) {κ : ℂ}
+    (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I) {η : ℝ} (hη : 0 < η) :
+    ∃ h, 0 < h ∧ h < η ∧ h < 1 ∧ ∃ k : ℤ, (k : ℝ) * orbitFrequency h = lam ∧
+      Complex.exp (-(2 * I * lam * eighthPeriod h)) * κ = 1 := by
+  have hphase (r : ℕ) (hr :
+      Complex.exp (-(I * (((if 0 < lam then 1 else -1 : ℤ) * π * r / 2 : ℝ) : ℂ))) *
+        κ = 1) :
+      ∃ h, 0 < h ∧ h < η ∧ h < 1 ∧ ∃ k : ℤ, (k : ℝ) * orbitFrequency h = lam ∧
+        Complex.exp (-(2 * I * lam * eighthPeriod h)) * κ = 1 := by
+    obtain ⟨h, h0, hη', h1, k, hk, he⟩ := exists_resonant_level_index hlam r hη
+    exact ⟨h, h0, hη', h1, k, hk, by rw [he]; exact hr⟩
+  have hpow (r : ℕ) :
+      exp (-(I * (((if 0 < lam then 1 else -1 : ℤ) * π * r / 2 : ℝ) : ℂ))) =
+        (if 0 < lam then -I else I) ^ r := by
+    by_cases h : 0 < lam
+    · simp only [h, ite_true, Int.cast_one, one_mul]
+      rw [← Complex.exp_neg_pi_div_two_mul_I, ← Complex.exp_nat_mul]
+      congr 1
+      push_cast
+      ring
+    · simp only [h, ite_false, Int.cast_neg, Int.cast_one, neg_mul, one_mul]
+      calc
+        _ = exp ((r : ℂ) * (π / 2 * I)) := by
+          congr 1
+          push_cast
+          ring
+        _ = I ^ r := by rw [Complex.exp_nat_mul, Complex.exp_pi_div_two_mul_I]
+  rcases hκ with rfl | rfl | rfl | rfl
+  · exact hphase 0 (by rw [hpow]; simp)
+  · apply hphase 2
+    rw [hpow]
+    split_ifs <;> simp [Complex.I_sq]
+  · by_cases h : 0 < lam
+    · apply hphase 1
+      rw [hpow]
+      simp [h, ← pow_two, Complex.I_sq]
+    · apply hphase 3
+      rw [hpow]
+      simp [h, show I ^ 3 = -I by rw [pow_succ, Complex.I_sq]; ring,
+        ← pow_two, Complex.I_sq]
+  · by_cases h : 0 < lam
+    · apply hphase 3
+      rw [hpow]
+      simp [h, show (-I) ^ 3 = I by rw [pow_succ, neg_sq, Complex.I_sq]; ring,
+        ← pow_two, Complex.I_sq]
+    · apply hphase 1
+      rw [hpow]
+      simp [h, ← pow_two, Complex.I_sq]
 
 end Resonant
+
+/-- Real-character specialization of the resonant-level lemma. -/
+theorem exists_resonant_level {lam : ℝ} (hlam : lam ≠ 0) {κ : ℝ} (hκ : κ = 1 ∨ κ = -1)
+    {η : ℝ} (hη : 0 < η) :
+    ∃ h, 0 < h ∧ h < η ∧ h < 1 ∧ ∃ k : ℤ, (k : ℝ) * orbitFrequency h = lam ∧
+      Complex.exp (-(2 * I * lam * eighthPeriod h)) = κ := by
+  have hc : (κ : ℂ) = 1 ∨ (κ : ℂ) = -1 ∨ (κ : ℂ) = I ∨ (κ : ℂ) = -I := by
+    rcases hκ with rfl | rfl <;> simp
+  obtain ⟨h, h0, hη', h1, k, hk, he⟩ := exists_resonant_level_character hlam hc hη
+  refine ⟨h, h0, hη', h1, k, hk, ?_⟩
+  rcases hκ with rfl | rfl
+  · simpa using he
+  · simp only [ofReal_neg, ofReal_one, mul_neg, mul_one] at he
+    simpa using congrArg Neg.neg he
 
 /-! ### The resonant quarter integral -/
 
@@ -392,7 +446,7 @@ theorem rotLift_iterate_mem {U : Set (ℝ × ℝ)} (hUR : ∀ p ∈ U, (p.2, -p.
   | zero => exact hp
   | succ j ih => rw [Function.iterate_succ_apply']; exact hUR _ ih
 
-theorem apply_rotLift_iterate {U : Set (ℝ × ℝ)} {f : ℝ × ℝ → ℂ} {κ : ℝ}
+theorem apply_rotLift_iterate {U : Set (ℝ × ℝ)} {f : ℝ × ℝ → ℂ} {κ : ℂ}
     (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
     {p : ℝ × ℝ} (hp : p ∈ U) (j : ℕ) : f (rotLift^[j] p) = (κ : ℂ) ^ j * f p := by
   induction j with
@@ -401,14 +455,15 @@ theorem apply_rotLift_iterate {U : Set (ℝ × ℝ)} {f : ℝ × ℝ → ℂ} {�
     rw [Function.iterate_succ_apply', rotLift, hfR _ (rotLift_iterate_mem hUR hp j), ih, pow_succ]
     ring
 
-/-- At a resonant level with `e^{-2iλL} = κ`, the four quarters of the resonant mode are equal,
+/-- At a resonant level with `e^{-2iλL} κ = 1`, the four quarters of the resonant mode are equal,
 so resonant vanishing gives `∫_{-L}^{L} e^{-iλt} f(γ_h(t)) dt = 0`. -/
-theorem integral_quarter_eq_zero_of_resonant {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+theorem integral_quarter_eq_zero_of_resonant {lam : ℝ} {κ : ℂ}
+    {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U)
     (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
     (hfc : ContinuousOn f U) {h : ℝ} (h0 : 0 < h) (h1 : h < 1) {k : ℤ}
     (hk : (k : ℝ) * orbitFrequency h = lam)
-    (he : Complex.exp (-(2 * I * lam * eighthPeriod h)) = κ) :
+    (he : Complex.exp (-(2 * I * lam * eighthPeriod h)) * κ = 1) :
     ∫ t in (-eighthPeriod h)..eighthPeriod h,
       Complex.exp (-(I * lam * t)) * f (dipoleOrbit h t) = 0 := by
   set L := eighthPeriod h
@@ -421,7 +476,6 @@ theorem integral_quarter_eq_zero_of_resonant {lam κ : ℝ} {U : Set (ℝ × ℝ
   have hφc : Continuous φ :=
     (by fun_prop : Continuous fun t : ℝ ↦ Complex.exp (-(I * lam * (t : ℂ)))).mul
       (hfc.comp_continuous hγc hcell)
-  have hκ2 : (κ : ℂ) ^ 2 = 1 := by rcases hκ with rfl | rfl <;> norm_num
   have hshift (j : ℕ) (t : ℝ) : φ (t + j * (2 * L)) = φ t := by
     simp only [φ]
     rw [dipoleOrbit_add_mul_quarter h0 h1 j t, apply_rotLift_iterate hUR hfR (hcell t) j]
@@ -431,7 +485,8 @@ theorem integral_quarter_eq_zero_of_resonant {lam κ : ℝ} {U : Set (ℝ × ℝ
       congr 1
       push_cast
       ring
-    rw [hexp, he, mul_assoc, ← mul_assoc ((κ : ℂ) ^ j), ← mul_pow, ← sq, hκ2, one_pow, one_mul]
+    rw [hexp, mul_assoc, ← mul_assoc (exp (-(2 * I * lam * L)) ^ j),
+      ← mul_pow, he, one_pow, one_mul]
   have hS : orbitPeriod h = 4 * (2 * L) := by simp only [orbitPeriod, L]; ring
   have hper : Function.Periodic φ (orbitPeriod h) := fun t ↦ by
     rw [hS]
@@ -547,11 +602,12 @@ end Parts
 /-! ### The Melnikov condition -/
 
 /-- The Melnikov condition. Let `(v, f)` be a transport pair on a neighbourhood of the closed
-    cell square that transforms with the character `κ = ±1` under the rotation
+    cell square that transforms with any fourth-root character under the rotation
     `R(x, y) = (y, -x)`, with `f` continuous. Then the trace `g = f ∘ γ` on the separatrix arc
     has `g' ∈ L¹` and `∫ g'(s) e^{-iλs} ds = 0`. -/
-theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+theorem melnikov_character {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U)
+    (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I)
     (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
     (hfc : ContinuousOn f U) :
     Integrable (deriv (f ∘ separatrixArc)) ∧
@@ -562,7 +618,7 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
   obtain ⟨hac, hdiff, hgi⟩ := arcTrace_regularity hUo hK hfc hp.memSobolevOn
   refine ⟨hgi, ?_⟩
   have hlam := hp.ne_zero
-  have hκ2 : (κ : ℂ) * κ = 1 := by rcases hκ with rfl | rfl <;> norm_num
+  have hκ0 : κ ≠ 0 := by rcases hκ with rfl | rfl | rfl | rfl <;> simp
   -- Hölder continuity near the arc, orbit comparison and the logarithmic size of `L`.
   obtain ⟨ρ, hρ, CH, hCH, hH⟩ := exists_holder_near_arcSegment hUo hK hfc hp.memSobolevOn
     (α := 1 / 2) (by norm_num) (by norm_num)
@@ -571,7 +627,8 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
   set Co' := max Co 0
   have hCo' : 0 ≤ Co' := le_max_right _ _
   -- Resonant levels tending to the separatrix.
-  have hseq (n : ℕ) := exists_resonant_level hlam hκ (η := 1 / ((n : ℝ) + 1)) (by positivity)
+  have hseq (n : ℕ) :=
+    exists_resonant_level_character hlam hκ (η := 1 / ((n : ℝ) + 1)) (by positivity)
   choose hs hs0 hsn hs1 ks hks hes using hseq
   have hlim0 : Tendsto hs atTop (𝓝 0) :=
     squeeze_zero (fun n ↦ (hs0 n).le) (fun n ↦ (hsn n).le) tendsto_one_div_add_atTop_nhds_zero_nat
@@ -601,7 +658,7 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
         I * lam * ∫ t in (-Ls n)..Ls n, g t * e t := by
     have := integral_deriv_mul_exp_eq hac hdiff hgi lam (Ls n)
     simpa only [profileIntegrand, he_def] using this
-  -- The boundary term: `e^{iλL}(κ g(L) - g(-L)) → e^{iλL}(κ c₊ - c₋) = 0`.
+  -- The backward phase is κ⁻¹, cancelling c₊ = κ c₋ at the endpoints.
   have hc : f (0, -π) = κ * f (π, 0) := by
     have := hfR (π, 0) (hK saddle_neg_mem_arcSegment)
     simpa using this
@@ -612,19 +669,22 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
     (hcont (hK saddle_neg_mem_arcSegment)).tendsto.comp
       (tendsto_separatrixArc_atBot.comp (tendsto_neg_atTop_atBot.comp hLtop))
   have hB : Tendsto (fun n ↦ g (Ls n) * e (Ls n) - g (-Ls n) * e (-Ls n)) atTop (𝓝 0) := by
-    have hlimit : Tendsto (fun n ↦ (κ : ℂ) * g (Ls n) - g (-Ls n)) atTop (𝓝 0) := by
-      have := (hgp.const_mul (κ : ℂ)).sub hgm
-      rwa [hc, ← mul_assoc, hκ2, one_mul, sub_self] at this
+    have hlimit : Tendsto (fun n ↦ κ⁻¹ * g (Ls n) - g (-Ls n)) atTop (𝓝 0) := by
+      have := (hgp.const_mul κ⁻¹).sub hgm
+      rwa [hc, ← mul_assoc, inv_mul_cancel₀ hκ0, one_mul, sub_self] at this
     rw [tendsto_zero_iff_norm_tendsto_zero] at hlimit ⊢
     refine hlimit.congr fun n ↦ ?_
-    have heL : e (Ls n) = e (-Ls n) * κ := by
-      rw [he_def, ← hes n, ← Complex.exp_add]
+    have hphase : Complex.exp (-(2 * I * lam * eighthPeriod (hs n))) = κ⁻¹ := by
+      rw [← one_div, eq_div_iff hκ0]
+      exact hes n
+    have heL : e (Ls n) = e (-Ls n) * κ⁻¹ := by
+      rw [he_def, ← hphase, ← Complex.exp_add]
       congr 1
       simp only [Ls]
       push_cast
       ring
-    rw [heL, show g (Ls n) * (e (-Ls n) * κ) - g (-Ls n) * e (-Ls n) =
-      e (-Ls n) * (κ * g (Ls n) - g (-Ls n)) by ring, norm_mul, hen, one_mul]
+    rw [heL, show g (Ls n) * (e (-Ls n) * κ⁻¹) - g (-Ls n) * e (-Ls n) =
+      e (-Ls n) * (κ⁻¹ * g (Ls n) - g (-Ls n)) by ring, norm_mul, hen, one_mul]
   -- The interior term: compare with the resonant orbit, whose integral vanishes.
   have hJ : Tendsto (fun n ↦ ∫ t in (-Ls n)..Ls n, g t * e t) atTop (𝓝 0) := by
     set A := 2 * CH * Co' ^ (1 / 2 : ℝ)
@@ -652,7 +712,7 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
       hU (subset_closure (dipoleOrbit_mem_cellSquare h0 h1 t))
     have hgc := continuous_of_absolutelyContinuous hac
     have hfγ : Continuous fun t ↦ f (dipoleOrbit h t) := hfc.comp_continuous hγc hcell
-    have hq := integral_quarter_eq_zero_of_resonant hp hU hκ hUR hfR hfc h0 h1 (hks n) (hes n)
+    have hq := integral_quarter_eq_zero_of_resonant hp hU hUR hfR hfc h0 h1 (hks n) (hes n)
     have hq' : ∫ t in (-L)..L, f (dipoleOrbit h t) * e t = 0 := by
       rw [← hq, he_def]
       congr 1
@@ -721,6 +781,16 @@ theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ
     rw [mul_zero, add_zero] at this
     exact this.congr fun n ↦ (hIBP n).symm
   exact tendsto_nhds_unique hI hzero
+
+/-- The real-character case of the Melnikov condition, for the equal-parity sectors. -/
+theorem melnikov {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+    (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
+    (hfc : ContinuousOn f U) :
+    Integrable (deriv (f ∘ separatrixArc)) ∧
+      ∫ s, profileIntegrand lam (f ∘ separatrixArc) s = 0 := by
+  apply melnikov_character hp hU _ hUR hfR hfc
+  rcases hκ with rfl | rfl <;> simp
 
 /-! ### Eigenfunctions -/
 

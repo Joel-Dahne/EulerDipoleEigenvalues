@@ -78,7 +78,8 @@ energies may diverge (manuscript \texttt{(mf:paired)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:ee-truncated-virial, prop:saddle-first-gain, cor:mixed-saddle-jet, lem:saddle-normal-form}
+\uses{lem:ee-truncated-virial, prop:saddle-first-gain, cor:mixed-saddle-jet,
+  lem:saddle-normal-form, lem:pairing-limit}
 The bulk is integrable since $f_0\le C/d^2$ and $\omega/d\in L^2$. Apply
 the truncated virial along good levels. In inward orthonormal saddle
 coordinates $(\xi,\eta)$ the model jet $\ell=A\xi$ has
@@ -89,17 +90,20 @@ coordinates $(\xi,\eta)$ the model jet $\ell=A\xi$ has
 \]
 Its integral on a symmetrically truncated hyperbola vanishes under
 $\xi\leftrightarrow\eta$, cancelling the two adjacent logarithms.
-The weighted jet estimate controls the remainder. The canonical pairing
-limit still needs the mixed-character argument below.
+The weighted jet estimate controls the remainder. For the canonical
+pairing, apply Lemma~\ref{lem:pairing-limit} to both character components
+on a common good sequence. The cross pairings cancel: shifting by one
+quarter multiplies the product of a $+i$ component and the conjugate of a
+$-i$ component by $-1$, both on a regular orbit and in the sum on the arcs.
 \end{proof}
 
-\begin{remark}[Digest note: pairing reuse needs complex characters]
-The truncated normal-field virial has no reflection-parity hypothesis.
-Lemma~\ref{lem:pairing-limit}, however, assumes rotation character $\pm1$.
-On mixed functions the square of the quarter rotation acts by $-1$, so the
-argument needs the $\pm i$ character extension, or a separate half-orbit proof.
-This is not supplied by the even--even gradient trace theorem either:
-mixed linear saddle jets can make the individual edge energies divergent.
+\begin{remark}[Digest note: two parts of the mixed flux limit]
+Lemma~\ref{lem:pairing-limit} now supports the $\pm i$ characters on a
+prescribed good sequence carrying both transports. The mixed application
+still has to choose that sequence and formalize the recombination.
+Separately, the even--even gradient trace theorem cannot handle the
+signed corner cancellation: mixed linear jets can make the individual
+edge energies divergent.
 \end{remark}
 
 \begin{proposition}[Mixed virial identity]

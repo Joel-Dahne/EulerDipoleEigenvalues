@@ -342,6 +342,55 @@ theorem norm_exp_sub_ge_of_goodWindow {lam h : ℝ} {j : ℤ}
     linarith
   exact (abs_le_of_sq_le_sq' hsq (norm_nonneg _)).2
 
+/-- The good windows work for all four quarter-rotation characters. A uniform
+gap for the full-period phase gives a gap for each fourth root of unity. -/
+theorem norm_exp_sub_ge_of_goodWindow_fourthRoot {lam h : ℝ} {j : ℤ}
+    (hj : |lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)| < Real.pi / 3)
+    {κ : ℂ} (hκ : κ ^ 4 = 1) :
+    (1 / 4 : ℝ) ≤ ‖exp (I * (lam * orbitPeriod h / 4)) - κ‖ := by
+  let q := exp (I * (lam * orbitPeriod h / 4))
+  have hq : ‖q‖ = 1 := by simp [q, Complex.norm_exp]
+  have hkpow := congrArg norm hκ
+  rw [norm_pow, norm_one] at hkpow
+  have hk : ‖κ‖ = 1 :=
+    (pow_left_inj₀ (norm_nonneg _) zero_le_one (by decide : (4 : ℕ) ≠ 0)).mp
+      (hkpow.trans (one_pow 4).symm)
+  have hsq (x y : ℂ) (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) :
+      ‖x ^ 2 - y ^ 2‖ ≤ 2 * ‖x - y‖ := by
+    rw [show x ^ 2 - y ^ 2 = (x - y) * (x + y) by ring, norm_mul, mul_comm 2]
+    apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+    simpa [hx, hy, one_add_one_eq_two] using norm_add_le x y
+  have hbound : ‖q ^ 4 - 1‖ ≤ 4 * ‖q - κ‖ := by
+    have hb := hsq (q ^ 2) (κ ^ 2) (by simp [norm_pow, hq]) (by simp [norm_pow, hk])
+    rw [← pow_mul, ← pow_mul, show (2 : ℕ) * 2 = 4 by decide, hκ] at hb
+    linarith [hsq q κ hq hk]
+  let err := lam * orbitPeriod h - 2 * Real.pi * (j + 1 / 2)
+  have he : |err| < Real.pi / 3 := hj
+  have hc : 0 ≤ Real.cos err := Real.cos_nonneg_of_mem_Icc
+    ⟨by have := (abs_lt.mp he).1; linarith [Real.pi_pos],
+      by have := (abs_lt.mp he).2; linarith [Real.pi_pos]⟩
+  have hq4 : q ^ 4 = -exp ((err : ℂ) * I) := by
+    rw [show q = exp ((lam * orbitPeriod h / 4 : ℝ) * I) by
+      unfold q
+      push_cast
+      ring, ← exp_nat_mul]
+    have hangle : (4 : ℂ) * ((lam * orbitPeriod h / 4 : ℝ) * I) =
+        (j : ℂ) * (2 * Real.pi * I) + Real.pi * I + (err : ℂ) * I := by
+      dsimp [err]
+      push_cast
+      ring
+    rw [Nat.cast_ofNat, hangle, exp_add, exp_add, exp_int_mul_two_pi_mul_I, exp_pi_mul_I]
+    ring
+  have hre : (q ^ 4 - 1).re ≤ -1 := by
+    rw [hq4]
+    simpa using (show -Real.cos err - 1 ≤ -1 by linarith)
+  have habs : 1 ≤ |(q ^ 4 - 1).re| := by
+    have hnonpos : (q ^ 4 - 1).re ≤ 0 := by linarith
+    rw [abs_of_nonpos hnonpos]
+    linarith
+  change (1 / 4 : ℝ) ≤ ‖q - κ‖
+  linarith [habs.trans (abs_re_le_norm (q ^ 4 - 1)), hbound]
+
 open Filter Topology in
 /-- A good window is also nonresonant for the full period. -/
 theorem exp_orbitPeriod_ne_one_of_goodWindow {lam h : ℝ} {j : ℤ}

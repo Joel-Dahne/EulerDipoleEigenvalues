@@ -253,7 +253,8 @@ proof mechanisms. Module names below are relative to
 - `EigenfunctionTransport.lean`: invariant cell neighbourhood and representative
   changes for eigenfunction transport pairs and level integrals.
 - `Melnikov.lean`, `PairingLimit.lean`: Melnikov condition, forcing comparison,
-  quarter/full pairing limits and eigenfunction specializations.
+  quarter/full pairing limits for all four rotation characters and eigenfunction
+  specializations. The full pairing also accepts a prescribed good sequence.
 - `TransportOperator.lean`: unbounded `H = -iL₀`, self-adjointness/core/group
   statements. This is a separate route, not required by the even–even exclusion.
 
@@ -452,6 +453,8 @@ can be added here as they are formalized.
   smooth harmonic comparison and parity's forbidden Taylor jets; its original
   public statement and all derivative witnesses are retained.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
+- `Regularity/MixedSaddle.lean`: the exponent-two inverse gives the unique
+  linear jet in the odd coordinate and the three weighted remainders.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization and quadratic compatibility.
   The raw chart parity theorem lives in `SaddleChartPullback.lean`, after its

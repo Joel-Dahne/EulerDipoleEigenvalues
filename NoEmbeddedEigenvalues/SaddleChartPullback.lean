@@ -164,30 +164,37 @@ theorem torusProj_saddleChart_axisReflect {P : ℝ × ℝ} (hP : P ∈ saddleSet
     push_cast
     linear_combination -Real.pi * hkr
 
-/-- Odd–odd torus parity becomes oddness in both local chart axes, a.e.
-(`lem:saddle-chart-parity`). No pointwise symmetry of an arbitrary L² representative
-is asserted. -/
-theorem saddle_chart_parity {P : ℝ × ℝ} (hP : P ∈ saddleSet) {f : L2}
-    (hf : InSector false false f) :
-    ∀ j, ∀ᵐ q, liftL2 f (saddleOrthoChart P (axisReflect j q)) =
-      -liftL2 f (saddleOrthoChart P q) := by
-  have h1 : ∀ᵐ t : Torus, f (S₁ t) = -f t := by
-    filter_upwards [ae_comp_of_pullback_eq hf.1, Lp.coeFn_smul (-1 : ℂ) f] with t ht hsm
-    simpa only [symmetry₁, paritySign, Bool.false_eq_true, ite_false, hsm,
-      Pi.smul_apply, smul_eq_mul, neg_one_mul] using ht
-  have h2 : ∀ᵐ t : Torus, f (S₂ t) = -f t := by
-    filter_upwards [ae_comp_of_pullback_eq hf.2, Lp.coeFn_smul (-1 : ℂ) f] with t ht hsm
-    simpa only [symmetry₂, paritySign, Bool.false_eq_true, ite_false, hsm,
-      Pi.smul_apply, smul_eq_mul, neg_one_mul] using ht
+/-- Torus reflection parities become the corresponding axis parities in the
+orthonormal saddle chart, almost everywhere. -/
+theorem saddle_chart_sector_parity {P : ℝ × ℝ} (hP : P ∈ saddleSet) {f : L2}
+    {ε₁ ε₂ : Bool} (hf : InSector ε₁ ε₂ f) :
+    ∀ j : Fin 2, ∀ᵐ q, liftL2 f (saddleOrthoChart P (axisReflect j q)) =
+      paritySign (if j = 0 then ε₁ else ε₂) * liftL2 f (saddleOrthoChart P q) := by
+  have h1 : ∀ᵐ t : Torus, f (S₁ t) = paritySign ε₁ * f t := by
+    filter_upwards [ae_comp_of_pullback_eq hf.1, Lp.coeFn_smul (paritySign ε₁) f]
+      with t ht hsm
+    simpa only [symmetry₁, hsm, Pi.smul_apply, smul_eq_mul] using ht
+  have h2 : ∀ᵐ t : Torus, f (S₂ t) = paritySign ε₂ * f t := by
+    filter_upwards [ae_comp_of_pullback_eq hf.2, Lp.coeFn_smul (paritySign ε₂) f]
+      with t ht hsm
+    simpa only [symmetry₂, hsm, Pi.smul_apply, smul_eq_mul] using ht
   have hc1 := (measurePreserving_saddleChart hP).quasiMeasurePreserving.ae (ae_torusProj h1)
   have hc2 := (measurePreserving_saddleChart hP).quasiMeasurePreserving.ae (ae_torusProj h2)
   intro j
   filter_upwards [hc1, hc2] with q hq1 hq2
   change f (torusProj (saddleOrthoChart P (axisReflect j q))) =
-    -f (torusProj (saddleOrthoChart P q))
+    paritySign (if j = 0 then ε₁ else ε₂) * f (torusProj (saddleOrthoChart P q))
   rw [torusProj_saddleChart_axisReflect hP]
   fin_cases j
   · exact hq1
   · exact hq2
+
+/-- Odd–odd specialization (`lem:saddle-chart-parity`). -/
+theorem saddle_chart_parity {P : ℝ × ℝ} (hP : P ∈ saddleSet) {f : L2}
+    (hf : InSector false false f) :
+    ∀ j, ∀ᵐ q, liftL2 f (saddleOrthoChart P (axisReflect j q)) =
+      -liftL2 f (saddleOrthoChart P q) := by
+  intro j
+  simpa [paritySign] using saddle_chart_sector_parity hP hf j
 
 end NoEmbeddedEigenvalues

@@ -145,6 +145,7 @@ import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.OddOddGradientTraces
 import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
+import NoEmbeddedEigenvalues.Regularity.MixedSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddCellH1
 import NoEmbeddedEigenvalues.Regularity.OddOddEdgeTraces

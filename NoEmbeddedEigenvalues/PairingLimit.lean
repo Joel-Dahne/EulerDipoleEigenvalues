@@ -205,9 +205,9 @@ set_option maxHeartbeats 1600000 in
 -- The endpoint estimate and ODE comparison are assembled with several integral limits.
 /-- The pairing on a single quarter converges to the canonical arc pairing along
     any good sequence carrying ACL transport solutions with the quarter character. -/
-theorem quarter_pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+theorem quarter_pairing_limit {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
     (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U)
-    (hκ : κ = 1 ∨ κ = -1) (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U)
+    (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I) (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U)
     (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p) (hfc : ContinuousOn f U)
     {hs : ℕ → ℝ} (hh : ∀ n, hs n ∈ Ioo 0 1 ∧
       ∃ m : ℤ, |lam * orbitPeriod (hs n) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3)
@@ -231,7 +231,7 @@ theorem quarter_pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ �
     exists_forcing_comparison hp.isOrbitUnion.1 hU hfc hp.memSobolevOn
   have hK := arcSegment_subset_closure_cellSquare.trans hU
   obtain ⟨hgac, hgdiff, hgi⟩ := arcTrace_regularity hp.isOrbitUnion.1 hK hfc hp.memSobolevOn
-  have hMel := (melnikov hp hU hκ hUR hfR hfc).2
+  have hMel := (melnikov_character hp hU hκ hUR hfR hfc).2
   obtain ⟨B, hΩ⟩ := norm_canonicalProfile_le_exp hgac hgi hMel (by norm_num : (0 : ℝ) < 1 / 2)
     hgp hgm
   have hB : 0 ≤ B := (norm_nonneg _).trans (by simpa using hΩ 0)
@@ -248,7 +248,7 @@ theorem quarter_pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ �
     dsimp [z, canonicalUnknown, g, Function.comp_def]
     ring
   have hzd := ae_hasDerivAt_canonicalUnknown_sub hp.ne_zero hgi hgdiff
-  have hκnorm : ‖(κ : ℂ)‖ = 1 := by rcases hκ with rfl | rfl <;> norm_num
+  have hκnorm : ‖(κ : ℂ)‖ = 1 := by rcases hκ with rfl | rfl | rfl | rfl <;> simp [← pow_two, Complex.I_sq]
   have hends : f (0, -π) = κ * f (π, 0) := by
     simpa using hfR (π, 0) (hK saddle_neg_mem_arcSegment)
   let D : ℝ := 2 * (B + C) / |lam|
@@ -287,9 +287,8 @@ theorem quarter_pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ �
       _ ≤ (2 * (B + C) * Real.exp (-(1 / 2) * L n)) / |lam| :=
         div_le_div_of_nonneg_right hnum (abs_nonneg _)
       _ = β n := by dsimp [β, D]; ring
-  let δ : ℝ := 2 * Real.sin (Real.pi / 12)
-  have hδ : 0 < δ := mul_pos (by norm_num) (Real.sin_pos_of_pos_of_lt_pi
-    (by linarith [Real.pi_pos]) (by linarith [Real.pi_pos]))
+  let δ : ℝ := 1 / 4
+  have hδ : 0 < δ := by norm_num [δ]
   let A : ℕ → ℝ := fun n ↦ |lam| * ((β n + 2 * L n * ε n) / δ + 2 * L n * ε n) + ε n
   let E : ℕ → ℝ := fun n ↦ (A n * M + B * ε n) * (2 * L n)
   let P : ℕ → ℝ := fun n ↦ ∫ t in (-L n)..L n,
@@ -313,9 +312,10 @@ theorem quarter_pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ �
       ring
     have hdiv : δ ≤ ‖exp (I * lam * ((L n : ℂ) - (-L n : ℝ))) - κ‖ := by
       obtain ⟨m, hm⟩ := (hh n).2
-      have hk : (κ : ℂ) = 1 ∨ (κ : ℂ) = -1 := by
-        rcases hκ with rfl | rfl <;> simp
-      have hb := norm_exp_sub_ge_of_goodWindow hm hk
+      have hk : κ ^ 4 = 1 := by
+        rw [show (4 : ℕ) = 2 * 2 by decide, pow_mul]
+        rcases hκ with rfl | rfl | rfl | rfl <;> norm_num [neg_sq, Complex.I_sq]
+      have hb := norm_exp_sub_ge_of_goodWindow_fourthRoot hm hk
       convert hb using 1
       congr 2
       dsimp only [L, orbitPeriod]
@@ -407,8 +407,8 @@ private theorem canonicalProfile_const_mul (lam : ℝ) (c : ℂ) (g : ℝ → �
     integral_const_mul]
   ring
 
-private theorem integral_arc_pairing_eq {lam κ : ℝ} {U : Set (ℝ × ℝ)} {f : ℝ × ℝ → ℂ}
-    (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+private theorem integral_arc_pairing_eq {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {f : ℝ × ℝ → ℂ}
+    (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I)
     (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p) (k : ℕ) :
     (∫ s, (canonicalProfile lam (f ∘ cellArc k) s * conj (f (cellArc k s))).re) =
       ∫ s, (canonicalProfile lam (f ∘ separatrixArc) s * conj (f (separatrixArc s))).re := by
@@ -417,7 +417,7 @@ private theorem integral_arc_pairing_eq {lam κ : ℝ} {U : Set (ℝ × ℝ)} {f
     exact apply_rotLift_iterate hUR hfR
       (hU (arcSegment_subset_closure_cellSquare (separatrixArc_mem_arcSegment s))) k
   have hunit : (κ : ℂ) * conj (κ : ℂ) = 1 := by
-    rcases hκ with rfl | rfl <;> norm_num
+    rcases hκ with rfl | rfl | rfl | rfl <;> simp [← pow_two, Complex.I_sq]
   have hpow : (κ : ℂ) ^ k * conj ((κ : ℂ) ^ k) = 1 := by
     rw [map_pow, ← mul_pow, hunit, one_pow]
   change (∫ s, (canonicalProfile lam (f ∘ cellArc k) s * conj ((f ∘ cellArc k) s)).re) = _
@@ -434,29 +434,32 @@ private theorem integral_arc_pairing_eq {lam κ : ℝ} {U : Set (ℝ × ℝ)} {f
 
 set_option maxHeartbeats 1200000 in
 -- Assemble the representative changes, periodic integral identities and quarter limit.
-/-- The limit of the vorticity pairing (`lem:pairing-limit`). Under the hypotheses of
-    `melnikov`, for every null set `N` there are good levels `h_j → 0` outside `N` along which
-    `∮ Re(v f̄) dt` tends to `∑_γ ∫ Re(Ω_γ ḡ_γ) ds` over the four arcs of the cell. -/
-theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+/-- For any common good sequence carrying the specified ACL transports, the
+vorticity pairing converges to the four canonical arc pairings. Keeping the
+sequence as input permits use on several rotation components at once. -/
+theorem pairing_limit_character_of_goodLevels {lam : ℝ} {κ : ℂ}
+    {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U)
+    (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I)
     (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
-    (hfc : ContinuousOn f U)
-    {N : Set ℝ} (hN : volume N = 0) :
-    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Set.Ioo 0 1 ∧ hs j ∉ N ∧
-        ∃ m : ℤ, |lam * orbitPeriod (hs j) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3) ∧
-      Tendsto hs atTop (𝓝 0) ∧
-      Tendsto (fun j ↦ levelIntegral (hs j) (fun p ↦ (v p * (starRingEnd ℂ) (f p)).re)) atTop
-        (𝓝 (∑ k ∈ Finset.range 4, ∫ s, (canonicalProfile lam (f ∘ cellArc k) s *
-          (starRingEnd ℂ) (f (cellArc k s))).re)) := by
-  obtain ⟨hs, Z, hhs, hlim, hZ⟩ := hp.exists_goodLevels_transport (subset_closure.trans hU)
-    (κ := (κ : ℂ)) (fun p hp ↦ hfR p hp) hN
+    (hfc : ContinuousOn f U) {hs : ℕ → ℝ}
+    (hhs : ∀ n, hs n ∈ Ioo 0 1 ∧
+      ∃ m : ℤ, |lam * orbitPeriod (hs n) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3)
+    (hlim : Tendsto hs atTop (𝓝 0)) {Z : ℕ → ℝ → ℂ}
+    (hZ : ∀ n, (∀ᵐ t, Z n t = transportUnknown lam v f (dipoleOrbit (hs n) t)) ∧
+      (∀ a b, AbsolutelyContinuousOnInterval (Z n) a b) ∧
+      (∀ᵐ t, HasDerivAt (Z n) (I * (lam * Z n t + f (dipoleOrbit (hs n) t))) t) ∧
+      ∀ t, Z n (t + 2 * eighthPeriod (hs n)) = κ * Z n t) :
+    Tendsto (fun n ↦ levelIntegral (hs n) (fun p ↦ (v p * conj (f p)).re)) atTop
+      (𝓝 (∑ k ∈ Finset.range 4, ∫ s, (canonicalProfile lam (f ∘ cellArc k) s *
+        conj (f (cellArc k s))).re)) := by
   have hchar (n : ℕ) : Z n (eighthPeriod (hs n)) = κ * Z n (-eighthPeriod (hs n)) := by
-    have h := (hZ n).2.2.2.2 (-eighthPeriod (hs n))
+    have h := (hZ n).2.2.2 (-eighthPeriod (hs n))
     simpa only [show -eighthPeriod (hs n) + 2 * eighthPeriod (hs n) = eighthPeriod (hs n)
       by ring] using h
   have hq := quarter_pairing_limit hp hU hκ hUR hfR hfc
-    (fun n ↦ ⟨(hhs n).1, (hhs n).2.2⟩) hlim
-    (fun n ↦ (hZ n).2.2.1) (fun n ↦ (hZ n).2.2.2.1) hchar
+    (fun n ↦ ⟨(hhs n).1, (hhs n).2⟩) hlim
+    (fun n ↦ (hZ n).2.1) (fun n ↦ (hZ n).2.2.1) hchar
   have hfull (n : ℕ) : levelIntegral (hs n) (fun p ↦ (v p * conj (f p)).re) =
       4 * ∫ t in (-eighthPeriod (hs n))..eighthPeriod (hs n),
         ((-(lam : ℂ) * Z n t - f (dipoleOrbit (hs n) t)) *
@@ -467,7 +470,7 @@ theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ �
     have hGc : Continuous G := hfc.comp_continuous
       (continuous_dipoleOrbit.comp (continuous_const.prodMk continuous_id))
       (fun t ↦ hU (subset_closure (dipoleOrbit_mem_cellSquare (hhs n).1.1 (hhs n).1.2 t)))
-    have hZc := continuous_of_absolutelyContinuous (hZ n).2.2.1
+    have hZc := continuous_of_absolutelyContinuous (hZ n).2.1
     have hQc : Continuous Q := by dsimp only [Q, V]; fun_prop
     have hGchar (t : ℝ) : G (t + 2 * eighthPeriod (hs n)) = κ * G t := by
       dsimp only [G]
@@ -475,10 +478,10 @@ theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ �
       exact hfR _ (hU (subset_closure (dipoleOrbit_mem_cellSquare (hhs n).1.1 (hhs n).1.2 t)))
     have hVchar (t : ℝ) : V (t + 2 * eighthPeriod (hs n)) = κ * V t := by
       dsimp only [V]
-      rw [(hZ n).2.2.2.2 t, hGchar]
+      rw [(hZ n).2.2.2 t, hGchar]
       ring
     have hunit : (κ : ℂ) * conj (κ : ℂ) = 1 := by
-      rcases hκ with rfl | rfl <;> norm_num
+      rcases hκ with rfl | rfl | rfl | rfl <;> simp [← pow_two, Complex.I_sq]
     have hper : Function.Periodic Q (2 * eighthPeriod (hs n)) := by
       intro t
       dsimp only [Q]
@@ -514,9 +517,42 @@ theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ �
       4 * ∫ s, (canonicalProfile lam (f ∘ separatrixArc) s * conj (f (separatrixArc s))).re := by
     simp_rw [integral_arc_pairing_eq hU hκ hUR hfR]
     simp
-  refine ⟨hs, hhs, hlim, ?_⟩
   rw [harcs]
   exact (hq.const_mul 4).congr fun n ↦ (hfull n).symm
+
+/-- The limit of the vorticity pairing for any of the four rotation characters.
+The good sequence can avoid an arbitrary prescribed null set. -/
+theorem pairing_limit_character {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I)
+    (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
+    (hfc : ContinuousOn f U)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Set.Ioo 0 1 ∧ hs j ∉ N ∧
+        ∃ m : ℤ, |lam * orbitPeriod (hs j) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3) ∧
+      Tendsto hs atTop (𝓝 0) ∧
+      Tendsto (fun j ↦ levelIntegral (hs j) (fun p ↦ (v p * (starRingEnd ℂ) (f p)).re)) atTop
+        (𝓝 (∑ k ∈ Finset.range 4, ∫ s, (canonicalProfile lam (f ∘ cellArc k) s *
+          (starRingEnd ℂ) (f (cellArc k s))).re)) := by
+  obtain ⟨hs, Z, hhs, hlim, hZ⟩ := hp.exists_goodLevels_transport
+    (subset_closure.trans hU) (κ := κ) (fun p hp ↦ hfR p hp) hN
+  exact ⟨hs, hhs, hlim, pairing_limit_character_of_goodLevels hp hU hκ hUR hfR hfc
+    (fun n ↦ ⟨(hhs n).1, (hhs n).2.2⟩) hlim (Z := Z)
+    (fun n ↦ ⟨(hZ n).1, (hZ n).2.2⟩)⟩
+
+/-- The real-character specialization used in the equal-parity sectors. -/
+theorem pairing_limit {lam κ : ℝ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1)
+    (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
+    (hfc : ContinuousOn f U)
+    {N : Set ℝ} (hN : volume N = 0) :
+    ∃ hs : ℕ → ℝ, (∀ j, hs j ∈ Set.Ioo 0 1 ∧ hs j ∉ N ∧
+        ∃ m : ℤ, |lam * orbitPeriod (hs j) - 2 * Real.pi * (m + 1 / 2)| < Real.pi / 3) ∧
+      Tendsto hs atTop (𝓝 0) ∧
+      Tendsto (fun j ↦ levelIntegral (hs j) (fun p ↦ (v p * (starRingEnd ℂ) (f p)).re)) atTop
+        (𝓝 (∑ k ∈ Finset.range 4, ∫ s, (canonicalProfile lam (f ∘ cellArc k) s *
+          (starRingEnd ℂ) (f (cellArc k s))).re)) := by
+  apply pairing_limit_character hp hU _ hUR hfR hfc hN
+  rcases hκ with rfl | rfl <;> simp
 
 
 /-- Melnikov and pairing traces specialized to raw eigenfunction lifts and continuous arc
