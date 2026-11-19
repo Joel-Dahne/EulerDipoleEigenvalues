@@ -6,6 +6,10 @@ import NoEmbeddedEigenvalues.FirstTransportGain
 import NoEmbeddedEigenvalues.SecondTransportGain
 import NoEmbeddedEigenvalues.WeakPointRemoval
 import NoEmbeddedEigenvalues.LocalContinuousRepresentative
+import NoEmbeddedEigenvalues.IntervalLinearHardy
+import NoEmbeddedEigenvalues.Analysis.AxisReflectionJets
+import NoEmbeddedEigenvalues.SpecifiedJetLp
+import NoEmbeddedEigenvalues.TraceH2
 
 /-!
 # Local analytic interfaces for the quotient construction
@@ -24,7 +28,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set Filter
-open scoped Topology
+open scoped Topology ENNReal
 
 /-- One-coordinate H³ division, including the uniform H² bound (`lem:odd-h3-division`). -/
 theorem odd_h3_division {l r b : ℝ} (hlr : l < r) (hb : 0 < b) :
@@ -168,6 +172,80 @@ theorem weighted_h2_point_removal {ρ : ℝ} (hρ : 0 < ρ) {V : ℝ × ℝ → 
   filter_upwards [he] with p hp
   rw [hD.1, hp]
 
+/-- The continuous sections of an a.e. odd derivative vanish on the axis.
+Apply interior Hardy on each section and integrate the resulting squared bound. -/
+private theorem odd_vertical_hardy {a l r : ℝ} (ha : 0 < a) (hlr : l < r)
+    {d dd : ℝ × ℝ → ℂ}
+    (hd : MemLp d 2 (volume.restrict (Ioo l r ×ˢ Ioo (-a) a)))
+    (hdd : MemLp dd 2 (volume.restrict (Ioo l r ×ˢ Ioo (-a) a)))
+    (hw : HasWeakPartialOn (Ioo l r ×ˢ Ioo (-a) a) 1 d dd)
+    (ho : ∀ᵐ p ∂(volume.restrict (Ioo l r ×ˢ Ioo (-a) a)), d (p.1, -p.2) = -d p) :
+    MemLp (fun p ↦ d p / (p.2 : ℂ)) 2 (volume.restrict (Ioo l r ×ˢ Ioo (-a) a)) ∧
+      (∫ p in Ioo l r ×ˢ Ioo (-a) a, ‖d p / (p.2 : ℂ)‖ ^ 2) ≤
+        4 * ∫ p in Ioo l r ×ˢ Ioo (-a) a, ‖dd p‖ ^ 2 := by
+  let I := Ioo l r
+  let J := Ioo (-a) a
+  let U := I ×ˢ J
+  have hz : (0 : ℝ) ∈ J := ⟨neg_lt_zero.mpr ha, ha⟩
+  have hneg : MapsTo (fun t : ℝ ↦ -t) J J := fun t ht ↦
+    ⟨by linarith [ht.2], by linarith [ht.1]⟩
+  have hmaps : MapsTo (axisReflect 1) U U :=
+    fun p hp ↦ ⟨hp.1, hneg hp.2⟩
+  obtain ⟨G, hGm, hGe, hGa⟩ := hw.exists_acl_sections isOpen_Ioo ordConnected_Ioo
+    (nonempty_Ioo.mpr hlr) isOpen_Ioo ordConnected_Ioo (nonempty_Ioo.mpr (hz.1.trans hz.2))
+  have hGr := ((measurePreserving_axisReflect 1).quasiMeasurePreserving.restrict hmaps).ae hGe
+  have hGo : (fun p : ℝ × ℝ ↦ G (p.1, -p.2)) =ᵐ[volume.restrict U] fun p ↦ -G p := by
+    filter_upwards [hGr, hGe, ho] with p hp he ho
+    change G (p.1, -p.2) = d (p.1, -p.2) at hp
+    rw [hp, ho, he]
+  have hc := hGa.ae_continuousOn isOpen_Ioo
+  have hco : ∀ᵐ x ∂(volume.restrict I),
+      ContinuousOn (fun t ↦ G (x, -t)) J := by
+    filter_upwards [hc] with x hx
+    exact hx.comp continuous_neg.continuousOn hneg
+  have hrows := ae_eqOn_sections_of_ae_eq isOpen_Ioo hGo hco
+    (hc.mono fun x hx ↦ hx.neg)
+  have hGzero : ∀ᵐ x ∂(volume.restrict I), G (x, 0) = 0 := by
+    filter_upwards [hrows] with x hx
+    apply CharZero.eq_neg_self_iff.mp
+    simpa only [neg_zero] using hx 0 hz
+  let Q := fun p : ℝ × ℝ ↦ G p / (p.2 : ℂ)
+  have hQm : Measurable Q := by dsimp [Q]; fun_prop
+  have hrowbound : ∀ᵐ x ∂(volume.restrict I),
+      (∫⁻ t in J, ENNReal.ofReal (‖Q (x, t)‖ ^ 2)) ≤
+        4 * ∫⁻ t in J, ENNReal.ofReal (‖dd (x, t)‖ ^ 2) := by
+    filter_upwards [hGa.ae_hasIntervalH1 (hd.ae_eq hGe.symm) hdd, hGzero] with x hx hx0
+    apply hx.lintegral_hardy_interior hz hx0
+    intro t ht
+    by_cases h : t = 0
+    · simpa [h] using hx0
+    · simpa only [sub_zero] using (mul_div_cancel₀ (G (x, t))
+        (Complex.ofReal_ne_zero.mpr h)).symm
+  have hDi := hdd.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
+  have hbound : (∫⁻ p in U, ENNReal.ofReal (‖Q p‖ ^ 2)) ≤
+      4 * ∫⁻ p in U, ENNReal.ofReal (‖dd p‖ ^ 2) := by
+    rw [Measure.volume_eq_prod, setLIntegral_prod _ (by fun_prop)]
+    rw [setLIntegral_prod _ (by
+      rw [← Measure.volume_eq_prod]
+      exact ENNReal.measurable_ofReal.comp_aemeasurable hDi.aemeasurable)]
+    rw [← lintegral_const_mul' _ _ (by norm_num)]
+    exact lintegral_mono_ae hrowbound
+  have hQi : IntegrableOn (fun p ↦ ‖Q p‖ ^ 2) U := by
+    refine ⟨(hQm.norm.pow_const 2).aestronglyMeasurable, ?_⟩
+    rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun _ ↦ sq_nonneg _)]
+    exact hbound.trans_lt (ENNReal.mul_lt_top (by norm_num) hDi.lintegral_lt_top)
+  have hQe : Q =ᵐ[volume.restrict U] fun p ↦ d p / (p.2 : ℂ) :=
+    hGe.mono fun p hp ↦ by simp [Q, hp]
+  refine ⟨((memLp_two_iff_integrable_sq_norm hQm.aestronglyMeasurable).2 hQi).ae_eq hQe, ?_⟩
+  have hi : (∫ p in U, ‖Q p‖ ^ 2) = ∫ p in U, ‖d p / (p.2 : ℂ)‖ ^ 2 :=
+    integral_congr_ae (hQe.mono fun p hp ↦ congrArg (fun z : ℂ ↦ ‖z‖ ^ 2) hp)
+  rw [← hi]
+  rw [← ofReal_integral_eq_lintegral_ofReal hQi (Eventually.of_forall fun _ ↦ sq_nonneg _),
+    ← ofReal_integral_eq_lintegral_ofReal hDi (Eventually.of_forall fun _ ↦ sq_nonneg _),
+    show (4 : ℝ≥0∞) = ENNReal.ofReal (4 : ℝ) by norm_num,
+    ← ENNReal.ofReal_mul (by norm_num : 0 ≤ (4 : ℝ))] at hbound
+  exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 hbound
+
 /-- Coordinate Hardy for either axis, using specified weak derivatives
 (`lem:even-h2-axis-hardy`). -/
 theorem even_h2_axis_hardy {j : Fin 2} {a l r : ℝ} (ha : 0 < a) (hlr : l < r)
@@ -178,7 +256,66 @@ theorem even_h2_axis_hardy {j : Fin 2} {a l r : ℝ} (ha : 0 < a) (hlr : l < r)
     MemLp (fun p ↦ d p / (axisCoord j p : ℂ)) 2 (volume.restrict (axisRectangle j a l r)) ∧
       (∫ p in axisRectangle j a l r, ‖d p / (axisCoord j p : ℂ)‖ ^ 2) ≤
         4 * ∫ p in axisRectangle j a l r, ‖dd p‖ ^ 2 := by
-  sorry
+  classical
+  let U := axisRectangle j a l r
+  have hU : IsOpen U := by unfold U axisRectangle; split_ifs <;> exact isOpen_Ioo.prod isOpen_Ioo
+  have hpre : axisReflect j ⁻¹' U = U := by
+    ext p
+    fin_cases j <;> simp [U, axisRectangle, axisReflect, neg_lt, and_comm]
+  choose D hD _ using hF.2
+  let E := fun i ↦ if i = j then d else D i
+  have hE (i : Fin 2) : HasWeakPartialOn U i F (E i) := by
+    by_cases hi : i = j
+    · simpa [E, hi] using hd
+    · simpa [E, hi] using hD i
+  obtain ⟨J, hJ, hJE⟩ := hF.exists_weakJet_two_with_first hU hE
+  have hJd : J [j] = d := by simp [hJE, E]
+  have hJdd : HasWeakPartialOn U j d (J [j, j]) := by
+    simpa only [hJd] using hJ.2 [j] (by simp) j
+  have hdL : MemLp d 2 (volume.restrict U) := by
+    rw [← hJd]
+    exact hF.memLp_weakJet hU hJ [j] (by simp)
+  have hddL : MemLp dd 2 (volume.restrict U) :=
+    (hF.memLp_weakJet hU hJ [j, j] (by simp)).ae_eq
+      ((ae_restrict_iff' hU.measurableSet).mpr (hJdd.ae_eq hU hdd))
+  have hp := hJ.axisReflect_entries hU j hpre (c := 1)
+    (he.mono fun p hp ↦ by simpa only [one_mul] using hp) [j] (by simp)
+  have ho : ∀ᵐ p ∂(volume.restrict U), d (axisReflect j p) = -d p := by
+    filter_upwards [hp] with p hp
+    simp only [List.count_cons_self, List.count_nil, zero_add, pow_one, neg_one_mul,
+      one_mul, hJd] at hp
+    exact neg_eq_iff_eq_neg.mp hp
+  fin_cases j
+  · let V := Ioo l r ×ˢ Ioo (-a) a
+    have hV : IsOpen V := isOpen_Ioo.prod isOpen_Ioo
+    have hs : Prod.swap ⁻¹' U = V := by ext p; simp [U, V, axisRectangle, and_comm]
+    have hm : MeasurePreserving (Prod.swap : ℝ × ℝ → ℝ × ℝ) volume volume := by
+      rw [Measure.volume_eq_prod]
+      exact Measure.measurePreserving_swap
+    have hmUV : MeasurePreserving (Prod.swap : ℝ × ℝ → ℝ × ℝ)
+        (volume.restrict V) (volume.restrict U) := by
+      rw [← hs]
+      exact hm.restrict_preimage hU.measurableSet
+    have hds := hdd.comp_swap_fst hU
+    rw [hs] at hds
+    have hos : ∀ᵐ p ∂(volume.restrict V), (d ∘ Prod.swap) (p.1, -p.2) =
+        -(d ∘ Prod.swap) p := hmUV.quasiMeasurePreserving.ae ho
+    obtain ⟨hL, hB⟩ := odd_vertical_hardy ha hlr (hdL.comp_measurePreserving hmUV)
+      (hddL.comp_measurePreserving hmUV) hds hos
+    have hs' : Prod.swap ⁻¹' V = U := by ext p; simp [U, V, axisRectangle, and_comm]
+    have hmVU : MeasurePreserving (Prod.swap : ℝ × ℝ → ℝ × ℝ)
+        (volume.restrict U) (volume.restrict V) := by
+      rw [← hs']
+      exact hm.restrict_preimage hV.measurableSet
+    refine ⟨?_, ?_⟩
+    · simpa [U, Function.comp_def, axisCoord] using hL.comp_measurePreserving hmVU
+    · have hi (f : ℝ × ℝ → ℝ) :
+          (∫ p in V, f p.swap) = ∫ p in U, f p :=
+        hmUV.integral_comp (Homeomorph.prodComm ℝ ℝ).measurableEmbedding f
+      simpa [U, Function.comp_apply, axisCoord] using
+        (hi (fun p ↦ ‖d p / (p.1 : ℂ)‖ ^ 2)).symm.le.trans
+          (hB.trans_eq (congrArg (4 * ·) (hi (fun p ↦ ‖dd p‖ ^ 2))))
+  · exact odd_vertical_hardy ha hlr hdL hddL hdd ho
 
 /-- Interior elliptic H³ regularity, with the Laplacian identified weakly
 (the regularity part of `lem:elliptic-local`). -/

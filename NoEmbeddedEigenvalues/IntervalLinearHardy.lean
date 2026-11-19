@@ -16,32 +16,34 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 open scoped ENNReal
 
-/-- A measurable linear quotient at an interior zero has genuine L² energy,
-without assuming its integrability in advance. -/
-theorem HasIntervalH1.hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
+/-- Split at the interior zero and use only the derivative energy on each side. -/
+theorem HasIntervalH1.lintegral_hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
     (hN : HasIntervalH1 a b N D) (hz : z ∈ Ioo a b) (hzero : N z = 0)
-    (hUm : AEStronglyMeasurable U (volume.restrict (Ioo a b)))
     (hfactor : ∀ x ∈ Ioo a b, N x = ((x - z : ℝ) : ℂ) * U x) :
-    MemLp U 2 (volume.restrict (Ioo a b)) ∧
-      (∫ x in Ioo a b, ‖U x‖ ^ 2) ≤ 8 * ∫ x in Ioo a b, ‖D x‖ ^ 2 := by
-  let E := intervalZeroExtension a b D
-  have hEi : Integrable E := integrable_intervalZeroExtension hN.memLp_derivative
-  let I := ∫⁻ x in Ioo a b, ENNReal.ofReal (‖D x‖ ^ 2)
-  have henergy : (∫⁻ x, ENNReal.ofReal (‖E x‖ ^ 2)) = I := by
-    dsimp only [I]
-    rw [← lintegral_indicator measurableSet_Ioo]
-    congr 1
-    funext x
-    by_cases hx : x ∈ Ioo a b <;> simp [E, intervalZeroExtension, hx]
-  have hhalf (σ L : ℝ) (hσ : σ = 1 ∨ σ = -1)
-      (hseg : ∀ t ∈ Ioo 0 L, σ * t + z ∈ Ioo a b) :
-      (∫⁻ t in Ioo 0 L, ENNReal.ofReal (‖U (σ * t + z)‖ ^ 2)) ≤ 4 * I := by
+    (∫⁻ x in Ioo a b, ENNReal.ofReal (‖U x‖ ^ 2)) ≤
+      4 * ∫⁻ x in Ioo a b, ENNReal.ofReal (‖D x‖ ^ 2) := by
+  have hhalf (σ L c d : ℝ) (hσ : σ = 1 ∨ σ = -1)
+      (hsub : Ioo c d ⊆ Ioo a b) (hc : z ∈ Icc c d)
+      (hseg : ∀ t ∈ Ioo 0 L, σ * t + z ∈ Ioo c d) :
+      (∫⁻ t in Ioo 0 L, ENNReal.ofReal (‖U (σ * t + z)‖ ^ 2)) ≤
+        4 * ∫⁻ x in Ioo c d, ENNReal.ofReal (‖D x‖ ^ 2) := by
+    let E := intervalZeroExtension c d D
+    have hEi : Integrable E :=
+      integrable_intervalZeroExtension (hN.memLp_derivative.mono_measure
+        (Measure.restrict_mono hsub le_rfl))
+    have henergy : (∫⁻ x, ENNReal.ofReal (‖E x‖ ^ 2)) =
+        ∫⁻ x in Ioo c d, ENNReal.ofReal (‖D x‖ ^ 2) := by
+      rw [← lintegral_indicator measurableSet_Ioo]
+      congr 1
+      funext x
+      by_cases hx : x ∈ Ioo c d <;> simp [E, intervalZeroExtension, hx]
     have hσne : σ ≠ 0 := by rcases hσ with rfl | rfl <;> norm_num
     have hσabs : |σ| = 1 := by rcases hσ with rfl | rfl <;> norm_num
     let V := fun t ↦ σ • E (σ * t + z)
     have hVi : Integrable V :=
       (((hEi.comp_add_right z).comp_mul_left' hσne).smul σ)
-    have hVE : (∫⁻ t, ENNReal.ofReal (‖V t‖ ^ 2)) = I := by
+    have hVE : (∫⁻ t, ENNReal.ofReal (‖V t‖ ^ 2)) =
+        ∫⁻ x in Ioo c d, ENNReal.ofReal (‖D x‖ ^ 2) := by
       simp only [V, norm_smul, Real.norm_eq_abs, hσabs, one_mul]
       rcases hσ with rfl | rfl
       · simp only [one_mul]
@@ -55,16 +57,16 @@ theorem HasIntervalH1.hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
         (∫ s in (0 : ℝ)..t, V s) = N (σ * t + z) := by
       simp only [V, intervalIntegral.integral_smul]
       rw [intervalIntegral.smul_integral_comp_mul_add, mul_zero, zero_add,
-        intervalIntegral_intervalZeroExtension D (Ioo_subset_Icc_self hz)
+        intervalIntegral_intervalZeroExtension D hc
           (Ioo_subset_Icc_self (hseg t ht)),
-        hN.integral_eq_sub hz (hseg t ht), hzero, sub_zero]
+        hN.integral_eq_sub hz (hsub (hseg t ht)), hzero, sub_zero]
     calc
       _ = ∫⁻ t in Ioo 0 L,
           ENNReal.ofReal (‖∫ s in (0 : ℝ)..t, V s‖ ^ 2 / t ^ 2) := by
         apply setLIntegral_congr_fun measurableSet_Ioo
         intro t ht
         dsimp only
-        rw [hprim t ht, hfactor _ (hseg t ht), add_sub_cancel_right,
+        rw [hprim t ht, hfactor _ (hsub (hseg t ht)), add_sub_cancel_right,
           ← Complex.real_smul, norm_smul, Real.norm_eq_abs, abs_mul,
           hσabs, one_mul, mul_pow, sq_abs]
         rw [mul_div_cancel_left₀ _ (ne_of_gt (sq_pos_of_pos ht.1))]
@@ -76,16 +78,20 @@ theorem HasIntervalH1.hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
         gcongr
         exact Measure.restrict_le_self
       _ = _ := by rw [hVE]
-  have hp := hhalf 1 (b - z) (Or.inl rfl) (fun t ht ↦ by
-    simp only [one_mul]; exact ⟨by linarith [hz.1, ht.1], by linarith [ht.2]⟩)
-  have hm := hhalf (-1) (z - a) (Or.inr rfl) (fun t ht ↦ by
-    simp only [neg_one_mul]; exact ⟨by linarith [ht.2], by linarith [hz.2, ht.1]⟩)
-  have hplus : (∫⁻ x in Ioo z b, ENNReal.ofReal (‖U x‖ ^ 2)) ≤ 4 * I := by
+  have hp := hhalf 1 (b - z) z b (Or.inl rfl) (Ioo_subset_Ioo hz.1.le le_rfl)
+    ⟨le_rfl, hz.2.le⟩ (fun t ht ↦ by
+      simp only [one_mul]; exact ⟨by linarith [ht.1], by linarith [ht.2]⟩)
+  have hm := hhalf (-1) (z - a) a z (Or.inr rfl) (Ioo_subset_Ioo le_rfl hz.2.le)
+    ⟨hz.1.le, le_rfl⟩ (fun t ht ↦ by
+      simp only [neg_one_mul]; exact ⟨by linarith [ht.2], by linarith [ht.1]⟩)
+  have hplus : (∫⁻ x in Ioo z b, ENNReal.ofReal (‖U x‖ ^ 2)) ≤
+      4 * ∫⁻ x in Ioo z b, ENNReal.ofReal (‖D x‖ ^ 2) := by
     have he := setLIntegral_Ioo_comp_add_right (fun x ↦ ENNReal.ofReal (‖U x‖ ^ 2)) z z b
     rw [sub_self] at he
     rw [← he]
     simpa only [one_mul] using hp
-  have hminus : (∫⁻ x in Ioo a z, ENNReal.ofReal (‖U x‖ ^ 2)) ≤ 4 * I := by
+  have hminus : (∫⁻ x in Ioo a z, ENNReal.ofReal (‖U x‖ ^ 2)) ≤
+      4 * ∫⁻ x in Ioo a z, ENNReal.ofReal (‖D x‖ ^ 2) := by
     have he := setLIntegral_Ioo_comp_sub_left (fun x ↦ ENNReal.ofReal (‖U x‖ ^ 2)) z a z
     rw [sub_self] at he
     rw [← he]
@@ -105,9 +111,21 @@ theorem HasIntervalH1.hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
       · exact Or.inl ⟨h.1, hlt⟩
       · exact Or.inr ⟨hgt, h.2⟩
     · rcases h with h | h <;> constructor <;> linarith [h.1, h.2, hz.1, hz.2]
-  have hb : (∫⁻ x in Ioo a b, ENNReal.ofReal (‖U x‖ ^ 2)) ≤ 8 * I := by
-    rw [hμ, lintegral_add_measure]
-    exact (add_le_add hminus hplus).trans_eq (by ring)
+  rw [hμ, lintegral_add_measure, lintegral_add_measure, mul_add]
+  exact add_le_add hminus hplus
+
+/-- A measurable linear quotient at an interior zero has genuine L² energy,
+without assuming its integrability in advance. -/
+theorem HasIntervalH1.hardy_interior {a b z : ℝ} {N D U : ℝ → ℂ}
+    (hN : HasIntervalH1 a b N D) (hz : z ∈ Ioo a b) (hzero : N z = 0)
+    (hUm : AEStronglyMeasurable U (volume.restrict (Ioo a b)))
+    (hfactor : ∀ x ∈ Ioo a b, N x = ((x - z : ℝ) : ℂ) * U x) :
+    MemLp U 2 (volume.restrict (Ioo a b)) ∧
+      (∫ x in Ioo a b, ‖U x‖ ^ 2) ≤ 8 * ∫ x in Ioo a b, ‖D x‖ ^ 2 := by
+  let I := ∫⁻ x in Ioo a b, ENNReal.ofReal (‖D x‖ ^ 2)
+  have hb : (∫⁻ x in Ioo a b, ENNReal.ofReal (‖U x‖ ^ 2)) ≤ 8 * I :=
+    (hN.lintegral_hardy_interior hz hzero hfactor).trans
+      (mul_le_mul_left (by norm_num : (4 : ℝ≥0∞) ≤ 8) I)
   have hDi := hN.memLp_derivative.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
   have hDf : I < ⊤ :=
     (hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun _ ↦ sq_nonneg _)).1 hDi.2

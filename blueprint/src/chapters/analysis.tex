@@ -3097,11 +3097,16 @@ coordinates, the analogous estimate for $F_v/v$ also holds.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:acl-slicing, lem:hardy-endpoint, lem:weak-derivative-basic}
-The weak derivative $F_u$ is $H^1$ and odd in $u$, so its one-dimensional
-continuous sections have zero trace at $u=0$ for almost every $v$.
-Apply endpoint Hardy on the positive and negative half intervals and
-integrate in $v$. Interchange the coordinates for the other estimate.
+\uses{lem:acl-slicing, lem:trace-l2, lem:hardy-interior-linear,
+ lem:specified-jet-lp, lem:specified-first-jet-extension, lem:axis-reflection-weak-jet}
+\leanok
+The specified weak derivative $F_u$ is odd in $u$ by reflection of the
+weak jet. On almost every section, the continuous ACL representative is
+odd everywhere and hence vanishes at $u=0$. Apply interior Hardy with
+constant four (each half uses only its own derivative energy), and
+integrate the nonnegative squared bounds in $v$. The finite right-hand
+side gives $F_u/u\in L^2$ before the estimate is read as a Bochner
+integral. Interchange the coordinates for the other estimate.
 \end{proof}
 
 \begin{lemma}[Corner Hardy bounds for even H2 functions]
@@ -5423,7 +5428,8 @@ instead of Hardy's inequality to control its endpoint flux.
 \label{lem:hardy-interior-linear}
 \uses{def:h1-interval}
 \lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_interior,
- NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le}
+ NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le,
+ NoEmbeddedEigenvalues.HasIntervalH1.lintegral_hardy_interior}
 \leanok
 Let $N\in H^1(a,b)$ have specified derivative $D$, and let
 $z\in(a,b)$ with $N(z)=0$. If $U$ is a.e.\ strongly measurable and satisfies
@@ -5437,14 +5443,16 @@ The constant is independent of the interval, zero and quotient.
 \begin{proof}
 \uses{lem:hardy-average, lem:interval-zero-extension-l2, lem:h1-interval-endpoints}
 \leanok
-Let $E$ be the zero extension of $D$. For $\sigma=1,-1$, apply the
-primitive Hardy inequality to $V_\sigma(t)=\sigma E(z+\sigma t)$.
+For $\sigma=1,-1$, let $E_\sigma$ be the zero extension of $D$
+restricted to the corresponding side of $z$. Apply the primitive Hardy
+inequality to $V_\sigma(t)=\sigma E_\sigma(z+\sigma t)$.
 The fundamental theorem identifies its primitive with $N(z+\sigma t)$
-while the segment stays inside $(a,b)$. Each orientation contributes at
-most $4\int_a^b|D|^2$; translation and reflection preserve this energy.
-Splitting the interval at $z$ gives the bound first for nonnegative
+while the segment stays on that side. Translation and reflection preserve
+energy, so each side contributes at most four times its own derivative
+energy. Summing gives the bound with constant four for nonnegative
 integrals. Its finite right side proves genuine quotient L2 integrability
-before converting to the displayed Bochner integrals.
+before converting to the displayed Bochner integrals, where the stated
+bound with constant eight is retained.
 The single value $U(z)$ does not enter the integral.
 \end{proof}
 
