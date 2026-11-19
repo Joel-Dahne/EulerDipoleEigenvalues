@@ -192,7 +192,7 @@ theorem smul_mollifyFstDeriv_eq_integral {ε : ℝ} (hε : 0 < ε)
     hε.ne'] using hscale.symm
 
 /-- Averaging over a probability factor is an `L²` contraction. -/
-private theorem eLpNorm_integral_prob_le {α β : Type*}
+theorem eLpNorm_integral_prob_le {α β : Type*}
     [MeasurableSpace α] [MeasurableSpace β]
     {ν : Measure α} [IsProbabilityMeasure ν] {σ : Measure β} [SFinite σ]
     {G : α × β → ℂ} (hG : MemLp G 2 (ν.prod σ)) :
@@ -321,27 +321,29 @@ private theorem memLp_translateFst {μ ν : Measure ℝ} [SFinite μ] [IsProbabi
   · simpa [σ, Function.comp_def] using hmem
   · simpa [σ, Function.comp_def] using hnorm
 
-/-- Lebesgue translations are strongly continuous on scalar `L²`. -/
-private theorem tendsto_eLpNorm_translate_sub {f : ℝ → ℂ} (hf : MemLp f 2 volume) :
-    Tendsto (fun t : ℝ ↦ eLpNorm (fun x ↦ f (x - t) - f x) 2 volume)
+/-- Translations of a scalar `L²` function are strongly continuous at the identity. -/
+theorem tendsto_eLpNorm_translate_sub {G : Type*} [NormedAddCommGroup G]
+    [MeasurableSpace G] [BorelSpace G] {μ : Measure G} [μ.InnerRegularCompactLTTop]
+    [IsLocallyFiniteMeasure μ] [μ.IsAddRightInvariant] {f : G → ℂ} (hf : MemLp f 2 μ) :
+    Tendsto (fun t : G ↦ eLpNorm (fun x ↦ f (x - t) - f x) 2 μ)
       (𝓝 0) (𝓝 0) := by
-  let fL : Lp ℂ 2 volume := hf.toLp f
-  let g : ℝ → C(ℝ, ℝ) := fun t =>
+  let fL : Lp ℂ 2 μ := hf.toLp f
+  let g : G → C(G, G) := fun t =>
     ⟨fun x => x - t, (continuous_id.sub continuous_const)⟩
-  have hg : Tendsto g (𝓝 0) (𝓝 (ContinuousMap.id ℝ)) := by
+  have hg : Tendsto g (𝓝 0) (𝓝 (ContinuousMap.id G)) := by
     have hc : Continuous g := by
       apply ContinuousMap.continuous_of_continuous_uncurry g
-      change Continuous (fun p : ℝ × ℝ => p.2 - p.1)
+      change Continuous (fun p : G × G => p.2 - p.1)
       fun_prop
-    have hg0 : g 0 = ContinuousMap.id ℝ := by ext x; simp [g]
+    have hg0 : g 0 = ContinuousMap.id G := by ext x; simp [g]
     rw [← hg0]
     exact hc.tendsto 0
-  have hgm : ∀ t : ℝ, MeasurePreserving (g t) volume volume := by
+  have hgm : ∀ t : G, MeasurePreserving (g t) μ μ := by
     intro t
-    exact measurePreserving_sub_right volume t
+    exact measurePreserving_sub_right μ t
   have hcomp := Filter.Tendsto.compMeasurePreservingLp
-    (tendsto_const_nhds : Tendsto (fun _ : ℝ => fL) (𝓝 0) (𝓝 fL)) hg hgm
-    (MeasurePreserving.id volume) (by norm_num : (2 : ENNReal) ≠ ⊤)
+    (tendsto_const_nhds : Tendsto (fun _ : G => fL) (𝓝 0) (𝓝 fL)) hg hgm
+    (MeasurePreserving.id μ) (by norm_num : (2 : ENNReal) ≠ ⊤)
   have hcomp' : Tendsto (fun t => Lp.compMeasurePreserving (g t) (hgm t) (fL))
       (𝓝 0) (𝓝 fL) := by
     simpa [g, fL] using hcomp
@@ -354,16 +356,16 @@ private theorem tendsto_eLpNorm_translate_sub {f : ℝ → ℂ} (hf : MemLp f 2 
     filter_upwards [Lp.coeFn_compMeasurePreserving fL (hgm t), hfxg] with x hx hfx
     simp only [Function.comp_apply, g] at hx
     change f (x - t) - f x =
-      (Lp.compMeasurePreserving (g t) (hgm t) fL : Lp ℂ 2 volume) x - f x
-    have hx' : (Lp.compMeasurePreserving (g t) (hgm t) fL : Lp ℂ 2 volume) x = f (x - t) := by
+      (Lp.compMeasurePreserving (g t) (hgm t) fL : Lp ℂ 2 μ) x - f x
+    have hx' : (Lp.compMeasurePreserving (g t) (hgm t) fL : Lp ℂ 2 μ) x = f (x - t) := by
       calc
-        (Lp.compMeasurePreserving (g t) (hgm t) fL : Lp ℂ 2 volume) x = fL (g t x) := hx
+        (Lp.compMeasurePreserving (g t) (hgm t) fL : Lp ℂ 2 μ) x = fL (g t x) := hx
         _ = f (x - t) := by
           simpa [g] using hfx
     rw [hx']
 
 /-- The squared product `L²` norm is the integral of the squared fiber norms. -/
-private theorem eLpNorm_two_prod_rpow_eq {α β : Type*}
+theorem eLpNorm_two_prod_rpow_eq {α β : Type*}
     [MeasurableSpace α] [MeasurableSpace β]
     {ν : Measure α} [SFinite ν] {σ : Measure β} [SFinite σ]
     {G : α × β → ℂ} (hG : AEStronglyMeasurable G (ν.prod σ)) :
@@ -383,7 +385,8 @@ private theorem eLpNorm_two_prod_rpow_eq {α β : Type*}
       filter_upwards [hsec] with q hq
       exact (eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num) hq).symm
 
-private theorem ae_memLp_two_section {α β : Type*}
+/-- A square-integrable function on a product has square-integrable sections a.e. -/
+theorem ae_memLp_two_section {α β : Type*}
     [MeasurableSpace α] [MeasurableSpace β]
     {ν : Measure α} [SFinite ν] {σ : Measure β} [SFinite σ]
     {G : α × β → ℂ} (hG : MemLp G 2 (ν.prod σ)) :

@@ -107,6 +107,7 @@ import NoEmbeddedEigenvalues.Analysis.CylinderCartesianWeak
 import NoEmbeddedEigenvalues.Analysis.WeakLaplacian
 import NoEmbeddedEigenvalues.Analysis.RadialMeanKernel
 import NoEmbeddedEigenvalues.Analysis.PlaneConvolution
+import NoEmbeddedEigenvalues.Analysis.PlaneMollifier
 import NoEmbeddedEigenvalues.Analysis.RadialMeanValue
 import NoEmbeddedEigenvalues.Analysis.WeakHarmonicLocal
 import NoEmbeddedEigenvalues.WeakChartTransportVariable

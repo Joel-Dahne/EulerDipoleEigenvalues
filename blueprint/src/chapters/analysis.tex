@@ -2720,16 +2720,23 @@ No boundary trace or zero extension of the original representative is assumed.
 
 \begin{proof}
 \uses{lem:localization-cutoff, lem:sobolev-weak-jets,
- lem:line-mollifier, lem:line-mollifier-convergence, lem:affine-jet-pullback}
+ lem:plane-convolution-basic, lem:plane-convolution-calculus,
+ lem:line-mollifier-contraction, lem:line-mollifier-convergence,
+ lem:weak-derivative-basic}
+\leanok
 Choose a smooth compact cutoff supported in $U$ and equal to one on a
 neighbourhood of $\overline V$. Its product with $u$ lies in $H^2(\R^2)$
-by cutoff localization. Convolve in both Cartesian variables with compactly
-supported mollifiers, choosing sufficiently small radii so that the enlarged
-support stays inside $U$. The weak jet commutes with convolution;
-the line-mollifier convergence theorem applies to every derivative of order
-at most two. Exchange the two coordinates for the second mollification.
-Restriction to $V$ gives the asserted convergence and identifies the root
-of the limiting jet with $u$.
+by cutoff localization. Convolve with normalized Cartesian bumps of
+shrinking radii, all smaller than the available support margin in $U$.
+For each coordinate, the reflected translated kernel is a compact test:
+the weak derivative identity moves the kernel derivative onto the
+specified weak derivative of the datum. Iterating gives each classical
+derivative as a convolution of the corresponding weak jet entry.
+The probability-averaging estimate used for the line mollifier also applies
+on the plane: the $L^2$ error is bounded by the largest $L^2$ translation
+error on the kernel support. Strong continuity of translations gives
+convergence for each jet entry. Restrict to $V$, where the cutoff product
+agrees with $u$.
 \end{proof}
 
 \begin{lemma}[Stability of bounded-coefficient $L^2$ product integrals]

@@ -9,14 +9,11 @@ its own. The geometry, odd–odd, and separatrix transport chapters have no
 unfinished nodes on this route. The exclusion still depends on admitted
 prerequisites.
 
-The remaining work serves three parts of the argument:
+The remaining work serves two parts of the argument:
 
 - **Quotient existence:** the minimal domain (`cor:dd-exclusion-domain`)
-  still depends on local analytic inputs for stream H² and Hardy–Poisson
-  vorticity division. The stronger bundled quotient domain is not needed.
-- **Picone/virial limits:** local H² smooth approximation is still needed.
-  The leading period value (`lem:period-leading-asymptotic`) is proved;
-  the elliptic identity and sharp remainders are not needed.
+  still depends on weighted elliptic regularity and division for the stream
+  H² quotient. The stronger bundled quotient domain is not needed.
 - **Bulk potential bound:** the odd–odd residual (`cert:dd-residual`) needs
   both the operator identity and the sign proof. See
   [shared certificate work](shared.md#shared-certificate-work).
