@@ -66,6 +66,7 @@ import NoEmbeddedEigenvalues.MixedComparisonForm
 import NoEmbeddedEigenvalues.MixedField
 import NoEmbeddedEigenvalues.MixedFlux
 import NoEmbeddedEigenvalues.MixedStaticForm
+import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm

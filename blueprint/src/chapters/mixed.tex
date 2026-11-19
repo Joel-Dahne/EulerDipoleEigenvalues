@@ -217,6 +217,30 @@ bounded and $h\in L^1(dt)$; the second is integrable since
 $\int |hwG'|\,dt=\int_{-1}^1\sqrt w\,|G'|\,dx$.
 \end{proof}
 
+\begin{lemma}[Critical trace weight on an inward strip]
+\label{lem:mixed-neumann-strip-weight}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.left_memLp_div_sqrt,
+  NoEmbeddedEigenvalues.mixed_neumann_strip_memLp_flow}
+\leanok
+On an inward strip $I\times(0,w)$, let $T$ be the canonical trace
+of $F$ at normal coordinate $0$. Suppose $F/k$ and the weak normal
+derivative of $F$ are square integrable, for a measurable tangential
+weight $k>0$ such that $\delta k\le w$ for some $\delta>0$.
+Then $T/\sqrt{k}\in L^2(I)$. On a full Neumann strip, $k=\cos a$
+therefore gives $T\in L^2(dt)$ in flow time.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:h1-interval-endpoints, lem:arc-diagonal}
+\leanok
+On each normal section, apply the endpoint trace inequality on the
+interval of width $\delta k$. Divide by $k$ and enlarge the integrals
+to the whole section to obtain
+$|T|^2/k\le(2/\delta)\int|F/k|^2+2\delta\int|\partial_nF|^2$.
+Integrate over the tangential variable. On the mixed arcs $|da|=\cos a\,dt$.
+\end{proof}
+
 \begin{lemma}[Physical vorticity trace on a mixed Neumann edge]
 \label{lem:mixed-neumann-vorticity-trace}
 \uses{prop:mixed-quotient-domain, def:sobolev-local}
@@ -229,12 +253,13 @@ everywhere, where $g=\psi|_N$.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, lem:mixed-neumann-stream-trace, lem:weighted-corner-trace,
+\uses{prop:mixed-quotient-domain, lem:mixed-neumann-stream-trace, lem:mixed-neumann-strip-weight,
   lem:trace-l2, lem:transport-pair-eigen, lem:transport-unknown, lem:separatrix-arc}
-Near a corner $h\le Cr$, so $\omega/h\in L^2$ implies $\omega/r\in L^2$.
-The $H^1$ collar and the weighted corner trace give $q\in L^2(dt)$,
-since $|dt|\asymp dr/r$ at each end. On compact arcs use the ordinary trace
-estimate. In a regular flow box the weak equation for the physical unknown
+Choose a full inward strip along the Neumann side contained in the
+$H^1$ collar. Its normal derivative is in $L^2$, and the quotient
+domain gives $\omega/\cos a\in L^2$. Thus the critical strip estimate
+gives the physical trace in $L^2(dt)$. In a regular flow box the
+weak equation for the physical unknown
 $z=-(q+g)/\lambda$ restricts to the edge: $H^1$ regularity gives $L^2$
 convergence of the sections, allowing passage to the limit in the weak
 $t$ equation. It yields $z'=i(\lambda z+g)$ and hence the equation for
@@ -313,9 +338,9 @@ with the Neumann stream energy.
 \end{proof}
 
 \begin{remark}[Digest note: no elliptic-center input]
-The manuscript invokes global $H^1$ regularity here. The weighted corner
-trace uses only $H^1$ near the separatrix and $\omega/r\in L^2$; both
-follow from Proposition~\ref{prop:mixed-quotient-domain}.
+The manuscript invokes global $H^1$ regularity here. The critical strip
+trace uses only $H^1$ near the separatrix and $\omega/\cos a\in L^2$;
+both follow from Proposition~\ref{prop:mixed-quotient-domain}.
 Thus neither Corollary~\ref{cor:global-h1} nor the elliptic-center
 analysis is needed for this step. This removes that dependency, not
 the unverified transport gains in the quotient-domain proposition.

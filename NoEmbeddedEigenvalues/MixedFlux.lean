@@ -3,6 +3,7 @@ import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.BoundaryTraceH2
+import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.NormalField
 import Mathlib.Analysis.SpecialFunctions.Artanh
@@ -302,6 +303,62 @@ private theorem mixedNeumannA_ae (σ : Bool) {P : ℝ → Prop}
     simpa only [mixedNeumannA, Bool.false_eq_true, ↓reduceIte] using ae_comp_arcAngle hP
   · simpa only [mixedNeumannA, Bool.true_eq, ↓reduceIte] using
       ae_comp_arcAngle ((ae_restrict_iff' measurableSet_Ioo).2 h')
+
+/-- The critical edge weight `1 / cos a` is exactly flow-time measure on either
+mixed Neumann edge. -/
+theorem mixed_neumann_trace_memLp_flow {T : ℝ → ℂ} (σ : Bool)
+    (hT : MemLp (fun a ↦ T a / (Real.sqrt (Real.cos a) : ℂ)) 2
+      (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2)))) :
+    MemLp (fun t ↦ T ((diagCoord (mixedNeumannArc σ t)).1)) 2 volume := by
+  have hi := mixedNeumannA_integrable σ
+    (hT.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0))
+  have he : (fun t ↦ (Real.cosh t)⁻¹ *
+      ‖T (mixedNeumannA σ t) / (Real.sqrt (Real.cos (mixedNeumannA σ t)) : ℂ)‖ ^ 2) =
+      (fun t ↦ ‖T (mixedNeumannA σ t)‖ ^ 2) := by
+    funext t
+    have hcos := mixedNeumannArc_cos σ t
+    rw [mixedNeumann_coord] at hcos
+    change Real.cos (mixedNeumannA σ t) = _ at hcos
+    have hpos := inv_pos.mpr (Real.cosh_pos t)
+    rw [hcos, norm_div, Complex.norm_real, Real.norm_eq_abs,
+      abs_of_nonneg (Real.sqrt_nonneg _), div_pow, Real.sq_sqrt hpos.le]
+    field_simp [hpos.ne']
+  rw [he] at hi
+  have hT0 : AEStronglyMeasurable T (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2))) := by
+    apply (hT.aestronglyMeasurable.mul (by fun_prop : Continuous fun a : ℝ ↦
+      (Real.sqrt (Real.cos a) : ℂ)).aestronglyMeasurable).congr
+    filter_upwards [ae_restrict_mem measurableSet_Ioo] with a ha
+    have hc := Real.cos_pos_of_mem_Ioo (by simpa only [neg_div] using ha)
+    exact div_mul_cancel₀ _ (Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr hc).ne')
+  have hM : Measure.QuasiMeasurePreserving (mixedNeumannA σ) volume
+      (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2))) := by
+    have hc : Continuous (mixedNeumannA σ) := continuous_iff_continuousAt.2
+      fun t ↦ (mixedNeumannA_deriv σ t).continuousAt
+    refine ⟨hc.measurable, Measure.AbsolutelyContinuous.mk ?_⟩
+    intro s hs hm
+    rw [Measure.map_apply hc.measurable hs]
+    have hm' : ∀ᵐ a ∂volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2)),
+        a ∉ s := by rwa [ae_iff, show {a | ¬a ∉ s} = s by ext a; simp]
+    have he := mixedNeumannA_ae σ hm'
+    rwa [ae_iff, show {t | ¬mixedNeumannA σ t ∉ s} = mixedNeumannA σ ⁻¹' s by
+      ext t; simp] at he
+  have hmem := (memLp_two_iff_integrable_sq_norm (hT0.comp_quasiMeasurePreserving hM)).2 hi
+  simpa only [mixedNeumann_coord, Function.comp_def] using hmem
+
+/-- A canonical trace on a full inward strip is square integrable in the
+Neumann flow time when its bulk representative divided by `cos a` is in `L²`. -/
+theorem mixed_neumann_strip_memLp_flow {w : ℝ} {F D : Plane → ℂ} {T : ℝ → ℂ}
+    {chart : Plane → Plane} (σ : Bool)
+    (hT : HasTransverseH1Trace (-Real.pi / 2) (Real.pi / 2) 0 w 0 chart F T)
+    (hD : HasWeakPartialOn (Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo 0 w) 1 (F ∘ chart) D)
+    (hDL : MemLp D 2 (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo 0 w)))
+    (hFL : MemLp (fun q ↦ F (chart q) / (Real.cos q.1 : ℂ)) 2
+      (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo 0 w))) :
+    MemLp (fun t ↦ T ((diagCoord (mixedNeumannArc σ t)).1)) 2 volume := by
+  apply mixed_neumann_trace_memLp_flow σ
+  exact hT.left_memLp_div_sqrt hD hDL hFL hT.2.1 Real.continuous_cos.measurable
+    (fun _ ha ↦ Real.cos_pos_of_mem_Ioo (by simpa only [neg_div] using ha))
+    (fun a _ ↦ mul_le_of_le_one_right hT.2.1.le (Real.cos_le_one a))
 
 private theorem mixed_hasDerivAt_weightedFlow {U : ℝ → ℂ} {t : ℝ}
     (h : DifferentiableAt ℝ U (Real.tanh t)) :
