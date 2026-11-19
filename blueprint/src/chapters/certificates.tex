@@ -4,9 +4,9 @@
 The odd--odd and mixed sectors use explicit two-variable sign inequalities.
 One proposed proof strategy reduces the logarithmic expressions to polynomial
 positivity on boxes, using nonnegative Bernstein coefficients after subdivision.
-The sign statements themselves do not prescribe this strategy. A Bernstein
-implementation would need both a sound exact checker and identities connecting
-its rational coefficient data to the actual differential expressions.
+The sign statements themselves do not prescribe this strategy. The general
+Bernstein criterion is independent of how the coefficients are checked and
+of the identities connecting them to the differential expressions.
 
 \section{General tools}
 
@@ -48,8 +48,12 @@ are excluded; the set $Z$ alone does not name an exceptional geometric set.
 \end{lemma}
 
 \begin{proof}
-$P=\sum b_{ij}B^n_i(\xi)B^m_j(\eta)$ with nonnegative Bernstein basis
-polynomials.
+\leanok
+Expand $x^k(x+(1-x))^{n-k}$ by the binomial theorem to convert each monomial
+to degree-$n$ Bernstein form. Apply this in both coordinates. The affine
+pullback formula is likewise the binomial theorem in each coordinate.
+The basis factors are nonnegative on the unit square, and an active positive
+coefficient gives a strictly positive summand.
 \end{proof}
 
 \begin{lemma}[Rational bounds for the logarithm]
@@ -72,8 +76,12 @@ and $\ell_+=\ell_-+\frac{2\cdot3^{-41}}{41(1-3^{-2})}$.
 \end{lemma}
 
 \begin{proof}
-Series expansions of $\log$ and $\operatorname{artanh}$ with explicit
-remainders.
+\leanok
+For the lower ratio bound use $1-x^{-1}\le\log x$ at $x=r/2$. For the upper
+bound use the first two terms of the $\operatorname{artanh}$ series at
+$t=(2-r)/(2+r)$, where $\log(r/2)=-2\operatorname{artanh}(t)$.
+For the other bounds, replace every denominator in the nonnegative series
+tail by its first denominator, then sum the resulting geometric series.
 \end{proof}
 
 \begin{lemma}[Affine dependence on the logarithm]
@@ -85,7 +93,9 @@ every $\ell\in[\ell_-,\ell_+]$, regardless of the sign of $B$.
 \end{lemma}
 
 \begin{proof}
-An affine function on an interval attains its minimum at an endpoint.
+\leanok
+An affine function on an interval attains its minimum at an endpoint:
+use the lower endpoint for $B\ge0$ and the upper endpoint for $B\le0$.
 \end{proof}
 
 \section{The certificates}
@@ -106,13 +116,13 @@ $Pw_*+\tfrac52s^2w_*=R(s,r)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:bernstein-positivity, lem:log-bounds, lem:affine-in-log, lem:dipole-identities}
-Write $Pw_*+\tfrac52s^2w_*=R_0+R_1\log(r/2)$ with
-$R_0=s\mathsf A(s,r)/(384r^3)$ and $R_1=s\mathsf B(s,r)/(1536r^2)$, where
-$\mathsf A,\mathsf B$ are the integer polynomials in the manuscript's table
-(the table was checked against a direct symbolic computation of
-$Pw_*+\tfrac52s^2w_*$ at sample points). Using the two rational logarithm
-bounds and the substitution $s=2x$, $r=2(1-x)[2x+(1-x)y]$, the resulting
+\uses{lem:dd-ground-residual-factorization, lem:bernstein-positivity, lem:log-bounds, lem:affine-in-log, lem:dipole-identities}
+Use the factorization of $Pw_*$, substitute $z=s(2-s)/r$ and
+$\ell=r\log(r/2)$, and add the explicit term $\tfrac52s^2w_*$. Treating
+$\log(r/2)$ as an independent variable, clearing the denominators gives a
+polynomial identity with the manuscript's table.
+For the sign, use the two rational logarithm bounds and the substitution
+$s=2x$, $r=2(1-x)[2x+(1-x)y]$. The resulting
 polynomials are divisible by $(1-x)^4$; the quotients $Q_-$, $Q_+$ (bidegrees
 $(9,6)$ and $(15,9)$) have nonnegative Bernstein coefficients on the six boxes
 listed in the manuscript.

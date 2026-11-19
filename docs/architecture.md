@@ -650,16 +650,20 @@ can be added here as they are formalized.
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.
 
-### Certificate interfaces
+### Certified polynomial inequalities
 
-- `BernsteinCertificates.lean`: exact rational power/Bernstein arrays and affine
-  box pullbacks, expansion and positivity statements, rational logarithmic bounds
-  and affine interpolation. Uses Mathlib's Bernstein basis; no checker is defined.
-- `MixedComparison.lean`: actual diagonal-coordinate mixed matrix, potential,
-  differential operator and explicit odd-in-a/b comparison functions.
-- `PolynomialInequalities.lean`: explicit odd–odd residual table and its operator
-  identity, mixed normalized differential residuals and interior sign claims,
+The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificates/).
+
+- `Certificates/Bernstein.lean`: exact rational power and Bernstein arrays, affine
+  box pullback, expansion and positivity. Uses Mathlib's Bernstein basis.
+- `Certificates/Logarithm.lean`: rational logarithm bounds from geometric
+  tail estimates and affine interpolation between endpoint bounds.
+- `Certificates/OddOdd.lean`: explicit odd–odd residual table, its identity
+  with the differentiated ground residual, and its sign on the geometric range.
+- `Certificates/Mixed.lean`: normalized mixed residuals, interior sign claims,
   and the Robin margin polynomial with its positive-level derivative identity.
+  The diagonal-coordinate matrix, potential, operator, and comparison
+  functions themselves live in `MixedComparison.lean`.
 
 ## Source checks and verification tools
 

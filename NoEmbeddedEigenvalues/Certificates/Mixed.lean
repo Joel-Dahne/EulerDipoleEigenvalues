@@ -1,19 +1,12 @@
-import NoEmbeddedEigenvalues.OddOddForms
 import NoEmbeddedEigenvalues.MixedComparison
 
 /-!
-# Explicit sign statements for the odd–odd and mixed comparisons
+# Mixed comparison certificates
 
-The sign claims do not prescribe Bernstein subdivision or any other proof method.
-The odd–odd residual is an explicit two-variable expression, with a separate
-identity tying the manuscript's integer coefficient table to `ddGroundResidual`.
-The mixed residuals are defined by differentiation of the actual comparison
-multipliers and likewise have explicit identities with the differential operator.
-Thus a coefficient table alone cannot substitute for the operator being bounded.
-
-The Robin polynomial is defined on the closed interval. Its identity with the
-rational exponent's derivatives is stated only for `h>0`: the value at zero is
-the continuous extension of that expression, not raw corner derivative data.
+The normalized residuals are defined by differentiation of the comparison
+multipliers. Their operator identities are separate from their signs.
+The Robin polynomial at zero is the continuous extension of the boundary
+expression, not its value computed from raw corner derivatives.
 -/
 
 noncomputable section
@@ -21,42 +14,6 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Set
-
-/-- Integer polynomial A in the odd–odd residual table. -/
-def ddResidualA (s r : ℝ) : ℝ :=
-  (452 * r ^ 4 - 832 * r ^ 3 + 1024 * r ^ 2) +
-    s * (-9 * r ^ 5 + 120 * r ^ 4 + 768 * r ^ 3) +
-    s ^ 2 * (148 * r ^ 3 + 1664 * r - 4096) +
-    s ^ 3 * (20 * r ^ 4 + 98 * r ^ 3 - 512 * r ^ 2 + 768 * r) +
-    s ^ 4 * (-32 * r ^ 2 - 384 * r + 2048) +
-    s ^ 5 * (28 * r ^ 3 + 72 * r ^ 2 - 592 * r + 512) +
-    s ^ 6 * (-8 * r - 256) + s ^ 7 * (10 * r ^ 2 + 96 * r - 256) +
-    s ^ 9 * (r + 32)
-
-/-- Integer polynomial B in the same table. -/
-def ddResidualB (s r : ℝ) : ℝ :=
-  (1408 * r ^ 3 - 2240 * r ^ 2) + s * (-87 * r ^ 4 + 96 * r ^ 3) +
-    s ^ 2 * (528 * r ^ 2 - 512 * r + 1024) + s ^ 3 * (4 * r ^ 3 - 56 * r ^ 2) +
-    s ^ 4 * (128 * r - 512) + s ^ 5 * (18 * r ^ 2 + 64 * r - 128) +
-    s ^ 6 * 64 + s ^ 7 * (-16 * r + 64) - s ^ 9 * 8
-
-/-- The residual `R₀(s,r) + R₁(s,r) log(r/2)` on its geometric range. -/
-def ddResidualExpression (s r : ℝ) : ℝ :=
-  s * ddResidualA s r / (384 * r ^ 3) +
-    s * ddResidualB s r / (1536 * r ^ 2) * Real.log (r / 2)
-
-/-- The coefficient table represents the actual differentiated ground residual. -/
-theorem dd_residual_identity {p : ℝ × ℝ} (hp : p ∈ cellSquare)
-    (hr : gradSq dipoleLift p ≠ 0) :
-    ddGroundResidual p + (5 / 2 : ℝ) * ddWeight p * ddGround p =
-      ddResidualExpression (dipoleLift p) (gradSq dipoleLift p) := by
-  sorry
-
-/-- Odd–odd residual sign on the full two-variable geometric range. -/
-theorem dd_residual_nonneg {s r : ℝ} (hs : 0 < s) (hs2 : s < 2)
-    (hrlo : s * (2 - s) ≤ r) (hrhi : r ≤ 2 - s ^ 2 / 2) :
-    0 ≤ ddResidualExpression s r := by
-  sorry
 
 /-- Auxiliary A_F in the odd-in-b differential reduction, in `(h,k)` variables. -/
 def mixedOddBFluxA (p : ℝ × ℝ) : ℝ :=
@@ -87,10 +44,24 @@ theorem mixed_odd_b_residual_nonneg {h k : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1)
     (hk : k ∈ Icc (0 : ℝ) 1) : 0 ≤ mixedOddBResidual (h, k) := by
   sorry
 
+private theorem cos_mem_unit {t : ℝ} (ht : t ∈ Ioo 0 (Real.pi / 2)) :
+    Real.cos t ∈ Ioo 0 1 := by
+  refine ⟨Real.cos_pos_of_mem_Ioo ⟨by linarith [ht.1, Real.pi_pos], ht.2⟩, ?_⟩
+  have h := Real.strictAntiOn_cos (show (0 : ℝ) ∈ Icc 0 Real.pi from ⟨le_rfl, Real.pi_pos.le⟩)
+    (show t ∈ Icc 0 Real.pi from ⟨ht.1.le, ht.2.le.trans (half_le_self Real.pi_pos.le)⟩) ht.1
+  simpa only [Real.cos_zero] using h
+
+private theorem sin_pos_quarter {t : ℝ} (ht : t ∈ Ioo 0 (Real.pi / 2)) : 0 < Real.sin t :=
+  Real.sin_pos_of_pos_of_lt_pi ht.1 (ht.2.trans (half_lt_self Real.pi_pos))
+
 theorem mixed_odd_b_interior {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
     (1 / 100 : ℝ) * Real.cos p.1 ^ 2 * mixedOddBComparison p ≤
       mixedComparisonOperator mixedOddBComparison p := by
-  sorry
+  rw [← sub_nonneg, mixed_odd_b_identity hp]
+  have hh := cos_mem_unit hp.1
+  have hk := cos_mem_unit hp.2
+  exact mul_nonneg (sin_pos_quarter hp.2).le
+    (mixed_odd_b_residual_nonneg ⟨hh.1, hh.2.le⟩ ⟨hk.1.le, hk.2.le⟩)
 
 /-- First-order coefficients in the normalized odd-in-a reduction. -/
 def mixedOddACoeffH (p : ℝ × ℝ) : ℝ :=
@@ -131,7 +102,10 @@ theorem mixed_odd_a_residual_nonneg {h k : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
 theorem mixed_odd_a_interior {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
     (1 / 200 : ℝ) * Real.cos p.1 ^ 2 * mixedOddAComparison p ≤
       mixedComparisonOperator mixedOddAComparison p := by
-  sorry
+  rw [← sub_nonneg, mixed_odd_a_identity hp]
+  have hw : 0 ≤ mixedOddAComparison p :=
+    mul_nonneg (sin_pos_quarter hp.1).le (Real.exp_pos _).le
+  exact mul_nonneg hw (mixed_odd_a_residual_nonneg (cos_mem_unit hp.1) (cos_mem_unit hp.2))
 
 /-- The exact Robin margin polynomial, including its continuous endpoint value. -/
 def mixedRobinPolynomial (h : ℝ) : ℝ :=

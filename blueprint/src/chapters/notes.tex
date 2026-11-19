@@ -34,10 +34,10 @@ once resolved; record the resolution in the relevant node.
         Only boundary nonnegativity is consumed by exclusion; strict
         positivity is unnecessary.
   \item \textbf{Certificate verification}
-        (Chapter~\ref{chap:certificates}). A Bernstein proof would require
-        exact polynomialization linked to the defining operators and a sound
-        coefficient checker. The original verification scripts are missing;
-        another proof method may be preferable.
+        (Chapter~\ref{chap:certificates}). The odd--odd residual table is
+        now linked to its operator, but a Bernstein sign proof still needs
+        the polynomialization of the logarithm bounds and exact coefficient
+        checks. The original verification scripts are missing.
 \end{enumerate}
 
 \section*{Possible simplifications}
@@ -143,9 +143,7 @@ last apart from the formula for $M$);
 the sums of squares and the affine splitting
 (Lemmas~\ref{lem:trace-sos-smooth}, \ref{lem:affine-splitting},
 \ref{lem:mixed-boundary-square}) on test polynomials;
-the determinant formula of Lemma~\ref{lem:mixed-G-positive};
-and the coefficient table of Lemma~\ref{cert:dd-residual} against a direct
-computation of $Pw_*+\tfrac52s^2w_*$.
+and the determinant formula of Lemma~\ref{lem:mixed-G-positive}.
 These are sanity checks, not proofs. The dipole identities
 (Lemma~\ref{lem:dipole-identities}) and the normal field identities
 (Lemma~\ref{lem:normal-field-algebra}) are now proved in Lean.

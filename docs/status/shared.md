@@ -14,9 +14,12 @@ the mixed saddle jet or quotient domain; see [Mixed](mixed.md).
 
 ## Shared certificate work
 
-No exact certificate backend has been selected. The original verification
-scripts and their output are not in the repository. The
+The general Bernstein criterion (`lem:bernstein-positivity`) and logarithm
+tools (`lem:log-bounds`, `lem:affine-in-log`) are proved in
+[`Certificates/`](../../NoEmbeddedEigenvalues/Certificates/). No backend has
+been selected for checking specific coefficient tables, and the original
+verification scripts and their output are not in the repository. The
 [certificate chapter](../../blueprint/src/chapters/certificates.tex) separates
-the operator identities from the sign claims; if using Bernstein subdivision,
-both the polynomialization and the exact coefficient checks must be justified.
+operator identities from sign claims: a Bernstein subdivision proof must
+justify both the polynomialization and the exact coefficient checks.
 See the [digest notes](../../blueprint/src/chapters/notes.tex).

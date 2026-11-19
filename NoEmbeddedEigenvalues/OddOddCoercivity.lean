@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.OddOddBulkIntegrability
-import NoEmbeddedEigenvalues.PolynomialInequalities
+import NoEmbeddedEigenvalues.Certificates.OddOdd
 import NoEmbeddedEigenvalues.OddOddPiconeIntegrability
 import NoEmbeddedEigenvalues.Analysis.FourierC1Multiplier
 import NoEmbeddedEigenvalues.Analysis.ZonalTransport
