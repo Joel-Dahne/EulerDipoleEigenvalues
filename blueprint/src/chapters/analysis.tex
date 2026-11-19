@@ -2975,19 +2975,28 @@ jet energies of Definition~\ref{def:local-weak-jets}.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:acl-slicing, lem:sobolev-weak-jets}
-The zero trace and ACL give
-\[
- R(u,v)/v=\int_0^1R_v(u,tv)\,dt,\qquad
- \partial_u^j\partial_v^k(R/v)
-   =\int_0^1t^k\partial_u^j\partial_v^{k+1}R(u,tv)\,dt
- \quad(j+k\le2).
-\]
-The $L^2$ dilation in $v$ costs $t^{-1/2}$, and
-$\int_0^1t^{k-1/2}dt<\infty$. Minkowski proves all the required bounds.
-The same bounds justify weak differentiation under the integral.
-The quotient is even, so its extension is even as an $H^2$ function;
-no separate matching of normal derivative traces is needed.
+\uses{lem:acl-slicing, lem:trace-l2, lem:sobolev-weak-jets,
+ lem:weak-derivative-unique, lem:weak-derivative-basic}
+\leanok
+On almost every normal section, the continuous ACL representative
+inherits oddness and vanishes at zero. Integrating its normal derivative
+recovers $R(u,v)$, so the quotient is the normal average of $R_v$.
+Use the reparametrization $t=s^2$ and form the specified ordered jet
+by averaging the entries of the original jet with an innermost normal
+derivative. With $k$ normal derivatives in the quotient word, the average
+uses the integrand $2s^{2k+1}D_wR_v(u,s^2 v)$.
+In its squared integral the normal dilation costs $s^{-2}$, so the
+resulting factor is $4s^{4k}\le4$. Cauchy--Schwarz in $s$ gives the
+squared $L^2$ bound with constant four for each entry.
+
+For weak differentiation, pull back the compact test by the inverse
+normal dilation at each $s>0$. A normal derivative adds a factor
+$s^2$ and a tangential derivative adds none. The joint $L^2$ bound
+justifies Fubini in the test identity. Appending the normal index
+injects the quotient words into the original jet, so the same constant
+bounds the sum of all squared energies. The identity $R=vV$ and
+oddness give evenness off the null axis, with no separate matching
+of normal derivative traces.
 \end{proof}
 
 \begin{lemma}[Weighted double division near crossing axes]

@@ -13,6 +13,7 @@ import NoEmbeddedEigenvalues.TraceH2
 import NoEmbeddedEigenvalues.LocalToGlobal
 import NoEmbeddedEigenvalues.WeakJetOperations
 import NoEmbeddedEigenvalues.Analysis.ScaledInteriorEnergy
+import NoEmbeddedEigenvalues.Analysis.NormalAverage
 import NoEmbeddedEigenvalues.SobolevApproximation
 
 /-!
@@ -47,7 +48,110 @@ theorem odd_h3_division {l r b : ℝ} (hlr : l < r) (hb : 0 < b) :
         (∀ᵐ p ∂(volume.restrict (axisRectangle 1 b l r)), V (axisReflect 1 p) = V p) ∧
         weakJetEnergy 2 (axisRectangle 1 b l r) E ≤
           C * weakJetEnergy 3 (axisRectangle 1 b l r) D := by
-  sorry
+  let U := Ioo l r ×ˢ Ioo (-b) b
+  have hU : IsOpen U := isOpen_Ioo.prod isOpen_Ioo
+  let : IsFiniteMeasure (volume.restrict U) := isFiniteMeasure_restrict.mpr
+    ((measure_mono (Set.prod_mono Ioo_subset_Icc_self Ioo_subset_Icc_self)).trans_lt
+      ((isCompact_Icc.prod isCompact_Icc).measure_lt_top (μ := volume))).ne
+  have hT (t : ℝ) (ht : t ∈ Ioo (0 : ℝ) 1) : MapsTo (normalScale t) U U := by
+    rintro ⟨x, y⟩ ⟨hx, hy⟩
+    change x ∈ Ioo l r ∧ -b < t * y ∧ t * y < b
+    refine ⟨hx, ?_, ?_⟩
+    · nlinarith only [mul_lt_mul_of_pos_left hy.1 ht.1, mul_pos hb (sub_pos.mpr ht.2)]
+    · nlinarith only [mul_lt_mul_of_pos_left hy.2 ht.1, mul_pos hb (sub_pos.mpr ht.2)]
+  refine ⟨4, by norm_num, fun R D hR hD hodd ↦ ?_⟩
+  have hR₃ : MemSobolevOn 3 U R := hR
+  have hD₃ : HasWeakJetOn 3 U R D := hD
+  have hL (w : List (Fin 2)) (hw : w.length ≤ 3) := hR₃.memLp_weakJet hU hD₃ w hw
+  let M (w : List (Fin 2)) : ℝ × ℝ → ℂ :=
+    if hw : w.length ≤ 3 then (hL w hw).aestronglyMeasurable.mk (D w) else 0
+  have hMm (w : List (Fin 2)) (hw : w.length ≤ 3) : Measurable (M w) := by
+    simpa only [M, dite_eq_left hw] using
+      (hL w hw).aestronglyMeasurable.stronglyMeasurable_mk.measurable
+  have hMe (w : List (Fin 2)) (hw : w.length ≤ 3) : D w =ᵐ[volume.restrict U] M w := by
+    simpa only [M, dite_eq_left hw] using (hL w hw).aestronglyMeasurable.ae_eq_mk
+  have hML (w : List (Fin 2)) (hw : w.length ≤ 3) := (hL w hw).ae_eq (hMe w hw)
+  have hmw (w : List (Fin 2)) (hw : w.length < 3) (j : Fin 2) :
+      HasWeakPartialOn U j (M w) (M (j :: w)) :=
+    (hD₃.2 w hw j).congr_ae_on hU.measurableSet
+      ((ae_restrict_iff' hU.measurableSet).mp (hMe w hw.le))
+      ((ae_restrict_iff' hU.measurableSet).mp (hMe (j :: w) (by simp; omega)))
+  let E (w : List (Fin 2)) := normalAverage (w.count 1) (M (w ++ [1]))
+  let V := E []
+  have havg (w : List (Fin 2)) (hw : w.length ≤ 2) :
+      MemLp (E w) 2 (volume.restrict U) ∧ squareEnergy U (E w) ≤
+        4 * squareEnergy U (D (w ++ [1])) := by
+    have hn : (w ++ [1]).length ≤ 3 := by simp; omega
+    have he : squareEnergy U (D (w ++ [1])) = squareEnergy U (M (w ++ [1])) :=
+      integral_congr_ae ((hMe _ hn).fun_comp fun z : ℂ ↦ ‖z‖ ^ 2)
+    rw [he]
+    exact normalAverage_memLp hU.measurableSet hT (hMm _ hn) (hML _ hn) _
+  have hE : HasWeakJetOn 2 U V E := by
+    refine ⟨rfl, fun w hw j ↦ ?_⟩
+    have hn : (w ++ [1]).length < 3 := by simp; omega
+    have hn' : (j :: (w ++ [1])).length ≤ 3 := by simp; omega
+    have h := (hmw _ hn j).average_normal hU hT
+      (hMm _ hn.le) (hMm _ hn') (hML _ hn.le) (hML _ hn') (w.count 1)
+    have hc : (j :: w).count 1 = w.count 1 + if j = 0 then 0 else 1 := by
+      fin_cases j
+      · change (0 :: w).count 1 = w.count 1 + 0
+        rw [List.count_cons_of_ne (by decide : (0 : Fin 2) ≠ 1), add_zero]
+      · exact List.count_cons_self
+    simpa only [E, hc, List.cons_append] using h
+  have hder : HasWeakPartialOn U 1 R (M [1]) := by
+    have h := (hD₃.2 [] (by decide) 1).congr_ae_on hU.measurableSet
+      (Eventually.of_forall fun _ _ ↦ rfl)
+      ((ae_restrict_iff' hU.measurableSet).mp (hMe [1] (by decide)))
+    rwa [hD₃.1] at h
+  have hbase : ∀ᵐ p ∂volume.restrict U, R p = (p.2 : ℂ) * V p :=
+    hder.eq_mul_normalAverage_of_odd hb hlr hR₃.memLp (hML [1] (by decide))
+      (hMm [1] (by decide)) hodd
+  have hmaps : MapsTo (axisReflect 1) U U := by
+    rintro ⟨x, y⟩ ⟨hx, hy⟩
+    change x ∈ Ioo l r ∧ -b < -y ∧ -y < b
+    exact ⟨hx, neg_lt_neg hy.2, neg_lt.mp hy.1⟩
+  have hbaseR := ((measurePreserving_axisReflect 1).quasiMeasurePreserving.restrict hmaps).ae hbase
+  have hzero : ∀ᵐ p ∂volume.restrict U, p.2 ≠ 0 := by
+    apply ae_restrict_of_ae
+    rw [Measure.volume_eq_prod]
+    have hh : ∀ᵐ y ∂(volume : Measure ℝ), y ≠ 0 := by
+      rw [ae_iff]
+      simp
+    exact Measure.quasiMeasurePreserving_snd.ae hh
+  have heven : ∀ᵐ p ∂volume.restrict U, V (axisReflect 1 p) = V p := by
+    filter_upwards [hbase, hbaseR, hodd, hzero] with p hp hr ho hn
+    have h : (p.2 : ℂ) * V (axisReflect 1 p) = (p.2 : ℂ) * V p := by
+      change R (axisReflect 1 p) = ((-p.2 : ℝ) : ℂ) * V (axisReflect 1 p) at hr
+      rw [ho, hp, Complex.ofReal_neg, neg_mul, neg_inj] at hr
+      exact hr.symm
+    exact mul_left_cancel₀ (Complex.ofReal_ne_zero.mpr hn) h
+  have hEn (k : ℕ) : 0 ≤ radialJetEnergy k 0 U 0 D :=
+    Finset.sum_nonneg fun _ _ ↦ integral_nonneg fun _ ↦ sq_nonneg _
+  have horder (k : ℕ) (hk : k ≤ 2) :
+      radialJetEnergy k 0 U 0 E ≤ 4 * radialJetEnergy (k + 1) 0 U 0 D := by
+    unfold radialJetEnergy
+    simp only [pow_zero, div_one, Finset.mul_sum]
+    let snoc (v : Fin k → Fin 2) : Fin (k + 1) → Fin 2 := Fin.snoc v 1
+    refine Finset.sum_le_sum_of_injOn snoc (fun x _ y _ h ↦ ?_)
+      (Finset.subset_univ _) (fun v _ ↦ ?_)
+      (fun _ _ _ ↦ mul_nonneg (by norm_num) (integral_nonneg fun _ ↦ sq_nonneg _))
+    · funext i
+      have hh := congrFun h i.castSucc
+      simpa only [snoc, Fin.snoc_castSucc] using hh
+    · have hh : List.ofFn (snoc v) = List.ofFn v ++ [1] := by
+        rw [List.ofFn_succ']
+        simp only [snoc, Fin.snoc_castSucc, Fin.snoc_last, List.concat_eq_append]
+      rw [hh]
+      exact (havg (List.ofFn v) (List.length_ofFn.trans_le hk)).2
+  have henergy : weakJetEnergy 2 U E ≤ 4 * weakJetEnergy 3 U D := by
+    unfold weakJetEnergy
+    rw [Finset.sum_range_succ' (fun k ↦ radialJetEnergy k 0 U 0 D) 3, mul_add,
+      Finset.mul_sum]
+    refine (Finset.sum_le_sum fun k hk ↦ horder k
+      (Nat.le_of_lt_succ (Finset.mem_range.mp hk))).trans ?_
+    exact le_add_of_nonneg_right (mul_nonneg (by norm_num) (hEn 0))
+  exact ⟨V, E, memSobolevOn_iff_exists_weakJet.mpr ⟨E, hE, fun w hw ↦ (havg w hw).1⟩,
+    hE, hbase, heven, henergy⟩
 
 /-- Weighted double division (`lem:weighted-double-division`), in squared-energy form.
 No fourth derivative and no weighted order-zero hypothesis on R is imposed. -/
