@@ -2935,26 +2935,31 @@ $D^3u/r\in L^2(D_\sigma(c))$.
 
 \begin{proof}
 \uses{lem:elliptic-local, lem:elliptic-dyadic, lem:sobolev-weak-jets,
- lem:weak-derivative-unique}
+ lem:weak-derivative-unique, lem:weak-derivative-basic}
+\leanok
 The trace identity and the weighted Hessian give $F/r^2\in L^2$.
 All radius powers are bounded on the disk, so the assumptions also give
 $u\in H^2$ and $F\in H^1$ there. Local elliptic regularity supplies a
 third jet on a smaller disk; uniqueness allows its entries through
 order two to be the prescribed representatives $D_w$.
 
-Choose $\sigma<\rho/4$. Multiply the estimate of
-Lemma~\ref{lem:elliptic-dyadic} on each dyadic annulus by its radius
-to the power $-2$. Finite overlap and comparability of the radius on
-each enlarged annulus give
+Take the third jet on $D_{\rho/2}(c)$ and set $\sigma=\rho/16$.
+Apply Lemma~\ref{lem:elliptic-dyadic} at radii $a_n=\sigma(2/3)^n$ and
+multiply each bound by $a_n^{-2}$. The open inner annuli cover the
+punctured disk $D_\sigma(c)\setminus\{c\}$. The enlarged annuli for each
+residue class modulo six are disjoint, since $(2/3)^6<1/8$.
+This bounded overlap and the comparability of $r$ to $a_n$ on each
+annulus give
 \[
  \int_{D_\sigma(c)}\frac{|D^3u|^2}{r^2}
  \le C\int_{D_\rho(c)}
  \left(\frac{|G|^2}{r^2}+\frac{|F|^2}{r^4}
                          +\frac{|u|^2}{r^8}\right)<\infty.
 \]
-The omitted center and dyadic circles are null.
-The third entries are locally $L^2$ before summing; the sum proves
-their weighted integrability, not merely a bound on a possibly
+The omitted center is null. The third entries divided by $r$ are $L^2$
+on each inner annulus, since $r$ is bounded below there. Thus the local
+bounds pass to nonnegative integrals before summing, which proves
+weighted integrability rather than just a bound on a possibly
 default-valued Bochner integral.
 \end{proof}
 
