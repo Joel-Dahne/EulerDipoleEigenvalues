@@ -2681,6 +2681,7 @@ whose entries of orders $0,\ldots,n$ all belong to $L^2(U)$.
 \end{lemma}
 
 \begin{proof}
+\leanok
 Induct on $n$. For $n=0$, set $D_\varnothing=f$ and all unused entries
 zero. At the successor step, the recursive Sobolev definition supplies
 first derivatives $g_j\in H^n(U)$, $j=0,1$.
@@ -2688,9 +2689,9 @@ Choose order-$n$ jets $E^j$ for them by induction and set
 \[
  D_\varnothing=f,\qquad D_{wj}=E^j_w\quad (|w|\le n).
 \]
-Set longer entries to zero. Here $wj$ appends the letter $j$ on the right:
-the head of a word is the \emph{outer} derivative. Every nonempty word has a unique last letter,
-so these two subtrees do not conflict. The root equations are
+The longer entries are unconstrained. Here $wj$ appends the letter $j$ on
+ the right: the head of a word is the \emph{outer} derivative. The last
+ letter is unique, so these two subtrees do not conflict. The root equations are
 $\partial_jf=g_j$, and within each subtree
 $\partial_iD_{wj}=D_{iwj}$; the required $L^2$ assertions come from induction.
 Conversely, from an order-$(n+1)$ jet take $g_j=D_j$ and

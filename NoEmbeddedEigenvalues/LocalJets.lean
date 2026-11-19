@@ -107,7 +107,56 @@ theorem memSobolevOn_iff_exists_weakJet {n : ℕ} {U : Set (ℝ × ℝ)}
     {f : ℝ × ℝ → ℂ} :
     MemSobolevOn n U f ↔ ∃ D, HasWeakJetOn n U f D ∧
       ∀ w, w.length ≤ n → MemLp (D w) 2 (volume.restrict U) := by
-  sorry
+  induction n generalizing f with
+  | zero =>
+    constructor
+    · intro hf
+      let D : List (Fin 2) → ℝ × ℝ → ℂ
+        | [] => f
+        | _ :: _ => 0
+      refine ⟨D, ⟨rfl, fun w hw _ ↦ (Nat.not_lt_zero w.length hw).elim⟩, ?_⟩
+      intro w hw
+      have he : w = [] := List.length_eq_zero_iff.mp (Nat.eq_zero_of_le_zero hw)
+      subst w
+      exact hf
+    · rintro ⟨D, hD, hL⟩
+      change MemLp f 2 (volume.restrict U)
+      simpa only [hD.1] using hL [] le_rfl
+  | succ n ih =>
+    constructor
+    · intro hf
+      choose g hg hgn using hf.2
+      choose E hE hEL using fun j ↦ ih.mp (hgn j)
+      -- The last letter selects the first derivative; the remaining word acts on it.
+      let D (w : List (Fin 2)) : ℝ × ℝ → ℂ :=
+        w.reverseRecOn (motive := fun _ ↦ ℝ × ℝ → ℂ) f (fun v j _ ↦ E j v)
+      have hnil : D [] = f := List.reverseRecOn_nil _ _
+      have happ (w : List (Fin 2)) (j : Fin 2) : D (w ++ [j]) = E j w :=
+        List.reverseRecOn_concat j w _ _
+      refine ⟨D, ⟨hnil, ?_⟩, ?_⟩
+      · intro w hw i
+        cases w using List.reverseRecOn with
+        | nil =>
+          rw [hnil, show D [i] = g i from (happ [] i).trans (hE i).1]
+          exact hg i
+        | append_singleton w j =>
+          rw [happ, ← List.cons_append, happ]
+          exact (hE j).2 w (Nat.lt_of_succ_lt_succ (by simpa using hw)) i
+      · intro w hw
+        cases w using List.reverseRecOn with
+        | nil => simpa only [hnil] using hf.1
+        | append_singleton w j =>
+          rw [happ]
+          exact hEL j w (Nat.le_of_succ_le_succ (by simpa using hw))
+    · rintro ⟨D, hD, hL⟩
+      refine ⟨by simpa only [hD.1] using hL [] (Nat.zero_le _), fun j ↦ ⟨D [j], ?_, ?_⟩⟩
+      · simpa only [hD.1] using hD.2 [] (Nat.zero_lt_succ n) j
+      · apply ih.mpr
+        refine ⟨fun w ↦ D (w ++ [j]), ⟨rfl, ?_⟩, ?_⟩
+        · intro w hw i
+          exact hD.2 (w ++ [j]) (by simpa using Nat.succ_lt_succ hw) i
+        · intro w hw
+          exact hL (w ++ [j]) (by simpa using Nat.succ_le_succ hw)
 
 /-- The coordinate normal to the j-th axis. -/
 def axisCoord (j : Fin 2) (p : ℝ × ℝ) : ℝ := if j = 0 then p.1 else p.2
