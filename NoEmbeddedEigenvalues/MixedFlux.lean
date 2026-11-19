@@ -133,19 +133,6 @@ private theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ 
     filter_upwards [isOpen_Ioo.mem_nhds hm] with y hy using heq (Ioo_subset_Icc_self hy)
   exact (ha.congr_of_eventuallyEq he.symm).deriv.symm
 
-/-- The physical vorticity trace obeys the transport equation on the regular arc and
-is square integrable in flow time. It is not yet identified with the canonical profile. -/
-theorem mixed_neumann_vorticity_trace {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω)
-    (σ : Bool) :
-    let g := mixedNeumannStream d.phi σ
-    ∃ q : ℝ → ℂ, (∀ c e, AbsolutelyContinuousOnInterval q c e) ∧
-      (∀ᵐ t, HasDerivAt q (Complex.I * lam * q t - deriv g t) t) ∧
-      MemLp q 2 volume ∧
-      ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ
-        (liftL2 ω) (fun a ↦ q (mixedNeumannTime σ a)) := by
-  sorry
-
 /-- Neumann contribution to the cutoff flux, before renormalizing the gradient term. -/
 def mixedNeumannFluxCutoff (lam : ℝ) (φ : Plane → ℂ) (σ : Bool) (T : ℝ) : ℝ :=
   let g := mixedNeumannStream φ σ
@@ -484,6 +471,66 @@ theorem mixed_neumann_inward_trace_memLp {ω : L2} (d : MixedQuotientData ω)
   change liftL2 ω (diagInv (edgeInward σ q)) / (Real.cos (edgeInward σ q).1 : ℂ) =
     liftL2 ω (diagInv (edgeInward σ q)) / (Real.cos q.1 : ℂ)
   rw [edgeInward_apply]
+
+private theorem mixed_glue_interval_h1 {a b : ℝ} {F D : ℝ → ℂ}
+    (h : ∀ c e, c < e → Icc c e ⊆ Ioo a b →
+      ∃ T, T =ᵐ[volume.restrict (Ioo c e)] F ∧ HasIntervalH1 c e T D) :
+    ∃ T, (T =ᵐ[volume.restrict (Ioo a b)] F) ∧
+      (∀ᵐ x ∂volume.restrict (Ioo a b), HasDerivAt T (D x) x) ∧
+      ∀ c e, c < e → Icc c e ⊆ Ioo a b → HasIntervalH1 c e T D := by
+  classical
+  let I := Ioo a b
+  have hloc (x : ℝ) (hx : x ∈ I) :
+      ∃ c e, x ∈ Ioo c e ∧
+        ∃ R, R =ᵐ[volume.restrict (Ioo c e)] F ∧ HasIntervalH1 c e R D := by
+    obtain ⟨c, hc, hcx⟩ := exists_between hx.1
+    obtain ⟨e, hxe, he⟩ := exists_between hx.2
+    exact ⟨c, e, ⟨hcx, hxe⟩, h c e (hcx.trans hxe) (Icc_subset_Ioo hc he)⟩
+  choose c e hmem R hR hRd using hloc
+  let T (x : ℝ) := if hx : x ∈ I then R x hx x else 0
+  have hagree {l r : ℝ} {S : ℝ → ℂ} (hW : Ioo l r ⊆ I)
+      (hS : S =ᵐ[volume.restrict (Ioo l r)] F) (hSd : HasIntervalH1 l r S D) :
+      EqOn T S (Ioo l r) := by
+    intro x hx
+    have hxI := hW hx
+    let J := Ioo (c x hxI) (e x hxI) ∩ Ioo l r
+    have he₁ : R x hxI =ᵐ[volume.restrict J] F :=
+      ae_restrict_of_ae_restrict_of_subset inter_subset_left (hR x hxI)
+    have he₂ : S =ᵐ[volume.restrict J] F :=
+      ae_restrict_of_ae_restrict_of_subset inter_subset_right hS
+    have hcont {l r : ℝ} {G : ℝ → ℂ} (hlr : l < r) (hG : HasIntervalH1 l r G D) :
+        ContinuousOn G (Ioo l r) :=
+      ((hG.continuousOn_extension hlr).mono Ioo_subset_Icc_self).congr (hG.extension_eq hlr).symm
+    have he := Measure.eqOn_open_of_ae_eq (he₁.trans he₂.symm) (isOpen_Ioo.inter isOpen_Ioo)
+      ((hcont ((hmem x hxI).1.trans (hmem x hxI).2) (hRd x hxI)).mono inter_subset_left)
+      ((hcont (hx.1.trans hx.2) hSd).mono inter_subset_right) ⟨hmem x hxI, hx⟩
+    simpa only [T, dite_eq_left hxI] using he
+  have hT (l r : ℝ) (hlr : l < r) (hW : Icc l r ⊆ I) :
+      (T =ᵐ[volume.restrict (Ioo l r)] F) ∧ HasIntervalH1 l r T D := by
+    obtain ⟨S, hS, hSd⟩ := h l r hlr hW
+    have he := hagree (Ioo_subset_Icc_self.trans hW) hS hSd
+    have he' : T =ᵐ[volume.restrict (Ioo l r)] S :=
+      ae_restrict_of_forall_mem measurableSet_Ioo he
+    exact ⟨he'.trans hS, hSd.congr_Ioo he.symm⟩
+  have hae (l r : ℚ) : ∀ᵐ x, x ∈ Ioo (l : ℝ) (r : ℝ) →
+      Icc (l : ℝ) (r : ℝ) ⊆ I → T x = F x ∧ HasDerivAt T (D x) x := by
+    rw [← ae_restrict_iff' measurableSet_Ioo]
+    by_cases hW : Icc (l : ℝ) (r : ℝ) ⊆ I
+    · by_cases hlr : (l : ℝ) < (r : ℝ)
+      · obtain ⟨he, hD⟩ := hT l r hlr hW
+        filter_upwards [he, ae_restrict_of_ae hD.hasDerivAt_ae,
+          ae_restrict_mem measurableSet_Ioo] with x hx hd hxW
+        exact fun _ ↦ ⟨hx, hd hxW⟩
+      · simp [Ioo_eq_empty hlr]
+    · exact Eventually.of_forall fun _ hx ↦ (hW hx).elim
+  have hall : ∀ᵐ x ∂volume.restrict I, T x = F x ∧ HasDerivAt T (D x) x := by
+    filter_upwards [ae_restrict_of_ae (ae_all_iff.2 fun l ↦ ae_all_iff.2 (hae l)),
+      ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with x hx hxI
+    obtain ⟨l, hl, hlx⟩ := exists_rat_btwn hxI.1
+    obtain ⟨r, hxr, hr⟩ := exists_rat_btwn hxI.2
+    exact hx l r ⟨hlx, hxr⟩ (Icc_subset_Ioo hl hr)
+  exact ⟨T, hall.mono fun _ hx ↦ hx.1, hall.mono fun _ hx ↦ hx.2,
+    fun l r hlr hW ↦ (hT l r hlr hW).2⟩
 
 private theorem mixed_hasDerivAt_weightedFlow {U : ℝ → ℂ} {t : ℝ}
     (h : DifferentiableAt ℝ U (Real.tanh t)) :
@@ -836,6 +883,210 @@ theorem mixed_neumann_stream_trace {ω : L2} (d : MixedQuotientData ω) (σ : Bo
       _ ≤ _ := mul_le_mul_of_nonneg_right
         (by nlinarith [mul_le_mul_of_nonneg_left (hle t) (hpos t).le]) (sq_nonneg _)
   exact ⟨hgac, hgI, hGac, hGbound, henergy⟩
+
+private theorem mixed_cell_eq_strip (ε : ℝ) :
+    cellSquare ∩ mixedSeparatrixCollar ε = cellSeparatrixStrip ε := by
+  ext p
+  have hp (h : p ∈ cellSquare) : 0 < dipoleLift p := by
+    rw [dipoleLift_eq_diag]
+    exact mul_pos (mul_pos (by norm_num) (Real.cos_pos_of_mem_Ioo (abs_lt.mp h.1)))
+      (Real.cos_pos_of_mem_Ioo (abs_lt.mp h.2))
+  constructor
+  · rintro ⟨h, h'⟩
+    exact ⟨h, hp h, (abs_of_pos (hp h)) ▸ h'⟩
+  · rintro ⟨h, h₁, h₂⟩
+    exact ⟨h, by change |dipoleLift p| < ε; rwa [abs_of_pos h₁]⟩
+
+private theorem mixed_stream_eq_on_closed_cell {ω : L2} (d : MixedQuotientData ω) :
+    EqOn (contStream ω ∘ diagInv) (fun q ↦ (Real.cos q.1 : ℂ) * d.phi q)
+      (closure mixedOpenCell) := by
+  have hO : IsOpen mixedOpenCell := isOpen_Ioo.prod isOpen_Ioo
+  have hleft : ContinuousOn (contStream ω ∘ diagInv) (closure mixedOpenCell) :=
+    ((continuous_contStream ω).comp diagInv.continuous).continuousOn
+  have hright : ContinuousOn (fun q ↦ (Real.cos q.1 : ℂ) * d.phi q)
+      (closure mixedOpenCell) :=
+    ((by fun_prop : Continuous fun q : Plane ↦ (Real.cos q.1 : ℂ)).continuousOn.mul d.continuous)
+  have hrep := (quasiMeasurePreserving_diagonalTraceChart 1).ae (streamLift_ae_eq_contStream ω)
+  have hae : contStream ω ∘ diagInv =ᵐ[volume.restrict mixedOpenCell]
+      fun q ↦ (Real.cos q.1 : ℂ) * d.phi q := by
+    filter_upwards [ae_restrict_of_ae hrep, d.stream_eq] with q hr hd
+    exact hr.symm.trans hd
+  exact (Measure.eqOn_open_of_ae_eq hae hO (hleft.mono subset_closure)
+    (hright.mono subset_closure)).of_subset_closure hleft hright subset_closure Subset.rfl
+
+private theorem mixedNeumannTime_left_inv (σ : Bool) (t : ℝ) :
+    mixedNeumannTime σ (mixedNeumannA σ t) = t := by
+  have hcos : Real.cos (arcAngle t) = Real.tanh t := by
+    rw [arcAngle, Real.cos_two_mul, Real.cos_arctan, Real.tanh_eq_sinh_div_cosh,
+      Real.sinh_eq, Real.cosh_eq]
+    have he := Real.exp_pos (-t)
+    have he' := Real.exp_pos t
+    have hm : Real.exp t * Real.exp (-t) = 1 := by rw [← Real.exp_add]; simp
+    have hs : 0 ≤ 1 + Real.exp (-t) ^ 2 := by positivity
+    rw [div_pow, Real.sq_sqrt hs]
+    field_simp
+    linear_combination -2 * Real.exp (-t) * hm
+  unfold mixedNeumannTime
+  rw [show (if σ then -1 else 1) * Real.sin (mixedNeumannA σ t) = Real.tanh t by
+    cases σ <;> simp [mixedNeumannA, Real.sin_sub_pi_div_two, Real.sin_pi_div_two_sub, hcos]]
+  exact Real.artanh_tanh t
+
+private theorem mixedNeumannA_right_inv (σ : Bool) {a : ℝ}
+    (ha : a ∈ Ioo (-Real.pi / 2) (Real.pi / 2)) :
+    mixedNeumannA σ (mixedNeumannTime σ a) = a := by
+  rw [← mixedNeumannA_image σ] at ha
+  obtain ⟨t, rfl⟩ := ha
+  rw [mixedNeumannTime_left_inv]
+
+private theorem mixed_neumann_comp_local_h1 (σ : Bool) {F D : ℝ → ℂ}
+    (h : ∀ l r, l < r → Icc l r ⊆ Ioo (-Real.pi / 2) (Real.pi / 2) →
+      HasIntervalH1 l r F D) (c e : ℝ) :
+    AbsolutelyContinuousOnInterval (F ∘ mixedNeumannA σ) c e := by
+  let A := mixedNeumannA σ
+  have hL0 : LipschitzWith 1 (fun t ↦ arcAngle t - Real.pi / 2) :=
+    LipschitzWith.of_dist_le_mul fun s t ↦ by
+      simpa only [Real.dist_eq, sub_sub_sub_cancel_right] using
+        lipschitzWith_arcAngle.dist_le_mul s t
+  have hL : LipschitzWith 1 A := by
+    cases σ
+    · exact hL0.neg
+    · exact hL0
+  have hac := mixedNeumannA_mem σ c
+  have hae := mixedNeumannA_mem σ e
+  obtain ⟨l, hl, hl'⟩ := exists_between (lt_min hac.1 hae.1)
+  obtain ⟨r, hr', hr⟩ := exists_between (max_lt hac.2 hae.2)
+  have hc : A c ∈ Ioo l r := ⟨hl'.trans_le (min_le_left _ _),
+    (le_max_left _ _).trans_lt hr'⟩
+  have he : A e ∈ Ioo l r := ⟨hl'.trans_le (min_le_right _ _),
+    (le_max_right _ _).trans_lt hr'⟩
+  have hF := (h l r (hc.1.trans hc.2) (Icc_subset_Ioo hl hr)).absolutelyContinuous hc he
+  cases σ
+  · have hm : Monotone A := fun s t hst ↦ by
+      change -(arcAngle s - Real.pi / 2) ≤ -(arcAngle t - Real.pi / 2)
+      linarith [antitone_arcAngle hst]
+    exact AbsolutelyContinuousOnInterval.comp_monotoneOn hF hL.lipschitzOnWith
+      (hm.monotoneOn _) hm.mapsTo_uIcc
+  · have hm : Antitone A := fun s t hst ↦ by
+      change arcAngle t - Real.pi / 2 ≤ arcAngle s - Real.pi / 2
+      linarith [antitone_arcAngle hst]
+    exact AbsolutelyContinuousOnInterval.comp_antitoneOn hF hL.lipschitzOnWith
+      (hm.antitoneOn _) hm.mapsTo_uIcc
+
+/-- The physical vorticity trace obeys the transport equation on the regular arc and
+is square integrable in flow time, assuming an H¹ vorticity collar. -/
+theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (d : MixedQuotientData ω)
+    {ε : ℝ} (hε : 0 < ε) (hv : MemSobolevLocOn 1 (mixedSeparatrixCollar ε) (liftL2 ω))
+    (σ : Bool) :
+    let g := mixedNeumannStream d.phi σ
+    ∃ q : ℝ → ℂ, (∀ c e, AbsolutelyContinuousOnInterval q c e) ∧
+      (∀ᵐ t, HasDerivAt q (Complex.I * lam * q t - deriv g t) t) ∧
+      MemLp q 2 volume ∧
+      ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ
+        (liftL2 ω) (fun a ↦ q (mixedNeumannTime σ a)) := by
+  let I := Ioo (-Real.pi / 2) (Real.pi / 2)
+  let A := mixedNeumannA σ
+  let g := mixedNeumannStream d.phi σ
+  let f := fun a ↦ contStream ω (diagonalTraceChart 1 (a, cellEdgeNormal σ))
+  have hv' := mixed_cell_collar_h1 hε hv
+  obtain ⟨w, hw, hW, S, hS, hS2, hScell⟩ :=
+    mixed_neumann_inward_trace_memLp d (half_pos hε) hv' σ
+  let k : ℝ := -edgeSideSign σ
+  let D := fun a ↦ Complex.I * ((k * lam / Real.cos a : ℝ) : ℂ) * S a
+  have hpair := isTransportPair_contStream hlam hω isOrbitUnion_cellNeighbourhood
+    isBounded_cellNeighbourhood
+  have hloc (l r : ℝ) (hlr : l < r) (hr : Icc l r ⊆ I) :
+      ∃ T, T =ᵐ[volume.restrict (Ioo l r)] (S + f) ∧ HasIntervalH1 l r T D := by
+    have hsub := Ioo_subset_Icc_self.trans hr
+    obtain ⟨V, T, hV, he, hT⟩ := hpair.inward_edge_window_transport
+      closure_cellSquare_subset_cellNeighbourhood hv' (continuous_contStream ω).continuousOn
+      EventuallyEq.rfl 1 σ hlr hw hr (fun q hq ↦ hW ⟨hsub hq.1, hq.2⟩)
+    have hVS := hV.ae_eq_inward hS hw le_rfl (k := id) hsub (fun _ hu ↦ hu)
+      (MeasurePreserving.id volume) (MeasurePreserving.id volume) continuous_id rfl
+      (fun _ _ _ _ ↦ rfl)
+    have hF : T =ᵐ[volume.restrict (Ioo l r)] (S + f) := by
+      filter_upwards [he, hVS] with a ha hsa
+      change V a = S a at hsa
+      simpa only [Pi.add_apply, f, hsa] using ha
+    have hD : (fun a ↦ Complex.I *
+        (↑((if (1 : Fin 2) = 0 then 1 else -1) * edgeSideSign σ * lam / Real.cos a) : ℂ) * V a)
+        =ᵐ[volume.restrict (Ioo l r)] D := by
+      filter_upwards [hVS] with a ha
+      change V a = S a at ha
+      simp only [D, k, one_ne_zero, ite_false, neg_one_mul, ha]
+    refine ⟨T, hF, hT.memLp_value, hT.memLp_derivative.ae_eq hD,
+      hT.locally_absolutelyContinuous, ?_⟩
+    filter_upwards [hT.hasDerivAt_ae, (ae_restrict_iff' measurableSet_Ioo).1 hD] with a ha hda hmem
+    rw [← hda hmem]
+    exact ha hmem
+  obtain ⟨T, heT, hTd, hT⟩ := mixed_glue_interval_h1 hloc
+  let q := T ∘ A - g
+  have hgac : ∀ c e, AbsolutelyContinuousOnInterval g c e :=
+    (mixed_neumann_stream_trace d σ).1
+  have hgval (t : ℝ) : f (A t) = g t := by
+    have hm := mixedNeumannArc_mem σ t
+    rw [mixedNeumann_coord] at hm
+    change contStream ω (diagInv (mixedNeumannA σ t, cellEdgeNormal σ)) =
+      mixedNeumannStream d.phi σ t
+    simpa only [Function.comp_apply, mixedNeumannStream, mixedNeumann_coord] using
+      mixed_stream_eq_on_closed_cell d hm
+  have hqS : ∀ᵐ a ∂volume.restrict I, q (mixedNeumannTime σ a) = S a := by
+    filter_upwards [heT, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo]
+      with a ha haI
+    have hinv : A (mixedNeumannTime σ a) = a := mixedNeumannA_right_inv σ haI
+    change T (A (mixedNeumannTime σ a)) - g (mixedNeumannTime σ a) = S a
+    rw [← hgval, hinv, ha, Pi.add_apply, add_sub_cancel_right]
+  have hqflow : q =ᵐ[volume] S ∘ A := by
+    filter_upwards [mixedNeumannA_ae σ heT] with t ht
+    change T (A t) - g t = S (A t)
+    rw [← hgval, ht, Pi.add_apply, add_sub_cancel_right]
+  refine ⟨q, fun c e ↦ (mixed_neumann_comp_local_h1 σ hT c e).sub (hgac c e), ?_,
+    ((show MemLp (S ∘ A) 2 volume by simpa only [A, Function.comp_def, mixedNeumann_coord]
+      using hS2).ae_eq hqflow.symm), ε / 2, half_pos hε, ?_⟩
+  · have hgd : ∀ᵐ t, DifferentiableAt ℝ g t := by
+      have hn (n : ℕ) := (hgac (-(n : ℝ)) n).boundedVariationOn.ae_differentiableAt_of_mem_uIcc
+      filter_upwards [ae_all_iff.2 hn] with t ht
+      obtain ⟨n, hn'⟩ := exists_nat_gt |t|
+      exact ht n (Icc_subset_uIcc ⟨by linarith [(abs_lt.mp hn').1], (abs_lt.mp hn').2.le⟩)
+    filter_upwards [mixedNeumannA_ae σ hTd, hgd, hqflow] with t ht hgt hq
+    have hc : Real.cos (A t) = (Real.cosh t)⁻¹ := by
+      simpa only [A, mixedNeumann_coord] using mixedNeumannArc_cos σ t
+    have hk : (if σ then -1 else 1 : ℝ) = k := by cases σ <;> norm_num [k, edgeSideSign]
+    have hh := (ht.scomp t (mixedNeumannA_deriv σ t)).sub hgt.hasDerivAt
+    refine hh.congr_deriv ?_
+    change ((if σ then -1 else 1 : ℝ) * (Real.cosh t)⁻¹) • D (A t) - deriv g t =
+      Complex.I * (lam : ℂ) * q t - deriv g t
+    rw [hq, hk]
+    simp only [D, hc, Function.comp_apply, Complex.real_smul, Complex.ofReal_mul,
+      Complex.ofReal_div]
+    have hk2 : (k : ℂ) ^ 2 = 1 := by cases σ <;> norm_num [k, edgeSideSign]
+    have hcz : (↑((Real.cosh t)⁻¹ : ℝ) : ℂ) ≠ 0 :=
+      Complex.ofReal_ne_zero.mpr (inv_ne_zero (Real.cosh_pos t).ne')
+    rw [show (k : ℂ) * (↑((Real.cosh t)⁻¹ : ℝ) : ℂ) *
+        (Complex.I * ((k : ℂ) * (lam : ℂ) / ↑((Real.cosh t)⁻¹ : ℝ)) * S (A t)) =
+        (k : ℂ) ^ 2 * (Complex.I * (lam : ℂ) * S (A t)) by
+          rw [div_eq_mul_inv]
+          linear_combination (k : ℂ) ^ 2 * Complex.I * (lam : ℂ) * S (A t) *
+            (mul_inv_cancel₀ hcz), hk2, one_mul]
+  · intro l r a b hlr hab hreg hedge hrect
+    have h' := hScell l r a b hlr hab hreg hedge (hrect.trans
+      (mixed_cell_eq_strip (ε / 2)).subset)
+    exact h'.congr_trace (ae_restrict_of_ae_restrict_of_subset
+      (Ioo_subset_Icc_self.trans hreg) hqS)
+
+/-- The physical vorticity trace obeys the transport equation on the regular arc and
+is square integrable in flow time. It is not yet identified with the canonical profile. -/
+theorem mixed_neumann_vorticity_trace {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω)
+    (σ : Bool) :
+    let g := mixedNeumannStream d.phi σ
+    ∃ q : ℝ → ℂ, (∀ c e, AbsolutelyContinuousOnInterval q c e) ∧
+      (∀ᵐ t, HasDerivAt q (Complex.I * lam * q t - deriv g t) t) ∧
+      MemLp q 2 volume ∧
+      ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ
+        (liftL2 ω) (fun a ↦ q (mixedNeumannTime σ a)) := by
+  obtain ⟨_, ε, hε, hv, _, _⟩ := mixed_quotient_domain hlam hω hs
+  exact mixed_neumann_vorticity_trace_of_collar hlam hω d hε hv σ
 
 /-- Boundary square and physical trace for the actual mixed Neumann profile. -/
 theorem mixed_boundary_square_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}

@@ -260,17 +260,22 @@ everywhere, where $g=\psi|_N$.
 
 \begin{proof}
 \uses{prop:mixed-quotient-domain, lem:mixed-neumann-stream-trace, lem:mixed-neumann-strip-weight,
-  lem:edge-window-transport, lem:trace-l2, lem:transport-pair-eigen,
-  lem:transport-unknown, lem:separatrix-arc}
-Choose a full inward strip along the Neumann side contained in the
-$H^1$ collar. Its normal derivative is in $L^2$, and the quotient
-domain gives $\omega/\cos a\in L^2$. Thus the critical strip estimate
-gives the physical trace in $L^2(dt)$. In a regular flow box the
-weak equation for the physical unknown
-$z=-(q+g)/\lambda$ restricts to the edge: $H^1$ regularity gives $L^2$
-convergence of the sections, allowing passage to the limit in the weak
-$t$ equation. It yields $z'=i(\lambda z+g)$ and hence the equation for
-$q$, without a trace of the normal derivative of $\omega$.
+  lem:edge-window-transport, lem:one-sided-trace-comparison, lem:transport-pair-eigen,
+  lem:h1-interval-endpoints, lem:arc-diagonal}
+\leanok
+Shrink the $H^1$ collar and choose a full inward strip. The critical
+strip estimate gives a canonical trace $S(a)$ in $L^2(dt)$.
+On each compact regular window the weak tangential equation gives
+an $H^1$ representative of $S+g_0$, where $g_0$ is the continuous
+stream trace in the side coordinate $a$. The derivative is
+$i\lambda\kappa S/\cos a$, with $\kappa$ the sign of the flow direction.
+The representatives agree pointwise on overlaps by continuity and
+agreement almost everywhere; rational windows suffice to combine the
+exceptional null sets. Compose the resulting representative with
+$a(t)$, using $a'(t)=\kappa\cos a(t)$, and subtract $g(t)$.
+This gives $q'=i\lambda q-g'$ and preserves both the $L^2(dt)$ class
+and the canonical cell-side traces. No trace of the normal derivative
+of $\omega$ is needed.
 \end{proof}
 
 \begin{lemma}[Decay of a square-integrable vorticity profile]

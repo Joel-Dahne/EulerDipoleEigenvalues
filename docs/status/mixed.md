@@ -27,14 +27,17 @@ admission-free; see [the module map](../architecture.md).
   `L²(dt)` for the vorticity on a Sobolev cell collar and identifies it
   with the trace on every regular cell-side window. The nonzero-forcing
   equation on compact regular windows is proved in `lem:edge-window-transport`.
-  `lem:mixed-neumann-vorticity-trace` still needs to glue those local
-  equations into a single locally absolutely continuous profile in flow time.
+  `lem:mixed-neumann-vorticity-trace` glues the local representatives
+  before changing to flow time. The proof from a supplied collar is
+  admission-free; the eigenfunction application still depends on the
+  vorticity collar from `prop:mixed-quotient-domain`.
   `lem:mixed-boundary-square-weighted` is admission-free: its current is
   bounded by a multiple of `1 − x²` and needs no endpoint traces of `F`.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
   `lem:mixed-neumann-renormalization` is proved from the boundary trace
-  data. The remaining direct inputs are `lem:mixed-trace-mass`,
+  data; its remaining admission is `prop:mixed-quotient-domain`.
+  The remaining direct inputs to the static identity are `lem:mixed-trace-mass`,
   `prop:mixed-virial`, and `lem:mixed-boundary-square-traces`.
   `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
   the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
