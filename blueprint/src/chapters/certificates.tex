@@ -100,6 +100,49 @@ use the lower endpoint for $B\ge0$ and the upper endpoint for $B\le0$.
 
 \section{The certificates}
 
+For the odd--odd inequalities write
+$R_0=s\mathsf A(s,r)/(384r^3)$ and $R_1=s\mathsf B(s,r)/(1536r^2)$,
+where $\mathsf A,\mathsf B$ are the integer polynomials in the residual table.
+Write $L_-(r),L_+(r)$ for the two bounds on $\log(r/2)$ in
+Lemma~\ref{lem:log-bounds}.
+
+\begin{lemma}[Odd--odd lower logarithm endpoint]
+\label{cert:dd-residual-lower}
+\lean{NoEmbeddedEigenvalues.dd_residual_lower_nonneg}
+\leanok
+On $0<s<2$, $s(2-s)\le r\le2-s^2/2$, one has $R_0+R_1 L_-(r)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+\uses{lem:bernstein-positivity}
+Set $x=s/2$ and $y=(r-s(2-s))/(2(1-x)^2)$, so that
+$(x,y)\in[0,1]^2$ and $r=2(1-x)[2x+(1-x)y]$.
+After multiplication by $384r^4/s$, the endpoint expression factors as
+$(1-x)^4 Q_-(x,y)$. Check this identity by polynomial normalization, then
+verify the signs of the Bernstein coefficients of $Q_-$ (bidegree $(9,6)$)
+on $[0,\frac12]\times[0,1]$ and $[\frac12,1]\times[0,1]$ by exact arithmetic.
+\end{proof}
+
+\begin{lemma}[Odd--odd upper logarithm endpoint]
+\label{cert:dd-residual-upper}
+\lean{NoEmbeddedEigenvalues.dd_residual_upper_nonneg}
+\leanok
+On the same range, $0<s<2$, $s(2-s)\le r\le2-s^2/2$, one has
+$R_0+R_1 L_+(r)\ge0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+\uses{lem:bernstein-positivity}
+Use the same substitution and multiply by $384r^4(r+2)^3/s$. Polynomial
+normalization gives $(1-x)^4Q_+(x,y)$, with $Q_+$ of bidegree $(15,9)$.
+Check the signs of the Bernstein coefficients by exact arithmetic on
+$[0,\frac14]\times[0,\frac12]$, $[\frac14,\frac12]\times[0,\frac12]$,
+$[0,\frac12]\times[\frac12,1]$, and $[\frac12,1]\times[0,1]$.
+These boxes cover the unit square.
+\end{proof}
+
 \begin{lemma}[Odd--odd residual]
 \label{cert:dd-residual}
 \uses{def:dd-ground-state}
@@ -116,16 +159,14 @@ $Pw_*+\tfrac52s^2w_*=R(s,r)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-ground-residual-factorization, lem:bernstein-positivity, lem:log-bounds, lem:affine-in-log, lem:dipole-identities}
+\leanok
+\uses{lem:dd-ground-residual-factorization, cert:dd-residual-lower, cert:dd-residual-upper, lem:log-bounds, lem:affine-in-log}
 Use the factorization of $Pw_*$, substitute $z=s(2-s)/r$ and
 $\ell=r\log(r/2)$, and add the explicit term $\tfrac52s^2w_*$. Treating
 $\log(r/2)$ as an independent variable, clearing the denominators gives a
 polynomial identity with the manuscript's table.
-For the sign, use the two rational logarithm bounds and the substitution
-$s=2x$, $r=2(1-x)[2x+(1-x)y]$. The resulting
-polynomials are divisible by $(1-x)^4$; the quotients $Q_-$, $Q_+$ (bidegrees
-$(9,6)$ and $(15,9)$) have nonnegative Bernstein coefficients on the six boxes
-listed in the manuscript.
+For the sign, apply affine interpolation to the two certified endpoints of
+the logarithm interval.
 \end{proof}
 
 \begin{lemma}[Odd-in-$b$ interior inequality]

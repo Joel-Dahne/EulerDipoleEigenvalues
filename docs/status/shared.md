@@ -16,10 +16,11 @@ the mixed saddle jet or quotient domain; see [Mixed](mixed.md).
 
 The general Bernstein criterion (`lem:bernstein-positivity`) and logarithm
 tools (`lem:log-bounds`, `lem:affine-in-log`) are proved in
-[`Certificates/`](../../NoEmbeddedEigenvalues/Certificates/). No backend has
-been selected for checking specific coefficient tables, and the original
-verification scripts and their output are not in the repository. The
+[`Certificates/`](../../NoEmbeddedEigenvalues/Certificates/). The
 [certificate chapter](../../blueprint/src/chapters/certificates.tex) separates
-operator identities from sign claims: a Bernstein subdivision proof must
-justify both the polynomialization and the exact coefficient checks.
-See the [digest notes](../../blueprint/src/chapters/notes.tex).
+operator identities from sign claims. For both odd–odd endpoints
+(`cert:dd-residual-lower`, `cert:dd-residual-upper`), Lean checks the
+polynomial identities and the coefficient signs. The independent
+[SymPy script](../../scripts/verify_dd_residual.py) reproduces the manuscript
+data but is not used as evidence by Lean. See the
+[digest notes](../../blueprint/src/chapters/notes.tex).

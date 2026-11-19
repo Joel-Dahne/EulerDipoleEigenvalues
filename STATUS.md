@@ -8,8 +8,8 @@ rebuilds both the graphs and the report.
 ## Overall state
 
 - **Even–even:** the exclusion is admission-free.
-- **Odd–odd:** the exclusion is assembled but still depends on admitted
-  prerequisites. Transport near the separatrix is no longer an open branch.
+- **Odd–odd:** the exclusion is admission-free, including the two endpoint
+  certificates for the residual bound.
 - **Mixed:** odd–even exclusion is admitted; even–odd follows by rotation.
 
 The main theorem combines the sector exclusions and is not yet admission-free.

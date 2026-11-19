@@ -658,8 +658,15 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   box pullback, expansion and positivity. Uses Mathlib's Bernstein basis.
 - `Certificates/Logarithm.lean`: rational logarithm bounds from geometric
   tail estimates and affine interpolation between endpoint bounds.
-- `Certificates/OddOdd.lean`: explicit odd–odd residual table, its identity
-  with the differentiated ground residual, and its sign on the geometric range.
+- `Certificates/OddOddResidual.lean`: explicit odd–odd residual table and
+  unit-square parametrization of its geometric range.
+- `Certificates/OddOddLower.lean`, `Certificates/OddOddUpper.lean`: sign
+  inequalities at the two rational logarithm bounds. Each module separates
+  its polynomial identity from the kernel-checked Bernstein coefficients.
+  The assembly imports these proofs, so downstream edits do not replay the
+  coefficient checks.
+- `Certificates/OddOdd.lean`: differentiated ground residual identity and
+  interpolation between the two endpoint inequalities.
 - `Certificates/Mixed.lean`: normalized mixed residuals, interior sign claims,
   and the Robin margin polynomial with its positive-level derivative identity.
   The diagonal-coordinate matrix, potential, operator, and comparison
@@ -667,6 +674,9 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
 
 ## Source checks and verification tools
 
+- `scripts/verify_dd_residual.py` (Python 3 with SymPy): independently reproduce
+  the exact odd–odd certificate data. Run with `--lean-power lower` or
+  `--lean-power upper` to print a quotient power table. Not part of the Lean build.
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,
   references, metadata and dependency cycles, without Lean or plasTeX.
 - `scripts/blueprint_status.py` (`just status-blueprint`, also `just web`):
