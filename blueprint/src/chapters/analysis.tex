@@ -3017,31 +3017,36 @@ Values on the axes do not affect these integrals.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:odd-h3-division, lem:acl-slicing, lem:sobolev-weak-jets}
-On $0<v<u$, $r\asymp u$ and
-\[
- V=u^{-1}\int_0^1R_v(u,tv)\,dt.
-\]
-If $T_kF=\int_0^1t^kF(u,tv)\,dt$, differentiation gives
-\[
- V_{uu}=2u^{-3}T_0R_v-2u^{-2}T_0R_{uv}+u^{-1}T_0R_{uuv},\quad
- V_{uv}=-u^{-2}T_1R_{vv}+u^{-1}T_1R_{uvv},\quad
- V_{vv}=u^{-1}T_2R_{vvv}.
-\]
-The expressions for $V/r^2$ and $\nabla V/r$ involve the same first-
-and second-derivative terms. For every real $\ell$,
-\[
- \|u^{-\ell}F(u,tv)\|_{L^2(0<v<u,\,(u,v)\in D)}
- \le t^{-1/2}\|u^{-\ell}F\|_{L^2(0<v<u,\,(u,v)\in D)}.
-\]
-Indeed the substitution $w=tv$ shrinks the cone into itself and keeps
-$u$ fixed. Thus the radius weight does not incur another dilation loss.
-Integrate $t^{k-1/2}$ and use Minkowski. Interchange $u,v$ on the other
-cone and reflect to the other quadrants.
-To justify the weak formulas first work where the larger coordinate is
-bounded away from zero and apply one-coordinate division. Let this lower
-bound decrease to zero using the uniform weighted estimates.
-The one-coordinate lemma also supplies $H^2$ across each open axis.
+\uses{lem:acl-slicing, lem:trace-l2, lem:sobolev-weak-jets,
+ lem:weak-derivative-basic, lem:weak-derivative-unique,
+ lem:weak-derivative-product, lem:affine-jet-pullback,
+ lem:sobolev-local-gluing}
+\leanok
+Use the two overlapping open cones $|v|<2|u|$ and $|u|<2|v|$
+inside the disk. On the first cone, the normal dilation
+$(u,v)\mapsto(u,tv)$, $0<t<1$, stays in the cone and keeps $u$ fixed.
+ACL on symmetric rectangles inside the disk gives
+$V=u^{-1}T_0R_v$ there, where $T_kF=\int_0^1t^k F(u,tv)\,dt$.
+Use the same reparametrized averaging argument as for one-coordinate
+division: $t=s^2$ makes the squared kernel weight cancel the inverse
+Jacobian, leaving $4s^{4k}\le4$. It also justifies weak differentiation
+under the integral. The weak product rule for $u^{-1}$ is valid on the
+whole first cone, including its open horizontal half-axes.
+
+In a quotient derivative of order $m\le2$, a term with $\ell$ derivatives
+on the average has multiplier a constant times $u^{-(1+m-\ell)}$.
+After division by $r^{2-m}$ its norm is bounded by the same average with
+weight $|u|^{-(3-\ell)}$, since $|u|\le r$. This weight commutes with the
+average, and $r\le3|u|$ on the cone bounds the weighted input by the
+given order-$(\ell+1)$ energy. The squared energy of each finite sum of
+terms is bounded by Cauchy--Schwarz.
+
+Interchange coordinates for the other cone. The two quotients agree
+a.e.\ on the overlap by $R=uvV$, so their specified weak derivatives
+agree there by uniqueness. Local Sobolev gluing supplies regularity on
+the punctured disk and identifies the patched jet on each compact test
+patch. The two cone bounds sum to the global weighted bound; the omitted
+center is null.
 \end{proof}
 
 \begin{lemma}[Weighted removal of a point in H2]

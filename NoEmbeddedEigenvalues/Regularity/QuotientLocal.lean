@@ -14,6 +14,7 @@ import NoEmbeddedEigenvalues.LocalToGlobal
 import NoEmbeddedEigenvalues.WeakJetOperations
 import NoEmbeddedEigenvalues.Analysis.ScaledInteriorEnergy
 import NoEmbeddedEigenvalues.Analysis.NormalAverage
+import NoEmbeddedEigenvalues.Analysis.DoubleDivision
 import NoEmbeddedEigenvalues.SobolevApproximation
 
 /-!
@@ -152,30 +153,6 @@ theorem odd_h3_division {l r b : ℝ} (hlr : l < r) (hb : 0 < b) :
     exact le_add_of_nonneg_right (mul_nonneg (by norm_num) (hEn 0))
   exact ⟨V, E, memSobolevOn_iff_exists_weakJet.mpr ⟨E, hE, fun w hw ↦ (havg w hw).1⟩,
     hE, hbase, heven, henergy⟩
-
-/-- Weighted double division (`lem:weighted-double-division`), in squared-energy form.
-No fourth derivative and no weighted order-zero hypothesis on R is imposed. -/
-theorem weighted_double_division {ρ : ℝ} (hρ : 0 < ρ) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (R : ℝ × ℝ → ℂ) (D : List (Fin 2) → ℝ × ℝ → ℂ),
-      MemSobolevOn 3 (localDisk 0 ρ) R → HasWeakJetOn 3 (localDisk 0 ρ) R D →
-      (∀ j, ∀ᵐ p ∂(volume.restrict (localDisk 0 ρ)), R (axisReflect j p) = -R p) →
-      RadialJetLp 1 3 (localDisk 0 ρ) 0 D →
-      RadialJetLp 2 2 (localDisk 0 ρ) 0 D →
-      RadialJetLp 3 1 (localDisk 0 ρ) 0 D →
-      ∃ (V : ℝ × ℝ → ℂ) (E : List (Fin 2) → ℝ × ℝ → ℂ),
-        MemSobolevLocOn 2 (localDisk 0 ρ \ {0}) V ∧
-        HasWeakJetOn 2 (localDisk 0 ρ \ {0}) V E ∧
-        (∀ᵐ p ∂(volume.restrict (localDisk 0 ρ)), R p = ((p.1 * p.2 : ℝ) : ℂ) * V p) ∧
-        RadialJetLp 0 2 (localDisk 0 ρ) 0 E ∧
-        RadialJetLp 1 1 (localDisk 0 ρ) 0 E ∧
-        RadialJetLp 2 0 (localDisk 0 ρ) 0 E ∧
-        radialJetEnergy 0 2 (localDisk 0 ρ) 0 E +
-          radialJetEnergy 1 1 (localDisk 0 ρ) 0 E +
-          radialJetEnergy 2 0 (localDisk 0 ρ) 0 E ≤
-          C * (radialJetEnergy 1 3 (localDisk 0 ρ) 0 D +
-            radialJetEnergy 2 2 (localDisk 0 ρ) 0 D +
-            radialJetEnergy 3 1 (localDisk 0 ρ) 0 D) := by
-  sorry
 
 /-- A nonzero continuous value at the center would force the weighted squared
 mass in a square of side `2 * r` to grow at least as fast as `r⁻²`. -/
