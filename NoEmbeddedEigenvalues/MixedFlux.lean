@@ -4,6 +4,8 @@ import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.MixedVorticityTrace
+import NoEmbeddedEigenvalues.EdgeWindowTransport
+import NoEmbeddedEigenvalues.Analysis.BoundaryTraceCompare
 import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.NormalField
 import Mathlib.Analysis.SpecialFunctions.Artanh
@@ -359,6 +361,129 @@ theorem mixed_neumann_strip_memLp_flow {w : ℝ} {F D : Plane → ℂ} {T : ℝ 
   exact hT.left_memLp_div_sqrt hD hDL hFL hT.2.1 Real.continuous_cos.measurable
     (fun _ ha ↦ Real.cos_pos_of_mem_Ioo (by simpa only [neg_div] using ha))
     (fun a _ ↦ mul_le_of_le_one_right hT.2.1.le (Real.cos_le_one a))
+
+/-- Shrinking the absolute-level open collar gives an H¹ cell collar. -/
+theorem mixed_cell_collar_h1 {ω : L2} {ε : ℝ} (hε : 0 < ε)
+    (hω : MemSobolevLocOn 1 (mixedSeparatrixCollar ε) (liftL2 ω)) :
+    MemSobolevOn 1 (cellSeparatrixStrip (ε / 2)) (liftL2 ω) := by
+  let P := cellSeparatrixStrip (ε / 2)
+  have hc : Continuous dipoleLift := by unfold dipoleLift; fun_prop
+  have hPc : closure P ⊆ {p | |dipoleLift p| ≤ ε / 2} :=
+    closure_minimal (fun p hp ↦ by
+      change |dipoleLift p| ≤ ε / 2
+      rw [abs_of_pos hp.2.1]
+      exact hp.2.2.le) (isClosed_le hc.abs continuous_const)
+  have hPB : Bornology.IsBounded P :=
+    isBounded_cellNeighbourhood.subset (fun _ hp ↦
+      closure_cellSquare_subset_cellNeighbourhood (subset_closure hp.1))
+  exact hω P (isOpen_cellSeparatrixStrip _) (Metric.isCompact_iff_isClosed_bounded.mpr
+    ⟨isClosed_closure, hPB.closure⟩) (fun p hp ↦
+      (show |dipoleLift p| ≤ ε / 2 from hPc hp).trans_lt (half_lt_self hε))
+
+private theorem mixed_trace_restrict_tangent {l r a b w : ℝ} {V : Plane → ℂ} {S : ℝ → ℂ}
+    (hS : HasTransverseH1Trace l r 0 w 0 id V S)
+    (hab : a < b) (hsub : Ioo a b ⊆ Ioo l r) :
+    HasTransverseH1Trace a b 0 w 0 id V S := by
+  obtain ⟨_, hw, h0, G, D, hGm, hG, hGL, hDL, hACL, hT⟩ := hS
+  have hP := prod_mono hsub (Subset.rfl : Ioo 0 w ⊆ Ioo 0 w)
+  have hμ := Measure.restrict_mono_set volume hP
+  have hν := Measure.restrict_mono_set volume hsub
+  exact ⟨hab, hw, h0, G, D, hGm, ae_mono hμ hG, hGL.mono_measure hμ,
+    hDL.mono_measure hμ, ae_mono hν hACL, ae_mono hν hT⟩
+
+/-- The full inward trace agrees with the trace on every regular physical
+window contained in the Sobolev collar, even if that window is wider. -/
+theorem mixed_neumann_inward_hasCellEdgeTrace {ω : L2} {ε w : ℝ} {S : ℝ → ℂ}
+    (σ : Bool) (hv : MemSobolevOn 1 (cellSeparatrixStrip ε) (liftL2 ω))
+    (hS : HasTransverseH1Trace (-Real.pi / 2) (Real.pi / 2) 0 w 0 id
+      (liftL2 ω ∘ inwardEdgeChart 1 σ) S) :
+    HasCellEdgeTrace (cellSeparatrixStrip ε) 1 σ (liftL2 ω) S := by
+  intro l r a b hlr hab hreg hedge hrect
+  let C := diagonalTraceChart 1
+  let V := liftL2 ω ∘ C
+  let t := cellEdgeNormal σ
+  have hV := (hv.comp_diagonalTraceChart (isOpen_cellSeparatrixStrip ε) 1).mono
+    (image_subset_iff.mp hrect)
+  obtain ⟨D, hd, hD⟩ := hV.2 1
+  have ht : t ∈ Icc a b := by
+    cases σ
+    · change a = cellEdgeNormal false at hedge
+      exact ⟨hedge.le, hedge.symm.le.trans hab.le⟩
+    · change b = cellEdgeNormal true at hedge
+      exact ⟨hab.le.trans hedge.le, hedge.symm.le⟩
+  obtain ⟨T, hT⟩ := hd.exists_transverse_trace hlr hab ht hV.1 hD
+  let δ := min w (b - a)
+  have hδ : 0 < δ := lt_min hS.2.1 (sub_pos.mpr hab)
+  have hδw : δ ≤ w := min_le_left _ _
+  have hδab : δ ≤ b - a := min_le_right _ _
+  let φ := fun u ↦ edgeSideSign σ * (Real.pi / 2 - u)
+  have hφ : MapsTo φ (Ioo 0 δ) (Ioo a b) := by
+    intro u hu
+    cases σ
+    · change a = -Real.pi / 2 at hedge
+      change -1 * (Real.pi / 2 - u) ∈ Ioo a b
+      exact ⟨by linarith [hu.1], by linarith [hu.2]⟩
+    · change b = Real.pi / 2 at hedge
+      change 1 * (Real.pi / 2 - u) ∈ Ioo a b
+      exact ⟨by linarith [hu.2], by linarith [hu.1]⟩
+  have hm : MeasurePreserving φ volume volume := by
+    cases σ
+    · convert measurePreserving_add_right volume (-(Real.pi / 2)) using 1
+      funext u
+      simp [φ, edgeSideSign]
+      ring
+    · simpa [φ, edgeSideSign] using Measure.measurePreserving_sub_left volume (Real.pi / 2)
+  have hφc : Continuous φ := by fun_prop
+  have hφ0 : φ 0 = t := by
+    cases σ <;> simp [φ, t, edgeSideSign, cellEdgeNormal, neg_div]
+  have hS' := mixed_trace_restrict_tangent hS hlr (Ioo_subset_Icc_self.trans hreg)
+  have he := hS'.ae_eq_inward hT hδ hδw (k := id) (fun _ hs ↦ hs)
+    hφ (MeasurePreserving.id volume) hm hφc hφ0 (fun s _ u _ ↦ by
+      change liftL2 ω (C (edgeInward σ (s, u))) = liftL2 ω (C (s, φ u))
+      rw [edgeInward_apply])
+  exact hT.congr_trace he
+
+/-- The mixed bulk weight and a Sobolev cell collar give the canonical
+physical vorticity trace in `L²(dt)` on a full inward rectangle. -/
+theorem mixed_neumann_inward_trace_memLp {ω : L2} (d : MixedQuotientData ω)
+    {ε : ℝ} (hε : 0 < ε) (hω : MemSobolevOn 1 (cellSeparatrixStrip ε) (liftL2 ω))
+    (σ : Bool) :
+    ∃ w : ℝ, 0 < w ∧
+      Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo 0 w ⊆
+        inwardEdgeChart 1 σ ⁻¹' cellSeparatrixStrip ε ∧
+      ∃ S : ℝ → ℂ,
+        HasTransverseH1Trace (-Real.pi / 2) (Real.pi / 2) 0 w 0 id
+          (liftL2 ω ∘ inwardEdgeChart 1 σ) S ∧
+        MemLp (fun t ↦ S ((diagCoord (mixedNeumannArc σ t)).1)) 2 volume ∧
+        HasCellEdgeTrace (cellSeparatrixStrip ε) 1 σ (liftL2 ω) S := by
+  let w := min (ε / 4) (Real.pi / 2)
+  let Q := Ioo (-Real.pi / 2) (Real.pi / 2) ×ˢ Ioo (0 : ℝ) w
+  let C := inwardEdgeChart 1 σ
+  have hw : 0 < w := lt_min (by positivity) (by positivity)
+  have hwε : 2 * w ≤ ε := by dsimp [w]; linarith [min_le_left (ε / 4) (Real.pi / 2)]
+  have hwπ : w < Real.pi := (min_le_right _ _).trans_lt (by linarith [Real.pi_pos])
+  have hW : Q ⊆ C ⁻¹' cellSeparatrixStrip ε := by
+    intro q hq
+    exact inwardEdgeChart_mem_collar ⟨hq.2.1, hq.2.2.trans hwπ⟩
+      ((mul_lt_mul_of_pos_left hq.2.2 (by norm_num)).trans_le hwε) hq.1 1 σ
+  have hV := (hω.comp_inwardEdgeChart (isOpen_cellSeparatrixStrip ε) 1 σ).mono hW
+  obtain ⟨D, hD, hDL⟩ := hV.2 1
+  obtain ⟨S, hS⟩ := hD.exists_left_trace (by linarith [Real.pi_pos]) hw hV.1 hDL
+  refine ⟨w, hw, hW, S, hS, mixed_neumann_strip_memLp_flow σ hS hD hDL ?_,
+    mixed_neumann_inward_hasCellEdgeTrace σ hω hS⟩
+  have hsub : Q ⊆ edgeInward σ ⁻¹' mixedOpenCell := by
+    intro q hq
+    have hp := (hW hq).1
+    change diagInv (edgeInward σ q) ∈ cellSquare at hp
+    simpa only [cellSquare, mem_ofPred_eq, diagCoord_diagInv, abs_lt, neg_div,
+      mem_preimage, mixedOpenCell, mem_prod, mem_Ioo] using hp
+  have hL := (memLp_comp_planeAffine _ _ (measurePreserving_edgeInward σ)
+    (measurableSet_Ioo.prod measurableSet_Ioo) d.vorticity_divided).mono_measure
+      (Measure.restrict_mono_set volume hsub)
+  refine hL.ae_eq (Eventually.of_forall fun q ↦ ?_)
+  change liftL2 ω (diagInv (edgeInward σ q)) / (Real.cos (edgeInward σ q).1 : ℂ) =
+    liftL2 ω (diagInv (edgeInward σ q)) / (Real.cos q.1 : ℂ)
+  rw [edgeInward_apply]
 
 private theorem mixed_hasDerivAt_weightedFlow {U : ℝ → ℂ} {t : ℝ}
     (h : DifferentiableAt ℝ U (Real.tanh t)) :

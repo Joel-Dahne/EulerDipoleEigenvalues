@@ -18,50 +18,50 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 open scoped Topology ContDiff
 
-private theorem ae_horizontal_of_ae {P : ℝ × ℝ → Prop} {a b w : ℝ}
-    (h : ∀ᵐ q ∂(volume.restrict (Ioo a b ×ˢ Ioo 0 w)), P q) :
-    ∀ᵐ u ∂(volume.restrict (Ioo 0 w)), ∀ᵐ s ∂(volume.restrict (Ioo a b)), P (s, u) := by
-  have hs : Prod.swap ⁻¹' (Ioo a b ×ˢ Ioo 0 w) = Ioo 0 w ×ˢ Ioo a b := by
+private theorem ae_horizontal_of_ae {P : ℝ × ℝ → Prop} {a b c d : ℝ}
+    (h : ∀ᵐ q ∂(volume.restrict (Ioo a b ×ˢ Ioo c d)), P q) :
+    ∀ᵐ u ∂(volume.restrict (Ioo c d)), ∀ᵐ s ∂(volume.restrict (Ioo a b)), P (s, u) := by
+  have hs : Prod.swap ⁻¹' (Ioo a b ×ˢ Ioo c d) = Ioo c d ×ˢ Ioo a b := by
     ext q
-    simp [and_comm]
+    simp
   have h' := (Measure.measurePreserving_swap.restrict_preimage
     (measurableSet_Ioo.prod measurableSet_Ioo)).quasiMeasurePreserving.ae h
   rw [hs, ← Measure.prod_restrict] at h'
   exact Measure.ae_ae_of_ae_prod (p := fun q ↦ P q.swap) h'
 
-private theorem HasACLSectionsOn.ae_horizontal_trace_eq {a b w : ℝ}
-    {G D F : ℝ × ℝ → ℂ} (hw : 0 < w) (h : HasACLSectionsOn (Ioo a b) (Ioo 0 w) G D)
-    (hG : MemLp G 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
-    (hD : MemLp D 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
-    (he : G =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)] F) :
-    ∀ᵐ u ∂(volume.restrict (Ioo 0 w)), aclTrace 0 w G D u =ᵐ[volume.restrict (Ioo a b)]
+private theorem HasACLSectionsOn.ae_horizontal_trace_eq {a b c d : ℝ}
+    {G D F : ℝ × ℝ → ℂ} (hw : c < d) (h : HasACLSectionsOn (Ioo a b) (Ioo c d) G D)
+    (hG : MemLp G 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (hD : MemLp D 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (he : G =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo c d)] F) :
+    ∀ᵐ u ∂(volume.restrict (Ioo c d)), aclTrace c d G D u =ᵐ[volume.restrict (Ioo a b)]
       fun s ↦ F (s, u) := by
-  have hprod : ∀ᵐ q ∂(volume.restrict (Ioo a b ×ˢ Ioo 0 w)),
-      aclTrace 0 w G D q.2 q.1 = G q := by
+  have hprod : ∀ᵐ q ∂(volume.restrict (Ioo a b ×ˢ Ioo c d)),
+      aclTrace c d G D q.2 q.1 = G q := by
     rw [Measure.volume_eq_prod, ← Measure.prod_restrict]
     filter_upwards [Measure.quasiMeasurePreserving_fst.ae (h.ae_trace_eq hw hG hD),
       Measure.quasiMeasurePreserving_snd.ae (ae_restrict_mem measurableSet_Ioo)] with q hq hu
     exact hq q.2 hu
   exact ae_horizontal_of_ae (hprod.mp (he.mono fun _ h₁ h₂ ↦ h₂.trans h₁))
 
-private theorem HasWeakPartialOn.ae_horizontal_test {a b w : ℝ}
-    {F A : ℝ × ℝ → ℂ} (hab : a < b) (hw : 0 < w)
-    (hd : HasWeakPartialOn (Ioo a b ×ˢ Ioo 0 w) 0 F A)
-    (hF : MemLp F 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
-    (hA : MemLp A 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
+private theorem HasWeakPartialOn.ae_horizontal_test {a b c d : ℝ}
+    {F A : ℝ × ℝ → ℂ} (hab : a < b) (hw : c < d)
+    (hd : HasWeakPartialOn (Ioo a b ×ˢ Ioo c d) 0 F A)
+    (hF : MemLp F 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (hA : MemLp A 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
     {β : ℝ → ℂ} (hβ : ContDiff ℝ 1 β) (hβa : β a = 0) (hβb : β b = 0) :
-    ∀ᵐ u ∂(volume.restrict (Ioo 0 w)), (∫ s in Ioo a b, F (s, u) * deriv β s) =
+    ∀ᵐ u ∂(volume.restrict (Ioo c d)), (∫ s in Ioo a b, F (s, u) * deriv β s) =
       -(∫ s in Ioo a b, A (s, u) * β s) := by
-  let Q := Ioo a b ×ˢ Ioo (0 : ℝ) w
+  let Q := Ioo a b ×ˢ Ioo c d
   have hQ : IsOpen Q := isOpen_Ioo.prod isOpen_Ioo
-  have he : Prod.swap ⁻¹' Q = Ioo 0 w ×ˢ Ioo a b := by ext p; simp [Q, and_comm]
+  have he : Prod.swap ⁻¹' Q = Ioo c d ×ˢ Ioo a b := by ext p; simp [Q]
   have hs := hd.comp_swap_fst hQ
   have hFs := memLp_comp_swap hQ.measurableSet hF
   have hAs := memLp_comp_swap hQ.measurableSet hA
   rw [he] at hs hFs hAs
   obtain ⟨G, _, hGF, hG⟩ := hs.exists_acl_sections isOpen_Ioo ordConnected_Ioo
     (nonempty_Ioo.2 hw) isOpen_Ioo ordConnected_Ioo (nonempty_Ioo.2 hab)
-  have hGFp : G =ᵐ[(volume.restrict (Ioo 0 w)).prod (volume.restrict (Ioo a b))]
+  have hGFp : G =ᵐ[(volume.restrict (Ioo c d)).prod (volume.restrict (Ioo a b))]
       (F ∘ Prod.swap) := by simpa only [Measure.prod_restrict, Measure.volume_eq_prod] using hGF
   filter_upwards [hG.ae_hasIntervalH1 (hFs.ae_eq hGF.symm) hAs,
     Measure.ae_ae_of_ae_prod hGFp] with u hu heu
@@ -133,6 +133,72 @@ theorem HasACLSectionsOn.tendsto_trace_pairing {I : Set ℝ} {a b t : ℝ}
     (show MemLp _ (ENNReal.ofReal 2) _ by simpa using hU.sub hT)
     (show MemLp _ (ENNReal.ofReal 2) _ by simpa using hβ)
   simpa only [Pi.sub_apply, Real.rpow_two, ← Real.sqrt_eq_rpow] using hh
+
+/-- Taking transverse traces commutes with the weak tangential equation
+when both sides have an H¹ normal derivative. -/
+theorem HasACLSectionsOn.trace_weak_tangent {a b c d u : ℝ}
+    {F A G K DG DK : ℝ × ℝ → ℂ} (hab : a < b) (hcd : c < d) (hu : u ∈ Icc c d)
+    (hd : HasWeakPartialOn (Ioo a b ×ˢ Ioo c d) 0 F A)
+    (hG : HasACLSectionsOn (Ioo a b) (Ioo c d) G DG)
+    (hK : HasACLSectionsOn (Ioo a b) (Ioo c d) K DK)
+    (hGm : Measurable G) (hKm : Measurable K)
+    (hGL : MemLp G 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (hKL : MemLp K 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (hDG : MemLp DG 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (hDK : MemLp DK 2 (volume.restrict (Ioo a b ×ˢ Ioo c d)))
+    (heG : G =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo c d)] F)
+    (heK : K =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo c d)] A) :
+    ∃ T : ℝ → ℂ, T =ᵐ[volume.restrict (Ioo a b)] aclTrace c d G DG u ∧
+      AbsolutelyContinuousOnInterval T a b ∧
+      (∀ᵐ s ∂volume.restrict (Ioo a b), HasDerivAt T (aclTrace c d K DK u s) s) := by
+  let I := Ioo a b
+  let TF := aclTrace c d G DG u
+  let TA := aclTrace c d K DK u
+  have hFL := (hG.l2_trace hcd hGm hGL hDG u hu).1
+  have hAL := (hK.l2_trace hcd hKm hKL hDK u hu).1
+  have hL (β : ℝ → ℂ) (hβ : Continuous β) :
+      MemLp β 2 (volume.restrict I) := by
+    obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn (f := β) hβ.continuousOn
+    exact MemLp.of_bound hβ.aestronglyMeasurable C
+      ((ae_restrict_mem measurableSet_Ioo).mono fun s hs ↦ hC s (Ioo_subset_Icc_self hs))
+  have hTest (β : ℝ → ℂ) (hβ : ContDiff ℝ 1 β) (hβa : β a = 0) (hβb : β b = 0) :
+      (∫ s in I, TF s * deriv β s) = -(∫ s in I, TA s * β s) := by
+    let L := fun v ↦ ∫ s in I, aclTrace c d G DG v s * deriv β s
+    let R := fun v ↦ -(∫ s in I, aclTrace c d K DK v s * β s)
+    have hLc : ContinuousOn L (Icc c d) := fun _ hv ↦
+      hG.tendsto_trace_pairing hcd hv hGm hGL hDG
+        (hL _ (hβ.continuous_deriv le_rfl))
+    have hRc : ContinuousOn R (Icc c d) := fun _ hv ↦
+      (hK.tendsto_trace_pairing hcd hv hKm hKL hDK (hL _ hβ.continuous)).neg
+    have he : L =ᵐ[volume.restrict (Ioo c d)] R := by
+      filter_upwards [hd.ae_horizontal_test hab hcd (hGL.ae_eq heG) (hKL.ae_eq heK) hβ hβa hβb,
+        hG.ae_horizontal_trace_eq hcd hGL hDG heG,
+        hK.ae_horizontal_trace_eq hcd hKL hDK heK] with v hv hg hk
+      dsimp only [L, R, I]
+      rw [integral_congr_ae (hg.mono fun s e ↦ congrArg (· * deriv β s) e),
+        integral_congr_ae (hk.mono fun s e ↦ congrArg (· * β s) e)]
+      exact hv
+    exact (Measure.eqOn_open_of_ae_eq he isOpen_Ioo (hLc.mono Ioo_subset_Icc_self)
+      (hRc.mono Ioo_subset_Icc_self)).of_subset_closure hLc hRc Ioo_subset_Icc_self
+        (by rw [closure_Ioo hcd.ne]) hu
+  have iTF : IntegrableOn TF (Icc a b) := by
+    rw [integrableOn_Icc_iff_integrableOn_Ioo]
+    exact hFL.integrable (by norm_num)
+  have iTA : IntegrableOn TA (Icc a b) := by
+    rw [integrableOn_Icc_iff_integrableOn_Ioo]
+    exact hAL.integrable (by norm_num)
+  apply ACLSlicing.exists_ac_rep_Icc_complex hab iTF iTA
+  intro β hβ hβs hβI
+  rw [integral_Icc_eq_integral_Ioo, integral_Icc_eq_integral_Ioo]
+  have hβc := Complex.ofRealCLM.contDiff.comp (hβ.of_le (show (1 : WithTop ℕ∞) ≤ ∞ by simp))
+  have hz (s : ℝ) (hs : s ∉ Ioo a b) : β s = 0 := by
+    by_contra hs'
+    exact hs (hβI (subset_tsupport _ hs'))
+  have heβ (s : ℝ) : deriv (fun x ↦ (β x : ℂ)) s = ((deriv β s : ℝ) : ℂ) :=
+    (Complex.ofRealCLM.hasFDerivAt.comp_hasDerivAt s
+      ((hβ.differentiable (by simp) s).hasDerivAt)).deriv
+  simpa only [heβ] using hTest (fun s ↦ (β s : ℂ)) hβc
+    (by simp [hz a (by simp)]) (by simp [hz b (by simp)])
 
 /-- A tangential weak equation descends to the canonical left-normal traces
 when the error is a distance factor times an integrable normal flux. -/
@@ -279,19 +345,18 @@ theorem HasIntervalH1.norm_eq_of_imaginary_derivative {a b : ℝ} {T D : ℝ →
     nlinarith [norm_nonneg (T c), norm_nonneg (T d)]
   exact hord x y hx hy
 
-/-- Identify the traces in the homogeneous boundary equation using only the
-bulk a.e. relations and the continuous zero boundary values of the forcing. -/
-theorem HasTransverseH1Trace.boundary_mode {a b w : ℝ}
+/-- Identify the traces in the boundary equation using the bulk a.e. relations
+and the continuous normal sections of the forcing. -/
+theorem HasTransverseH1Trace.boundary_mode_add {a b w : ℝ}
     {F V R g : ℝ × ℝ → ℂ} {TF TV TR : ℝ → ℂ} {α : ℝ → ℝ}
     (hF : HasTransverseH1Trace a b 0 w 0 id F TF)
     (hV : HasTransverseH1Trace a b 0 w 0 id V TV)
     (hR : HasTransverseH1Trace a b 0 w 0 id R TR)
     (hg : ∀ s ∈ Ioo a b, ContinuousOn (fun u ↦ g (s, u)) (Icc 0 w))
-    (hg0 : ∀ s ∈ Ioo a b, g (s, 0) = 0)
     (heF : F =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)] fun q ↦ V q + g q)
     (heR : R =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)]
       fun q ↦ Complex.I * (α q.1 : ℂ) * V q) :
-    TF =ᵐ[volume.restrict (Ioo a b)] TV ∧
+    (TF =ᵐ[volume.restrict (Ioo a b)] fun s ↦ TV s + g (s, 0)) ∧
       TR =ᵐ[volume.restrict (Ioo a b)] fun s ↦ Complex.I * (α s : ℂ) * TV s := by
   obtain ⟨hab, hw, ht, GF, DF, _, heGF, hGFL, hDFL, hGF, hTF⟩ := hF
   obtain ⟨_, _, _, GV, DV, _, heGV, hGVL, hDVL, hGV, hTV⟩ := hV
@@ -321,10 +386,10 @@ theorem HasTransverseH1Trace.boundary_mode {a b w : ℝ}
     have hg' := (hg s hs 0 ht).mono Ioo_subset_Icc_self
     have hlim := (h4 0 ht).add hg'
     dsimp only at hlim
-    rw [hg0 s hs, add_zero] at hlim
     have he' : ∀ᶠ u in 𝓝[Ioo 0 w] (0 : ℝ), GV (s, u) + g (s, u) = GF (s, u) :=
       hJ.mono fun u hu ↦ (he u hu).symm
-    exact h1.trans ((tendsto_nhds_unique (h3 0 ht) (hlim.congr' he')).trans h2.symm)
+    exact h1.trans ((tendsto_nhds_unique (h3 0 ht) (hlim.congr' he')).trans
+      (congrArg (· + g (s, 0)) h2.symm))
   · filter_upwards [hTR, hTV, hGR.ae_tendsto_trace hw hGRL hDRL,
       hGV.ae_tendsto_trace hw hGVL hDVL,
       ae_eqOn_sections_of_ae_eq isOpen_Ioo heqR (hGR.ae_continuousOn isOpen_Ioo) hGc]
@@ -334,6 +399,25 @@ theorem HasTransverseH1Trace.boundary_mode {a b w : ℝ}
     change TR s = Complex.I * (α s : ℂ) * TV s
     rw [h1, h2]
     exact tendsto_nhds_unique (h3 0 ht) (((h4 0 ht).const_mul _).congr' he')
+
+/-- Identify the traces in the homogeneous boundary equation using only the
+bulk a.e. relations and the continuous zero boundary values of the forcing. -/
+theorem HasTransverseH1Trace.boundary_mode {a b w : ℝ}
+    {F V R g : ℝ × ℝ → ℂ} {TF TV TR : ℝ → ℂ} {α : ℝ → ℝ}
+    (hF : HasTransverseH1Trace a b 0 w 0 id F TF)
+    (hV : HasTransverseH1Trace a b 0 w 0 id V TV)
+    (hR : HasTransverseH1Trace a b 0 w 0 id R TR)
+    (hg : ∀ s ∈ Ioo a b, ContinuousOn (fun u ↦ g (s, u)) (Icc 0 w))
+    (hg0 : ∀ s ∈ Ioo a b, g (s, 0) = 0)
+    (heF : F =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)] fun q ↦ V q + g q)
+    (heR : R =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)]
+      fun q ↦ Complex.I * (α q.1 : ℂ) * V q) :
+    TF =ᵐ[volume.restrict (Ioo a b)] TV ∧
+      TR =ᵐ[volume.restrict (Ioo a b)] fun s ↦ Complex.I * (α s : ℂ) * TV s := by
+  have ⟨h1, h2⟩ := hF.boundary_mode_add hV hR hg heF heR
+  refine ⟨?_, h2⟩
+  filter_upwards [h1, ae_restrict_mem measurableSet_Ioo] with s h hs
+  simpa only [hg0 s hs, add_zero] using h
 
 /-- Local homogeneous boundary transport gives a single constant modulus on
 the full tangential interval of the input canonical trace. -/

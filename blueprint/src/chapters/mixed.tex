@@ -221,24 +221,30 @@ $\int |hwG'|\,dt=\int_{-1}^1\sqrt w\,|G'|\,dx$.
 \label{lem:mixed-neumann-strip-weight}
 \uses{def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.left_memLp_div_sqrt,
-  NoEmbeddedEigenvalues.mixed_neumann_strip_memLp_flow}
+  NoEmbeddedEigenvalues.mixed_neumann_strip_memLp_flow,
+  NoEmbeddedEigenvalues.mixed_neumann_inward_trace_memLp}
 \leanok
 On an inward strip $I\times(0,w)$, let $T$ be the canonical trace
 of $F$ at normal coordinate $0$. Suppose $F/k$ and the weak normal
 derivative of $F$ are square integrable, for a measurable tangential
 weight $k>0$ such that $\delta k\le w$ for some $\delta>0$.
 Then $T/\sqrt{k}\in L^2(I)$. On a full Neumann strip, $k=\cos a$
-therefore gives $T\in L^2(dt)$ in flow time.
+therefore gives $T\in L^2(dt)$ in flow time. In particular this applies to
+the mixed vorticity on a Sobolev cell collar with the bulk quotient weight.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-l2, lem:h1-interval-endpoints, lem:arc-diagonal}
+\uses{lem:trace-l2, lem:h1-interval-endpoints, lem:arc-diagonal,
+  lem:edge-inward-pullback, lem:one-sided-trace-comparison}
 \leanok
 On each normal section, apply the endpoint trace inequality on the
 interval of width $\delta k$. Divide by $k$ and enlarge the integrals
 to the whole section to obtain
 $|T|^2/k\le(2/\delta)\int|F/k|^2+2\delta\int|\partial_nF|^2$.
 Integrate over the tangential variable. On the mixed arcs $|da|=\cos a\,dt$.
+For the physical trace, pull back the smaller Sobolev collar to a full
+inward strip, and compare to each cell-side window on their common
+inward subwindow.
 \end{proof}
 
 \begin{lemma}[Physical vorticity trace on a mixed Neumann edge]
@@ -254,7 +260,8 @@ everywhere, where $g=\psi|_N$.
 
 \begin{proof}
 \uses{prop:mixed-quotient-domain, lem:mixed-neumann-stream-trace, lem:mixed-neumann-strip-weight,
-  lem:trace-l2, lem:transport-pair-eigen, lem:transport-unknown, lem:separatrix-arc}
+  lem:edge-window-transport, lem:trace-l2, lem:transport-pair-eigen,
+  lem:transport-unknown, lem:separatrix-arc}
 Choose a full inward strip along the Neumann side contained in the
 $H^1$ collar. Its normal derivative is in $L^2$, and the quotient
 domain gives $\omega/\cos a\in L^2$. Thus the critical strip estimate

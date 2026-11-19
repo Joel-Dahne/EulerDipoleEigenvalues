@@ -82,9 +82,9 @@ private theorem memLp_mul_of_continuousOn_compact {Q K : Set (ℝ × ℝ)}
   rw [Pi.mul_apply, norm_mul]
   exact mul_le_mul_of_nonneg_right (hM q (hsub hq)) (norm_nonneg _)
 
-/-- In a regular inward rectangle a sign-normalized bulk transport equation
-and zero continuous forcing trace give a canonical trace of constant modulus. -/
-theorem edge_window_modulus {a b w lam σ : ℝ} (hab : a < b) (hw : 0 < w)
+/-- The weak transport equation restricts to a regular inward edge window,
+with the continuous forcing included in the tangential unknown. -/
+theorem edge_window_transport {a b w lam σ : ℝ} (hab : a < b) (hw : 0 < w)
     (hs : Icc a b ⊆ Ioo (-Real.pi / 2) (Real.pi / 2)) (hσ : σ * σ = 1)
     {F V g A B D : ℝ × ℝ → ℂ}
     (hF : MemLp F 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
@@ -99,10 +99,10 @@ theorem edge_window_modulus {a b w lam σ : ℝ} (hab : a < b) (hw : 0 < w)
       (σ : ℂ) * ((Real.cos q.1 * Real.cos q.2 : ℝ) * A q +
         (Real.sin q.1 * Real.sin q.2 : ℝ) * B q) = Complex.I * (lam * V q))
     (hg : ∀ s ∈ Ioo a b, ContinuousOn (fun u ↦ g (s, u)) (Icc 0 w))
-    (hg0 : ∀ s ∈ Ioo a b, g (s, 0) = 0)
     (heF : F =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)] fun q ↦ V q + g q) :
-    ∃ (T : ℝ → ℂ) (z : ℂ), HasTransverseH1Trace a b 0 w 0 id V T ∧
-      ∀ᵐ s ∂(volume.restrict (Ioo a b)), ‖T s‖ = ‖z‖ := by
+    ∃ (TV T : ℝ → ℂ), HasTransverseH1Trace a b 0 w 0 id V TV ∧
+      (T =ᵐ[volume.restrict (Ioo a b)] fun s ↦ TV s + g (s, 0)) ∧
+      HasIntervalH1 a b T (fun s ↦ Complex.I * (↑(σ * lam / Real.cos s) : ℂ) * TV s) := by
   let Q := Ioo a b ×ˢ Ioo 0 w
   let K := Icc a b ×ˢ Icc 0 w
   have hQ : IsOpen Q := isOpen_Ioo.prod isOpen_Ioo
@@ -168,9 +168,57 @@ theorem edge_window_modulus {a b w lam σ : ℝ} (hab : a < b) (hw : 0 < w)
   obtain ⟨TF, hTF⟩ := hb.exists_left_trace hab hw hF hB
   obtain ⟨TV, hTV⟩ := hd.exists_left_trace hab hw hV hD
   obtain ⟨TR, hTR⟩ := hr.exists_left_trace hab hw hRL hDR
-  have hT := hTF.boundary_weak_tangent hTR ha hb hr hA (hNL.integrable (by norm_num)) hB hDR
+  obtain ⟨T, hT, hTd⟩ := hTF.boundary_weak_tangent hTR ha hb hr hA
+    (hNL.integrable (by norm_num)) hB hDR
     (Complex.continuous_ofReal.comp Real.continuous_cos).continuousAt (by simp) hEq
-  obtain ⟨z, hz⟩ := hTF.exists_norm_eq_of_boundary_mode hTV hTR hg hg0 heF EventuallyEq.rfl hT
+  have ⟨heTF, heTR⟩ := hTF.boundary_mode_add hTV hTR hg heF EventuallyEq.rfl
+  have hD' := hTd.memLp_derivative.ae_eq heTR
+  refine ⟨TV, T, hTV, hT.trans heTF, hTd.memLp_value, hD',
+    hTd.locally_absolutelyContinuous, ?_⟩
+  filter_upwards [hTd.hasDerivAt_ae, (ae_restrict_iff' measurableSet_Ioo).1 heTR] with s hs he hsI
+  simpa only [α, he hsI] using hs hsI
+
+/-- A vanishing forcing trace makes the edge equation a pure phase equation. -/
+theorem HasIntervalH1.exists_norm_eq_of_zero_forcing {a b : ℝ} {T TV g : ℝ → ℂ} {α : ℝ → ℝ}
+    (hab : a < b)
+    (hT : HasIntervalH1 a b T (fun s ↦ Complex.I * (α s : ℂ) * TV s))
+    (he : T =ᵐ[volume.restrict (Ioo a b)] fun s ↦ TV s + g s)
+    (hg : ∀ s ∈ Ioo a b, g s = 0) :
+    ∃ z : ℂ, ∀ᵐ s ∂(volume.restrict (Ioo a b)), ‖TV s‖ = ‖z‖ := by
+  have hm : (a + b) / 2 ∈ Ioo a b := by constructor <;> linarith
+  have hE : T =ᵐ[volume.restrict (Ioo a b)] TV := by
+    filter_upwards [he, ae_restrict_mem measurableSet_Ioo] with s hs hsI
+    simpa only [hg s hsI, add_zero] using hs
+  refine ⟨T ((a + b) / 2), ?_⟩
+  filter_upwards [hE, ae_restrict_mem measurableSet_Ioo] with s hs hsI
+  rw [← hs]
+  exact hT.norm_eq_of_imaginary_derivative
+    (hE.mono fun s hs ↦ congrArg (Complex.I * (α s : ℂ) * ·) hs.symm) hsI hm
+
+/-- In a regular inward rectangle a sign-normalized bulk transport equation
+and zero continuous forcing trace give a canonical trace of constant modulus. -/
+theorem edge_window_modulus {a b w lam σ : ℝ} (hab : a < b) (hw : 0 < w)
+    (hs : Icc a b ⊆ Ioo (-Real.pi / 2) (Real.pi / 2)) (hσ : σ * σ = 1)
+    {F V g A B D : ℝ × ℝ → ℂ}
+    (hF : MemLp F 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
+    (hV : MemLp V 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
+    (ha : HasWeakPartialOn (Ioo a b ×ˢ Ioo 0 w) 0 F A)
+    (hb : HasWeakPartialOn (Ioo a b ×ˢ Ioo 0 w) 1 F B)
+    (hd : HasWeakPartialOn (Ioo a b ×ˢ Ioo 0 w) 1 V D)
+    (hA : MemLp A 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
+    (hB : MemLp B 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
+    (hD : MemLp D 2 (volume.restrict (Ioo a b ×ˢ Ioo 0 w)))
+    (he : ∀ᵐ q ∂(volume.restrict (Ioo a b ×ˢ Ioo 0 w)),
+      (σ : ℂ) * ((Real.cos q.1 * Real.cos q.2 : ℝ) * A q +
+        (Real.sin q.1 * Real.sin q.2 : ℝ) * B q) = Complex.I * (lam * V q))
+    (hg : ∀ s ∈ Ioo a b, ContinuousOn (fun u ↦ g (s, u)) (Icc 0 w))
+    (hg0 : ∀ s ∈ Ioo a b, g (s, 0) = 0)
+    (heF : F =ᵐ[volume.restrict (Ioo a b ×ˢ Ioo 0 w)] fun q ↦ V q + g q) :
+    ∃ (T : ℝ → ℂ) (z : ℂ), HasTransverseH1Trace a b 0 w 0 id V T ∧
+      ∀ᵐ s ∂(volume.restrict (Ioo a b)), ‖T s‖ = ‖z‖ := by
+  obtain ⟨TV, T, hTV, heT, hT⟩ := edge_window_transport hab hw hs hσ
+    hF hV ha hb hd hA hB hD he hg heF
+  obtain ⟨z, hz⟩ := hT.exists_norm_eq_of_zero_forcing hab heT hg0
   exact ⟨TV, z, hTV, hz⟩
 
 /-- Inward physical edge chart, with the original tangential parameter. -/
@@ -233,21 +281,22 @@ theorem inwardEdgeChart_mem_collar {ε s u : ℝ} (hu : u ∈ Ioo 0 Real.pi) (he
       ht, htc, htf, hs', and_self, true_and]
     exact ⟨by positivity, hupper⟩
 
-/-- Every regular inward window contained in the original collar has a
-canonical trace with constant modulus, for the original transport pair. -/
-theorem IsTransportPair.inward_edge_window_modulus {lam ε : ℝ}
+/-- Restrict the transport pair to a regular inward window, retaining
+the continuous stream trace. -/
+theorem IsTransportPair.inward_edge_window_transport {lam ε : ℝ}
     {U : Set (ℝ × ℝ)} {v f g : ℝ × ℝ → ℂ} (hp : IsTransportPair lam U v f)
     (hcell : closure cellSquare ⊆ U) (hv : MemSobolevOn 1 (cellSeparatrixStrip ε) v)
     (hg : ContinuousOn g U) (hfg : f =ᵐ[volume.restrict U] g)
     (j : Fin 2) (side : Bool)
-    (hz : ∀ s ∈ Ioo (-Real.pi / 2) (Real.pi / 2),
-      g (diagonalTraceChart j (s, cellEdgeNormal side)) = 0)
     {a b w : ℝ} (hab : a < b) (hw : 0 < w)
     (hs : Icc a b ⊆ Ioo (-Real.pi / 2) (Real.pi / 2))
     (hW : Ioo a b ×ˢ Ioo 0 w ⊆ inwardEdgeChart j side ⁻¹' cellSeparatrixStrip ε) :
-    ∃ (T : ℝ → ℂ) (z : ℂ),
-      HasTransverseH1Trace a b 0 w 0 id (v ∘ inwardEdgeChart j side) T ∧
-        ∀ᵐ s ∂(volume.restrict (Ioo a b)), ‖T s‖ = ‖z‖ := by
+    ∃ TV T : ℝ → ℂ,
+      HasTransverseH1Trace a b 0 w 0 id (v ∘ inwardEdgeChart j side) TV ∧
+      (T =ᵐ[volume.restrict (Ioo a b)]
+        fun s ↦ TV s + g (diagonalTraceChart j (s, cellEdgeNormal side))) ∧
+      HasIntervalH1 a b T (fun s ↦ Complex.I *
+        (↑((if j = 0 then 1 else -1) * edgeSideSign side * lam / Real.cos s) : ℂ) * TV s) := by
   let P := cellSeparatrixStrip ε
   let C := inwardEdgeChart j side
   let E := edgeInward side
@@ -308,12 +357,10 @@ theorem IsTransportPair.inward_edge_window_modulus {lam ε : ℝ}
     exact hg.comp ((continuous_inwardEdgeChart j side).comp
       (continuous_const.prodMk continuous_id)).continuousOn
       (fun u hu ↦ hKU ⟨Ioo_subset_Icc_self hsi, hu⟩)
-  have hz' (s : ℝ) (hsi : s ∈ Ioo a b) : g (C (s, 0)) = 0 := by
-    have hh : E (s, 0) = (s, cellEdgeNormal side) := by
-      cases side <;> simp [E, edgeSideSign, cellEdgeNormal, neg_div]
-    change g (diagonalTraceChart j (E (s, 0))) = 0
-    rw [hh]
-    exact hz s (hs (Ioo_subset_Icc_self hsi))
+  have hEdge (s : ℝ) : C (s, 0) = diagonalTraceChart j (s, cellEdgeNormal side) := by
+    change diagonalTraceChart j (E (s, 0)) = _
+    congr 1
+    cases side <;> simp [E, edgeSideSign, cellEdgeNormal, neg_div]
   have hfg' : (fun q ↦ v (C q) + f (C q)) =ᵐ[volume.restrict Q]
       fun q ↦ v (C q) + g (C q) := by
     have hC : Measure.QuasiMeasurePreserving C volume volume :=
@@ -323,8 +370,30 @@ theorem IsTransportPair.inward_edge_window_modulus {lam ε : ℝ}
       fun q e ↦ congrArg (v (C q) + ·) e
   have hV := (hv.comp_inwardEdgeChart hP j side).mono hW
   obtain ⟨D, hd, hD⟩ := hV.2 1
-  exact edge_window_modulus hab hw hs hσ
+  obtain ⟨TV, T, hTV, heT, hT⟩ := edge_window_transport hab hw hs hσ
     ((hF.comp_inwardEdgeChart hP j side).1.mono_measure hr) hV.1
-    (ha'.1.mono hW) (ha'.2.mono hW) hd hA' hB' hD hEq hg' hz' hfg'
+    (ha'.1.mono hW) (ha'.2.mono hW) hd hA' hB' hD hEq hg' hfg'
+  exact ⟨TV, T, hTV, heT.mono fun s h ↦ by simpa only [hEdge] using h, hT⟩
+
+/-- Every regular inward window contained in the original collar has a
+canonical trace with constant modulus, for the original transport pair. -/
+theorem IsTransportPair.inward_edge_window_modulus {lam ε : ℝ}
+    {U : Set (ℝ × ℝ)} {v f g : ℝ × ℝ → ℂ} (hp : IsTransportPair lam U v f)
+    (hcell : closure cellSquare ⊆ U) (hv : MemSobolevOn 1 (cellSeparatrixStrip ε) v)
+    (hg : ContinuousOn g U) (hfg : f =ᵐ[volume.restrict U] g)
+    (j : Fin 2) (side : Bool)
+    (hz : ∀ s ∈ Ioo (-Real.pi / 2) (Real.pi / 2),
+      g (diagonalTraceChart j (s, cellEdgeNormal side)) = 0)
+    {a b w : ℝ} (hab : a < b) (hw : 0 < w)
+    (hs : Icc a b ⊆ Ioo (-Real.pi / 2) (Real.pi / 2))
+    (hW : Ioo a b ×ˢ Ioo 0 w ⊆ inwardEdgeChart j side ⁻¹' cellSeparatrixStrip ε) :
+    ∃ (T : ℝ → ℂ) (z : ℂ),
+      HasTransverseH1Trace a b 0 w 0 id (v ∘ inwardEdgeChart j side) T ∧
+        ∀ᵐ s ∂(volume.restrict (Ioo a b)), ‖T s‖ = ‖z‖ := by
+  obtain ⟨TV, T, hTV, heT, hT⟩ :=
+    hp.inward_edge_window_transport hcell hv hg hfg j side hab hw hs hW
+  obtain ⟨z, hz'⟩ := hT.exists_norm_eq_of_zero_forcing hab heT
+    (fun s hs' ↦ hz s (hs (Ioo_subset_Icc_self hs')))
+  exact ⟨TV, z, hTV, hz'⟩
 
 end NoEmbeddedEigenvalues

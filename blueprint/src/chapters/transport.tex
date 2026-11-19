@@ -6954,6 +6954,32 @@ on the positive side, a normal reversal. The level is $2\cos s\sin u$,
 which is positive and at most $2u$ in the indicated strip.
 \end{proof}
 
+\begin{lemma}[Weak transport on a regular edge window]
+\label{lem:edge-window-transport}
+\uses{def:transport-pair, def:edge-inward-chart, def:canonical-transverse-trace,
+ def:cell-separatrix-collar, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.edge_window_transport,
+ NoEmbeddedEigenvalues.IsTransportPair.inward_edge_window_transport}
+\leanok
+Let $v\in H^1$ in the cell collar and let $(v,f)$ be a transport pair
+on a neighbourhood of the closed cell, with $f$ represented by a continuous
+function. In an inward rectangle $(a,b)\times(0,w)$ contained in the collar,
+assume $[a,b]\subset(-\pi/2,\pi/2)$. Write $V$ for the canonical inward
+trace of $v$ and $f_0$ for the boundary restriction of the continuous forcing.
+Then $V+f_0$ has an $H^1(a,b)$ representative with derivative
+$i(\sigma\lambda/\cos s)V$, where $\sigma$ is the tangential orientation sign.
+\end{lemma}
+\begin{proof}
+\uses{lem:diagonal-boundary-transport, lem:edge-inward-pullback,
+ lem:boundary-transport-ode, lem:canonical-trace-from-partial}
+\leanok
+In inward coordinates the two transport coefficients are
+$\sigma\cos s\cos u$ and $\sigma\sin s\sin u$. Divide by $\sigma\cos s$
+on the compact regular interval. The remaining normal term is $u$ times
+an $L^2$ field by $|\sin u/u|\leq1$. Apply the weak boundary equation
+and identify the trace of $v+f$ by continuity of the normal forcing sections.
+\end{proof}
+
 \begin{lemma}[Constant modulus on a physical edge window]
 \label{lem:edge-window-modulus}
 \uses{def:transport-pair, def:edge-inward-chart, def:canonical-transverse-trace,
@@ -6968,18 +6994,10 @@ $w>0$ and $[a,b]\subset(-\pi/2,\pi/2)$. The canonical inward trace of $v$
 exists and has constant modulus almost everywhere on $(a,b)$.
 \end{lemma}
 \begin{proof}
-\uses{lem:diagonal-boundary-transport, lem:edge-inward-pullback,
- lem:boundary-transport-ode, lem:boundary-mode-modulus,
- lem:canonical-trace-from-partial}
+\uses{lem:edge-window-transport, lem:boundary-mode-modulus}
 \leanok
-The same weak partials of $F=v+f$ in the inward coordinates satisfy
-$L_0F=i\lambda v$ with coefficients
-$\sigma(\cos s\cos u,\sin s\sin u)$ for a sign $\sigma$.
-Divide by the regular factor $\sigma\cos s$ only on this compact tangential
-window. The right-hand side is $i(\sigma\lambda/\cos s)v$ and the normal
-term is $u$ times an $L^2$ field, since $|\sin u/u|\le1$ there.
-Apply the weak boundary ODE and identify the traces using the continuous
-forcing representative. The modulus law now applies.
+When $f_0=0$, Lemma~\ref{lem:edge-window-transport} is a pure phase
+equation for the trace of $v$. Apply the modulus law.
 \end{proof}
 
 \begin{lemma}[One modulus on all regular edge windows]

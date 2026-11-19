@@ -34,10 +34,10 @@ theorem locallyIntegrableOn_comp_swap {U : Set (ℝ × ℝ)} {F : ℝ × ℝ →
   change IntegrableOn (F ∘ Prod.swap) (Prod.swap ⁻¹' (Prod.swap '' K)) at hp
   simpa only [(Function.Involutive.injective Prod.swap_swap).preimage_image] using hp
 
-/-- Interchanging coordinates turns the first weak partial into the second. -/
-theorem HasWeakPartialOn.comp_swap_fst {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ → ℂ}
-    (hU : IsOpen U) (hd : HasWeakPartialOn U 0 F D) :
-    HasWeakPartialOn (Prod.swap ⁻¹' U) 1 (F ∘ Prod.swap) (D ∘ Prod.swap) := by
+/-- Interchanging coordinates interchanges the weak partial derivatives. -/
+theorem HasWeakPartialOn.comp_swap {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ → ℂ} {j : Fin 2}
+    (hU : IsOpen U) (hd : HasWeakPartialOn U j F D) :
+    HasWeakPartialOn (Prod.swap ⁻¹' U) (1 - j) (F ∘ Prod.swap) (D ∘ Prod.swap) := by
   refine ⟨locallyIntegrableOn_comp_swap hd.1 hU,
     locallyIntegrableOn_comp_swap hd.2.1 hU, fun φ hφ ↦ ?_⟩
   have hψ : IsTestFunctionOn U (φ ∘ Prod.swap) := by
@@ -52,11 +52,20 @@ theorem HasWeakPartialOn.comp_swap_fst {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ 
   have hi (f : ℝ × ℝ → ℂ) : (∫ p : ℝ × ℝ, f p.swap) = ∫ p, f p := by
     rw [Measure.volume_eq_prod]
     exact integral_prod_swap f
-  rw [← hi (fun p ↦ F p * coordPartial 0 (φ ∘ Prod.swap) p),
+  rw [← hi (fun p ↦ F p * coordPartial j (φ ∘ Prod.swap) p),
     ← hi (fun p ↦ D p * (φ ∘ Prod.swap) p)] at hw
-  simpa only [Function.comp_apply, coordPartial, show (1 : Fin 2) ≠ 0 by decide,
-    ↓reduceIte, partialX, partialY, Prod.fst_swap, Prod.snd_swap, Prod.swap_prod_mk,
-    Prod.swap_swap] using hw
+  fin_cases j <;>
+    simpa only [show (⟨0, by decide⟩ : Fin 2) = 0 by rfl,
+      show (⟨1, by decide⟩ : Fin 2) = 1 by rfl,
+      show (1 - 0 : Fin 2) = 1 by decide, sub_self, Function.comp_apply,
+      coordPartial, show (1 : Fin 2) ≠ 0 by decide, ↓reduceIte, partialX, partialY,
+      Prod.fst_swap, Prod.snd_swap, Prod.swap_prod_mk, Prod.swap_swap] using hw
+
+/-- Interchanging coordinates turns the first weak partial into the second. -/
+theorem HasWeakPartialOn.comp_swap_fst {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ → ℂ}
+    (hU : IsOpen U) (hd : HasWeakPartialOn U 0 F D) :
+    HasWeakPartialOn (Prod.swap ⁻¹' U) 1 (F ∘ Prod.swap) (D ∘ Prod.swap) :=
+  hd.comp_swap hU
 
 /-- A uniform L¹ envelope for an interval H¹ section, anchored at an interior point. -/
 theorem HasIntervalH1.norm_le_anchor {a b c t : ℝ} {F D : ℝ → ℂ}
