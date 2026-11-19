@@ -10,7 +10,8 @@ rebuilds both the graphs and the report.
 - **Even–even:** the exclusion is admission-free.
 - **Odd–odd:** the exclusion is admission-free, including the two endpoint
   certificates for the residual bound.
-- **Mixed:** odd–even exclusion is admitted; even–odd follows by rotation.
+- **Mixed:** `thm:mixed-exclusion` is proved from admitted analytic inputs;
+  the other mixed sector follows by rotation.
 
 All blueprint statements are represented in Lean. The main theorem combines
 the sector exclusions and is not yet admission-free.

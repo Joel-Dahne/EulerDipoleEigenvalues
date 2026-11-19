@@ -1703,9 +1703,9 @@ are nonnegative. Thus zero density forces $\omega=0$ off the null cosine diagona
 \uses{def:sectors, def:cells, def:torus-of-lift}
 \lean{NoEmbeddedEigenvalues.InSector.eq_zero_of_lift_ae_zero_on_cellSquare}
 \leanok
-If $\omega$ is even--even and its lift vanishes almost everywhere on the lifted
-positive cell, then $\omega=0$ in $L^2(\T^2)$. No eigenvalue or stream-function relation
-is needed.
+If $\omega$ lies in any reflection sector and its lift vanishes almost
+everywhere on the lifted positive cell, then $\omega=0$ in $L^2(\T^2)$.
+No eigenvalue or stream-function relation is needed.
 \end{lemma}
 
 \begin{proof}
@@ -1715,7 +1715,8 @@ The projection from the fundamental square $(-\pi,\pi]^2$ preserves measure and 
 injective. Its positive part is exactly the lifted positive cell, so $\omega=0$
 almost everywhere on the positive torus cell. The separatrix is null: at each fixed
 $x$ its section has at most two points. Finally $S_1$ preserves measure, exchanges
-the two cells, and acts evenly on $\omega$, giving vanishing on the negative cell.
+the two cells, and acts by multiplication by $\pm1$ on $\omega$, giving
+vanishing on the negative cell.
 \end{proof}
 
 \begin{lemma}[Nonnegative exhaustion without global integrability]

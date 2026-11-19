@@ -3,14 +3,11 @@
 [Project status](../../STATUS.md) · [Generated sector report](generated.md#mixed)
 · [Blueprint chapter](../../blueprint/src/chapters/mixed.tex)
 
-`thm:mixed-exclusion` (odd–even) is admitted in
+`thm:mixed-exclusion` (odd–even) is proved from `prop:mixed-quotient-domain`,
+`lem:mixed-K-identity` and `thm:mixed-coercivity` in
 [Mixed.lean](../../NoEmbeddedEigenvalues/Mixed.lean).
-`cor:mixed-other-exclusion` follows by rotation.
-
-The mixed chapter now has Lean statements for the analytic chain through
-`thm:mixed-coercivity`. The analytic chain remains incomplete, and the top-level
-exclusion has not been rewired. See [the module map](../architecture.md) for
-where the statements live.
+`cor:mixed-other-exclusion` follows by rotation. The analytic inputs are not
+admission-free; see [the module map](../architecture.md).
 
 - **Regularity:** the route can reuse the shared cylinder inverse and
   weighted-forcing H¹ theorem. `cor:mixed-saddle-jet` is proved using the
@@ -21,6 +18,9 @@ where the statements live.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must
   also be paired; the even–even trace limits do not justify that step.
+- **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
+  and the boundary-square identity. The single-edge calculation
+  `lem:mixed-neumann-renormalization` is isolated and admitted.
 - **Coercivity:** the comparison functions are defined in Lean, but the
   boundary/virial passage and `thm:mixed-coercivity` are unproved. See
   [shared certificate work](shared.md#shared-certificate-work) for the sign

@@ -74,15 +74,18 @@ theorem mixed_boundary_square_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       (fun a ↦ canonicalProfile lam g (mixedNeumannTime σ a)) := by
   sorry
 
+/-- Neumann contribution to the cutoff flux, before renormalizing the gradient term. -/
+def mixedNeumannFluxCutoff (lam : ℝ) (φ : Plane → ℂ) (σ : Bool) (T : ℝ) : ℝ :=
+  let g := mixedNeumannStream φ σ
+  ∫ t in Ioo (-T) T, ‖deriv g t / (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2 +
+    (canonicalProfile lam g t * conj (g t)).re
+
 /-- The paired edge expression before taking the limit. On a Dirichlet side,
 the squared physical normal derivative is `|φ|²/2`. On a Neumann side the
 physical tangential derivative is the time derivative divided by the flow speed. -/
 def mixedPairedFluxCutoff (lam : ℝ) (φ : Plane → ℂ) (T : ℝ) : ℝ :=
   let dir := fun k : ℕ ↦ ∫ t in Ioo (-T) T, ‖φ (diagCoord (cellArc k t))‖ ^ 2 / 2
-  dir 1 + dir 3 - ∑ σ : Bool,
-    let g := mixedNeumannStream φ σ
-    ∫ t in Ioo (-T) T, ‖deriv g t / (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2 +
-      (canonicalProfile lam g t * conj (g t)).re
+  dir 1 + dir 3 - ∑ σ : Bool, mixedNeumannFluxCutoff lam φ σ T
 
 /-- Normal-field virial density in diagonal measure. The normal and tangent
 are still physical unit directions in Cartesian coordinates. -/
@@ -112,12 +115,70 @@ theorem mixed_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       (𝓝 (∫ q in mixedOpenCell, mixedVirialDensity d q)) := by
   sorry
 
+/-- On a single Neumann edge, subtract the trace mass before taking the cutoff
+limit. In `x = tanh t` the leftover gradient term is the weighted energy
+minus the derivative of `x |G|²`; the latter gives the two corner values. -/
+theorem mixed_neumann_flux_renormalized {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω)
+    (σ : Bool) :
+    let F := mixedNeumannF lam d.phi σ
+    let G := mixedNeumannG d.phi σ
+    Tendsto (fun T ↦ 2 * mixedNeumannFluxCutoff lam d.phi σ T -
+      ∫ t in Ioo (-T) T, ‖d.phi (diagCoord (mixedNeumannArc σ t))‖ ^ 2) atTop
+      (𝓝 (((∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv G x‖ ^ 2) -
+        2 * (∫ x in Ioo (-1) 1, (mixedBoundaryTransport 0 F x * conj (G x)).re)) -
+        ∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2)) := by
+  sorry
+
 /-- Static identity and its sign for the original mixed eigenproblem. -/
 theorem mixed_static_identity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
     0 = mixedStaticForm d + (∑ σ : Bool, ∫ x in Ioo (-1) 1,
       boundaryWeight x * ‖mixedBoundarySquare lam (mixedNeumannF lam d.phi σ) x‖ ^ 2) ∧
     mixedStaticForm d ≤ 0 := by
-  sorry
+  let square (σ : Bool) : ℝ := ∫ x in Ioo (-1) 1,
+    boundaryWeight x * ‖mixedBoundarySquare lam (mixedNeumannF lam d.phi σ) x‖ ^ 2
+  let corner (σ : Bool) : ℝ := ∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2
+  let edge (σ : Bool) (T : ℝ) : ℝ := 2 * mixedNeumannFluxCutoff lam d.phi σ T -
+    ∫ t in Ioo (-T) T, ‖d.phi (diagCoord (mixedNeumannArc σ t))‖ ^ 2
+  have hEdge (σ : Bool) : Tendsto (edge σ) atTop (𝓝 (square σ - corner σ)) := by
+    have h := mixed_neumann_flux_renormalized hlam hω hs d σ
+    dsimp only at h
+    rw [(mixed_boundary_square_traces hlam hω hs d σ).2.2.2.2.2.2.2.2.2.1] at h
+    exact h
+  have hSum : Tendsto (fun T ↦ ∑ σ : Bool, edge σ T) atTop
+      (𝓝 (∑ σ : Bool, (square σ - corner σ))) := by
+    simp only [Fintype.sum_bool]
+    exact (hEdge true).add (hEdge false)
+  have hlim := (mixed_trace_mass d).2.2.2.sub hSum
+  have hCutoff (T : ℝ) :
+      mixedTraceMassCutoff d.phi T - (∑ σ : Bool, edge σ T) =
+        2 * mixedPairedFluxCutoff lam d.phi T := by
+    simp only [mixedTraceMassCutoff, mixedPairedFluxCutoff, edge, mixedNeumannArc,
+      Fintype.sum_bool, Bool.false_eq_true, ↓reduceIte, div_eq_mul_inv, integral_mul_const]
+    ring
+  have hEq := tendsto_nhds_unique (mixed_virial hlam hω hs d).2
+    (hlim.congr (fun T ↦ hCutoff T))
+  have hCorners : (∑ σ : Bool, corner σ) =
+      ∑ a : Bool, ∑ b : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal b)‖ ^ 2 :=
+    Finset.sum_comm
+  rw [Finset.sum_sub_distrib, hCorners] at hEq
+  have hId : 0 = mixedStaticForm d + ∑ σ : Bool, square σ := by
+    unfold mixedStaticForm
+    linarith only [hEq]
+  refine ⟨hId, ?_⟩
+  have hNonneg : 0 ≤ ∑ σ : Bool, square σ := by
+    apply Finset.sum_nonneg
+    intro σ _
+    apply integral_nonneg_of_ae
+    filter_upwards [ae_restrict_mem (measurableSet_Ioo (a := (-1 : ℝ)) (b := 1))]
+      with x hx
+    have hw : 0 ≤ boundaryWeight x := by
+      unfold boundaryWeight
+      have hl : 0 ≤ x + 1 := by linarith [hx.1]
+      have hr : 0 ≤ 1 - x := by linarith [hx.2]
+      nlinarith only [mul_nonneg hl hr]
+    exact mul_nonneg hw (sq_nonneg _)
+  linarith only [hId, hNonneg]
 
 end NoEmbeddedEigenvalues

@@ -23,10 +23,10 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Filter Topology Set
 open scoped ENNReal
 
-/-- A symmetry/measure bridge: vanishing on a positive-cell lift forces an even vorticity
-    to vanish on both torus cells. It needs no eigenvalue or stream-function hypothesis. -/
-theorem InSector.eq_zero_of_lift_ae_zero_on_cellSquare {ω : L2}
-    (hs : InSector true true ω)
+/-- Vanishing on the positive-cell lift forces vanishing on the torus in any
+    reflection sector. No eigenvalue or stream-function hypothesis is needed. -/
+theorem InSector.eq_zero_of_lift_ae_zero_on_cellSquare {ω : L2} {ε₁ ε₂ : Bool}
+    (hs : InSector ε₁ ε₂ ω)
     (hz : ∀ᵐ p ∂(volume.restrict cellSquare), liftL2 ω p = 0) : ω = 0 := by
   have hΨ : Continuous Ψ :=
     (Real.Angle.continuous_cos.comp continuous_fst).add
@@ -97,20 +97,20 @@ theorem InSector.eq_zero_of_lift_ae_zero_on_cellSquare {ω : L2}
       have hpair := measure_union_null (hsingle (((Real.pi : ℝ) : Real.Angle) - x))
         (hsingle (x - ((Real.pi : ℝ) : Real.Angle)))
       exact measure_mono_null hsub' (by simpa only [singleton_union] using hpair)
-  have href : reflect₁ ω = ω := by simpa [paritySign] using hs.1
   have hraw := Lp.coeFn_compMeasurePreserving ω measurePreserving_S₁
   change (reflect₁ ω : Torus → ℂ) =ᵐ[volume] (fun t ↦ ω (S₁ t)) at hraw
-  rw [href] at hraw
+  rw [hs.1] at hraw
   apply Lp.eq_zero_iff_ae_eq_zero.mpr
-  filter_upwards [hpos, measurePreserving_S₁.quasiMeasurePreserving.ae hpos, hraw, hnull]
-    with t hp hpn ht hn
+  filter_upwards [hpos, measurePreserving_S₁.quasiMeasurePreserving.ae hpos, hraw, hnull,
+    Lp.coeFn_smul (paritySign ε₁) ω] with t hp hpn ht hn hsmul
   by_cases hpt : 0 < Ψ t
   · exact hp hpt
   · have hsneg : Ψ (S₁ t) = -Ψ t := congrFun Ψ_comp_S₁ t
-    rw [ht]
-    apply hpn
-    rw [hsneg]
-    exact neg_pos.mpr (lt_of_le_of_ne (le_of_not_gt hpt) hn)
+    have hzero : ω (S₁ t) = 0 :=
+      hpn (by rw [hsneg]; exact neg_pos.mpr (lt_of_le_of_ne (le_of_not_gt hpt) hn))
+    have hprod : paritySign ε₁ * ω t = 0 := by
+      simpa only [Pi.smul_apply, smul_eq_mul] using hsmul.symm.trans (ht.trans hzero)
+    exact (mul_eq_zero.mp hprod).resolve_left (by cases ε₁ <;> simp [paritySign])
 
 /-- Unlike the gradient argument, exclusion only needs strict positivity of the vorticity
     coefficient away from a null set. -/

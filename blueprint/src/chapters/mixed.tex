@@ -299,6 +299,35 @@ Divergence theorem; at a corner the circular flux of the constant jet cancels
 by interchanging the two inward coordinates.
 \end{proof}
 
+\begin{lemma}[Renormalized Neumann flux]
+\label{lem:mixed-neumann-renormalization}
+\uses{prop:mixed-quotient-domain, prop:mixed-paired-flux, lem:mixed-boundary-square-traces}
+\lean{NoEmbeddedEigenvalues.mixedNeumannFluxCutoff,
+  NoEmbeddedEigenvalues.mixed_neumann_flux_renormalized}
+\leanok
+For a mixed eigenfunction and either Neumann side $N$, set
+$B_N(T)=\int_{-T}^T (|\psi_t|^2_{\mathrm{tan}}+
+\operatorname{Re}(\Omega\bar\psi))\,dt$, where
+$|\psi_t|_{\mathrm{tan}}$ denotes the physical tangential derivative in
+Proposition~\ref{prop:mixed-paired-flux}. Then
+\[
+ \lim_{T\to\infty}\left(2 B_N(T)-\int_{-T}^T|\phi|^2\,dt\right)
+ = \int_{-1}^1 w|G'|^2\,dx-2\operatorname{Re}\int_{-1}^1 T_0F\bar G\,dx
+   -\sum_{P\in\partial N}|\phi(P)|^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-boundary-square-traces, lem:arc-diagonal}
+Substitute $x=\tanh t$ and $g=\sqrt w\,G$ on the centered truncated
+interval. The renormalized gradient density is
+$|wG'-xG|^2/w-|G|^2/w=w|G'|^2-(x|G|^2)'$.
+Integrating the total derivative gives the two endpoint contributions,
+which tend to the corner values by continuity. The pairing transforms
+using $\Omega=-\sqrt w\,T_0F$; the remaining integrands are integrable by
+Lemma~\ref{lem:mixed-boundary-square-traces}.
+\end{proof}
+
 \begin{lemma}[Static identity]
 \label{lem:mixed-K-identity}
 \uses{def:mixed-K, lem:mixed-boundary-square-traces}
@@ -310,12 +339,15 @@ $K[\phi]\le0$ (manuscript \texttt{(eq:mixed-K-identity)}).
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-virial, lem:mixed-trace-mass, lem:mixed-boundary-square-traces}
-In the $x=\tanh t$ variable, Proposition~\ref{prop:mixed-virial} becomes
-$0=J_W-M_{\mathrm{tr}}+\sum_N\{\int w|G'|^2-2\operatorname{Re}\int T_0F\bar G
--|G(1)|^2-|G(-1)|^2\}$, the endpoint constants coming from integrating
-$|G_t-\tanh(t)G|^2$ by parts. The endpoint values are the corner values of
-$\phi$. Apply Lemma~\ref{lem:mixed-boundary-square-traces}.
+\uses{prop:mixed-virial, lem:mixed-trace-mass, lem:mixed-neumann-renormalization,
+  lem:mixed-boundary-square-traces}
+\leanok
+At each cutoff, twice the paired flux is the trace-mass cutoff minus
+the sum of the two renormalized Neumann contributions. Compare its two
+limits using Proposition~\ref{prop:mixed-virial} and
+Lemmas~\ref{lem:mixed-trace-mass} and~\ref{lem:mixed-neumann-renormalization}.
+The two corner sums account for all four corners. The boundary-square
+identity then gives $0=K[\phi]$ plus the nonnegative sum of squares.
 \end{proof}
 
 \section{The second-order form}
@@ -609,11 +641,15 @@ $S_1^*\omega=-\omega$, $S_2^*\omega=\omega$, then $\omega=0$.
 \end{theorem}
 
 \begin{proof}
-\uses{thm:mixed-coercivity, lem:mixed-K-identity, prop:mixed-quotient-domain}
+\uses{thm:mixed-coercivity, lem:mixed-K-identity, prop:mixed-quotient-domain,
+  lem:stream-sector, lem:ee-cell-vanishing, lem:canonical-stream-poisson}
+\leanok
 $K[\phi]\le0$ by Lemma~\ref{lem:mixed-K-identity} and
-$K[\phi]\ge\frac1{400}\int_\Cell|\psi|^2$ by Theorem~\ref{thm:mixed-coercivity},
-so $\psi=0$ on $\Cell$. The reflections determine $\psi$ on the other cell, so
-$\psi=0$ and $\omega=\Delta\psi=0$.
+$K[\phi]\ge\frac1{400}\int_\Cell|\psi|^2$ by Theorem~\ref{thm:mixed-coercivity}.
+Thus the stream mass vanishes and $\psi=0$ almost everywhere on $\Cell$.
+The stream inherits the vorticity's parities, so vanishing extends to the
+torus by Lemma~\ref{lem:ee-cell-vanishing}. The Fourier Poisson relation
+then gives $\omega=0$.
 \end{proof}
 
 \begin{corollary}[The other mixed sector]
