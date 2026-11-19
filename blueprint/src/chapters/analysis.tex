@@ -2882,73 +2882,41 @@ is supplied separately by Lemma~\ref{lem:elliptic-local}.
 
 \begin{proof}
 \uses{lem:elliptic-local, lem:weak-derivative-unique,
- lem:localization-cutoff, lem:local-to-global, lem:elliptic-torus,
- lem:lift-sobolev-local, lem:line-mollifier-kernel,
- lem:line-mollifier-contraction, lem:line-mollifier-convergence}
-First prove the estimate on the fixed annuli
-$A=\{1<|q|<2\}$ and $B=\{1/2<|q|<4\}$ for $\Delta v=H$.
-Lemma~\ref{lem:elliptic-local} and weak derivative uniqueness identify
-all entries of the supplied third jet with the local $H^3$ derivatives.
-This proves their square integrability on $A$ before any energy integral
-is used; the quantitative bound is obtained independently as follows.
+ lem:local-h2-smooth-approximation, lem:l2-product-integral-stability,
+ lem:weak-derivative-basic}
+\leanok
+First work with smooth functions on fixed nested annuli. If
+$\Delta g=h+\partial_i k$, test against $\eta^2\overline g$, where
+$0\le\eta\le1$ is a smooth cutoff equal to one on the inner annulus.
+Integrate by parts on the Laplacian and on $\partial_i k$.
+Each term involving $\eta\nabla g$ is bounded by Young's inequality;
+absorbing these terms gives
+\[
+ \|\nabla g\|_{2,\mathrm{inner}}^2
+ \le C_\eta\bigl(\|g\|_{2,\mathrm{outer}}^2+
+       \|h\|_{2,\mathrm{outer}}^2+\|k\|_{2,\mathrm{outer}}^2\bigr).
+\]
+Apply this estimate on three nested pairs of annuli, in order, to $v$,
+$\partial_k v$, and $\partial_j\partial_k v$. Their equations have sources
+$H$, $\partial_k H$, and $\partial_j(\partial_k H)$, respectively,
+where $H=\Delta v$. For the last two equations use the differentiated
+source form above, so no second derivatives of $H$ enter the bound.
 
-Fix nested annuli
-$B_1=\{3/4<|q|<5/2\}$ and $B_2=\{5/8<|q|<3\}$.
-Choose real cutoffs $\eta,\chi,\theta$, supported respectively in
-$B,B_2,B_1$, and equal to one near
-$\overline{B_2},\overline{B_1},\overline A$, respectively.
-Testing $\Delta v=H$ against $\eta^2\bar v$ and taking real parts gives
-\[
- \int\eta^2|\nabla v|^2
- =-\Re\int\eta^2\bar v H
-   -2\Re\int\eta\bar v\nabla\eta\cdot\nabla v.
-\]
-Absorb half the gradient term by Cauchy--Schwarz and Young to obtain
-\[
- \|\nabla v\|_{2,B_2}^2
- \le C\bigl(\|H\|_{2,B}^2+\|v\|_{2,B}^2\bigr).
-\]
-For the test, apply the line kernel successively in both coordinates
-to the zero extensions of $v,H$. For sufficiently small kernel support,
-the weak test identities give $\Delta v_\epsilon=H_\epsilon$ near
-$\operatorname{supp}\eta$. The contraction and convergence lemmas,
-also applied to the first derivatives of $v$, allow passage to the limit
-in the displayed identity. No bound on third derivatives is used here.
+For the smooth estimate at radius $r$ use $v(q)=u(c+rq)$.
+The planar change of variables contributes $r^{-2}$, and each
+derivative of order $m$ contributes $r^m$ before squaring.
+The squared third jet and squared gradient of the rescaled Laplacian
+therefore both have factor $r^4$, whereas the Laplacian and the function
+have factors $r^2$ and $r^{-2}$. Dividing by $r^4$ gives $1,r^{-2},r^{-6}$.
 
-For compactly supported $z$ in the fixed period box, the torus Fourier
-estimate, including its constant mode, is
-\[
- \|z\|_{H^{j+2}}^2
- \le C\bigl(\|\Delta z\|_{H^j}^2+\|z\|_2^2\bigr),\qquad j=0,1.
-\]
-Apply the $j=0$ estimate to $z=\chi v$. The formula
-$\Delta(\chi v)=\chi H+2\nabla\chi\cdot\nabla v+(\Delta\chi)v$
-and the gradient bound give
-$\|v\|_{H^2(B_1)}^2\le C(\|H\|_{2,B}^2+\|v\|_{2,B}^2)$.
-Next apply the $j=1$ estimate to $z=\theta v$:
-its Laplacian has $H^1$ norm controlled by
-$\|H\|_{H^1(B)}+\|v\|_{H^2(B_1)}$.
-Both cutoff products fit inside $(-\pi,\pi)^2$, so periodization and
-lifting preserve the local derivatives. Hence
-\[
- \|D^3v\|_{2,A}^2
- \le C\bigl(\|\nabla H\|_{2,B}^2+\|H\|_{2,B}^2+\|v\|_{2,B}^2\bigr).
-\]
-All cutoffs were fixed, so this constant is independent of $v,H$.
-
-Finally set $v(q)=u(c+rq)$ and $H(q)=r^2F(c+rq)$.
-The weak chain rule follows by substitution in the test identities.
-In dimension two the squared norms transform as
-\[
- \|D^3v\|_{2,A}^2=r^4\|D^3u\|_{2,A_r}^2,\qquad
- \|\nabla H\|_{2,B}^2=r^4\|\nabla F\|_{2,A_r^*}^2,
-\]
-\[
- \|H\|_{2,B}^2=r^2\|F\|_{2,A_r^*}^2,\qquad
- \|v\|_{2,B}^2=r^{-2}\|u\|_{2,A_r^*}^2.
-\]
-Divide by $r^4$ to get exactly the powers $1,r^{-2},r^{-6}$ in the
-statement, with the same constant for every centre and scale.
+For weak data, interior regularity supplies $H^3$ locally. On the
+intermediate annulus $\{3r/4<|p-c|<3r\}$ use the same cutoff and
+mollification proof as for local $H^2$ approximation, now through order
+three. Weak derivative uniqueness identifies the limits with the specified
+jet and identifies the gradient of its trace with the specified first
+jet of $F$. Strong $L^2$ convergence passes the smooth squared-energy
+bounds to the limit. Enlarge the right-hand integrals to $A_r^*$ and
+sum over the eight ordered third derivatives.
 \end{proof}
 
 \begin{lemma}[Weighted third-order elliptic gain]

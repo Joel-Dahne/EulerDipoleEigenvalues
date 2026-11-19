@@ -12,6 +12,8 @@ import NoEmbeddedEigenvalues.SpecifiedJetLp
 import NoEmbeddedEigenvalues.TraceH2
 import NoEmbeddedEigenvalues.LocalToGlobal
 import NoEmbeddedEigenvalues.WeakJetOperations
+import NoEmbeddedEigenvalues.Analysis.ScaledInteriorEnergy
+import NoEmbeddedEigenvalues.SobolevApproximation
 
 /-!
 # Local analytic interfaces for the quotient construction
@@ -500,6 +502,56 @@ theorem elliptic_local_h3 {U : Set (ℝ × ℝ)} (hU : IsOpen U) {u F : ℝ × �
     have hpi : (2 * Real.pi) ≠ 0 := by positivity
     exact Prod.ext (by simpa [liftShift, hpi] using h₁) (by simpa [liftShift, hpi] using h₂)
 
+private theorem tendsto_squareEnergy_of_L2 {V : Set (ℝ × ℝ)} {v : ℕ → ℝ × ℝ → ℂ}
+    {f : ℝ × ℝ → ℂ} (hv : ∀ n, MemLp (v n) 2 (volume.restrict V))
+    (hf : MemLp f 2 (volume.restrict V))
+    (ht : Tendsto (fun n ↦ eLpNorm (fun p ↦ v n p - f p) 2 (volume.restrict V)) atTop (𝓝 0)) :
+    Tendsto (fun n ↦ squareEnergy V (v n)) atTop (𝓝 (squareEnergy V f)) := by
+  let c : ℝ × ℝ → ℂ := fun _ ↦ 1
+  have hc : MemLp c ⊤ (volume.restrict V) := memLp_top_const _
+  have hi {g : ℝ × ℝ → ℂ} (hg : MemLp g 2 (volume.restrict V)) :
+      (∫ p in V, c p * g p * (starRingEnd ℂ) (g p)).re = squareEnergy V g := by
+    have hm : MemLp (fun p ↦ (starRingEnd ℂ) (g p)) 2 (volume.restrict V) := by
+      apply hg.of_le_mul (c := 1)
+        (Complex.conjCLE.continuous.comp_aestronglyMeasurable hg.aestronglyMeasurable)
+      exact Eventually.of_forall fun p ↦ by simp
+    have hi : IntegrableOn (fun p ↦ c p * g p * (starRingEnd ℂ) (g p)) V := by
+      simp only [c, one_mul]
+      exact hg.integrable_mul hm
+    have he := (integral_re hi).symm
+    change (∫ p in V, c p * g p * (starRingEnd ℂ) (g p)).re =
+      ∫ p in V, (c p * g p * (starRingEnd ℂ) (g p)).re at he
+    rw [he]
+    apply integral_congr_ae
+    exact Eventually.of_forall fun p ↦ by
+      change (c p * g p * (starRingEnd ℂ) (g p)).re = ‖g p‖ ^ 2
+      rw [show c p = 1 from rfl, one_mul, Complex.mul_conj, Complex.normSq_eq_norm_sq]
+      exact Complex.ofReal_re _
+  have := Complex.continuous_re.tendsto _ |>.comp
+    (tendsto_integral_mul_conj_of_L2 hc hv hv hf hf ht ht)
+  rw [hi hf] at this
+  convert this using 1
+  funext n
+  exact (hi (hv n)).symm
+
+private theorem tendsto_eLpNorm_sum_diff {V : Set (ℝ × ℝ)} {v w : ℕ → ℝ × ℝ → ℂ}
+    {f g : ℝ × ℝ → ℂ}
+    (htv : Tendsto (fun n ↦ eLpNorm (fun p ↦ v n p - f p) 2 (volume.restrict V)) atTop (𝓝 0))
+    (htw : Tendsto (fun n ↦ eLpNorm (fun p ↦ w n p - g p) 2 (volume.restrict V)) atTop (𝓝 0)) :
+    Tendsto (fun n ↦ eLpNorm (fun p ↦ (v n p + w n p) - (f p + g p)) 2 (volume.restrict V))
+      atTop (𝓝 0) := by
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
+    (by simpa only [zero_add] using htv.add htw) (fun _ ↦ show (0 : ENNReal) ≤ _ from bot_le)
+  intro n
+  have he : (fun p ↦ v n p + w n p - (f p + g p)) =
+      (fun p ↦ v n p - f p) + (fun p ↦ w n p - g p) := by
+    funext p
+    simp only [Pi.add_apply]
+    ring
+  change eLpNorm (fun p ↦ v n p + w n p - (f p + g p)) 2 (volume.restrict V) ≤ _
+  rw [he]
+  exact eLpNorm_add_le (p := (2 : ENNReal)) (by norm_num)
+
 /-- Uniform squared dyadic elliptic estimate (`lem:elliptic-dyadic`). -/
 theorem elliptic_dyadic : ∃ C : ℝ, 0 < C ∧ ∀ (c : ℝ × ℝ) (r : ℝ), 0 < r →
     ∀ (u F : ℝ × ℝ → ℂ) (D G : List (Fin 2) → ℝ × ℝ → ℂ),
@@ -511,7 +563,136 @@ theorem elliptic_dyadic : ∃ C : ℝ, 0 < C ∧ ∀ (c : ℝ × ℝ) (r : ℝ),
       RadialJetLp 3 0 A c D ∧
         radialJetEnergy 3 0 A c D ≤ C * (radialJetEnergy 1 0 B c G +
           r⁻¹ ^ 2 * radialJetEnergy 0 0 B c G + r⁻¹ ^ 6 * radialJetEnergy 0 0 B c D) := by
-  sorry
+  obtain ⟨C, hC, hbound⟩ := smooth_dyadic_third_estimate
+  refine ⟨8 * C, by positivity, ?_⟩
+  intro c r hr u F D G A B hu hF hD hG hΔ
+  let V := ellipticAnnulus c (r * (3 / 4)) (r * 3)
+  have hA : IsOpen A := isOpen_ellipticAnnulus c _ _
+  have hB : IsOpen B := isOpen_ellipticAnnulus c _ _
+  have hV : IsOpen V := isOpen_ellipticAnnulus c _ _
+  have hVc : IsCompact (closure V) := isCompact_closure_ellipticAnnulus c _ _
+  have hVB : closure V ⊆ B := closure_ellipticAnnulus_subset
+    (by linarith) (by linarith)
+  have hAv : A ⊆ V := by
+    rintro p ⟨hp, hq⟩
+    exact ⟨lt_trans (by linarith) hp, hq.trans (by linarith)⟩
+  have hVB' := subset_closure.trans hVB
+  have hD₂ : HasWeakJetOn 2 B u D := ⟨hD.1, fun w hw ↦ hD.2 w (by omega)⟩
+  have hu₃ : MemSobolevLocOn 3 B u :=
+    elliptic_local_h3 hB hu.memSobolevLocOn hF.memSobolevLocOn hD₂ hΔ
+  obtain ⟨E, hE, hEL, v, hv, hvL⟩ := local_smooth_approximation 3 hB hV hVc hVB hu₃
+  have hED (w : List (Fin 2)) (hw : w.length ≤ 3) : E w =ᵐ[volume.restrict V] D w :=
+    (ae_restrict_iff' hV.measurableSet).mpr (hE.ae_eq hV (hD.mono hVB') w hw)
+  have hDL (w : List (Fin 2)) (hw : w.length ≤ 3) := (hEL w hw).ae_eq (hED w hw)
+  have hlim (w : List (Fin 2)) (hw : w.length ≤ 3) :
+      Tendsto (fun n ↦ eLpNorm (fun p ↦ classicalComplexJet w (v n) p - D w p)
+        2 (volume.restrict V)) atTop (𝓝 0) := by
+    convert (hvL w hw).2 using 1
+    funext n
+    apply eLpNorm_congr_ae
+    filter_upwards [hED w hw] with p hp
+    rw [hp]
+  have hGL (w : List (Fin 2)) (hw : w.length ≤ 1) := hF.memLp_weakJet hB hG w hw
+  have hΔV : ∀ᵐ p ∂volume.restrict V, D [0, 0] p + D [1, 1] p = G [] p := by
+    rw [hG.1]
+    exact ae_mono (Measure.restrict_mono hVB' le_rfl) hΔ
+  have hΔj (j : Fin 2) :
+      ∀ᵐ p ∂volume.restrict V, D [j, 0, 0] p + D [j, 1, 1] p = G [j] p := by
+    have hh := (((hD.2 [0, 0] (by simp) j).add (hD.2 [1, 1] (by simp) j)).mono hVB')
+      |>.congr_ae_on hV.measurableSet ((ae_restrict_iff' hV.measurableSet).mp hΔV)
+        (Eventually.of_forall fun _ _ ↦ rfl)
+    exact (ae_restrict_iff' hV.measurableSet).mpr
+      (hh.ae_eq hV ((hG.2 [] (by simp) j).mono hVB'))
+  have hsum {i j : List (Fin 2)} (hi : i.length ≤ 3) (hj : j.length ≤ 3)
+      {f : ℝ × ℝ → ℂ} (hf : MemLp f 2 (volume.restrict V))
+      (he : ∀ᵐ p ∂volume.restrict V, D i p + D j p = f p) :
+      Tendsto (fun n ↦ squareEnergy V (fun p ↦
+        classicalComplexJet i (v n) p + classicalComplexJet j (v n) p)) atTop
+          (𝓝 (squareEnergy V f)) := by
+    apply tendsto_squareEnergy_of_L2 (fun n ↦ ((hvL i hi).1 n).add ((hvL j hj).1 n)) hf
+    have h := tendsto_eLpNorm_sum_diff (hlim i hi) (hlim j hj)
+    convert h using 1
+    funext n
+    apply eLpNorm_congr_ae
+    filter_upwards [he] with p hp
+    simp only [Pi.add_apply, hp]
+  have hlimL : Tendsto (fun n ↦ squareEnergy V (energyLaplacian (v n))) atTop
+      (𝓝 (squareEnergy V (G []))) :=
+    hsum (i := [0, 0]) (j := [1, 1]) (by simp) (by simp)
+      ((hGL [] (by simp)).mono_measure (Measure.restrict_mono hVB' le_rfl)) hΔV
+  have hlimLj (k : Fin 2) :
+      Tendsto (fun n ↦ squareEnergy V (coordPartial k (energyLaplacian (v n)))) atTop
+        (𝓝 (squareEnergy V (G [k]))) := by
+    have h := hsum (i := [k, 0, 0]) (j := [k, 1, 1]) (by simp) (by simp)
+      ((hGL [k] (by simp)).mono_measure (Measure.restrict_mono hVB' le_rfl)) (hΔj k)
+    convert h using 1
+    funext n
+    congr 1
+    unfold energyLaplacian
+    have hd (j : Fin 2) := contDiff_coordPartial_top j (contDiff_coordPartial_top j (hv n).1)
+    exact coordPartial_sum k ((hd 0).differentiable (by simp)) ((hd 1).differentiable (by simp))
+  have hlim0 : Tendsto (fun n ↦ squareEnergy V (v n)) atTop (𝓝 (squareEnergy V (D []))) :=
+    tendsto_squareEnergy_of_L2 ((hvL [] (by simp)).1) (hDL [] (by simp)) (hlim [] (by simp))
+  have hlimA (w : List (Fin 2)) (hw : w.length ≤ 3) :
+      Tendsto (fun n ↦ squareEnergy A (classicalComplexJet w (v n))) atTop
+        (𝓝 (squareEnergy A (D w))) := by
+    have hm := Measure.restrict_mono hAv (le_refl (volume : Measure (ℝ × ℝ)))
+    apply tendsto_squareEnergy_of_L2 (fun n ↦ ((hvL w hw).1 n).mono_measure hm)
+      ((hDL w hw).mono_measure hm)
+    exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds (hlim w hw)
+      (fun _ ↦ bot_le) (fun _ ↦ eLpNorm_mono_measure _ hm)
+  have hbnd (i j k : Fin 2) : squareEnergy A (D [i, j, k]) ≤ C *
+      (squareEnergy V (G [k]) + r⁻¹ ^ 2 * squareEnergy V (G []) +
+        r⁻¹ ^ 6 * squareEnergy V (D [])) := by
+    apply le_of_tendsto_of_tendsto (hlimA [i, j, k] (by simp))
+      (((hlimLj k).add (hlimL.const_mul _)).add (hlim0.const_mul _) |>.const_mul C)
+    exact Eventually.of_forall fun n ↦ hbound c r hr (hv n).1 i j k
+  have hmono {f : ℝ × ℝ → ℂ} (hf : MemLp f 2 (volume.restrict B)) :
+      squareEnergy V f ≤ squareEnergy B f :=
+    setIntegral_mono_set hf.norm.integrable_sq (Eventually.of_forall fun _ ↦ sq_nonneg _)
+      (Eventually.of_forall hVB')
+  have hBk (k : Fin 2) : squareEnergy V (G [k]) ≤ radialJetEnergy 1 0 B c G := by
+    refine (hmono (hGL [k] (by simp))).trans ?_
+    have h₁ : radialJetEnergy 1 0 B c G = squareEnergy B (G [0]) + squareEnergy B (G [1]) := by
+      unfold radialJetEnergy
+      simp only [pow_zero, div_one]
+      trans ∑ j : Fin 2, squareEnergy B (G [j])
+      · exact Fintype.sum_equiv (Equiv.funUnique (Fin 1) (Fin 2)) _ _ (fun f ↦ by
+          simp [List.ofFn_succ, squareEnergy])
+      · exact Fin.sum_univ_two _
+    rw [h₁]
+    fin_cases k
+    · exact le_add_of_nonneg_right (squareEnergy_nonneg _ _)
+    · exact le_add_of_nonneg_left (squareEnergy_nonneg _ _)
+  have hE0 (J : List (Fin 2) → ℝ × ℝ → ℂ) :
+      radialJetEnergy 0 0 B c J = squareEnergy B (J []) := by
+    simp [radialJetEnergy, squareEnergy, List.ofFn_zero]
+  have hB0 := hmono (hGL [] (by simp))
+  have hBu := hmono (show MemLp (D []) 2 (volume.restrict B) from by rw [hD.1]; exact hu.memLp)
+  refine ⟨fun w hw ↦ ?_, ?_⟩
+  · simpa only [pow_zero, Complex.ofReal_one, div_one] using
+      (hDL w hw.le).mono_measure (Measure.restrict_mono hAv le_rfl)
+  · have hE₃ : radialJetEnergy 3 0 A c D =
+        ∑ w : Fin 3 → Fin 2, squareEnergy A (D (List.ofFn w)) := by
+      simp only [radialJetEnergy, pow_zero, div_one, squareEnergy]
+    rw [hE₃]
+    calc
+      _ ≤ ∑ _w : Fin 3 → Fin 2, C *
+          (radialJetEnergy 1 0 B c G + r⁻¹ ^ 2 * radialJetEnergy 0 0 B c G +
+            r⁻¹ ^ 6 * radialJetEnergy 0 0 B c D) := by
+        apply Finset.sum_le_sum
+        intro w _
+        have h := hbnd (w 0) (w 1) (w 2)
+        have hw : List.ofFn w = [w 0, w 1, w 2] := by
+          simp [List.ofFn_succ]
+        rw [hw]
+        refine h.trans (mul_le_mul_of_nonneg_left ?_ hC.le)
+        rw [hE0 G, hE0 D]
+        gcongr
+        exact hBk (w 2)
+      _ = _ := by simp [radialJetEnergy, mul_assoc]
+
+
 
 
 end NoEmbeddedEigenvalues

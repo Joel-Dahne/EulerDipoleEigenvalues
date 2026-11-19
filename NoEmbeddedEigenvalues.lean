@@ -108,6 +108,8 @@ import NoEmbeddedEigenvalues.Analysis.WeakLaplacian
 import NoEmbeddedEigenvalues.Analysis.RadialMeanKernel
 import NoEmbeddedEigenvalues.Analysis.PlaneConvolution
 import NoEmbeddedEigenvalues.Analysis.PlaneMollifier
+import NoEmbeddedEigenvalues.Analysis.InteriorEnergy
+import NoEmbeddedEigenvalues.Analysis.ScaledInteriorEnergy
 import NoEmbeddedEigenvalues.Analysis.RadialMeanValue
 import NoEmbeddedEigenvalues.Analysis.WeakHarmonicLocal
 import NoEmbeddedEigenvalues.WeakChartTransportVariable

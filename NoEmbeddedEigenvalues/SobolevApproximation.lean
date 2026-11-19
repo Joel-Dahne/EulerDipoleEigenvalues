@@ -26,19 +26,19 @@ namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter Topology Metric
 open scoped ContDiff
 
-/-- Smooth compactly supported approximants converge to the full weak H² jet
+/-- Smooth compactly supported approximants converge to the full specified weak jet
     on each precompact open patch. No boundary trace or extension of the raw
     function outside its given open domain is assumed. -/
-theorem local_h2_smooth_approximation {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ → ℂ}
+theorem local_smooth_approximation (m : ℕ) {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ → ℂ}
     (hU : IsOpen U) (hV : IsOpen V) (hVc : IsCompact (closure V))
-    (hVU : closure V ⊆ U) (hu : MemSobolevLocOn 2 U u) :
+    (hVU : closure V ⊆ U) (hu : MemSobolevLocOn m U u) :
     ∃ D : List (Fin 2) → ℝ × ℝ → ℂ,
-      HasWeakJetOn 2 V u D ∧
-      (∀ w, w.length ≤ 2 → MemLp (D w) 2 (volume.restrict V)) ∧
+      HasWeakJetOn m V u D ∧
+      (∀ w, w.length ≤ m → MemLp (D w) 2 (volume.restrict V)) ∧
       ∃ v : ℕ → ℝ × ℝ → ℂ,
         (∀ n, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (v n) ∧
           HasCompactSupport (v n) ∧ tsupport (v n) ⊆ U) ∧
-        ∀ w, w.length ≤ 2 →
+        ∀ w, w.length ≤ m →
           (∀ n, MemLp (classicalComplexJet w (v n)) 2 (volume.restrict V)) ∧
           Tendsto (fun n ↦ eLpNorm (fun p ↦ classicalComplexJet w (v n) p - D w p)
             2 (volume.restrict V)) atTop (𝓝 0) := by
@@ -52,14 +52,14 @@ theorem local_h2_smooth_approximation {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ �
   have hχc : HasCompactSupport χ := hWc.of_isClosed_subset (isClosed_tsupport _) hχsupport
   have hχU := hχsupport.trans hWU
   let f : ℝ × ℝ → ℂ := fun x ↦ χ x * u x
-  have hf : MemSobolevOn 2 univ f := hu.cutoff 2 hU hχ hχc hχU
+  have hf : MemSobolevOn m univ f := hu.cutoff m hU hχ hχc hχU
   have hfs : tsupport f ⊆ tsupport χ := tsupport_mul_subset_left
   have hfu : EqOn f u V := by
     intro x hx
     have he := (hχone x).mp (subset_closure hx)
     simp [f, χ, he]
   obtain ⟨E, hE, hEL⟩ := memSobolevOn_iff_exists_weakJet.mp hf
-  have hLp (w : List (Fin 2)) (hw : w.length ≤ 2) : MemLp (E w) 2 volume := by
+  have hLp (w : List (Fin 2)) (hw : w.length ≤ m) : MemLp (E w) 2 volume := by
     simpa only [Measure.restrict_univ] using hEL w hw
   -- Only the root of the global jet needs changing on the approximation patch.
   let D : List (Fin 2) → ℝ × ℝ → ℂ
@@ -71,7 +71,7 @@ theorem local_h2_smooth_approximation {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ �
     | cons => exact fun _ _ ↦ rfl
   have hDa (w : List (Fin 2)) : E w =ᵐ[volume.restrict V] D w :=
     (ae_restrict_iff' hV.measurableSet).mpr (Eventually.of_forall (hED w))
-  have hD : HasWeakJetOn 2 V u D := by
+  have hD : HasWeakJetOn m V u D := by
     refine ⟨rfl, fun w hw j ↦ ?_⟩
     exact ((hE.2 w hw j).mono (subset_univ V)).congr_ae_on hV.measurableSet
       (Eventually.of_forall (hED w)) (Eventually.of_forall (hED (j :: w)))
@@ -106,12 +106,12 @@ theorem local_h2_smooth_approximation {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ �
     | cons j w ih =>
       exact ⟨contDiff_coordPartial_top j ih.1,
         ih.2.of_isClosed_subset (isClosed_tsupport _) (tsupport_coordPartial_subset j _)⟩
-  have hcomm (n : ℕ) (w : List (Fin 2)) (hw : w.length ≤ 2) :
+  have hcomm (n : ℕ) (w : List (Fin 2)) (hw : w.length ≤ m) :
       classicalComplexJet w (v n) = planeConvolution (E w) (k n) := by
     induction w with
     | nil => simp only [classicalComplexJet, v, hE.1]
     | cons j w ih =>
-      have hlt : w.length < 2 := Nat.lt_of_succ_le hw
+      have hlt : w.length < m := Nat.lt_of_succ_le hw
       rw [classicalComplexJet, ih hlt.le]
       exact coordPartial_planeConvolution_of_weak ((hLp w hlt.le).locallyIntegrable (by norm_num))
         (hE.2 w hlt j) (contDiff_planeBumpKernel _) (hasCompactSupport_planeBumpKernel _)
@@ -131,6 +131,24 @@ theorem local_h2_smooth_approximation {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ �
     simp only [Pi.sub_apply, hp]
   rw [eLpNorm_congr_ae he]
   exact eLpNorm_mono_measure _ Measure.restrict_le_self
+
+/-- Smooth compactly supported approximants converge to the full weak H² jet
+    on each precompact open patch. No boundary trace or extension of the raw
+    function outside its given open domain is assumed. -/
+theorem local_h2_smooth_approximation {U V : Set (ℝ × ℝ)} {u : ℝ × ℝ → ℂ}
+    (hU : IsOpen U) (hV : IsOpen V) (hVc : IsCompact (closure V))
+    (hVU : closure V ⊆ U) (hu : MemSobolevLocOn 2 U u) :
+    ∃ D : List (Fin 2) → ℝ × ℝ → ℂ,
+      HasWeakJetOn 2 V u D ∧
+      (∀ w, w.length ≤ 2 → MemLp (D w) 2 (volume.restrict V)) ∧
+      ∃ v : ℕ → ℝ × ℝ → ℂ,
+        (∀ n, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (v n) ∧
+          HasCompactSupport (v n) ∧ tsupport (v n) ⊆ U) ∧
+        ∀ w, w.length ≤ 2 →
+          (∀ n, MemLp (classicalComplexJet w (v n)) 2 (volume.restrict V)) ∧
+          Tendsto (fun n ↦ eLpNorm (fun p ↦ classicalComplexJet w (v n) p - D w p)
+            2 (volume.restrict V)) atTop (𝓝 0) :=
+  local_smooth_approximation 2 hU hV hVc hVU hu
 
 /-- A bounded coefficient preserves convergence of L² product integrals.
     The proof uses the continuous L∞ multiplier and the L² inner product,
