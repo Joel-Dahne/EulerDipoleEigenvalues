@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.MixedStaticForm
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
+import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.NormalField
 import Mathlib.Analysis.SpecialFunctions.Artanh
@@ -14,7 +15,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open MeasureTheory Set Filter ComplexConjugate
-open scoped Topology
+open scoped Topology ENNReal
 
 local notation "Plane" => ℝ × ℝ
 
@@ -55,14 +56,79 @@ def mixedNeumannF (lam : ℝ) (φ : Plane → ℂ) (positive : Bool) (x : ℝ) :
   canonicalUnknown lam (mixedNeumannStream φ positive) (Real.artanh x) /
     (Real.sqrt (boundaryWeight x) : ℂ)
 
-/-- The Neumann stream trace and its weighted tangential energy. -/
-theorem mixed_neumann_stream_trace {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
-    let g := mixedNeumannStream d.phi σ
-    let G := mixedNeumannG d.phi σ
-    (∀ c e, AbsolutelyContinuousOnInterval g c e) ∧ Integrable (deriv g) ∧
-    MixedBoundaryLocAC G ∧ (∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖G x‖ ≤ C) ∧
-    IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2) (Ioo (-1) 1) := by
-  sorry
+private theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+    let a₀ := -Real.pi / 2
+    let a₁ := Real.pi / 2
+    let T := fun a ↦ d.phi (a, cellEdgeNormal σ)
+    AbsolutelyContinuousOnInterval T a₀ a₁ ∧
+      MemLp (deriv T) 2 (volume.restrict (Ioo a₀ a₁)) := by
+  let a₀ := -Real.pi / 2
+  let a₁ := Real.pi / 2
+  let I := Ioo a₀ a₁
+  let b := cellEdgeNormal σ
+  let T := fun a ↦ d.phi (a, b)
+  have hab : a₀ < a₁ := by dsimp [a₀, a₁]; linarith [Real.pi_pos]
+  have hb : b = a₀ ∨ b = a₁ := by cases σ <;> simp [b, a₀, a₁, cellEdgeNormal]
+  have hb' : b ∈ Icc a₀ a₁ := by
+    rcases hb with h | h
+    · rw [h]; exact left_mem_Icc.mpr hab.le
+    · rw [h]; exact right_mem_Icc.mpr hab.le
+  obtain ⟨D, hD, hL⟩ := memSobolevOn_iff_exists_weakJet.mp d.h2
+  have hcoords : traceSideCoords 0 = id := rfl
+  have hrect : traceSideCoords 0 '' (I ×ˢ I) = mixedOpenCell := by
+    rw [hcoords, image_id]
+    rfl
+  obtain ⟨G, H, R, hG, hH, hGacl, hHacl, hGt, hHt, hRt, hRac, hRc, _, hRd⟩ :=
+    hasWeakJetOn_h2_boundary_trace (F := d.phi) (D := D) 0 hab hab hb
+      (hrect.symm ▸ hD) (fun w hw ↦ hrect.symm ▸ hL w hw)
+  have hG' : G =ᵐ[volume.restrict (I ×ˢ I)] d.phi := by
+    simpa only [hcoords, Function.comp_id] using hG
+  have hD' : MemLp (D [1]) 2 (volume.restrict (I ×ˢ I)) := hL [1] (by decide)
+  have hGmem : MemLp G 2 (volume.restrict (I ×ˢ I)) := by
+    have h : MemLp d.phi 2 (volume.restrict mixedOpenCell) := by
+      rw [← hD.1]
+      exact hL [] (by decide)
+    exact (memLp_congr_ae hG').mpr h
+  have hGacl' : HasACLSectionsOn I I G (D [1]) := by
+    simpa only [hcoords, Function.comp_id, sub_zero] using hGacl
+  have hphiC : ∀ a ∈ Icc a₀ a₁, ContinuousOn (fun y ↦ d.phi (a, y)) (Icc a₀ a₁) := by
+    intro a ha
+    exact d.continuous.comp' (f := fun y ↦ (a, y)) (by fun_prop) (by
+      intro y hy
+      rw [mixedOpenCell, closure_prod_eq, closure_Ioo hab.ne]
+      exact ⟨ha, hy⟩)
+  have hGae : ∀ᵐ a ∂volume.restrict I, ∀ᵐ y ∂volume.restrict I, G (a, y) = d.phi (a, y) := by
+    refine Measure.ae_ae_of_ae_prod (p := fun z ↦ G z = d.phi z) ?_
+    rw [Measure.prod_restrict I I]
+    exact hG'
+  have hre : R =ᵐ[volume.restrict I] T := by
+    filter_upwards [hRt, hGae, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo,
+      hGacl'.ae_hasIntervalH1 hGmem hD'] with a hrt hae ha hline
+    have hcont := hphiC a (Ioo_subset_Icc_self ha)
+    have he := Measure.eqOn_open_of_ae_eq hae isOpen_Ioo
+      ((hline.continuousOn_extension hab).mono Ioo_subset_Icc_self |>.congr
+        (hline.extension_eq hab).symm) (hcont.mono Ioo_subset_Icc_self)
+    rw [hrt]
+    simp only [hcoords, Function.comp_id, sub_zero, aclTrace]
+    exact (hline.extension_unique hab hcont (fun y hy ↦ (he hy).symm) hb').symm
+  have hTc : ContinuousOn T (Icc a₀ a₁) := by
+    refine d.continuous.comp' (f := fun a ↦ (a, b)) (by fun_prop) ?_
+    intro a ha
+    rw [mixedOpenCell, closure_prod_eq, closure_Ioo hab.ne]
+    exact ⟨ha, hb'⟩
+  have heq : EqOn R T (Icc a₀ a₁) := by
+    apply (Measure.eqOn_open_of_ae_eq hre isOpen_Ioo (hRc.mono Ioo_subset_Icc_self)
+      (hTc.mono Ioo_subset_Icc_self)).of_subset_closure
+    · exact hRc
+    · exact hTc
+    · exact Ioo_subset_Icc_self
+    · rw [closure_Ioo hab.ne]
+  refine ⟨hRac.congr (fun a ha ↦ heq (by simpa only [uIcc_of_le hab.le] using ha)), ?_⟩
+  refine (memLp_congr_ae ?_).mp hHt
+  filter_upwards [hRd, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with a ha hm
+  have he : R =ᶠ[𝓝 a] T := by
+    filter_upwards [isOpen_Ioo.mem_nhds hm] with y hy using heq (Ioo_subset_Icc_self hy)
+  exact (ha.congr_of_eventuallyEq he.symm).deriv.symm
 
 /-- The physical vorticity trace obeys the transport equation on the regular arc and
 is square integrable in flow time. It is not yet identified with the canonical profile. -/
@@ -165,6 +231,77 @@ private theorem mixed_sech_deriv (t : ℝ) :
   convert (Real.hasDerivAt_cosh t).inv (Real.cosh_pos t).ne' using 1
   rw [Real.tanh_eq_sinh_div_cosh]
   field_simp
+
+private def mixedNeumannA (σ : Bool) (t : ℝ) : ℝ :=
+  if σ then arcAngle t - Real.pi / 2 else -(arcAngle t - Real.pi / 2)
+
+private theorem mixedNeumann_coord (σ : Bool) (t : ℝ) :
+    diagCoord (mixedNeumannArc σ t) = (mixedNeumannA σ t, cellEdgeNormal σ) := by
+  cases σ <;> simp only [mixedNeumannArc, cellArc, Function.iterate_succ_apply',
+    Function.iterate_zero_apply, rotLift, Bool.false_eq_true, ↓reduceIte, separatrixArc,
+    diagCoord, mixedNeumannA, cellEdgeNormal, Prod.mk.injEq] <;> constructor <;> ring
+
+private theorem mixedNeumannA_mem (σ : Bool) (t : ℝ) :
+    mixedNeumannA σ t ∈ Ioo (-Real.pi / 2) (Real.pi / 2) := by
+  have ht := arcAngle_mem_Ioo t
+  cases σ <;> simp only [mixedNeumannA, Bool.false_eq_true, ↓reduceIte] <;> constructor <;>
+    linarith [ht.1, ht.2]
+
+private theorem mixedNeumannA_deriv (σ : Bool) (t : ℝ) :
+    HasDerivAt (mixedNeumannA σ)
+      ((if σ then -1 else 1) * (Real.cosh t)⁻¹) t := by
+  have h := (hasDerivAt_arcAngle t).sub_const (Real.pi / 2)
+  cases σ
+  · exact h.neg.congr_of_eventuallyEq (Eventually.of_forall fun _ ↦ rfl) |>.congr_deriv
+      (by simp [one_div])
+  · exact h.congr_of_eventuallyEq (Eventually.of_forall fun _ ↦ rfl) |>.congr_deriv
+      (by simp [one_div])
+
+private theorem mixedNeumannA_image (σ : Bool) :
+    range (mixedNeumannA σ) = Ioo (-Real.pi / 2) (Real.pi / 2) := by
+  refine Subset.antisymm (range_subset_iff.2 (mixedNeumannA_mem σ)) ?_
+  intro a ha
+  have hpos : a + Real.pi / 2 ∈ Ioo 0 Real.pi :=
+    ⟨by linarith [ha.1], by linarith [ha.2]⟩
+  have hneg : -a + Real.pi / 2 ∈ Ioo 0 Real.pi :=
+    ⟨by linarith [ha.2], by linarith [ha.1]⟩
+  cases σ
+  · refine ⟨-Real.log (Real.tan ((-a + Real.pi / 2) / 2)), ?_⟩
+    simp [mixedNeumannA, arcAngle_surjOn hneg]
+  · refine ⟨-Real.log (Real.tan ((a + Real.pi / 2) / 2)), ?_⟩
+    simp [mixedNeumannA, arcAngle_surjOn hpos]
+
+private theorem mixedNeumannA_injective (σ : Bool) : Function.Injective (mixedNeumannA σ) := by
+  cases σ
+  · exact (fun _ _ h ↦ strictAnti_arcAngle.injective (by simpa [mixedNeumannA] using h))
+  · exact (fun _ _ h ↦ strictAnti_arcAngle.injective (by simpa [mixedNeumannA] using h))
+
+private theorem mixedNeumannA_integrable (σ : Bool) {f : ℝ → ℝ}
+    (hf : IntegrableOn f (Ioo (-Real.pi / 2) (Real.pi / 2))) :
+    Integrable (fun t ↦ (Real.cosh t)⁻¹ * f (mixedNeumannA σ t)) := by
+  have h := integrableOn_image_iff_integrableOn_abs_deriv_smul (f := mixedNeumannA σ)
+    MeasurableSet.univ (fun t _ ↦ (mixedNeumannA_deriv σ t).hasDerivWithinAt)
+    (mixedNeumannA_injective σ).injOn f
+  rw [image_univ, mixedNeumannA_image, integrableOn_univ] at h
+  refine (h.mp hf).congr (Eventually.of_forall fun t ↦ ?_)
+  have hp := inv_pos.mpr (Real.cosh_pos t)
+  cases σ <;> simp [abs_of_pos hp, smul_eq_mul]
+
+private theorem mixedNeumannA_ae (σ : Bool) {P : ℝ → Prop}
+    (h : ∀ᵐ a ∂volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2)), P a) :
+    ∀ᵐ t, P (mixedNeumannA σ t) := by
+  have h' : ∀ᵐ a, a ∈ Ioo (-(Real.pi / 2)) (Real.pi / 2) → P a := by
+    rw [← neg_div, ← ae_restrict_iff' measurableSet_Ioo]
+    exact h
+  cases σ
+  · have hn := (Measure.measurePreserving_neg (volume : Measure ℝ)).quasiMeasurePreserving.ae h'
+    have hP : ∀ᵐ a ∂volume.restrict (Ioo (-(Real.pi / 2)) (Real.pi / 2)), P (-a) := by
+      rw [ae_restrict_iff' measurableSet_Ioo]
+      filter_upwards [hn] with a ha hm
+      exact ha ⟨by linarith [hm.2], by linarith [hm.1]⟩
+    simpa only [mixedNeumannA, Bool.false_eq_true, ↓reduceIte] using ae_comp_arcAngle hP
+  · simpa only [mixedNeumannA, Bool.true_eq, ↓reduceIte] using
+      ae_comp_arcAngle ((ae_restrict_iff' measurableSet_Ioo).2 h')
 
 private theorem mixed_hasDerivAt_weightedFlow {U : ℝ → ℂ} {t : ℝ}
     (h : DifferentiableAt ℝ U (Real.tanh t)) :
@@ -377,6 +514,146 @@ theorem mixed_neumann_canonical_transport {lam : ℝ} (hlam : lam ≠ 0) {φ : P
   refine ⟨hF, hbF, (ae_restrict_iff' measurableSet_Ioo).2 ?_⟩
   filter_upwards [ae_comp_artanh hflow] with x hx hmem
   simpa only [Real.tanh_artanh hmem] using hx hmem
+
+/-- The Neumann stream trace and its weighted tangential energy. -/
+theorem mixed_neumann_stream_trace {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+    let g := mixedNeumannStream d.phi σ
+    let G := mixedNeumannG d.phi σ
+    (∀ c e, AbsolutelyContinuousOnInterval g c e) ∧ Integrable (deriv g) ∧
+    MixedBoundaryLocAC G ∧ (∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖G x‖ ≤ C) ∧
+    IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2) (Ioo (-1) 1) := by
+  let I := Ioo (-Real.pi / 2) (Real.pi / 2)
+  let a := mixedNeumannA σ
+  let T := fun x ↦ d.phi (x, cellEdgeNormal σ)
+  let U := T ∘ a
+  let g := mixedNeumannStream d.phi σ
+  let G := mixedNeumannG d.phi σ
+  let h := fun t ↦ (Real.cosh t)⁻¹
+  obtain ⟨hTac, hT2⟩ : AbsolutelyContinuousOnInterval T (-Real.pi / 2) (Real.pi / 2) ∧
+      MemLp (deriv T) 2 (volume.restrict I) := mixed_quotient_edge_h1 d σ
+  have haMem := mixedNeumannA_mem σ
+  have haL : LipschitzWith 1 a := by
+    have he : LipschitzWith 1 (fun t ↦ arcAngle t - Real.pi / 2) :=
+      LipschitzWith.of_dist_le_mul fun s t ↦ by
+        simpa only [Real.dist_eq, sub_sub_sub_cancel_right] using
+          lipschitzWith_arcAngle.dist_le_mul s t
+    cases σ
+    · exact he.neg
+    · exact he
+  have haMaps (c e : ℝ) : MapsTo a (uIcc c e) (uIcc (-Real.pi / 2) (Real.pi / 2)) :=
+    fun t _ ↦ Icc_subset_uIcc (Ioo_subset_Icc_self (haMem t))
+  have hUac (c e : ℝ) : AbsolutelyContinuousOnInterval U c e := by
+    cases σ
+    · refine AbsolutelyContinuousOnInterval.comp_monotoneOn hTac haL.lipschitzOnWith ?_ (haMaps c e)
+      exact (show Monotone a from fun s t hst ↦ by
+        change -(arcAngle s - Real.pi / 2) ≤ -(arcAngle t - Real.pi / 2)
+        linarith [antitone_arcAngle hst]).monotoneOn _
+    · refine AbsolutelyContinuousOnInterval.comp_antitoneOn hTac haL.lipschitzOnWith ?_ (haMaps c e)
+      exact (show Antitone a from fun s t hst ↦ by
+        simpa [a, mixedNeumannA] using antitone_arcAngle hst).antitoneOn _
+  have hcomp (t : ℝ) : G (Real.tanh t) = U t := by
+    simp only [G, mixedNeumannG, Real.artanh_tanh, mixedNeumann_coord, U, Function.comp_apply, T, a]
+  have hg_eq : g = fun t ↦ (h t : ℂ) * U t := by
+    rw [show g = _ from mixedNeumann_weighted_stream d.phi σ]
+    funext t
+    change (h t : ℂ) * G (Real.tanh t) = _
+    rw [hcomp]
+  have hGac : MixedBoundaryLocAC G := by
+    intro c e hc hce he
+    refine (absolutelyContinuousOnInterval_comp_artanh hUac hc hce.le he).congr fun x hx ↦ ?_
+    rw [uIcc_of_le hce.le] at hx
+    have hxm := Real.tanh_artanh ⟨hc.trans_le hx.1, hx.2.trans_lt he⟩
+    simpa only [Function.comp_apply, hxm] using (hcomp (Real.artanh x)).symm
+  obtain ⟨C, hC⟩ := hTac.exists_bound
+  have hC' (x : ℝ) (hx : x ∈ I) : ‖T x‖ ≤ C :=
+    hC x (Icc_subset_uIcc (Ioo_subset_Icc_self hx))
+  have hgac (c e : ℝ) : AbsolutelyContinuousOnInterval g c e := by
+    rw [hg_eq]
+    have hCosh : ContDiff ℝ 1 (fun t ↦ (h t : ℂ)) :=
+      Complex.ofRealCLM.contDiff.comp (Real.contDiff_cosh.inv (fun t ↦ (Real.cosh_pos t).ne'))
+    exact hCosh.contDiffOn.absolutelyContinuousOnInterval.smul (hUac c e)
+  have hGbound : ∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖G x‖ ≤ C := by
+    refine ⟨C, fun x hx ↦ ?_⟩
+    have he := hcomp (Real.artanh x)
+    rw [Real.tanh_artanh hx] at he
+    rw [he]
+    exact hC' _ (haMem _)
+  have hTae : ∀ᵐ x ∂volume.restrict I, DifferentiableAt ℝ T x := by
+    filter_upwards [ae_restrict_of_ae hTac.boundedVariationOn.ae_differentiableAt_of_mem_uIcc,
+      ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with x hx hxI
+    exact hx (Icc_subset_uIcc (Ioo_subset_Icc_self hxI))
+  have hUdiff : ∀ᵐ t, HasDerivAt U (((if σ then -1 else 1 : ℝ) * h t) • deriv T (a t)) t := by
+    filter_upwards [mixedNeumannA_ae σ hTae] with t ht
+    exact ht.hasDerivAt.scomp t (mixedNeumannA_deriv σ t)
+  have hhI : Integrable h := by
+    simpa only [mul_one] using mixedNeumannA_integrable σ (f := fun _ ↦ 1) (integrable_const _)
+  have hTl := hT2.integrable (by norm_num : 1 ≤ (2 : ℝ≥0∞))
+  have hD1 := mixedNeumannA_integrable σ hTl.norm
+  have hD2 := mixedNeumannA_integrable σ ((memLp_two_iff_integrable_sq_norm
+    hT2.aestronglyMeasurable).mp hT2)
+  have hpos (t : ℝ) : 0 < h t := inv_pos.mpr (Real.cosh_pos _)
+  have hle (t : ℝ) : h t ≤ 1 := inv_le_one_of_one_le₀ (Real.one_le_cosh _)
+  have hgI : Integrable (deriv g) := by
+    refine ((hhI.const_mul C).add hD1).mono' (measurable_deriv g).aestronglyMeasurable ?_
+    filter_upwards [hUdiff] with t ht
+    have hgD : deriv (fun t ↦ (h t : ℂ) * U t) t =
+        ((-(h t) * Real.tanh t : ℝ) : ℂ) * U t +
+          (h t : ℂ) * (((if σ then -1 else 1 : ℝ) * h t) • deriv T (a t)) :=
+      ((mixed_sech_deriv t).ofReal_comp.mul ht).deriv
+    rw [hg_eq, hgD]
+    refine (norm_add_le _ _).trans ?_
+    have htanh : |Real.tanh t| ≤ 1 := abs_le.mpr
+      ⟨(Real.neg_one_lt_tanh t).le, (Real.tanh_lt_one t).le⟩
+    have h₁ : ‖((-(h t) * Real.tanh t : ℝ) : ℂ) * U t‖ ≤ C * h t := by
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_mul, abs_neg, abs_of_pos (hpos t)]
+      calc
+        _ ≤ (h t * 1) * C :=
+          mul_le_mul (mul_le_mul_of_nonneg_left htanh (hpos t).le)
+            (hC' _ (haMem t)) (norm_nonneg _) (by positivity)
+        _ = _ := by ring
+    have h₂ : ‖(h t : ℂ) * (((if σ then -1 else 1 : ℝ) * h t) • deriv T (a t))‖ ≤
+        h t * ‖deriv T (a t)‖ := by
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (hpos t), norm_smul,
+        Real.norm_eq_abs, abs_mul, abs_of_pos (hpos t)]
+      have he : |(if σ then -1 else 1 : ℝ)| = 1 := by cases σ <;> norm_num
+      rw [he, one_mul]
+      exact mul_le_mul_of_nonneg_left (by
+        simpa only [one_mul] using mul_le_mul_of_nonneg_right (hle t)
+          (norm_nonneg (deriv T (a t)))) (hpos t).le
+    exact add_le_add h₁ h₂
+  have henergy : IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2)
+      (Ioo (-1) 1) := by
+    apply (integrableOn_Ioo_iff_tanh _).2
+    refine hD2.mono' (by
+      change AEStronglyMeasurable (fun t ↦ (1 / Real.cosh t ^ 2) *
+        (boundaryWeight (Real.tanh t) * ‖deriv G (Real.tanh t)‖ ^ 2)) volume
+      have ht : Continuous Real.tanh := continuous_iff_continuousAt.2
+        fun t ↦ (hasDerivAt_tanh t).continuousAt
+      have h₁ : Continuous (fun t : ℝ ↦ 1 / Real.cosh t ^ 2) :=
+        continuous_const.div (Real.continuous_cosh.pow _)
+          (fun t ↦ pow_ne_zero _ (Real.cosh_pos t).ne')
+      have h₂ : Continuous (fun t : ℝ ↦ boundaryWeight (Real.tanh t)) :=
+        continuous_const.sub (ht.pow 2)
+      exact h₁.aestronglyMeasurable.mul (h₂.aestronglyMeasurable.mul
+        (((measurable_deriv G).comp ht.measurable).aestronglyMeasurable.norm.pow 2))) ?_
+    filter_upwards [hUdiff, ae_comp_tanh hGac.ae_differentiableAt] with t ht htG
+    have heq : G ∘ Real.tanh = U := funext hcomp
+    have hd := ((htG (mixed_tanh_mem t)).hasDerivAt.scomp t (hasDerivAt_tanh t)).unique
+      (heq.symm ▸ ht)
+    have hdN := congrArg norm hd
+    have hsign : |(if σ then -1 else 1 : ℝ)| = 1 := by cases σ <;> norm_num
+    simp only [norm_smul, Real.norm_eq_abs, abs_mul, hsign, one_mul,
+      one_sub_tanh_sq, abs_of_pos (hpos t)] at hdN
+    have hw : 0 < 1 / Real.cosh t ^ 2 := by positivity
+    rw [abs_of_pos hw] at hdN
+    simp only [smul_eq_mul, boundaryWeight_tanh, Real.norm_of_nonneg
+      (mul_nonneg hw.le (mul_nonneg hw.le (sq_nonneg _)))]
+    calc
+      _ = ((1 / Real.cosh t ^ 2) * ‖deriv G (Real.tanh t)‖) ^ 2 := by ring
+      _ = h t ^ 2 * ‖deriv T (a t)‖ ^ 2 := by rw [hdN, mul_pow]
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        (by nlinarith [mul_le_mul_of_nonneg_left (hle t) (hpos t).le]) (sq_nonneg _)
+  exact ⟨hgac, hgI, hGac, hGbound, henergy⟩
 
 /-- Boundary square and physical trace for the actual mixed Neumann profile. -/
 theorem mixed_boundary_square_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}

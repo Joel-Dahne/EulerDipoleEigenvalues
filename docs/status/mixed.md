@@ -21,8 +21,10 @@ admission-free; see [the module map](../architecture.md).
 - **Neumann traces:** `lem:mixed-boundary-square-traces` is assembled in Lean.
   The profile ODE and square integrability force decay at both ends; uniqueness
   identifies the physical trace with the canonical profile, and decay at
-  `−∞` gives the Melnikov condition. The remaining inputs are
-  `lem:mixed-neumann-stream-trace` and `lem:mixed-neumann-vorticity-trace`.
+  `−∞` gives the Melnikov condition. `lem:mixed-neumann-stream-trace` is
+  proved from `lem:trace-h2-boundary`, which is still admitted. The
+  separate physical trace and transport step `lem:mixed-neumann-vorticity-trace`
+  remains open.
   `lem:mixed-boundary-square-weighted` is admission-free: its current is
   bounded by a multiple of `1 − x²` and needs no endpoint traces of `F`.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
