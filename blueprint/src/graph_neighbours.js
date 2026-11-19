@@ -1,4 +1,4 @@
-/* Extend the standard leanblueprint graph popups without replacing its renderer. */
+/* Extend the standard leanblueprint graphs without replacing their renderer. */
 (function () {
     "use strict";
 
@@ -92,9 +92,23 @@
         });
     }
 
-    // The SVG is rendered asynchronously. A namespaced listener leaves the
-    // upstream popup/legend click handlers intact. Also handle an SVG that
-    // finished rendering before this extra script loaded.
-    d3.select(graph).graphviz().on("end.neighbours", populateNeighbours);
-    populateNeighbours();
+    const renderer = d3.select(graph).graphviz();
+
+    function enhanceGraph() {
+        // d3-graphviz defaults to a maximum scale of 10. On a large graph
+        // fitted to the viewport, that can still leave the labels unreadable.
+        // Change the live zoom behavior; the renderer's option setter only
+        // applies when that behavior is first created.
+        const zoom = renderer.zoomBehavior();
+        if (zoom) {
+            const [min] = zoom.scaleExtent();
+            zoom.scaleExtent([min, Infinity]);
+        }
+        populateNeighbours();
+    }
+
+    // The SVG and its zoom behavior are created asynchronously. A namespaced
+    // listener leaves the upstream handlers intact. Also handle late loading.
+    renderer.on("end.neighbours", enhanceGraph);
+    enhanceGraph();
 }());

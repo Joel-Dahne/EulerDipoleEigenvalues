@@ -82,10 +82,19 @@ function testGraphNeighbours(source) {
         };
     }
     const callbacks = {};
+    let rendered = false;
+    let zoomExtent = [0.1, 10];
+    const zoom = {
+        scaleExtent(extent) {
+            if (extent === undefined) return zoomExtent;
+            zoomExtent = extent;
+            return this;
+        },
+    };
     const d3 = {select: () => ({graphviz: () => ({
         on: (event, callback) => { callbacks[event] = callback; },
+        zoomBehavior: () => rendered ? zoom : null,
     })})};
-    let rendered = false;
     const edges = [
         "def:root->lem:a.b", "def:root->lem:other",
         "lem:other->thm:target", "lem:a.b->thm:target",
@@ -117,6 +126,8 @@ function testGraphNeighbours(source) {
     assert(callbacks["end.neighbours"], "register a namespaced graph-end callback");
     rendered = true;
     callbacks["end.neighbours"]();
+    assert(zoomExtent[0] === 0.1 && zoomExtent[1] === Infinity,
+        "remove the zoom-in cap after rendering without changing the zoom-out limit");
 
     function panel(label) { return ids.get(label).querySelector(".dep-neighbours"); }
     function links(label, column) {
@@ -161,7 +172,10 @@ function testGraphNeighbours(source) {
     renderedNodes[1].querySelector("ellipse").setAttribute("fill", "#9CEC8B");
     callbacks["end.neighbours"]();
     assert(dot("thm:target", 0).style.backgroundColor === "#9CEC8B", "refresh colours after rerender");
+    zoomExtent = [0.2, 10];
     run(document, d3, jquery); // Also support a graph rendered before script loading.
+    assert(zoomExtent[0] === 0.2 && zoomExtent[1] === Infinity,
+        "remove an already-rendered graph's zoom-in cap and preserve its minimum");
     assert(labels.every(label => ids.get(label).children.filter(child => child.className === "dep-neighbours").length === 1), "rerender does not duplicate panels");
     return "Graph neighbour DOM tests passed";
 }
