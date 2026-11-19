@@ -20,7 +20,11 @@ admission-free; see [the module map](../architecture.md).
   also be paired; the even–even trace limits do not justify that step.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
-  `lem:mixed-neumann-renormalization` is isolated and admitted.
+  `lem:mixed-neumann-renormalization` is proved from the boundary trace
+  data. The remaining direct inputs are `lem:mixed-trace-mass`,
+  `prop:mixed-virial`, and `lem:mixed-boundary-square-traces`.
+  `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
+  the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
 - **Coercivity:** the comparison functions are defined in Lean, but the
   boundary/virial passage and `thm:mixed-coercivity` are unproved. See
   [shared certificate work](shared.md#shared-certificate-work) for the sign

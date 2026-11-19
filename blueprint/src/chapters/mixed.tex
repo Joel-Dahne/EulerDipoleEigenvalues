@@ -278,6 +278,24 @@ where $J_W[\psi]=\int_\Cell(f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi})\,dx\,dy$.
 The volume definition avoids taking a limit before its existence is known.
 \end{definition}
 
+\begin{lemma}[Signed trace-mass field]
+\label{lem:mixed-trace-field}
+\uses{def:mixed-field}
+\lean{NoEmbeddedEigenvalues.mixed_trace_mass_field, NoEmbeddedEigenvalues.mixed_trace_mass_edge_flux}
+\leanok
+The field $V=\frac up\partial_a-\frac vp\partial_b$ has zero divergence in
+the diagonal rectangle and satisfies $Vp=h-k$. Its outer normal flux is
+$1/k$ on the regular Dirichlet sides and $-1/h$ on the regular Neumann sides.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Differentiate the two components and use $u^2+h^2=v^2+k^2=1$.
+For the second identity, $Vp=(v^2-u^2)/p=(h^2-k^2)/p$.
+Evaluate the normal components on each side using the sign of its
+outward normal.
+\end{proof}
+
 \begin{lemma}[Trace mass as a volume integral]
 \label{lem:mixed-trace-mass}
 \uses{def:mixed-K}
@@ -294,9 +312,16 @@ and equals the paired limit
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain}
-Divergence theorem; at a corner the circular flux of the constant jet cancels
-by interchanging the two inward coordinates.
+\uses{prop:mixed-quotient-domain, lem:mixed-trace-field, lem:arc-diagonal}
+Use the divergence theorem for $|\phi|^2 V$ on $p>\delta$.
+On each original side the condition $p>\delta$ is exactly the flow-time
+cutoff with $\delta=\operatorname{sech}T$. On $p=\delta$, the normal flux
+has magnitude $|h-k|/|\nabla_0p|=O(\delta)$: the new arcs are near the
+corners where $|\nabla_0p|$ is bounded below, and their lengths are
+$O(\delta)$. This avoids a separate cancellation argument on circular
+arcs. To pass to the limit in the volume integral, use boundedness of
+$\phi$ on the closed cell, $\nabla_0\phi\in L^4$ by the rectangle Sobolev
+embedding, and $1/p\in L^{4/3}$ near the corners.
 \end{proof}
 
 \begin{lemma}[Renormalized Neumann flux]
@@ -318,7 +343,9 @@ Proposition~\ref{prop:mixed-paired-flux}. Then
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-boundary-square-traces, lem:arc-diagonal}
+\uses{lem:mixed-boundary-square-traces, lem:arc-diagonal, lem:canonical-profile-ode,
+  lem:boundary-form-xi}
+\leanok
 Substitute $x=\tanh t$ and $g=\sqrt w\,G$ on the centered truncated
 interval. The renormalized gradient density is
 $|wG'-xG|^2/w-|G|^2/w=w|G'|^2-(x|G|^2)'$.
