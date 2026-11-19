@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.MixedStaticForm
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
+import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.NormalField
 import Mathlib.Analysis.SpecialFunctions.Artanh
@@ -54,26 +55,26 @@ def mixedNeumannF (lam : ℝ) (φ : Plane → ℂ) (positive : Bool) (x : ℝ) :
   canonicalUnknown lam (mixedNeumannStream φ positive) (Real.artanh x) /
     (Real.sqrt (boundaryWeight x) : ℂ)
 
-/-- Boundary square and physical trace for the actual mixed Neumann profile. -/
-theorem mixed_boundary_square_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+/-- The Neumann stream trace and its weighted tangential energy. -/
+theorem mixed_neumann_stream_trace {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+    let g := mixedNeumannStream d.phi σ
+    let G := mixedNeumannG d.phi σ
+    (∀ c e, AbsolutelyContinuousOnInterval g c e) ∧ Integrable (deriv g) ∧
+    MixedBoundaryLocAC G ∧ (∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖G x‖ ≤ C) ∧
+    IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2) (Ioo (-1) 1) := by
+  sorry
+
+/-- The physical vorticity trace obeys the transport equation on the regular arc and
+is square integrable in flow time. It is not yet identified with the canonical profile. -/
+theorem mixed_neumann_vorticity_trace {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω)
     (σ : Bool) :
     let g := mixedNeumannStream d.phi σ
-    let F := mixedNeumannF lam d.phi σ
-    let G := mixedNeumannG d.phi σ
-    Integrable (deriv g) ∧ MixedBoundaryLocAC F ∧ MixedBoundaryLocAC G ∧
-    MixedBoundaryLocAC (deriv F) ∧
-    G =ᵐ[volume.restrict (Ioo (-1 : ℝ) 1)] mixedBoundaryTransport lam F ∧
-    (∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1,
-      ‖F x‖ ≤ C ∧ ‖G x‖ ≤ C ∧ ‖(boundaryWeight x : ℂ) * deriv F x‖ ≤ C) ∧
-    IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2) (Ioo (-1) 1) ∧
-    IntegrableOn (fun x ↦ (mixedBoundaryTransport 0 F x * conj (G x)).re) (Ioo (-1) 1) ∧
-    IntegrableOn (fun x ↦ boundaryWeight x * ‖mixedBoundarySquare lam F x‖ ^ 2) (Ioo (-1) 1) ∧
-    ((∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv G x‖ ^ 2) -
-      2 * (∫ x in Ioo (-1) 1, (mixedBoundaryTransport 0 F x * conj (G x)).re) =
-        ∫ x in Ioo (-1) 1, boundaryWeight x * ‖mixedBoundarySquare lam F x‖ ^ 2) ∧
-    ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ (liftL2 ω)
-      (fun a ↦ canonicalProfile lam g (mixedNeumannTime σ a)) := by
+    ∃ q : ℝ → ℂ, (∀ c e, AbsolutelyContinuousOnInterval q c e) ∧
+      (∀ᵐ t, HasDerivAt q (Complex.I * lam * q t - deriv g t) t) ∧
+      MemLp q 2 volume ∧
+      ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ
+        (liftL2 ω) (fun a ↦ q (mixedNeumannTime σ a)) := by
   sorry
 
 /-- Neumann contribution to the cutoff flux, before renormalizing the gradient term. -/
@@ -191,6 +192,245 @@ private theorem mixed_hasDerivAt_weightedFlow {U : ℝ → ℂ} {t : ℝ}
     simp [flowValue, flowFirst, Pi.mul_def]
   ring
 
+private theorem mixedNeumann_weighted_stream (φ : Plane → ℂ) (σ : Bool) :
+    mixedNeumannStream φ σ = fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * mixedNeumannG φ σ (Real.tanh t) := by
+  funext t
+  simp only [mixedNeumannStream, mixedNeumannG, Real.artanh_tanh, mixedNeumannArc_cos]
+
+private theorem mixedNeumann_weighted_unknown (lam : ℝ) (φ : Plane → ℂ) (σ : Bool) :
+    canonicalUnknown lam (mixedNeumannStream φ σ) =
+      fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * mixedNeumannF lam φ σ (Real.tanh t) := by
+  funext t
+  simp only [mixedNeumannF, Real.artanh_tanh, boundaryWeight_tanh, one_div, Real.sqrt_inv,
+    Real.sqrt_sq (Real.cosh_pos t).le, Complex.ofReal_inv]
+  have hcosh : (↑(Real.cosh t) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.cosh_pos t).ne'
+  rw [mul_comm, div_mul_cancel₀ _ (inv_ne_zero hcosh)]
+
+private theorem mixedNeumannF_eq {lam : ℝ} (φ : Plane → ℂ) (σ : Bool) {x : ℝ}
+    (hx : x ∈ Ioo (-1 : ℝ) 1) :
+    mixedNeumannF lam φ σ x = (Real.cosh (Real.artanh x) : ℂ) *
+      canonicalUnknown lam (mixedNeumannStream φ σ) (Real.artanh x) := by
+  have h := congrFun (mixedNeumann_weighted_unknown lam φ σ) (Real.artanh x)
+  rw [Real.tanh_artanh hx, Complex.ofReal_inv] at h
+  rw [h, ← mul_assoc, mul_inv_cancel₀ (Complex.ofReal_ne_zero.mpr (Real.cosh_pos _).ne'), one_mul]
+
+private theorem mixed_cosh_exp_abs (t : ℝ) :
+    Real.exp |t| / 2 ≤ Real.cosh t ∧ Real.cosh t ≤ Real.exp |t| := by
+  rw [← Real.cosh_abs t, Real.cosh_eq]
+  constructor
+  · linarith [Real.exp_pos (-|t|)]
+  · linarith [Real.exp_le_exp.mpr (show -|t| ≤ |t| by linarith [abs_nonneg t])]
+
+private theorem mixed_integrating_factor_limit {q : ℝ → ℂ} (hq : MemLp q 2 volume)
+    {b : ℂ} {f : ℝ → ℂ} (hn : ∀ t, ‖f t‖ = ‖q t‖)
+    (h : Tendsto f atTop (𝓝 b) ∨ Tendsto f atBot (𝓝 b)) : b = 0 := by
+  by_contra hb
+  have hpos : 0 < ‖b‖ / 2 := half_pos (norm_pos_iff.mpr hb)
+  have hm : volume {t | ‖b‖ / 2 ≤ ‖q t‖} < ⊤ := by
+    simpa only [Real.coe_toNNReal _ hpos.le, coe_nnnorm, ← NNReal.coe_le_coe] using
+      hq.meas_ge_lt_top (by norm_num) (by norm_num)
+        (ne_of_gt (show 0 < Real.toNNReal (‖b‖ / 2) from Real.toNNReal_pos.2 hpos))
+  have hnorm {l : Filter ℝ} (hl : Tendsto f l (𝓝 b)) :
+      ∀ᶠ t in l, ‖b‖ / 2 ≤ ‖q t‖ := by
+    filter_upwards [hl.norm.eventually_const_lt (show ‖b‖ / 2 < ‖b‖ by linarith)] with t ht
+    exact (hn t ▸ ht).le
+  rcases h with ht | ht
+  · obtain ⟨a, ha⟩ := eventually_atTop.1 (hnorm ht)
+    have hmono := measure_mono (μ := volume) (show Ioi a ⊆ {t | ‖b‖ / 2 ≤ ‖q t‖} from
+      fun t ht ↦ ha t ht.le)
+    rw [Real.volume_Ioi] at hmono
+    exact (not_lt_of_ge hmono) hm
+  · obtain ⟨a, ha⟩ := eventually_atBot.1 (hnorm ht)
+    have hmono := measure_mono (μ := volume) (show Iio a ⊆ {t | ‖b‖ / 2 ≤ ‖q t‖} from
+      fun t ht ↦ ha t ht.le)
+    rw [Real.volume_Iio] at hmono
+    exact (not_lt_of_ge hmono) hm
+
+/-- An `L²(dt)` trace satisfying the profile ODE decays at both ends. The
+integrating factor has limits because the forcing is in `L¹(dt)`, and any
+nonzero limit would give a positive lower bound on a half-line. -/
+theorem mixed_vorticity_profile_decay {lam : ℝ} {g q : ℝ → ℂ}
+    (hg : Integrable (deriv g)) (hqAC : ∀ c e, AbsolutelyContinuousOnInterval q c e)
+    (hqODE : ∀ᵐ t, HasDerivAt q (Complex.I * lam * q t - deriv g t) t)
+    (hq : MemLp q 2 volume) :
+    Tendsto q atTop (𝓝 0) ∧ Tendsto q atBot (𝓝 0) := by
+  let E : ℝ → ℂ := fun t ↦ Complex.exp (-(Complex.I * lam * t))
+  let Q : ℝ → ℂ := fun t ↦ E t * q t
+  have hNorm (t : ℝ) : ‖Q t‖ = ‖q t‖ := by
+    simp only [Q, E, norm_mul, norm_exp_neg_I_mul, one_mul]
+  have hE : ContDiff ℝ 1 E :=
+    (contDiff_const.mul Complex.ofRealCLM.contDiff).neg.cexp
+  have hQAC (c e : ℝ) : AbsolutelyContinuousOnInterval Q c e :=
+    hE.contDiffOn.absolutelyContinuousOnInterval.smul (hqAC c e)
+  have hQD : ∀ᵐ t, HasDerivAt Q (-profileIntegrand lam g t) t := by
+    filter_upwards [hqODE] with t ht
+    have hEd : HasDerivAt E (E t * -(Complex.I * lam)) t := by
+      simpa [E] using
+        (((hasDerivAt_id (t : ℂ)).const_mul (Complex.I * lam)).neg.cexp).comp_ofReal
+    convert hEd.mul ht using 1
+    simp only [profileIntegrand, E]
+    ring
+  have hI := integrable_profileIntegrand (lam := lam) hg
+  have hQ (t : ℝ) : Q t = Q 0 - ∫ s in (0 : ℝ)..t, profileIntegrand lam g s := by
+    have h := complex_integral_eq_sub_of_ac (hQAC 0 t) hI.neg.intervalIntegrable
+      (hQD.mono fun _ ht _ ↦ ht)
+    simp only [Pi.neg_apply, intervalIntegral.integral_neg] at h
+    linear_combination -h
+  have hTop : Tendsto Q atTop (𝓝 (Q 0 - ∫ t in Ioi 0, profileIntegrand lam g t)) :=
+    ((intervalIntegral_tendsto_integral_Ioi 0 hI.integrableOn tendsto_id).const_sub (Q 0)).congr
+      (fun t ↦ (hQ t).symm)
+  have hBot : Tendsto Q atBot (𝓝 (Q 0 + ∫ t in Iic 0, profileIntegrand lam g t)) := by
+    refine ((intervalIntegral_tendsto_integral_Iic 0 hI.integrableOn tendsto_id).const_add
+      (Q 0)).congr fun t ↦ ?_
+    simp only [id_eq, hQ t, intervalIntegral.integral_symm t 0, sub_eq_add_neg, neg_neg]
+  have hT := mixed_integrating_factor_limit hq hNorm (Or.inl hTop)
+  have hB := mixed_integrating_factor_limit hq hNorm (Or.inr hBot)
+  rw [hT] at hTop
+  rw [hB] at hBot
+  constructor
+  · rw [tendsto_zero_iff_norm_tendsto_zero]
+    simpa only [hNorm, norm_zero] using hTop.norm
+  · rw [tendsto_zero_iff_norm_tendsto_zero]
+    simpa only [hNorm, norm_zero] using hBot.norm
+
+/-- The Melnikov condition and the bounded stream quotient give a bounded
+transformed canonical unknown and its first-order transport equation. -/
+theorem mixed_neumann_canonical_transport {lam : ℝ} (hlam : lam ≠ 0) {φ : Plane → ℂ}
+    (σ : Bool) (hgac : ∀ c e, AbsolutelyContinuousOnInterval (mixedNeumannStream φ σ) c e)
+    (hg : Integrable (deriv (mixedNeumannStream φ σ)))
+    (hbG : ∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖mixedNeumannG φ σ x‖ ≤ C)
+    (hM : ∫ t, profileIntegrand lam (mixedNeumannStream φ σ) t = 0) :
+    let F := mixedNeumannF lam φ σ
+    let G := mixedNeumannG φ σ
+    MixedBoundaryLocAC F ∧
+    (∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖F x‖ ≤ C) ∧
+    G =ᵐ[volume.restrict (Ioo (-1 : ℝ) 1)] mixedBoundaryTransport lam F := by
+  let g := mixedNeumannStream φ σ
+  let G := mixedNeumannG φ σ
+  let F := mixedNeumannF lam φ σ
+  let z := canonicalUnknown lam g
+  have hzAC (c e : ℝ) : AbsolutelyContinuousOnInterval z c e := by
+    refine (((absolutelyContinuousOnInterval_canonicalProfile (lam := lam) hg c e).add
+      (hgac c e)).neg.const_smul (lam : ℂ)⁻¹).congr fun t _ ↦ ?_
+    simp only [z, g, canonicalUnknown, Pi.neg_apply, Pi.add_apply, smul_eq_mul,
+      div_eq_mul_inv]
+    exact mul_comm _ _
+  have hzCos (c e : ℝ) :
+      AbsolutelyContinuousOnInterval (fun t ↦ (Real.cosh t : ℂ) * z t) c e := by
+    have hcos : ContDiff ℝ 1 (fun t ↦ (Real.cosh t : ℂ)) :=
+      Complex.ofRealCLM.contDiff.comp Real.contDiff_cosh
+    exact hcos.contDiffOn.absolutelyContinuousOnInterval.smul (hzAC c e)
+  have hF : MixedBoundaryLocAC F := by
+    intro c e hc hce he
+    refine (absolutelyContinuousOnInterval_comp_artanh hzCos hc hce.le he).congr ?_
+    intro x hx
+    rw [uIcc_of_le hce.le] at hx
+    exact (mixedNeumannF_eq φ σ ⟨hc.trans_le hx.1, hx.2.trans_lt he⟩).symm
+  obtain ⟨C, hC⟩ := hbG
+  have hC0 : 0 ≤ C := (norm_nonneg _).trans (hC 0 ⟨by norm_num, by norm_num⟩)
+  have hgb (t : ℝ) : ‖g t‖ ≤ 2 * C * Real.exp (-|t|) := by
+    change ‖mixedNeumannStream φ σ t‖ ≤ _
+    rw [congrFun (mixedNeumann_weighted_stream φ σ) t, norm_mul,
+      Complex.norm_real, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr (Real.cosh_pos t))]
+    calc
+      _ ≤ (Real.cosh t)⁻¹ * C :=
+        mul_le_mul_of_nonneg_left (hC _ (mixed_tanh_mem t)) (by positivity)
+      _ ≤ (Real.exp |t| / 2)⁻¹ * C :=
+        mul_le_mul_of_nonneg_right ((inv_le_inv₀ (Real.cosh_pos t)
+          (half_pos (Real.exp_pos _))).2 (mixed_cosh_exp_abs t).1) hC0
+      _ = _ := by rw [Real.exp_neg]; ring
+  obtain ⟨D, hD⟩ := norm_canonicalProfile_le_exp hgac hg hM (α := 1) (C := 2 * C)
+    (cp := 0) (cm := 0) one_pos
+    (fun t ht ↦ by simpa [abs_of_nonneg ht] using hgb t)
+    (fun t ht ↦ by simpa [abs_of_nonpos ht] using hgb t)
+  have hbF : ∃ A : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1, ‖F x‖ ≤ A := by
+    refine ⟨(D + 2 * C) / |lam|, fun x hx ↦ ?_⟩
+    let t := Real.artanh x
+    change ‖mixedNeumannF lam φ σ x‖ ≤ _
+    rw [mixedNeumannF_eq φ σ hx, norm_mul, Complex.norm_real, Real.norm_eq_abs,
+      abs_of_pos (Real.cosh_pos _)]
+    change Real.cosh t * ‖z t‖ ≤ _
+    have hzb : ‖z t‖ ≤ (D + 2 * C) / |lam| * Real.exp (-|t|) := by
+      change ‖canonicalUnknown lam g t‖ ≤ _
+      rw [canonicalUnknown, norm_div, norm_neg, Complex.norm_real, Real.norm_eq_abs]
+      calc
+        _ ≤ (‖canonicalProfile lam g t‖ + ‖g t‖) / |lam| :=
+          div_le_div_of_nonneg_right (norm_add_le _ _) (abs_nonneg _)
+        _ ≤ (D * Real.exp (-|t|) + 2 * C * Real.exp (-|t|)) / |lam| :=
+          div_le_div_of_nonneg_right (add_le_add (by simpa using hD t) (hgb t)) (abs_nonneg _)
+        _ = _ := by ring
+    calc
+      _ ≤ Real.exp |t| * ‖z t‖ :=
+        mul_le_mul_of_nonneg_right (mixed_cosh_exp_abs t).2 (norm_nonneg _)
+      _ ≤ Real.exp |t| * ((D + 2 * C) / |lam| * Real.exp (-|t|)) :=
+        mul_le_mul_of_nonneg_left hzb (Real.exp_nonneg _)
+      _ = _ := by
+        rw [Real.exp_neg, mul_left_comm, mul_inv_cancel₀ (Real.exp_ne_zero _), mul_one]
+  have hgd : ∀ᵐ t, DifferentiableAt ℝ g t := by
+    have h (n : ℕ) : ∀ᵐ t, t ∈ uIcc (-(n : ℝ)) n → DifferentiableAt ℝ g t :=
+      (hgac _ _).boundedVariationOn.ae_differentiableAt_of_mem_uIcc
+    filter_upwards [ae_all_iff.2 h] with t ht
+    obtain ⟨n, hn⟩ := exists_nat_ge |t|
+    exact ht n (Icc_subset_uIcc ⟨(neg_le_neg hn).trans (neg_abs_le _), (le_abs_self _).trans hn⟩)
+  have hflow : ∀ᵐ t, G (Real.tanh t) = mixedBoundaryTransport lam F (Real.tanh t) := by
+    filter_upwards [ae_comp_tanh (mixedLocAC_ae_diff hF),
+      ae_hasDerivAt_canonicalUnknown_sub hlam hg hgd] with t ht hz
+    have h := hz.unique
+      ((mixedNeumann_weighted_unknown lam φ σ).symm ▸
+        mixed_hasDerivAt_weightedFlow (ht (mixed_tanh_mem t)))
+    rw [congrFun (mixedNeumann_weighted_unknown lam φ σ) t,
+      congrFun (mixedNeumann_weighted_stream φ σ) t] at h
+    have hc : ((↑(Real.cosh t)⁻¹ : ℂ)) ≠ 0 :=
+      Complex.ofReal_ne_zero.mpr (inv_ne_zero (Real.cosh_pos t).ne')
+    have he := mul_left_cancel₀ hc (show
+        (↑(Real.cosh t)⁻¹ : ℂ) * (Complex.I * ((lam : ℂ) * F (Real.tanh t) + G (Real.tanh t))) =
+        (↑(Real.cosh t)⁻¹ : ℂ) * ((boundaryWeight (Real.tanh t) : ℂ) * deriv F (Real.tanh t) -
+          (Real.tanh t : ℂ) * F (Real.tanh t)) from by rw [← h]; ring)
+    unfold mixedBoundaryTransport
+    linear_combination -Complex.I * he + (Complex.I_sq) *
+      ((lam : ℂ) * F (Real.tanh t) + G (Real.tanh t))
+  refine ⟨hF, hbF, (ae_restrict_iff' measurableSet_Ioo).2 ?_⟩
+  filter_upwards [ae_comp_artanh hflow] with x hx hmem
+  simpa only [Real.tanh_artanh hmem] using hx hmem
+
+/-- Boundary square and physical trace for the actual mixed Neumann profile. -/
+theorem mixed_boundary_square_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω)
+    (σ : Bool) :
+    let g := mixedNeumannStream d.phi σ
+    let F := mixedNeumannF lam d.phi σ
+    let G := mixedNeumannG d.phi σ
+    Integrable (deriv g) ∧ MixedBoundaryLocAC F ∧ MixedBoundaryLocAC G ∧
+    MixedBoundaryLocAC (deriv F) ∧
+    G =ᵐ[volume.restrict (Ioo (-1 : ℝ) 1)] mixedBoundaryTransport lam F ∧
+    (∃ C : ℝ, ∀ x ∈ Ioo (-1 : ℝ) 1,
+      ‖F x‖ ≤ C ∧ ‖G x‖ ≤ C ∧ ‖(boundaryWeight x : ℂ) * deriv F x‖ ≤ C) ∧
+    IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2) (Ioo (-1) 1) ∧
+    IntegrableOn (fun x ↦ (mixedBoundaryTransport 0 F x * conj (G x)).re) (Ioo (-1) 1) ∧
+    IntegrableOn (fun x ↦ boundaryWeight x * ‖mixedBoundarySquare lam F x‖ ^ 2) (Ioo (-1) 1) ∧
+    ((∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv G x‖ ^ 2) -
+      2 * (∫ x in Ioo (-1) 1, (mixedBoundaryTransport 0 F x * conj (G x)).re) =
+        ∫ x in Ioo (-1) 1, boundaryWeight x * ‖mixedBoundarySquare lam F x‖ ^ 2) ∧
+    ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ (liftL2 ω)
+      (fun a ↦ canonicalProfile lam g (mixedNeumannTime σ a)) := by
+  obtain ⟨hgac, hg, hG, hbG, he⟩ := mixed_neumann_stream_trace d σ
+  obtain ⟨q, hqAC, hqODE, hqL2, ε, hε, hqTrace⟩ :=
+    mixed_neumann_vorticity_trace hlam hω hs d σ
+  obtain ⟨hqTop, hqBot⟩ := mixed_vorticity_profile_decay hg hqAC hqODE hqL2
+  obtain rfl := canonicalProfile_unique hg hqAC hqODE hqTop
+  have hM := (tendsto_canonicalProfile_atBot_iff hg).mp hqBot
+  obtain ⟨hF, hbF, htr⟩ := mixed_neumann_canonical_transport hlam σ hgac hg hbG hM
+  obtain ⟨hdF, hbdF, hc, hsquare, heq⟩ :=
+    mixed_boundary_square_weighted lam hF hG htr hbF hbG he
+  obtain ⟨CF, hCF⟩ := hbF
+  obtain ⟨CG, hCG⟩ := hbG
+  obtain ⟨CD, hCD⟩ := hbdF
+  exact ⟨hg, hF, hG, hdF, htr, ⟨max CF (max CG CD), fun x hx ↦
+    ⟨(hCF x hx).trans (le_max_left _ _),
+      (hCG x hx).trans ((le_max_left _ _).trans (le_max_right _ _)),
+      (hCD x hx).trans ((le_max_right _ _).trans (le_max_right _ _))⟩⟩,
+    he, hc, hsquare, heq, ε, hε, hqTrace⟩
+
 private theorem mixed_tanh_integral {f : ℝ → ℝ} {a b : ℝ} :
     (∫ t in Ioo a b, boundaryWeight (Real.tanh t) * f (Real.tanh t)) =
       ∫ x in Ioo (Real.tanh a) (Real.tanh b), f x := by
@@ -285,16 +525,10 @@ theorem mixed_neumann_flux_renormalized {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   obtain ⟨hg, hF, hG, _, _, _, he, hc, _⟩ := mixed_boundary_square_traces hlam hω hs d σ
   have hmass (t : ℝ) : G (Real.tanh t) = d.phi (diagCoord (mixedNeumannArc σ t)) := by
     simp [G, mixedNeumannG, Real.artanh_tanh]
-  have hg_eq : g = fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * G (Real.tanh t) := by
-    funext t
-    simp only [g, mixedNeumannStream, mixedNeumannArc_cos, hmass]
-  have hz_eq : canonicalUnknown lam g = fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * F (Real.tanh t) := by
-    funext t
-    simp only [F, mixedNeumannF, Real.artanh_tanh, boundaryWeight_tanh, one_div, Real.sqrt_inv,
-      Real.sqrt_sq (Real.cosh_pos t).le, Complex.ofReal_inv]
-    change _ = (↑(Real.cosh t) : ℂ)⁻¹ * (canonicalUnknown lam g t / (↑(Real.cosh t) : ℂ)⁻¹)
-    have hcosh : (↑(Real.cosh t) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (Real.cosh_pos t).ne'
-    rw [mul_comm, div_mul_cancel₀ _ (inv_ne_zero hcosh)]
+  have hg_eq : g = fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * G (Real.tanh t) :=
+    mixedNeumann_weighted_stream d.phi σ
+  have hz_eq : canonicalUnknown lam g = fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * F (Real.tanh t) :=
+    mixedNeumann_weighted_unknown lam d.phi σ
   have hgd := ae_comp_tanh (mixedLocAC_ae_diff hG)
   have hfd := ae_comp_tanh (mixedLocAC_ae_diff hF)
   have hgd' : ∀ᵐ t, DifferentiableAt ℝ g t := by

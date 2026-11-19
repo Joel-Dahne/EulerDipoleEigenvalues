@@ -188,6 +188,97 @@ The current is $O(w)$ at both ends, since $F$ and $wF'$ are bounded.
 Integrate on compact subintervals and exhaust $(-1,1)$.
 \end{proof}
 
+\begin{lemma}[Stream trace on a mixed Neumann edge]
+\label{lem:mixed-neumann-stream-trace}
+\uses{prop:mixed-quotient-domain, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.mixed_neumann_stream_trace}
+\leanok
+Let $g=\psi|_N$, $x=\tanh t$, $w=1-x^2$, and $g=\sqrt w\,G$.
+Then $g$ and $G$ are locally absolutely continuous, $g'\in L^1(dt)$,
+$G$ is bounded, and $\int_{-1}^1w|G'|^2\,dx<\infty$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-h2-boundary, lem:arc-diagonal}
+The quotient $\phi=\psi/h$ is continuous on the closed cell and belongs to
+$H^2$ in the cell, so its boundary restriction is the Sobolev trace
+and belongs to $H^1(da)$ on the edge.
+Along either directed Neumann edge $h=\sech t$ and $|dx|=h\,|da|$, so
+\[
+ G=\phi|_N,\qquad \int_{-1}^1w|G'|^2\,dx=\int_N h|\phi_a|^2\,da.
+\]
+Also $g'=-xhG+hwG'$. The first term is integrable in time since $G$ is
+bounded and $h\in L^1(dt)$; the second is integrable since
+$\int |hwG'|\,dt=\int_{-1}^1\sqrt w\,|G'|\,dx$.
+\end{proof}
+
+\begin{lemma}[Physical vorticity trace on a mixed Neumann edge]
+\label{lem:mixed-neumann-vorticity-trace}
+\uses{prop:mixed-quotient-domain, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixed_neumann_vorticity_trace}
+\leanok
+For a mixed eigenfunction with $\lambda\ne0$, the one-sided vorticity trace
+on a Neumann edge has a representative $q$ in flow time with $q\in L^2(dt)$,
+locally absolutely continuous and satisfying $q'=i\lambda q-g'$ almost
+everywhere, where $g=\psi|_N$.
+\end{lemma}
+
+\begin{proof}
+\uses{prop:mixed-quotient-domain, lem:mixed-neumann-stream-trace, lem:weighted-corner-trace,
+  lem:trace-l2, lem:transport-pair-eigen, lem:transport-unknown, lem:separatrix-arc}
+Near a corner $h\le Cr$, so $\omega/h\in L^2$ implies $\omega/r\in L^2$.
+The $H^1$ collar and the weighted corner trace give $q\in L^2(dt)$,
+since $|dt|\asymp dr/r$ at each end. On compact arcs use the ordinary trace
+estimate. In a regular flow box the weak equation for the physical unknown
+$z=-(q+g)/\lambda$ restricts to the edge: $H^1$ regularity gives $L^2$
+convergence of the sections, allowing passage to the limit in the weak
+$t$ equation. It yields $z'=i(\lambda z+g)$ and hence the equation for
+$q$, without a trace of the normal derivative of $\omega$.
+\end{proof}
+
+\begin{lemma}[Decay of a square-integrable vorticity profile]
+\label{lem:mixed-vorticity-profile-decay}
+\uses{def:canonical-profile, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.mixed_vorticity_profile_decay}
+\leanok
+If $g'\in L^1(dt)$ and a locally absolutely continuous $q\in L^2(dt)$
+satisfies $q'=i\lambda q-g'$, then $q$ tends to zero at both ends.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ac-integration-by-parts}
+The derivative of $e^{-i\lambda t}q(t)$ is $-e^{-i\lambda t}g'(t)$.
+The integrating factor therefore gives a limit at each end. A nonzero
+limit would keep $|q|$ bounded below by a positive constant on a half-line,
+contradicting $q\in L^2(dt)$.
+\leanok
+\end{proof}
+
+\begin{lemma}[Transformed canonical transport on a mixed Neumann edge]
+\label{lem:mixed-neumann-canonical-transport}
+\uses{def:canonical-profile, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.mixed_neumann_canonical_transport}
+\leanok
+Write $g=\sech t\,G(\tanh t)$ for the stream trace associated to a
+quotient on a Neumann edge. Let $\lambda\ne0$ and suppose $G$ is bounded
+on $(-1,1)$, $g$ is locally absolutely continuous, $g'\in L^1(dt)$, and the
+Melnikov integral $\int e^{-i\lambda t}g'(t)\,dt$ vanishes. For the canonical
+unknown $z$, the function $F$ defined by $z=\sech t\,F(\tanh t)$ is locally
+absolutely continuous and bounded on $(-1,1)$, and $G=T_\lambda F$ a.e.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:canonical-profile-ode, lem:canonical-profile-ac, lem:canonical-profile-decay,
+  lem:boundary-form-xi}
+Local absolute continuity follows from that of $z=-({\Omega}+g)/\lambda$
+by smooth rescaling and reparametrization on each compact interval.
+Since $g=O(e^{-|t|})$, the two-sided canonical profile bound gives
+$\Omega=O(e^{-|t|})$ and hence $F=(\cosh t)z=O(1)$.
+Write $z'=i(\lambda z+g)$ in $x=\tanh t$ using $dx/dt=w$ to obtain
+$G=T_\lambda F$.
+\leanok
+\end{proof}
+
 \begin{lemma}[Boundary square for eigenfunction traces]
 \label{lem:mixed-boundary-square-traces}
 \uses{prop:mixed-quotient-domain, def:canonical-profile,
@@ -205,50 +296,15 @@ trace on the edge agrees almost everywhere with the canonical profile.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, lem:weighted-corner-trace,
-  lem:trace-h2-boundary, lem:trace-l2, lem:transport-pair-eigen,
-  lem:transport-unknown, lem:separatrix-arc}
-Write $h=\cos a$. The quotient-domain proposition gives
-$\phi=\psi/h\in H^2(\Cell)$ and $\omega/h\in L^2(\Cell)$, as well as
-$\omega\in H^1$ near the separatrix. The boundary trace theorem gives
-$\phi|_N\in H^1(da)$. Along either directed Neumann edge $h=\sech t$
-and $|dx|=h\,|da|$, so
-\[
- G=\phi|_N,\qquad
- \int_{-1}^1w|G'|^2\,dx=\int_N h|\phi_a|^2\,da<\infty.
-\]
-In particular $G$ is bounded and has endpoint limits.
-
-Near a corner, $h\le Cr$, hence $\omega/r\in L^2$ follows already from
-$\omega/h\in L^2$. Lemma~\ref{lem:weighted-corner-trace} gives the edge
-trace $q=\omega|_N\in L^2(dt)$, since $|dt|\asymp dr/r$ at the ends;
-on compact arcs use the ordinary trace estimate.
-Thus the physical unknown $z=-(q+\psi|_N)/\lambda$ is in $L^2(dt)$.
-
-The weak transport equation restricts to each compact regular arc.
-Indeed, in a smooth flow box it reads
-$\partial_tz=i(\lambda z+\psi)$; the local $H^1$ bounds give $L^2$
-convergence of sections to the edge traces. Passing to the limit in
-the distributional identity in $t$ gives the same equation on the
-edge, and hence a locally absolutely continuous representative.
-No normal derivative trace of $\omega$ is used.
-
-Since $hG\in L^1(dt)$, the integrating factor $e^{-i\lambda t}z(t)$
-has a limit at each end. Square integrability forces both limits
-to be zero. For $t\ge0$,
-\[
- z(t)=-i e^{i\lambda t}\int_t^\infty
-               \sech s\,G(\tanh s)e^{-i\lambda s}\,ds ,
- \qquad |z(t)|\le2\sech t\,\|G\|_\infty .
-\]
-The integral from $-\infty$ gives the same bound for $t\le0$.
-Consequently $F=z/h$ is bounded and satisfies $G=T_\lambda F$.
-Moreover $g=\psi|_N=hG$ has $g'\in L^1(dt)$: its derivative is
-$-xhG+hwG'$, and
-$\int |hwG'|\,dt=\int_{-1}^1\sqrt w\,|G'|\,dx<\infty$
-by Cauchy--Schwarz. The equation
-$q'=i\lambda q-g'$ and $q=-\lambda z-g=O(h)$ identify $q$ with the
-canonical profile. Apply Lemma~\ref{lem:mixed-boundary-square-weighted}.
+\uses{lem:mixed-neumann-stream-trace, lem:mixed-neumann-vorticity-trace,
+  lem:mixed-vorticity-profile-decay, lem:canonical-profile-unique, lem:canonical-profile-ode,
+  lem:mixed-neumann-canonical-transport, lem:mixed-boundary-square-weighted}
+The decay at $+\infty$ identifies the physical trace with the canonical
+profile by uniqueness. Decay at $-\infty$ then gives the Melnikov
+condition. This supplies the bounded transformed unknown and the
+first-order equation; apply the weighted boundary-square identity
+with the Neumann stream energy.
+\leanok
 \end{proof}
 
 \begin{remark}[Digest note: no elliptic-center input]
@@ -326,15 +382,15 @@ embedding, and $1/p\in L^{4/3}$ near the corners.
 
 \begin{lemma}[Renormalized Neumann flux]
 \label{lem:mixed-neumann-renormalization}
-\uses{prop:mixed-quotient-domain, prop:mixed-paired-flux, lem:mixed-boundary-square-traces}
+\uses{prop:mixed-quotient-domain, def:canonical-profile, lem:mixed-boundary-square-traces}
 \lean{NoEmbeddedEigenvalues.mixedNeumannFluxCutoff,
   NoEmbeddedEigenvalues.mixed_neumann_flux_renormalized}
 \leanok
 For a mixed eigenfunction and either Neumann side $N$, set
 $B_N(T)=\int_{-T}^T (|\psi_t|^2_{\mathrm{tan}}+
 \operatorname{Re}(\Omega\bar\psi))\,dt$, where
-$|\psi_t|_{\mathrm{tan}}$ denotes the physical tangential derivative in
-Proposition~\ref{prop:mixed-paired-flux}. Then
+$|\psi_t|_{\mathrm{tan}}$ is the magnitude of the physical tangential
+derivative, i.e. $|g'(t)|/(\sqrt2\sech t)$ for $g=\psi|_N$. Then
 \[
  \lim_{T\to\infty}\left(2 B_N(T)-\int_{-T}^T|\phi|^2\,dt\right)
  = \int_{-1}^1 w|G'|^2\,dx-2\operatorname{Re}\int_{-1}^1 T_0F\bar G\,dx

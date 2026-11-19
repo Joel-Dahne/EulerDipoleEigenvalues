@@ -18,6 +18,12 @@ admission-free; see [the module map](../architecture.md).
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must
   also be paired; the even–even trace limits do not justify that step.
+- **Neumann traces:** `lem:mixed-boundary-square-traces` is assembled in Lean.
+  The profile ODE and square integrability force decay at both ends; uniqueness
+  identifies the physical trace with the canonical profile, and decay at
+  `−∞` gives the Melnikov condition. The remaining inputs are
+  `lem:mixed-neumann-stream-trace`, `lem:mixed-neumann-vorticity-trace`,
+  and `lem:mixed-boundary-square-weighted`.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
   `lem:mixed-neumann-renormalization` is proved from the boundary trace
