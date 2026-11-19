@@ -44,7 +44,7 @@ theorem ae_dipoleLift_ne_zero : ∀ᵐ p : ℝ × ℝ, dipoleLift p ≠ 0 := by
     exact ((countable_range _).union (countable_range _)).mono hsub |>.measure_zero volume
 
 /-- Odd parity is an a.e. identity of actual lifted representatives. -/
-theorem liftL2_separatrixReflect_ae {ω : L2} (hs : InSector false false ω) :
+theorem liftL2_separatrixReflect_ae {ω : L2} {b : Bool} (hs : InSector false b ω) :
     (liftL2 ω ∘ separatrixReflect) =ᵐ[volume] fun p ↦ -liftL2 ω p := by
   have he : pullback S₁ measurePreserving_S₁ ω = (-1 : ℂ) • ω := hs.1
   have ht := ae_comp_of_pullback_eq he
@@ -54,8 +54,8 @@ theorem liftL2_separatrixReflect_ae {ω : L2} (hs : InSector false false ω) :
   filter_upwards [ae_torusProj ht'] with p hp
   simpa only [Function.comp_apply, liftL2, separatrixReflect, torusProj, S₁, Angle.coe_sub] using hp
 
-/-- Each fold acts by a nonzero constant on an odd--odd raw lift. -/
-theorem liftL2_cellFold_ae {ω : L2} (hs : InSector false false ω)
+/-- Each fold acts by a nonzero constant on a raw lift odd in the first reflection. -/
+theorem liftL2_cellFold_ae {ω : L2} {b : Bool} (hs : InSector false b ω)
     (s : Bool) (n : ℤ × ℤ) :
     (liftL2 ω ∘ cellFold s n) =ᵐ[volume] fun p ↦ (if s then -1 else 1 : ℂ) * liftL2 ω p := by
   cases s

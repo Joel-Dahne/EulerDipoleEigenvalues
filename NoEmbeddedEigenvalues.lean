@@ -152,6 +152,7 @@ import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.MixedSaddle
 import NoEmbeddedEigenvalues.Regularity.MixedCellH1
+import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddCellH1
 import NoEmbeddedEigenvalues.Regularity.OddOddEdgeTraces

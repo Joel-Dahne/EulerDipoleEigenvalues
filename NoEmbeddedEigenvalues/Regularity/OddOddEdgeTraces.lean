@@ -82,6 +82,28 @@ theorem dd_cell_edge_h1 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       cellEdgeNormal true by ring] at hR hRT
     exact hS.glue_matching_trace hR hST hRT
 
+/-- Transport the H¹ regularity of a translated diagonal chart to its
+Cartesian image. -/
+theorem MemSobolevOn.liftShift_diagonalTraceChart_image {Q : Set (ℝ × ℝ)}
+    (hO : IsOpen Q) {ω : L2} (j : Fin 2) (n : ℤ × ℤ)
+    (hd : MemSobolevOn 1 Q ((liftL2 ω ∘ liftShift n) ∘ diagonalTraceChart j)) :
+    MemSobolevOn 1 ((liftShift n ∘ diagonalTraceChart j) '' Q) (liftL2 ω) := by
+  let G := liftL2 ω ∘ liftShift n
+  have hP := hd.diagonalTraceChart_image hO
+  have ho := isOpenMap_diagonalTraceChart j Q hO
+  let E := cellFold false n
+  have hE := hP.comp_planeAffine_symm (cellFoldLinear false) (cellFoldTranslation false n)
+    (measurePreserving_cellFold false n) ho
+  change MemSobolevOn 1 (E.symm ⁻¹' (diagonalTraceChart j '' Q)) (G ∘ E.symm) at hE
+  rw [E.preimage_symm] at hE
+  have he : (G ∘ E.symm) =ᵐ[volume] liftL2 ω := Eventually.of_forall fun p ↦ by
+    change liftL2 ω (liftShift n (E.symm p)) = liftL2 ω p
+    apply congrArg (liftL2 ω)
+    simpa only [E, cellFold_apply, Bool.false_eq_true, ite_false] using E.apply_symm_apply p
+  have hh := hE.congr_ae he
+  simpa only [image_image, Function.comp_def, E, cellFold_apply, Bool.false_eq_true,
+    ite_false] using hh
+
 /-- The same glued patches have genuine Cartesian H¹ on their physical images.
 The chart inverse transports the whole finite norms and both weak identities. -/
 theorem dd_cell_edge_spatial_h1 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
@@ -104,22 +126,7 @@ theorem dd_cell_edge_spatial_h1 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   let A := if side then a else 2 * cellEdgeNormal side - b
   let B := if side then 2 * cellEdgeNormal side - a else b
   let Q := Ioo l r ×ˢ Ioo A B
-  let G := liftL2 ω ∘ liftShift n
-  have hd : MemSobolevOn 1 Q (G ∘ diagonalTraceChart j) := hQ
-  have hP := hd.diagonalTraceChart_image (isOpen_Ioo.prod isOpen_Ioo)
-  have ho := isOpenMap_diagonalTraceChart j Q (isOpen_Ioo.prod isOpen_Ioo)
-  let E := cellFold false n
-  have hE := hP.comp_planeAffine_symm (cellFoldLinear false) (cellFoldTranslation false n)
-    (measurePreserving_cellFold false n) ho
-  change MemSobolevOn 1 (E.symm ⁻¹' (diagonalTraceChart j '' Q)) (G ∘ E.symm) at hE
-  rw [E.preimage_symm] at hE
-  have he : (G ∘ E.symm) =ᵐ[volume] liftL2 ω := Eventually.of_forall fun p ↦ by
-    change liftL2 ω (liftShift n (E.symm p)) = liftL2 ω p
-    apply congrArg (liftL2 ω)
-    simpa only [E, cellFold_apply, Bool.false_eq_true, ite_false] using E.apply_symm_apply p
-  refine ⟨?_, hT⟩
-  have hh := hE.congr_ae he
-  simpa only [image_image, Function.comp_def, E, cellFold_apply, Bool.false_eq_true,
-    ite_false] using hh
+  exact ⟨MemSobolevOn.liftShift_diagonalTraceChart_image (Q := Q)
+    (isOpen_Ioo.prod isOpen_Ioo) j n hQ, hT⟩
 
 end NoEmbeddedEigenvalues

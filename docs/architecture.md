@@ -462,6 +462,10 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   at the four lifted saddles and applies weighted transport to the remainder.
   The inward H¹ collar and odd-side zero traces do not require seam gluing
   or the mixed quotient data.
+- `Regularity/MixedSeparatrix.lean`: glues the odd zero and even reflected
+  traces, then uses the first-odd fold cover and saddle removal shared with
+  `Regularity/OddOddRegularSeams.lean`. Interior elliptic regularity gives
+  the H³ stream on the same collar.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization and quadratic compatibility.
   The raw chart parity theorem lives in `SaddleChartPullback.lean`, after its

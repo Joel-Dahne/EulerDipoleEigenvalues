@@ -4,7 +4,7 @@ import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.MixedVorticityTrace
-import NoEmbeddedEigenvalues.Regularity.MixedCellH1
+import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix
 import NoEmbeddedEigenvalues.EdgeWindowTransport
 import NoEmbeddedEigenvalues.Analysis.BoundaryTraceCompare
 import NoEmbeddedEigenvalues.Melnikov
@@ -26,6 +26,19 @@ local notation "Plane" => ℝ × ℝ
 /-- An absolute-level collar in the Cartesian lift. -/
 def mixedSeparatrixCollar (ε : ℝ) : Set Plane := {p | |dipoleLift p| < ε}
 
+private theorem mixed_cell_eq_strip (ε : ℝ) :
+    cellSquare ∩ mixedSeparatrixCollar ε = cellSeparatrixStrip ε := by
+  ext p
+  have hp (h : p ∈ cellSquare) : 0 < dipoleLift p := by
+    rw [dipoleLift_eq_diag]
+    exact mul_pos (mul_pos (by norm_num) (Real.cos_pos_of_mem_Ioo (abs_lt.mp h.1)))
+      (Real.cos_pos_of_mem_Ioo (abs_lt.mp h.2))
+  constructor
+  · rintro ⟨h, h'⟩
+    exact ⟨h, hp h, (abs_of_pos (hp h)) ▸ h'⟩
+  · rintro ⟨h, h₁, h₂⟩
+    exact ⟨h, by change |dipoleLift p| < ε; rwa [abs_of_pos h₁]⟩
+
 /-- Regularity across the separatrix and the one-factor cell quotient. -/
 theorem mixed_quotient_domain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false true ω) :
@@ -35,7 +48,14 @@ theorem mixed_quotient_domain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
         MemSobolevLocOn 3 (mixedSeparatrixCollar ε) (liftL2 (invLap ω)) ∧
         ∀ σ : Bool, HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 0 σ
           (liftL2 ω) (fun _ ↦ 0) := by
-  sorry
+  obtain ⟨ε, hε, _, hv, hψ, hodd⟩ := mixed_separatrix_h1 hlam hω hs
+  have hψ' : MemSobolevLocOn 3 (mixedSeparatrixCollar ε) (liftL2 (invLap ω)) :=
+    hψ.congr_ae_on ((streamLift_ae_eq_contStream ω).symm.mono fun _ hp _ ↦ hp)
+  refine ⟨?_, ε, hε, hv, hψ', ?_⟩
+  · -- Construct the quotient data from the full collar.
+    sorry
+  · rw [mixed_cell_eq_strip]
+    exact hodd
 
 /-- The two Neumann arcs, with their inherited orientations. -/
 def mixedNeumannArc (positive : Bool) (t : ℝ) : Plane :=
@@ -884,19 +904,6 @@ theorem mixed_neumann_stream_trace {ω : L2} (d : MixedQuotientData ω) (σ : Bo
       _ ≤ _ := mul_le_mul_of_nonneg_right
         (by nlinarith [mul_le_mul_of_nonneg_left (hle t) (hpos t).le]) (sq_nonneg _)
   exact ⟨hgac, hgI, hGac, hGbound, henergy⟩
-
-private theorem mixed_cell_eq_strip (ε : ℝ) :
-    cellSquare ∩ mixedSeparatrixCollar ε = cellSeparatrixStrip ε := by
-  ext p
-  have hp (h : p ∈ cellSquare) : 0 < dipoleLift p := by
-    rw [dipoleLift_eq_diag]
-    exact mul_pos (mul_pos (by norm_num) (Real.cos_pos_of_mem_Ioo (abs_lt.mp h.1)))
-      (Real.cos_pos_of_mem_Ioo (abs_lt.mp h.2))
-  constructor
-  · rintro ⟨h, h'⟩
-    exact ⟨h, hp h, (abs_of_pos (hp h)) ▸ h'⟩
-  · rintro ⟨h, h₁, h₂⟩
-    exact ⟨h, by change |dipoleLift p| < ε; rwa [abs_of_pos h₁]⟩
 
 private theorem mixed_stream_eq_on_closed_cell {ω : L2} (d : MixedQuotientData ω) :
     EqOn (contStream ω ∘ diagInv) (fun q ↦ (Real.cos q.1 : ℂ) * d.phi q)

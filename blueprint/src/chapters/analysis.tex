@@ -4456,6 +4456,23 @@ All products split in the argument are integrable.
 The other ordering follows by swapping parameters.
 \end{proof}
 
+\begin{lemma}[Cartesian H1 on a translated diagonal image]
+\label{lem:translated-diagonal-h1}
+\uses{def:sobolev-local, def:diagonal-trace-chart, def:periodic-cell-folds}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.liftShift_diagonalTraceChart_image}
+\leanok
+Let $C$ be $\Xi_j$ followed by an integer torus-period translation.
+If $\widetilde\omega\circ C$ belongs to $H^1(Q)$ on an open parameter
+set $Q$, then $\widetilde\omega$ belongs to $H^1(C(Q))$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-h1-inverse, lem:affine-jet-pullback}
+\leanok
+First apply the inverse diagonal change of variables. Then undo the
+translation, an affine map with determinant one.
+\end{proof}
+
 \begin{definition}[Corner rays and matching crossing traces]
 \label{def:corner-crossing-traces}
 \uses{def:canonical-transverse-trace, def:local-plane-geometry}

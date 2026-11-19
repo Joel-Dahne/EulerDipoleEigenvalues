@@ -2907,6 +2907,32 @@ measurable gradient selection. Weak uniqueness and the finite fold cover
 retain that same gradient in all full-collar norm bounds.
 \end{proof}
 
+\begin{lemma}[Gluing a first-odd cell collar]
+\label{lem:cell-separatrix-gluing}
+\uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.cell_separatrix_regular_h1,
+  NoEmbeddedEigenvalues.cell_separatrix_h1_of_regular_edges}
+\leanok
+Suppose $\omega$ is odd under $S_1$ and belongs to $H^1$ on the
+inward cell collar of width $\varepsilon>0$. If the reflected,
+periodically translated regular-edge windows have Cartesian $H^1$
+across their seams, then $\widetilde\omega\in H^1_{\rm loc}
+(\{|\Psi|<\varepsilon\})$. Before removing the saddles, the weak
+gradient off them has local $L^2$ norms on the full collar.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:periodic-regular-edge-cover, lem:odd-odd-h1-cell-fold,
+  lem:odd-odd-collar-gradient, lem:cell-fold-l2-cover,
+  lem:weak-derivative-unique, lem:saddle-set-h1-removal}
+\leanok
+Periodic edge windows cover the regular seams; folded cell strips cover
+the nonzero levels. Weak uniqueness on the latter identifies the glued
+gradient with the finite-norm gradient from the fold cover. Since the
+separatrix is null this identifies their classes on the regular collar.
+Remove the isolated saddles using the local norms of the value and gradient.
+\end{proof}
+
 \begin{lemma}[Ordinary H1 across all regular lifted seams]
 \label{lem:dd-regular-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
@@ -2925,22 +2951,10 @@ $L^2_{\rm loc}(C_\varepsilon)$.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:dd-cell-edge-h1, lem:periodic-regular-edge-cover,
- lem:odd-odd-h1-cell-fold, lem:odd-odd-collar-gradient,
- lem:saddle-distance-comparison, lem:local-h1-specified-gradient,
- lem:weak-derivative-unique, lem:sobolev-congr-ae,
- lem:cell-fold-l2-cover, lem:sobolev-local-gluing}
+\uses{lem:dd-cell-edge-h1, lem:cell-separatrix-gluing}
 \leanok
-Use the cell strip from the Cartesian edge producer for all conclusions.
-The admissible periodic edge patches cover every regular zero-level point;
-folded strips cover every nonzero level in the collar.
-Actual Cartesian H1 glues locally away from the closed saddle lattice.
-Choose its weak gradient $E$ and retain the original full-collar norm
-candidate $D$. On the nonzero collar weak uniqueness gives $E=D$ a.e.
-The separatrix is null, so this equality holds a.e.\ on the whole regular
-collar. Transfer the already established weak identities of $E$ to $D$.
-Nullity is used for equality of actual gradients, not to infer weak gluing.
-The finite fold norm cover also supplies the full-collar value norm.
+The odd--odd Cartesian edge patches supply the hypothesis of the common
+regular-collar construction. Use the same inward strip for all conclusions.
 \end{proof}
 
 \begin{lemma}[Ordinary vorticity H1 on the whole lifted collar]
@@ -4004,6 +4018,30 @@ first vorticity weight force zero traces there by the critical corner
 trace estimate. This does not require gluing across the separatrix.
 \end{proof}
 
+\begin{lemma}[Mixed Sobolev regularity on the full separatrix collar]
+\label{lem:mixed-separatrix-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.mixed_separatrix_h1}
+\leanok
+In the sector $(-,+)$ with $\lambda\ne0$ there exists $0<\varepsilon<1$
+such that $\widetilde\omega\in H^1_{\rm loc}(\{|\Psi|<\varepsilon\})$
+and the continuous stream is $H^3_{\rm loc}$ on the same collar.
+The canonical inward vorticity traces are zero on the odd cell sides.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-cell-separatrix-h1, lem:odd-odd-reflected-edge-traces,
+  lem:rectangle-h1-gluing, lem:translated-diagonal-h1,
+  lem:cell-separatrix-gluing, lem:stream-h3-of-vorticity-h1}
+\leanok
+Use the inward $H^1$ strip to construct each regular-edge window.
+On an odd side reflection changes the trace sign but the trace is zero.
+On an even side a canonical trace exists and reflection preserves it.
+Glue the matching traces, transport the resulting windows to the Cartesian
+lift, and use the common collar construction. Local elliptic regularity
+then gains one more derivative on the stream.
+\end{proof}
+
 \begin{definition}[Mixed cell quotient data]
 \label{def:mixed-quotient-data}
 \uses{def:eigen-problem, lem:cell-square, def:sobolev-local}
@@ -4040,11 +4078,9 @@ $(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
 \end{proposition}
 
 \begin{proof}
-\uses{lem:mixed-cell-separatrix-h1, lem:elliptic-local, lem:hardy-1d}
-Lemma~\ref{lem:mixed-cell-separatrix-h1} gives the inward Sobolev collar
-with zero traces on the odd sides. The even traces agree by reflection, so
-gluing and removability of the saddle points give $H^1$ across the separatrix.
-Local elliptic regularity gives $\psi\in H^3$ near the separatrix.
+\uses{lem:mixed-separatrix-h1, lem:hardy-1d}
+Lemma~\ref{lem:mixed-separatrix-h1} supplies the full Sobolev collar and
+zero inward vorticity traces on the odd sides.
 Normal Hardy division of the zero-trace $H^1$ vorticity gives $\nu\in L^2$.
 For the odd $H^3$ stream function, differentiate
 $\psi(u,v)/u=\int_0^1\psi_u(tu,v)\,dt$ through order two;

@@ -5446,13 +5446,13 @@ $\|S(p)\|\le\pi+\|p\|$. Thus each period displacement has size at most
 $2\pi+R$, giving the stated finite bound on its integer index.
 \end{proof}
 
-\begin{lemma}[Raw odd--odd parity under cell folds]
+\begin{lemma}[Raw first-odd parity under cell folds]
 \label{lem:odd-odd-cell-fold-parity}
 \uses{def:sectors, def:periodic-cell-folds, def:torus-of-lift}
 \lean{NoEmbeddedEigenvalues.liftL2_separatrixReflect_ae,
  NoEmbeddedEigenvalues.liftL2_cellFold_ae}
 \leanok
-For odd--odd $\omega$, its raw lift $F=\widetilde\omega$ satisfies
+If $\omega$ is odd under $S_1$, its raw lift $F=\widetilde\omega$ satisfies
 $F\circ S=-F$ a.e.\ and $F\circ T_{s,n}=(-1)^sF$ a.e.
 No assertion about values on a null line is made.
 \end{lemma}
@@ -5576,18 +5576,20 @@ Finally $\cos(2t_*-y)=-\cos y$ reverses the dipole.
 No raw value on a zero line is used.
 \end{proof}
 
-\begin{lemma}[Odd--odd traces on reflected cell edges]
+\begin{lemma}[Sector traces on reflected cell edges]
 \label{lem:odd-odd-reflected-edge-traces}
 \uses{def:sectors, def:sobolev-local, def:cell-edge-trace, def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
+\lean{NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_character_ae,
+ NoEmbeddedEigenvalues.HasTransverseH1Trace.reflected_sector,
+ NoEmbeddedEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
  NoEmbeddedEigenvalues.HasTransverseH1Trace.liftShift}
 \leanok
-Let $F=\widetilde\omega$ be odd--odd, $V$ open, and $F\in H^1(V)$.
-Suppose $F$ has zero canonical trace on a chosen regular cell edge
-$t_*\in\{\pi/2,-\pi/2\}$.
-For every admissible source rectangle $(l,r)\times(a,b)$ at that edge,
-the opposite rectangle $(l,r)\times(2t_*-b,2t_*-a)$ has H1 pullback
-and the same canonical zero trace at $t_*$.
+Let $F=\widetilde\omega$ come from a reflection sector. If its pullback
+on a regular source rectangle $(l,r)\times(a,b)$ is $H^1$ with
+canonical trace $T$ at the edge $t_*\in\{-\pi/2,\pi/2\}$, the opposite
+rectangle $(l,r)\times(2t_*-b,2t_*-a)$ has $H^1$ pullback and trace
+$\chi T$, where $\chi$ is the character of that side's reflection.
+In particular an odd--odd canonical zero trace remains zero.
 The original and reflected trace witnesses also persist under every
 integer torus-period translation of the physical chart.
 \end{lemma}
@@ -5599,10 +5601,10 @@ integer torus-period translation of the physical chart.
 Normal reflection in either signed edge, composed with $\Xi_j$ and torus
 projection, is precisely $S_1$ for $j=0$ and $S_2$ for $j=1$.
 Indeed $2t_*=\pm\pi$ has the same angular class as $\pi$.
-Both symmetries act by minus one on $\omega$.
+The torus symmetry acts by its sector character $\chi$.
 Nonsingularity of $\Xi_j$ transfers that raw a.e.\ parity to the pullbacks.
 First transport the ordinary H1 data, then identify the opposite-side
-canonical trace with minus the original one, hence zero.
+canonical trace with $\chi$ times the original one.
 Periodicity gives pointwise equality of the translated raw pullbacks,
 so the trace witnesses transport without any null-line evaluation.
 \end{proof}

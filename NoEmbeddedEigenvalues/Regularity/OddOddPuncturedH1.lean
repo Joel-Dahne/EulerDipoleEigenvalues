@@ -20,8 +20,9 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Filter
 
-/-- Reflected periodic pullback retains the same raw odd–odd function. -/
-theorem MemSobolevOn.oddOdd_cellFold {ω : L2} (hs : InSector false false ω)
+/-- Reflected periodic pullback retains the same raw lift for first-odd sectors. -/
+theorem MemSobolevOn.oddOdd_cellFold {ω : L2} {b : Bool}
+    (hs : InSector false b ω)
     {V : Set (ℝ × ℝ)} (hV : IsOpen V) (hF : MemSobolevOn 1 V (liftL2 ω))
     (s : Bool) (n : ℤ × ℤ) :
     MemSobolevOn 1 (cellFold s n ⁻¹' V) (liftL2 ω) := by
@@ -36,7 +37,8 @@ theorem MemSobolevOn.oddOdd_cellFold {ω : L2} (hs : InSector false false ω)
 
 /-- An ordinary positive-cell strip covers the small-level lift only away from
 its null seams. No assertion of across-seam weak derivatives is made. -/
-theorem MemSobolevOn.oddOdd_punctured_collar {ω : L2} (hs : InSector false false ω)
+theorem MemSobolevOn.oddOdd_punctured_collar {ω : L2} {b : Bool}
+    (hs : InSector false b ω)
     {ε : ℝ} (hF : MemSobolevOn 1 (cellSeparatrixStrip ε) (liftL2 ω)) :
     MemSobolevLocOn 1 {p | dipoleLift p ≠ 0 ∧ |dipoleLift p| < ε} (liftL2 ω) := by
   apply memSobolevLocOn_of_locally
@@ -48,7 +50,8 @@ theorem MemSobolevOn.oddOdd_punctured_collar {ω : L2} (hs : InSector false fals
 
 /-- A single measurable off-separatrix gradient has finite local L² norms on
 the full collar. These norm bounds do not assert across-seam weak identities. -/
-theorem MemSobolevOn.oddOdd_collar_gradient {ω : L2} (hs : InSector false false ω)
+theorem MemSobolevOn.oddOdd_collar_gradient {ω : L2} {b : Bool}
+    (hs : InSector false b ω)
     {ε : ℝ} (hF : MemSobolevOn 1 (cellSeparatrixStrip ε) (liftL2 ω)) :
     ∃ D : Fin 2 → ℝ × ℝ → ℂ, ∀ j,
       Measurable (D j) ∧

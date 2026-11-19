@@ -48,26 +48,68 @@ theorem torusProj_diagonalTraceChart_reflection (j : Fin 2) (side : Bool) (q : �
       simp only [sub_eq_add_neg, neg_add_rev, neg_neg, Angle.neg_coe_pi]
       abel
 
-/-- Odd parity of the actual pullback in each of the four cell-edge charts. -/
+/-- The normal reflection character of the actual pullback in each of the four cell-edge charts. -/
+theorem liftL2_diagonalTraceChart_character_ae {ω : L2} {a b : Bool}
+    (hs : InSector a b ω)
+    (j : Fin 2) (side : Bool) :
+    ∀ᵐ q : ℝ × ℝ, liftL2 ω (diagonalTraceChart j
+      (normalReflection (2 * cellEdgeNormal side) q)) =
+        paritySign (if j = 0 then a else b) * liftL2 ω (diagonalTraceChart j q) := by
+  have htor (e : Bool) (S : Torus → Torus) (hm : MeasurePreserving S volume volume)
+      (he : pullback S hm ω = (paritySign e) • ω) : ∀ᵐ t : Torus, ω (S t) = paritySign e * ω t := by
+    filter_upwards [ae_comp_of_pullback_eq he, Lp.coeFn_smul (paritySign e) ω] with t ht hsm
+    simp only [ht, hsm, Pi.smul_apply, smul_eq_mul]
+  have hp : ∀ᵐ p : ℝ × ℝ, ω ((if j = 0 then S₁ else S₂) (torusProj p)) =
+      paritySign (if j = 0 then a else b) * ω (torusProj p) := by
+    fin_cases j
+    · simpa using ae_torusProj (htor a S₁ measurePreserving_S₁ hs.1)
+    · simpa using ae_torusProj (htor b S₂ measurePreserving_S₂ hs.2)
+  filter_upwards [(quasiMeasurePreserving_diagonalTraceChart j).ae hp] with q hq
+  change ω (torusProj (diagonalTraceChart j
+    (normalReflection (2 * cellEdgeNormal side) q))) =
+      paritySign (if j = 0 then a else b) * ω (torusProj (diagonalTraceChart j q))
+  rw [torusProj_diagonalTraceChart_reflection]
+  exact hq
+
+/-- Odd–odd specialization of the normal reflection character. -/
 theorem liftL2_diagonalTraceChart_reflection_ae {ω : L2} (hs : InSector false false ω)
     (j : Fin 2) (side : Bool) :
     ∀ᵐ q : ℝ × ℝ, liftL2 ω (diagonalTraceChart j
       (normalReflection (2 * cellEdgeNormal side) q)) =
         -liftL2 ω (diagonalTraceChart j q) := by
-  have htor (S : Torus → Torus) (hm : MeasurePreserving S volume volume)
-      (he : pullback S hm ω = (-1 : ℂ) • ω) : ∀ᵐ t : Torus, ω (S t) = -ω t := by
-    filter_upwards [ae_comp_of_pullback_eq he, Lp.coeFn_smul (-1 : ℂ) ω] with t ht hsm
-    simp only [ht, hsm, Pi.smul_apply, smul_eq_mul, neg_one_mul]
-  have hp : ∀ᵐ p : ℝ × ℝ, ω ((if j = 0 then S₁ else S₂) (torusProj p)) =
-      -ω (torusProj p) := by
-    fin_cases j
-    · exact ae_torusProj (htor S₁ measurePreserving_S₁ hs.1)
-    · exact ae_torusProj (htor S₂ measurePreserving_S₂ hs.2)
-  filter_upwards [(quasiMeasurePreserving_diagonalTraceChart j).ae hp] with q hq
-  change ω (torusProj (diagonalTraceChart j
-    (normalReflection (2 * cellEdgeNormal side) q))) = -ω (torusProj (diagonalTraceChart j q))
-  rw [torusProj_diagonalTraceChart_reflection]
-  exact hq
+  simpa only [ite_self, paritySign, Bool.false_eq_true, ite_false, neg_one_mul] using
+    liftL2_diagonalTraceChart_character_ae hs j side
+
+/-- Reflect a canonical cell trace with the character of that side. -/
+theorem HasTransverseH1Trace.reflected_sector {ω : L2} {e₁ e₂ : Bool}
+    (hs : InSector e₁ e₂ ω) {j : Fin 2} {side : Bool} {l r a b : ℝ} {T : ℝ → ℂ}
+    (ht : HasTransverseH1Trace l r a b (cellEdgeNormal side) (diagonalTraceChart j)
+      (liftL2 ω) T)
+    (hS : MemSobolevOn 1 (Ioo l r ×ˢ Ioo a b) (liftL2 ω ∘ diagonalTraceChart j)) :
+    MemSobolevOn 1
+      (Ioo l r ×ˢ Ioo (2 * cellEdgeNormal side - b) (2 * cellEdgeNormal side - a))
+      (liftL2 ω ∘ diagonalTraceChart j) ∧
+    HasTransverseH1Trace l r (2 * cellEdgeNormal side - b) (2 * cellEdgeNormal side - a)
+      (cellEdgeNormal side) (diagonalTraceChart j) (liftL2 ω)
+      (fun s ↦ paritySign (if j = 0 then e₁ else e₂) * T s) := by
+  let χ := paritySign (if j = 0 then e₁ else e₂)
+  have hχ : χ * χ = 1 := by
+    by_cases hj : j = 0 <;> simp only [χ, hj, ite_true, ite_false]
+    · cases e₁ <;> norm_num [paritySign]
+    · cases e₂ <;> norm_num [paritySign]
+  have hR := ht.reflect_normal (c := 2 * cellEdgeNormal side) hS χ
+  have he : (fun q ↦ χ * liftL2 ω (diagonalTraceChart j
+      (normalReflection (2 * cellEdgeNormal side) q))) =ᵐ[volume]
+      (liftL2 ω ∘ diagonalTraceChart j) := by
+    filter_upwards [liftL2_diagonalTraceChart_character_ae hs j side] with q hq
+    change liftL2 ω (diagonalTraceChart j (normalReflection (2 * cellEdgeNormal side) q)) =
+      χ * liftL2 ω (diagonalTraceChart j q) at hq
+    simpa only [Function.comp_apply, hq, ← mul_assoc, hχ, one_mul]
+  refine ⟨hR.1.congr_ae he, ?_⟩
+  have htrace := hR.2.congr_ae_pullback (C' := diagonalTraceChart j) (F' := liftL2 ω)
+    (ae_restrict_of_ae he)
+  simpa only [show 2 * cellEdgeNormal side - cellEdgeNormal side =
+    cellEdgeNormal side by ring] using htrace
 
 /-- A supplied ordinary cell H¹ strip and its canonical zero edge trace produce
 ordinary H¹ and the same zero trace on the adjacent reflected rectangle. -/
@@ -85,18 +127,8 @@ theorem HasCellEdgeTrace.oddOdd_reflected {ω : L2} (hs : InSector false false �
     HasTransverseH1Trace l r (2 * cellEdgeNormal side - b) (2 * cellEdgeNormal side - a)
       (cellEdgeNormal side) (diagonalTraceChart j) (liftL2 ω) (fun _ ↦ 0) := by
   have hS := (hF.comp_diagonalTraceChart hV j).mono (image_subset_iff.mp hsub)
-  have ht := hT l r a b hlr hab hI hedge hsub
-  have hR := ht.reflect_normal (c := 2 * cellEdgeNormal side) hS (-1)
-  have he : (fun q ↦ (-1 : ℂ) * liftL2 ω (diagonalTraceChart j
-      (normalReflection (2 * cellEdgeNormal side) q))) =ᵐ[volume]
-      (liftL2 ω ∘ diagonalTraceChart j) := by
-    filter_upwards [liftL2_diagonalTraceChart_reflection_ae hs j side] with q hq
-    simp only [Function.comp_apply, hq, neg_one_mul, neg_neg]
-  refine ⟨hR.1.congr_ae he, ?_⟩
-  have htrace := hR.2.congr_ae_pullback (C' := diagonalTraceChart j) (F' := liftL2 ω)
-    (ae_restrict_of_ae he)
-  simpa only [show 2 * cellEdgeNormal side - cellEdgeNormal side = cellEdgeNormal side by ring,
-    mul_zero] using htrace
+  simpa only [mul_zero] using
+    (hT l r a b hlr hab hI hedge hsub).reflected_sector hs hS
 
 /-- Periodic translation preserves the actual pullback and hence the canonical
 trace on every one of these local windows. -/

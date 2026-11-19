@@ -12,8 +12,10 @@ admission-free; see [the module map](../architecture.md).
 - **Regularity:** `cor:mixed-saddle-jet` supplies the jet removed by
   `lem:mixed-weighted-forcing-remainder`. The resulting
   `lem:mixed-cell-separatrix-h1` gives an inward collar and zero odd-side
-  traces. To finish `prop:mixed-quotient-domain`, glue across the
-  separatrix, gain stream regularity, and prove the quotient estimates.
+  traces. `lem:mixed-separatrix-h1` glues across regular sides, removes the
+  saddles and gains local H³ for the stream on the full collar.
+  `prop:mixed-quotient-domain` now uses this collar; its remaining task is
+  to construct the quotient data.
 - **Paired flux:** `lem:melnikov` and `lem:pairing-limit` now cover ±i.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must
