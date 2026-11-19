@@ -1,6 +1,8 @@
 import NoEmbeddedEigenvalues.PeriodicTransportGain
 import NoEmbeddedEigenvalues.Derivatives
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
+import NoEmbeddedEigenvalues.EvenGradientHardy
+import NoEmbeddedEigenvalues.VirialFourier
 
 /-!
 # Minimal odd–odd quotient domain
@@ -67,6 +69,192 @@ theorem dd_stream_quotient_h2 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   obtain ⟨φ, hφ, hψ⟩ := exists_h2_stream_quotient hlam hω hs
   exact ⟨φ, hφ, hs.invLap.even_dipole_quotient hψ, hψ⟩
 
+/-- Apply the Fourier product rule twice before passing to raw representatives. -/
+private theorem dipole_laplacian_expansion {φ ψ ζ : L2} (hφ : MemSobolev 2 φ)
+    (hψ : ∀ᵐ t, ψ t = (Ψ t : ℂ) * φ t) (hΔ : HasFourierLaplacian ψ ζ) :
+    ∃ τ dx dy : L2, HasFourierPartial 0 φ dx ∧ HasFourierPartial 1 φ dy ∧
+      ∀ᵐ p, liftL2 ζ p =
+        (dipoleLift p : ℂ) * (liftL2 τ p - liftL2 φ p) -
+          2 * ((Real.sin p.1 : ℂ) * liftL2 dx p + (Real.sin p.2 : ℂ) * liftL2 dy p) := by
+  have h1 := hφ.mono (by norm_num : (1 : ℝ) ≤ 2)
+  obtain ⟨dx, hdx⟩ := h1.exists_hasFourierPartial 0
+  obtain ⟨dy, hdy⟩ := h1.exists_hasFourierPartial 1
+  have hφ' : MemSobolev ((1 : ℝ) + 1) φ := by norm_num; exact hφ
+  obtain ⟨dxx, hdxx⟩ := (hφ'.of_hasFourierPartial hdx).exists_hasFourierPartial 0
+  obtain ⟨dyy, hdyy⟩ := (hφ'.of_hasFourierPartial hdy).exists_hasFourierPartial 1
+  let s : ℝ × ℝ → ℂ := fun p ↦ (dipoleLift p : ℂ)
+  have hsR : ContDiff ℝ 2 dipoleLift := by unfold dipoleLift; fun_prop
+  have hs2 : ContDiff ℝ 2 s := Complex.ofRealCLM.contDiff.comp hsR
+  have hs1 : ContDiff ℝ 1 s := hs2.of_le (by norm_num)
+  have hp : IsPeriodicLift s := by
+    intro p
+    dsimp [s, dipoleLift]
+    simp [Real.cos_add, Real.cos_two_pi, Real.sin_two_pi]
+  have hx1 : ContDiff ℝ 1 (partialX s) := contDiff_partialX hs2
+  have hy1 : ContDiff ℝ 1 (partialY s) := contDiff_partialY hs2
+  let c := torusFun hs1.continuous hp
+  let cx := torusFun hx1.continuous hp.partialX
+  let cy := torusFun hy1.continuous hp.partialY
+  let cxx := torusFun (continuous_partialX_of_contDiff hx1) hp.partialX.partialX
+  let cyy := torusFun (continuous_partialY_of_contDiff hy1) hp.partialY.partialY
+  have hc (t : Torus) : c t = (Ψ t : ℂ) := by
+    obtain ⟨p, rfl⟩ := torusProj_surjective t
+    exact (torusOfLift_torusProj hp p).trans (congrArg Complex.ofReal (Ψ_torusProj p).symm)
+  have hcp : ψ = mulL2 c φ := by
+    apply Lp.ext
+    filter_upwards [hψ, mulL2_ae c φ] with t h ht
+    rw [h, ht, hc]
+  have hcx : HasClassicalPartial 0 c cx := hasClassicalPartial_torusFun_x hs1 hp
+  have hcy : HasClassicalPartial 1 c cy := hasClassicalPartial_torusFun_y hs1 hp
+  have hcxx : HasClassicalPartial 0 cx cxx := hasClassicalPartial_torusFun_x hx1 hp.partialX
+  have hcyy : HasClassicalPartial 1 cy cyy := hasClassicalPartial_torusFun_y hy1 hp.partialY
+  have hprod {j : Fin 2} {d dd : L2} {dc ddc : C(Torus, ℂ)}
+      (hd : HasFourierPartial j φ d) (hdd : HasFourierPartial j d dd)
+      (hc' : HasClassicalPartial j c dc) (hdc : HasClassicalPartial j dc ddc) :
+      HasFourierSecondPartial j j ψ
+        ((mulL2 ddc φ + mulL2 dc d) + (mulL2 dc d + mulL2 c dd)) := by
+    rw [hcp]
+    exact (hasFourierPartial_iff_second (hasFourierPartial_mulL2 hc' hd)).mp
+      ((hasFourierPartial_mulL2 hdc hd).add (hasFourierPartial_mulL2 hc' hdd))
+  let X := (mulL2 cxx φ + mulL2 cx dx) + (mulL2 cx dx + mulL2 c dxx)
+  let Y := (mulL2 cyy φ + mulL2 cy dy) + (mulL2 cy dy + mulL2 c dyy)
+  have hXY : HasFourierLaplacian ψ (X + Y) :=
+    hasFourierLaplacian_of_second (hprod hdx hdxx hcx hcxx) (hprod hdy hdyy hcy hcyy)
+  have he : ζ = X + Y := fourierCoeff_ext fun k ↦ (hΔ k).trans (hXY k).symm
+  have hraw (d dd : L2) (dc ddc : C(Torus, ℂ)) :
+      ((mulL2 ddc φ + mulL2 dc d) + (mulL2 dc d + mulL2 c dd) : L2) =ᵐ[volume]
+        fun t ↦ ddc t * φ t + 2 * dc t * d t + c t * dd t := by
+    filter_upwards [Lp.coeFn_add (mulL2 ddc φ + mulL2 dc d) (mulL2 dc d + mulL2 c dd),
+      Lp.coeFn_add (mulL2 ddc φ) (mulL2 dc d), Lp.coeFn_add (mulL2 dc d) (mulL2 c dd),
+      mulL2_ae ddc φ, mulL2_ae dc d, mulL2_ae c dd] with t h ha hb h₁ h₂ h₃
+    simp only [h, Pi.add_apply, ha, hb, h₁, h₂, h₃]
+    ring
+  have hsx : partialX s = fun p ↦ -(Real.sin p.1 : ℂ) := by
+    funext p
+    rw [partialX_ofReal (show Differentiable ℝ dipoleLift by unfold dipoleLift; fun_prop),
+      partialX_dipoleLift]
+    exact Complex.ofReal_neg _
+  have hsy : partialY s = fun p ↦ -(Real.sin p.2 : ℂ) := by
+    funext p
+    rw [partialY_ofReal (show Differentiable ℝ dipoleLift by unfold dipoleLift; fun_prop),
+      partialY_dipoleLift]
+    exact Complex.ofReal_neg _
+  have hss (p : ℝ × ℝ) : partialX (partialX s) p + partialY (partialY s) p = -s p := by
+    have hd := hsR.differentiable (by norm_num)
+    have hdx := (contDiff_partialX hsR).differentiable (by norm_num)
+    have hdy := (contDiff_partialY hsR).differentiable (by norm_num)
+    rw [show partialX s = fun p ↦ ((partialX dipoleLift p : ℝ) : ℂ) from
+          partialX_ofReal hd,
+        show partialY s = fun p ↦ ((partialY dipoleLift p : ℝ) : ℂ) from
+          partialY_ofReal hd,
+        partialX_ofReal hdx, partialY_ofReal hdy]
+    simpa only [s, Complex.ofReal_neg, Complex.ofReal_add, laplacian] using
+      congrArg Complex.ofReal (laplacian_dipoleLift p)
+  refine ⟨dxx + dyy, dx, dy, hdx, hdy, ?_⟩
+  rw [he]
+  filter_upwards [liftL2_add_ae X Y, liftL2_add_ae dxx dyy,
+    ae_torusProj (hraw dx dxx cx cxx), ae_torusProj (hraw dy dyy cy cyy)]
+    with p h hx hy hz
+  rw [h, hx]
+  change liftL2 X p = _ at hy
+  change liftL2 Y p = _ at hz
+  rw [hy, hz, hc, Ψ_torusProj]
+  have hx' : cx (torusProj p) = -(Real.sin p.1 : ℂ) :=
+    (torusOfLift_torusProj hp.partialX p).trans (congrFun hsx p)
+  have hy' : cy (torusProj p) = -(Real.sin p.2 : ℂ) :=
+    (torusOfLift_torusProj hp.partialY p).trans (congrFun hsy p)
+  have hsum : cxx (torusProj p) + cyy (torusProj p) = -(dipoleLift p : ℂ) :=
+    (congrArg₂ (· + ·) (torusOfLift_torusProj hp.partialX.partialX p)
+      (torusOfLift_torusProj hp.partialY.partialY p)).trans (hss p)
+  rw [hx', hy']
+  simp only [liftL2]
+  linear_combination (φ (torusProj p)) * hsum
+
+/-- The singular term is a bounded combination of the two Hardy quotients. -/
+private theorem memLp_div_dipole_gradient {φ dx dy : L2} (hφ : MemSobolev 2 φ)
+    (hs : InSector true true φ) (hx : HasFourierPartial 0 φ dx)
+    (hy : HasFourierPartial 1 φ dy) :
+    MemLp (fun p ↦ (2 * ((Real.sin p.1 : ℂ) * liftL2 dx p +
+      (Real.sin p.2 : ℂ) * liftL2 dy p)) / (dipoleLift p : ℂ)) 2
+      (volume.restrict cellSquare) := by
+  obtain ⟨mA, mB⟩ := even_h2_diagonal_gradient_division hφ hs hx hy
+  have mul_sin (f : ℝ × ℝ → ℂ) (hf : MemLp f 2 (volume.restrict cellSquare))
+      (a : ℝ × ℝ → ℝ) (ha : Continuous a) :
+      MemLp (fun p ↦ (Real.sin (a p) : ℂ) * f p) 2 (volume.restrict cellSquare) := by
+    apply hf.of_le_mul (c := 1)
+      ((Complex.continuous_ofReal.comp (Real.continuous_sin.comp ha)).aestronglyMeasurable.mul
+        hf.aestronglyMeasurable)
+    exact Filter.Eventually.of_forall fun p ↦ by
+      change ‖(Real.sin (a p) : ℂ) * f p‖ ≤ 1 * ‖f p‖
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, one_mul]
+      exact mul_le_of_le_one_left (norm_nonneg _) (Real.abs_sin_le_one _)
+  have hc : Continuous diagCoord := by unfold diagCoord; fun_prop
+  apply ((mul_sin _ mA _ hc.fst).add (mul_sin _ mB _ hc.snd)).ae_eq
+  filter_upwards [ae_restrict_mem isOpen_cellSquare.measurableSet] with p hp
+  let a := (diagCoord p).1
+  let b := (diagCoord p).2
+  have hca : (Real.cos a : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (Real.cos_pos_of_mem_Ioo (abs_lt.mp hp.1)).ne'
+  have hcb : (Real.cos b : ℂ) ≠ 0 :=
+    Complex.ofReal_ne_zero.mpr (Real.cos_pos_of_mem_Ioo (abs_lt.mp hp.2)).ne'
+  have hx' : p.1 = a + b := by dsimp [a, b, diagCoord]; ring
+  have hy' : p.2 = a - b := by dsimp [a, b, diagCoord]; ring
+  have hs' : dipoleLift p = 2 * Real.cos a * Real.cos b := dipoleLift_eq_diag p
+  change (Real.sin a : ℂ) * ((liftL2 dx p + liftL2 dy p) / (Real.cos a : ℂ)) +
+    (Real.sin b : ℂ) * ((liftL2 dx p - liftL2 dy p) / (Real.cos b : ℂ)) =
+    (2 * ((Real.sin p.1 : ℂ) * liftL2 dx p + (Real.sin p.2 : ℂ) * liftL2 dy p)) /
+      (dipoleLift p : ℂ)
+  rw [hs', hx', hy', Real.sin_add, Real.sin_sub]
+  simp only [Complex.ofReal_add, Complex.ofReal_sub, Complex.ofReal_mul, Complex.ofReal_ofNat]
+  field_simp
+  ring
+
+/-- Reflection transfers a positive-cell norm of the divided odd datum to the torus. -/
+private theorem memLp_div_dipole_of_odd_cell {ζ : L2} (hodd : reflect₁ ζ = -ζ)
+    (hcell : MemLp (fun p ↦ liftL2 ζ p / (dipoleLift p : ℂ)) 2
+      (volume.restrict cellSquare)) :
+    MemLp (fun t ↦ ζ t / (Ψ t : ℂ)) 2 volume := by
+  let q := fun t ↦ ζ t / (Ψ t : ℂ)
+  have hΨ : Continuous Ψ :=
+    (Real.Angle.continuous_cos.comp continuous_fst).add
+      (Real.Angle.continuous_cos.comp continuous_snd)
+  have hpos : MeasurableSet positiveCell := (isOpen_lt continuous_const hΨ).measurableSet
+  have hrep : torusRep ⁻¹' cellSquare = positiveCell := by
+    ext t
+    change torusRep t ∈ cellSquare ↔ t ∈ positiveCell
+    constructor
+    · intro ht
+      simpa only [torusProj_torusRep] using torusProj_mem_positiveCell ht
+    · intro ht
+      apply mem_cellSquare_of_mem_periodBox (torusRep_mem t)
+      rw [← Ψ_torusProj, torusProj_torusRep]
+      exact ht
+  have hm := measurePreserving_torusRep.restrict_preimage isOpen_cellSquare.measurableSet
+  rw [hrep, Measure.restrict_restrict_of_subset cellSquare_subset_periodBox] at hm
+  have hq : MemLp q 2 (volume.restrict positiveCell) := by
+    apply (hcell.comp_measurePreserving hm).ae_eq
+    exact Filter.Eventually.of_forall fun t ↦ by
+      simp only [Function.comp_apply, liftL2, ← Ψ_torusProj, torusProj_torusRep, q]
+  let P := positiveCell.indicator q
+  have hP : MemLp P 2 volume := (memLp_indicator_iff_restrict hpos).mpr hq
+  have hsym : ∀ᵐ t, q (S₁ t) = q t := by
+    filter_upwards [ae_comp_of_pullback_eq (T := S₁) (hT := measurePreserving_S₁) hodd,
+      Lp.coeFn_neg ζ] with t hs hn
+    have hS : Ψ (S₁ t) = -Ψ t := congrFun Ψ_comp_S₁ t
+    simp only [q, hs, hn, Pi.neg_apply, hS, Complex.ofReal_neg, neg_div_neg_eq]
+  apply (hP.add (hP.comp_measurePreserving measurePreserving_S₁)).ae_eq
+  filter_upwards [hsym, ae_Ψ_ne_zero] with t ht hn
+  change P t + P (S₁ t) = q t
+  dsimp only [P]
+  have hS : Ψ (S₁ t) = -Ψ t := congrFun Ψ_comp_S₁ t
+  rcases lt_or_gt_of_ne hn with hneg | hpos'
+  · have h₁ : t ∉ positiveCell := not_lt_of_gt hneg
+    have h₂ : S₁ t ∈ positiveCell := by change 0 < Ψ (S₁ t); rw [hS]; linarith
+    rw [indicator_of_notMem h₁, indicator_of_mem h₂, zero_add, ht]
+  · have h₁ : t ∈ positiveCell := hpos'
+    have h₂ : S₁ t ∉ positiveCell := by change ¬0 < Ψ (S₁ t); rw [hS]; linarith
+    rw [indicator_of_mem h₁, indicator_of_notMem h₂, add_zero]
+
 /-- Coordinate Hardy controls the divided Laplacian of an even H² function
 (`lem:even-h2-dipole-laplacian`). The Laplacian is specified by its Fourier relation;
 no classical second derivative of an arbitrary L² representative is used. -/
@@ -74,7 +262,47 @@ theorem even_h2_dipole_laplacian {φ ψ ζ : L2} (hφ : MemSobolev 2 φ)
     (hs : InSector true true φ) (hψ : ∀ᵐ t, ψ t = (Ψ t : ℂ) * φ t)
     (hΔ : HasFourierLaplacian ψ ζ) :
     ∃ ν : L2, ∀ᵐ t, ζ t = (Ψ t : ℂ) * ν t := by
-  sorry
+  obtain ⟨τ, dx, dy, hx, hy, he⟩ := dipole_laplacian_expansion hφ hψ hΔ
+  have hnorm (u : L2) : MemLp (liftL2 u) 2 (volume.restrict cellSquare) :=
+    (memLp_liftL2_periodBox u).mono_measure
+      (Measure.restrict_mono cellSquare_subset_periodBox le_rfl)
+  have hcell : MemLp (fun p ↦ liftL2 ζ p / (dipoleLift p : ℂ)) 2
+      (volume.restrict cellSquare) := by
+    apply (((hnorm τ).sub (hnorm φ)).sub (memLp_div_dipole_gradient hφ hs hx hy)).ae_eq
+    filter_upwards [ae_restrict_of_ae he, ae_restrict_mem isOpen_cellSquare.measurableSet]
+      with p hp hmem
+    have hne : (dipoleLift p : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr
+      (show 0 < dipoleLift p by
+        simpa only [positiveCell, mem_ofPred_eq, Ψ_torusProj] using
+          torusProj_mem_positiveCell hmem).ne'
+    simp only [Pi.sub_apply, hp, sub_div, mul_div_cancel_left₀ _ hne]
+  have hφR : reflect₁ φ = φ := by
+    simpa only [paritySign, ite_true, one_smul] using hs.1
+  have hψR : reflect₁ ψ = -ψ := by
+    apply Lp.ext
+    filter_upwards [Lp.coeFn_compMeasurePreserving ψ measurePreserving_S₁,
+      ae_comp_of_pullback_eq (T := S₁) (hT := measurePreserving_S₁) hφR,
+      measurePreserving_S₁.quasiMeasurePreserving.ae hψ, hψ, Lp.coeFn_neg ψ]
+      with t h₀ h₁ h₂ h₃ h₄
+    change (reflect₁ ψ : Torus → ℂ) t = ψ (S₁ t) at h₀
+    have hS : Ψ (S₁ t) = -Ψ t := congrFun Ψ_comp_S₁ t
+    rw [h₀, h₄, Pi.neg_apply, h₂, h₁, h₃, hS, Complex.ofReal_neg, neg_mul]
+  have hΔR := symmetry₁.hasFourierLaplacian hΔ
+  change HasFourierLaplacian (reflect₁ ψ) (reflect₁ ζ) at hΔR
+  rw [hψR] at hΔR
+  have hζR : reflect₁ ζ = -ζ := by
+    apply fourierCoeff_ext
+    intro k
+    rw [hΔR k]
+    simp only [show -ψ = (-1 : ℂ) • ψ by simp, show -ζ = (-1 : ℂ) • ζ by simp,
+      fourierCoeff_smul, hΔ k]
+    ring
+  let q := fun t ↦ ζ t / (Ψ t : ℂ)
+  have hq : MemLp q 2 volume := memLp_div_dipole_of_odd_cell hζR hcell
+  refine ⟨hq.toLp q, ?_⟩
+  filter_upwards [hq.coeFn_toLp, ae_Ψ_ne_zero] with t ht hn
+  rw [ht]
+  exact (mul_div_cancel₀ _ (Complex.ofReal_ne_zero.mpr hn)).symm
 
 /-- The vorticity quotient follows from the stream quotient and the Poisson equation
 (`lem:dd-vorticity-quotient-l2`), without a separate angular Hardy estimate on ω. -/

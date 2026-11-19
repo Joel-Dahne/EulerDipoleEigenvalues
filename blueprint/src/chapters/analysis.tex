@@ -3197,23 +3197,27 @@ Fourier sense. Then there is $N_F\in L^2(\T^2)$ with $\zeta=\Psi N_F$ a.e.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:even-h2-axis-hardy, lem:saddle-normal-form,
- lem:diagonal-calculus, lem:lift-sobolev-local, lem:separatrix-lines,
- lem:weak-derivative-basic}
-The weak product rule gives
+\uses{lem:l2-product-rule, lem:lift-torus, lem:sobolev-torus-basic,
+ lem:even-h2-diagonal-hardy, lem:laplacian-symmetries, lem:dipole-identities,
+ lem:cell-lift-integral, lem:separatrix-lines}
+\leanok
+Apply the Fourier product rule twice. Since $\Delta\Psi=-\Psi$,
+$\zeta/\Psi=\Delta F-F+2(\nabla\Psi\cdot\nabla F)/\Psi$ off the
+separatrix. In the lifted positive cell, write $a=(x+y)/2$ and
+$b=(x-y)/2$. The sine addition formulas and $\Psi=2\cos a\cos b$
+give
 \[
- N_F=\Delta F-F+2\,\frac{\nabla\Psi\cdot\nabla F}{\Psi}
- \quad\text{off the separatrix}.
+ 2\,\frac{\nabla\Psi\cdot\nabla F}{\Psi}
+ =-\sin a\,\frac{F_x+F_y}{\cos a}
+  -\sin b\,\frac{F_x-F_y}{\cos b}.
 \]
-Near a regular edge write $\Psi=u\,m$ in orthonormal coordinates, where
-$m$ is smooth and nonvanishing. The only singular term is $F_u/u$.
-Near a saddle write $\Psi=uv\,m$; the singular terms are
-$F_u/u$ and $F_v/v$. All other coefficients are smooth and bounded.
-Coordinate Hardy controls each singular term by a pure second derivative
-of $F$. Away from the separatrix all coefficients are bounded.
-Define $N_F$ by this formula off the null separatrix, and zero on it.
-A finite cover gives $N_F\in L^2$ and the a.e. identity.
-No weighted derivative or trace of the vorticity is used in this step.
+The factors multiplying the two Hardy quotients are bounded, so
+$\zeta/\Psi$ is square integrable on the lifted cell and hence on the
+positive torus cell. Reflection $S_1$ exchanges the two cells. The
+product $\psi=\Psi F$ is odd under $S_1$, so its Fourier Laplacian
+$\zeta$ is odd as well. Thus their quotient $\zeta/\Psi$ is invariant
+and has the same integrability on the negative cell. The separatrix is
+null. Take $N_F=\zeta/\Psi$ almost everywhere.
 \end{proof}
 
 \begin{lemma}[Bound for the divided Laplacian]
