@@ -103,17 +103,18 @@ theorem MemSobolevLocOn.div_saddleDist_of_radius {c : ℝ × ℝ} (hc : c ∈ sa
   field_simp
 
 /-- Radial mass at each saddle and ordinary local L² away from the lattice
-give lattice-weighted local L² on the whole lift. Radii need not be uniform. -/
-theorem MemSobolevLocOn.div_saddleDist {F : ℝ × ℝ → ℂ}
-    (hF : MemSobolevLocOn 0 univ F) {s : ℝ} (hs : 0 ≤ s)
-    (hlocal : ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧
+give lattice-weighted local L² on an open set. Radii need not be uniform. -/
+theorem MemSobolevLocOn.div_saddleDist_on {W : Set (ℝ × ℝ)} (hW : IsOpen W)
+    {F : ℝ × ℝ → ℂ}
+    (hF : MemSobolevLocOn 0 W F) {s : ℝ} (hs : 0 ≤ s)
+    (hlocal : ∀ c ∈ saddleSet, c ∈ W → ∃ ρ : ℝ, 0 < ρ ∧
       MemLp (fun p ↦ F p / (Real.rpow (localRadius c p) s : ℂ)) 2
         (volume.restrict (localDisk c ρ))) :
-    MemSobolevLocOn 0 univ (fun p ↦ F p / (Real.rpow (saddleDist p) s : ℂ)) := by
+    MemSobolevLocOn 0 W (fun p ↦ F p / (Real.rpow (saddleDist p) s : ℂ)) := by
   apply memSobolevLocOn_of_locally
-  intro c _
+  intro c hcW
   by_cases hc : c ∈ saddleSet
-  · obtain ⟨r, hr, hR⟩ := hlocal c hc
+  · obtain ⟨r, hr, hR⟩ := hlocal c hc hcW
     let ρ := min r (Real.pi / 4)
     have hρ : 0 < ρ := lt_min hr (by positivity)
     have hU : IsOpen (localDisk c ρ) := by
@@ -132,18 +133,27 @@ theorem MemSobolevLocOn.div_saddleDist {F : ℝ × ℝ → ℂ}
       (show MemSobolevOn 0 (localDisk c r) _ from hR).memSobolevLocOn.mono hsub
     refine ⟨localDisk c ρ, hU, ?_, hRad.div_saddleDist_of_radius hc hball hs⟩
     simpa [localDisk, localRadius] using hρ
-  · let U := {p | 0 < saddleDist p}
+  · let U := W ∩ {p | 0 < saddleDist p}
     have hd : Continuous saddleDist := Metric.continuous_infDist_pt saddleSet
-    have hU : IsOpen U := isOpen_lt continuous_const hd
-    have hcp : c ∈ U := lt_of_le_of_ne Metric.infDist_nonneg
-      (Ne.symm (mt saddleDist_eq_zero_iff.mp hc))
+    have hU : IsOpen U := hW.inter (isOpen_lt continuous_const hd)
+    have hcp : c ∈ U := ⟨hcW, lt_of_le_of_ne Metric.infDist_nonneg
+      (Ne.symm (mt saddleDist_eq_zero_iff.mp hc))⟩
     have hp : Continuous (fun p ↦ Real.rpow (saddleDist p) s) :=
       hd.rpow_const (fun _ ↦ Or.inr hs)
     have hG : ContinuousOn (fun p ↦ (Real.rpow (saddleDist p) s : ℂ)⁻¹) U :=
       (Complex.continuous_ofReal.comp hp).continuousOn.inv₀ fun p hp ↦
-        Complex.ofReal_ne_zero.mpr (Real.rpow_pos_of_pos hp _).ne'
+        Complex.ofReal_ne_zero.mpr (Real.rpow_pos_of_pos hp.2 _).ne'
     refine ⟨U, hU, hcp, ?_⟩
     simpa only [div_eq_mul_inv, mul_comm] using
-      (hF.mono (subset_univ U)).zero_mul_continuousOn hG
+      (hF.mono inter_subset_left).zero_mul_continuousOn hG
+
+/-- Whole-lift specialization of the local saddle-distance weight transfer. -/
+theorem MemSobolevLocOn.div_saddleDist {F : ℝ × ℝ → ℂ}
+    (hF : MemSobolevLocOn 0 univ F) {s : ℝ} (hs : 0 ≤ s)
+    (hlocal : ∀ c ∈ saddleSet, ∃ ρ : ℝ, 0 < ρ ∧
+      MemLp (fun p ↦ F p / (Real.rpow (localRadius c p) s : ℂ)) 2
+        (volume.restrict (localDisk c ρ))) :
+    MemSobolevLocOn 0 univ (fun p ↦ F p / (Real.rpow (saddleDist p) s : ℂ)) :=
+  hF.div_saddleDist_on isOpen_univ hs fun c hc _ ↦ hlocal c hc
 
 end NoEmbeddedEigenvalues

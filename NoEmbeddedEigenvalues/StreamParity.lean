@@ -35,6 +35,17 @@ private theorem continuousRep_invLap_parity {ω : L2} {T : Torus → Torus}
     ((continuousRep (invLap ω)).continuous.comp hTc)
     (continuous_const.mul (continuousRep (invLap ω)).continuous))
 
+/-- Odd parity under the first reflection also forces zero stream values
+on its fixed lines, independently of the parity under the second reflection. -/
+theorem contStream_eq_zero_of_odd_first {ω : L2} {b : Bool} (hs : InSector false b ω)
+    {p : ℝ × ℝ} (hp : (torusProj p).1 + (torusProj p).2 = Real.pi) : contStream ω p = 0 := by
+  have h := continuousRep_invLap_parity (show Continuous S₁ by unfold S₁; fun_prop)
+    hs.invLap.1 (torusProj p)
+  rw [(S₁_eq_self_iff _).mpr hp] at h
+  change contStream ω p = paritySign false * contStream ω p at h
+  simp only [paritySign, Bool.false_eq_true, ite_false, neg_one_mul] at h
+  exact CharZero.eq_neg_self_iff.mp h
+
 /-- Odd parity under both reflections forces the continuous stream to vanish
 on every lifted separatrix line, including saddles. -/
 theorem contStream_eq_zero_on_separatrix {ω : L2} (hs : InSector false false ω)

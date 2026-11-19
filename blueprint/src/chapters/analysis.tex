@@ -1975,12 +1975,14 @@ Multiply this bounded factor by the actual L2 function $r_c^{-1/2}$.
 \label{lem:saddle-distance-weight-transfer}
 \uses{def:sobolev-local, def:cell-arcs, def:local-plane-geometry}
 \lean{NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_of_radius,
+ NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_on,
  NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist}
 \leanok
 Let $c$ be a saddle, $U\subset B(c,\pi/2)$ in the product metric, and $s\ge0$.
 If $F/r_c^s\in L^2_{\rm loc}(U)$, then $F/d^s\in L^2_{\rm loc}(U)$.
-Consequently, if $F\in L^2_{\rm loc}(\R^2)$ and at every saddle $c$ some
-disk has $F/r_c^s\in L^2$, then $F/d^s\in L^2_{\rm loc}(\R^2)$.
+Consequently, if $F\in L^2_{\rm loc}(W)$ on an open set $W$ and at
+every saddle $c\in W$ some disk has $F/r_c^s\in L^2$, then
+$F/d^s\in L^2_{\rm loc}(W)$.
 The disk radii need not be uniform.
 \end{lemma}
 
@@ -1990,7 +1992,7 @@ The disk radii need not be uniform.
 \leanok
 The measurable multiplier $(r_c/d)^s$ is bounded by $2^s$ on $U$.
 Off the null saddle set it transforms the first quotient into the second.
-For the whole-lift conclusion shrink each saddle disk into its product-metric
+For the local conclusion shrink each saddle disk into its product-metric
 $\pi/2$ ball and apply this transfer. Away from the closed saddle lattice,
 $d^{-s}$ is continuous. Glue these local L2 norms; only compact
 localizations have finite norms.
@@ -2631,13 +2633,15 @@ reflection and add the two entries. No mixed entries are commuted.
 \begin{lemma}[Saddle-chart pullback of Sobolev and radial jet data]
 \label{lem:saddle-chart-pullback}
 \uses{def:saddle-ortho-chart, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.saddle_chart_pullback}
+\lean{NoEmbeddedEigenvalues.saddle_chart_pullback, NoEmbeddedEigenvalues.saddle_chart_pushforward}
 \leanok
 Let $P$ be a lifted saddle. If $f\in H^n(D_\rho(P))$ has a specified
 order-$n$ weak jet $D$, then $f\circ\Xi_P\in H^n(D_\rho(0))$ has a
 specified transformed jet $E$. Every integer radial condition
 $\mathcal R_{k,s}(D;D_\rho(P),P)$ transfers to
-$\mathcal R_{k,s}(E;D_\rho(0),0)$.
+$\mathcal R_{k,s}(E;D_\rho(0),0)$. Conversely, a weak jet and its radial
+conditions on $D_\rho(0)$ give a Cartesian weak jet and the same radial
+conditions on $D_\rho(P)$.
 \end{lemma}
 
 \begin{proof}
@@ -2647,7 +2651,9 @@ The explicit linear part of $\Xi_P$ has determinant $\cos P_x$,
 whose absolute value is one at a saddle.
 Its formula directly gives $r_P(\Xi_P(q))=r_0(q)$.
 Apply the affine pullback lemma; the radius identity identifies
-the preimage disk with $D_\rho(0)$.
+the preimage disk with $D_\rho(0)$. The inverse affine chart preserves
+the same volume and radius, so the argument transfers weak jets and
+weights in the other direction as well.
 \end{proof}
 
 \begin{lemma}[Laplacian of the transformed saddle jet]

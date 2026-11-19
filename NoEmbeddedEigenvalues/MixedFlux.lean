@@ -4,6 +4,7 @@ import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.MixedVorticityTrace
+import NoEmbeddedEigenvalues.Regularity.MixedCellH1
 import NoEmbeddedEigenvalues.EdgeWindowTransport
 import NoEmbeddedEigenvalues.Analysis.BoundaryTraceCompare
 import NoEmbeddedEigenvalues.Melnikov
@@ -973,10 +974,10 @@ private theorem mixed_neumann_comp_local_h1 (σ : Bool) {F D : ℝ → ℂ}
       (hm.antitoneOn _) hm.mapsTo_uIcc
 
 /-- The physical vorticity trace obeys the transport equation on the regular arc and
-is square integrable in flow time, assuming an H¹ vorticity collar. -/
-theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+is square integrable in flow time, assuming an inward H¹ vorticity collar. -/
+theorem mixed_neumann_vorticity_trace_of_cell_collar {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (d : MixedQuotientData ω)
-    {ε : ℝ} (hε : 0 < ε) (hv : MemSobolevLocOn 1 (mixedSeparatrixCollar ε) (liftL2 ω))
+    {ε : ℝ} (hε : 0 < ε) (hv : MemSobolevOn 1 (cellSeparatrixStrip ε) (liftL2 ω))
     (σ : Bool) :
     let g := mixedNeumannStream d.phi σ
     ∃ q : ℝ → ℂ, (∀ c e, AbsolutelyContinuousOnInterval q c e) ∧
@@ -988,9 +989,8 @@ theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {
   let A := mixedNeumannA σ
   let g := mixedNeumannStream d.phi σ
   let f := fun a ↦ contStream ω (diagonalTraceChart 1 (a, cellEdgeNormal σ))
-  have hv' := mixed_cell_collar_h1 hε hv
   obtain ⟨w, hw, hW, S, hS, hS2, hScell⟩ :=
-    mixed_neumann_inward_trace_memLp d (half_pos hε) hv' σ
+    mixed_neumann_inward_trace_memLp d hε hv σ
   let k : ℝ := -edgeSideSign σ
   let D := fun a ↦ Complex.I * ((k * lam / Real.cos a : ℝ) : ℂ) * S a
   have hpair := isTransportPair_contStream hlam hω isOrbitUnion_cellNeighbourhood
@@ -999,7 +999,7 @@ theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {
       ∃ T, T =ᵐ[volume.restrict (Ioo l r)] (S + f) ∧ HasIntervalH1 l r T D := by
     have hsub := Ioo_subset_Icc_self.trans hr
     obtain ⟨V, T, hV, he, hT⟩ := hpair.inward_edge_window_transport
-      closure_cellSquare_subset_cellNeighbourhood hv' (continuous_contStream ω).continuousOn
+      closure_cellSquare_subset_cellNeighbourhood hv (continuous_contStream ω).continuousOn
       EventuallyEq.rfl 1 σ hlr hw hr (fun q hq ↦ hW ⟨hsub hq.1, hq.2⟩)
     have hVS := hV.ae_eq_inward hS hw le_rfl (k := id) hsub (fun _ hu ↦ hu)
       (MeasurePreserving.id volume) (MeasurePreserving.id volume) continuous_id rfl
@@ -1042,7 +1042,7 @@ theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {
     rw [← hgval, ht, Pi.add_apply, add_sub_cancel_right]
   refine ⟨q, fun c e ↦ (mixed_neumann_comp_local_h1 σ hT c e).sub (hgac c e), ?_,
     ((show MemLp (S ∘ A) 2 volume by simpa only [A, Function.comp_def, mixedNeumann_coord]
-      using hS2).ae_eq hqflow.symm), ε / 2, half_pos hε, ?_⟩
+      using hS2).ae_eq hqflow.symm), ε, hε, ?_⟩
   · have hgd : ∀ᵐ t, DifferentiableAt ℝ g t := by
       have hn (n : ℕ) := (hgac (-(n : ℝ)) n).boundedVariationOn.ae_differentiableAt_of_mem_uIcc
       filter_upwards [ae_all_iff.2 hn] with t ht
@@ -1070,9 +1070,23 @@ theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {
             (mul_inv_cancel₀ hcz), hk2, one_mul]
   · intro l r a b hlr hab hreg hedge hrect
     have h' := hScell l r a b hlr hab hreg hedge (hrect.trans
-      (mixed_cell_eq_strip (ε / 2)).subset)
+      (mixed_cell_eq_strip ε).subset)
     exact h'.congr_trace (ae_restrict_of_ae_restrict_of_subset
       (Ioo_subset_Icc_self.trans hreg) hqS)
+
+/-- The full-collar variant follows by shrinking to an inward strip. -/
+theorem mixed_neumann_vorticity_trace_of_collar {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (d : MixedQuotientData ω)
+    {ε : ℝ} (hε : 0 < ε) (hv : MemSobolevLocOn 1 (mixedSeparatrixCollar ε) (liftL2 ω))
+    (σ : Bool) :
+    let g := mixedNeumannStream d.phi σ
+    ∃ q : ℝ → ℂ, (∀ c e, AbsolutelyContinuousOnInterval q c e) ∧
+      (∀ᵐ t, HasDerivAt q (Complex.I * lam * q t - deriv g t) t) ∧
+      MemLp q 2 volume ∧
+      ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ
+        (liftL2 ω) (fun a ↦ q (mixedNeumannTime σ a)) := by
+  exact mixed_neumann_vorticity_trace_of_cell_collar hlam hω d (half_pos hε)
+    (mixed_cell_collar_h1 hε hv) σ
 
 /-- The physical vorticity trace obeys the transport equation on the regular arc and
 is square integrable in flow time. It is not yet identified with the canonical profile. -/
@@ -1085,8 +1099,8 @@ theorem mixed_neumann_vorticity_trace {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       MemLp q 2 volume ∧
       ∃ ε : ℝ, 0 < ε ∧ HasCellEdgeTrace (cellSquare ∩ mixedSeparatrixCollar ε) 1 σ
         (liftL2 ω) (fun a ↦ q (mixedNeumannTime σ a)) := by
-  obtain ⟨_, ε, hε, hv, _, _⟩ := mixed_quotient_domain hlam hω hs
-  exact mixed_neumann_vorticity_trace_of_collar hlam hω d hε hv σ
+  obtain ⟨ε, hε, _, hv, _⟩ := mixed_cell_separatrix_h1 hlam hω hs
+  exact mixed_neumann_vorticity_trace_of_cell_collar hlam hω d hε hv σ
 
 /-- Boundary square and physical trace for the actual mixed Neumann profile. -/
 theorem mixed_boundary_square_traces {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}

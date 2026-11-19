@@ -456,8 +456,12 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
 - `Regularity/MixedSaddle.lean`: the exponent-two inverse gives the unique
   linear jet in the odd coordinate and the three weighted remainders.
-  `Regularity/SaddleLinearization.lean` states the Jacobian and Hamiltonian
+  `Regularity/SaddleLinearization.lean` computes the Jacobian and Hamiltonian
   actions in the normalized coordinates.
+- `Regularity/MixedCellH1.lean`: interpolates a smooth transport correction
+  at the four lifted saddles and applies weighted transport to the remainder.
+  The inward H¹ collar and odd-side zero traces do not require seam gluing
+  or the mixed quotient data.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization and quadratic compatibility.
   The raw chart parity theorem lives in `SaddleChartPullback.lean`, after its

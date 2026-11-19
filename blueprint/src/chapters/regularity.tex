@@ -2685,13 +2685,15 @@ $r^{-2}$-weighted $L^2$ norm unless it is zero.
 
 \section{Odd--odd sector: regularity across the separatrix}
 
-\begin{lemma}[Continuous odd--odd stream vanishes on the separatrix]
+\begin{lemma}[Continuous stream vanishes on the odd fixed lines]
 \label{lem:continuous-stream-zero-separatrix}
 \uses{def:sectors, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.contStream_eq_zero_on_separatrix}
+\lean{NoEmbeddedEigenvalues.contStream_eq_zero_of_odd_first,
+  NoEmbeddedEigenvalues.contStream_eq_zero_on_separatrix}
 \leanok
-For every odd--odd $\omega\in L^2$, its continuous stream representative
-vanishes at every lifted zero-level point of the dipole, including saddles.
+If $\omega\in L^2$ is odd under $S_1$, the continuous stream vanishes
+on the lifts of its fixed lines. In the odd--odd sector it vanishes at
+every lifted zero-level point of the dipole, including saddles.
 No eigenfunction hypothesis is needed.
 \end{lemma}
 
@@ -3951,10 +3953,76 @@ exclusion route.
 
 \section{Mixed sectors: regularity across the separatrix}
 
+\begin{lemma}[Weighted mixed forcing after linear jet subtraction]
+\label{lem:mixed-weighted-forcing-remainder}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:transport-pair,
+  lem:cell-square, lem:orbit-saddle-distance}
+\lean{NoEmbeddedEigenvalues.mixed_weighted_forcing_remainder}
+\leanok
+For a mixed eigenfunction in the sector $(-,+)$ with $\lambda\ne0$,
+there is a smooth transport pair $(\omega_0,\psi_0)$ on the bounded
+cell neighbourhood such that $f=\psi-\psi_0$ has the weights
+$f/d^2,\ \partial_j f/d^{3/2}\in L^2(\Cell)$, where $d$ is saddle distance.
+\end{lemma}
+
+\begin{proof}
+\uses{cor:mixed-saddle-jet, cor:saddle-linearization, lem:saddle-chart-pullback,
+  lem:smooth-transport-pair, lem:saddle-distance-weight-transfer}
+\leanok
+For a smooth profile $P$, take $\omega_0=HP/\lambda$ and
+$\psi_0=P-\omega_0$. At a saddle of sign $s=\cos P_x$, choose $P$
+affine nearby with its odd linear coefficient divided by $1-is/\lambda$.
+Use disjoint bumps around the four saddles in the cell neighbourhood.
+The forcing $\psi_0$ matches the stream jet through order two:
+the sine coefficients of the velocity have vanishing second derivatives
+at a saddle. The differentiated Taylor bounds for $\psi_0-\ell$ and the
+weighted weak remainder for $\psi-\ell$ give the required bounds on
+disks, with the inverse orthonormal chart transferring the derivatives
+to Cartesian coordinates. Away from the saddles the weights are bounded.
+\end{proof}
+
+\begin{lemma}[Mixed vorticity on the inward cell collar]
+\label{lem:mixed-cell-separatrix-h1}
+\uses{def:eigen-problem, def:sectors, def:sobolev-local, lem:cell-square}
+\lean{NoEmbeddedEigenvalues.mixed_cell_separatrix_h1}
+\leanok
+For a mixed eigenfunction in the sector $(-,+)$ with $\lambda\ne0$,
+there exists $0<\epsilon<1$ such that the vorticity is $H^1$ on
+$\Cell\cap\{0<\Psi<\epsilon\}$, with canonical zero traces on its odd
+cell sides.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-weighted-forcing-remainder, lem:weighted-transport-h1,
+  prop:saddle-first-gain, lem:continuous-stream-zero-separatrix,
+  lem:transport-zero-edge-trace}
+\leanok
+Apply the weighted transport theorem to the subtracted pair and add back
+the smooth vorticity correction. The original stream vanishes on the
+fixed lines of the odd reflection. The homogeneous edge equation and the
+first vorticity weight force zero traces there by the critical corner
+trace estimate. This does not require gluing across the separatrix.
+\end{proof}
+
+\begin{definition}[Mixed cell quotient data]
+\label{def:mixed-quotient-data}
+\uses{def:eigen-problem, lem:cell-square, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MixedQuotientData}
+\leanok
+The quotient data for a vorticity $\omega$ consist of a closed-cell
+continuous, centrally odd representative $\phi$ with an $H^2$ weak jet.
+It satisfies $\psi=\cos a\,\phi$ almost everywhere on the cell, where
+$\psi=\Delta^{-1}\omega$. The data include the $L^2$ condition on
+$\nu=\omega/\cos a$, zero Sobolev traces of the normal derivatives,
+and the weak equation
+$(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
+\end{definition}
+
 \begin{proposition}[Mixed-sector regularity]
 \label{prop:mixed-quotient-domain}
-\uses{def:eigen-problem, def:sectors, def:cells, lem:cell-square, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_quotient_domain, NoEmbeddedEigenvalues.MixedQuotientData}
+\uses{def:eigen-problem, def:sectors, def:cells, lem:cell-square, def:sobolev-local,
+  def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_quotient_domain}
 \leanok
 For $\lambda\ne0$ in the mixed sector $(-,+)$ (odd across $a=\pm\pi/2$, even across
 $b=\pm\pi/2$), $\omega\in H^1$ near the separatrix with zero trace on the odd
@@ -3972,24 +4040,9 @@ $(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
 \end{proposition}
 
 \begin{proof}
-\uses{cor:mixed-saddle-jet, lem:saddle-normal-form, cor:saddle-linearization,
-  lem:weighted-transport-h1, lem:elliptic-local, lem:hardy-1d,
-  lem:weighted-corner-trace}
-Choose a smooth $z_0$, affine near each saddle, whose linear term solves
-$(H_s-\lambda)z_0=\ell$ (possible since $H_s$ has eigenvalues $\pm i$ on linear
-functions). Then $(\omega_0,\psi_0)=(-Hz_0,(H-\lambda)z_0)$ is a transport pair.
-The cubic Taylor remainder of the dipole field gives
-$\psi_0=\ell+O(r^3)$ with the corresponding derivative bounds.
-The remainder pair $(v,f)=(\omega-\omega_0,\psi-\psi_0)$ therefore has zero jet:
-$f/d^3,\nabla f/d^2,D^2f/d\in L^2$ near the saddles.
-In particular $f/d^2,\nabla f/d^2\in L^2$.
-Lemma~\ref{lem:weighted-transport-h1} gives $v/d^2\in L^2$ and
-cellwise $H^1$, hence cellwise $\omega\in H^1$.
-On an odd edge the boundary trace satisfies
-$-i\partial_t\omega=\lambda\omega$, hence equals $ce^{i\lambda t}$.
-Since $\omega_0=O(d)$ and $v/d^2\in L^2$, one has $\omega/d\in L^2$;
-Lemma~\ref{lem:weighted-corner-trace} forces $c=0$.
-The odd traces are zero and the even traces agree by reflection, so
+\uses{lem:mixed-cell-separatrix-h1, lem:elliptic-local, lem:hardy-1d}
+Lemma~\ref{lem:mixed-cell-separatrix-h1} gives the inward Sobolev collar
+with zero traces on the odd sides. The even traces agree by reflection, so
 gluing and removability of the saddle points give $H^1$ across the separatrix.
 Local elliptic regularity gives $\psi\in H^3$ near the separatrix.
 Normal Hardy division of the zero-trace $H^1$ vorticity gives $\nu\in L^2$.

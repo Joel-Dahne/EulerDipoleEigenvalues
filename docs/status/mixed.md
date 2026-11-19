@@ -9,11 +9,11 @@
 `cor:mixed-other-exclusion` follows by rotation. The analytic inputs are not
 admission-free; see [the module map](../architecture.md).
 
-- **Regularity:** the route can reuse the shared cylinder inverse and
-  weighted-forcing H¹ theorem. `cor:mixed-saddle-jet` is proved using the
-  first vorticity weight; `prop:mixed-quotient-domain` still needs a proof. The blueprint
-  uses the weighted-forcing theorem on the jet-subtracted remainder, not on
-  the quotient by `cos a`.
+- **Regularity:** `cor:mixed-saddle-jet` supplies the jet removed by
+  `lem:mixed-weighted-forcing-remainder`. The resulting
+  `lem:mixed-cell-separatrix-h1` gives an inward collar and zero odd-side
+  traces. To finish `prop:mixed-quotient-domain`, glue across the
+  separatrix, gain stream regularity, and prove the quotient estimates.
 - **Paired flux:** `lem:melnikov` and `lem:pairing-limit` now cover ±i.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must
@@ -28,15 +28,15 @@ admission-free; see [the module map](../architecture.md).
   with the trace on every regular cell-side window. The nonzero-forcing
   equation on compact regular windows is proved in `lem:edge-window-transport`.
   `lem:mixed-neumann-vorticity-trace` glues the local representatives
-  before changing to flow time. The proof from a supplied collar is
-  admission-free; the eigenfunction application still depends on the
-  vorticity collar from `prop:mixed-quotient-domain`.
+  before changing to flow time. It uses the inward collar from
+  `lem:mixed-cell-separatrix-h1`, not across-separatrix regularity.
   `lem:mixed-boundary-square-weighted` is admission-free: its current is
   bounded by a multiple of `1 − x²` and needs no endpoint traces of `F`.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
-  `lem:mixed-neumann-renormalization` is proved from the boundary trace
-  data; its remaining admission is `prop:mixed-quotient-domain`.
+  `lem:mixed-neumann-renormalization` is admission-free from the
+  supplied quotient data; `prop:mixed-quotient-domain` still needs to
+  construct those data from the eigenfunction.
   The remaining direct inputs to the static identity are `lem:mixed-trace-mass`,
   `prop:mixed-virial`, and `lem:mixed-boundary-square-traces`.
   `lem:mixed-trace-field` proves the divergence and normal-flux algebra;

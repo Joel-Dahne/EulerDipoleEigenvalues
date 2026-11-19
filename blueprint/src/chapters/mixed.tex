@@ -194,7 +194,7 @@ Integrate on compact subintervals and exhaust $(-1,1)$.
 
 \begin{lemma}[Stream trace on a mixed Neumann edge]
 \label{lem:mixed-neumann-stream-trace}
-\uses{prop:mixed-quotient-domain, def:h1-interval}
+\uses{def:mixed-quotient-data, def:h1-interval}
 \lean{NoEmbeddedEigenvalues.mixed_neumann_stream_trace}
 \leanok
 Let $g=\psi|_N$, $x=\tanh t$, $w=1-x^2$, and $g=\sqrt w\,G$.
@@ -249,7 +249,7 @@ inward subwindow.
 
 \begin{lemma}[Physical vorticity trace on a mixed Neumann edge]
 \label{lem:mixed-neumann-vorticity-trace}
-\uses{prop:mixed-quotient-domain, def:sobolev-local}
+\uses{def:mixed-quotient-data, def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.mixed_neumann_vorticity_trace}
 \leanok
 For a mixed eigenfunction with $\lambda\ne0$, the one-sided vorticity trace
@@ -259,11 +259,11 @@ everywhere, where $g=\psi|_N$.
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, lem:mixed-neumann-stream-trace, lem:mixed-neumann-strip-weight,
+\uses{lem:mixed-cell-separatrix-h1, lem:mixed-neumann-stream-trace, lem:mixed-neumann-strip-weight,
   lem:edge-window-transport, lem:one-sided-trace-comparison, lem:transport-pair-eigen,
   lem:h1-interval-endpoints, lem:arc-diagonal}
 \leanok
-Shrink the $H^1$ collar and choose a full inward strip. The critical
+Choose a full inward strip in the cellwise $H^1$ collar. The critical
 strip estimate gives a canonical trace $S(a)$ in $L^2(dt)$.
 On each compact regular window the weak tangential equation gives
 an $H^1$ representative of $S+g_0$, where $g_0$ is the continuous
@@ -323,7 +323,7 @@ $G=T_\lambda F$.
 
 \begin{lemma}[Boundary square for eigenfunction traces]
 \label{lem:mixed-boundary-square-traces}
-\uses{prop:mixed-quotient-domain, def:canonical-profile,
+\uses{def:mixed-quotient-data, def:canonical-profile,
   lem:mixed-boundary-square-weighted, def:h1-interval}
 \lean{NoEmbeddedEigenvalues.mixed_boundary_square_traces}
 \leanok
@@ -350,12 +350,12 @@ with the Neumann stream energy.
 \end{proof}
 
 \begin{remark}[Digest note: no elliptic-center input]
-The manuscript invokes global $H^1$ regularity here. The critical strip
-trace uses only $H^1$ near the separatrix and $\omega/\cos a\in L^2$;
-both follow from Proposition~\ref{prop:mixed-quotient-domain}.
-Thus neither Corollary~\ref{cor:global-h1} nor the elliptic-center
-analysis is needed for this step. This removes that dependency, not
-the unverified transport gains in the quotient-domain proposition.
+The manuscript invokes global $H^1$ regularity here. The critical
+trace uses the inward collar from Lemma~\ref{lem:mixed-cell-separatrix-h1}
+and the bulk quotient weight from Definition~\ref{def:mixed-quotient-data}.
+Neither across-separatrix gluing nor elliptic-center regularity enters
+the trace argument. Proposition~\ref{prop:mixed-quotient-domain}
+is still needed to construct the supplied quotient data.
 \end{remark}
 
 \begin{definition}[Trace mass and static form]
@@ -424,7 +424,7 @@ embedding, and $1/p\in L^{4/3}$ near the corners.
 
 \begin{lemma}[Renormalized Neumann flux]
 \label{lem:mixed-neumann-renormalization}
-\uses{prop:mixed-quotient-domain, def:canonical-profile, lem:mixed-boundary-square-traces}
+\uses{def:mixed-quotient-data, def:canonical-profile, lem:mixed-boundary-square-traces}
 \lean{NoEmbeddedEigenvalues.mixedNeumannFluxCutoff,
   NoEmbeddedEigenvalues.mixed_neumann_flux_renormalized}
 \leanok

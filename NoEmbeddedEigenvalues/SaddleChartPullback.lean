@@ -107,6 +107,40 @@ theorem saddle_chart_pullback {n : ℕ} {P : ℝ × ℝ} (hP : P ∈ saddleSet) 
   · simpa only [hpre] using
       hk.comp_planeAffine (saddleLinear P hP) P hmp ho.measurableSet hr
 
+/-- The inverse saddle chart transfers the full weighted weak jet back to
+physical coordinates, including the Cartesian derivative indices. -/
+theorem saddle_chart_pushforward {n : ℕ} {P : ℝ × ℝ} (hP : P ∈ saddleSet) {ρ : ℝ}
+    {f : ℝ × ℝ → ℂ} {D : List (Fin 2) → ℝ × ℝ → ℂ}
+    (hD : HasWeakJetOn n (localDisk 0 ρ) (f ∘ saddleOrthoChart P) D) :
+    ∃ E, HasWeakJetOn n (localDisk P ρ) f E ∧
+      ∀ k s, RadialJetLp k s (localDisk 0 ρ) 0 D →
+        RadialJetLp k s (localDisk P ρ) P E := by
+  let A := saddleLinear P hP
+  let e := planeAffine A P
+  have he : (e : (ℝ × ℝ) → ℝ × ℝ) = saddleOrthoChart P := planeAffine_saddleLinear P hP
+  have hi : (e.symm : (ℝ × ℝ) → ℝ × ℝ) = planeAffine A.symm (-A.symm P) := by
+    funext p
+    change A.symm (p - P) = A.symm p + -A.symm P
+    rw [map_sub, sub_eq_add_neg]
+  have hm : MeasurePreserving e := he ▸ measurePreserving_saddleChart hP
+  have hmi : MeasurePreserving (planeAffine A.symm (-A.symm P)) :=
+    hi ▸ hm.symm e.toMeasurableEquiv
+  have hr (p : ℝ × ℝ) : localRadius 0 (planeAffine A.symm (-A.symm P) p) =
+      localRadius P p := by
+    rw [← hi, ← localRadius_saddleChart hP, ← he, e.apply_symm_apply]
+  have hpre : planeAffine A.symm (-A.symm P) ⁻¹' localDisk 0 ρ = localDisk P ρ := by
+    ext p
+    change localRadius 0 _ < ρ ↔ localRadius P p < ρ
+    rw [hr]
+  have hf : (f ∘ saddleOrthoChart P) ∘ planeAffine A.symm (-A.symm P) = f := by
+    funext p
+    simp only [← hi, ← he, Function.comp_apply, e.apply_symm_apply]
+  refine ⟨affineJet A.symm (-A.symm P) D, ?_, fun k s hk ↦ ?_⟩
+  · simpa only [hpre, hf] using
+      hD.comp_planeAffine A.symm (-A.symm P) hmi (isOpen_localDisk 0 ρ)
+  · simpa only [hpre] using hk.comp_planeAffine A.symm (-A.symm P) hmi
+      (isOpen_localDisk 0 ρ).measurableSet hr
+
 /-- Orthogonality preserves the trace of an arbitrary specified second jet.
 No symmetry of its mixed entries is assumed or needed. -/
 theorem affineJet_saddle_laplacian {P : ℝ × ℝ} (hP : P ∈ saddleSet)
