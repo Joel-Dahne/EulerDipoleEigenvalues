@@ -646,7 +646,15 @@ can be added here as they are formalized.
   means and unnormalized energies, central-parity Poincaré,
   constrained coercivity and the bridge from the actual Picone quotient.
   Separates the gradient estimate from the residual-certificate potential bound.
-- `Mixed.lean`, `Main.lean`: mixed-sector interfaces, rotation between mixed
+- `MixedField.lean`, `MixedBoundarySquare.lean`: the adapted field and the
+  smooth and weighted one-edge boundary squares.
+- `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
+  comparison on either odd axis, with canonical Sobolev traces.
+- `MixedStaticForm.lean`: the quotient interface, paired trace mass, Rellich
+  and weighted forms, square completion and static coercivity.
+- `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
+  paired virials and the static identity.
+- `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.
 

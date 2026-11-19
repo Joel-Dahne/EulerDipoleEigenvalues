@@ -101,4 +101,40 @@ theorem mixed_odd_a_exponent_bounds : ∃ C : ℝ, 0 ≤ C ∧
         |partialY mixedOddAExponent p| ≤ C := by
   sorry
 
+/-- Determinant of the second-order matrix, with its positive expansion on the
+open cell. The positive diagonal and determinant give positive definiteness. -/
+theorem mixed_comparison_matrix_positive {q : ℝ × ℝ} (hq : q ∈ mixedOpenCell) :
+    let h := Real.cos q.1
+    let k := Real.cos q.2
+    let d := mixedComparisonDiagonal q
+    let j := mixedComparisonOffDiagonal q
+    0 < d ∧ 0 < d ^ 2 - j ^ 2 ∧
+    d ^ 2 - j ^ 2 = h ^ 2 / (h + k) ^ 4 *
+      (h ^ 6 + 4 * h * (2 - h ^ 2) * k + (4 + 8 * h ^ 2 - 6 * h ^ 4) * k ^ 2 +
+        4 * h * k ^ 3 + h ^ 2 * k ^ 4) := by
+  sorry
+
+/-- The Robin numerator at `(h,0)` for a multiplier `ρ`.
+The first term is `3hρ` for odd-in-a comparisons and `hρ` for odd-in-b. -/
+def mixedRobinNumerator (oddA : Bool) (ρ : ℝ × ℝ → ℝ) (h : ℝ) : ℝ :=
+  (if oddA then 3 else 1) * h * ρ (h, 0) -
+    2 * (1 - h ^ 2) * partialX ρ (h, 0) - (2 - h ^ 2) * partialY ρ (h, 0)
+
+/-- The multiplier bounds and boundary inequality for the odd-in-b comparison.
+All derivatives on the Robin side are taken at `h>0`. -/
+theorem mixed_odd_b_multiplier_robin :
+    (∀ q ∈ Ioc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1,
+      (3 / 4 : ℝ) < mixedOddBMultiplier q ∧ mixedOddBMultiplier q < 5 / 3) ∧
+    ∀ h ∈ Ioc (0 : ℝ) 1,
+      1789 / 2500 * h ≤ mixedRobinNumerator false mixedOddBMultiplier h := by
+  sorry
+
+/-- The exponent version of the odd-in-a Robin bound; the positive exponential
+factor has been divided out. Only the regular edge is used. -/
+theorem mixed_odd_a_robin :
+    ∀ h ∈ Ioc (0 : ℝ) 1,
+      h / 250 ≤ 3 * h - 2 * (1 - h ^ 2) * partialX mixedOddAExponent (h, 0) -
+        (2 - h ^ 2) * partialY mixedOddAExponent (h, 0) := by
+  sorry
+
 end NoEmbeddedEigenvalues

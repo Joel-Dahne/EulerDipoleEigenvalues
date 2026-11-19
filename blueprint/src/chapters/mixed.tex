@@ -4,10 +4,17 @@
 By Lemma~\ref{lem:sector-swap} it suffices to treat the sector $(-,+)$: odd
 under $S_1$ (Dirichlet on the edges $a=\pm\pi/2$) and even under $S_2$ (Neumann
 on the edges $b=\pm\pi/2$). We write $D$ for the Dirichlet and $N$ for the
-Neumann edges of $\Cell$.
+Neumann edges of $\Cell$. Throughout this chapter eigenfunctions are at
+real $\lambda\ne0$ in the sector $(-,+)$. We use the continuous representative
+of $\phi=\psi/\cos a$ from Proposition~\ref{prop:mixed-quotient-domain}
+for its edge and corner values.
 
 \emph{Local notation:} $a=(x+y)/2$, $b=(x-y)/2$, $h=\cos a$, $k=\cos b$,
 $u=\sin a$, $v=\sin b$, $s=\Psi=2hk$, $p=h+k$, $R=u^2+v^2$, $\mu=h^2$.
+Here $dx\,dy=2\,da\,db$ and the physical gradient in the orthonormal
+diagonal directions is $\nabla_0/\sqrt2$, where $\nabla_0=(\partial_a,\partial_b)$.
+The edge subscripts $n,t$ denote physical unit normal and tangent
+derivatives; $t$ as an integration variable is directed flow time.
 
 \begin{remark}[Digest note: notation]
 Within this sector the manuscript uses three overlapping naming schemes for
@@ -23,6 +30,12 @@ should be unified in the paper.
 \begin{definition}[Mixed field]
 \label{def:mixed-field}
 \uses{def:cells, lem:cell-square, lem:diagonal-calculus, def:adapted-field}
+\lean{NoEmbeddedEigenvalues.mixedFieldX,
+ NoEmbeddedEigenvalues.mixedFieldY,
+ NoEmbeddedEigenvalues.mixedFieldA,
+ NoEmbeddedEigenvalues.mixedFieldB,
+ NoEmbeddedEigenvalues.mixedFieldCoeff}
+\leanok
 On $\Cell$ let
 $W=\tan(x/2)\partial_x+\tan(y/2)\partial_y=\frac{u}{p}\partial_a+\frac{v}{p}\partial_b$
 and $f=R/p^2$.
@@ -31,6 +44,8 @@ and $f=R/p^2$.
 \begin{lemma}[Mixed field algebra]
 \label{lem:mixed-field-algebra}
 \uses{def:mixed-field}
+\lean{NoEmbeddedEigenvalues.mixed_field_algebra, NoEmbeddedEigenvalues.mixedFieldMatrixOffDiagonal}
+\leanok
 $W\Psi=\Psi-2$, $W$ is adapted with coefficient $f$, $\Div W=f+1$, and in the
 orthonormal directions parallel to the $a$, $b$ axes
 \[
@@ -47,12 +62,13 @@ $(U\partial_U+V\partial_V)/2$.
 
 \begin{proposition}[Paired flux identity for the normal field]
 \label{prop:mixed-paired-flux}
-\uses{def:normal-field, def:canonical-profile}
-\notready
-With $f,c$ from Definition~\ref{def:normal-field}, every mixed-sector
-eigenfunction satisfies
+\uses{def:normal-field, def:canonical-profile, prop:mixed-quotient-domain}
+\lean{NoEmbeddedEigenvalues.mixed_paired_flux}
+\leanok
+Write $f_0,c_0$ for the coefficients in Definition~\ref{def:normal-field}.
+For a mixed eigenfunction and its quotient,
 \[
-  \int_\Cell\big[f|\omega|^2+(2-c)|\psi_n|^2+c|\psi_t|^2\big]
+  \int_\Cell\big[f_0|\omega|^2+(2-c_0)|\psi_n|^2+c_0|\psi_t|^2\big]\,dx\,dy
   =2\lim_{T\to\infty}\Big\{\sum_D\int_{-T}^T|\psi_n|^2\,dt
   -\sum_N\int_{-T}^T\big[|\psi_t|^2+\operatorname{Re}(\Omega\bar g)\big]\,dt\Big\},
 \]
@@ -62,31 +78,39 @@ energies may diverge (manuscript \texttt{(mf:paired)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:ee-truncated-virial, lem:pairing-limit, prop:saddle-first-gain, cor:mixed-saddle-jet, lem:saddle-normal-form}
-The bulk is integrable since $f\le C/d^2$ and $\omega/d\in L^2$. Apply the
-truncated virial along good levels. Near a saddle the linear jet $\ell=a\,u$
-has $(|\ell_n|^2-|\ell_t|^2)dt=|a|^2\frac{v^2-u^2}{u^2+v^2}\frac{du}u$ on
-$uv=h$, whose integral vanishes under $u\mapsto h/u$; this cancels the adjacent
-normal and tangential logarithms. The remainder is controlled by the weighted
-jet estimate.
+\uses{lem:ee-truncated-virial, prop:saddle-first-gain, cor:mixed-saddle-jet, lem:saddle-normal-form}
+The bulk is integrable since $f_0\le C/d^2$ and $\omega/d\in L^2$. Apply
+the truncated virial along good levels. In inward orthonormal saddle
+coordinates $(\xi,\eta)$ the model jet $\ell=A\xi$ has
+\[
+ (|\ell_n|^2-|\ell_t|^2)\,dt
+  = |A|^2\frac{\eta^2-\xi^2}{\xi^2+\eta^2}\frac{d\xi}{\xi}
+ \quad\text{on }\xi\eta=\epsilon.
+\]
+Its integral on a symmetrically truncated hyperbola vanishes under
+$\xi\leftrightarrow\eta$, cancelling the two adjacent logarithms.
+The weighted jet estimate controls the remainder. The canonical pairing
+limit still needs the mixed-character argument below.
 \end{proof}
 
 \begin{remark}[Digest note: pairing reuse needs complex characters]
 The truncated normal-field virial has no reflection-parity hypothesis.
-The cited pairing limit, however, assumes $R^*f=\pm f$. Mixed functions have $(R^*)^2f=-f$, so the argument needs
-the $\pm i$ character extension, or a separate half-orbit proof.
+Lemma~\ref{lem:pairing-limit}, however, assumes rotation character $\pm1$.
+On mixed functions the square of the quarter rotation acts by $-1$, so the
+argument needs the $\pm i$ character extension, or a separate half-orbit proof.
 This is not supplied by the even--even gradient trace theorem either:
 mixed linear saddle jets can make the individual edge energies divergent.
 \end{remark}
 
 \begin{proposition}[Mixed virial identity]
 \label{prop:mixed-virial}
-\uses{def:mixed-field}
-\notready
-Every mixed-sector eigenfunction satisfies, with the same centered flow-time
+\uses{def:mixed-field, prop:mixed-quotient-domain}
+\lean{NoEmbeddedEigenvalues.mixed_virial}
+\leanok
+For a mixed eigenfunction and its quotient, with the same centered flow-time
 cutoff on all four edges,
 \[
-  \int_\Cell f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi}
+  \int_\Cell \big(f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi}\big)\,dx\,dy
   =2\lim_{T\to\infty}\Big\{\sum_D\int_{-T}^T|\psi_n|^2\,dt
   -\sum_N\int_{-T}^T\big(|\partial_\tau\psi|^2+\operatorname{Re}(\omega|_N\,\bar\psi)\big)dt\Big\},
 \]
@@ -95,7 +119,8 @@ and the bulk integral converges absolutely (manuscript
 \end{proposition}
 
 \begin{proof}
-\uses{prop:mixed-paired-flux, lem:mixed-field-algebra, cor:mixed-saddle-jet, prop:saddle-first-gain}
+\uses{prop:mixed-paired-flux, lem:mixed-field-algebra, lem:mixed-boundary-square-traces,
+  cor:mixed-saddle-jet, prop:saddle-first-gain}
 $W-W_0$, with $W_0$ the normal field, is tangent to the orbits, and the
 tangential virial on $\{s>\epsilon\}$ gives
 $J_W-J_{W_0}=2\operatorname{Re}\int_{\partial}((W-W_0)\psi)\,\partial_n\bar\psi\,d\ell$.
@@ -109,6 +134,10 @@ $U\leftrightarrow V$ symmetry.
 
 \begin{lemma}[Mixed boundary square, smooth case]
 \label{lem:mixed-boundary-square}
+\lean{NoEmbeddedEigenvalues.mixed_boundary_square,
+ NoEmbeddedEigenvalues.mixedBoundaryTransport,
+ NoEmbeddedEigenvalues.mixedBoundarySquare}
+\leanok
 With $w=1-x^2$, $T_\lambda F=-i(wF'-xF)-\lambda F$ and $G=T_\lambda F$, for
 smooth $F$ on $[-1,1]$ and real $\lambda$,
 \[
@@ -128,14 +157,11 @@ integration; integrating the third term by parts leaves
 $\int[(1-3x^2)|F|^2+xw(|F|^2)']=0$. All boundary currents carry a factor $w$.
 \end{proof}
 
-\begin{remark}
-Checked symbolically for a test polynomial with nonzero endpoint values
-(scratch sympy computation).
-\end{remark}
-
 \begin{lemma}[Mixed boundary square on the weighted domain]
 \label{lem:mixed-boundary-square-weighted}
 \uses{lem:mixed-boundary-square, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.mixed_boundary_square_weighted}
+\leanok
 Let $\lambda\in\R$, $w=1-x^2$, and let $F,G$ be locally absolutely
 continuous on $(-1,1)$. Suppose $G=T_\lambda F$ almost everywhere,
 $F,G$ are bounded, and $\int_{-1}^1w|G'|^2<\infty$.
@@ -160,8 +186,10 @@ Integrate on compact subintervals and exhaust $(-1,1)$.
 
 \begin{lemma}[Boundary square for eigenfunction traces]
 \label{lem:mixed-boundary-square-traces}
-\uses{def:eigen-problem, def:sectors, def:canonical-profile,
+\uses{prop:mixed-quotient-domain, def:canonical-profile,
   lem:mixed-boundary-square-weighted, def:h1-interval}
+\lean{NoEmbeddedEigenvalues.mixed_boundary_square_traces}
+\leanok
 Let $\omega$ be a mixed-sector eigenfunction with $\lambda\ne0$.
 On a Neumann edge, use directed flow time $t$, put $x=\tanh t$ and
 $w=1-x^2$, and write the canonical transport pair as
@@ -169,7 +197,7 @@ $z=\sqrt wF$, $\psi|_N=\sqrt wG$.
 Then $F,G$ are locally absolutely continuous, $G$ is bounded,
 $\int w|G'|^2<\infty$, $F$ and $wF'$ are bounded, and the identity of
 Lemma~\ref{lem:mixed-boundary-square} holds. The physical vorticity
-trace on the edge agrees with the canonical profile.
+trace on the edge agrees almost everywhere with the canonical profile.
 \end{lemma}
 
 \begin{proof}
@@ -231,23 +259,34 @@ the unverified transport gains in the quotient-domain proposition.
 \begin{definition}[Trace mass and static form]
 \label{def:mixed-K}
 \uses{def:mixed-field, prop:mixed-quotient-domain}
+\lean{NoEmbeddedEigenvalues.mixedStaticForm,
+ NoEmbeddedEigenvalues.mixedTraceMassCutoff,
+ NoEmbeddedEigenvalues.mixedTraceMassDensity,
+ NoEmbeddedEigenvalues.mixedVirialDensity}
+\leanok
 With $\psi=h\phi$, define
 \[
-  M_{\mathrm{tr}}[\phi]=\lim_{T\to\infty}\Big(\sum_D\int_{-T}^T|\phi|^2dt
-  -\sum_N\int_{-T}^T|\phi|^2dt\Big),\qquad
+  M_{\mathrm{tr}}[\phi]=2\operatorname{Re}\int_\Cell
+     \frac{u\phi_a-v\phi_b}{p}\bar\phi\,da\,db,\qquad
   K[\phi]=J_W[h\phi]-M_{\mathrm{tr}}[\phi]-\sum_{P\text{ corner}}|\phi(P)|^2,
 \]
-where $J_W[\psi]=\int_\Cell f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi}$.
+where $J_W[\psi]=\int_\Cell(f|\omega|^2+\ip{M\nabla\psi}{\nabla\psi})\,dx\,dy$.
+The volume definition avoids taking a limit before its existence is known.
 \end{definition}
 
 \begin{lemma}[Trace mass as a volume integral]
 \label{lem:mixed-trace-mass}
 \uses{def:mixed-K}
+\lean{NoEmbeddedEigenvalues.mixed_trace_mass}
+\leanok
 The field $V=\frac up\partial_a-\frac vp\partial_b$ is divergence free in the
 $(a,b)$ rectangle, with outer normal flux $1/k$ on $D$ and $-1/h$ on $N$.
-Consequently
-$M_{\mathrm{tr}}[\phi]=2\operatorname{Re}\int_\Cell\frac{u\phi_a-v\phi_b}{p}\bar\phi\,da\,db$,
-an absolutely convergent integral.
+The volume integral defining $M_{\mathrm{tr}}[\phi]$ is absolutely convergent
+and equals the paired limit
+\[
+  \lim_{T\to\infty}\Big(\sum_D\int_{-T}^T|\phi|^2\,dt
+                         -\sum_N\int_{-T}^T|\phi|^2\,dt\Big).
+\]
 \end{lemma}
 
 \begin{proof}
@@ -258,7 +297,9 @@ by interchanging the two inward coordinates.
 
 \begin{lemma}[Static identity]
 \label{lem:mixed-K-identity}
-\uses{def:mixed-K}
+\uses{def:mixed-K, lem:mixed-boundary-square-traces}
+\lean{NoEmbeddedEigenvalues.mixed_static_identity}
+\leanok
 Every mixed eigenfunction satisfies
 $0=K[\phi]+\sum_N\int_{-1}^1w|wF''-3xF'-i\lambda F'|^2$. In particular
 $K[\phi]\le0$ (manuscript \texttt{(eq:mixed-K-identity)}).
@@ -278,6 +319,8 @@ $\phi$. Apply Lemma~\ref{lem:mixed-boundary-square-traces}.
 \begin{lemma}[Rellich form of $K$]
 \label{lem:mixed-rellich}
 \uses{def:mixed-K}
+\lean{NoEmbeddedEigenvalues.mixed_rellich}
+\leanok
 $K[\phi]=\int_\Cell\big(f|\omega|^2+|\nabla\psi|^2-2\operatorname{Re}((W\psi)\bar\omega)\big)\,dx\,dy
 -\sum_N\int h|\phi_a|^2\,da$ (manuscript \texttt{(eq:mixed-static-rellich)}).
 \end{lemma}
@@ -297,6 +340,8 @@ zero by $\theta\mapsto\pi/2-\theta$.
 \begin{lemma}[Weighted interior form]
 \label{lem:mixed-weighted-form}
 \uses{lem:mixed-rellich}
+\lean{NoEmbeddedEigenvalues.mixed_weighted_form}
+\leanok
 With $L_\mu=\partial_a^2-2\tan a\,\partial_a+\partial_b^2$ and
 $C_0=-f+\frac{2u^2}{hp}=1-\Div_\mu W$,
 \[
@@ -341,6 +386,9 @@ On the open diagonal-coordinate cell, $0\le-V\le4$, $g\le3$ and $|j|\le2$.
 \begin{lemma}[Completion of the square]
 \label{lem:mixed-completion}
 \uses{lem:mixed-weighted-form, def:mixed-coefficients, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixedSecondOrderForm, NoEmbeddedEigenvalues.mixed_completion,
+ NoEmbeddedEigenvalues.mixed_second_order_form_bounded}
+\leanok
 \[
   K[\phi]=\int_\Cell\frac{\mu f}2\Big|L_\mu\phi+\frac{C_0}f\phi\Big|^2\,da\,db+Q_2[\phi],
 \]
@@ -365,6 +413,8 @@ applied to $\nabla_0\phi$.
 \begin{lemma}[Positivity of the second-order matrix]
 \label{lem:mixed-G-positive}
 \uses{def:mixed-coefficients}
+\lean{NoEmbeddedEigenvalues.mixed_comparison_matrix_positive}
+\leanok
 $G$ is positive definite in the open cell:
 \[
   \det G=\frac{h^2}{p^4}\big[h^6+4h(2-h^2)k+(4+8h^2-6h^4)k^2+4hk^3+h^2k^4\big]>0 .
@@ -372,8 +422,9 @@ $G$ is positive definite in the open cell:
 \end{lemma}
 
 \begin{proof}
-Direct computation (checked numerically); every coefficient in the bracket is
-positive for $0<h,k\le1$.
+Expand $g^2-j^2$ using $u^2=1-h^2$ and $v^2=1-k^2$.
+The diagonal entry $g$ and every coefficient in the bracket are positive
+for $0<h,k\le1$.
 \end{proof}
 
 \section{Positive comparisons}
@@ -381,6 +432,10 @@ positive for $0<h,k\le1$.
 \begin{definition}[Comparison form on the quarter cell]
 \label{def:comparison-form}
 \uses{def:mixed-coefficients, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixedQuarterForm,
+ NoEmbeddedEigenvalues.MixedQuarterFormDomain,
+ NoEmbeddedEigenvalues.MixedQuarterZeroTrace}
+\leanok
 On $Q=(0,\pi/2)^2$, for $z\in H^1(Q)$, let
 \[
   \mathcal Q[z]=\int_Q\big(G\nabla z\cdot\nabla\bar z+V|z|^2\big)\,da\,db
@@ -392,18 +447,25 @@ On $Q=(0,\pi/2)^2$, for $z\in H^1(Q)$, let
 \begin{lemma}[Comparison lemma with logarithmic weights]
 \label{lem:robin-comparison}
 \uses{def:comparison-form, def:sobolev-local}
-Let $\rho(h,k)$ be positive, smooth for $h>0$, continuous on $[0,1]^2$, with
-$m\le\rho\le M$ and $|\rho_h|+|\rho_k|\le C(1+|\log h|)$. If $g=v\rho$
+\lean{NoEmbeddedEigenvalues.mixed_robin_comparison,
+ NoEmbeddedEigenvalues.MixedRobinMultiplier,
+ NoEmbeddedEigenvalues.mixedRobinNumerator}
+\leanok
+Let $\rho(h,k)$ be continuous on $[0,1]^2$, with $0<m\le\rho\le M$ there.
+Assume it is smooth on a neighbourhood of $(0,1]\times[0,1]$, and that
+$|\rho_h|+|\rho_k|\le C(1+|\log h|)$ on that strip. The Robin inequalities
+below are only on the regular edge $k=0$, $0<h\le1$. If $g=v\rho$
 satisfies $\mathcal Pg\ge ch^2g$ in $Q$ and
 $h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$, then
-$\mathcal Q[z]\ge c\int_Qh^2|z|^2$ for all $z\in H^1(Q)$ with $z(a,0)=0$.
-The same holds for $z(0,b)=0$ if $g=u\rho$ satisfies $\mathcal Pg\ge ch^2g$ and
+$\mathcal Q[z]\ge c\int_Qh^2|z|^2$ for all $z\in H^1(Q)$ with zero Sobolev
+trace on $b=0$. The same holds for zero Sobolev trace on $a=0$ if $g=u\rho$
+satisfies $\mathcal Pg\ge ch^2g$ and
 $3h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$
 (manuscript \texttt{(lem:logarithmic-robin-comparison)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:picone, lem:trace-l2}
+\uses{lem:picone, lem:trace-l2, lem:mixed-G-positive}
 Picone identity (Lemma~\ref{lem:picone}) on a rectangle truncated at
 $h=\epsilon$ and at distance $\delta$ from the odd axis. The Robin current has
 the stated numerator; the current near the odd axis is $O(\delta)$; the
@@ -426,8 +488,12 @@ Let $w_v=vF_v(h,k)$ with
 \begin{lemma}[Odd-in-$b$ comparison]
 \label{lem:mixed-v-comparison}
 \uses{def:odd-b-comparison}
-$\tfrac34<F_v<\tfrac53$, $\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$, and on
-$b=\pi/2$ (that is, $k=0$)
+\lean{NoEmbeddedEigenvalues.mixed_odd_b_multiplier_robin,
+ NoEmbeddedEigenvalues.mixed_odd_b_interior}
+\leanok
+$\tfrac34<F_v<\tfrac53$ on $(0,1]\times[0,1]$,
+$\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$, and on
+the regular edge $k=0$, $0<h\le1$,
 \[
   hF_v-2(1-h^2)\partial_hF_v-(2-h^2)\partial_kF_v\ge\tfrac{1789}{2500}h
 \]
@@ -477,7 +543,11 @@ This asserts boundedness, not a continuous gradient at $(0,0)$.
 \begin{lemma}[Odd-in-$a$ comparison]
 \label{lem:mixed-u-comparison}
 \uses{def:odd-a-comparison}
-$\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ in $Q$, and on $b=\pi/2$ (that is, $k=0$)
+\lean{NoEmbeddedEigenvalues.mixed_odd_a_robin,
+ NoEmbeddedEigenvalues.mixed_odd_a_interior}
+\leanok
+$\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ in $Q$, and on the regular edge
+$k=0$, $0<h\le1$,
 \[
   3h-2(1-h^2)\partial_hF_u-(2-h^2)\partial_kF_u\ge\tfrac h{250}
 \]
@@ -494,6 +564,8 @@ Lemmas~\ref{cert:odd-a} and~\ref{cert:robin}.
 \begin{lemma}[Parity splitting]
 \label{lem:mixed-parity-split}
 \uses{lem:mixed-completion}
+\lean{NoEmbeddedEigenvalues.mixed_parity_split}
+\leanok
 Write $\phi=\phi_u+\phi_v$ with $\phi_u$ odd in $a$ and even in $b$, $\phi_v$
 even in $a$ and odd in $b$ (possible since $\phi$ is centrally odd). Then
 $Q_2[\phi]=Q_2[\phi_u]+Q_2[\phi_v]$.
@@ -507,6 +579,8 @@ the off-diagonal coefficient is odd in each.
 \begin{theorem}[Static coercivity]
 \label{thm:mixed-coercivity}
 \uses{lem:mixed-completion}
+\lean{NoEmbeddedEigenvalues.mixed_static_coercivity}
+\leanok
 For the mixed quotient,
 $K[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db=\frac1{400}\int_\Cell|\psi|^2\,dx\,dy$
 (manuscript \texttt{(eq:mixed-static-coercivity)}).

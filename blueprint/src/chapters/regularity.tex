@@ -3929,14 +3929,21 @@ exclusion route.
 \begin{proposition}[Mixed-sector regularity]
 \label{prop:mixed-quotient-domain}
 \uses{def:eigen-problem, def:sectors, def:cells, lem:cell-square, def:sobolev-local}
-\notready
-In the mixed sector $(-,+)$ (odd across $a=\pm\pi/2$, even across
+\lean{NoEmbeddedEigenvalues.mixed_quotient_domain, NoEmbeddedEigenvalues.MixedQuotientData}
+\leanok
+For $\lambda\ne0$ in the mixed sector $(-,+)$ (odd across $a=\pm\pi/2$, even across
 $b=\pm\pi/2$), $\omega\in H^1$ near the separatrix with zero trace on the odd
 edges, $\psi\in H^3$ near the separatrix, and on the positive cell
 \[
   \phi=\psi/\cos a\in H^2(\Cell),\qquad \nu=\omega/\cos a\in L^2(\Cell),
 \]
-including the corners (manuscript \texttt{(prop:mixed-quotient-domain)}).
+including the corners. We take the continuous representative of $\phi$
+on the closed cell. The quotient is centrally odd, and its normal derivative
+has zero Sobolev trace on each edge: the quotient is even across regular edges,
+including the odd edges where both $\psi$ and $\cos a$ change sign. In the
+diagonal chart its weak derivatives satisfy
+$(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
+(Manuscript \texttt{(prop:mixed-quotient-domain)}.)
 \end{proposition}
 
 \begin{proof}
@@ -3966,7 +3973,11 @@ $\psi(u,v)/u=\int_0^1\psi_u(tu,v)\,dt$ through order two;
 Minkowski uses only the integrable dilation factor $t^{-1/2}$.
 The smooth factor between $u$ and $\cos a$ gives the $H^2$ quotient.
 Away from the odd edges, the original $\psi\in H^2$ suffices,
-including at the elliptic center.
+including at the elliptic center. The closed-cell $H^2$ representative
+is continuous. The two reflection parities give central oddness and,
+after division, evenness across each regular side, giving zero normal
+trace there. The equation for the weak jet follows by expanding
+$\Delta_0(h\phi)=2\omega$.
 \end{proof}
 
 \begin{remark}[The mixed quotient is not a transport pair]

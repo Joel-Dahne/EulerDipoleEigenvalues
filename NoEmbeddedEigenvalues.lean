@@ -57,7 +57,12 @@ import NoEmbeddedEigenvalues.Melnikov
 import NoEmbeddedEigenvalues.PairingLimit
 import NoEmbeddedEigenvalues.Picone
 import NoEmbeddedEigenvalues.Mixed
+import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.MixedComparison
+import NoEmbeddedEigenvalues.MixedComparisonForm
+import NoEmbeddedEigenvalues.MixedField
+import NoEmbeddedEigenvalues.MixedFlux
+import NoEmbeddedEigenvalues.MixedStaticForm
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial
 import NoEmbeddedEigenvalues.CorrectedBoundaryForm
