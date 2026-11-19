@@ -10,6 +10,8 @@ import NoEmbeddedEigenvalues.IntervalLinearHardy
 import NoEmbeddedEigenvalues.Analysis.AxisReflectionJets
 import NoEmbeddedEigenvalues.SpecifiedJetLp
 import NoEmbeddedEigenvalues.TraceH2
+import NoEmbeddedEigenvalues.LocalToGlobal
+import NoEmbeddedEigenvalues.WeakJetOperations
 
 /-!
 # Local analytic interfaces for the quotient construction
@@ -317,6 +319,71 @@ theorem even_h2_axis_hardy {j : Fin 2} {a l r : ℝ} (ha : 0 < a) (hlr : l < r)
           (hB.trans_eq (congrArg (4 * ·) (hi (fun p ↦ ‖dd p‖ ^ 2))))
   · exact odd_vertical_hardy ha hlr hdL hddL hdd ho
 
+private theorem periodize_poisson_h3 {K : Set (ℝ × ℝ)} (hc : IsCompact K)
+    {w G : ℝ × ℝ → ℂ} {d e : Fin 2 → ℝ × ℝ → ℂ}
+    (hw : MemLp w 2 volume) (hG : MemSobolevOn 1 univ G)
+    (hd : ∀ j, MemLp (d j) 2 volume) (he : ∀ j, MemLp (e j) 2 volume)
+    (hw₀ : ∀ p ∉ K, w p = 0) (hG₀ : ∀ p ∉ K, G p = 0)
+    (hd₀ : ∀ j p, p ∉ K → d j p = 0) (he₀ : ∀ j p, p ∉ K → e j p = 0)
+    (hwd : ∀ j, HasWeakPartialOn univ j w (d j))
+    (hde : ∀ j, HasWeakPartialOn univ j (d j) (e j))
+    (htrace : ∀ᵐ p, e 0 p + e 1 p = G p) : MemSobolev 3 (compactPeriodize w) := by
+  have hG₂ : MemLp G 2 volume := by simpa using hG.memLp
+  have hG₁ : MemSobolev 1 (compactPeriodize G) :=
+    by simpa only [Nat.cast_one] using memSobolev_compactPeriodize 1 hc hG₀ hG
+  have hwd' (j : Fin 2) := hasFourierPartial_compactPeriodize hc hw₀ (hd₀ j) hw (hd j) (hwd j)
+  have hde' (j : Fin 2) := hasFourierPartial_compactPeriodize hc (hd₀ j) (he₀ j)
+    (hd j) (he j) (hde j)
+  have hLap := hasFourierLaplacian_of_second ((hasFourierPartial_iff_second (hwd' 0)).mp (hde' 0))
+    ((hasFourierPartial_iff_second (hwd' 1)).mp (hde' 1))
+  have heq : compactPeriodize (e 0) + compactPeriodize (e 1) = compactPeriodize G := by
+    apply fourierCoeff_ext
+    intro k
+    rw [fourierCoeff_add, fourierCoeff_compactPeriodize hc (he₀ 0) (he 0),
+      fourierCoeff_compactPeriodize hc (he₀ 1) (he 1), fourierCoeff_compactPeriodize hc hG₀ hG₂,
+      ← mul_add]
+    congr 1
+    have hInt (j : Fin 2) : Integrable (fun p ↦ char (-k) (torusProj p) * e j p) := by
+      have h := ((he j).locallyIntegrable (by norm_num)).integrableOn_isCompact hc
+      have hi : Integrable (e j) := by
+        rw [← integrable_indicator_iff hc.isClosed.measurableSet] at h
+        exact h.congr (Eventually.of_forall fun p ↦ by
+          by_cases hp : p ∈ K <;> simp [hp, he₀ j p])
+      refine hi.norm.mono' (((char (-k)).continuous.comp
+        isOpenQuotientMap_torusProj.continuous).aestronglyMeasurable.mul
+          (he j).aestronglyMeasurable) ?_
+      exact Eventually.of_forall fun p ↦ by rw [norm_mul, norm_char, one_mul]
+    rw [← integral_add (hInt 0) (hInt 1)]
+    apply integral_congr_ae
+    filter_upwards [htrace] with p hp
+    simpa only [← mul_add] using congrArg (char (-k) (torusProj p) * ·) hp
+  rw [heq] at hLap
+  have hInv : MemSobolev 3 (invLap (compactPeriodize G)) := by
+    simpa only [show (1 : ℝ) + 2 = 3 by norm_num] using hG₁.invLap
+  -- Ignore the zero mode in the comparison with the inverse Laplacian.
+  apply hInv.congr_cofinite
+  filter_upwards [Filter.eventually_cofinite_ne (0 : ℤ × ℤ)] with k hk
+  have hn : (normSq k : ℂ) ≠ 0 := by exact_mod_cast (normSq_pos k hk).ne'
+  rw [fourierCoeff_invLap, ite_eq_right hk, hLap k, neg_mul, neg_neg, mul_div_cancel_left₀ _ hn]
+
+private theorem torusProj_injOn_unitBall (x : ℝ × ℝ) :
+    InjOn torusProj (Metric.ball x 1) := by
+  intro p hp q hq hpq
+  have hdist : dist q p < 2 := by
+    have h₁ : dist p x < 1 := hp
+    have h₂ : dist q x < 1 := hq
+    linarith [dist_triangle_right q p x]
+  obtain ⟨n, rfl⟩ := exists_liftShift_of_torusProj_eq hpq
+  have hcoord (m : ℤ) (a : ℝ) (h : dist (a + m * (2 * Real.pi)) a < 2) : m = 0 := by
+    by_contra hm
+    have hh : (1 : ℝ) ≤ |(m : ℝ)| := by exact_mod_cast Int.one_le_abs hm
+    rw [Real.dist_eq, add_sub_cancel_left, abs_mul,
+      abs_of_pos (show 0 < 2 * Real.pi by positivity)] at h
+    nlinarith [Real.pi_gt_three, mul_le_mul_of_nonneg_right hh (by positivity : 0 ≤ 2 * Real.pi)]
+  rw [Prod.dist_eq, max_lt_iff] at hdist
+  have hn : n = 0 := Prod.ext (hcoord n.1 p.1 hdist.1) (hcoord n.2 p.2 hdist.2)
+  rw [hn, liftShift_zero]
+
 /-- Interior elliptic H³ regularity, with the Laplacian identified weakly
 (the regularity part of `lem:elliptic-local`). -/
 theorem elliptic_local_h3 {U : Set (ℝ × ℝ)} (hU : IsOpen U) {u F : ℝ × ℝ → ℂ}
@@ -324,7 +391,114 @@ theorem elliptic_local_h3 {U : Set (ℝ × ℝ)} (hU : IsOpen U) {u F : ℝ × �
     (hF : MemSobolevLocOn 1 U F) (hD : HasWeakJetOn 2 U u D)
     (hΔ : ∀ᵐ p ∂(volume.restrict U), D [0, 0] p + D [1, 1] p = F p) :
     MemSobolevLocOn 3 U u := by
-  sorry
+  apply memSobolevLocOn_of_locally_ae
+  intro x hx
+  obtain ⟨r, hr, hrU⟩ := Metric.nhds_basis_closedBall.mem_iff.mp (hU.mem_nhds hx)
+  let ρ := min r 1 / 2
+  have hρ : 0 < ρ := half_pos (lt_min hr zero_lt_one)
+  let B := Metric.ball x ρ
+  let b : ContDiffBump x := ⟨ρ / 4, ρ / 2, by positivity, by linarith⟩
+  let χ : ℝ × ℝ → ℂ := fun p ↦ b p
+  let K := tsupport χ
+  have hχ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) χ := Complex.ofRealCLM.contDiff.comp b.contDiff
+  have hc : IsCompact K := b.hasCompactSupport.comp_left Complex.ofReal_zero
+  have hKB : K ⊆ B := by
+    refine (tsupport_comp_subset Complex.ofReal_zero b).trans ?_
+    rw [b.tsupport_eq]
+    exact Metric.closedBall_subset_ball (by linarith : ρ / 2 < ρ)
+  have hB : B ⊆ U := (Metric.ball_subset_closedBall.trans
+    (Metric.closedBall_subset_closedBall (by dsimp [ρ]; linarith [min_le_left r 1]))).trans hrU
+  have hKU := hKB.trans hB
+  let w : ℝ × ℝ → ℂ := fun p ↦ χ p * u p
+  let a (j : Fin 2) := coordPartial j χ
+  let A (j : Fin 2) := coordPartial j (a j)
+  let d (j : Fin 2) : ℝ × ℝ → ℂ := fun p ↦ a j p * u p + χ p * D [j] p
+  let e (j : Fin 2) : ℝ × ℝ → ℂ := fun p ↦
+    (A j p * u p + a j p * D [j] p) + (a j p * D [j] p + χ p * D [j,j] p)
+  let G : ℝ × ℝ → ℂ := fun p ↦
+    ((A 0 p * u p + a 0 p * D [0] p) + a 0 p * D [0] p) +
+    ((A 1 p * u p + a 1 p * D [1] p) + a 1 p * D [1] p) + χ p * F p
+  have ha (j : Fin 2) := contDiff_coordPartial_top j hχ
+  have hA (j : Fin 2) := contDiff_coordPartial_top j (ha j)
+  have has (j : Fin 2) : tsupport (a j) ⊆ K := tsupport_coordPartial_subset j χ
+  have hAs (j : Fin 2) : tsupport (A j) ⊆ K :=
+    (tsupport_coordPartial_subset j (a j)).trans (has j)
+  have hac (j : Fin 2) : HasCompactSupport (a j) :=
+    hc.of_isClosed_subset (isClosed_tsupport _) (has j)
+  have hwd (j : Fin 2) : HasWeakPartialOn univ j w (d j) := by
+    have hj := hD.2 [] (by simp) j
+    rw [hD.1] at hj
+    exact hj.cutoff hχ hc hKU _
+  have hde (j : Fin 2) : HasWeakPartialOn univ j (d j) (e j) := by
+    have hj := hD.2 [] (by simp) j
+    rw [hD.1] at hj
+    exact (hj.cutoff (ha j) (hac j) ((has j).trans hKU) _).add
+      ((hD.2 [j] (by simp) j).cutoff hχ hc hKU _)
+  have hc₀ (f : ℝ × ℝ → ℂ) (hf : tsupport f ⊆ K) (p : ℝ × ℝ) (hp : p ∉ K) : f p = 0 :=
+    image_eq_zero_of_notMem_tsupport (fun h ↦ hp (hf h))
+  have hw₀ (p : ℝ × ℝ) (hp : p ∉ K) : w p = 0 := by simp [w, hc₀ χ (subset_refl _) p hp]
+  have hzero (p : ℝ × ℝ) (hp : p ∉ K) :
+      χ p = 0 ∧ (∀ j, a j p = 0) ∧ (∀ j, A j p = 0) :=
+    ⟨hc₀ χ (subset_refl _) p hp, fun j ↦ hc₀ (a j) (has j) p hp,
+      fun j ↦ hc₀ (A j) (hAs j) p hp⟩
+  have hd₀ (j : Fin 2) (p : ℝ × ℝ) (hp : p ∉ K) : d j p = 0 := by
+    obtain ⟨h₁, h₂, -⟩ := hzero p hp
+    simp [d, h₁, h₂]
+  have he₀ (j : Fin 2) (p : ℝ × ℝ) (hp : p ∉ K) : e j p = 0 := by
+    obtain ⟨h₁, h₂, h₃⟩ := hzero p hp
+    simp [e, h₁, h₂, h₃]
+  have hG₀ (p : ℝ × ℝ) (hp : p ∉ K) : G p = 0 := by
+    obtain ⟨h₁, h₂, h₃⟩ := hzero p hp
+    simp [G, h₁, h₂, h₃]
+  have hs (k : ℕ) {f g : ℝ × ℝ → ℂ} (hf : MemSobolevLocOn k U f)
+      (hg : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) g) (hgs : tsupport g ⊆ K) :
+      MemSobolevOn k univ (fun p ↦ g p * f p) :=
+    hf.cutoff k hU hg (hc.of_isClosed_subset (isClosed_tsupport _) hgs) (hgs.trans hKU)
+  have hLp {f : ℝ × ℝ → ℂ} {k : ℕ} (hf : MemSobolevOn k univ f) : MemLp f 2 volume := by
+    simpa only [Measure.restrict_univ] using hf.memLp
+  have hD₁ (j : Fin 2) : MemSobolevLocOn 1 U (D [j]) :=
+    hD.memSobolevLocOn hu [j] (by simp) (by simp)
+  have hw := hLp (hs 2 hu hχ (subset_refl K))
+  have hd (j : Fin 2) : MemLp (d j) 2 volume :=
+    hLp ((hs 1 hu.of_succ (ha j) (has j)).add (hs 1 (hD₁ j) hχ (subset_refl K)))
+  have he (j : Fin 2) : MemLp (e j) 2 volume := by
+    have h₁ := hLp (hs 0 hu.of_succ.of_succ (hA j) (hAs j))
+    have h₂ := hLp (hs 0 (hD₁ j).of_succ (ha j) (has j))
+    have hD₂ : MemSobolevLocOn 0 U (D [j, j]) :=
+      hD.memSobolevLocOn hu [j, j] (by simp) (by simp)
+    have h₃ := hLp (hs 0 hD₂ hχ (subset_refl K))
+    exact (h₁.add h₂).add (h₂.add h₃)
+  have hG : MemSobolevOn 1 univ G := by
+    have hj (j : Fin 2) := ((hs 1 hu.of_succ (hA j) (hAs j)).add
+      (hs 1 (hD₁ j) (ha j) (has j))).add (hs 1 (hD₁ j) (ha j) (has j))
+    exact ((hj 0).add (hj 1)).add (hs 1 hF hχ (subset_refl K))
+  have htrace : ∀ᵐ p, e 0 p + e 1 p = G p := by
+    filter_upwards [(ae_restrict_iff' hU.measurableSet).mp hΔ] with p hp
+    by_cases hpK : p ∈ K
+    · dsimp [e, G]
+      linear_combination χ p * hp (hKU hpK)
+    · rw [he₀ 0 p hpK, he₀ 1 p hpK, hG₀ p hpK, add_zero]
+  have h₃ := periodize_poisson_h3 hc hw hG hd he hw₀ hG₀ hd₀ he₀ hwd hde htrace
+  let V := Metric.ball x (ρ / 4)
+  have hVB : V ⊆ B := Metric.ball_subset_ball (by linarith)
+  have hinj : InjOn torusProj B := (torusProj_injOn_unitBall x).mono
+    (Metric.ball_subset_ball (by dsimp [ρ]; linarith [min_le_right r 1]))
+  refine ⟨V, Metric.isOpen_ball, Metric.mem_ball_self (by positivity),
+    liftL2 (compactPeriodize w), (memSobolevOn_liftL2 h₃ Metric.isBounded_ball).memSobolevLocOn, ?_⟩
+  filter_upwards [ae_restrict_of_ae (liftL2_compactPeriodize hc hw₀ hw),
+    ae_restrict_mem (Metric.isOpen_ball (x := x) (ε := ρ / 4)).measurableSet] with p hp hpV
+  have hpB := hVB hpV
+  rw [hp, liftPeriodize, finsum_eq_single _ (0 : ℤ × ℤ) (fun n hn ↦ ?_), liftShift_zero]
+  · have hone : b p = 1 := b.one_of_mem_closedBall (Metric.ball_subset_closedBall hpV)
+    simp [w, χ, hone]
+  · by_contra hn₀
+    have hm : liftShift n p ∈ K := by_contra fun h ↦ hn₀ (hw₀ _ h)
+    have hnp := hinj (hKB hm) hpB (torusProj_liftShift n p)
+    apply hn
+    have h₁ := congrArg Prod.fst hnp
+    have h₂ := congrArg Prod.snd hnp
+    have hpi : (2 * Real.pi) ≠ 0 := by positivity
+    exact Prod.ext (by simpa [liftShift, hpi] using h₁) (by simpa [liftShift, hpi] using h₂)
 
 /-- Uniform squared dyadic elliptic estimate (`lem:elliptic-dyadic`). -/
 theorem elliptic_dyadic : ∃ C : ℝ, 0 < C ∧ ∀ (c : ℝ × ℝ) (r : ℝ), 0 < r →
