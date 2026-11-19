@@ -3905,16 +3905,22 @@ no maximal-domain or closed-operator theorem is needed.
 
 \begin{proposition}[Quotient domain with corner bounds, odd--odd]
 \label{prop:dd-quotient-domain}
-\uses{def:eigen-problem, def:sectors, def:sobolev-torus}
-For every odd--odd eigenfunction,
+\uses{def:eigen-problem, def:sectors, def:sobolev-torus, def:local-weak-jets,
+  def:saddle-ortho-chart}
+\lean{NoEmbeddedEigenvalues.dd_quotient_domain}
+\leanok
+For every odd--odd eigenfunction with $\lambda\ne0$,
 \[
   \phi:=\psi/\Psi\in H^2(\T^2),\qquad \nu:=\omega/\Psi\in L^2(\T^2),\qquad
   \nu/d\in L^2(\T^2).
 \]
-$\phi$ is even under both separatrix reflections, $(\nu,\phi)$ is a transport
-pair ($H(\nu+\phi)=\lambda\nu$ in the graph domain), and at each saddle there is
-a constant $a$ with $(\phi-a)/r^2,\ \nabla\phi/r\in L^2$ locally and
-$\phi(\mathrm{saddle})=a$ (manuscript \texttt{(prop:dd-quotient-domain)}).
+$\phi$ is even under both separatrix reflections and
+$H(\nu+\phi)=\lambda\nu$ in the periodic weak graph domain.
+The global $\nu/d$ weight is read over one period box of the lift.
+At each lifted saddle $P$, the continuous quotient in the orthonormal
+chart has $(\phi-a)/r^2,\ \nabla\phi/r\in L^2$ on a disk, with $a$ its
+value at $P$ and the gradient taken from its weak jet
+(manuscript \texttt{(prop:dd-quotient-domain)}).
 \end{proposition}
 
 \begin{proof}
@@ -4014,10 +4020,13 @@ jet-subtracted pair before division, not directly to $(\nu,\phi)$.
 
 \begin{proposition}[Regularity at the elliptic centers]
 \label{prop:center-regularity}
-\uses{def:eigen-problem, def:sobolev-local}
-\notready
-Every eigenfunction has $\omega\in H^1$ near each elliptic center, including
-the case $\lambda\in\Z$ (manuscript \texttt{(prop:center-regularity)}).
+\uses{def:eigen-problem, def:sobolev-local, lem:lift-torus}
+\lean{NoEmbeddedEigenvalues.center_regularity}
+\leanok
+For every eigenfunction with $\lambda\ne0$, the lifted vorticity is in
+$H^1$ on some ball about each lift $P$ of an elliptic center, characterized
+by $|\Psi(P)|=2$. This includes nonzero integer $\lambda$
+(manuscript \texttt{(prop:center-regularity)}).
 \end{proposition}
 
 \begin{proof}
@@ -4033,10 +4042,11 @@ cylinder (indicial roots $\pm\sqrt{m^2+8}$) to get $p/r^3,\nabla p/r^2,D^2p/r\in
 
 \begin{corollary}[Global $H^1$ regularity]
 \label{cor:global-h1}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local}
-\notready
-In the odd--odd and mixed sectors every eigenfunction has $\omega\in H^1(\T^2)$
-and $\psi\in H^3(\T^2)$ (manuscript \texttt{(cor:global-eigenfunction-h1)}).
+\uses{def:eigen-problem, def:sectors, def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.global_eigenfunction_h1}
+\leanok
+In the odd--odd and mixed sectors every eigenfunction with $\lambda\ne0$
+has $\omega\in H^1(\T^2)$ and $\psi\in H^3(\T^2)$ (manuscript \texttt{(cor:global-eigenfunction-h1)}).
 \end{corollary}
 
 \begin{proof}

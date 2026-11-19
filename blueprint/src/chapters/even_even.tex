@@ -1224,7 +1224,11 @@ Lemma~\ref{lem:weighted-boundary-positivity}.
 \begin{lemma}[Affine splitting]
 \label{lem:affine-splitting}
 \uses{lem:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
-If $F=F_0+a+b\xi$ with $F_0(\pm1)=0$ and $F\in\mathcal D_w$, then
+\lean{NoEmbeddedEigenvalues.flowBoundaryForm_affine_splitting}
+\leanok
+Let $F\in\mathcal D_w$ have canonical endpoint values $a-b$ and $a+b$.
+Then $F_0(\xi)=F(\xi)-a-b\xi$ is in $\mathcal D_w$ with zero endpoint
+values, and
 \[
   \mathcal F_\lambda(F)=\mathcal F_\lambda(F_0)+\lambda^2|b|^2
   +2\lambda\operatorname{Im}(b\bar a)

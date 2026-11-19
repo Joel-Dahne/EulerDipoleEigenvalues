@@ -12,7 +12,8 @@ rebuilds both the graphs and the report.
   certificates for the residual bound.
 - **Mixed:** odd–even exclusion is admitted; even–odd follows by rotation.
 
-The main theorem combines the sector exclusions and is not yet admission-free.
+All blueprint statements are represented in Lean. The main theorem combines
+the sector exclusions and is not yet admission-free.
 The reworked manuscript presents the introduction through the main theorem;
 later sections are placeholders.
 

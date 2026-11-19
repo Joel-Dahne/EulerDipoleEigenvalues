@@ -120,6 +120,7 @@ proof mechanisms. Module names below are relative to
   `WeakParameterIntegral.lean` proves local integrability and weak differentiation
   of signed midpoint primitives by sliced testing and Fubini.
 - `TraceL2.lean`, `TraceH2.lean`, `TraceGagliardo.lean`: rectangle trace package.
+  `BoundaryTraceH2.lean` states the one-sided tangential trace result.
   `TraceWeakGluing.lean` retains specified derivatives and the common canonical trace
   across a matching-trace line, by fiberwise integration by parts and transverse
   cutoffs. Derivative-witness replacement and nested normal-window consistency
@@ -263,8 +264,8 @@ proof mechanisms. Module names below are relative to
 The Lean results for [Regularity of eigenfunctions](../blueprint/src/chapters/regularity.tex)
 live in `Regularity/`, retaining the namespace `NoEmbeddedEigenvalues`.
 General Sobolev/jet, trace and weighted-transport prerequisites remain shared
-in the sections above. Mixed-sector and center results without Lean statements
-can be added here as they are formalized.
+in the sections above. `Regularity/Center.lean` states local elliptic-center
+regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
 
 - `Analysis/AxisReflectionJets.lean`: volume-preserving axis reflections, disk
   invariance and diagonal pullback of ordered weak jets. Weak uniqueness transfers
@@ -455,6 +456,8 @@ can be added here as they are formalized.
   Explicit gap lemmas cover exponents three halves and three for odd–odd data.
 - `Regularity/MixedSaddle.lean`: the exponent-two inverse gives the unique
   linear jet in the odd coordinate and the three weighted remainders.
+  `Regularity/SaddleLinearization.lean` states the Jacobian and Hamiltonian
+  actions in the normalized coordinates.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization and quadratic compatibility.
   The raw chart parity theorem lives in `SaddleChartPullback.lean`, after its
@@ -558,7 +561,10 @@ can be added here as they are formalized.
   quotient from the lower local analytic inputs.
 - `Regularity/OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
   invariant division/periodic gain interfaces, the generic continuous-forcing
-  transport-pair bridge, and quotient-existence assembly.
+  transport-pair bridge, and quotient-existence assembly. The full quotient
+  statement and quantitative divided-Laplacian bound are in
+  `Regularity/OddOddDomain.lean`, with the independent corner Hardy statement
+  in `Regularity/EvenCornerHardy.lean`.
 
 ### Virials and regularization
 

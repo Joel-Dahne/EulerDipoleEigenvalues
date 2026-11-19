@@ -3107,9 +3107,13 @@ integral. Interchange the coordinates for the other estimate.
 
 \begin{lemma}[Corner Hardy bounds for even H2 functions]
 \label{lem:even-h2-corner-hardy}
-\uses{def:sobolev-local}
-Let $F\in H^2(D)$ on a disk centered at zero be even under both axis
-reflections, and let $c=F(0)$ for its continuous representative. On a
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.even_h2_corner_hardy}
+\leanok
+Let $F\in H^2(D)$ on a disk centered at zero be even almost everywhere
+under both axis reflections, and let $c=F(0)$ for its continuous
+representative. Read derivatives from a specified square-integrable
+weak jet for $F$. On a
 smaller concentric disk,
 \[
  \nabla F/r\in L^2,\qquad (F-c)/r^2\in L^2.
@@ -3218,6 +3222,8 @@ null. Take $N_F=\zeta/\Psi$ almost everywhere.
 \begin{lemma}[Bound for the divided Laplacian]
 \label{lem:even-h2-dipole-laplacian-bound}
 \uses{lem:even-h2-dipole-laplacian, def:sobolev-torus}
+\lean{NoEmbeddedEigenvalues.even_h2_dipole_laplacian_bound}
+\leanok
 The divided Laplacian satisfies $\|N_F\|_2\le C\|F\|_{H^2}$ for a constant
 independent of the even function $F$. This quantitative bound is not
 required by the exclusion construction.
@@ -5047,7 +5053,9 @@ trace estimate is needed.
 
 \begin{lemma}[Tangential derivative of an $H^2$ boundary trace]
 \label{lem:trace-h2-boundary}
-\uses{def:sobolev-local}
+\uses{def:sobolev-local, def:local-weak-jets, lem:trace-l2}
+\lean{NoEmbeddedEigenvalues.hasWeakJetOn_h2_boundary_trace}
+\leanok
 Let $I,J$ be nonempty bounded open intervals, $Q=I\times J$, and
 $u\in H^2(Q)$.
 On each side, the $L^2$ trace of $u$ has an absolutely continuous
@@ -5735,8 +5743,12 @@ $(x-z)g(x)=f(x)-f(z)$, including $x=z$.
 
 \begin{lemma}[Angular Hardy]
 \label{lem:hardy-angular}
-\uses{def:h1-interval, lem:h1-interval-endpoints}
-If $g\in H^1(0,\pi/2)$ has zero canonical traces at both endpoints, then
+\uses{def:h1-interval, def:h1-zero-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.interval_hardy_angular}
+\leanok
+There is a constant $C>0$ independent of $g$. If $g\in H^1(0,\pi/2)$
+has zero canonical traces at both endpoints, then
+$g/(\sin\theta\cos\theta)\in L^2(0,\pi/2)$ and
 \[
  \int_0^{\pi/2}\frac{|g|^2}{\sin^2\theta\cos^2\theta}\,d\theta
  \le C\int_0^{\pi/2}|g'|^2\,d\theta .
@@ -5746,6 +5758,9 @@ If $g\in H^1(0,\pi/2)$ has zero canonical traces at both endpoints, then
 \begin{lemma}[One-dimensional Hardy collection]
 \label{lem:hardy-1d}
 \uses{lem:hardy-endpoint, lem:hardy-second, lem:hardy-angular}
+\lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_endpoint,
+  NoEmbeddedEigenvalues.interval_h2_div_sub, NoEmbeddedEigenvalues.interval_hardy_angular}
+\leanok
 The endpoint, second-order and angular Hardy inequalities above hold.
 This collection retains the original references; phase-cell division
 uses linear Hardy energy and second-order division, not angular Hardy.

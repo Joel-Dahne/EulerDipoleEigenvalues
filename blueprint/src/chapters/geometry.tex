@@ -2471,15 +2471,21 @@ the invertible affine chart.
 
 \begin{corollary}[Linearized saddle Hamiltonian]
 \label{cor:saddle-linearization}
-\uses{lem:saddle-normal-form}
-The linearization $H_s$ of $H$ at the saddle has eigenvalues $\pm i$
-on linear polynomials.
+\uses{def:dipole-flow, def:saddle-ortho-chart}
+\lean{NoEmbeddedEigenvalues.saddleLinearVelocity, NoEmbeddedEigenvalues.saddleLinearHamiltonian,
+  NoEmbeddedEigenvalues.saddle_linearization}
+\leanok
+For a lifted saddle $P$, write $s=\cos P_x$. The linearized velocity in
+the normalized chart is $(-su,sv)$; the Hamiltonian $H_s=-iL_s$ acts
+on $u,v$ with eigenvalues $is,-is$, respectively.
 \end{corollary}
 
 \begin{proof}
-With $s=\cos P_x=\pm1$, the linearized flow in the normalized chart is
-$-s u\partial_u+s v\partial_v$. Hence $H_s=-iL_s$ acts on $u,v$
-with eigenvalues $is,-is$.
+\uses{lem:saddle-normal-form}
+In physical coordinates the velocity Jacobian at $P$ has zero diagonal
+and both off-diagonal entries equal to $-s$. The columns of the saddle
+chart are its eigenvectors, with eigenvalues $-s,s$. Multiplication by
+$-i$ gives the asserted Hamiltonian action.
 \end{proof}
 
 \begin{remark}[Digest note: factorization and linearization have different roles]
