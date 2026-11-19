@@ -137,21 +137,6 @@ private theorem mixed_tanh_atTop : Tendsto Real.tanh atTop (𝓝 1) := by
     _ = Real.tanh (Real.artanh y) := (Real.tanh_artanh hy').symm
     _ ≤ Real.tanh t := mixed_tanh_strictMono.monotone ht
 
-private theorem mixedLocAC_ae_diff {F : ℝ → ℂ} (h : MixedBoundaryLocAC F) :
-    ∀ᵐ x, x ∈ Ioo (-1 : ℝ) 1 → DifferentiableAt ℝ F x := by
-  have hq (a b : ℚ) : ∀ᵐ x : ℝ, -1 < (a : ℝ) → (a : ℝ) < b → (b : ℝ) < 1 →
-      x ∈ Icc (a : ℝ) (b : ℝ) → DifferentiableAt ℝ F x := by
-    by_cases hab : -1 < (a : ℝ) ∧ (a : ℝ) < b ∧ (b : ℝ) < 1
-    · have hv := (h a b hab.1 hab.2.1 hab.2.2).boundedVariationOn
-      filter_upwards [BoundedVariationOn.ae_differentiableAt_of_mem_uIcc hv]
-        with x hx _ _ _ hm
-      exact hx (Icc_subset_uIcc hm)
-    · exact Eventually.of_forall fun _ ha hab' hb _ ↦ (hab ⟨ha, hab', hb⟩).elim
-  filter_upwards [ae_all_iff.2 fun a ↦ ae_all_iff.2 (hq a)] with x hx hm
-  obtain ⟨a, ha, hax⟩ := exists_rat_btwn hm.1
-  obtain ⟨b, hxb, hb⟩ := exists_rat_btwn hm.2
-  exact hx a b ha (hax.trans hxb) hb ⟨hax.le, hxb.le⟩
-
 private theorem mixedNeumannArc_cos (σ : Bool) (t : ℝ) :
     Real.cos (diagCoord (mixedNeumannArc σ t)).1 = (Real.cosh t)⁻¹ := by
   cases σ <;>
@@ -373,7 +358,7 @@ theorem mixed_neumann_canonical_transport {lam : ℝ} (hlam : lam ≠ 0) {φ : P
     obtain ⟨n, hn⟩ := exists_nat_ge |t|
     exact ht n (Icc_subset_uIcc ⟨(neg_le_neg hn).trans (neg_abs_le _), (le_abs_self _).trans hn⟩)
   have hflow : ∀ᵐ t, G (Real.tanh t) = mixedBoundaryTransport lam F (Real.tanh t) := by
-    filter_upwards [ae_comp_tanh (mixedLocAC_ae_diff hF),
+    filter_upwards [ae_comp_tanh hF.ae_differentiableAt,
       ae_hasDerivAt_canonicalUnknown_sub hlam hg hgd] with t ht hz
     have h := hz.unique
       ((mixedNeumann_weighted_unknown lam φ σ).symm ▸
@@ -529,8 +514,8 @@ theorem mixed_neumann_flux_renormalized {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     mixedNeumann_weighted_stream d.phi σ
   have hz_eq : canonicalUnknown lam g = fun t ↦ ((Real.cosh t)⁻¹ : ℝ) * F (Real.tanh t) :=
     mixedNeumann_weighted_unknown lam d.phi σ
-  have hgd := ae_comp_tanh (mixedLocAC_ae_diff hG)
-  have hfd := ae_comp_tanh (mixedLocAC_ae_diff hF)
+  have hgd := ae_comp_tanh hG.ae_differentiableAt
+  have hfd := ae_comp_tanh hF.ae_differentiableAt
   have hgd' : ∀ᵐ t, DifferentiableAt ℝ g t := by
     filter_upwards [hgd] with t ht
     rw [hg_eq]

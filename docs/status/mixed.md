@@ -22,8 +22,9 @@ admission-free; see [the module map](../architecture.md).
   The profile ODE and square integrability force decay at both ends; uniqueness
   identifies the physical trace with the canonical profile, and decay at
   `−∞` gives the Melnikov condition. The remaining inputs are
-  `lem:mixed-neumann-stream-trace`, `lem:mixed-neumann-vorticity-trace`,
-  and `lem:mixed-boundary-square-weighted`.
+  `lem:mixed-neumann-stream-trace` and `lem:mixed-neumann-vorticity-trace`.
+  `lem:mixed-boundary-square-weighted` is admission-free: its current is
+  bounded by a multiple of `1 − x²` and needs no endpoint traces of `F`.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
   `lem:mixed-neumann-renormalization` is proved from the boundary trace

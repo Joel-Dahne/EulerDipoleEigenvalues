@@ -175,16 +175,20 @@ and that identity holds. No endpoint values of $F$ are required.
 \end{lemma}
 
 \begin{proof}
-The equation gives $wF'=(x+i\lambda)F+iG$, proving the regularity of
-$F'$ and the bound for $wF'$. Set
-$A=wF''-3xF'-i\lambda F'$. Differentiating the equation gives
-$A=iG'+F$, so $\sqrt w A\in L^2$; also $T_0F=G+\lambda F$ is bounded.
-The expansion in the smooth proof is valid almost everywhere on compact
-subintervals. It identifies the difference of the integrands with
+\uses{lem:ac-integration-by-parts}
+\leanok
+The equation gives $wF'=(x+i\lambda)F+iG$. On each compact subinterval
+the right side divided by $w$ is continuous and absolutely continuous.
+The fundamental theorem of calculus identifies it with the classical
+derivative everywhere in the interior. Differentiating gives
+$wF''-3xF'-i\lambda F'=iG'+F$, whose weighted square is integrable.
+Also $T_0F=G+\lambda F$ is bounded. The difference of the integrands
+is the derivative of
 \[
- \frac{d}{dx}\left[xw|F|^2-2w^2\operatorname{Re}(F'\bar F)\right].
+ -w\left(x|F|^2+2\operatorname{Re}(iG\bar F)\right)
+ = xw|F|^2-2w^2\operatorname{Re}(F'\bar F).
 \]
-The current is $O(w)$ at both ends, since $F$ and $wF'$ are bounded.
+The first expression is $O(w)$ at both ends by boundedness of $F,G$.
 Integrate on compact subintervals and exhaust $(-1,1)$.
 \end{proof}
 
