@@ -674,8 +674,9 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   Separates the gradient estimate from the residual-certificate potential bound.
 - `MixedField.lean`, `MixedBoundarySquare.lean`: the adapted field and the
   smooth and weighted one-edge boundary squares.
-- `MixedComparison.lean`: explicit comparison functions, bounds on the
-  coefficients, and the positive determinant expansion.
+- `MixedComparison.lean`: explicit comparison functions, coefficient and
+  odd-in-b multiplier bounds, the elementary odd-in-b Robin inequality,
+  and the positive determinant expansion.
 - `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
   comparison on either odd axis, with canonical Sobolev traces. It combines
   the interior and Robin inequalities into a common quarter-cell bound.
@@ -706,10 +707,11 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   coefficient checks.
 - `Certificates/OddOdd.lean`: differentiated ground residual identity and
   interpolation between the two endpoint inequalities.
-- `Certificates/Mixed.lean`: normalized mixed residuals, interior sign claims,
-  and the Robin margin polynomial with its positive-level derivative identity.
-  The diagonal-coordinate matrix, potential, operator, and comparison
-  functions themselves live in `MixedComparison.lean`.
+- `Certificates/Mixed.lean`: local cosine-coordinate flux factorizations
+  for the two normalized interior residual identities, and the
+  regular-edge identity for the odd-in-a Robin margin. The three sign
+  checks are separate from these identities. The matrix, potential,
+  operator, and comparison functions live in `MixedComparison.lean`.
 
 ## Source checks and verification tools
 

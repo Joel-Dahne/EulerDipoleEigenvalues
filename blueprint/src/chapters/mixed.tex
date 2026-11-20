@@ -671,12 +671,16 @@ the regular edge $k=0$, $0<h\le1$,
 \end{lemma}
 
 \begin{proof}
-\uses{cert:odd-b}
-The bounds on $F_v$ follow from positive definiteness of the quadratic form
-$(2502h^2-7590hk+7640k^2)/10000$ (so $\partial_hF_v\le0$ for the polynomial
-part), the Bernstein coefficients of the cubic $F_v(1,k)$, and
-$-h\log h\le e^{-1}$. The Robin inequality is a one-variable estimate. The
-interior inequality is Lemma~\ref{cert:odd-b}.
+\uses{lem:mixed-v-residual-identity, cert:odd-b}
+\leanok
+The quadratic form $2502h^2-7590hk+7640k^2$ is nonnegative, so the
+polynomial part $F_0$ decreases in $h$. At $h=1$,
+$10000(F_0(1,k)-0.894)=k(1784-3508k+2167k^2)\ge0$ by completing the
+square. At $h=0$ the polynomial part is at most $1.6299$. The logarithmic
+term is nonpositive, and $-h\log h\le e^{-1}<3/8$ gives its lower bound.
+On the Robin side, differentiate at $k=0$ and divide the numerator by
+$h>0$. The log term is nonnegative, and $h,h^2,h^3\le1$ give the stated
+margin. The interior bound follows from the residual identity and sign.
 \end{proof}
 
 \begin{definition}[Odd-in-$a$ comparison function]
@@ -725,8 +729,10 @@ $k=0$, $0<h\le1$,
 \end{lemma}
 
 \begin{proof}
-\uses{cert:odd-a, cert:robin}
-Lemmas~\ref{cert:odd-a} and~\ref{cert:robin}.
+\uses{lem:mixed-u-residual-identity, lem:mixed-robin-identity, cert:odd-a, cert:robin}
+\leanok
+Multiply the nonnegative interior residual by the positive comparison
+function, and apply the Robin sign to the regular-edge identity.
 \end{proof}
 
 \section{Conclusion}

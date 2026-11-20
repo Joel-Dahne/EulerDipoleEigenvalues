@@ -169,21 +169,30 @@ For the sign, apply affine interpolation to the two certified endpoints of
 the logarithm interval.
 \end{proof}
 
-\begin{lemma}[Odd-in-$b$ interior inequality]
-\label{cert:odd-b}
+\begin{lemma}[Odd-in-$b$ differential reduction]
+\label{lem:mixed-v-residual-identity}
 \uses{def:odd-b-comparison}
-\lean{NoEmbeddedEigenvalues.mixedOddBResidual,
- NoEmbeddedEigenvalues.mixed_odd_b_identity,
- NoEmbeddedEigenvalues.mixed_odd_b_residual_nonneg,
- NoEmbeddedEigenvalues.mixed_odd_b_interior}
+\lean{NoEmbeddedEigenvalues.mixedOddBResidual, NoEmbeddedEigenvalues.mixed_odd_b_identity}
 \leanok
-For the comparison function of Definition~\ref{def:odd-b-comparison},
-$\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ on the open quarter cell $Q$.
-More precisely, the normalized residual $\mathcal R_v(h,k)$ defined by the
-explicit differentiation formula in manuscript \texttt{(lem:mixed-v-comparison)}
-is nonnegative on $(0,1]\times[0,1]$, and on $Q$
-$\mathcal Pw_v-h^2w_v/100=v\mathcal R_v(h,k)$.
-At $(h,k)=(1,1)$ the potential uses its continuous value.
+On $Q$, $\mathcal Pw_v-h^2w_v/100=v\mathcal R_v(h,k)$, where
+$\mathcal R_v$ is the normalized residual of manuscript
+\texttt{(lem:mixed-v-comparison)}.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Write the two components of $G\nabla w_v$ as $uvA_F(h,k)$ and $B_F(h,k)$,
+respectively. Differentiate the local factorizations by the chain rule,
+using $\partial_a h=-u$ and $\partial_b k=-v$.
+\end{proof}
+
+\begin{lemma}[Odd-in-$b$ residual sign]
+\label{cert:odd-b}
+\uses{lem:mixed-v-residual-identity}
+\lean{NoEmbeddedEigenvalues.mixed_odd_b_residual_nonneg}
+\leanok
+The normalized residual $\mathcal R_v(h,k)$ is nonnegative on
+$(0,1]\times[0,1]$. At $(h,k)=(1,1)$ the potential uses its continuous value.
 \end{lemma}
 
 \begin{proof}
@@ -195,19 +204,28 @@ strips $2^{-j-1}\le h\le2^{-j}$, $j=0,\dots,9$, use the logarithm bounds and
 subdivision (658 nodes in total).
 \end{proof}
 
-\begin{lemma}[Odd-in-$a$ interior inequality]
-\label{cert:odd-a}
+\begin{lemma}[Odd-in-$a$ differential reduction]
+\label{lem:mixed-u-residual-identity}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixedOddAResidual,
- NoEmbeddedEigenvalues.mixed_odd_a_identity,
- NoEmbeddedEigenvalues.mixed_odd_a_residual_nonneg,
- NoEmbeddedEigenvalues.mixed_odd_a_interior}
+\lean{NoEmbeddedEigenvalues.mixedOddAResidual, NoEmbeddedEigenvalues.mixed_odd_a_identity}
 \leanok
-For the comparison function of Definition~\ref{def:odd-a-comparison},
-$\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ on $Q$.
-The normalized rational residual $\mathcal R_u$ obtained by differentiating
-$u e^{F_u}$ and subtracting $h^2/200$ is nonnegative for $0<h,k<1$,
-and $\mathcal Pw_u-h^2w_u/200=w_u\mathcal R_u(h,k)$ on $Q$.
+On $Q$, $\mathcal Pw_u-h^2w_u/200=w_u\mathcal R_u(h,k)$, with the
+normalized rational residual from manuscript \texttt{(lem:mixed-u-comparison)}.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Factor $e^{F_u}$ from each flux component, and $uv$ from the second.
+Differentiate the local factorizations by the chain rule and use symmetry
+of the mixed second derivatives of $F_u$ on $h+k>0$.
+\end{proof}
+
+\begin{lemma}[Odd-in-$a$ residual sign]
+\label{cert:odd-a}
+\uses{lem:mixed-u-residual-identity}
+\lean{NoEmbeddedEigenvalues.mixed_odd_a_residual_nonneg}
+\leanok
+The normalized residual $\mathcal R_u$ is nonnegative for $0<h,k<1$.
 \end{lemma}
 
 \begin{proof}
@@ -218,18 +236,32 @@ $t^{-15}N(t,tq)$ are polynomials of bidegrees $(17,32)$ and $(17,30)$ with
 nonnegative Bernstein coefficients on two, respectively four, boxes.
 \end{proof}
 
-\begin{lemma}[Odd-in-$a$ Robin inequality]
-\label{cert:robin}
+\begin{lemma}[Odd-in-$a$ Robin polynomial identity]
+\label{lem:mixed-robin-identity}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixedRobinPolynomial,
- NoEmbeddedEigenvalues.mixed_robin_identity, NoEmbeddedEigenvalues.mixed_robin_nonneg}
+\lean{NoEmbeddedEigenvalues.mixedRobinPolynomial, NoEmbeddedEigenvalues.mixed_robin_identity}
 \leanok
-The polynomial
-$P(h)=\tfrac1{1000}(673h^7-1953h^6-3213h^5+7317h^4+109h^3-4647h^2+1718h+1)-\tfrac h{250}$
-is nonnegative for $h\in[0,1]$. For $0<h\le1$,
+Write
+$P(h)=\tfrac1{1000}(673h^7-1953h^6-3213h^5+7317h^4+109h^3-4647h^2+1718h+1)-\tfrac h{250}$.
+For $0<h\le1$,
 $3h-2(1-h^2)\partial_hF_u(h,0)-(2-h^2)\partial_kF_u(h,0)-\tfrac h{250}=P(h)$.
 At $h=0$ use the continuous extension of this boundary expression, not the
 raw coordinate derivatives of $F_u$ at the corner.
+\end{lemma}
+
+\begin{proof}
+\leanok
+For $\partial_hF_u(h,0)$ simplify the axis restriction to a polynomial
+near $h>0$ before differentiating. For $\partial_kF_u(h,0)$ use the
+quotient rule with $h$ fixed and then set $k=0$.
+\end{proof}
+
+\begin{lemma}[Odd-in-$a$ Robin polynomial sign]
+\label{cert:robin}
+\uses{lem:mixed-robin-identity}
+\lean{NoEmbeddedEigenvalues.mixed_robin_nonneg}
+\leanok
+$P(h)\ge0$ for $h\in[0,1]$.
 \end{lemma}
 
 \begin{proof}

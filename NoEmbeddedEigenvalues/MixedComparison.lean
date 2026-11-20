@@ -1,6 +1,8 @@
 import NoEmbeddedEigenvalues.VirialAlgebra
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Explicit mixed-sector comparison data
@@ -20,6 +22,7 @@ noncomputable section
 namespace NoEmbeddedEigenvalues
 
 open Set
+open scoped ContDiff
 
 /-- Open diagonal-coordinate cell. -/
 def mixedOpenCell : Set (ℝ × ℝ) :=
@@ -129,11 +132,94 @@ theorem mixed_comparison_coefficient_bounds {p : ℝ × ℝ} (hp : p ∈ mixedOp
       (by linarith)
     exact (mul_le_of_le_one_right (by positivity) hj).trans hi
 
+/-- Polynomial part of the odd-in-b multiplier. -/
+private def mixedOddBPolynomial (h k : ℝ) : ℝ :=
+  1 + (4132 * k ^ 2 + 2167 * k ^ 3 - 2011 * h * k -
+    7640 * h * k ^ 2 - 226 * h ^ 2 + 3795 * h ^ 2 * k - 834 * h ^ 3) / 10000
+
 /-- The explicit logarithmic multiplier `F_v(h,k)`. -/
 def mixedOddBMultiplier (p : ℝ × ℝ) : ℝ :=
-  1 + (4132 * p.2 ^ 2 + 2167 * p.2 ^ 3 - 2011 * p.1 * p.2 -
-    7640 * p.1 * p.2 ^ 2 - 226 * p.1 ^ 2 + 3795 * p.1 ^ 2 * p.2 - 834 * p.1 ^ 3) / 10000 +
+  mixedOddBPolynomial p.1 p.2 +
     (808 * p.1 * p.2 + 2505 * p.1 * p.2 ^ 2) / 10000 * Real.log p.1
+
+/-- The logarithmic multiplier is smooth wherever the first coordinate is positive. -/
+theorem mixedOddBMultiplier_contDiffAt {n : ℕ∞ω} {p : ℝ × ℝ} (hp : 0 < p.1) :
+    ContDiffAt ℝ n mixedOddBMultiplier p := by
+  have hlog : ContDiffAt ℝ n (fun q : ℝ × ℝ ↦ Real.log q.1) p :=
+    (Real.contDiffAt_log.mpr hp.ne').comp p contDiff_fst.contDiffAt
+  unfold mixedOddBMultiplier mixedOddBPolynomial
+  fun_prop
+
+private theorem mixedOddBPolynomial_antitone {k : ℝ} (hk : 0 ≤ k) :
+    AntitoneOn (fun h ↦ mixedOddBPolynomial h k) (Icc 0 1) := by
+  apply antitoneOn_of_deriv_nonpos (convex_Icc 0 1)
+  · unfold mixedOddBPolynomial
+    fun_prop
+  · intro h _
+    unfold mixedOddBPolynomial
+    fun_prop
+  · simp only [interior_Icc]
+    intro h hh
+    have hd : deriv (fun x ↦ mixedOddBPolynomial x k) h =
+        (-(2502 * h ^ 2 - 7590 * h * k + 7640 * k ^ 2) - 452 * h - 2011 * k) / 10000 := by
+      simp (disch := fun_prop) only [mixedOddBPolynomial, deriv_const_add, deriv_div_const,
+        deriv_fun_add, deriv_fun_sub, deriv_fun_mul, deriv_const_mul_id, deriv_pow_field,
+        deriv_const]
+      ring
+    rw [hd]
+    have hquad : 0 ≤ 2502 * h ^ 2 - 7590 * h * k + 7640 * k ^ 2 := by
+      nlinarith only [sq_nonneg (5004 * h - 7590 * k), sq_nonneg k]
+    exact div_nonpos_of_nonpos_of_nonneg (by linarith [hh.1]) (by norm_num)
+
+private theorem neg_mul_log_le_three_eighth {h : ℝ} (hh : 0 < h) :
+    -(h * Real.log h) ≤ 3 / 8 := by
+  have hE : 0 < Real.exp 1 := Real.exp_pos _
+  have hp : 0 < h * Real.exp 1 := mul_pos hh hE
+  have hlog := Real.log_le_sub_one_of_pos (inv_pos.mpr hp)
+  rw [Real.log_inv, Real.log_mul hh.ne' hE.ne', Real.log_exp, mul_inv_rev] at hlog
+  have hle := mul_le_mul_of_nonneg_left hlog hh.le
+  have heq : h * ((Real.exp 1)⁻¹ * h⁻¹ - 1) = (Real.exp 1)⁻¹ - h := by
+    field_simp
+  rw [heq] at hle
+  have hE' : (Real.exp 1)⁻¹ ≤ 3 / 8 := by
+    rw [inv_le_iff_one_le_mul₀ hE]
+    linarith only [Real.exp_one_gt_d9]
+  linarith only [hle, hE']
+
+private theorem mixedOddBMultiplier_bounds {q : ℝ × ℝ}
+    (hq : q ∈ Ioc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1) :
+    (3 / 4 : ℝ) < mixedOddBMultiplier q ∧ mixedOddBMultiplier q < 5 / 3 := by
+  let h := q.1
+  let k := q.2
+  have hh : h ∈ Ioc 0 1 := hq.1
+  have hk : k ∈ Icc 0 1 := hq.2
+  have han := mixedOddBPolynomial_antitone hk.1
+  have h₁ := han (show h ∈ Icc 0 1 from ⟨hh.1.le, hh.2⟩) (by simp) hh.2
+  have h₀ := han (show (0 : ℝ) ∈ Icc 0 1 by simp) ⟨hh.1.le, hh.2⟩ hh.1.le
+  have hlog : Real.log h ≤ 0 := Real.log_nonpos hh.1.le hh.2
+  have hk₀ : 0 ≤ k := hk.1
+  have hkl : 0 ≤ (808 * k + 2505 * k ^ 2) / 10000 := by positivity
+  have hk₂ : k ^ 2 ≤ 1 := pow_le_one₀ hk₀ hk.2
+  have hk₃ : k ^ 3 ≤ 1 := pow_le_one₀ hk₀ hk.2
+  have hku : (808 * k + 2505 * k ^ 2) / 10000 ≤ 3313 / 10000 := by linarith [hk.2]
+  have hb₁ : 894 / 1000 ≤ mixedOddBPolynomial 1 k := by
+    have hquad : 0 ≤ 1784 - 3508 * k + 2167 * k ^ 2 := by
+      nlinarith only [sq_nonneg (4334 * k - 3508)]
+    unfold mixedOddBPolynomial
+    nlinarith only [mul_nonneg hk.1 hquad]
+  have hb₀ : mixedOddBPolynomial 0 k ≤ 16299 / 10000 := by
+    unfold mixedOddBPolynomial
+    linarith only [hk₂, hk₃]
+  have hident : mixedOddBMultiplier q = mixedOddBPolynomial h k +
+      ((808 * k + 2505 * k ^ 2) / 10000) * (h * Real.log h) := by
+    unfold mixedOddBMultiplier
+    dsimp [h, k]
+    ring
+  rw [hident]
+  have hlo := mul_le_mul_of_nonneg_left (neg_mul_log_le_three_eighth hh.1) hkl
+  have hlo' := mul_le_mul_of_nonneg_right hku (by norm_num : 0 ≤ (3 / 8 : ℝ))
+  have hup := mul_nonpos_of_nonneg_of_nonpos hkl (mul_nonpos_of_nonneg_of_nonpos hh.1.le hlog)
+  exact ⟨by linarith only [h₁, hb₁, hlo, hlo'], by linarith only [h₀, hb₀, hup]⟩
 
 /-- The odd-in-`b` comparison in actual diagonal coordinates. -/
 def mixedOddBComparison (p : ℝ × ℝ) : ℝ :=
@@ -215,14 +301,35 @@ theorem mixed_odd_b_multiplier_robin :
       (3 / 4 : ℝ) < mixedOddBMultiplier q ∧ mixedOddBMultiplier q < 5 / 3) ∧
     ∀ h ∈ Ioc (0 : ℝ) 1,
       1789 / 2500 * h ≤ mixedRobinNumerator false mixedOddBMultiplier h := by
-  sorry
-
-/-- The exponent version of the odd-in-a Robin bound; the positive exponential
-factor has been divided out. Only the regular edge is used. -/
-theorem mixed_odd_a_robin :
-    ∀ h ∈ Ioc (0 : ℝ) 1,
-      h / 250 ≤ 3 * h - 2 * (1 - h ^ 2) * partialX mixedOddAExponent (h, 0) -
-        (2 - h ^ 2) * partialY mixedOddAExponent (h, 0) := by
-  sorry
+  refine ⟨fun _ hq ↦ mixedOddBMultiplier_bounds hq, ?_⟩
+  intro h hh
+  have hv (x : ℝ) : mixedOddBMultiplier (x, 0) =
+      1 + (-226 * x ^ 2 - 834 * x ^ 3) / 10000 := by
+    simp [mixedOddBMultiplier, mixedOddBPolynomial]
+  have hx : partialX mixedOddBMultiplier (h, 0) = (-452 * h - 2502 * h ^ 2) / 10000 := by
+    change deriv (fun x ↦ mixedOddBMultiplier (x, 0)) h = _
+    simp (disch := fun_prop) only [hv, deriv_const_add, deriv_div_const, deriv_fun_sub,
+      deriv_const_mul_field, deriv_pow_field]
+    ring
+  have hy : partialY mixedOddBMultiplier (h, 0) =
+      (-2011 * h + 3795 * h ^ 2 + 808 * h * Real.log h) / 10000 := by
+    change deriv (fun k ↦ mixedOddBMultiplier (h, k)) 0 = _
+    simp (disch := fun_prop) only [mixedOddBMultiplier, mixedOddBPolynomial, deriv_fun_add,
+      deriv_div_const, deriv_fun_sub, deriv_const_mul_field, deriv_const_mul_id,
+      deriv_pow_field, deriv_mul_const_field, deriv_const]
+    ring
+  have he : mixedRobinNumerator false mixedOddBMultiplier h = h *
+      ((14926 - 2586 * h - 3141 * h ^ 2 - 2043 * h ^ 3) / 10000 -
+        (808 / 10000) * (2 - h ^ 2) * Real.log h) := by
+    simp only [mixedRobinNumerator, Bool.false_eq_true, ite_false, hv, hx, hy]
+    ring
+  rw [he, mul_comm (1789 / 2500 : ℝ)]
+  apply mul_le_mul_of_nonneg_left _ hh.1.le
+  have h₂ : h ^ 2 ≤ 1 := pow_le_one₀ hh.1.le hh.2
+  have h₃ : h ^ 3 ≤ 1 := pow_le_one₀ hh.1.le hh.2
+  have hlog := mul_nonpos_of_nonneg_of_nonpos
+    (show 0 ≤ (808 / 10000 : ℝ) * (2 - h ^ 2) by linarith only [h₂])
+    (Real.log_nonpos hh.1.le hh.2)
+  linarith only [hh.2, h₂, h₃, hlog]
 
 end NoEmbeddedEigenvalues
