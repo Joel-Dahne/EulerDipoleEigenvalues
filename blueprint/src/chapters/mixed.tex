@@ -174,6 +174,58 @@ $|h-k|\le p$. It changes sign under swapping the two coordinates;
 the swap preserves cell measure.
 \end{proof}
 
+\begin{lemma}[Tangential shell current and integrable remainder]
+\label{lem:mixed-tangential-current}
+\uses{def:mixed-quotient-data, lem:mixed-tangential-factor}
+\lean{NoEmbeddedEigenvalues.mixedTangentialCurrent,
+ NoEmbeddedEigenvalues.mixed_tangential_current_eq,
+ NoEmbeddedEigenvalues.mixed_tangential_current_split,
+ NoEmbeddedEigenvalues.mixed_tangential_remainder_integrable,
+ NoEmbeddedEigenvalues.mixed_tangential_remainder_limit}
+\leanok
+In the level variable $\ell=hk$, the outward tangential current splits
+as $K|\phi|^2+\ell R$, where $K$ is the model kernel of
+Lemma~\ref{lem:mixed-tangential-factor} and $R\in L^1$ of the diagonal cell.
+The remainder integrates to zero in the limit against cutoff derivatives
+for which $\ell$ times the derivative is uniformly bounded and tends to zero.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-rellich-integrable-sections}
+\leanok
+Contract the tangential difference with the outward level conormal.
+Expand the diagonal stream gradient $(h\phi_a-u\phi,h\phi_b)$ around
+$(-u\phi,0)$ and use $u^2=1-h^2$. The pure squares have a bounded
+coefficient after moving $1/(h+k)$ onto $\phi_a$ or $\phi_b$.
+The cross term pairs the first stream derivative with $\phi_b/k$.
+Normal Hardy and Hölder give $R\in L^1$; then use dominated convergence.
+\end{proof}
+
+\begin{lemma}[Antisymmetrization of the shell model term]
+\label{lem:mixed-tangential-model}
+\uses{def:mixed-quotient-data, lem:mixed-tangential-factor, lem:mixed-tangential-current}
+\lean{NoEmbeddedEigenvalues.mixed_tangential_corner_kernel_bound,
+ NoEmbeddedEigenvalues.mixed_tangential_model_defect,
+ NoEmbeddedEigenvalues.mixed_tangential_model_antisymmetrize,
+ NoEmbeddedEigenvalues.mixed_tangential_current_limit_of_model}
+\leanok
+The model kernel satisfies $|K|\le 4hk/(h+k)^2$. Against any integrable
+swap-invariant weight, its pairing with $|\phi|^2$ equals its pairing with
+half the difference $|\phi(a,b)|^2-|\phi(b,a)|^2$. This difference is
+continuous on the closed cell and vanishes at each corner. For level cutoffs
+as in Lemma~\ref{lem:mixed-tangential-current}, convergence to zero of this
+model pairing suffices for the full current limit.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The bound follows from $u^2v^2(h+k)^2\le 2D$. The swap fixes two corners
+and agrees with central inversion at the other two, so central oddness
+gives equality of the squared quotient values there. The sum of the
+two squared values is swap-invariant and cancels under the integral.
+Add the vanishing remainder.
+\end{proof}
+
 \begin{lemma}[Integrated tangential comparison]
 \label{lem:mixed-tangential-virial}
 \uses{def:mixed-field, def:normal-field, def:mixed-quotient-data}
@@ -183,16 +235,17 @@ The adapted-field and normal-field bulk integrals agree for a mixed eigenfunctio
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-field-algebra, lem:mixed-tangential-factor, lem:virial-l2,
-  cor:mixed-saddle-jet}
+\uses{lem:mixed-field-algebra, lem:mixed-tangential-current, lem:mixed-tangential-model,
+  lem:virial-l2}
 Since $W-W_0$ is tangent to the orbits, the truncated tangential virial
 has only the boundary current
 $2\operatorname{Re}\int_{\partial C_\epsilon}((W-W_0)\psi)\,
 \partial_{n_{\rm out}}\overline\psi\,d\ell$.
-The Dirichlet or Neumann condition kills its limit on a regular edge.
-Near a saddle the model current is antisymmetric under swapping the
-inward variables. The remaining step is to justify the truncated current
-and control the Sobolev remainder as the cutoff tends to zero.
+The shell formulation controls the Sobolev remainder directly in volume
+measure. To finish, justify the cutoff identity and bound the absolute
+mass of the rescaled model kernel uniformly on shells
+$\epsilon < hk < 2\epsilon$. The continuous model defect then gives
+smallness near corners, and the kernel bound controls regular edges.
 \end{proof}
 
 \begin{proposition}[Mixed virial identity]

@@ -706,6 +706,8 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
 - `MixedVirialBulk.lean`: normal-field bulk integrability and its
   Cartesian representative, exhaustion on good truncations, and the exact
   tangential field and model corner cancellation.
+- `MixedTangentialCurrent.lean`: exact level-conormal current, integrable
+  Hardy remainder, and antisymmetrization of the continuous corner model.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed

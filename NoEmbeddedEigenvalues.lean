@@ -73,6 +73,7 @@ import NoEmbeddedEigenvalues.MixedFlux
 import NoEmbeddedEigenvalues.MixedStaticForm
 import NoEmbeddedEigenvalues.MixedRellich
 import NoEmbeddedEigenvalues.MixedVirialBulk
+import NoEmbeddedEigenvalues.MixedTangentialCurrent
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial
