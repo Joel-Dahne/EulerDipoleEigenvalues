@@ -45,8 +45,13 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-trace-mass` and `prop:mixed-virial`.
   `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
   the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
-- **Coercivity:** the comparison functions are defined in Lean, but the
-  boundary/virial passage and `thm:mixed-coercivity` are unproved. See
+- **Coercivity:** `thm:mixed-coercivity` is assembled from the square
+  completion and the two quarter comparisons; it is not admission-free.
+  The parity splitting of the form and mass, the Cartesian mass conversion,
+  and the matrix positivity and coefficient bounds are admission-free.
+  The next inputs are `lem:mixed-fold-quarter` (including the canonical
+  traces), `lem:mixed-robin-multipliers`, `lem:robin-comparison`,
+  the comparison inequalities, and `lem:mixed-completion`. See
   [shared certificate work](shared.md#shared-certificate-work) for the sign
   checks.
 

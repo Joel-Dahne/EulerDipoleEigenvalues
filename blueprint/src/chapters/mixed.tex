@@ -544,6 +544,14 @@ $\mathcal P=-\Div(G\nabla)+V$ in the $(a,b)$ variables.
 On the open diagonal-coordinate cell, $0\le-V\le4$, $g\le3$ and $|j|\le2$.
 \end{lemma}
 
+\begin{proof}
+\leanok
+Write $-V=(h\sqrt R/p-u^2/\sqrt R)^2+(u^2/\sqrt R)^2$ for $R>0$;
+at $R=0$ the potential is zero. For the upper bound drop the negative
+cross term and use $h\le p$ and $0\le u^2\le R\le2$. The bounds on $g$
+and $j$ follow from $h^2\le1$, $h/p\le1$ and $|uv|\le1$.
+\end{proof}
+
 \begin{lemma}[Completion of the square]
 \label{lem:mixed-completion}
 \uses{lem:mixed-weighted-form, def:mixed-coefficients, def:sobolev-local}
@@ -583,6 +591,7 @@ $G$ is positive definite in the open cell:
 \end{lemma}
 
 \begin{proof}
+\leanok
 Expand $g^2-j^2$ using $u^2=1-h^2$ and $v^2=1-k^2$.
 The diagonal entry $g$ and every coefficient in the bracket are positive
 for $0<h,k\le1$.
@@ -724,17 +733,109 @@ Lemmas~\ref{cert:odd-a} and~\ref{cert:robin}.
 
 \begin{lemma}[Parity splitting]
 \label{lem:mixed-parity-split}
-\uses{lem:mixed-completion}
-\lean{NoEmbeddedEigenvalues.mixed_parity_split}
+\uses{def:mixed-quotient-data, lem:mixed-completion, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixed_parity_split, NoEmbeddedEigenvalues.mixed_parity_mass}
 \leanok
 Write $\phi=\phi_u+\phi_v$ with $\phi_u$ odd in $a$ and even in $b$, $\phi_v$
 even in $a$ and odd in $b$ (possible since $\phi$ is centrally odd). Then
 $Q_2[\phi]=Q_2[\phi_u]+Q_2[\phi_v]$.
+The same splitting holds for the weighted mass $\int_\Cell h^2|\phi|^2\,da\,db$.
 \end{lemma}
 
 \begin{proof}
+\uses{lem:axis-reflection-weak-jet, lem:affine-jet-pullback,
+  lem:specified-jet-lp, lem:mixed-coefficient-bounds, lem:mixed-G-positive}
+\leanok
 The diagonal and scalar coefficients of $Q_2$ are even in both variables and
-the off-diagonal coefficient is odd in each.
+the off-diagonal coefficient is odd in each. Reflect the function and its
+specified weak gradient in $a$. The sum of the two projected
+densities is the average of the original and reflected densities by the
+parallelogram identity. Use the same argument on each Robin edge and
+for the weighted mass.
+\end{proof}
+
+\begin{lemma}[Admissibility of the explicit Robin multipliers]
+\label{lem:mixed-robin-multipliers}
+\uses{lem:robin-comparison, def:odd-a-comparison, def:odd-b-comparison}
+\lean{NoEmbeddedEigenvalues.mixed_explicit_robin_multipliers}
+\leanok
+The multipliers $e^{F_u}$ and $F_v$ have the regularity, uniform positive
+bounds, and logarithmic derivative bounds of the Robin comparison lemma.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-u-exponent-bounds, lem:mixed-v-comparison}
+Extend the rational terms of $F_u$ continuously at $(0,0)$ using
+homogeneity and use their bounded first derivatives on the regular strip.
+For $F_v$, use $h\log h\to0$ and differentiate $h\log h$ for $h>0$.
+\end{proof}
+
+\begin{lemma}[Coercivity on the quarter cell]
+\label{lem:mixed-quarter-coercivity}
+\uses{def:comparison-form, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixed_quarter_coercivity}
+\leanok
+For quarter-form data with zero Sobolev trace on either odd axis,
+$\mathcal Q[z]\ge \frac1{200}\int_Q h^2|z|^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:robin-comparison, lem:mixed-robin-multipliers,
+  lem:mixed-u-comparison, lem:mixed-v-comparison}
+\leanok
+Apply the Robin comparison with the multiplier for the specified odd axis.
+In the exponential case factor out the positive $e^{F_u}$ from the
+Robin numerator; in the other case weaken $1/100$ to $1/200$.
+\end{proof}
+
+\begin{lemma}[Quarter reduction with canonical traces]
+\label{lem:mixed-fold-quarter}
+\uses{def:comparison-form, lem:mixed-completion, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixed_fold_to_quarter}
+\leanok
+An $H^1$ function continuous on the closed cell, odd in one axis and even
+in the other, restricts to quarter-form data. Its Robin trace is its
+continuous edge value and its trace vanishes on the odd axis. Its full
+weighted mass is four times the quarter mass and its full second-order
+form is four times the quarter form.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:axis-reflection-weak-jet, lem:canonical-transverse-trace,
+  lem:mixed-coefficient-bounds, lem:mixed-G-positive}
+Weak gradient parity gives reflection invariance of the form density;
+the axes have measure zero. The trace agrees with the continuous
+representative on the closed normal sections, and the Robin edge
+integrals agree by reflection.
+\end{proof}
+
+\begin{lemma}[Second-order coercivity on the cell]
+\label{lem:mixed-second-order-coercivity}
+\uses{def:mixed-quotient-data, lem:mixed-completion}
+\lean{NoEmbeddedEigenvalues.mixed_second_order_coercivity}
+\leanok
+$Q_2[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db$ for the mixed quotient.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-parity-split, lem:mixed-fold-quarter, lem:mixed-quarter-coercivity}
+\leanok
+Split into the two parity components and apply the quarter bound to each.
+The reflection factors are the same for the form and the mass.
+\end{proof}
+
+\begin{lemma}[Cartesian and diagonal stream mass]
+\label{lem:mixed-stream-mass}
+\uses{def:mixed-quotient-data, lem:cell-square}
+\lean{NoEmbeddedEigenvalues.MixedQuotientData.stream_mass}
+\leanok
+$\int_\Cell|\psi|^2\,dx\,dy=2\int_\Cell h^2|\phi|^2\,da\,db$ for the mixed quotient.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-l2-transport}
+\leanok
+Change coordinates and use the stream factorization almost everywhere.
 \end{proof}
 
 \begin{theorem}[Static coercivity]
@@ -748,12 +849,10 @@ $K[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db=\frac1{400}\int_\Cell|\psi|
 \end{theorem}
 
 \begin{proof}
-\uses{lem:mixed-parity-split, lem:robin-comparison, lem:mixed-u-comparison,
- lem:mixed-v-comparison, lem:mixed-G-positive, lem:mixed-u-exponent-bounds}
-Apply Lemma~\ref{lem:robin-comparison} on the quarter cells to $\phi_u$ (with
-Lemma~\ref{lem:mixed-u-comparison}) and to $\phi_v$ (with
-Lemma~\ref{lem:mixed-v-comparison}), reflect, and drop the nonnegative square
-of Lemma~\ref{lem:mixed-completion}.
+\uses{lem:mixed-completion, lem:mixed-second-order-coercivity, lem:mixed-stream-mass}
+\leanok
+Drop the nonnegative square from the completion and use the second-order
+coercivity bound. The Cartesian mass introduces a factor of two.
 \end{proof}
 
 \begin{theorem}[Mixed exclusion]

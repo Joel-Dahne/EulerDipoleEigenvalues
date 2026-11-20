@@ -674,10 +674,15 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   Separates the gradient estimate from the residual-certificate potential bound.
 - `MixedField.lean`, `MixedBoundarySquare.lean`: the adapted field and the
   smooth and weighted one-edge boundary squares.
+- `MixedComparison.lean`: explicit comparison functions, bounds on the
+  coefficients, and the positive determinant expansion.
 - `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
-  comparison on either odd axis, with canonical Sobolev traces.
+  comparison on either odd axis, with canonical Sobolev traces. It combines
+  the interior and Robin inequalities into a common quarter-cell bound.
 - `MixedStaticForm.lean`: the quotient interface, paired trace mass, Rellich
-  and weighted forms, square completion and static coercivity.
+  and weighted forms, and square completion. It splits the second-order form
+  and mass by parity, assembles the quarter bounds, and converts the
+  coercivity estimate to Cartesian stream mass.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed

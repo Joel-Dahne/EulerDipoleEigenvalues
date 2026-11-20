@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.MixedComparison
+import NoEmbeddedEigenvalues.Certificates.Mixed
 import NoEmbeddedEigenvalues.WeightedTraces
 
 /-!
@@ -63,5 +63,53 @@ theorem mixed_robin_comparison (oddA : Bool) {ρ : ℝ × ℝ → ℝ} (hρ : Mi
     c * (∫ q in mixedQuarterCell, Real.cos q.1 ^ 2 * ‖z q‖ ^ 2) ≤
       mixedQuarterForm z za zb top := by
   sorry
+
+/-- The two explicit multipliers meet the regularity and boundedness
+hypotheses for logarithmic Robin comparison. -/
+theorem mixed_explicit_robin_multipliers :
+    MixedRobinMultiplier (fun q ↦ Real.exp (mixedOddAExponent q)) ∧
+    MixedRobinMultiplier mixedOddBMultiplier := by
+  sorry
+
+/-- The Robin numerator of the exponential multiplier, with its positive
+exponential factored out. -/
+private theorem mixed_odd_a_robin_exp {h : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1) :
+    0 ≤ mixedRobinNumerator true (fun q ↦ Real.exp (mixedOddAExponent q)) h := by
+  -- The exponent itself is smooth wherever the rational denominators are nonzero.
+  have he : DifferentiableAt ℝ mixedOddAExponent (h, (0 : ℝ)) := by
+    unfold mixedOddAExponent
+    have hden : (h, (0 : ℝ)).1 + (h, (0 : ℝ)).2 ≠ 0 := by simpa using hh.1.ne'
+    fun_prop (disch := first | exact hden | positivity)
+  have h₀ : DifferentiableAt ℝ (fun x : ℝ ↦ mixedOddAExponent (x, 0)) h := by
+    exact he.comp h (show DifferentiableAt ℝ (fun x : ℝ ↦ (x, (0 : ℝ))) h by fun_prop)
+  have h₁ : DifferentiableAt ℝ (fun y : ℝ ↦ mixedOddAExponent (h, y)) 0 := by
+    exact he.comp (0 : ℝ) (show DifferentiableAt ℝ (fun y : ℝ ↦ (h, y)) 0 by fun_prop)
+  have hx' : partialX (fun q ↦ Real.exp (mixedOddAExponent q)) (h, 0) =
+      Real.exp (mixedOddAExponent (h, 0)) * partialX mixedOddAExponent (h, 0) :=
+    (h₀.hasDerivAt.exp).deriv
+  have hy' : partialY (fun q ↦ Real.exp (mixedOddAExponent q)) (h, 0) =
+      Real.exp (mixedOddAExponent (h, 0)) * partialY mixedOddAExponent (h, 0) :=
+    (h₁.hasDerivAt.exp).deriv
+  unfold mixedRobinNumerator
+  simp only [ite_true, hx', hy']
+  have hsign : 0 ≤ 3 * h - 2 * (1 - h ^ 2) * partialX mixedOddAExponent (h, 0) -
+      (2 - h ^ 2) * partialY mixedOddAExponent (h, 0) :=
+    (div_nonneg hh.1.le (by norm_num) : 0 ≤ h / 250).trans (mixed_odd_a_robin h hh)
+  convert mul_nonneg (Real.exp_pos (mixedOddAExponent (h, 0))).le hsign using 1; ring
+
+/-- Both certified quarter comparisons give the common lower bound 1/200. -/
+theorem mixed_quarter_coercivity (oddA : Bool) {z za zb : ℝ × ℝ → ℂ} {top : ℝ → ℂ}
+    (hz : MixedQuarterFormDomain z za zb top) (hzero : MixedQuarterZeroTrace oddA z) :
+    (1 / 200 : ℝ) * (∫ q in mixedQuarterCell, Real.cos q.1 ^ 2 * ‖z q‖ ^ 2) ≤
+      mixedQuarterForm z za zb top := by
+  cases oddA
+  · have h := mixed_robin_comparison false mixed_explicit_robin_multipliers.2
+      (c := 1 / 100) (fun _ hq ↦ mixed_odd_b_interior hq)
+      (fun h hh ↦ (mul_nonneg (by norm_num) hh.1.le : 0 ≤ 1789 / 2500 * h).trans
+        (mixed_odd_b_multiplier_robin.2 h hh)) hz hzero
+    exact (mul_le_mul_of_nonneg_right (by norm_num)
+      (integral_nonneg fun _ ↦ by positivity)).trans h
+  · exact mixed_robin_comparison true mixed_explicit_robin_multipliers.1
+      (fun _ hq ↦ mixed_odd_a_interior hq) (fun _ hh ↦ mixed_odd_a_robin_exp hh) hz hzero
 
 end NoEmbeddedEigenvalues
