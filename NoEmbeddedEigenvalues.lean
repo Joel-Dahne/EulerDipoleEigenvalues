@@ -77,6 +77,7 @@ import NoEmbeddedEigenvalues.MixedTangentialCurrent
 import NoEmbeddedEigenvalues.MixedTangentialShell
 import NoEmbeddedEigenvalues.MixedTangentialCutoff
 import NoEmbeddedEigenvalues.MixedTangentialLimit
+import NoEmbeddedEigenvalues.MixedPairing
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial

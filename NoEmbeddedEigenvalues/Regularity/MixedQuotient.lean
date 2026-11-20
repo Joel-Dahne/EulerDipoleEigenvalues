@@ -12,7 +12,8 @@ open Set MeasureTheory Filter
 local notation "π" => Real.pi
 local notation "Plane" => ℝ × ℝ
 
-private theorem contStream_diagInv_neg {ω : L2} (hs : InSector false true ω) (q : Plane) :
+/-- The continuous odd–even stream is odd under central inversion. -/
+theorem contStream_diagInv_neg {ω : L2} (hs : InSector false true ω) (q : Plane) :
     contStream ω (diagInv (-q)) = -contStream ω (diagInv q) := by
   have ha := contStream_diagonalTraceChart_character hs 0 true (q.2, q.1)
   have hb := contStream_diagonalTraceChart_character hs 1 true (π - q.1, q.2)

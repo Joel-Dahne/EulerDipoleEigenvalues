@@ -714,6 +714,9 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   Sobolev virial on the period square, and exact pullback of the cutoff current.
 - `MixedTangentialLimit.lean`: simultaneous removal of the lower and center
   cutoffs; assembly of the integrated field comparison.
+- `MixedPairing.lean`: pointwise projection of transport pairs onto the
+  imaginary characters; common good levels and cross-term cancellation
+  on the period and the four canonical arcs.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed

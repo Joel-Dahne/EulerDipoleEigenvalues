@@ -20,8 +20,8 @@ admission-free; see [the module map](../architecture.md).
   and corners. The same weak jet supplies the zero normal traces and
   the divided Poisson equation.
 - **Virial:** `prop:mixed-virial` is assembled in Lean from
-  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`. Only paired
-  flux remains admitted. The field algebra, full-cell integrability,
+  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`. Only
+  `lem:mixed-geometric-flux` remains admitted in this chain. The field algebra, full-cell integrability,
   Fourier-gradient identification and normal bulk truncation limit are
   admission-free. The exact tangential field factors through the
   antisymmetric cosine difference, and its leading current cancels on
@@ -37,10 +37,13 @@ admission-free; see [the module map](../architecture.md).
   coefficient. `lem:mixed-tangential-center` bounds the upper cutoff
   current by an integrable gradient energy after absorbing the derivative.
   Removing both cutoffs proves `lem:mixed-tangential-virial`.
-- **Paired flux:** `lem:melnikov` and `lem:pairing-limit` cover ±i.
-  The mixed application still needs a common good-level sequence and
-  cancellation of the cross terms. Adjacent divergent edge energies must
-  also be paired; the even–even trace limits do not justify that step.
+- **Paired flux:** `lem:mixed-pairing-levels` chooses common good levels
+  for the two imaginary characters and the truncated virial. Shifting
+  by a quarter cancels their cross terms on the orbit and on the arcs.
+  `lem:mixed-canonical-cutoff` identifies the arc sum with the two
+  Neumann cutoff pairings. The remaining input to `prop:mixed-paired-flux`
+  is `lem:mixed-geometric-flux`: match the signed level-gradient limit
+  to the centered cutoff after pairing adjacent divergent energies.
 - **Neumann traces:** `lem:mixed-boundary-square-traces` is assembled in Lean.
   The profile ODE and square integrability force decay at both ends; uniqueness
   identifies the physical trace with the canonical profile, and decay at

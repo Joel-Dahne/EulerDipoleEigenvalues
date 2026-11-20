@@ -101,6 +101,75 @@ Use dominated convergence on the indicators of the truncated cells;
 the dominator is the integrable full-cell bulk.
 \end{proof}
 
+\begin{lemma}[Canonical pairing on common good levels]
+\label{lem:mixed-pairing-levels}
+\uses{def:canonical-profile, def:ee-level-term, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.pairing_limit_half_turn_odd, NoEmbeddedEigenvalues.mixed_normal_and_pairing_levels}
+\leanok
+For the mixed eigenfunction, one can choose levels tending to zero that
+satisfy any prescribed almost-everywhere level property. Along these levels
+the truncated normal virial converges to its bulk integral, and the raw
+vorticity pairing converges to the sum of the four canonical arc pairings.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:ee-truncated-virial, lem:mixed-normal-level-limit, lem:pairing-limit, lem:good-level-transport}
+\leanok
+Project the transport pair pointwise onto its two imaginary rotation
+characters. Both components have periodic absolutely continuous
+representatives on a common full-measure set; impose the virial identity
+and the raw-to-continuous pairing agreement when selecting good levels.
+The mixed products change sign under a quarter shift, so they cancel
+over a period. The cross terms of the canonical profiles likewise
+alternate in sign over the four arcs.
+\end{proof}
+
+\begin{lemma}[Canonical cutoff pairings on the Neumann arcs]
+\label{lem:mixed-canonical-cutoff}
+\uses{def:mixed-quotient-data, def:canonical-profile}
+\lean{NoEmbeddedEigenvalues.mixed_canonical_pairing_cutoff_limit}
+\leanok
+The canonical Neumann pairing densities are integrable on the full
+line. The sum of their centered cutoff integrals converges to the sum
+of the four canonical arc pairings.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-neumann-stream-trace}
+\leanok
+The continuous stream equals $h\phi$ on the closed cell, so its Dirichlet
+traces vanish and its Neumann traces are the specified ones. On a Neumann
+arc the stream is bounded by a multiple of $\operatorname{sech}t$, and
+the canonical profile is bounded by the $L^1$ norm of the stream's
+time derivative. Apply dominated convergence to the centered cutoffs.
+\end{proof}
+
+\begin{lemma}[Geometric part of the mixed flux limit]
+\label{lem:mixed-geometric-flux}
+\uses{def:ee-level-term, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_geometric_flux_limit}
+\leanok
+The signed gradient cutoff (Dirichlet normal energies minus Neumann
+tangential energies) has a finite limit $L$. With the vorticity pairing
+omitted, the normal-field level term tends to $2L$ as the level tends to
+zero outside a null set.
+\end{lemma}
+
+\begin{proof}
+\uses{cor:mixed-saddle-jet, lem:saddle-normal-form}
+In inward orthonormal saddle coordinates $(\xi,\eta)$ the model jet
+$\ell=A\xi$ has
+\[
+ (|\ell_n|^2-|\ell_t|^2)\,dt
+  = |A|^2\frac{\eta^2-\xi^2}{\xi^2+\eta^2}\frac{d\xi}{\xi}
+ \quad\text{on }\xi\eta=\epsilon.
+\]
+Its integral on a symmetrically truncated hyperbola vanishes under
+$\xi\leftrightarrow\eta$, cancelling the two adjacent logarithms.
+The weighted jet estimate is needed to control the remainder and to
+pass from the model to the actual levels.
+\end{proof}
+
 \begin{proposition}[Paired flux identity for the normal field]
 \label{prop:mixed-paired-flux}
 \uses{def:normal-field, def:canonical-profile, prop:mixed-quotient-domain}
@@ -119,32 +188,22 @@ energies may diverge (manuscript \texttt{(mf:paired)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:ee-truncated-virial, lem:mixed-normal-level-limit, cor:mixed-saddle-jet,
-  lem:saddle-normal-form, lem:pairing-limit}
-Apply the truncated virial along good levels. The bulk limit follows
-from Lemma~\ref{lem:mixed-normal-level-limit}. In inward orthonormal saddle
-coordinates $(\xi,\eta)$ the model jet $\ell=A\xi$ has
-\[
- (|\ell_n|^2-|\ell_t|^2)\,dt
-  = |A|^2\frac{\eta^2-\xi^2}{\xi^2+\eta^2}\frac{d\xi}{\xi}
- \quad\text{on }\xi\eta=\epsilon.
-\]
-Its integral on a symmetrically truncated hyperbola vanishes under
-$\xi\leftrightarrow\eta$, cancelling the two adjacent logarithms.
-The weighted jet estimate controls the remainder. For the canonical
-pairing, apply Lemma~\ref{lem:pairing-limit} to both character components
-on a common good sequence. The cross pairings cancel: shifting by one
-quarter multiplies the product of a $+i$ component and the conjugate of a
-$-i$ component by $-1$, both on a regular orbit and in the sum on the arcs.
+\uses{lem:mixed-pairing-levels, lem:mixed-canonical-cutoff, lem:mixed-geometric-flux,
+  lem:mixed-neumann-stream-trace, lem:mixed-normal-bulk}
+\leanok
+Choose the common good levels outside the exceptional set for the geometric
+limit. The truncated virial then converges both to the normal bulk and to
+twice the difference between the signed gradient limit and the canonical
+pairing. The latter difference is also the full centered-cutoff limit:
+on each finite time interval the Neumann energy and canonical pairing
+are integrable separately.
 \end{proof}
 
-\begin{remark}[Digest note: two parts of the mixed flux limit]
-Lemma~\ref{lem:pairing-limit} now supports the $\pm i$ characters on a
-prescribed good sequence carrying both transports. The mixed application
-still has to choose that sequence and formalize the recombination.
-Separately, the even--even gradient trace theorem cannot handle the
-signed corner cancellation: mixed linear jets can make the individual
-edge energies divergent.
+\begin{remark}[Digest note: signed gradient limit]
+The remaining input is Lemma~\ref{lem:mixed-geometric-flux}.
+The even--even gradient trace theorem cannot handle the signed corner
+cancellation: mixed linear jets can make the individual edge energies
+divergent. The two adjacent terms must be paired before taking the limit.
 \end{remark}
 
 \begin{lemma}[Exact tangential field and model cancellation]

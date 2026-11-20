@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.MixedRellich
 import NoEmbeddedEigenvalues.MixedTangentialLimit
+import NoEmbeddedEigenvalues.MixedPairing
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
@@ -91,34 +92,35 @@ def mixedPairedFluxCutoff (lam : ℝ) (φ : Plane → ℂ) (T : ℝ) : ℝ :=
   let dir := fun k : ℕ ↦ ∫ t in Ioo (-T) T, ‖φ (diagCoord (cellArc k t))‖ ^ 2 / 2
   dir 1 + dir 3 - ∑ σ : Bool, mixedNeumannFluxCutoff lam φ σ T
 
-/-- The normal-field paired flux. This uses the canonical profile and takes
-no physical vorticity trace. The mixed-character limit remains to be proved. -/
-theorem mixed_paired_flux {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+/-- Signed gradient contribution to the cutoff flux, with no vorticity pairing. -/
+def mixedGradientFluxCutoff (φ : Plane → ℂ) (T : ℝ) : ℝ :=
+  let dir := fun k : ℕ ↦ ∫ t in Ioo (-T) T, ‖φ (diagCoord (cellArc k t))‖ ^ 2 / 2
+  dir 1 + dir 3 - ∑ σ : Bool, ∫ t in Ioo (-T) T,
+    ‖deriv (mixedNeumannStream φ σ) t / (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2
+
+/-- The geometric part of the normal-field level term, before pairing with vorticity. -/
+def mixedGeometricLevelTerm (ω : L2) (h : ℝ) : ℝ :=
+  levelIntegral h (fun p ↦ gradNorm p * (streamLift ω p * conj (streamNormal ω p)).re) +
+    (2 - 2 * h) * (levelIntegral h (fun p ↦ ‖streamNormal ω p‖ ^ 2) -
+      levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2))
+
+/-- The two geometric limits, with the signed gradient energies paired before
+taking either limit. No vorticity transport or canonical profile is used. -/
+theorem mixed_geometric_flux_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
-    IntegrableOn (mixedNormalVirialDensity d) mixedOpenCell ∧
-    Tendsto (fun T ↦ 2 * mixedPairedFluxCutoff lam d.phi T) atTop
-      (𝓝 (∫ q in mixedOpenCell, mixedNormalVirialDensity d q)) := by
+    ∃ L : ℝ, ∃ N : Set ℝ, volume N = 0 ∧
+      Tendsto (mixedGradientFluxCutoff d.phi) atTop (𝓝 L) ∧
+      Tendsto (mixedGeometricLevelTerm ω) (𝓝[Ioo 0 1 \ N] 0) (𝓝 (2 * L)) := by
   sorry
 
 /-- Integrated tangential comparison for the adapted and normal fields.
 The two integrals are separately absolutely convergent; this comparison
 requires removing the boundary current of their tangential difference. -/
 theorem mixed_tangential_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+    (hω : IsEigenSolution lam ω) (_hs : InSector false true ω) (d : MixedQuotientData ω) :
     (∫ q in mixedOpenCell, mixedVirialDensity d q) =
       ∫ q in mixedOpenCell, mixedNormalVirialDensity d q :=
   mixed_tangential_compare hlam hω d
-
-/-- The mixed-field virial. The boundary profile in the paired expression is
-the physical vorticity trace by `mixed_boundary_square_traces`. -/
-theorem mixed_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
-    IntegrableOn (mixedVirialDensity d) mixedOpenCell ∧
-    Tendsto (fun T ↦ 2 * mixedPairedFluxCutoff lam d.phi T) atTop
-      (𝓝 (∫ q in mixedOpenCell, mixedVirialDensity d q)) := by
-  refine ⟨(mixed_rellich_volume_integrable d).1, ?_⟩
-  rw [mixed_tangential_virial hlam hω hs d]
-  exact (mixed_paired_flux hlam hω hs d).2
 
 private theorem mixed_tanh_strictMono : StrictMono Real.tanh :=
   strictMono_of_deriv_pos fun t ↦ by
@@ -847,6 +849,110 @@ private theorem mixed_stream_eq_on_closed_cell {ω : L2} (d : MixedQuotientData 
   exact (Measure.eqOn_open_of_ae_eq hae hO (hleft.mono subset_closure)
     (hright.mono subset_closure)).of_subset_closure hleft hright subset_closure Subset.rfl
 
+/-- The canonical pairing density on a Neumann edge. -/
+def mixedNeumannPairing (lam : ℝ) (φ : Plane → ℂ) (σ : Bool) (t : ℝ) : ℝ :=
+  let g := mixedNeumannStream φ σ
+  (canonicalProfile lam g t * conj (g t)).re
+
+/-- The four canonical arc pairings are precisely the full-line limits of
+the two Neumann cutoff pairings. Both Dirichlet stream traces vanish. -/
+theorem mixed_canonical_pairing_cutoff_limit {lam : ℝ} {ω : L2} (d : MixedQuotientData ω) :
+    (∀ σ, Integrable (mixedNeumannPairing lam d.phi σ)) ∧
+    Tendsto (fun T ↦ ∑ σ : Bool, ∫ t in Ioo (-T) T, mixedNeumannPairing lam d.phi σ t) atTop
+      (𝓝 (∑ k ∈ Finset.range 4, ∫ t,
+        (canonicalProfile lam (contStream ω ∘ cellArc k) t *
+          conj (contStream ω (cellArc k t))).re)) := by
+  let g := mixedNeumannStream d.phi
+  have gi (σ : Bool) : Integrable (g σ) := by
+    obtain ⟨hac, _, _, ⟨C, hC⟩, _⟩ := mixed_neumann_stream_trace d σ
+    have hc := continuous_of_absolutelyContinuous hac
+    have hh : Integrable (fun t : ℝ ↦ (Real.cosh t)⁻¹) := by
+      simpa only [mul_one] using mixedNeumannA_integrable σ (f := fun _ ↦ 1) (integrable_const _)
+    refine (hh.const_mul C).mono' hc.aestronglyMeasurable (.of_forall fun t ↦ ?_)
+    change ‖mixedNeumannStream d.phi σ t‖ ≤ _
+    rw [congrFun (mixedNeumann_weighted_stream d.phi σ) t, norm_mul, Complex.norm_real,
+      Real.norm_of_nonneg (inv_nonneg.mpr (Real.cosh_pos t).le), mul_comm C]
+    exact mul_le_mul_of_nonneg_left (hC _ (mixed_tanh_mem t)) (by positivity)
+  have hi (σ : Bool) : Integrable (mixedNeumannPairing lam d.phi σ) := by
+    have hgi := (mixed_neumann_stream_trace d σ).2.1
+    have hc := continuous_of_absolutelyContinuous
+      (absolutelyContinuousOnInterval_canonicalProfile (lam := lam) hgi)
+    let B := ∫ t, ‖profileIntegrand lam (g σ) t‖
+    have hbound (t : ℝ) : ‖canonicalProfile lam (g σ) t‖ ≤ B := by
+      rw [norm_canonicalProfile]
+      refine (norm_integral_le_integral_norm _).trans ?_
+      exact setIntegral_le_integral (integrable_profileIntegrand hgi).norm
+        (.of_forall fun _ ↦ norm_nonneg _)
+    have hj := (gi σ).norm.const_mul B
+    refine hj.mono' (Complex.continuous_re.comp_aestronglyMeasurable
+      (hc.aestronglyMeasurable.mul
+        (Complex.continuous_conj.comp_aestronglyMeasurable (gi σ).aestronglyMeasurable)))
+      (.of_forall fun t ↦ ?_)
+    change |(canonicalProfile lam (g σ) t * conj (g σ t)).re| ≤ _
+    exact (Complex.abs_re_le_norm _).trans (by
+      rw [norm_mul, Complex.norm_conj]
+      exact mul_le_mul_of_nonneg_right (hbound t) (norm_nonneg _))
+  have hNeumann (σ : Bool) : contStream ω ∘ mixedNeumannArc σ = g σ := by
+    funext t
+    have he := mixed_stream_eq_on_closed_cell d (mixedNeumannArc_mem σ t)
+    simp only [Function.comp_apply, diagInv_diagCoord] at he
+    exact he
+  have hDirichlet (k : ℕ) (hk : k = 1 ∨ k = 3) :
+      contStream ω ∘ cellArc k = 0 := by
+    funext t
+    have hmem := rotLift_iterate_mem (U := closure cellSquare)
+      (fun _ h ↦ rotLift_mem_closure_cellSquare h)
+      (arcSegment_subset_closure_cellSquare (separatrixArc_mem_arcSegment t)) k
+    have hq : diagCoord (cellArc k t) ∈ closure mixedOpenCell := by
+      have hmap : MapsTo diagCoord cellSquare mixedOpenCell := fun p hp ↦ by
+        exact ⟨by simpa only [mem_Ioo, neg_div] using abs_lt.mp hp.1,
+          by simpa only [mem_Ioo, neg_div] using abs_lt.mp hp.2⟩
+      exact hmap.closure_of_continuousOn continuous_diagCoord.continuousOn hmem
+    have he := mixed_stream_eq_on_closed_cell d hq
+    simp only [Function.comp_apply, diagInv_diagCoord] at he
+    have hzero : Real.cos (diagCoord (cellArc k t)).1 = 0 := by
+      rcases hk with rfl | rfl <;>
+        simp only [cellArc, Function.iterate_succ_apply', Function.iterate_zero_apply,
+          rotLift, neg_neg, separatrixArc, diagCoord]
+      · rw [show (arcAngle t - Real.pi + -arcAngle t) / 2 = -(Real.pi / 2) by ring,
+          Real.cos_neg, Real.cos_pi_div_two]
+      · rw [show (-(arcAngle t - Real.pi) + arcAngle t) / 2 = Real.pi / 2 by ring,
+          Real.cos_pi_div_two]
+    rw [hzero, Complex.ofReal_zero, zero_mul] at he
+    exact he
+  have hEq : (∑ k ∈ Finset.range 4, ∫ t,
+      (canonicalProfile lam (contStream ω ∘ cellArc k) t * conj (contStream ω (cellArc k t))).re) =
+      ∑ σ : Bool, ∫ t, mixedNeumannPairing lam d.phi σ t := by
+    have hD (k : ℕ) (hk : k = 1 ∨ k = 3) :
+        (∫ t, (canonicalProfile lam (contStream ω ∘ cellArc k) t *
+          conj (contStream ω (cellArc k t))).re) = 0 := by
+      have h := hDirichlet k hk
+      change (∫ t, (canonicalProfile lam (contStream ω ∘ cellArc k) t *
+        conj ((contStream ω ∘ cellArc k) t)).re) = 0
+      rw [h]
+      simp only [Pi.zero_apply, map_zero, mul_zero, Complex.zero_re, integral_zero]
+    have hN (σ : Bool) :
+        (∫ t, (canonicalProfile lam (contStream ω ∘ mixedNeumannArc σ) t *
+          conj (contStream ω (mixedNeumannArc σ t))).re) =
+          ∫ t, mixedNeumannPairing lam d.phi σ t := by
+      change (∫ t, (canonicalProfile lam (contStream ω ∘ mixedNeumannArc σ) t *
+        conj ((contStream ω ∘ mixedNeumannArc σ) t)).re) = _
+      rw [hNeumann]
+      rfl
+    rw [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_succ,
+      Finset.sum_range_succ, Finset.sum_range_zero, hD 1 (Or.inl rfl), hD 3 (Or.inr rfl),
+      zero_add, add_zero, add_zero, Fintype.sum_bool]
+    exact congrArg₂ (· + ·) (hN true) (hN false)
+  refine ⟨hi, ?_⟩
+  rw [hEq]
+  have hlim (σ : Bool) : Tendsto (fun T ↦ ∫ t in Ioo (-T) T, mixedNeumannPairing lam d.phi σ t)
+      atTop (𝓝 (∫ t, mixedNeumannPairing lam d.phi σ t)) := by
+    apply (intervalIntegral_tendsto_integral (hi σ) tendsto_neg_atTop_atBot tendsto_id).congr'
+    filter_upwards [eventually_ge_atTop (0 : ℝ)] with T hT
+    rw [id_eq, intervalIntegral.integral_of_le (by linarith : -T ≤ T), integral_Ioc_eq_integral_Ioo]
+  simp only [Fintype.sum_bool]
+  exact (hlim true).add (hlim false)
+
 private theorem mixedNeumannTime_left_inv (σ : Bool) (t : ℝ) :
     mixedNeumannTime σ (mixedNeumannA σ t) = t := by
   have hcos : Real.cos (arcAngle t) = Real.tanh t := by
@@ -1140,6 +1246,57 @@ private theorem mixed_flux_gradient_pointwise (t : ℝ) (U V : ℂ) :
     Complex.conj_re, Complex.conj_im, boundaryWeight]
   ring
 
+private theorem mixed_neumann_energy_cutoff_integrable {ω : L2} (d : MixedQuotientData ω)
+    (σ : Bool) (T : ℝ) :
+    IntegrableOn (fun t ↦ ‖deriv (mixedNeumannStream d.phi σ) t /
+      (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2) (Ioo (-T) T) := by
+  let g := mixedNeumannStream d.phi σ
+  let G := mixedNeumannG d.phi σ
+  let w := fun t ↦ boundaryWeight (Real.tanh t)
+  let H := fun x : ℝ ↦ x * ‖G x‖ ^ 2
+  let e := fun t ↦ ‖deriv g t / (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2
+  obtain ⟨hac, _, hG, _, hge⟩ := mixed_neumann_stream_trace d σ
+  by_cases hT : 0 < T
+  · have ht : -T < T := by linarith
+    have hab := mixed_tanh_strictMono ht
+    have hE : Integrable (fun t ↦ w t * (boundaryWeight (Real.tanh t) *
+        ‖deriv G (Real.tanh t)‖ ^ 2)) := by
+      rw [← integrableOn_univ]
+      apply mixed_tanh_integrable (f := fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2)
+        MeasurableSet.univ
+      rwa [Real.tanh_bijOn.image_eq]
+    have hH := mixed_norm_boundary_ac (hG _ _ (mixed_tanh_mem (-T)).1 hab (mixed_tanh_mem T).2)
+    have hDi : IntegrableOn (fun t ↦ w t * deriv H (Real.tanh t)) (Ioo (-T) T) := by
+      apply mixed_tanh_integrable measurableSet_Ioo
+      have htc : Continuous Real.tanh := continuous_iff_continuousAt.2
+        fun t ↦ (hasDerivAt_tanh t).continuousAt
+      rw [htc.image_Ioo_of_strictMono mixed_tanh_strictMono]
+      exact (intervalIntegrable_iff_integrableOn_Ioo_of_le hab.le).1 hH.intervalIntegrable_deriv
+    have hm : IntegrableOn (fun t ↦ ‖G (Real.tanh t)‖ ^ 2) (Ioo (-T) T) := by
+      have he (t : ℝ) : G (Real.tanh t) = (Real.cosh t : ℂ) * g t := by
+        change _ = _ * mixedNeumannStream d.phi σ t
+        rw [congrFun (mixedNeumann_weighted_stream d.phi σ) t, ← mul_assoc,
+          ← Complex.ofReal_mul, mul_inv_cancel₀ (Real.cosh_pos t).ne',
+          Complex.ofReal_one, one_mul]
+      simp_rw [he]
+      have hgc : Continuous g := continuous_of_absolutelyContinuous hac
+      have hc : Continuous fun t : ℝ ↦ (Real.cosh t : ℂ) * g t := by fun_prop
+      exact (hc.norm.pow 2).continuousOn.integrableOn_Icc.mono_set Ioo_subset_Icc_self
+    have hgd := ae_comp_tanh hG.ae_differentiableAt
+    have hg_eq := mixedNeumann_weighted_stream d.phi σ
+    apply (((hE.integrableOn.sub hDi).add hm).const_mul (1 / 2 : ℝ)).congr
+    filter_upwards [ae_restrict_of_ae hgd] with t htG
+    have hd := htG (mixed_tanh_mem t)
+    change (1 / 2 : ℝ) * (w t * (boundaryWeight (Real.tanh t) * ‖deriv G (Real.tanh t)‖ ^ 2) -
+      w t * deriv H (Real.tanh t) + ‖G (Real.tanh t)‖ ^ 2) = e t
+    dsimp only [e, g, w, H]
+    rw [congrArg (fun f : ℝ → ℂ ↦ deriv f t) hg_eq,
+      (mixed_hasDerivAt_weightedFlow hd).deriv, mixed_norm_boundary_deriv hd]
+    have hx := mixed_flux_gradient_pointwise t (G (Real.tanh t)) (deriv G (Real.tanh t))
+    linarith only [hx]
+  · rw [Ioo_eq_empty (by linarith)]
+    exact integrableOn_empty
+
 /-- On a single Neumann edge, subtract the trace mass before taking the cutoff
 limit. In `x = tanh t` the leftover gradient term is the weighted energy
 minus the derivative of `x |G|²`; the latter gives the two corner values. -/
@@ -1301,6 +1458,58 @@ theorem mixed_neumann_flux_renormalized {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   simp only [id_eq]
   rw [intervalIntegral.integral_of_le (by linarith : -T ≤ T), integral_Ioc_eq_integral_Ioo]
   exact (hcut T hT).symm
+
+private theorem mixed_paired_flux_split {lam : ℝ} {ω : L2} (d : MixedQuotientData ω)
+    (T : ℝ) :
+    mixedPairedFluxCutoff lam d.phi T = mixedGradientFluxCutoff d.phi T -
+      ∑ σ : Bool, ∫ t in Ioo (-T) T, mixedNeumannPairing lam d.phi σ t := by
+  have he (σ : Bool) : mixedNeumannFluxCutoff lam d.phi σ T =
+      (∫ t in Ioo (-T) T, ‖deriv (mixedNeumannStream d.phi σ) t /
+        (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2) +
+      ∫ t in Ioo (-T) T, mixedNeumannPairing lam d.phi σ t := by
+    exact integral_add (mixed_neumann_energy_cutoff_integrable d σ T)
+      ((mixed_canonical_pairing_cutoff_limit (lam := lam) d).1 σ).integrableOn
+  simp only [mixedPairedFluxCutoff, mixedGradientFluxCutoff, he, Fintype.sum_bool]
+  ring
+
+/-- The normal-field paired flux. The transport part uses canonical profiles,
+not a physical vorticity trace. -/
+theorem mixed_paired_flux {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+    IntegrableOn (mixedNormalVirialDensity d) mixedOpenCell ∧
+    Tendsto (fun T ↦ 2 * mixedPairedFluxCutoff lam d.phi T) atTop
+      (𝓝 (∫ q in mixedOpenCell, mixedNormalVirialDensity d q)) := by
+  obtain ⟨L, N, hN, hcut, hlevel⟩ := mixed_geometric_flux_limit hlam hω hs d
+  obtain ⟨seq, hseq, hlim, hbulk, hpair⟩ := mixed_normal_and_pairing_levels hlam hω hs d
+    (ae_restrict_of_ae (measure_eq_zero_iff_ae_notMem.1 hN))
+  let A := ∑ k ∈ Finset.range 4, ∫ t, (canonicalProfile lam (contStream ω ∘ cellArc k) t *
+    conj (contStream ω (cellArc k t))).re
+  have hseq' : Tendsto seq atTop (𝓝[Ioo 0 1 \ N] 0) :=
+    tendsto_nhdsWithin_iff.2 ⟨hlim, .of_forall hseq⟩
+  have hc : Tendsto (fun n ↦ 2 - 2 * seq n) atTop (𝓝 2) := by
+    simpa only [mul_zero, sub_zero] using tendsto_const_nhds.sub (hlim.const_mul (2 : ℝ))
+  have hb : Tendsto (fun n ↦ eeLevelTerm ω (seq n)) atTop (𝓝 (2 * L - 2 * A)) := by
+    apply ((hlevel.comp hseq').sub (hc.mul hpair)).congr
+    intro n
+    dsimp only [Function.comp_apply, eeLevelTerm, mixedGeometricLevelTerm]
+    ring
+  rw [tendsto_nhds_unique hbulk hb]
+  refine ⟨mixed_normal_virial_integrable d, ?_⟩
+  have hpairCut := (mixed_canonical_pairing_cutoff_limit (lam := lam) d).2
+  have h := (hcut.sub hpairCut).const_mul (2 : ℝ)
+  rw [mul_sub] at h
+  exact h.congr (fun T ↦ by rw [mixed_paired_flux_split d T])
+
+/-- The mixed-field virial. The boundary profile in the paired expression is
+the physical vorticity trace by `mixed_boundary_square_traces`. -/
+theorem mixed_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+    IntegrableOn (mixedVirialDensity d) mixedOpenCell ∧
+    Tendsto (fun T ↦ 2 * mixedPairedFluxCutoff lam d.phi T) atTop
+      (𝓝 (∫ q in mixedOpenCell, mixedVirialDensity d q)) := by
+  refine ⟨(mixed_rellich_volume_integrable d).1, ?_⟩
+  rw [mixed_tangential_virial hlam hω hs d]
+  exact (mixed_paired_flux hlam hω hs d).2
 
 /-- Static identity and its sign for the original mixed eigenproblem. -/
 theorem mixed_static_identity {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
