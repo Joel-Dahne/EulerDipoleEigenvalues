@@ -6,9 +6,8 @@
 `thm:mixed-exclusion` (odd–even) is proved from `prop:mixed-quotient-domain`,
 `lem:mixed-K-identity` and `thm:mixed-coercivity` in
 [Mixed.lean](../../NoEmbeddedEigenvalues/Mixed.lean).
-`cor:mixed-other-exclusion` follows by rotation. The only remaining
-admissions in this chain are the deferred comparison sign certificates.
-See [the module map](../architecture.md).
+`cor:mixed-other-exclusion` follows by rotation. The only remaining admission
+in this chain is `cert:odd-b`. See [the module map](../architecture.md).
 
 - **Regularity:** `cor:mixed-saddle-jet` supplies the jet removed by
   `lem:mixed-weighted-forcing-remainder`. The resulting
@@ -95,10 +94,9 @@ See [the module map](../architecture.md).
   completion and the two quarter comparisons; it is not admission-free.
   The parity splitting of the form and mass, the Cartesian mass conversion,
   and the matrix positivity and coefficient bounds are admission-free.
-  The certified comparison inequalities reduce to the three deferred sign
-  checks `cert:odd-b`, `cert:odd-a`, and `cert:robin`. The two interior
-  differential identities and the odd-in-a Robin polynomial identity are
-  admission-free. So is `lem:mixed-robin-multipliers`: homogeneity controls
+  The signs `cert:odd-a` and `cert:robin` are admission-free; only
+  `cert:odd-b` remains. The two interior differential identities and the
+  odd-in-a Robin polynomial identity are admission-free. So is `lem:mixed-robin-multipliers`: homogeneity controls
   the rational exponent and its first derivatives up to the regular Robin
   edge, and the factor `h log h` gives continuity and the logarithmic
   derivative bound for the odd-in-b multiplier.
@@ -116,7 +114,7 @@ See [the module map](../architecture.md).
   bounds the second-order form on H¹. The separate
   `lem:mixed-weighted-form` remains admitted but is not used by coercivity.
   See [shared certificate work](shared.md#shared-certificate-work) for
-  the remaining sign checks.
+  the remaining sign check.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical
 gaps and the generated report for per-node status.

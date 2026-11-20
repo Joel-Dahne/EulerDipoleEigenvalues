@@ -1,4 +1,7 @@
+import NoEmbeddedEigenvalues.Certificates.Bernstein
+import NoEmbeddedEigenvalues.Certificates.MixedOddA
 import NoEmbeddedEigenvalues.MixedComparison
+import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Mixed comparison differential reductions and certificates
@@ -191,32 +194,6 @@ theorem mixed_odd_b_interior {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
   exact mul_nonneg (sin_pos_quarter hp.2).le
     (mixed_odd_b_residual_nonneg ⟨hh.1, hh.2.le⟩ ⟨hk.1.le, hk.2.le⟩)
 
-/-- First-order coefficients in the normalized odd-in-a reduction. -/
-def mixedOddACoeffH (p : ℝ × ℝ) : ℝ :=
-  3 * p.1 * mixedD p - (1 - p.1 ^ 2) * partialX mixedD p +
-    (1 - p.1 ^ 2) * (p.2 * mixedC p - (1 - p.2 ^ 2) * partialY mixedC p)
-
-def mixedOddACoeffK (p : ℝ × ℝ) : ℝ :=
-  (1 - p.2 ^ 2) * (-(1 - p.1 ^ 2) * partialX mixedC p +
-    3 * p.1 * mixedC p - partialY mixedD p) + p.2 * mixedD p
-
-def mixedOddACoeffZero (p : ℝ × ℝ) : ℝ :=
-  mixedD p + p.1 * partialX mixedD p - p.1 * p.2 * mixedC p +
-    p.1 * (1 - p.2 ^ 2) * partialY mixedC p + mixedV p
-
-/-- Rational normalized odd-in-a residual; division by the comparison has removed
-    the positive exponential before any polynomial denominator clearing. -/
-def mixedOddAResidual (p : ℝ × ℝ) : ℝ :=
-  mixedOddACoeffZero p + mixedOddACoeffH p * partialX mixedOddAExponent p +
-    mixedOddACoeffK p * partialY mixedOddAExponent p -
-    mixedD p * ((1 - p.1 ^ 2) *
-      (partialX (partialX mixedOddAExponent) p + partialX mixedOddAExponent p ^ 2) +
-      (1 - p.2 ^ 2) *
-        (partialY (partialY mixedOddAExponent) p + partialY mixedOddAExponent p ^ 2)) -
-    2 * mixedC p * (1 - p.1 ^ 2) * (1 - p.2 ^ 2) *
-      (partialY (partialX mixedOddAExponent) p +
-        partialX mixedOddAExponent p * partialY mixedOddAExponent p) - p.1 ^ 2 / 200
-
 theorem mixed_odd_a_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
     mixedComparisonOperator mixedOddAComparison p -
         (1 / 200 : ℝ) * Real.cos p.1 ^ 2 * mixedOddAComparison p =
@@ -306,10 +283,6 @@ theorem mixed_odd_a_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
   rw [Real.sin_sq p.2]
   ring
 
-theorem mixed_odd_a_residual_nonneg {h k : ℝ} (hh : h ∈ Ioo (0 : ℝ) 1)
-    (hk : k ∈ Ioo (0 : ℝ) 1) : 0 ≤ mixedOddAResidual (h, k) := by
-  sorry
-
 theorem mixed_odd_a_interior {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
     (1 / 200 : ℝ) * Real.cos p.1 ^ 2 * mixedOddAComparison p ≤
       mixedComparisonOperator mixedOddAComparison p := by
@@ -373,9 +346,39 @@ theorem mixed_robin_identity {h : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1) :
   unfold mixedRobinPolynomial
   ring
 
+-- Use degree zero in the second variable to reuse the box criterion.
+private def mixedRobinPower (i : Fin 8) (_ : Fin 1) : ℚ :=
+  (![1, 1714, -4647, 109, 7317, -3213, -1953, 673] : Fin 8 → ℚ) i
+
+private theorem mixedRobinPower_identity (h : ℝ) :
+    certificatePolynomial mixedRobinPower h 0 = 1000 * mixedRobinPolynomial h := by
+  simp [certificatePolynomial, mixedRobinPower, mixedRobinPolynomial, Fin.sum_univ_succ]
+  ring
+
+private theorem mixedRobinPower_box {a b : ℚ} (hab : a < b)
+    (hc : ∀ i j, 0 ≤ certificateBoxCoeff mixedRobinPower a b 0 1 i j)
+    {h : ℝ} (hh : h ∈ Icc (a : ℝ) (b : ℝ)) : 0 ≤ mixedRobinPolynomial h := by
+  have hp := certificate_bernstein_nonneg mixedRobinPower hab (by norm_num) hc hh
+    (y := 0) (by norm_num)
+  rw [mixedRobinPower_identity] at hp
+  linarith
+
 theorem mixed_robin_nonneg {h : ℝ} (hh : h ∈ Icc (0 : ℝ) 1) :
     0 ≤ mixedRobinPolynomial h := by
-  sorry
+  rcases le_or_gt h (1 / 2) with h₁ | h₁
+  · exact mixedRobinPower_box (a := 0) (b := 1 / 2) (by norm_num)
+      (by decide +kernel) (by norm_num; exact ⟨hh.1, h₁⟩)
+  rcases le_or_gt h (5 / 8) with h₂ | h₂
+  · exact mixedRobinPower_box (a := 1 / 2) (b := 5 / 8) (by norm_num)
+      (by decide +kernel) (by norm_num; exact ⟨h₁.le, h₂⟩)
+  rcases le_or_gt h (11 / 16) with h₃ | h₃
+  · exact mixedRobinPower_box (a := 5 / 8) (b := 11 / 16) (by norm_num)
+      (by decide +kernel) (by norm_num; exact ⟨h₂.le, h₃⟩)
+  rcases le_or_gt h (3 / 4) with h₄ | h₄
+  · exact mixedRobinPower_box (a := 11 / 16) (b := 3 / 4) (by norm_num)
+      (by decide +kernel) (by norm_num; exact ⟨h₃.le, h₄⟩)
+  · exact mixedRobinPower_box (a := 3 / 4) (b := 1) (by norm_num)
+      (by decide +kernel) (by norm_num; exact ⟨h₄.le, hh.2⟩)
 
 /-- The exponent version of the odd-in-a Robin bound. Only the regular
 edge is used; the closed-interval sign is a separate certificate. -/

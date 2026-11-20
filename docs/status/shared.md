@@ -24,3 +24,9 @@ polynomial identities and the coefficient signs. The independent
 [SymPy script](../../scripts/verify_dd_residual.py) reproduces the manuscript
 data but is not used as evidence by Lean. See the
 [digest notes](../../blueprint/src/chapters/notes.tex).
+
+For the mixed sector, Lean checks `cert:robin` on five intervals and
+`cert:odd-a` on six boxes. The latter uses `lem:bernstein-separable` to
+check and reuse intermediate first-axis coefficient tables. The
+[generator](../../scripts/verify_mixed_odd_a.py) reproduces the integer data
+but is not used as proof evidence. `cert:odd-b` remains open.

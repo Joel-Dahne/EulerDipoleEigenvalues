@@ -751,6 +751,9 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
 
 - `Certificates/Bernstein.lean`: exact rational power and Bernstein arrays, affine
   box pullback, expansion and positivity. Uses Mathlib's Bernstein basis.
+- `Certificates/BernsteinSeparable.lean`: computes a box transform by
+  successive one-variable transforms, allowing intermediate tables to be
+  checked once and shared across boxes.
 - `Certificates/Logarithm.lean`: rational logarithm bounds from geometric
   tail estimates and affine interpolation between endpoint bounds.
 - `Certificates/OddOddResidual.lean`: explicit odd–odd residual table and
@@ -764,15 +767,23 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   interpolation between the two endpoint inequalities.
 - `Certificates/Mixed.lean`: local cosine-coordinate flux factorizations
   for the two normalized interior residual identities, and the
-  regular-edge identity for the odd-in-a Robin margin. The three sign
-  checks are separate from these identities. The matrix, potential,
-  operator, and comparison functions live in `MixedComparison.lean`.
+  regular-edge identity and five-interval sign check for the odd-in-a Robin
+  margin. The matrix, potential, operator, and comparison functions live in
+  `MixedComparison.lean`.
+- `Certificates/MixedOddAAlgebra.lean`: clears the odd-in-a residual
+  using factored partial derivatives and checks the two power table
+  identities. `Certificates/MixedOddAData.lean` stores the integer power
+  and intermediate tables. `Certificates/MixedOddA.lean` uses kernel
+  reduction to check the intermediate tables and six final box signs.
 
 ## Source checks and verification tools
 
 - `scripts/verify_dd_residual.py` (Python 3 with SymPy): independently reproduce
   the exact odd–odd certificate data. Run with `--lean-power lower` or
   `--lean-power upper` to print a quotient power table. Not part of the Lean build.
+- `scripts/verify_mixed_odd_a.py` (Python 3 with SymPy): reproduces the
+  mixed odd-in-a power data and checks the signs independently. Run with
+  `--lean-power` to print the power and intermediate tables.
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,
   references, metadata and dependency cycles, without Lean or plasTeX.
 - `scripts/blueprint_status.py` (`just status-blueprint`, also `just web`):
