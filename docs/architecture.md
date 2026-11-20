@@ -679,6 +679,11 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   the odd-in-a exponent through the corner and its derivatives on the regular
   strip. The odd-in-b multiplier uses bounded polynomial coefficients times
   `h log h`; its positive bounds and Robin inequality are elementary.
+- `MixedRobinCurrent.lean`: abstract Robin multipliers, regular conormal
+  formulas and the pointwise mixed Picone inequality.
+- `MixedRobinRectangle.lean`: Fubini and sectionwise integration of the
+  classical current, with the nonnegative Robin side removed and the other
+  currents retained.
 - `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
   comparison on either odd axis, with canonical Sobolev traces. It combines
   the interior and Robin inequalities into a common quarter-cell bound.

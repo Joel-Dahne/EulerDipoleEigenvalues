@@ -57,9 +57,12 @@ admission-free; see [the module map](../architecture.md).
   edge, and the factor `h log h` gives continuity and the logarithmic
   derivative bound for the odd-in-b multiplier. The remaining analytic
   inputs are `lem:mixed-fold-quarter` (including the canonical traces),
-  `lem:robin-comparison`, and `lem:mixed-completion`. See
-  [shared certificate work](shared.md#shared-certificate-work) for the sign
-  checks.
+  `lem:robin-comparison`, and `lem:mixed-completion`.
+  For `lem:robin-comparison`, the pointwise Picone inequality, regular
+  conormal formulas, and signed truncated-rectangle comparison are
+  admission-free. Removing the odd-axis and `h = 0` cutoffs and passing
+  to Sobolev data remain. See [shared certificate work](shared.md#shared-certificate-work)
+  for the sign checks.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical
 gaps and the generated report for per-node status.

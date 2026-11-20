@@ -624,6 +624,81 @@ $(0,1]\times[0,1]$. On this strip it satisfies
 $|\rho_h|+|\rho_k|\le C(1+|\log h|)$ for some $C\ge0$.
 \end{definition}
 
+\begin{lemma}[Pointwise mixed Picone inequality]
+\label{lem:mixed-robin-picone}
+\uses{def:mixed-robin-multiplier, def:mixed-coefficients}
+\lean{NoEmbeddedEigenvalues.mixed_robin_picone}
+\leanok
+Let $\rho$ be a Robin multiplier and take $g=u\rho$ or $g=v\rho$.
+If $\mathcal Pg\ge ch^2g$ in $Q$, then for $z\in C^1(Q)$,
+\[
+ ch^2|z|^2+\operatorname{div}J
+ \le G\nabla z\cdot\nabla\bar z+V|z|^2,\qquad
+ J=|z|^2G\nabla g/g .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:picone, lem:mixed-G-positive}
+\leanok
+The multiplier is positive and smooth in the open quarter. Use the Picone
+divergence identity and drop its nonnegative gradient square.
+\end{proof}
+
+\begin{lemma}[Regular conormal currents]
+\label{lem:mixed-robin-currents}
+\uses{def:mixed-robin-multiplier, def:mixed-coefficients}
+\lean{NoEmbeddedEigenvalues.mixed_robin_ground_logPartials,
+ NoEmbeddedEigenvalues.mixed_robin_top_current,
+ NoEmbeddedEigenvalues.mixed_robin_even_axis_current}
+\leanok
+The components of $\nabla g/g$ are
+$X=\mathbf1_{g=u\rho}\,h/u-u\rho_h/\rho$ and
+$Y=\mathbf1_{g=v\rho}\,k/v-v\rho_k/\rho$ on the regular strip in $(a,b)$,
+away from the odd axis. On $b=\pi/2$, $0<a<\pi/2$, the sum of
+the top current and the Robin density is
+\[
+ J_b+h|z|^2
+ =\big((1+2\mathbf1_{g=u\rho})h\rho
+ -2(1-h^2)\rho_h-(2-h^2)\rho_k\big)|z|^2/\rho .
+\]
+The conormal current on the regular even axis is zero.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Differentiate the sine and cosine factors by the chain rule. On the top,
+the diagonal entry is $2-h^2$ and the off-diagonal entry is $2u$.
+On the even axis the off-diagonal entry and the even normal derivative
+both vanish.
+\end{proof}
+
+\begin{lemma}[Mixed comparison on a regular rectangle]
+\label{lem:mixed-robin-rectangle}
+\uses{def:mixed-coefficients, def:mixed-robin-multiplier}
+\lean{NoEmbeddedEigenvalues.mixed_robin_rectangle}
+\leanok
+Suppose $\mathcal Pg\ge ch^2g$ in $Q$ and the Robin numerator is
+nonnegative on the top. Let $R=(a_0,A)\times(b_0,\pi/2)$, with
+$0\le a_0<A<\pi/2$, $0\le b_0<\pi/2$, and with the closed rectangle
+disjoint from the odd axis. For a globally $C^2$ test function $z$,
+\[
+ c\int_R h^2|z|^2 + \int_{b_0}^{\pi/2}(J_a(A,b)-J_a(a_0,b))\,db
+       -\int_{a_0}^A J_b(a,b_0)\,da
+ \le
+ \int_R (G\nabla z\cdot\nabla\bar z+V|z|^2)
+       +\int_{a_0}^A h|z(a,\pi/2)|^2\,da .
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-robin-picone, lem:mixed-robin-currents}
+\leanok
+Integrate the pointwise inequality. Fubini and the fundamental theorem
+of calculus give the four signed normal currents. Combine the top
+current with the Robin term and discard their nonnegative sum.
+\end{proof}
+
 \begin{lemma}[Comparison lemma with logarithmic weights]
 \label{lem:robin-comparison}
 \uses{def:comparison-form, def:mixed-robin-multiplier, def:sobolev-local}
@@ -641,12 +716,13 @@ $3h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$
 \end{lemma}
 
 \begin{proof}
-\uses{lem:picone, lem:trace-l2, lem:mixed-G-positive}
-Picone identity (Lemma~\ref{lem:picone}) on a rectangle truncated at
-$h=\epsilon$ and at distance $\delta$ from the odd axis. The Robin current has
-the stated numerator; the current near the odd axis is $O(\delta)$; the
-current on $h=\epsilon$ is $O(\epsilon(1+|\log\epsilon|)^2)$. Extend by density
-(odd reflection and mollification).
+\uses{lem:mixed-robin-rectangle, lem:mixed-robin-currents, lem:trace-l2}
+Apply the regular rectangle inequality with $h>\epsilon$ and at distance
+$\delta$ from the odd axis. For smooth tests vanishing on that axis, its
+cutoff current is $O(\delta)$ for fixed $\epsilon$. The current on
+$h=\epsilon$ is $O(\epsilon(1+|\log\epsilon|)^2)$ after integration along
+the side. Extend the smooth-test inequality by density with the zero
+Sobolev trace (odd reflection and mollification).
 \end{proof}
 
 \begin{definition}[Odd-in-$b$ comparison function]

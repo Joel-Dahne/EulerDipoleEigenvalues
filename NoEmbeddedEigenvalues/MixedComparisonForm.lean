@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.Certificates.Mixed
+import NoEmbeddedEigenvalues.MixedRobinRectangle
 import NoEmbeddedEigenvalues.WeightedTraces
 
 /-!
@@ -34,22 +35,6 @@ structure MixedQuarterFormDomain (z za zb : ℝ × ℝ → ℂ) (top : ℝ → �
 def MixedQuarterZeroTrace (oddA : Bool) (z : ℝ × ℝ → ℂ) : Prop :=
   HasTransverseH1Trace 0 (Real.pi / 2) 0 (Real.pi / 2) 0
     (axisTraceChart (if oddA then 0 else 1)) z (fun _ ↦ 0)
-
-/-- The logarithmic multiplier hypotheses in `(h,k)`. Smoothness includes the
-regular Robin edge `k=0, h>0`, but does not prescribe derivatives at the corner. -/
-structure MixedRobinMultiplier (ρ : ℝ × ℝ → ℝ) : Prop where
-  smooth : ∃ U : Set (ℝ × ℝ), IsOpen U ∧ (Ioc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1) ⊆ U ∧
-    ContDiffOn ℝ ∞ ρ U
-  continuous : ContinuousOn ρ (Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1)
-  bounded : ∃ m M : ℝ, 0 < m ∧ ∀ q ∈ Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1,
-    m ≤ ρ q ∧ ρ q ≤ M
-  derivative_bound : ∃ C : ℝ, 0 ≤ C ∧
-    ∀ q ∈ Ioc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1,
-      |partialX ρ q| + |partialY ρ q| ≤ C * (1 + |Real.log q.1|)
-
-/-- The actual interior comparison built from a multiplier. -/
-def mixedRobinComparison (oddA : Bool) (ρ : ℝ × ℝ → ℝ) (q : ℝ × ℝ) : ℝ :=
-  (if oddA then Real.sin q.1 else Real.sin q.2) * ρ (Real.cos q.1, Real.cos q.2)
 
 /-- The logarithmic Robin comparison lemma for either odd axis. -/
 theorem mixed_robin_comparison (oddA : Bool) {ρ : ℝ × ℝ → ℝ} (hρ : MixedRobinMultiplier ρ)

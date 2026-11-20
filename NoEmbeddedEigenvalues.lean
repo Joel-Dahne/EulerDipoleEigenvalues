@@ -63,6 +63,8 @@ import NoEmbeddedEigenvalues.Picone
 import NoEmbeddedEigenvalues.Mixed
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.MixedComparison
+import NoEmbeddedEigenvalues.MixedRobinCurrent
+import NoEmbeddedEigenvalues.MixedRobinRectangle
 import NoEmbeddedEigenvalues.MixedComparisonForm
 import NoEmbeddedEigenvalues.MixedField
 import NoEmbeddedEigenvalues.MixedFlux
