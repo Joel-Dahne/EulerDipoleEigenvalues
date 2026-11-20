@@ -21,8 +21,9 @@ admission-free; see [the module map](../architecture.md).
   the divided Poisson equation.
 - **Virial:** `prop:mixed-virial` is assembled in Lean from
   `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`. Only
-  `lem:mixed-geometric-flux` remains admitted in this chain. The field algebra, full-cell integrability,
-  Fourier-gradient identification and normal bulk truncation limit are
+  `lem:mixed-geometric-level` remains admitted in this chain. The field
+  algebra, full-cell integrability, Fourier-gradient identification and
+  normal bulk truncation limit are
   admission-free. The exact tangential field factors through the
   antisymmetric cosine difference, and its leading current cancels on
   symmetric shells. `lem:mixed-tangential-current` factors out the level
@@ -41,9 +42,13 @@ admission-free; see [the module map](../architecture.md).
   for the two imaginary characters and the truncated virial. Shifting
   by a quarter cancels their cross terms on the orbit and on the arcs.
   `lem:mixed-canonical-cutoff` identifies the arc sum with the two
-  Neumann cutoff pairings. The remaining input to `prop:mixed-paired-flux`
-  is `lem:mixed-geometric-flux`: match the signed level-gradient limit
-  to the centered cutoff after pairing adjacent divergent energies.
+  Neumann cutoff pairings. `lem:mixed-edge-mass` combines the four
+  singular trace masses before integration; `lem:mixed-gradient-cutoff`
+  uses this to prove the centered signed gradient limit.
+  `lem:mixed-level-model` proves convergence of the paired leading
+  boundary model with the exact level weight. What remains in
+  `lem:mixed-geometric-level` is comparison with the actual weak gradients
+  on the levels and the first-order level limit.
 - **Neumann traces:** `lem:mixed-boundary-square-traces` is assembled in Lean.
   The profile ODE and square integrability force decay at both ends; uniqueness
   identifies the physical trace with the canonical profile, and decay at

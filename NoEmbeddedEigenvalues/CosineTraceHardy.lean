@@ -111,6 +111,44 @@ theorem HasIntervalH1.lintegral_div_cos_sq {F D : ℝ → ℂ}
     _ ≤ _ := (lintegral_union_le H _ _).trans
       ((add_le_add hleft hright).trans_eq (by rw [← two_mul]; ac_rfl))
 
+/-- An absolutely continuous complex trace with zero endpoint values and an
+`L²` derivative remains square integrable after division by the cosine. -/
+theorem memLp_div_cos_of_ac {F : ℝ → ℂ}
+    (hf : AbsolutelyContinuousOnInterval F (-(π / 2)) (π / 2))
+    (hD : MemLp (deriv F) 2 (volume.restrict (Ioo (-(π / 2)) (π / 2))))
+    (hl : F (-(π / 2)) = 0) (hr : F (π / 2) = 0) :
+    MemLp (fun x ↦ F x / (cos x : ℂ)) 2 (volume.restrict (Ioo (-(π / 2)) (π / 2))) := by
+  have hab : -(π / 2) < π / 2 := by linarith [pi_pos]
+  let I := Ioo (-(π / 2)) (π / 2)
+  have hc : ContinuousOn F (Icc (-(π / 2)) (π / 2)) := by
+    simpa only [uIcc_of_le hab.le] using hf.continuousOn
+  obtain ⟨M, hM⟩ := isCompact_Icc.exists_bound_of_continuousOn hc
+  have hm := (hc.mono Ioo_subset_Icc_self).aestronglyMeasurable (μ := volume) measurableSet_Ioo
+  have hF : MemLp F 2 (volume.restrict I) :=
+    MemLp.of_bound hm M ((ae_restrict_mem measurableSet_Ioo).mono fun t ht ↦
+      hM t (Ioo_subset_Icc_self ht))
+  have hjet : HasIntervalH1 (-(π / 2)) (π / 2) F (deriv F) := by
+    refine ⟨hF, hD, ?_, ?_⟩
+    · intro a b ha hab' hb
+      apply hf.mono
+      rw [uIcc_of_le hab.le, uIcc_of_le hab']
+      exact Icc_subset_Icc ha.le hb.le
+    · filter_upwards [hf.boundedVariationOn.ae_differentiableAt_of_mem_uIcc] with t ht h
+      exact (ht (Icc_subset_uIcc (Ioo_subset_Icc_self h))).hasDerivAt
+  have he (t : ℝ) (ht : t ∈ Icc (-(π / 2)) (π / 2)) :
+      intervalH1Extension (-(π / 2)) (π / 2) F (deriv F) t = F t :=
+    (hjet.extension_unique hab hc (fun _ _ ↦ rfl) ht).symm
+  have hfin := (hjet.lintegral_div_cos_sq
+    ((he _ ⟨le_rfl, hab.le⟩).trans hl) ((he _ ⟨hab.le, le_rfl⟩).trans hr)).trans_lt
+      (ENNReal.mul_lt_top (by finiteness) (hD.integrable_norm_pow (by decide)).lintegral_lt_top)
+  have hm' : AEStronglyMeasurable (fun x ↦ F x / (cos x : ℂ)) (volume.restrict I) :=
+    hm.mul ((Complex.continuous_ofReal.comp continuous_cos).measurable.inv.aestronglyMeasurable)
+      |>.congr (.of_forall fun x ↦ (div_eq_mul_inv _ _).symm)
+  apply (memLp_two_iff_integrable_sq_norm hm').2
+  refine ⟨hm'.norm.pow 2, ?_⟩
+  rw [hasFiniteIntegral_iff_ofReal (.of_forall fun t ↦ sq_nonneg _)]
+  simpa only [norm_div, Complex.norm_real, Real.norm_eq_abs, div_pow, sq_abs] using hfin
+
 /-- Two zero endpoint traces give square-integrability after division by the
 normal cosine. This uses only the inward rectangle, not a reflected extension. -/
 theorem HasTransverseH1Trace.memLp_div_cos_snd {l r : ℝ} {F D : ℝ × ℝ → ℂ}

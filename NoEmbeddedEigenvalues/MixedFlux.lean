@@ -1,6 +1,7 @@
 import NoEmbeddedEigenvalues.MixedRellich
 import NoEmbeddedEigenvalues.MixedTangentialLimit
 import NoEmbeddedEigenvalues.MixedPairing
+import NoEmbeddedEigenvalues.MixedEdgeDefect
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
@@ -103,15 +104,6 @@ def mixedGeometricLevelTerm (ω : L2) (h : ℝ) : ℝ :=
   levelIntegral h (fun p ↦ gradNorm p * (streamLift ω p * conj (streamNormal ω p)).re) +
     (2 - 2 * h) * (levelIntegral h (fun p ↦ ‖streamNormal ω p‖ ^ 2) -
       levelIntegral h (fun p ↦ ‖streamTangent ω p‖ ^ 2))
-
-/-- The two geometric limits, with the signed gradient energies paired before
-taking either limit. No vorticity transport or canonical profile is used. -/
-theorem mixed_geometric_flux_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
-    ∃ L : ℝ, ∃ N : Set ℝ, volume N = 0 ∧
-      Tendsto (mixedGradientFluxCutoff d.phi) atTop (𝓝 L) ∧
-      Tendsto (mixedGeometricLevelTerm ω) (𝓝[Ioo 0 1 \ N] 0) (𝓝 (2 * L)) := by
-  sorry
 
 /-- Integrated tangential comparison for the adapted and normal fields.
 The two integrals are separately absolutely convergent; this comparison
@@ -224,6 +216,99 @@ private theorem mixedNeumannA_integrable (σ : Bool) {f : ℝ → ℝ}
   refine (h.mp hf).congr (Eventually.of_forall fun t ↦ ?_)
   have hp := inv_pos.mpr (Real.cosh_pos t)
   cases σ <;> simp [abs_of_pos hp, smul_eq_mul]
+
+private theorem mixedNeumannA_true_neg (t : ℝ) :
+    mixedNeumannA true (-t) = -(mixedNeumannA true t) := by
+  simp only [mixedNeumannA, ite_true, arcAngle, neg_neg, Real.exp_neg]
+  rw [Real.arctan_inv_of_pos (Real.exp_pos t)]
+  ring
+
+/-- Pair the singular edge masses before taking the time cutoff. This does
+not require the bulk divergence theorem for the trace-mass current. -/
+theorem mixed_trace_mass_cutoff_limit {ω : L2} (d : MixedQuotientData ω) :
+    Tendsto (mixedTraceMassCutoff d.phi) atTop
+      (𝓝 (∫ x in Ioo (-Real.pi / 2) (Real.pi / 2), mixedEdgeMassDefect d.phi x / Real.cos x)) := by
+  let a := mixedNeumannA true
+  let D (σ : Bool) (t : ℝ) := ‖d.phi (cellEdgeNormal σ, a t)‖ ^ 2
+  let N (σ : Bool) (t : ℝ) := ‖d.phi (a t, cellEdgeNormal σ)‖ ^ 2
+  let F := fun t ↦ mixedEdgeMassDefect d.phi (a t)
+  let f := fun x ↦ mixedEdgeMassDefect d.phi x / Real.cos x
+  have hfi : IntegrableOn f (Ioo (-Real.pi / 2) (Real.pi / 2)) := by
+    simpa only [neg_div] using mixed_edge_mass_defect_integrable d
+  have hcos (t : ℝ) : Real.cos (a t) = (Real.cosh t)⁻¹ := by
+    have h := mixedNeumannArc_cos true t
+    rw [mixedNeumann_coord] at h
+    exact h
+  have hF (t : ℝ) : (Real.cosh t)⁻¹ * f (a t) = F t := by
+    dsimp only [F, f]
+    rw [hcos, mul_div_cancel₀ _ (inv_ne_zero (Real.cosh_pos t).ne')]
+  have hi : Integrable F := (mixedNeumannA_integrable true hfi).congr (.of_forall hF)
+  have hI : (∫ t, F t) = ∫ x in Ioo (-Real.pi / 2) (Real.pi / 2), f x := by
+    have hs := integral_image_eq_integral_abs_deriv_smul (f := a) (g := f)
+      MeasurableSet.univ (fun t _ ↦ (mixedNeumannA_deriv true t).hasDerivWithinAt)
+      (mixedNeumannA_injective true).injOn
+    rw [image_univ, mixedNeumannA_image, setIntegral_univ] at hs
+    rw [hs]
+    apply integral_congr_ae
+    filter_upwards with t
+    rw [← hF t]
+    simp only [ite_true, neg_one_mul, abs_neg,
+      abs_of_nonneg (inv_nonneg.mpr (Real.cosh_pos t).le), smul_eq_mul]
+  have hac : Continuous a := continuous_iff_continuousAt.2
+    fun t ↦ (mixedNeumannA_deriv true t).continuousAt
+  have hden (x : ℝ) (hx : x ∈ Ioo (-Real.pi / 2) (Real.pi / 2)) (σ : Bool) :
+      (cellEdgeNormal σ, x) ∈ closure mixedOpenCell ∧
+      (x, cellEdgeNormal σ) ∈ closure mixedOpenCell := by
+    rw [mixedOpenCell, closure_prod_eq, closure_Ioo (by linarith [Real.pi_pos])]
+    have h : cellEdgeNormal σ ∈ Icc (-Real.pi / 2) (Real.pi / 2) := by
+      cases σ <;> simp [cellEdgeNormal] <;> linarith [Real.pi_pos]
+    exact ⟨⟨h, Ioo_subset_Icc_self hx⟩, ⟨Ioo_subset_Icc_self hx, h⟩⟩
+  have hcD (σ : Bool) : Continuous (D σ) :=
+    (d.continuous.comp_continuous (continuous_const.prodMk hac)
+      (fun t ↦ (hden _ (mixedNeumannA_mem true t) σ).1)).norm.pow _
+  have hcN (σ : Bool) : Continuous (N σ) :=
+    (d.continuous.comp_continuous (hac.prodMk continuous_const)
+      (fun t ↦ (hden _ (mixedNeumannA_mem true t) σ).2)).norm.pow _
+  have hneg (T : ℝ) (hT : 0 ≤ T) (g : ℝ → ℝ) :
+      (∫ t in Ioo (-T) T, g (-t)) = ∫ t in Ioo (-T) T, g t := by
+    have h : -T ≤ T := by linarith
+    rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le h,
+      intervalIntegral.integral_comp_neg, neg_neg, intervalIntegral.integral_of_le h,
+      integral_Ioc_eq_integral_Ioo]
+  have hArc₁ (t : ℝ) : diagCoord (cellArc 1 t) = (cellEdgeNormal false, a t) := by
+    simp only [cellArc, Function.iterate_one, rotLift, diagCoord, separatrixArc, a, mixedNeumannA,
+      ite_true, cellEdgeNormal, Bool.false_eq_true, ite_false, Prod.mk.injEq]
+    constructor <;> ring
+  have hArc₃ (t : ℝ) : diagCoord (cellArc 3 t) = (cellEdgeNormal true, a (-t)) := by
+    dsimp only [a]
+    rw [mixedNeumannA_true_neg]
+    simp only [cellArc, Function.iterate_succ_apply', Function.iterate_zero_apply, rotLift, neg_neg,
+      diagCoord, separatrixArc, mixedNeumannA, ite_true, cellEdgeNormal, Prod.mk.injEq]
+    constructor <;> ring
+  have hArc₂ (t : ℝ) : diagCoord (cellArc 2 t) = (a (-t), cellEdgeNormal false) := by
+    change diagCoord (mixedNeumannArc false t) = _
+    rw [mixedNeumann_coord]
+    exact congrArg (fun s ↦ (s, cellEdgeNormal false)) (mixedNeumannA_true_neg t).symm
+  rw [← hI]
+  apply (intervalIntegral_tendsto_integral hi tendsto_neg_atTop_atBot tendsto_id).congr'
+  filter_upwards [eventually_ge_atTop (0 : ℝ)] with T hT
+  rw [id_eq, intervalIntegral.integral_of_le (by linarith : -T ≤ T), integral_Ioc_eq_integral_Ioo]
+  have hD (σ : Bool) : IntegrableOn (D σ) (Ioo (-T) T) :=
+    ((hcD σ).continuousOn.integrableOn_Icc).mono_set Ioo_subset_Icc_self
+  have hN (σ : Bool) : IntegrableOn (N σ) (Ioo (-T) T) :=
+    ((hcN σ).continuousOn.integrableOn_Icc).mono_set Ioo_subset_Icc_self
+  have hsplit : (∫ t in Ioo (-T) T, F t) =
+      (∫ t in Ioo (-T) T, D true t) + (∫ t in Ioo (-T) T, D false t) -
+        ((∫ t in Ioo (-T) T, N true t) + (∫ t in Ioo (-T) T, N false t)) := by
+    change (∫ t in Ioo (-T) T, (D true + D false) t - (N true + N false) t) = _
+    rw [integral_sub ((hD true).add (hD false)) ((hN true).add (hN false))]
+    simp only [Pi.add_apply, integral_add (hD true) (hD false), integral_add (hN true) (hN false)]
+  rw [hsplit]
+  simp only [mixedTraceMassCutoff, hArc₁, hArc₂, hArc₃,
+    show ∀ t, diagCoord (cellArc 0 t) = (a t, cellEdgeNormal true) from mixedNeumann_coord true]
+  change _ = (∫ t in Ioo (-T) T, D false t) + (∫ t in Ioo (-T) T, D true (-t)) -
+    ((∫ t in Ioo (-T) T, N true t) + (∫ t in Ioo (-T) T, N false (-t)))
+  rw [hneg T hT (D true), hneg T hT (N false), add_comm (∫ t in Ioo (-T) T, D true t)]
 
 private theorem mixedNeumannA_ae (σ : Bool) {P : ℝ → Prop}
     (h : ∀ᵐ a ∂volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2)), P a) :
@@ -1246,45 +1331,95 @@ private theorem mixed_flux_gradient_pointwise (t : ℝ) (U V : ℂ) :
     Complex.conj_re, Complex.conj_im, boundaryWeight]
   ring
 
-private theorem mixed_neumann_energy_cutoff_integrable {ω : L2} (d : MixedQuotientData ω)
-    (σ : Bool) (T : ℝ) :
-    IntegrableOn (fun t ↦ ‖deriv (mixedNeumannStream d.phi σ) t /
-      (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2) (Ioo (-T) T) := by
+private theorem mixed_neumann_corner_limit {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+    let H := fun x : ℝ ↦ x * ‖mixedNeumannG d.phi σ x‖ ^ 2
+    Tendsto (fun T ↦ H (Real.tanh T) - H (Real.tanh (-T))) atTop
+      (𝓝 (∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2)) := by
+  let H := fun x : ℝ ↦ x * ‖mixedNeumannG d.phi σ x‖ ^ 2
+  have hmass (t : ℝ) :
+      mixedNeumannG d.phi σ (Real.tanh t) = d.phi (diagCoord (mixedNeumannArc σ t)) := by
+    simp [mixedNeumannG, Real.artanh_tanh]
+  change Tendsto (fun T ↦ H (Real.tanh T) - H (Real.tanh (-T))) atTop _
+  have hminus : Tendsto (fun T : ℝ ↦ Real.tanh (-T)) atTop (𝓝 (-1)) := by
+    simpa only [Real.tanh_neg] using mixed_tanh_atTop.neg
+  let R (p : Plane) : Plane := if σ then p else (-p.1, -p.2)
+  have hR : Continuous R := by
+    cases σ <;> dsimp [R] <;> fun_prop
+  have hArc (t : ℝ) : mixedNeumannArc σ t = R (separatrixArc t) := by
+    cases σ <;> simp [R, mixedNeumannArc, cellArc, Function.iterate_succ_apply', rotLift]
+  have hp : Tendsto (fun t ↦ diagCoord (mixedNeumannArc σ t)) atTop
+      (𝓝 (diagCoord (R (0, -Real.pi)))) := by
+    simpa only [hArc, Function.comp_def] using ((continuous_diagCoord.comp hR).tendsto _).comp
+      tendsto_separatrixArc_atTop
+  have hn : Tendsto (fun t ↦ diagCoord (mixedNeumannArc σ (-t))) atTop
+      (𝓝 (diagCoord (R (Real.pi, 0)))) := by
+    simpa only [hArc, Function.comp_def] using ((continuous_diagCoord.comp hR).tendsto _).comp
+      (tendsto_separatrixArc_atBot.comp tendsto_neg_atTop_atBot)
+  have hClosed : IsClosed (closure mixedOpenCell) := isClosed_closure
+  have hpMem := hClosed.mem_of_tendsto hp (Eventually.of_forall (mixedNeumannArc_mem σ))
+  have hnMem := hClosed.mem_of_tendsto hn
+    (Eventually.of_forall fun t ↦ mixedNeumannArc_mem σ (-t))
+  have hpG := (d.continuous _ hpMem).tendsto.comp
+    (tendsto_nhdsWithin_iff.2 ⟨hp, Eventually.of_forall (mixedNeumannArc_mem σ)⟩)
+  have hnG := (d.continuous _ hnMem).tendsto.comp
+    (tendsto_nhdsWithin_iff.2 ⟨hn, Eventually.of_forall fun t ↦ mixedNeumannArc_mem σ (-t)⟩)
+  have h := (mixed_tanh_atTop.mul (hpG.norm.pow 2)).sub (hminus.mul (hnG.norm.pow 2))
+  have hP : diagCoord (R (0, -Real.pi)) = (cellEdgeNormal (!σ), cellEdgeNormal σ) := by
+    cases σ <;> simp [R, diagCoord, cellEdgeNormal]
+  have hN : diagCoord (R (Real.pi, 0)) = (cellEdgeNormal σ, cellEdgeNormal σ) := by
+    cases σ <;> simp [R, diagCoord, cellEdgeNormal]
+  rw [hP, hN] at h
+  simp only [H, hmass]
+  cases σ <;> simpa [Fintype.sum_bool, add_comm] using h
+
+private theorem mixed_neumann_energy_cutoff {ω : L2} (d : MixedQuotientData ω)
+    (σ : Bool) (T : ℝ) (hT : 0 < T) :
+    let e := fun t ↦ ‖deriv (mixedNeumannStream d.phi σ) t /
+      (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2
+    let G := mixedNeumannG d.phi σ
+    let H := fun x ↦ x * ‖G x‖ ^ 2
+    IntegrableOn e (Ioo (-T) T) ∧
+      2 * (∫ t in Ioo (-T) T, e t) -
+          (∫ t in Ioo (-T) T, ‖d.phi (diagCoord (mixedNeumannArc σ t))‖ ^ 2) =
+        (∫ x in Ioo (Real.tanh (-T)) (Real.tanh T), boundaryWeight x * ‖deriv G x‖ ^ 2) -
+          (H (Real.tanh T) - H (Real.tanh (-T))) := by
   let g := mixedNeumannStream d.phi σ
   let G := mixedNeumannG d.phi σ
   let w := fun t ↦ boundaryWeight (Real.tanh t)
   let H := fun x : ℝ ↦ x * ‖G x‖ ^ 2
   let e := fun t ↦ ‖deriv g t / (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2
   obtain ⟨hac, _, hG, _, hge⟩ := mixed_neumann_stream_trace d σ
-  by_cases hT : 0 < T
-  · have ht : -T < T := by linarith
-    have hab := mixed_tanh_strictMono ht
-    have hE : Integrable (fun t ↦ w t * (boundaryWeight (Real.tanh t) *
-        ‖deriv G (Real.tanh t)‖ ^ 2)) := by
-      rw [← integrableOn_univ]
-      apply mixed_tanh_integrable (f := fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2)
-        MeasurableSet.univ
-      rwa [Real.tanh_bijOn.image_eq]
-    have hH := mixed_norm_boundary_ac (hG _ _ (mixed_tanh_mem (-T)).1 hab (mixed_tanh_mem T).2)
-    have hDi : IntegrableOn (fun t ↦ w t * deriv H (Real.tanh t)) (Ioo (-T) T) := by
-      apply mixed_tanh_integrable measurableSet_Ioo
-      have htc : Continuous Real.tanh := continuous_iff_continuousAt.2
-        fun t ↦ (hasDerivAt_tanh t).continuousAt
-      rw [htc.image_Ioo_of_strictMono mixed_tanh_strictMono]
-      exact (intervalIntegrable_iff_integrableOn_Ioo_of_le hab.le).1 hH.intervalIntegrable_deriv
-    have hm : IntegrableOn (fun t ↦ ‖G (Real.tanh t)‖ ^ 2) (Ioo (-T) T) := by
-      have he (t : ℝ) : G (Real.tanh t) = (Real.cosh t : ℂ) * g t := by
-        change _ = _ * mixedNeumannStream d.phi σ t
-        rw [congrFun (mixedNeumann_weighted_stream d.phi σ) t, ← mul_assoc,
-          ← Complex.ofReal_mul, mul_inv_cancel₀ (Real.cosh_pos t).ne',
-          Complex.ofReal_one, one_mul]
-      simp_rw [he]
-      have hgc : Continuous g := continuous_of_absolutelyContinuous hac
-      have hc : Continuous fun t : ℝ ↦ (Real.cosh t : ℂ) * g t := by fun_prop
-      exact (hc.norm.pow 2).continuousOn.integrableOn_Icc.mono_set Ioo_subset_Icc_self
-    have hgd := ae_comp_tanh hG.ae_differentiableAt
-    have hg_eq := mixedNeumann_weighted_stream d.phi σ
-    apply (((hE.integrableOn.sub hDi).add hm).const_mul (1 / 2 : ℝ)).congr
+  have ht : -T < T := by linarith
+  have hab := mixed_tanh_strictMono ht
+  have hE : Integrable (fun t ↦ w t * (boundaryWeight (Real.tanh t) *
+      ‖deriv G (Real.tanh t)‖ ^ 2)) := by
+    rw [← integrableOn_univ]
+    apply mixed_tanh_integrable (f := fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2)
+      MeasurableSet.univ
+    rwa [Real.tanh_bijOn.image_eq]
+  have hH := mixed_norm_boundary_ac (hG _ _ (mixed_tanh_mem (-T)).1 hab (mixed_tanh_mem T).2)
+  have hDi : IntegrableOn (fun t ↦ w t * deriv H (Real.tanh t)) (Ioo (-T) T) := by
+    apply mixed_tanh_integrable measurableSet_Ioo
+    have htc : Continuous Real.tanh := continuous_iff_continuousAt.2
+      fun t ↦ (hasDerivAt_tanh t).continuousAt
+    rw [htc.image_Ioo_of_strictMono mixed_tanh_strictMono]
+    exact (intervalIntegrable_iff_integrableOn_Ioo_of_le hab.le).1 hH.intervalIntegrable_deriv
+  have hm : IntegrableOn (fun t ↦ ‖G (Real.tanh t)‖ ^ 2) (Ioo (-T) T) := by
+    have he (t : ℝ) : G (Real.tanh t) = (Real.cosh t : ℂ) * g t := by
+      change _ = _ * mixedNeumannStream d.phi σ t
+      rw [congrFun (mixedNeumann_weighted_stream d.phi σ) t, ← mul_assoc,
+        ← Complex.ofReal_mul, mul_inv_cancel₀ (Real.cosh_pos t).ne',
+        Complex.ofReal_one, one_mul]
+    simp_rw [he]
+    have hgc : Continuous g := continuous_of_absolutelyContinuous hac
+    have hc : Continuous fun t : ℝ ↦ (Real.cosh t : ℂ) * g t := by fun_prop
+    exact (hc.norm.pow 2).continuousOn.integrableOn_Icc.mono_set Ioo_subset_Icc_self
+  have hgd := ae_comp_tanh hG.ae_differentiableAt
+  have hg_eq := mixedNeumann_weighted_stream d.phi σ
+  have he : (fun t ↦ (1 / 2 : ℝ) *
+      (w t * (boundaryWeight (Real.tanh t) * ‖deriv G (Real.tanh t)‖ ^ 2) -
+        w t * deriv H (Real.tanh t) + ‖G (Real.tanh t)‖ ^ 2)) =ᵐ[volume.restrict (Ioo (-T) T)]
+        e := by
     filter_upwards [ae_restrict_of_ae hgd] with t htG
     have hd := htG (mixed_tanh_mem t)
     change (1 / 2 : ℝ) * (w t * (boundaryWeight (Real.tanh t) * ‖deriv G (Real.tanh t)‖ ^ 2) -
@@ -1294,6 +1429,37 @@ private theorem mixed_neumann_energy_cutoff_integrable {ω : L2} (d : MixedQuoti
       (mixed_hasDerivAt_weightedFlow hd).deriv, mixed_norm_boundary_deriv hd]
     have hx := mixed_flux_gradient_pointwise t (G (Real.tanh t)) (deriv G (Real.tanh t))
     linarith only [hx]
+  have hi : IntegrableOn e (Ioo (-T) T) :=
+    (((hE.integrableOn.sub hDi).add hm).const_mul (1 / 2 : ℝ)).congr he
+  refine ⟨hi, ?_⟩
+  have hmass (t : ℝ) : G (Real.tanh t) = d.phi (diagCoord (mixedNeumannArc σ t)) := by
+    simp [G, mixedNeumannG, Real.artanh_tanh]
+  simp only [← hmass]
+  change 2 * (∫ t in Ioo (-T) T, e t) - (∫ t in Ioo (-T) T, ‖G (Real.tanh t)‖ ^ 2) = _
+  rw [← integral_congr_ae he, integral_const_mul]
+  have hsplit := integral_add (hE.integrableOn.sub hDi) hm
+  simp only [Pi.sub_apply] at hsplit
+  rw [hsplit, integral_sub hE.integrableOn hDi]
+  have hD : (∫ x in Ioo (Real.tanh (-T)) (Real.tanh T), deriv H x) =
+      H (Real.tanh T) - H (Real.tanh (-T)) := by
+    rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hab.le]
+    exact hH.integral_deriv_eq_sub
+  have hE' := mixed_tanh_integral (f := fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2)
+    (a := -T) (b := T)
+  have hD' := mixed_tanh_integral (f := deriv H) (a := -T) (b := T)
+  change (∫ t in Ioo (-T) T, w t * (boundaryWeight (Real.tanh t) *
+    ‖deriv G (Real.tanh t)‖ ^ 2)) = _ at hE'
+  change (∫ t in Ioo (-T) T, w t * deriv H (Real.tanh t)) = _ at hD'
+  rw [hE', hD', hD]
+  change 2 * (1 / 2 * (_ + _)) - _ = _ - (H _ - H _)
+  ring
+
+private theorem mixed_neumann_energy_cutoff_integrable {ω : L2} (d : MixedQuotientData ω)
+    (σ : Bool) (T : ℝ) :
+    IntegrableOn (fun t ↦ ‖deriv (mixedNeumannStream d.phi σ) t /
+      (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2) (Ioo (-T) T) := by
+  by_cases hT : 0 < T
+  · exact (mixed_neumann_energy_cutoff d σ T hT).1
   · rw [Ioo_eq_empty (by linarith)]
     exact integrableOn_empty
 
@@ -1419,45 +1585,76 @@ theorem mixed_neumann_flux_renormalized {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       simpa only [w, boundaryWeight_tanh, smul_eq_mul] using
         integral_tanh_subst (fun x ↦ e x - 2 * c x)]
     rw [integral_sub he (hc.const_mul 2), integral_const_mul]] at htimeLim
-  -- The endpoints are the two corners of this edge (in opposite orders for the two edges).
-  have hEnds : Tendsto (fun T ↦ H (Real.tanh T) - H (Real.tanh (-T))) atTop
-      (𝓝 (∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2)) := by
-    have hminus : Tendsto (fun T : ℝ ↦ Real.tanh (-T)) atTop (𝓝 (-1)) := by
-      simpa only [Real.tanh_neg] using mixed_tanh_atTop.neg
-    let R (p : Plane) : Plane := if σ then p else (-p.1, -p.2)
-    have hR : Continuous R := by
-      cases σ <;> dsimp [R] <;> fun_prop
-    have hArc (t : ℝ) : mixedNeumannArc σ t = R (separatrixArc t) := by
-      cases σ <;> simp [R, mixedNeumannArc, cellArc, Function.iterate_succ_apply', rotLift]
-    have hp : Tendsto (fun t ↦ diagCoord (mixedNeumannArc σ t)) atTop
-        (𝓝 (diagCoord (R (0, -Real.pi)))) := by
-      simpa only [hArc, Function.comp_def] using ((continuous_diagCoord.comp hR).tendsto _).comp
-        tendsto_separatrixArc_atTop
-    have hn : Tendsto (fun t ↦ diagCoord (mixedNeumannArc σ (-t))) atTop
-        (𝓝 (diagCoord (R (Real.pi, 0)))) := by
-      simpa only [hArc, Function.comp_def] using ((continuous_diagCoord.comp hR).tendsto _).comp
-        (tendsto_separatrixArc_atBot.comp tendsto_neg_atTop_atBot)
-    have hClosed : IsClosed (closure mixedOpenCell) := isClosed_closure
-    have hpMem := hClosed.mem_of_tendsto hp (Eventually.of_forall (mixedNeumannArc_mem σ))
-    have hnMem := hClosed.mem_of_tendsto hn
-      (Eventually.of_forall fun t ↦ mixedNeumannArc_mem σ (-t))
-    have hpG := (d.continuous _ hpMem).tendsto.comp
-      (tendsto_nhdsWithin_iff.2 ⟨hp, Eventually.of_forall (mixedNeumannArc_mem σ)⟩)
-    have hnG := (d.continuous _ hnMem).tendsto.comp
-      (tendsto_nhdsWithin_iff.2 ⟨hn, Eventually.of_forall fun t ↦ mixedNeumannArc_mem σ (-t)⟩)
-    have h := (mixed_tanh_atTop.mul (hpG.norm.pow 2)).sub (hminus.mul (hnG.norm.pow 2))
-    have hP : diagCoord (R (0, -Real.pi)) = (cellEdgeNormal (!σ), cellEdgeNormal σ) := by
-      cases σ <;> simp [R, diagCoord, cellEdgeNormal]
-    have hN : diagCoord (R (Real.pi, 0)) = (cellEdgeNormal σ, cellEdgeNormal σ) := by
-      cases σ <;> simp [R, diagCoord, cellEdgeNormal]
-    rw [hP, hN] at h
-    simp only [H, hmass]
-    cases σ <;> simpa [Fintype.sum_bool, add_comm] using h
+  have hEnds := mixed_neumann_corner_limit d σ
   apply (htimeLim.sub hEnds).congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with T hT
   simp only [id_eq]
   rw [intervalIntegral.integral_of_le (by linarith : -T ≤ T), integral_Ioc_eq_integral_Ioo]
   exact (hcut T hT).symm
+
+/-- Explicit finite part of twice the centered signed gradient cutoff. -/
+def mixedGradientFluxFinitePart {ω : L2} (d : MixedQuotientData ω) : ℝ :=
+  (∫ x in Ioo (-Real.pi / 2) (Real.pi / 2), mixedEdgeMassDefect d.phi x / Real.cos x) -
+    ∑ σ : Bool, ((∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv (mixedNeumannG d.phi σ) x‖ ^ 2) -
+      ∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2)
+
+/-- The centered edge cutoff converges after pairing the signed energies.
+The Neumann energy minus its trace mass contributes the weighted tangential
+energy and the two endpoint terms. -/
+theorem mixed_gradient_cutoff_limit {ω : L2} (d : MixedQuotientData ω) :
+    Tendsto (mixedGradientFluxCutoff d.phi) atTop (𝓝 (mixedGradientFluxFinitePart d / 2)) := by
+  let E (σ : Bool) (T : ℝ) := 2 * (∫ t in Ioo (-T) T,
+    ‖deriv (mixedNeumannStream d.phi σ) t / (Real.sqrt 2 / Real.cosh t : ℝ)‖ ^ 2) -
+      ∫ t in Ioo (-T) T, ‖d.phi (diagCoord (mixedNeumannArc σ t))‖ ^ 2
+  let B (σ : Bool) := (∫ x in Ioo (-1) 1,
+    boundaryWeight x * ‖deriv (mixedNeumannG d.phi σ) x‖ ^ 2) -
+      ∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2
+  have he (σ : Bool) : Tendsto (E σ) atTop (𝓝 (B σ)) := by
+    let f := fun x : ℝ ↦ boundaryWeight x * ‖deriv (mixedNeumannG d.phi σ) x‖ ^ 2
+    let F := fun t : ℝ ↦ boundaryWeight (Real.tanh t) * f (Real.tanh t)
+    have hi : Integrable F := by
+      rw [← integrableOn_univ]
+      apply mixed_tanh_integrable (f := f) MeasurableSet.univ
+      rw [Real.tanh_bijOn.image_eq]
+      exact (mixed_neumann_stream_trace d σ).2.2.2.2
+    have hI : (∫ t, F t) = ∫ x in Ioo (-1) 1, f x := by
+      simpa only [F, boundaryWeight_tanh, smul_eq_mul] using integral_tanh_subst f
+    have hh := intervalIntegral_tendsto_integral hi tendsto_neg_atTop_atBot tendsto_id
+    rw [hI] at hh
+    apply (hh.sub (mixed_neumann_corner_limit d σ)).congr'
+    filter_upwards [eventually_gt_atTop (0 : ℝ)] with T hT
+    rw [id_eq, intervalIntegral.integral_of_le (by linarith : -T ≤ T), integral_Ioc_eq_integral_Ioo]
+    change ((∫ t in Ioo (-T) T, boundaryWeight (Real.tanh t) * f (Real.tanh t)) - _) = E σ T
+    rw [mixed_tanh_integral]
+    exact (mixed_neumann_energy_cutoff d σ T hT).2.symm
+  have hsum : Tendsto (fun T ↦ ∑ σ : Bool, E σ T) atTop (𝓝 (∑ σ : Bool, B σ)) := by
+    simp only [Fintype.sum_bool]
+    exact (he true).add (he false)
+  have h := ((mixed_trace_mass_cutoff_limit d).sub hsum).div_const (2 : ℝ)
+  apply h.congr
+  intro T
+  simp only [E, mixedTraceMassCutoff, mixedGradientFluxCutoff, Fintype.sum_bool,
+    mixedNeumannArc, Bool.false_eq_true, ite_false, ite_true, div_eq_mul_inv, integral_mul_const]
+  ring
+
+/-- Geometric trace limit on regular levels. The signed gradient energies
+must be paired on the two sides of each corner before taking the limit. -/
+theorem mixed_geometric_level_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+    ∃ N : Set ℝ, volume N = 0 ∧
+      Tendsto (mixedGeometricLevelTerm ω) (𝓝[Ioo 0 1 \ N] 0) (𝓝 (mixedGradientFluxFinitePart d)) := by
+  sorry
+
+/-- The two geometric limits, with the signed gradient energies paired before
+taking either limit. No vorticity transport or canonical profile is used. -/
+theorem mixed_geometric_flux_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+    ∃ L : ℝ, ∃ N : Set ℝ, volume N = 0 ∧
+      Tendsto (mixedGradientFluxCutoff d.phi) atTop (𝓝 L) ∧
+      Tendsto (mixedGeometricLevelTerm ω) (𝓝[Ioo 0 1 \ N] 0) (𝓝 (2 * L)) := by
+  obtain ⟨N, hN, hlim⟩ := mixed_geometric_level_limit hlam hω hs d
+  refine ⟨mixedGradientFluxFinitePart d / 2, N, hN, mixed_gradient_cutoff_limit d, ?_⟩
+  rwa [show 2 * (mixedGradientFluxFinitePart d / 2) = mixedGradientFluxFinitePart d by ring]
 
 private theorem mixed_paired_flux_split {lam : ℝ} {ω : L2} (d : MixedQuotientData ω)
     (T : ℝ) :

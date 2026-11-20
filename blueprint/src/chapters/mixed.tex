@@ -144,6 +144,94 @@ the canonical profile is bounded by the $L^1$ norm of the stream's
 time derivative. Apply dominated convergence to the centered cutoffs.
 \end{proof}
 
+\begin{lemma}[Paired edge mass]
+\label{lem:mixed-edge-mass}
+\uses{def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_edge_mass_defect_integrable,
+  NoEmbeddedEigenvalues.mixed_trace_mass_cutoff_limit}
+\leanok
+Use the same straight tangential parameter $a$ on all four sides, and let
+$E(a)$ be the sum of the Dirichlet squared quotient traces minus the sum
+of the Neumann squared quotient traces. Then $E/\cos a\in L^1$ and its
+integral is the limit of the centered signed trace-mass cutoff.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-quotient-neumann-traces, lem:h1-interval-endpoints}
+\leanok
+The four side traces are absolutely continuous with square-integrable
+derivatives. At either endpoint the squared corner values cancel: the
+off-diagonal corners have equal squared values by central oddness.
+The interval Hardy estimate applied to their combined mass gives
+$E/\cos a\in L^2$. Since the centered time window is invariant under time
+reversal, the four masses use the same parameter after reversing the
+two oppositely oriented arcs. The time measure is $da/\cos a$.
+\end{proof}
+
+\begin{lemma}[Centered signed gradient cutoff]
+\label{lem:mixed-gradient-cutoff}
+\uses{def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixedGradientFluxFinitePart, NoEmbeddedEigenvalues.mixed_gradient_cutoff_limit}
+\leanok
+The signed gradient cutoff converges, with twice its limit given by
+the paired edge mass minus the two weighted Neumann energies plus the
+four squared corner values.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-edge-mass, lem:mixed-neumann-stream-trace}
+\leanok
+In $x=\tanh t$, subtract the squared trace mass from twice the Neumann
+energy before taking the limit. The remainder is the weighted energy
+minus the derivative of $x|G|^2$. Its endpoint term gives the two corner
+values of that edge. All finite cutoff integrals are integrable.
+\end{proof}
+
+\begin{lemma}[Exact level weight for the paired corner model]
+\label{lem:mixed-level-model}
+\uses{def:mixed-quotient-data, lem:quarter-orbit-diagonal}
+\lean{NoEmbeddedEigenvalues.mixed_level_frame_swap,
+  NoEmbeddedEigenvalues.mixed_quarter_weight_bound,
+  NoEmbeddedEigenvalues.mixed_quarter_height_defect_bound,
+  NoEmbeddedEigenvalues.mixed_level_model_trace_limit}
+\leanok
+On the upper quarter at level $s$, write $b=\beta_s(a)$,
+$R=\cos a\sin b$, and $S=\cos b\sin a$. Swapping the coordinates reverses
+the sign of the model coefficient $(R^2-S^2)/(R^2+S^2)$.
+For $s<1/2$ the time weight is at most $2/\cos a$, and the height defect
+is bounded by $(\pi/2)\cos a$. The integral of the signed model coefficient
+times the time weight and the boundary mass defect $E(a)$ tends to
+$\int E(a)/\cos a\,da$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-edge-mass, lem:quarter-height-limit}
+\leanok
+On the quarter, $s\le\cos^2 a$ gives both bounds. The signed coefficient
+is bounded by one and tends to one at fixed tangential coordinate. The
+indicator of the quarter interval tends to one on the open side.
+Apply dominated convergence against $2|E(a)|/\cos a$.
+\end{proof}
+
+\begin{lemma}[Geometric trace limit on regular levels]
+\label{lem:mixed-geometric-level}
+\uses{def:ee-level-term, def:mixed-quotient-data, lem:mixed-gradient-cutoff}
+\lean{NoEmbeddedEigenvalues.mixed_geometric_level_limit}
+\leanok
+Outside a null set of levels, the normal-field level term with the
+vorticity pairing omitted tends to the finite part of twice the centered
+signed gradient cutoff.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-level-model, lem:mixed-quotient-neumann-traces, lem:quarter-orbit-diagonal}
+Pair the quarters in diagonal coordinates. The leading gradient term
+uses the exact signed projection; replacing interior values by their
+paired traces gives the model in Lemma~\ref{lem:mixed-level-model}.
+The errors in this replacement and the remaining gradient terms need
+sectionwise estimates, and the first-order level integral has to vanish.
+\end{proof}
+
 \begin{lemma}[Geometric part of the mixed flux limit]
 \label{lem:mixed-geometric-flux}
 \uses{def:ee-level-term, def:mixed-quotient-data}
@@ -156,18 +244,11 @@ zero outside a null set.
 \end{lemma}
 
 \begin{proof}
-\uses{cor:mixed-saddle-jet, lem:saddle-normal-form}
-In inward orthonormal saddle coordinates $(\xi,\eta)$ the model jet
-$\ell=A\xi$ has
-\[
- (|\ell_n|^2-|\ell_t|^2)\,dt
-  = |A|^2\frac{\eta^2-\xi^2}{\xi^2+\eta^2}\frac{d\xi}{\xi}
- \quad\text{on }\xi\eta=\epsilon.
-\]
-Its integral on a symmetrically truncated hyperbola vanishes under
-$\xi\leftrightarrow\eta$, cancelling the two adjacent logarithms.
-The weighted jet estimate is needed to control the remainder and to
-pass from the model to the actual levels.
+\uses{lem:mixed-gradient-cutoff, lem:mixed-geometric-level}
+\leanok
+Use the common finite part. The centered edge cutoff tends to half
+of it, and the regular-level geometric term tends to the finite part
+itself.
 \end{proof}
 
 \begin{proposition}[Paired flux identity for the normal field]
@@ -200,10 +281,12 @@ are integrable separately.
 \end{proof}
 
 \begin{remark}[Digest note: signed gradient limit]
-The remaining input is Lemma~\ref{lem:mixed-geometric-flux}.
-The even--even gradient trace theorem cannot handle the signed corner
-cancellation: mixed linear jets can make the individual edge energies
-divergent. The two adjacent terms must be paired before taking the limit.
+The remaining input is Lemma~\ref{lem:mixed-geometric-level}.
+The exact level coefficient reverses under coordinate swap, so the
+paired leading trace term needs no comparison to a model hyperbola.
+What remains is to control the difference between the actual level
+gradients and the paired boundary model, and to prove the first-order
+level integral tends to zero.
 \end{remark}
 
 \begin{lemma}[Exact tangential field and model cancellation]
@@ -820,11 +903,12 @@ diagonal field terms cancel, as do the mixed Hessian terms.
 \begin{lemma}[Canonical Neumann traces of the quotient jet]
 \label{lem:mixed-quotient-neumann-traces}
 \uses{def:sobolev-local, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_quotient_neumann_traces}
+\lean{NoEmbeddedEigenvalues.mixed_quotient_side_traces, NoEmbeddedEigenvalues.mixed_quotient_neumann_traces}
 \leanok
-The continuous Neumann side value $T$ is absolutely continuous and has
-$T'\in L^2$. The canonical traces of $\phi$ and $\phi_a$ there are
-$T$ and $T'$, respectively.
+On each side the continuous quotient trace $T$ is absolutely continuous
+and has $T'\in L^2$. The canonical traces of $\phi$ and its weak
+tangential partial there are $T$ and $T'$, respectively; on the
+Neumann sides the tangential partial is $\phi_a$.
 \end{lemma}
 
 \begin{proof}
