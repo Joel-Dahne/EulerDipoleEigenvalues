@@ -213,6 +213,85 @@ indicator of the quarter interval tends to one on the open side.
 Apply dominated convergence against $2|E(a)|/\cos a$.
 \end{proof}
 
+\begin{lemma}[Diagonal geometric level densities]
+\label{lem:mixed-level-density}
+\uses{def:ee-level-term, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.MixedQuotientData.level_first_order_ae,
+  NoEmbeddedEigenvalues.MixedQuotientData.level_signed_gradient_ae,
+  NoEmbeddedEigenvalues.MixedQuotientData.level_gradient_split,
+  NoEmbeddedEigenvalues.mixed_level_cross_norm_le}
+\leanok
+Write $A=\psi_a$, $B=\psi_b$, $C=(R^2-S^2)/(R^2+S^2)$ and
+$K=4SR/(R^2+S^2)$, with $R=\cos a\sin b$ and $S=\cos b\sin a$.
+The first-order density in the level term equals
+$\operatorname{Re}(\psi\,\overline{SA+RB})$ almost everywhere.
+Twice the signed gradient density is
+$-C(|A|^2-|B|^2)+K\operatorname{Re}(A\bar B)$.
+Its leading term is $-C|\phi|^2$; every other term has a factor $\cos a$,
+and $|K|\le 2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-calculus, lem:mixed-level-model}
+\leanok
+The Cartesian normal and tangent numerators are $SA+RB$ and $-RA+SB$.
+Their common squared denominator is $2(R^2+S^2)$.
+Substitute $A=\cos a\,\phi_a-\sin a\,\phi$ and $B=\cos a\,\phi_b$ using
+the weak product rule and Fourier gradient identification; then use
+$\sin^2a=1-\cos^2a$.
+\end{proof}
+
+\begin{lemma}[Moving-quarter Sobolev trace estimates]
+\label{lem:mixed-quarter-section-envelope}
+\uses{def:sobolev-local, lem:quarter-orbit-diagonal}
+\lean{NoEmbeddedEigenvalues.HasACLSectionsOn.exists_l2_section_envelope,
+  NoEmbeddedEigenvalues.HasACLSectionsOn.exists_l2_section_increment,
+  NoEmbeddedEigenvalues.ae_mixed_quarterGraph_of_ae,
+  NoEmbeddedEigenvalues.mixed_quarter_pair_limit}
+\leanok
+A function with one square-integrable normal derivative has an $L^2$
+tangential envelope bounding the entire canonical normal section.
+With a second square-integrable normal derivative, its increment from
+the trace is bounded by the normal distance times another $L^2$
+envelope. Products of two such first-order sections on the moving
+quarter, integrated in the tangential parameter against uniformly
+bounded coefficients with an almost-everywhere pointwise limit, converge
+to the corresponding trace products. Almost-everywhere identities in
+the square transfer to almost every quarter graph.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:h1-interval-endpoints, lem:quarter-height-limit}
+\leanok
+Use the one-dimensional $H^1$ estimate on each closed section.
+Apply it also to the normal derivative and use the fundamental theorem
+of calculus for the increment. The product of two $L^2$ envelopes
+is integrable, so dominated convergence applies on the fixed side interval.
+Fubini in tangential position and level gives the transfer of
+almost-everywhere identities.
+\end{proof}
+
+\begin{lemma}[Replacement of the leading level mass by its trace]
+\label{lem:mixed-quarter-mass-replacement}
+\uses{def:mixed-quotient-data, lem:mixed-level-model}
+\lean{NoEmbeddedEigenvalues.mixed_quarter_all_side_mass_replacement}
+\leanok
+On each of the four quarters, the integral against the exact signed
+model weight of the squared quotient on the quarter graph minus its
+squared edge trace tends to zero outside a null set of levels.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-quarter-section-envelope, lem:mixed-quotient-neumann-traces}
+\leanok
+The normal depth is at most $(\pi/2)\cos a$, which absorbs the singular
+time weight in the mass difference. The product of the value and
+increment envelopes is integrable. The sections tend to the canonical
+traces at fixed tangential position, so dominated convergence applies.
+Central oddness and reversal of the tangential parameter give the
+opposite sides.
+\end{proof}
+
 \begin{lemma}[Geometric trace limit on regular levels]
 \label{lem:mixed-geometric-level}
 \uses{def:ee-level-term, def:mixed-quotient-data, lem:mixed-gradient-cutoff}
@@ -224,12 +303,15 @@ signed gradient cutoff.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-level-model, lem:mixed-quotient-neumann-traces, lem:quarter-orbit-diagonal}
-Pair the quarters in diagonal coordinates. The leading gradient term
-uses the exact signed projection; replacing interior values by their
-paired traces gives the model in Lemma~\ref{lem:mixed-level-model}.
-The errors in this replacement and the remaining gradient terms need
-sectionwise estimates, and the first-order level integral has to vanish.
+\uses{lem:mixed-level-density, lem:mixed-level-model, lem:mixed-quarter-mass-replacement,
+  lem:mixed-quarter-section-envelope, lem:mixed-rellich-edge, lem:quarter-orbit-diagonal}
+Pair the quarters in diagonal coordinates. The leading term is the
+paired trace model after the mass replacement. In the remainder the
+Dirichlet cosine absorbs the time weight even on the Dirichlet
+quarters, where it is no larger than the tangential cosine.
+The remaining proof is to apply the section product limits to all
+finite terms, sum the quarter integrals and identify the Neumann
+contribution with the finite part of the centered cutoff.
 \end{proof}
 
 \begin{lemma}[Geometric part of the mixed flux limit]
@@ -284,9 +366,10 @@ are integrable separately.
 The remaining input is Lemma~\ref{lem:mixed-geometric-level}.
 The exact level coefficient reverses under coordinate swap, so the
 paired leading trace term needs no comparison to a model hyperbola.
-What remains is to control the difference between the actual level
-gradients and the paired boundary model, and to prove the first-order
-level integral tends to zero.
+The leading mass replacement on all four quarters is proved.
+The remaining terms are finite trace products after absorbing the
+time weight by a cosine; their limits and normalization still have
+to be assembled.
 \end{remark}
 
 \begin{lemma}[Exact tangential field and model cancellation]

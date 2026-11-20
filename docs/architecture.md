@@ -721,6 +721,11 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   central parity cancels off-diagonal corners, allowing interval Hardy.
 - `MixedLevelModel.lean`: sign reversal of the model under coordinate swap,
   exact quarter weights and their limit against the paired mass defect.
+- `MixedLevelTrace.lean`: normal-section envelopes, moving graph product
+  convergence, and replacement of the singular model mass by its trace
+  on all four quarter graphs.
+- `MixedLevelDensity.lean`: diagonal conormal algebra and factorization
+  of the nonsingular gradient remainder and first-order term.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed

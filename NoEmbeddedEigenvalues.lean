@@ -80,6 +80,8 @@ import NoEmbeddedEigenvalues.MixedTangentialLimit
 import NoEmbeddedEigenvalues.MixedPairing
 import NoEmbeddedEigenvalues.MixedEdgeDefect
 import NoEmbeddedEigenvalues.MixedLevelModel
+import NoEmbeddedEigenvalues.MixedLevelTrace
+import NoEmbeddedEigenvalues.MixedLevelDensity
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial
