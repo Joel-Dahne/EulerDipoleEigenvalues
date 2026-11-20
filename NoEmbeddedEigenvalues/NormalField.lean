@@ -375,7 +375,7 @@ private theorem classicalL0_comp_dipoleLift {χ : ℝ → ℝ} (hχ : Differenti
   ring
 
 /-- Multiplying a field component by `χ(Ψ)` passes through `L₀`. -/
-private theorem classicalL0_cutoff_mul {χ : ℝ → ℝ} (hχ : Differentiable ℝ χ) {u : ℝ × ℝ → ℝ}
+theorem classicalL0_cutoff_mul {χ : ℝ → ℝ} (hχ : Differentiable ℝ χ) {u : ℝ × ℝ → ℝ}
     {p : ℝ × ℝ} (hu : DifferentiableAt ℝ u p) :
     classicalL0 (fun q ↦ χ (dipoleLift q) * u q) p =
       χ (dipoleLift p) * classicalL0 u p := by

@@ -59,7 +59,7 @@ private theorem mixed_field_half_angles {p : ℝ × ℝ} (hp : p ∈ cellSquare)
   exact ⟨cos_pos_of_mem_Ioo ⟨by linarith [ha.1, hb.1], by linarith [ha.2, hb.2]⟩,
     cos_pos_of_mem_Ioo ⟨by linarith [ha.1, hb.2], by linarith [ha.2, hb.1]⟩⟩
 
-private theorem mixed_field_trig {x : ℝ} (hx : cos (x / 2) ≠ 0) :
+theorem mixed_field_trig {x : ℝ} (hx : cos (x / 2) ≠ 0) :
     1 / cos (x / 2) ^ 2 = 1 + tan (x / 2) ^ 2 ∧
     sin x * tan (x / 2) = 1 - cos x ∧
     cos x * tan (x / 2) = sin x * (1 - tan (x / 2) ^ 2) / 2 := by
@@ -75,18 +75,25 @@ private theorem mixed_field_trig {x : ℝ} (hx : cos (x / 2) ≠ 0) :
   · linear_combination -(sin_sq_add_cos_sq (x / 2))
   · linear_combination sin_sq_add_cos_sq (x / 2)
 
-private theorem mixed_field_cartesian_partials {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
+theorem mixed_field_cartesian_partials_of_cos_ne {p : ℝ × ℝ}
+    (hx : cos (p.1 / 2) ≠ 0) (hy : cos (p.2 / 2) ≠ 0) :
     partialX mixedFieldX p = (cos (p.1 / 2) ^ 2)⁻¹ / 2 ∧
     partialY mixedFieldY p = (cos (p.2 / 2) ^ 2)⁻¹ / 2 ∧
     partialY mixedFieldX p = 0 ∧ partialX mixedFieldY p = 0 := by
-  obtain ⟨hx, hy⟩ := mixed_field_half_angles hp
   have hd (x : ℝ) (h : cos (x / 2) ≠ 0) :
       HasDerivAt (fun t : ℝ ↦ tan (t / 2)) ((cos (x / 2) ^ 2)⁻¹ / 2) x := by
     have h' := (hasDerivAt_tan h).comp x ((hasDerivAt_id x).div_const 2)
     exact h'.congr_deriv (by simp only [div_eq_mul_inv, one_mul])
-  exact ⟨(hd _ hx.ne').deriv, (hd _ hy.ne').deriv,
+  exact ⟨(hd _ hx).deriv, (hd _ hy).deriv,
     (hasDerivAt_const p.2 (tan (p.1 / 2))).deriv,
     (hasDerivAt_const p.1 (tan (p.2 / 2))).deriv⟩
+
+private theorem mixed_field_cartesian_partials {p : ℝ × ℝ} (hp : p ∈ cellSquare) :
+    partialX mixedFieldX p = (cos (p.1 / 2) ^ 2)⁻¹ / 2 ∧
+    partialY mixedFieldY p = (cos (p.2 / 2) ^ 2)⁻¹ / 2 ∧
+    partialY mixedFieldX p = 0 ∧ partialX mixedFieldY p = 0 :=
+  mixed_field_cartesian_partials_of_cos_ne (mixed_field_half_angles hp).1.ne'
+    (mixed_field_half_angles hp).2.ne'
 
 private theorem mixed_field_cos_sum (p : ℝ × ℝ) :
     cos (diagCoord p).1 + cos (diagCoord p).2 = 2 * cos (p.1 / 2) * cos (p.2 / 2) := by

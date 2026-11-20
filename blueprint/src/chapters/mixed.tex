@@ -254,6 +254,44 @@ is bounded, and the shell eventually misses each interior point;
 apply dominated convergence. Add the vanishing Hardy remainder.
 \end{proof}
 
+\begin{lemma}[Tangential virial with an annular cutoff]
+\label{lem:mixed-tangential-cutoff}
+\uses{def:mixed-quotient-data, def:mixed-field, def:normal-field, lem:mixed-tangential-current}
+\lean{NoEmbeddedEigenvalues.mixed_tangential_cutoff_identity}
+\leanok
+For a smooth $\chi$ compactly supported in $(0,1)$, the bulk difference
+weighted by $\chi(hk)$ integrates to the outward tangential current weighted
+by $\chi'(hk)$, in diagonal area measure. Both integrands are integrable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-field-algebra, lem:mixed-normal-bulk, lem:mixed-rellich-volume,
+  lem:normal-field-cutoff-algebra, lem:virial-l2}
+\leanok
+Apply the quadratic $L^2$ virial to the smooth periodic cutoff of $W-W_0$.
+It is adapted with coefficient $\chi(hk)(f-f_0)$. The two original fields
+have the same derivative of the level, so the divergence of the cutoff field
+is exactly that coefficient and the zeroth-order stream term vanishes.
+The product rule leaves the one contraction with the outward conormal.
+The specified weak stream gradient agrees almost everywhere with the
+Fourier derivatives; changing coordinates yields the stated normalization.
+\end{proof}
+
+\begin{lemma}[Tangential current near the maximum]
+\label{lem:mixed-tangential-center}
+\uses{lem:mixed-tangential-current}
+\lean{NoEmbeddedEigenvalues.mixed_tangential_center_bound}
+\leanok
+On $hk\ge1/2$, the absolute tangential current is bounded by
+$4(1-hk)(|A|+|B|)^2$ for $A=\partial_a\psi$ and $B=\partial_b\psi$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use $|h-k|\le 1-hk$, $h+k\ge1$, and
+$2hk|uv|\le (ku)^2+(hv)^2$ in the exact factored current.
+\end{proof}
+
 \begin{lemma}[Integrated tangential comparison]
 \label{lem:mixed-tangential-virial}
 \uses{def:mixed-field, def:normal-field, def:mixed-quotient-data}
@@ -263,15 +301,15 @@ The adapted-field and normal-field bulk integrals agree for a mixed eigenfunctio
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-field-algebra, lem:mixed-tangential-current, lem:mixed-tangential-shell,
-  lem:virial-l2}
-Since $W-W_0$ is tangent to the orbits, the truncated tangential virial
-has only the boundary current
-$2\operatorname{Re}\int_{\partial C_\epsilon}((W-W_0)\psi)\,
-\partial_{n_{\rm out}}\overline\psi\,d\ell$.
-Lemma~\ref{lem:mixed-tangential-shell} removes the lower level cutoff
-in volume measure. The remaining work is the Sobolev cutoff identity
-and its assembly, including removal of the cutoff at the cell center.
+\uses{lem:mixed-tangential-cutoff, lem:mixed-tangential-shell, lem:mixed-tangential-center,
+  lem:mixed-normal-bulk, lem:mixed-rellich-volume}
+\leanok
+Take a smooth cutoff with transitions on $\epsilon<hk<2\epsilon$ and
+$\epsilon<1-hk<2\epsilon$. The lower current vanishes by shell cancellation.
+On the upper shell, the factor $1-hk$ pays for the cutoff derivative, so the
+current is dominated by the integrable stream-gradient energy. Both the
+upper-shell limit and the limit of the cutoff bulk follow by dominated
+convergence.
 \end{proof}
 
 \begin{proposition}[Mixed virial identity]

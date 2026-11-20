@@ -20,8 +20,8 @@ admission-free; see [the module map](../architecture.md).
   and corners. The same weak jet supplies the zero normal traces and
   the divided Poisson equation.
 - **Virial:** `prop:mixed-virial` is assembled in Lean from
-  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`; both inputs
-  still have admissions. The field algebra, full-cell integrability,
+  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`. Only paired
+  flux remains admitted. The field algebra, full-cell integrability,
   Fourier-gradient identification and normal bulk truncation limit are
   admission-free. The exact tangential field factors through the
   antisymmetric cosine difference, and its leading current cancels on
@@ -31,8 +31,12 @@ admission-free; see [the module map](../architecture.md).
   the model term to a continuous antisymmetric defect that is zero at
   all four corners. `lem:mixed-tangential-shell` bounds the shell mass
   by integrating first in the smaller inward distance and proves that
-  the full current vanishes against the lower cutoff derivative. The
-  Sobolev cutoff identity and removal of the center cutoff remain.
+  the full current vanishes against the lower cutoff derivative.
+  `lem:mixed-tangential-cutoff` applies the quadratic Sobolev virial to
+  the difference field, whose cutoff divergence equals its adapted
+  coefficient. `lem:mixed-tangential-center` bounds the upper cutoff
+  current by an integrable gradient energy after absorbing the derivative.
+  Removing both cutoffs proves `lem:mixed-tangential-virial`.
 - **Paired flux:** `lem:melnikov` and `lem:pairing-limit` cover ±i.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must

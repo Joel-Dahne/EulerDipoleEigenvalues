@@ -1,5 +1,5 @@
 import NoEmbeddedEigenvalues.MixedRellich
-import NoEmbeddedEigenvalues.MixedVirialBulk
+import NoEmbeddedEigenvalues.MixedTangentialLimit
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
@@ -106,8 +106,8 @@ requires removing the boundary current of their tangential difference. -/
 theorem mixed_tangential_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
     (∫ q in mixedOpenCell, mixedVirialDensity d q) =
-      ∫ q in mixedOpenCell, mixedNormalVirialDensity d q := by
-  sorry
+      ∫ q in mixedOpenCell, mixedNormalVirialDensity d q :=
+  mixed_tangential_compare hlam hω d
 
 /-- The mixed-field virial. The boundary profile in the paired expression is
 the physical vorticity trace by `mixed_boundary_square_traces`. -/

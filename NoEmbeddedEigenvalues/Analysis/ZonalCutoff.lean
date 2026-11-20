@@ -28,7 +28,7 @@ theorem contDiff_zonalCutoff (n : ℕ) : ContDiff ℝ ∞ (zonalCutoff n) :=
 theorem zonalCutoff_mem_Icc (n : ℕ) (a : ℝ) : zonalCutoff n a ∈ Icc (0 : ℝ) 1 :=
   ⟨Real.smoothTransition.nonneg _, Real.smoothTransition.le_one _⟩
 
-private theorem deriv_transition_zero {x : ℝ} (hx : x ≤ 0 ∨ 1 ≤ x) :
+theorem deriv_transition_zero {x : ℝ} (hx : x ≤ 0 ∨ 1 ≤ x) :
     deriv Real.smoothTransition x = 0 := by
   rcases hx with hx | hx
   · apply IsLocalMin.deriv_eq_zero
@@ -40,7 +40,7 @@ private theorem deriv_transition_zero {x : ℝ} (hx : x ≤ 0 ∨ 1 ≤ x) :
     rw [Real.smoothTransition.one_of_one_le hx]
     exact Real.smoothTransition.le_one y
 
-private theorem bound_deriv_transition :
+theorem bound_deriv_transition :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x, |deriv Real.smoothTransition x| ≤ C := by
   obtain ⟨C, hC⟩ := (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).exists_bound_of_continuousOn
     ((show ContDiff ℝ 1 Real.smoothTransition from Real.smoothTransition.contDiff).continuous_deriv

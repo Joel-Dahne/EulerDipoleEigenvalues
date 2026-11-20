@@ -447,4 +447,93 @@ theorem mixed_tangential_current_limit_of_model {ω : L2} (d : MixedQuotientData
   dsimp only [W]
   ring
 
+/-- The tangential current gains one power of the distance in level
+from the cell maximum. Only the stream gradient, not its derivatives,
+is needed to remove the upper cutoff. -/
+theorem mixed_tangential_center_bound {ω : L2} (d : MixedQuotientData ω)
+    {q : Plane} (hq : q ∈ mixedOpenCell) (hlevel : 1 / 2 ≤ Real.cos q.1 * Real.cos q.2) :
+    ‖mixedTangentialCurrent d q‖ ≤
+      4 * (1 - Real.cos q.1 * Real.cos q.2) * (‖d.streamA q‖ + ‖d.streamB q‖) ^ 2 := by
+  obtain ⟨hh, hk⟩ := cosines_pos hq
+  let h := trh q
+  let k := trk q
+  let u := tru q
+  let v := trv q
+  let G := tanG q
+  let A := d.streamA q
+  let B := d.streamB q
+  have hh₁ : h ≤ 1 := Real.cos_le_one _
+  have hk₁ : k ≤ 1 := Real.cos_le_one _
+  have hℓ : h * k ≤ 1 := (mul_le_of_le_one_left hk.le hh₁).trans hk₁
+  have hsum : 1 ≤ h + k := by
+    linarith [mul_le_of_le_one_right hh.le hk₁, mul_le_of_le_one_left hk.le hh₁]
+  have hd : |h - k| ≤ 1 - h * k := by
+    apply abs_le.2
+    constructor
+    · nlinarith [mul_nonneg (sub_nonneg.mpr hk₁) (show 0 ≤ 1 + h by positivity)]
+    · nlinarith [mul_nonneg (sub_nonneg.mpr hh₁) (show 0 ≤ 1 + k by positivity)]
+  have huv : |u| * |v| ≤ 1 :=
+    (mul_le_of_le_one_left (abs_nonneg _) (Real.abs_sin_le_one q.1)).trans
+      (Real.abs_sin_le_one q.2)
+  have hs : |u| * |v| ≤ G := by
+    have hG : 2 * (h * k) * (|u| * |v|) ≤ G := by
+      unfold G tanG
+      change 2 * (h * k) * (|u| * |v|) ≤ (k * u) ^ 2 + (h * v) ^ 2
+      nlinarith only [sq_nonneg (k * |u| - h * |v|), sq_abs u, sq_abs v,
+        show (k * |u|) ^ 2 = (k * u) ^ 2 by rw [mul_pow, sq_abs, ← mul_pow],
+        show (h * |v|) ^ 2 = (h * v) ^ 2 by rw [mul_pow, sq_abs, ← mul_pow]]
+    exact (le_mul_of_one_le_left (by positivity) (by linarith only [hlevel])).trans hG
+  have hf : ‖shellFactor q‖ ≤ 2 * (1 - h * k) := by
+    change |2 * (h - k) * u * v / ((h + k) * G)| ≤ _
+    by_cases hg : G = 0
+    · simp only [hg, mul_zero, div_zero, abs_zero]
+      linarith
+    · have hp : 0 < (h + k) * G :=
+        mul_pos (add_pos hh hk) (lt_of_le_of_ne (by unfold G tanG; positivity) (Ne.symm hg))
+      rw [abs_div, abs_of_pos hp, div_le_iff₀ hp, abs_mul, abs_mul, abs_mul,
+        abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
+      calc
+        _ ≤ 2 * (1 - h * k) * (|u| * |v|) := by
+          rw [← mul_assoc]
+          exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
+            (mul_le_mul_of_nonneg_left hd (by norm_num)) (abs_nonneg _)) (abs_nonneg _)
+        _ ≤ 2 * (1 - h * k) * ((h + k) * G) := by
+          apply mul_le_mul_of_nonneg_left _ (by linarith)
+          exact hs.trans (le_mul_of_one_le_left (by unfold G tanG; positivity) hsum)
+  have hsq (c t : ℝ) (hc : 0 ≤ c) (hc₁ : c ≤ 1) (ht : |t| ≤ 1) :
+      (c * t) ^ 2 ≤ 1 := by
+    have ht' : |c * t| ≤ 1 := by
+      rw [abs_mul, abs_of_nonneg hc]
+      exact (mul_le_of_le_one_left (abs_nonneg _) hc₁).trans ht
+    nlinarith [sq_abs (c * t), abs_nonneg (c * t)]
+  have hdiff : |(h * v) ^ 2 - (k * u) ^ 2| ≤ 1 := by
+    have h₁ := hsq h v hh.le hh₁ (Real.abs_sin_le_one _)
+    have h₂ := hsq k u hk.le hk₁ (Real.abs_sin_le_one _)
+    exact abs_le.2 ⟨by linarith [sq_nonneg (h * v)], by linarith [sq_nonneg (k * u)]⟩
+  have hℓuv : |h * k * u * v| ≤ 1 := by
+    rw [abs_mul, abs_mul, abs_of_pos (mul_pos hh hk), mul_assoc]
+    exact (mul_le_of_le_one_left (by positivity) hℓ).trans huv
+  have hpair : ‖realPair A B‖ ≤ ‖A‖ * ‖B‖ := by
+    unfold realPair
+    exact (Complex.abs_re_le_norm _).trans_eq (by rw [norm_mul, Complex.norm_conj])
+  have hsquares : ‖‖A‖ ^ 2 - ‖B‖ ^ 2‖ ≤ (‖A‖ + ‖B‖) ^ 2 := by
+    rw [Real.norm_eq_abs]
+    exact abs_le.2 ⟨by nlinarith [mul_nonneg (norm_nonneg A) (norm_nonneg B)],
+      by nlinarith [mul_nonneg (norm_nonneg A) (norm_nonneg B)]⟩
+  have hpairs : ‖A‖ * ‖B‖ ≤ (‖A‖ + ‖B‖) ^ 2 := by
+    nlinarith [mul_nonneg (norm_nonneg A) (norm_nonneg B)]
+  change ‖shellFactor q * (h * k * u * v * (‖A‖ ^ 2 - ‖B‖ ^ 2) +
+    ((h * v) ^ 2 - (k * u) ^ 2) * realPair A B)‖ ≤ _
+  rw [norm_mul]
+  calc
+    _ ≤ 2 * (1 - h * k) * (2 * (‖A‖ + ‖B‖) ^ 2) := by
+      apply mul_le_mul hf _ (norm_nonneg _) (by linarith)
+      refine (norm_add_le _ _).trans ?_
+      rw [norm_mul (h * k * u * v), norm_mul ((h * v) ^ 2 - (k * u) ^ 2),
+        Real.norm_eq_abs (h * k * u * v),
+        Real.norm_eq_abs ((h * v) ^ 2 - (k * u) ^ 2)]
+      linarith [mul_le_mul hℓuv hsquares (norm_nonneg _) (by norm_num),
+        mul_le_mul hdiff (hpair.trans hpairs) (norm_nonneg _) (by norm_num)]
+    _ = _ := by change _ = 4 * (1 - h * k) * (‖A‖ + ‖B‖) ^ 2; ring
+
 end NoEmbeddedEigenvalues

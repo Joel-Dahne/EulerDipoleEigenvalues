@@ -710,6 +710,10 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   Hardy remainder, and antisymmetrization of the continuous corner model.
 - `MixedTangentialShell.lean`: uniform absolute mass on shrinking
   cosine-product shells and the vanishing lower-cutoff current.
+- `MixedTangentialCutoff.lean`: smooth annular difference field, quadratic
+  Sobolev virial on the period square, and exact pullback of the cutoff current.
+- `MixedTangentialLimit.lean`: simultaneous removal of the lower and center
+  cutoffs; assembly of the integrated field comparison.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed
