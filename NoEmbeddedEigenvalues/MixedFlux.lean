@@ -2,6 +2,7 @@ import NoEmbeddedEigenvalues.MixedRellich
 import NoEmbeddedEigenvalues.MixedTangentialLimit
 import NoEmbeddedEigenvalues.MixedPairing
 import NoEmbeddedEigenvalues.MixedEdgeDefect
+import NoEmbeddedEigenvalues.MixedLevelGradient
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
@@ -1695,11 +1696,56 @@ theorem mixed_gradient_cutoff_limit {ω : L2} (d : MixedQuotientData ω) :
 
 /-- Geometric trace limit on regular levels. The signed gradient energies
 must be paired on the two sides of each corner before taking the limit. -/
-theorem mixed_geometric_level_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
-    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+theorem mixed_geometric_level_limit {lam : ℝ} (_hlam : lam ≠ 0) {ω : L2}
+    (_hω : IsEigenSolution lam ω) (_hs : InSector false true ω) (d : MixedQuotientData ω) :
     ∃ N : Set ℝ, volume N = 0 ∧
-      Tendsto (mixedGeometricLevelTerm ω) (𝓝[Ioo 0 1 \ N] 0) (𝓝 (mixedGradientFluxFinitePart d)) := by
-  sorry
+      Tendsto (mixedGeometricLevelTerm ω) (𝓝[Ioo 0 1 \ N] 0)
+        (𝓝 (mixedGradientFluxFinitePart d)) := by
+  obtain ⟨N, hN, hfirst⟩ := mixed_level_first_limit d
+  obtain ⟨M, hM, hgradient⟩ := mixed_level_signed_gradient_limit d
+  refine ⟨N ∪ M, measure_union_null hN hM, ?_⟩
+  let 𝓕 := 𝓝[Ioo 0 1 \ (N ∪ M)] (0 : ℝ)
+  have h₁ : 𝓕 ≤ 𝓝[Ioo 0 1 \ N] 0 :=
+    nhdsWithin_mono _ (fun _ hs ↦ ⟨hs.1, fun h ↦ hs.2 (Or.inl h)⟩)
+  have h₂ : 𝓕 ≤ 𝓝[Ioo 0 1 \ M] 0 :=
+    nhdsWithin_mono _ (fun _ hs ↦ ⟨hs.1, fun h ↦ hs.2 (Or.inr h)⟩)
+  have hscale : Tendsto (fun s : ℝ ↦ 1 - s) 𝓕 (𝓝 1) := by
+    simpa only [sub_zero, id_eq] using
+      ((tendsto_const_nhds (x := (1 : ℝ)) (f := 𝓕)).sub
+        (tendsto_id.mono_left (nhdsWithin_le_nhds : 𝓕 ≤ 𝓝 (0 : ℝ))))
+  have h := (hfirst.mono_left h₁).add (hscale.mul (hgradient.mono_left h₂))
+  simp only [zero_add, one_mul] at h
+  have he (σ : Bool) :
+      (∫ a in Ioo (-(Real.pi / 2)) (Real.pi / 2),
+        mixedRellichEdgeDensity (mixedEdgeValue 1 σ d.phi) a) =
+        -((∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv (mixedNeumannG d.phi σ) x‖ ^ 2) -
+          ∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2) := by
+    obtain ⟨hc, hd⟩ := mixed_quotient_edge_h1 d σ
+    change AbsolutelyContinuousOnInterval (mixedEdgeValue 1 σ d.phi) _ _ at hc
+    change MemLp (deriv (mixedEdgeValue 1 σ d.phi)) 2 _ at hd
+    rw [← neg_div, (mixed_rellich_edge_integral hc hd).2.2,
+      mixed_neumann_weighted_energy_eq, Fintype.sum_bool]
+    change ‖d.phi (-Real.pi / 2, cellEdgeNormal σ)‖ ^ 2 +
+      ‖d.phi (Real.pi / 2, cellEdgeNormal σ)‖ ^ 2 - _ = -(_ - (_ + _))
+    simp only [cellEdgeNormal, Bool.false_eq_true, ite_true, ite_false]
+    ring
+  have hfin : (∫ a in Ioo (-(Real.pi / 2)) (Real.pi / 2),
+        mixedEdgeMassDefect d.phi a / Real.cos a) +
+        (∑ σ : Bool, ∫ a in Ioo (-(Real.pi / 2)) (Real.pi / 2),
+          mixedRellichEdgeDensity (mixedEdgeValue 1 σ d.phi) a) =
+        mixedGradientFluxFinitePart d := by
+    have hs : (∑ σ : Bool, ∫ a in Ioo (-(Real.pi / 2)) (Real.pi / 2),
+        mixedRellichEdgeDensity (mixedEdgeValue 1 σ d.phi) a) =
+        ∑ σ : Bool, -((∫ x in Ioo (-1) 1,
+          boundaryWeight x * ‖deriv (mixedNeumannG d.phi σ) x‖ ^ 2) -
+          ∑ a : Bool, ‖d.phi (cellEdgeNormal a, cellEdgeNormal σ)‖ ^ 2) :=
+      Finset.sum_congr rfl (fun σ _ ↦ he σ)
+    rw [mixedGradientFluxFinitePart, hs, Finset.sum_neg_distrib, ← sub_eq_add_neg, neg_div]
+  rw [hfin] at h
+  apply h.congr
+  intro s
+  unfold mixedGeometricLevelTerm
+  ring
 
 /-- The two geometric limits, with the signed gradient energies paired before
 taking either limit. No vorticity transport or canonical profile is used. -/

@@ -344,6 +344,29 @@ density. The first-order terms also vanish there. Change variables
 from $\tanh t$ to the straight side parameter in the weighted energy.
 \end{proof}
 
+\begin{lemma}[Signed gradient limit on regular levels]
+\label{lem:mixed-level-signed-gradient}
+\uses{def:ee-level-term, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_level_signed_gradient_limit}
+\leanok
+Outside a null set of levels, twice the normal-minus-tangential
+gradient energy tends to the integral of the paired trace mass defect
+plus the two corrected Neumann edge integrals.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-level-density, lem:mixed-level-model, lem:mixed-quarter-mass-replacement,
+  lem:mixed-level-remainders, lem:mixed-signed-quarters}
+\leanok
+Both individual gradient energies are integrable on the retained
+regular levels by coarea. On each quarter, subtract the integrable
+finite remainder from the signed gradient density. What remains is
+the signed model mass. Replace each model mass by its edge trace and
+combine the four signed terms before passing to the limit. The finite
+remainders vanish on the Dirichlet sides and give the corrected edge
+integrals on the Neumann sides.
+\end{proof}
+
 \begin{lemma}[Geometric trace limit on regular levels]
 \label{lem:mixed-geometric-level}
 \uses{def:ee-level-term, def:mixed-quotient-data, lem:mixed-gradient-cutoff}
@@ -355,13 +378,13 @@ signed gradient cutoff.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-level-density, lem:mixed-level-model, lem:mixed-quarter-mass-replacement,
-  lem:mixed-level-remainders, lem:mixed-signed-quarters, lem:mixed-rellich-edge}
-The first-order term vanishes. For the gradient term, combine the
-leading masses before taking the limit, add the four finite quarter
-remainders, and use the corrected Rellich edge integral to identify
-the endpoint terms. The remaining step is to assemble these identities
-for the signed gradient in the full level expression.
+\uses{lem:mixed-level-signed-gradient, lem:mixed-level-remainders, lem:mixed-rellich-edge}
+\leanok
+The first-order term vanishes. The factor $1-s$ multiplying twice the
+signed gradient energy tends to one. The corrected Rellich edge
+integrals give the four endpoint masses minus the weighted tangential
+energy, which in centered-time coordinates is the energy in the
+cutoff finite part.
 \end{proof}
 
 \begin{lemma}[Geometric part of the mixed flux limit]
@@ -411,16 +434,6 @@ pairing. The latter difference is also the full centered-cutoff limit:
 on each finite time interval the Neumann energy and canonical pairing
 are integrable separately.
 \end{proof}
-
-\begin{remark}[Digest note: signed gradient limit]
-The remaining input is Lemma~\ref{lem:mixed-geometric-level}.
-The exact level coefficient reverses under coordinate swap, so the
-paired leading trace term needs no comparison to a model hyperbola.
-The leading mass replacement on all four quarters is proved.
-The remaining terms are finite trace products after absorbing the
-time weight by a cosine; their limits and normalization still have
-to be assembled.
-\end{remark}
 
 \begin{lemma}[Exact tangential field and model cancellation]
 \label{lem:mixed-tangential-factor}

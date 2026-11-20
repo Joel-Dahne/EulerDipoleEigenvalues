@@ -19,12 +19,10 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-stream-division` gives an H² extension through the sides
   and corners. The same weak jet supplies the zero normal traces and
   the divided Poisson equation.
-- **Virial:** `prop:mixed-virial` is assembled in Lean from
-  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`. Only
-  `lem:mixed-geometric-level` remains admitted in this chain. The field
+- **Virial:** `prop:mixed-virial` is admission-free, including
+  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`. The field
   algebra, full-cell integrability, Fourier-gradient identification and
-  normal bulk truncation limit are
-  admission-free. The exact tangential field factors through the
+  normal bulk truncation limit are also admission-free. The exact tangential field factors through the
   antisymmetric cosine difference, and its leading current cancels on
   symmetric shells. `lem:mixed-tangential-current` factors out the level
   from the analytic remainder; the normal Hardy bounds give an L¹ dominator,
@@ -57,9 +55,10 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-level-remainders` proves the vanishing full first-order
   term, identifies the finite gradient remainders on the four sides,
   and matches the weighted tangential energy to the centered-time one.
-  What remains in `lem:mixed-geometric-level` is to assemble the
-  signed gradient integral from the paired leading mass and these
-  remainders and evaluate the endpoint terms.
+  `lem:mixed-level-signed-gradient` pairs the leading mass before taking
+  the limit and adds these finite remainders. `lem:mixed-geometric-level`
+  identifies the resulting limit with the centered cutoff finite part
+  using the corrected Neumann edge integrals.
 - **Neumann traces:** `lem:mixed-boundary-square-traces` is assembled in Lean.
   The profile ODE and square integrability force decay at both ends; uniqueness
   identifies the physical trace with the canonical profile, and decay at

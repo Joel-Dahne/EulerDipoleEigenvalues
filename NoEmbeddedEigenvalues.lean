@@ -83,6 +83,7 @@ import NoEmbeddedEigenvalues.MixedLevelModel
 import NoEmbeddedEigenvalues.MixedLevelTrace
 import NoEmbeddedEigenvalues.MixedLevelOrbit
 import NoEmbeddedEigenvalues.MixedLevelRemainder
+import NoEmbeddedEigenvalues.MixedLevelGradient
 import NoEmbeddedEigenvalues.MixedLevelDensity
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.NormalField

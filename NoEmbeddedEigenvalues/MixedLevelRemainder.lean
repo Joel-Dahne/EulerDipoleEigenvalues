@@ -16,7 +16,8 @@ local notation "Jside" => (Ioo (-c) c)
 local notation "νside" => (volume.restrict Jside)
 local notation "Plane" => (ℝ × ℝ)
 
-private def sidePoint (j : Fin 2) (σ : Bool) (a : ℝ) : Plane :=
+/-- A point on the side of a signed quarter, in its straight parameter. -/
+def mixedQuarterSidePoint (j : Fin 2) (σ : Bool) (a : ℝ) : Plane :=
   traceSideCoords j (a, cellEdgeNormal σ)
 
 /-- The regular time weight multiplied by the Dirichlet cosine. -/
@@ -35,7 +36,7 @@ private theorem point_measurable (j : Fin 2) (σ : Bool) (s : ℝ) :
   · exact hh.prodMk measurable_id
 
 private theorem point_limit (j : Fin 2) (σ : Bool) {a : ℝ} (ha : a ∈ Jside) :
-    Tendsto (fun s ↦ mixedQuarterPoint j σ s a) (𝓝[>] 0) (𝓝 (sidePoint j σ a)) := by
+    Tendsto (fun s ↦ mixedQuarterPoint j σ s a) (𝓝[>] 0) (𝓝 (mixedQuarterSidePoint j σ a)) := by
   have ht := (mixed_quarter_signed_height_tendsto σ ha).mono_right nhdsWithin_le_nhds
   fin_cases j
   · exact tendsto_const_nhds.prodMk_nhds ht
@@ -69,7 +70,7 @@ private theorem cosWeight_limit (j : Fin 2) (σ : Bool) {a : ℝ} (ha : a ∈ Js
     have hc : ContinuousAt (fun s : ℝ ↦ √(cos a ^ 2 - s ^ 2)) 0 := by fun_prop
     simpa only [zero_pow (by decide : 2 ≠ 0), sub_zero, sqrt_sq (cos_pos_of_mem_Ioo ha).le]
       using hc.tendsto.mono_left (nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0)
-  have hp' := (continuous_fst.continuousAt (x := sidePoint j σ a)).tendsto.comp hp
+  have hp' := (continuous_fst.continuousAt (x := mixedQuarterSidePoint j σ a)).tendsto.comp hp
   have h := (continuous_cos.continuousAt.tendsto.comp hp').div hD
     (cos_pos_of_mem_Ioo ha).ne'
   change Tendsto (fun s ↦ mixedLevelCosWeight j σ s a) _ _ at h
@@ -82,10 +83,10 @@ private theorem cosWeight_limit (j : Fin 2) (σ : Bool) {a : ℝ} (ha : a ∈ Js
     cases σ <;> simpa [cellEdgeNormal, neg_div, cos_neg] using h
 
 private theorem side_denom_ne (j : Fin 2) (σ : Bool) {a : ℝ} (ha : a ∈ Jside) :
-    mixedLevelR (sidePoint j σ a) ^ 2 + mixedLevelS (sidePoint j σ a) ^ 2 ≠ 0 := by
+    mixedLevelR (mixedQuarterSidePoint j σ a) ^ 2 + mixedLevelS (mixedQuarterSidePoint j σ a) ^ 2 ≠ 0 := by
   have hc := (cos_pos_of_mem_Ioo ha).ne'
   fin_cases j <;> cases σ <;>
-    simp [mixedLevelR, mixedLevelS, sidePoint, traceSideCoords, cellEdgeNormal, neg_div, hc]
+    simp [mixedLevelR, mixedLevelS, mixedQuarterSidePoint, traceSideCoords, cellEdgeNormal, neg_div, hc]
 
 set_option maxHeartbeats 600000 in
 -- Elaborating the specialized ACL limit and the two integral sum rewrites exceeds the default.
@@ -96,14 +97,14 @@ private theorem mixed_quarter_cosine_form_limit {ω : L2} (d : MixedQuotientData
     (j : Fin 2) (σ : Bool) {ι : Type*} [Fintype ι]
     (i l : ι → Option (Fin 2)) (B : ι → Plane → ℝ) (C : ι → ℝ)
     (hm : ∀ r, Measurable (B r)) (hb : ∀ r q, ‖B r q‖ ≤ C r)
-    (hc : ∀ r a, a ∈ Jside → ContinuousAt (B r) (sidePoint j σ a)) :
+    (hc : ∀ r a, a ∈ Jside → ContinuousAt (B r) (mixedQuarterSidePoint j σ a)) :
     ∃ N : Set ℝ, volume N = 0 ∧
       let W := fun s a ↦ mixedLevelCosWeight j σ s a *
         ∑ r, B r (mixedQuarterPoint j σ s a) *
           (d.levelField (i r) (mixedQuarterPoint j σ s a) *
             conj (d.levelField (l r) (mixedQuarterPoint j σ s a))).re
       let T := fun a ↦ (if j = 0 then 1 else 0) *
-        ∑ r, B r (sidePoint j σ a) * (d.levelTrace j σ (i r) a *
+        ∑ r, B r (mixedQuarterSidePoint j σ a) * (d.levelTrace j σ (i r) a *
           conj (d.levelTrace j σ (l r) a)).re
       (∀ᶠ s in 𝓝[Ioo 0 1 \ N] 0, IntegrableOn (W s) (mixedLevelInterval s)) ∧
       Tendsto (fun s ↦ ∫ a in mixedLevelInterval s, W s a) (𝓝[Ioo 0 1 \ N] 0)
@@ -112,7 +113,7 @@ private theorem mixed_quarter_cosine_form_limit {ω : L2} (d : MixedQuotientData
   obtain ⟨N, hN, H⟩ := mixed_quarter_weak_pair_limit d j σ
   refine ⟨N, hN, ?_⟩
   let K := fun r s a ↦ mixedLevelCosWeight j σ s a * B r (mixedQuarterPoint j σ s a)
-  let k := fun r a ↦ (if j = 0 then 1 else 0) * B r (sidePoint j σ a)
+  let k := fun r a ↦ (if j = 0 then 1 else 0) * B r (mixedQuarterSidePoint j σ a)
   let W := fun r s a ↦ K r s a * (d.levelField (i r) (mixedQuarterPoint j σ s a) *
     conj (d.levelField (l r) (mixedQuarterPoint j σ s a))).re
   let T := fun r a ↦ k r a * (d.levelTrace j σ (i r) a * conj (d.levelTrace j σ (l r) a)).re
@@ -160,15 +161,15 @@ private theorem mixed_quarter_cosine_form_limit {ω : L2} (d : MixedQuotientData
     have hi := Complex.reCLM.integrable_comp ((hT (i r)).integrable_mul hconj)
     refine hi.bdd_mul ?_ (show ∀ᵐ a ∂νside, ‖k r a‖ ≤ C r from
       .of_forall fun a ↦ ?_)
-    · have hq : Continuous (sidePoint j σ) := by
+    · have hq : Continuous (mixedQuarterSidePoint j σ) := by
         fin_cases j
         · exact continuous_id.prodMk continuous_const
         · exact continuous_const.prodMk continuous_id
       exact (measurable_const.mul ((hm r).comp hq.measurable)).aestronglyMeasurable
     · dsimp only [k]
-      have h0 : 0 ≤ C r := (norm_nonneg _).trans (hb r (sidePoint j σ a))
+      have h0 : 0 ≤ C r := (norm_nonneg _).trans (hb r (mixedQuarterSidePoint j σ a))
       split_ifs
-      · simpa only [one_mul] using hb r (sidePoint j σ a)
+      · simpa only [one_mul] using hb r (mixedQuarterSidePoint j σ a)
       · simpa only [zero_mul, norm_zero] using h0
   have hsum (s a : ℝ) : ∑ r, W r s a = mixedLevelCosWeight j σ s a *
       ∑ r, B r (mixedQuarterPoint j σ s a) *
@@ -176,7 +177,7 @@ private theorem mixed_quarter_cosine_form_limit {ω : L2} (d : MixedQuotientData
           conj (d.levelField (l r) (mixedQuarterPoint j σ s a))).re := by
     simp only [W, K, Finset.mul_sum, mul_assoc]
   have ht a : ∑ r, T r a = (if j = 0 then 1 else 0) *
-      ∑ r, B r (sidePoint j σ a) *
+      ∑ r, B r (mixedQuarterSidePoint j σ a) *
         (d.levelTrace j σ (i r) a * conj (d.levelTrace j σ (l r) a)).re := by
     simp only [T, k, Finset.mul_sum, mul_assoc]
   simp only [← hsum, ← ht]
@@ -278,26 +279,26 @@ theorem MixedQuotientData.level_gradient_remainder_eq {ω : L2} (d : MixedQuotie
   ring
 
 private theorem side_sign_cross (σ : Bool) {a : ℝ} (ha : a ∈ Jside) :
-    mixedLevelSign (sidePoint 0 σ a) = 1 ∧ mixedLevelCross (sidePoint 0 σ a) = 0 := by
+    mixedLevelSign (mixedQuarterSidePoint 0 σ a) = 1 ∧ mixedLevelCross (mixedQuarterSidePoint 0 σ a) = 0 := by
   have hc := (cos_pos_of_mem_Ioo ha).ne'
-  cases σ <;> simp [mixedLevelSign, mixedLevelCross, mixedLevelR, mixedLevelS, sidePoint,
+  cases σ <;> simp [mixedLevelSign, mixedLevelCross, mixedLevelR, mixedLevelS, mixedQuarterSidePoint,
     traceSideCoords, cellEdgeNormal, neg_div, hc]
 
 private theorem first_trace_eq_zero {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool)
     (a : ℝ) :
     (if j = 0 then 1 else 0) *
-      ∑ r, firstB r (sidePoint j σ a) *
+      ∑ r, firstB r (mixedQuarterSidePoint j σ a) *
         (d.levelTrace j σ (firstI r) a * conj (d.levelTrace j σ none a)).re = 0 := by
   by_cases hj : j = 0
   · subst j
-    cases σ <;> simp [sidePoint, firstB, firstI, Fin.sum_univ_succ, traceSideCoords,
+    cases σ <;> simp [mixedQuarterSidePoint, firstB, firstI, Fin.sum_univ_succ, traceSideCoords,
       cellEdgeNormal, neg_div, mixedLevelS, MixedQuotientData.levelTrace]
   · simp [hj]
 
 private theorem grad_trace_eval {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool)
     {a : ℝ} (ha : a ∈ Jside) :
     (if j = 0 then 1 else 0) *
-      ∑ r, gradB r (sidePoint j σ a) *
+      ∑ r, gradB r (mixedQuarterSidePoint j σ a) *
         (d.levelTrace j σ (gradI r) a * conj (d.levelTrace j σ (gradJ r) a)).re =
     if j = 0 then mixedRellichEdgeDensity (mixedEdgeValue 1 σ d.phi) a else 0 := by
   by_cases hj : j = 0
@@ -306,7 +307,7 @@ private theorem grad_trace_eval {ω : L2} (d : MixedQuotientData ω) (j : Fin 2)
     change mixedLevelSign (a, cellEdgeNormal σ) = 1 at hS
     change mixedLevelCross (a, cellEdgeNormal σ) = 0 at hX
     simp [gradB, gradI, gradJ, Fin.sum_univ_succ, MixedQuotientData.levelTrace, hS, hX,
-      sidePoint, traceSideCoords, mixedRellichEdgeDensity, Complex.sq_norm, Complex.normSq_apply]
+      mixedQuarterSidePoint, traceSideCoords, mixedRellichEdgeDensity, Complex.sq_norm, Complex.normSq_apply]
     ring
   · simp [hj]
 
@@ -348,11 +349,11 @@ theorem mixed_quarter_gradient_remainder_limit {ω : L2} (d : MixedQuotientData 
     fin_cases r <;> unfold gradB mixedLevelSign mixedLevelCross mixedLevelS mixedLevelR <;>
       simp only [Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue, Matrix.cons_val_zero,
         Matrix.cons_val_one, Matrix.cons_val, measurable_neg_iff] <;> fun_prop
-  have hc (r : Fin 6) (a : ℝ) (ha : a ∈ Jside) : ContinuousAt (gradB r) (sidePoint j σ a) := by
+  have hc (r : Fin 6) (a : ℝ) (ha : a ∈ Jside) : ContinuousAt (gradB r) (mixedQuarterSidePoint j σ a) := by
     have hs := sign_continuousAt (side_denom_ne j σ ha)
     have hx := cross_continuousAt (side_denom_ne j σ ha)
-    have hc : ContinuousAt (fun q : Plane ↦ cos q.1) (sidePoint j σ a) := by fun_prop
-    have hu : ContinuousAt (fun q : Plane ↦ sin q.1) (sidePoint j σ a) := by fun_prop
+    have hc : ContinuousAt (fun q : Plane ↦ cos q.1) (mixedQuarterSidePoint j σ a) := by fun_prop
+    have hu : ContinuousAt (fun q : Plane ↦ sin q.1) (mixedQuarterSidePoint j σ a) := by fun_prop
     fin_cases r
     · exact hs.mul hc
     · exact (hs.mul hc).neg

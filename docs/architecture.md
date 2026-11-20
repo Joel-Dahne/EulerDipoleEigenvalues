@@ -730,6 +730,9 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   quarter integrals; transfer of cell integrability and a.e. identities.
 - `MixedLevelRemainder.lean`: finite quadratic trace limits on each side,
   vanishing of the full first-order term, and the signed model weights.
+- `MixedLevelGradient.lean`: pairs the signed model masses before the
+  limit, then adds the finite quarter corrections to obtain the full signed
+  gradient limit.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   centered-time energy normalization, paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed
