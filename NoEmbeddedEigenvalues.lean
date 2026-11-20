@@ -72,6 +72,7 @@ import NoEmbeddedEigenvalues.MixedField
 import NoEmbeddedEigenvalues.MixedFlux
 import NoEmbeddedEigenvalues.MixedStaticForm
 import NoEmbeddedEigenvalues.MixedRellich
+import NoEmbeddedEigenvalues.MixedTraceMass
 import NoEmbeddedEigenvalues.MixedVirialBulk
 import NoEmbeddedEigenvalues.MixedTangentialCurrent
 import NoEmbeddedEigenvalues.MixedTangentialShell

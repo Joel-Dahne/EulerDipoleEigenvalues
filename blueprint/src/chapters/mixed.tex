@@ -894,7 +894,7 @@ outward normal.
 \begin{lemma}[Trace mass as a volume integral]
 \label{lem:mixed-trace-mass}
 \uses{def:mixed-K}
-\lean{NoEmbeddedEigenvalues.mixed_trace_mass}
+\lean{NoEmbeddedEigenvalues.mixed_trace_mass_volume_eq, NoEmbeddedEigenvalues.mixed_trace_mass}
 \leanok
 The field $V=\frac up\partial_a-\frac vp\partial_b$ is divergence free in the
 $(a,b)$ rectangle, with outer normal flux $1/k$ on $D$ and $-1/h$ on $N$.
@@ -907,16 +907,20 @@ and equals the paired limit
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, lem:mixed-trace-field, lem:arc-diagonal}
-Use the divergence theorem for $|\phi|^2 V$ on $p>\delta$.
-On each original side the condition $p>\delta$ is exactly the flow-time
-cutoff with $\delta=\operatorname{sech}T$. On $p=\delta$, the normal flux
-has magnitude $|h-k|/|\nabla_0p|=O(\delta)$: the new arcs are near the
-corners where $|\nabla_0p|$ is bounded below, and their lengths are
-$O(\delta)$. This avoids a separate cancellation argument on circular
-arcs. To pass to the limit in the volume integral, use boundedness of
-$\phi$ on the closed cell, $\nabla_0\phi\in L^4$ by the rectangle Sobolev
-embedding, and $1/p\in L^{4/3}$ near the corners.
+\uses{lem:mixed-trace-field, lem:mixed-edge-mass, lem:mixed-rellich-volume}
+\leanok
+Replace the denominator $p$ in $V$ by $p+\varepsilon$. Integrate the
+two normal derivatives of the regularized current by the sectional
+fundamental theorem and Fubini. The continuous quotient identifies the
+section endpoints. The remaining divergence error has coefficient
+$\varepsilon(h-k)/(p+\varepsilon)^2$, bounded by one and tending to zero.
+The main volume density is integrable by the divided normal derivative
+bounds and is multiplied by $p/(p+\varepsilon)$. Pair the four side
+masses before removing the regularization; their density is the
+integrable straight-coordinate defect multiplied by
+$\cos a/(\cos a+\varepsilon)$. Dominated convergence on both sides proves
+the volume identity, and the centered cutoff converges to the same defect
+integral.
 \end{proof}
 
 \begin{lemma}[Renormalized Neumann flux]

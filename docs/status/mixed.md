@@ -75,14 +75,13 @@ admission-free; see [the module map](../architecture.md).
   bounded by a multiple of `1 − x²` and needs no endpoint traces of `F`.
   `lem:mixed-boundary-square` is its smooth specialization: derivatives
   within the closed interval give finite energy without imposing endpoint data.
-- **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
-  and the boundary-square identity. The single-edge calculation
-  `lem:mixed-neumann-renormalization` is admission-free from the
-  quotient data now constructed by `prop:mixed-quotient-domain`.
-  The remaining admitted inputs to the static identity are
-  `lem:mixed-trace-mass` and `prop:mixed-virial`.
-  `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
-  the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
+- **Static identity:** `lem:mixed-K-identity` is admission-free, including
+  `lem:mixed-neumann-renormalization`, `lem:mixed-trace-mass`, and
+  `prop:mixed-virial`. For the trace-mass identity, regularize the field
+  denominator by adding ε, integrate along closed coordinate sections,
+  and pair the side masses before taking the limit. Divided normal
+  derivatives control the bulk density; the divergence error is
+  uniformly bounded and tends to zero.
 - **Rellich form:** `lem:mixed-rellich` and `lem:mixed-rellich-flux` are
   admission-free. Subtracting the signed trace-mass current first leaves
   a bounded ratio `h/(h+k)` times a gradient polynomial. In

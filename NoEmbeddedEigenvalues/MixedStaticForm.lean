@@ -134,19 +134,6 @@ theorem mixed_trace_mass_edge_flux {x : ℝ} (_hx : x ∈ Ioo (-Real.pi / 2) (Re
       -sign * mixedFieldB (x, cellEdgeNormal σ) = -1 / Real.cos x := by
   cases σ <;> simp [mixedFieldA, mixedFieldB, cellEdgeNormal, neg_div]
 
-/-- Trace-mass limit and the divergence-free algebra in the diagonal chart. -/
-theorem mixed_trace_mass {ω : L2} (d : MixedQuotientData ω) :
-    (∀ q ∈ mixedOpenCell, divergence mixedFieldA (fun r ↦ -mixedFieldB r) q = 0) ∧
-    (∀ x ∈ Ioo (-Real.pi / 2) (Real.pi / 2), ∀ σ : Bool,
-      let sign : ℝ := if σ then 1 else -1
-      sign * mixedFieldA (cellEdgeNormal σ, x) = 1 / Real.cos x ∧
-      -sign * mixedFieldB (x, cellEdgeNormal σ) = -1 / Real.cos x) ∧
-    IntegrableOn (mixedTraceMassDensity d.phi (d.jet [0]) (d.jet [1])) mixedOpenCell ∧
-    Tendsto (mixedTraceMassCutoff d.phi) atTop
-      (𝓝 (∫ q in mixedOpenCell, mixedTraceMassDensity d.phi (d.jet [0]) (d.jet [1]) q)) := by
-  refine ⟨fun _ hq ↦ (mixed_trace_mass_field hq).1, fun _ hx ↦ mixed_trace_mass_edge_flux hx, ?_⟩
-  sorry
-
 /-- The continuous edge value and its derivative are the canonical
 traces of the quotient and its tangential weak partial. -/
 theorem mixed_quotient_side_traces {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool) :

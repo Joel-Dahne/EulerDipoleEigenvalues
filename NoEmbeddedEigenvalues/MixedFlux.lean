@@ -1,4 +1,4 @@
-import NoEmbeddedEigenvalues.MixedRellich
+import NoEmbeddedEigenvalues.MixedTraceMass
 import NoEmbeddedEigenvalues.MixedTangentialLimit
 import NoEmbeddedEigenvalues.MixedPairing
 import NoEmbeddedEigenvalues.MixedEdgeDefect
@@ -323,6 +323,21 @@ theorem mixed_trace_mass_cutoff_limit {ω : L2} (d : MixedQuotientData ω) :
   change _ = (∫ t in Ioo (-T) T, D false t) + (∫ t in Ioo (-T) T, D true (-t)) -
     ((∫ t in Ioo (-T) T, N true t) + (∫ t in Ioo (-T) T, N false (-t)))
   rw [hneg T hT (D true), hneg T hT (N false), add_comm (∫ t in Ioo (-T) T, D true t)]
+
+/-- The paired time cutoff equals the absolutely convergent volume trace mass. -/
+theorem mixed_trace_mass {ω : L2} (d : MixedQuotientData ω) :
+    (∀ q ∈ mixedOpenCell, divergence mixedFieldA (fun r ↦ -mixedFieldB r) q = 0) ∧
+    (∀ x ∈ Ioo (-Real.pi / 2) (Real.pi / 2), ∀ σ : Bool,
+      let sign : ℝ := if σ then 1 else -1
+      sign * mixedFieldA (cellEdgeNormal σ, x) = 1 / Real.cos x ∧
+      -sign * mixedFieldB (x, cellEdgeNormal σ) = -1 / Real.cos x) ∧
+    IntegrableOn (mixedTraceMassDensity d.phi (d.jet [0]) (d.jet [1])) mixedOpenCell ∧
+    Tendsto (mixedTraceMassCutoff d.phi) atTop
+      (𝓝 (∫ q in mixedOpenCell, mixedTraceMassDensity d.phi (d.jet [0]) (d.jet [1]) q)) := by
+  refine ⟨fun _ hq ↦ (mixed_trace_mass_field hq).1, fun _ hx ↦ mixed_trace_mass_edge_flux hx, ?_⟩
+  refine ⟨(mixed_rellich_volume_integrable d).2.2, ?_⟩
+  rw [mixed_trace_mass_volume_eq d, ← neg_div]
+  exact mixed_trace_mass_cutoff_limit d
 
 private theorem mixedNeumannA_ae (σ : Bool) {P : ℝ → Prop}
     (h : ∀ᵐ a ∂volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2)), P a) :

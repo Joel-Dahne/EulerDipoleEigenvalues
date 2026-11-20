@@ -966,7 +966,9 @@ private theorem rellich_extension_ac {l r : ℝ} {F D : ℝ → ℂ}
   rw [uIcc_of_le hlr.le] at hx
   exact congrArg (fun z ↦ F ((l + r) / 2) + z) (intervalIntegral_intervalZeroExtension D hm hx)
 
-private theorem rellich_acl_sections (j : Fin 2) {f df : Plane → ℂ}
+/-- Closed ACL sections of a specified weak partial, with its associated
+Neumann-side endpoint values when the transverse coordinate is `b`. -/
+theorem rellich_acl_sections (j : Fin 2) {f df : Plane → ℂ}
     (hd : HasWeakPartialOn mixedOpenCell j f df)
     (hf : MemLp f 2 (volume.restrict mixedOpenCell))
     (hdf : MemLp df 2 (volume.restrict mixedOpenCell)) (T : Bool → ℝ → ℂ)

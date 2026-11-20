@@ -717,6 +717,8 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
 - `MixedPairing.lean`: pointwise projection of transport pairs onto the
   imaginary characters; common good levels and cross-term cancellation
   on the period and the four canonical arcs.
+- `MixedTraceMass.lean`: sectional divergence for the regularized trace
+  field and the volume identity after pairing its side fluxes.
 - `MixedEdgeDefect.lean`: combined Dirichlet-minus-Neumann trace mass;
   central parity cancels off-diagonal corners, allowing interval Hardy.
 - `MixedLevelModel.lean`: sign reversal of the model under coordinate swap,
