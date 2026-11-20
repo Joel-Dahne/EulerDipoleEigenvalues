@@ -56,8 +56,49 @@ The eigenvalues of $2\sym DW$ are $\sec^2((a+b)/2)$ and $\sec^2((a-b)/2)$.
 
 \begin{proof}
 \uses{lem:dipole-identities}
-Direct differentiation. In $U=\sin(x/2)$, $V=\sin(y/2)$ the field is
-$(U\partial_U+V\partial_V)/2$.
+\leanok
+Differentiate in Cartesian and diagonal coordinates. The half-angle
+identities give the Cartesian commutator and $Ws=s-2$; the diagonal
+partials have the common denominator $p^2$.
+\end{proof}
+
+\begin{lemma}[Normal virial bulk on the mixed quotient domain]
+\label{lem:mixed-normal-bulk}
+\uses{def:normal-field, def:ee-bulk-density, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_normal_coeff_bounds,
+ NoEmbeddedEigenvalues.mixed_normal_virial_integrable,
+ NoEmbeddedEigenvalues.mixed_normal_virial_cartesian_ae,
+ NoEmbeddedEigenvalues.mixed_normal_virial_cartesian}
+\leanok
+On the diagonal cell, $0\le f_0 h^2\le 2$ and $0\le c_0\le 1$.
+The normal-field bulk is integrable on the full cell, and the quotient
+formula in diagonal measure agrees with its Cartesian integral.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:normal-field-algebra, lem:diagonal-calculus, lem:weak-jet-ae-comparison,
+  lem:sobolev-local-multiplier}
+\leanok
+The normal coefficient factors as $c_0(\cos x-\cos y)^2/|\nabla s|^2$.
+Here $(\cos x-\cos y)^2=4u^2v^2$ and $|\nabla s|^2=2(k^2u^2+h^2v^2)$,
+so the divided vorticity $\omega/h$ controls its contribution.
+The gradient terms use bounded coefficients. Weak derivative uniqueness
+identifies the product-rule gradient with the Fourier gradient.
+\end{proof}
+
+\begin{lemma}[Normal virial along regular truncations]
+\label{lem:mixed-normal-level-limit}
+\uses{def:ee-level-term, lem:mixed-normal-bulk}
+\lean{NoEmbeddedEigenvalues.mixed_normal_level_limit}
+\leanok
+Along any sequence of levels tending to zero on which the truncated
+normal identity holds, the level term tends to the full normal-field bulk.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Use dominated convergence on the indicators of the truncated cells;
+the dominator is the integrable full-cell bulk.
 \end{proof}
 
 \begin{proposition}[Paired flux identity for the normal field]
@@ -78,10 +119,10 @@ energies may diverge (manuscript \texttt{(mf:paired)}).
 \end{proposition}
 
 \begin{proof}
-\uses{lem:ee-truncated-virial, prop:saddle-first-gain, cor:mixed-saddle-jet,
+\uses{lem:ee-truncated-virial, lem:mixed-normal-level-limit, cor:mixed-saddle-jet,
   lem:saddle-normal-form, lem:pairing-limit}
-The bulk is integrable since $f_0\le C/d^2$ and $\omega/d\in L^2$. Apply
-the truncated virial along good levels. In inward orthonormal saddle
+Apply the truncated virial along good levels. The bulk limit follows
+from Lemma~\ref{lem:mixed-normal-level-limit}. In inward orthonormal saddle
 coordinates $(\xi,\eta)$ the model jet $\ell=A\xi$ has
 \[
  (|\ell_n|^2-|\ell_t|^2)\,dt
@@ -106,6 +147,54 @@ signed corner cancellation: mixed linear jets can make the individual
 edge energies divergent.
 \end{remark}
 
+\begin{lemma}[Exact tangential field and model cancellation]
+\label{lem:mixed-tangential-factor}
+\uses{def:mixed-field, def:normal-field}
+\lean{NoEmbeddedEigenvalues.mixed_field_tangential_factor,
+ NoEmbeddedEigenvalues.mixedTangentialCornerKernel,
+ NoEmbeddedEigenvalues.mixed_tangential_corner_cancel}
+\leanok
+Write $D=k^2u^2+h^2v^2$. On the punctured cell the diagonal components of
+$W-W_0$ are
+\[
+  \frac{(h-k)uv}{pD}(hv,-ku).
+\]
+For a constant model gradient $(A,0)$, the coefficient of $|A|^2$ in the
+outward current in flow time is $2hk\,u^2v^2(h-k)/(pD)$. Its product
+with any integrable swap-invariant weight has integral zero on the
+diagonal cell.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:dipole-identities, lem:diagonal-calculus}
+\leanok
+Subtract $W_0$ in the diagonal chart and use $u^2+h^2=v^2+k^2=1$.
+The kernel is bounded by $1$, since $2hk\,u^2v^2\le D$ and
+$|h-k|\le p$. It changes sign under swapping the two coordinates;
+the swap preserves cell measure.
+\end{proof}
+
+\begin{lemma}[Integrated tangential comparison]
+\label{lem:mixed-tangential-virial}
+\uses{def:mixed-field, def:normal-field, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_tangential_virial}
+\leanok
+The adapted-field and normal-field bulk integrals agree for a mixed eigenfunction.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-field-algebra, lem:mixed-tangential-factor, lem:virial-l2,
+  cor:mixed-saddle-jet}
+Since $W-W_0$ is tangent to the orbits, the truncated tangential virial
+has only the boundary current
+$2\operatorname{Re}\int_{\partial C_\epsilon}((W-W_0)\psi)\,
+\partial_{n_{\rm out}}\overline\psi\,d\ell$.
+The Dirichlet or Neumann condition kills its limit on a regular edge.
+Near a saddle the model current is antisymmetric under swapping the
+inward variables. The remaining step is to justify the truncated current
+and control the Sobolev remainder as the cutoff tends to zero.
+\end{proof}
+
 \begin{proposition}[Mixed virial identity]
 \label{prop:mixed-virial}
 \uses{def:mixed-field, prop:mixed-quotient-domain}
@@ -123,15 +212,13 @@ and the bulk integral converges absolutely (manuscript
 \end{proposition}
 
 \begin{proof}
-\uses{prop:mixed-paired-flux, lem:mixed-field-algebra, lem:mixed-boundary-square-traces,
-  cor:mixed-saddle-jet, prop:saddle-first-gain}
-$W-W_0$, with $W_0$ the normal field, is tangent to the orbits, and the
-tangential virial on $\{s>\epsilon\}$ gives
-$J_W-J_{W_0}=2\operatorname{Re}\int_{\partial}((W-W_0)\psi)\,\partial_n\bar\psi\,d\ell$.
-This current vanishes on regular edges by the Dirichlet or Neumann condition,
-and its corner contribution
-$4|A|^2\frac{UV(U-V)}{(U+V)(U^2+V^2)}\frac{dU}U$ integrates to zero by
-$U\leftrightarrow V$ symmetry.
+\uses{prop:mixed-paired-flux, lem:mixed-tangential-virial, lem:mixed-rellich-volume,
+  lem:mixed-boundary-square-traces}
+\leanok
+Use the integrability from Lemma~\ref{lem:mixed-rellich-volume} and
+replace the normal-field bulk limit by the equal adapted-field integral.
+The physical trace agrees with the canonical profile by
+Lemma~\ref{lem:mixed-boundary-square-traces}.
 \end{proof}
 
 \section{The boundary square}

@@ -703,6 +703,9 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   form and square completion. It splits the second-order form
   and mass by parity, assembles the quarter bounds, and converts the
   coercivity estimate to Cartesian stream mass.
+- `MixedVirialBulk.lean`: normal-field bulk integrability and its
+  Cartesian representative, exhaustion on good truncations, and the exact
+  tangential field and model corner cancellation.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
   paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed

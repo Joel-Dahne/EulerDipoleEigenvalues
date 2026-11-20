@@ -1,4 +1,5 @@
-import NoEmbeddedEigenvalues.MixedStaticForm
+import NoEmbeddedEigenvalues.MixedRellich
+import NoEmbeddedEigenvalues.MixedVirialBulk
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
@@ -8,7 +9,6 @@ import NoEmbeddedEigenvalues.Regularity.MixedQuotient
 import NoEmbeddedEigenvalues.EdgeWindowTransport
 import NoEmbeddedEigenvalues.Analysis.BoundaryTraceCompare
 import NoEmbeddedEigenvalues.Melnikov
-import NoEmbeddedEigenvalues.NormalField
 import Mathlib.Analysis.SpecialFunctions.Artanh
 import Mathlib.Analysis.BoundedVariation
 
@@ -91,16 +91,6 @@ def mixedPairedFluxCutoff (lam : ℝ) (φ : Plane → ℂ) (T : ℝ) : ℝ :=
   let dir := fun k : ℕ ↦ ∫ t in Ioo (-T) T, ‖φ (diagCoord (cellArc k t))‖ ^ 2 / 2
   dir 1 + dir 3 - ∑ σ : Bool, mixedNeumannFluxCutoff lam φ σ T
 
-/-- Normal-field virial density in diagonal measure. The normal and tangent
-are still physical unit directions in Cartesian coordinates. -/
-def mixedNormalVirialDensity {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
-  let p := diagInv q
-  let dx := fun r ↦ (d.streamA (diagCoord r) + d.streamB (diagCoord r)) / 2
-  let dy := fun r ↦ (d.streamA (diagCoord r) - d.streamB (diagCoord r)) / 2
-  2 * (normalCoeff p * ‖liftL2 ω p‖ ^ 2 +
-    (2 - normalC p) * ‖normalDeriv dx dy p‖ ^ 2 +
-    normalC p * ‖tangentDeriv dx dy p‖ ^ 2)
-
 /-- The normal-field paired flux. This uses the canonical profile and takes
 no physical vorticity trace. The mixed-character limit remains to be proved. -/
 theorem mixed_paired_flux {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
@@ -110,6 +100,15 @@ theorem mixed_paired_flux {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       (𝓝 (∫ q in mixedOpenCell, mixedNormalVirialDensity d q)) := by
   sorry
 
+/-- Integrated tangential comparison for the adapted and normal fields.
+The two integrals are separately absolutely convergent; this comparison
+requires removing the boundary current of their tangential difference. -/
+theorem mixed_tangential_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
+    (hω : IsEigenSolution lam ω) (hs : InSector false true ω) (d : MixedQuotientData ω) :
+    (∫ q in mixedOpenCell, mixedVirialDensity d q) =
+      ∫ q in mixedOpenCell, mixedNormalVirialDensity d q := by
+  sorry
+
 /-- The mixed-field virial. The boundary profile in the paired expression is
 the physical vorticity trace by `mixed_boundary_square_traces`. -/
 theorem mixed_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
@@ -117,7 +116,9 @@ theorem mixed_virial {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
     IntegrableOn (mixedVirialDensity d) mixedOpenCell ∧
     Tendsto (fun T ↦ 2 * mixedPairedFluxCutoff lam d.phi T) atTop
       (𝓝 (∫ q in mixedOpenCell, mixedVirialDensity d q)) := by
-  sorry
+  refine ⟨(mixed_rellich_volume_integrable d).1, ?_⟩
+  rw [mixed_tangential_virial hlam hω hs d]
+  exact (mixed_paired_flux hlam hω hs d).2
 
 private theorem mixed_tanh_strictMono : StrictMono Real.tanh :=
   strictMono_of_deriv_pos fun t ↦ by

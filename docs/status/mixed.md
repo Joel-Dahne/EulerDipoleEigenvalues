@@ -19,7 +19,15 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-stream-division` gives an H² extension through the sides
   and corners. The same weak jet supplies the zero normal traces and
   the divided Poisson equation.
-- **Paired flux:** `lem:melnikov` and `lem:pairing-limit` now cover ±i.
+- **Virial:** `prop:mixed-virial` is assembled in Lean from
+  `prop:mixed-paired-flux` and `lem:mixed-tangential-virial`; both inputs
+  still have admissions. The field algebra, full-cell integrability,
+  Fourier-gradient identification and normal bulk truncation limit are
+  admission-free. The exact tangential field factors through the
+  antisymmetric cosine difference, and its leading current cancels on
+  symmetric shells. The Sobolev current identity and the limit of its
+  remainder still need proof.
+- **Paired flux:** `lem:melnikov` and `lem:pairing-limit` cover ±i.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must
   also be paired; the even–even trace limits do not justify that step.

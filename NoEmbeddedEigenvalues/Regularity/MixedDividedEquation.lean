@@ -35,6 +35,43 @@ private theorem mixedCos_partial_two (j : Fin 2) (q : ℝ × ℝ) :
   · change partialY (fun _ : ℝ × ℝ ↦ (0 : ℂ)) q = 0
     simp [partialY]
 
+/-- The gradient of the specified quotient recovers the Fourier-defined
+stream gradient almost everywhere on the diagonal cell. -/
+theorem MixedQuotientData.stream_partials_ae {ζ : L2} (d : MixedQuotientData ζ) :
+    ∀ᵐ q ∂volume.restrict mixedOpenCell,
+      d.streamA q = streamLiftX ζ (diagInv q) + streamLiftY ζ (diagInv q) ∧
+      d.streamB q = streamLiftX ζ (diagInv q) - streamLiftY ζ (diagInv q) := by
+  have hU : IsOpen mixedOpenCell := isOpen_Ioo.prod isOpen_Ioo
+  have hpre : diagInv ⁻¹' cellSquare = mixedOpenCell := by
+    ext q
+    simp only [mixedOpenCell, cellSquare, mem_preimage, mem_ofPred_eq, diagCoord_diagInv,
+      mem_prod, mem_Ioo, abs_lt, neg_div]
+  have hx := hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ζ 0) cellSquare
+  have hy := hasWeakPartialOn_liftL2 (hasFourierPartial_streamPartial ζ 1) cellSquare
+  have ha := hx.comp_diagInv_fst isOpen_cellSquare hy
+  have hb := hx.comp_diagInv_snd isOpen_cellSquare hy
+  rw [hpre] at ha hb
+  have he : (liftL2 (invLap ζ) ∘ diagInv) =ᵐ[volume.restrict mixedOpenCell]
+      fun q ↦ mixedCos q * d.phi q := d.stream_eq
+  have hw (j : Fin 2) : HasWeakPartialOn mixedOpenCell j d.phi (d.jet [j]) := by
+    simpa only [d.weakJet.1] using d.weakJet.2 [] (by decide) j
+  have hprod (j : Fin 2) :=
+    (hw j).mul_smooth hU smooth_mixedCos
+  have ha' : HasWeakPartialOn mixedOpenCell 0 (fun q ↦ mixedCos q * d.phi q) d.streamA := by
+    change HasWeakPartialOn _ _ _ (fun q ↦ (Real.cos q.1 : ℂ) * d.jet [0] q -
+      (Real.sin q.1 : ℂ) * d.phi q)
+    simpa only [mixedCos_partial, ite_true, mixedCos, neg_mul, add_comm, sub_eq_add_neg]
+      using hprod 0
+  have hb' : HasWeakPartialOn mixedOpenCell 1 (fun q ↦ mixedCos q * d.phi q) d.streamB := by
+    change HasWeakPartialOn _ _ _ (fun q ↦ (Real.cos q.1 : ℂ) * d.jet [1] q)
+    simpa only [mixedCos_partial, one_ne_zero, ite_false, zero_mul, zero_add, mixedCos]
+      using hprod 1
+  have hv := (ae_restrict_iff' hU.measurableSet).1 he
+  have ea := ha'.ae_eq hU (ha.congr_ae_on hU.measurableSet hv (.of_forall fun _ _ ↦ rfl))
+  have eb := hb'.ae_eq hU (hb.congr_ae_on hU.measurableSet hv (.of_forall fun _ _ ↦ rfl))
+  exact (ae_restrict_iff' hU.measurableSet).2
+    (ea.mp (eb.mono fun _ hy hx hq ↦ ⟨hx hq, hy hq⟩))
+
 /-- Once the stream factorization is known for an H² quotient, its specified
 weak jet satisfies the divided diagonal Poisson equation. -/
 theorem mixed_divided_equation {ζ : L2} (hζ : MeanZero ζ)
