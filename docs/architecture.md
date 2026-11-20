@@ -685,12 +685,15 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   classical current, with the nonnegative Robin side removed and the other
   currents retained.
 - `MixedRobinCutoff.lean`: odd-face and degenerate right-face current bounds,
-  and removal of both cutoffs for smooth tests. The comparison form passes
-  to strong H¹ approximants and their canonical top traces by bounded
-  L² pairings from `SobolevApproximation.lean`.
+  and removal of both cutoffs for smooth tests.
+- `RectangleH1Approximation.lean`: matching-trace reflections and odd
+  projection of interior smooth approximants give strong H¹ convergence
+  on the square. A fixed-rectangle trace estimate gives L² convergence
+  of the top values to the canonical trace.
 - `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
-  comparison on either odd axis, with canonical Sobolev traces. It combines
-  the interior and Robin inequalities into a common quarter-cell bound.
+  comparison on either odd axis. Bounded L² pairings from
+  `SobolevApproximation.lean` pass the smooth-test inequality to the full
+  quarter form domain, retaining its canonical Robin trace.
 - `MixedStaticForm.lean`: the quotient interface, paired trace mass, Rellich
   and weighted forms, and square completion. It splits the second-order form
   and mass by parity, assembles the quarter bounds, and converts the

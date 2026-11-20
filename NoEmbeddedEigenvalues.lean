@@ -339,6 +339,7 @@ import NoEmbeddedEigenvalues.WeightedTraces
 import NoEmbeddedEigenvalues.TraceWeakGluing
 import NoEmbeddedEigenvalues.ReflectedTraces
 import NoEmbeddedEigenvalues.RectangleH1Gluing
+import NoEmbeddedEigenvalues.RectangleH1Approximation
 import NoEmbeddedEigenvalues.OddOddEdgeTraces
 import NoEmbeddedEigenvalues.OddOddSobolevTraces
 import NoEmbeddedEigenvalues.RegularEdgeCover

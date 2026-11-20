@@ -745,10 +745,15 @@ Their top values converge in $L^2(0,\pi/2)$ to the canonical top trace.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:trace-l2, lem:local-h2-smooth-approximation}
+\uses{lem:trace-l2, lem:local-h2-smooth-approximation, lem:rectangle-h1-gluing,
+  lem:transverse-trace-reflection, lem:axis-reflection-weak-jet}
+\leanok
 Extend by odd reflection across the zero-trace axis and by even reflection
-across the other three sides. Mollify and project onto the odd character;
-then use the $H^1$ trace estimate on the fixed quarter.
+across the other three sides. The traces match across each joining line.
+Mollify on a precompact symmetric strip, then project onto the odd character;
+reflection preserves the $L^2$ error of each jet entry there. Apply the
+fixed-quarter $H^1$ trace estimate to the difference, identifying its top
+trace by the limits of the continuous normal sections.
 \end{proof}
 
 \begin{lemma}[Comparison lemma with logarithmic weights]

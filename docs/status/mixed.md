@@ -55,16 +55,14 @@ admission-free; see [the module map](../architecture.md).
   admission-free. So is `lem:mixed-robin-multipliers`: homogeneity controls
   the rational exponent and its first derivatives up to the regular Robin
   edge, and the factor `h log h` gives continuity and the logarithmic
-  derivative bound for the odd-in-b multiplier. The remaining analytic
-  inputs are `lem:mixed-fold-quarter` (including the canonical traces),
-  `lem:robin-comparison`, and `lem:mixed-completion`.
-  For `lem:robin-comparison`, the two cutoff limits now give the
-  admission-free `lem:mixed-robin-smooth`. The right-face current is
-  bounded using an integrable inverse-square-root weight, including at the
-  top corner. The form inequality is proved from strong approximation
-  of the two weak derivatives, the function, and its canonical top trace.
-  The sole admitted input to `lem:robin-comparison` is now
-  `lem:mixed-quarter-smooth-approximation`. See [shared certificate work](shared.md#shared-certificate-work)
+  derivative bound for the odd-in-b multiplier.
+  The generic `lem:robin-comparison` is admission-free: an integrable
+  inverse-square-root weight controls the right-face current up to the top
+  corner, and `lem:mixed-quarter-smooth-approximation` uses reflection and
+  mollification to preserve the zero odd-axis condition while converging in
+  H¹ and in the canonical top trace. The remaining analytic inputs are
+  `lem:mixed-fold-quarter` (including the canonical traces) and
+  `lem:mixed-completion`. See [shared certificate work](shared.md#shared-certificate-work)
   for the sign checks.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical

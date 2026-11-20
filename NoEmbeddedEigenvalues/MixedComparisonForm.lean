@@ -1,7 +1,7 @@
 import NoEmbeddedEigenvalues.Certificates.Mixed
 import NoEmbeddedEigenvalues.MixedRobinCutoff
 import NoEmbeddedEigenvalues.Analysis.BoundaryConeTrace
-import NoEmbeddedEigenvalues.SobolevApproximation
+import NoEmbeddedEigenvalues.RectangleH1Approximation
 
 /-!
 # Mixed second-order comparison forms
@@ -55,18 +55,30 @@ def MixedQuarterSmoothApproximation (oddA : Bool)
       atTop (𝓝 0) ∧
     Tendsto (fun n ↦ eLpNorm (fun x ↦ v n (x, L) - top x) 2 (volume.restrict S)) atTop (𝓝 0)
 
-/-- Density in the quarter H¹ space with a specified zero odd-axis trace. -/
-theorem mixed_quarter_smooth_approximation (oddA : Bool)
-    {z za zb : ℝ × ℝ → ℂ} {top : ℝ → ℂ} (hz : MixedQuarterFormDomain z za zb top)
-    (hzero : MixedQuarterZeroTrace oddA z) : MixedQuarterSmoothApproximation oddA z za zb top := by
-  sorry
-
 private theorem mixed_quarter_weak_memLp {z d : ℝ × ℝ → ℂ} {j : Fin 2}
     (h : MemSobolevOn 1 Q z) (hd : HasWeakPartialOn Q j z d) :
     MemLp d 2 (volume.restrict Q) := by
   obtain ⟨D, hD, hLp⟩ := h.2 j
   have ho : IsOpen Q := isOpen_Ioo.prod isOpen_Ioo
   exact hLp.ae_eq ((ae_restrict_iff' ho.measurableSet).mpr (hD.ae_eq ho hd))
+
+/-- Density in the quarter H¹ space with a specified zero odd-axis trace. -/
+theorem mixed_quarter_smooth_approximation (oddA : Bool)
+    {z za zb : ℝ × ℝ → ℂ} {top : ℝ → ℂ} (hz : MixedQuarterFormDomain z za zb top)
+    (hzero : MixedQuarterZeroTrace oddA z) : MixedQuarterSmoothApproximation oddA z za zb top := by
+  have hL : 0 < L := half_pos Real.pi_pos
+  have hzB := mixed_quarter_weak_memLp hz.h1 hz.weakB
+  cases oddA
+  · obtain ⟨v, hv, hzero', tv, tx, ty⟩ :=
+      square_smooth_approximation_odd_snd hL hz.h1 hz.weakA hz.weakB hzero
+    exact ⟨v, hv, fun n t _ ↦ hzero' n t, tv, tx, ty,
+      hz.topTrace.tendsto_smooth_top hz.weakB hz.h1.1 hzB
+        (fun n ↦ (hv n).of_le (by norm_num)) tv ty⟩
+  · obtain ⟨v, hv, hzero', tv, tx, ty⟩ :=
+      square_smooth_approximation_odd_fst hL hz.h1 hz.weakA hz.weakB hzero
+    exact ⟨v, hv, fun n t _ ↦ hzero' n t, tv, tx, ty,
+      hz.topTrace.tendsto_smooth_top hz.weakB hz.h1.1 hzB
+        (fun n ↦ (hv n).of_le (by norm_num)) tv ty⟩
 
 private theorem mixed_quarter_weight_memLp :
     MemLp mixedComparisonDiagonal ⊤ (volume.restrict Q) ∧
@@ -116,8 +128,8 @@ private theorem mixed_quarter_weight_memLp :
       exact abs_le.mpr ⟨Real.neg_one_le_cos _, Real.cos_le_one _⟩
 
 /-- The smooth Robin inequality passes to the given strong approximants. -/
-theorem mixed_robin_comparison_of_approximation (oddA : Bool) {ρ : ℝ × ℝ → ℝ} (hρ : MixedRobinMultiplier ρ)
-    {c : ℝ}
+theorem mixed_robin_comparison_of_approximation (oddA : Bool) {ρ : ℝ × ℝ → ℝ}
+    (hρ : MixedRobinMultiplier ρ) {c : ℝ}
     (hinterior : ∀ q ∈ mixedQuarterCell,
       c * Real.cos q.1 ^ 2 * mixedRobinComparison oddA ρ q ≤
         mixedComparisonOperator (mixedRobinComparison oddA ρ) q)
