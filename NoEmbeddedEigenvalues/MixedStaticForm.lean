@@ -147,13 +147,15 @@ theorem mixed_trace_mass {ω : L2} (d : MixedQuotientData ω) :
   refine ⟨fun _ hq ↦ (mixed_trace_mass_field hq).1, fun _ hx ↦ mixed_trace_mass_edge_flux hx, ?_⟩
   sorry
 
-/-- The continuous Neumann edge value is the H¹ trace of the quotient. -/
-theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+/-- The continuous Neumann edge value and its derivative are the canonical
+traces of the quotient and its tangential weak partial. -/
+theorem mixed_quotient_neumann_traces {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
     let a₀ := -Real.pi / 2
     let a₁ := Real.pi / 2
     let T := fun a ↦ d.phi (a, cellEdgeNormal σ)
     AbsolutelyContinuousOnInterval T a₀ a₁ ∧
-      MemLp (deriv T) 2 (volume.restrict (Ioo a₀ a₁)) := by
+      MemLp (deriv T) 2 (volume.restrict (Ioo a₀ a₁)) ∧
+      HasMixedEdgeTrace 1 σ d.phi T ∧ HasMixedEdgeTrace 1 σ (d.jet [0]) (deriv T) := by
   let a₀ := -Real.pi / 2
   let a₁ := Real.pi / 2
   let I := Ioo a₀ a₁
@@ -165,12 +167,14 @@ theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) 
     rcases hb with h | h
     · rw [h]; exact left_mem_Icc.mpr hab.le
     · rw [h]; exact right_mem_Icc.mpr hab.le
-  obtain ⟨D, hD, hL⟩ := memSobolevOn_iff_exists_weakJet.mp d.h2
+  let D := d.jet
+  have hD := d.weakJet
+  have hL := d.h2.memLp_weakJet (isOpen_Ioo.prod isOpen_Ioo : IsOpen mixedOpenCell) hD
   have hcoords : traceSideCoords 0 = id := rfl
   have hrect : traceSideCoords 0 '' (I ×ˢ I) = mixedOpenCell := by
     rw [hcoords, image_id]
     rfl
-  obtain ⟨G, H, R, hG, hH, hGacl, hHacl, hGt, hHt, hRt, hRac, hRc, _, hRd⟩ :=
+  obtain ⟨G, H, R, hG, hH, hGacl, hHacl, _, hHt, hRt, hRac, hRc, _, hRd, hGm, hHm⟩ :=
     hasWeakJetOn_h2_boundary_trace (F := d.phi) (D := D) 0 hab hab hb
       (hrect.symm ▸ hD) (fun w hw ↦ hrect.symm ▸ hL w hw)
   have hG' : G =ᵐ[volume.restrict (I ×ˢ I)] d.phi := by
@@ -215,12 +219,27 @@ theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) 
     · exact hTc
     · exact Ioo_subset_Icc_self
     · rw [closure_Ioo hab.ne]
-  refine ⟨hRac.congr (fun a ha ↦ heq (by simpa only [uIcc_of_le hab.le] using ha)), ?_⟩
-  refine (memLp_congr_ae ?_).mp hHt
-  filter_upwards [hRd, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with a ha hm
-  have he : R =ᶠ[𝓝 a] T := by
-    filter_upwards [isOpen_Ioo.mem_nhds hm] with y hy using heq (Ioo_subset_Icc_self hy)
-  exact (ha.congr_of_eventuallyEq he.symm).deriv.symm
+  have hder : deriv T =ᵐ[volume.restrict I] aclTrace a₀ a₁ H (D [1, 0]) b := by
+    filter_upwards [hRd, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with a ha hm
+    have he : R =ᶠ[𝓝 a] T := by
+      filter_upwards [isOpen_Ioo.mem_nhds hm] with y hy using heq (Ioo_subset_Icc_self hy)
+    exact (ha.congr_of_eventuallyEq he.symm).deriv
+  refine ⟨hRac.congr (fun a ha ↦ heq (by simpa only [uIcc_of_le hab.le] using ha)),
+    hHt.ae_eq hder.symm, ?_, ?_⟩
+  · exact ⟨hab, hab, hb', G, D [1], hGm, hG', hGmem, hD', hGacl', hre.symm.trans hRt⟩
+  · have hH' : H =ᵐ[volume.restrict (I ×ˢ I)] D [0] := by
+      simpa only [hcoords, Function.comp_id] using hH
+    exact ⟨hab, hab, hb', H, D [1, 0], hHm, hH', (hL [0] (by decide)).ae_eq hH'.symm,
+      hL [1, 0] (by decide), hHacl, hder⟩
+
+/-- The continuous Neumann edge value belongs to the bounded-interval H¹ domain. -/
+theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+    let a₀ := -Real.pi / 2
+    let a₁ := Real.pi / 2
+    let T := fun a ↦ d.phi (a, cellEdgeNormal σ)
+    AbsolutelyContinuousOnInterval T a₀ a₁ ∧
+      MemLp (deriv T) 2 (volume.restrict (Ioo a₀ a₁)) :=
+  ⟨(mixed_quotient_neumann_traces d σ).1, (mixed_quotient_neumann_traces d σ).2.1⟩
 
 /-- `C₀ = 1 - div_μ W`, in diagonal coordinates. -/
 def mixedC₀ (q : Plane) : ℝ :=

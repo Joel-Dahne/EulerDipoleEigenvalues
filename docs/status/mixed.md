@@ -51,9 +51,14 @@ admission-free; see [the module map](../architecture.md).
   identity, volume integrability, and a one-dimensional edge calculation.
   Subtracting the signed trace-mass current first leaves a bounded ratio
   `h/(h+k)` times a gradient polynomial. Inward Hardy estimates control
-  both divided normal derivatives. The volume and edge calculations are
-  admission-free; `lem:mixed-rellich-flux` still needs the Sobolev
-  integration with the canonical edge traces.
+  both divided normal derivatives. The interior product rule and divided
+  Poisson equation give `lem:mixed-rellich-divergence`.
+  `lem:mixed-quotient-neumann-traces` identifies the canonical value and
+  tangential derivative, and `lem:mixed-rellich-section` proves FTC up
+  to both ends of each regular section. `lem:mixed-rellich-flux` now
+  integrates these sections by Fubini. Its remaining admission is
+  `lem:mixed-rellich-integrable-sections`: construct the separate
+  integrable bulk derivatives and verify their a.e. sectional formulas.
 - **Coercivity:** `thm:mixed-coercivity` is assembled from the square
   completion and the two quarter comparisons; it is not admission-free.
   The parity splitting of the form and mass, the Cartesian mass conversion,

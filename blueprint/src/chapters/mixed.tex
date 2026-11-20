@@ -485,9 +485,11 @@ identity then gives $0=K[\phi]$ plus the nonnegative sum of squares.
 \begin{lemma}[Cosine division of the normal derivatives]
 \label{lem:mixed-rellich-hardy}
 \uses{def:mixed-quotient-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MixedQuotientData.memLp_normal_div_cos}
+\lean{NoEmbeddedEigenvalues.MixedQuotientData.memLp_normal_div_cos,
+  NoEmbeddedEigenvalues.MixedQuotientData.memLp_partials_div_corner}
 \leanok
-The quotient data give $\phi_a/h,\phi_b/k\in L^2(\Cell)$.
+The quotient data give $\phi_a/h,\phi_b/k\in L^2(\Cell)$ and hence also
+$\phi_a/(h+k),\phi_b/(h+k)\in L^2(\Cell)$.
 \end{lemma}
 
 \begin{proof}
@@ -552,6 +554,24 @@ polynomial on the regular sides. In the differentiated current the
 diagonal field terms cancel, as do the mixed Hessian terms.
 \end{proof}
 
+\begin{lemma}[Canonical Neumann traces of the quotient jet]
+\label{lem:mixed-quotient-neumann-traces}
+\uses{def:sobolev-local, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_quotient_neumann_traces}
+\leanok
+The continuous Neumann side value $T$ is absolutely continuous and has
+$T'\in L^2$. The canonical traces of $\phi$ and $\phi_a$ there are
+$T$ and $T'$, respectively.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-h2-boundary}
+\leanok
+Apply one-sided trace differentiation to the specified weak jet.
+Continuity identifies the trace of the quotient with its actual side
+value, including the endpoints of its absolutely continuous representative.
+\end{proof}
+
 \begin{lemma}[Corrected Neumann flux integral]
 \label{lem:mixed-rellich-edge}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
@@ -570,6 +590,78 @@ The first two terms are $(u|T|^2)'$. Apply the fundamental theorem
 on the closed side, using $u=\pm1$ at the endpoints.
 \end{proof}
 
+\begin{lemma}[Interior section divergence of the corrected current]
+\label{lem:mixed-rellich-divergence}
+\uses{def:sobolev-local, def:mixed-K, lem:mixed-rellich-current}
+\lean{NoEmbeddedEigenvalues.mixed_rellich_section_divergence}
+\leanok
+At an interior crossing of two sectional representatives whose value
+and first normal derivatives match the prescribed jet there, the sum
+of the current derivatives is the virial density minus the Rellich
+and trace-mass densities, provided the mixed partials agree and the
+divided Poisson equation holds there.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The field has equal diagonal partials and each off-diagonal partial
+is half the off-diagonal matrix entry. The product rule cancels the
+diagonal and mixed-Hessian terms, leaving the sum of the diagonal
+second derivatives of the stream. Multiplying the divided equation
+by $h$ identifies that sum with $2\omega$.
+\end{proof}
+
+\begin{lemma}[Sectionwise flux at regular endpoints]
+\label{lem:mixed-rellich-section}
+\uses{def:h1-interval, lem:h1-interval-endpoints, lem:mixed-rellich-current}
+\lean{NoEmbeddedEigenvalues.mixed_rellich_normal_section_ac,
+  NoEmbeddedEigenvalues.mixed_rellich_normal_section_integral}
+\leanok
+On a normal section at a fixed interior tangential coordinate, the
+current computed from absolutely continuous extensions of the quotient
+and its first weak derivatives is absolutely continuous up to both
+ends. The integral of its normal derivative is zero for a
+Dirichlet-to-Dirichlet section. For a Neumann-to-Neumann section with
+zero normal derivative trace, it is the sum of the two outward
+quadratic fluxes of Lemma~\ref{lem:mixed-rellich-current}.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-rellich-current}
+\leanok
+The tangential cosine bounds the denominator away from zero on the
+fixed section. Apply the interval product rules, FTC and the pointwise
+side formulas.
+\end{proof}
+
+\begin{lemma}[Integrable normal derivatives of the corrected current]
+\label{lem:mixed-rellich-integrable-sections}
+\uses{def:sobolev-local, def:mixed-K, lem:mixed-rellich-current}
+\lean{NoEmbeddedEigenvalues.MixedRellichNormalDerivative,
+  NoEmbeddedEigenvalues.mixed_rellich_integrable_sections}
+\leanok
+Both normal derivatives of the corrected current have integrable bulk
+representatives, agreeing with the derivatives on the corresponding
+ACL sections. The Neumann section endpoints have the canonical
+quotient, tangential-derivative and zero normal-derivative traces.
+The sum of the bulk representatives equals the corrected divergence
+almost everywhere.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-rellich-divergence, lem:mixed-rellich-hardy,
+  lem:acl-slicing, lem:mixed-quotient-neumann-traces}
+Choose ACL extensions from the specified weak jet and compare their
+endpoints to the canonical traces. Commutation of the mixed weak
+partials follows by differentiating the test function twice.
+In the differentiated factored current the derivative of $h/(h+k)$
+costs at most $1/(h+k)$. Pure gradient and pure value squares carry
+an extra $h$ in that term. The other quadratic terms pair $\phi$
+with a first weak derivative divided by $h+k$. Thus the separate
+normal derivatives are integrable by the Hardy estimates and
+$L^2$ pairing, before summing them.
+\end{proof}
+
 \begin{lemma}[Sobolev flux of the corrected Rellich current]
 \label{lem:mixed-rellich-flux}
 \uses{def:mixed-K, def:mixed-quotient-data}
@@ -580,17 +672,12 @@ densities equals the sum of the two corrected Neumann flux integrals.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-rellich-current, lem:mixed-rellich-volume,
-  lem:mixed-rellich-hardy, lem:trace-h2-boundary}
-Use normal ACL sections of the quotient and its first weak derivatives
-in the two directions. For the factored current, the derivatives of
-$h/p$ cost at most $1/p$; terms without an extra $h$ pair a first
-derivative divided by $p$ with $\phi$. The Hardy estimates make each
-normal current derivative integrable. Sectionwise integration uses the
-canonical traces: the Dirichlet flux is zero and the Neumann flux uses
-the tangential weak derivative trace, which is the derivative of the
-continuous edge value. This method combines the currents before taking
-edge values and does not require a separate corner flux.
+\uses{lem:mixed-rellich-integrable-sections, lem:mixed-rellich-section,
+  lem:mixed-rellich-edge, lem:mixed-quotient-neumann-traces}
+\leanok
+Integrate each normal derivative by Fubini and use the sectionwise
+FTC. The Dirichlet flux vanishes and the Neumann endpoints give the
+stated edge densities. No corner flux is assigned separately.
 \end{proof}
 
 \begin{lemma}[Rellich form of $K$]

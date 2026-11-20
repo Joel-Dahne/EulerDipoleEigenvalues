@@ -37,7 +37,8 @@ theorem hasWeakJetOn_h2_boundary_trace (j : Fin 2) {a₀ a₁ b₀ b₁ t : ℝ}
       AbsolutelyContinuousOnInterval T a₀ a₁ ∧
       ContinuousOn T (Icc a₀ a₁) ∧
       (∃ M : ℝ, ∀ a ∈ Icc a₀ a₁, ‖T a‖ ≤ M) ∧
-      (∀ᵐ a ∂volume.restrict I, HasDerivAt T (aclTrace b₀ b₁ H E' t a) a) := by
+      (∀ᵐ a ∂volume.restrict I, HasDerivAt T (aclTrace b₀ b₁ H E' t a) a) ∧
+      Measurable G ∧ Measurable H := by
   let I := Ioo a₀ a₁
   let J := Ioo b₀ b₁
   let Q := I ×ˢ J
@@ -107,6 +108,6 @@ theorem hasWeakJetOn_h2_boundary_trace (j : Fin 2) {a₀ a₁ b₀ b₁ t : ℝ}
     simpa only [uIcc_of_le ha.le] using hTac.continuousOn
   exact ⟨G, H, T, hGF, hHA, hG, hH, (hG.l2_trace hb hGm hGL hE t ht').1,
     (hH.l2_trace hb hHm hHL hB t ht').1, hT, hTac, hTc,
-    isCompact_Icc.exists_bound_of_continuousOn hTc, hTd⟩
+    isCompact_Icc.exists_bound_of_continuousOn hTc, hTd, hGm, hHm⟩
 
 end NoEmbeddedEigenvalues
