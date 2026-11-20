@@ -105,8 +105,10 @@ admission-free; see [the module map](../architecture.md).
   inverse-square-root weight controls the right-face current up to the top
   corner, and `lem:mixed-quarter-smooth-approximation` uses reflection and
   mollification to preserve the zero odd-axis condition while converging in
-  H¹ and in the canonical top trace. The remaining analytic inputs are
-  `lem:mixed-fold-quarter` (including the canonical traces) and
+  H¹ and in the canonical top trace. The admission-free
+  `lem:mixed-fold-quarter` uses the reflected weak gradients to keep
+  the exact form and mass scaling and identifies the canonical Robin
+  and odd-axis traces by continuity. The remaining analytic input is
   `lem:mixed-completion`. See [shared certificate work](shared.md#shared-certificate-work)
   for the sign checks.
 

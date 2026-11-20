@@ -1664,7 +1664,7 @@ Robin numerator; in the other case weaken $1/100$ to $1/200$.
 
 \begin{lemma}[Quarter reduction with canonical traces]
 \label{lem:mixed-fold-quarter}
-\uses{def:comparison-form, lem:mixed-completion, def:sobolev-local}
+\uses{def:comparison-form, def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.mixed_fold_to_quarter}
 \leanok
 An $H^1$ function continuous on the closed cell, odd in one axis and even
@@ -1677,10 +1677,13 @@ form is four times the quarter form.
 \begin{proof}
 \uses{lem:axis-reflection-weak-jet, lem:canonical-transverse-trace,
   lem:mixed-coefficient-bounds, lem:mixed-G-positive}
-Weak gradient parity gives reflection invariance of the form density;
-the axes have measure zero. The trace agrees with the continuous
-representative on the closed normal sections, and the Robin edge
-integrals agree by reflection.
+\leanok
+The reflection rule for the specified weak gradient makes the form
+density even in both coordinates. Fubini and the one-dimensional
+even-integral identity give the factor of four for the bulk and mass.
+The closed normal sections agree with the continuous representative,
+giving the Robin trace and zero trace on the odd axis. The Robin
+integrals have the same factor of four by reflection in both axes.
 \end{proof}
 
 \begin{lemma}[Second-order coercivity on the cell]

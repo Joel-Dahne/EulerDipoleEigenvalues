@@ -602,6 +602,150 @@ theorem mixed_parity_split {ω : L2} (d : MixedQuotientData ω) :
   rw [he]
   ring
 
+private theorem mixed_cos_sq_mul_integrable {f : Plane → ℂ}
+    (hf : MemLp f 2 (volume.restrict mixedOpenCell)) :
+    IntegrableOn (fun q ↦ Real.cos q.1 ^ 2 * ‖f q‖ ^ 2) mixedOpenCell := by
+  refine (hf.integrable_norm_pow (by decide)).mono'
+    ((Real.continuous_cos.comp continuous_fst).pow 2 |>.aestronglyMeasurable.mul
+      (hf.aestronglyMeasurable.norm.pow 2)) (Eventually.of_forall fun q ↦ ?_)
+  rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+  exact mul_le_of_le_one_left (sq_nonneg _) (by
+    nlinarith [Real.cos_le_one q.1, Real.neg_one_le_cos q.1])
+
+section QuarterFold
+
+local notation "c" => (Real.pi / 2)
+local notation "J" => (Ioo (-c) c)
+local notation "P" => (Ioo (0 : ℝ) c)
+
+private theorem quarter_subset_cell : mixedQuarterCell ⊆ mixedOpenCell := by
+  rintro q ⟨ha, hb⟩
+  exact ⟨⟨by linarith [ha.1, Real.pi_pos], ha.2⟩, ⟨by linarith [hb.1, Real.pi_pos], hb.2⟩⟩
+
+private theorem fold_partial_memLp {z dz : Plane → ℂ} {j : Fin 2}
+    (hz : MemSobolevOn 1 mixedOpenCell z) (hd : HasWeakPartialOn mixedOpenCell j z dz) :
+    MemLp dz 2 (volume.restrict mixedOpenCell) := by
+  obtain ⟨_, hw, hl⟩ := hz.2 j
+  exact hl.ae_eq ((ae_restrict_iff' isOpen_mixedOpenCell.measurableSet).mpr
+    (hw.ae_eq isOpen_mixedOpenCell hd))
+
+/-- The continuous closed-cell representative identifies the canonical
+quarter trace, including the traces on the two coordinate axes. -/
+private theorem fold_quarter_trace {z dz : Plane → ℂ} (j : Fin 2) {t : ℝ}
+    (ht : t ∈ Icc 0 c) (hz : MemSobolevOn 1 mixedOpenCell z)
+    (hc : ContinuousOn z (closure mixedOpenCell))
+    (hd : HasWeakPartialOn mixedOpenCell j z dz) :
+    HasTransverseH1Trace 0 c 0 c t (axisTraceChart j) z
+      (fun x ↦ z (axisTraceChart j (x, t))) := by
+  let C := axisTraceChart j
+  let Q := mixedQuarterCell
+  have hC : Continuous C := by
+    fin_cases j
+    · exact continuous_swap
+    · exact continuous_id
+  have hswap : Prod.swap ⁻¹' Q = Q := by ext q; exact and_comm
+  have hQ : IsOpen Q := isOpen_Ioo.prod isOpen_Ioo
+  have hw : HasWeakPartialOn Q 1 (z ∘ C) (dz ∘ C) := by
+    fin_cases j
+    · have h := (hd.mono quarter_subset_cell).comp_swap_fst hQ
+      rwa [hswap] at h
+    · exact hd.mono quarter_subset_cell
+  have hcomp {f : Plane → ℂ} (hf : MemLp f 2 (volume.restrict mixedOpenCell)) :
+      MemLp (f ∘ C) 2 (volume.restrict Q) := by
+    have h := hf.mono_measure (Measure.restrict_mono quarter_subset_cell le_rfl)
+    fin_cases j
+    · have h' := memLp_comp_swap hQ.measurableSet h
+      rwa [hswap] at h'
+    · exact h
+  have hzl := hcomp hz.memLp
+  have hdl := hcomp (fold_partial_memLp hz hd)
+  have h0 : 0 < c := half_pos Real.pi_pos
+  obtain ⟨G, hm, he, hACL, hline, _⟩ :=
+    hw.exists_l2_trace isOpen_Ioo ordConnected_Ioo (nonempty_Ioo.2 h0) h0 hzl hdl
+  refine ⟨h0, h0, ht, G, dz ∘ C, hm, he, hzl.ae_eq he.symm, hdl, hACL, ?_⟩
+  have hprod : (volume.restrict P).prod (volume.restrict P) = volume.restrict Q := by
+    rw [Measure.prod_restrict, ← Measure.volume_eq_prod]
+    rfl
+  have hsections := Measure.ae_ae_of_ae_prod
+    (p := fun q ↦ G q = (z ∘ C) q) (hprod.symm ▸ he)
+  filter_upwards [hsections, hline, ae_restrict_mem (s := P) measurableSet_Ioo] with x hx hL hxP
+  have hclosed (b : ℝ) (hb : b ∈ Icc 0 c) : C (x, b) ∈ closure mixedOpenCell := by
+    rw [mixedOpenCell, closure_prod_eq, closure_Ioo (by linarith [Real.pi_pos])]
+    have hb' : b ∈ Icc (-Real.pi / 2) c := ⟨by linarith [hb.1, Real.pi_pos], hb.2⟩
+    have hx' : x ∈ Icc (-Real.pi / 2) c := ⟨by linarith [hxP.1, Real.pi_pos], hxP.2.le⟩
+    fin_cases j
+    · exact ⟨hb', hx'⟩
+    · exact ⟨hx', hb'⟩
+  have hcont : ContinuousOn (fun b ↦ z (C (x, b))) (Icc 0 c) :=
+    hc.comp (hC.comp (continuous_const.prodMk continuous_id)).continuousOn hclosed
+  have hEq := Measure.eqOn_open_of_ae_eq hx isOpen_Ioo
+    ((hL.continuousOn_extension h0).mono Ioo_subset_Icc_self |>.congr
+      (hL.extension_eq h0).symm) (hcont.mono Ioo_subset_Icc_self)
+  exact hL.extension_unique h0 hcont (fun b hb ↦ (hEq hb).symm) ht
+
+private theorem integral_even_half {f : ℝ → ℝ} (hf : IntegrableOn f J)
+    (he : (fun x ↦ f (-x)) =ᵐ[volume.restrict P] f) :
+    (∫ x in J, f x) = 2 * ∫ x in P, f x := by
+  have h0 : 0 < c := half_pos Real.pi_pos
+  have hn : -c ≤ 0 := by linarith
+  have hm : 0 ≤ c := h0.le
+  have hsub : Ioo (-c) (0 : ℝ) ⊆ J := Ioo_subset_Ioo le_rfl hm
+  have hs : P ⊆ J := Ioo_subset_Ioo hn le_rfl
+  have i₁ : IntervalIntegrable f volume (-c) 0 := by
+    rw [intervalIntegrable_iff_integrableOn_Ioo_of_le hn]
+    exact hf.mono_set hsub
+  have i₂ : IntervalIntegrable f volume 0 c := by
+    rw [intervalIntegrable_iff_integrableOn_Ioo_of_le hm]
+    exact hf.mono_set hs
+  have h := intervalIntegral.integral_add_adjacent_intervals i₁ i₂
+  rw [intervalIntegral.integral_of_le hn, integral_Ioc_eq_integral_Ioo,
+    intervalIntegral.integral_of_le hm, integral_Ioc_eq_integral_Ioo,
+    intervalIntegral.integral_of_le (hn.trans hm), integral_Ioc_eq_integral_Ioo] at h
+  have hr := intervalIntegral.integral_comp_neg (a := 0) (b := c) f
+  rw [neg_zero, intervalIntegral.integral_of_le hn, integral_Ioc_eq_integral_Ioo,
+    intervalIntegral.integral_of_le hm, integral_Ioc_eq_integral_Ioo, integral_congr_ae he] at hr
+  linarith
+
+private theorem integral_even_quarter {f : Plane → ℝ} (hf : IntegrableOn f mixedOpenCell)
+    (he : ∀ j : Fin 2, f ∘ axisReflect j =ᵐ[volume.restrict mixedOpenCell] f) :
+    (∫ q in mixedOpenCell, f q) = 4 * ∫ q in mixedQuarterCell, f q := by
+  let μ := volume.restrict J
+  let ν := volume.restrict P
+  have hI : P ⊆ J := Ioo_subset_Ioo (by linarith [Real.pi_pos]) le_rfl
+  have hJJ : μ.prod μ = volume.restrict mixedOpenCell := by
+    rw [Measure.prod_restrict, ← Measure.volume_eq_prod, mixedOpenCell, neg_div]
+  have hJP : μ.prod ν = volume.restrict (J ×ˢ P) := by
+    rw [Measure.prod_restrict, ← Measure.volume_eq_prod]
+  have hPP : ν.prod ν = volume.restrict mixedQuarterCell := by
+    rw [Measure.prod_restrict, ← Measure.volume_eq_prod]
+    rfl
+  have hF : Integrable f (μ.prod μ) := hJJ.symm ▸ hf
+  have hJPf : Integrable f (μ.prod ν) := hJP.symm ▸ hf.mono_set (by
+    rw [mixedOpenCell, neg_div]
+    exact prod_mono Subset.rfl hI)
+  have hPPf : Integrable f (ν.prod ν) := hPP.symm ▸ hf.mono_set quarter_subset_cell
+  have h1 : (∫ q, f q ∂(μ.prod μ)) = 2 * (∫ q, f q ∂(μ.prod ν)) := by
+    rw [integral_prod f hF, integral_prod f hJPf]
+    have hR := Measure.ae_ae_of_ae_prod (p := fun q ↦ f (q.1, -q.2) = f q)
+      (hJJ.symm ▸ he 1)
+    have h : (fun x ↦ ∫ t in J, f (x, t)) =ᵐ[μ] fun x ↦ 2 * ∫ t in P, f (x, t) := by
+      filter_upwards [hR, hF.prod_right_ae] with x hx hi
+      exact integral_even_half hi (ae_restrict_of_ae_restrict_of_subset hI hx)
+    rw [integral_congr_ae h, integral_const_mul]
+  have h2 : (∫ q, f q ∂(μ.prod ν)) = 2 * (∫ q, f q ∂(ν.prod ν)) := by
+    rw [integral_prod_symm f hJPf, integral_prod_symm f hPPf]
+    have hR := Measure.ae_ae_of_ae_prod (p := fun q ↦ f (-q.2, q.1) = f (q.2, q.1))
+      ((Measure.measurePreserving_swap (μ := μ) (ν := μ)).quasiMeasurePreserving.ae
+        (show ∀ᵐ q ∂(μ.prod μ), f (-q.1, q.2) = f q from hJJ.symm ▸ he 0))
+    have h : (fun x ↦ ∫ t in J, f (t, x)) =ᵐ[ν] fun x ↦ 2 * ∫ t in P, f (t, x) := by
+      filter_upwards [ae_restrict_of_ae_restrict_of_subset hI hR, hJPf.prod_left_ae] with x hx hi
+      exact integral_even_half hi (ae_restrict_of_ae_restrict_of_subset hI hx)
+    rw [integral_congr_ae h, integral_const_mul]
+  rw [hJJ] at h1
+  rw [hPP] at h2
+  rw [h1, h2]
+  ring
+
 /-- Reflect a function with one odd and one even axis into the quarter.
 Its mass and form both acquire the same factor of four. The restricted
 canonical traces are the actual continuous edge values. -/
@@ -618,17 +762,129 @@ theorem mixed_fold_to_quarter (oddA : Bool) {z za zb : Plane → ℂ}
       4 * (∫ q in mixedQuarterCell, Real.cos q.1 ^ 2 * ‖z q‖ ^ 2) ∧
     mixedSecondOrderForm z za zb (fun σ ↦ mixedEdgeValue 1 σ z) =
       4 * mixedQuarterForm z za zb (mixedEdgeValue 1 true z) := by
-  sorry
+  let j : Fin 2 := if oddA then 0 else 1
+  have h₀ : 0 < c := half_pos Real.pi_pos
+  have hclosed : Icc (-c) c ×ˢ Icc (-c) c = closure mixedOpenCell := by
+    rw [mixedOpenCell, neg_div, closure_prod_eq, closure_Ioo (by linarith)]
+  let D : List (Fin 2) → Plane → ℂ := fun w ↦
+    match w with
+    | [] => z
+    | i :: _ => if i = 0 then za else zb
+  have hD : HasWeakJetOn 1 mixedOpenCell z D := by
+    refine ⟨rfl, fun w hw i ↦ ?_⟩
+    cases w with
+    | nil => fin_cases i <;> assumption
+    | cons _ _ => simp at hw
+  have hsym (k : Fin 2) : ∀ᵐ q ∂volume.restrict mixedOpenCell,
+      z (axisReflect k q) = (if k = j then -1 else 1 : ℂ) * z q := by
+    filter_upwards [ae_restrict_mem (μ := volume) isOpen_mixedOpenCell.measurableSet] with q hq
+    have H := hp q (subset_closure hq)
+    cases oddA <;> fin_cases k
+    · simpa [j, axisReflect] using H.1
+    · simpa [j, axisReflect] using H.2
+    · simpa [j, axisReflect] using H.1
+    · simpa [j, axisReflect] using H.2
+  have hg (i k : Fin 2) : ∀ᵐ q ∂volume.restrict mixedOpenCell,
+      (-1 : ℂ) ^ ([i] : List (Fin 2)).count k * D [i] (axisReflect k q) =
+        (if k = j then -1 else 1 : ℂ) * D [i] q :=
+    hD.axisReflect_entries isOpen_mixedOpenCell k (mixed_reflection_preimage k) (hsym k)
+      [i] (by simp)
+  refine ⟨⟨hz.mono quarter_subset_cell, ha.mono quarter_subset_cell, hb.mono quarter_subset_cell,
+    fold_quarter_trace 1 (right_mem_Icc.mpr h₀.le) hz hc hb⟩, ?_, ?_, ?_⟩
+  · have H : HasWeakPartialOn mixedOpenCell j z (D [j]) := by
+      cases oddA
+      · exact hb
+      · exact ha
+    have ht := fold_quarter_trace j (left_mem_Icc.mpr h₀.le) hz hc H
+    obtain ⟨hl, hr, h0, G, E, hm, he, hG, hE, hA, hT⟩ := ht
+    refine ⟨hl, hr, h0, G, E, hm, he, hG, hE, hA, ?_⟩
+    filter_upwards [hT, ae_restrict_mem (s := P) measurableSet_Ioo] with x hx hm
+    rw [← hx]
+    have hx' : x ∈ Icc (-c) c := ⟨by linarith [hm.1], hm.2.le⟩
+    have hz' : 0 ∈ Icc (-c) c := ⟨by linarith, h₀.le⟩
+    cases oddA
+    · have h := (hp (x, 0) (hclosed ▸ (show (x, 0) ∈ _ from ⟨hx', hz'⟩))).2
+      simp only [neg_zero, Bool.false_eq_true, ite_false, neg_one_mul] at h
+      change 0 = z (x, 0)
+      linear_combination -h / 2
+    · have h := (hp (0, x) (hclosed ▸ (show (0, x) ∈ _ from ⟨hz', hx'⟩))).1
+      simp only [neg_zero, ite_true, neg_one_mul] at h
+      change 0 = z (0, x)
+      linear_combination -h / 2
+  · apply integral_even_quarter (mixed_cos_sq_mul_integrable hz.memLp)
+    intro k
+    filter_upwards [hsym k] with q h
+    change Real.cos (axisReflect k q).1 ^ 2 * ‖z (axisReflect k q)‖ ^ 2 = _
+    rw [h]
+    cases oddA <;> fin_cases k <;> simp [axisReflect, j]
+  · have hvol := integral_even_quarter
+      (mixed_density_integrable hz.memLp (fold_partial_memLp hz ha) (fold_partial_memLp hz hb))
+      (f := mixedSecondOrderDensity z za zb) (by
+        intro k
+        filter_upwards [hg 0 k, hg 1 k, hsym k] with q hA hB hZ
+        change mixedSecondOrderDensity z za zb (axisReflect k q) = _
+        cases oddA <;> fin_cases k <;>
+          simp only [D, j, axisReflect, Fin.zero_eta, Fin.mk_one, Fin.isValue, one_ne_zero,
+            Bool.false_eq_true, ite_true, ite_false, List.count_cons, List.count_nil,
+            beq_self_eq_true, show ((1 : Fin 2) == 0) = false by decide,
+            show ((0 : Fin 2) == 1) = false by decide,
+            zero_add, pow_zero, pow_one, one_mul, neg_one_mul, neg_inj,
+            show (0 : Fin 2) ≠ 1 by decide] at hA hB hZ
+        · have hA' := neg_eq_iff_eq_neg.mp hA
+          simp [mixedSecondOrderDensity, mixedGradientForm, mixedComparisonDiagonal,
+            mixedComparisonPotential, mixedComparisonOffDiagonal, axisReflect, hA', hB, hZ,
+            mul_neg, neg_mul]
+          ring
+        · simp [mixedSecondOrderDensity, mixedGradientForm, mixedComparisonDiagonal,
+            mixedComparisonPotential, mixedComparisonOffDiagonal, axisReflect, hA, hB, hZ,
+            mul_neg, neg_mul]
+          ring
+        · simp [mixedSecondOrderDensity, mixedGradientForm, mixedComparisonDiagonal,
+            mixedComparisonPotential, mixedComparisonOffDiagonal, axisReflect, hA, hB, hZ,
+            mul_neg, neg_mul]
+          ring
+        · have hB' := neg_eq_iff_eq_neg.mp hB
+          simp [mixedSecondOrderDensity, mixedGradientForm, mixedComparisonDiagonal,
+            mixedComparisonPotential, mixedComparisonOffDiagonal, axisReflect, hA, hB', hZ,
+            mul_neg, neg_mul]
+          ring)
+    have hEdge (x : ℝ) (hx : x ∈ J) :
+        ‖z (x, -c)‖ = ‖z (x, c)‖ := by
+      have hm : (x, c) ∈ closure mixedOpenCell := hclosed ▸
+        (show (x, c) ∈ Icc (-c) c ×ˢ Icc (-c) c from
+          ⟨Ioo_subset_Icc_self hx, right_mem_Icc.mpr (by linarith)⟩)
+      have H := (hp (x, c) hm).2
+      change ‖z (x, -(c : ℝ))‖ = _
+      rw [H]
+      cases oddA <;> simp
+    let f := fun x ↦ Real.cos x * ‖z (x, c)‖ ^ 2
+    have hTop : (∫ x in J, f x) = 2 * ∫ x in P, f x := by
+      apply integral_even_half (by
+        simpa only [neg_div, f, mixedEdgeValue, axisTraceChart, one_ne_zero, ite_false,
+          cellEdgeNormal, ite_true] using mixed_edge_integrable hc true)
+      filter_upwards [ae_restrict_mem (s := P) measurableSet_Ioo] with x hx
+      have hm : (x, c) ∈ closure mixedOpenCell := hclosed ▸
+        (show (x, c) ∈ Icc (-c) c ×ˢ Icc (-c) c from
+          ⟨⟨by linarith [hx.1], hx.2.le⟩, right_mem_Icc.mpr (by linarith)⟩)
+      have H := (hp (x, c) hm).1
+      change Real.cos (-x) * ‖z (-x, c)‖ ^ 2 = _
+      rw [Real.cos_neg, H]
+      cases oddA <;> simp [f]
+    have hBot : (∫ x in J, Real.cos x * ‖z (x, -c)‖ ^ 2) = ∫ x in J, f x := by
+      apply integral_congr_ae
+      filter_upwards [ae_restrict_mem (s := J) measurableSet_Ioo] with x hx
+      rw [hEdge x hx]
+    unfold mixedSecondOrderForm mixedQuarterForm
+    rw [hvol, Fintype.sum_bool, neg_div]
+    simp only [mixedEdgeValue, axisTraceChart, one_ne_zero, ite_false, cellEdgeNormal,
+      Bool.false_eq_true, ite_true, neg_div]
+    change 4 * (∫ q in mixedQuarterCell, mixedSecondOrderDensity z za zb q) +
+        ((∫ x in J, f x) + ∫ x in J, Real.cos x * ‖z (x, -c)‖ ^ 2) =
+      4 * ((∫ q in mixedQuarterCell, mixedSecondOrderDensity z za zb q) + ∫ x in P, f x)
+    rw [hBot, hTop]
+    ring
 
-private theorem mixed_cos_sq_mul_integrable {f : Plane → ℂ}
-    (hf : MemLp f 2 (volume.restrict mixedOpenCell)) :
-    IntegrableOn (fun q ↦ Real.cos q.1 ^ 2 * ‖f q‖ ^ 2) mixedOpenCell := by
-  refine (hf.integrable_norm_pow (by decide)).mono'
-    ((Real.continuous_cos.comp continuous_fst).pow 2 |>.aestronglyMeasurable.mul
-      (hf.aestronglyMeasurable.norm.pow 2)) (Eventually.of_forall fun q ↦ ?_)
-  rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
-  exact mul_le_of_le_one_left (sq_nonneg _) (by
-    nlinarith [Real.cos_le_one q.1, Real.neg_one_le_cos q.1])
+end QuarterFold
 
 /-- The same orthogonal parity decomposition for the weighted mass. -/
 theorem mixed_parity_mass {ω : L2} (d : MixedQuotientData ω) :
