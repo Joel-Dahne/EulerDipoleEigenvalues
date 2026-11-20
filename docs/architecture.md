@@ -694,8 +694,13 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   comparison on either odd axis. Bounded L² pairings from
   `SobolevApproximation.lean` pass the smooth-test inequality to the full
   quarter form domain, retaining its canonical Robin trace.
-- `MixedStaticForm.lean`: the quotient interface, paired trace mass, Rellich
-  and weighted forms, and square completion. It splits the second-order form
+- `CosineTraceHardy.lean`: division by the normal cosine using two
+  canonical zero traces and interval Hardy on inward sections.
+- `MixedRellich.lean`: subtracts the signed mass current before integrating,
+  factors the combined current, and assembles the Rellich form from volume and
+  edge integrability and a Sobolev flux identity.
+- `MixedStaticForm.lean`: the quotient interface, paired trace mass, weighted
+  form and square completion. It splits the second-order form
   and mass by parity, assembles the quarter bounds, and converts the
   coercivity estimate to Cartesian stream mass.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,

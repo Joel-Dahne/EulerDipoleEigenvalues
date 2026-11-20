@@ -47,6 +47,13 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-trace-mass` and `prop:mixed-virial`.
   `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
   the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
+- **Rellich form:** `lem:mixed-rellich` is assembled from the corrected flux
+  identity, volume integrability, and a one-dimensional edge calculation.
+  Subtracting the signed trace-mass current first leaves a bounded ratio
+  `h/(h+k)` times a gradient polynomial. Inward Hardy estimates control
+  both divided normal derivatives. The volume and edge calculations are
+  admission-free; `lem:mixed-rellich-flux` still needs the Sobolev
+  integration with the canonical edge traces.
 - **Coercivity:** `thm:mixed-coercivity` is assembled from the square
   completion and the two quarter comparisons; it is not admission-free.
   The parity splitting of the form and mass, the Cartesian mass conversion,

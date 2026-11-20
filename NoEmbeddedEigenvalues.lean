@@ -47,6 +47,7 @@ import NoEmbeddedEigenvalues.DescendingIntervalPartition
 import NoEmbeddedEigenvalues.IntervalLinearHardy
 import NoEmbeddedEigenvalues.IntervalAngularHardy
 import NoEmbeddedEigenvalues.IntervalHardy
+import NoEmbeddedEigenvalues.CosineTraceHardy
 import NoEmbeddedEigenvalues.IntervalSecondHardy
 import NoEmbeddedEigenvalues.IntervalSegmentAverage
 import NoEmbeddedEigenvalues.IntervalParameterH1
@@ -70,6 +71,7 @@ import NoEmbeddedEigenvalues.MixedComparisonForm
 import NoEmbeddedEigenvalues.MixedField
 import NoEmbeddedEigenvalues.MixedFlux
 import NoEmbeddedEigenvalues.MixedStaticForm
+import NoEmbeddedEigenvalues.MixedRellich
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.NormalField
 import NoEmbeddedEigenvalues.NormalVirial

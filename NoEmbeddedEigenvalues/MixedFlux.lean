@@ -2,7 +2,6 @@ import NoEmbeddedEigenvalues.MixedStaticForm
 import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.CanonicalBoundaryForm
 import NoEmbeddedEigenvalues.EvenEvenBoundary
-import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix
 import NoEmbeddedEigenvalues.Regularity.MixedQuotient
@@ -78,80 +77,6 @@ def mixedNeumannG (φ : Plane → ℂ) (positive : Bool) (x : ℝ) : ℂ :=
 def mixedNeumannF (lam : ℝ) (φ : Plane → ℂ) (positive : Bool) (x : ℝ) : ℂ :=
   canonicalUnknown lam (mixedNeumannStream φ positive) (Real.artanh x) /
     (Real.sqrt (boundaryWeight x) : ℂ)
-
-private theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
-    let a₀ := -Real.pi / 2
-    let a₁ := Real.pi / 2
-    let T := fun a ↦ d.phi (a, cellEdgeNormal σ)
-    AbsolutelyContinuousOnInterval T a₀ a₁ ∧
-      MemLp (deriv T) 2 (volume.restrict (Ioo a₀ a₁)) := by
-  let a₀ := -Real.pi / 2
-  let a₁ := Real.pi / 2
-  let I := Ioo a₀ a₁
-  let b := cellEdgeNormal σ
-  let T := fun a ↦ d.phi (a, b)
-  have hab : a₀ < a₁ := by dsimp [a₀, a₁]; linarith [Real.pi_pos]
-  have hb : b = a₀ ∨ b = a₁ := by cases σ <;> simp [b, a₀, a₁, cellEdgeNormal]
-  have hb' : b ∈ Icc a₀ a₁ := by
-    rcases hb with h | h
-    · rw [h]; exact left_mem_Icc.mpr hab.le
-    · rw [h]; exact right_mem_Icc.mpr hab.le
-  obtain ⟨D, hD, hL⟩ := memSobolevOn_iff_exists_weakJet.mp d.h2
-  have hcoords : traceSideCoords 0 = id := rfl
-  have hrect : traceSideCoords 0 '' (I ×ˢ I) = mixedOpenCell := by
-    rw [hcoords, image_id]
-    rfl
-  obtain ⟨G, H, R, hG, hH, hGacl, hHacl, hGt, hHt, hRt, hRac, hRc, _, hRd⟩ :=
-    hasWeakJetOn_h2_boundary_trace (F := d.phi) (D := D) 0 hab hab hb
-      (hrect.symm ▸ hD) (fun w hw ↦ hrect.symm ▸ hL w hw)
-  have hG' : G =ᵐ[volume.restrict (I ×ˢ I)] d.phi := by
-    simpa only [hcoords, Function.comp_id] using hG
-  have hD' : MemLp (D [1]) 2 (volume.restrict (I ×ˢ I)) := hL [1] (by decide)
-  have hGmem : MemLp G 2 (volume.restrict (I ×ˢ I)) := by
-    have h : MemLp d.phi 2 (volume.restrict mixedOpenCell) := by
-      rw [← hD.1]
-      exact hL [] (by decide)
-    exact (memLp_congr_ae hG').mpr h
-  have hGacl' : HasACLSectionsOn I I G (D [1]) := by
-    simpa only [hcoords, Function.comp_id, sub_zero] using hGacl
-  have hphiC : ∀ a ∈ Icc a₀ a₁, ContinuousOn (fun y ↦ d.phi (a, y)) (Icc a₀ a₁) := by
-    intro a ha
-    exact d.continuous.comp' (f := fun y ↦ (a, y)) (by fun_prop) (by
-      intro y hy
-      rw [mixedOpenCell, closure_prod_eq, closure_Ioo hab.ne]
-      exact ⟨ha, hy⟩)
-  have hGae : ∀ᵐ a ∂volume.restrict I, ∀ᵐ y ∂volume.restrict I, G (a, y) = d.phi (a, y) := by
-    refine Measure.ae_ae_of_ae_prod (p := fun z ↦ G z = d.phi z) ?_
-    rw [Measure.prod_restrict I I]
-    exact hG'
-  have hre : R =ᵐ[volume.restrict I] T := by
-    filter_upwards [hRt, hGae, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo,
-      hGacl'.ae_hasIntervalH1 hGmem hD'] with a hrt hae ha hline
-    have hcont := hphiC a (Ioo_subset_Icc_self ha)
-    have he := Measure.eqOn_open_of_ae_eq hae isOpen_Ioo
-      ((hline.continuousOn_extension hab).mono Ioo_subset_Icc_self |>.congr
-        (hline.extension_eq hab).symm) (hcont.mono Ioo_subset_Icc_self)
-    rw [hrt]
-    simp only [hcoords, Function.comp_id, sub_zero, aclTrace]
-    exact (hline.extension_unique hab hcont (fun y hy ↦ (he hy).symm) hb').symm
-  have hTc : ContinuousOn T (Icc a₀ a₁) := by
-    refine d.continuous.comp' (f := fun a ↦ (a, b)) (by fun_prop) ?_
-    intro a ha
-    rw [mixedOpenCell, closure_prod_eq, closure_Ioo hab.ne]
-    exact ⟨ha, hb'⟩
-  have heq : EqOn R T (Icc a₀ a₁) := by
-    apply (Measure.eqOn_open_of_ae_eq hre isOpen_Ioo (hRc.mono Ioo_subset_Icc_self)
-      (hTc.mono Ioo_subset_Icc_self)).of_subset_closure
-    · exact hRc
-    · exact hTc
-    · exact Ioo_subset_Icc_self
-    · rw [closure_Ioo hab.ne]
-  refine ⟨hRac.congr (fun a ha ↦ heq (by simpa only [uIcc_of_le hab.le] using ha)), ?_⟩
-  refine (memLp_congr_ae ?_).mp hHt
-  filter_upwards [hRd, ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with a ha hm
-  have he : R =ᶠ[𝓝 a] T := by
-    filter_upwards [isOpen_Ioo.mem_nhds hm] with y hy using heq (Ioo_subset_Icc_self hy)
-  exact (ha.congr_of_eventuallyEq he.symm).deriv.symm
 
 /-- Neumann contribution to the cutoff flux, before renormalizing the gradient term. -/
 def mixedNeumannFluxCutoff (lam : ℝ) (φ : Plane → ℂ) (σ : Bool) (T : ℝ) : ℝ :=

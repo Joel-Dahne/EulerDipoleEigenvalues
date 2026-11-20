@@ -482,6 +482,117 @@ identity then gives $0=K[\phi]$ plus the nonnegative sum of squares.
 
 \section{The second-order form}
 
+\begin{lemma}[Cosine division of the normal derivatives]
+\label{lem:mixed-rellich-hardy}
+\uses{def:mixed-quotient-data, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MixedQuotientData.memLp_normal_div_cos}
+\leanok
+The quotient data give $\phi_a/h,\phi_b/k\in L^2(\Cell)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:hardy-endpoint, lem:trace-l2}
+\leanok
+Use the canonical zero traces of each normal derivative. On each half
+of a normal section, the cosine is comparable to the distance to the
+near endpoint. Apply endpoint Hardy there and integrate the sectional
+bounds in the tangential variable.
+\end{proof}
+
+\begin{lemma}[Rellich volume integrability]
+\label{lem:mixed-rellich-volume}
+\uses{def:mixed-K, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_rellich_volume_integrable}
+\leanok
+The virial density, the trace-mass density, and the diagonal-coordinate
+Rellich density
+\[
+  2f|\omega|^2+|\psi_a|^2+|\psi_b|^2-4\operatorname{Re}((W\psi)\bar\omega)
+\]
+are integrable.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-rellich-hardy}
+\leanok
+Use the bounded ratios $h/p,k/p$ with $p=h+k$. In the virial shear term,
+$\psi_b=h\phi_b$ and $\phi_b/p=(k/p)(\phi_b/k)$; in the vorticity terms
+use $\omega/h$. The trace-mass density pairs the two divided normal
+derivatives with $\phi$. All these products are $L^2$ pairings with
+bounded coefficients.
+\end{proof}
+
+\begin{lemma}[Corrected Rellich current algebra]
+\label{lem:mixed-rellich-current}
+\uses{def:mixed-field}
+\lean{NoEmbeddedEigenvalues.mixedRellichCurrent,
+  NoEmbeddedEigenvalues.mixed_rellich_current_factor,
+  NoEmbeddedEigenvalues.mixed_rellich_current_product_rule,
+  NoEmbeddedEigenvalues.mixed_rellich_current_dirichlet,
+  NoEmbeddedEigenvalues.mixed_rellich_current_neumann}
+\leanok
+Subtract $(W_a,-W_b)|\phi|^2$ from the Rellich current in diagonal
+coordinates. The corrected current factors as $h/p$ times a quadratic
+polynomial in $(\phi,\phi_a,\phi_b)$ with smooth trigonometric coefficients.
+Its normal component is zero on Dirichlet sides. On a Neumann side with
+$\phi_b=0$ and tangential data $T,T'$, its outward flux is
+\[
+  h|T|^2+2u\operatorname{Re}(T'\bar T)-h|T'|^2 .
+\]
+The sectional product rule uses equality of the diagonal field partials
+and symmetry of the mixed second stream derivatives.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Substitute $\psi_a=h\phi_a-u\phi$ and $\psi_b=h\phi_b$.
+The identity $u^2-1=-h^2$ factors the corrected diagonal part, and
+$\psi_b$ already supplies $h$ to the cross term. Evaluate the resulting
+polynomial on the regular sides. In the differentiated current the
+diagonal field terms cancel, as do the mixed Hessian terms.
+\end{proof}
+
+\begin{lemma}[Corrected Neumann flux integral]
+\label{lem:mixed-rellich-edge}
+\uses{def:h1-interval, lem:h1-interval-endpoints}
+\lean{NoEmbeddedEigenvalues.mixedRellichEdgeDensity,
+  NoEmbeddedEigenvalues.mixed_rellich_edge_integral}
+\leanok
+For an absolutely continuous Neumann edge value $T$ with $T'\in L^2$,
+the corrected edge density and $h|T'|^2$ are integrable. The integral of
+the corrected edge density equals the sum of the two endpoint masses
+minus $\int h|T'|^2$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+The first two terms are $(u|T|^2)'$. Apply the fundamental theorem
+on the closed side, using $u=\pm1$ at the endpoints.
+\end{proof}
+
+\begin{lemma}[Sobolev flux of the corrected Rellich current]
+\label{lem:mixed-rellich-flux}
+\uses{def:mixed-K, def:mixed-quotient-data}
+\lean{NoEmbeddedEigenvalues.mixed_rellich_current_integral}
+\leanok
+The integral of the virial density minus the Rellich and trace-mass
+densities equals the sum of the two corrected Neumann flux integrals.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-rellich-current, lem:mixed-rellich-volume,
+  lem:mixed-rellich-hardy, lem:trace-h2-boundary}
+Use normal ACL sections of the quotient and its first weak derivatives
+in the two directions. For the factored current, the derivatives of
+$h/p$ cost at most $1/p$; terms without an extra $h$ pair a first
+derivative divided by $p$ with $\phi$. The Hardy estimates make each
+normal current derivative integrable. Sectionwise integration uses the
+canonical traces: the Dirichlet flux is zero and the Neumann flux uses
+the tangential weak derivative trace, which is the derivative of the
+continuous edge value. This method combines the currents before taking
+edge values and does not require a separate corner flux.
+\end{proof}
+
 \begin{lemma}[Rellich form of $K$]
 \label{lem:mixed-rellich}
 \uses{def:mixed-K}
@@ -492,15 +603,12 @@ $K[\phi]=\int_\Cell\big(f|\omega|^2+|\nabla\psi|^2-2\operatorname{Re}((W\psi)\ba
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-field-algebra, cor:mixed-saddle-jet}
-Apply the Rellich identity
-$\Div\{2\operatorname{Re}((W\psi)\nabla\bar\psi)-W|\nabla\psi|^2\}
-=(2\sym DW-\Div W\,I)\nabla\psi\cdot\nabla\bar\psi+2\operatorname{Re}((W\psi)\bar\omega)$.
-The Dirichlet-edge current cancels its part of $M_{\mathrm{tr}}$; on a
-Neumann edge
-$\int(-|\psi_a|^2/h+|\psi|^2/h^3)\,da=\sum_{\text{endpoints}}|\phi|^2-\int h|\phi_a|^2\,da$
-produces the corner values. The corner flux of the leading jet integrates to
-zero by $\theta\mapsto\pi/2-\theta$.
+\uses{lem:mixed-rellich-volume, lem:mixed-rellich-flux,
+  lem:mixed-rellich-edge, lem:trace-h2-boundary}
+\leanok
+The Neumann edge values are absolutely continuous with square-integrable
+derivatives. In the corrected flux identity the edge integrals produce
+one copy of each corner mass, cancelling the corner sum in $K$.
 \end{proof}
 
 \begin{lemma}[Weighted interior form]
