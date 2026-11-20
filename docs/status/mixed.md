@@ -29,8 +29,10 @@ admission-free; see [the module map](../architecture.md).
   from the analytic remainder; the normal Hardy bounds give an L¹ dominator,
   so the cutoff remainder vanishes. `lem:mixed-tangential-model` reduces
   the model term to a continuous antisymmetric defect that is zero at
-  all four corners. The Sobolev cutoff identity and a uniform shell mass
-  bound for the model kernel still need proof.
+  all four corners. `lem:mixed-tangential-shell` bounds the shell mass
+  by integrating first in the smaller inward distance and proves that
+  the full current vanishes against the lower cutoff derivative. The
+  Sobolev cutoff identity and removal of the center cutoff remain.
 - **Paired flux:** `lem:melnikov` and `lem:pairing-limit` cover ±i.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must

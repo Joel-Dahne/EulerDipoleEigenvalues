@@ -226,6 +226,34 @@ two squared values is swap-invariant and cancels under the integral.
 Add the vanishing remainder.
 \end{proof}
 
+\begin{lemma}[Vanishing on shrinking tangential level shells]
+\label{lem:mixed-tangential-shell}
+\uses{lem:mixed-tangential-current, lem:mixed-tangential-model}
+\lean{NoEmbeddedEigenvalues.mixed_tangential_shell_mass,
+ NoEmbeddedEigenvalues.mixed_tangential_shell_defect_limit,
+ NoEmbeddedEigenvalues.mixed_tangential_shell_limit}
+\leanok
+The model kernel has uniformly bounded absolute mass after division by
+$\epsilon$ on $\{\epsilon<hk<2\epsilon\}$. For swap-invariant measurable
+weights of size at most $C/\epsilon$ supported on these shells, the
+integral of the full tangential current tends to zero as $\epsilon\to0$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Split the shell by which cosine is larger. On $h\ge k$, let $x,y$ be the
+distances to the nearer $a$ and $b$ endpoints. The inequalities
+$x/2\le h\le x$ and $y/2\le k\le y$ imply
+$x>\sqrt{\epsilon}$ and $0<y<8\epsilon/x$. The rescaled model kernel is
+bounded by $32/x^2$, so integrating first in the second coordinate
+reduces the uniform mass bound to $\epsilon\int_{\sqrt{\epsilon}}^\infty x^{-3}\,dx$
+up to a constant. Swap the coordinates for the other half.
+For the limit, the continuous antisymmetric defect is uniformly small
+where $h+k$ is small. On its complement the rescaled weighted kernel
+is bounded, and the shell eventually misses each interior point;
+apply dominated convergence. Add the vanishing Hardy remainder.
+\end{proof}
+
 \begin{lemma}[Integrated tangential comparison]
 \label{lem:mixed-tangential-virial}
 \uses{def:mixed-field, def:normal-field, def:mixed-quotient-data}
@@ -235,17 +263,15 @@ The adapted-field and normal-field bulk integrals agree for a mixed eigenfunctio
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-field-algebra, lem:mixed-tangential-current, lem:mixed-tangential-model,
+\uses{lem:mixed-field-algebra, lem:mixed-tangential-current, lem:mixed-tangential-shell,
   lem:virial-l2}
 Since $W-W_0$ is tangent to the orbits, the truncated tangential virial
 has only the boundary current
 $2\operatorname{Re}\int_{\partial C_\epsilon}((W-W_0)\psi)\,
 \partial_{n_{\rm out}}\overline\psi\,d\ell$.
-The shell formulation controls the Sobolev remainder directly in volume
-measure. To finish, justify the cutoff identity and bound the absolute
-mass of the rescaled model kernel uniformly on shells
-$\epsilon < hk < 2\epsilon$. The continuous model defect then gives
-smallness near corners, and the kernel bound controls regular edges.
+Lemma~\ref{lem:mixed-tangential-shell} removes the lower level cutoff
+in volume measure. The remaining work is the Sobolev cutoff identity
+and its assembly, including removal of the cutoff at the cell center.
 \end{proof}
 
 \begin{proposition}[Mixed virial identity]
