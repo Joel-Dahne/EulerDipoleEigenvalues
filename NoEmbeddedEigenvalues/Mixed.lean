@@ -1,4 +1,5 @@
 import NoEmbeddedEigenvalues.MixedFlux
+import NoEmbeddedEigenvalues.MixedCompletionCurrent
 import NoEmbeddedEigenvalues.EvenEven
 
 /-!

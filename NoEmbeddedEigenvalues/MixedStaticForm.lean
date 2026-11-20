@@ -292,28 +292,6 @@ def mixedCompletionDensity (φ : Plane → ℂ) (D : List (Fin 2) → Plane → 
   Real.cos q.1 ^ 2 * mixedFieldCoeff q / 2 *
     ‖mixedWeightedLaplacian D q + (mixedC₀ q / mixedFieldCoeff q : ℝ) • φ q‖ ^ 2
 
-/-- Static completion, with integrability of the square (not a totalized
-identity between potentially divergent integrals). -/
-theorem mixed_completion {ω : L2} (d : MixedQuotientData ω) :
-    IntegrableOn (mixedCompletionDensity d.phi d.jet) mixedOpenCell ∧
-    IntegrableOn (mixedSecondOrderDensity d.phi (d.jet [0]) (d.jet [1])) mixedOpenCell ∧
-    (∀ σ : Bool, IntegrableOn (fun a ↦ Real.cos a * ‖mixedEdgeValue 1 σ d.phi a‖ ^ 2)
-      (Ioo (-Real.pi / 2) (Real.pi / 2))) ∧
-    mixedStaticForm d = (∫ q in mixedOpenCell, mixedCompletionDensity d.phi d.jet q) +
-      mixedSecondOrderForm d.phi (d.jet [0]) (d.jet [1]) (fun σ ↦ mixedEdgeValue 1 σ d.phi) := by
-  sorry
-
-/-- H¹ bound for the second-order form with canonical traces. As this is a
-real quadratic form, the norm bound gives continuity by polarization. -/
-theorem mixed_second_order_form_bounded :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ (φ da db : Plane → ℂ) (edge : Bool → ℝ → ℂ),
-      MemSobolevOn 1 mixedOpenCell φ →
-      HasWeakPartialOn mixedOpenCell 0 φ da → HasWeakPartialOn mixedOpenCell 1 φ db →
-      (∀ σ, HasMixedEdgeTrace 1 σ φ (edge σ)) →
-      |mixedSecondOrderForm φ da db edge| ≤
-        C * ∫ q in mixedOpenCell, ‖φ q‖ ^ 2 + ‖da q‖ ^ 2 + ‖db q‖ ^ 2 := by
-  sorry
-
 /-- Projection onto odd-in-a (`true`) or even-in-a (`false`). On a centrally
 odd function, the respective b parities are even and odd. -/
 def mixedParityPart (oddA : Bool) (φ : Plane → ℂ) (q : Plane) : ℂ :=
@@ -352,7 +330,7 @@ private theorem mixed_reflection_integral (j : Fin 2) (f : Plane → ℝ) :
     exact (planeAffine (axisReflectionLinear j) 0).measurableEmbedding
   exact (mixed_reflection_mp j).integral_comp he f
 
-private theorem mixed_density_integrable {f a b : Plane → ℂ}
+theorem mixed_density_integrable {f a b : Plane → ℂ}
     (hf : MemLp f 2 (volume.restrict mixedOpenCell))
     (ha : MemLp a 2 (volume.restrict mixedOpenCell))
     (hb : MemLp b 2 (volume.restrict mixedOpenCell)) :
@@ -400,7 +378,7 @@ private theorem mixed_density_integrable {f a b : Plane → ℂ}
   refine ((hDiag.add hOff).add hF).congr (Eventually.of_forall fun q ↦ ?_)
   simp only [Pi.add_apply, mixedSecondOrderDensity, mixedGradientForm, mul_assoc]
 
-private theorem mixed_edge_integrable {f : Plane → ℂ}
+theorem mixed_edge_integrable {f : Plane → ℂ}
     (hc : ContinuousOn f (closure mixedOpenCell)) (σ : Bool) :
     IntegrableOn (fun a ↦ Real.cos a * ‖mixedEdgeValue 1 σ f a‖ ^ 2)
       (Ioo (-Real.pi / 2) (Real.pi / 2)) := by
@@ -942,6 +920,92 @@ theorem mixed_second_order_coercivity {ω : L2} (d : MixedQuotientData ω) :
   rw [hsplit, hUf, hVf, hm, hUm, hVm]
   linarith
 
+/-- H¹ bound for the second-order form with canonical traces. As this is a
+real quadratic form, the norm bound gives continuity by polarization. -/
+theorem mixed_second_order_form_bounded :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (φ da db : Plane → ℂ) (edge : Bool → ℝ → ℂ),
+      MemSobolevOn 1 mixedOpenCell φ →
+      HasWeakPartialOn mixedOpenCell 0 φ da → HasWeakPartialOn mixedOpenCell 1 φ db →
+      (∀ σ, HasMixedEdgeTrace 1 σ φ (edge σ)) →
+      |mixedSecondOrderForm φ da db edge| ≤
+        C * ∫ q in mixedOpenCell, ‖φ q‖ ^ 2 + ‖da q‖ ^ 2 + ‖db q‖ ^ 2 := by
+  let I := Ioo (-Real.pi / 2) (Real.pi / 2)
+  let w := Real.pi / 2 - (-Real.pi / 2)
+  have hw : 0 < w := by dsimp [w]; linarith [Real.pi_pos]
+  let C : ℝ := 5 + 2 * (2 / w + 2 * w)
+  refine ⟨C, by dsimp [C]; positivity, ?_⟩
+  intro φ da db edge hz ha hb he
+  let E := fun q ↦ ‖φ q‖ ^ 2 + ‖da q‖ ^ 2 + ‖db q‖ ^ 2
+  have hF := hz.memLp
+  have hA := fold_partial_memLp hz ha
+  have hB := fold_partial_memLp hz hb
+  have hE : IntegrableOn E mixedOpenCell :=
+    (hF.norm.integrable_sq.add hA.norm.integrable_sq).add hB.norm.integrable_sq
+  have hD := mixed_density_integrable hF hA hB
+  have hbulk : |∫ q in mixedOpenCell, mixedSecondOrderDensity φ da db q| ≤
+      5 * ∫ q in mixedOpenCell, E q := by
+    rw [← integral_const_mul]
+    refine (norm_integral_le_integral_norm _).trans (integral_mono_ae hD.norm (hE.const_mul 5) ?_)
+    filter_upwards [ae_restrict_mem isOpen_mixedOpenCell.measurableSet] with q hq
+    obtain ⟨hv₀, hv₁, hd, hj⟩ := mixed_comparison_coefficient_bounds hq
+    have hd₀ := (mixed_comparison_matrix_positive hq).1
+    have hcross : ‖(da q * conj (db q)).re‖ ≤ (‖da q‖ ^ 2 + ‖db q‖ ^ 2) / 2 := by
+      rw [Real.norm_eq_abs]
+      refine (Complex.abs_re_le_norm _).trans ?_
+      rw [norm_mul, Complex.norm_conj]
+      nlinarith only [sq_nonneg (‖da q‖ - ‖db q‖)]
+    have hpos : 0 ≤ ‖da q‖ ^ 2 + ‖db q‖ ^ 2 := by positivity
+    unfold mixedSecondOrderDensity mixedGradientForm
+    refine (norm_add_le _ _).trans (add_le_add (norm_add_le _ _) (le_refl _)) |>.trans ?_
+    simp only [norm_mul, Real.norm_of_nonneg hd₀.le, Real.norm_of_nonneg hpos,
+      Real.norm_of_nonneg (by norm_num : (0 : ℝ) ≤ 2),
+      Real.norm_of_nonpos (neg_nonneg.mp hv₀), Real.norm_of_nonneg (sq_nonneg ‖φ q‖)]
+    have e₁ := mul_le_mul_of_nonneg_right hd hpos
+    have e₂ : 2 * ‖mixedComparisonOffDiagonal q‖ * ‖(da q * conj (db q)).re‖ ≤
+        2 * (‖da q‖ ^ 2 + ‖db q‖ ^ 2) := by
+      calc
+        _ ≤ 2 * 2 * ((‖da q‖ ^ 2 + ‖db q‖ ^ 2) / 2) :=
+          mul_le_mul (mul_le_mul_of_nonneg_left hj (by norm_num)) hcross
+            (norm_nonneg _) (by norm_num)
+        _ = _ := by ring
+    have e₃ := mul_le_mul_of_nonneg_right hv₁ (sq_nonneg ‖φ q‖)
+    dsimp [E]
+    simp only [Real.norm_eq_abs] at e₂
+    linarith only [e₁, e₂, e₃, sq_nonneg ‖φ q‖]
+  have htrace (σ : Bool) :
+      |∫ a in I, Real.cos a * ‖edge σ a‖ ^ 2| ≤
+        (2 / w + 2 * w) * ∫ q in mixedOpenCell, E q := by
+    obtain ⟨hL, hbd⟩ := (he σ).l2_estimate_of_weak_snd hb hB
+    have hI := hL.norm.integrable_sq
+    have hW := hI.bdd_mul Real.continuous_cos.aestronglyMeasurable
+      (c := 1) (Eventually.of_forall fun a ↦ Real.abs_cos_le_one a)
+    have hi : |∫ a in I, Real.cos a * ‖edge σ a‖ ^ 2| ≤ ∫ a in I, ‖edge σ a‖ ^ 2 := by
+      refine (norm_integral_le_integral_norm _).trans (integral_mono_ae hW.norm hI ?_)
+      exact Eventually.of_forall fun a ↦ by
+        change ‖Real.cos a * ‖edge σ a‖ ^ 2‖ ≤ ‖edge σ a‖ ^ 2
+        rw [norm_mul, Real.norm_of_nonneg (sq_nonneg _)]
+        exact mul_le_of_le_one_left (sq_nonneg _) (Real.abs_cos_le_one _)
+    have hfE : (∫ q in mixedOpenCell, ‖φ q‖ ^ 2) ≤ ∫ q in mixedOpenCell, E q :=
+      integral_mono_ae hF.norm.integrable_sq hE (.of_forall fun q ↦ by
+        dsimp [E]; linarith only [sq_nonneg ‖da q‖, sq_nonneg ‖db q‖])
+    have hbE : (∫ q in mixedOpenCell, ‖db q‖ ^ 2) ≤ ∫ q in mixedOpenCell, E q :=
+      integral_mono_ae hB.norm.integrable_sq hE (.of_forall fun q ↦ by
+        dsimp [E]; linarith only [sq_nonneg ‖φ q‖, sq_nonneg ‖da q‖])
+    refine hi.trans (hbd.trans ?_)
+    change (2 / w) * (∫ q in mixedOpenCell, ‖φ q‖ ^ 2) + 2 * w *
+      (∫ q in mixedOpenCell, ‖db q‖ ^ 2) ≤ _
+    rw [add_mul]
+    exact add_le_add (mul_le_mul_of_nonneg_left hfE (by positivity))
+      (mul_le_mul_of_nonneg_left hbE (by positivity))
+  unfold mixedSecondOrderForm
+  rw [Fintype.sum_bool]
+  change |(∫ q in mixedOpenCell, mixedSecondOrderDensity φ da db q) +
+    ((∫ a in I, Real.cos a * ‖edge true a‖ ^ 2) + ∫ a in I, Real.cos a * ‖edge false a‖ ^ 2)| ≤ _
+  refine (abs_add_le _ _).trans ((add_le_add hbulk
+    ((abs_add_le _ _).trans (add_le_add (htrace true) (htrace false)))).trans_eq ?_)
+  dsimp [C]
+  ring
+
 /-- Cartesian stream mass equals twice the diagonal weighted quotient mass. -/
 theorem MixedQuotientData.stream_mass {ω : L2} (d : MixedQuotientData ω) :
     (∫ p in cellSquare, ‖liftL2 (invLap ω) p‖ ^ 2) =
@@ -966,23 +1030,5 @@ theorem MixedQuotientData.stream_mass {ω : L2} (d : MixedQuotientData ω) :
   filter_upwards [d.stream_eq] with q hq
   change ‖liftL2 (invLap ω) (diagInv q)‖ ^ 2 = _
   rw [hq, norm_mul, Complex.norm_real, Real.norm_eq_abs, mul_pow, sq_abs]
-
-/-- Coercivity with the two normalizations of the mass. -/
-theorem mixed_static_coercivity {ω : L2} (d : MixedQuotientData ω) :
-    let mass := ∫ q in mixedOpenCell, Real.cos q.1 ^ 2 * ‖d.phi q‖ ^ 2
-    (1 / 200 : ℝ) * mass ≤ mixedStaticForm d ∧
-    (1 / 200 : ℝ) * mass =
-      (1 / 400 : ℝ) * ∫ p in cellSquare, ‖liftL2 (invLap ω) p‖ ^ 2 := by
-  have hsq : 0 ≤ ∫ q in mixedOpenCell, mixedCompletionDensity d.phi d.jet q := by
-    apply integral_nonneg
-    intro q
-    unfold mixedCompletionDensity mixedFieldCoeff
-    positivity
-  constructor
-  · calc
-      _ ≤ _ := mixed_second_order_coercivity d
-      _ ≤ _ := by rw [(mixed_completion d).2.2.2]; linarith
-  · rw [d.stream_mass]
-    ring
 
 end NoEmbeddedEigenvalues

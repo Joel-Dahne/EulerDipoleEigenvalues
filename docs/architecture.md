@@ -699,10 +699,14 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
 - `MixedRellich.lean`: subtracts the signed mass current before integrating,
   factors the combined current, and assembles the Rellich form from volume and
   edge integrability and a Sobolev flux identity.
-- `MixedStaticForm.lean`: the quotient interface, paired trace mass, weighted
-  form and square completion. It splits the second-order form
-  and mass by parity, assembles the quarter bounds, and converts the
-  coercivity estimate to Cartesian stream mass.
+- `MixedStaticForm.lean`: the quotient interface and static-form definitions.
+  It bounds the second-order form on H¹, splits the form and mass by parity,
+  assembles the quarter bounds, and identifies the Cartesian stream mass.
+- `MixedCompletionCurrent.lean`: completes the square directly from the
+  Rellich density. A bounded-coefficient current accounts for both the
+  Neumann-energy cancellation and the Robin term, with flux computed
+  on closed ACL sections. The module assembles the full static coercivity
+  bound from the completion and the second-order comparison.
 - `MixedVirialBulk.lean`: normal-field bulk integrability and its
   Cartesian representative, exhaustion on good truncations, and the exact
   tangential field and model corner cancellation.

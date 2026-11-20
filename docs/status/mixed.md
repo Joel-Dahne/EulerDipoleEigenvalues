@@ -6,8 +6,9 @@
 `thm:mixed-exclusion` (odd–even) is proved from `prop:mixed-quotient-domain`,
 `lem:mixed-K-identity` and `thm:mixed-coercivity` in
 [Mixed.lean](../../NoEmbeddedEigenvalues/Mixed.lean).
-`cor:mixed-other-exclusion` follows by rotation. The analytic inputs are not
-admission-free; see [the module map](../architecture.md).
+`cor:mixed-other-exclusion` follows by rotation. The only remaining
+admissions in this chain are the deferred comparison sign certificates.
+See [the module map](../architecture.md).
 
 - **Regularity:** `cor:mixed-saddle-jet` supplies the jet removed by
   `lem:mixed-weighted-forcing-remainder`. The resulting
@@ -108,9 +109,14 @@ admission-free; see [the module map](../architecture.md).
   H¹ and in the canonical top trace. The admission-free
   `lem:mixed-fold-quarter` uses the reflected weak gradients to keep
   the exact form and mass scaling and identifies the canonical Robin
-  and odd-axis traces by continuity. The remaining analytic input is
-  `lem:mixed-completion`. See [shared certificate work](shared.md#shared-certificate-work)
-  for the sign checks.
+  and odd-axis traces by continuity. In the admission-free
+  `lem:mixed-completion`, a single current converts the Rellich density
+  directly to the square and second-order bulk. Its Neumann flux cancels
+  the Rellich edge energy and supplies the Robin mass. The proof also
+  bounds the second-order form on H¹. The separate
+  `lem:mixed-weighted-form` remains admitted but is not used by coercivity.
+  See [shared certificate work](shared.md#shared-certificate-work) for
+  the remaining sign checks.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical
 gaps and the generated report for per-node status.

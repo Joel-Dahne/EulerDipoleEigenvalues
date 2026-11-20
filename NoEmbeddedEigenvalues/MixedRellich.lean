@@ -384,7 +384,7 @@ private theorem mixed_rellich_field_partials {q : Plane} (hq : q ∈ mixedOpenCe
     nlinarith [Real.sin_sq_add_cos_sq q.1, Real.sin_sq_add_cos_sq q.2]
 
 /-- Commutation of the weak mixed derivatives, obtained by testing twice. -/
-private theorem mixed_rellich_weak_symm {ω : L2} (d : MixedQuotientData ω) :
+theorem mixed_rellich_weak_symm {ω : L2} (d : MixedQuotientData ω) :
     d.jet [0, 1] =ᵐ[volume.restrict mixedOpenCell] d.jet [1, 0] := by
   have hU : IsOpen mixedOpenCell := isOpen_Ioo.prod isOpen_Ioo
   have h0 := d.weakJet.2 [] (by decide) 0

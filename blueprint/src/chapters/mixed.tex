@@ -1255,7 +1255,7 @@ and $j$ follow from $h^2\le1$, $h/p\le1$ and $|uv|\le1$.
 
 \begin{lemma}[Completion of the square]
 \label{lem:mixed-completion}
-\uses{lem:mixed-weighted-form, def:mixed-coefficients, def:sobolev-local}
+\uses{def:mixed-K, def:mixed-quotient-data, def:mixed-coefficients, def:sobolev-local}
 \lean{NoEmbeddedEigenvalues.mixedSecondOrderForm, NoEmbeddedEigenvalues.mixed_completion,
  NoEmbeddedEigenvalues.mixed_second_order_form_bounded}
 \leanok
@@ -1271,13 +1271,27 @@ All terms are finite, and $Q_2$ is continuous on $H^1(\Cell)$ (manuscript
 \end{lemma}
 
 \begin{proof}
-\uses{prop:mixed-quotient-domain, lem:hardy-1d, lem:mixed-coefficient-bounds}
-Integrate the drift by parts, complete the square, and use
-$2\int\mu W\cdot\operatorname{Re}(\phi\nabla_0\bar\phi)
-=-\int\mu\Div_\mu W|\phi|^2+\sum_N\int h|\phi|^2\,da$. Finiteness:
-$\mu f$ and $\mu C_0^2/f=\mu f-4hu^2/p+4u^4/R$ are bounded, and
-$L_\mu\phi=2\omega/h+\phi$. The corner currents vanish by angular Poincar\'e
-applied to $\nabla_0\phi$.
+\uses{lem:mixed-rellich, lem:mixed-quotient-neumann-traces,
+  lem:mixed-rellich-divergence, lem:acl-slicing, lem:trace-l2,
+  lem:mixed-coefficient-bounds, lem:mixed-G-positive}
+\leanok
+Start directly from the Rellich form. Write $X=h^2W_a$, $Y=h^2W_b$,
+$Z=hu$, $D=|\phi_a|^2-|\phi_b|^2$, and
+$B=2\operatorname{Re}(\phi_a\overline{\phi_b})$. The Rellich density
+minus the completed square and the second-order bulk density is the
+divergence of
+\[
+  (-XD-YB+(X-Z)|\phi|^2,\quad YD-XB+Y|\phi|^2).
+\]
+The coefficients and their first derivatives are bounded using $h/p\le1$,
+so each sectional derivative is integrable by $L^2$ pairing.
+The identity then also proves integrability of the square; the center
+where $f=0$ is a null set. Integrate on closed ACL sections by Fubini.
+The Dirichlet flux vanishes. On the Neumann sides the outward flux is
+$h(|\phi_a|^2+|\phi|^2)$ by the zero normal trace. The first term cancels
+the Neumann energy in the Rellich form and the second is the Robin term.
+For the $H^1$ bound, use the bounded coefficients and the $L^2$ trace
+estimate with the specified normal derivative.
 \end{proof}
 
 \begin{lemma}[Positivity of the second-order matrix]
