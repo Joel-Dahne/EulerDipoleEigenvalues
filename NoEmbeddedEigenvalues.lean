@@ -12,6 +12,7 @@ import NoEmbeddedEigenvalues.Certificates.OddOddUpper
 import NoEmbeddedEigenvalues.Certificates.Mixed
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalACL
+import NoEmbeddedEigenvalues.DiagonalSobolev
 import NoEmbeddedEigenvalues.DiagonalH1
 import NoEmbeddedEigenvalues.DiagonalBoundaryTransport
 import NoEmbeddedEigenvalues.DiagonalH1Inverse
@@ -153,6 +154,11 @@ import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.MixedSaddle
 import NoEmbeddedEigenvalues.Regularity.MixedCellH1
 import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix
+import NoEmbeddedEigenvalues.Regularity.MixedDividedEquation
+import NoEmbeddedEigenvalues.Regularity.MixedVorticityDivision
+import NoEmbeddedEigenvalues.Regularity.MixedStreamDivision
+import NoEmbeddedEigenvalues.Regularity.MixedQuotientTraces
+import NoEmbeddedEigenvalues.Regularity.MixedQuotient
 import NoEmbeddedEigenvalues.Regularity.OddOddSaddle
 import NoEmbeddedEigenvalues.Regularity.OddOddCellH1
 import NoEmbeddedEigenvalues.Regularity.OddOddEdgeTraces

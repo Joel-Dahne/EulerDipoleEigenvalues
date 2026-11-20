@@ -4042,6 +4042,96 @@ lift, and use the common collar construction. Local elliptic regularity
 then gains one more derivative on the stream.
 \end{proof}
 
+\begin{lemma}[One-factor Hardy division of vorticity]
+\label{lem:mixed-vorticity-division}
+\uses{def:sectors, def:sobolev-local, lem:cell-square, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.mixed_vorticity_divided_of_collar}
+\leanok
+If $\omega$ is odd under $S_1$ and its lift is locally $H^1$ on
+$\{|\Psi|<\varepsilon\}$ for some $\varepsilon>0$, then
+$\widetilde\omega\circ\operatorname{diagInv}/\cos a$ is $L^2$ on the diagonal
+cell.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-sobolev-pullback, lem:odd-odd-reflected-edge-traces,
+  lem:cosine-hardy-reflection, lem:sobolev-local-multiplier}
+\leanok
+An even smooth cutoff in $\cos a$ localizes the Hardy estimate to the
+collar, since $|\Psi|\le 2|\cos a|$. The cutoff preserves odd reflection and
+normal periodicity, so the cosine Hardy estimate applies to the truncated
+vorticity. For the remaining term the cosine is bounded away from zero.
+\end{proof}
+
+\begin{lemma}[One-factor division of the stream near the closed cell]
+\label{lem:mixed-stream-division}
+\uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
+\lean{NoEmbeddedEigenvalues.mixed_stream_quotient_local_h2}
+\leanok
+If $\omega$ is odd under $S_1$ and the continuous stream is locally
+$H^3$ on $\{|\Psi|<\varepsilon\}$ for some $\varepsilon>0$, then
+$\psi\circ\operatorname{diagInv}/\cos a$ is locally $H^2$ on the diagonal
+strip $|a|<\pi$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-h3-division, lem:stream-sector, lem:odd-odd-reflected-edge-traces,
+  lem:diagonal-sobolev-pullback, lem:affine-jet-pullback,
+  lem:sobolev-local-gluing, lem:sobolev-local-multiplier,
+  lem:lift-sobolev-local, lem:saddle-factor-regular}
+\leanok
+At either zero line use the translated normal coordinate $y$ and odd
+$H^3$ division by $y$. The factor $\cos a/y=\pm\operatorname{sinc}(y)$
+is smooth and nonzero near $y=0$. This patch includes the corners since
+the $H^3$ collar includes them. Away from these lines use the original
+$H^2$ stream and a smooth nonvanishing denominator.
+\end{proof}
+
+\begin{lemma}[Zero normal traces for the mixed quotient]
+\label{lem:mixed-quotient-normal-zero}
+\uses{def:sectors, def:sobolev-local, def:local-weak-jets, def:canonical-transverse-trace,
+  lem:cell-square}
+\lean{NoEmbeddedEigenvalues.mixed_quotient_normal_zero}
+\leanok
+In the sector $(-,+)$ let $\phi$ agree a.e.\ with the raw quotient
+$\psi\circ\operatorname{diagInv}/\cos a$ on $(-3\pi/4,3\pi/4)^2$ and
+have a specified $H^2$ jet there. On each whole one-sided cell rectangle
+the normal derivative has canonical trace zero at that side.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:odd-odd-reflected-edge-traces, lem:affine-jet-pullback,
+  lem:weak-derivative-unique, lem:canonical-transverse-trace,
+  lem:transverse-trace-window-consistency, lem:transverse-trace-reflection}
+\leanok
+The quotient is even in reflection about either type of side: on the odd
+sides both numerator and denominator change sign. Weak uniqueness makes
+the normal derivative odd on a symmetric window through the side.
+Construct the canonical trace on an enlarged window and restrict it to the
+symmetric one. Reflection identifies the trace with its negative, so
+restricting to the whole inward rectangle retains trace zero.
+\end{proof}
+
+\begin{lemma}[Divided diagonal Poisson equation]
+\label{lem:mixed-divided-equation}
+\uses{def:sobolev-local, def:local-weak-jets, lem:cell-square}
+\lean{NoEmbeddedEigenvalues.mixed_divided_equation}
+\leanok
+For mean-zero vorticity, suppose the lifted stream agrees a.e.\ on the cell
+with $\cos a\,\phi$ for a quotient with specified $H^2$ weak jet. This jet
+satisfies
+$(\partial_{aa}-2\tan a\,\partial_a+\partial_{bb})\phi
+=2\,\widetilde\omega\circ\operatorname{diagInv}/\cos a+\phi$
+a.e.\ on the diagonal cell.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-stream-poisson, lem:weak-jet-ae-comparison, lem:sobolev-local-multiplier}
+\leanok
+Apply the weak product rule twice and compare with the diagonal stream
+jet by weak uniqueness. Divide by the nonzero $\cos a$ in the open cell.
+\end{proof}
+
 \begin{definition}[Mixed cell quotient data]
 \label{def:mixed-quotient-data}
 \uses{def:eigen-problem, lem:cell-square, def:sobolev-local}
@@ -4078,20 +4168,18 @@ $(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
 \end{proposition}
 
 \begin{proof}
-\uses{lem:mixed-separatrix-h1, lem:hardy-1d}
-Lemma~\ref{lem:mixed-separatrix-h1} supplies the full Sobolev collar and
-zero inward vorticity traces on the odd sides.
-Normal Hardy division of the zero-trace $H^1$ vorticity gives $\nu\in L^2$.
-For the odd $H^3$ stream function, differentiate
-$\psi(u,v)/u=\int_0^1\psi_u(tu,v)\,dt$ through order two;
-Minkowski uses only the integrable dilation factor $t^{-1/2}$.
-The smooth factor between $u$ and $\cos a$ gives the $H^2$ quotient.
-Away from the odd edges, the original $\psi\in H^2$ suffices,
-including at the elliptic center. The closed-cell $H^2$ representative
-is continuous. The two reflection parities give central oddness and,
-after division, evenness across each regular side, giving zero normal
-trace there. The equation for the weak jet follows by expanding
-$\Delta_0(h\phi)=2\omega$.
+\uses{lem:mixed-separatrix-h1, lem:mixed-vorticity-division, lem:mixed-stream-division,
+  lem:local-h2-continuous-representative, lem:finite-weak-jet-sobolev,
+  lem:mixed-quotient-normal-zero, lem:mixed-divided-equation}
+\lean{NoEmbeddedEigenvalues.mixed_quotient_data_of_collar}
+\leanok
+Use the same full Sobolev collar for both divisions. Choose the continuous
+$H^2_{\rm loc}$ representative on an open neighbourhood of the closed cell
+and one weak jet on a slightly larger square. On the open cell the
+pointwise stream factorization and the opposite characters under the two
+reflections make the quotient centrally odd; continuity extends this to
+the corners. The normal-trace and divided-equation lemmas apply to the
+same jet restricted to the cell.
 \end{proof}
 
 \begin{remark}[The mixed quotient is not a transport pair]

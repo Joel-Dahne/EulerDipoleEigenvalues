@@ -14,8 +14,11 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-cell-separatrix-h1` gives an inward collar and zero odd-side
   traces. `lem:mixed-separatrix-h1` glues across regular sides, removes the
   saddles and gains local H³ for the stream on the full collar.
-  `prop:mixed-quotient-domain` now uses this collar; its remaining task is
-  to construct the quotient data.
+  `prop:mixed-quotient-domain` constructs the data from that collar:
+  `lem:mixed-vorticity-division` gives the divided vorticity in L², and
+  `lem:mixed-stream-division` gives an H² extension through the sides
+  and corners. The same weak jet supplies the zero normal traces and
+  the divided Poisson equation.
 - **Paired flux:** `lem:melnikov` and `lem:pairing-limit` now cover ±i.
   The mixed application still needs a common good-level sequence and
   cancellation of the cross terms. Adjacent divergent edge energies must
@@ -37,10 +40,9 @@ admission-free; see [the module map](../architecture.md).
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
   `lem:mixed-neumann-renormalization` is admission-free from the
-  supplied quotient data; `prop:mixed-quotient-domain` still needs to
-  construct those data from the eigenfunction.
-  The remaining direct inputs to the static identity are `lem:mixed-trace-mass`,
-  `prop:mixed-virial`, and `lem:mixed-boundary-square-traces`.
+  quotient data now constructed by `prop:mixed-quotient-domain`.
+  The remaining admitted inputs to the static identity are
+  `lem:mixed-trace-mass` and `prop:mixed-virial`.
   `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
   the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
 - **Coercivity:** the comparison functions are defined in Lean, but the

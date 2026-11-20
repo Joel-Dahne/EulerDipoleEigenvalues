@@ -5,6 +5,7 @@ import NoEmbeddedEigenvalues.EvenEvenBoundary
 import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.MixedVorticityTrace
 import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix
+import NoEmbeddedEigenvalues.Regularity.MixedQuotient
 import NoEmbeddedEigenvalues.EdgeWindowTransport
 import NoEmbeddedEigenvalues.Analysis.BoundaryTraceCompare
 import NoEmbeddedEigenvalues.Melnikov
@@ -51,11 +52,9 @@ theorem mixed_quotient_domain {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
   obtain ⟨ε, hε, _, hv, hψ, hodd⟩ := mixed_separatrix_h1 hlam hω hs
   have hψ' : MemSobolevLocOn 3 (mixedSeparatrixCollar ε) (liftL2 (invLap ω)) :=
     hψ.congr_ae_on ((streamLift_ae_eq_contStream ω).symm.mono fun _ hp _ ↦ hp)
-  refine ⟨?_, ε, hε, hv, hψ', ?_⟩
-  · -- Construct the quotient data from the full collar.
-    sorry
-  · rw [mixed_cell_eq_strip]
-    exact hodd
+  refine ⟨mixed_quotient_data_of_collar hω.1 hs hε hv hψ, ε, hε, hv, hψ', ?_⟩
+  rw [mixed_cell_eq_strip]
+  exact hodd
 
 /-- The two Neumann arcs, with their inherited orientations. -/
 def mixedNeumannArc (positive : Bool) (t : ℝ) : Plane :=

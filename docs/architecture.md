@@ -90,6 +90,8 @@ proof mechanisms. Module names below are relative to
 - `CellPeriodization.lean`: box periodization of compactly supported cell data
   and uniqueness of weak derivatives.
 - `ACLSlicing.lean`, `DiagonalACL.lean`: ACL representatives and diagonal slicing.
+  `DiagonalSobolev.lean` iterates the weak coordinate rule at arbitrary integer
+  order and supplies a specified diagonal Poisson jet.
   The latter owns raw diagonal L² transport in both directions, shared by the
   logarithmic multiplier and even-gradient Hardy proofs.
   `DiagonalH1.lean`, `DiagonalH1Inverse.lean` give ordinary H¹ in both directions
@@ -466,6 +468,13 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   traces, then uses the first-odd fold cover and saddle removal shared with
   `Regularity/OddOddRegularSeams.lean`. Interior elliptic regularity gives
   the H³ stream on the same collar.
+- `Regularity/MixedQuotient.lean`: assembles the continuous closed-cell
+  quotient and its specified jet. `MixedVorticityDivision.lean` localizes the
+  cosine Hardy estimate to the collar. `MixedStreamDivision.lean` divides in
+  translated odd-side charts and extends the H² quotient past the corners.
+  `MixedQuotientTraces.lean` uses reflection to prove zero normal traces;
+  `MixedDividedEquation.lean` identifies the divided Poisson equation by weak
+  jet uniqueness. These four files also live in `Regularity/`.
 - `Regularity/SaddleNormalForm.lean`: normalized Cartesian quadratics, explicit orthonormal
   saddle charts and sinc factor, exact factorization and quadratic compatibility.
   The raw chart parity theorem lives in `SaddleChartPullback.lean`, after its

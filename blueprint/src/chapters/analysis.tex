@@ -3155,6 +3155,27 @@ Integrate in angle. This proves the second bound from the first;
 no eigenfunction equation or quadratic expansion of $F$ is used.
 \end{proof}
 
+\begin{lemma}[Cosine Hardy division for an odd normal reflection]
+\label{lem:cosine-hardy-reflection}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.memLp_div_cos_snd_of_reflection}
+\leanok
+Let $F$ and its specified weak normal derivative be $L^2$ on
+$(-\pi/2,\pi/2)\times(-2\pi,2\pi)$. Suppose $F$ is odd a.e.\ under
+$(s,t)\mapsto(s,\pi-t)$ and periodic in $t$ with period $2\pi$.
+Then $F/\cos t\in L^2((-\pi/2,\pi/2)^2)$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-acl, lem:trace-l2, lem:hardy-average}
+\leanok
+Periodicity gives the second reflection and ACL slicing gives continuous
+normal representatives. The two odd reflections give zero traces on each
+section. Apply the primitive Hardy inequality with
+$\sin t\ge 2t/\pi$ for $0\le t\le\pi/2$, then integrate the squared estimate
+in the tangential coordinate.
+\end{proof}
+
 \begin{lemma}[Diagonal Hardy division for even H2 functions]
 \label{lem:even-h2-diagonal-hardy}
 \uses{def:sobolev-torus, def:fourier-derivatives, def:reflections,
@@ -3173,7 +3194,7 @@ Fourier first derivatives $u_x,u_y$. On the lifted cell,
 \uses{lem:h2-laplacian-reconstruction, lem:laplacian-symmetries,
  lem:inverse-laplacian-derivatives, lem:stream-derivative-parities,
  lem:lift-representatives, lem:lift-sobolev-local,
- lem:diagonal-calculus, lem:trace-acl, lem:trace-l2, lem:hardy-average}
+ lem:diagonal-calculus, lem:cosine-hardy-reflection}
 \leanok
 Write $u=\Delta^{-1}v+\widehat u_0$. Its derivatives are stream derivatives
 of an even $v\in L^2$, hence belong to $H^1$. The derivative $u_x+u_y$ is
@@ -4426,6 +4447,42 @@ The L2 transport supplies their finite norms. Swapping parameter coordinates
 gives the other trace chart by volume-preserving affine pullback.
 For the local version, enclose the compact closed image in a relatively
 compact open subset of $U$, use the actual finite H1 there, then restrict.
+\end{proof}
+
+\begin{lemma}[Diagonal pullback of higher weak derivatives]
+\label{lem:diagonal-sobolev-pullback}
+\uses{def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MemSobolevOn.comp_diagInv_order,
+  NoEmbeddedEigenvalues.MemSobolevLocOn.comp_diagInv}
+\leanok
+The inverse diagonal coordinate map pulls back each integer-order Sobolev
+space, finite or local, on an open set to the same order on its preimage.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-h1-pullback, lem:diagonal-l2-transport}
+\leanok
+Induct on the order. At each step the two new weak derivatives are the sum
+and difference of the pulled-back derivatives. Compact closures are
+preserved by the coordinate homeomorphism.
+\end{proof}
+
+\begin{lemma}[Poisson equation in diagonal coordinates]
+\label{lem:diagonal-stream-poisson}
+\uses{def:sobolev-local, def:local-weak-jets}
+\lean{NoEmbeddedEigenvalues.contStream_diagInv_weak_poisson}
+\leanok
+For mean-zero vorticity, the pulled-back stream has a weak second jet
+with diagonal Laplacian equal a.e.\ to twice the pulled-back vorticity.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:diagonal-h1-pullback, lem:diagonal-l2-transport,
+  lem:stream-weak-second-jet, lem:canonical-stream-poisson}
+\leanok
+Pull back the two ordered second derivatives using sum and difference.
+The mixed terms cancel in the sum of the repeated diagonal entries, leaving
+twice the Cartesian Laplacian.
 \end{proof}
 
 \begin{lemma}[Cartesian H1 from diagonal H1]
