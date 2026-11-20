@@ -11,7 +11,7 @@ rebuilds both the graphs and the report.
 - **Odd–odd:** the exclusion is admission-free, including the two endpoint
   certificates for the residual bound.
 - **Mixed:** `thm:mixed-exclusion` depends only on the remaining comparison
-  sign certificate `cert:odd-b`; the other mixed sector follows by rotation.
+  sign certificate `cert:odd-b-strips`; the other mixed sector follows by rotation.
 
 All blueprint statements are represented in Lean. The main theorem combines
 the sector exclusions and is not yet admission-free.

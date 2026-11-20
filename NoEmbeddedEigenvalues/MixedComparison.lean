@@ -133,7 +133,7 @@ theorem mixed_comparison_coefficient_bounds {p : ℝ × ℝ} (hp : p ∈ mixedOp
     exact (mul_le_of_le_one_right (by positivity) hj).trans hi
 
 /-- Polynomial part of the odd-in-b multiplier. -/
-private def mixedOddBPolynomial (h k : ℝ) : ℝ :=
+def mixedOddBPolynomial (h k : ℝ) : ℝ :=
   1 + (4132 * k ^ 2 + 2167 * k ^ 3 - 2011 * h * k -
     7640 * h * k ^ 2 - 226 * h ^ 2 + 3795 * h ^ 2 * k - 834 * h ^ 3) / 10000
 

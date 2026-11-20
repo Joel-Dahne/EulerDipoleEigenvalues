@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.Certificates.Bernstein
 import NoEmbeddedEigenvalues.Certificates.MixedOddA
+import NoEmbeddedEigenvalues.Certificates.MixedOddBLog
 import NoEmbeddedEigenvalues.MixedComparison
 import Mathlib.Data.Fin.VecNotation
 
@@ -44,47 +45,6 @@ private theorem cosPair_hasDerivY {f : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
   simpa only [Function.comp_def, cosPair] using
     (hasDerivAt_partialY hf).comp p.2 (Real.hasDerivAt_cos p.2)
 
-private theorem partialX_congr_nhds {f g : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
-    (h : f =ᶠ[𝓝 p] g) : partialX f p = partialX g p :=
-  EventuallyEq.deriv_eq
-    (((continuous_id.prodMk continuous_const).tendsto' p.1 p Prod.mk.eta).eventually h)
-
-private theorem partialY_congr_nhds {f g : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
-    (h : f =ᶠ[𝓝 p] g) : partialY f p = partialY g p :=
-  EventuallyEq.deriv_eq
-    (((continuous_const.prodMk continuous_id).tendsto' p.2 p Prod.mk.eta).eventually h)
-
-private theorem partialX_eq_fderiv_nhds {f : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
-    (hf : ContDiffAt ℝ 2 f p) :
-    partialX f =ᶠ[𝓝 p] fun q ↦ fderiv ℝ f q (1, 0) := by
-  obtain ⟨U, hU, h⟩ := hf.contDiffOn (m := 2) le_rfl (by norm_num)
-  filter_upwards [isOpen_interior.mem_nhds (mem_interior_iff_mem_nhds.mpr hU)] with q hq
-  exact partialX_eq_fderiv ((h.contDiffAt (mem_interior_iff_mem_nhds.mp hq)).differentiableAt
-    (by norm_num))
-
-private theorem partialY_eq_fderiv_nhds {f : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
-    (hf : ContDiffAt ℝ 2 f p) :
-    partialY f =ᶠ[𝓝 p] fun q ↦ fderiv ℝ f q (0, 1) := by
-  obtain ⟨U, hU, h⟩ := hf.contDiffOn (m := 2) le_rfl (by norm_num)
-  filter_upwards [isOpen_interior.mem_nhds (mem_interior_iff_mem_nhds.mpr hU)] with q hq
-  exact partialY_eq_fderiv ((h.contDiffAt (mem_interior_iff_mem_nhds.mp hq)).differentiableAt
-    (by norm_num))
-
-private theorem mixed_partial_data {f : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
-    (hf : ContDiffAt ℝ 2 f p) :
-    DifferentiableAt ℝ (partialX f) p ∧ DifferentiableAt ℝ (partialY f) p ∧
-      partialX (partialY f) p = partialY (partialX f) p := by
-  have hd := (hf.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
-  have hX := hd.clm_apply (differentiableAt_const (c := ((1, 0) : ℝ × ℝ)))
-  have hY := hd.clm_apply (differentiableAt_const (c := ((0, 1) : ℝ × ℝ)))
-  have hx := partialX_eq_fderiv_nhds hf
-  have hy := partialY_eq_fderiv_nhds hf
-  refine ⟨hX.congr_of_eventuallyEq hx, hY.congr_of_eventuallyEq hy, ?_⟩
-  rw [partialX_congr_nhds hy, partialY_congr_nhds hx, partialX_eq_fderiv hY,
-    partialY_eq_fderiv hX, fderiv_clm_apply hd (differentiableAt_const _),
-    fderiv_clm_apply hd (differentiableAt_const _)]
-  simpa using hf.isSymmSndFDerivAt (by norm_num) (1, 0) (0, 1)
-
 private theorem mixedD_diff {p : ℝ × ℝ} (hp : 0 < p.1 + p.2) :
     DifferentiableAt ℝ mixedD p := by
   unfold mixedD
@@ -94,23 +54,6 @@ private theorem mixedC_diff {p : ℝ × ℝ} (hp : 0 < p.1 + p.2) :
     DifferentiableAt ℝ mixedC p := by
   unfold mixedC
   fun_prop (disch := first | exact hp.ne' | positivity)
-
-/-- Auxiliary A_F in the odd-in-b differential reduction, in `(h,k)` variables. -/
-def mixedOddBFluxA (p : ℝ × ℝ) : ℝ :=
-  -mixedD p * partialX mixedOddBMultiplier p + mixedC p *
-    (p.2 * mixedOddBMultiplier p - (1 - p.2 ^ 2) * partialY mixedOddBMultiplier p)
-
-/-- Auxiliary B_F in the same reduction. -/
-def mixedOddBFluxB (p : ℝ × ℝ) : ℝ :=
-  -mixedC p * (1 - p.1 ^ 2) * (1 - p.2 ^ 2) * partialX mixedOddBMultiplier p +
-    mixedD p * (p.2 * mixedOddBMultiplier p -
-      (1 - p.2 ^ 2) * partialY mixedOddBMultiplier p)
-
-/-- Normalized odd-in-b residual after subtracting `h² F_v/100`. -/
-def mixedOddBResidual (p : ℝ × ℝ) : ℝ :=
-  -p.1 * mixedOddBFluxA p + (1 - p.1 ^ 2) * partialX mixedOddBFluxA p +
-    partialY mixedOddBFluxB p + mixedV p * mixedOddBMultiplier p -
-    p.1 ^ 2 * mixedOddBMultiplier p / 100
 
 theorem mixed_odd_b_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
     mixedComparisonOperator mixedOddBComparison p -
@@ -172,8 +115,8 @@ theorem mixed_odd_b_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
 /-- The normalized residual includes the one-sided boundary values in the rectangle.
     At `(1,1)` the potential uses its specified continuous value. -/
 theorem mixed_odd_b_residual_nonneg {h k : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1)
-    (hk : k ∈ Icc (0 : ℝ) 1) : 0 ≤ mixedOddBResidual (h, k) := by
-  sorry
+    (hk : k ∈ Icc (0 : ℝ) 1) : 0 ≤ mixedOddBResidual (h, k) :=
+  mixed_odd_b_residual_nonneg_of_strips mixed_odd_b_strip_signs hh hk
 
 private theorem cos_mem_unit {t : ℝ} (ht : t ∈ Ioo 0 (Real.pi / 2)) :
     Real.cos t ∈ Ioo 0 1 := by

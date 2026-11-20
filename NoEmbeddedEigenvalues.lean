@@ -14,6 +14,8 @@ import NoEmbeddedEigenvalues.Certificates.Mixed
 import NoEmbeddedEigenvalues.Certificates.MixedOddA
 import NoEmbeddedEigenvalues.Certificates.MixedOddAAlgebra
 import NoEmbeddedEigenvalues.Certificates.MixedOddAData
+import NoEmbeddedEigenvalues.Certificates.MixedOddBAlgebra
+import NoEmbeddedEigenvalues.Certificates.MixedOddBLog
 import NoEmbeddedEigenvalues.Cells
 import NoEmbeddedEigenvalues.DiagonalACL
 import NoEmbeddedEigenvalues.DiagonalSobolev

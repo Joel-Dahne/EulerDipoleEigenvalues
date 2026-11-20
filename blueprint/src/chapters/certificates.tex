@@ -201,6 +201,65 @@ respectively. Differentiate the local factorizations by the chain rule,
 using $\partial_a h=-u$ and $\partial_b k=-v$.
 \end{proof}
 
+\begin{lemma}[Odd-in-$b$ polynomial reduction]
+\label{lem:mixed-odd-b-clear}
+\uses{lem:mixed-v-residual-identity, def:bernstein}
+\lean{NoEmbeddedEigenvalues.mixed_odd_b_clear, NoEmbeddedEigenvalues.mixed_odd_b_cleared_affine,
+ NoEmbeddedEigenvalues.mixed_odd_b_a_table, NoEmbeddedEigenvalues.mixed_odd_b_b_table,
+ NoEmbeddedEigenvalues.mixed_odd_b_residual_center}
+\leanok
+For $h>0$, $S=h+k>0$, $R=2-h^2-k^2\ne0$,
+$10^6 S^3R\mathcal R_v(h,k)=A(h,k)+B(h,k)\log h$ for integer power tables
+of bidegrees $(10,8)$ and $(8,7)$. The residual at $(1,1)$ is $670267/10^6$.
+\end{lemma}
+
+\begin{proof}
+\leanok
+Differentiate the factored fluxes using the product rule and the logarithmic jet.
+The factor $h$ in the diagonal numerator cancels the $1/h$ term in $F_{hh}$.
+Normalize the polynomial expressions against the two power tables.
+Evaluate the expanded residual directly at the center, without clearing $R$.
+\end{proof}
+
+\begin{lemma}[Odd-in-$b$ small-strip sign]
+\label{cert:odd-b-small}
+\uses{lem:mixed-odd-b-clear}
+\lean{NoEmbeddedEigenvalues.mixed_odd_b_small_strip}
+\leanok
+The residual is nonnegative on $(0,2^{-10}]\times[0,1]$.
+\end{lemma}
+\begin{proof}
+\uses{lem:bernstein-positivity, lem:log-bounds}
+\leanok
+Check $-B$ and $A-6B$ by Bernstein coefficients on the closed strip.
+As $\log h\le-6$, their signs give the residual bound.
+\end{proof}
+
+\begin{lemma}[Odd-in-$b$ strip endpoint polynomial signs]
+\label{cert:odd-b-strips}
+\uses{lem:mixed-odd-b-clear, lem:log-bounds}
+\lean{NoEmbeddedEigenvalues.mixedOddBStripLower, NoEmbeddedEigenvalues.mixedOddBStripUpper,
+ NoEmbeddedEigenvalues.mixed_odd_b_strip_signs}
+\leanok
+For $j=0,\dots,9$, set $h=2^{-j}(1-z/2)$, $z\in[0,1]$.
+Let $\ell_-,\ell_+$ enclose $\log 2$ as in Lemma~\ref{lem:log-bounds}.
+With $T$ its degree-fourteen Taylor bound, the polynomials
+\[
+ h\big(A+B(-j\ell_++T(z/2))\big)
+   -2^{-j}B(z/2)^{15}/15,
+ \qquad A+B(-j\ell_-+T(z/2))
+\]
+are nonnegative on $(z,k)\in[0,1]^2$. Here both $A,B$ are evaluated at $(h,k)$.
+\end{lemma}
+\begin{proof}
+\uses{lem:bernstein-positivity}
+Evaluate each strip's Bernstein coefficients once, and check signs on its
+dyadic subdivisions. An independent exact-arithmetic search finds common
+trees for the two endpoints with 132 nodes counted across both bounds,
+rather than the manuscript's 656 on these strips. These trees still need
+to be checked in Lean.
+\end{proof}
+
 \begin{lemma}[Odd-in-$b$ residual sign]
 \label{cert:odd-b}
 \uses{lem:mixed-v-residual-identity}
@@ -211,12 +270,13 @@ $(0,1]\times[0,1]$. At $(h,k)=(1,1)$ the potential uses its continuous value.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:bernstein-positivity, lem:log-bounds, lem:affine-in-log}
-After multiplying by $S^3R$ the inequality reads $A+B\log h\ge0$ with rational
-polynomials $A,B$ of bidegrees $(10,8)$ and $(8,7)$. On $0\le h\le2^{-10}$ the
-Bernstein coefficients of $-B$ and $A-6B$ are nonnegative. On the dyadic
-strips $2^{-j-1}\le h\le2^{-j}$, $j=0,\dots,9$, use the logarithm bounds and
-subdivision (658 nodes in total).
+\uses{lem:mixed-odd-b-clear, cert:odd-b-small, cert:odd-b-strips, lem:log-bounds, lem:affine-in-log}
+\leanok
+Use the small-strip certificate below $2^{-10}$. On each of the other strips,
+bound $\log h=-j\log 2+\log(1-z/2)$ by the rational endpoints. The factor
+$h>0$ in the lower polynomial cancels the Taylor remainder denominator
+because $h=2^{-j}(1-z/2)$. Interpolate between the two endpoint signs.
+At $(1,1)$ use the direct evaluation from the polynomial reduction lemma.
 \end{proof}
 
 \begin{lemma}[Odd-in-$a$ differential reduction]
@@ -311,6 +371,6 @@ $F_u$ do not imply a continuous gradient at the corner.
 The manuscript's certificate scripts are not in this repository.
 The odd-in-$a$ tables have been reconstructed from the differentiation
 formulas; Lean checks the polynomial identities and signs independently.
-The odd-in-$b$ polynomials $A,B$ still need the same link to the normalized
-residual. Coefficient signs alone do not establish that link.
+The odd-in-$b$ power data and their link to the normalized residual are
+also checked. The dyadic endpoint signs remain the only missing part.
 \end{remark}

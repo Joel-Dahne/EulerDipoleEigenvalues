@@ -775,6 +775,10 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   identities. `Certificates/MixedOddAData.lean` stores the integer power
   and intermediate tables. `Certificates/MixedOddA.lean` uses kernel
   reduction to check the intermediate tables and six final box signs.
+- `Certificates/MixedOddBAlgebra.lean`: logarithmic jet, cleared polynomial
+  identity, two exact power tables, and direct evaluation at `(1,1)`.
+  `Certificates/MixedOddBLog.lean` checks the small strip and reduces the
+  rest of the rectangle to twenty polynomial endpoint signs.
 
 ## Source checks and verification tools
 
@@ -784,6 +788,9 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
 - `scripts/verify_mixed_odd_a.py` (Python 3 with SymPy): reproduces the
   mixed odd-in-a power data and checks the signs independently. Run with
   `--lean-power` to print the power and intermediate tables.
+- `scripts/verify_mixed_odd_b.py` (Python 3 with SymPy): reproduces the
+  mixed odd-in-b power tables and searches for common dyadic trees for the
+  two endpoints in each strip, replaying the signs using exact integers.
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,
   references, metadata and dependency cycles, without Lean or plasTeX.
 - `scripts/blueprint_status.py` (`just status-blueprint`, also `just web`):

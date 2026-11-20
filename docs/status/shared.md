@@ -29,4 +29,8 @@ For the mixed sector, Lean checks `cert:robin` on five intervals and
 `cert:odd-a` on six boxes. The latter uses `lem:bernstein-separable` to
 check and reuse intermediate first-axis coefficient tables. The
 [generator](../../scripts/verify_mixed_odd_a.py) reproduces the integer data
-but is not used as proof evidence. `cert:odd-b` remains open.
+but is not used as proof evidence. For `cert:odd-b`, the power tables,
+center value, logarithm reduction, and `cert:odd-b-small` are checked.
+Only `cert:odd-b-strips` is admitted. The independent
+[search script](../../scripts/verify_mixed_odd_b.py) finds shared dyadic trees
+for the endpoint pairs; its output is not used as proof evidence.

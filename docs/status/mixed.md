@@ -7,7 +7,8 @@
 `lem:mixed-K-identity` and `thm:mixed-coercivity` in
 [Mixed.lean](../../NoEmbeddedEigenvalues/Mixed.lean).
 `cor:mixed-other-exclusion` follows by rotation. The only remaining admission
-in this chain is `cert:odd-b`. See [the module map](../architecture.md).
+in this chain is `cert:odd-b-strips`, the dyadic polynomial signs within
+`cert:odd-b`. See [the module map](../architecture.md).
 
 - **Regularity:** `cor:mixed-saddle-jet` supplies the jet removed by
   `lem:mixed-weighted-forcing-remainder`. The resulting
