@@ -61,7 +61,10 @@ admission-free; see [the module map](../architecture.md).
   For `lem:robin-comparison`, the two cutoff limits now give the
   admission-free `lem:mixed-robin-smooth`. The right-face current is
   bounded using an integrable inverse-square-root weight, including at the
-  top corner. Only the passage from smooth tests to Sobolev data remains. See [shared certificate work](shared.md#shared-certificate-work)
+  top corner. The form inequality is proved from strong approximation
+  of the two weak derivatives, the function, and its canonical top trace.
+  The sole admitted input to `lem:robin-comparison` is now
+  `lem:mixed-quarter-smooth-approximation`. See [shared certificate work](shared.md#shared-certificate-work)
   for the sign checks.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical

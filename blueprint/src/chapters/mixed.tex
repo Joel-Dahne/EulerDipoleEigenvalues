@@ -732,6 +732,25 @@ Let $\delta\to0$ first and then $h\to0$. Bounded coefficients and dominated
 convergence pass the bulk and Robin integrals to the full quarter.
 \end{proof}
 
+\begin{lemma}[Smooth approximation with zero odd-axis trace]
+\label{lem:mixed-quarter-smooth-approximation}
+\uses{def:comparison-form, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.MixedQuarterSmoothApproximation,
+ NoEmbeddedEigenvalues.mixed_quarter_smooth_approximation}
+\leanok
+For $H^1(Q)$ data with zero canonical trace on the chosen odd axis,
+there are globally $C^2$ functions vanishing pointwise on that axis
+which converge in $L^2(Q)$ together with both first derivatives.
+Their top values converge in $L^2(0,\pi/2)$ to the canonical top trace.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:trace-l2, lem:local-h2-smooth-approximation}
+Extend by odd reflection across the zero-trace axis and by even reflection
+across the other three sides. Mollify and project onto the odd character;
+then use the $H^1$ trace estimate on the fixed quarter.
+\end{proof}
+
 \begin{lemma}[Comparison lemma with logarithmic weights]
 \label{lem:robin-comparison}
 \uses{def:comparison-form, def:mixed-robin-multiplier, def:sobolev-local}
@@ -749,11 +768,13 @@ $3h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-robin-smooth, lem:trace-l2}
-Extend the smooth-test inequality by density with the zero Sobolev
-trace (odd reflection and mollification). The bulk terms are continuous
-under $H^1$ convergence by boundedness of the coefficients, and the
-canonical top traces converge in $L^2$.
+\uses{lem:mixed-robin-smooth, lem:mixed-quarter-smooth-approximation,
+  lem:local-h2-smooth-approximation, lem:mixed-coefficient-bounds, lem:trace-l2}
+\leanok
+Apply the smooth-test inequality to the approximants. The bulk terms
+and weighted mass converge as bounded-coefficient $L^2$ pairings of
+the functions and their specified derivatives. The Robin term converges
+by the same pairing argument on the top trace.
 \end{proof}
 
 \begin{definition}[Odd-in-$b$ comparison function]

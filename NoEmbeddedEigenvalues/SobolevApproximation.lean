@@ -181,4 +181,41 @@ theorem tendsto_integral_mul_conj_of_L2
   have ht := hgl.inner (𝕜 := ℂ) (M.continuous.tendsto _ |>.comp hfl)
   simpa only [Function.comp_apply, hpair] using ht
 
+/-- Real parts of the bounded-coefficient products also converge in integral. -/
+theorem bounded_real_pair_limit_of_L2 {α : Type*} [MeasurableSpace α] {μ : Measure α}
+    {a : α → ℝ} (ha : MemLp a ⊤ μ)
+    {f g : ℕ → α → ℂ} {F G : α → ℂ}
+    (hf : ∀ n, MemLp (f n) 2 μ) (hg : ∀ n, MemLp (g n) 2 μ)
+    (hF : MemLp F 2 μ) (hG : MemLp G 2 μ)
+    (tf : Tendsto (fun n ↦ eLpNorm (fun p ↦ f n p - F p) 2 μ) atTop (𝓝 0))
+    (tg : Tendsto (fun n ↦ eLpNorm (fun p ↦ g n p - G p) 2 μ) atTop (𝓝 0)) :
+    (∀ n, Integrable (fun p ↦ a p * (f n p * (starRingEnd ℂ) (g n p)).re) μ) ∧
+    Integrable (fun p ↦ a p * (F p * (starRingEnd ℂ) (G p)).re) μ ∧
+    Tendsto (fun n ↦ ∫ p, a p * (f n p * (starRingEnd ℂ) (g n p)).re ∂μ)
+      atTop (𝓝 (∫ p, a p * (F p * (starRingEnd ℂ) (G p)).re ∂μ)) := by
+  have hac : MemLp (fun p ↦ (a p : ℂ)) ⊤ μ := ha.ofReal
+  have hi {v w : α → ℂ} (hv : MemLp v 2 μ) (hw : MemLp w 2 μ) :
+      Integrable (fun p ↦ (a p : ℂ) * v p * (starRingEnd ℂ) (w p)) μ := by
+    have hav : MemLp (fun p ↦ (a p : ℂ) * v p) 2 μ := hac.mul hv
+    exact hav.integrable_mul hw.star
+  have heq (v w : α → ℂ) :
+      (fun p ↦ a p * (v p * (starRingEnd ℂ) (w p)).re) =
+      (fun p ↦ ((a p : ℂ) * v p * (starRingEnd ℂ) (w p)).re) := by
+    funext p
+    simp [Complex.mul_re, Complex.mul_im]
+    ring
+  have hir {v w : α → ℂ} (hv : MemLp v 2 μ) (hw : MemLp w 2 μ) :
+      Integrable (fun p ↦ a p * (v p * (starRingEnd ℂ) (w p)).re) μ := by
+    rw [heq]
+    exact Complex.reCLM.integrable_comp (hi hv hw)
+  refine ⟨fun n ↦ hir (hf n) (hg n), hir hF hG, ?_⟩
+  have h := Complex.continuous_re.tendsto _ |>.comp
+    (tendsto_integral_mul_conj_of_L2 hac hf hg hF hG tf tg)
+  have hInt {v w : α → ℂ} (hv : MemLp v 2 μ) (hw : MemLp w 2 μ) :
+      (∫ p, a p * (v p * (starRingEnd ℂ) (w p)).re ∂μ) =
+        (∫ p, (a p : ℂ) * v p * (starRingEnd ℂ) (w p) ∂μ).re := by
+    rw [heq]
+    exact integral_re (hi hv hw)
+  simpa only [hInt (hf _) (hg _), hInt hF hG, Function.comp_def] using h
+
 end NoEmbeddedEigenvalues
