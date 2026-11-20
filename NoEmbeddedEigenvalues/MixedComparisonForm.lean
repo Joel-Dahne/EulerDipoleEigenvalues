@@ -64,32 +64,62 @@ theorem mixed_robin_comparison (oddA : Bool) {ρ : ℝ × ℝ → ℝ} (hρ : Mi
       mixedQuarterForm z za zb top := by
   sorry
 
+private theorem mixed_exp_partials {q : ℝ × ℝ} (hs : 0 < q.1 + q.2) :
+    partialX (fun p ↦ Real.exp (mixedOddAExponent p)) q =
+      Real.exp (mixedOddAExponent q) * partialX mixedOddAExponent q ∧
+    partialY (fun p ↦ Real.exp (mixedOddAExponent p)) q =
+      Real.exp (mixedOddAExponent q) * partialY mixedOddAExponent q := by
+  have h := (mixedOddAExponent_contDiffAt (n := 1) hs).differentiableAt (by norm_num)
+  have hx := h.comp q.1 (show DifferentiableAt ℝ (fun x : ℝ ↦ (x, q.2)) q.1 by fun_prop)
+  have hy := h.comp q.2 (show DifferentiableAt ℝ (fun y : ℝ ↦ (q.1, y)) q.2 by fun_prop)
+  exact ⟨hx.hasDerivAt.exp.deriv, hy.hasDerivAt.exp.deriv⟩
+
 /-- The two explicit multipliers meet the regularity and boundedness
 hypotheses for logarithmic Robin comparison. -/
 theorem mixed_explicit_robin_multipliers :
     MixedRobinMultiplier (fun q ↦ Real.exp (mixedOddAExponent q)) ∧
     MixedRobinMultiplier mixedOddBMultiplier := by
-  sorry
+  let K : Set (ℝ × ℝ) := Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) 1
+  have hK : IsCompact K := isCompact_Icc.prod isCompact_Icc
+  have hcont : ContinuousOn mixedOddAExponent K := mixedOddAExponent_continuousOn
+  obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn hcont
+  have hM' (q : ℝ × ℝ) (hq : q ∈ K) :
+      Real.exp (-M) ≤ Real.exp (mixedOddAExponent q) ∧
+        Real.exp (mixedOddAExponent q) ≤ Real.exp M := by
+    have hb : |mixedOddAExponent q| ≤ M := by simpa only [Real.norm_eq_abs] using hM q hq
+    exact ⟨Real.exp_le_exp.mpr (abs_le.mp hb).1, Real.exp_le_exp.mpr (abs_le.mp hb).2⟩
+  constructor
+  · refine ⟨?_, Real.continuous_exp.comp_continuousOn hcont,
+      ⟨Real.exp (-M), Real.exp M, Real.exp_pos _, hM'⟩, ?_⟩
+    · refine ⟨{q | 0 < q.1 + q.2}, isOpen_lt continuous_const
+        (continuous_fst.add continuous_snd), fun q hq ↦ ?_, fun q hq ↦ ?_⟩
+      · exact add_pos_of_pos_of_nonneg hq.1.1 hq.2.1
+      · exact (Real.contDiff_exp.contDiffAt.comp q
+          (mixedOddAExponent_contDiffAt hq)).contDiffWithinAt
+    · obtain ⟨C, hC, hb⟩ := mixed_odd_a_exponent_bounds_regular
+      refine ⟨2 * Real.exp M * C, by positivity, fun q hq ↦ ?_⟩
+      obtain ⟨hx, hy⟩ := mixed_exp_partials (add_pos_of_pos_of_nonneg hq.1.1 hq.2.1)
+      obtain ⟨_, hbx, hby⟩ := hb q hq
+      have hE := (hM' q ⟨⟨hq.1.1.le, hq.1.2⟩, hq.2⟩).2
+      rw [hx, hy, abs_mul, abs_mul, abs_of_nonneg (Real.exp_pos _).le]
+      calc
+        _ ≤ Real.exp M * C + Real.exp M * C :=
+          add_le_add (mul_le_mul hE hbx (abs_nonneg _) (Real.exp_pos _).le)
+            (mul_le_mul hE hby (abs_nonneg _) (Real.exp_pos _).le)
+        _ = 2 * Real.exp M * C := by ring
+        _ ≤ _ := le_mul_of_one_le_right (by positivity)
+          (le_add_of_nonneg_right (abs_nonneg _))
+  · refine ⟨?_, mixedOddBMultiplier_continuous.continuousOn,
+      ⟨3 / 4, 5 / 3, by norm_num, fun _ hq ↦ mixed_odd_b_multiplier_closed_bounds hq⟩,
+      mixed_odd_b_multiplier_derivative_bound⟩
+    exact ⟨{q | 0 < q.1}, isOpen_lt continuous_const continuous_fst, fun _ hq ↦ hq.1.1,
+      fun _ hq ↦ (mixedOddBMultiplier_contDiffAt hq).contDiffWithinAt⟩
 
 /-- The Robin numerator of the exponential multiplier, with its positive
 exponential factored out. -/
 private theorem mixed_odd_a_robin_exp {h : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1) :
     0 ≤ mixedRobinNumerator true (fun q ↦ Real.exp (mixedOddAExponent q)) h := by
-  -- The exponent itself is smooth wherever the rational denominators are nonzero.
-  have he : DifferentiableAt ℝ mixedOddAExponent (h, (0 : ℝ)) := by
-    unfold mixedOddAExponent
-    have hden : (h, (0 : ℝ)).1 + (h, (0 : ℝ)).2 ≠ 0 := by simpa using hh.1.ne'
-    fun_prop (disch := first | exact hden | positivity)
-  have h₀ : DifferentiableAt ℝ (fun x : ℝ ↦ mixedOddAExponent (x, 0)) h := by
-    exact he.comp h (show DifferentiableAt ℝ (fun x : ℝ ↦ (x, (0 : ℝ))) h by fun_prop)
-  have h₁ : DifferentiableAt ℝ (fun y : ℝ ↦ mixedOddAExponent (h, y)) 0 := by
-    exact he.comp (0 : ℝ) (show DifferentiableAt ℝ (fun y : ℝ ↦ (h, y)) 0 by fun_prop)
-  have hx' : partialX (fun q ↦ Real.exp (mixedOddAExponent q)) (h, 0) =
-      Real.exp (mixedOddAExponent (h, 0)) * partialX mixedOddAExponent (h, 0) :=
-    (h₀.hasDerivAt.exp).deriv
-  have hy' : partialY (fun q ↦ Real.exp (mixedOddAExponent q)) (h, 0) =
-      Real.exp (mixedOddAExponent (h, 0)) * partialY mixedOddAExponent (h, 0) :=
-    (h₁.hasDerivAt.exp).deriv
+  obtain ⟨hx', hy'⟩ := mixed_exp_partials (q := (h, 0)) (by simpa using hh.1)
   unfold mixedRobinNumerator
   simp only [ite_true, hx', hy']
   have hsign : 0 ≤ 3 * h - 2 * (1 - h ^ 2) * partialX mixedOddAExponent (h, 0) -

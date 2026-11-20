@@ -92,11 +92,6 @@ private theorem mixedC_diff {p : ℝ × ℝ} (hp : 0 < p.1 + p.2) :
   unfold mixedC
   fun_prop (disch := first | exact hp.ne' | positivity)
 
-private theorem mixedOddA_contDiffAt {p : ℝ × ℝ} (hp : 0 < p.1 + p.2) :
-    ContDiffAt ℝ 2 mixedOddAExponent p := by
-  unfold mixedOddAExponent
-  fun_prop (disch := first | exact hp.ne' | positivity)
-
 /-- Auxiliary A_F in the odd-in-b differential reduction, in `(h,k)` variables. -/
 def mixedOddBFluxA (p : ℝ × ℝ) : ℝ :=
   -mixedD p * partialX mixedOddBMultiplier p + mixedC p *
@@ -235,7 +230,7 @@ theorem mixed_odd_a_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
   let B := fun r : ℝ × ℝ ↦ mixedC r * (r.1 - (1 - r.1 ^ 2) * partialX F r) -
     mixedD r * partialY F r
   have hF (r : ℝ × ℝ) (hr : 0 < r.1 + r.2) : DifferentiableAt ℝ F r :=
-    (mixedOddA_contDiffAt hr).differentiableAt (by norm_num)
+    (mixedOddAExponent_contDiffAt (n := 2) hr).differentiableAt (by norm_num)
   have hflux : ∀ᶠ t in 𝓝 p,
       mixedComparisonDiagonal t * partialX mixedOddAComparison t +
         mixedComparisonOffDiagonal t * partialY mixedOddAComparison t =
@@ -262,7 +257,8 @@ theorem mixed_odd_a_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
   have hD := mixedD_diff (add_pos hh hk)
   have hC := mixedC_diff (add_pos hh hk)
   have hdf : DifferentiableAt ℝ F q := hF _ (add_pos hh hk)
-  obtain ⟨hFx, hFy, hxy⟩ := mixed_partial_data (f := F) (mixedOddA_contDiffAt (add_pos hh hk))
+  obtain ⟨hFx, hFy, hxy⟩ :=
+    mixed_partial_data (f := F) (mixedOddAExponent_contDiffAt (add_pos hh hk))
   have hA : DifferentiableAt ℝ A q := by unfold A; fun_prop
   have hB : DifferentiableAt ℝ B q := by unfold B; fun_prop
   have hx := (cosPair_hasDerivX hdf).exp.mul (cosPair_hasDerivX hA)
@@ -345,7 +341,7 @@ theorem mixed_robin_identity {h : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1) :
           224 * x ^ 3 + 235 * x ^ 3) / 1000 := by
       filter_upwards [isOpen_ne.mem_nhds (show h ∈ {x : ℝ | x ≠ 0} from hn)] with x hx
       change x ≠ 0 at hx
-      simp only [mixedOddAExponent]
+      simp only [mixedOddAExponent, mixedOddAPolynomial]
       field_simp [hx]
       ring
     change deriv (fun x : ℝ ↦ mixedOddAExponent (x, 0)) h = _
@@ -369,8 +365,8 @@ theorem mixed_robin_identity {h : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1) :
     have hquot₁ (c : ℝ) : deriv (fun y : ℝ ↦ c / (h + y)) 0 = -c / h ^ 2 := by
       simpa using hquot c 1
     simp (disch := first | fun_prop (disch := first | simpa using hn | positivity)) only
-      [mixedOddAExponent, deriv_div_const, deriv_fun_add, deriv_fun_sub, deriv_const_mul_field,
-        deriv_pow_field, deriv_const, deriv_const_mul_id, hquot, hquot₁]
+      [mixedOddAExponent, mixedOddAPolynomial, deriv_div_const, deriv_fun_add, deriv_fun_sub,
+        deriv_const_mul_field, deriv_pow_field, deriv_const, deriv_const_mul_id, hquot, hquot₁]
     field_simp [hn]
     ring
   rw [hx, hy]

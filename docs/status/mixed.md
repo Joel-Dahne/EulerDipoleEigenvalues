@@ -49,13 +49,15 @@ admission-free; see [the module map](../architecture.md).
   completion and the two quarter comparisons; it is not admission-free.
   The parity splitting of the form and mass, the Cartesian mass conversion,
   and the matrix positivity and coefficient bounds are admission-free.
-  Both comparison lemmas now reduce to the three deferred sign checks
-  `cert:odd-b`, `cert:odd-a`, and `cert:robin`. The two interior
-  differential identities, the odd-in-a Robin polynomial identity, and the
-  odd-in-b multiplier and Robin bounds are admission-free. The remaining
-  analytic inputs are `lem:mixed-fold-quarter` (including the canonical
-  traces), `lem:mixed-robin-multipliers`, `lem:robin-comparison`, and
-  `lem:mixed-completion`. See
+  The certified comparison inequalities reduce to the three deferred sign
+  checks `cert:odd-b`, `cert:odd-a`, and `cert:robin`. The two interior
+  differential identities and the odd-in-a Robin polynomial identity are
+  admission-free. So is `lem:mixed-robin-multipliers`: homogeneity controls
+  the rational exponent and its first derivatives up to the regular Robin
+  edge, and the factor `h log h` gives continuity and the logarithmic
+  derivative bound for the odd-in-b multiplier. The remaining analytic
+  inputs are `lem:mixed-fold-quarter` (including the canonical traces),
+  `lem:robin-comparison`, and `lem:mixed-completion`. See
   [shared certificate work](shared.md#shared-certificate-work) for the sign
   checks.
 

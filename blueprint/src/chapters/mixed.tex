@@ -614,17 +614,23 @@ On $Q=(0,\pi/2)^2$, for $z\in H^1(Q)$, let
 (The manuscript writes $\mathsf G=G$ and $U=-V$ here.)
 \end{definition}
 
+\begin{definition}[Robin multiplier with logarithmic derivative bound]
+\label{def:mixed-robin-multiplier}
+\lean{NoEmbeddedEigenvalues.MixedRobinMultiplier}
+\leanok
+A Robin multiplier $\rho(h,k)$ is continuous on $[0,1]^2$, with
+$0<m\le\rho\le M$ there, and smooth on an open neighbourhood of
+$(0,1]\times[0,1]$. On this strip it satisfies
+$|\rho_h|+|\rho_k|\le C(1+|\log h|)$ for some $C\ge0$.
+\end{definition}
+
 \begin{lemma}[Comparison lemma with logarithmic weights]
 \label{lem:robin-comparison}
-\uses{def:comparison-form, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_robin_comparison,
- NoEmbeddedEigenvalues.MixedRobinMultiplier,
- NoEmbeddedEigenvalues.mixedRobinNumerator}
+\uses{def:comparison-form, def:mixed-robin-multiplier, def:sobolev-local}
+\lean{NoEmbeddedEigenvalues.mixed_robin_comparison, NoEmbeddedEigenvalues.mixedRobinNumerator}
 \leanok
-Let $\rho(h,k)$ be continuous on $[0,1]^2$, with $0<m\le\rho\le M$ there.
-Assume it is smooth on a neighbourhood of $(0,1]\times[0,1]$, and that
-$|\rho_h|+|\rho_k|\le C(1+|\log h|)$ on that strip. The Robin inequalities
-below are only on the regular edge $k=0$, $0<h\le1$. If $g=v\rho$
+Let $\rho$ be a Robin multiplier. The Robin inequalities below are only
+on the regular edge $k=0$, $0<h\le1$. If $g=v\rho$
 satisfies $\mathcal Pg\ge ch^2g$ in $Q$ and
 $h\rho-2(1-h^2)\rho_h-(2-h^2)\rho_k\ge0$ on $k=0$, then
 $\mathcal Q[z]\ge c\int_Qh^2|z|^2$ for all $z\in H^1(Q)$ with zero Sobolev
@@ -655,32 +661,52 @@ Let $w_v=vF_v(h,k)$ with
 \]
 \end{definition}
 
-\begin{lemma}[Odd-in-$b$ comparison]
-\label{lem:mixed-v-comparison}
+\begin{lemma}[Odd-in-$b$ multiplier and edge bounds]
+\label{lem:mixed-v-multiplier-bounds}
 \uses{def:odd-b-comparison}
 \lean{NoEmbeddedEigenvalues.mixed_odd_b_multiplier_robin,
- NoEmbeddedEigenvalues.mixed_odd_b_interior}
+ NoEmbeddedEigenvalues.mixed_odd_b_multiplier_closed_bounds,
+ NoEmbeddedEigenvalues.mixed_odd_b_multiplier_derivative_bound,
+ NoEmbeddedEigenvalues.mixedOddBMultiplier_continuous,
+ NoEmbeddedEigenvalues.mixedOddBMultiplier_contDiffAt}
 \leanok
-$\tfrac34<F_v<\tfrac53$ on $(0,1]\times[0,1]$,
-$\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$, and on
-the regular edge $k=0$, $0<h\le1$,
+$F_v$ is continuous on the closed square and smooth wherever $h>0$.
+There are strict bounds $\tfrac34<F_v<\tfrac53$ on $(0,1]\times[0,1]$,
+and the non-strict bounds hold on the closed square. On the regular strip,
+$|\partial_hF_v|+|\partial_kF_v|\le C(1+|\log h|)$ for some $C\ge0$.
+On $k=0$, $0<h\le1$,
 \[
-  hF_v-2(1-h^2)\partial_hF_v-(2-h^2)\partial_kF_v\ge\tfrac{1789}{2500}h
+  hF_v-2(1-h^2)\partial_hF_v-(2-h^2)\partial_kF_v\ge\tfrac{1789}{2500}h .
 \]
-(manuscript \texttt{(lem:mixed-v-comparison)}).
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-v-residual-identity, cert:odd-b}
 \leanok
 The quadratic form $2502h^2-7590hk+7640k^2$ is nonnegative, so the
 polynomial part $F_0$ decreases in $h$. At $h=1$,
 $10000(F_0(1,k)-0.894)=k(1784-3508k+2167k^2)\ge0$ by completing the
 square. At $h=0$ the polynomial part is at most $1.6299$. The logarithmic
 term is nonpositive, and $-h\log h\le e^{-1}<3/8$ gives its lower bound.
+Write this term as a polynomial in $k$ times $h\log h$. The latter
+extends continuously by zero and has derivative $1+\log h$ for $h>0$.
+The bounds at $h=0$ follow from the polynomial part.
 On the Robin side, differentiate at $k=0$ and divide the numerator by
-$h>0$. The log term is nonnegative, and $h,h^2,h^3\le1$ give the stated
-margin. The interior bound follows from the residual identity and sign.
+$h>0$. The log term is nonnegative, and $h,h^2,h^3\le1$ give the margin.
+\end{proof}
+
+\begin{lemma}[Odd-in-$b$ comparison]
+\label{lem:mixed-v-comparison}
+\uses{def:odd-b-comparison}
+\lean{NoEmbeddedEigenvalues.mixed_odd_b_interior}
+\leanok
+$\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$
+(manuscript \texttt{(lem:mixed-v-comparison)}).
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-v-residual-identity, cert:odd-b}
+\leanok
+Use the interior residual identity and the nonnegativity of $v\mathcal R_v$.
 \end{proof}
 
 \begin{definition}[Odd-in-$a$ comparison function]
@@ -702,16 +728,23 @@ Let $w_u=ue^{F_u}$, where, with $S=h+k$,
 \begin{lemma}[Bounded exponent and first derivatives]
 \label{lem:mixed-u-exponent-bounds}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixed_odd_a_exponent_bounds}
+\lean{NoEmbeddedEigenvalues.mixed_odd_a_exponent_bounds_regular,
+ NoEmbeddedEigenvalues.mixedOddAExponent_continuousOn,
+ NoEmbeddedEigenvalues.mixedOddAExponent_contDiffAt}
 \leanok
+$F_u$ is continuous on the closed square and smooth on $h+k>0$.
 There is a finite constant bounding $|F_u|$, $|\partial_hF_u|$ and
-$|\partial_kF_u|$ throughout $0<h,k<1$.
+$|\partial_kF_u|$ throughout $(0,1]\times[0,1]$.
 \end{lemma}
 
 \begin{proof}
-Every rational term is homogeneous of degree at least one; use
-$h/(h+k),k/(h+k)\in[0,1]$ to bound it and its first derivatives.
-This asserts boundedness, not a continuous gradient at $(0,0)$.
+\leanok
+Each rational term is a constant times $h^m/(h+k)^n$ with $m>n$.
+This is bounded by $h^{m-n}$ on the square, and hence extends by zero at
+the corner. Both partial derivatives are linear combinations of such
+quotients with numerator and denominator degrees satisfying $m'\ge n'$,
+so they are bounded, including on the regular edge. This does not give a
+continuous gradient at $(0,0)$.
 \end{proof}
 
 \begin{lemma}[Odd-in-$a$ comparison]
@@ -762,18 +795,19 @@ for the weighted mass.
 
 \begin{lemma}[Admissibility of the explicit Robin multipliers]
 \label{lem:mixed-robin-multipliers}
-\uses{lem:robin-comparison, def:odd-a-comparison, def:odd-b-comparison}
+\uses{def:mixed-robin-multiplier, def:odd-a-comparison, def:odd-b-comparison}
 \lean{NoEmbeddedEigenvalues.mixed_explicit_robin_multipliers}
 \leanok
-The multipliers $e^{F_u}$ and $F_v$ have the regularity, uniform positive
-bounds, and logarithmic derivative bounds of the Robin comparison lemma.
+Both $e^{F_u}$ and $F_v$ are Robin multipliers.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:mixed-u-exponent-bounds, lem:mixed-v-comparison}
-Extend the rational terms of $F_u$ continuously at $(0,0)$ using
-homogeneity and use their bounded first derivatives on the regular strip.
-For $F_v$, use $h\log h\to0$ and differentiate $h\log h$ for $h>0$.
+\uses{lem:mixed-u-exponent-bounds, lem:mixed-v-multiplier-bounds}
+\leanok
+Continuity of $F_u$ on the compact square gives a positive lower bound
+and a finite upper bound for its exponential. The chain rule gives
+bounded derivatives on the regular strip, which implies the logarithmic
+bound there. For $F_v$, apply the multiplier bounds directly.
 \end{proof}
 
 \begin{lemma}[Coercivity on the quarter cell]
@@ -787,7 +821,7 @@ $\mathcal Q[z]\ge \frac1{200}\int_Q h^2|z|^2$.
 
 \begin{proof}
 \uses{lem:robin-comparison, lem:mixed-robin-multipliers,
-  lem:mixed-u-comparison, lem:mixed-v-comparison}
+  lem:mixed-u-comparison, lem:mixed-v-comparison, lem:mixed-v-multiplier-bounds}
 \leanok
 Apply the Robin comparison with the multiplier for the specified odd axis.
 In the exponential case factor out the positive $e^{F_u}$ from the

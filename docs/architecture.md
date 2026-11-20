@@ -674,9 +674,11 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   Separates the gradient estimate from the residual-certificate potential bound.
 - `MixedField.lean`, `MixedBoundarySquare.lean`: the adapted field and the
   smooth and weighted one-edge boundary squares.
-- `MixedComparison.lean`: explicit comparison functions, coefficient and
-  odd-in-b multiplier bounds, the elementary odd-in-b Robin inequality,
-  and the positive determinant expansion.
+- `MixedComparison.lean`: explicit comparison functions, coefficient bounds
+  and the positive determinant expansion. Homogeneous rational terms control
+  the odd-in-a exponent through the corner and its derivatives on the regular
+  strip. The odd-in-b multiplier uses bounded polynomial coefficients times
+  `h log h`; its positive bounds and Robin inequality are elementary.
 - `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
   comparison on either odd axis, with canonical Sobolev traces. It combines
   the interior and Robin inequalities into a common quarter-cell bound.
