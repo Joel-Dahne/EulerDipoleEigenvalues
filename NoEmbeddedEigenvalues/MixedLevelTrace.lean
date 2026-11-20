@@ -304,6 +304,84 @@ theorem mixed_quarter_mass_replacement {F D G E : Plane → ℂ}
 quadratic remainder on the graph is controlled by a product of two
 L² section envelopes. No regularity in the level parameter is needed
 for the coefficient, only a uniform bound and a pointwise limit. -/
+theorem mixed_quarter_pair_limit_of_graph {F D G E : Plane → ℂ} {K : ℝ → ℝ → ℝ}
+    {k : ℝ → ℝ} {C t : ℝ} {b : ℝ → ℝ → ℝ}
+    (ht : t ∈ Icc (-c) c) (hbm : ∀ s, Measurable (b s))
+    (hbmem : ∀ᶠ s in 𝓝[>] 0, ∀ a ∈ mixedLevelInterval s, b s a ∈ Jside)
+    (hbt : ∀ a ∈ Jside, Tendsto (fun s ↦ b s a) (𝓝[>] 0) (𝓝[Jside] t))
+    (hF : HasACLSectionsOn Jside Jside F D) (hG : HasACLSectionsOn Jside Jside G E)
+    (hFm : Measurable F) (hGm : Measurable G)
+    (hFL : MemLp F 2 (volume.restrict (Jside ×ˢ Jside)))
+    (hDL : MemLp D 2 (volume.restrict (Jside ×ˢ Jside)))
+    (hGL : MemLp G 2 (volume.restrict (Jside ×ˢ Jside)))
+    (hEL : MemLp E 2 (volume.restrict (Jside ×ˢ Jside)))
+    (hKm : ∀ᶠ s in 𝓝[>] 0, AEStronglyMeasurable (K s) νside)
+    (hK : ∀ᶠ s in 𝓝[>] 0, ∀ a ∈ mixedLevelInterval s, ‖K s a‖ ≤ C)
+    (hlim : ∀ᵐ a ∂νside, Tendsto (fun s ↦ K s a) (𝓝[>] 0) (𝓝 (k a))) :
+    (∀ᶠ s in 𝓝[>] 0, IntegrableOn (fun a ↦ K s a *
+      (F (a, b s a) * (starRingEnd ℂ) (G (a, b s a))).re) (mixedLevelInterval s)) ∧
+    Tendsto (fun s ↦ ∫ a in mixedLevelInterval s, K s a *
+      (F (a, b s a) * (starRingEnd ℂ) (G (a, b s a))).re) (𝓝[>] 0)
+      (𝓝 (∫ a in Jside, k a *
+        (aclTrace (-c) c F D t a * (starRingEnd ℂ) (aclTrace (-c) c G E t a)).re)) := by
+  obtain ⟨M, hML, hM⟩ := hF.exists_l2_section_envelope hFL hDL
+  obtain ⟨N, hNL, hN⟩ := hG.exists_l2_section_envelope hGL hEL
+  let B := fun a ↦ max C 0 * (‖M a‖ * ‖N a‖)
+  let W := fun s a ↦ K s a *
+    (F (a, b s a) * (starRingEnd ℂ) (G (a, b s a))).re
+  have hS (s : ℝ) : Measurable (fun a ↦ (a, b s a)) := by
+    exact measurable_id.prodMk (hbm s)
+  have hWm : ∀ᶠ s in 𝓝[>] 0, AEStronglyMeasurable (W s) νside := by
+    filter_upwards [hKm] with s h
+    have hFG : Measurable (fun a ↦ (F (a, b s a) *
+        star (G (a, b s a))).re) :=
+      Complex.continuous_re.measurable.comp
+        ((hFm.comp (hS s)).mul (Complex.continuous_conj.measurable.comp (hGm.comp (hS s))))
+    exact h.mul hFG.aestronglyMeasurable
+  have hB : Integrable B νside := (hML.norm.integrable_mul hNL.norm).const_mul (max C 0)
+  have hbound : ∀ᶠ s in 𝓝[>] 0,
+      ∀ᵐ a ∂νside, a ∈ mixedLevelInterval s → ‖W s a‖ ≤ B a := by
+    filter_upwards [hK, hbmem] with s hs hs'
+    filter_upwards [hM, hN, hF.ae_hasIntervalH1 hFL hDL, hG.ae_hasIntervalH1 hGL hEL]
+      with a hMa hNa hFa hGa
+    intro ha
+    let z := b s a
+    have hb : z ∈ Jside := hs' a ha
+    have hMf : ‖F (a, z)‖ ≤ ‖M a‖ := le_trans (by
+      simpa only [aclTrace, hFa.extension_eq mixed_interval_ne hb] using
+        hMa z (Ioo_subset_Icc_self hb)) (le_abs_self _)
+    have hNg : ‖G (a, z)‖ ≤ ‖N a‖ := le_trans (by
+      simpa only [aclTrace, hGa.extension_eq mixed_interval_ne hb] using
+        hNa z (Ioo_subset_Icc_self hb)) (le_abs_self _)
+    change ‖K s a * _‖ ≤ B a
+    rw [norm_mul]
+    apply mul_le_mul ((hs a ha).trans (le_max_left _ _)) _ (norm_nonneg _) (le_max_right _ _)
+    refine (Complex.abs_re_le_norm _).trans ?_
+    rw [norm_mul, Complex.norm_conj]
+    exact mul_le_mul hMf hNg (norm_nonneg _) (norm_nonneg _)
+  constructor
+  · filter_upwards [hWm, hbound, (Ioo_mem_nhdsGT zero_lt_one : Ioo (0 : ℝ) 1 ∈ 𝓝[>] 0)]
+      with s hsm hsb hs
+    have hsub : mixedLevelInterval s ⊆ Jside :=
+      fun _ ha ↦ (mixed_quarter_graph_mem hs ha).1.1
+    exact (hB.mono_measure (Measure.restrict_mono hsub le_rfl)).mono'
+      (hsm.mono_measure (Measure.restrict_mono hsub le_rfl)) (by
+        filter_upwards [ae_restrict_of_ae_restrict_of_subset hsub hsb,
+          ae_restrict_mem (s := mixedLevelInterval s) measurableSet_Ioo] with a ha hm
+        exact ha hm)
+  · refine mixed_quarter_dominated_limit hWm hB hbound
+      (Eventually.of_forall fun a ↦
+        show 0 ≤ B a from mul_nonneg (le_max_right C 0)
+          (mul_nonneg (norm_nonneg _) (norm_nonneg _))) ?_
+    filter_upwards [hlim, hF.ae_tendsto_trace mixed_interval_ne hFL hDL,
+      hG.ae_tendsto_trace mixed_interval_ne hGL hEL, ae_restrict_mem measurableSet_Ioo]
+      with a ha hf hg ham
+    have hht := hbt a ham
+    have hft := (hf t ht).comp hht
+    have hgt := Complex.continuous_conj.continuousAt.tendsto.comp ((hg t ht).comp hht)
+    have hr := Complex.continuous_re.continuousAt.tendsto.comp (hft.mul hgt)
+    simpa only [W, Function.comp_apply] using ha.mul hr
+
 theorem mixed_quarter_pair_limit {F D G E : Plane → ℂ} {K : ℝ → ℝ → ℝ}
     {k : ℝ → ℝ} {C : ℝ}
     (hF : HasACLSectionsOn Jside Jside F D) (hG : HasACLSectionsOn Jside Jside G E)
@@ -318,54 +396,15 @@ theorem mixed_quarter_pair_limit {F D G E : Plane → ℂ} {K : ℝ → ℝ → 
     Tendsto (fun s ↦ ∫ a in mixedLevelInterval s, K s a *
       (F (a, quarterHeight s a) * (starRingEnd ℂ) (G (a, quarterHeight s a))).re) (𝓝[>] 0)
       (𝓝 (∫ a in Jside, k a *
-        (aclTrace (-c) c F D c a * (starRingEnd ℂ) (aclTrace (-c) c G E c a)).re)) := by
-  obtain ⟨M, hML, hM⟩ := hF.exists_l2_section_envelope hFL hDL
-  obtain ⟨N, hNL, hN⟩ := hG.exists_l2_section_envelope hGL hEL
-  let B := fun a ↦ max C 0 * (‖M a‖ * ‖N a‖)
-  let W := fun s a ↦ K s a *
-    (F (a, quarterHeight s a) * (starRingEnd ℂ) (G (a, quarterHeight s a))).re
-  have hS (s : ℝ) : Measurable (fun a ↦ (a, quarterHeight s a)) := by
-    unfold quarterHeight
-    fun_prop
-  have hWm : ∀ᶠ s in 𝓝[>] 0, AEStronglyMeasurable (W s) νside := by
-    filter_upwards [hKm] with s h
-    have hFG : Measurable (fun a ↦ (F (a, quarterHeight s a) *
-        star (G (a, quarterHeight s a))).re) :=
-      Complex.continuous_re.measurable.comp
-        ((hFm.comp (hS s)).mul (Complex.continuous_conj.measurable.comp (hGm.comp (hS s))))
-    exact h.mul hFG.aestronglyMeasurable
-  refine mixed_quarter_dominated_limit hWm
-    ((hML.norm.integrable_mul hNL.norm).const_mul (max C 0) : Integrable B νside) ?_
-    (Eventually.of_forall fun a ↦
-      show 0 ≤ B a from mul_nonneg (le_max_right C 0)
-        (mul_nonneg (norm_nonneg _) (norm_nonneg _))) ?_
-  · filter_upwards [hK, (Ioo_mem_nhdsGT zero_lt_one : Ioo (0 : ℝ) 1 ∈ 𝓝[>] 0)] with s hs hs'
-    filter_upwards [hM, hN, hF.ae_hasIntervalH1 hFL hDL, hG.ae_hasIntervalH1 hGL hEL]
-      with a hMa hNa hFa hGa
-    intro ha
-    let b := quarterHeight s a
-    have hb : b ∈ Jside := (mixed_quarter_graph_mem hs' ha).1.2
-    have hMf : ‖F (a, b)‖ ≤ ‖M a‖ := le_trans (by
-      simpa only [aclTrace, hFa.extension_eq mixed_interval_ne hb] using
-        hMa b (Ioo_subset_Icc_self hb)) (le_abs_self _)
-    have hNg : ‖G (a, b)‖ ≤ ‖N a‖ := le_trans (by
-      simpa only [aclTrace, hGa.extension_eq mixed_interval_ne hb] using
-        hNa b (Ioo_subset_Icc_self hb)) (le_abs_self _)
-    change ‖K s a * _‖ ≤ B a
-    rw [norm_mul]
-    apply mul_le_mul ((hs a ha).trans (le_max_left _ _)) _ (norm_nonneg _) (le_max_right _ _)
-    refine (Complex.abs_re_le_norm _).trans ?_
-    rw [norm_mul, Complex.norm_conj]
-    exact mul_le_mul hMf hNg (norm_nonneg _) (norm_nonneg _)
-  · have hc : c ∈ Icc (-c) c := right_mem_Icc.mpr mixed_interval_ne.le
-    filter_upwards [hlim, hF.ae_tendsto_trace mixed_interval_ne hFL hDL,
-      hG.ae_tendsto_trace mixed_interval_ne hGL hEL, ae_restrict_mem measurableSet_Ioo]
-      with a ha hf hg ham
-    have ht := mixed_quarter_height_tendsto ham
-    have hft := (hf c hc).comp ht
-    have hgt := Complex.continuous_conj.continuousAt.tendsto.comp ((hg c hc).comp ht)
-    have hr := Complex.continuous_re.continuousAt.tendsto.comp (hft.mul hgt)
-    simpa only [W, Function.comp_apply] using ha.mul hr
+        (aclTrace (-c) c F D c a * (starRingEnd ℂ) (aclTrace (-c) c G E c a)).re)) :=
+  (mixed_quarter_pair_limit_of_graph
+    (right_mem_Icc.mpr mixed_interval_ne.le)
+    (fun s ↦ by unfold quarterHeight; fun_prop)
+    (by
+      filter_upwards [(Ioo_mem_nhdsGT zero_lt_one : Ioo (0 : ℝ) 1 ∈ 𝓝[>] 0)] with s hs
+      exact fun _ ha ↦ (mixed_quarter_graph_mem hs ha).1.2)
+    (fun _ ha ↦ mixed_quarter_height_tendsto ha)
+    hF hG hFm hGm hFL hDL hGL hEL hKm hK hlim).2
 
 /-- On each of the two positive sides, the singular signed quadratic
 model evaluated on the actual quotient differs from its trace model by
@@ -482,5 +521,199 @@ theorem mixed_quarter_all_side_mass_replacement {ω : L2} (d : MixedQuotientData
     rw [hβ] at hh ⊢
     rw [hh]
   · simpa only [ite_true, one_mul] using H
+
+/-- The signed normal graph in side coordinates. -/
+def mixedQuarterHeight (σ : Bool) (s a : ℝ) : ℝ :=
+  if σ then quarterHeight s a else -quarterHeight s a
+
+/-- An exact quarter graph, with the tangential coordinate first before
+applying the side chart. -/
+def mixedQuarterPoint (j : Fin 2) (σ : Bool) (s a : ℝ) : Plane :=
+  traceSideCoords j (a, mixedQuarterHeight σ s a)
+
+private theorem mixed_neg_mem {x : ℝ} (hx : x ∈ Jside) : -x ∈ Jside :=
+  ⟨by linarith [hx.2], by linarith [hx.1]⟩
+
+theorem mixed_quarter_signed_height_mem (σ : Bool) {s a : ℝ}
+    (hs : s ∈ Ioo (0 : ℝ) 1) (ha : a ∈ mixedLevelInterval s) :
+    mixedQuarterHeight σ s a ∈ Jside := by
+  cases σ
+  · exact mixed_neg_mem (mixed_quarter_graph_mem hs ha).1.2
+  · exact (mixed_quarter_graph_mem hs ha).1.2
+
+theorem mixed_quarter_signed_height_tendsto (σ : Bool) {a : ℝ} (ha : a ∈ Jside) :
+    Tendsto (fun s ↦ mixedQuarterHeight σ s a) (𝓝[>] 0) (𝓝[Jside] (cellEdgeNormal σ)) := by
+  have h := mixed_quarter_height_tendsto ha
+  cases σ
+  · rw [tendsto_nhdsWithin_iff] at h ⊢
+    refine ⟨?_, ?_⟩
+    · simpa only [mixedQuarterHeight, cellEdgeNormal, Bool.false_eq_true, ite_false, neg_div]
+        using h.1.neg
+    · exact h.2.mono fun _ hb ↦ mixed_neg_mem hb
+  · exact h
+
+/-- The graph a.e. transfer works in either orientation. -/
+theorem ae_mixed_quarterGraph_signed_of_ae (σ : Bool) {P : Plane → Prop}
+    (hP : ∀ᵐ q ∂volume.restrict (Jside ×ˢ Jside), P q) :
+    ∀ᵐ s : ℝ, s ∈ Ioo (0 : ℝ) 1 →
+      ∀ᵐ a ∂volume.restrict (mixedLevelInterval s), P (a, mixedQuarterHeight σ s a) := by
+  cases σ
+  · let M : Plane → Plane := fun q ↦ (q.1, -q.2)
+    have hm : MeasurePreserving M volume volume := by
+      change MeasurePreserving (Prod.map id Neg.neg) (volume : Measure Plane) volume
+      rw [Measure.volume_eq_prod]
+      exact (MeasurePreserving.id (volume : Measure ℝ)).prod (Measure.measurePreserving_neg volume)
+    have hp : ∀ᵐ q ∂volume.restrict (Jside ×ˢ Jside), P (M q) := by
+      have h := hm.quasiMeasurePreserving.ae
+        ((ae_restrict_iff' (measurableSet_Ioo.prod measurableSet_Ioo)).1 hP)
+      refine (ae_restrict_iff' (measurableSet_Ioo.prod measurableSet_Ioo)).2 ?_
+      filter_upwards [h] with q hq hqm
+      exact hq ⟨hqm.1, mixed_neg_mem hqm.2⟩
+    exact ae_mixed_quarterGraph_of_ae hp
+  · exact ae_mixed_quarterGraph_of_ae hP
+
+/-- The three fields appearing in the geometric quadratic forms: the
+quotient and its two specified first weak partials. -/
+def MixedQuotientData.levelField {ω : L2} (d : MixedQuotientData ω) :
+    Option (Fin 2) → Plane → ℂ
+  | none => d.phi
+  | some i => d.jet [i]
+
+/-- Their canonical traces in the side chart. The normal trace is zero,
+and the tangential trace differentiates the continuous edge value. -/
+def MixedQuotientData.levelTrace {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool) :
+    Option (Fin 2) → ℝ → ℂ
+  | none => mixedEdgeValue (1 - j) σ d.phi
+  | some i => if i = j then deriv (mixedEdgeValue (1 - j) σ d.phi) else fun _ ↦ 0
+
+private theorem mixed_levelField_acl {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool)
+    (i : Option (Fin 2)) :
+    ∃ F D : Plane → ℂ, Measurable F ∧
+      F =ᵐ[volume.restrict (Jside ×ˢ Jside)] d.levelField i ∘ traceSideCoords j ∧
+      MemLp F 2 (volume.restrict (Jside ×ˢ Jside)) ∧
+      MemLp D 2 (volume.restrict (Jside ×ˢ Jside)) ∧
+      HasACLSectionsOn Jside Jside F D ∧
+      d.levelTrace j σ i =ᵐ[νside] aclTrace (-c) c F D (cellEdgeNormal σ) := by
+  let U := Jside ×ˢ Jside
+  let C := traceSideCoords j
+  let n := 1 - j
+  have hU : IsOpen U := isOpen_Ioo.prod isOpen_Ioo
+  have hcell : mixedOpenCell = U := by simp only [mixedOpenCell, neg_div, U]
+  have hpre : Prod.swap ⁻¹' U = U := by
+    ext q
+    exact and_comm
+  have hweak {f e : Plane → ℂ} (h : HasWeakPartialOn U n f e) :
+      HasWeakPartialOn U 1 (f ∘ C) (e ∘ C) := by
+    fin_cases j
+    · exact h
+    · exact hpre ▸ h.comp_swap hU
+  have hmem {f : Plane → ℂ} (h : MemLp f 2 (volume.restrict U)) :
+      MemLp (f ∘ C) 2 (volume.restrict U) := by
+    fin_cases j
+    · exact h
+    · exact hpre ▸ memLp_comp_swap hU.measurableSet h
+  have hC : axisTraceChart n = C := by fin_cases j <;> rfl
+  have go {f e : Plane → ℂ} {T : ℝ → ℂ} (h : HasMixedEdgeTrace n σ f T)
+      (hw : HasWeakPartialOn mixedOpenCell n f e)
+      (hL : MemLp e 2 (volume.restrict mixedOpenCell)) :
+      ∃ F : Plane → ℂ, Measurable F ∧ F =ᵐ[volume.restrict U] f ∘ C ∧
+        MemLp F 2 (volume.restrict U) ∧ HasACLSectionsOn Jside Jside F (e ∘ C) ∧
+        T =ᵐ[νside] aclTrace (-c) c F (e ∘ C) (cellEdgeNormal σ) := by
+    unfold HasMixedEdgeTrace at h
+    rw [hC, neg_div] at h
+    exact h.with_weak_snd (hweak (hcell ▸ hw)) (hmem (hcell ▸ hL))
+  have hL := d.h2.memLp_weakJet (hcell.symm ▸ hU) d.weakJet
+  cases i with
+  | none =>
+    have hw : HasWeakPartialOn mixedOpenCell n d.phi (d.jet [n]) := by
+      simpa only [d.weakJet.1] using d.weakJet.2 [] (by decide) n
+    have hLn := hL [n] (by simp)
+    have hside : HasMixedEdgeTrace n σ d.phi (d.levelTrace j σ none) := by
+      unfold HasMixedEdgeTrace MixedQuotientData.levelTrace mixedEdgeValue
+      change HasTransverseH1Trace _ _ _ _ _ (axisTraceChart n) d.phi
+        (fun a ↦ d.phi (axisTraceChart n (a, cellEdgeNormal σ)))
+      rw [hC]
+      exact (mixed_quotient_side_traces d j σ).2.2.1
+    obtain ⟨F, hm, he, hF, hA, hT⟩ := go hside hw hLn
+    exact ⟨F, d.jet [n] ∘ C, hm, he, hF, hmem (hcell ▸ hLn), hA, hT⟩
+  | some i =>
+    have hw := d.weakJet.2 [i] (by simp) n
+    have hLi := hL [n, i] (by simp)
+    have hside : HasMixedEdgeTrace n σ (d.jet [i]) (d.levelTrace j σ (some i)) := by
+      by_cases hi : i = j
+      · subst i
+        simp only [HasMixedEdgeTrace, MixedQuotientData.levelTrace, ite_true]
+        change HasTransverseH1Trace _ _ _ _ _ (axisTraceChart n) (d.jet [j])
+          (deriv (fun a ↦ d.phi (axisTraceChart n (a, cellEdgeNormal σ))))
+        rw [hC]
+        exact (mixed_quotient_side_traces d j σ).2.2.2
+      · have hn : i = n := by fin_cases j <;> fin_cases i <;> simp_all [n]
+        rw [MixedQuotientData.levelTrace, ite_eq_right hi, hn]
+        exact d.normal_zero n σ
+    obtain ⟨F, hm, he, hF, hA, hT⟩ := go hside hw hLi
+    exact ⟨F, d.jet [n, i] ∘ C, hm, he, hF, hmem (hcell ▸ hLi), hA, hT⟩
+
+/-- Bounded-coefficient quadratic products of the specified weak fields
+converge to the canonical products on each of the four sides. The good
+level set is independent of the coefficient and of the pair of fields. -/
+theorem mixed_quarter_weak_pair_limit {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool) :
+    ∃ N : Set ℝ, volume N = 0 ∧ ∀ (i l : Option (Fin 2)) (K : ℝ → ℝ → ℝ) (k : ℝ → ℝ) (C : ℝ),
+      (∀ᶠ s in 𝓝[>] 0, AEStronglyMeasurable (K s) νside) →
+      (∀ᶠ s in 𝓝[>] 0, ∀ a ∈ mixedLevelInterval s, ‖K s a‖ ≤ C) →
+      (∀ᵐ a ∂νside, Tendsto (fun s ↦ K s a) (𝓝[>] 0) (𝓝 (k a))) →
+      let W := fun s a ↦ K s a * (d.levelField i (mixedQuarterPoint j σ s a) *
+        (starRingEnd ℂ) (d.levelField l (mixedQuarterPoint j σ s a))).re
+      (∀ᶠ s in 𝓝[Ioo 0 1 \ N] 0, IntegrableOn (W s) (mixedLevelInterval s)) ∧
+      Tendsto (fun s ↦ ∫ a in mixedLevelInterval s, W s a) (𝓝[Ioo 0 1 \ N] 0)
+        (𝓝 (∫ a in Jside, k a * (d.levelTrace j σ i a *
+          (starRingEnd ℂ) (d.levelTrace j σ l a)).re)) := by
+  choose F D hm ha hF hD hA hT using fun i ↦ mixed_levelField_acl d j σ i
+  have hg (i : Option (Fin 2)) := ae_mixed_quarterGraph_signed_of_ae σ (ha i)
+  let P := fun s ↦ s ∈ Ioo (0 : ℝ) 1 → ∀ i, ∀ᵐ a ∂volume.restrict (mixedLevelInterval s),
+    F i (a, mixedQuarterHeight σ s a) = d.levelField i (mixedQuarterPoint j σ s a)
+  have hp : ∀ᵐ s ∂volume, P s := by
+    filter_upwards [ae_all_iff.2 hg] with s hs h i
+    exact hs i h
+  let N := {s | ¬P s}
+  refine ⟨N, hp, fun i l K k C hKm hK hlim ↦ ?_⟩
+  have ht : cellEdgeNormal σ ∈ Icc (-c) c := by
+    cases σ
+    · simpa only [cellEdgeNormal, Bool.false_eq_true, ite_false, neg_div] using
+        left_mem_Icc.mpr mixed_interval_ne.le
+    · exact right_mem_Icc.mpr mixed_interval_ne.le
+  have H := mixed_quarter_pair_limit_of_graph ht
+    (fun s ↦ by
+      cases σ <;> simp only [mixedQuarterHeight, quarterHeight, Bool.false_eq_true,
+        ite_false, ite_true] <;> fun_prop)
+    (by
+      filter_upwards [(Ioo_mem_nhdsGT zero_lt_one : Ioo (0 : ℝ) 1 ∈ 𝓝[>] 0)] with s hs
+      exact fun _ ha ↦ mixed_quarter_signed_height_mem σ hs ha)
+    (fun _ ha ↦ mixed_quarter_signed_height_tendsto σ ha)
+    (hA i) (hA l) (hm i) (hm l) (hF i) (hD i) (hF l) (hD l) hKm hK hlim
+  have hf : 𝓝[Ioo 0 1 \ N] (0 : ℝ) ≤ 𝓝[>] 0 :=
+    nhdsWithin_mono _ (fun _ hs ↦ hs.1.1)
+  dsimp only
+  have he : ∀ᶠ s in 𝓝[Ioo 0 1 \ N] 0,
+      (fun a ↦ K s a * (F i (a, mixedQuarterHeight σ s a) *
+        (starRingEnd ℂ) (F l (a, mixedQuarterHeight σ s a))).re)
+        =ᵐ[volume.restrict (mixedLevelInterval s)]
+      fun a ↦ K s a * (d.levelField i (mixedQuarterPoint j σ s a) *
+        (starRingEnd ℂ) (d.levelField l (mixedQuarterPoint j σ s a))).re := by
+    filter_upwards [self_mem_nhdsWithin] with s hs
+    have hh : P s := not_not.mp hs.2
+    filter_upwards [hh hs.1 i, hh hs.1 l] with a hi hl
+    simp only [hi, hl]
+  refine ⟨?_, ?_⟩
+  · filter_upwards [hf H.1, he] with s hs h
+    exact hs.congr h
+  · rw [show (∫ a in Jside, k a * (d.levelTrace j σ i a *
+        (starRingEnd ℂ) (d.levelTrace j σ l a)).re) =
+        ∫ a in Jside, k a * (aclTrace (-c) c (F i) (D i) (cellEdgeNormal σ) a *
+          (starRingEnd ℂ) (aclTrace (-c) c (F l) (D l) (cellEdgeNormal σ) a)).re by
+      apply integral_congr_ae
+      filter_upwards [hT i, hT l] with a hi hl
+      simp only [hi, hl]
+    ]
+    exact (H.2.mono_left hf).congr' (he.mono fun s hs ↦ integral_congr_ae hs)
 
 end NoEmbeddedEigenvalues

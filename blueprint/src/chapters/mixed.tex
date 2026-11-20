@@ -292,6 +292,58 @@ Central oddness and reversal of the tangential parameter give the
 opposite sides.
 \end{proof}
 
+\begin{lemma}[Full level integrals in signed quarter coordinates]
+\label{lem:mixed-signed-quarters}
+\uses{lem:quarter-orbit-diagonal}
+\lean{NoEmbeddedEigenvalues.mixed_levelIntegral_eq_signed_quarters,
+  NoEmbeddedEigenvalues.ae_mixedQuarterPoint_of_ae,
+  NoEmbeddedEigenvalues.ae_mixedQuarter_integrable}
+\leanok
+A level integral is the sum of the four integrable signed-side graph
+integrals, all with time density $(\cos^2 a-s^2)^{-1/2}$.
+An almost-everywhere cell identity and cell integrability pass to the
+four graphs for almost every regular level.
+\end{lemma}
+\begin{proof}
+\uses{lem:mixed-quarter-section-envelope, lem:quarter-orbit-decomposition}
+\leanok
+Rotate the upper quarter in diagonal coordinates and reverse the
+tangential parameter on the last two quarters. Cosine is even, so
+this reversal does not change the time density. Use coarea for
+integrability and the graph restriction in each orientation for the
+almost-everywhere identity.
+\end{proof}
+
+\begin{lemma}[Finite parts on the four mixed quarters]
+\label{lem:mixed-level-remainders}
+\uses{lem:mixed-level-density, lem:mixed-signed-quarters}
+\lean{NoEmbeddedEigenvalues.mixed_level_first_limit,
+  NoEmbeddedEigenvalues.mixed_quarter_gradient_remainder_limit,
+  NoEmbeddedEigenvalues.mixed_quarter_signed_weight,
+  NoEmbeddedEigenvalues.mixed_neumann_weighted_energy_eq}
+\leanok
+The full first-order integral tends to zero. After subtracting the
+leading signed quotient mass on a quarter, the remaining gradient
+integral tends to zero on the Dirichlet sides and to the corrected
+Rellich edge integral on the Neumann sides. The squared tangential
+energy in that correction agrees with the centered-time energy.
+The leading coefficient is the same exact model weight, with opposite
+signs on the two types of side.
+\end{lemma}
+\begin{proof}
+\uses{lem:mixed-quarter-section-envelope, lem:mixed-quotient-neumann-traces,
+  lem:mixed-rellich-edge, lem:mixed-level-model}
+\leanok
+Absorb the time density into the Dirichlet cosine and apply the
+bounded-coefficient section product limit to the quotient and its
+specified weak partials. The weighted cosine tends to zero on the
+Dirichlet sides and to one on the Neumann sides. On a Neumann side the
+canonical normal trace is zero, the cross coefficient tends to zero,
+and the surviving gradient terms are exactly the corrected edge
+density. The first-order terms also vanish there. Change variables
+from $\tanh t$ to the straight side parameter in the weighted energy.
+\end{proof}
+
 \begin{lemma}[Geometric trace limit on regular levels]
 \label{lem:mixed-geometric-level}
 \uses{def:ee-level-term, def:mixed-quotient-data, lem:mixed-gradient-cutoff}
@@ -304,14 +356,12 @@ signed gradient cutoff.
 
 \begin{proof}
 \uses{lem:mixed-level-density, lem:mixed-level-model, lem:mixed-quarter-mass-replacement,
-  lem:mixed-quarter-section-envelope, lem:mixed-rellich-edge, lem:quarter-orbit-diagonal}
-Pair the quarters in diagonal coordinates. The leading term is the
-paired trace model after the mass replacement. In the remainder the
-Dirichlet cosine absorbs the time weight even on the Dirichlet
-quarters, where it is no larger than the tangential cosine.
-The remaining proof is to apply the section product limits to all
-finite terms, sum the quarter integrals and identify the Neumann
-contribution with the finite part of the centered cutoff.
+  lem:mixed-level-remainders, lem:mixed-signed-quarters, lem:mixed-rellich-edge}
+The first-order term vanishes. For the gradient term, combine the
+leading masses before taking the limit, add the four finite quarter
+remainders, and use the corrected Rellich edge integral to identify
+the endpoint terms. The remaining step is to assemble these identities
+for the signed gradient in the full level expression.
 \end{proof}
 
 \begin{lemma}[Geometric part of the mixed flux limit]

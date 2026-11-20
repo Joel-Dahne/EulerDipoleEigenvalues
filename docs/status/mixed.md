@@ -52,9 +52,14 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-level-density` factors a Dirichlet cosine out of the
   remaining signed gradient terms, and `lem:mixed-quarter-section-envelope`
   provides the dominated trace-product limit for bounded coefficients.
-  What remains in `lem:mixed-geometric-level` is to evaluate these
-  finite products and the first-order contribution and match their
-  sum to the centered cutoff normalization.
+  `lem:mixed-signed-quarters` gives the exact full-orbit decomposition
+  and the transfer of cell integrability and a.e. identities.
+  `lem:mixed-level-remainders` proves the vanishing full first-order
+  term, identifies the finite gradient remainders on the four sides,
+  and matches the weighted tangential energy to the centered-time one.
+  What remains in `lem:mixed-geometric-level` is to assemble the
+  signed gradient integral from the paired leading mass and these
+  remainders and evaluate the endpoint terms.
 - **Neumann traces:** `lem:mixed-boundary-square-traces` is assembled in Lean.
   The profile ODE and square integrability force decay at both ends; uniqueness
   identifies the physical trace with the canonical profile, and decay at

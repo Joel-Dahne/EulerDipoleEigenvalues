@@ -726,8 +726,12 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   on all four quarter graphs.
 - `MixedLevelDensity.lean`: diagonal conormal algebra and factorization
   of the nonsingular gradient remainder and first-order term.
+- `MixedLevelOrbit.lean`: exact full-orbit decomposition into signed
+  quarter integrals; transfer of cell integrability and a.e. identities.
+- `MixedLevelRemainder.lean`: finite quadratic trace limits on each side,
+  vanishing of the full first-order term, and the signed model weights.
 - `MixedFlux.lean`: quotient-domain producer, physical Neumann trace,
-  paired virials and the static identity.
+  centered-time energy normalization, paired virials and the static identity.
 - `Mixed.lean`, `Main.lean`: mixed-sector exclusions, rotation between mixed
   sectors, and main theorem assembly. Consult
   [sector status](../STATUS.md#topic-pages) for proof completion.

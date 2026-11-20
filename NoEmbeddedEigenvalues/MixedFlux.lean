@@ -217,6 +217,19 @@ private theorem mixedNeumannA_integrable (σ : Bool) {f : ℝ → ℝ}
   have hp := inv_pos.mpr (Real.cosh_pos t)
   cases σ <;> simp [abs_of_pos hp, smul_eq_mul]
 
+private theorem mixedNeumannA_integral (σ : Bool) (f : ℝ → ℝ) :
+    (∫ t, (Real.cosh t)⁻¹ * f (mixedNeumannA σ t)) =
+      ∫ a in Ioo (-Real.pi / 2) (Real.pi / 2), f a := by
+  have h := integral_image_eq_integral_abs_deriv_smul (f := mixedNeumannA σ)
+    MeasurableSet.univ (fun t _ ↦ (mixedNeumannA_deriv σ t).hasDerivWithinAt)
+    (mixedNeumannA_injective σ).injOn f
+  rw [image_univ, mixedNeumannA_image, Measure.restrict_univ] at h
+  rw [h]
+  apply integral_congr_ae
+  refine Eventually.of_forall fun t ↦ ?_
+  have hp := inv_pos.mpr (Real.cosh_pos t)
+  cases σ <;> simp [abs_of_pos hp, smul_eq_mul]
+
 private theorem mixedNeumannA_true_neg (t : ℝ) :
     mixedNeumannA true (-t) = -(mixedNeumannA true t) := by
   simp only [mixedNeumannA, ite_true, arcAngle, neg_neg, Real.exp_neg]
@@ -916,6 +929,49 @@ theorem mixed_neumann_stream_trace {ω : L2} (d : MixedQuotientData ω) (σ : Bo
       _ ≤ _ := mul_le_mul_of_nonneg_right
         (by nlinarith [mul_le_mul_of_nonneg_left (hle t) (hpos t).le]) (sq_nonneg _)
   exact ⟨hgac, hgI, hGac, hGbound, henergy⟩
+
+/-- The finite Neumann energy in centered time coordinates is the
+cosine-weighted tangential trace energy in the straight side coordinate. -/
+theorem mixed_neumann_weighted_energy_eq {ω : L2} (d : MixedQuotientData ω) (σ : Bool) :
+    (∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv (mixedNeumannG d.phi σ) x‖ ^ 2) =
+      ∫ a in Ioo (-Real.pi / 2) (Real.pi / 2),
+        Real.cos a * ‖deriv (mixedEdgeValue 1 σ d.phi) a‖ ^ 2 := by
+  let I := Ioo (-Real.pi / 2) (Real.pi / 2)
+  let a := mixedNeumannA σ
+  let T := fun x ↦ d.phi (x, cellEdgeNormal σ)
+  let G := mixedNeumannG d.phi σ
+  have hTac : AbsolutelyContinuousOnInterval T (-Real.pi / 2) (Real.pi / 2) :=
+    (mixed_quotient_edge_h1 d σ).1
+  have hGac : MixedBoundaryLocAC G := (mixed_neumann_stream_trace d σ).2.2.1
+  have hcomp : G ∘ Real.tanh = T ∘ a := by
+    funext t
+    simp only [G, mixedNeumannG, Real.artanh_tanh, mixedNeumann_coord, T, a, Function.comp_apply]
+  have hTae : ∀ᵐ x ∂volume.restrict I, DifferentiableAt ℝ T x := by
+    filter_upwards [ae_restrict_of_ae hTac.boundedVariationOn.ae_differentiableAt_of_mem_uIcc,
+      ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with x hx hxI
+    exact hx (Icc_subset_uIcc (Ioo_subset_Icc_self hxI))
+  rw [← integral_tanh_subst, ← mixedNeumannA_integral σ]
+  apply integral_congr_ae
+  filter_upwards [mixedNeumannA_ae σ hTae, ae_comp_tanh hGac.ae_differentiableAt] with t ht htG
+  have hU := ht.hasDerivAt.scomp t (mixedNeumannA_deriv σ t)
+  have hd := ((htG (mixed_tanh_mem t)).hasDerivAt.scomp t (hasDerivAt_tanh t)).unique
+    (hcomp.symm ▸ hU)
+  have hdN := congrArg norm hd
+  have hsign : |(if σ then -1 else 1 : ℝ)| = 1 := by cases σ <;> norm_num
+  have hp : 0 < Real.cosh t := Real.cosh_pos t
+  have hw : 0 < 1 / Real.cosh t ^ 2 := by positivity
+  simp only [norm_smul, Real.norm_eq_abs, abs_mul, hsign, one_mul,
+    one_sub_tanh_sq, abs_of_pos (inv_pos.mpr hp), abs_of_pos hw] at hdN
+  change (1 / Real.cosh t ^ 2) • (boundaryWeight (Real.tanh t) * ‖deriv G (Real.tanh t)‖ ^ 2) =
+    (Real.cosh t)⁻¹ * (Real.cos (a t) * ‖deriv T (a t)‖ ^ 2)
+  have hcos : Real.cos (a t) = (Real.cosh t)⁻¹ := by
+    have hh := mixedNeumannArc_cos σ t
+    rw [mixedNeumann_coord] at hh
+    simpa only [a] using hh
+  rw [boundaryWeight_tanh, smul_eq_mul, hcos]
+  calc
+    _ = ((1 / Real.cosh t ^ 2) * ‖deriv G (Real.tanh t)‖) ^ 2 := by ring
+    _ = _ := by rw [hdN]; ring
 
 private theorem mixed_stream_eq_on_closed_cell {ω : L2} (d : MixedQuotientData ω) :
     EqOn (contStream ω ∘ diagInv) (fun q ↦ (Real.cos q.1 : ℂ) * d.phi q)
