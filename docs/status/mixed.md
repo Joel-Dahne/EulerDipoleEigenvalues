@@ -37,6 +37,8 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-cell-separatrix-h1`, not across-separatrix regularity.
   `lem:mixed-boundary-square-weighted` is admission-free: its current is
   bounded by a multiple of `1 − x²` and needs no endpoint traces of `F`.
+  `lem:mixed-boundary-square` is its smooth specialization: derivatives
+  within the closed interval give finite energy without imposing endpoint data.
 - **Static identity:** `lem:mixed-K-identity` follows from the cutoff limits
   and the boundary-square identity. The single-edge calculation
   `lem:mixed-neumann-renormalization` is admission-free from the

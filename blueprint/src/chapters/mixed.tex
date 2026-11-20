@@ -153,25 +153,30 @@ $F$ are needed.
 \end{lemma}
 
 \begin{proof}
-With $Sv=-i(wv'-3xv)-\lambda v$ one has $G'=S(F')+iF$. Expanding, the
-difference of the two sides is
-$\int[(1-3x^2)|F|^2-2w^2|F'|^2-2w^2\operatorname{Re}(F''\bar F)
-+10xw\operatorname{Re}(F'\bar F)]$, the $\lambda$ terms cancelling before
-integration; integrating the third term by parts leaves
-$\int[(1-3x^2)|F|^2+xw(|F|^2)']=0$. All boundary currents carry a factor $w$.
+\uses{lem:mixed-boundary-square-weighted}
+\leanok
+Use the within-interval derivative of $F$ on $[-1,1]$ to construct a $C^1$
+extension of $G$ to that closed interval. Its within-interval derivative
+agrees with $G'$ on $(-1,1)$, so the weighted energy is finite by
+continuity on the compact interval. Both $F$ and $G$ are bounded and
+locally absolutely continuous there, so the weighted identity applies.
 \end{proof}
 
 \begin{lemma}[Mixed boundary square on the weighted domain]
 \label{lem:mixed-boundary-square-weighted}
-\uses{lem:mixed-boundary-square, def:h1-interval}
+\uses{def:h1-interval}
 \lean{NoEmbeddedEigenvalues.mixed_boundary_square_weighted}
 \leanok
 Let $\lambda\in\R$, $w=1-x^2$, and let $F,G$ be locally absolutely
 continuous on $(-1,1)$. Suppose $G=T_\lambda F$ almost everywhere,
 $F,G$ are bounded, and $\int_{-1}^1w|G'|^2<\infty$.
 Then $F'$ has a locally absolutely continuous representative, $wF'$ is
-bounded, all integrals in Lemma~\ref{lem:mixed-boundary-square} are finite,
-and that identity holds. No endpoint values of $F$ are required.
+bounded, and all three integrals in the following identity are finite:
+\[
+  \int_{-1}^1w|G'|^2\,dx-2\operatorname{Re}\int_{-1}^1T_0F\,\bar G\,dx
+  =\int_{-1}^1w\,|wF''-3xF'-i\lambda F'|^2\,dx.
+\]
+No endpoint values of $F$ are required.
 \end{lemma}
 
 \begin{proof}

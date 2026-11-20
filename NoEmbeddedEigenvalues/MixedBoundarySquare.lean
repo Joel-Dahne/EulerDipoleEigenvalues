@@ -1,5 +1,6 @@
 import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.IntervalH1
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
@@ -25,15 +26,6 @@ def mixedBoundaryTransport (lam : ℝ) (F : ℝ → ℂ) (x : ℝ) : ℂ :=
 def mixedBoundarySquare (lam : ℝ) (F : ℝ → ℂ) (x : ℝ) : ℂ :=
   (boundaryWeight x : ℂ) * deriv (deriv F) x -
     (3 * (x : ℂ) + Complex.I * (lam : ℂ)) * deriv F x
-
-/-- The mixed boundary square for smooth data (`lem:mixed-boundary-square`). -/
-theorem mixed_boundary_square (lam : ℝ) {F : ℝ → ℂ}
-    (hF : ContDiffOn ℝ ∞ F (Icc (-1) 1)) :
-    let G := mixedBoundaryTransport lam F
-    (∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv G x‖ ^ 2) -
-      2 * (∫ x in Ioo (-1) 1, (mixedBoundaryTransport 0 F x * conj (G x)).re) =
-      ∫ x in Ioo (-1) 1, boundaryWeight x * ‖mixedBoundarySquare lam F x‖ ^ 2 := by
-  sorry
 
 /-- Compact-subinterval absolute continuity on `(-1,1)`. -/
 def MixedBoundaryLocAC (F : ℝ → ℂ) : Prop :=
@@ -430,5 +422,55 @@ theorem mixed_boundary_square_weighted (lam : ℝ) {F G : ℝ → ℂ}
   refine ⟨hdF, hbound, hc.congr hcae.symm, hS, ?_⟩
   rw [integral_congr_ae hcae]
   exact sub_eq_zero.mp hzero
+
+/-- The mixed boundary square for smooth data (`lem:mixed-boundary-square`).
+Use derivatives within the closed interval to bound the weighted energy;
+they agree with ordinary derivatives on the open interval of integration. -/
+theorem mixed_boundary_square (lam : ℝ) {F : ℝ → ℂ}
+    (hF : ContDiffOn ℝ ∞ F (Icc (-1) 1)) :
+    let G := mixedBoundaryTransport lam F
+    (∫ x in Ioo (-1) 1, boundaryWeight x * ‖deriv G x‖ ^ 2) -
+      2 * (∫ x in Ioo (-1) 1, (mixedBoundaryTransport 0 F x * conj (G x)).re) =
+      ∫ x in Ioo (-1) 1, boundaryWeight x * ‖mixedBoundarySquare lam F x‖ ^ 2 := by
+  let K := Icc (-1 : ℝ) 1
+  let S := Ioo (-1 : ℝ) 1
+  let G := mixedBoundaryTransport lam F
+  let H : ℝ → ℂ := fun x ↦ -Complex.I *
+    ((boundaryWeight x : ℂ) * derivWithin F K x - (x : ℂ) * F x) - (lam : ℂ) * F x
+  have hK : UniqueDiffOn ℝ K := uniqueDiffOn_Icc (by norm_num)
+  have hW : ContDiff ℝ 1 (fun x ↦ (boundaryWeight x : ℂ)) :=
+    Complex.ofRealCLM.contDiff.comp (contDiff_const.sub (contDiff_id.pow 2))
+  have hX : ContDiff ℝ 1 (fun x : ℝ ↦ (x : ℂ)) := Complex.ofRealCLM.contDiff
+  have hH : ContDiffOn ℝ 1 H K :=
+    (contDiffOn_const.mul ((hW.contDiffOn.mul (hF.derivWithin hK (by simp))).sub
+      (hX.contDiffOn.mul (hF.of_le (by simp))))).sub (contDiffOn_const.mul (hF.of_le (by simp)))
+  have he : EqOn G H S := by
+    intro x hx
+    have h := derivWithin_of_mem_nhds (f := F) (mem_of_superset (isOpen_Ioo.mem_nhds hx)
+      (show S ⊆ K from Ioo_subset_Icc_self))
+    simp only [G, H, mixedBoundaryTransport, h]
+  have hloc {u : ℝ → ℂ} (hu : ContDiffOn ℝ 1 u S) : MixedBoundaryLocAC u := by
+    intro a b ha hab hb
+    apply ContDiffOn.absolutelyContinuousOnInterval
+    rw [uIcc_of_le hab.le]
+    exact hu.mono fun x hx ↦ ⟨ha.trans_le hx.1, hx.2.trans_lt hb⟩
+  have hGS := hH.congr_mono he (show S ⊆ K from Ioo_subset_Icc_self)
+  obtain ⟨A, hA⟩ := isCompact_Icc.exists_bound_of_continuousOn hF.continuousOn
+  obtain ⟨B, hB⟩ := isCompact_Icc.exists_bound_of_continuousOn hH.continuousOn
+  have hd (x : ℝ) (hx : x ∈ S) : derivWithin H K x = deriv G x :=
+    (derivWithin_of_mem_nhds (mem_of_superset (isOpen_Ioo.mem_nhds hx)
+      (show S ⊆ K from Ioo_subset_Icc_self))).trans
+      (he.eventuallyEq_of_mem (isOpen_Ioo.mem_nhds hx)).deriv_eq.symm
+  have hEnergy : IntegrableOn (fun x ↦ boundaryWeight x * ‖deriv G x‖ ^ 2) S := by
+    have hc : ContinuousOn (fun x ↦ boundaryWeight x * ‖derivWithin H K x‖ ^ 2) K :=
+      (show Continuous boundaryWeight by unfold boundaryWeight; fun_prop).continuousOn.mul
+        ((hH.continuousOn_derivWithin hK le_rfl).norm.pow 2)
+    exact (hc.integrableOn_Icc.mono_set Ioo_subset_Icc_self).congr
+      ((ae_restrict_mem measurableSet_Ioo).mono fun x hx ↦
+        congrArg (fun D : ℂ ↦ boundaryWeight x * ‖D‖ ^ 2) (hd x hx))
+  exact (mixed_boundary_square_weighted lam
+    (hloc ((hF.of_le (show (1 : WithTop ℕ∞) ≤ ∞ by simp)).mono Ioo_subset_Icc_self)) (hloc hGS)
+    EventuallyEq.rfl ⟨A, fun x hx ↦ hA x (Ioo_subset_Icc_self hx)⟩
+    ⟨B, fun x hx ↦ (he hx).symm ▸ hB x (Ioo_subset_Icc_self hx)⟩ hEnergy).2.2.2.2
 
 end NoEmbeddedEigenvalues
