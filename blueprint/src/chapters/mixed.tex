@@ -650,16 +650,20 @@ almost everywhere.
 
 \begin{proof}
 \uses{lem:mixed-rellich-divergence, lem:mixed-rellich-hardy,
-  lem:acl-slicing, lem:mixed-quotient-neumann-traces}
+  lem:acl-slicing, lem:h1-interval-endpoints, lem:mixed-quotient-neumann-traces}
+\leanok
 Choose ACL extensions from the specified weak jet and compare their
-endpoints to the canonical traces. Commutation of the mixed weak
-partials follows by differentiating the test function twice.
-In the differentiated factored current the derivative of $h/(h+k)$
-costs at most $1/(h+k)$. Pure gradient and pure value squares carry
-an extra $h$ in that term. The other quadratic terms pair $\phi$
-with a first weak derivative divided by $h+k$. Thus the separate
-normal derivatives are integrable by the Hardy estimates and
-$L^2$ pairing, before summing them.
+endpoints to the canonical traces. In the differentiated factored
+current the derivative of $h/(h+k)$ costs at most $1/(h+k)$.
+Pure gradient and pure value squares carry an extra $h$ in that term.
+The other quadratic terms pair $\phi$ with a first weak derivative
+divided by $h+k$. The Hardy estimates and $L^2$ pairing therefore
+control each normal derivative separately.
+
+The resulting bulk formulas depend only on the jet at the crossing.
+Apply Lemma~\ref{lem:mixed-rellich-divergence} to affine profiles with
+those values and derivatives. Commutation of the mixed weak partials
+follows by differentiating the test function twice.
 \end{proof}
 
 \begin{lemma}[Sobolev flux of the corrected Rellich current]

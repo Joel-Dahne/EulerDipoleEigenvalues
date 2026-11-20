@@ -47,18 +47,14 @@ admission-free; see [the module map](../architecture.md).
   `lem:mixed-trace-mass` and `prop:mixed-virial`.
   `lem:mixed-trace-field` proves the divergence and normal-flux algebra;
   the Sobolev divergence argument and limit for `lem:mixed-trace-mass` remain.
-- **Rellich form:** `lem:mixed-rellich` is assembled from the corrected flux
-  identity, volume integrability, and a one-dimensional edge calculation.
-  Subtracting the signed trace-mass current first leaves a bounded ratio
-  `h/(h+k)` times a gradient polynomial. Inward Hardy estimates control
-  both divided normal derivatives. The interior product rule and divided
-  Poisson equation give `lem:mixed-rellich-divergence`.
-  `lem:mixed-quotient-neumann-traces` identifies the canonical value and
-  tangential derivative, and `lem:mixed-rellich-section` proves FTC up
-  to both ends of each regular section. `lem:mixed-rellich-flux` now
-  integrates these sections by Fubini. Its remaining admission is
-  `lem:mixed-rellich-integrable-sections`: construct the separate
-  integrable bulk derivatives and verify their a.e. sectional formulas.
+- **Rellich form:** `lem:mixed-rellich` and `lem:mixed-rellich-flux` are
+  admission-free. Subtracting the signed trace-mass current first leaves
+  a bounded ratio `h/(h+k)` times a gradient polynomial. In
+  `lem:mixed-rellich-integrable-sections`, Hardy estimates control the
+  divided first derivatives and make the two normal current derivatives
+  separately integrable. Their bulk formulas agree with the ACL section
+  derivatives and sum to the corrected divergence. Integrating by Fubini
+  uses the canonical Neumann traces and needs no separate corner flux.
 - **Coercivity:** `thm:mixed-coercivity` is assembled from the square
   completion and the two quarter comparisons; it is not admission-free.
   The parity splitting of the form and mass, the Cartesian mass conversion,

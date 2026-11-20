@@ -693,6 +693,347 @@ theorem MixedQuotientData.memLp_partials_div_corner {ω : L2} (d : MixedQuotient
   obtain ⟨ha, hb⟩ := d.memLp_normal_div_cos
   exact ⟨rellich_memLp_div_p 0 ha, rellich_memLp_div_p 1 hb⟩
 
+private def rellichPair (f g : ℂ) : ℝ := (f * conj g).re
+
+private def rellichPairD (f g df dg : ℂ) : ℝ :=
+  rellichPair df g + rellichPair f dg
+
+private def rellichSquareD (f df : ℂ) : ℝ := 2 * rellichPair df f
+
+private def rellichH (q : Plane) : ℝ := Real.cos q.1
+
+private def rellichW (q : Plane) : ℝ := rellichH q / mixedRellichDenominator q
+
+private def rellichU (q : Plane) : ℝ := Real.sin q.1
+
+private def rellichS (j : Fin 2) (q : Plane) : ℝ :=
+  if j = 0 then Real.sin q.1 else -Real.sin q.2
+
+private def rellichT (j : Fin 2) (q : Plane) : ℝ :=
+  if j = 0 then Real.sin q.2 else Real.sin q.1
+
+private def rellichHd (j : Fin 2) (q : Plane) : ℝ := if j = 0 then -rellichU q else 0
+
+private def rellichUd (j : Fin 2) (q : Plane) : ℝ := if j = 0 then rellichH q else 0
+
+private def rellichSd (j : Fin 2) (q : Plane) : ℝ :=
+  if j = 0 then Real.cos q.1 else -Real.cos q.2
+
+private def rellichM (j : Fin 2) (q : Plane) : ℝ :=
+  rellichHd j q + rellichW q * Real.sin (if j = 0 then q.1 else q.2)
+
+private def rellichSq (s t : ℝ) (f a b : ℂ) : ℝ :=
+  s * (‖a‖ ^ 2 - ‖b‖ ^ 2 - ‖f‖ ^ 2) + 2 * t * rellichPair a b
+
+private def rellichCross (s t : ℝ) (f a b : ℂ) : ℝ :=
+  s * rellichPair a f + t * rellichPair f b
+
+/-- Expanded derivative of the factored current. In the term from
+differentiating `h/(h+k)`, put the denominator onto a first partial
+in each mixed value-gradient pairing. -/
+private def rellichD (j : Fin 2) (q : Plane) (f a b df da db : ℂ) : ℝ :=
+  let p := mixedRellichDenominator q
+  let h := rellichH q
+  let u := rellichU q
+  let ud := rellichUd j q
+  let w := rellichW q
+  let s := rellichS j q
+  let t := rellichT j q
+  let hd := rellichHd j q
+  let sd := rellichSd j q
+  let m := rellichM j q
+  let Q := rellichSq s t f a b
+  let Qd := rellichSq sd 0 f a b +
+    s * (rellichSquareD a da - rellichSquareD b db - rellichSquareD f df) +
+    2 * t * rellichPairD a b da db
+  let L := rellichCross s t f a b
+  let Ld := rellichCross sd 0 f a b +
+    s * rellichPairD a f da df + t * rellichPairD f b df db
+  m * (w * Q - 2 * u * rellichCross s t f (a / (p : ℂ)) (b / (p : ℂ))) +
+    w * (hd * Q + h * Qd - 2 * ud * L - 2 * u * Ld)
+
+private def rellichBulk {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (q : Plane) : ℝ :=
+  rellichD j q (d.phi q) (d.jet [0] q) (d.jet [1] q)
+    (d.jet [j] q) (d.jet [j, 0] q) (d.jet [j, 1] q)
+
+private def rellichCoord (j : Fin 2) (q : Plane) : ℝ := if j = 0 then q.1 else q.2
+
+private def rellichLine (j : Fin 2) (q : Plane) (x : ℝ) : Plane :=
+  if j = 0 then (x, q.2) else (q.1, x)
+
+private theorem rellichLine_center (j : Fin 2) (q : Plane) :
+    rellichLine j q (rellichCoord j q) = q := by
+  unfold rellichLine rellichCoord
+  split_ifs <;> rfl
+
+private theorem rellich_line_weights (j : Fin 2) {q : Plane} (hq : q ∈ mixedOpenCell) :
+    let x := rellichCoord j q
+    let L := rellichLine j q
+    HasDerivAt (rellichH ∘ L) (rellichHd j q) x ∧
+    HasDerivAt (rellichU ∘ L) (rellichUd j q) x ∧
+    HasDerivAt (rellichS j ∘ L) (rellichSd j q) x ∧
+    HasDerivAt (rellichT j ∘ L) 0 x ∧
+    HasDerivAt (rellichW ∘ L) (rellichM j q / mixedRellichDenominator q) x := by
+  have hp := (rellichP_pos hq).ne'
+  have hd : HasDerivAt (mixedRellichDenominator ∘ rellichLine j q)
+      (-Real.sin (rellichCoord j q)) (rellichCoord j q) := by
+    fin_cases j
+    · exact (Real.hasDerivAt_cos q.1).add_const (Real.cos q.2)
+    · exact (Real.hasDerivAt_cos q.2).const_add (Real.cos q.1)
+  have hh : HasDerivAt (rellichH ∘ rellichLine j q) (rellichHd j q) (rellichCoord j q) := by
+    fin_cases j
+    · exact Real.hasDerivAt_cos q.1
+    · exact hasDerivAt_const q.2 (Real.cos q.1)
+  change _ ∧ _ ∧ _ ∧ _ ∧ _
+  refine ⟨hh, ?_, ?_, ?_, ?_⟩
+  · fin_cases j
+    · exact Real.hasDerivAt_sin q.1
+    · exact hasDerivAt_const q.2 (Real.sin q.1)
+  · fin_cases j
+    · exact Real.hasDerivAt_sin q.1
+    · exact (Real.hasDerivAt_sin q.2).neg
+  · fin_cases j
+    · exact hasDerivAt_const q.1 (Real.sin q.2)
+    · exact hasDerivAt_const q.2 (Real.sin q.1)
+  · apply (hh.div hd (by simpa only [Function.comp_apply, rellichLine_center] using hp)).congr_deriv
+    simp only [Function.comp_apply, rellichLine_center, rellichM, rellichW]
+    change ((_ * _ - _ * -Real.sin (rellichCoord j q)) / _) =
+      (_ + _ / _ * Real.sin (rellichCoord j q)) / _
+    field_simp
+    ring
+
+private theorem rellich_div_pair (p : ℝ) (f g : ℂ) :
+    rellichPair (f / (p : ℂ)) g = rellichPair f g / p ∧
+    rellichPair f (g / (p : ℂ)) = rellichPair f g / p := by
+  simp only [rellichPair, div_eq_mul_inv, map_mul, map_inv₀, Complex.conj_ofReal]
+  constructor
+  · rw [mul_comm f, mul_assoc, ← Complex.ofReal_inv, Complex.mul_re]
+    simp [mul_comm]
+  · rw [← mul_assoc, mul_comm _ ((p : ℂ)⁻¹), ← Complex.ofReal_inv, Complex.mul_re]
+    simp [mul_comm]
+
+private theorem rellich_normal_hasDerivAt (j : Fin 2) {q : Plane} (hq : q ∈ mixedOpenCell)
+    {F A B : ℝ → ℂ} {f a b df da db : ℂ}
+    (hF : F (rellichCoord j q) = f) (hA : A (rellichCoord j q) = a)
+    (hB : B (rellichCoord j q) = b)
+    (dF : HasDerivAt F df (rellichCoord j q)) (dA : HasDerivAt A da (rellichCoord j q))
+    (dB : HasDerivAt B db (rellichCoord j q)) :
+    let J := fun x ↦ mixedRellichCurrent (fun _ ↦ F x) (fun _ ↦ A x) (fun _ ↦ B x)
+      (rellichLine j q x)
+    HasDerivAt (if j = 0 then fun x ↦ (J x).1 else fun x ↦ (J x).2)
+      (rellichD j q f a b df da db) (rellichCoord j q) := by
+  obtain ⟨hh, hu, hs, ht, hw⟩ := rellich_line_weights j hq
+  have hQ := (hs.mul (((mixed_rellich_norm_sq_hasDerivAt dA).sub
+      (mixed_rellich_norm_sq_hasDerivAt dB)).sub (mixed_rellich_norm_sq_hasDerivAt dF))).add
+    ((ht.const_mul 2).mul (mixed_rellich_pair_hasDerivAt dA dB))
+  have hL := (hs.mul (mixed_rellich_pair_hasDerivAt dA dF)).add
+    (ht.mul (mixed_rellich_pair_hasDerivAt dF dB))
+  have hD := hw.mul ((hh.mul hQ).sub ((hu.const_mul 2).mul hL))
+  have he : (if j = 0 then fun x ↦
+        (mixedRellichCurrent (fun _ ↦ F x) (fun _ ↦ A x) (fun _ ↦ B x)
+          (rellichLine j q x)).1 else fun x ↦
+        (mixedRellichCurrent (fun _ ↦ F x) (fun _ ↦ A x) (fun _ ↦ B x)
+          (rellichLine j q x)).2) =
+      fun x ↦ let z := rellichLine j q x
+        rellichW z * (rellichH z * rellichSq (rellichS j z) (rellichT j z) (F x) (A x) (B x) -
+          2 * rellichU z * rellichCross (rellichS j z) (rellichT j z) (F x) (A x) (B x)) := by
+    by_cases hj : j = 0
+    all_goals
+      simp only [hj, ite_true, ite_false]
+      funext x
+      rw [mixed_rellich_current_factor]
+      simp only [rellichW, rellichH, rellichU, rellichS, rellichT, hj, ite_true, ite_false,
+        rellichSq, rellichCross, rellichPair, mixedRellichDenominator]
+      ring
+  dsimp only
+  rw [he]
+  apply hD.congr_deriv
+  simp only [Pi.sub_apply, Pi.add_apply, Pi.mul_apply, Function.comp_apply, rellichLine_center,
+    hF, hA, hB, Complex.add_re, zero_mul, zero_add]
+  simp only [rellichD, rellichSq, rellichCross, rellichSquareD, rellichPairD,
+    (rellich_div_pair (mixedRellichDenominator q) a f).1,
+    (rellich_div_pair (mixedRellichDenominator q) f b).2, mul_zero, zero_mul, add_zero]
+  unfold rellichPair
+  unfold rellichW
+  ring
+
+private theorem rellich_bulk_integrable {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) :
+    IntegrableOn (rellichBulk d j) mixedOpenCell := by
+  let μ := volume.restrict mixedOpenCell
+  have hU : IsOpen mixedOpenCell := isOpen_Ioo.prod isOpen_Ioo
+  have hμ := ae_restrict_mem (μ := volume) hU.measurableSet
+  have bd {c : Plane → ℝ} (hm : Measurable c) (hc : ∀ q ∈ mixedOpenCell, |c q| ≤ 1) :
+      MemLp c ∞ μ := by
+    apply memLp_top_of_bound hm.aestronglyMeasurable 1
+    exact hμ.mono fun q hq ↦ by simpa only [Real.norm_eq_abs] using hc q hq
+  have hh : MemLp rellichH ∞ μ := bd (by unfold rellichH; fun_prop)
+    (fun _ _ ↦ Real.abs_cos_le_one _)
+  have hu : MemLp rellichU ∞ μ := bd (by unfold rellichU; fun_prop)
+    (fun _ _ ↦ Real.abs_sin_le_one _)
+  have hw : MemLp rellichW ∞ μ := bd (by
+    unfold rellichW rellichH mixedRellichDenominator
+    fun_prop) (fun q hq ↦ by
+      have h := Real.cos_pos_of_mem_Ioo (by simpa only [neg_div] using hq.1)
+      have k := Real.cos_pos_of_mem_Ioo (by simpa only [neg_div] using hq.2)
+      change |Real.cos q.1 / mixedRellichDenominator q| ≤ 1
+      rw [abs_of_nonneg (div_nonneg h.le (rellichP_pos hq).le)]
+      exact (div_le_one (rellichP_pos hq)).2 (le_add_of_nonneg_right k.le))
+  have hs : MemLp (rellichS j) ∞ μ := by
+    unfold rellichS
+    split_ifs
+    · exact hu
+    · exact bd (by fun_prop) (fun _ _ ↦ by simpa only [abs_neg] using Real.abs_sin_le_one _)
+  have ht : MemLp (rellichT j) ∞ μ := by
+    unfold rellichT
+    split_ifs
+    · exact bd (by fun_prop) (fun _ _ ↦ Real.abs_sin_le_one _)
+    · exact hu
+  have hhd : MemLp (rellichHd j) ∞ μ := by
+    unfold rellichHd
+    split_ifs
+    · exact hu.neg
+    · exact MemLp.zero
+  have hud : MemLp (rellichUd j) ∞ μ := by
+    unfold rellichUd
+    split_ifs
+    · exact hh
+    · exact MemLp.zero
+  have hsd : MemLp (rellichSd j) ∞ μ := by
+    unfold rellichSd
+    split_ifs
+    · exact hh
+    · exact bd (by fun_prop) (fun _ _ ↦ by simpa only [abs_neg] using Real.abs_cos_le_one _)
+  have hj : MemLp (fun q ↦ Real.sin (rellichCoord j q)) ∞ μ := by
+    unfold rellichCoord
+    split_ifs
+    · exact hu
+    · exact bd (by fun_prop) (fun _ _ ↦ Real.abs_sin_le_one _)
+  have hm : MemLp (rellichM j) ∞ μ := hhd.add (hw.mul hj)
+  have mul {c e : Plane → ℝ} (hc : MemLp c ∞ μ) (he : Integrable e μ) :
+      Integrable (fun q ↦ c q * e q) μ :=
+    (he.mul_of_top_left hc).congr (.of_forall fun q ↦ mul_comm (e q) (c q))
+  have pair {f g : Plane → ℂ} (hf : MemLp f 2 μ) (hg : MemLp g 2 μ) :
+      Integrable (fun q ↦ rellichPair (f q) (g q)) μ := by
+    have hgc : MemLp (fun q ↦ conj (g q)) 2 μ :=
+      hg.congr_norm (Complex.continuous_conj.comp_aestronglyMeasurable hg.aestronglyMeasurable)
+        (.of_forall fun q ↦ (Complex.norm_conj (g q)).symm)
+    exact Complex.reCLM.integrable_comp (hf.integrable_mul hgc)
+  have pairD {f g df dg : Plane → ℂ} (hf : MemLp f 2 μ) (hg : MemLp g 2 μ)
+      (hdf : MemLp df 2 μ) (hdg : MemLp dg 2 μ) :
+      Integrable (fun q ↦ rellichPairD (f q) (g q) (df q) (dg q)) μ :=
+    (pair hdf hg).add (pair hf hdg)
+  have sqD {f df : Plane → ℂ} (hf : MemLp f 2 μ) (hdf : MemLp df 2 μ) :
+      Integrable (fun q ↦ rellichSquareD (f q) (df q)) μ := (pair hdf hf).const_mul 2
+  have sq {s t : Plane → ℝ} {f a b : Plane → ℂ}
+      (hs : MemLp s ∞ μ) (ht : MemLp t ∞ μ)
+      (hf : MemLp f 2 μ) (ha : MemLp a 2 μ) (hb : MemLp b 2 μ) :
+      Integrable (fun q ↦ rellichSq (s q) (t q) (f q) (a q) (b q)) μ :=
+    (mul hs ((ha.norm.integrable_sq.sub hb.norm.integrable_sq).sub hf.norm.integrable_sq)).add
+      (mul (ht.const_mul 2) (pair ha hb))
+  have cross {s t : Plane → ℝ} {f a b : Plane → ℂ}
+      (hs : MemLp s ∞ μ) (ht : MemLp t ∞ μ)
+      (hf : MemLp f 2 μ) (ha : MemLp a 2 μ) (hb : MemLp b 2 μ) :
+      Integrable (fun q ↦ rellichCross (s q) (t q) (f q) (a q) (b q)) μ :=
+    (mul hs (pair ha hf)).add (mul ht (pair hf hb))
+  have jet := d.h2.memLp_weakJet hU d.weakJet
+  have hf := d.h2.memLp
+  have ha := jet [0] (by decide)
+  have hb := jet [1] (by decide)
+  have hdf := jet [j] (by simp)
+  have hda := jet [j, 0] (by simp)
+  have hdb := jet [j, 1] (by simp)
+  obtain ⟨hap, hbp⟩ := d.memLp_partials_div_corner
+  have hQ := sq hs ht hf ha hb
+  have hQd := ((sq hsd MemLp.zero hf ha hb).add
+    (mul hs (((sqD ha hda).sub (sqD hb hdb)).sub (sqD hf hdf)))).add
+    (mul (ht.const_mul 2) (pairD ha hb hda hdb))
+  have hL := cross hs ht hf ha hb
+  have hLd := ((cross hsd MemLp.zero hf ha hb).add
+    (mul hs (pairD ha hf hda hdf))).add (mul ht (pairD hf hb hdf hdb))
+  have hLp := cross hs ht hf hap hbp
+  exact (mul hm ((mul hw hQ).sub (mul (hu.const_mul 2) hLp))).add
+    (mul hw ((((mul hhd hQ).add (mul hh hQd)).sub (mul (hud.const_mul 2) hL)).sub
+      (mul (hu.const_mul 2) hLd)))
+
+private theorem rellich_extension_ac {l r : ℝ} {F D : ℝ → ℂ}
+    (h : HasIntervalH1 l r F D) (hlr : l < r) :
+    AbsolutelyContinuousOnInterval (intervalH1Extension l r F D) l r := by
+  have hm : (l + r) / 2 ∈ Icc l r := ⟨by linarith, by linarith⟩
+  apply ((LipschitzWith.const (F ((l + r) / 2))).lipschitzOnWith.absolutelyContinuousOnInterval.add
+    (absolutelyContinuous_complex_primitive h.integrable_zeroExtension_derivative
+      ((l + r) / 2) l r)).congr
+  intro x hx
+  rw [uIcc_of_le hlr.le] at hx
+  exact congrArg (fun z ↦ F ((l + r) / 2) + z) (intervalIntegral_intervalZeroExtension D hm hx)
+
+private theorem rellich_acl_sections (j : Fin 2) {f df : Plane → ℂ}
+    (hd : HasWeakPartialOn mixedOpenCell j f df)
+    (hf : MemLp f 2 (volume.restrict mixedOpenCell))
+    (hdf : MemLp df 2 (volume.restrict mixedOpenCell)) (T : Bool → ℝ → ℂ)
+    (hT : j = 1 → ∀ σ : Bool, HasMixedEdgeTrace 1 σ f (T σ)) :
+    let l := -Real.pi / 2
+    let r := Real.pi / 2
+    let I := Ioo l r
+    ∀ᵐ x ∂volume.restrict I, ∃ F : ℝ → ℂ,
+      AbsolutelyContinuousOnInterval F l r ∧
+      (j = 1 → ∀ σ : Bool, F (cellEdgeNormal σ) = T σ x) ∧
+      ∀ᵐ t ∂volume.restrict I,
+        F t = f (axisTraceChart j (x, t)) ∧
+        HasDerivAt F (df (axisTraceChart j (x, t))) t := by
+  let l := -Real.pi / 2
+  let r := Real.pi / 2
+  let I := Ioo l r
+  let Q := I ×ˢ I
+  let C := axisTraceChart j
+  have hU : IsOpen mixedOpenCell := isOpen_Ioo.prod isOpen_Ioo
+  have hpre : Prod.swap ⁻¹' mixedOpenCell = mixedOpenCell := by
+    ext q
+    exact and_comm
+  have hd' : HasWeakPartialOn Q 1 (f ∘ C) (df ∘ C) := by
+    fin_cases j
+    · have h := hd.comp_swap_fst hU
+      rw [hpre] at h
+      exact h
+    · exact hd
+  have hlp {g : Plane → ℂ} (hg : MemLp g 2 (volume.restrict mixedOpenCell)) :
+      MemLp (g ∘ C) 2 (volume.restrict Q) := by
+    fin_cases j
+    · have h := memLp_comp_swap hU.measurableSet hg
+      rw [hpre] at h
+      exact h
+    · exact hg
+  have hlr : l < r := by dsimp [l, r]; linarith [Real.pi_pos]
+  obtain ⟨G, _, hGF, hGD, hline, _⟩ := hd'.exists_l2_trace isOpen_Ioo ordConnected_Ioo
+    (nonempty_Ioo.2 hlr) hlr (hlp hf) (hlp hdf)
+  have hprod : (volume.restrict I).prod (volume.restrict I) = volume.restrict Q := by
+    rw [Measure.prod_restrict, ← Measure.volume_eq_prod]
+  have hGF' : ∀ᵐ x ∂volume.restrict I, ∀ᵐ t ∂volume.restrict I,
+      G (x, t) = f (C (x, t)) :=
+    Measure.ae_ae_of_ae_prod (p := fun q ↦ G q = f (C q)) (hprod.symm ▸ hGF)
+  have ht : ∀ᵐ x ∂volume.restrict I, j = 1 → ∀ σ : Bool,
+      aclTrace l r G (df ∘ C) (cellEdgeNormal σ) x = T σ x := by
+    by_cases hj : j = 1
+    · subst j
+      have hs (σ : Bool) : ∀ᵐ x ∂volume.restrict I,
+          aclTrace l r G (df ∘ axisTraceChart 1) (cellEdgeNormal σ) x = T σ x := by
+        obtain ⟨_, _, hσ, H, E, _, hHF, hH, hE, hHE, hHT⟩ := hT rfl σ
+        have he := hGD.ae_trace_independent hlr hHE hGF hHF
+          ((hlp hf).ae_eq hGF.symm) hH (hlp hdf) hE
+        filter_upwards [he, hHT] with x hx hTx
+        exact (hx _ hσ).trans hTx.symm
+      filter_upwards [hs true, hs false] with x h1 h0 _
+      intro σ
+      cases σ <;> assumption
+    · exact .of_forall fun _ h ↦ absurd h hj
+  filter_upwards [hline, hGF', ht] with x hx hGFx hTx
+  refine ⟨intervalH1Extension l r (fun t ↦ G (x, t)) (fun t ↦ df (C (x, t))),
+    rellich_extension_ac hx hlr, hTx, ?_⟩
+  filter_upwards [hGFx, ae_restrict_of_ae hx.hasDerivAt_ae,
+    ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo] with t hval hder ht
+  refine ⟨(hx.extension_eq hlr ht).trans hval, (hder ht).congr_of_eventuallyEq ?_⟩
+  filter_upwards [isOpen_Ioo.mem_nhds ht] with s hs
+  exact hx.extension_eq hlr hs
+
 /-- Integrable representatives of the separate normal derivatives of the
 corrected current, together with the ACL sections on which they are computed.
 Only the Neumann endpoint values need to be identified explicitly. -/
@@ -715,6 +1056,58 @@ def MixedRellichNormalDerivative {ω : L2} (d : MixedQuotientData ω)
       (fun t ↦ P (axisTraceChart j (x, t))) =ᵐ[volume.restrict I]
         deriv (if j = 0 then fun t ↦ (J t).1 else fun t ↦ (J t).2)
 
+private theorem rellich_bulk_section {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) :
+    MixedRellichNormalDerivative d j (rellichBulk d j) := by
+  let l := -Real.pi / 2
+  let r := Real.pi / 2
+  let I := Ioo l r
+  let C := axisTraceChart j
+  have hU : IsOpen mixedOpenCell := isOpen_Ioo.prod isOpen_Ioo
+  have jet := d.h2.memLp_weakJet hU d.weakJet
+  have hf := d.weakJet.2 [] (by simp) j
+  rw [d.weakJet.1] at hf
+  let T := fun σ ↦ mixedEdgeValue 1 σ d.phi
+  have hFs := rellich_acl_sections j hf d.h2.memLp (jet [j] (by simp)) T
+    (fun _ σ ↦ (mixed_quotient_neumann_traces d σ).2.2.1)
+  have hAs := rellich_acl_sections j (d.weakJet.2 [0] (by simp) j)
+    (jet [0] (by decide)) (jet [j, 0] (by simp)) (fun σ ↦ deriv (T σ))
+    (fun _ σ ↦ (mixed_quotient_neumann_traces d σ).2.2.2)
+  have hBs := rellich_acl_sections j (d.weakJet.2 [1] (by simp) j)
+    (jet [1] (by decide)) (jet [j, 1] (by simp)) (fun _ _ ↦ 0) (fun _ ↦ d.normal_zero 1)
+  refine ⟨rellich_bulk_integrable d j, ?_⟩
+  have hI := ae_restrict_mem (μ := volume) (s := I) measurableSet_Ioo
+  filter_upwards [hFs, hAs, hBs, hI] with x hxF hxA hxB hxI
+  obtain ⟨F, hF, hFT, hFD⟩ := hxF
+  obtain ⟨A, hA, hAT, hAD⟩ := hxA
+  obtain ⟨B, hB, hBT, hBD⟩ := hxB
+  refine ⟨F, A, B, hF, hA, hB, fun hj σ ↦ ⟨hFT hj σ, hAT hj σ, hBT hj σ⟩, ?_⟩
+  filter_upwards [hFD, hAD, hBD, hI] with t htF htA htB htI
+  let q := C (x, t)
+  have hq : q ∈ mixedOpenCell := by
+    fin_cases j
+    · exact ⟨htI, hxI⟩
+    · exact ⟨hxI, htI⟩
+  have hc : rellichCoord j q = t := by fin_cases j <;> rfl
+  have hl : rellichLine j q = fun y ↦ C (x, y) := by fin_cases j <;> rfl
+  have he := rellich_normal_hasDerivAt j hq
+    (F := F) (A := A) (B := B) (f := d.phi q) (a := d.jet [0] q) (b := d.jet [1] q)
+    (df := d.jet [j] q) (da := d.jet [j, 0] q) (db := d.jet [j, 1] q)
+    (hc ▸ htF.1) (hc ▸ htA.1) (hc ▸ htB.1) (hc ▸ htF.2) (hc ▸ htA.2) (hc ▸ htB.2)
+  dsimp only at he
+  rw [hc, hl] at he
+  exact he.deriv.symm
+
+private def rellichAffine (x : ℝ) (f df : ℂ) (y : ℝ) : ℂ := f + (y - x) • df
+
+private theorem rellich_affine_at (x : ℝ) (f df : ℂ) : rellichAffine x f df x = f := by
+  simp [rellichAffine]
+
+private theorem rellich_affine_deriv (x : ℝ) (f df : ℂ) :
+    HasDerivAt (rellichAffine x f df) df x := by
+  have h : HasDerivAt (rellichAffine x f df) ((1 : ℝ) • df) x :=
+    (((hasDerivAt_id x).sub_const x).smul_const df).const_add f
+  rwa [one_smul] at h
+
 /-- Lift the two sectional derivatives to integrable bulk representatives.
 The only weights needed for the lift are the bounded ratio `h/(h+k)`
 and the divided first partials. -/
@@ -723,7 +1116,39 @@ theorem mixed_rellich_integrable_sections {ω : L2} (d : MixedQuotientData ω) :
       ∀ᵐ q ∂volume.restrict mixedOpenCell,
         P q + Q q = mixedVirialDensity d q - mixedRellichDensity d q -
           mixedTraceMassDensity d.phi (d.jet [0]) (d.jet [1]) q := by
-  sorry
+  refine ⟨rellichBulk d 0, rellichBulk d 1, rellich_bulk_section d 0, rellich_bulk_section d 1, ?_⟩
+  have hμ := ae_restrict_mem (μ := volume) (s := mixedOpenCell)
+    (measurableSet_Ioo.prod measurableSet_Ioo)
+  filter_upwards [hμ, mixed_rellich_weak_symm d, d.laplace_eq] with q hq hs hl
+  -- Both derivative formulas depend only on the jets at q, so we can
+  -- compare them on affine profiles instead of matching two ACL fields.
+  let F₁ := rellichAffine q.1 (d.phi q) (d.jet [0] q)
+  let A₁ := rellichAffine q.1 (d.jet [0] q) (d.jet [0, 0] q)
+  let B₁ := rellichAffine q.1 (d.jet [1] q) (d.jet [0, 1] q)
+  let F₂ := rellichAffine q.2 (d.phi q) (d.jet [1] q)
+  let A₂ := rellichAffine q.2 (d.jet [0] q) (d.jet [1, 0] q)
+  let B₂ := rellichAffine q.2 (d.jet [1] q) (d.jet [1, 1] q)
+  have hF₁ : F₁ q.1 = d.phi q := rellich_affine_at ..
+  have hA₁ : A₁ q.1 = d.jet [0] q := rellich_affine_at ..
+  have hB₁ : B₁ q.1 = d.jet [1] q := rellich_affine_at ..
+  have hF₂ : F₂ q.2 = d.phi q := rellich_affine_at ..
+  have hA₂ : A₂ q.2 = d.jet [0] q := rellich_affine_at ..
+  have hB₂ : B₂ q.2 = d.jet [1] q := rellich_affine_at ..
+  have hdF₁ : HasDerivAt F₁ (d.jet [0] q) q.1 := rellich_affine_deriv ..
+  have hdA₁ : HasDerivAt A₁ (d.jet [0, 0] q) q.1 := rellich_affine_deriv ..
+  have hdB₁ : HasDerivAt B₁ (d.jet [0, 1] q) q.1 := rellich_affine_deriv ..
+  have hdF₂ : HasDerivAt F₂ (d.jet [1] q) q.2 := rellich_affine_deriv ..
+  have hdA₂ : HasDerivAt A₂ (d.jet [1, 0] q) q.2 := rellich_affine_deriv ..
+  have hdB₂ : HasDerivAt B₂ (d.jet [1, 1] q) q.2 := rellich_affine_deriv ..
+  have h₁ : deriv (fun x ↦ (mixedRellichCurrent (fun _ ↦ F₁ x) (fun _ ↦ A₁ x)
+      (fun _ ↦ B₁ x) (x, q.2)).1) q.1 = rellichBulk d 0 q :=
+    (rellich_normal_hasDerivAt 0 hq hF₁ hA₁ hB₁ hdF₁ hdA₁ hdB₁).deriv
+  have h₂ : deriv (fun y ↦ (mixedRellichCurrent (fun _ ↦ F₂ y) (fun _ ↦ A₂ y)
+      (fun _ ↦ B₂ y) (q.1, y)).2) q.2 = rellichBulk d 1 q :=
+    (rellich_normal_hasDerivAt 1 hq hF₂ hA₂ hB₂ hdF₂ hdA₂ hdB₂).deriv
+  rw [← h₁, ← h₂]
+  exact mixed_rellich_section_divergence d hq hs hl hF₁ hA₁ hB₁ hF₂ hA₂ hB₂
+    hdF₁ hdA₁ hdB₁ hdF₂ hdA₂ hdB₂
 
 /-- Sobolev flux identity for the corrected Rellich current. Integrate the
 combined divergence, so no separate corner flux for either singular summand
