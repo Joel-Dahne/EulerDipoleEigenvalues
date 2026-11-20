@@ -684,6 +684,8 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
 - `MixedRobinRectangle.lean`: Fubini and sectionwise integration of the
   classical current, with the nonnegative Robin side removed and the other
   currents retained.
+- `MixedRobinCutoff.lean`: odd-face and degenerate right-face current bounds,
+  and removal of both cutoffs for smooth tests.
 - `MixedComparisonForm.lean`: the quarter-cell form and logarithmic Robin
   comparison on either odd axis, with canonical Sobolev traces. It combines
   the interior and Robin inequalities into a common quarter-cell bound.

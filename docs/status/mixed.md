@@ -58,10 +58,10 @@ admission-free; see [the module map](../architecture.md).
   derivative bound for the odd-in-b multiplier. The remaining analytic
   inputs are `lem:mixed-fold-quarter` (including the canonical traces),
   `lem:robin-comparison`, and `lem:mixed-completion`.
-  For `lem:robin-comparison`, the pointwise Picone inequality, regular
-  conormal formulas, and signed truncated-rectangle comparison are
-  admission-free. Removing the odd-axis and `h = 0` cutoffs and passing
-  to Sobolev data remain. See [shared certificate work](shared.md#shared-certificate-work)
+  For `lem:robin-comparison`, the two cutoff limits now give the
+  admission-free `lem:mixed-robin-smooth`. The right-face current is
+  bounded using an integrable inverse-square-root weight, including at the
+  top corner. Only the passage from smooth tests to Sobolev data remains. See [shared certificate work](shared.md#shared-certificate-work)
   for the sign checks.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical

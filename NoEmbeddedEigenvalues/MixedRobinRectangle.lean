@@ -33,6 +33,29 @@ private theorem contDiffAt_partialY_one {E : Type*} [NormedAddCommGroup E]
   filter_upwards [hf.eventually (by norm_num)] with p hp
   exact partialY_eq_fderiv (hp.differentiableAt (by norm_num))
 
+/-- The two regular Picone currents are classically differentiable right
+up to a regular boundary face. -/
+theorem mixed_robin_current_contDiffAt (oddA : Bool) {ρ : ℝ × ℝ → ℝ}
+    (hρ : MixedRobinMultiplier ρ) {z : ℝ × ℝ → ℂ} (hz : ContDiff ℝ 1 z)
+    {q : ℝ × ℝ} (hq : q ∈ Ico 0 (Real.pi / 2) ×ˢ Icc 0 (Real.pi / 2))
+    (haxis : 0 < if oddA then q.1 else q.2) :
+    let g := mixedRobinComparison oddA ρ
+    ContDiffAt ℝ 1 (mixedRobinCurrentA g z) q ∧
+      ContDiffAt ℝ 1 (mixedRobinCurrentB g z) q := by
+  dsimp only
+  let g := mixedRobinComparison oddA ρ
+  have hgg : ContDiffAt ℝ 2 g q :=
+    (mixed_robin_ground_contDiffAt oddA hρ hq).of_le (by simp)
+  have hpos := mixed_robin_ground_pos oddA hρ hq haxis
+  have ⟨hd, hj⟩ := mixed_robin_coefficients_contDiffAt (n := 1) hq
+  have hx := contDiffAt_partialX_one hgg
+  have hy := contDiffAt_partialY_one hgg
+  have hh : ContDiffAt ℝ 1 g q := hgg.of_le (by norm_num)
+  have hn := (hz.contDiffAt (x := q)).norm_sq ℂ
+  constructor
+  · exact (((hd.mul hx).add (hj.mul hy)).div hh hpos.ne').mul hn
+  · exact (((hj.mul hx).add (hd.mul hy)).div hh hpos.ne').mul hn
+
 private theorem continuousAt_partialX {f : ℝ × ℝ → ℝ} {p : ℝ × ℝ}
     (hf : ContDiffAt ℝ 1 f p) : ContinuousAt (partialX f) p := by
   apply ((hf.continuousAt_fderiv (by simp)).clm_apply
@@ -82,7 +105,7 @@ private theorem rectangle_partialX {a A b B : ℝ} (ha : a ≤ A) {F : ℝ × �
   rw [← Measure.volume_eq_prod]
   exact rectangle_partialY ha hs
 
-private theorem robin_potential_continuousAt {q : ℝ × ℝ}
+theorem mixed_robin_potential_continuousAt {q : ℝ × ℝ}
     (hq : q ∈ Ico 0 (Real.pi / 2) ×ˢ Icc 0 (Real.pi / 2))
     (hn : 0 < q.1 ∨ 0 < q.2) : ContinuousAt mixedComparisonPotential q := by
   have hh : 0 < Real.cos q.1 :=
@@ -140,19 +163,8 @@ theorem mixed_robin_rectangle (oddA : Bool) {ρ : ℝ × ℝ → ℝ} (hρ : Mix
     · exact haxis.trans_le hq.2.1
     · exact haxis.trans_le hq.1.1
   have hJ (q : ℝ × ℝ) (hq : q ∈ K) : ContDiffAt ℝ 1 Jx q ∧ ContDiffAt ℝ 1 Jy q := by
-    have hgg : ContDiffAt ℝ 2 g q :=
-      (mixed_robin_ground_contDiffAt oddA hρ (hreg q hq)).of_le (by simp)
-    have hpos : 0 < g q := mixed_robin_ground_pos oddA hρ (hreg q hq) (hp q hq)
-    have ⟨hd, hj⟩ := mixed_robin_coefficients_contDiffAt (n := 1) (hreg q hq)
-    have hx := contDiffAt_partialX_one hgg
-    have hy := contDiffAt_partialY_one hgg
-    have hh : ContDiffAt ℝ 1 g q := hgg.of_le (by norm_num)
-    have hn := ((hz.of_le (show (1 : ℕ∞ω) ≤ 2 by norm_num)).contDiffAt (x := q)).norm_sq ℂ
-    constructor
-    · unfold Jx mixedRobinCurrentA piconeCurrent₁ piconeGroundFlux₁
-      exact (((hd.mul hx).add (hj.mul hy)).div hh hpos.ne').mul hn
-    · unfold Jy mixedRobinCurrentB piconeCurrent₂ piconeGroundFlux₂
-      exact (((hj.mul hx).add (hd.mul hy)).div hh hpos.ne').mul hn
+    exact mixed_robin_current_contDiffAt oddA hρ (hz.of_le (by norm_num))
+      (hreg q hq) (hp q hq)
   have hint {f : ℝ × ℝ → ℝ} (hf : ContinuousOn f K) : IntegrableOn f R :=
     (hf.integrableOn_compact hK).mono_set hRK
   have hiX : IntegrableOn (partialX Jx) R := hint fun q hq ↦
@@ -169,7 +181,7 @@ theorem mixed_robin_rectangle (oddA : Bool) {ρ : ℝ × ℝ → ℝ} (hρ : Mix
     have ⟨hd, hj⟩ := mixed_robin_coefficients_contDiffAt (n := 1) (hreg q hq)
     have hD := hd.continuousAt
     have hE := hj.continuousAt
-    have hV := robin_potential_continuousAt (hreg q hq)
+    have hV := mixed_robin_potential_continuousAt (hreg q hq)
       (by
         cases oddA
         · exact Or.inr (hp q hq)

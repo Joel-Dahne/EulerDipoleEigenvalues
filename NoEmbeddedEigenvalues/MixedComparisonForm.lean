@@ -1,5 +1,5 @@
 import NoEmbeddedEigenvalues.Certificates.Mixed
-import NoEmbeddedEigenvalues.MixedRobinRectangle
+import NoEmbeddedEigenvalues.MixedRobinCutoff
 import NoEmbeddedEigenvalues.WeightedTraces
 
 /-!

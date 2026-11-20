@@ -65,6 +65,7 @@ import NoEmbeddedEigenvalues.MixedBoundarySquare
 import NoEmbeddedEigenvalues.MixedComparison
 import NoEmbeddedEigenvalues.MixedRobinCurrent
 import NoEmbeddedEigenvalues.MixedRobinRectangle
+import NoEmbeddedEigenvalues.MixedRobinCutoff
 import NoEmbeddedEigenvalues.MixedComparisonForm
 import NoEmbeddedEigenvalues.MixedField
 import NoEmbeddedEigenvalues.MixedFlux
