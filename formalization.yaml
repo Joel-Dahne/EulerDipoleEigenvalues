@@ -1,0 +1,60 @@
+# Palomar metadata draft: confirm credits, automation details and review status before submission.
+version: "v0.4"
+
+project:
+  name: "Absence of nonzero embedded eigenvalues for the linearized Euler dipole"
+  description: >-
+    Lean formalization of the absence of nonzero purely imaginary eigenvalues
+    for the two-dimensional Euler equation linearized around the dipole on
+    the flat torus. The compared results include the Fourier-character
+    formulas, the existence and uniqueness of the mean-zero inverse Laplacian,
+    agreement of the weak transport operator with classical transport on
+    Fourier characters, and an example showing that zero is an eigenvalue.
+  authors:
+    - Joel Dahne
+    - Hao Jia
+  license: MIT
+  responsible_maintainers:
+    - Joel Dahne
+
+classification:
+  arxiv: [math.AP]
+  msc2020: [35Q31, 76E09]
+
+sources:
+  - title: "Absence of nonzero embedded eigenvalues for the two-dimensional Euler equation linearized around the dipole"
+    authors:
+      - Joel Dahne
+      - Hao Jia
+    type: paper
+    location: "https://github.com/Joel-Dahne/NoEmbeddedEigenvalues/blob/45765253879a22d9eeb87f9d3b37143614d7d50a/Manuscript/eigenvalues.tex"
+    relationship: formalizes
+    note: >-
+      Unpublished, largely AI-generated working manuscript preserved as the
+      source of the theorem labelled Intm6. The Lean proof follows the
+      sector-based approach but repairs or replaces parts of the argument.
+
+automation:
+  methods:
+    - method: agent
+  notes: >-
+    AI agents were used in the formalization. The roles and extent of
+    automation will be documented before submission.
+
+review:
+  status: unchecked
+  notes: "Provisional: describe the human review actually performed before submission."
+
+fidelity:
+  divergences: >-
+    The Challenge states the result with a weak Fourier formulation of the
+    inverse Laplacian and transport. It assumes that transport of the
+    vorticity plus stream is in L², rather than imposing a separate transport
+    domain condition on the vorticity. The blueprint proves transport of
+    the stream is in L², which bridges these domain formulations.
+
+alignment:
+  namespace: EulerDipole
+  statements:
+    - source: "Manuscript/eigenvalues.tex, theorem labelled Intm6"
+      lean: EulerDipole.no_embedded_eigenvalues
