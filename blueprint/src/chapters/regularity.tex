@@ -5,9 +5,7 @@ The odd--odd and mixed arguments need regularity well beyond
 $\omega\in L^2$: weighted bounds at the saddles, $H^1$ regularity across the
 separatrix and $H^2$ regularity of quotients $\psi/\Psi$ or $\psi/\cos a$.
 The transport gains must apply to jet-subtracted pairs, not only to
-eigenfunctions satisfying an elliptic relation. The final section records
-the separate elliptic-center argument; neither sector exclusion needs it
-once the mixed boundary trace is handled locally.
+eigenfunctions satisfying an elliptic relation.
 In this chapter $d$ is distance to the saddle set and $r$ distance to a fixed saddle.
 
 \section{Weighted elliptic estimates at a saddle}
@@ -468,28 +466,6 @@ For support, combine the countably many null exceptional sets in frequency
 before passing to the product measure.
 \end{proof}
 
-\begin{lemma}[Modewise inversion of normalized spectral data]
-\label{lem:cylinder-normalized-fourier-inverse}
-\uses{def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierData_rescale_ae,
- NoEmbeddedEigenvalues.cylinderFourierDataMode_eq,
- NoEmbeddedEigenvalues.cylinderFourierData_inverse_ae}
-\leanok
-For each $n$, the rescaled function $\eta\mapsto\Phi_G(2\pi\eta,n)$
-represents $\mathscr F_nG$ in real-line L2. Its inverse L2 Fourier transform
-agrees a.e.\ with the original specified coefficient $G_n$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-frequency-transport, lem:cylinder-normalized-fourier-data,
- lem:cylinder-fourier-modes}
-\leanok
-Pull the representative identity back under the measure-preserving forward
-dilation. The resulting L2 classes are equal.
-Apply the inverse Fourier equivalence and then the original coefficient's
-a.e.\ representative identity.
-\end{proof}
-
 \begin{lemma}[Normalized spectral data from physical Poisson forcing]
 \label{lem:cylinder-forcing-fourier-data}
 \uses{def:cylinder-physical-forcing, def:cylinder-inverse-data,
@@ -608,30 +584,6 @@ Multiplication gives $\delta^2w^2\le L|\sigma_a|^2$; for example,
 $B=L/\delta^2\ge1$ suffices.
 \end{proof}
 
-\begin{lemma}[Weighted spectral cylinder inverse]
-\label{lem:cylinder-spectral-inverse}
-\uses{def:cylinder-spectral-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_spectral_inverse}
-\leanok
-Let $a\ge1$ avoid $M\subset\N$. One $B\ge1$ works for every measure $\mu$
-on $\R\times\N$ supported a.e.\ on the modes in $M$ and every $G\in L^2(\mu)$:
-\[
- V=G/\sigma_a\in L^2(\mu),\qquad wV\in L^2(\mu),\qquad
- \sigma_a V=G\ \hbox{a.e.},\qquad \|wV\|_2\le B\|G\|_2.
-\]
-These are spectral weighted norms; identification with physical weak
-derivatives is a separate assertion.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-symbol-gap, lem:cylinder-symbol-factorization}
-\leanok
-The quotient is a.e.\ strongly measurable. Uniform ellipticity gives
-$|wV|\le B|G|$ on the allowed modes, a genuine L2 majorant.
-Since $w\ge1$, the unweighted norm is finite too.
-Nonvanishing gives the multiplier equation without a totalized-inverse defect.
-\end{proof}
-
 \begin{lemma}[Integrable spectral mass for cylinder synthesis]
 \label{lem:cylinder-spectral-mass}
 \uses{def:cylinder-spectral-data, def:sobolev-local}
@@ -655,118 +607,6 @@ The first factor is integrable on $\R$. The second is summable, including
 $m=0$, since $(1+m^2)^{-1}\le2(m+1)^{-2}$.
 This proves actual L2 membership of $w^{-1}$.
 Hölder applied to $w^{-1}|wV|=|V|$ gives the last assertion.
-\end{proof}
-
-\begin{lemma}[Bounded continuous cylinder synthesis]
-\label{lem:cylinder-bounded-synthesis}
-\uses{def:cylinder-spectral-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.integrable_cylinderSynthesis,
- NoEmbeddedEigenvalues.continuous_cylinderSynthesis,
- NoEmbeddedEigenvalues.norm_cylinderSynthesis_le,
- NoEmbeddedEigenvalues.cylinderAngularMode_periodic,
- NoEmbeddedEigenvalues.cylinderSynthesis_periodic,
- NoEmbeddedEigenvalues.cylinderSynthesis_of_memLp_weighted}
-\leanok
-For $V\in L^1(\mu)$ the defining synthesis integral is integrable at every
-$(t,\theta)$. Its value is continuous, $2\pi$-periodic in $\theta$, and
-\[
- |{\cal S}_{b,\mu}V(t,\theta)|\le\int|V|\,d\mu.
-\]
-Consequently, if $\mu\le\mu_{\rm sp}$ and $V$ is a.e.\ strongly measurable
-with $wV\in L^2(\mu)$, the synthesis has a positive bound uniform over the
-whole cylinder.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-spectral-mass}
-\leanok
-The kernel is measurable in frequency, continuous in $(t,\theta)$ and
-bounded by one. The integrable dominator $|V|$ gives both continuity and
-the bound. Integer angular modes give pointwise periodicity before integration.
-\end{proof}
-
-\begin{definition}[Folded trigonometric spectral data]
-\label{def:cylinder-trig-data}
-\uses{def:cylinder-normalized-frequency-data, def:cylinder-spectral-data}
-\lean{NoEmbeddedEigenvalues.cylinderPositiveFourierMeasure,
- NoEmbeddedEigenvalues.cylinderAllowedFourierMeasure,
- NoEmbeddedEigenvalues.cylinderFoldFactor,
- NoEmbeddedEigenvalues.cylinderPositiveFourierData,
- NoEmbeddedEigenvalues.cylinderTrigFourierData}
-\leanok
-Set $d\mu_+=d\nu(\xi)\,d\#(m)$ on $\R\times\N$ and
-$\mu_M=\mu_+|_{\{m\in M\}}$.
-For a Boolean $b$ set $A_b(0)=1$ for even $b$ and $A_b(0)=0$ otherwise;
-for $m>0$, set $A_b(m)=2$ for even $b$ and $A_b(m)=2i$ otherwise.
-Given cylinder L2 data $G$, define
-\[
- \Phi_G^+(\xi,m)=\Phi_G(\xi,m),\qquad
- H_b(\xi,m)=A_b(m)\Phi_G^+(\xi,m).
-\]
-\end{definition}
-
-\begin{lemma}[Exact signed-mode folding and the constant mode]
-\label{lem:cylinder-trig-folding}
-\uses{def:cylinder-trig-data}
-\lean{NoEmbeddedEigenvalues.norm_cylinderFoldFactor_le,
- NoEmbeddedEigenvalues.cylinderFoldFactor_pair,
- NoEmbeddedEigenvalues.cylinderTrigFourierData_pair,
- NoEmbeddedEigenvalues.cylinderTrigFourierData_constant}
-\leanok
-One has $|A_b(m)|\le2$. For $m>0$,
-\[
- A_b(m)e_{b,m}(\theta)=e^{im\theta}
-       +\operatorname{sgn}(b)e^{-im\theta}.
-\]
-Consequently, if $\Phi_G(\xi,-m)=\operatorname{sgn}(b)\Phi_G(\xi,m)$ a.e.\
-in $\nu$, their signed pair equals $e_{b,m}(\theta)H_b(\xi,m)$ a.e.\
-in frequency, simultaneously for every $\theta$.
-If the same reflection identity holds at degree zero, then
-$e_{b,0}(\theta)H_b(\xi,0)=\Phi_G(\xi,0)$ a.e.:
-the even constant is counted once and the odd constant vanishes.
-\end{lemma}
-
-\begin{proof}
-\leanok
-Euler's formula gives the nonzero pair. At degree zero the even factor is one.
-In odd parity the reflection identity is $z=-z$, hence $z=0$.
-No square-root angular normalization is used.
-\end{proof}
-
-\begin{lemma}[Finite folded spectral data and allowed measure]
-\label{lem:cylinder-trig-data}
-\uses{def:cylinder-trig-data}
-\lean{NoEmbeddedEigenvalues.measurable_cylinderPositiveFourierData,
- NoEmbeddedEigenvalues.measurable_cylinderTrigFourierData,
- NoEmbeddedEigenvalues.cylinderPositiveFourierData_memLp,
- NoEmbeddedEigenvalues.cylinderTrigFourierData_memLp,
- NoEmbeddedEigenvalues.cylinderTrigFourierData_support,
- NoEmbeddedEigenvalues.cylinderAllowedFourierMeasure_eq_prod,
- NoEmbeddedEigenvalues.integrable_mode_cylinderAllowedFourierMeasure,
- NoEmbeddedEigenvalues.cylinderAllowedFourierMeasure_le_spectral,
- NoEmbeddedEigenvalues.ae_mem_cylinderAllowedFourierMeasure}
-\leanok
-The positive and folded data are jointly measurable and genuinely L2 in $\mu_+$.
-If $G_m=0$ a.e.\ for each $m\notin M$, then $H_b$ vanishes jointly a.e.\
-outside $M$.
-Moreover
-\[
- \mu_M=\nu\times(\#|_M)\le\mu_{\rm sp},
-\]
-and $\mu_M$ is supported on $M$.
-Every $L^1(\mu_M)$ function has an actual $L^1(\nu)$ slice at every $m\in M$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-normalized-fourier-data, lem:cylinder-fourier-modes,
- lem:cylinder-trig-folding, lem:cylinder-frequency-transport}
-\leanok
-The summable signed mode masses stay summable when restricted to natural
-indices. The product integrability criterion gives finite joint L2, and
-$|A_b|\le2$ retains it. Countably many coefficient null sets give joint support.
-The restriction belongs to the discrete product factor; $\nu\le d\xi$ gives
-measure domination. Fubini gives a.e.\ integrable slices in restricted counting
-measure, which has no exceptional allowed degree.
 \end{proof}
 
 \begin{lemma}[Pointwise reflection parity of cylinder synthesis]
@@ -795,71 +635,6 @@ Allowed degree gives $(-1)^m=\operatorname{sgn}(\varepsilon_0)
 \operatorname{sgn}(\varepsilon_1)$.
 Apply the cosine/sine subtraction and negation formulas before integration.
 The exceptional set is spectral, not a set of angular evaluation points.
-\end{proof}
-
-\begin{definition}[Trigonometric spectral inverse candidate]
-\label{def:cylinder-trig-inverse}
-\uses{def:cylinder-trig-data, def:cylinder-spectral-data}
-\lean{NoEmbeddedEigenvalues.cylinderTrigInverse}
-\leanok
-For the specified folded data set $W_{a,b}=H_b/\sigma_a$, and synthesize it
-with $\mathcal S_{b,\mu_M}$.
-\end{definition}
-
-\begin{lemma}[Finite spectral inverse and bounded candidate]
-\label{lem:cylinder-trig-inverse}
-\uses{def:cylinder-trig-inverse}
-\lean{NoEmbeddedEigenvalues.measurable_cylinderTrigInverse,
- NoEmbeddedEigenvalues.cylinderTrigInverse_spectral_bounds,
- NoEmbeddedEigenvalues.cylinderTrigInverse_mode_bounds}
-\leanok
-Let $a\ge1$ avoid $M$ and $G$ be genuine cylinder L2 data.
-Then $W_{a,b}$ and $wW_{a,b}$ are L2 in $\mu_M$, $W_{a,b}$ is L1, and
-$\sigma_aW_{a,b}=H_b$ a.e.
-The actual synthesis is continuous and bounded by one positive constant
-uniform in both cylinder coordinates. Each allowed degree has genuine
-frequency L1 and L2 norms.
-This is a spectral multiplier identity, not a physical weak Poisson identity.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-trig-data, lem:cylinder-spectral-inverse,
- lem:cylinder-spectral-mass, lem:cylinder-bounded-synthesis}
-\leanok
-Restrict the proved folded L2 data to $\mu_M$ and apply the uniform nonresonant
-multiplier theorem. The two-derivative weight and measure domination give L1,
-hence the bounded continuous integral.
-Counting-measure slicing gives L1 and squared-mass integrability at each allowed
-degree; the explicit measurable quotient gives its L2 measurability.
-\end{proof}
-
-\begin{lemma}[Bounded parity-preserving candidate from physical forcing]
-\label{lem:cylinder-forcing-trig-candidate}
-\uses{def:cylinder-trig-inverse, def:cylinder-inverse-data,
- def:cylinder-physical-forcing, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_forcing_trig_pair,
- NoEmbeddedEigenvalues.cylinder_forcing_trig_constant,
- NoEmbeddedEigenvalues.cylinder_forcing_trig_inverse}
-\leanok
-Under the original Poisson, parity, weighted-forcing and nonresonance hypotheses,
-take $G$ to be the actual cylinder forcing, $b=\varepsilon_1$ and
-$M$ the allowed degrees. The exact signed-pair and constant-mode identities hold
-for its own data. Its folded amplitudes vanish jointly a.e.\ outside $M$.
-The candidate has the spectral L2, weighted L2, L1 and multiplier properties
-above. Its synthesis is actually bounded, continuous, $2\pi$-periodic in angle
-and has both original reflection signs pointwise.
-No extra spectral-data, parity, support or integrability premise is imposed.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-forcing-fourier-data, lem:cylinder-forcing-data,
- lem:cylinder-trig-folding, lem:cylinder-trig-data, lem:cylinder-trig-inverse,
- lem:cylinder-trig-parity, lem:cylinder-bounded-synthesis}
-\leanok
-Use the forcing's proved negative-mode sign for each nonzero pair and at zero.
-Its original coefficient support gives the folded support. Apply the finite
-spectral inverse to its actual L2 data, and use allowed support for pointwise
-reflection parity. Integer angular modes give actual periodicity.
 \end{proof}
 
 \begin{lemma}[Inverse Fourier integral represents the L2 inverse]
@@ -923,30 +698,6 @@ The frequency dilation is a measure-preserving embedding and converts
 $e^{it\xi}$ to $e^{2\pi it\eta}$ exactly.
 Use the L1/L2 inverse-integral bridge, then the L2 inverse isometry and
 representative congruence for the squared-mass identity.
-\end{proof}
-
-\begin{lemma}[Actual candidate modes have identified finite time inverses]
-\label{lem:cylinder-candidate-time-modes}
-\uses{def:cylinder-trig-inverse, def:cylinder-time-synthesis,
- def:cylinder-inverse-data, def:cylinder-physical-forcing}
-\lean{NoEmbeddedEigenvalues.cylinderTrigInverse_time_modes,
- NoEmbeddedEigenvalues.cylinderTrigInverse_time_mass,
- NoEmbeddedEigenvalues.cylinder_forcing_trig_time_mode}
-\leanok
-For each allowed $m$ of the spectral candidate, let
-$f_m(\xi)=W_{a,b}(\xi,m)$. Its actual time integral $T_\nu f_m$ is genuinely L2,
-represents the specified inverse class $K_\nu f_m$ a.e., and has exact mass
-$\int|T_\nu f_m|^2=\int|f_m|^2\,d\nu$.
-In particular this holds for the candidate produced by the original weighted
-physical forcing, without additional mode-finiteness hypotheses.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:cylinder-trig-inverse, lem:cylinder-time-synthesis}
-\leanok
-Every allowed mode already has genuine frequency L1 and L2 norms.
-Apply the normalized inverse-integral theorem, specializing to the actual
-physical forcing's cylinder L2 data when required.
 \end{proof}
 
 \begin{definition}[Joint signed cylinder synthesis]
@@ -1416,30 +1167,22 @@ with the same L2 inverse witness. All finite norms are established before the
 mass identities.
 \end{proof}
 
-\begin{lemma}[Specified L2 candidates for the allowed signed inverse]
-\label{lem:cylinder-signed-inverse-candidates}
-\uses{def:cylinder-signed-inverse, def:cylinder-l2-inverse,
- def:cylinder-spectral-jets, def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_spectral_jet_memLp,
- NoEmbeddedEigenvalues.cylinder_signed_inverse_jet_candidates}
+\begin{lemma}[Finite derivative spectra for the allowed signed inverse]
+\label{lem:cylinder-signed-inverse-jet-l2}
+\uses{def:cylinder-signed-inverse, def:cylinder-spectral-jets}
+\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_spectral_jet_memLp}
 \leanok
-Let $a\ge1$ avoid $M$ and let genuinely cylinder-L2 $G$ have its actual
+Let $a\ge1$ avoid $M$, and let genuinely cylinder-L2 $G$ have its actual
 normalized spectrum zero jointly a.e.\ when $|n|\notin M$.
-For $H=W_{a,G}$ there are specified entries with
-$E_\emptyset=J(W_{a,G})$ pointwise, genuine joint L2 through order two, and
-$E_w=\mathcal I_2[(W_{a,G})_w]$ a.e.\ for every $|w|\le2$.
-The derivative spectra themselves have genuine finite L2 norms.
-No extra spectral-derivative integrability or weak-jet premise is accepted.
+Every ordered derivative spectrum $(W_{a,G})_w$ for $|w|\le2$
+is genuinely spectral L2.
 \end{lemma}
 
 \begin{proof}
-\uses{lem:cylinder-signed-inverse, lem:cylinder-inverse-jet-candidates,
- lem:cylinder-spectral-jet-l2}
+\uses{lem:cylinder-signed-inverse, lem:cylinder-spectral-jet-l2}
 \leanok
-The allowed signed inverse already has genuine quadratic weighted spectral L2.
-Apply the common candidate construction to that same measurable quotient.
-Retain its actual nil integral and the specified L2 inverse class of every
-ordered derivative spectrum.
+The allowed signed inverse has a genuine quadratic weighted spectral L2 norm,
+so the derivative spectrum estimate applies to that same measurable quotient.
 \end{proof}
 
 \begin{definition}[Algebraic cylinder jet operator]
@@ -1501,7 +1244,7 @@ The specified entry identifications then give the joint raw a.e.\ equation.
 \label{lem:cylinder-signed-candidate-equation}
 \uses{def:cylinder-jet-operator, def:cylinder-signed-inverse,
  def:cylinder-l2-inverse, def:cylinder-spectral-jets,
- def:cylinder-normalized-frequency-data}
+ def:cylinder-normalized-frequency-data, lem:cylinder-signed-inverse-jet-l2}
 \lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_candidates_equation}
 \leanok
 Let $a\ge1$ avoid $M$, and let genuinely cylinder-L2 $G$ have its actual
@@ -2885,28 +2628,6 @@ the inverse period translation is volume-preserving affine.
 All value and gradient norms are actual finite whole-patch norms.
 \end{proof}
 
-\begin{lemma}[Ordinary odd--odd gain off the separatrix with full-collar norms]
-\label{lem:dd-punctured-separatrix-h1}
-\uses{def:eigen-problem, def:sectors, def:sobolev-local, def:weak-derivative-local,
- def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.dd_punctured_separatrix_h1}
-\leanok
-For an odd--odd eigenfunction there is $0<\varepsilon<1$ such that
-$\widetilde\omega\in H^1_{\rm loc}(\{0<|\Psi|<\varepsilon\})$.
-On this same nonzero collar it has a single measurable specified gradient $D$
-whose entries belong to $L^2_{\rm loc}(\{|\Psi|<\varepsilon\})$.
-Only the norms, not the weak identities, have been extended through the seams.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:dd-cell-separatrix-h1, lem:odd-odd-h1-cell-fold,
- lem:odd-odd-collar-gradient}
-\leanok
-Use the one cell strip for both reflected-periodic H1 pullback and
-measurable gradient selection. Weak uniqueness and the finite fold cover
-retain that same gradient in all full-collar norm bounds.
-\end{proof}
-
 \begin{lemma}[Gluing a first-odd cell collar]
 \label{lem:cell-separatrix-gluing}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
@@ -3013,7 +2734,7 @@ interval $H^1$ extensions specify the zero traces.
 The quadratic saddle jet supplies the weaker weighted-forcing hypotheses
 of Lemma~\ref{lem:weighted-transport-h1}, so the former generic $H^1$
 transport sketch is unnecessary. The endpoint ray terms are controlled by
-Lemma~\ref{lem:weighted-corner-trace}; numerator differentiation uses only
+Lemma~\ref{lem:weighted-quarter-ray-values}; numerator differentiation uses only
 $H^2$ regularity of $\psi$, not a prior $H^1$ bound for $\omega$.
 Zero edge trace then follows from the boundary transport equation and
 weighted corner integrability, with no separate assumption about the
@@ -3493,37 +3214,6 @@ The specified time derivative and its weighted bound are valid on
 that same strip without shrinking it.
 \end{proof}
 
-\begin{lemma}[Strong weighted quarter derivatives, odd--odd]
-\label{lem:dd-quarter-weighted-derivatives}
-\uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
- def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.dd_quarter_weighted_derivatives}
-\leanok
-For an odd--odd eigenfunction with fixed rotation character there is
-$0<h_0<1/2$ such that every separately recentered profile
-$\omega_k=\widetilde\omega\circ\Gamma_k$ on $Q_{h_0}$ has specified
-weak derivatives $H_k,T_k$ with
-\[
- H_k\in L^2(Q_{h_0}),\qquad
- \frac{T_k}{(d\circ\Gamma_k)^2}\in L^2(Q_{h_0}).
-\]
-\end{lemma}
-
-\begin{proof}
-\uses{lem:dd-base-quarter-weighted-derivatives, lem:quarter-rotation-character,
- lem:weak-derivative-basic}
-\leanok
-The base-quarter lemma supplies both weak derivatives and their bounds
-for the same raw pullback and cutoff.
-Lemma~\ref{lem:quarter-rotation-character} gives
-$\widetilde\omega\circ\Gamma_k=\kappa^k\widetilde\omega\circ\Gamma_0$
-jointly a.e. Hence weak linearity and a.e.\ congruence give
-$H_k=\kappa^kH_0$ and $T_k=\kappa^kT_0$.
-Since $d\circ\Gamma_k=d\circ\Gamma_0$ pointwise, the weighted
-time derivative is also a constant multiple of its base-quarter
-counterpart. Both norms transfer without shrinking the common cutoff.
-\end{proof}
-
 \begin{remark}[Digest note: midpoint representatives and weak reconstruction]
 The midpoint value is selected by interval absolute continuity and the
 endpoint transport identity, not by evaluating a raw spatial representative
@@ -3611,26 +3301,6 @@ The sum of the two projected raw lifts equals the actual raw lift a.e.,
 which transfers the weak identities; division is linear for the weighted norms.
 \end{proof}
 
-\begin{lemma}[Weighted specified gradient on the base-quarter overlap]
-\label{lem:dd-weighted-gradient-base-overlap}
-\uses{def:eigen-problem, def:sectors, def:quarter-image,
- def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_weighted_gradient_base_overlap}
-\leanok
-For an odd--odd eigenfunction there are an open lifted neighbourhood
-$U$ of $\{\Psi=0\}$, $0<b<1/2$, and specified weak derivatives $D_j$
-on all of $U$, such that $D_j/d\in L^2(U\cap V_b)$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:dd-separatrix-weak-gradient,
- lem:dd-base-quarter-spatial-gradient, lem:weak-derivative-unique}
-\leanok
-Choose the one ordinary separatrix gradient on $U$ and the weighted
-gradient on $V_b$. Weak uniqueness on their open overlap identifies
-their representatives a.e.\ and transfers the weighted norm.
-\end{proof}
-
 \begin{lemma}[Weighted gradient on a whole positive cell collar]
 \label{lem:dd-cell-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
@@ -3690,9 +3360,9 @@ $\partial_h\omega$ without the factor $d$ present in the ordinary $H^1$
 gain. It is not differentiated: phase-cell comparability transfers the
 existing Hardy estimates to $\Lambda(h)dh$.
 The manuscript uses $H^1\hookrightarrow L^4$ to control multiplication by
-$\Lambda_\Psi$. The rectangle slicing argument of
-Lemma~\ref{lem:log-multiplier-rectangle} supplies exactly that multiplier
-bound without a finite-$p$ embedding. The weighted gradient supplies the
+$\Lambda_\Psi$. The diagonal slicing argument of
+Lemma~\ref{lem:dipole-log-multiplier} supplies the multiplier bound
+without a finite-$p$ embedding. The weighted gradient supplies the
 third-derivative input to the stream-quotient construction below; it is not
 by itself an $H^2$ division argument.
 \end{remark}
@@ -3868,26 +3538,6 @@ partition suffices; a new torus partition-of-unity construction is unnecessary.
 The weighted operator $E$ is not used in this construction.
 \end{remark}
 
-\begin{lemma}[$L^2$ vorticity quotient, odd--odd]
-\label{lem:dd-vorticity-quotient-l2}
-\uses{def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.dd_vorticity_quotient_l2}
-\leanok
-For an odd--odd eigenfunction, $\nu=\omega/\Psi\in L^2(\T^2)$.
-\end{lemma}
-
-\begin{proof}
-\uses{prop:dd-stream-quotient-h2, lem:even-h2-dipole-laplacian,
- lem:inverse-laplacian-derivatives}
-\leanok
-The stream quotient is even and $H^2$, and $\psi=\Psi\phi$.
-Since $\Delta\psi=\omega$, the divided-Laplacian lemma with $F=\phi$
-gives $\nu\in L^2$.
-The manuscript instead applies angular Hardy to the vorticity using
-$\nabla\omega/d\in L^2$. That separate division argument is unnecessary
-after stream $H^2$ is established.
-\end{proof}
-
 \begin{corollary}[Periodic quotient transport]
 \label{cor:dd-quotient-transport-periodic}
 \uses{def:dipole}
@@ -3919,50 +3569,12 @@ Taking $\eta=\overline{e_k}$ gives the character-tested relation directly;
 no maximal-domain or closed-operator theorem is needed.
 \end{proof}
 
-\begin{proposition}[Quotient domain with corner bounds, odd--odd]
-\label{prop:dd-quotient-domain}
-\uses{def:eigen-problem, def:sectors, def:sobolev-torus, def:local-weak-jets,
-  def:saddle-ortho-chart}
-\lean{NoEmbeddedEigenvalues.dd_quotient_domain}
-\leanok
-For every odd--odd eigenfunction with $\lambda\ne0$,
-\[
-  \phi:=\psi/\Psi\in H^2(\T^2),\qquad \nu:=\omega/\Psi\in L^2(\T^2),\qquad
-  \nu/d\in L^2(\T^2).
-\]
-$\phi$ is even under both separatrix reflections and
-$H(\nu+\phi)=\lambda\nu$ in the periodic weak graph domain.
-The global $\nu/d$ weight is read over one period box of the lift.
-At each lifted saddle $P$, the continuous quotient in the orthonormal
-chart has $(\phi-a)/r^2,\ \nabla\phi/r\in L^2$ on a disk, with $a$ its
-value at $P$ and the gradient taken from its weak jet
-(manuscript \texttt{(prop:dd-quotient-domain)}).
-\end{proposition}
-
-\begin{proof}
-\uses{cor:dd-exclusion-domain, cor:dd-quotient-transport-periodic,
- lem:even-h2-corner-hardy, lem:saddle-normal-form}
-The exclusion data supply the $H^2$ quotient, $L^2$ vorticity quotient,
-local transport pair and $\nu/d\in L^2$ near all saddles.
-Away from the saddles, $d$ is bounded below, so the last estimate is global.
-Weak invariant division on the torus gives the global transport relation.
-At each saddle apply the corner Hardy lemma to the even $H^2$ quotient,
-with $a=\phi(P)$. This supplies both additional weighted bounds.
-\end{proof}
-
-\begin{remark}[Digest note: the corner conclusions are not independent inputs]
-The full manuscript proposition is a consequence of the minimal exclusion
-data, rather than a prerequisite for obtaining them. Its two extra corner
-bounds follow from even $H^2$ regularity alone. Thus \emph{stronger} describes
-the bundled statement, not an independent analytic regularity requirement.
-
-The stream-quotient proof above still uses the quadratic numerator jet
-and the weighted third derivative. Double division yields precisely the
-weighted quotient tails needed for an elementary $H^2$ point-removal
-argument. Removing these weights from the final interface does not remove
-that internal proof work. The simplification is to prove the small
-division/removal lemmas once and keep the bundled proposition off the
-exclusion route.
+\begin{remark}[Digest note: corner weights in the quotient proof]
+The exclusion uses the minimal quotient domain, not the full manuscript
+proposition. The stream-quotient proof still uses the quadratic numerator
+jet and the weighted third derivative. Double division gives the weighted
+tails used for $H^2$ point removal; these weights are an internal input,
+not an additional hypothesis of the exclusion.
 \end{remark}
 
 \section{Mixed sectors: regularity across the separatrix}
@@ -4191,58 +3803,4 @@ Consequently the mixed quotients satisfy
 \]
 not the transport-pair equation. The gains above are applied to the
 jet-subtracted pair before division, not directly to $(\nu,\phi)$.
-\end{remark}
-
-\section{Elliptic centers}
-
-\begin{proposition}[Regularity at the elliptic centers]
-\label{prop:center-regularity}
-\uses{def:eigen-problem, def:sobolev-local, lem:lift-torus}
-\lean{NoEmbeddedEigenvalues.center_regularity}
-\leanok
-For every eigenfunction with $\lambda\ne0$, the lifted vorticity is in
-$H^1$ on some ball about each lift $P$ of an elliptic center, characterized
-by $|\Psi(P)|=2$. This includes nonzero integer $\lambda$
-(manuscript \texttt{(prop:center-regularity)}).
-\end{proposition}
-
-\begin{proof}
-\uses{lem:period-regularity, lem:period-elliptic, lem:elliptic-local, lem:hardy-1d}
-Construct smooth action-angle-type coordinates $F(p)=\frac1{2\pi}\int_0^{2\pi}R_{-t}\Phi^t(p)\,dt$
-for the normalized flow $L_0/b(\Psi)$, in which $H=b(r)D_\theta$ and
-$b(r)=1-r^2/8+O(r^4)$. In angular modes
-$\omega_n=-\frac{nb}{nb-\lambda}\psi_n$. For $\lambda\notin\Z$ the multipliers
-are bounded with radial derivatives $O(r)$. For $\lambda=m\in\Z\setminus\{0\}$
-the resonant mode solves $(\Delta_0-8/r^2)p=G$ with $G/r\in L^2$; solve on the
-cylinder (indicial roots $\pm\sqrt{m^2+8}$) to get $p/r^3,\nabla p/r^2,D^2p/r\in L^2$.
-\end{proof}
-
-\begin{corollary}[Global $H^1$ regularity]
-\label{cor:global-h1}
-\uses{def:eigen-problem, def:sectors, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.global_eigenfunction_h1}
-\leanok
-In the odd--odd and mixed sectors every eigenfunction with $\lambda\ne0$
-has $\omega\in H^1(\T^2)$ and $\psi\in H^3(\T^2)$ (manuscript \texttt{(cor:global-eigenfunction-h1)}).
-\end{corollary}
-
-\begin{proof}
-\uses{prop:dd-separatrix-h1, prop:mixed-quotient-domain, prop:center-regularity, lem:resonant-vanishing, lem:hardy-1d, lem:elliptic-local}
-Separatrix neighbourhoods and centers are covered above. On compact regular
-annuli only finitely many angular modes can be resonant. For each, the
-numerator is $H^2$ in the transverse variable and vanishes at the simple
-resonant level, and division gives an $H^1$ quotient. The other modes have
-uniformly bounded multipliers.
-\end{proof}
-
-\begin{remark}[Digest note: elliptic centers are not a sector prerequisite]
-The manuscript's only use of Corollary~\ref{cor:global-h1} in a sector
-exclusion is the mixed corner trace. Lemma~\ref{lem:weighted-corner-trace}
-supplies that trace using local $H^1$ and $\omega/r\in L^2$, both already
-in Proposition~\ref{prop:mixed-quotient-domain}; see
-Lemma~\ref{lem:mixed-boundary-square-traces}.
-Thus the global corollary and Proposition~\ref{prop:center-regularity},
-including its resonant case $\lambda\in\Z$, are separate assertions rather
-than prerequisites of either remaining exclusion. Their sketches here
-are retained as unverified arguments, not used to justify the local route.
 \end{remark}

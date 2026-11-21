@@ -136,25 +136,6 @@ linear (Lemma~\ref{lem:L0-linearity}), and this subspace is invariant under
 $S_1^*$ and $S_2^*$ by Lemma~\ref{lem:symmetries-commute}.
 \end{proof}
 
-\begin{lemma}[Sector projections are orthogonal]
-\label{lem:sector-projections}
-\uses{def:sectors}
-\lean{NoEmbeddedEigenvalues.sector_projections_orthogonal,
-  NoEmbeddedEigenvalues.sectorProjection_mem, NoEmbeddedEigenvalues.sectorProjection_sum}
-\leanok
-The $P_\epsilon$ are commuting orthogonal projections, and $P_\epsilon g=g$
-for $g$ in sector $\epsilon$. In particular $P_\epsilon$ maps $L^2$ onto
-sector $\epsilon$, and $L^2$ is the orthogonal direct sum of the four sectors.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:sector-reduction, lem:symmetries-commute}
-$S_1^*$ and $S_2^*$ are isometric involutions, hence unitary and self-adjoint,
-and they commute. So each $\frac12(I\pm S_j^*)$ is an orthogonal projection,
-and these commute. On sector $\epsilon$, each factor of $P_\epsilon$ acts as
-the identity.
-\end{proof}
-
 \begin{lemma}[Laplacian and reflection parities]
 \label{lem:laplacian-symmetries}
 \uses{def:fourier-derivatives, def:reflections, def:sectors}

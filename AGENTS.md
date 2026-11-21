@@ -151,7 +151,7 @@ the server won't connect, or you're changing its configuration.
   (H^s(T^2) via Fourier coefficients), or `def:sobolev-local` (Sobolev spaces on
   open sets, weighted PDE spaces, curve traces; the main infrastructure gap in Mathlib).
   Interval nodes also list the relevant derived definitions (`def:h1-zero-interval`,
-  `def:h2-interval`, `def:h1-periodic`, `def:weighted-boundary-domain`) and
+  `def:h2-interval`, `def:weighted-boundary-domain`) and
   `lem:h1-interval-endpoints` when
   endpoint traces are needed. These are distinct targets, not bundled into H^1.
   This keeps visible in the graph where Sobolev theory enters. The setup and

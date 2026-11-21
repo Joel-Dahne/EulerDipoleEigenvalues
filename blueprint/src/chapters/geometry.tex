@@ -1684,27 +1684,6 @@ differentiation under the integral, and the lower bound needs no corner dynamics
 what the good windows (Lemma~\ref{lem:good-windows}) use.
 \end{remark}
 
-\begin{lemma}[The elliptic-integral identity for the period]
-\label{lem:period-elliptic}
-\uses{def:period}
-\lean{NoEmbeddedEigenvalues.orbitPeriod_eq_ellipticK}
-\leanok
-For $0<h<1$,
-\[
-  S(h)=4\mathbf K(1-h^2),\qquad
-  \mathbf K(m)=\int_0^{\pi/2}(1-m\sin^2\theta)^{-1/2}\,d\theta .
-\]
-\end{lemma}
-
-\begin{proof}
-\uses{lem:period-orbit, lem:period-integral}
-The flow-time quadrature over a quarter gives
-$2L(h)=\int_0^{\arccos h}(\cos^2a-h^2)^{-1/2}\,da$, interpreted
-improperly at the endpoint. Substitute
-$\sin a=\sqrt{1-h^2}\sin\theta$, first short of the endpoint and then
-pass to the limit. This gives $2L=\mathbf K(1-h^2)$, hence $S=4\mathbf K$.
-\end{proof}
-
 \begin{lemma}[Leading separatrix asymptotic of the period]
 \label{lem:period-leading-asymptotic}
 \uses{def:period}
@@ -1738,45 +1717,11 @@ that for $S$. This uses neither the elliptic-integral identity nor a
 sharp remainder estimate.
 \end{proof}
 
-\begin{lemma}[Sharp separatrix asymptotics of the period]
-\label{lem:period-asymptotics}
-\uses{def:period}
-\lean{NoEmbeddedEigenvalues.eighthPeriod_asymptotics}
-\leanok
-As $h\to0^+$,
-\[
-  L(h)=\tfrac12\log(4/h)+O(h^2\log(1/h)),\qquad
-  L'(h)=-\frac1{2h}+O(h\log(1/h)).
-\]
-\end{lemma}
-
-\begin{proof}
-\uses{lem:period-elliptic, lem:period-regularity}
-Use the classical expansion of $\mathbf K$ near $m=1$, including
-its derivative, and substitute $m=1-h^2$.
-A precise reference or a quantified remainder argument is still needed.
-The derivative remainder requires a separate justification; it cannot
-be obtained by differentiating an unspecified $O$-term.
-\end{proof}
-
-\begin{remark}[Digest note: scope of the period inputs, split]
-The coarse bound follows from the saddle-distance estimate independently
-of the elliptic identity and the sharp remainders. The even--even transport
-arguments use only Lemmas~\ref{lem:period-regularity}
-and~\ref{lem:period-coarse}. The odd--odd finite parts need only
-Lemma~\ref{lem:period-leading-asymptotic}, derived directly from the defining
-integral. The elliptic identity and sharp remainder estimates are separate
-results, not prerequisites of these finite parts. The numerical checks
-below remain sanity checks, not a proof of either sharp remainder estimate.
-\end{remark}
-
-\begin{remark}
-The asymptotics were checked numerically for $h=10^{-1},\dots,10^{-5}$: the
-ratios $(L-\frac12\log(4/h))/(h^2\log(1/h))$ and $(L'+\frac1{2h})/(h\log(1/h))$
-stay near $0.13$ and $0.25$, and $8L=4\mathbf K(1-h^2)$ to working precision
-(scratch computation, October 2026). In Lean the $O$-terms are written with an
-explicit constant $C$ on an interval $(0,h_0)$. The strict monotonicity is proved
-in Lean from $L'<0$.
+\begin{remark}[Digest note: scope of the period inputs]
+The sectors use the coarse bounds from Lemmas~\ref{lem:period-coarse}
+and~\ref{lem:period-derivative-bounds}; the odd--odd finite parts also use
+the leading asymptotic above. Neither the elliptic-integral identity nor
+the sharp remainders in the manuscript are needed.
 \end{remark}
 
 \begin{lemma}[Orbit comparison]
@@ -2124,43 +2069,6 @@ variational equations. The coordinate-gradient bounds are now proved by
 Jacobian inversion and rotation invariance in
 Lemma~\ref{lem:orbit-coordinate-gradients}.
 \end{remark}
-
-\begin{definition}[Corner chart]
-\label{def:corner-chart}
-\uses{def:cells, lem:diagonal-calculus}
-\lean{NoEmbeddedEigenvalues.cornerChart}
-\leanok
-The corner chart is $(u,v)\mapsto(a,b)=(\arccos u,\arccos v)$, written in $(x,y)$
-coordinates as $(\arccos u+\arccos v,\arccos u-\arccos v)$.
-\end{definition}
-
-\begin{lemma}[Corner coordinates]
-\label{lem:corner-coordinates}
-\uses{def:cells, lem:cell-square, def:dipole-flow, def:corner-chart}
-\lean{NoEmbeddedEigenvalues.dipoleLift_cornerChart,
-  NoEmbeddedEigenvalues.hasDerivAt_cornerChart,
-  NoEmbeddedEigenvalues.hasDerivAt_cos_diag_fst,
-  NoEmbeddedEigenvalues.hasDerivAt_cos_diag_snd,
-  NoEmbeddedEigenvalues.sin_mul_sin_mem_of_corner}
-\leanok
-Near the corner $(a,b)=(\pi/2,\pi/2)$ of $\Cell$, let $\alpha,\beta>0$ be the distances to
-the two sides and $u=\sin\alpha=\cos a$, $v=\sin\beta=\cos b$, the coordinates of
-Definition~\ref{def:corner-chart}. Then $\Psi/2=uv$ exactly, and the metric is
-$dx^2+dy^2=2\,du^2/(1-u^2)+2\,dv^2/(1-v^2)$: diagonal, smooth and even in each variable,
-and comparable to constants for $|u|,|v|\le\frac12$. Along the flow
-$\dot u=u\sin a\sin b$ and $\dot v=-v\sin a\sin b$, with $\frac34\le\sin a\sin b\le1$ for
-$|u|,|v|\le\frac12$; so along the level $uv=h$, $dt$ is comparable to $du/u$. The other
-corners follow by the rotation $R$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:separatrix-lines, lem:diagonal-calculus, lem:dipole-flow}
-\leanok
-$\Psi=2\cos a\cos b$ (Lemma~\ref{lem:separatrix-lines}). With $x=a+b$, $y=a-b$ the partial
-derivatives of the chart are $-(1-u^2)^{-1/2}(1,1)$ and $(1-v^2)^{-1/2}(-1,1)$, which are
-orthogonal. The flow equations follow from $\dot a=-\cos a\sin b$, $\dot b=\sin a\cos b$
-(Lemma~\ref{lem:dipole-flow}), and $\sin^2a=1-u^2\ge\frac34$.
-\end{proof}
 
 
 \begin{definition}[Local Euclidean disk and axis notation]

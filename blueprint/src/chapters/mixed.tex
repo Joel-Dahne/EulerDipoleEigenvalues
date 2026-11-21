@@ -628,35 +628,19 @@ Lemma~\ref{lem:mixed-boundary-square-traces}.
 
 \section{The boundary square}
 
-\begin{lemma}[Mixed boundary square, smooth case]
-\label{lem:mixed-boundary-square}
-\lean{NoEmbeddedEigenvalues.mixed_boundary_square,
- NoEmbeddedEigenvalues.mixedBoundaryTransport,
+\begin{definition}[Mixed boundary transport and square]
+\label{def:mixed-boundary-operators}
+\lean{NoEmbeddedEigenvalues.mixedBoundaryTransport,
  NoEmbeddedEigenvalues.mixedBoundarySquare}
 \leanok
-With $w=1-x^2$, $T_\lambda F=-i(wF'-xF)-\lambda F$ and $G=T_\lambda F$, for
-smooth $F$ on $[-1,1]$ and real $\lambda$,
-\[
-  \int_{-1}^1w|G'|^2\,dx-2\operatorname{Re}\int_{-1}^1T_0F\,\bar G\,dx
-  =\int_{-1}^1w\,|wF''-3xF'-i\lambda F'|^2\,dx
-\]
-(manuscript \texttt{(eq:mixed-boundary-square)}). No boundary conditions on
-$F$ are needed.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:mixed-boundary-square-weighted}
-\leanok
-Use the within-interval derivative of $F$ on $[-1,1]$ to construct a $C^1$
-extension of $G$ to that closed interval. Its within-interval derivative
-agrees with $G'$ on $(-1,1)$, so the weighted energy is finite by
-continuity on the compact interval. Both $F$ and $G$ are bounded and
-locally absolutely continuous there, so the weighted identity applies.
-\end{proof}
+For $w=1-x^2$, set $T_\lambda F=-i(wF'-xF)-\lambda F$.
+The second-order expression in the boundary square is
+$wF''-(3x+i\lambda)F'$.
+\end{definition}
 
 \begin{lemma}[Mixed boundary square on the weighted domain]
 \label{lem:mixed-boundary-square-weighted}
-\uses{def:h1-interval}
+\uses{def:h1-interval, def:mixed-boundary-operators}
 \lean{NoEmbeddedEigenvalues.mixed_boundary_square_weighted}
 \leanok
 Let $\lambda\in\R$, $w=1-x^2$, and let $F,G$ be locally absolutely
@@ -668,7 +652,8 @@ bounded, and all three integrals in the following identity are finite:
   \int_{-1}^1w|G'|^2\,dx-2\operatorname{Re}\int_{-1}^1T_0F\,\bar G\,dx
   =\int_{-1}^1w\,|wF''-3xF'-i\lambda F'|^2\,dx.
 \]
-No endpoint values of $F$ are required.
+No endpoint values of $F$ are required (manuscript
+\texttt{(eq:mixed-boundary-square)}).
 \end{lemma}
 
 \begin{proof}
@@ -795,7 +780,7 @@ contradicting $q\in L^2(dt)$.
 
 \begin{lemma}[Transformed canonical transport on a mixed Neumann edge]
 \label{lem:mixed-neumann-canonical-transport}
-\uses{def:canonical-profile, def:h1-interval}
+\uses{def:canonical-profile, def:h1-interval, def:mixed-boundary-operators}
 \lean{NoEmbeddedEigenvalues.mixed_neumann_canonical_transport}
 \leanok
 Write $g=\sech t\,G(\tanh t)$ for the stream trace associated to a
@@ -830,7 +815,7 @@ $w=1-x^2$, and write the canonical transport pair as
 $z=\sqrt wF$, $\psi|_N=\sqrt wG$.
 Then $F,G$ are locally absolutely continuous, $G$ is bounded,
 $\int w|G'|^2<\infty$, $F$ and $wF'$ are bounded, and the identity of
-Lemma~\ref{lem:mixed-boundary-square} holds. The physical vorticity
+Lemma~\ref{lem:mixed-boundary-square-weighted} holds. The physical vorticity
 trace on the edge agrees almost everywhere with the canonical profile.
 \end{lemma}
 
@@ -1052,7 +1037,7 @@ diagonal field terms cancel, as do the mixed Hessian terms.
 
 \begin{lemma}[Canonical Neumann traces of the quotient jet]
 \label{lem:mixed-quotient-neumann-traces}
-\uses{def:sobolev-local, def:mixed-quotient-data}
+\uses{def:sobolev-local, def:mixed-quotient-data, def:axis-trace-chart}
 \lean{NoEmbeddedEigenvalues.mixed_quotient_side_traces, NoEmbeddedEigenvalues.mixed_quotient_neumann_traces}
 \leanok
 On each side the continuous quotient trace $T$ is absolutely continuous
@@ -1197,26 +1182,6 @@ $K[\phi]=\int_\Cell\big(f|\omega|^2+|\nabla\psi|^2-2\operatorname{Re}((W\psi)\ba
 The Neumann edge values are absolutely continuous with square-integrable
 derivatives. In the corrected flux identity the edge integrals produce
 one copy of each corner mass, cancelling the corner sum in $K$.
-\end{proof}
-
-\begin{lemma}[Weighted interior form]
-\label{lem:mixed-weighted-form}
-\uses{lem:mixed-rellich}
-\lean{NoEmbeddedEigenvalues.mixed_weighted_form}
-\leanok
-With $L_\mu=\partial_a^2-2\tan a\,\partial_a+\partial_b^2$ and
-$C_0=-f+\frac{2u^2}{hp}=1-\Div_\mu W$,
-\[
-  K[\phi]=\int\mu\Big[\frac f2|L_\mu\phi|^2+2\sym DW\nabla_0\phi\cdot\nabla_0\bar\phi
-  +(2W-\nabla_0C_0)\cdot\operatorname{Re}(\phi\nabla_0\bar\phi)
-  +\Big(1-C_0-\frac f2\Big)|\phi|^2\Big]\,da\,db
-\]
-(manuscript \texttt{(eq:weighted-static-K)}).
-\end{lemma}
-
-\begin{proof}
-Use $\Delta_0(h\phi)=h(L_\mu-1)\phi$ and
-$\int|\nabla_0(h\phi)|^2=\int\mu(|\nabla_0\phi|^2+|\phi|^2)$, and expand.
 \end{proof}
 
 \begin{definition}[Second-order coefficients]

@@ -113,8 +113,7 @@ admission-free. See [the module map](../architecture.md).
   `lem:mixed-completion`, a single current converts the Rellich density
   directly to the square and second-order bulk. Its Neumann flux cancels
   the Rellich edge energy and supplies the Robin mass. The proof also
-  bounds the second-order form on H¹. The separate
-  `lem:mixed-weighted-form` remains admitted but is not used by coercivity.
+  bounds the second-order form on H¹.
   See [shared certificate work](shared.md#shared-certificate-work) for
   the implementation of the sign checks.
 

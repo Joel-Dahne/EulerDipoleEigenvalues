@@ -1,6 +1,5 @@
 import NoEmbeddedEigenvalues.ACLSlicing
 import NoEmbeddedEigenvalues.AnglePeriodization
-import NoEmbeddedEigenvalues.ArcAffineSplitting
 import NoEmbeddedEigenvalues.BoundaryForm
 import NoEmbeddedEigenvalues.BoundaryTraceH2
 import NoEmbeddedEigenvalues.Certificates.Bernstein
@@ -66,7 +65,6 @@ import NoEmbeddedEigenvalues.CountableCellEnergy
 import NoEmbeddedEigenvalues.WeightedCellEnergy
 import NoEmbeddedEigenvalues.DescendingIntervalPartition
 import NoEmbeddedEigenvalues.IntervalLinearHardy
-import NoEmbeddedEigenvalues.IntervalAngularHardy
 import NoEmbeddedEigenvalues.IntervalHardy
 import NoEmbeddedEigenvalues.CosineTraceHardy
 import NoEmbeddedEigenvalues.IntervalSecondHardy
@@ -189,7 +187,6 @@ import NoEmbeddedEigenvalues.OddOddPiconeCutoff
 import NoEmbeddedEigenvalues.OddOddQuotientEquations
 import NoEmbeddedEigenvalues.OddOddVirial
 import NoEmbeddedEigenvalues.OddOddGradientTraces
-import NoEmbeddedEigenvalues.Regularity.OddOddDomain
 import NoEmbeddedEigenvalues.Regularity.OddOddQuotient
 import NoEmbeddedEigenvalues.Regularity.StreamQuotientAssembly
 import NoEmbeddedEigenvalues.Regularity.MixedSaddle
@@ -279,7 +276,6 @@ import NoEmbeddedEigenvalues.WeakQuarterReconstruction
 import NoEmbeddedEigenvalues.Regularity.OddOddMidpoint
 import NoEmbeddedEigenvalues.Regularity.OddOddQuarter
 import NoEmbeddedEigenvalues.Regularity.OddOddQuarterTime
-import NoEmbeddedEigenvalues.Regularity.OddOddQuarters
 import NoEmbeddedEigenvalues.Regularity.OddOddGradientCoordinates
 import NoEmbeddedEigenvalues.Regularity.QuarterTime
 import NoEmbeddedEigenvalues.QuarterCoordinates
@@ -388,8 +384,6 @@ import NoEmbeddedEigenvalues.EdgeCornerTransport
 import NoEmbeddedEigenvalues.WeightedTransport
 import NoEmbeddedEigenvalues.Regularity.QuotientLocal
 import NoEmbeddedEigenvalues.ScalarDivision
-import NoEmbeddedEigenvalues.Regularity.Center
-import NoEmbeddedEigenvalues.Regularity.EvenCornerHardy
 import NoEmbeddedEigenvalues.Regularity.SaddleLinearization
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalForm
 import NoEmbeddedEigenvalues.Regularity.SaddleNormalFormDerivatives
@@ -399,7 +393,6 @@ import NoEmbeddedEigenvalues.SaddleDistance
 import NoEmbeddedEigenvalues.Period
 import NoEmbeddedEigenvalues.PeriodDerivativeBounds
 import NoEmbeddedEigenvalues.ResonantVanishing
-import NoEmbeddedEigenvalues.SectorOrthogonality
 import NoEmbeddedEigenvalues.Sectors
 import NoEmbeddedEigenvalues.SeparatrixArc
 import NoEmbeddedEigenvalues.Setup
@@ -420,7 +413,6 @@ import NoEmbeddedEigenvalues.HardyAverage
 import NoEmbeddedEigenvalues.TraceGagliardo
 import NoEmbeddedEigenvalues.TraceH2
 import NoEmbeddedEigenvalues.TraceL2
-import NoEmbeddedEigenvalues.TransportOperator
 import NoEmbeddedEigenvalues.TransversalMollifier
 import NoEmbeddedEigenvalues.OrbitRestriction
 import NoEmbeddedEigenvalues.VirialAlgebra

@@ -13,9 +13,9 @@ rebuilds both the graphs and the report.
 - **Mixed:** `thm:mixed-exclusion` is admission-free, including `cert:odd-b`.
   The other mixed sector follows by rotation.
 
-All blueprint statements are represented in Lean. `thm:main` combines the
-sector exclusions and is admission-free. Some auxiliary results outside its
-dependency chain still have admissions.
+`thm:main` combines the sector exclusions and is admission-free. The blueprint
+tracks this proof and retains the smooth virial identities for exposition.
+Some auxiliary Lean results outside the proof still have admissions.
 The reworked manuscript presents the introduction through the main theorem;
 later sections are placeholders.
 

@@ -521,8 +521,7 @@ are its Fourier derivatives (Lemma~\ref{lem:classical-partial-fourier}).
 \begin{remark}
 No density argument is needed beyond Parseval: the Fourier series of an $H^1$ function
 converges in $H^1$, and $L_0:H^1\to L^2$ is bounded. The hypothesis $u\in H^1$ is on the
-test, not on $g$. Without it the identity would be a statement about the maximal domain of
-$L_0$, which is the self-adjointness question of Lemma~\ref{lem:H-selfadjoint}.
+test, not on $g$.
 \end{remark}
 
 \begin{definition}[Operator domain]
@@ -648,24 +647,26 @@ Laplace modes $\cos x,\sin x,\cos y,\sin y$, which span $\ker A$.
 \end{remark}
 
 \begin{remark}[Non-real eigenvalues]
-Theorem~\ref{thm:main} is stated for real $\lambda$ only, but $L$ has no
-eigenvalues off the imaginary axis either. Let $L\omega=\mu\omega$ with
+Theorem~\ref{thm:main} is stated for real $\lambda$ only. To rule out
+eigenvalues off the imaginary axis, it suffices to know that
+$\ip{L_0u}{u}$ is purely imaginary on the maximal domain of $L_0$.
+Indeed, let $L\omega=\mu\omega$ with
 $\mu\in\C\setminus\{0\}$ and $\omega\in\Dom$. Then $L_0(A\omega)=\mu\omega\in L^2$, so
-$A\omega$ is in the domain of $H$, and pairing with $A\omega$ gives
-$\ip{L_0A\omega}{A\omega}=\mu\ip{\omega}{A\omega}$. The left side is purely
-imaginary since $H$ is self-adjoint (Lemma~\ref{lem:H-selfadjoint}), and
+$A\omega$ is in the maximal domain of $L_0$, and pairing with $A\omega$ gives
+$\ip{L_0A\omega}{A\omega}=\mu\ip{\omega}{A\omega}$. Under the stated input the
+left side is purely imaginary, and
 $\ip{\omega}{A\omega}=(2\pi)^2\sum_k(1-|k|^{-2})|\hat\omega_k|^2\ge0$.
 If $\ip{\omega}{A\omega}>0$, then $\mu\in i\R$. If $\ip{\omega}{A\omega}=0$, then
 $\hat\omega_k=0$ for $|k|\ne1$, so $A\omega=0$ and $\mu\omega=L\omega=0$, hence
-$\omega=0$. The only analytic input is that $\ip{L_0u}{u}\in i\R$ on the
-maximal domain.
+$\omega=0$. The maximal-domain symmetry input is not part of
+Theorem~\ref{thm:main}.
 \end{remark}
 
 \begin{remark}[Digest note: non-real eigenvalues]
 The manuscript (before \texttt{(ee:reflections)}) argues: if
 $\ip{A\omega}{\omega}=0$, then ``$A\omega=0$ and $\omega=0$''. The second step
 is false as stated, since $\ker A$ is spanned by the four modes with $|k|=1$.
-The conclusion holds because $\mu\ne0$, as in the previous remark. (Resolved.)
+The implication from $A\omega=0$ uses the eigenvalue equation and $\mu\ne0$.
 \end{remark}
 
 \begin{remark}[Lean model]

@@ -79,7 +79,7 @@ proof mechanisms. Module names below are relative to
   `SaddleCoefficient.lean` proves coefficient uniqueness from the weighted Hessian
   alone, on possibly different disk radii, and packages existence as uniqueness.
 - `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
-  trace data; weighted corner trace and crossing-edge H¹ gluing interfaces.
+  trace data.
 - `LiftTorus.lean`, `LiftIntegration.lean`: classical/Fourier derivative
   correspondence, smooth lifts and integration by parts over `[0, 2π]²`.
 - `LiftPeriodization.lean`: compact-test periodization, integral unfolding,
@@ -258,16 +258,13 @@ proof mechanisms. Module names below are relative to
 - `Melnikov.lean`, `PairingLimit.lean`: Melnikov condition, forcing comparison,
   quarter/full pairing limits for all four rotation characters and eigenfunction
   specializations. The full pairing also accepts a prescribed good sequence.
-- `TransportOperator.lean`: unbounded `H = -iL₀`, self-adjointness/core/group
-  statements. This is a separate route, not required by the even–even exclusion.
 
 ### Eigenfunction regularity
 
 The Lean results for [Regularity of eigenfunctions](../blueprint/src/chapters/regularity.tex)
 live in `Regularity/`, retaining the namespace `NoEmbeddedEigenvalues`.
 General Sobolev/jet, trace and weighted-transport prerequisites remain shared
-in the sections above. `Regularity/Center.lean` states local elliptic-center
-regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
+in the sections above.
 
 - `Analysis/AxisReflectionJets.lean`: volume-preserving axis reflections, disk
   invariance and diagonal pullback of ordered weak jets. Weak uniqueness transfers
@@ -555,8 +552,6 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   gives the specified weak time identity for every eigenfunction; no saddle
   regularity or packed-jet admission is used. `Regularity/OddOddQuarterTime.lean`
   adds the stronger saddle weight and assembles both base-quarter derivatives.
-  `Regularity/OddOddQuarters.lean` transfers them to all four recentered quarters
-  on a common cutoff by joint a.e. congruence and saddle-distance invariance.
   `Regularity/OddOddGradientCoordinates.lean` extracts a single measurable ordinary
   separatrix gradient and reconstructs weighted spatial derivatives on the actual
   base-quarter image. Two-character summation removes the character premise;
@@ -578,10 +573,7 @@ regularity and the global H¹/H³ conclusion for sectors with an odd reflection.
   quotient from the lower local analytic inputs.
 - `Regularity/OddOddQuotient.lean`: minimal quotient data, stream H²/Hardy–Poisson/weak
   invariant division/periodic gain interfaces, the generic continuous-forcing
-  transport-pair bridge, and quotient-existence assembly. The full quotient
-  statement and quantitative divided-Laplacian bound are in
-  `Regularity/OddOddDomain.lean`, with the independent corner Hardy statement
-  in `Regularity/EvenCornerHardy.lean`.
+  transport-pair bridge, and quotient-existence assembly.
 
 ### Virials and regularization
 

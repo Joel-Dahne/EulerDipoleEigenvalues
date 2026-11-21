@@ -410,31 +410,6 @@ Lemma~\ref{lem:nonnegative-exhaustion} gives the final passage to the cell.
 \section{Even--even gradient traces}
 \label{sec:ee-gradient-limits}
 
-\begin{lemma}[Neumann condition]
-\label{lem:ee-neumann}
-\uses{def:sectors, def:normal-tangent, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.ee_neumann}
-\leanok
-In the even--even sector, almost everywhere on the lift, $\psi_n$ is odd and $\psi_t$ is
-even under the reflections $S_2(x,y)=(y+\pi,x+\pi)$ and $S_1(x,y)=(\pi-y,\pi-x)$, whose
-fixed lines carry the separatrix arcs.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:stream-derivative-parities, lem:lift-representatives}
-\leanok
-The reflection $S_j$ fixes the arc and reverses its normal. In formulas: by
-Lemma~\ref{lem:stream-derivative-parities} with $\epsilon=(+,+)$, lifted to $\R^2$
-(Lemma~\ref{lem:lift-representatives}), $\psi_x\circ S_2=\psi_y$ and $\psi_y\circ S_2=\psi_x$
-almost everywhere. Since $\sin(y+\pi)=-\sin y$ and $\rho\circ S_2=\rho$,
-\[
-  \psi_n\circ S_2=\frac{-\sin y\,\psi_y-\sin x\,\psi_x}{\rho}=-\psi_n,\qquad
-  \psi_t\circ S_2=\frac{-\sin x\,\psi_y+\sin y\,\psi_x}{\rho}=\psi_t .
-\]
-For $S_1$, $\psi_x\circ S_1=-\psi_y$, $\psi_y\circ S_1=-\psi_x$ and $\sin(\pi-y)=\sin y$ give the
-same signs.
-\end{proof}
-
 \begin{remark}[Parity and traces]
 Almost-everywhere parity of the raw derivatives is not a pointwise
 boundary condition. Lemma~\ref{lem:arc-trace-identification} uses
@@ -623,38 +598,6 @@ $\Phi=4\bigl(\frac\pi2(K_x+K_y)+|f'|^2/(2\cos a)\bigr)$ works, with $K$ the line
 $|\partial_bG|^2$. The pointwise form of the segment estimate is used since $G(a,\beta_h(a))$ need
 not be measurable in $a$.
 \end{proof}
-
-\begin{lemma}[Corner tails]
-\label{lem:ee-corner-tails}
-\uses{def:sectors, def:stream-lifts, def:normal-tangent, def:line-representative}
-\lean{NoEmbeddedEigenvalues.ee_corner_tails}
-\leanok
-Let $\psi$ be as in Lemma~\ref{lem:ee-arc-energy} and let $G_x,G_y$ be line representatives of
-$\psi_x,\psi_y$ as in Lemma~\ref{lem:arc-trace-identification}, with normal and tangential
-derivatives $\psi_n,\psi_t$. For every $\epsilon>0$ there is $\delta>0$ such that for all
-$h\in(0,1)$
-\[
-  \int_{\{\pi/2-\delta<|a|<a_h\}}\bigl(|\psi_n|^2+|\psi_t|^2\bigr)(a,\beta_h(a))
-    \frac{da}{\sqrt{\cos^2a-h^2}}<\epsilon,
-\]
-the corner parts of the quarter integral (Lemma~\ref{lem:quarter-orbit-diagonal}).
-\end{lemma}
-
-\begin{proof}
-\uses{lem:ee-quarter-bound}
-\leanok
-Take $\delta\le\pi/6$, so that $|\sin a|\ge\frac12$ for $\pi/2-\delta<|a|<\pi/2$. By
-Lemma~\ref{lem:ee-quarter-bound} the integrand is bounded there by $\Phi(a)$, independently of
-$h$, and the range lies in $\{\pi/2-\delta<|a|<\pi/2\}$, of measure $2\delta$. By absolute
-continuity of the integral, $\int\Phi$ over it is less than $\epsilon$ for small $\delta$.
-\end{proof}
-
-\begin{remark}[Auxiliary corner estimate]
-The segment estimate in $(a,b)$ controls the tails directly, without
-separate corner coordinates or a hyperbola estimate. This corollary
-records uniform control for all $h$; Lemma~\ref{lem:ee-level-traces}
-instead uses the full-quarter bound and does not depend on it.
-\end{remark}
 
 \begin{lemma}[The first-order trace term]
 \label{lem:ee-first-trace-limit}
@@ -950,47 +893,6 @@ terms involving $\lambda$. Integrate by the fundamental theorem of calculus.
 Since $w(\pm1)=0$, $K(1)-K(-1)$ is exactly the displayed endpoint correction.
 \end{proof}
 
-\begin{lemma}[Classical affine splitting]
-\label{lem:affine-splitting-classical}
-\uses{def:boundary-form-xi, def:boundary-jet}
-\lean{NoEmbeddedEigenvalues.BoundaryJet.affine_splitting}
-\leanok
-Let $(F,D,E)$ be a classical boundary jet, $\lambda\in\R$, and $a,b\in\C$
-with $F(-1)=a-b$ and $F(1)=a+b$. Set $F_0=F-a-b\xi$ and $D_0=D-b$. Then
-\[
-  \mathcal B_\lambda(F,D,E)=\mathcal B_\lambda(F_0,D_0,E)
-    +\lambda^2|b|^2+2\lambda\operatorname{Im}(b\bar a).
-\]
-\end{lemma}
-
-\begin{proof}
-\uses{lem:trace-completion-classical}
-\leanok
-For $A_0=wE-\xi D_0+F_0-i\lambda D_0$, both $\int_{-1}^1A_0$ and
-$\int_{-1}^1D_0$ vanish: primitives are $wD_0+\xi F_0-i\lambda F_0$ and
-$F_0$, respectively. Since $A=A_0+a-i\lambda b$ and $D=D_0+b$, the mixed
-terms in the integrated squared norms vanish. The endpoint correction then
-gives the formula.
-\end{proof}
-
-\begin{lemma}[Classical boundary positivity]
-\label{lem:ee-trace-positivity-classical}
-\uses{def:boundary-form-xi, def:boundary-jet}
-\lean{NoEmbeddedEigenvalues.BoundaryJet.boundaryForm_nonneg}
-\leanok
-For a classical boundary jet $(F,D,E)$, real $\lambda$, and
-$F(1)=F(-1)$ or $F(1)=-F(-1)$, one has $\mathcal B_\lambda(F,D,E)\ge0$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:affine-splitting-classical, lem:trace-completion-classical}
-\leanok
-Take $a=(F(1)+F(-1))/2$ and $b=(F(1)-F(-1))/2$. The zero-endpoint
-remainder has nonnegative form by the completion of squares. Equal endpoints
-give $b=0$, and opposite endpoints give $a=0$, so the indefinite affine
-cross term vanishes in either case.
-\end{proof}
-
 \begin{lemma}[Sum of squares, smooth case]
 \label{lem:trace-sos-smooth}
 \uses{lem:boundary-form-xi, def:boundary-jet}
@@ -1182,7 +1084,7 @@ $\mathcal B_\lambda(F,D,E)\ge0$.
 \begin{proof}
 \uses{lem:weighted-affine-splitting, lem:weighted-completion}
 \leanok
-As in Lemma~\ref{lem:ee-trace-positivity-classical}: take
+Take the affine part with coefficients
 $a=(\widetilde F(1)+\widetilde F(-1))/2$ and
 $b=(\widetilde F(1)-\widetilde F(-1))/2$. The zero-trace remainder has
 $\mathcal B_\lambda(F_0,D_0,E)=\frac12\int|A_0|^2+\frac12\int|D_0|^2\ge0$
@@ -1219,33 +1121,6 @@ By Lemma~\ref{lem:boundary-form-xi}, $\mathcal F_\lambda(F)=\mathcal B_\lambda(F
 Apply Lemma~\ref{lem:weighted-completion}; the endpoint correction vanishes.
 The manuscript argues by density instead; see the digest note after
 Lemma~\ref{lem:weighted-boundary-positivity}.
-\end{proof}
-
-\begin{lemma}[Affine splitting]
-\label{lem:affine-splitting}
-\uses{lem:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.flowBoundaryForm_affine_splitting}
-\leanok
-Let $F\in\mathcal D_w$ have canonical endpoint values $a-b$ and $a+b$.
-Then $F_0(\xi)=F(\xi)-a-b\xi$ is in $\mathcal D_w$ with zero endpoint
-values, and
-\[
-  \mathcal F_\lambda(F)=\mathcal F_\lambda(F_0)+\lambda^2|b|^2
-  +2\lambda\operatorname{Im}(b\bar a)
-\]
-(manuscript \texttt{(ee:affine-splitting)}).
-\end{lemma}
-
-\begin{proof}
-\uses{lem:boundary-form-xi, lem:weighted-affine-splitting}
-Lemma~\ref{lem:boundary-form-xi} and
-Lemma~\ref{lem:weighted-affine-splitting} with $(F_0,D_0,E)=(F-a-b\xi,F'-b,F'')$.
-Equivalently, expand; all mixed terms with $F_0$ cancel (the quadratic
-$\lambda$ term uses $\int F_0'=0$; in the linear term
-$\int wF_0''=-2\int F_0$ cancels the two
-mixed current terms). On $\mathcal D_w$ the vanishing of these integrals
-needs the endpoint argument in the proof of
-Lemma~\ref{lem:weighted-affine-splitting}.
 \end{proof}
 
 \subsection{The canonical unknown for even--even eigenfunctions}
@@ -1404,10 +1279,7 @@ $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
 \leanok
 By Lemma~\ref{lem:boundary-form-xi},
 $\mathcal F_\lambda(F)=\mathcal B_\lambda(F,D,E)$ for the derivatives $D,E$
-of $F$, and Lemma~\ref{lem:weighted-boundary-positivity} applies. In the
-manuscript's terms: write $F=F_0+a+b\xi$ with $F_0(\pm1)=0$; one of $a,b$
-vanishes, which kills the cross term of Lemma~\ref{lem:affine-splitting},
-and $\mathcal F_\lambda(F_0)\ge0$ by Lemma~\ref{lem:trace-sos-extension}.
+of $F$, and Lemma~\ref{lem:weighted-boundary-positivity} applies.
 \end{proof}
 
 \section{From transport traces to exclusion}

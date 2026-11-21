@@ -168,43 +168,10 @@ For a bounded interval $I=(a,b)$, $H^2(I)$ consists of the $F\in H^1(I)$
 whose a.e. first derivative has an $H^1(I)$ representative.
 \end{definition}
 
-\begin{definition}[Periodic $H^1$]
-\label{def:h1-periodic}
-\uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.MemPeriodicH1}
-\leanok
-For $T>0$, $H^1(\R/T\Z)$ is represented by the $H^1(0,T)$ functions whose
-endpoint traces agree, with the endpoints identified. No matching condition
-on the derivative is imposed at this order.
-\end{definition}
-
-\begin{lemma}[Basic properties of interval $H^2$ and periodic $H^1$]
-\label{lem:interval-h2-periodic}
-\uses{def:h2-interval, def:h1-periodic}
-\lean{NoEmbeddedEigenvalues.HasIntervalH2.add,
-  NoEmbeddedEigenvalues.HasIntervalH2.smul,
-  NoEmbeddedEigenvalues.MemIntervalH2.memIntervalH1,
-  NoEmbeddedEigenvalues.HasIntervalH2.memIntervalH1_deriv,
-  NoEmbeddedEigenvalues.HasIntervalH1.memPeriodicH1_iff,
-  NoEmbeddedEigenvalues.MemPeriodicH1.memIntervalH1}
-\leanok
-$H^2(I)$ is a linear space contained in $H^1(I)$, and the first derivative of an
-$H^2(I)$ function is in $H^1(I)$. Periodic $H^1$ functions are in $H^1(0,T)$, and
-the periodicity of the traces can be tested with any choice of a.e. derivative.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:h1-interval-endpoints}
-\leanok
-Linearity of $H^1$, and the independence of the continuous extension from the
-chosen derivative (Lemma~\ref{lem:h1-interval-endpoints}).
-\end{proof}
-
 \begin{remark}[Formalization scope]
 The first-order bounded-interval predicates, endpoint theorem, zero-trace
 definition and first-order zero-extension theorem are implemented. The model uses locally absolutely continuous
 representatives, not a bundled normed space of a.e. equivalence classes.
-The interval $H^2$ and periodic definitions are separate, deferred targets.
 As usual, $H^1_{\mathrm{loc}}(I)$ elsewhere means $H^1$ on every compact
 subinterval; this local notation is not yet formalized. The condition
 $(1-\xi^2)F''\in L^2$ in the boundary argument is a further weighted-domain
@@ -276,13 +243,6 @@ functions whose weak derivatives up to order $k$ exist and are in $L^2(U)$, and
 $H^k_{\mathrm{loc}}(U)$ the space of functions in $H^k(V)$ for every open
 $V\Subset U$ (compact closure contained in $U$). The weighted space
 $H^k(U,w)$ uses $L^2(U,w\,dx)$ instead of $L^2(U)$.
-\end{definition}
-
-\begin{definition}[Fractional Sobolev space on the line]
-\label{def:sobolev-fractional}
-\lean{TemperedDistribution.MemSobolev}
-\mathlibok
-$H^{1/2}(\R)$ is Mathlib's Bessel potential space $H^{s,2}(\R)$ with $s=1/2$.
 \end{definition}
 
 \begin{definition}[Gagliardo seminorm]
@@ -1311,23 +1271,6 @@ $(0,2\pi]^2$ to the torus measure, and $[0,2\pi]^2$ differs from $(0,2\pi]^2$ by
 null set.
 \end{proof}
 
-\begin{lemma}[Smooth lifts are Sobolev]
-\label{lem:lift-sobolev}
-\uses{def:torus-of-lift, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.memSobolev_torusL2,
-  NoEmbeddedEigenvalues.memSobolev_torusL2_of_smooth}
-\leanok
-A periodic $C^k$ lift lies in $H^k(\T^2)$, and a smooth periodic lift lies in every
-$H^s(\T^2)$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:lift-torus, lem:elliptic-torus, lem:sobolev-torus-basic}
-\leanok
-Induction on $k$: $u$, $\partial_xu$, $\partial_yu$ are $C^k$, so in $H^k$, and
-their Fourier relation gives $u\in H^{k+1}$ (Lemma~\ref{lem:elliptic-torus}).
-\end{proof}
-
 \begin{definition}[Periodization of compactly supported functions]
 \label{def:lift-periodization}
 \uses{def:torus-of-lift}
@@ -1520,45 +1463,6 @@ If $|u|\le M$ and $u$ has one-half H\"older constant $H$, use
  \le2MH\sqrt{d(p,q)}.
 \]
 \end{proof}
-
-\begin{lemma}[Finite-$p$ Sobolev embeddings on the torus]
-\label{lem:sobolev-lp}
-\uses{def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.memLp_of_memSobolev_one}
-\leanok
-For every $0<p<\infty$ there is a constant $C_p$ such that
-$g\in H^1(\T^2)$ implies $g\in L^p(\T^2)$ and
-$\|g\|_{L^p}\le C_p\|g\|_{H^1}$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:torus-fourier-basis, lem:sobolev-torus-basic, lem:sobolev-weight-summable}
-Write $a_k=\hat g_k$. For $p\le2$, the $L^p$ bound follows from the finite measure of the torus
-and Parseval. For $2<p<\infty$, put $q=p/(p-1)\in(1,2)$.
-H\"older's inequality for the Fourier coefficients gives
-\[
-  \|(a_k)\|_{\ell^q}
-  \le \|g\|_{H^1}
-      \left(\sum_k(1+|k|^2)^{-q/(2-q)}\right)^{(2-q)/(2q)}.
-\]
-Here $q/(2-q)>1$, so this lattice sum also converges. The inverse
-Hausdorff--Young inequality bounds the $L^p$ norm of Fourier polynomials
-by their $\ell^q$ coefficient norm. Apply it also to differences of
-Fourier truncations to obtain convergence in $L^p$; their $L^2$ limit
-is $g$. This identifies the $L^p$ representative and proves the claimed
-continuous inclusion. Normalization constants are absorbed into $C$.
-\end{proof}
-
-\begin{remark}[Digest note: scope of the embedding nodes, resolved]
-The H\"older node is now proved without admissions in
-\texttt{SobolevHolder.lean}, with a uniform constant, the existing continuous
-Fourier representative and the exponent-zero case included.
-The former combined embedding node has been split. The even--even
-pairing limit uses Lemma~\ref{lem:sobolev-holder}, not
-Lemma~\ref{lem:sobolev-lp}; its proof only needs the H\"older estimate.
-The two inputs are retained separately in the less settled odd--odd
-quotient argument pending its review.
-\end{remark}
 
 \section{Local Sobolev theory (candidate assumptions)}
 \label{sec:local-sobolev}
@@ -3084,77 +2988,6 @@ The integral is finite by a.e. agreement with $V$. Dividing by $(2s)^2$
 and letting $s$ tend to zero gives a contradiction.
 \end{proof}
 
-\begin{lemma}[Coordinate Hardy bounds for even H2 functions]
-\label{lem:even-h2-axis-hardy}
-\uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.even_h2_axis_hardy}
-\leanok
-Let $F\in H^2((-a,a)\times I)$ be even in $u$, with $a>0$ and $I$ a
-bounded interval. Then
-\[
- \int |F_u/u|^2\le4\int|F_{uu}|^2.
-\]
-If both coordinate intervals are symmetric and $F$ is even in both
-coordinates, the analogous estimate for $F_v/v$ also holds.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:acl-slicing, lem:trace-l2, lem:hardy-interior-linear,
- lem:specified-jet-lp, lem:specified-first-jet-extension, lem:axis-reflection-weak-jet}
-\leanok
-The specified weak derivative $F_u$ is odd in $u$ by reflection of the
-weak jet. On almost every section, the continuous ACL representative is
-odd everywhere and hence vanishes at $u=0$. Apply interior Hardy with
-constant four (each half uses only its own derivative energy), and
-integrate the nonnegative squared bounds in $v$. The finite right-hand
-side gives $F_u/u\in L^2$ before the estimate is read as a Bochner
-integral. Interchange the coordinates for the other estimate.
-\end{proof}
-
-\begin{lemma}[Corner Hardy bounds for even H2 functions]
-\label{lem:even-h2-corner-hardy}
-\uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.even_h2_corner_hardy}
-\leanok
-Let $F\in H^2(D)$ on a disk centered at zero be even almost everywhere
-under both axis reflections, and let $c=F(0)$ for its continuous
-representative. Read derivatives from a specified square-integrable
-weak jet for $F$. On a
-smaller concentric disk,
-\[
- \nabla F/r\in L^2,\qquad (F-c)/r^2\in L^2.
-\]
-\end{lemma}
-
-\begin{proof}
-\uses{lem:even-h2-axis-hardy, lem:acl-slicing, lem:local-to-global,
- lem:sobolev-holder}
-Coordinate Hardy on symmetric sections of the disk gives
-\[
- \int |F_u/u|^2\le4\int |F_{uu}|^2,\qquad
- \int |F_v/v|^2\le4\int |F_{vv}|^2.
-\]
-Since $|u|,|v|\le r$, these imply $\nabla F/r\in L^2$.
-
-For almost every polar angle put $h(r)=F(r,\theta)-c$.
-Continuity at zero and the weighted derivative bound give
-\[
- |h(\epsilon)|^2/\epsilon^2
- \le\tfrac12\int_0^\epsilon |h'(r)|^2\,dr/r\longrightarrow0.
-\]
-Integration by parts on $(\epsilon,R)$, discarding the nonpositive
-outer boundary term, gives
-\[
- A_\epsilon:=\int_\epsilon^R|h|^2\,dr/r^3
- \le\frac{|h(\epsilon)|^2}{2\epsilon^2}
-      +\sqrt{A_\epsilon}\sqrt{\int_\epsilon^R|h'|^2\,dr/r}.
-\]
-Young's inequality and $\epsilon\downarrow0$ yield
-$\int_0^R|h|^2dr/r^3\le\int_0^R|h'|^2dr/r$.
-Integrate in angle. This proves the second bound from the first;
-no eigenfunction equation or quadratic expansion of $F$ is used.
-\end{proof}
-
 \begin{lemma}[Cosine Hardy division for an odd normal reflection]
 \label{lem:cosine-hardy-reflection}
 \uses{def:sobolev-local}
@@ -3244,25 +3077,6 @@ product $\psi=\Psi F$ is odd under $S_1$, so its Fourier Laplacian
 $\zeta$ is odd as well. Thus their quotient $\zeta/\Psi$ is invariant
 and has the same integrability on the negative cell. The separatrix is
 null. Take $N_F=\zeta/\Psi$ almost everywhere.
-\end{proof}
-
-\begin{lemma}[Bound for the divided Laplacian]
-\label{lem:even-h2-dipole-laplacian-bound}
-\uses{lem:even-h2-dipole-laplacian, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.even_h2_dipole_laplacian_bound}
-\leanok
-The divided Laplacian satisfies $\|N_F\|_2\le C\|F\|_{H^2}$ for a constant
-independent of the even function $F$. This quantitative bound is not
-required by the exclusion construction.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:even-h2-axis-hardy, lem:saddle-normal-form, lem:diagonal-calculus}
-In each chart the singular terms have squared norms at most four times
-the corresponding pure second-derivative squared norms.
-The remaining coefficients are bounded, so their terms are controlled by
-$\|F\|_{H^1}$. Sum over the fixed finite cover and absorb the chart and
-coefficient bounds into $C$.
 \end{proof}
 
 \begin{lemma}[ACL slicing for a single weak partial derivative]
@@ -3814,36 +3628,6 @@ Integrate, then transfer the result to the original raw representative.
 For the sum weight, add the three genuine squared-norm integrals.
 \end{proof}
 
-\begin{lemma}[Logarithmic multiplier on a rectangle]
-\label{lem:log-multiplier-rectangle}
-\uses{def:sobolev-local, def:local-weak-jets, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.log_multiplier_rectangle}
-\leanok
-Let $\rho>0$ and $Q=(-\rho,\rho)^2$. For $F\in H^1(Q)$ with a specified
-first weak jet, $\sqrt W F\in L^2(Q)$ and
-\[
- \int_Q\bigl(1+|\log|u||+|\log|v||\bigr)|F(u,v)|^2\,du\,dv
- \le C_\rho\|F\|_{H^1(Q)}^2.
-\]
-The values of the weight on the two axes are immaterial.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:coordinate-weight-multiplier, lem:weak-jet-regularity}
-\leanok
-For almost every $v$, choose the absolutely continuous section
-representative $\widetilde F(\cdot,v)$ and its endpoint extension.
-The same pointwise estimate used in Lemma~\ref{lem:trace-l2} gives
-\[
- \sup_{|u|\le\rho}|\widetilde F(u,v)|^2
- \le\rho^{-1}\int_{-\rho}^\rho|F(u,v)|^2du
-       +4\rho\int_{-\rho}^\rho|\partial_uF(u,v)|^2du.
-\]
-Multiply by $\int_{-\rho}^\rho|\log|u||du<\infty$ and integrate in $v$.
-The other logarithm follows by interchanging the coordinates; the constant
-term is the $L^2$ norm. No finite-$p$ Sobolev embedding is used.
-\end{proof}
-
 \begin{lemma}[Physical logarithmic multiplier]
 \label{lem:dipole-log-multiplier}
 \uses{def:sobolev-local, def:log-level-weight}
@@ -4306,36 +4090,6 @@ Two continuous scalar representatives agreeing a.e. agree throughout
 the interior, so the supplied value representative is retained.
 \end{proof}
 
-\begin{lemma}[Second weak parameter derivative in canonical flux form]
-\label{lem:second-window-flux}
-\uses{def:weak-derivative-local, def:h1-interval, def:h2-interval,
- def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h2_flux}
-\leanok
-On the same rectangle and window, let $F$ be continuous.
-Suppose $F,D,E,H,P,B\in L^2(Q)$,
-$\partial_hF=D$, $\partial_hD=E$, $\partial_\theta P=B$ weakly,
-and $E=H+\beta B$ a.e.
-For the original $N(h)=\int_l^rF(h,\theta)\,d\theta$, one has
-\[
- \operatorname{HasIntervalH2}(a,b;N,N',C),\qquad
- C(h)=\int_l^rH(h,\theta)\,d\theta+
- \beta(h)\bigl[\tau_r(P(h,\cdot))-\tau_l(P(h,\cdot))\bigr].
-\]
-In particular $C$ is the weak second derivative of the original integral,
-not just a formal integral expression.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:fixed-window-h1, lem:fixed-window-h2,
- lem:interval-h2-canonical-derivatives, lem:rough-window-flux}
-\leanok
-Fixed-window H2 makes the ordinary $N'$ an H1, hence continuous,
-representative. The first differentiation identifies it a.e. with the raw
-average of $D$. Apply the rough flux lemma to this same scalar representative.
-No continuity of $D$ or $P$ is introduced.
-\end{proof}
-
 \begin{lemma}[Tangential differentiation of continuous interior traces]
 \label{lem:tangential-interior-trace}
 \uses{def:weak-derivative-local, def:h1-interval, def:interior-section-trace}
@@ -4530,25 +4284,13 @@ First apply the inverse diagonal change of variables. Then undo the
 translation, an affine map with determinant one.
 \end{proof}
 
-\begin{definition}[Corner rays and matching crossing traces]
-\label{def:corner-crossing-traces}
-\uses{def:canonical-transverse-trace, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.polarTraceChart, NoEmbeddedEigenvalues.HasRadialTrace,
- NoEmbeddedEigenvalues.quadrantDisk, NoEmbeddedEigenvalues.axisTraceChart,
- NoEmbeddedEigenvalues.HasMatchingAxisTraces}
+\begin{definition}[Cartesian trace chart]
+\label{def:axis-trace-chart}
+\lean{NoEmbeddedEigenvalues.axisTraceChart}
 \leanok
-The polar trace chart is $(r,\theta)\mapsto(r\cos\theta,r\sin\theta)$.
-A radial trace at $\theta\in[0,\pi/2]$ is a canonical transverse trace
-on every $(a,b)\times(0,\pi/2)$ with $0<a<b<\rho$.
-The four signed quadrants of $D_\rho(0)$ use a prescribed positive or
-negative sign for each coordinate.
-
-For crossing traces use the Cartesian chart with the selected coordinate
-normal and the other tangential. On every symmetric normal rectangle
-compactly contained in the disk, whose tangential interval avoids zero,
-require a common canonical trace from its two open normal halves.
-This defines matching traces on the open half-axes only, not a trace at
-the crossing or an ACL representative across an axis.
+The Cartesian trace chart with tangential coordinate $s$ and normal
+coordinate $t$ maps $(s,t)$ to $(t,s)$ for the first coordinate as normal,
+and to $(s,t)$ for the second.
 \end{definition}
 
 \begin{definition}[Canonical cell-edge trace]
@@ -4746,12 +4488,6 @@ rectangle. Apply the band estimate to the same interior-section choice,
 then sum with its genuinely integrable nonnegative bulk density.
 \end{proof}
 
-\begin{remark}
-This concerns an interior ray in a Cartesian cone. It does not include
-the boundary rays and uniform angular assertion of
-Lemma~\ref{lem:weighted-corner-trace}.
-\end{remark}
-
 \begin{definition}[Cartesian half-cone at a boundary]
 \label{def:cartesian-half-cone}
 \lean{NoEmbeddedEigenvalues.cartesianHalfCone}
@@ -4839,31 +4575,6 @@ by $a^{-1}$ and use $a<r<2a$ to bound $2a^{-2}\le8r^{-2}$.
 Only canonical traces are evaluated.
 \end{proof}
 
-\begin{lemma}[Critical one-sided trace in a Cartesian half-cone]
-\label{lem:boundary-weighted-cone-trace}
-\uses{def:cartesian-half-cone, def:canonical-transverse-trace,
- def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.boundary_weighted_cone_trace}
-\leanok
-Let $R>0$, $\partial_uF=D$ weakly on $\mathcal H_R$,
-and $F/r,D\in L^2(\mathcal H_R)$.
-If the same $T$ is a canonical endpoint trace on every
-$(a,2a)\times(0,a)$ with $a>0$, $2a\le R$, then
-\[
- T/\sqrt r\in L^2(0,R),\qquad
- \int_0^R\frac{|T|^2}{r}
- \le8\int_{\mathcal H_R}\left(\frac{|F|^2}{r^2}+|D|^2\right).
-\]
-No continuous planar representative or vertex value is assumed.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:boundary-weighted-band-trace, lem:half-cone-band-energy}
-\leanok
-Restrict the actual weak derivative and both finite norms to each band.
-Sum the scale-independent estimates against the common integrable energy.
-\end{proof}
-
 \begin{lemma}[Critical boundary mass excludes a constant-modulus mode]
 \label{lem:critical-boundary-mode}
 \uses{def:cartesian-half-cone, def:canonical-transverse-trace,
@@ -4891,70 +4602,12 @@ Half-cone summation gives $z/\sqrt r\in L^2(0,R)$, so the first assertion
 forces $|z|=0$. This is a norm argument, not weak gluing.
 \end{proof}
 
-\begin{lemma}[Weighted trace at a corner]
-\label{lem:weighted-corner-trace}
-\uses{def:sobolev-local, def:local-weak-jets, def:corner-crossing-traces}
-\lean{NoEmbeddedEigenvalues.weighted_corner_trace}
-\leanok
-Let $Q=\{0<r<r_0,\ 0<\theta<\pi/2\}$ be a quadrant of a disk, with
-$r_0>0$. If $u\in H^1(Q)$ and $u/r\in L^2(Q)$, its traces on the two
-straight sides satisfy
-\[
- \sum_{\theta_0\in\{0,\pi/2\}}\int_0^{r_0}
-       |u(r,\theta_0)|^2\,\frac{dr}{r}
- \le C\int_Q\left(\frac{|u|^2}{r^2}+|\nabla u|^2\right)\,dx\,dy ,
-\]
-The traces are the canonical radial traces of
-Definition~\ref{def:corner-crossing-traces} and belong to $L^2(dr/r)$.
-The constant $C$ is independent of $r_0$. The same bound holds for the
-single-ray integral at any fixed $\theta_0\in[0,\pi/2]$, with a
-constant independent of $\theta_0$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:trace-l2}
-Put $U(\tau,\theta)=u(r_0e^{-\tau},\theta)$. Change variables on finite
-cylinder strips and then exhaust the cylinder:
-\[
- \int |U|^2\,d\tau\,d\theta=\int_Q|u|^2/r^2,\qquad
- \int (|U_\tau|^2+|U_\theta|^2)\,d\tau\,d\theta=\int_Q|\nabla u|^2.
-\]
-Apply Lemma~\ref{lem:trace-l2} in the angular variable on
-$(0,\infty)\times(0,\pi/2)$. Since $d\tau=-dr/r$, its traces at the
-endpoints, or at any fixed angular value, give the asserted integrals.
-\end{proof}
-
-\begin{lemma}[$H^1$ gluing at crossing edges]
-\label{lem:h1-crossing-gluing}
-\uses{def:sobolev-local, def:corner-crossing-traces}
-\lean{NoEmbeddedEigenvalues.h1_crossing_gluing}
-\leanok
-Let $D$ be a disk centred at the origin, split into four quadrants by two
-orthogonal axes, and let $u\in L^2(D)$. Suppose its restrictions to the
-quadrants are in $H^1$ with specified weak gradients, their canonical
-one-sided traces match on each open half-axis, and $u/r\in L^2(D)$, where $r$ is distance to the origin. Then $u\in H^1(D)$,
-with weak gradient given by the quadrant gradients.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:acl-slicing, lem:trace-l2, lem:weak-point-removal}
-Away from the origin, ordinary trace gluing follows by ACL slicing:
-the one-dimensional absolutely continuous sections on either side of
-an axis have the same endpoint value, so their concatenation has no jump.
-Fubini gives the piecewise weak derivatives on the punctured disk.
-The four finite quadrant norms give finite value and derivative L2 norms
-on that whole punctured disk. The H1 consequence of
-Lemma~\ref{lem:weak-point-removal} extends these same derivatives through
-the center; no value on the crossing point is assumed.
-\end{proof}
-
 \begin{remark}[Digest note: finite H1 norms remove the isolated crossing]
 The radial-tail argument is unnecessary once the whole punctured disk has
 finite H1 norms. A transverse cutoff removes a point from each specified
 weak identity without differentiating the cutoff in the tested direction.
-The $u/r$ assumption is retained in the crossing interface, but is not needed
-for this alternative final extension step. Local H1 away from the point
-alone would not supply the required finite derivative norms.
+Local H1 away from the point alone would not supply the required finite
+derivative norms.
 \end{remark}
 
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]
@@ -5250,7 +4903,7 @@ $H^2$ and fractional statements are now both proved by the density-free
 arguments above.
 \end{remark}
 
-\section{Measure theory and operator theory}
+\section{Restriction to flow orbits}
 
 \begin{lemma}[Restriction to almost every orbit]
 \label{lem:coarea}
@@ -5314,59 +4967,6 @@ diffeomorphism onto a product. This lemma keeps the remaining part, $H^1$ along 
 every orbit.
 \end{remark}
 
-\begin{definition}[The transport operator]
-\label{def:transport-operator}
-\uses{def:dipole, def:dipole-flow, def:torus-of-lift, def:classical-tests}
-\lean{NoEmbeddedEigenvalues.transportDomain,
-  NoEmbeddedEigenvalues.transportL0,
-  NoEmbeddedEigenvalues.transportH,
-  NoEmbeddedEigenvalues.smoothL2,
-  NoEmbeddedEigenvalues.torusFlow}
-\leanok
-$H=-iL_0$ is the partially defined operator on $L^2(\T^2)$ with domain
-$\{u\in L^2:L_0u\in L^2\}$, where $L_0u$ is taken in the weak sense of
-Definition~\ref{def:dipole}. The smooth functions form a subspace of $L^2(\T^2)$, and
-$\Phi_t$ is the flow of $(\sin y,-\sin x)$ on $\T^2$, induced by the flow on the lift.
-\end{definition}
-
-\begin{lemma}[Self-adjointness of the transport operator]
-\label{lem:H-selfadjoint}
-\uses{def:transport-operator}
-\lean{NoEmbeddedEigenvalues.measurePreserving_torusFlow,
-  NoEmbeddedEigenvalues.isSelfAdjoint_transportH,
-  NoEmbeddedEigenvalues.hasCore_transportH,
-  NoEmbeddedEigenvalues.tendsto_torusFlow_sub_iff,
-  NoEmbeddedEigenvalues.tendsto_torusFlow_sub}
-\leanok
-$H$ is self-adjoint on $L^2(\T^2)$, and smooth functions form a core. The flow
-$\Phi_t$ is area preserving, and $H$ generates the unitary group $u\mapsto u\circ\Phi_t$:
-$u$ is in the domain of $H$ exactly when $(u\circ\Phi_s-u)/s$ converges in $L^2$ as
-$s\to0$, and the limit is then $L_0u=iHu$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:transport-l2, lem:orbit-coordinates-area, lem:dipole-flow, lem:cell-square}
-The maximal domain is by definition the adjoint of $H$ restricted to smooth functions,
-since $L_0u$ is defined by testing against characters, and $H$ is symmetric there.
-Self-adjointness is therefore equivalent to smooth functions being a core, which is
-Friedrichs' lemma: for a mollifier $J_\epsilon$ and $u$ in the maximal domain,
-$J_\epsilon u\to u$ and $L_0J_\epsilon u\to L_0u$, because the commutator
-$[L_0,J_\epsilon]$ tends to $0$ strongly when the coefficients are Lipschitz. The flow is
-area preserving because in orbit coordinates it is $(h,t)\mapsto(h,t+s)$ and
-$dx\,dy=2\,dh\,dt$ (Lemma~\ref{lem:orbit-coordinates-area}), on the negative cell by
-symmetry, and the separatrix is a null set. The generator is computed on smooth functions
-and extended by the core property.
-\end{proof}
-
-\begin{remark}
-Lemma~\ref{lem:H-selfadjoint} is the classical fact that a smooth divergence
-free vector field on a compact manifold gives an essentially skew-adjoint
-operator on smooth functions, whose closure is the maximal (distributional)
-operator. It needs no Sobolev spaces. Mathlib has unbounded operators, adjoints,
-self-adjointness, closures and cores, but no strongly continuous groups or Stone's
-theorem, so the generator statement is formulated through difference quotients.
-\end{remark}
-
 \section{Elementary inequalities}
 
 \begin{lemma}[Endpoint Cauchy--Schwarz estimates]
@@ -5396,38 +4996,6 @@ $|\widetilde F(x)|^2\le(b-x)\int_x^b|D(t)|^2\,dt$.
 The closed-interval fundamental theorem gives
 $\widetilde F(d)-\widetilde F(c)=\int_c^dD$. Apply the integral triangle
 inequality and Cauchy--Schwarz to $|D|$ and the constant function $1$.
-\end{proof}
-
-\begin{lemma}[Vanishing rescaled endpoint layers]
-\label{lem:h1-endpoint-layers}
-\uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_extension_sq_le_left,
-  NoEmbeddedEigenvalues.HasIntervalH1.integral_extension_sq_le_right,
-  NoEmbeddedEigenvalues.HasIntervalH1.integral_rescaled_left_le,
-  NoEmbeddedEigenvalues.HasIntervalH1.integral_rescaled_right_le,
-  NoEmbeddedEigenvalues.HasIntervalH1.tendsto_integral_rescaled_left,
-  NoEmbeddedEigenvalues.HasIntervalH1.tendsto_integral_rescaled_right}
-\leanok
-Let $F\in H^1(a,b)$ have a.e.\ derivative $D$. If its left trace vanishes,
-then for $0<\eta\le b-a$,
-\[
-  \int_a^{a+\eta}|\widetilde F(x)|^2\,dx
-  \le\eta^2\int_a^{a+\eta}|D(t)|^2\,dt,\qquad
-  \int_a^{a+\eta}\left|\frac{\widetilde F(x)}{\eta}\right|^2\,dx
-  \le\int_a^{a+\eta}|D(t)|^2\,dt\longrightarrow0
-\]
-as $\eta\downarrow0$. If the right trace vanishes, the same statements hold
-on $[b-\eta,b]$.
-\end{lemma}
-
-\begin{proof}
-\uses{lem:h1-endpoint-estimates}
-\leanok
-On the left layer, bound $x-a$ by $\eta$ and the integral of $|D|^2$ on
-$[a,x]$ by its integral on the whole layer. Integrating the resulting
-constant bound gives the factor $\eta^2$. The rescaled integral is
-nonnegative and bounded above by the local derivative energy, which tends
-to zero since $D\in L^2(a,b)$. The right endpoint is identical.
 \end{proof}
 
 \begin{lemma}[Square-integrable functions along endpoint sequences]
@@ -5822,39 +5390,6 @@ Affine substitution and the fundamental theorem give
 $(x-z)g(x)=f(x)-f(z)$, including $x=z$.
 \end{proof}
 
-\begin{lemma}[Angular Hardy]
-\label{lem:hardy-angular}
-\uses{def:h1-interval, def:h1-zero-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.interval_hardy_angular}
-\leanok
-There is a constant $C>0$ independent of $g$. If $g\in H^1(0,\pi/2)$
-has zero canonical traces at both endpoints, then
-$g/(\sin\theta\cos\theta)\in L^2(0,\pi/2)$ and
-\[
- \int_0^{\pi/2}\frac{|g|^2}{\sin^2\theta\cos^2\theta}\,d\theta
- \le C\int_0^{\pi/2}|g'|^2\,d\theta .
-\]
-\end{lemma}
-
-\begin{lemma}[One-dimensional Hardy collection]
-\label{lem:hardy-1d}
-\uses{lem:hardy-endpoint, lem:hardy-second, lem:hardy-angular}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_endpoint,
-  NoEmbeddedEigenvalues.interval_h2_div_sub, NoEmbeddedEigenvalues.interval_hardy_angular}
-\leanok
-The endpoint, second-order and angular Hardy inequalities above hold.
-This collection retains the original references; phase-cell division
-uses linear Hardy energy and second-order division, not angular Hardy.
-\end{lemma}
-
-\begin{remark}[Digest note: do not bundle angular Hardy into phase division]
-The unweighted and logarithmic phase-cell arguments need linear Hardy energy
-and second Hardy division. Their former reference to the whole collection
-also pulled angular Hardy into the odd--odd quotient graph. Angular Hardy
-is a separate claim; it is not required by the Hardy/Poisson vorticity
-division used on that route.
-\end{remark}
-
 \begin{lemma}[Critical Hardy inequality for odd functions]
 \label{lem:odd-hardy}
 \uses{def:gagliardo}
@@ -5889,32 +5424,6 @@ seminorm; the trace input for $\psi_u$ is given directly in Gagliardo form by
 Lemma~\ref{lem:trace-gagliardo}, so no link between the Gagliardo seminorm and $H^{1/2}$ is needed.
 \end{remark}
 
-\begin{lemma}[Hyperbola estimate]
-\label{lem:hyperbola-estimate}
-\lean{NoEmbeddedEigenvalues.lintegral_hyperbola_le}
-\leanok
-Let $0<h$, $\sqrt h\le u_0$, and let $F,F_v$ be functions on $\R^2$, $F_v$ measurable, such
-that for almost every $u\in(0,u_0)$ the function $v\mapsto F(u,v)$ is absolutely continuous on
-$[0,u_0]$ with derivative $F_v(u,\cdot)$ almost everywhere. Then
-\[
-  \int_{\sqrt h}^{u_0}\frac{|F(u,h/u)-F(u,0)|^2}{u}\,du\le\int_{(0,u_0)^2}|F_v|^2
-\]
-(manuscript \texttt{(ee:hyperbola-estimate)}).
-\end{lemma}
-
-\begin{proof}
-\leanok
-For such $u$, $F(u,h/u)-F(u,0)=\int_0^{h/u}F_v(u,v)\,dv$, so by Cauchy--Schwarz
-$|F(u,h/u)-F(u,0)|^2/u\le(h/u^2)\int_0^{h/u}|F_v(u,v)|^2dv$. For $u\ge\sqrt h$ both $h/u^2\le1$
-and $h/u\le\sqrt h\le u_0$; integrate over $u$.
-\end{proof}
-
-\begin{remark}
-This is the manuscript's estimate near the saddles, in the corner coordinates $u=\cos a$,
-$v=\cos b$. The even--even corner tails (Lemma~\ref{lem:ee-corner-tails}) now apply the segment
-estimate directly in diagonal coordinates, so this lemma is no longer used there.
-\end{remark}
-
 \begin{lemma}[Segment estimate]
 \label{lem:segment-estimate}
 \lean{NoEmbeddedEigenvalues.lintegral_segment_le, NoEmbeddedEigenvalues.ae_segment_le,
@@ -5938,9 +5447,8 @@ measurable in $a$ even when $a\mapsto G(a,\beta(a))$ is not known to be.
 
 \begin{proof}
 \leanok
-Fundamental theorem of calculus and Cauchy--Schwarz on the segment from $b_0$ to $\beta(a)$,
-as in Lemma~\ref{lem:hyperbola-estimate}, which is the case $w(u)=1/u$, $\beta(u)=h/u$, $b_0=0$,
-where $w|\beta-b_0|=h/u^2\le1$.
+Apply the fundamental theorem of calculus and Cauchy--Schwarz on the
+segment from $b_0$ to $\beta(a)$, then integrate the measurable bound.
 \end{proof}
 
 \begin{lemma}[Local odd Hardy inequality]
