@@ -4,7 +4,7 @@
 · [Blueprint chapter](../../blueprint/src/chapters/odd_odd.tex)
 
 Odd–odd exclusion (`thm:dd-exclusion`) is transitively admission-free. The
-assembly is in [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd.lean).
+assembly is in [OddOdd.lean](../../NoEmbeddedEigenvalues/OddOdd/Conclusion/OddOdd.lean).
 
 The minimal quotient domain (`cor:dd-exclusion-domain`) is admission-free.
 The stronger bundled quotient domain is not needed.

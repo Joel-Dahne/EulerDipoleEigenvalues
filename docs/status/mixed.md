@@ -5,7 +5,7 @@
 
 `thm:mixed-exclusion` (odd–even) is proved from `prop:mixed-quotient-domain`,
 `lem:mixed-K-identity` and `thm:mixed-coercivity` in
-[Mixed.lean](../../NoEmbeddedEigenvalues/Mixed.lean).
+[Mixed.lean](../../NoEmbeddedEigenvalues/Mixed/Conclusion/Mixed.lean).
 `cor:mixed-other-exclusion` follows by rotation. Both exclusions are
 admission-free. See [the module map](../architecture.md).
 

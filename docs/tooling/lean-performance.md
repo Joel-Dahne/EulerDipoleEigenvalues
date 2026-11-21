@@ -8,7 +8,7 @@ proof elaboration **and** server reporting/reference-metadata work.
 
 Measured on 2026-10-30 with Lean 4.34.1, lean-lsp-mcp 0.31.0 and leanclient
 0.12.0 in the 4-core, 12 GB VM. The same worker checked the 3,136-line
-`NoEmbeddedEigenvalues/OddOddVirial.lean` throughout. Test edits were restored
+`NoEmbeddedEigenvalues/OddOdd/WeightedVirial/OddOddVirial.lean` throughout. Test edits were restored
 byte-for-byte; all complete checks passed. No builds were run.
 
 | Request | Elapsed time |
