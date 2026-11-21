@@ -17,8 +17,6 @@ rebuilds both the graphs and the report.
 tracks this proof and retains the smooth virial identities for exposition.
 The Lean library has no admissions. `Challenge.lean` still uses placeholders
 by design; its statements are proved in `Solution.lean`.
-The reworked manuscript presents the introduction through the main theorem;
-later sections are placeholders.
 
 ## Topic pages
 

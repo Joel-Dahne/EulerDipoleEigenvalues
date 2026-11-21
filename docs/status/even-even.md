@@ -9,5 +9,4 @@ are transitively admission-free. The assembly is in
 
 The remaining work is human review of the Lean statements, especially the
 setup, sector reduction, interval representatives, and weighted boundary
-domain. Bring the settled argument into the reworked manuscript once the
-authors agree on its structure.
+domain.

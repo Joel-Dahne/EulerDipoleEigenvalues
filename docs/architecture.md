@@ -9,9 +9,7 @@ proof mechanisms. Module names below are relative to
 ## Mathematical sources and audit entry points
 
 - `Manuscript/eigenvalues.tex`: unchanged original reference, not a trusted proof.
-- `Manuscript/manuscript.tex`: reworked paper, updated with the authors'
-  agreement once the corresponding argument has settled. Both manuscripts
-  build into `Manuscript/build`.
+  `just manuscript` builds it into `Manuscript/build`.
 - `blueprint/src/content.tex`: ordered chapter list; `chapters/*.tex` contains
   setup, symmetry, geometry, analysis, virial, transport, sector arguments,
   regularity, certificates and digest notes.

@@ -28,9 +28,6 @@ errors, look for simpler proofs, and record what you learn in the blueprint.
 - `blueprint/` is the dependency graph, formalization plan and staging area
   for corrections. See `blueprint/README.md` and `blueprint/src/chapters/intro.tex`.
 - `NoEmbeddedEigenvalues/` is the Lean library.
-- `Manuscript/manuscript.tex` is the reworked paper: current understanding,
-  written as a paper rather than a blueprint, with placeholders for unsettled
-  sections. Update it only with the authors' agreement.
 
 ## Working on the mathematics
 
@@ -48,8 +45,7 @@ errors, look for simpler proofs, and record what you learn in the blueprint.
 - Scratch computations (SymPy, numerics) belong in a scratch directory. Do not
   add them to the repository unless asked; verification scripts for the
   certificates are an exception, once they are planned.
-- Never edit `eigenvalues.tex`. Record mathematical changes in the blueprint
-  first. Leave `manuscript.tex` alone unless the authors request edits.
+- Never edit `eigenvalues.tex`. Record mathematical changes in the blueprint.
 
 ## Navigation and audit boundary
 

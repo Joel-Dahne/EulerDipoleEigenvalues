@@ -20,9 +20,8 @@ challenge:
     lake -q build --log-level=error Challenge Solution
     lake env lean --run scripts/CheckChallenge.lean
 
-# Output in Manuscript/build. `just manuscript eigenvalues` builds the original manuscript.
-# Build the reworked manuscript PDF and rebuild it whenever the source changes
-manuscript file="manuscript":
+# Build the original manuscript PDF in Manuscript/build and watch for source changes.
+manuscript file="eigenvalues":
     cd Manuscript && latexmk -pvc -pdf -pdflatex=xelatex -output-directory=build {{file}}.tex
 
 # Check blueprint labels, references and dependency cycles (Python 3 only)
