@@ -15,7 +15,8 @@ rebuilds both the graphs and the report.
 
 `thm:main` combines the sector exclusions and is admission-free. The blueprint
 tracks this proof and retains the smooth virial identities for exposition.
-Some auxiliary Lean results outside the proof still have admissions.
+The Lean library has no admissions. `Challenge.lean` still uses placeholders
+by design; its statements are proved in `Solution.lean`.
 The reworked manuscript presents the introduction through the main theorem;
 later sections are placeholders.
 

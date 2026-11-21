@@ -11,7 +11,6 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 Blueprint: `def:period`, `lem:period-integral`, `lem:period-basic`, `lem:period-regularity`,
 `lem:period-leading-asymptotic`.
-The elliptic-integral formula and sharp asymptotics remain stated.
 Coarse logarithmic and exponential bounds are proved in `OrbitCoordinates.lean`, after
 constructing the flow and proving the half-quarter endpoint estimates.
 
@@ -390,11 +389,6 @@ theorem orbitPeriod_strictAntiOn : StrictAntiOn orbitPeriod (Ioo 0 1) := by
 
 /-! ### Further period estimates -/
 
-/-- `S(h) = 4 K(1 - h²)` with `K(m) = ∫₀^{π/2} (1 - m sin² θ)^{-1/2} dθ`. -/
-theorem orbitPeriod_eq_ellipticK {h : ℝ} (h0 : 0 < h) (h1 : h < 1) :
-    orbitPeriod h = 4 * ∫ θ in (0 : ℝ)..π / 2, 1 / √(1 - (1 - h ^ 2) * sin θ ^ 2) := by
-  sorry
-
 /-- The remainder after subtracting the integrable logarithmic model at each `h > 0`. -/
 private def periodLogRemainder (h t : ℝ) : ℝ :=
   1 / (√(1 - (1 - h) * t ^ 2) * √(1 + h - t ^ 2)) - 1 / (-2 * t + (2 + h))
@@ -522,11 +516,5 @@ theorem orbitPeriod_leading_asymptotic :
   refine h.congr' (Eventually.of_forall fun h ↦ ?_)
   unfold orbitPeriod
   ring
-
-/-- `L(h) = ½ log(4/h) + O(h² log(1/h))` and `L'(h) = -1/(2h) + O(h log(1/h))` as `h → 0`. -/
-theorem eighthPeriod_asymptotics : ∃ C h₀ : ℝ, 0 < h₀ ∧ ∀ h ∈ Set.Ioo 0 h₀,
-    |eighthPeriod h - log (4 / h) / 2| ≤ C * h ^ 2 * log (1 / h) ∧
-      |deriv eighthPeriod h + 1 / (2 * h)| ≤ C * h * log (1 / h) := by
-  sorry
 
 end NoEmbeddedEigenvalues

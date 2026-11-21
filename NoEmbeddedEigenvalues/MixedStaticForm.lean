@@ -259,23 +259,6 @@ theorem mixed_quotient_edge_h1 {ω : L2} (d : MixedQuotientData ω) (σ : Bool) 
 def mixedC₀ (q : Plane) : ℝ :=
   -mixedFieldCoeff q + 2 * Real.sin q.1 ^ 2 / (Real.cos q.1 * (Real.cos q.1 + Real.cos q.2))
 
-/-- Density of the weighted interior form, before completion of the square. -/
-def mixedWeightedDensity (φ : Plane → ℂ) (D : List (Fin 2) → Plane → ℂ) (q : Plane) : ℝ :=
-  Real.cos q.1 ^ 2 * (
-    mixedFieldCoeff q / 2 * ‖mixedWeightedLaplacian D q‖ ^ 2 +
-    mixedGradientForm (1 + mixedFieldCoeff q) (mixedFieldMatrixOffDiagonal q) (D [0] q) (D [1] q) +
-    (2 * mixedFieldA q - partialX mixedC₀ q) * (φ q * conj (D [0] q)).re +
-    (2 * mixedFieldB q - partialY mixedC₀ q) * (φ q * conj (D [1] q)).re +
-    (1 - mixedC₀ q - mixedFieldCoeff q / 2) * ‖φ q‖ ^ 2)
-
-/-- The weighted interior form of the mixed static functional. -/
-theorem mixed_weighted_form {ω : L2} (d : MixedQuotientData ω) :
-    (∀ q ∈ mixedOpenCell, mixedC₀ q =
-      1 - divergence mixedFieldA mixedFieldB q + 2 * Real.tan q.1 * mixedFieldA q) ∧
-    IntegrableOn (mixedWeightedDensity d.phi d.jet) mixedOpenCell ∧
-    mixedStaticForm d = ∫ q in mixedOpenCell, mixedWeightedDensity d.phi d.jet q := by
-  sorry
-
 /-- Interior density of the second-order form. -/
 def mixedSecondOrderDensity (φ da db : Plane → ℂ) (q : Plane) : ℝ :=
   mixedGradientForm (mixedComparisonDiagonal q) (mixedComparisonOffDiagonal q) (da q) (db q) +

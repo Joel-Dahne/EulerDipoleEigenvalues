@@ -78,7 +78,7 @@ proof mechanisms. Module names below are relative to
   the continuous stream everywhere and proves zero values on the full separatrix.
   `SaddleCoefficient.lean` proves coefficient uniqueness from the weighted Hessian
   alone, on possibly different disk radii, and packages existence as uniqueness.
-- `WeightedTraces.lean`: canonical transverse, radial, cell-edge and separatrix
+- `WeightedTraces.lean`: canonical transverse, cell-edge and separatrix
   trace data.
 - `LiftTorus.lean`, `LiftIntegration.lean`: classical/Fourier derivative
   correspondence, smooth lifts and integration by parts over `[0, 2π]²`.

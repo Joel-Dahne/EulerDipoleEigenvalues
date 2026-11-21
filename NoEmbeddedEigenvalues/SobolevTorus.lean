@@ -7,7 +7,7 @@ import NoEmbeddedEigenvalues.Derivatives
 # Sobolev spaces on the torus
 
 Blueprint: `def:sobolev-torus`, `lem:elliptic-torus`, `def:continuous-representative`,
-`lem:continuous-representative`; `lem:sobolev-lp` (stated).
+`lem:continuous-representative`.
 The quantitative Hölder embedding is proved in `SobolevHolder.lean`.
 
 `Hˢ(𝕋²)` consists of the `g ∈ L²` with `∑ (1 + |k|²)ˢ |ĝ_k|² < ∞`, and derivatives are
@@ -300,20 +300,5 @@ theorem coeFn_invLap_eq_continuousRep (ω : L2) :
   coeFn_eq_continuousRep (memSobolev_two_invLap ω)
 
 end ContinuousRep
-
-/-! ### Finite-p Sobolev embedding (`lem:sobolev-lp`, stated) -/
-
-section Embedding
-
-open MeasureTheory
-open scoped NNReal ENNReal
-
-/-- `H¹(𝕋²) ⊂ Lᵖ(𝕋²)` for every `p < ∞`, continuously. -/
-theorem memLp_of_memSobolev_one {p : ℝ≥0∞} (hp : p ≠ ⊤) :
-    ∃ C : ℝ, ∀ g : L2, MemSobolev 1 g → MemLp (g : Torus → ℂ) p ∧
-      eLpNorm (g : Torus → ℂ) p volume ≤ ENNReal.ofReal (C * √(sobolevNormSq 1 g)) := by
-  sorry
-
-end Embedding
 
 end NoEmbeddedEigenvalues
