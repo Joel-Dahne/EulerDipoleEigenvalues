@@ -754,6 +754,11 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
 - `Certificates/BernsteinSeparable.lean`: computes a box transform by
   successive one-variable transforms, allowing intermediate tables to be
   checked once and shared across boxes.
+- `Certificates/BernsteinMidpoint.lean`: factorial-scaled integer root
+  conversion, exact midpoint subdivision by adjacent sums, and a sound
+  sign checker for subdivision trees. Checkpoint identities let the kernel
+  verify each child against its immediate parent without expanding a chain
+  of integer table calculations.
 - `Certificates/Logarithm.lean`: rational logarithm bounds from geometric
   tail estimates and affine interpolation between endpoint bounds.
 - `Certificates/OddOddResidual.lean`: explicit odd–odd residual table and
@@ -779,6 +784,12 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   identity, two exact power tables, and direct evaluation at `(1,1)`.
   `Certificates/MixedOddBLog.lean` checks the small strip and reduces the
   rest of the rectangle to twenty polynomial endpoint signs.
+- `Certificates/MixedOddBStripData.lean` stores the endpoint power tables
+  and trees. `Certificates/MixedOddBStripPower.lean` verifies the evaluation
+  identities. `Certificates/MixedOddBReplay/Strip*.lean` checks each root by
+  two axis transforms and each child by a midpoint restriction; the leaves
+  are checked by exact integer signs. `Certificates/MixedOddBStrips.lean`
+  combines the identities, signs, and strip coverage.
 
 ## Source checks and verification tools
 
@@ -791,6 +802,8 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
 - `scripts/verify_mixed_odd_b.py` (Python 3 with SymPy): reproduces the
   mixed odd-in-b power tables and searches for common dyadic trees for the
   two endpoints in each strip, replaying the signs using exact integers.
+  `--lean-strips` emits power tables and schedules; `--lean-replay J`
+  emits locally checked intermediate tables and proofs for strip `J`.
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,
   references, metadata and dependency cycles, without Lean or plasTeX.
 - `scripts/blueprint_status.py` (`just status-blueprint`, also `just web`):

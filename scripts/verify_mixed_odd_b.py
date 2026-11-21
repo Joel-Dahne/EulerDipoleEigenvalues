@@ -6,7 +6,7 @@ This standalone exact-arithmetic check does not supply proof evidence to Lean.
 import argparse
 from fractions import Fraction
 from functools import lru_cache
-from math import lcm
+from math import factorial, lcm
 
 import sympy as sp
 
@@ -74,7 +74,7 @@ def nonnegative(t):
     return all(x >= 0 for row in t for x in row)
 
 
-def strip_tables(a, b, j):
+def strip_polynomials(a, b, j):
     z = sp.Symbol('z')
     s = sp.Rational(1, 2)**j
     h = s*(1-z/2)
@@ -84,7 +84,82 @@ def strip_tables(a, b, j):
     hi2 = lo2 + 2*sp.Rational(1, 3)**41/(41*(1-sp.Rational(1, 9)))
     lower = h*(a+b*(-j*hi2+taylor)) - s*b*(z/2)**15/15
     upper = a+b*(-j*lo2+taylor)
-    return tuple(integer_bernstein(sp.Poly(p, z, K)) for p in (lower, upper))
+    return tuple(sp.Poly(p, z, K) for p in (lower, upper))
+
+
+def lean_strip(j, polynomials, tree, replay=False):
+    def lean_tree(t):
+        if t is None:
+            return '.leaf'
+        axis, l, r = t
+        return f'(.split {str(bool(axis)).lower()} {lean_tree(l)} {lean_tree(r)})'
+
+    def print_row(row, last):
+        entries = list(map(str, row))
+        # Wrap before large integer literals to keep the generated file readable.
+        chunks = [[entries[0]]]
+        for e in entries[1:]:
+            if sum(map(len, chunks[-1]))+len(e)+2*len(chunks[-1]) > 90:
+                chunks.append([e])
+            else:
+                chunks[-1].append(e)
+        print('  #v[' + ',\n    '.join(', '.join(line) for line in chunks) + (']]' if last else '],'))
+
+    if not replay:
+        print(f'/-- Common midpoint schedule for strip {j}. -/')
+        print(f'def oddBTree{j} : BernsteinMidTree :=\n  {lean_tree(tree)}\n')
+    for p, label in zip(polynomials, ('Lower', 'Upper')):
+        coeffs = rows(p)
+        scale = lcm(*(v.denominator for row in coeffs for v in row))
+        n, m = p.degree_list()
+        name = f'oddB{label}{j}'
+        def table(term, data):
+            print(f'{term} : BernsteinIntTable {n} {m} := #v[')
+            for i, row in enumerate(data):
+                print_row(row, i == n)
+            print()
+
+        ints = [[int(scale*v) for v in row] for row in coeffs]
+        if not replay:
+            print(f'/-- Common power denominator of the {label.lower()} endpoint on strip {j}. -/')
+            print(f'def {name}Scale : ℕ := {scale}\n')
+            print(f'/-- Integer power coefficients of the {label.lower()} endpoint on strip {j}. -/')
+            table(f'def {name}Power', ints)
+            continue
+
+        def axis(row):
+            degree = len(row)-1
+            return [int(factorial(degree)*v) for v in bernstein_1d(row, 0, 1)]
+
+        middle = [axis(row) for row in ints]
+        root = tuple(zip(*map(axis, zip(*middle))))
+        table(f'private def {name}Middle', middle)
+        table(f'private def {name}Root', root)
+        print(f'private theorem {name}Root_eq : bernsteinIntFromPower {name}Power = {name}Root :=')
+        print(f'  bernsteinIntFromPower_eq (middle := {name}Middle) (by decide +kernel)')
+        print('    (by decide +kernel)\n')
+
+        def replay_node(node, data, parent):
+            if node is None:
+                print(f'private theorem {parent}_check : BernsteinMidTree.leaf.check {parent} = true := by')
+                print('  decide +kernel\n')
+                return
+            direction, l, r = node
+            left, right = split(data, direction)
+            table(f'private def {parent}L', left)
+            replay_node(l, left, parent+'L')
+            table(f'private def {parent}R', right)
+            replay_node(r, right, parent+'R')
+            print(f'private theorem {parent}_check :')
+            print(f'    ({lean_tree(node)} : BernsteinMidTree).check {parent} = true :=')
+            print('  BernsteinMidTree.check_split (by decide +kernel) (by decide +kernel)')
+            print(f'    {parent}L_check {parent}R_check\n')
+
+        replay_node(tree, root, name+'Root')
+        print(f'/-- Kernel-checked integer subdivision signs for the {label.lower()} endpoint. -/')
+        print(f'theorem {name}_check : oddBTree{j}.check (bernsteinIntFromPower {name}Power) = true := by')
+        print(f'  rw [{name}Root_eq]')
+        print(f'  exact {name}Root_check\n')
 
 
 def optimal_tree(roots, max_x=5, max_y=6):
@@ -131,6 +206,9 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--lean-power', action='store_true', help='emit the two integer power tables')
     group.add_argument('--trees', action='store_true', help='print the common strip trees')
+    group.add_argument('--lean-strips', action='store_true', help='emit power tables and trees')
+    group.add_argument('--lean-replay', type=int, choices=range(10),
+                       help='emit checked intermediate tables and proofs for one strip')
     args = parser.parse_args()
     a, b = power_polynomials()
     if args.lean_power:
@@ -138,17 +216,28 @@ def main():
             lean_table('mixedOddB'+name+'Int',
                        'Integer power coefficients of the odd-in-b polynomial '+name+'.', rows(p))
         return
+    if args.lean_replay is not None:
+        j = args.lean_replay
+        polys = strip_polynomials(a, b, j)
+        tree = optimal_tree(tuple(map(integer_bernstein, polys)))[2]
+        lean_strip(j, polys, tree, replay=True)
+        return
     for p in (-b, a-6*b):
         assert nonnegative(integer_bernstein(sp.Poly(p.as_expr().subs(H, H/1024), H, K)))
     total_nodes, total_leaves = 2, 2
     for j in range(10):
-        n, depth, tree = optimal_tree(strip_tables(a, b, j))
+        polys = strip_polynomials(a, b, j)
+        n, depth, tree = optimal_tree(tuple(map(integer_bernstein, polys)))
+        if args.lean_strips:
+            lean_strip(j, polys, tree)
+            continue
         print(f'Strip {j}: {n} nodes per endpoint, depth {depth}')
         if args.trees:
             print(tree)
         total_nodes += 2*n
         total_leaves += n+1
-    print(f'{total_nodes} nodes, {total_leaves} leaves including the two small-strip checks')
+    if not args.lean_strips:
+        print(f'{total_nodes} nodes, {total_leaves} leaves including the two small-strip checks')
 
 
 if __name__ == '__main__':

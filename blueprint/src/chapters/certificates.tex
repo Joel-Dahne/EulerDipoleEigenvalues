@@ -71,6 +71,31 @@ Both the affine pullback and the power-to-Bernstein weights factor into a
 product of one-variable weights. Expand the sums and exchange their order.
 \end{proof}
 
+\begin{lemma}[Integer midpoint subdivision]
+\label{lem:bernstein-midpoint}
+\uses{def:bernstein}
+\lean{NoEmbeddedEigenvalues.bernsteinIntFromPower_eval,
+ NoEmbeddedEigenvalues.bernsteinIntEval_midTable, NoEmbeddedEigenvalues.BernsteinMidTree.power_nonneg}
+\leanok
+An integer power table of bidegree at most $(n,m)$ converts to the
+Bernstein table scaled by $n!m!$. A midpoint restriction in a coordinate
+of degree $d$ gives a new Bernstein table scaled by $2^d$ relative to
+its parent. If all leaf tables on a binary midpoint subdivision tree
+are nonnegative, the original polynomial is nonnegative on $[0,1]^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:bernstein-positivity}
+\leanok
+Use $d!/{d\choose i}=i!(d-i)!$ in the power-to-Bernstein transform.
+For the left midpoint restriction, compute adjacent sums successively
+and multiply the first entry at depth $i$ by $2^{d-i}$.
+The Bernstein recursion verifies evaluation at $x/2$ with scale $2^d$;
+reversing the coefficients gives the right restriction.
+Apply the one-variable identity in each split coordinate, and induct on
+the tree using the positivity of the Bernstein basis at each leaf.
+\end{proof}
+
 \begin{lemma}[Rational bounds for the logarithm]
 \label{lem:log-bounds}
 \lean{NoEmbeddedEigenvalues.certificateLogTaylor,
@@ -252,12 +277,14 @@ With $T$ its degree-fourteen Taylor bound, the polynomials
 are nonnegative on $(z,k)\in[0,1]^2$. Here both $A,B$ are evaluated at $(h,k)$.
 \end{lemma}
 \begin{proof}
-\uses{lem:bernstein-positivity}
-Evaluate each strip's Bernstein coefficients once, and check signs on its
-dyadic subdivisions. An independent exact-arithmetic search finds common
-trees for the two endpoints with 132 nodes counted across both bounds,
-rather than the manuscript's 656 on these strips. These trees still need
-to be checked in Lean.
+\uses{lem:bernstein-midpoint}
+\leanok
+Identify each endpoint with a positively scaled integer power table by
+polynomial normalization. Compute its Bernstein table once, one axis
+at a time, and verify each child table by the scaled integer midpoint
+rule. Inspect the leaf signs by kernel reduction. The two endpoints
+share a tree on each strip; counting each tree twice gives 132 nodes,
+rather than the manuscript's 656 on these strips.
 \end{proof}
 
 \begin{lemma}[Odd-in-$b$ residual sign]
@@ -372,5 +399,5 @@ The manuscript's certificate scripts are not in this repository.
 The odd-in-$a$ tables have been reconstructed from the differentiation
 formulas; Lean checks the polynomial identities and signs independently.
 The odd-in-$b$ power data and their link to the normalized residual are
-also checked. The dyadic endpoint signs remain the only missing part.
+also checked, including the signs on the dyadic endpoint trees.
 \end{remark}

@@ -1,6 +1,6 @@
 import NoEmbeddedEigenvalues.Certificates.Bernstein
 import NoEmbeddedEigenvalues.Certificates.MixedOddA
-import NoEmbeddedEigenvalues.Certificates.MixedOddBLog
+import NoEmbeddedEigenvalues.Certificates.MixedOddBStrips
 import NoEmbeddedEigenvalues.MixedComparison
 import Mathlib.Data.Fin.VecNotation
 

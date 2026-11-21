@@ -6,9 +6,8 @@
 `thm:mixed-exclusion` (odd–even) is proved from `prop:mixed-quotient-domain`,
 `lem:mixed-K-identity` and `thm:mixed-coercivity` in
 [Mixed.lean](../../NoEmbeddedEigenvalues/Mixed.lean).
-`cor:mixed-other-exclusion` follows by rotation. The only remaining admission
-in this chain is `cert:odd-b-strips`, the dyadic polynomial signs within
-`cert:odd-b`. See [the module map](../architecture.md).
+`cor:mixed-other-exclusion` follows by rotation. Both exclusions are
+admission-free. See [the module map](../architecture.md).
 
 - **Regularity:** `cor:mixed-saddle-jet` supplies the jet removed by
   `lem:mixed-weighted-forcing-remainder`. The resulting
@@ -92,12 +91,14 @@ in this chain is `cert:odd-b-strips`, the dyadic polynomial signs within
   derivatives and sum to the corrected divergence. Integrating by Fubini
   uses the canonical Neumann traces and needs no separate corner flux.
 - **Coercivity:** `thm:mixed-coercivity` is assembled from the square
-  completion and the two quarter comparisons; it is not admission-free.
+  completion and the two quarter comparisons and is admission-free.
   The parity splitting of the form and mass, the Cartesian mass conversion,
   and the matrix positivity and coefficient bounds are admission-free.
-  The signs `cert:odd-a` and `cert:robin` are admission-free; only
-  `cert:odd-b` remains. The two interior differential identities and the
-  odd-in-a Robin polynomial identity are admission-free. So is `lem:mixed-robin-multipliers`: homogeneity controls
+  The signs `cert:odd-a`, `cert:robin`, and `cert:odd-b` are admission-free.
+  For `cert:odd-b-strips`, Lean checks each root conversion and then verifies
+  scaled integer midpoint restrictions on a shared tree for each strip.
+  Both interior differential identities and the Robin polynomial identity
+  are admission-free. In `lem:mixed-robin-multipliers`, homogeneity controls
   the rational exponent and its first derivatives up to the regular Robin
   edge, and the factor `h log h` gives continuity and the logarithmic
   derivative bound for the odd-in-b multiplier.
@@ -115,7 +116,7 @@ in this chain is `cert:odd-b-strips`, the dyadic polynomial signs within
   bounds the second-order form on H¹. The separate
   `lem:mixed-weighted-form` remains admitted but is not used by coercivity.
   See [shared certificate work](shared.md#shared-certificate-work) for
-  the remaining sign check.
+  the implementation of the sign checks.
 
 See the [digest notes](../../blueprint/src/chapters/notes.tex) for mathematical
 gaps and the generated report for per-node status.

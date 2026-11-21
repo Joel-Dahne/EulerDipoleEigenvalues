@@ -167,12 +167,6 @@ private theorem dyadic_cover (n : ℕ) {h : ℝ} (hlo : (1 / 2 : ℝ) ^ n < h) (
     · obtain ⟨j, hj, hbox⟩ := ih ht
       exact ⟨j, Nat.lt_succ_of_lt hj, hbox⟩
 
-/-- The twenty polynomial signs on the rescaled unit squares. -/
-theorem mixed_odd_b_strip_signs (j : ℕ) (hj : j < 10) (z k : ℝ)
-    (hz : z ∈ Icc 0 1) (hk : k ∈ Icc 0 1) :
-    0 ≤ mixedOddBStripLower j z k ∧ 0 ≤ mixedOddBStripUpper j z k := by
-  sorry
-
 /-- Sign on the full rectangle from the twenty polynomial endpoint inequalities. -/
 theorem mixed_odd_b_residual_nonneg_of_strips
     (hstrips : ∀ j < 10, ∀ z k : ℝ, z ∈ Icc 0 1 → k ∈ Icc 0 1 →
