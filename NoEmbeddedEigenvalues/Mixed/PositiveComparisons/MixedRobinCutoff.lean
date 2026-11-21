@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedRobinRectangle
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+module
+
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedRobinRectangle
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-!
 # Cutoff current estimates for the mixed Robin comparison
@@ -11,6 +13,8 @@ On the right face the diagonal and shear both carry the factor
 odd-in-b ground function. A separated estimate uses the integrable
 weight `1/√(cos b)`, including up to the top corner.
 -/
+
+@[expose] public section
 
 noncomputable section
 

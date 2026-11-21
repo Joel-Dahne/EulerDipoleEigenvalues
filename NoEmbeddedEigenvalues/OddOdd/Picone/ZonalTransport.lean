@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalWeakPairing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
-import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalWeakPairing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
+public import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
 
 /-!
 # Physical-to-diagonal weighted measure transport
@@ -9,6 +11,8 @@ The diagonal inverse sends the probability measure `zonalMeasure` to
 `(2π²)⁻¹ • ddCellMeasure`. Thus weighted L² values and specified Cartesian
 weak derivatives give the diagonal weak domain without boundary assumptions.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.HardyAverage
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.HardyAverage
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
 
 /-!
 # Hardy division for interval Sobolev representatives
@@ -11,6 +13,8 @@ an integral primitive of its zero-extended derivative. The half-line primitive
 Hardy inequality supplies finite squared quotient energy with constant four.
 Endpoint values throughout are canonical traces, not raw assignments.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

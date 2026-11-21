@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddSeparatrix
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogSaddle
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DipoleLogMultiplier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddSeparatrix
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogSaddle
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DipoleLogMultiplier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
 
 /-!
 # Logarithmic stream-jet mass near the separatrix
@@ -16,6 +18,8 @@ Near each saddle the quadratic and remainder bounds are summed and transferred
 to the lattice distance by a bounded measurable multiplier. Away from saddles,
 inverse distance is continuous. Local gluing retains one lifted neighbourhood.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

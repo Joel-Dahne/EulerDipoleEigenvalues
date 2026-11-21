@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterNumeratorBounds
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleForcing
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterNumeratorBounds
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleForcing
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
 
 /-!
 # Quantitative first derivatives of zero-saddle forcing numerators
@@ -12,6 +14,8 @@ integrable inverse-square saddle-distance profile. The moving endpoints cost
 only h^(-3/2) in squared energy, because the continuous forcing is O(h^(1/4))
 there. No global second derivative of the numerator is required.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

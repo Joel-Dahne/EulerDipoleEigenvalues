@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterChart
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.QuarterOrbits
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterChart
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.QuarterOrbits
 
 /-!
 # Covering a cell collar by the four open quarter images
@@ -10,6 +12,8 @@ The base quarter contains every collar point with `x > 0` and `y < 0`.
 Rotations therefore cover the collar except for the two Cartesian axes.
 These seams are null; no weak derivative is glued across them here.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

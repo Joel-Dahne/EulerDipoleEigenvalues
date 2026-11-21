@@ -1,7 +1,10 @@
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import NoEmbeddedEigenvalues.Symmetry.Symmetry
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import NoEmbeddedEigenvalues.Symmetry.Symmetry
 
 /-!
 # Classical calculus on the real lift and the dipole identities
@@ -15,6 +18,8 @@ ordinary partial derivatives along the coordinate lines; `classicalL0` is the
 transport operator `sin y ∂ₓ - sin x ∂_y` acting on them. Periodicity plays no
 role in pointwise identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 

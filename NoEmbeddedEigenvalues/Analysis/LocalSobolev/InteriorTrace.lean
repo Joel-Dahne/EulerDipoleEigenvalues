@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
 
 /-!
 # Consistent interior traces from continuous section germs
@@ -10,6 +12,8 @@ value at zero. Choosing that value gives a single interior trace independent of
 all transverse windows. Its agreement with the existing ACL trace is proved;
 no value of an arbitrary raw planar representative on a null line is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

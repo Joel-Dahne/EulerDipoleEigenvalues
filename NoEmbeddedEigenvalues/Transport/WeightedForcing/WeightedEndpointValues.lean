@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedConeTrace
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayCharts
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicRayTransport
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedConeTrace
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayCharts
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicRayTransport
 
 /-!
 # Weighted continuous forcing values on the quarter endpoint rays
@@ -14,6 +16,8 @@ is exactly saddle distance in the product metric. Shrinking-rectangle traces
 therefore use the original weighted forcing and supplied weak gradient.
 Only the continuous forcing is evaluated on a ray, never its raw gradient.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

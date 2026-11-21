@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterTransportProjections
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterTransportProjections
 
 /-!
 # Weighted first gradients and forcing growth under quarter projections
@@ -10,6 +12,8 @@ then take the same finite linear combination as for the forcing. Restricted
 measure-preserving rotations and exact distance invariance retain the cell
 norms. No weak gradient is replaced or evaluated along an endpoint curve.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

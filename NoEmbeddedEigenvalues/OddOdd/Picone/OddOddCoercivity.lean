@@ -1,10 +1,14 @@
-import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddBulkIntegrability
-import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOdd
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.FourierC1Multiplier
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalTransport
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalSpectral
+module
+
+public import Mathlib.Analysis.Calculus.FDeriv.Extend
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddBulkIntegrability
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOdd
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.FourierC1Multiplier
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalTransport
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalSpectral
 
 /-!
 # The weighted form domain for odd–odd bulk coercivity
@@ -30,6 +34,8 @@ they do not assert its mean is zero.
 Coefficient inequalities are asserted off the elliptic center (or a.e.), because
 real division assigns artificial values to the singular matrix formulas there.
 -/
+
+@[expose] public section
 
 noncomputable section
 

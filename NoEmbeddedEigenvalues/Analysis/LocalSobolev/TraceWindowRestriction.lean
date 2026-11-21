@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
 
 /-!
 # Restriction of canonical transverse traces
@@ -8,6 +10,8 @@ Blueprint: `lem:transverse-trace-window-consistency`.
 Restrict the existing ACL data and identify the continuous interval extensions
 on the entire smaller closed interval, including either normal endpoint.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

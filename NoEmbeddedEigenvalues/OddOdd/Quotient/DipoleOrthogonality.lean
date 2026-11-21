@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
-import NoEmbeddedEigenvalues.Symmetry.Sectors
+module
+
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+public import NoEmbeddedEigenvalues.Symmetry.Sectors
 
 /-!
 # Dipole orthogonality and cell pairings
@@ -17,6 +19,8 @@ under the first reflection, `Ψg` is reflection-invariant and its torus integral
 its cell integral. The product vanishes on the separatrix, so no boundary trace or
 separatrix null-set assertion is needed for that decomposition.
 -/
+
+@[expose] public section
 
 noncomputable section
 

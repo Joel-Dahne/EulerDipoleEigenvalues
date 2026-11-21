@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFrame
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
-import Mathlib.Analysis.Calculus.FDeriv.Measurable
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFrame
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
+public import Mathlib.Analysis.Calculus.FDeriv.Measurable
 
 /-!
 # Weighted inverse-frame candidates on the base quarter
@@ -13,6 +15,8 @@ The inverse rows of the orbit Jacobian (whose determinant is two) are
 These coefficients construct square-integrable weighted Cartesian candidates.
 Identifying them as the specified spatial weak gradient is a separate step.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

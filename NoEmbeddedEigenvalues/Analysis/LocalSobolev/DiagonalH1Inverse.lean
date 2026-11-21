@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
 
 /-!
 # Recovering Cartesian H¹ from diagonal weak derivatives
@@ -9,6 +11,8 @@ The sum and difference of the two specified diagonal derivatives give the
 Cartesian derivatives divided by two. In weak testing, the same factor two
 is the Jacobian of the diagonal map. Actual L² transport precedes the identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

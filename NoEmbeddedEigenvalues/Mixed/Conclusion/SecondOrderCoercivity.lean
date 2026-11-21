@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.SecondOrderForm
-import NoEmbeddedEigenvalues.Mixed.Conclusion.QuarterCoercivity
+module
+
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.SecondOrderForm
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.QuarterCoercivity
 
 /-! # Mixed parity splitting, quarter folding, and coercivity -/
+
+@[expose] public section
 
 noncomputable section
 

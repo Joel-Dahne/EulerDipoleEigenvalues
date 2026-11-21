@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicQuarterMass
-import Mathlib.MeasureTheory.Function.JacobianOneDim
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicQuarterMass
+public import Mathlib.MeasureTheory.Function.JacobianOneDim
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
+public import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Logarithmic endpoint-ray change of variables
@@ -13,6 +15,8 @@ r⁻³ dr into h⁻² dh and r⁻¹ dr into h⁻¹ dh, up to bounded factors.
 Measurability on the level interval is supplied separately, so arbitrary
 representatives on null rays are never composed without justification.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

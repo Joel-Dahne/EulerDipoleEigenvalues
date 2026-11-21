@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.HardyAverage
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.HardyAverage
 
 /-!
 # Fractional traces by averaged rectangular paths
@@ -15,6 +17,8 @@ identity cancels the diagonal Jacobian, giving the uniform constant
 The final theorem retains the original global representative and a.e. transverse
 ACL/derivative guarantees; line values are not freely reassigned.
 -/
+
+@[expose] public section
 
 noncomputable section
 

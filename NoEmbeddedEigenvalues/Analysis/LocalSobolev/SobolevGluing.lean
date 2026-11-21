@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevSums
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevSums
 
 /-! # Local Sobolev gluing on the plane -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

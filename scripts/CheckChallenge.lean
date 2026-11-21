@@ -18,9 +18,13 @@ comparator configuration and checks:
 Constants outside the challenge module (Lean core and Mathlib) are compared by type only and
 not traversed: both environments load the same build of them. Unlike the comparator, this does
 not sandbox the build or replay proofs in the kernel; it checks that the two files agree, not
-that a solution is not adversarial. Lean v4.35 provides the real check as `lake comparator`.
+that a solution is not adversarial. Use `lake comparator` for the sandboxed check.
 -/
-import Lean
+module
+
+public import Lean
+
+public section
 
 open Lean
 

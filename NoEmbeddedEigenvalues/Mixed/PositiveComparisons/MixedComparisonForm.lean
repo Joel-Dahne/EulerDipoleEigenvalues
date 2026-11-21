@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Certificates.Inequalities.Mixed
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedRobinCutoff
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryConeTrace
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RectangleH1Approximation
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.Mixed
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedRobinCutoff
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryConeTrace
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RectangleH1Approximation
 
 /-! # Mixed quarter comparison forms and the Robin inequality -/
+
+@[expose] public section
 
 noncomputable section
 

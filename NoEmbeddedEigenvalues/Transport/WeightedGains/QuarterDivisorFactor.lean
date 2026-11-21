@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorGeometry
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorCalculus
-import NoEmbeddedEigenvalues.Analysis.Inequalities.SmoothLinearFactor
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorGeometry
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorCalculus
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.SmoothLinearFactor
 
 /-!
 # A uniformly controlled inverse divisor factor on complete phase cells
@@ -12,6 +14,8 @@ geometry and the chord inequality keep `g` away from zero throughout a complete
 cell. The second divisor derivative bounds `g'`, hence the derivative of `1/g`.
 The constants depend only on the nonzero real spectral parameter.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

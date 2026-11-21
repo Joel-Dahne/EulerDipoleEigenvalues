@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderParity
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakHarmonicLocal
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderParity
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakHarmonicLocal
 
 /-!
 # Smooth harmonic comparison of two specified weak Poisson solutions
@@ -9,6 +11,8 @@ including its center. Equal weak Laplacians give a smooth harmonic representativ
 of their difference. Axis parity is transferred a.e.; Taylor-jet consequences
 are separate from this comparison.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.PiconeDensities
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.PiconeDensities
 
 /-! # Odd–odd boundary data and regularity -/
+
+@[expose] public section
 
 noncomputable section
 

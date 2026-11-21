@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
-import Mathlib.MeasureTheory.Function.JacobianOneDim
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+public import Mathlib.MeasureTheory.Function.JacobianOneDim
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Quarter orbits and the arc in diagonal coordinates
@@ -16,6 +18,8 @@ with `ȧ = -√(cos² a - h²)`, so flow-time integrals over it are integrals in
 explicit formulas are used for the level traces at the separatrix instead of comparisons of
 orbits.
 -/
+
+@[expose] public section
 
 noncomputable section
 

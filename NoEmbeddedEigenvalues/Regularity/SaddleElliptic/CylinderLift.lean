@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarL2
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarL2
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 /-!
 # Finite local mass on the full real-angle cylinder lift
@@ -9,6 +11,8 @@ length measure. Its open interior gives local integrability near every real
 angle, including every seam of any previously selected strip. The full periodic
 lift is not asserted to have finite global planar L² mass.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

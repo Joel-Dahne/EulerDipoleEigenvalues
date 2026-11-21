@@ -1,9 +1,11 @@
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftTorus
-import NoEmbeddedEigenvalues.Geometry.Cells.DiagonalCalculus
+module
+
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftTorus
+public import NoEmbeddedEigenvalues.Geometry.Cells.DiagonalCalculus
 
 /-!
 # Sobolev spaces on open subsets of the plane
@@ -21,6 +23,8 @@ multiplier, without compact support or global derivative bounds.
 The test-annihilator criterion and a.e. uniqueness of weak partial derivatives live here
 so the action-angle chain rules can use them without importing `CellPeriodization.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -548,7 +552,7 @@ theorem memLp_cutoff {u : ℝ × ℝ → ℂ} (hVo : IsOpen V) (hu : MemLp u 2 (
     · simp [hp]
     · have : χ p = 0 := image_eq_zero_of_notMem_tsupport fun h ↦ hp (hsub h)
       simp [hp, this]
-  rw [hind, memLp_indicator_iff_restrict hVo.measurableSet]
+  rw [hind, memLp_indicator_iff_restrict hVo.measurableSet.nullMeasurableSet]
   exact hV
 
 /-- Localization: if `u ∈ Hᵏ_loc(U)` and `χ` is smooth with compact support in `U`, then

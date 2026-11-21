@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Symmetry.Sectors
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Symmetry.Sectors
 
 /-! # Parity, angular degrees and classical harmonicity for cylinder inversion -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

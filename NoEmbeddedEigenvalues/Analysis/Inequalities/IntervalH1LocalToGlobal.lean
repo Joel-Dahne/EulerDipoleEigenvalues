@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
-import Mathlib.Topology.LocallyConstant.Basic
-import Mathlib.Analysis.SpecialFunctions.NonIntegrable
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
+public import Mathlib.Topology.LocallyConstant.Basic
+public import Mathlib.Analysis.SpecialFunctions.NonIntegrable
 
 /-!
 # Local interval H¹ data and global finite energy
@@ -13,6 +15,8 @@ L² norm. The value norm follows from the bounded integral primitive.
 Subtracting that primitive gives a locally constant function on an interval,
 so local increment identities globalize.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

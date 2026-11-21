@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.ComparisonCoefficients
+module
+
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.ComparisonCoefficients
 
 /-! # Explicit mixed comparison multipliers and their bounds -/
+
+@[expose] public section
 
 noncomputable section
 

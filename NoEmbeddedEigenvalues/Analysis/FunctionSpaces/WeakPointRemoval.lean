@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import Mathlib.Analysis.Calculus.BumpFunction.Basic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 
 /-!
 # Transverse cutoffs for specified weak partial identities
@@ -13,6 +15,8 @@ needed for this distributional extension. The same argument removes a line of
 constant transverse coordinate from the tangential weak identity; it does not
 remove a normal jump without a trace condition.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

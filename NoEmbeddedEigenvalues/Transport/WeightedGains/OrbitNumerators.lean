@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
-import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorRegularity
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ResonantCancellation
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorGeometry
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorRegularity
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ResonantCancellation
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorGeometry
 
 /-!
 # Quarter-orbit endpoints and resonant zeros
@@ -12,6 +14,8 @@ of unity are allowed. Endpoint functions are separate locally L² functions of t
 level; they are values of orbitwise ACL representatives, not raw spatial traces.
 The numerator uses continuous forcing, so its values at resonances are canonical.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

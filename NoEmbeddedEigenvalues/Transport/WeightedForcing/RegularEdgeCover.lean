@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.CellFolding
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.CellFolding
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Regular separatrix points in reflected-periodic edge windows
@@ -13,6 +15,8 @@ Small one-sided normal windows lie in any prescribed positive strip; joining
 such a window to its reflection gives an open physical patch about the point.
 This is a spatial cover, not an inference of weak identities from nullity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

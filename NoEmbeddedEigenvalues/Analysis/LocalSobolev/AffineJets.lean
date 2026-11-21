@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-!
 # Affine pullback of specified weak jets
@@ -10,6 +12,8 @@ recursive formula expands every derivative into its two Cartesian components.
 Measure-preserving affine charts preserve square integrability; a radius identity
 then transfers radial weights without differentiating them.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

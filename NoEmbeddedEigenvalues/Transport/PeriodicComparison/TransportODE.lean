@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.CanonicalProfile
+module
+
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.CanonicalProfile
 
 /-!
 # Finite-interval transport estimates
@@ -20,6 +22,8 @@ The monotone and antitone Lipschitz change-of-variable lemmas for absolute conti
 (previously in `Melnikov.lean`) are shared by translation of transport solutions and
 parametrization of the separatrix trace.
 -/
+
+@[expose] public section
 
 noncomputable section
 

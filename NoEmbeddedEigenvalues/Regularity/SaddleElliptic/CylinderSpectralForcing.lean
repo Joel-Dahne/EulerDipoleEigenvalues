@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTimeSynthesis
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigParity
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierForcing
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTimeSynthesis
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigParity
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierForcing
 
 /-!
 # The actual physical forcing's trigonometric spectral candidate
@@ -12,6 +14,8 @@ periodic synthesis with the original two pointwise reflection signs.
 Identification of this synthesis with weak inverse Fourier derivatives remains
 a separate analytic step.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

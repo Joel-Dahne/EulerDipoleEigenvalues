@@ -1,10 +1,12 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogBulk
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogSaddle
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogRays
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumerators
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicNumerators
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogBulk
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogSaddle
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogRays
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumerators
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicNumerators
 
 /-!
 # Odd–odd logarithmic forcing and numerator interfaces
@@ -20,6 +22,8 @@ traces by uniqueness, and combines the weighted bulk and endpoint masses.
 Rotation parity is not needed for this summation; its premise is retained in the
 export used by the subsequent character-wise phase division.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

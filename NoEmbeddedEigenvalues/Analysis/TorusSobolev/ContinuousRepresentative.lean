@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.TorusElliptic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.TorusElliptic
 
 /-! # Continuous representatives of torus H² functions -/
+
+@[expose] public section
 
 noncomputable section
 

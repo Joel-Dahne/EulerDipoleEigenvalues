@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.ResonantVanishing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
+module
+
+public import NoEmbeddedEigenvalues.Transport.ResonantVanishing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
 
 /-!
 # Local L² endpoint traces of weak transport
@@ -9,6 +11,8 @@ fixed angular sections ±1/8. A level cutoff allows the angular weak-derivative
 bridge on the whole cell; rectangle trace bounds and uniqueness identify its
 traces with every continuous orbitwise representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -77,10 +81,9 @@ theorem ae_orbit_congr {u v : ℝ × ℝ → ℂ} {h₀ : ℝ} (h₀1 : h₀ ≤
   have heall := ae_eq_of_unit_periodic
     (fun θ ↦ congrArg u (actionAngleInv_add_one hI.1 h1 θ))
     (fun θ ↦ congrArg v (actionAngleInv_add_one hI.1 h1 θ)) he
-  have hq : Measure.QuasiMeasurePreserving (fun t : ℝ ↦ t / orbitPeriod h) volume volume := by
-    convert Measure.quasiMeasurePreserving_smul (volume : Measure ℝ) (inv_ne_zero hS.ne') using 1
-    funext t
-    simp only [smul_eq_mul, div_eq_inv_mul]
+  have hq : QuasiMeasurePreserving (fun t : ℝ ↦ t / orbitPeriod h) volume volume := by
+    simpa only [smul_eq_mul, div_eq_inv_mul] using
+      Measure.quasiMeasurePreserving_smul (volume : Measure ℝ) (inv_ne_zero hS.ne')
   filter_upwards [hq.ae heall] with t ht
   simpa only [actionAngleInv, div_mul_cancel₀ t hS.ne'] using ht
 
@@ -130,7 +133,7 @@ theorem memLp_actionAngleInv_band {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     rw [tsupport, hχs, closure_Ioo (by linarith)]
     exact Icc_subset_Ioo (by linarith) (by linarith)
   have hui : MemLp (U.indicator u) 2 (volume.restrict cellSquare) :=
-    ((memLp_indicator_iff_restrict hU.measurableSet).2 hu).mono_measure Measure.restrict_le_self
+    ((memLp_indicator_iff_restrict hU.measurableSet.nullMeasurableSet).2 hu).mono_measure Measure.restrict_le_self
   have hm := memLp_cutoff_actionInput hχ hχt hui
   have hm' := hm.mono_measure
     (show volume.restrict (Ioo a b ×ˢ Ioo (-1 / 4 : ℝ) (3 / 4)) ≤
@@ -225,7 +228,7 @@ theorem exists_l2_orbit_endpoints {U : Set (ℝ × ℝ)} (hU : IsOpen U)
   have h0 : 0 < h := ha.trans hh.1
   have h1 : h < 1 := hh.2.trans (hb.trans h₀1)
   have hSpos := orbitPeriod_pos h0 h1
-  have hq : Measure.QuasiMeasurePreserving (fun θ : ℝ ↦ θ * orbitPeriod h) volume volume := by
+  have hq : QuasiMeasurePreserving (fun θ : ℝ ↦ θ * orbitPeriod h) volume volume := by
     simpa only [smul_eq_mul, mul_comm] using
       Measure.quasiMeasurePreserving_smul (volume : Measure ℝ) hSpos.ne'
   have hcZ : Continuous Z := continuous_iff_continuousAt.2 fun t ↦

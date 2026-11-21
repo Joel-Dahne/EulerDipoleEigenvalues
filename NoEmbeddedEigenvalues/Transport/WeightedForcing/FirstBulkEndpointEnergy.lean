@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterBulkTime
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterClockTrace
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitBulkFlux
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterBulkTime
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterClockTrace
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitBulkFlux
 
 /-!
 # First-bulk endpoint energy from weak time differentiation
@@ -10,6 +12,8 @@ Local weak data identify canonical section traces. The global trace bound uses
 unit physical-time windows and the actual joint energy, without comparing
 individual gradient traces in two different transverse charts.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

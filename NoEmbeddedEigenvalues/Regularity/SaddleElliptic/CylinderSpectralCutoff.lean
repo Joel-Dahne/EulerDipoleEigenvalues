@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Simultaneous finite-mass spectral approximation
@@ -10,6 +12,8 @@ transfers strong L² convergence. Frequency bounds or higher differentiability
 of a spectral cutoff are unnecessary: kernel integration by parts only needs
 the two actual spectra in each weak pair to be integrable.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -26,7 +30,7 @@ def cylinderSpectralCutoff (N : ℕ) (H : ℝ × ℤ → ℂ) : ℝ × ℤ → �
 theorem cylinderSpectralCutoff_memLp {H : ℝ × ℤ → ℂ}
     (hH : MemLp H 2 cylinderFourierMeasure) (N : ℕ) :
     MemLp (cylinderSpectralCutoff N H) 2 cylinderFourierMeasure :=
-  hH.indicator (measurableSet_spanningSets _ _)
+  hH.indicator (measurableSet_spanningSets _ _).nullMeasurableSet
 
 /-- Integrability is derived for the truncation, not assumed of the original spectrum. -/
 theorem cylinderSpectralCutoff_integrable {H : ℝ × ℤ → ℂ}

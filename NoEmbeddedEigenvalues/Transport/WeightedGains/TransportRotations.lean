@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
 
 /-!
 # Rotation and linearity of spatial transport pairs
@@ -9,6 +11,8 @@ Blueprint: `lem:transport-pair-rotation`, `lem:transport-rotation-neighbourhood`
 The quarter rotation preserves the vector field, the weak equation and all
 integer Sobolev orders. Domain restrictions retain the original raw fields.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

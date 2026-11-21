@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
 
 /-!
 # The B-weighted level trace
@@ -9,6 +11,8 @@ on small quarter orbits. This gives a bounded dominating density on a fixed
 finite interval, without Sobolev derivative traces or exceptional levels.
 Only boundedness and continuity of the chosen value representative are used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

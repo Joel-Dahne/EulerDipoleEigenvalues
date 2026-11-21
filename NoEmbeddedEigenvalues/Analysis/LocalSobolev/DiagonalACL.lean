@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
 
 /-!
 # Transverse ACL representatives in diagonal coordinates
@@ -10,6 +12,8 @@ The linear change of variables transfers the two weak partial derivatives to
 The area formula is also recorded on rectangles. Directional slicing supplies a jointly measurable
 representative, without a fractional trace estimate or Sobolev approximation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

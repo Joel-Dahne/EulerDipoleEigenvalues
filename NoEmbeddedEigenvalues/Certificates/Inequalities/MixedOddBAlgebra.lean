@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Polynomial reduction of the odd-in-b residual
@@ -8,6 +10,8 @@ import Mathlib.Data.Fin.VecNotation
 The logarithm is treated as an independent parameter in the cleared
 numerator. Derivatives before clearing use the logarithm's actual jet.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 
@@ -268,7 +272,7 @@ theorem mixed_odd_b_residual_center : mixedOddBResidual (1, 1) = 670267 / 100000
 
 /-- Integer-scaled cleared residual with an independent logarithm parameter `l`.
 The factor `h` in the diagonal numerator cancels the sole `1 / h` jet term. -/
-def mixedOddBCleared (h k l : ℝ) : ℝ :=
+@[no_expose] def mixedOddBCleared (h k l : ℝ) : ℝ :=
   let s := h + k
   let r := 2 - h ^ 2 - k ^ 2
   let u := 1 - h ^ 2

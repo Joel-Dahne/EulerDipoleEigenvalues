@@ -1,11 +1,15 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellDivision
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SeparableMultiplier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellDivision
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SeparableMultiplier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
 
 /-! # Logarithmic weights and the physical multiplier estimate -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSynthesis
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderData
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSynthesis
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderData
 
 /-!
 # Pointwise axis parity of trigonometric synthesis
@@ -8,6 +10,8 @@ Allowed degrees give the first reflection sign; the cosine/sine choice gives
 the second. The identities are pointwise in both cylinder coordinates. Actual
 integrability and continuity are supplied separately by the spectral bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

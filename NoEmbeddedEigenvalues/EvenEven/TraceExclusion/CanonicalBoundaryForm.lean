@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.ProfileContinuity
+module
+
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.ProfileContinuity
 
 /-! # The canonical arc form -/
+
+@[expose] public section
 
 noncomputable section
 

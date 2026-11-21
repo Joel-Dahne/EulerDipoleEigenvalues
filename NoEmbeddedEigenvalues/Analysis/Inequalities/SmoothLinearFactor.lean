@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.SmoothIntervalIntegral
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.Convex.Basic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.SmoothIntervalIntegral
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Convex.Basic
 
 /-!
 # Smooth division by a linear factor
@@ -13,6 +15,8 @@ A smooth function vanishing at `z` factors through the segment average of its
 first derivative. A uniform second-derivative bound controls the derivative of
 the factor, including at the removable singularity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

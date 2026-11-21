@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
 
 /-!
 # Quantitative moving-endpoint value-flux estimate
@@ -8,6 +10,8 @@ Blueprint: `lem:numerator-endpoint-flux-energy`.
 Only the tangential derivative of the endpoint value is identified across
 charts here. This does not identify the individual gradient traces.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

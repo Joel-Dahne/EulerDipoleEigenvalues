@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.Melnikov
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ExponentialTransportDecay
+module
+
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.Melnikov
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ExponentialTransportDecay
 
 /-!
 # Pointwise forcing estimates from zero saddle values
@@ -11,6 +13,8 @@ The corner selected by the sign of orbit time has distance O(exp(-|t|));
 at a moving endpoint its distance is O(sqrt(h)). Comparing with its zero
 forcing value yields the exponential and fourth-root bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

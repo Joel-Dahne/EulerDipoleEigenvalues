@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarCoordinates
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarCoordinates
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 /-!
 # Finite L² mass under logarithmic-polar transport
@@ -10,6 +12,8 @@ Multiplication by exp(-t), the square root of the planar Jacobian, sends
 planar L² data to actual L² data on the logarithmic cylinder. The circle
 measure is probability Haar measure; angular slices are taken only a.e. in t.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

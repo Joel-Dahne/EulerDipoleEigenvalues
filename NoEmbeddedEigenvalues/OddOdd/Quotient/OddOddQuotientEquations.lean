@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
 
 /-!
 # Weighted quotient Poisson equations
@@ -9,6 +11,8 @@ operator to the negative ordinary Laplacian. Weak identities use specified
 Fourier derivatives and compactly supported tests, not classical derivatives of
 raw representatives or a global divided transport domain.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

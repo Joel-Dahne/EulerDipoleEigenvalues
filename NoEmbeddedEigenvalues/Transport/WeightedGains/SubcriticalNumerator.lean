@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterGradient
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalForcing
-import Mathlib.Topology.Compactness.Lindelof
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterGradient
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalForcing
+public import Mathlib.Topology.Compactness.Lindelof
 
 /-!
 # First numerator derivatives from subcritical weighted forcing
@@ -13,6 +15,8 @@ positive time moment controls the bulk, while continuous endpoint values
 cost h^(-δ) in squared energy. All real frequencies share one collar and
 one majorant. No second numerator derivative or weak-gradient ray value is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

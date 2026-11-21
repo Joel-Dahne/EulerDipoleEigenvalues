@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH1
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH1
 
 /-!
 # A boundary-flux formula for weak parameter integrals
@@ -11,6 +13,8 @@ weak parameter derivative therefore gives an H¹ derivative with boundary flux.
 The window endpoints lie strictly inside the rectangle; no raw boundary trace
 of a merely almost-everywhere defined function is evaluated.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

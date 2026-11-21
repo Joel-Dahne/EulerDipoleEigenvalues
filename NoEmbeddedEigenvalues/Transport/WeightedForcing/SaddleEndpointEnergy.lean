@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.DampedTransportEnergy
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.DampedTransportEnergy
 
 /-!
 # Saddle-weighted canonical endpoint energy
@@ -10,6 +12,8 @@ inverse-square-distance mass. The forcing enters only through its actual
 weighted L² norm; no pointwise forcing envelope is used. Endpoint values belong
 to the specified ACL unknown, not a raw spatial representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

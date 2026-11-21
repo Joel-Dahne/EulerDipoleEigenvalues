@@ -1,11 +1,15 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceContinuity
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
-import Mathlib.MeasureTheory.Covering.Besicovitch
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.MeasureTheory.Function.Jacobian
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceContinuity
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
+public import Mathlib.MeasureTheory.Covering.Besicovitch
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Function.Jacobian
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 
 /-! # Rectangular averages recover the canonical ACL trace -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

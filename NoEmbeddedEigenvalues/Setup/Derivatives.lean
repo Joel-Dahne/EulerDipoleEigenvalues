@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Setup.Setup
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+module
+
+public import NoEmbeddedEigenvalues.Setup.Setup
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Fourier derivatives and classical test functions
@@ -27,6 +29,8 @@ product rule `∂ⱼ(c g) = (∂ⱼc) g + c ∂ⱼg` for classically differentia
 testing, and the integration by parts `⟪b, ∂ⱼa⟫ = -⟪∂ⱼb, a⟫`, by Parseval
 (`lem:l2-product-rule`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SecondNumeratorBulk
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitTraceDerivative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SecondNumeratorBulk
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitTraceDerivative
 
 /-!
 # Weak differentiation of the first fixed-time bulk
@@ -12,6 +14,8 @@ level vector. This keeps every ordered Cartesian second entry in its supplied
 position; no weak mixed derivatives are commuted. Boundary values of the rough
 first bulk are canonical normalized-angle traces, not raw gradient-ray values.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

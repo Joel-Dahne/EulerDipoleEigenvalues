@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.EvenEven.GradientTraces.EvenEvenBoundary
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.GradientTraces.EvenEvenBoundary
 
 /-!
 # Diagonal Hardy estimates for even torus functions
@@ -7,6 +9,8 @@ The normal diagonal derivatives are odd across the separatrix lines. ACL
 representatives turn this symmetry into zero traces. The primitive Hardy
 estimate then controls division by the corresponding diagonal cosine.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

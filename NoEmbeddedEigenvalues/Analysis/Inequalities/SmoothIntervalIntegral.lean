@@ -1,5 +1,7 @@
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-import Mathlib.Analysis.Calculus.ContDiff.Operations
+module
+
+public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Smooth parameter integrals over a compact interval
@@ -9,6 +11,8 @@ parameter integral on the open set `s`. Compactness supplies a uniform local bou
 for each derivative; the proof iterates dominated differentiation under the integral.
 Used by the regular period quadrature and the incomplete orbit-time quadrature.
 -/
+
+@[expose] public section
 
 noncomputable section
 

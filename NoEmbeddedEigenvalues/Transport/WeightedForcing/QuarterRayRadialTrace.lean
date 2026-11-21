@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayCharts
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LogarithmicRadialMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayCharts
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LogarithmicRadialMass
 
 /-!
 # Subcritical logarithmic ray traces from Cartesian radial quotients
@@ -10,6 +12,8 @@ An H¹ radial quotient has an actual L² Cartesian trace. Multiplication by the
 continuous integer radius power identifies the trace of the unweighted function.
 A positive residual power absorbs the radial logarithm.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterReconstruction
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterForcingPullback
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterReconstruction
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterForcingPullback
 
 /-!
 # Ordinary weighted forcing data on a common quarter collar
@@ -10,6 +12,8 @@ Positive distance moments control both the signed midpoint integral and the
 outer distance-weighted reconstruction. The forcing level field itself is L²:
 its square is bounded by a constant times d times the three-halves density.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

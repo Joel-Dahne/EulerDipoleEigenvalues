@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLWeakDerivative
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLWeakDerivative
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
 
 /-!
 # Weak transport becomes a weak time derivative on a quarter strip
@@ -12,6 +14,8 @@ The orbit restriction theorem supplies one-dimensional ACL representatives.
 Rectangular testing lifts their derivative identities to the single raw
 pullback. Spatial L² data supply the local integrability through coarea.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

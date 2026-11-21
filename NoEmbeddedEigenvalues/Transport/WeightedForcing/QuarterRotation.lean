@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
 
 /-!
 # Joint almost-everywhere rotation identities on recentered quarters
@@ -11,6 +13,8 @@ First transfer measurable spatial a.e. identities by coarea, then use the
 joint measurability of both raw pullbacks. No values on an exceptional orbit
 or jointly measurable family of ACL representatives are selected.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

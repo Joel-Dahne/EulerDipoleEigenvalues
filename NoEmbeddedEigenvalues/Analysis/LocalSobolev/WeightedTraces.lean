@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
 
 /-!
 # Canonical transverse, separatrix and cell-edge traces
@@ -7,6 +9,8 @@ import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
 Traces are endpoint extensions of transverse ACL representatives, not evaluations
 of arbitrary L² functions on null lines.
 -/
+
+@[expose] public section
 
 noncomputable section
 

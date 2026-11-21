@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddCellH1
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddEdgeTraces
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RectangleH1Gluing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1Inverse
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddCellH1
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddEdgeTraces
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RectangleH1Gluing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1Inverse
 
 /-!
 # Canonical trace pairs on reflected-periodic odd–odd cell edges
@@ -15,6 +17,8 @@ Matching canonical traces give genuine weak gluing in the actual diagonal
 coordinates, retaining zero as the full-window trace. Whole-lift spatial
 covering and removal of the saddle points are separate from these local patches.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

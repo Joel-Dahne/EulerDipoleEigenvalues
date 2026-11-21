@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralMass
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralMass
 
 /-!
 # Summable mass of the signed cylinder weight
@@ -8,6 +10,8 @@ The signed complex basis uses the original normalized measure, with no folding
 factors. Splitting integers into natural and strictly negative indices proves the
 reciprocal weight has genuine L² mass. Hölder gives actual L¹ of weighted data.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

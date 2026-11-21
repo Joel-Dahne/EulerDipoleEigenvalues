@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
 
 /-!
 # Plane geometry and specified weak jets
@@ -8,6 +10,8 @@ is the maximum norm. Jet entries are identified by weak derivative equations.
 Square integrability is separate from energies, since a divergent Bochner integral
 has a default value. These definitions do not depend on quotient or sector interfaces.
 -/
+
+@[expose] public section
 
 noncomputable section
 

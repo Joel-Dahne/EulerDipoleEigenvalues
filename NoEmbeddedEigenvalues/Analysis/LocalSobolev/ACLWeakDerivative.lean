@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1WeakLift
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1WeakLift
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
 
 /-!
 # Weak time derivatives from orbitwise absolute continuity
@@ -10,6 +12,8 @@ Integration by parts is performed separately on almost every time fiber.
 Only the raw functions must be jointly integrable; no measurable selection of
 the one-dimensional absolutely continuous representatives is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

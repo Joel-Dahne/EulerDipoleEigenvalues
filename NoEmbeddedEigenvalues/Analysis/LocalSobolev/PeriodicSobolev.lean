@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.AnglePeriodization
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.AnglePeriodization
 
 /-!
 # Sobolev reconstruction of periodic lifts
@@ -10,6 +12,8 @@ A tensor product of the rescaled angular partition gives one compact cutoff whos
 lattice translates sum to one. Cutoff localization followed by compact periodization
 therefore reconstructs any periodic Hᵏ_loc function, without an injective torus chart.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

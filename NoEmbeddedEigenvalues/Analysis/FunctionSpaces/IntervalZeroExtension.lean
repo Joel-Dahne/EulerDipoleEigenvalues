@@ -1,5 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
 
 /-!
 # Zero extension of interval H¹ data
@@ -18,6 +21,8 @@ The complex primitive and elementary zero-extension helpers are also used by
 continuity and the specified a.e. derivative.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace NoEmbeddedEigenvalues
@@ -33,7 +38,7 @@ def intervalZeroExtension (a b : ℝ) (F : ℝ → ℂ) : ℝ → ℂ :=
 theorem memLp_intervalZeroExtension {a b : ℝ} {F : ℝ → ℂ}
     (hF : MemLp F 2 (volume.restrict (Ioo a b))) :
     MemLp (intervalZeroExtension a b F) 2 volume :=
-  (memLp_indicator_iff_restrict measurableSet_Ioo).mpr hF
+  (memLp_indicator_iff_restrict (measurableSet_Ioo.nullMeasurableSet (μ := volume))).mpr hF
 
 /-- On a bounded interval, zero-extended L² data are globally integrable too. -/
 theorem integrable_intervalZeroExtension {a b : ℝ} {F : ℝ → ℂ}

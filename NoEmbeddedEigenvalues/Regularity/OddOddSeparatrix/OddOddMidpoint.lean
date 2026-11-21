@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogarithmic
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicMidpoint
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterReconstruction
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogarithmic
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicMidpoint
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterReconstruction
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
 
 /-!
 # Logarithmic phase division and the odd–odd midpoint coefficient
@@ -13,6 +15,8 @@ with orbitwise ACL midpoint values. Weak differentiation of the joint reconstruc
 identifies the square-integrable level derivative of the actual transport-unknown
 pullback on the recentered quarter strip.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

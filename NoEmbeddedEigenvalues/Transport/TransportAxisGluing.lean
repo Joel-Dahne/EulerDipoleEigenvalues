@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
 
 /-!
 # Distributional no-jump gluing at transverse Cartesian axes
@@ -9,6 +11,8 @@ A tangential weak partial extends through a transverse null line by cutoffs.
 The global transport equation then determines the missing normal partial where
 its velocity coefficient is nonzero. No raw trace on an axis is evaluated.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
 
 /-!
 # Reflected periodic copies of the positive cell
@@ -9,6 +11,8 @@ The folding maps are volume-preserving affine isometries. They preserve the
 saddle lattice, while reflection reverses the dipole level. On a bounded set,
 only finitely many folds can land in the positive cell.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

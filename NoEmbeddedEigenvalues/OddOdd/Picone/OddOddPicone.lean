@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeCutoff
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeCutoff
 
 /-!
 # Picone on every positive stream truncation
@@ -10,6 +12,8 @@ approaching a prescribed lower level from above and the center from below.
 Bulk dominated convergence and the full center-current limit recover the identity
 at every positive level, without exceptional boundary gradient values.
 -/
+
+@[expose] public section
 
 noncomputable section
 

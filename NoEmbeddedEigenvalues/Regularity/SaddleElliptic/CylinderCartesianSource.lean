@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCartesianJet
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCartesianJet
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
 
 /-!
 # Real-angle weak calculus for the Cartesian cylinder coefficients
@@ -9,6 +11,8 @@ cylinder entry is retained with its specified outer derivative, so the time
 derivative of the first angular entry and the angular derivative of the first
 time entry are not identified.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

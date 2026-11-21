@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
-import Mathlib.Topology.MetricSpace.Thickening
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
+public import Mathlib.Topology.MetricSpace.Thickening
 
 /-!
 # Independence of canonical quarter-ray traces
@@ -10,6 +12,8 @@ Two trace constructions on different open neighbourhoods agree on their common
 ray interval. Compact radial segments admit a common transverse rectangle;
 ACL trace independence and a countable rational interval cover give a.e. equality.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

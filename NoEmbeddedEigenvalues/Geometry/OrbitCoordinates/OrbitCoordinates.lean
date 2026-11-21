@@ -1,10 +1,13 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
-import NoEmbeddedEigenvalues.Geometry.Cells.DiagonalCalculus
-import NoEmbeddedEigenvalues.Geometry.SeparatrixArcs.SeparatrixArc
-import Mathlib.Analysis.Calculus.ImplicitContDiff
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.MeasureTheory.Function.Jacobian
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+module
+
+public import Mathlib.Analysis.ODE.Gronwall
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
+public import NoEmbeddedEigenvalues.Geometry.Cells.DiagonalCalculus
+public import NoEmbeddedEigenvalues.Geometry.SeparatrixArcs.SeparatrixArc
+public import Mathlib.Analysis.Calculus.ImplicitContDiff
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.MeasureTheory.Function.Jacobian
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # Orbit coordinates and integrals over levels
@@ -97,6 +100,8 @@ parametrization `P(h, θ) = γ_h(θ S(h))` is defined on the strip `(0, 1) × �
 `1`-periodic in `θ`, so functions in these coordinates are periodic in `θ` rather than
 functions on a circle.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -1161,7 +1166,7 @@ private theorem measurableSet_levelBand (a b : ℝ) :
 private theorem integrableOn_levelIndicator {F : ℝ × ℝ → ℝ} {a b : ℝ}
     (hF : IntegrableOn F {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b}) :
     IntegrableOn ({p | levelCoord p ∈ Icc a b}.indicator F) cellSquare := by
-  rw [integrableOn_indicator_iff (measurableSet_levelBand a b)]
+  rw [integrableOn_indicator_iff (measurableSet_levelBand a b).nullMeasurableSet]
   have hset : {p | levelCoord p ∈ Icc a b} ∩ cellSquare =
       {p | p ∈ cellSquare ∧ 2 * a ≤ dipoleLift p ∧ dipoleLift p ≤ 2 * b} := by
     ext p

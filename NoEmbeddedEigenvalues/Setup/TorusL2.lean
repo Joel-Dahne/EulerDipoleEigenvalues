@@ -1,5 +1,7 @@
-import Mathlib.Analysis.Fourier.AddCircle
-import NoEmbeddedEigenvalues.Symmetry.Symmetry
+module
+
+public import Mathlib.Analysis.Fourier.AddCircle
+public import NoEmbeddedEigenvalues.Symmetry.Symmetry
 
 /-!
 # Lebesgue and Fourier foundations on the torus
@@ -8,6 +10,8 @@ The measure, complex `L²` space, characters, Fourier coefficients and mean-zero
 condition for `Torus = Angle × Angle` (blueprint: `def:torus`).
 This lower-level module is shared by the Fourier infrastructure and Setup.
 -/
+
+@[expose] public section
 
 noncomputable section
 

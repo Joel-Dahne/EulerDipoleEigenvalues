@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterTraceComparison
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitBulkFlux
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterTraceComparison
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitBulkFlux
 
 /-! # Pointwise first-bulk boundary energy -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

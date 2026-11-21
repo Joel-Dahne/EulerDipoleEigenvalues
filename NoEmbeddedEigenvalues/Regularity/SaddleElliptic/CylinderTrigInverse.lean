@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigData
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigData
 
 /-!
 # A bounded spectral candidate from the actual trigonometric forcing data
@@ -8,6 +10,8 @@ spectral weight gives actual L¹ and a bounded continuous periodic synthesis.
 These are spectral statements and a dominated integral construction, not yet
 an identification of the inverse L² transform or physical weak derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

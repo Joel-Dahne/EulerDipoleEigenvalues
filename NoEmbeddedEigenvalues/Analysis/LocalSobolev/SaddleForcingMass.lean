@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 
 /-!
 # Ordinary forcing mass near quadratic saddles
@@ -12,6 +14,8 @@ The square of the quadratic-gradient weight is bounded by a constant times
 inverse Euclidean radius, integrable in two physical dimensions. Remainder
 weights can then be weakened without any logarithmic multiplier.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

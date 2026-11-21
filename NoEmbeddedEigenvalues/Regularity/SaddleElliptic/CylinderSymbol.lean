@@ -1,10 +1,12 @@
-import Mathlib.Analysis.Complex.Norm
-import Mathlib.Algebra.Order.Floor.Semiring
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
+module
+
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.Algebra.Order.Floor.Semiring
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
 
 /-!
 # The logarithmic-cylinder symbol
@@ -15,6 +17,8 @@ A discrete nonresonance condition gives a uniform elliptic bound, including
 large angular modes and large continuous frequencies. This module concerns
 spectral functions; it does not identify them with physical weak derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 

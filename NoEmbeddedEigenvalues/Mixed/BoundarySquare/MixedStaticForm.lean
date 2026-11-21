@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotientData
+module
+
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotientData
 
 /-! # The mixed static form and its trace-mass field -/
+
+@[expose] public section
 
 noncomputable section
 

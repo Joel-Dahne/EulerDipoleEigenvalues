@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.ResonantVanishing
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.SobolevHolder
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
+module
+
+public import NoEmbeddedEigenvalues.Transport.ResonantVanishing
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.SobolevHolder
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
 
 /-!
 # The Melnikov condition
@@ -22,6 +24,8 @@ continuous, and let `g = f ∘ γ` be its trace on the separatrix arc. Then `g' 
 * Integration by parts is done only on `g`; the boundary term tends to
   `e^{iλL}(κ c₊ - c₋) = 0`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

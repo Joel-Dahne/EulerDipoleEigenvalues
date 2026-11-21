@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
-import Mathlib.Analysis.Calculus.ContDiff.RCLike
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
+public import Mathlib.Analysis.Calculus.ContDiff.RCLike
 
 /-!
 # Ordinary and logarithmic control of the midpoint coefficient
@@ -8,6 +10,8 @@ The phase derivative costs Q/h, not a derivative of the logarithmic weight.
 All derivative representatives are specified explicitly. Local H¹ is retained:
 an a.e. classical derivative alone would not justify weak reconstruction.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

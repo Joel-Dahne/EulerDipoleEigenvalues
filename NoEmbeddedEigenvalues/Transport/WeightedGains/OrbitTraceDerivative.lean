@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceDerivative
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorDerivative
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceDerivative
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorDerivative
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
 
 /-!
 # Tangential differentiation at normalized orbit endpoints
@@ -13,6 +15,8 @@ canonical transverse trace of the normalized level contraction. This applies at
 both quarter endpoints without continuous gradients or raw gradient-ray values.
 Only the ordered mixed derivatives supplied by recursive H² are used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

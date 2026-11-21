@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 
 /-!
 # Cartesian jets of the saddle Taylor correction
@@ -8,6 +10,8 @@ The explicit dipole and its normalized quadratic differ by order four, including
 all derivatives through order three. These geometric estimates have no
 vorticity or eigenfunction hypotheses.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

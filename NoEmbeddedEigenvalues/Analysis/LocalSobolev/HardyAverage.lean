@@ -1,7 +1,9 @@
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Integral.MeanInequalities
-import Mathlib.MeasureTheory.Group.LIntegral
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+module
+
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.MeasureTheory.Integral.MeanInequalities
+public import Mathlib.MeasureTheory.Group.LIntegral
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-!
 # The L² Hardy averaging inequality
@@ -13,6 +15,8 @@ including its two height-averaging kernels.
 Weighted Cauchy–Schwarz and dilation give the constant four, without an
 integration-by-parts argument at the singular endpoint.
 -/
+
+@[expose] public section
 
 noncomputable section
 

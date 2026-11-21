@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierForcing
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedInverse
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointParity
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierForcing
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedInverse
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointParity
 
 /-!
 # Actual joint L² inverse candidate from the physical Poisson data
@@ -11,6 +13,8 @@ parity-preserving function with genuine joint cylinder L² and exact Plancherel
 mass. Its angular coefficients are the actual time inverse integrals. Spectral
 multiplier equations do not yet assert weak derivatives or the physical PDE.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

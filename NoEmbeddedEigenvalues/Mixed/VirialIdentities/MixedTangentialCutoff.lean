@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialCurrent
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialCurrent
 
 /-! # Smooth annular cutoff for the difference of the virial fields -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -496,8 +500,9 @@ theorem mixed_level_lt_one_ae :
     ∀ᵐ q : Plane ∂volume.restrict mixedOpenCell, cos q.1 * cos q.2 < 1 := by
   have hne : ∀ᵐ q : Plane ∂volume, q ≠ 0 := by
     rw [ae_iff]
+    rw [Measure.volume_eq_prod]
     simpa only [not_not, ofPred_eq_eq_singleton] using
-      (measure_singleton (μ := volume) (0 : Plane))
+      (measure_singleton (μ := (volume : Measure ℝ).prod volume) (0 : Plane))
   filter_upwards [ae_restrict_of_ae (s := mixedOpenCell) hne,
     ae_restrict_mem (μ := volume) (measurableSet_Ioo.prod measurableSet_Ioo :
       MeasurableSet mixedOpenCell)] with q hn hq

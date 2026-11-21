@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
 
 /-!
 # Strong one-sided continuity of canonical rectangle traces
@@ -10,6 +12,8 @@ trace lines. Integrating the section estimate yields an L² increment bound,
 including normal endpoints. The traces belong to one supplied joint ACL field;
 no raw boundary values or measurable choice of fibre representatives is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

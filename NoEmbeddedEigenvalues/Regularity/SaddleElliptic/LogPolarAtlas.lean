@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarCoordinates
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarCoordinates
 
 /-!
 # Overlapping real-angle logarithmic-polar charts
@@ -8,6 +10,8 @@ are the same actual logarithmic-polar parametrization on their entire source
 coordinate plane; only their source windows and inverse branches differ.
 This cover is for weak locality, not merely measure transport across a null cut.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

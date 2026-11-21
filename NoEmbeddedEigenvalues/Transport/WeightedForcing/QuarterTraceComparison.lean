@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceAverages
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceAverages
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
 
 /-! # Canonical endpoint traces in the two quarter charts -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

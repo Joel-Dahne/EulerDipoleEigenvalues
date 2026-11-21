@@ -1,8 +1,10 @@
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+module
+
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The du Bois-Reymond lemma on an interval
@@ -18,6 +20,8 @@ Proof: with `M(x) = ∫_c^x m`, integration by parts for the absolutely continuo
 `k = ∫ φ₀ (G + M)`, and `G + M = k` almost everywhere by the fundamental lemma of the calculus
 of variations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,12 +1,16 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPicone
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddCoercivity
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddBoundaryTrace
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddCurrentRemainder
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddRenormalizedBulk
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddValueFinitePart
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddGradientTraces
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPicone
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddCoercivity
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddBoundaryTrace
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddCurrentRemainder
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddRenormalizedBulk
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddValueFinitePart
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddGradientTraces
 
 /-! # Odd–odd character virial limit and boundary ground state -/
+
+@[expose] public section
 
 noncomputable section
 

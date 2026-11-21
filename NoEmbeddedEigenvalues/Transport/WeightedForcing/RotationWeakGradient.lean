@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRotation
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRotation
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
 
 /-!
 # Cartesian weak gradients under quarter rotations
@@ -11,6 +13,8 @@ The affine chain rule transports both derivative indices. Exact saddle-distance
 invariance transports the weighted L² norms. A spatial a.e. character identity
 then returns derivatives of the same raw function, not of a new representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

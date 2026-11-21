@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointL2
-import Mathlib.Analysis.Normed.Operator.Extend
-import Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointL2
+public import Mathlib.Analysis.Normed.Operator.Extend
+public import Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
 
 /-!
 # Normalized cylinder inversion for arbitrary L² spectral data
@@ -11,6 +13,8 @@ constructs genuine joint cylinder L² inverse witnesses without requiring
 derivative multipliers to be L¹. On integrable data the extension retains the
 same actual integral representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -113,7 +117,7 @@ private theorem cylinderIntegrableInverse_norm (f : cylinderIntegrableSpectrum) 
   exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h
 
 /-- The normalized signed inverse on arbitrary joint L² spectral classes. -/
-def cylinderInverseL2 :
+@[no_expose] def cylinderInverseL2 :
     Lp ℂ 2 cylinderFourierMeasure →ₗᵢ[ℂ] Lp ℂ 2 logCylinderMeasure :=
   cylinderIntegrableInverseLinear.extendOfIsometry cylinderIntegrableSpectrum_dense
     cylinderIntegrableInverse_norm

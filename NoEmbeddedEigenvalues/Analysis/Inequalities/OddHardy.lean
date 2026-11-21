@@ -1,9 +1,11 @@
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.MeasureTheory.Group.LIntegral
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Haar.Unique
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-import Mathlib.Analysis.Distribution.Sobolev
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Group.LIntegral
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
+public import Mathlib.Analysis.Distribution.Sobolev
 
 /-!
 # The critical Hardy inequality for odd functions
@@ -21,6 +23,8 @@ Integrating over `w ∈ [-u, u]` gives `|a(u)|²/u ≤ 2 ∫ A(u, w) dw`. Everyt
 nonnegative, so no integrability assumption is needed. Since `w` only runs over `[-u, u]`,
 the same proof gives the local version on `(-δ, δ)` with no cutoff.
 -/
+
+@[expose] public section
 
 noncomputable section
 

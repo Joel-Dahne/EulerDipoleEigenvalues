@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Geometry.Cells.DipoleCalculus
+module
+
+public import NoEmbeddedEigenvalues.Geometry.Cells.DipoleCalculus
 
 /-!
 # Commutator algebra for adapted vector fields
@@ -11,6 +13,8 @@ generator `D = W · ∇ + ½ div W` satisfies `[L₀, D] = ½ (f L₀ + L₀ f)`
 pointwise identities for `C²` functions on the real lift. Skew-symmetry of `D`
 (integration by parts) is not treated here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TracePairing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TracePairing
 
 /-! # Transport modes on the boundary -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

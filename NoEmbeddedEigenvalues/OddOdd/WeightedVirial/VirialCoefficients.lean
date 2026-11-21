@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.EvenEven.Conclusion.EvenEven
-import NoEmbeddedEigenvalues.OddOdd.Quotient.DipoleOrthogonality
-import NoEmbeddedEigenvalues.OddOdd.BoundaryForm.CorrectedBoundaryForm
-import NoEmbeddedEigenvalues.Regularity.OddOddDomain.OddOddQuotient
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.Conclusion.EvenEven
+public import NoEmbeddedEigenvalues.OddOdd.Quotient.DipoleOrthogonality
+public import NoEmbeddedEigenvalues.OddOdd.BoundaryForm.CorrectedBoundaryForm
+public import NoEmbeddedEigenvalues.Regularity.OddOddDomain.OddOddQuotient
 
 /-! # Odd–odd virial weight and coefficient matrix -/
+
+@[expose] public section
 
 noncomputable section
 

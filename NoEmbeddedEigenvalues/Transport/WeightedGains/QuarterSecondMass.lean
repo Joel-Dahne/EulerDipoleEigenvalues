@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 
 /-!
 # Second weighted mass from a quarter-profile bound
@@ -11,6 +13,8 @@ A homogeneous amplitude Q/h in L² and a remainder exp(-(2-δ)|t|),
 moments cost h⁻² for the amplitude and h⁻δ for the remainder, with no
 logarithmic loss. Actual integrability precedes all energy integrals.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

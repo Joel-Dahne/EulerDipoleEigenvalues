@@ -1,6 +1,8 @@
-import Mathlib.RingTheory.Polynomial.Bernstein
-import Mathlib.Basic.Real.Basic
-import Mathlib.Data.Rat.Cast.Lemmas
+module
+
+public import Mathlib.RingTheory.Polynomial.Bernstein
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Rat.Cast.Lemmas
 
 /-!
 # Bernstein certificates
@@ -14,6 +16,8 @@ Strict positivity requires an active positive coefficient: a coefficient's basis
 factor must be positive at the point in question. Merely naming a set of possibly
 zero coefficients does not specify a geometric exceptional set.
 -/
+
+@[expose] public section
 
 noncomputable section
 

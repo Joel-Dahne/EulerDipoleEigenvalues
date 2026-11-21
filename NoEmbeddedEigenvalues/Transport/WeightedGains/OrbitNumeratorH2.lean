@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH2
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorRegularity
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH2
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorRegularity
 
 /-!
 # Local H² regularity of the original quarter numerator
@@ -12,6 +14,8 @@ integration retains the original continuous forcing and gives interval H².
 The ordinary scalar derivatives glue the local data; no boundary gradient values
 or weighted second-derivative estimate are asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

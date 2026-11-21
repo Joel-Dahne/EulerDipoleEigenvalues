@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitBulkFlux
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorH2
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Multipliers
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitBulkFlux
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorH2
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Multipliers
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
 
 /-!
 # The second weak moving-endpoint numerator formula
@@ -15,6 +17,8 @@ numerator and its ordinary first derivative are retained, as are all ordered
 entries of the supplied forcing jet. The result is local H² with the explicit
 second candidate; it does not assert its global h-weighted L² norm.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.FlowDerivatives
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.FlowDerivatives
 
 /-! # Continuity of the canonical transport profile -/
+
+@[expose] public section
 
 noncomputable section
 

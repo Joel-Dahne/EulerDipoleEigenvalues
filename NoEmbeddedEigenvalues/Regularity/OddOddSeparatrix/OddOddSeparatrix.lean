@@ -1,10 +1,12 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddPuncturedH1
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddEdgeTraces
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddRegularSeams
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddSobolevTraces
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddPuncturedH1
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddEdgeTraces
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddRegularSeams
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddSobolevTraces
 
 /-!
 # Ordinary odd–odd regularity through the lifted separatrix
@@ -15,6 +17,8 @@ The whole-lift endpoint is separated from the saddle/forcing inputs so that
 cellwise transport, reflected periodic covering and elliptic completion can
 precede its assembly, independently of logarithmic forcing.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

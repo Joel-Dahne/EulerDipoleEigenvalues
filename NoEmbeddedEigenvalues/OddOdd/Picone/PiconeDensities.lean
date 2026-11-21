@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.VirialCoefficients
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.VirialCoefficients
 
 /-! # Ground state and Picone densities -/
+
+@[expose] public section
 
 noncomputable section
 

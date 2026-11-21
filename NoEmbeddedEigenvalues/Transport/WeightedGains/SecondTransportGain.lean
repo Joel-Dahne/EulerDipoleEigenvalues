@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterProjections
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalCellMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterProjections
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalCellMass
 
 /-!
 # Second transport gain
@@ -12,6 +14,8 @@ the projected gradients by Cartesian rotation and finite linearity, retaining
 their weighted cell norms. Each of the four characters has full-cell second
 mass, so pointwise recombination does not require a common collar.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
+module
+
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
 
 /-!
 # Exponential tails and canonical endpoint reconstruction
@@ -11,6 +13,8 @@ time endpoint, with the exact factor 1/a. The real oscillation frequency has
 no sign or nonvanishing restriction. All endpoints belong to the specified
 absolutely continuous function, not to a raw spatial representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

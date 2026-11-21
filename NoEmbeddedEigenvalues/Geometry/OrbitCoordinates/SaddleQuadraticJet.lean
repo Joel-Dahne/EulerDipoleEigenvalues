@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
 
 /-! # The first jet of the saddle quadratic -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

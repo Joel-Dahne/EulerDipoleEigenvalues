@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Group.Integral
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Group.Integral
 
 /-!
 # Segment averages of interval H¹ data
@@ -13,6 +15,8 @@ Averaging a continuous H¹ representative along segments from a fixed point
 preserves H¹. The derivative has an extra segment parameter, which compensates
 for the inverse dilation Jacobian in the squared integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

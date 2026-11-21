@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalL2Multipliers
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalL2Multipliers
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-! # Distance to the discrete saddle lattice -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

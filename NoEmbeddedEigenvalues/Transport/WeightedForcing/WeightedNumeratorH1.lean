@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFirstNumerator
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1LocalToGlobal
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFirstNumerator
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1LocalToGlobal
 
 /-!
 # Global first-order regularity of the weighted numerators
@@ -12,6 +14,8 @@ collar for every real frequency. The endpoint traces are canonical extensions;
 no agreement with raw endpoint assignments or zero trace is asserted.
 This is first-order regularity, not local H² or a second-derivative estimate.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

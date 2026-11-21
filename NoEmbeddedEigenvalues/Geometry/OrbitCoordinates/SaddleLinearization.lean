@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
 
 /-! # The linearized Hamiltonian at a saddle -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

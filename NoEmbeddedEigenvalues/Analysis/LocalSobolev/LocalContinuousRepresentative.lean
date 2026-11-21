@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.ContinuousRepresentative
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.ContinuousRepresentative
 
 /-!
 # Continuous representatives of local H² functions
@@ -10,6 +12,8 @@ Compact localization on injective torus patches gives continuous local
 representatives. A.e. uniqueness on open overlaps glues their actual values;
 a countable subcover separately supplies agreement with the raw function.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

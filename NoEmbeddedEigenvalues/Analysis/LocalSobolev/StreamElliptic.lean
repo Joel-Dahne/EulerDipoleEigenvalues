@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
 
 /-!
 # Elliptic completion of ordinary stream regularity
@@ -10,6 +12,8 @@ The Laplacian uses the fixed Fourier second jet. Mean zero removes the constant
 mode. Ordinary torus H² supplies finite local lift norms before applying interior
 elliptic regularity to the same continuous stream, on the same open domain.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
 
 /-!
 # Pointwise forcing growth on the cell and its quarter orbits
@@ -10,6 +12,8 @@ compactness. The exponential saddle-distance bound gives time decay; the
 endpoint distance bound gives the precise level power. The original raw
 continuous representative is retained throughout.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterScalars
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodDerivativeBounds
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterScalars
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodDerivativeBounds
 
 /-!
 # Quantitative derivatives of the quarter divisor
@@ -10,6 +12,8 @@ The unit modulus of the exponential removes dependence on the character and
 phase value. Coarse period derivatives give inverse first- and second-power
 bounds, uniformly for either sign of the spectral parameter.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

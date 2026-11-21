@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
 
 /-!
 # Reflection of canonical transverse traces
@@ -11,6 +13,8 @@ constructed. Almost-everywhere equality of the reflected spatial functions
 then identifies the continuous section extensions, including their endpoint
 values. No raw representative is evaluated on the reflecting line.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

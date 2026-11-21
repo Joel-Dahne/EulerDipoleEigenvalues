@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedRobinCurrent
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+module
+
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedRobinCurrent
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The regular rectangle inequality for mixed Robin comparison
@@ -9,6 +11,8 @@ This step keeps the signed currents on the artificial faces. It uses the
 ordinary fundamental theorem of calculus on normal sections; it does not
 take a trace of the gradient of the trial function.
 -/
+
+@[expose] public section
 
 noncomputable section
 

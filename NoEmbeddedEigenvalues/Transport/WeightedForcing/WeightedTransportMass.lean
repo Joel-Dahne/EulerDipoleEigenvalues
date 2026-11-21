@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleEndpointEnergy
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellSecondMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterTransportProjections
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleEndpointEnergy
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellSecondMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterTransportProjections
 
 /-!
 # Weighted transport mass from the scalar quotient
@@ -16,6 +18,8 @@ no jointly measurable selection of these solutions is required. Exponential
 endpoint energy and the period bound give an integrable level majorant without
 pointwise forcing decay or a logarithmic loss.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

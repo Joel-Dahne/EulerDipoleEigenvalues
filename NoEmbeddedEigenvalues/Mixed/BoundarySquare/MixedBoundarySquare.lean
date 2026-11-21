@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.BoundaryForm
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.BoundaryForm
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
 # The mixed Neumann-edge square
@@ -9,6 +11,8 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 The boundary variable is `x = tanh t`; all integrals are on the open interval.
 The weighted identity does not impose any endpoint values or boundary conditions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

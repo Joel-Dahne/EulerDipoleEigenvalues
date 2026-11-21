@@ -1,9 +1,13 @@
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Topology.MetricSpace.Holder
-import Mathlib.Analysis.PSeries
-import NoEmbeddedEigenvalues.Setup.Derivatives
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Topology.MetricSpace.Holder
+public import Mathlib.Analysis.PSeries
+public import NoEmbeddedEigenvalues.Setup.Derivatives
 
 /-! # Fourier Sobolev spaces on the torus -/
+
+@[expose] public section
 
 noncomputable section
 

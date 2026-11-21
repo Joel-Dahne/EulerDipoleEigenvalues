@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.ContinuousRepresentative
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.ContinuousRepresentative
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # The Hölder Sobolev embedding on the torus
@@ -11,6 +13,8 @@ The Fourier sum is the existing continuous representative. Character increments
 are bounded by interpolation between their uniform and Lipschitz bounds;
 weighted Cauchy–Schwarz closes the estimate for every exponent below one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

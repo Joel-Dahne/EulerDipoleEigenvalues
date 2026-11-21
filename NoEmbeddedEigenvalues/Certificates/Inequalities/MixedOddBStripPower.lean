@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBLog
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripData
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBLog
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripData
 
 /-!
 # Endpoint polynomial identities for the odd-in-b strips
@@ -7,6 +9,8 @@ import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripData
 Normalize each integer power table against the cleared logarithm endpoint.
 The independent subdivision arithmetic does not enter these identities.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

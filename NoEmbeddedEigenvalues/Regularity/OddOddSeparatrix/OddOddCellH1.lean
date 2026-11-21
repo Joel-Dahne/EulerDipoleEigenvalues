@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
 
 /-!
 # Cellwise ordinary H¹ and zero edge traces
@@ -12,6 +14,8 @@ implies the first mass gain on the bounded cell. Zero stream values on a whole
 edge then give the canonical one-sided zero trace of the same raw vorticity.
 No logarithmic forcing, rotation character or across-edge H¹ is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

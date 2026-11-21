@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakLaplacian
-import Mathlib.Analysis.Calculus.ContDiff.Convolution
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakLaplacian
+public import Mathlib.Analysis.Calculus.ContDiff.Convolution
 
 /-!
 # Cartesian smoothing and compact-test harmonicity
@@ -9,6 +11,8 @@ convolution. A reflected translated kernel is an admissible weak test whenever
 its whole support fits in the original open set. Associativity below proves
 its Fubini integrability from an L1 datum and bounded compact kernels.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

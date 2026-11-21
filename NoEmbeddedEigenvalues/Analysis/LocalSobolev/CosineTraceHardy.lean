@@ -1,8 +1,12 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalHardy
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalHardy
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-! # Cosine division with zero canonical traces -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

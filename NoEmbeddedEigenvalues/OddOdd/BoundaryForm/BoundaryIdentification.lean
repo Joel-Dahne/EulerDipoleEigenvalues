@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.CharacterVirialLimit
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.CharacterVirialLimit
 
 /-! # Identification of the odd–odd boundary form -/
+
+@[expose] public section
 
 noncomputable section
 

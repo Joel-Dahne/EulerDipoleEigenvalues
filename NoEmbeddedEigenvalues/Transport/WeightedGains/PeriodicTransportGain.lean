@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleBootstrapMass
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleBootstrapMass
 
 /-!
 # Periodic first transport gain
@@ -8,6 +10,8 @@ The torus transport equation supplies a pair on each bounded invariant
 neighbourhood. Apply the positive-cell gain to the original and reflected
 data, then use a finite reflected-periodic cover for the bounded lift norm.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LogarithmicRadialMass
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DipoleLogMultiplier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LogarithmicRadialMass
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DipoleLogMultiplier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
 
 /-!
 # Logarithmic quadratic mass near a saddle
@@ -13,6 +15,8 @@ The normalized factorization bounds the physical logarithm by the crossing
 logarithm. A separable power majorant gives integrability after division by
 radius. The affine chart preserves volume and Euclidean radius.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,10 +1,12 @@
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+module
+
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
 /-!
 # Complex H¹ functions on a bounded interval
@@ -21,6 +23,8 @@ uniqueness means equality on `[a,b]`, not outside it.
 This is an unbundled first-order API, not a normed Sobolev space. Interval `H²`
 (`HasIntervalH2`) and periodic `H¹` (`MemPeriodicH1`) build on it at the end of the file.
 -/
+
+@[expose] public section
 
 noncomputable section
 

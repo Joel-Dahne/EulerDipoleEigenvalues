@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
 
 /-!
 # Smooth bounded multipliers on interval H¹
@@ -9,6 +11,8 @@ Blueprint: `lem:h1-smooth-multiplier`.
 Both multiplier coefficients are bounded only on the interval in question.
 The specified derivative and the original pointwise representative are retained.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

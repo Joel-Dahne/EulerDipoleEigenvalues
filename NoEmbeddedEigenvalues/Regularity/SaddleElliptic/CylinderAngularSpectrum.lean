@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderData
-import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.MeasureTheory.Group.Integral
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderData
+public import Mathlib.Analysis.Fourier.AddCircle
+public import Mathlib.MeasureTheory.Group.Integral
 
 /-!
 # Allowed angular Fourier modes from axis parity
@@ -9,6 +11,8 @@ Coefficients use probability Haar measure on the angular circle. The reflections
 are θ ↦ π - θ and θ ↦ -θ. They are identities of a.e. representatives on the
 circle, not restrictions of arbitrary planar representatives to a fixed circle.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

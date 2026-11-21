@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EdgeWindowTransport
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryConeTrace
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EdgeWindowTransport
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryConeTrace
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
 
 /-!
 # Whole-edge modulus and critical corner mass
@@ -12,6 +14,8 @@ Blueprint: `lem:common-edge-modulus`, `def:edge-corner-shift`,
 Any two compact regular intervals are contained in a larger regular interval.
 Trace uniqueness thus identifies one modulus, which the corner norm excludes.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -136,7 +140,7 @@ theorem inward_edge_common_modulus_eq_zero {ε w : ℝ} (hw : 0 < w)
     ((measurableSet_lt measurable_const measurable_snd).inter
       (measurableSet_lt measurable_snd measurable_fst))
   have hWeight : MemLp (fun q ↦ W q / (q.1 : ℂ)) 2 (volume.restrict Q) := by
-    have hCq : Measure.QuasiMeasurePreserving C volume volume :=
+    have hCq : QuasiMeasurePreserving C volume volume :=
       (quasiMeasurePreserving_diagonalTraceChart j).comp
         (measurePreserving_edgeInward side).quasiMeasurePreserving
     have hne := (hCq.comp measurePreserving_edgeCornerShift.quasiMeasurePreserving).ae

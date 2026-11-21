@@ -1,5 +1,7 @@
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftTorus
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftTorus
 
 /-!
 # Cells, separatrix and critical points of the dipole
@@ -13,6 +15,8 @@ In the diagonal coordinates `a = (x + y)/2`, `b = (x - y)/2` the dipole is
 `{Ψ > 0}` is the image of the open square `|a|, |b| < π/2`, on which the covering
 map is injective.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,12 +1,16 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.MixedSaddle
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleLinearization
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.MixedSaddle
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleLinearization
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamJet
 
 /-! # Mixed cellwise vorticity regularity
 
 The weighted transport estimate is applied after removing a smooth
 transport pair, not after dividing by a defining function of the odd sides.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

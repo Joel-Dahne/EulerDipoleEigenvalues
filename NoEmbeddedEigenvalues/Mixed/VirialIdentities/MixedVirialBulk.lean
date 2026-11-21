@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedDividedEquation
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedDividedEquation
 
 /-! # Bulk densities and field comparison for the mixed virial -/
+
+@[expose] public section
 
 noncomputable section
 

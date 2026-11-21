@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Inverse
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Inverse
+public import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Joint L² convergence and null-set transport on real-angle lifts
@@ -10,6 +12,8 @@ joint L² convergence to every translated angular strip. Countable strip covers
 also transport joint a.e. identities to the whole plane. Neither assertion
 provides weak derivative gluing.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

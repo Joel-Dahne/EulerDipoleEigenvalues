@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.PairingLimit
-import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotient
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedVirialBulk
+module
+
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.PairingLimit
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotient
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedVirialBulk
 
 /-! # Recombining the two imaginary rotation characters -/
+
+@[expose] public section
 
 noncomputable section
 

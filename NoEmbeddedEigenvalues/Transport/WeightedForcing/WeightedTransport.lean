@@ -1,11 +1,13 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
-import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedNumeratorData
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleTransportGain
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Assembly
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EdgeCornerTransport
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedNumeratorData
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleTransportGain
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Assembly
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EdgeCornerTransport
 
 /-!
 # Weighted cellwise transport regularity interfaces
@@ -18,6 +20,8 @@ Quarter profiles use independent recentered time coordinates. Their h/t derivati
 carry weights d and 1/d respectively; no unweighted global H¹ norm on the quarter
 coordinate domain is asserted. The physical stream level is Ψ = 2h.
 -/
+
+@[expose] public section
 
 noncomputable section
 

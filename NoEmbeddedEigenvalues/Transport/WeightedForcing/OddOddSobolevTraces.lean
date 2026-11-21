@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddEdgeTraces
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.RegularEdgeCover
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWindowRestriction
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddEdgeTraces
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.RegularEdgeCover
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWindowRestriction
 
 /-!
 # Canonical zero traces of odd–odd H¹ vorticity on an absolute-level collar
@@ -13,6 +15,8 @@ have a symmetric rectangular union still inside the same collar. Ordinary H¹
 there supplies a canonical trace equal to its own negative. Restriction retains
 zero on the original window, even when the normal point is an endpoint.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

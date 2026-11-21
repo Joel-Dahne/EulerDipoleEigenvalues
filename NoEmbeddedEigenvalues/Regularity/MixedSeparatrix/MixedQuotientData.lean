@@ -1,13 +1,17 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceH2
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.ComparisonCoefficients
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedField
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
-import NoEmbeddedEigenvalues.Symmetry.Sectors
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceH2
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.ComparisonCoefficients
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedField
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+public import NoEmbeddedEigenvalues.Symmetry.Sectors
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
 
 /-! # Weak jet and trace data for the mixed quotient -/
+
+@[expose] public section
 
 noncomputable section
 

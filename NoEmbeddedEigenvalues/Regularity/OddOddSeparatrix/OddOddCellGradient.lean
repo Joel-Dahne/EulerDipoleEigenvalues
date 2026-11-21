@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddGradientCoordinates
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddGradientCoordinates
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
 
 /-!
 # Weighted Cartesian gradients on a full positive cell collar
@@ -11,6 +13,8 @@ partial with one ordinary separatrix gradient, and cover the collar up to the
 null Cartesian seams. Compactness shrinks the collar inside that gradient's
 domain. Summing the two rotation characters removes the character premise.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

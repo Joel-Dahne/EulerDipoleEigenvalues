@@ -1,7 +1,12 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.InteriorEnergy
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakLaplacian
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.InteriorEnergy
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakLaplacian
 
 /-! # Scaling the interior estimate from a fixed annulus -/
+
+@[expose] public section
+
 noncomputable section
 namespace NoEmbeddedEigenvalues
 open MeasureTheory Set Metric

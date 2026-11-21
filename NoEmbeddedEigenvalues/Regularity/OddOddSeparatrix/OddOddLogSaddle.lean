@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DipoleLogMultiplier
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleLogarithmicMass
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DipoleLogMultiplier
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleLogarithmicMass
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
 
 /-!
 # Logarithmic mass of the saddle remainder gradient
@@ -17,6 +19,8 @@ through the center. The physical logarithmic multiplier then applies. Weak jet
 uniqueness identifies these same derivatives with the fixed canonical Fourier
 stream jet minus the classical quadratic jet.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # A genuinely Euclidean radial smoothing kernel
@@ -9,6 +11,8 @@ uses the explicit inner-product bump base on the complex plane and pulls it
 back through the real coordinate equivalence. Its support is an actual
 Euclidean disk, not a ball for the product maximum norm.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

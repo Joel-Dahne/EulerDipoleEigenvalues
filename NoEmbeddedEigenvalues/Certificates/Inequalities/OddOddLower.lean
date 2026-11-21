@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
-import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddResidual
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddResidual
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # The lower endpoint polynomial for the Odd–odd residual
@@ -11,6 +13,8 @@ both sets of Bernstein coefficient signs independently of the script.
 The sign checks use kernel reduction of closed rational inequalities. Keeping
 them separate from the symbolic identity makes either step easy to profile.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

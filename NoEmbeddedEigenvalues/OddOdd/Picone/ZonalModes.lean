@@ -1,9 +1,11 @@
-import Mathlib.Analysis.Calculus.Deriv.Polynomial
-import Mathlib.Analysis.Calculus.ContDiff.Polynomial
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.InnerProductSpace.Orthonormal
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial
+public import Mathlib.Analysis.Calculus.ContDiff.Polynomial
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.InnerProductSpace.Orthonormal
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Basic
+public import Mathlib.Tactic
 
 /-!
 # Zonal modes and the weak spectral-gap step
@@ -20,6 +22,8 @@ The companion `ZonalBasis.lean` constructs the concrete weighted Hilbert basis.
 Application to `zonal_poincare` also needs weak pairings with the supplied
 weighted derivatives; the algebraic mode identities here do not supply them.
 -/
+
+@[expose] public section
 
 noncomputable section
 

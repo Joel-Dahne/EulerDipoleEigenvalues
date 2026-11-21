@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedStaticForm
+module
+
+public import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedStaticForm
 
 /-! # Neumann traces and the mixed second-order form -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularTransform
-import Mathlib.Analysis.Fourier.LpSpace
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularTransform
+public import Mathlib.Analysis.Fourier.LpSpace
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Real-line L² Fourier analysis of cylinder modes
@@ -9,6 +11,8 @@ The Fourier transform here is Mathlib's unitary cycle-frequency transform.
 Angular frequency is `2 * π` times this real frequency. Mode functions are
 first passed to their genuine L² classes; no time L¹ hypothesis is imposed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

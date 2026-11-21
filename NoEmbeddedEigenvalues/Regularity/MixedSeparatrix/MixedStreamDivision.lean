@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalSobolev
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedSeparatrix
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalSobolev
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedSeparatrix
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
 
 /-! # H² stream division at the odd sides of the mixed cell -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

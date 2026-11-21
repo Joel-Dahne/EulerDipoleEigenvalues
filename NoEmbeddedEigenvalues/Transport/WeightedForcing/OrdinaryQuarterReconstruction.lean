@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicMidpoint
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterGradient
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1LocalToGlobal
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodDerivativeBounds
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicMidpoint
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterGradient
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1LocalToGlobal
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodDerivativeBounds
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
 
 /-!
 # Ordinary midpoint data and distance-weighted reconstruction
@@ -15,6 +17,8 @@ an interval H¹ quotient. Its phase derivative costs Q/h, without a logarithmic
 weight. Orbitwise ACL witnesses identify the single raw transport pullback;
 no measurable selection of witnesses is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

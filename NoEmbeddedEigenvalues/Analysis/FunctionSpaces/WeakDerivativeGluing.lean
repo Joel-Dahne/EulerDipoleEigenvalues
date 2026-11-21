@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
-import Mathlib.Topology.Compactness.Lindelof
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
+public import Mathlib.Topology.Compactness.Lindelof
 
 /-!
 # Specified weak derivatives from local Sobolev regularity
@@ -11,6 +13,8 @@ Local H¹ witnesses need not use the same derivative representatives. A countabl
 subcover and weak uniqueness on overlaps glue their raw derivatives a.e.; weak
 locality then gives one specified derivative on the whole open set.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

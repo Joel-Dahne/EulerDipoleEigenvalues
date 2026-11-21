@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorFactor
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalSecondHardy
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Multipliers
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorFactor
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalSecondHardy
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Multipliers
 
 /-!
 # Uniform complete-cell division estimates
@@ -13,6 +15,8 @@ smooth inverse linear divisor factor. The two Hardy bounds and the uniform
 factor estimates give the value and derivative energies; level comparability
 converts the second-derivative energy to the required `h²`-weighted energy.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

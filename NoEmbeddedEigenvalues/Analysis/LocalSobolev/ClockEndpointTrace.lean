@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceFlux
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH2
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
-import Mathlib.Topology.Compactness.Lindelof
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceFlux
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH2
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+public import Mathlib.Topology.Compactness.Lindelof
 
 /-! # Endpoint traces from interval energy -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

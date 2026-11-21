@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 
 /-!
 # First weighted mass from a quarter-profile bound
@@ -11,6 +13,8 @@ give a profile divided by saddle distance in L². Exponential time moments
 avoid a logarithmic loss from estimating the moving interval by its length.
 All fiber and global square integrals are established as integrable.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

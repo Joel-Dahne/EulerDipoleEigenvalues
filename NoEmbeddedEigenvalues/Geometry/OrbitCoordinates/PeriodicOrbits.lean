@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Geometry.Flow.DipoleFlow
+module
+
+public import NoEmbeddedEigenvalues.Geometry.Flow.DipoleFlow
 
 /-! # The positive-cell orbit and its period -/
+
+@[expose] public section
 
 noncomputable section
 

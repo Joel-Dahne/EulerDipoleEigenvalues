@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
-import Mathlib.Analysis.InnerProductSpace.Laplacian
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
 
 /-!
 # Compact-test Laplacians of specified ordered weak jets
@@ -9,6 +11,8 @@ Two integrations by parts use only the two repeated-coordinate entries.
 Neither mixed-derivative commutation nor a choice of new Sobolev witnesses
 is needed. Integrability is proved before splitting the test pairings.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

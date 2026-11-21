@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.EvenEven.Conclusion.EvenEven
-import NoEmbeddedEigenvalues.OddOdd.Conclusion.OddOdd
-import NoEmbeddedEigenvalues.Mixed.Conclusion.Mixed
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.Conclusion.EvenEven
+public import NoEmbeddedEigenvalues.OddOdd.Conclusion.OddOdd
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.Mixed
 
 /-!
 # Absence of nonzero embedded eigenvalues
@@ -8,6 +10,8 @@ import NoEmbeddedEigenvalues.Mixed.Conclusion.Mixed
 The main theorem is assembled from the three sector exclusions and the
 sector decomposition. Its proof and transitive dependencies are admission-free.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

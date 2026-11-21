@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedDividedEquation
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+module
+
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedDividedEquation
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
 
 /-! # Signed geometric densities in diagonal coordinates -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

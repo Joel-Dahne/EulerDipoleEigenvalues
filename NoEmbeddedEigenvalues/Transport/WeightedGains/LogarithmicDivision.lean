@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LogarithmicWeights
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LogarithmicWeights
 
 /-! # Logarithmic weights in the phase cell -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

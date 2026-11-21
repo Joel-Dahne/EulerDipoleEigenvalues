@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-!
 # Specified second jet of the continuous stream
@@ -8,6 +10,8 @@ The entries are the existing Fourier multiplier derivatives, not classical
 derivatives of raw L² representatives. Fixing this jet makes bulk, ray and
 orbit estimates use identical derivative data.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

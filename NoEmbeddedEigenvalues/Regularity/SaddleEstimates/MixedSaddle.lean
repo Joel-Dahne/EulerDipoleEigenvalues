@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
 
 /-! # The linear saddle jet in either mixed sector
 
@@ -7,6 +9,8 @@ The first vorticity weight is already the forcing weight for exponent two.
 The chart is orthonormal: the linear term is in the coordinate reversed by
 the odd torus reflection, and the radius and area are physical.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

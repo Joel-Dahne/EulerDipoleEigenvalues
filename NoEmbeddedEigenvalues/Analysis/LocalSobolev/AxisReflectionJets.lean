@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
 
 /-!
 # Axis reflection of specified weak jets
@@ -9,6 +11,8 @@ reflected jet with a scalar multiple by weak uniqueness transfers an a.e. parity
 identity to every specified entry. In particular the weak Laplacian retains the
 parity of the function; no separate symmetry assumption on the forcing is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

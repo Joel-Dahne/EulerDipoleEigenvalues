@@ -1,5 +1,7 @@
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import NoEmbeddedEigenvalues.Geometry.Cells.Cells
+module
+
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import NoEmbeddedEigenvalues.Geometry.Cells.Cells
 
 /-!
 # Calculus in diagonal coordinates
@@ -11,6 +13,8 @@ The diagonal coordinates `a = (x + y)/2`, `b = (x - y)/2` have inverse
 since `∂_a = ∂ₓ + ∂_y`, `∂_b = ∂ₓ - ∂_y`, the Laplacian is `Δ = ½(∂_a² + ∂_b²)`. In the
 latter the mixed terms cancel directly, without symmetry of second derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 

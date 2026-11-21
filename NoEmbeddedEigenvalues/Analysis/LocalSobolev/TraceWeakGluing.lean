@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalTraceIntegration
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalTraceIntegration
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
 
 /-!
 # Specified weak derivatives across a matching-trace line
@@ -14,6 +16,8 @@ parts. Their equality cancels the normal jump. The tangential derivative is
 extended by cutoffs constant in the tested coordinate. All candidates have
 actual whole-rectangle L² norms before either weak identity is extended.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

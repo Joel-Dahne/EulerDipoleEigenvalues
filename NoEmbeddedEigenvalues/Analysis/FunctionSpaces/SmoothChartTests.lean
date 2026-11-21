@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import Mathlib.MeasureTheory.Function.Jacobian
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import Mathlib.MeasureTheory.Function.Jacobian
 
 /-!
 # Tests and integrability through a smooth chart
@@ -10,6 +12,8 @@ Compact test pullback is extended by zero outside the chart source. Its support
 is contained in the inverse image of the original compact support. Constant
 Jacobian transport applies to genuine integrability, not just integral values.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

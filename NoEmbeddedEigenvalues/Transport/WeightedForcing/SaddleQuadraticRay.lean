@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayRadialTrace
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleLogarithmicMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayRadialTrace
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleLogarithmicMass
 
 /-!
 # Explicit logarithmic quadratic ray bounds
@@ -10,6 +12,8 @@ Along each Cartesian ray the quadratic is homogeneous of degree two, and its
 classical gradient is homogeneous of degree one. A positive residual radius
 power absorbs the logarithm, without polar trace estimates.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

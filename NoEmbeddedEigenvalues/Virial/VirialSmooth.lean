@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
+module
+
+public import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
 
 /-!
 # The virial identity for smooth eigenfunctions
@@ -11,6 +13,8 @@ The relation `ψ = Δ⁻¹ ω` is not used. The proof pairs `[L₀, D] a = ½(f 
 with `a`, moves `L₀` and `D` across the pairing by skew-symmetry, and uses
 `Re ⟨D ω, ω⟩ = 0`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

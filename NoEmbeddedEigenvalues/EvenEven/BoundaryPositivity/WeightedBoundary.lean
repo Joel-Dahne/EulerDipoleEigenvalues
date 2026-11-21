@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.BoundaryForm
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.BoundaryForm
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
 
 /-!
 # The weighted second-order boundary domain
@@ -16,6 +18,8 @@ This is a representative/derivative predicate, not a normed quotient space.
 The distributional weak-test bridge, density, and Sobolev boundary positivity
 are not asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

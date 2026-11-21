@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFirstNumerator
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterProjections
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFirstNumerator
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedQuarterProjections
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
 
 /-!
 # Second transport mass from the original weighted L² forcing
@@ -13,6 +15,8 @@ weak gradient, then use the raw-profile mass assembly. This is the mass
 conclusion of weighted transport H¹, independent of second numerator data,
 gradient-ray traces and the spatial weak-gradient/gluing conclusion.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

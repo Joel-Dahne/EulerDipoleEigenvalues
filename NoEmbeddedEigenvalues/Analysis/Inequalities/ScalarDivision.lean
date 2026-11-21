@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellDivision
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellDivision
 
 /-!
 # Scalar interfaces for phase-cell division

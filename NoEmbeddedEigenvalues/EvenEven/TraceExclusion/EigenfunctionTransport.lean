@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
-import NoEmbeddedEigenvalues.Symmetry.Sectors
+module
+
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
+public import NoEmbeddedEigenvalues.Symmetry.Sectors
 
 /-!
 # Transport traces of eigenfunctions
@@ -12,6 +14,8 @@ raw stream lift with its continuous representative; the specializations `ee_meln
 `ee_transport_traces` are in `Melnikov.lean`. The neighbourhood is the diagonal
 square `|a|, |b| < 3π/2`, whose boundary lines are invariant under the dipole flow.
 -/
+
+@[expose] public section
 
 noncomputable section
 

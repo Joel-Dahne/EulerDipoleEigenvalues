@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddGroundResidual
-import NoEmbeddedEigenvalues.Analysis.Inequalities.Picone
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddGroundResidual
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.Picone
 
 /-!
 # Weak Picone testing and annular extraction
@@ -12,6 +14,8 @@ Annular cutoffs remove the critical levels before testing; coarea and the weak
 one-dimensional fundamental theorem give a common exceptional set of endpoints.
 No smooth approximation or pointwise Sobolev gradient trace is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

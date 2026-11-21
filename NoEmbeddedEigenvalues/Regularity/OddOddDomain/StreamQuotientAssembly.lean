@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddDomain.WeightedThirdStream
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PeriodicSobolev
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddDomain.WeightedThirdStream
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PeriodicSobolev
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
 
 /-!
 # Assembly of local stream quotients
@@ -12,6 +14,8 @@ Local division, weighted point removal and smooth inverse multiplication are
 performed before gluing the periodic raw quotient. Values on the separatrix
 are only compared almost everywhere.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

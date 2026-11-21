@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+module
+
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
 
 /-!
 # The virial identities on the `L²` domain
@@ -29,6 +31,9 @@ second-order part of `[H, D]` is a mixed term `Im ∫ g ∂ₓu ∂_y ū`, which
 derivatives in Fourier variables (`inner_partial_swap`); adaptedness then cancels the rest
 pointwise.
 -/
+
+@[expose] public section
+
 noncomputable section
 
 namespace NoEmbeddedEigenvalues

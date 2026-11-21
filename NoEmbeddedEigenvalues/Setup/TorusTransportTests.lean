@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialFourier
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialFourier
 
 /-! # Multiplication and weak transport tests on the torus -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterGradient
-import NoEmbeddedEigenvalues.Transport.TransportAxisGluing
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Data
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakDerivativeGluing
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterGradient
+public import NoEmbeddedEigenvalues.Transport.TransportAxisGluing
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Data
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakDerivativeGluing
 
 /-!
 # Physical H¹ from all four original weighted quarter fields
@@ -12,6 +14,8 @@ quarter cover supplies its full collar norms. Transverse-cutoff extension and
 the global weak transport equation remove the axis jumps without evaluating
 raw line values or imposing a separate trace matching hypothesis.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

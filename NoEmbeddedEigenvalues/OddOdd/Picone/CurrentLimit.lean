@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.OddOdd.BoundaryForm.BoundaryIdentification
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.BoundaryForm.BoundaryIdentification
 
 /-! # Odd–odd Picone current limit and bulk decomposition -/
+
+@[expose] public section
 
 noncomputable section
 

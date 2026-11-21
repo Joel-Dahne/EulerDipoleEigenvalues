@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
-import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+public import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
 
 /-! # Local energy estimates for Poisson equations -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,14 +1,16 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PeriodicTransportGain
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderInverse
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleNormalForm
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleForcingMass
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.StreamParity
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleCoefficient
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.SaddleStreamCoordinates
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleSubcritical
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleGrowth
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PeriodicTransportGain
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderInverse
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleNormalForm
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleForcingMass
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.StreamParity
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleCoefficient
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.SaddleStreamCoordinates
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleSubcritical
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleGrowth
 
 /-!
 # Odd–odd saddle and weighted forcing interfaces
@@ -18,6 +20,8 @@ vorticity gradients. The ordinary whole-lift endpoint is in OddOddSeparatrix;
 its cellwise ingredients depend on the forcing input here, not on logarithmic
 forcing or the weighted-gradient theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

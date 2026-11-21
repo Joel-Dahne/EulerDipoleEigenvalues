@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorDerivative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorDerivative
 
 /-!
 # The weak moving-endpoint derivative of the half numerator
@@ -10,6 +12,8 @@ because its angular coordinate is zero, not because the forcing vanishes
 there. The remaining endpoint is the original continuous forcing at negative
 eighth-period time. No raw gradient is evaluated on an endpoint ray.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PlaneConvolution
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.LineMollifier
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PlaneConvolution
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.LineMollifier
 
 /-!
 # Compact Cartesian mollification in L²
@@ -8,6 +10,8 @@ A normalized bump averages translations. The averaging contraction bounds the
 error by the largest translation error on its support. A translated test also
 moves a classical kernel derivative onto the specified weak derivative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

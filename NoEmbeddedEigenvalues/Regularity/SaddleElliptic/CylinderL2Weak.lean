@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderIntegralWeak
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLiftL2
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralCutoff
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLimit
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderIntegralWeak
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLiftL2
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralCutoff
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLimit
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-!
 # Weak differentiation of the normalized cylinder L² inverse
@@ -14,6 +16,8 @@ The inverse isometry and exact strip mass transport joint strong L² convergence
 to every translated angular period. Weak-pair closedness and genuine open-patch
 locality then give the identity everywhere, including every angular seam.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

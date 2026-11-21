@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalSobolev
-import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalSobolev
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
 
 /-! # The weak equation after division by the odd-side defining function -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

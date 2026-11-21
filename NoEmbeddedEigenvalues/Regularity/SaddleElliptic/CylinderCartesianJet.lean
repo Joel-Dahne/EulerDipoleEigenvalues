@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderPhysicalL2
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderWeak
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderPhysicalL2
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderWeak
 
 /-!
 # Ordered Cartesian cylinder-jet candidates
@@ -10,6 +12,8 @@ second candidates equals the conjugated cylinder operator algebraically, before
 any weak derivative identification. Neither norms nor this equation assert a
 weak Cartesian jet.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

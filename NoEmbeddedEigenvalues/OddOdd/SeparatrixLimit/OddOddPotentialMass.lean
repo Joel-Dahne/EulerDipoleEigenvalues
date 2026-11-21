@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddFinitePart
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddFinitePart
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 
 /-!
 # Corner subtraction for the odd–odd weighted value mass
@@ -8,6 +10,8 @@ The two torus saddle values have a trigonometric interpolant. Its nonconstant
 part is antisymmetric under coordinate exchange and integrates to zero against
 F on a stream truncation. This avoids a measurable partition into corner sectors.
 -/
+
+@[expose] public section
 
 noncomputable section
 

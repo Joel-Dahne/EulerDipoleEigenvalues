@@ -1,8 +1,12 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialCutoff
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialShell
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalCutoff
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialCutoff
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialShell
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalCutoff
 
 /-! # Removing both annular cutoffs in the mixed virial -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterNumeratorBounds
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
-import Mathlib.Algebra.Order.Chebyshev
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterNumeratorBounds
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-!
 # Second fixed-time numerator bulk energy
@@ -13,6 +15,8 @@ The formal second level contraction retains every ordered entry of the supplied
 weak jet. Its bulk bound is separate from a weak moving-endpoint differentiation
 formula: no assertion of numerator H² follows from this estimate alone.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

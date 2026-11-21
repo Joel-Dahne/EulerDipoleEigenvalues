@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleBootstrapMass
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleCylinderRemainder
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleBootstrapMass
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleCylinderRemainder
 
 /-!
 # Physical subcritical stream estimates from the first vorticity weight
@@ -9,6 +11,8 @@ inverse orthogonal affine frame transports actual weak first derivatives,
 then uniqueness identifies them with the fixed Fourier derivatives. No
 ordinary vorticity H¹ or downstream saddle remainder is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.BernsteinSeparable
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddAAlgebra
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.BernsteinSeparable
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddAAlgebra
 
 /-!
 # Mixed odd-in-a Bernstein certificate
@@ -9,6 +11,8 @@ triangles of the cosine square. Kernel reduction checks the intermediate
 table after the first-axis transform, and then the signs after the second.
 Each first-axis table is reused across boxes with the same first interval.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

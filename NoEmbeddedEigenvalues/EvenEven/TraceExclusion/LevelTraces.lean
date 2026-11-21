@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.EvenEven.GradientTraces.SeparatrixTraces
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.GradientTraces.SeparatrixTraces
 
 /-! # Even–even level traces and their limits -/
+
+@[expose] public section
 
 noncomputable section
 

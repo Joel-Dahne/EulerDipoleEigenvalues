@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
 
 /-!
 # Elementary L² traces on a rectangle
@@ -11,6 +13,8 @@ The endpoint values of a raw representative do not enter their definition.
 The estimate follows from the one-dimensional FTC and Cauchy–Schwarz,
 averaging over the bounded interval and then integrating over the other variable.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralMass
-import Mathlib.Tactic.FunProp
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralMass
+public import Mathlib.Tactic.FunProp
 
 /-!
 # Bounded continuous synthesis of cylinder spectral data
@@ -9,6 +11,8 @@ identification with a unitary angular transform are separate from this dominated
 integral construction. The logarithmic frequency is angular frequency, matching
 `cylinderSymbol`. L¹ data make every displayed synthesis integral genuine.
 -/
+
+@[expose] public section
 
 noncomputable section
 

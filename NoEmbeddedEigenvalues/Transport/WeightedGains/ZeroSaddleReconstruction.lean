@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFirstMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ExponentialTransportDecay
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleQuotientMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFirstMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ExponentialTransportDecay
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleQuotientMass
 
 /-!
 # Zero-saddle base-quarter reconstruction
@@ -13,6 +15,8 @@ as exp(-|t|/2). The resulting estimate is transferred a.e. to the original
 spatial unknown before applying the weighted moving-strip mass criterion.
 No raw endpoint values of the spatial unknown are used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

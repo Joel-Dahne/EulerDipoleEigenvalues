@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderPhysicalValue
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderPhysicalValue
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
 
 /-!
 # Genuine physical weighted L² from joint cylinder L²
@@ -8,6 +10,8 @@ The inverse square-root-Jacobian reconstruction is S(t,θ)/r. Its finite planar
 mass is proved before using the exact factor 2π. All identities and null sets
 are transported jointly, never by restricting a raw representative to a ray.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

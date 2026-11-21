@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedVirialBulk
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedVirialBulk
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
 
 /-! # Tangential virial current on mixed level shells -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -11,10 +15,12 @@ open MeasureTheory Set Filter ComplexConjugate
 open scoped Topology ENNReal
 
 local notation "Plane" => ℝ × ℝ
-private abbrev trh (q : Plane) : ℝ := Real.cos q.1
-private abbrev trk (q : Plane) : ℝ := Real.cos q.2
-private abbrev tru (q : Plane) : ℝ := Real.sin q.1
-private abbrev trv (q : Plane) : ℝ := Real.sin q.2
+abbrev MixedTangentialAux.trh (q : Plane) : ℝ := Real.cos q.1
+abbrev MixedTangentialAux.trk (q : Plane) : ℝ := Real.cos q.2
+abbrev MixedTangentialAux.tru (q : Plane) : ℝ := Real.sin q.1
+abbrev MixedTangentialAux.trv (q : Plane) : ℝ := Real.sin q.2
+
+open MixedTangentialAux
 
 private def shellLevel (q : Plane) : ℝ := trh q * trk q
 private def tanG (q : Plane) : ℝ := (trk q * tru q) ^ 2 + (trh q * trv q) ^ 2
@@ -23,11 +29,11 @@ private def tanP (q : Plane) : ℝ := trh q + trk q
 private def shellFactor (q : Plane) : ℝ :=
   2 * (trh q - trk q) * tru q * trv q / (tanP q * tanG q)
 
-private def realPair (z w : ℂ) : ℝ := (z * conj w).re
+def MixedTangentialAux.realPair (z w : ℂ) : ℝ := (z * conj w).re
 
 /-- The outward tangential virial current in the level variable
 `cos a * cos b`, with both diagonal Jacobian factors included. -/
-def mixedTangentialCurrent {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
+@[no_expose] def mixedTangentialCurrent {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
   let A := d.streamA q
   let B := d.streamB q
   shellFactor q * (shellLevel q * tru q * trv q * (‖A‖ ^ 2 - ‖B‖ ^ 2) +
@@ -121,7 +127,7 @@ private def streamModel {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℂ :
 
 /-- After factoring out the level, the non-model part of the current pairs
 the undivided stream derivatives with Hardy-controlled quotient derivatives. -/
-def mixedTangentialRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
+@[no_expose] def mixedTangentialRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
   let a := d.jet [0] q / (tanP q : ℂ)
   let b := d.jet [1] q / (tanP q : ℂ)
   let b₀ := d.jet [1] q / (trk q : ℂ)

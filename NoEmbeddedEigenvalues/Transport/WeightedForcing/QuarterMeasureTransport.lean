@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterReconstruction
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterReconstruction
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
 
 /-!
 # Square integrability in recentered quarter coordinates
@@ -10,6 +12,8 @@ The quarter strip is a subset of the full flow-time coordinate domain.
 The constant-Jacobian integrability bridge transports actual squared norms;
 no measure-preservation property is asserted for the level projection.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

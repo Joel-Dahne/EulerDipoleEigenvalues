@@ -14,7 +14,7 @@ sorries +args="main":
     lake -q build --log-level=error
     lake env lean --run scripts/SorryDeps.lean {{args}}
 
-# Unsandboxed stand-in for `lake comparator` (Lean v4.35); reads `comparator.json` (~2 min).
+# Unsandboxed local diagnostic; use `lake comparator` for verification.
 # Check that `Solution.lean` proves the statements of `Challenge.lean`, and list admissions
 challenge:
     lake -q build --log-level=error Challenge Solution

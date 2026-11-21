@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1WeakLift
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1WeakLift
 
 /-!
 # Integration by parts with canonical interval traces
@@ -10,6 +12,8 @@ The closed-interval extension is an absolutely continuous integral primitive.
 Its endpoint values, rather than the raw endpoint assignments, are the boundary
 terms used to glue transverse weak derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

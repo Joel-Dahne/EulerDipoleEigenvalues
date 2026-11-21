@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SmoothChartTests
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SmoothChartTests
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
 
 /-!
 # Weak derivatives through a constant-Jacobian plane chart
@@ -11,6 +13,8 @@ column. Testing both supplied weak coordinate derivatives against this column
 cancels all zeroth-order terms. The determinant supplies the remaining factor
 two, exactly matching change of variables. No Sobolev density is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

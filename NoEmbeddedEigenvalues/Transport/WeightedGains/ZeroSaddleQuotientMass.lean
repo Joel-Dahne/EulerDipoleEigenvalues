@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellMassDivision
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleNumerator
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellMassDivision
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleNumerator
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 
 /-!
 # The first scalar mass gain for a zero-saddle transport component
@@ -14,6 +16,8 @@ Resonant cancellation and first-derivative phase-cell summation then give
 physical transport reconstruction and assembly of all four components are
 separate from this scalar mass conclusion.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

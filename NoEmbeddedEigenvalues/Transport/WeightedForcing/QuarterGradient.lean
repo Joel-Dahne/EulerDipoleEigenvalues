@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterChart
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterInverseFrame
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransport
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterChart
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterInverseFrame
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransport
 
 /-!
 # Cartesian weak derivatives on the actual quarter image
@@ -13,6 +15,8 @@ is exactly the weighted inverse frame. Constant-Jacobian L² transport then
 supplies the spatial weighted bound, without assuming an ordinary spatial
 gradient in advance.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

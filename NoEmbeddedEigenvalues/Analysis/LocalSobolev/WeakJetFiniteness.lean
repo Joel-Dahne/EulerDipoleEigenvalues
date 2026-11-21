@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
 
 /-!
 # Finite specified weak jets and removal of one point
@@ -8,6 +10,8 @@ Finite norms are hypotheses on the whole target domain at every ordered level.
 They supply recursive Sobolev membership and the local integrability needed to
 extend each specified weak pair through an isolated point.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

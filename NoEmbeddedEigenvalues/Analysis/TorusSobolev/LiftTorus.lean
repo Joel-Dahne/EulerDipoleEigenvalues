@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.ContinuousRepresentative
+module
+
+public import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.ContinuousRepresentative
 
 /-!
 # Periodic lifts and functions on the torus
@@ -13,6 +15,8 @@ derivatives of `C¹` lifts are then classical, hence Fourier, partial derivative
 torus, and periodic `Cᵏ` lifts lie in `Hᵏ(𝕋²)`. Integrals of lifts `G ∘ π` of
 a.e. strongly measurable torus functions over the period square are torus integrals.
 -/
+
+@[expose] public section
 
 noncomputable section
 

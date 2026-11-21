@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialFourier
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialFourier
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
 
 /-!
 # Periodizing cell functions to the torus
@@ -19,6 +21,8 @@ on the torus.
   (`hasFourierPartial_boxPeriodize`). The last is tested against the characters, cut off
   near the support, so no density argument is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
 
 /-!
 # Recentered quarter domains and endpoint rays
@@ -8,6 +10,8 @@ The stream level is Ψ = 2h. The negative-time endpoint approaches (π,0),
 the positive-time endpoint approaches (0,-π), and their Euclidean radius
 from the saddle is 2 arcsin √h. Ray traces use transverse ACL extensions.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

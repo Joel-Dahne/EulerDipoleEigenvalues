@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterScalars
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodDerivativeBounds
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterScalars
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodDerivativeBounds
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Geometry of quarter-divisor resonances
@@ -15,6 +17,8 @@ arithmetic lattice in phase, not in physical level. Logarithmic derivative bound
 convert fixed phase increments into uniform level ratios. Jordan's sine inequality
 then controls the divisor throughout each complete phase cell.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

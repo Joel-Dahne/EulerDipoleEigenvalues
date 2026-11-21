@@ -1,4 +1,6 @@
-import Mathlib.Analysis.Fourier.LpSpace
+module
+
+public import Mathlib.Analysis.Fourier.LpSpace
 
 /-!
 # Identifying the inverse Fourier integral with the L² inverse
@@ -8,6 +10,8 @@ unitary L² inverse. The proof compares their Schwartz pairings through the
 tempered-distribution Fourier transform, then uses locally integrable uniqueness.
 It does not assume the inverse integral is L² before identifying it.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

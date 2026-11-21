@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Endpoint estimates for interval H¹ representatives
@@ -11,6 +13,8 @@ The estimates use the canonical extension, not the unrestricted raw endpoint
 values. Cauchy–Schwarz bounds endpoint values and rescaled zero-trace layers
 using only first-order data; no Hardy inequality or second derivative is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

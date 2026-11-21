@@ -1,5 +1,7 @@
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Int.Basic
+module
+
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Int.Basic
 
 /-!
 # Integer coefficient tables for the mixed odd-in-a certificate
@@ -8,6 +10,8 @@ Reproduce with `python3 scripts/verify_mixed_odd_a.py --lean-power`.
 Each intermediate rational table is stored as integers over one common
 denominator. Lean checks both the power-table identities and the transforms.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

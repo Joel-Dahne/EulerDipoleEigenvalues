@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
 
 /-!
 # Weak differentiation under a signed parameter integral
@@ -9,6 +11,8 @@ Blueprint: `lem:weak-parameter-integral`.
 Coordinate swapping and complex-valued sliced tests provide the distributional
 identities used to commute level differentiation with a midpoint integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

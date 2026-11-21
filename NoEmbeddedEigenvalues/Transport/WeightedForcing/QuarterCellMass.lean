@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SmoothChartTests
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SmoothChartTests
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
 
 /-!
 # Physical-area mass from a quarter character
@@ -14,6 +16,8 @@ Restricted measure-preserving rotations propagate a raw character identity
 and its norm to the other quarters. Their finite cover omits only null axes.
 No global measurability of the original spatial function is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

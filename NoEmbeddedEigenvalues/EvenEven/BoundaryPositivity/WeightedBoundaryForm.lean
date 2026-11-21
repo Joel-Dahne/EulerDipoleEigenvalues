@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalEndpointLimits
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalEndpointLimits
 
 /-! # The boundary form on the weighted domain -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
-import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-import Mathlib.MeasureTheory.Function.L2Space
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
+public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
+public import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Weak partial derivatives are closed under joint L² convergence
@@ -10,6 +12,8 @@ Both the value and its specified derivative converge strongly on the same
 domain. Compact test pairings are continuous by the L² inner product. This
 does not require Sobolev density, pointwise convergence, or boundary traces.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

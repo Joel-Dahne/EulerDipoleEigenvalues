@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
 
 /-!
 # Finite-norm removal of the lifted saddle lattice
@@ -12,6 +14,8 @@ of each saddle. Uniform saddle separation isolates that one missing point.
 Point removal and local Sobolev gluing then recover H¹ on the original open
 set. Merely local H¹ away from the lattice would not supply these finite norms.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

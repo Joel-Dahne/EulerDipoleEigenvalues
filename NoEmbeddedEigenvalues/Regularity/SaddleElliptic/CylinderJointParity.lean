@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointSynthesis
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigParity
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularSpectrum
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointSynthesis
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigParity
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularSpectrum
 
 /-!
 # Pointwise parity of signed joint inverse synthesis
@@ -9,6 +11,8 @@ Negative-mode identities are combined over the countable index before frequency
 integration. Allowed support gives the half-turn character. These yield both
 reflection identities for the actual integral at every cylinder point.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

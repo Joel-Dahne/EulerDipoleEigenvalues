@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderForcing
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderForcing
 
 /-!
 # Normalized Fourier data from the physical Poisson forcing
@@ -9,6 +11,8 @@ The exact squared-mass normalization is inherited from logarithmic-polar
 transport and the unitary real-line L² transform. No extra forcing parity,
 mode support, or time L¹ hypothesis is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

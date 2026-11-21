@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedCellH1
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddRegularSeams
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
+module
+
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedCellH1
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddRegularSeams
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
 
 /-! # Mixed Sobolev regularity through the separatrix
 
@@ -9,6 +11,8 @@ Odd sides glue by their zero traces; even sides glue because reflection
 preserves the canonical trace. Periodic covering and saddle removability
 then give the full collar without any quotient assumptions.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

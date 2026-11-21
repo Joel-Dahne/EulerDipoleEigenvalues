@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Setup.Fourier
+module
+
+public import NoEmbeddedEigenvalues.Setup.Fourier
 
 /-!
 # The setting and the eigenvalue equation
@@ -23,6 +25,8 @@ The operators are defined through the characters `e_k(x, y) = exp(i(k₁x + k₂
 Mathlib's inner product `⟪f, g⟫ = ∫ conj f * g` is conjugate linear in the *first* argument, the
 opposite of the blueprint's convention.
 -/
+
+@[expose] public section
 
 noncomputable section
 

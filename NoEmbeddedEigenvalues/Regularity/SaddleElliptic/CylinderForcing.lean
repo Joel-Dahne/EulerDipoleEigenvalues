@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularSpectrum
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularTransform
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarL2
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderParity
-import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularSpectrum
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderAngularTransform
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarL2
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderParity
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 
 /-!
 # Physical Poisson data on the logarithmic cylinder
@@ -11,6 +13,8 @@ Extend the weighted forcing by zero from the original disk, then apply the
 square-root-Jacobian pullback. Parity is transported jointly before slicing;
 no arbitrary planar representative is restricted to a chosen circle.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -85,7 +89,7 @@ theorem cylinderForcing_memLp {a ρ : ℝ} {F : ℝ × ℝ → ℂ}
       (volume.restrict (localDisk 0 ρ))) :
     MemLp (cylinderForcing a ρ F) 2 logCylinderMeasure := by
   apply memLp_logCylinderL2Pullback
-  exact (memLp_indicator_iff_restrict (measurable_disk ρ)).mpr hF
+  exact (memLp_indicator_iff_restrict (measurable_disk ρ).nullMeasurableSet).mpr hF
 
 /-- The physical forcing weight and the probability-Haar normalization agree exactly. -/
 theorem cylinderForcing_sq_mass {a ρ : ℝ} {F : ℝ × ℝ → ℂ}
@@ -95,7 +99,7 @@ theorem cylinderForcing_sq_mass {a ρ : ℝ} {F : ℝ × ℝ → ℂ}
       (2 * Real.pi)⁻¹ * ∫ p in localDisk 0 ρ,
         ‖F p / (Real.rpow (localRadius 0 p) (a - 1) : ℂ)‖ ^ 2 := by
   have hw : MemLp (cylinderWeightedExtension a ρ F) 2 volume :=
-    (memLp_indicator_iff_restrict (measurable_disk ρ)).mpr hF
+    (memLp_indicator_iff_restrict (measurable_disk ρ).nullMeasurableSet).mpr hF
   rw [cylinderForcing, integral_sq_logCylinderL2Pullback hw]
   congr 1
   have he : (fun p ↦ ‖cylinderWeightedExtension a ρ F p‖ ^ 2) =

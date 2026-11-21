@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.Logarithm
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBAlgebra
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.Logarithm
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBAlgebra
 
 /-!
 # Logarithm reduction for the mixed odd-in-b sign
@@ -7,6 +9,8 @@ import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBAlgebra
 The small strip uses the signs of `-B` and `A-6B` directly. On every other
 dyadic strip the two logarithm endpoints reduce to polynomial inequalities.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

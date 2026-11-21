@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellMassEstimates
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterPhaseCells
-import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
-import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellMassEstimates
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterPhaseCells
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
 
 /-!
 # First-derivative phase-cell mass summation
@@ -14,6 +16,8 @@ ordinary totalized quotient. No continuous extension, quotient derivative or
 canonical trace at zero is asserted. All resonances and cell endpoints form
 null sets for this mass estimate.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

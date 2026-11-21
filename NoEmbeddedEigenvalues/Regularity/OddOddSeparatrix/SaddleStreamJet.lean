@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleQuadraticJet
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleQuadraticJet
 
 /-! # Canonical first stream jet at a saddle -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

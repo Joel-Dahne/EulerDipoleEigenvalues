@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSynthesis
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSynthesis
 
 /-!
 # Folding signed Fourier data into cosine/sine amplitudes
@@ -9,6 +11,8 @@ The even constant mode has factor one; the odd constant mode is absent.
 The positive-mode product measure retains the frequency density `dξ / (2 * π)`.
 Finite joint mass is proved before these data are used in spectral inversion.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

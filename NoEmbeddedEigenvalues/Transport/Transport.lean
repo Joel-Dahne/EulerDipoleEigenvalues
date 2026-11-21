@@ -1,11 +1,15 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.CanonicalProfile
-import NoEmbeddedEigenvalues.Geometry.SeparatrixArcs.SeparatrixArc
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.CanonicalProfile
+public import NoEmbeddedEigenvalues.Geometry.SeparatrixArcs.SeparatrixArc
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
 
 /-! # Weak transport pairs -/
+
+@[expose] public section
 
 noncomputable section
 

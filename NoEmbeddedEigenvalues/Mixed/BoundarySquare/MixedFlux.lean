@@ -1,21 +1,25 @@
-import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedTraceMass
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialLimit
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedPairing
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedEdgeDefect
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelGradient
-import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedBoundarySquare
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.CanonicalBoundaryForm
-import NoEmbeddedEigenvalues.EvenEven.GradientTraces.EvenEvenBoundary
-import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedVorticityTrace
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedSeparatrix
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotient
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EdgeWindowTransport
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.Melnikov
-import Mathlib.Analysis.SpecialFunctions.Artanh
-import Mathlib.Analysis.BoundedVariation
+module
+
+public import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedTraceMass
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialLimit
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedPairing
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedEdgeDefect
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelGradient
+public import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedBoundarySquare
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.CanonicalBoundaryForm
+public import NoEmbeddedEigenvalues.EvenEven.GradientTraces.EvenEvenBoundary
+public import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedVorticityTrace
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedSeparatrix
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotient
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EdgeWindowTransport
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.Melnikov
+public import Mathlib.Analysis.SpecialFunctions.Artanh
+public import Mathlib.Analysis.BoundedVariation
 
 /-! # Paired mixed-sector flux and its Neumann trace -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -381,7 +385,7 @@ theorem mixed_neumann_trace_memLp_flow {T : ℝ → ℂ} (σ : Bool)
     filter_upwards [ae_restrict_mem measurableSet_Ioo] with a ha
     have hc := Real.cos_pos_of_mem_Ioo (by simpa only [neg_div] using ha)
     exact div_mul_cancel₀ _ (Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr hc).ne')
-  have hM : Measure.QuasiMeasurePreserving (mixedNeumannA σ) volume
+  have hM : QuasiMeasurePreserving (mixedNeumannA σ) volume
       (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2))) := by
     have hc : Continuous (mixedNeumannA σ) := continuous_iff_continuousAt.2
       fun t ↦ (mixedNeumannA_deriv σ t).continuousAt

@@ -1,7 +1,12 @@
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.FlowBoundaryForm
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.CanonicalProfile
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.FlowBoundaryForm
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.CanonicalProfile
 
 /-! # Weighted boundary derivatives in flow time -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderPhysicalWeak
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderPhysicalWeak
 
 /-!
 # Specified ordered weak Cartesian cylinder reconstruction
@@ -8,6 +10,8 @@ the same physical candidates allow negative-Jacobian cofactor transport on
 overlapping charts. Their previously established whole-disk finite norms
 supply local integrability independently at every ordered level.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
 
 /-!
 # Weak planar derivatives of interval H¹ representatives
@@ -10,6 +12,8 @@ Absolute continuity and the complex FTC give integration by parts on compact
 intervals. Fubini then lifts a specified interval derivative to the first
 coordinate of the plane. No endpoint trace convention is used in this lift.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
 
 /-!
 # Cancellation in the differentiated ground-state residual
@@ -11,6 +13,8 @@ remain bounded on the positive cell. Factoring the actual differentiated
 residual in these coordinates removes its apparent poles. This calculation
 is independent of the residual sign certificate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,7 +1,9 @@
-import Mathlib.Analysis.Real.Pi.Bounds
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourier
-import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+module
+
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourier
+public import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # Normalized angular-frequency data
@@ -12,6 +14,8 @@ frequency measure `dξ / (2 * π)`. Signed angular modes retain counting measure
 A jointly measurable representative is chosen explicitly, before product norms
 or a.e. spectral support are asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

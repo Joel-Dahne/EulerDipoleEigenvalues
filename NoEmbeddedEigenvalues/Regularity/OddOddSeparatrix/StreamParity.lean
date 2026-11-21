@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
 
 /-!
 # Pointwise parity of the continuous stream
@@ -9,6 +11,8 @@ The continuous Fourier representative inherits a.e. reflection identities
 everywhere. Only this representative, not raw L² values on the fixed lines,
 is evaluated on the separatrix.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

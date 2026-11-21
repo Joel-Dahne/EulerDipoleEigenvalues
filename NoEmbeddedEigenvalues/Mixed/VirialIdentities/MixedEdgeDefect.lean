@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CosineTraceHardy
+module
+
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CosineTraceHardy
 
 /-! # Pairing quotient trace masses before taking cutoffs -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

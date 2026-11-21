@@ -17,7 +17,11 @@ list every admission in the project, used or not.
 This reads the built `.olean` files, so the result is only as current as the last
 build. Mathlib is not traversed: it cannot depend on project declarations.
 -/
-import Lean
+module
+
+public import Lean
+
+public section
 
 open Lean
 

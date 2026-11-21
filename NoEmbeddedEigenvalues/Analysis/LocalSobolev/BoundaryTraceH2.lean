@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.BoundaryTransportODE
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.BoundaryTransportODE
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-! # Tangential differentiation of the one-sided H² trace -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

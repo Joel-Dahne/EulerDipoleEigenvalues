@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleReconstruction
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleReconstruction
 
 /-!
 # Zero-saddle first mass for a single quarter character
@@ -11,6 +13,8 @@ transport and a finite rotated cover. Character identities are used only on
 the smaller collar where they are supplied. The original L² norm controls
 the interior complement, since the stream level bounds saddle distance below.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedMass
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointL2
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedMass
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointL2
 
 /-!
 # The signed spectral inverse of actual cylinder Fourier data
@@ -9,6 +11,8 @@ normalization. Nonresonance is needed only on the actual allowed support. The
 signed integral reconstruction has finite joint cylinder mass by Parseval;
 no weak differential equation is inferred from these multiplier identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

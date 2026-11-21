@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalWeakPairing
-import Mathlib.Analysis.InnerProductSpace.ProdL2
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalWeakPairing
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
 
 /-!
 # The weighted zonal spectral gap
@@ -12,6 +14,8 @@ Normalize the nonconstant gradients in the Hilbert product of two weighted
 L² spaces and apply Bessel. Only the value expansion is complete; no gradient
 energy expansion or weighted Sobolev approximation is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

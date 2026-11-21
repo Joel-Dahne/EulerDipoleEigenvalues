@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
 
 /-!
 # Interval H¹ regularity of fixed-window parameter integrals
@@ -9,6 +11,8 @@ An L² weak level derivative can be integrated over a fixed transverse window.
 The horizontal ACL fundamental theorem and Fubini give the increment identity;
 continuity retains the original pointwise parameter integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

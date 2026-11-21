@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigInverse
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.FourierL2Integral
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTrigInverse
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.FourierL2Integral
 
 /-!
 # Normalized real-line inverse synthesis of actual cylinder modes
@@ -9,6 +11,8 @@ to cycle frequency identifies the actual integral with the unitary L² inverse.
 In particular, every allowed mode of the bounded spectral candidate has genuine
 real-line L² mass. This is modewise identification, not the whole cylinder PDE.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

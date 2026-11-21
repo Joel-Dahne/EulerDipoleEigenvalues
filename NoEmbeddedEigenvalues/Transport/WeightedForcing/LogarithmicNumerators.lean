@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicRayTransport
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayTraceUniqueness
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.LogarithmicRayTransport
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterRayTraceUniqueness
 
 /-!
 # Logarithmic summation of compatible numerator estimates
@@ -10,6 +12,8 @@ Restriction retains exactly the same derivative and ray-trace representatives.
 The weighted estimates are obtained from the existing a.e. quantitative bounds,
 without differentiating the logarithm or replacing compatible witnesses.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

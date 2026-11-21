@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
 
 /-! # Weighted normal-section estimates for the mixed vorticity trace -/
+
+@[expose] public section
 
 noncomputable section
 

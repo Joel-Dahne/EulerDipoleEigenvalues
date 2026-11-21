@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
+module
+
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
 
 /-!
 # C¹ multipliers for specified Fourier derivatives
@@ -7,6 +9,8 @@ Compact C¹ plane tests can be periodized and paired directly with Fourier
 derivatives. Thus multiplying a lifted Fourier H¹ function by a C¹ coefficient
 needs neither smooth density nor uniform bounds on the coefficient at infinity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

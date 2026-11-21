@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Geometry.Cells.DipoleCalculus
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
-import NoEmbeddedEigenvalues.Symmetry.Sectors
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Geometry.Cells.DipoleCalculus
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.OrbitCoordinates
+public import NoEmbeddedEigenvalues.Symmetry.Sectors
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
 
 /-!
 # Explicit orthonormal saddle charts
@@ -16,6 +18,8 @@ Taylor bounds for the explicit function include derivatives through order three;
 they do not come from formally differentiating a value-only big-O assertion.
 The linearized Hamiltonian on linear polynomials is a separate, mixed-sector input.
 -/
+
+@[expose] public section
 
 noncomputable section
 

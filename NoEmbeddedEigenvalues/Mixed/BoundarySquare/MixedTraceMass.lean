@@ -1,8 +1,12 @@
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedEdgeDefect
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedEdgeDefect
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-! # The trace-mass divergence with a regularized denominator -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

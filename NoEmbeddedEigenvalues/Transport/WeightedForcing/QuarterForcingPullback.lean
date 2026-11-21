@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransportVariable
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterGradient
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SecondNumeratorBulk
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransportVariable
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterGradient
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SecondNumeratorBulk
 
 /-!
 # The specified Cartesian gradient in fixed-time quarter coordinates
@@ -12,6 +14,8 @@ The forward chart has determinant two. Its inverse cofactors are the forward
 coordinate vectors divided by two; the same factor cancels in the weak chain
 rule. All entries are the supplied raw representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

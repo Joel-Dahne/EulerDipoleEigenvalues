@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Inverse
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedMass
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Inverse
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedMass
 
 /-!
 # Finite L² candidate entries for the cylinder jet
@@ -10,6 +12,8 @@ The inverse entries are genuine joint L² functions, even when their spectra are
 not L¹. The zeroth entry is kept pointwise equal to the actual continuous integral.
 This construction alone does not assert any weak derivative identity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

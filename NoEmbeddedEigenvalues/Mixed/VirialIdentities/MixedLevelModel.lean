@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedEdgeDefect
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedEdgeDefect
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
 
 /-! # The paired corner model on exact regular levels -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

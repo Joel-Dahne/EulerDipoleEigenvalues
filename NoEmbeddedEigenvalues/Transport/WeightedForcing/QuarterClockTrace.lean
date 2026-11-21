@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ClockEndpointTrace
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ClockEndpointTrace
 
 /-! # Canonical quarter endpoint traces from physical-time energy -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

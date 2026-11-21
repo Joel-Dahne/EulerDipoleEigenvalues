@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierRoundtrip
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierRoundtrip
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
 
 /-!
 # The forcing identity for the specified L² inverse entries
@@ -8,6 +10,8 @@ Linearity and the normalized Fourier round-trip transfer the spectral multiplier
 equation to an a.e. algebraic equation among the actual candidate entries.
 No weak derivative identity is inferred from this equation.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

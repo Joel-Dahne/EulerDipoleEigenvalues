@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH2
 
 /-!
 # Weak parameter flux with canonical traces
@@ -13,6 +15,8 @@ trace works on every containing rectangle. Rough fixed-window averages retain
 their raw a.e. class, and second differentiation keeps the original continuous
 value function.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

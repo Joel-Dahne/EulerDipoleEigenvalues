@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderWeak
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointForcing
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCartesianWeak
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetFiniteness
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderWeak
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointForcing
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCartesianWeak
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetFiniteness
 
 /-!
 # Weighted physical particular solution from the specified cylinder jet
@@ -18,6 +20,8 @@ constant-Jacobian quarter-chart theorem does not apply directly. Once each
 punctured weak pair is identified, whole-disk local integrability removes the
 center separately at both derivative levels.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

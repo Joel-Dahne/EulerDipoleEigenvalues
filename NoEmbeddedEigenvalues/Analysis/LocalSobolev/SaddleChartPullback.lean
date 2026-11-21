@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleNormalForm
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleNormalForm
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
 
 /-!
 # The affine jet interface in normalized saddle coordinates
@@ -11,6 +13,8 @@ The explicit saddle chart is an affine equivalence of absolute determinant one.
 Its disk pullback mixes the derivative indices and preserves each radial L²
 condition. The chart's assigned values on the separatrix play no role.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

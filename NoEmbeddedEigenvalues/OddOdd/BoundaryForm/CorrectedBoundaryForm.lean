@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundaryForm
-import NoEmbeddedEigenvalues.Symmetry.Sectors
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundaryForm
+public import NoEmbeddedEigenvalues.Symmetry.Sectors
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # The logarithmically corrected boundary form
@@ -10,6 +12,8 @@ The logarithmic coefficient, its integrability, endpoint logarithmic moments,
 and the endpoint-character energy estimates are separated. All endpoint values
 are H¹ traces.
 -/
+
+@[expose] public section
 
 noncomputable section
 

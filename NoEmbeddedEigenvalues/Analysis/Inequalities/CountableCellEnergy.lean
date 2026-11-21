@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Summing uniform L² estimates over disjoint measurable cells
@@ -9,6 +11,8 @@ Blueprint: `lem:countable-cell-energy`.
 Finite global energy follows from a uniform cell bound. Finiteness is proved
 with nonnegative integrals, before returning to Bochner integrals.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1WeakLift
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakParameterIntegral
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterReconstruction
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1WeakLift
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakParameterIntegral
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterReconstruction
 
 /-!
 # Weak level differentiation on moving quarter strips
@@ -14,6 +16,8 @@ contains the midpoint and whose whole rectangle stays inside the strip.
 Rectangular weak primitive identities therefore glue without differentiating
 the moving endpoints or choosing pointwise orbit representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
 
 /-!
 # Bounded weighted mass for the saddle bootstrap
@@ -9,6 +11,8 @@ Periodic box data and reflected positive-cell data supply finite norms on
 bounded lift sets, never on the whole periodic plane. Radius weights are
 weaker than lattice-distance weights at any fixed saddle.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

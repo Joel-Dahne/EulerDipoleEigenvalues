@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
 
 /-!
 # Logarithmic bulk mass on a small quarter strip
@@ -10,6 +12,8 @@ A compact collar inside the open separatrix neighbourhood permits genuine L²
 restriction before coarea. The constant-Jacobian pullback and Fubini sum the
 weighted jet density; finite totalized fiber integrals alone are not used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddGroundResidual
-import NoEmbeddedEigenvalues.Certificates.Tools.Logarithm
-import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddLower
-import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddUpper
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddGroundResidual
+public import NoEmbeddedEigenvalues.Certificates.Tools.Logarithm
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddLower
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddUpper
 
 /-!
 # Odd–odd residual certificate
@@ -10,6 +12,8 @@ The residual sign follows by affine interpolation between the two rational
 logarithm bounds. Their coefficient checks live in `OddOddLower` and
 `OddOddUpper`, independently of the identity for the differentiated ground state.
 -/
+
+@[expose] public section
 
 noncomputable section
 

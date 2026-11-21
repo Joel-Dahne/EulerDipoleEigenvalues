@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedStreamDivision
-import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWindowRestriction
+module
+
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedStreamDivision
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceCompare
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWindowRestriction
 
 /-! # Zero normal traces of the mixed quotient -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

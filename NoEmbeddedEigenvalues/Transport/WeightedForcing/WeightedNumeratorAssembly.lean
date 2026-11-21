@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointNumeratorBounds
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFirstNumerator
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterForcingPullback
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointNumeratorBounds
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedFirstNumerator
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterForcingPullback
 
 /-!
 # Quantitative numerator assembly from a canonical boundary estimate
@@ -11,6 +13,8 @@ The one separate input is the levelwise bound for the first-bulk boundary
 potential by the canonical affine-gradient energy. The fixed-time second
 bulk and the differentiated endpoint-value flux are controlled separately.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

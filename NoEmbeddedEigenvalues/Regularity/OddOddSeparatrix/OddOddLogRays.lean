@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleQuadraticRay
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogSaddle
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleQuadraticRay
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogSaddle
 
 /-!
 # Canonical logarithmic endpoint-ray bounds
@@ -11,6 +13,8 @@ both strong Cartesian H¹ quotients. Their rectangle traces absorb the weaker
 ray weights. The continuous value trace is identified pointwise; gradient traces
 remain canonical transverse ACL traces, not raw ray evaluations.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

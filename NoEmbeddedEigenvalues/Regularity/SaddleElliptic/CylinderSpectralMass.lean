@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSymbol
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSymbol
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Spectral mass for the logarithmic cylinder
@@ -12,6 +14,8 @@ and counting measure on nonnegative angular modes. A separable integrable
 majorant proves this without evaluating an improper integral. Hölder then gives
 L¹ spectral data from the weighted L² norm used by the cylinder inverse.
 -/
+
+@[expose] public section
 
 noncomputable section
 

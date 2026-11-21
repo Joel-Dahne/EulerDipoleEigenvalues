@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalReconstruction
-import NoEmbeddedEigenvalues.Transport.WeightedGains.FirstTransportGain
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalReconstruction
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.FirstTransportGain
 
 /-!
 # Second physical-cell mass for a supplied subcritical quarter character
@@ -13,6 +15,8 @@ whose genuine cell L² norm is supplied by First transport gain. This gives
 v/d² on the entire cell, without assigning raw endpoint values or selecting
 one collar shared by different characters.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

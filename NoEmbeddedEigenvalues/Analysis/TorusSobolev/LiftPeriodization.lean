@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Setup.TorusTransportTests
+module
+
+public import NoEmbeddedEigenvalues.Setup.TorusTransportTests
 
 /-! # Periodization, weak transport, and Sobolev regularity of lifts -/
+
+@[expose] public section
 
 noncomputable section
 

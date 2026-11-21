@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-!
 # Finite norms of a specified weak jet
@@ -9,6 +11,8 @@ Recursive Sobolev membership gives finite norms for the original supplied jet,
 not just for a newly selected family. The word head remains the outer derivative;
 induction peels off the innermost (last) index. No mixed entries are identified.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

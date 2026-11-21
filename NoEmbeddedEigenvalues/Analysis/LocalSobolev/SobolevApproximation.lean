@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PlaneMollifier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PlaneMollifier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 
 /-!
 # Local H² approximation and quadratic stability
@@ -18,6 +20,8 @@ is inside the original domain, not necessarily inside the approximation patch.
 Bounded-coefficient products of two strongly convergent L² families have
 convergent integrals. This stability fact is independent of the density theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

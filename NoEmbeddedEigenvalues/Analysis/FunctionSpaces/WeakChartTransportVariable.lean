@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransport
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransport
 
 /-!
 # Weak transport through variable-Jacobian charts of fixed orientation
@@ -12,6 +14,8 @@ one common orientation factor on both integrals. Local integrability of the spec
 physical entries is supplied separately; it is not inferred from an equality
 of totalized integrals.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

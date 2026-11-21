@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
 
 /-! # Differentiated bounds in the orthonormal saddle chart -/
+
+@[expose] public section
 
 noncomputable section
 

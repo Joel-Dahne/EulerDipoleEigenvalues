@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Virial.VirialQuadratic
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftTorus
+module
+
+public import NoEmbeddedEigenvalues.Virial.VirialQuadratic
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftTorus
 
 /-!
 # Fourier integration by parts for the virial forms
@@ -18,6 +20,8 @@ Main results: skew-symmetry of `D = W·∇ + ½ div W` on `H¹` (`inner_halfDens
 the identity relating the two forms of the virial identity for every `ω` with mean zero
 (`re_virialForm_eq_quadratic`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

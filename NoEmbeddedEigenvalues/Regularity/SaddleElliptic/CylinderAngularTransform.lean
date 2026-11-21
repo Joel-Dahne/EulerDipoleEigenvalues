@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarL2
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarL2
 
 /-!
 # Angular analysis of square-integrable cylinder data
@@ -7,6 +9,8 @@ Probability-Haar coefficients satisfy Parseval on a.e. angular slice. Each
 coefficient is an actual L² function of logarithmic radius, so real-line L²
 Fourier analysis can be applied without assuming pointwise integrability in t.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

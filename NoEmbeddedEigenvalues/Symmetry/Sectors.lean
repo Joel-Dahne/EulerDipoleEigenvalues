@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Symmetry.SymmetryL2
-import Mathlib.Tactic.Module
+module
+
+public import NoEmbeddedEigenvalues.Symmetry.SymmetryL2
+public import Mathlib.Tactic.Module
 
 /-!
 # Parity sectors and reduction
@@ -12,6 +14,8 @@ parities and reconstruction, and preservation of the eigenvalue equation
 The equal-parity sectors split further into rotation characters ±1.
 `true` denotes even parity and `false` denotes odd parity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

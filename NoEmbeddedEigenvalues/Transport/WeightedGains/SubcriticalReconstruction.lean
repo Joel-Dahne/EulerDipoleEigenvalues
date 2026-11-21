@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterSecondMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalQuotientMass
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ExponentialTransportDecay
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterSecondMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalQuotientMass
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ExponentialTransportDecay
 
 /-!
 # Subcritical base-quarter reconstruction and second mass
@@ -13,6 +15,8 @@ norms are the original scalar quotient norm. Transfer a.e. to the original
 raw spatial unknown before applying the second-mass profile criterion.
 No jointly measurable choice of canonical orbit representatives is required.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,10 +1,14 @@
-import NoEmbeddedEigenvalues.Virial.VirialAlgebra
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+module
+
+public import NoEmbeddedEigenvalues.Virial.VirialAlgebra
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 
 /-! # The mixed second-order coefficients and matrix positivity -/
+
+@[expose] public section
 
 noncomputable section
 

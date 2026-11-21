@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCartesianSource
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarAtlas
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransportVariable
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCartesianSource
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarAtlas
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakChartTransportVariable
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPartialLocality
 
 /-!
 # Weak homogeneous reconstruction on the entire punctured plane
@@ -10,6 +12,8 @@ Physical local integrability is supplied independently. Cofactor-weighted tests
 transport each weak pair on a genuine open angular chart. Two overlapping cuts
 then cover every nonzero point, including each chart's omitted ray.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

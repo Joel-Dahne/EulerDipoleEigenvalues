@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalNumerator
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellSecondMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalNumerator
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellSecondMass
 
 /-!
 # Scalar second mass for a subcritical transport character
@@ -11,6 +13,8 @@ local H¹ numerator data and an actual L² first derivative. Resonant
 cancellation and first-derivative second-mass division yield Q/h in L².
 Physical reconstruction and recombination of characters are separate.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

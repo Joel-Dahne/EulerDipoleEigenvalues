@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
+module
+
+public import NoEmbeddedEigenvalues.Geometry.Cells.LiftIntegration
 
 /-!
 # The normal field of the even–even sector
@@ -15,6 +17,8 @@ coefficient `f = Ψ (2 - Ψ) δ² / ρ⁴`, has divergence `f + 1`, and in the f
 identities in `sin` and `cos`, proved by explicit differentiation and
 `linear_combination` with `sin² + cos² = 1` and `ρ² · ρ⁻² = 1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

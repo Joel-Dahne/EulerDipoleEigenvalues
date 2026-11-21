@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
 
 /-!
 # Weak differentiation of actual integrable cylinder synthesis
@@ -10,6 +12,8 @@ Fubini transports its integration-by-parts identity to actual inverse integrals
 when both spectra are integrable. These premises are intended for finite-mass
 spectral truncations; no integrability of an untruncated derivative is inferred.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

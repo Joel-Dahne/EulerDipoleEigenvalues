@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
-import NoEmbeddedEigenvalues.Analysis.Inequalities.Picone
+module
+
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.Picone
 
 /-!
 # Regular currents for mixed Robin comparison
@@ -7,6 +9,8 @@ import NoEmbeddedEigenvalues.Analysis.Inequalities.Picone
 The ground function is positive away from the odd axis. Its classical
 Picone current does not involve any boundary derivative of the test function.
 -/
+
+@[expose] public section
 
 noncomputable section
 

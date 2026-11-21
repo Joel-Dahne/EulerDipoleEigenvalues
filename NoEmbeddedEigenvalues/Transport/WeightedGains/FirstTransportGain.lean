@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SmoothTransportPairs
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SaddleValueInterpolation
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleTransportGain
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SmoothTransportPairs
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SaddleValueInterpolation
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleTransportGain
 
 /-!
 # First transport gain without a saddle-value hypothesis
@@ -13,6 +15,8 @@ quadratic profile. Its generated transport pair has a finite first weighted
 mass. Subtract that pair on the original domain, apply the zero-saddle gain,
 and add back the correction. No elliptic relation or parity is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Function.L2Space
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
 # Estimates along segments
@@ -14,6 +16,8 @@ controls restrictions to curves `b = β(a)` near the line `b = b₀` (the middle
 level traces at the separatrix) and, with `β(u) = h/u` and the weight `1/u`, the corner tails
 (the hyperbola estimate). All estimates are lower integrals, so no integrability is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

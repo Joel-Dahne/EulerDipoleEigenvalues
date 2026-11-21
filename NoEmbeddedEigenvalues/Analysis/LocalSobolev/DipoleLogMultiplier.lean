@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SeparableMultiplier
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
-import Mathlib.Analysis.SpecialFunctions.Integrability.LogMeromorphic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SeparableMultiplier
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevMultipliers
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Log
 
 /-!
 # The physical logarithmic multiplier
@@ -12,6 +14,8 @@ The identity Ψ = 2 cos(a) cos(b) separates the two logarithmic singularities
 in diagonal coordinates, including regular edges and saddle crossings at once.
 Coordinate slicing uses only integrability of log |cos| and ordinary H¹.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

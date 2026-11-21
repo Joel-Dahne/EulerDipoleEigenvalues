@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
 
 /-!
 # Forcing and weighted mass integrability for the odd–odd bulk
@@ -9,6 +11,8 @@ the weighted L² hypothesis to the cell. Ordinary stream-level exhaustion
 passes any integrable bulk density to the full cell integral. Diagonal coordinates
 factor the squared dipole integral into two cosine-square moments.
 -/
+
+@[expose] public section
 
 noncomputable section
 

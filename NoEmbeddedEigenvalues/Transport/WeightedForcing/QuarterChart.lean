@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeakQuarterReconstruction
 
 /-!
 # The open base-quarter orbit chart
@@ -11,6 +13,8 @@ The image is described by ordinary orbit coordinates on the upper regular
 patch. Thus its inverse is smooth without crossing the time cut. The strip
 and the image are both open; the actual flow map is the chart's forward map.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

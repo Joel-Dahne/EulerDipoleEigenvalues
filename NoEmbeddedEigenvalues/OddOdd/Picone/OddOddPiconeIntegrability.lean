@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
 
 /-!
 # Ground-state estimates and positive-truncation Picone integrability
@@ -10,6 +12,8 @@ continuous values. The raw coefficients are bounded on positive truncations.
 The ground state's explicit first derivatives control the divided gradient and
 give a full-level center-current limit without gradient traces.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
 
 /-!
 # Weighted numerator data
@@ -9,6 +11,8 @@ Ray values of the gradient are canonical Sobolev traces. Fiber integrability is
 explicit before any Bochner-defined orbit energy is used. The quantitative bounds
 are exported for logarithmic summation rather than hidden in a qualitative proof.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

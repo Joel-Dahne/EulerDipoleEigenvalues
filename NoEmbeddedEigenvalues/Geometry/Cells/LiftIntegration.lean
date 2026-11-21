@@ -1,7 +1,9 @@
-import Mathlib.Analysis.Calculus.Deriv.Star
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.MeasureTheory.Integral.Prod
-import NoEmbeddedEigenvalues.Virial.VirialAlgebra
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Star
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.MeasureTheory.Integral.Prod
+public import NoEmbeddedEigenvalues.Virial.VirialAlgebra
 
 /-!
 # Integration by parts on the periodic lift
@@ -15,6 +17,8 @@ The basic fact is that `∫ ∂ₓ g = ∫ ∂_y g = 0` for periodic `C¹` funct
 From it, the half-density generator `D` of a periodic `C²` field is
 skew-symmetric for the pairing `⟨u, v⟩ = ∫ u v̄`, and so is `L₀`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-! # Restriction, linearity and uniqueness of specified weak jets -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

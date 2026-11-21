@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
 
 /-!
 # Weighted square integrability in a two-column frame
@@ -10,6 +12,8 @@ of these coefficients transfers H ∈ L² and T/r² ∈ L² to (a*H+b*T)/r ∈ L
 The identity is valid even at totalized zero denominators, and does not
 require measurability of the unweighted time derivative T.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

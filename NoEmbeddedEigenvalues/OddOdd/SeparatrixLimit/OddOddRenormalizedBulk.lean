@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddPotentialMass
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddGradientIntegrability
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddPotentialMass
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddGradientIntegrability
 
 /-!
 # Assembly of the renormalized odd–odd bulk limit
@@ -9,6 +11,8 @@ even-H² gradient integrability, and the finite part of the weighted value mass.
 Ordinary exhaustion combines them without a relation between the forcing and
 the quotient and without exceptional levels.
 -/
+
+@[expose] public section
 
 noncomputable section
 

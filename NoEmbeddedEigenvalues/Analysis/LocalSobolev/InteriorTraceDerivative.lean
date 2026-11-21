@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceFlux
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTraceFlux
 
 /-!
 # Tangential weak differentiation of a continuous interior trace
@@ -10,6 +12,8 @@ regularity has an H¹ trace on each interior line. Its derivative is the canonic
 trace of that specified tangential derivative. Only the indicated ordered mixed
 derivative is used. No continuous gradient or raw gradient-line values occur.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

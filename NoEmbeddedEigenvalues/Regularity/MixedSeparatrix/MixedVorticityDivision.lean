@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalSobolev
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedSeparatrix
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.EvenGradientHardy
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalSobolev
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedSeparatrix
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.EvenGradientHardy
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
 
 /-! # Hardy division of the mixed vorticity
 
@@ -9,6 +11,8 @@ A smooth even cutoff in the cosine confines the Hardy argument to the
 ordinary Sobolev collar. Off the support of the cutoff defect the
 division is harmless; no interior gain for the vorticity is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

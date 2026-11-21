@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedCompletionCurrent
+module
+
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedCompletionCurrent
 
 /-! # Coercivity of the mixed static form -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

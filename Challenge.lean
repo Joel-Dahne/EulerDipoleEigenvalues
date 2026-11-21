@@ -1,4 +1,6 @@
-import Mathlib
+module
+
+public import Mathlib
 
 /-!
 # Challenge: no nonzero embedded eigenvalues for Euler linearized around the dipole
@@ -7,8 +9,8 @@ This file is the statement a reader audits. It imports only Mathlib, defines the
 statement needs, and states the main theorem together with some sanity checks of the
 definitions. Every theorem here is proved in `Solution.lean` from the development in
 `NoEmbeddedEigenvalues/`. The definitions are copied there verbatim. That the copies and the
-statements agree, and which axioms the proofs use, is checked by `just challenge` (and, from
-Lean v4.35, by `lake comparator` with `comparator.json`).
+statements agree, and which axioms the proofs use, is checked by `lake comparator` with
+`comparator.json`. The local check `just challenge` is a quicker, unsandboxed diagnostic.
 
 ## The problem
 
@@ -42,6 +44,8 @@ mean-zero `ω`, `hasL0_char` shows that `HasL0` agrees with the classical `L₀`
 fixes its sign and rules out a degenerate definition), and `zero_eigenvalue` shows that the
 assumption `λ ≠ 0` cannot be dropped.
 -/
+
+@[expose] public section
 
 noncomputable section
 

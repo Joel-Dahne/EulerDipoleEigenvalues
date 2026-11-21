@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderInverse
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderInverse
 
 /-!
 # Canonical stream data for saddle cylinder inversion
@@ -11,6 +13,8 @@ derivative witnesses. Orthogonality identifies its Laplacian with the raw
 vorticity pullback. Finite H² norms and axis parity precede cylinder inversion;
 neither ordinary separatrix regularity nor weighted forcing is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

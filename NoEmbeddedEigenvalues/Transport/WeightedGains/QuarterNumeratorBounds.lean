@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorDerivative
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorDerivative
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
 
 /-!
 # Elementary estimates for quarter-numerator derivatives
@@ -7,6 +9,8 @@ import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterFiberIntegrals
 Complex Cauchy–Schwarz, the two-term norm inequality and continuity of the
 fixed-time level vector are shared by weighted and unweighted numerator bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.HarmonicSaddleJets
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.SaddleStreamCoordinates
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleCoefficient
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.HarmonicSaddleJets
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.SaddleStreamCoordinates
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.SaddleCoefficient
 
 /-!
 # The critical cylinder step for the canonical stream
@@ -11,6 +13,8 @@ jet, first in normalized coordinates and then in the original Cartesian disk.
 Weak uniqueness transfers the bounds to the fixed Fourier stream jet minus the
 classical jet of the same normalized quadratic.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

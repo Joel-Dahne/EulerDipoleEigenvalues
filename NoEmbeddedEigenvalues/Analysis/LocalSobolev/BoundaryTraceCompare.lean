@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
 
 /-!
 # Comparison of one-sided canonical boundary traces
@@ -9,6 +11,8 @@ Restrict to a common inward interval and compare the continuous sections
 before taking their endpoint limits. The map can translate the tangential
 parameter and reverse or translate the normal parameter.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

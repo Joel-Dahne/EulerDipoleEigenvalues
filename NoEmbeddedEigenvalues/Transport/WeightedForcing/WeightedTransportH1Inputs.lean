@@ -1,10 +1,12 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorSecondNorm
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorH2
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellDivision
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Data
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedCharacterQuarterDerivatives
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedQuarterPhysicalH1
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorSecondNorm
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorH2
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellDivision
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Data
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedCharacterQuarterDerivatives
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedQuarterPhysicalH1
 
 /-!
 # Ordinary weighted transport H¹: scalar and spatial interfaces
@@ -22,6 +24,8 @@ identity across the interior quarter seams, not the fact that those seams are nu
 The ordinary route does not assume the stronger logarithmic numerator package,
 whole-edge zero trace or an elliptic relation.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,9 +1,11 @@
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Calculus.ContDiff.Convolution
-import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+module
+
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Analysis.Calculus.ContDiff.Convolution
+public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
 
 /-!
 # Mollification in one variable
@@ -34,6 +36,8 @@ therefore give the first weak derivative. Testing against translated test functi
 proves commutation with existing weak derivatives. Uniqueness of weak derivatives
 identifies the derivative-kernel convolution with mollification of the weak derivative.
 -/
+
+@[expose] public section
 
 noncomputable section
 

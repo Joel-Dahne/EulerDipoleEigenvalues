@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.CanonicalProfile.Melnikov
+module
+
+public import NoEmbeddedEigenvalues.Transport.CanonicalProfile.Melnikov
 
 /-!
 # Limit of the transport pairing at the separatrix
@@ -21,6 +23,8 @@ the raw stream representative outside one additional null set of levels.
 The pairing-limit results and their trace, chart/coarea, Hölder, periodization,
 orbit-comparison and period-bound prerequisites are proved without admissions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

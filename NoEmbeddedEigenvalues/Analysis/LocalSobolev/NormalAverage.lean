@@ -1,15 +1,19 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.MeasureTheory.Measure.WithDensity
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1Estimates
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+public import Mathlib.MeasureTheory.Measure.WithDensity
 
 /-! # Sobolev averaging along normal segments
 
 Use the reparametrization `t = s²` of the normal segment. The factor `2s`
 then cancels the inverse normal Jacobian in the joint squared integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

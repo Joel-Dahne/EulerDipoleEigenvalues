@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.OddOdd.BoundaryForm.BoundaryData
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.BoundaryForm.BoundaryData
 
 /-! # Picone truncations, odd–odd finite parts, and ground-state current -/
+
+@[expose] public section
 
 noncomputable section
 

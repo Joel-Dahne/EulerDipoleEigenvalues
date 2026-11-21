@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceContinuity
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.BoundaryTraceContinuity
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 
 /-! # Convergence of transverse trace pairings -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

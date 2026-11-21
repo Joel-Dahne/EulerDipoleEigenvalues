@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PlaneConvolution
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialMeanValue
-import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.PlaneConvolution
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialMeanValue
+public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 
 /-!
 # Smooth representatives of compact-test harmonic data
@@ -12,6 +14,8 @@ the raw datum with a fixed smooth convolution, jointly a.e. on an open patch.
 Continuous uniqueness glues these representatives on the entire original open
 set; the final a.e. identity uses a countable subcover.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
 
 /-!
 # Smooth transport pairs and their first weighted mass
@@ -10,6 +12,8 @@ For a smooth profile P, set v = -i L₀P/λ and f = P-v. Then v+f=P
 and L₀P=iλv. Each sine coefficient vanishes linearly at every saddle,
 so v/d is controlled by the ordinary gradient of P on a bounded set.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

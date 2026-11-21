@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterTransportProjections
-import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleCellMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterTransportProjections
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.ZeroSaddleCellMass
 
 /-!
 # First transport gain with zero saddle values
@@ -11,6 +13,8 @@ fields into the four complex quarter characters. Project the supplied continuous
 forcing by the same formula. Each character has a full physical-cell norm, so
 pointwise recombination needs neither common collar cutoffs nor endpoint values.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

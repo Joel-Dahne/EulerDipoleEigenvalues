@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterNumeratorBounds
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterNumeratorBounds
 
 /-!
 # Weighted first-gradient energy and fixed-time numerator bounds
@@ -11,6 +13,8 @@ integrable level energy. Pair it with d^s times the orbit-level vector.
 Cauchy–Schwarz then uses the complementary time moment d^(2s-2), rather
 than the inverse-square moment of the unweighted first-gain argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

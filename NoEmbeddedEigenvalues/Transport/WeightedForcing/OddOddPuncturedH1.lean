@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddCellH1
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakDerivativeGluing
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddCellH1
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakDerivativeGluing
 
 /-!
 # Ordinary H¹ on reflected periodic open cell strips
@@ -15,6 +17,8 @@ Weak uniqueness identifies one measurable gradient on every folded strip.
 Finite covers give actual local L² for that gradient through the omitted seams.
 The weak identities are asserted only off the separatrix, not across it.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

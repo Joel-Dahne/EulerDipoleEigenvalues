@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevTorus
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevTorus
 
 /-! # Elliptic regularity and derivatives on the torus -/
+
+@[expose] public section
 
 noncomputable section
 

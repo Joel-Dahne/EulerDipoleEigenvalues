@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddA
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStrips
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddA
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStrips
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Mixed comparison differential reductions and certificates
@@ -12,6 +14,8 @@ coordinates, then differentiate them. No polynomial positivity is used in these
 reductions. The Robin polynomial at zero extends the regular-edge expression;
 it is not computed from raw corner derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 

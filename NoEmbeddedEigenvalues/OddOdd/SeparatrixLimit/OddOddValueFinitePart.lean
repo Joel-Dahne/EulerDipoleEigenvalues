@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddForms
 
 /-!
 # Finite part of the level value mass
@@ -8,6 +10,8 @@ arc values have exponential tails, while the orbit–arc comparison error is
 bounded by a quarter power of the level. Integration on the growing quarter
 window and the leading period asymptotic give the full positive-level limit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

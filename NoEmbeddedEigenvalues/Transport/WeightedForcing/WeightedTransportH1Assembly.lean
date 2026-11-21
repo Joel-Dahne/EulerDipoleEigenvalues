@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Inputs
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportSecondMass
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Inputs
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportSecondMass
 
 /-!
 # Four-character assembly of ordinary weak quarter derivatives
@@ -13,6 +15,8 @@ numerator package. Each character's joint quarter derivatives are restricted to
 one common collar before finite summation; pointwise Fourier recombination then
 returns the original raw field. Physical-cell H¹ gluing is a separate interface.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

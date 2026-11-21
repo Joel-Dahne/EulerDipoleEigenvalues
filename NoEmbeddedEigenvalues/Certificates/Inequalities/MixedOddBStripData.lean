@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.BernsteinMidpoint
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.BernsteinMidpoint
 
 /-!
 # Odd-in-b strip certificate data
@@ -6,6 +8,8 @@ import NoEmbeddedEigenvalues.Certificates.Tools.BernsteinMidpoint
 Reproduce with `python3 scripts/verify_mixed_odd_b.py --lean-strips`.
 The endpoint identities and midpoint signs are checked separately in Lean.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

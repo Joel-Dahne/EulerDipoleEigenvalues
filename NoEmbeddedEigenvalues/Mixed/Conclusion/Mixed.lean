@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedFlux
-import NoEmbeddedEigenvalues.Mixed.Conclusion.StaticCoercivity
-import NoEmbeddedEigenvalues.EvenEven.Conclusion.EvenEven
+module
+
+public import NoEmbeddedEigenvalues.Mixed.BoundarySquare.MixedFlux
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.StaticCoercivity
+public import NoEmbeddedEigenvalues.EvenEven.Conclusion.EvenEven
 
 /-!
 # Mixed exclusion
@@ -10,6 +12,8 @@ The static identity and coercivity force zero stream mass in the positive
 cell. Reflection gives global vanishing, and the Poisson relation recovers
 the vorticity. The opposite mixed sector follows by quarter rotation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

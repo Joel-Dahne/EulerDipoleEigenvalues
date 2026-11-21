@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelTrace
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelTrace
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
 
 /-! # Full level integrals in signed side coordinates -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

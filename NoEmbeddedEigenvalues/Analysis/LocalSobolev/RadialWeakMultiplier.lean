@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
 
 /-!
 # Weak multiplication by radial powers
@@ -12,6 +14,8 @@ Local smooth multiplication fixes the derivative representative. An isolated
 singularity is then removed using local integrability, rather than by selecting
 new Sobolev derivatives on quadrants.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

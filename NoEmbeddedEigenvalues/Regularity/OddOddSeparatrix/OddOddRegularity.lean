@@ -1,11 +1,15 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogarithmic
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddCellGradient
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedElliptic
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleEstimates.OddOddSaddle
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddLogarithmic
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddCellGradient
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedElliptic
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleTaylorJet
 
 /-! # Weighted gradient across an odd–odd cell collar -/
+
+@[expose] public section
 
 noncomputable section
 

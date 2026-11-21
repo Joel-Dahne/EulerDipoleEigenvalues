@@ -1,12 +1,16 @@
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceGagliardo
-import NoEmbeddedEigenvalues.Analysis.Inequalities.SegmentEstimates
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.QuarterOrbits
-import NoEmbeddedEigenvalues.Analysis.Inequalities.OddHardy
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceGagliardo
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.SegmentEstimates
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.QuarterOrbits
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.OddHardy
 
 /-! # Representatives and gradient traces on the separatrix -/
+
+@[expose] public section
 
 noncomputable section
 

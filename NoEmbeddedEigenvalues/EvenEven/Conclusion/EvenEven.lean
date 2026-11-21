@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.CharacterExclusion
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.CharacterExclusion
 
 /-! # Even–even sector exclusion -/
+
+@[expose] public section
 
 noncomputable section
 

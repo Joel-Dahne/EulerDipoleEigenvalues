@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialNonintegrability
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialNonintegrability
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.SaddleStreamJet
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleChartPullback
 
 /-!
 # Uniqueness of the normalized quadratic saddle coefficient
@@ -9,6 +11,8 @@ Two admissible second remainder jets have a difference equal to the classical
 quadratic difference by weak uniqueness. Its xx entry is constant. The genuine
 L² Hessian weight rules out any nonzero constant, even on different disk sizes.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

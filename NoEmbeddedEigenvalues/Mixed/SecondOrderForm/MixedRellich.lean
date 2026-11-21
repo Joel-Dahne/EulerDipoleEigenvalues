@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CosineTraceHardy
-import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CosineTraceHardy
+public import NoEmbeddedEigenvalues.Mixed.Conclusion.SecondOrderCoercivity
 
 /-!
 # The corrected Rellich current for the mixed sector
@@ -8,6 +10,8 @@ Subtract the signed trace-mass current before integration. The combined flux
 has a bounded cosine ratio in its coefficients, and only the Neumann sides
 contribute to the boundary integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

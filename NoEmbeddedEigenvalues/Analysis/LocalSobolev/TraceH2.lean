@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalZeroExtension
 
 /-!
 # Differentiating an H² trace
@@ -10,6 +12,8 @@ Blueprint: `lem:trace-h2`.
 The proof uses ACL slicing and the elementary L² trace estimate. No smooth
 Sobolev approximation or fractional trace estimate is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

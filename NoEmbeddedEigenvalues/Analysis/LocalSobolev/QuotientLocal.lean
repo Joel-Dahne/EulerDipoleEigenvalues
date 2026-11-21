@@ -1,21 +1,23 @@
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransport
-import NoEmbeddedEigenvalues.Transport.WeightedGains.FirstTransportGain
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SecondTransportGain
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.ScaledInteriorEnergy
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.NormalAverage
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DoubleDivision
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevApproximation
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceL2
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransport
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.FirstTransportGain
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SecondTransportGain
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakPointRemoval
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SpecifiedJetLp
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalToGlobal
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.ScaledInteriorEnergy
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.NormalAverage
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DoubleDivision
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevApproximation
 
 /-!
 # Local analytic interfaces for the quotient construction
@@ -28,6 +30,8 @@ usual metric on a product of real normed spaces uses the maximum norm.
 All division identities and parity hypotheses are a.e. identities on their domains.
 The derivative jets in point removal are only required on the punctured disk.
 -/
+
+@[expose] public section
 
 noncomputable section
 

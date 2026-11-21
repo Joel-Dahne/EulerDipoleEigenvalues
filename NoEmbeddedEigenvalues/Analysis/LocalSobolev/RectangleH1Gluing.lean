@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
-import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 
 /-!
 # Ordinary H¹ gluing from two matching canonical traces
@@ -11,6 +13,8 @@ assembly is first proved square integrable on the whole rectangle; the null
 joining line is omitted only in this norm argument. Matching canonical traces
 then give genuine weak identities and the same full-window trace.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -27,12 +31,12 @@ private theorem memLp_rectangle_halves {l r a t b : ℝ} {F : ℝ × ℝ → ℂ
     prod_mono Subset.rfl (Ioo_subset_Ioo hat.le le_rfl)
   have hiL : MemLp ((Ioo l r ×ˢ Ioo a t).indicator F) 2
       (volume.restrict (Ioo l r ×ˢ Ioo a b)) := by
-    rw [memLp_indicator_iff_restrict (measurableSet_Ioo.prod measurableSet_Ioo),
+    rw [memLp_indicator_iff_restrict (measurableSet_Ioo.prod measurableSet_Ioo).nullMeasurableSet,
       Measure.restrict_restrict_of_subset hsL]
     exact hL
   have hiR : MemLp ((Ioo l r ×ˢ Ioo t b).indicator F) 2
       (volume.restrict (Ioo l r ×ˢ Ioo a b)) := by
-    rw [memLp_indicator_iff_restrict (measurableSet_Ioo.prod measurableSet_Ioo),
+    rw [memLp_indicator_iff_restrict (measurableSet_Ioo.prod measurableSet_Ioo).nullMeasurableSet,
       Measure.restrict_restrict_of_subset hsR]
     exact hR
   have hne : ∀ᵐ p : ℝ × ℝ, p.2 ≠ t := by

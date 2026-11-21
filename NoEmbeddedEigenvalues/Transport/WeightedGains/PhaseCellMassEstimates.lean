@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorFactor
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorFactor
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
 
 /-!
 # First-derivative mass estimates on complete phase cells
@@ -11,6 +13,8 @@ numerator data. The inverse divisor factor and cell comparability convert this
 into the energy of the ordinary quotient divided by √h. Values at a resonance
 are immaterial; no H² numerator or derivative of the quotient is required.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

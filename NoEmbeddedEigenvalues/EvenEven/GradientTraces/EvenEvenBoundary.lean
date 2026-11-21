@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.CanonicalBoundaryForm
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.PairingLimit
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.CanonicalBoundaryForm
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.PairingLimit
 
 /-!
 # Boundary profiles and even–even inputs
@@ -24,6 +26,8 @@ regularity, forcing identification and endpoint values independently of the sect
 The normal-field virial is in `NormalVirial.lean`, transport traces are in
 `PairingLimit.lean`, and the exclusion assembly is in `EvenEven.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

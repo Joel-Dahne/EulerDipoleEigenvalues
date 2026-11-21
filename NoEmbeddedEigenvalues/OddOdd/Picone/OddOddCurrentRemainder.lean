@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
 
 /-!
 # The integrated current remainder
@@ -7,6 +9,8 @@ The outward Picone current differs from `-(8/3)(1-B)` by a uniformly
 linear stream-level error. The logarithmic period bound then gives the
 full-level limit, using only bounded continuous values.
 -/
+
+@[expose] public section
 
 noncomputable section
 

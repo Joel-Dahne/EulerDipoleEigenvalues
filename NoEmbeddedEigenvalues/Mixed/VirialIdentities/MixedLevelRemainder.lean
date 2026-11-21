@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelOrbit
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelDensity
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundary
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelOrbit
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelDensity
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundary
 
 /-! # The finite remainder terms on mixed quarter graphs -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -246,12 +250,12 @@ private theorem firstB_bound (r : Fin 3) (q : Plane) : ‖firstB r q‖ ≤ 1 :=
 
 /-- The first-order term in the geometric level density after absorbing
 the time weight by the Dirichlet cosine. -/
-def MixedQuotientData.levelFirstRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
+@[no_expose] def MixedQuotientData.levelFirstRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
   ∑ r, firstB r q * (d.levelField (firstI r) q * conj (d.phi q)).re
 
 /-- The part of the signed gradient other than the leading mass, after
 factoring out the Dirichlet cosine. -/
-def MixedQuotientData.levelGradientRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
+@[no_expose] def MixedQuotientData.levelGradientRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
   ∑ r, gradB r q * (d.levelField (gradI r) q * conj (d.levelField (gradJ r) q)).re
 
 theorem MixedQuotientData.level_first_remainder_eq {ω : L2} (d : MixedQuotientData ω) (q : Plane) :

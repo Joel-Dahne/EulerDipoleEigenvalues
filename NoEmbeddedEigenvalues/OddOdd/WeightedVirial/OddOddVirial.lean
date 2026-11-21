@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.Quotient.OddOddQuotientEquations
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevApproximation
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Quotient.OddOddQuotientEquations
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevApproximation
 
 /-!
 # Weighted odd–odd virial interfaces
@@ -46,6 +48,8 @@ all four integrands are finite bounded-coefficient quadratic forms in the value,
 forcing and two weak gradients; L² product stability passes the smooth identity
 to the supplied representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -1056,8 +1060,14 @@ private theorem green_contDiffAt_norm_sq {f : ℝ × ℝ → ℂ} {p : ℝ × �
     (hf : ContDiffAt ℝ 1 f p) : ContDiffAt ℝ 1 (fun q ↦ ‖f q‖ ^ 2) p :=
   hf.norm_sq ℂ
 
+private theorem green_contDiffAt_conj {f : ℝ × ℝ → ℂ} {p : ℝ × ℝ}
+    (hf : ContDiffAt ℝ 1 f p) : ContDiffAt ℝ 1 (fun q ↦ starRingEnd ℂ (f q)) p := by
+  have h := Complex.conjCLE.contDiff.contDiffAt.comp p hf
+  change ContDiffAt ℝ 1 (fun q ↦ Complex.conjCLE (f q)) p at h
+  simpa only [Complex.conjCLE_apply] using h
+
 attribute [local fun_prop] green_contDiffAt_re green_contDiffAt_im
-  green_contDiffAt_ofReal green_contDiffAt_norm_sq
+  green_contDiffAt_ofReal green_contDiffAt_norm_sq green_contDiffAt_conj
 
 /-- The classical Green identity integrated against an annular cutoff.
     This is the smooth endpoint for local H² approximation; compact support is

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
-import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
-import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
 
 /-!
 # Weighted traces in a Cartesian cone
@@ -14,6 +16,8 @@ the transverse derivative energy weight r⁻². Continuity identifies the raw
 interior ray values with canonical ACL traces; no raw Sobolev ray assignment
 is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

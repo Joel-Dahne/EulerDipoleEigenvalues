@@ -1,6 +1,9 @@
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
-import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.MeasureTheory.Measure.Prod
+module
+
+public import Mathlib.Analysis.SpecialFunctions.PolarCoord
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.Fourier.AddCircle
+public import Mathlib.MeasureTheory.Measure.Prod
 
 /-!
 # Joint logarithmic-polar measure transport
@@ -9,6 +12,8 @@ The real-angle chart is injective on the open angular strip. Its nonzero
 Jacobian transports planar a.e. identities jointly, before any angular slicing.
 The circle uses probability Haar measure, not angular length measure.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

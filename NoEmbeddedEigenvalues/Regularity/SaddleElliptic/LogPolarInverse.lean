@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderForcing
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderForcing
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-!
 # Inverse logarithmic-polar coordinates on the punctured plane
@@ -8,6 +10,8 @@ The angle is circle-valued. Thus these coordinates are continuous at every
 nonzero point, including both sides of any chosen real-angle seam. The two
 round-trips are pointwise; null-set transport is joint in both variables.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

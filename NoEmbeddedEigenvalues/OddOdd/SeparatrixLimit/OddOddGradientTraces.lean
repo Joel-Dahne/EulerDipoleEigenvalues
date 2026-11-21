@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
 
 /-!
 # Even H² quotient gradient traces
@@ -8,6 +10,8 @@ the even–even stream traces. The constant Fourier mode does not change the
 gradient or arc derivatives. A bounded-value Cauchy–Schwarz estimate handles
 the first-order term, retaining one exceptional set after rescaling Ψ = 2h.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

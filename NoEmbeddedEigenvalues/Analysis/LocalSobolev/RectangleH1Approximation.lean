@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RectangleH1Gluing
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ReflectedTraces
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevApproximation
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RectangleH1Gluing
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ReflectedTraces
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevApproximation
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
 
 /-!
 # Smooth approximation with zero trace on one side of a square
@@ -11,6 +13,8 @@ Extend across the four sides by reflection, imposing the odd character only
 on the zero-trace side. Approximate on an interior patch and project the
 smooth functions onto that character.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

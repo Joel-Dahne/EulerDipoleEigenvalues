@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.PeriodicOrbits
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
 
 /-!
 # Scalar data for quarter-orbit division
@@ -7,6 +9,8 @@ import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
 The signed phase, actual complex divisor, orbit numerator, and compatible local
 interval Sobolev data. All four quarter characters use the same definitions.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

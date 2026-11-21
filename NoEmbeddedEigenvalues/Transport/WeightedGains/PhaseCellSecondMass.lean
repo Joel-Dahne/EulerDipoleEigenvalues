@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorFactor
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterPhaseCells
-import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
-import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorFactor
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalLinearHardy
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterPhaseCells
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
 
 /-!
 # Second mass division using only the first numerator derivative
@@ -16,6 +18,8 @@ establishes actual L² membership of U. The bound |R|/h ≤ B² then controls
 only local H¹, resonant cancellation and global L² of N₁, not a second
 numerator derivative, a derivative of the quotient or a trace at zero.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

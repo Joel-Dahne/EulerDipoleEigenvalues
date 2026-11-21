@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedEndpointValues
-import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalNumerator
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitHalfNumeratorDerivative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedEndpointValues
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.SubcriticalNumerator
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitHalfNumeratorDerivative
 
 /-!
 # First derivatives of the weighted full and half numerators
@@ -14,6 +16,8 @@ L² energy. Both derivatives have one collar and one integrable majorant for
 all real frequencies; the half numerator has no moving midpoint term.
 No second numerator derivative or gradient-ray value is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import Mathlib.Geometry.Manifold.PartitionOfUnity
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-! # Finite sums in local Sobolev spaces -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

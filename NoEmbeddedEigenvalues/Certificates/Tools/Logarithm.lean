@@ -1,4 +1,6 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Rational logarithm bounds for certificates
@@ -6,6 +8,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 The remainder estimates compare the tails of the logarithm series to geometric
 series, without expanding the finite sums into explicit coefficients.
 -/
+
+@[expose] public section
 
 noncomputable section
 

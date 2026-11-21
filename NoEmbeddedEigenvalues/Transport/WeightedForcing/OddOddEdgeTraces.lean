@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ReflectedTraces
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ReflectedTraces
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.PeriodicWeightedGradient
 
 /-!
 # Odd–odd canonical traces on adjacent cell sides
@@ -13,6 +15,8 @@ torus symmetry, modulo periods. Transport ordinary H¹ before constructing the
 opposite-side trace, then identify it with minus the original canonical trace.
 Zero therefore gives matching traces, without evaluating the raw lift on an edge.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

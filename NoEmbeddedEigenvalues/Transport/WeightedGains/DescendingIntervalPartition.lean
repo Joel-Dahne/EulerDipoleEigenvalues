@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
 
 /-!
 # Descending interval partitions
@@ -8,6 +10,8 @@ Blueprint: `lem:complete-phase-cells`.
 Consecutive cells of a strictly decreasing positive sequence accumulating at
 zero are disjoint and cover the interval up to the countable set of endpoints.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

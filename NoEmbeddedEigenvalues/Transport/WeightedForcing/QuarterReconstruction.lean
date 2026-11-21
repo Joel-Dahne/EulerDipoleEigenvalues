@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedNumeratorData
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedNumeratorData
 
 /-!
 # Summation of recentered quarter reconstructions
@@ -15,6 +17,8 @@ mass and the geometric level-vector bound.
 Blueprint: `lem:quarter-fiber-summation`, `lem:quarter-strip-summation`,
 `lem:quarter-forcing-level-gain`, `lem:quarter-reconstruction-level-gain`.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

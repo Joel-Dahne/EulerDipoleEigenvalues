@@ -1,8 +1,12 @@
-import Mathlib.Analysis.ODE.ExistUnique
-import NoEmbeddedEigenvalues.Geometry.Cells.Cells
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.Period
+module
+
+public import Mathlib.Analysis.ODE.ExistUnique
+public import NoEmbeddedEigenvalues.Geometry.Cells.Cells
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.Period
 
 /-! # Global existence and the dipole flow -/
+
+@[expose] public section
 
 noncomputable section
 

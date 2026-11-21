@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
 
 /-!
 # Multipliers for local L²
@@ -9,6 +11,8 @@ At order zero no derivatives of the coefficient are needed. Measurable bounded
 coefficients preserve L²; continuous coefficients are bounded on each compact
 localization. Neither assertion gives finite norms on the whole periodic lift.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

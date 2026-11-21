@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderParticular
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.HarmonicComparison
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralForcing
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSynthesis
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderParticular
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.HarmonicComparison
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSpectralForcing
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSynthesis
 
 /-!
 # Weighted cylinder inverse interface
@@ -11,6 +13,8 @@ this is the cylinder weight r^(2-a) F. Parity uses `paritySign`: true is even.
 The harmonic remainder is specified by smoothness, the classical Laplace equation
 and forbidden Taylor jets; no convergence assertion for an infinite series is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

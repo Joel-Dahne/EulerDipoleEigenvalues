@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierRelations
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Inverse
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierRelations
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Inverse
 
 /-!
 # Joint normalized cylinder analysis as a linear isometry
@@ -8,6 +10,8 @@ The map acts on genuine L² classes, with probability Haar in angle and
 `dξ / (2 * π)` in frequency. Its chosen raw spectral representative is exactly
 the previously specified normalized Fourier data, up to joint a.e. equality.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -45,7 +49,7 @@ private def cylinderFourierLinear :
     exact hd
 
 /-- Analysis into the normalized joint signed spectrum, on L² classes. -/
-def cylinderFourierL2 :
+@[no_expose] def cylinderFourierL2 :
     Lp ℂ 2 logCylinderMeasure →ₗᵢ[ℂ] Lp ℂ 2 cylinderFourierMeasure where
   toLinearMap := cylinderFourierLinear
   norm_map' f := by

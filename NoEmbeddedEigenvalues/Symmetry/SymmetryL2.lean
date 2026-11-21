@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Setup.Derivatives
-import Mathlib.MeasureTheory.Group.Prod
+module
+
+public import NoEmbeddedEigenvalues.Setup.Derivatives
+public import Mathlib.MeasureTheory.Group.Prod
 
 /-!
 # Symmetries on L²
@@ -12,6 +14,8 @@ and the pullback identities used by `lem:rotation-characters`).
 A `CharacterSymmetry` collects what this needs: how the map acts on characters and on
 `L₀` of characters.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,8 @@
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.AnglePeriodization
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
+module
+
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.AnglePeriodization
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
 
 /-!
 # The transversal mollifier
@@ -80,6 +82,8 @@ back to the cell. Since the angle jumps across its cut, `∂ⱼθ` is replaced b
 band-supported cylinder data. For the `H¹` convergence the limit is identified with
 `∇(χ(Ψ/2) u)` pointwise off the cut by the classical chain rule `chainRule_actionAngle`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -331,9 +335,9 @@ private theorem memLp_actionReconstruct {F : ℝ × ℝ → ℂ}
     MemLp (actionReconstruct F) 2 volume ∧
       eLpNorm (actionReconstruct F) 2 volume =
         eLpNorm F 2 (actionMeasure.withDensity actionWeight) := by
-  refine ⟨(memLp_indicator_iff_restrict measurableSet_cellSquare).mpr
+  refine ⟨(memLp_indicator_iff_restrict measurableSet_cellSquare.nullMeasurableSet).mpr
     (hF.comp_measurePreserving measurePreserving_actionCoordinates), ?_⟩
-  rw [actionReconstruct, eLpNorm_indicator_eq_eLpNorm_restrict measurableSet_cellSquare]
+  rw [actionReconstruct, eLpNorm_indicator_eq_eLpNorm_restrict measurableSet_cellSquare.nullMeasurableSet]
   exact eLpNorm_comp_measurePreserving hF.aestronglyMeasurable
     measurePreserving_actionCoordinates
 
@@ -606,7 +610,7 @@ theorem memLp_cutoff_actionInput {χ : ℝ → ℝ} (hχ : ContDiff ℝ ∞ χ)
     · have h01 : q.1 ∉ Ioo (0 : ℝ) 1 := by simpa [S] using hq
       have hz : χ q.1 = 0 := image_eq_zero_of_notMem_tsupport (fun hs ↦ h01 (hχs hs))
       simp [hq, F, hz]
-  have hi := (memLp_indicator_iff_restrict hS).mpr hmem
+  have hi := (memLp_indicator_iff_restrict hS.nullMeasurableSet).mpr hmem
   rwa [heq] at hi
 
 private theorem eLpNorm_actionInput_eq {χ : ℝ → ℝ} (hχs : tsupport χ ⊆ Ioo 0 1)
@@ -627,7 +631,7 @@ private theorem eLpNorm_actionInput_eq {χ : ℝ → ℝ} (hχs : tsupport χ �
   calc
     _ = eLpNorm (S.indicator F) 2 cylinderMeasure := by rw [heq]
     _ = eLpNorm F 2 actionMeasure := by
-      rw [eLpNorm_indicator_eq_eLpNorm_restrict hS, cylinder_restrict_level]
+      rw [eLpNorm_indicator_eq_eLpNorm_restrict hS.nullMeasurableSet, cylinder_restrict_level]
     _ = _ := by
       apply eLpNorm_congr_ae
       filter_upwards [ae_restrict_mem measurableSet_actionRectangle] with q hq
@@ -1769,7 +1773,7 @@ private theorem angleGrad_curl_zero {p : ℝ × ℝ} (hp : p ∈ puncturedCell)
 
 /-- The rotated smooth angular gradient, used as the dual coefficient for the level derivative.
 The coefficients are complex-valued for compatibility with the weak derivative pairing. -/
-def levelDualCoeff (j : Fin 2) (p : ℝ × ℝ) : ℂ :=
+@[no_expose] def levelDualCoeff (j : Fin 2) (p : ℝ × ℝ) : ℂ :=
   if j = 0 then angleGrad 1 p else -angleGrad 0 p
 
 theorem contDiffOn_levelDualCoeff (j : Fin 2) :

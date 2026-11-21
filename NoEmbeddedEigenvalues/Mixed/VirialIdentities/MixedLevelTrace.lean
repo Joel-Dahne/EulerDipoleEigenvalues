@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelModel
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelModel
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
 
 /-!
 # Sobolev traces on the moving quarter graphs
@@ -9,6 +11,8 @@ all normal positions. For a field with a second normal derivative, the
 same estimate applied to its first normal derivative controls the
 increment divided by the tangential cosine.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

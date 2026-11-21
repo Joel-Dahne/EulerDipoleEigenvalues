@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterForcing
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterForcing
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
 
 /-!
 # The physical-time derivative of the first fixed-time level contraction
@@ -10,6 +12,8 @@ Only the singleton row has a distance weight; ordered Hessian entries need their
 standing unweighted L2 norms. The formula and its norm are separate from the
 weak differentiation identity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

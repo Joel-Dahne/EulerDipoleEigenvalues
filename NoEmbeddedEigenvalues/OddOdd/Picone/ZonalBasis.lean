@@ -1,11 +1,13 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalModes
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Function.ContinuousMapDense
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Topology.ContinuousMap.StoneWeierstrass
-import Mathlib.Topology.Order.ProjIcc
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalModes
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Function.ContinuousMapDense
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
+public import Mathlib.Topology.Order.ProjIcc
 
 /-!
 # The weighted product zonal basis
@@ -19,6 +21,8 @@ weighted L². This is separate from all weak derivative and weighted Sobolev
 questions. `zonalBasis_repr` and `hasSum_sq_zonalCoeff` identify the Hilbert
 coordinates with the raw weighted integrals, including their normalization.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -163,7 +167,7 @@ abbrev ZonalInterval := Icc (-Real.pi / 2) (Real.pi / 2)
 
 abbrev ZonalCompactSquare := ZonalInterval × ZonalInterval
 
-private theorem zonalInterval_le : -Real.pi / 2 ≤ Real.pi / 2 := by linarith [Real.pi_pos]
+theorem zonalInterval_le : -Real.pi / 2 ≤ Real.pi / 2 := by linarith [Real.pi_pos]
 
 /-- Coordinatewise retraction onto the compact square. -/
 def zonalClamp : C(ℝ × ℝ, ZonalCompactSquare) :=

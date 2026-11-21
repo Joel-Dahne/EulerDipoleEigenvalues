@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalH1
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
 
 /-!
 # Bulk transport in the diagonal trace charts
@@ -11,6 +13,8 @@ The same specified Cartesian weak gradient yields both chart partials and
 the diagonal-coordinate form of the transport equation. No boundary
 derivative is taken here.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -36,7 +40,8 @@ theorem HasWeakL0On.diagonalTraceChart_partials {U : Set (ℝ × ℝ)} (hU : IsO
     ((hx.hasWeakL0On hU hy).ae_eq hU hL)
   let C := diagonalTraceChart j
   have hpre : P ∘ C =ᵐ[volume.restrict (C ⁻¹' U)] R ∘ C :=
-    ((quasiMeasurePreserving_diagonalTraceChart j).restrict (mapsTo_preimage C U)).ae he
+    (QuasiMeasurePreserving.restrict (quasiMeasurePreserving_diagonalTraceChart j)
+      (mapsTo_preimage C U)).ae he
   let S := fun p ↦ X p + Y p
   let D := fun p ↦ X p - Y p
   have eq (q : ℝ × ℝ) : P (diagInv q) =

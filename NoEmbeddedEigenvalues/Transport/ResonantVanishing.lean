@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
-import NoEmbeddedEigenvalues.Analysis.OrbitRestriction.OrbitRestriction
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
+public import NoEmbeddedEigenvalues.Analysis.OrbitRestriction.OrbitRestriction
 
 /-!
 # Orbitwise transport and resonant vanishing
@@ -23,6 +25,8 @@ At those levels periodic uniqueness transfers the forcing's quarter-period chara
 to the representatives; no planar a.e. character hypothesis on `v` is needed. The results,
 including the orbit-restriction prerequisite `lem:coarea`, have no admitted dependencies.
 -/
+
+@[expose] public section
 
 noncomputable section
 

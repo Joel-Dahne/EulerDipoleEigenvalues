@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
 
 /-!
 # Actual integrals and L² sections on a moving quarter strip
@@ -10,6 +12,8 @@ cell. Zero extension of a moving strip then permits ordinary product-measure
 Fubini. In particular, no global measurability of the original representative
 and no unproved fiber integrability are needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -45,12 +49,12 @@ theorem memLp_quarterStrip_sections {b : ℝ} {F : ℝ × ℝ → ℂ}
     ∀ᵐ h ∂(volume.restrict (Ioo 0 b)),
       MemLp (fun t ↦ F (h, t)) 2
         (volume.restrict (Ioo (-eighthPeriod h) (eighthPeriod h))) := by
-  have hI := (memLp_indicator_iff_restrict (measurableSet_quarterOrbitStrip b)).2 hF
+  have hI := (memLp_indicator_iff_restrict (measurableSet_quarterOrbitStrip b).nullMeasurableSet).2 hF
   have hR := hI.mono_measure
     (Measure.restrict_le_self (s := Ioo 0 b ×ˢ (univ : Set ℝ)))
   filter_upwards [ae_memLp_sections hR, ae_restrict_mem measurableSet_Ioo] with h hh hhI
   rw [Measure.restrict_univ, quarterStrip_indicator_section hhI] at hh
-  exact (memLp_indicator_iff_restrict measurableSet_Ioo).1 hh
+  exact (memLp_indicator_iff_restrict (measurableSet_Ioo.nullMeasurableSet (μ := volume))).1 hh
 
 /-- Fubini on a zero-extended moving strip supplies an integrable level mass
 and genuine integrability on almost every time fiber. -/

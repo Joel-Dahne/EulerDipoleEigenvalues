@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddEdgeTraces
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddPuncturedH1
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.RegularEdgeCover
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SaddlePointRemoval
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddEdgeTraces
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OddOddPuncturedH1
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.RegularEdgeCover
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SaddlePointRemoval
 
 /-!
 # Ordinary odd–odd H¹ on the whole lifted collar
@@ -14,6 +16,8 @@ finite-norm candidate. Isolated-point removal uses actual value and gradient
 norms on whole punctured neighborhoods. No logarithmic forcing or weighted
 vorticity gradient is used. Global canonical trace compatibility is separate.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

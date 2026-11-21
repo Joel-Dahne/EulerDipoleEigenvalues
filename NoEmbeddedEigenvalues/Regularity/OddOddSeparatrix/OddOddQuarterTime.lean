@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.QuarterTime
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddQuarter
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.QuarterTime
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddQuarter
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SaddleTransportWeights
 
 /-!
 # Saddle-weighted time derivatives on the base quarter
@@ -11,6 +13,8 @@ The weak time identity is independent of odd–odd saddle regularity.
 Only its stronger weighted L² bound uses saddle mass and forcing weights.
 The same raw spatial vorticity pullback carries both coordinate derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

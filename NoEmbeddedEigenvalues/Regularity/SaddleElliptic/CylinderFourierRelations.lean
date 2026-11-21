@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierData
 
 /-!
 # Representative-compatible linearity of normalized cylinder Fourier data
@@ -7,6 +9,8 @@ Joint cylinder a.e. identities are transported to angular slices before taking
 coefficients. Relations then pass through the real-line L² Fourier classes,
 and only afterwards to the normalized, jointly measurable spectral representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

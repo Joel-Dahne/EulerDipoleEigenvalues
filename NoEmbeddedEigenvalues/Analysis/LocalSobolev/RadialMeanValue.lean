@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialMeanKernel
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakLaplacian
-import Mathlib.Analysis.Complex.Harmonic.MeanValue
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialMeanKernel
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakLaplacian
+public import Mathlib.Analysis.Complex.Harmonic.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.PolarCoord
 
 /-!
 # A fixed radial smoothing reproduces a classical harmonic function
@@ -11,6 +13,8 @@ rectangle before the angular mean-value identity is applied. Complex Euclidean
 harmonicity is bridged to the actual Cartesian coordinate trace; no inner
 product is placed on the product maximum-norm carrier.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

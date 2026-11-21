@@ -1,7 +1,9 @@
-import Mathlib.Analysis.SpecialFunctions.Artanh
-import Mathlib.MeasureTheory.Function.JacobianOneDim
-import NoEmbeddedEigenvalues.Geometry.SeparatrixArcs.SeparatrixArc
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundaryForm
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Artanh
+public import Mathlib.MeasureTheory.Function.JacobianOneDim
+public import NoEmbeddedEigenvalues.Geometry.SeparatrixArcs.SeparatrixArc
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundaryForm
 
 /-!
 # The boundary form in flow time
@@ -17,6 +19,8 @@ The substitution is Mathlib's change of variables for the injective map `tanh`,
 which needs no integrability; integrability is only used to split the second
 integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 

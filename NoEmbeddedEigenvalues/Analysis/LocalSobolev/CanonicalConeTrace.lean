@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedConeTrace
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedConeTrace
 
 /-!
 # Canonical weighted traces without continuous planar representatives
@@ -9,6 +11,8 @@ The trace is fixed by interior continuous-section germs, not raw ray values.
 A radius-sized transverse rectangle controls its r⁻¹ mass by F/r and the
 unweighted transverse weak derivative. Disjoint bands then sum actual energies.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

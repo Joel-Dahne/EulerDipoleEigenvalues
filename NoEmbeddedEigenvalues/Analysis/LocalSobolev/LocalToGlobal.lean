@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
-import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
+module
+
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+public import NoEmbeddedEigenvalues.Analysis.TorusSobolev.LiftPeriodization
 
 /-!
 # From local Sobolev functions to the torus
@@ -17,6 +19,8 @@ Blueprint: `lem:local-to-global`.
   periodization of `χu` lies in `Hᵏ(𝕋²)`. Injectivity of the projection on `U` is used only to
   identify the lift with `χu` on `U`: no other translate of the support meets `U`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

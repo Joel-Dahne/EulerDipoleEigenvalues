@@ -1,10 +1,14 @@
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripCheck
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripPower
-import Mathlib.Tactic.IntervalCases
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripCheck
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBStripPower
+public import Mathlib.Tactic.IntervalCases
 
 /-!
 # The twenty mixed odd-in-b endpoint signs
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

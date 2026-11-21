@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import Mathlib.Geometry.Manifold.PartitionOfUnity
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-!
 # Locality of a specified weak partial derivative
@@ -10,6 +12,8 @@ A finite smooth partition of a test function combines local weak identities.
 Both the function and its specified derivative are unchanged between patches.
 No square-integrability or Sobolev density assumption is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

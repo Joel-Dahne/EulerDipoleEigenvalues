@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalModes
-import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalModes
+public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Endpoint cutoffs for weak zonal testing
@@ -12,6 +14,8 @@ zero at every interior point. Combined with the endpoint factor in mode
 derivatives, this permits dominated convergence against weighted L¹ values.
 No boundary traces or approximation in a weighted Sobolev norm are involved.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

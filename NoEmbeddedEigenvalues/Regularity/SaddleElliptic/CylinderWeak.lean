@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedInverse
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCandidateEquation
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Weak
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderSignedInverse
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJetCandidates
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderCandidateEquation
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderLift
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderL2Weak
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalJets
 
 /-!
 # Weak inversion on the full logarithmic cylinder
@@ -13,6 +15,8 @@ are imposed on the entire real-angle lift, not merely on a strip with a null
 seam omitted. Derivative entries live on the angular circle and have finite
 joint L² norms. The zeroth entry is the actual signed integral reconstruction.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

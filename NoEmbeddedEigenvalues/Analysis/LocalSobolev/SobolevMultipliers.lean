@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
 
 /-!
 # Local smooth Sobolev multipliers
@@ -8,6 +10,8 @@ Blueprint: `lem:sobolev-local-multiplier`.
 A compact cutoff equal to one near each point reduces local smooth multiplication
 to cutoff localization. Inverse factors are used only on their nonzero open set.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AffineJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeightedTraces
 
 /-!
 # Ordinary H¹ in the diagonal trace charts
@@ -11,6 +13,8 @@ The diagonal map has absolute determinant two, not one. Its actual L²
 pullback and the sum/difference weak chain rules supply ordinary H¹.
 The other trace chart swaps the two parameter coordinates.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -28,7 +32,7 @@ theorem isOpenMap_diagonalTraceChart (j : Fin 2) : IsOpenMap (diagonalTraceChart
 
 /-- The diagonal map preserves null sets in the direction needed for raw lifts. -/
 theorem quasiMeasurePreserving_diagonalTraceChart (j : Fin 2) :
-    Measure.QuasiMeasurePreserving (diagonalTraceChart j) volume volume := by
+    QuasiMeasurePreserving (diagonalTraceChart j) volume volume := by
   have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]
     infer_instance

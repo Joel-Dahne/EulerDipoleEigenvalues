@@ -1,9 +1,13 @@
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedDividedEquation
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedVorticityDivision
-import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotientTraces
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
+module
+
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedDividedEquation
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedVorticityDivision
+public import NoEmbeddedEigenvalues.Regularity.MixedSeparatrix.MixedQuotientTraces
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
 
 /-! # Construction of the mixed quotient on the closed cell -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

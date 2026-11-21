@@ -1,7 +1,11 @@
-import Mathlib.Analysis.SpecialFunctions.NonIntegrable
-import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundary
+module
+
+public import Mathlib.Analysis.SpecialFunctions.NonIntegrable
+public import NoEmbeddedEigenvalues.EvenEven.BoundaryPositivity.WeightedBoundary
 
 /-! # Interval integral exhaustion and L² endpoint bounds -/
+
+@[expose] public section
 
 noncomputable section
 

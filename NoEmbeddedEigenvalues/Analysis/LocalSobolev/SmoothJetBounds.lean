@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleNormalForm
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleNormalForm
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
 
 /-!
 # Finite-order bounds from vanishing classical jets
@@ -9,6 +11,8 @@ Bounds for each derivative are obtained by repeated mean-value inequalities,
 not by differentiating a value-only big-O estimate. The intermediate balls use
 the product norm; Euclidean radius is used only after the norm comparison.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

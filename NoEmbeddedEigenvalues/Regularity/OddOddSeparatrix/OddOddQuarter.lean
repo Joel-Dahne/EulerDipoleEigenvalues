@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddMidpoint
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddMidpoint
 
 /-!
 # The base-quarter weak level derivative of odd–odd vorticity
@@ -10,6 +12,8 @@ The weighted forcing energy controls the forcing-level derivative on a smaller
 strip. Their linear combination differentiates the actual vorticity pullback;
 no raw representative is evaluated on a distinguished orbit.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

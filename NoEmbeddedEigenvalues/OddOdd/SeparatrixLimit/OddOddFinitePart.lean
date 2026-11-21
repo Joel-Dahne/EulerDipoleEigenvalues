@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
-import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddBulkIntegrability
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.WeightedVirial.OddOddVirial
+public import NoEmbeddedEigenvalues.OddOdd.SeparatrixLimit.OddOddBulkIntegrability
 
 /-!
 # Scalar finite part of the odd–odd bulk coefficient
@@ -8,6 +10,8 @@ The annular normal-field divergence gives the exact truncated coefficient
 integral. Removing the center and then using the leading period asymptotic
 isolates the logarithmic finite part.
 -/
+
+@[expose] public section
 
 noncomputable section
 

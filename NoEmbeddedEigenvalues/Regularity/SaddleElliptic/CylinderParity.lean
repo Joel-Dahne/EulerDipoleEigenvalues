@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderData
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderData
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.AxisReflectionJets
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
 
 /-!
 # Parity of the cylinder forcing and Taylor jets
@@ -11,6 +13,8 @@ identities hold at the center by continuity. A nonzero ordered jet must have the
 prescribed sign in each coordinate, so its degree is allowed. Harmonicity is not
 needed for this finite-jet assertion.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddQuarterTime
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterInverseFrame
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterGradient
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakDerivativeGluing
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddQuarterTime
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterInverseFrame
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterGradient
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.WeakDerivativeGluing
 
 /-!
 # Specified separatrix gradient and inverse-frame data
@@ -15,6 +17,8 @@ reconstruct weighted spatial derivatives on the quarter image. Weak uniqueness
 transfers this weight to the same specified ordinary gradient on the overlap.
 Character decomposition removes the auxiliary rotation-character premise.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
+module
+
+public import NoEmbeddedEigenvalues.Mixed.SecondOrderForm.MixedRellich
 
 /-! # The combined current for mixed square completion
 
@@ -6,6 +8,8 @@ Integrate the weighted Rellich term and the scalar drift together. The current
 uses the coefficients `cos²(a) W`, whose first derivatives are bounded even
 at the corners. The normal flux is evaluated on closed ACL sections.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

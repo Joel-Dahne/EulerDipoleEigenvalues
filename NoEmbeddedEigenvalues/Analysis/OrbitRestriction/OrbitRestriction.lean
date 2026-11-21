@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TransversalMollifier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ACLSlicing
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
 
 /-!
 # Restriction to almost every orbit
@@ -21,6 +23,8 @@ If `L₀g = Lg` weakly on an open set containing an orbit annulus, then on almos
   pointwise periodic pullback. Rescaling `θ = t / S(h)` gives flow time.
 * Countably many bands exhaust `(h₁, h₂)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -169,11 +173,9 @@ theorem ae_orbit_restriction_band {U : Set (ℝ × ℝ)} {g Lg : ℝ × ℝ → 
     have hc1 : Continuous fun θ ↦ F (θ + 1) := hcF.comp (continuous_id.add continuous_const)
     exact congrFun ((hc1.ae_eq_iff_eq volume hcF).1 hae) θ
   -- Rescale to flow time.
-  have hq : Measure.QuasiMeasurePreserving (fun t : ℝ ↦ t / S) volume volume := by
-    have := Measure.quasiMeasurePreserving_smul (volume : Measure ℝ) (inv_ne_zero hS.ne')
-    convert this using 1
-    funext t
-    simp [smul_eq_mul, div_eq_inv_mul]
+  have hq : QuasiMeasurePreserving (fun t : ℝ ↦ t / S) volume volume := by
+    simpa only [smul_eq_mul, div_eq_inv_mul] using
+      Measure.quasiMeasurePreserving_smul (volume : Measure ℝ) (inv_ne_zero hS.ne')
   have hinv (t : ℝ) : actionAngleInv (h, t / S) = dipoleOrbit h t := by
     simp only [actionAngleInv]
     rw [div_mul_cancel₀ t hS.ne']

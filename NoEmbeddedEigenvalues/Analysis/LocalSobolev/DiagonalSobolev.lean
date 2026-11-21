@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.DiagonalACL
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.StreamElliptic
 
 /-! # Diagonal coordinate change for higher weak derivatives -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -40,8 +44,11 @@ theorem MemSobolevLocOn.comp_diagInv {k : ℕ} {U : Set (ℝ × ℝ)}
 
 /-- The determinant of the inverse diagonal chart is nonzero. -/
 theorem quasiMeasurePreserving_diagInv :
-    Measure.QuasiMeasurePreserving (diagInv : (ℝ × ℝ) → ℝ × ℝ) volume volume :=
-  Measure.LinearMap.quasiMeasurePreserving volume (diagInvLinear : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ))
+    QuasiMeasurePreserving (diagInv : (ℝ × ℝ) → ℝ × ℝ) volume volume := by
+  have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+    rw [Measure.volume_eq_prod]
+    infer_instance
+  exact Measure.LinearMap.quasiMeasurePreserving volume (diagInvLinear : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ))
     (by rw [det_diagInvLinear]; norm_num)
 
 /-- The diagonal Laplacian of the stream is twice the lifted vorticity. -/

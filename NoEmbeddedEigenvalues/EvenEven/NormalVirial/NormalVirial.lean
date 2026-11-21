@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalField
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
-import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialL2
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.DuBoisReymond
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalField
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.EigenfunctionTransport
+public import NoEmbeddedEigenvalues.EvenEven.TraceExclusion.LevelTraces
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialL2
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.DuBoisReymond
 
 /-!
 # The normal-field virial on truncated cells
@@ -19,6 +21,8 @@ The truncated identity includes integrability and needs no reflection-sector
 hypothesis. Boundary limits specific to even–even eigenfunctions are in
 `EvenEvenBoundary.lean`; the exclusion assembly is in `EvenEven.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -1014,10 +1018,14 @@ theorem abs_eeLevelTerm_le (ω : L2) {M h : ℝ} (hM0 : 0 ≤ M) (hh : 1 / 2 < h
       rw [Real.norm_of_nonneg (by positivity)]; exact htg t)
   have iW : Integrable (fun t ↦ (liftL2 ω (γ t) * (starRingEnd ℂ) (streamLift ω (γ t))).re)
       (volume.restrict I) :=
-    iF.mono' (by fun_prop) (Eventually.of_forall fun t ↦ hws t)
+    iF.mono' (Complex.measurable_re.comp
+      (hw.mul (Complex.continuous_conj.measurable.comp hsm))).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ hws t)
   have iA : Integrable (fun t ↦ gradNorm (γ t) * (streamLift ω (γ t) *
       (starRingEnd ℂ) (streamNormal ω (γ t))).re) (volume.restrict I) :=
-    (iF.const_mul 3).mono' (by fun_prop) (Eventually.of_forall fun t ↦ hA t)
+    (iF.const_mul 3).mono' (hρm.mul (Complex.measurable_re.comp
+      (hsm.mul (Complex.continuous_conj.measurable.comp hnm)))).aestronglyMeasurable
+      (Eventually.of_forall fun t ↦ hA t)
   have iρ : Integrable (fun t ↦ gradNorm (γ t) ^ 2) (volume.restrict I) :=
     (integrable_const (4 * (1 - h))).mono' (hρm.pow_const 2).aestronglyMeasurable
       (Eventually.of_forall fun t ↦ by

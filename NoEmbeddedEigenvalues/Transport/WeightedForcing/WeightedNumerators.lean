@@ -1,10 +1,14 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorAssembly
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.FirstBulkBoundaryBounds
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorAssembly
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.FirstBulkBoundaryBounds
 
 /-! # Weighted numerator estimates
 
 The original data definitions are reexported from `WeightedNumeratorData`.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

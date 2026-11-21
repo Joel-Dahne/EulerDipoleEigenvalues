@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalSegmentAverage
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalSegmentAverage
 
 /-!
 # H² division by a linear factor
@@ -10,6 +12,8 @@ regularity and derivative-energy bound follow from segment averaging; the endpoi
 fundamental theorem identifies the product with the original interior numerator.
 The same construction works at either endpoint and at every interior point.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

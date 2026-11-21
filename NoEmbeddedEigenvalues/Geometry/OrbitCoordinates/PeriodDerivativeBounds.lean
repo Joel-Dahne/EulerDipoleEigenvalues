@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.Period
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.Period
 
 /-!
 # Coarse bounds for the first two period derivatives
@@ -10,6 +12,8 @@ With B = 1 + h - t² and 0 < h < 1/2, both sqrt(Q) and Q_h are comparable to B.
 The resulting derivatives are bounded by fixed multiples of (h + 1 - t)⁻²
 and (h + 1 - t)⁻³. Their elementary primitives give uniform weighted bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

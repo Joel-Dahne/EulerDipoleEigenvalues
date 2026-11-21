@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterMeasureTransport
 
 /-!
 # Saddle weights for the forcing transport derivative
@@ -10,6 +12,8 @@ Consequently its absolute value is at most the square root of that distance.
 Multiplying a gradient component weighted by d⁻³ᐟ² therefore gives a
 transport term weighted by d⁻², without a cutoff or a bound on the distance.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalIntegralFlux
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalIntegralFlux
 
 /-!
 # Second regularity of fixed-window parameter integrals
@@ -12,6 +14,8 @@ H² for the original integral whenever its continuous potential has two L² weak
 parameter derivatives. The ordinary first and second derivatives provide
 compatible representatives on overlapping intervals.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

@@ -1,10 +1,12 @@
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Integral.Prod
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.LebesgueDifferentiationThm
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.MeasureTheory.Integral.Prod
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
 
 /-!
 # The canonical transport profile
@@ -29,6 +31,8 @@ For a trace `g` on a separatrix arc with `g' ∈ L¹(ℝ)`, the canonical profil
 tends to `0` at `+∞`; it tends to `0` at `-∞` exactly when the Melnikov condition
 `∫ g'(t) e^{-iλt} dt = 0` holds, and then it equals `-e^{iλs} ∫_{-∞}^s g'(t) e^{-iλt} dt`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

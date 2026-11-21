@@ -1,11 +1,13 @@
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.Tactic.FunProp
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+module
+
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+public import Mathlib.Tactic.FunProp
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
 /-!
 # The even–even boundary quadratic form
@@ -19,6 +21,8 @@ triples. The derivative identities `hasDerivAt_boundaryFlux` and
 `hasDerivAt_boundaryPrimitive` are pointwise; `WeightedBoundaryForm.lean` uses them
 almost everywhere to extend the results here to the weighted domain.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.CountableCellEnergy
 
 /-!
 # Transfer of cell energies to comparable weights
@@ -7,6 +9,8 @@ Blueprint: `lem:cell-weight-transfer`.
 
 Only cellwise comparison with constants is used; the weight need not be smooth.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

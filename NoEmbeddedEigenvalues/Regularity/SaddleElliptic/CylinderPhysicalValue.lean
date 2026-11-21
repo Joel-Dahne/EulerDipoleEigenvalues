@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarInverse
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.LogPolarInverse
 
 /-!
 # The pointwise physical cylinder reconstruction
@@ -8,6 +10,8 @@ For positive exponent, a uniform cylinder bound gives continuity through the
 origin with value zero. These are value statements; no weak jet is inferred
 from a growth bound or from pointwise parity.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

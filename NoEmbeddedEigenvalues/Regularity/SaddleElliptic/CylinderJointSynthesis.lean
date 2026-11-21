@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTimeSynthesis
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderTimeSynthesis
 
 /-!
 # Joint inverse synthesis on the logarithmic cylinder
@@ -8,6 +10,8 @@ Signed complex angular modes use probability Haar, and real angular frequency us
 angular coefficient extraction by Fubini. Spectral L² then supplies finite joint
 cylinder mass by the actual modewise inverse integrals and angular Parseval.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

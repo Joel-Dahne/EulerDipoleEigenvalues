@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Virial.VirialAlgebra
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.MeasureTheory.Measure.Prod
+module
+
+public import NoEmbeddedEigenvalues.Virial.VirialAlgebra
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Measure.Prod
 
 /-!
 # Classical Picone identities for real symmetric planar matrices
@@ -26,6 +28,8 @@ is not a divergence theorem for arbitrary domains, a Sobolev approximation
 result, or a justification for removing singular points. In particular the
 current uses values of the function, not boundary values of its gradient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

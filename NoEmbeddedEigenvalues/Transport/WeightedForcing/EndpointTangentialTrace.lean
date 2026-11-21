@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedEndpointGradients
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitNumeratorSecondDerivative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedEndpointGradients
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrbitNumeratorSecondDerivative
 
 /-!
 # Tangential endpoint derivatives from the affine ray trace
@@ -14,6 +16,8 @@ ray and along the normalized orbit chart. Uniqueness of the scalar derivative
 identifies the tangential contraction, without asserting invariance of arbitrary
 transverse gradient traces under changes of chart.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

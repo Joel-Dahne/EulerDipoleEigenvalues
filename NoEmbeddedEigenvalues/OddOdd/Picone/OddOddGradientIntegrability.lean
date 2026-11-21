@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.EvenGradientHardy
-import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.EvenGradientHardy
+public import NoEmbeddedEigenvalues.OddOdd.Picone.OddOddPiconeIntegrability
 
 /-!
 # Integrability of the original and divided odd–odd gradient energies
@@ -8,6 +10,8 @@ Diagonal Hardy division controls the singular normal coefficient. The ground
 state has bounded cosine-divided diagonal derivatives, so subtracting its
 logarithmic gradient preserves the same integrability class.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

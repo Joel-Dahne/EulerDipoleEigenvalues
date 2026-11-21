@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellEstimates
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterPhaseCells
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1LocalToGlobal
-import NoEmbeddedEigenvalues.Analysis.Inequalities.WeightedCellEnergy
-import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PhaseCellEstimates
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterPhaseCells
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalH1LocalToGlobal
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.WeightedCellEnergy
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.DescendingIntervalPartition
 
 /-!
 # Global quarter-divisor division
@@ -14,6 +16,8 @@ At their nonresonant boundaries the quotient is ordinary division. Countable
 energy summation and local interval H¹ globalization give the whole collar;
 reciprocal-distance integrability forces its canonical zero trace.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

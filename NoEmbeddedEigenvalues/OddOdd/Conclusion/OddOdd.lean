@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.CurrentLimit
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.CurrentLimit
 
 /-! # Odd–odd sector exclusion -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,8 +1,12 @@
-import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
-import NoEmbeddedEigenvalues.EvenEven.GradientTraces.EvenEvenBoundary
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.PairingLimit
+module
+
+public import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
+public import NoEmbeddedEigenvalues.EvenEven.GradientTraces.EvenEvenBoundary
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.PairingLimit
 
 /-! # Even–even exclusion for each rotation character -/
+
+@[expose] public section
 
 noncomputable section
 

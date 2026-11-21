@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparisonForm
+module
+
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparisonForm
 
 /-! # Coercivity on a mixed comparison quarter -/
+
+@[expose] public section
 
 noncomputable section
 

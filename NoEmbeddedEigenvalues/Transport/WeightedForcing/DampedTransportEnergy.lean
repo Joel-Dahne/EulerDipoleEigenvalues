@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+module
+
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.TransportODE
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 
 /-!
 # Dissipative energy for complex transport
@@ -11,6 +13,8 @@ real oscillation frequency. Absolute continuity supplies genuine integrability
 of the unknown before the energy identity is used. Boundary values are those
 of the specified absolutely continuous function.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

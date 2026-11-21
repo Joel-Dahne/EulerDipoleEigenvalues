@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Virial.VirialSmooth
+module
+
+public import NoEmbeddedEigenvalues.Virial.VirialSmooth
 
 /-!
 # The quadratic form of the smooth virial identity
@@ -10,6 +12,8 @@ gives `0 = ∫ f |Δψ|² + ∫ (2 sym DW - f I) ∇ψ · ∇ψ̄ + ½ ∫ Δ(f 
 All integrations by parts come from skew-symmetry: `∂ₓ` and `∂_y` are the
 half-density generators of the constant fields `(1, 0)` and `(0, 1)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

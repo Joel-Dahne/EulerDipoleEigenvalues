@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.QuotientLocal
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.WeakJetOperations
 
 /-!
 # Radially weighted interior elliptic regularity
@@ -8,6 +10,8 @@ The weighted third-order gain is the dyadic summation corollary of the uniform
 annular estimate. It is an analytic input, independent of eigenfunctions or parity.
 Lower jet entries are preserved, not replaced by unrelated representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

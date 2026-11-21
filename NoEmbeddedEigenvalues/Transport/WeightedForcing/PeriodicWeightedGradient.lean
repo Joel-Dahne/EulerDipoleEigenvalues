@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.CellFolding
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.CellFolding
 
 /-!
 # Lifting a weighted cell gradient to a separatrix neighbourhood
@@ -11,6 +13,8 @@ set needs only finitely many period indices. Weak uniqueness transfers each
 cell estimate to the same specified ordinary spatial gradient; null level
 sets and cell seams are used only for L², never to glue weak identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

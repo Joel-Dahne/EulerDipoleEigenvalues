@@ -64,7 +64,7 @@ map and verification tools.
   through library bridges. `comparator.json` lists compared theorems and
   permitted axioms. Change Challenge definitions only with the authors'
   agreement, and copy changes to Solution.
-- `lakefile.toml` and `lean-toolchain`: Lean and Mathlib `v4.34.1`.
+- `lakefile.toml` and `lean-toolchain`: Lean and Mathlib `v4.35.0`.
 - `justfile`: build recipes; run `just` to list them.
 
 ## Building and verification

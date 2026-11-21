@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
 
 /-!
 # Compact pointwise growth bounds at the saddle lattice
@@ -7,6 +9,8 @@ Pointwise radial bounds for a continuous function at every saddle give one
 lattice-distance growth bound on each compact localization. A finite open
 cover, not a uniform radius over the infinite lattice, supplies the constant.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

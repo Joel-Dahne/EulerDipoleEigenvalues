@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CanonicalConeTrace
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedEndpointValues
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CanonicalConeTrace
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedEndpointValues
 
 /-!
 # Canonical gradient traces at the moving quarter endpoints
@@ -11,6 +13,8 @@ Only canonical interior Sobolev traces are evaluated on the rays. The radial
 Jacobian transports their r⁻¹ mass to h⁻¹ mass. It also supplies measurability
 of the composed trace, without continuous gradient representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

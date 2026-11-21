@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointSynthesis
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderJointSynthesis
 
 /-!
 # Finite joint mass of the actual cylinder inverse integral
@@ -8,6 +10,8 @@ summable masses. Angular coefficient extraction and Parseval then identify the
 mass of the bounded integral synthesis. In particular, joint finiteness is not
 inferred merely from a totalized integral identity or separate mode finiteness.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

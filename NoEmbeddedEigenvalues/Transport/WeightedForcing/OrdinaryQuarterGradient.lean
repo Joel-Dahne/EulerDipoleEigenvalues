@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterGradient
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.SecondNumeratorBulk
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterGradient
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.SecondNumeratorBulk
 
 /-!
 # Ordinary physical gradient norms on the supplied quarter collar
@@ -8,6 +10,8 @@ The inverse-frame coefficients normalized by distance are bounded on every
 collar b < 1/2. The small-level estimates handle h near zero; compactness handles
 the rest of the same collar. Thus no shrinkage is needed for ordinary H¹.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

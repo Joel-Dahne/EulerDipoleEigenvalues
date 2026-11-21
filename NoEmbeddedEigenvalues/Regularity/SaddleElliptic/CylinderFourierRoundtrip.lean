@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierL2
+module
+
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderFourierL2
 
 /-!
 # Two-sided normalized cylinder Fourier inversion
@@ -8,6 +10,8 @@ Density and continuity extend this identity to every spectral L² class.
 Injectivity of the analysis isometry gives the other round-trip, recovering
 arbitrary original cylinder data with no time or joint L¹ hypothesis.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

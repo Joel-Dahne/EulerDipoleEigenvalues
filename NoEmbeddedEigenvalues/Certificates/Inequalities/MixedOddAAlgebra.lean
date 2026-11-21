@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
-import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddAData
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddAData
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
 
 /-!
 # Clearing the mixed odd-in-a residual
@@ -9,6 +11,8 @@ The exponent has denominator `2000 * S^6`, with `S = h + k`.
 Writing all partials with a common power of `S` keeps the denominator
 clearing separate from the expanded power tables.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 
@@ -433,7 +437,7 @@ private theorem first_order_clear (h k : ℝ) (hs : h + k ≠ 0)
     field_simp [hs, hr]
 
 /-- Cleared numerator, with an extra positive integer scale for integer tables. -/
-def mixedOddAScaledNumerator (h k : ℝ) : ℝ :=
+@[no_expose] def mixedOddAScaledNumerator (h k : ℝ) : ℝ :=
   let s := h + k
   let r := 2 - h ^ 2 - k ^ 2
   let u := 1 - h ^ 2

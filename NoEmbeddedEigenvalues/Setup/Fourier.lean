@@ -1,6 +1,8 @@
-import Mathlib.Analysis.Fourier.AddCircleMulti
-import Mathlib.MeasureTheory.Measure.Haar.Unique
-import NoEmbeddedEigenvalues.Setup.TorusL2
+module
+
+public import Mathlib.Analysis.Fourier.AddCircleMulti
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
+public import NoEmbeddedEigenvalues.Setup.TorusL2
 
 /-!
 # Fourier infrastructure on the `2π`-torus
@@ -14,6 +16,8 @@ Parseval, uniqueness and existence for prescribed square-summable coefficients
 (blueprint: `lem:torus-fourier-basis`, `lem:torus-fourier`), and bounded Fourier
 multipliers (`lem:fourier-multiplier`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

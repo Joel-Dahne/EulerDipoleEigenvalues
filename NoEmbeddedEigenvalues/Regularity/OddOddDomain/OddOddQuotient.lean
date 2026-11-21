@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.PeriodicTransportGain
-import NoEmbeddedEigenvalues.Setup.Derivatives
-import NoEmbeddedEigenvalues.Regularity.OddOddDomain.StreamQuotientAssembly
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.EvenGradientHardy
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialFourier
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.PeriodicTransportGain
+public import NoEmbeddedEigenvalues.Setup.Derivatives
+public import NoEmbeddedEigenvalues.Regularity.OddOddDomain.StreamQuotientAssembly
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.EvenGradientHardy
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.VirialFourier
 
 /-!
 # Minimal odd–odd quotient domain
@@ -28,6 +30,8 @@ Local Sobolev gluing on the lift is separate from periodization. Once the lift i
 locally H² everywhere, one compact cutoff with periodized value one suffices for
 passage to the torus; it can be built from the existing unit-period angular partition.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -236,7 +240,7 @@ private theorem memLp_div_dipole_of_odd_cell {ζ : L2} (hodd : reflect₁ ζ = -
     exact Filter.Eventually.of_forall fun t ↦ by
       simp only [Function.comp_apply, liftL2, ← Ψ_torusProj, torusProj_torusRep, q]
   let P := positiveCell.indicator q
-  have hP : MemLp P 2 volume := (memLp_indicator_iff_restrict hpos).mpr hq
+  have hP : MemLp P 2 volume := (memLp_indicator_iff_restrict hpos.nullMeasurableSet).mpr hq
   have hsym : ∀ᵐ t, q (S₁ t) = q t := by
     filter_upwards [ae_comp_of_pullback_eq (T := S₁) (hT := measurePreserving_S₁) hodd,
       Lp.coeFn_neg ζ] with t hs hn

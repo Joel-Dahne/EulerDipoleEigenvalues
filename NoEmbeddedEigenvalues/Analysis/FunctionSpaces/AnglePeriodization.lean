@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.LineMollifier
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.LineMollifier
 
 /-!
 # Periodization of compactly supported angular test functions
@@ -10,6 +12,8 @@ chain rules. Periodization commutes with both coordinate derivatives.
 The periodization, integral unfolding, and normalized angular partition have no
 admitted dependencies.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -335,7 +339,7 @@ private theorem periodize_angleBump_pos (q : ℝ × ℝ) : 0 < periodizeSnd angl
     (fun m _ ↦ stdBump_nonneg (q.2 + m)) hn)
 
 /-- A smooth angular cutoff whose integer translates sum to one. -/
-def anglePartition (q : ℝ × ℝ) : ℝ := angleBump q / periodizeSnd angleBump q
+@[no_expose] def anglePartition (q : ℝ × ℝ) : ℝ := angleBump q / periodizeSnd angleBump q
 
 theorem contDiff_anglePartition : ContDiff ℝ ∞ anglePartition :=
   contDiff_angleBump.div (contDiff_periodizeSnd contDiff_angleBump bounded_angleBump)

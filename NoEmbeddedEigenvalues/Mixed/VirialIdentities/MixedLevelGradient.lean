@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelRemainder
-import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedLevelRemainder
+public import NoEmbeddedEigenvalues.EvenEven.NormalVirial.NormalVirial
 
 /-! # Pairing the signed gradient terms on regular levels -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

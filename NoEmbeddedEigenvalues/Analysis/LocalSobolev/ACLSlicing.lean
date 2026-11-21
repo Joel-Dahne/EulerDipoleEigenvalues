@@ -1,9 +1,11 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.DuBoisReymond
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import Mathlib.Topology.ContinuousMap.SecondCountableSpace
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Analysis.Calculus.Deriv.Support
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.DuBoisReymond
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import Mathlib.Topology.ContinuousMap.SecondCountableSpace
+public import Mathlib.Topology.ContinuousMap.Compact
+public import Mathlib.Analysis.Calculus.Deriv.Support
 
 /-!
 # Directional absolute continuity on almost every section
@@ -25,6 +27,8 @@ measurable; rational windows cover every compact subinterval, also for unbounded
 intervals. Finally, measurable versions of the data remove any extra measurability
 assumption on the original representatives. Uniqueness only needs continuity of sections.
 -/
+
+@[expose] public section
 
 noncomputable section
 

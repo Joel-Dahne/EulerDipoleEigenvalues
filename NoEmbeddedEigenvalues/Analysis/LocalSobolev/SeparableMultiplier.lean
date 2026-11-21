@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceH2
 
 /-!
 # Integrable coordinate weights on H¹ rectangles
@@ -9,6 +11,8 @@ The interval H¹ supremum estimate bounds a weighted section by its unweighted
 value and derivative energies. Fubini supplies an integrable product majorant.
 Only the coordinate weight, not the Sobolev function, must be globally measurable.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

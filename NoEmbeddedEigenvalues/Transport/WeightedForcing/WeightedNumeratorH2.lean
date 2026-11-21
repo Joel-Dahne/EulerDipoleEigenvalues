@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorH2
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorH1
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumeratorH2
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedNumeratorH1
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.LocalContinuousRepresentative
 
 /-!
 # Weighted first data with local numerator H²
@@ -13,6 +15,8 @@ agrees a.e. with the existing supplied-gradient first-derivative candidate;
 the half numerator keeps its specified candidate unchanged.
 No global hN″ norm or second moving-endpoint formula is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

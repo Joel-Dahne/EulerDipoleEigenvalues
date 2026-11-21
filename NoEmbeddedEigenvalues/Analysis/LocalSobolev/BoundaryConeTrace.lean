@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CanonicalConeTrace
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.CanonicalConeTrace
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.TraceWeakGluing
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 
 /-!
 # Critical one-sided traces at a Cartesian corner
@@ -15,6 +17,8 @@ these genuine energies. A trace with constant modulus therefore vanishes.
 The trace is supplied as a canonical ACL trace on the bands; no raw boundary
 values or continuous planar representative are assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

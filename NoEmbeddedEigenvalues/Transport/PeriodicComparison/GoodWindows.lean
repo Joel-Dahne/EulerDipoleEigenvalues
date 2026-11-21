@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.Transport
+module
+
+public import NoEmbeddedEigenvalues.Transport.Transport
 
 /-! # Good phase windows and selection of levels -/
+
+@[expose] public section
 
 noncomputable section
 

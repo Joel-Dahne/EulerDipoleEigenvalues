@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
 
 /-!
 # Integrable quotients cancel at differentiable divisor zeros
@@ -10,6 +12,8 @@ a reciprocal-distance lower bound on the quotient. This contradicts local L¹
 integrability. Neither simplicity of the zero nor a value of the quotient at
 the exceptional point is required.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

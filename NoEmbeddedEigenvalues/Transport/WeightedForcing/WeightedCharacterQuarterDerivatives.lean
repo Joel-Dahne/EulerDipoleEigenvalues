@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Data
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterForcing
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportMass
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterTimeDerivative
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportH1Data
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.OrdinaryQuarterForcing
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.WeightedTransportMass
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterTimeDerivative
 
 /-!
 # Single-character weighted weak quarter derivatives
@@ -14,6 +16,8 @@ weak derivative. The original weak transport identity gives the time weak
 derivative. Both are joint fields of the original raw pullback. Constant
 rotation characters transfer them to every recentered quarter.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

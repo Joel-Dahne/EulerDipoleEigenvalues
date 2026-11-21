@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
-import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddResidual
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import NoEmbeddedEigenvalues.Certificates.Tools.Bernstein
+public import NoEmbeddedEigenvalues.Certificates.Inequalities.OddOddResidual
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # The upper endpoint polynomial for the Odd–odd residual
@@ -11,6 +13,8 @@ of the four boxes separately. The power table can be reproduced with
 `scripts/verify_dd_residual.py --lean-power upper`; the script is not trusted
 by the proof.
 -/
+
+@[expose] public section
 
 namespace NoEmbeddedEigenvalues
 

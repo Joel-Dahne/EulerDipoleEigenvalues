@@ -1,7 +1,9 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH1
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitTransportTraces
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
-import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalParameterH1
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitTransportTraces
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.ScalarDivision
 
 /-!
 # Local H¹ regularity of the quarter-orbit numerator
@@ -13,6 +15,8 @@ angular window [-1/8, 1/8]. A spatial cutoff on a compact annulus permits the
 weak action--angle chain rule. Integration of its L² level derivative gives
 H¹ regularity of the numerator formed from the original continuous forcing.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

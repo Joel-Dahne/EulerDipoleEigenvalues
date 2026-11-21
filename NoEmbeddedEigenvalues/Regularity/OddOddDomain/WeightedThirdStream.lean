@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddRegularity
+module
+
+public import NoEmbeddedEigenvalues.Regularity.OddOddSeparatrix.OddOddRegularity
 
 /-! # Weighted third derivatives of the stream remainders -/
+
+@[expose] public section
 
 noncomputable section
 

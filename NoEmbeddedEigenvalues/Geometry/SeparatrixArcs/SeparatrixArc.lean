@@ -1,7 +1,9 @@
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # The heteroclinic separatrix arc
@@ -13,6 +15,8 @@ velocity `(sin y, -sin x)` on the line `x - y = π`, from the saddle `(π, 0)` t
 `(0, -π)`, with speed `√2 / cosh s`. The variable `ξ = tanh s` has
 `dξ/ds = 1 - ξ²`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterTimeDerivative
-import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterTimeDerivative
+public import NoEmbeddedEigenvalues.Virial.OriginalDomain.CellPeriodization
 
 /-!
 # The eigenfunction's weak quarter-time derivative
@@ -11,6 +13,8 @@ Subtracting their transport equation from the eigenfunction equation gives a
 specified transport derivative of the vorticity, and orbitwise ACL testing
 identifies its raw pullback as the weak time derivative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

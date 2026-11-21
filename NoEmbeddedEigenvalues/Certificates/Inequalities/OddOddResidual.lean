@@ -1,4 +1,6 @@
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # The explicit Odd–odd residual
@@ -6,6 +8,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 This is the two-variable coefficient table for `cert:dd-residual`. It is kept
 independent of the differentiated ground state and the certificate checks.
 -/
+
+@[expose] public section
 
 noncomputable section
 

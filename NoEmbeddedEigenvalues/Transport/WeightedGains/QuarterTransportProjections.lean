@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.TransportRotations
 
 /-!
 # Four complex quarter-character projections of raw transport fields
@@ -9,6 +11,8 @@ The finite Fourier formula is pointwise, including on exceptional sets.
 Restricted measure-preserving rotations separately transfer the a.e. agreement
 of the original forcing and its supplied continuous representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

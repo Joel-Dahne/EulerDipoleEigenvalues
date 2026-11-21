@@ -1,4 +1,6 @@
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
 
 /-!
 # Symmetries of the dipole
@@ -10,6 +12,8 @@ them (blueprint: `def:reflections`, `lem:reflection-algebra`).
 Here the torus is only a set of points, `Real.Angle × Real.Angle`. The action of the symmetries
 on `L²` is in `SymmetryL2.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

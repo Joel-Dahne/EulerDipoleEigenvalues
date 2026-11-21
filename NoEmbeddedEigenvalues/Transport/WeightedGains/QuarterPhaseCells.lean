@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorGeometry
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterDivisorGeometry
 
 /-!
 # Complete quarter-phase cells accumulating at zero
@@ -9,6 +11,8 @@ The positive phase handles both signs of the spectral parameter. Its endpoint
 lattice gives adjacent complete cells with a central resonance. No exact
 geometric progression of physical levels is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

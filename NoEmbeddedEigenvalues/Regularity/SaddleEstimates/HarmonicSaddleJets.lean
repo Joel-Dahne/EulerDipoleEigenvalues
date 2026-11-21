@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderInverse
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleForcingMass
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SmoothJetBounds
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.CylinderInverse
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleForcingMass
 
 /-!
 # Finite quadratic remainders of odd--odd cylinder data
@@ -10,6 +12,8 @@ The coefficient is the mixed second derivative at the origin. Finite Taylor
 bounds then control the value and each derivative on the same disk; no infinite
 harmonic expansion or evaluation of raw L² representatives on axes is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

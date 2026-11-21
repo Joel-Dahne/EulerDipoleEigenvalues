@@ -1,4 +1,6 @@
-import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
+module
+
+public import NoEmbeddedEigenvalues.Transport.PeriodicComparison.GoodWindows
 
 /-!
 # Smooth interpolation of the four cell-saddle values
@@ -8,6 +10,8 @@ Blueprint: `lem:saddle-value-interpolation`.
 Quadratic coordinate polynomials interpolate arbitrary values at (±π,0)
 and (0,±π). No cutoff, neighbourhood size or periodicity is required.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

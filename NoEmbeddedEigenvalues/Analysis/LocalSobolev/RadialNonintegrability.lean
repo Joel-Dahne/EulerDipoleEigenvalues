@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SaddleDistanceWeights
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 
 /-!
 # Critical inverse-radius nonintegrability
@@ -8,6 +10,8 @@ In two physical dimensions inverse squared Euclidean radius is not locally
 integrable at its center. This distinguishes a genuine weighted L² condition
 from the totalized value of an integral, and detects constant Hessian defects.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

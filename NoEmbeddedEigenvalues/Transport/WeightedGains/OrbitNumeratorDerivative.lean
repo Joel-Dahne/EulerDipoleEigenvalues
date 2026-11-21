@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalIntegralFlux
-import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedNumeratorData
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.IntervalIntegralFlux
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.WeightedNumeratorData
 
 /-!
 # The weak moving-endpoint derivative of the quarter numerator
@@ -12,6 +14,8 @@ moving-endpoint values of the original continuous forcing. This cancellation
 leaves the fixed-time orbit-level derivative in the bulk, with no differentiated
 ray value of the weak gradient.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

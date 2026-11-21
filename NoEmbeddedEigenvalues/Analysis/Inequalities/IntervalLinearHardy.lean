@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalHardy
-import Mathlib.MeasureTheory.Group.Integral
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+module
+
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.IntervalHardy
+public import Mathlib.MeasureTheory.Group.Integral
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # Energy of division at an interior zero
@@ -10,6 +12,8 @@ Blueprint: `lem:hardy-interior-linear`.
 The two orientations of the primitive Hardy inequality control division by
 `x - z`. Values at the single zero are immaterial for the energy estimate.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

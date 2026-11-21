@@ -1,8 +1,10 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.BoundaryTransportODE
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.DiagonalBoundaryTransport
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ReflectedTraces
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.BoundaryTransportODE
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.DiagonalBoundaryTransport
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.ReflectedTraces
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.QuarterCellCover
 
 /-!
 # Constant modulus on a physical edge window
@@ -13,6 +15,8 @@ Blueprint: `def:edge-inward-chart`, `lem:edge-inward-pullback`,
 The affine inward normal coordinate puts the chosen boundary at zero.
 Tangential velocity is divided out only on compact regular edge intervals.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -363,7 +367,7 @@ theorem IsTransportPair.inward_edge_window_transport {lam ε : ℝ}
     cases side <;> simp [E, edgeSideSign, cellEdgeNormal, neg_div]
   have hfg' : (fun q ↦ v (C q) + f (C q)) =ᵐ[volume.restrict Q]
       fun q ↦ v (C q) + g (C q) := by
-    have hC : Measure.QuasiMeasurePreserving C volume volume :=
+    have hC : QuasiMeasurePreserving C volume volume :=
       (quasiMeasurePreserving_diagonalTraceChart j).comp
         (measurePreserving_edgeInward side).quasiMeasurePreserving
     exact ((hC.restrict (fun q hq ↦ hPU (hW hq))).ae hfg).mono

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalBasis
-import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalCutoff
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
+module
+
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalBasis
+public import NoEmbeddedEigenvalues.OddOdd.Picone.ZonalCutoff
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.SobolevLocal
 
 /-!
 # Weak testing with zonal fluxes
@@ -11,6 +13,8 @@ it is enough that the mode derivative has a cosine factor: its product with
 the cutoff derivative is uniformly bounded and tends pointwise to zero.
 Dominated convergence uses only weighted L¹ of the value and derivatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

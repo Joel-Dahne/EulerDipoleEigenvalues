@@ -1,8 +1,12 @@
-import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
-import NoEmbeddedEigenvalues.Geometry.Cells.Cells
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+module
+
+public import NoEmbeddedEigenvalues.Mixed.PositiveComparisons.MixedComparison
+public import NoEmbeddedEigenvalues.Geometry.Cells.Cells
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 /-! # The adapted field in the odd–even mixed sector -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
-import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
+module
+
+public import NoEmbeddedEigenvalues.Analysis.FunctionSpaces.IntervalH1
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.OrbitNumerators
 
 /-!
 # Scalar and joint weak data for weighted quarter reconstruction
@@ -11,6 +13,8 @@ Blueprint: `def:quarter-h1-scalar-data`, `def:weighted-quarter-derivative-data`,
 The quotient trace is canonical. The planar fields are derivatives of the same
 raw profiles, with coordinate-area measure and physical-distance weights.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

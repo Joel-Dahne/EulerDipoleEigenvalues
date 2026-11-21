@@ -1,10 +1,14 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.NormalAverage
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
-import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.ScaledInteriorEnergy
-import Mathlib.Topology.Compactness.Lindelof
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.NormalAverage
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.RadialWeakMultiplier
+public import NoEmbeddedEigenvalues.Regularity.SaddleElliptic.ScaledInteriorEnergy
+public import Mathlib.Topology.Compactness.Lindelof
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.SobolevGluing
 
 /-! # Weighted division on the two coordinate cones -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

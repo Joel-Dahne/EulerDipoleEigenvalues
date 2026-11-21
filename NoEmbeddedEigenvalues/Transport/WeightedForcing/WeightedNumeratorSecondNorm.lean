@@ -1,5 +1,7 @@
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.FirstBulkEndpointEnergy
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.FirstBulkEndpointEnergy
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.EndpointTangentialTrace
 
 /-!
 # Global ordinary second numerator norm from the original weighted forcing
@@ -10,6 +12,8 @@ Unit-time-window traces control the middle term without logarithmic Hessian
 weights or chart covariance of individual gradient traces. The local ordinary
 second identity identifies their sum with the original scalar second derivative.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

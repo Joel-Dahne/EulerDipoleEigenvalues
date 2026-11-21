@@ -1,7 +1,11 @@
-import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialCurrent
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+module
+
+public import NoEmbeddedEigenvalues.Mixed.VirialIdentities.MixedTangentialCurrent
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-! # Uniform mass of mixed virial level shells -/
+
+@[expose] public section
 
 noncomputable section
 

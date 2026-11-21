@@ -1,6 +1,10 @@
-import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleDistance
+module
+
+public import NoEmbeddedEigenvalues.Geometry.OrbitCoordinates.SaddleDistance
 
 /-! # Transfer of local radial weights to saddle-distance weights -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

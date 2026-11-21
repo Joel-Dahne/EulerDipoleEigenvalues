@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+module
+
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.LogarithmicDivision
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-!
 # Integrable logarithmic mass divided by radius
@@ -11,6 +13,8 @@ A product of one-dimensional powers dominates the crossing logarithm divided
 by Euclidean radius. This avoids polar coordinates and treats the null axes
 only by a.e. equality, without assigning curve values to L² representatives.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues

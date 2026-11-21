@@ -1,4 +1,7 @@
-import NoEmbeddedEigenvalues
+module
+
+public import Mathlib
+public import NoEmbeddedEigenvalues
 
 /-!
 # Solution: proof of the challenge statements
@@ -14,6 +17,8 @@ spaces are definitionally equal (`Real.Angle` is `AddCircle (2 * π)`), `coeff` 
 `fourierCoeff`, `IsInvLap ω ψ` says `MeanZero ω ∧ ψ = invLap ω`, and `HasL0` is the library's
 `HasL0`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

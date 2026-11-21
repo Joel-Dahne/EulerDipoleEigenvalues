@@ -1,6 +1,8 @@
-import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
-import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
-import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
+module
+
+public import NoEmbeddedEigenvalues.Analysis.LocalSobolev.InteriorTrace
+public import NoEmbeddedEigenvalues.Transport.WeightedGains.QuarterCoordinates
+public import NoEmbeddedEigenvalues.Transport.WeightedForcing.RotationWeakGradient
 
 /-!
 # Affine Cartesian charts for the quarter endpoint rays
@@ -11,6 +13,8 @@ The existing ray charts are volume-preserving affine maps. Pulling back local
 H¹ therefore supplies canonical transverse traces on every admissible compact
 window. The continuous-section germ fixes one trace across all these windows.
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace NoEmbeddedEigenvalues
@@ -64,6 +68,9 @@ theorem measurePreserving_quarterEndpointChart (side : Bool) :
     cases side
     · exact hswap.comp measurePreserving_rotLift
     · exact hswap
+  have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+    rw [Measure.volume_eq_prod]
+    infer_instance
   have h := (measurePreserving_add_right volume (quarterEndpointRay side 0)).comp hlin
   change MeasurePreserving (planeAffine (endpointRayLinear side)
     (quarterEndpointRay side 0)) volume volume at h

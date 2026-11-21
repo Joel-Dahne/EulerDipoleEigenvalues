@@ -1,10 +1,13 @@
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import NoEmbeddedEigenvalues.Analysis.Inequalities.SmoothIntervalIntegral
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import NoEmbeddedEigenvalues.Analysis.Inequalities.SmoothIntervalIntegral
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # The period function of the dipole orbits
@@ -21,6 +24,8 @@ gives `L(h) = ∫₀¹ dt / (√(1 - (1 - h) t²) √(1 + h - t²))`, and hence 
 This regular quadrature also proves smoothness and strict negativity of the derivative:
 its squared denominator has strictly positive `h` derivative on `[0, 1]`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
