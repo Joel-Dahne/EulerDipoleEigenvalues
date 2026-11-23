@@ -169,7 +169,7 @@ theorem quasiMeasurePreserving_logCylinderPlane_length :
   have hc : logCylinderPlane ∘ logCylinderProjection = logPolarPlane := by
     funext q
     exact logCylinderPlane_coe q.1 q.2
-  refine ⟨continuous_logCylinderPlane.measurable, ?_⟩
+  refine ⟨continuous_logCylinderPlane.measurable.aemeasurable, ?_⟩
   rw [← hp.map_eq, Measure.map_map continuous_logCylinderPlane.measurable hp.measurable, hc]
   exact quasiMeasurePreserving_logPolarPlane.absolutelyContinuous
 

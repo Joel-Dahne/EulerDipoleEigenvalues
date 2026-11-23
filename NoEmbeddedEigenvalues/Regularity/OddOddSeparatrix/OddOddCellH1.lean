@@ -75,8 +75,9 @@ theorem dd_cell_separatrix_h1 {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       · field_simp
   have hε : 0 < 2 * r := mul_pos (by norm_num) hr
   refine ⟨hmass, 2 * r, hε, by linarith, hH1, fun j side ↦ ?_⟩
+  have hsub : cellSeparatrixStrip (2 * r) ⊆ cellSquare := fun _ hp ↦ hp.1
   apply transport_zero_edge_trace hp closure_cellSquare_subset_cellNeighbourhood hε hH1
-    (hfirst.mono_measure (Measure.restrict_mono (fun _ hp ↦ hp.1) le_rfl))
+    (hfirst.mono_measure (Measure.restrict_mono hsub le_rfl))
     (continuous_contStream ω).continuousOn (Eventually.of_forall fun _ ↦ rfl) j side
   intro s _
   apply hf.2.2

@@ -274,15 +274,15 @@ private theorem scalar_mul_eLpNorm {f : ℝ × ℝ → ℂ}
   have hfm := hf.mono_ac ordinary_ac_weighted
   have hsm : AEStronglyMeasurable (fun p ↦ scalar p * f p)
       (volume.restrict cellSquare) := smooth_scalar.continuous.aestronglyMeasurable.mul hfm
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hsm,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hf]
+  rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) hsm,
+    eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) hf]
   norm_num only [ENNReal.toReal_ofNat, ENNReal.rpow_ofNat]
   congr 1
   rw [ddCellMeasure, lintegral_withDensity_eq_lintegral_mul₀'
-    measurable_weight_density.aemeasurable (hf.enorm.pow_const 2)]
+    measurable_weight_density.aemeasurable (hf.eNorm.pow_const 2)]
   apply lintegral_congr_ae
   exact Eventually.of_forall fun p ↦ by
-    simp only [enorm_mul, mul_pow, scalar_enorm_sq, Pi.mul_apply]
+    simp only [eNorm_mul, mul_pow, scalar_enorm_sq, Pi.mul_apply]
 
 private theorem scalar_mul_memLp {f : ℝ × ℝ → ℂ} (hf : MemLp f 2 ddCellMeasure) :
     MemLp (fun p ↦ scalar p * f p) 2 (volume.restrict cellSquare) := by

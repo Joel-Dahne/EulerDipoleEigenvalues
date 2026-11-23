@@ -502,36 +502,36 @@ theorem eLpNorm_exp_mul_canonicalProfile_le (hg : Integrable (deriv g))
         funext t
         by_cases hst : s < t
         · rw [Set.indicator_of_mem (s := Ioi s) hst]
-          simp only [profileKernel, ite_eq_left hs, ite_eq_left hst, f, enorm_mul, hw, hqn]
+          simp only [profileKernel, ite_eq_left hs, ite_eq_left hst, f, eNorm_mul, hw, hqn]
           rw [abs_of_nonneg hs, abs_of_nonneg (hs.trans hst.le)]
           rw [← mul_assoc, ← ENNReal.ofReal_mul (Real.exp_pos _).le, ← Real.exp_add,
             sub_add_cancel]
         · simp [profileKernel, hs, hst]
       rw [heq, lintegral_indicator measurableSet_Ioi,
-        lintegral_const_mul'' _ hq.aestronglyMeasurable.enorm.restrict]
+        lintegral_const_mul'' _ hq.aestronglyMeasurable.eNorm.restrict]
       dsimp only [w]
-      rw [enorm_mul, hw, ← ofReal_norm, norm_canonicalProfile, ofReal_norm]
+      rw [eNorm_mul, hw, ← ofReal_norm, norm_canonicalProfile, ofReal_norm]
       gcongr
-      exact enorm_integral_le_lintegral_enorm _
+      exact eNorm_integral_le_lintegral_eNorm _
     · have heq : (fun t ↦ profileKernel s t * ‖f t‖ₑ) =
           (Iic s).indicator (fun t ↦ ENNReal.ofReal (Real.exp |s|) *
             ‖profileIntegrand lam g t‖ₑ) := by
         funext t
         by_cases hts : t ≤ s
         · rw [Set.indicator_of_mem (s := Iic s) hts]
-          simp only [profileKernel, ite_eq_right hs, ite_eq_left hts, f, enorm_mul, hw, hqn]
+          simp only [profileKernel, ite_eq_right hs, ite_eq_left hts, f, eNorm_mul, hw, hqn]
           rw [abs_of_nonpos (le_of_not_ge hs), abs_of_nonpos (hts.trans (le_of_not_ge hs))]
           rw [← mul_assoc, ← ENNReal.ofReal_mul (Real.exp_pos _).le, ← Real.exp_add,
             show t - s + -t = -s by ring]
         · simp [profileKernel, hs, hts]
       rw [heq, lintegral_indicator measurableSet_Iic,
-        lintegral_const_mul'' _ hq.aestronglyMeasurable.enorm.restrict]
+        lintegral_const_mul'' _ hq.aestronglyMeasurable.eNorm.restrict]
       dsimp only [w]
-      rw [canonicalProfile_eq_Iic hg hM, enorm_mul, hw, enorm_neg, enorm_mul]
+      rw [canonicalProfile_eq_Iic hg hM, eNorm_mul, hw, eNorm_neg, eNorm_mul]
       have hphase : ‖exp (I * lam * s)‖ₑ = 1 := by simp [← ofReal_norm, norm_exp_I_mul]
       rw [hphase, one_mul]
       gcongr
-      exact enorm_integral_le_lintegral_enorm _
+      exact eNorm_integral_le_lintegral_eNorm _
   apply (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp
   simp only [ENNReal.rpow_two]
   calc
@@ -539,7 +539,7 @@ theorem eLpNorm_exp_mul_canonicalProfile_le (hg : Integrable (deriv g))
       simpa using eLpNorm_nnreal_pow_eq_lintegral (p := 2) (by norm_num) hwm
     _ ≤ ∫⁻ s, (∫⁻ t, profileKernel s t * ‖f t‖ₑ) ^ 2 :=
       lintegral_mono fun s ↦ pow_le_pow_left' (hb s) 2
-    _ ≤ ∫⁻ t, ‖f t‖ₑ ^ 2 := lintegral_profileKernel_sq_le hfm.enorm
+    _ ≤ ∫⁻ t, ‖f t‖ₑ ^ 2 := lintegral_profileKernel_sq_le hfm.eNorm
     _ = eLpNorm f 2 volume ^ 2 := by
       simpa using (eLpNorm_nnreal_pow_eq_lintegral (p := 2) (by norm_num) hfm).symm
 

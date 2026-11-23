@@ -384,9 +384,10 @@ theorem integrableOn_comp_actionAngleInv_levelBand {a b : ℝ} (ha : 0 < a) (hb 
   have hw := (integrable_withDensity_iff_integrable_smul' measurable_actionWeight
     (Filter.Eventually.of_forall (fun q ↦ ENNReal.ofReal_lt_top))).mp hU.norm
   have hw' := (hw.mono_measure hσ)
+  have hsub : Icc a b ⊆ Ioo 0 1 :=
+    fun _ hh ↦ ⟨ha.trans_le hh.1, hh.2.trans_lt hb⟩
   have hc : ContinuousOn (fun h ↦ (2 * orbitPeriod h)⁻¹) (Icc a b) :=
-    (continuousOn_const.mul (contDiffOn_orbitPeriod.continuousOn.mono
-      (fun h hh ↦ ⟨lt_of_lt_of_le ha hh.1, lt_of_le_of_lt hh.2 hb⟩))).inv₀
+    (continuousOn_const.mul (contDiffOn_orbitPeriod.continuousOn.mono hsub)).inv₀
       (fun h hh ↦ (mul_pos (by norm_num)
         (orbitPeriod_pos (lt_of_lt_of_le ha hh.1) (lt_of_le_of_lt hh.2 hb))).ne')
   obtain ⟨C, hC⟩ := isCompact_Icc.bddAbove_image hc
@@ -3448,7 +3449,7 @@ theorem transversalMollifier_hasWeakPartialOn (hχ : ContDiff ℝ ∞ χ)
           gcongr
           exact (key ε hε j).2.2
       _ = _ := by
-          rw [eLpNorm_const_smul, Real.enorm_eq_ofReal hε.1.le]
+          rw [eLpNorm_const_smul, Real.eNorm_eq_ofReal hε.1.le]
           ring
 
 /-! #### `lem:transversal-mollifier-commutator` -/

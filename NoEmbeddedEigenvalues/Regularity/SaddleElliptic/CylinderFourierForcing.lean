@@ -36,7 +36,7 @@ theorem cylinder_forcing_fourier_data {a ρ : ℝ} {ε : Fin 2 → Bool}
   dsimp only
   refine ⟨cylinderFourierData_memLp _, ?_, ?_⟩
   · exact (cylinderFourierData_sq_mass _).trans (cylinderForcing_sq_mass hF)
-  · exact cylinderFourierData_support _ fun n hn ↦
+  · exact cylinderFourierData_support _ (M := {n | AllowedSaddleDegree ε n.natAbs}) fun n hn ↦
       (cylinder_forcing_modes hp hD hΔ hF n).2 hn
 
 /-- The second reflection sign relates negative and positive signed spectral

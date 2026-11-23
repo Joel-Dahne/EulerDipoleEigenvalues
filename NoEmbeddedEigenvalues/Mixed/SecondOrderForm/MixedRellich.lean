@@ -424,7 +424,7 @@ theorem mixed_rellich_weak_symm {ω : L2} (d : MixedQuotientData ω) :
         fderiv_clm_apply (hf q) (differentiableAt_const _),
         fderiv_clm_apply (hf q) (differentiableAt_const _)]
       simpa using (h2.contDiffAt (x := q)).isSymmSndFDerivAt
-        (by norm_num [minSmoothness]) (0, 1) (1, 0)
+        (by norm_num) (0, 1) (1, 0)
     simp only [Pi.sub_apply, sub_mul]
     rw [integral_sub
       (integrable_mul_of_tsupport_subset h01.2.1 hφ.contDiff.continuous

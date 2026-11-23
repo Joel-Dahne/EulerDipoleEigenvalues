@@ -194,7 +194,7 @@ theorem arcTrace_regularity {U : Set (ℝ × ℝ)} (hUo : IsOpen U) (hK : arcSeg
         rw [setLIntegral_univ]
         congr 1
         funext s
-        rw [enorm_smul, Real.enorm_eq_ofReal_abs]
+        rw [eNorm_smul, Real.eNorm_eq_ofReal_abs]
     _ = ∫⁻ a in φ '' univ, ‖D a‖ₑ := hcv.symm
     _ ≤ ∫⁻ a in Ioo (-(π / 2) - ε) (π / 2 + ε), ‖D a‖ₑ :=
         lintegral_mono_set (image_subset_iff.2 fun s _ ↦ hφr' s)

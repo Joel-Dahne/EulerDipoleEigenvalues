@@ -195,7 +195,7 @@ theorem exists_l2_orbit_endpoints {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn hc
     apply memLp_top_of_bound
       ((Complex.continuous_ofReal.comp_continuousOn
-        (continuousOn_orbitPeriod.comp continuous_fst.continuousOn
+        (continuousOn_orbitPeriod.comp (s := R) continuous_fst.continuousOn
           (fun q hq ↦ ⟨ha.trans hq.1.1, hq.1.2.trans (hb.trans h₀1)⟩))).aestronglyMeasurable
             (measurableSet_Ioo.prod measurableSet_Ioo)) C
     filter_upwards [ae_restrict_mem (measurableSet_Ioo.prod measurableSet_Ioo)] with q hq

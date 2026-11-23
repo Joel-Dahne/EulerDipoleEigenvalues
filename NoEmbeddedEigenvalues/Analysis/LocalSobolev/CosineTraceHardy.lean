@@ -42,7 +42,7 @@ theorem HasIntervalH1.lintegral_div_cos_sq {F D : ℝ → ℂ}
   have hind (P : ℝ → ℝ) (hP : MeasurePreserving P volume volume) (hEmb : MeasurableEmbedding P) :
       (∫⁻ t in Ioo 0 c, ENNReal.ofReal (‖∫ s in (0 : ℝ)..t, E (P s)‖ ^ 2 / t ^ 2)) ≤
         4 * M := by
-    refine (lintegral_mono_set (fun _ ht ↦ ht.1)).trans ?_
+    refine (lintegral_mono_set (Ioo_subset_Ioi_self : Ioo 0 c ⊆ Ioi 0)).trans ?_
     refine (lintegral_sq_primitive_div_sq_le_of_integrable
       (hP.integrable_comp_of_integrable hi)).trans ?_
     gcongr

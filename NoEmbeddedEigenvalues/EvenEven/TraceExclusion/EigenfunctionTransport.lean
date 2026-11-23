@@ -205,7 +205,7 @@ private theorem dist_dipoleFlow_le (p q : ℝ × ℝ) (t : ℝ) :
     simpa only [neg_neg, NNReal.coe_one, one_mul, sub_zero, abs_of_neg hneg] using hh
 
 private theorem lipschitzWith_dipoleFlow_time (p : ℝ × ℝ) : LipschitzWith 1 (dipoleFlow p) := by
-  apply lipschitzWith_of_nnnorm_deriv_le
+  apply lipschitzWith_of_nnNorm_deriv_le
     (fun s ↦ (hasDerivAt_dipoleFlow p s).differentiableAt)
   intro s
   rw [(hasDerivAt_dipoleFlow p s).deriv]

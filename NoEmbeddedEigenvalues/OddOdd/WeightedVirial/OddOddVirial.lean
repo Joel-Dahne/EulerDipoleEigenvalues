@@ -1849,17 +1849,17 @@ theorem ddStreamQuotient_memSobolevOn_of_le (ω : L2) {k : ℕ} (hk : k ≤ 2)
     hloc.div_smooth hU (by unfold dipoleLift; fun_prop) (fun _ hp ↦ hp.2.ne')
   have hbound : Bornology.IsBounded cellSquare :=
     hb.subset (subset_closure.trans closure_cellSquare_subset_cellNeighbourhood)
+  have hsub : ddTruncatedCell a ⊆ cellSquare := fun _ hp ↦ hp.1
+  have hlevel : ddTruncatedCell a ⊆ {p | a ≤ dipoleLift p} := fun _ hp ↦ hp.2.le
   have hclosure : closure (ddTruncatedCell a) ⊆ U := by
     intro p hp
-    refine ⟨closure_cellSquare_subset_cellNeighbourhood
-      (closure_mono (fun _ h ↦ h.1) hp), ?_⟩
+    refine ⟨closure_cellSquare_subset_cellNeighbourhood (closure_mono hsub hp), ?_⟩
     have hle : a ≤ dipoleLift p :=
-      closure_minimal (fun _ h ↦ h.2.le)
+      closure_minimal hlevel
         (isClosed_le continuous_const
           (show Continuous dipoleLift by unfold dipoleLift; fun_prop)) hp
     exact ha.trans_le hle
-  exact hd _ (isOpen_ddTruncatedCell a)
-    (hbound.subset (fun _ hp ↦ hp.1)).isCompact_closure hclosure
+  exact hd _ (isOpen_ddTruncatedCell a) (hbound.subset hsub).isCompact_closure hclosure
 
 /-- Local H² division on the open cell, with no global divided Sobolev domain. -/
 theorem ddStreamQuotient_memSobolevLocOn (ω : L2) :

@@ -377,13 +377,13 @@ theorem enorm_angularMode_le {h : ℝ} (h0 : 0 < h) (h1 : h < 1) (k : ℤ) (g : 
   rw [zero_add, show (-1 / 4 : ℝ) + 1 = 3 / 4 by norm_num] at hshift
   rw [hshift, intervalIntegral.integral_of_le (by norm_num),
     setLIntegral_congr (Ico_ae_eq_Ioc (μ := volume))]
-  refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
   congr 1
   funext θ
   have hn : ‖exp (-(2 * Real.pi * I * k * θ))‖ = 1 := by
     rw [Complex.norm_exp]
     simp
-  rw [enorm_mul, ← ofReal_norm, hn, ENNReal.ofReal_one, one_mul]
+  rw [eNorm_mul, ← ofReal_norm, hn, ENNReal.ofReal_one, one_mul]
 
 /-- The modes of a function in `L²` of a neighbourhood of an annulus are integrable in the
 level: `∫ |v_k(h)| dh < ∞`. The proof changes `v` on a null set to a measurable function,
@@ -455,7 +455,7 @@ theorem lintegral_enorm_angularMode_lt_top {U : Set (ℝ × ℝ)} {v : ℝ × �
     linarith
   set c := ENNReal.ofReal (2 * Smin)⁻¹
   set w : ℝ × ℝ → ENNReal := A.indicator fun p ↦ ‖v' p‖ₑ
-  have hw : Measurable w := hv'm.measurable.enorm.indicator hAm
+  have hw : Measurable w := hv'm.measurable.eNorm.indicator hAm
   have hpt : ∀ h ∈ Ioo h₁ h₂, ∀ θ, ‖v' (actionAngleInv (h, θ))‖ₑ ≤
       c * (ENNReal.ofReal (2 * orbitPeriod h) * w (actionAngleInv (h, θ))) := by
     intro h hh θ

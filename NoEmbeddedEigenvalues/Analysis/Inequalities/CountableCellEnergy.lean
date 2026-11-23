@@ -44,7 +44,7 @@ theorem memLp_two_of_cell_energy {α : Type*} [MeasurableSpace α] {μ : Measure
   apply (memLp_two_iff_integrable_sq_norm hFm).2
   refine ⟨hFm.norm.pow 2, ?_⟩
   rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun _ ↦ sq_nonneg _)]
-  have hsum := ENNReal.tsum_le_tsum hbe
+  have hsum := tsum_le_tsum hbe
   rw [ENNReal.tsum_mul_left,
     ← lintegral_iUnion hs hdis (fun x ↦ ENNReal.ofReal (G x))] at hsum
   rw [lintegral_iUnion hs hdis]

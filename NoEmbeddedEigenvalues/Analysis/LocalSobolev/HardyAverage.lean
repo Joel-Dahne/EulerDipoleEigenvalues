@@ -176,7 +176,7 @@ theorem lintegral_unit_comp_mul {f : ℝ → ℝ≥0∞} (hf : Measurable f) {r 
         simp [hs0, hs1, hsr]
     · simp [hs0]
   have he2 : (Ioi 0).indicator ((Ioo 0 r).indicator f) = (Ioo 0 r).indicator f := by
-    rw [indicator_indicator, inter_eq_right.2 (fun s hs ↦ hs.1)]
+    rw [indicator_indicator, inter_eq_right.2 Ioo_subset_Ioi_self]
   rw [← lintegral_indicator measurableSet_Ioi, he, lintegral_indicator measurableSet_Ioo,
     ← lintegral_indicator measurableSet_Ioi, he2, lintegral_indicator measurableSet_Ioo] at h
   exact h
@@ -203,7 +203,7 @@ theorem lintegral_sq_primitive_div_sq_le {D : ℝ → ℂ} (hD : Measurable D) :
       apply setLIntegral_mono' measurableSet_Ioi
       intro r hr
       rw [intervalIntegral.integral_of_le hr.le, integral_Ioc_eq_integral_Ioo]
-      have hi := enorm_integral_le_lintegral_enorm (μ := volume.restrict (Ioo 0 r)) D
+      have hi := eNorm_integral_le_lintegral_eNorm (μ := volume.restrict (Ioo 0 r)) D
       simp only [← ofReal_norm] at hi
       have hreal : ‖∫ t in Ioo 0 r, D t‖ ^ 2 / r ^ 2 =
           (r⁻¹ * ‖∫ t in Ioo 0 r, D t‖) ^ 2 := by ring

@@ -60,7 +60,7 @@ theorem hasCompactSupport_radialPlaneBump {R : ℝ} (hR : 0 < R) :
 theorem integral_radialPlaneBump_pos {R : ℝ} (hR : 0 < R) :
     0 < ∫ p, radialPlaneBump R p := by
   have hc := contDiff_radialPlaneBump R |>.continuous
-  apply integral_pos_of_integrable_nonneg_nonzero hc
+  apply integral_pos_of_integrable_nonneg_ne_zero hc
     (hc.integrable_of_hasCompactSupport (hasCompactSupport_radialPlaneBump hR))
   · intro p
     exact (ContDiffBumpBase.ofInnerProductSpace ℂ).mem_Icc 2 _ |>.1

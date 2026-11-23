@@ -42,9 +42,9 @@ theorem antitone_arcAngle : Antitone arcAngle := fun s t hst ↦ by
   linarith
 
 theorem lipschitzWith_arcAngle : LipschitzWith 1 arcAngle := by
-  refine lipschitzWith_of_nnnorm_deriv_le (fun s ↦ (hasDerivAt_arcAngle s).differentiableAt)
+  refine lipschitzWith_of_nnNorm_deriv_le (fun s ↦ (hasDerivAt_arcAngle s).differentiableAt)
     fun s ↦ ?_
-  rw [(hasDerivAt_arcAngle s).deriv, ← NNReal.coe_le_coe, coe_nnnorm, norm_neg, norm_div,
+  rw [(hasDerivAt_arcAngle s).deriv, ← NNReal.coe_le_coe, coe_nnNorm, norm_neg, norm_div,
     norm_one, Real.norm_of_nonneg (Real.cosh_pos s).le, NNReal.coe_one,
     div_le_one (Real.cosh_pos s)]
   exact Real.one_le_cosh s

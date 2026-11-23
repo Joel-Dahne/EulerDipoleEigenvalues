@@ -57,7 +57,6 @@ theorem descending_cells_ae_cover {e : ℕ → ℝ} (he : StrictAnti e)
     rw [ae_iff]
     simpa only [not_not, ofPred_mem_eq] using (countable_range e).measure_zero volume
   filter_upwards [hn] with x hx
-  apply propext
   constructor
   · rintro ⟨_, ⟨n, rfl⟩, hn⟩
     exact ⟨(hpos (n + 1)).trans hn.1, hn.2.trans_le (he.antitone (Nat.zero_le n))⟩

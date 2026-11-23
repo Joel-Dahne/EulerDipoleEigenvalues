@@ -109,7 +109,6 @@ theorem HasIntervalH1.lintegral_hardy_interior {a b z : ℝ} {N D U : ℝ → �
     apply Measure.restrict_congr_set
     filter_upwards [volume.ae_ne z] with x hx
     simp only [mem_Ioo, mem_union]
-    apply propext
     constructor <;> intro h
     · rcases lt_or_gt_of_ne hx with hlt | hgt
       · exact Or.inl ⟨h.1, hlt⟩

@@ -61,7 +61,7 @@ theorem eq_zero_of_integrable_divisor {a b z : ℝ} {N D E : ℝ → ℂ}
     rw [div_mul_eq_mul_div, div_le_iff₀ hC', ← div_eq_mul_inv, div_le_iff₀ hpos]
     nlinarith [hprod]
   have hfin : ∫⁻ x in Ioo a b, ‖E x‖ₑ < ⊤ :=
-    (hasFiniteIntegral_iff_enorm).1 hE.2
+    (hasFiniteIntegral_iff_eNorm).1 hE.2
   have hI : ∫⁻ x in Ioc z (z + ε), ENNReal.ofReal (x - z)⁻¹ < ⊤ := by
     have h1 : ENNReal.ofReal (m / C') *
         ∫⁻ x in Ioc z (z + ε), ENNReal.ofReal (x - z)⁻¹ < ⊤ := by

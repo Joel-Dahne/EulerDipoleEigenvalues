@@ -89,9 +89,9 @@ theorem absolutelyContinuous_of_continuousOn_derivative {a b : ℝ} {F D : ℝ �
     (hab : a ≤ b) (hD : ContinuousOn D (Icc a b))
     (hder : ∀ x ∈ Icc a b, HasDerivAt F (D x) x) :
     AbsolutelyContinuousOnInterval F a b := by
-  obtain ⟨C, hC⟩ := isCompact_Icc.bddAbove_image hD.nnnorm
+  obtain ⟨C, hC⟩ := isCompact_Icc.bddAbove_image hD.nnNorm
   have hL : LipschitzOnWith C F (Icc a b) :=
-    (convex_Icc a b).lipschitzOnWith_of_nnnorm_hasDerivWithin_le
+    (convex_Icc a b).lipschitzOnWith_of_nnNorm_hasDerivWithin_le
       (fun x hx ↦ (hder x hx).hasDerivWithinAt)
       (fun x hx ↦ hC (mem_image_of_mem (fun x ↦ ‖D x‖₊) hx))
   apply LipschitzOnWith.absolutelyContinuousOnInterval (K := C)

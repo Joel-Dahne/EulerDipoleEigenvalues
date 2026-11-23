@@ -214,8 +214,8 @@ theorem eLpNorm_integral_prob_le {α β : Type*}
       ‖∫ t, G (t, q) ∂ν‖ₑ ^ (2 : ℝ) ≤
           (eLpNorm (fun t ↦ G (t, q)) 1 ν) ^ (2 : ℝ) := by
             gcongr
-            exact enorm_integral_le_lintegral_enorm _ |>.trans
-              (lintegral_enorm_le_eLpNorm_one)
+            exact eNorm_integral_le_lintegral_eNorm _ |>.trans
+              (lintegral_eNorm_le_eLpNorm_one)
       _ ≤ (eLpNorm (fun t ↦ G (t, q)) 2 ν) ^ (2 : ℝ) := by
         gcongr
         exact eLpNorm_le_eLpNorm_of_exponent_le (by norm_num)
@@ -235,7 +235,7 @@ theorem eLpNorm_integral_prob_le {α β : Type*}
       _ = ∫⁻ z, ‖G z‖ₑ ^ (2 : ℝ) ∂(ν.prod σ) := by
         symm
         apply lintegral_prod_symm
-        exact (AEMeasurable.pow_const hG.aestronglyMeasurable.enorm 2)
+        exact (AEMeasurable.pow_const hG.aestronglyMeasurable.eNorm 2)
       _ = eLpNorm G 2 (ν.prod σ) ^ (2 : ℝ) := by
         symm
         exact eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num)
@@ -383,7 +383,7 @@ theorem eLpNorm_two_prod_rpow_eq {α β : Type*}
       eLpNorm_nnreal_pow_eq_lintegral (p := (2 : ℝ≥0)) (by norm_num) hG
     _ = ∫⁻ q, ∫⁻ t, ‖G (t, q)‖ₑ ^ (2 : ℝ) ∂ν ∂σ := by
       rw [lintegral_prod_symm]
-      exact (AEMeasurable.pow_const hG.enorm 2)
+      exact (AEMeasurable.pow_const hG.eNorm 2)
     _ = ∫⁻ q, eLpNorm (fun t ↦ G (t, q)) 2 ν ^ (2 : ℝ) ∂σ := by
       apply lintegral_congr_ae
       filter_upwards [hsec] with q hq
@@ -399,7 +399,7 @@ theorem ae_memLp_two_section {α β : Type*}
     hG.aestronglyMeasurable.prodMk_right
   let E : β → ENNReal := fun q ↦ ∫⁻ t, ‖G (t, q)‖ₑ ^ (2 : ℝ) ∂ν
   have hE : AEMeasurable E σ :=
-    (AEMeasurable.pow_const hG.aestronglyMeasurable.enorm 2).lintegral_prod_left'
+    (AEMeasurable.pow_const hG.aestronglyMeasurable.eNorm 2).lintegral_prod_left'
   have hEint : ∫⁻ q, E q ∂σ ≠ ⊤ := by
     have hEq : (∫⁻ q, E q ∂σ) =
         ∫⁻ q, eLpNorm (fun t ↦ G (t, q)) 2 ν ^ (2 : ℝ) ∂σ := by
@@ -444,7 +444,7 @@ private theorem tendsto_eLpNorm_translateFst_sub {μ : Measure ℝ} [SFinite μ]
     ∫⁻ h, ‖D t (h, θ)‖ₑ ^ (2 : ℝ) ∂volume
   have hEmeas : ∀ t, AEMeasurable (E t) μ := by
     intro t
-    exact ((hDmem t).aestronglyMeasurable.enorm.pow_const 2).lintegral_prod_left'
+    exact ((hDmem t).aestronglyMeasurable.eNorm.pow_const 2).lintegral_prod_left'
   let EF : ℝ → ENNReal := fun θ ↦ ∫⁻ h, ‖F (h, θ)‖ₑ ^ (2 : ℝ) ∂volume
   have hEFint : ∫⁻ θ, EF θ ∂μ ≠ ⊤ := by
     dsimp [EF]
@@ -676,7 +676,7 @@ private theorem tendsto_eLpNorm_scaled_translateFst_sub
   have hEmeas : ∀ ε : ℝ, AEMeasurable
       (fun t : ℝ ↦ ∫⁻ q, ‖D ε (t, q)‖ₑ ^ (2 : ℝ) ∂σ) ν := by
     intro ε
-    exact ((hDmem ε).aestronglyMeasurable.enorm.pow_const 2).lintegral_prod_right'
+    exact ((hDmem ε).aestronglyMeasurable.eNorm.pow_const 2).lintegral_prod_right'
   let E : ℝ → ℝ → ENNReal := fun ε t ↦
     ∫⁻ q, ‖D ε (t, q)‖ₑ ^ (2 : ℝ) ∂σ
   have hEmeas' : ∀ ε : ℝ, AEMeasurable (E ε) ν := by
@@ -773,7 +773,7 @@ private def derivativeParamMeasure : Measure ℝ :=
 private instance derivativeParamMeasure_isProbability :
     IsProbabilityMeasure derivativeParamMeasure := by
   refine ⟨?_⟩
-  norm_num [derivativeParamMeasure, Measure.smul_apply, Real.volume_Icc,
+  norm_num [derivativeParamMeasure, smul_apply, Real.volume_Icc,
     ENNReal.ofReal_ofNat]
   exact ENNReal.inv_mul_cancel (by norm_num) (by norm_num)
 

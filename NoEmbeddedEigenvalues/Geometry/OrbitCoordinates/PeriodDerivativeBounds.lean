@@ -38,7 +38,7 @@ private theorem contDiffOn_periodIntegrand₁ :
   have hS : ContDiff ℝ ∞ periodSlope := by unfold periodSlope; fun_prop
   have hQ : ContDiff ℝ ∞ periodDenom := by unfold periodDenom; fun_prop
   exact hS.contDiffOn.neg.div
-    (contDiffOn_const.mul ((hQ.contDiffOn.sqrt (fun _ hq ↦ hq.ne')).pow 3))
+    (contDiffOn_const.mul ((hQ.contDiffOn.sqrt (fun q (hq : 0 < periodDenom q) ↦ hq.ne')).pow 3))
     (fun q hq ↦ mul_ne_zero (by norm_num) (pow_ne_zero _ (sqrt_pos.2 hq).ne'))
 
 private theorem contDiffOn_periodIntegrand₂ :

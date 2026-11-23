@@ -99,7 +99,7 @@ theorem quasiMeasurePreserving_logCylinderCoordinates :
     change logCylinderCoordinates (logPolarPlane (q.1, q.2)) = logCylinderProjection q
     rw [← logCylinderPlane_coe q.1 q.2]
     exact logCylinderCoordinates_plane _
-  refine ⟨measurable_logCylinderCoordinates, ?_⟩
+  refine ⟨measurable_logCylinderCoordinates.aemeasurable, ?_⟩
   rw [← measurePreserving_logPolarPlane.map_eq,
     Measure.map_map measurable_logCylinderCoordinates continuous_logPolarPlane.measurable, hc]
   exact hπ.absolutelyContinuous.trans hlength

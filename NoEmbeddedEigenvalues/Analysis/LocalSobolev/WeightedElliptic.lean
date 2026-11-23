@@ -102,7 +102,7 @@ private theorem memLp_of_shell_bounds {α : Type*} [MeasurableSpace α] {μ : Me
     MemLp f 2 (μ.restrict (⋃ n, A n)) := by
   let b (n : ℕ) := ∫⁻ p in B n, ENNReal.ofReal (H p) ∂μ
   have hb : ∑' n, b n < ∞ := by
-    rw [← (Nat.divModEquiv 6).symm.tsum_eq b, ENNReal.tsum_prod', ENNReal.tsum_comm,
+    rw [← (Nat.divModEquiv 6).symm.tsum_eq b, tsum_prod', tsum_comm,
       tsum_fintype]
     apply ENNReal.sum_lt_top.mpr
     intro j _
@@ -121,7 +121,7 @@ private theorem memLp_of_shell_bounds {α : Type*} [MeasurableSpace α] {μ : Me
     rw [← ofReal_integral_eq_lintegral_ofReal (hH.mono_set (hBU n))
       (Eventually.of_forall hpos), ← ENNReal.ofReal_mul hK]
     exact ENNReal.ofReal_le_ofReal (hbound n)
-  exact (lintegral_iUnion_le A _).trans_lt ((ENNReal.tsum_le_tsum he).trans_lt (by
+  exact (lintegral_iUnion_le A _).trans_lt ((tsum_le_tsum he).trans_lt (by
     rw [ENNReal.tsum_mul_left]
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top hb))
 

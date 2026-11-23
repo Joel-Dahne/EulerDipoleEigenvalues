@@ -53,7 +53,8 @@ private theorem phase_smooth (lam : ℝ) : ContDiffOn ℝ ∞ (phase lam) action
 
 private theorem weight_smooth (lam : ℝ) : ContDiffOn ℝ ∞ (weight lam) actionStrip :=
   (Complex.ofRealCLM.contDiff.comp_contDiffOn
-    (contDiffOn_orbitPeriod.comp contDiff_fst.contDiffOn (fun _ hq ↦ hq.1))).mul (phase_smooth lam)
+    (contDiffOn_orbitPeriod.comp (s := actionStrip) contDiff_fst.contDiffOn
+      (fun _ hq ↦ hq.1))).mul (phase_smooth lam)
 
 private theorem fluxWeight_smooth (lam : ℝ) : ContDiffOn ℝ ∞ (fluxWeight lam) actionStrip :=
   (Complex.ofRealCLM.contDiff.comp_contDiffOn contDiffOn_snd).mul (phase_smooth lam)

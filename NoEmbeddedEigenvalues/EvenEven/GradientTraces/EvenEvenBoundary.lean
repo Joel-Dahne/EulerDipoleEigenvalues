@@ -548,10 +548,10 @@ theorem absolutelyContinuousOnInterval_comp_artanh {X : Type*} [PseudoMetricSpac
       rcases le_total 0 x with h0 | h0
       · exact (min_le_right _ _).trans (by nlinarith [hx.2])
       · exact (min_le_left _ _).trans (by nlinarith [hx.1])
-    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ (by positivity),
+    rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal _ (by positivity),
       Real.norm_of_nonneg (by have := hm0.trans_le hw; positivity)]
     exact one_div_le_one_div_of_le hm0 hw
-  have hL := (convex_uIcc c d).lipschitzOnWith_of_nnnorm_hasDerivWithin_le
+  have hL := (convex_uIcc c d).lipschitzOnWith_of_nnNorm_hasDerivWithin_le
     (fun x hx ↦ (hasDerivAt_artanh (hsub hx)).hasDerivWithinAt) hbound
   refine AbsolutelyContinuousOnInterval.comp_monotoneOn (hf (Real.artanh c) (Real.artanh d)) hL
     (fun x hx y hy h ↦ Real.artanh_le_artanh (hsub hx).1 (hsub hy).2 h) fun x hx ↦ ?_

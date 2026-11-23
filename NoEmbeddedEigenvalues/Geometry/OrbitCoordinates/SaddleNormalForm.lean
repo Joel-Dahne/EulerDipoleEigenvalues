@@ -65,7 +65,7 @@ private theorem contDiff_sinc : ContDiff ℝ ∞ Real.sinc := by
   rcases eq_or_ne x 0 with rfl | hx
   · rw [Real.sinc_eq_dslope]
     obtain ⟨p, hp⟩ := Real.analyticAt_sin (x := 0)
-    exact hp.has_fpower_series_dslope_fslope.analyticAt
+    exact hp.dslope_fslope.analyticAt
   · refine (Real.analyticAt_sin.div analyticAt_id hx).congr ?_
     filter_upwards [eventually_ne_nhds hx] with y hy using (Real.sinc_of_ne_zero hy).symm
 

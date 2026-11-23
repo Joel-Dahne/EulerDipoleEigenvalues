@@ -389,7 +389,7 @@ theorem mixed_neumann_trace_memLp_flow {T : ℝ → ℂ} (σ : Bool)
       (volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2))) := by
     have hc : Continuous (mixedNeumannA σ) := continuous_iff_continuousAt.2
       fun t ↦ (mixedNeumannA_deriv σ t).continuousAt
-    refine ⟨hc.measurable, Measure.AbsolutelyContinuous.mk ?_⟩
+    refine ⟨hc.measurable.aemeasurable, Measure.AbsolutelyContinuous.mk ?_⟩
     intro s hs hm
     rw [Measure.map_apply hc.measurable hs]
     have hm' : ∀ᵐ a ∂volume.restrict (Ioo (-Real.pi / 2) (Real.pi / 2)),
@@ -644,7 +644,7 @@ private theorem mixed_integrating_factor_limit {q : ℝ → ℂ} (hq : MemLp q 2
   by_contra hb
   have hpos : 0 < ‖b‖ / 2 := half_pos (norm_pos_iff.mpr hb)
   have hm : volume {t | ‖b‖ / 2 ≤ ‖q t‖} < ⊤ := by
-    simpa only [Real.coe_toNNReal _ hpos.le, coe_nnnorm, ← NNReal.coe_le_coe] using
+    simpa only [Real.coe_toNNReal _ hpos.le, coe_nnNorm, ← NNReal.coe_le_coe] using
       hq.meas_ge_lt_top (by norm_num) (by norm_num)
         (ne_of_gt (show 0 < Real.toNNReal (‖b‖ / 2) from Real.toNNReal_pos.2 hpos))
   have hnorm {l : Filter ℝ} (hl : Tendsto f l (𝓝 b)) :

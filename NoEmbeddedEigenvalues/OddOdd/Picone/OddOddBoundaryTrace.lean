@@ -223,7 +223,7 @@ private theorem boundaryB_quarter_limit {f : ℝ × ℝ → ℝ} (hf : Continuou
     exact arc_density_bound hM hbound ha
   have hga : Integrable (fun t ↦ g (separatrixArc t)) := by
     refine ⟨(hgm.comp (by unfold separatrixArc arcAngle; fun_prop)).aestronglyMeasurable, ?_⟩
-    apply hasFiniteIntegral_iff_enorm.mpr
+    apply hasFiniteIntegral_iff_eNorm.mpr
     rw [lintegral_separatrixArc_eq (fun p ↦ ‖g p‖ₑ)]
     have he : (∫⁻ a in A, ENNReal.ofReal (1 / cos a) * ‖g (diagInv (a, π / 2))‖ₑ) =
         ∫⁻ a in A, ‖g (diagInv (a, π / 2)) / cos a‖ₑ := by
@@ -235,7 +235,7 @@ private theorem boundaryB_quarter_limit {f : ℝ × ℝ → ℝ} (hf : Continuou
       simp only [norm_div, Real.norm_eq_abs, abs_of_pos hc]
       ring
     rw [he]
-    exact hasFiniteIntegral_iff_enorm.mp hArc.hasFiniteIntegral
+    exact hasFiniteIntegral_iff_eNorm.mp hArc.hasFiniteIntegral
   have hquarter (h : ℝ) (hh : h ∈ Ioo (0 : ℝ) (1 / 4)) :
       (∫ t in Ioo (-eighthPeriod h) (eighthPeriod h), g (dipoleOrbit h t)) = ∫ a in A, H h a := by
     rw [integral_quarter_eq hh.1 (by linarith [hh.2]),
