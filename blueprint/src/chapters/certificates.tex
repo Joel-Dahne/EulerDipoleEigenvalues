@@ -246,6 +246,32 @@ Normalize the polynomial expressions against the two power tables.
 Evaluate the expanded residual directly at the center, without clearing $R$.
 \end{proof}
 
+\begin{lemma}[Odd-in-$b$ corner sign]
+\label{cert:odd-b-corner}
+\uses{lem:mixed-v-residual-identity}
+\lean{NoEmbeddedEigenvalues.mixed_odd_b_residual_corner}
+\leanok
+The residual $\mathcal R_v$ is nonnegative on $[15/16,1]^2$.
+\end{lemma}
+
+\begin{proof}
+\uses{lem:mixed-odd-b-clear, lem:mixed-v-multiplier-bounds}
+\leanok
+Write $U=1-h^2$, $W=1-k^2$, $S=h+k$, and $R=U+W$.
+When $R>0$, replace the potential contribution $-2U^2 F_v/R$ by its
+lower bound $-2UF_v$. The omitted correction is $2UW F_v/R\ge0$.
+Clearing only $10^6S^3$ from the resulting lower bound gives
+$P(1-h,1-k)+Q(1-h,1-k)\log h$.
+For each shifted power table, keep the constant term, discard positive
+nonconstant terms, and bound negative terms using
+$(1-h)^i(1-k)^j\le 16^{-(i+j)}$.
+Applied to $P$ and $-Q$, the rational checks give
+$P\ge 2600000$ and $Q\le 19000000$.
+The inequality $1-1/h\le \log h\le0$ yields
+$\log h\ge-1/15$, so the numerator is nonnegative.
+At $(1,1)$ use the direct residual value.
+\end{proof}
+
 \begin{lemma}[Odd-in-$b$ small-strip sign]
 \label{cert:odd-b-small}
 \uses{lem:mixed-odd-b-clear}

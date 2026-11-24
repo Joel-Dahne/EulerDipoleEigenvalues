@@ -313,6 +313,84 @@ theorem mixed_odd_b_clear (h k : ℝ) (hh : 0 < h) (hs : h + k ≠ 0)
   field_simp [hs, hr, hh.ne']
   ring
 
+/-- Cleared lower bound obtained by replacing `-2 * (1 - h ^ 2) ^ 2 / R` in the
+potential by `-2 * (1 - h ^ 2)`. Only the denominator `(h+k)^3` remains. -/
+@[no_expose] def mixedOddBCornerNum (h k l : ℝ) : ℝ :=
+  let s := h + k
+  let r := 2 - h ^ 2 - k ^ 2
+  let u := 1 - h ^ 2
+  let v := 1 - k ^ 2
+  let f := bF h k l
+  let fx := bFx h k l
+  let fy := bFy h k l
+  let g := k * f - v * fy
+  let d := dNum h s
+  let c := cNum h
+  let fxxNum := h * (-452 + 7590 * k - 5004 * h) + bT k
+  let dFactor := h * s + 2 * u
+  100 * (-h * (-d * s ^ 2 * fx + c * s * g) +
+    u * (-dxNum h s * s * fx - dFactor * s ^ 2 * fxxNum +
+      cxNum h s * g + c * s * (k * fx - v * bFxy h k l)) -
+    (cyNum h * u * v - 2 * k * c * s * u) * fx -
+    c * s * u * v * bFxy h k l + dyNum h s * s * g +
+    d * s ^ 2 * (f + 3 * k * fy - v * bFyy h k l) -
+    s * (h ^ 2 * r + 2 * u * k * s) * f) - h ^ 2 * s ^ 3 * f
+
+/-- Recover the original cleared residual by adding back the nonnegative
+potential correction and restoring the factor `R`. -/
+theorem mixed_odd_b_corner_clear (h k : ℝ) :
+    mixedOddBCleared h k (Real.log h) =
+      (2 - h ^ 2 - k ^ 2) * mixedOddBCornerNum h k (Real.log h) +
+        2000000 * (h + k) ^ 3 * (1 - h ^ 2) * (1 - k ^ 2) *
+          mixedOddBMultiplier (h, k) := by
+  rw [multiplier_value]
+  dsimp only [mixedOddBCleared, mixedOddBCornerNum]
+  generalize bF h k (Real.log h) = f
+  generalize bFx h k (Real.log h) = fx
+  generalize bFy h k (Real.log h) = fy
+  generalize bFxy h k (Real.log h) = fxy
+  generalize bFyy h k (Real.log h) = fyy
+  generalize bT k = t
+  generalize hd : h + k = s
+  generalize hr : 2 - h ^ 2 - k ^ 2 = r
+  have hv : r = (1 - h ^ 2) + (1 - k ^ 2) := by rw [← hr]; ring
+  linear_combination (norm := ring) 200 * f * (1 - h ^ 2) * s ^ 2 * r * hd +
+    200 * f * (1 - h ^ 2) * s ^ 3 * hv
+
+/-- Shifted power coefficients of the corner numerator, part A. -/
+def mixedOddBCornerA (i : Fin 9) (j : Fin 7) : ℚ :=
+  (![
+    ![5362136, -35161852, 92613730, -117744051, 78952969, -26950605, 3681733],
+    ![-7049996, 16036868, -67379089, 98393576, -83490896, 41275749, -8230266],
+    ![630930, 48707055, -11448282, 34764036, -34611591, -1524983, 4115133],
+    ![-6533891, -56266560, -81081702, 50422606, 22810494, -9373361, 0],
+    ![18186017, 86494005, 40627013, -55695769, 6232024, 0, 0],
+    ![-29935054, -65654271, 14836073, 6608602, 0, 0, 0],
+    ![24538929, 17326148, -5539743, 0, 0, 0, 0],
+    ![-9105705, -1089993, 0, 0, 0, 0, 0],
+    ![1251834, 0, 0, 0, 0, 0, 0]] : Fin 9 → Fin 7 → ℚ) i j
+
+/-- Shifted power coefficients of the corner numerator, part B. -/
+def mixedOddBCornerB (i : Fin 7) (j : Fin 6) : ℚ :=
+  (![
+    ![17912296, -64477500, 89180866, -60706019, 20503952, -2752995],
+    ![-40752132, 137243728, -200290883, 156810343, -63403241, 10262985],
+    ![-1317458, 19096363, 28051169, -87012300, 56697411, -11264985],
+    ![64311419, -216831675, 191597136, -39376168, -12538107, 3754995],
+    ![-59266829, 176361467, -145924382, 38719759, -1761015, 0],
+    ![21192717, -54905201, 36653299, -6270015, 0, 0],
+    ![-2742613, 6001618, -2758005, 0, 0, 0]] : Fin 7 → Fin 6 → ℚ) i j
+
+theorem mixed_odd_b_corner_power (x y l : ℝ) :
+    mixedOddBCornerNum (1 - x) (1 - y) l =
+      certificatePolynomial mixedOddBCornerA x y +
+        certificatePolynomial mixedOddBCornerB x y * l := by
+  simp only [mixedOddBCornerNum, certificatePolynomial, Fin.sum_univ_succ,
+    mixedOddBCornerA, mixedOddBCornerB, Matrix.cons_val_zero, Matrix.cons_val_succ,
+    bF, bFx, bFy, bFxy, bFyy, bP, bT, bT', dNum, cNum, dxNum, dyNum, cxNum, cyNum]
+  norm_num [Fin.val_succ]
+  ring
+
 /-- Polynomial terms independent of, and multiplying, the logarithm. -/
 def mixedOddBA (h k : ℝ) : ℝ := mixedOddBCleared h k 0
 
