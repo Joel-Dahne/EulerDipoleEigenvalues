@@ -31,7 +31,10 @@ check and reuse intermediate first-axis coefficient tables. The
 [generator](../../scripts/verify_mixed_odd_a.py) reproduces the integer data
 but is not used as proof evidence. For `cert:odd-b`, the power tables,
 center value, logarithm reduction, and `cert:odd-b-small` are checked.
-In `cert:odd-b-strips`, the two endpoints on each strip share a dyadic tree.
+The proof of `cert:odd-b` uses `cert:odd-b-first-strip` for `h ≥ 1/2`:
+`cert:odd-b-corner` and two short-log rectangles replace the original
+strip-zero replay. For the remaining strips in `cert:odd-b-strips`, the
+two endpoints on each strip share a dyadic tree.
 Lean checks the root power conversion once and verifies each scaled integer
 midpoint split against its parent. The independent
 [search script](../../scripts/verify_mixed_odd_b.py) produces the certificate

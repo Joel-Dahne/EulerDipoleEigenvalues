@@ -87,7 +87,7 @@ def strip_polynomials(a, b, j):
     return tuple(sp.Poly(p, z, K) for p in (lower, upper))
 
 
-def lean_strip(j, polynomials, tree, replay=False):
+def lean_strip(j, polynomials, tree, replay=False, private=False, prefix='oddB'):
     def lean_tree(t):
         if t is None:
             return '.leaf'
@@ -105,14 +105,16 @@ def lean_strip(j, polynomials, tree, replay=False):
                 chunks[-1].append(e)
         print('  #v[' + ',\n    '.join(', '.join(line) for line in chunks) + (']]' if last else '],'))
 
+    visibility = 'private ' if private else ''
     if not replay:
-        print(f'/-- Common midpoint schedule for strip {j}. -/')
-        print(f'def oddBTree{j} : BernsteinMidTree :=\n  {lean_tree(tree)}\n')
+        region = f'rectangle {j}' if private else f'strip {j}'
+        print(f'/-- Common midpoint schedule for {region}. -/')
+        print(f'{visibility}def {prefix}Tree{j} : BernsteinMidTree :=\n  {lean_tree(tree)}\n')
     for p, label in zip(polynomials, ('Lower', 'Upper')):
         coeffs = rows(p)
         scale = lcm(*(v.denominator for row in coeffs for v in row))
         n, m = p.degree_list()
-        name = f'oddB{label}{j}'
+        name = f'{prefix}{label}{j}'
         def table(term, data):
             print(f'{term} : BernsteinIntTable {n} {m} := #v[')
             for i, row in enumerate(data):
@@ -122,9 +124,9 @@ def lean_strip(j, polynomials, tree, replay=False):
         ints = [[int(scale*v) for v in row] for row in coeffs]
         if not replay:
             print(f'/-- Common power denominator of the {label.lower()} endpoint on strip {j}. -/')
-            print(f'def {name}Scale : ℕ := {scale}\n')
+            print(f'{visibility}def {name}Scale : ℕ := {scale}\n')
             print(f'/-- Integer power coefficients of the {label.lower()} endpoint on strip {j}. -/')
-            table(f'def {name}Power', ints)
+            table(f'{visibility}def {name}Power', ints)
             continue
 
         def axis(row):
@@ -135,13 +137,17 @@ def lean_strip(j, polynomials, tree, replay=False):
         root = tuple(zip(*map(axis, zip(*middle))))
         table(f'private def {name}Middle', middle)
         table(f'private def {name}Root', root)
-        print(f'private theorem {name}Root_eq : bernsteinIntFromPower {name}Power = {name}Root :=')
+        sig = f'private theorem {name}Root_eq :'
+        eq = f'bernsteinIntFromPower {name}Power = {name}Root :='
+        print(f'{sig}\n    {eq}' if private else f'{sig} {eq}')
         print(f'  bernsteinIntFromPower_eq (middle := {name}Middle) (by decide +kernel)')
         print('    (by decide +kernel)\n')
 
         def replay_node(node, data, parent):
             if node is None:
-                print(f'private theorem {parent}_check : BernsteinMidTree.leaf.check {parent} = true := by')
+                sig = f'private theorem {parent}_check :'
+                check = f'BernsteinMidTree.leaf.check {parent} = true := by'
+                print(f'{sig}\n    {check}' if private else f'{sig} {check}')
                 print('  decide +kernel\n')
                 return
             direction, l, r = node
@@ -157,7 +163,9 @@ def lean_strip(j, polynomials, tree, replay=False):
 
         replay_node(tree, root, name+'Root')
         print(f'/-- Kernel-checked integer subdivision signs for the {label.lower()} endpoint. -/')
-        print(f'theorem {name}_check : oddBTree{j}.check (bernsteinIntFromPower {name}Power) = true := by')
+        sig = f'{visibility}theorem {name}_check :'
+        check = f'{prefix}Tree{j}.check (bernsteinIntFromPower {name}Power) = true := by'
+        print(f'{sig}\n    {check}' if private else f'{sig} {check}')
         print(f'  rw [{name}Root_eq]')
         print(f'  exact {name}Root_check\n')
 
@@ -201,12 +209,27 @@ def optimal_tree(roots, max_x=5, max_y=6):
     return n, depth, tree
 
 
+def lean_first_strip(a, b):
+    """Emit certificates on the two rectangles outside the analytic corner."""
+    a, b = a.as_expr(), b.as_expr()
+    lower = 6*H*(1+H)*a - (12*H*(1-H) + (1-H)**3)*b
+    upper = (1+H)*a - 2*(1-H)*b
+    for label, h, k in [('Left', (8+7*H)/16, K), ('Right', (15+H)/16, 15*K/16)]:
+        polys = [sp.Poly(p.subs({H: h, K: k}, simultaneous=True), H, K)
+                 for p in (lower, upper)]
+        _, _, tree = optimal_tree(tuple(map(integer_bernstein, polys)), max_x=1, max_y=1)
+        for replay in (False, True):
+            lean_strip(label, polys, tree, replay=replay, private=True, prefix='first')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--lean-power', action='store_true', help='emit the two integer power tables')
     group.add_argument('--trees', action='store_true', help='print the common strip trees')
     group.add_argument('--lean-strips', action='store_true', help='emit power tables and trees')
+    group.add_argument('--lean-first-strip', action='store_true',
+                       help='emit the short-log strip-0 certificates outside the corner')
     group.add_argument('--lean-replay', type=int, choices=range(10),
                        help='emit checked intermediate tables and proofs for one strip')
     args = parser.parse_args()
@@ -215,6 +238,9 @@ def main():
         for name, p in [('A', a), ('B', b)]:
             lean_table('mixedOddB'+name+'Int',
                        'Integer power coefficients of the odd-in-b polynomial '+name+'.', rows(p))
+        return
+    if args.lean_first_strip:
+        lean_first_strip(a, b)
         return
     if args.lean_replay is not None:
         j = args.lean_replay

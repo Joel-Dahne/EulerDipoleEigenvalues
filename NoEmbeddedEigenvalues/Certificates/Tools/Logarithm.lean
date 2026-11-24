@@ -138,6 +138,32 @@ theorem certificate_log_two_bounds :
   rw [← div_div]
   exact h.2
 
+/-- The first term of the odd logarithm series, with a geometric bound on the tail. -/
+theorem certificate_log_cayley_bounds {t : ℝ} (ht : 0 ≤ t) (ht1 : t < 1) :
+    2 * t ≤ Real.log ((1 + t) / (1 - t)) ∧
+      Real.log ((1 + t) / (1 - t)) ≤ 2 * t + 2 * t ^ 3 / (3 * (1 - t ^ 2)) := by
+  have hs := Real.hasSum_log_sub_log_of_abs_lt_one (by rwa [abs_of_nonneg ht])
+  have ht2 : t ^ 2 < 1 := pow_lt_one₀ ht ht1 two_ne_zero
+  have hb := series_bounds hs 1 (sq_nonneg t) ht2 (C := 2 * t ^ 3 / 3)
+    (fun k ↦ by positivity) (by
+      intro k
+      have hp : t ^ (2 * (k + 1) + 1) = t ^ 3 * (t ^ 2) ^ k := by
+        rw [← pow_mul, ← pow_add]
+        congr 1
+        omega
+      rw [hp]
+      have hd : (3 : ℝ) ≤ 2 * ((k + 1 : ℕ) : ℝ) + 1 := by
+        push_cast
+        linarith [Nat.cast_nonneg (α := ℝ) k]
+      have hm := one_div_le_one_div_of_le (by norm_num : (0 : ℝ) < 3) hd
+      calc
+        _ ≤ 2 * (1 / 3 : ℝ) * (t ^ 3 * (t ^ 2) ^ k) := by gcongr
+        _ = _ := by ring)
+  rw [← Real.log_div (by linarith : 1 + t ≠ 0) (by linarith : 1 - t ≠ 0)] at hb
+  norm_num at hb
+  rw [← div_div]
+  exact hb
+
 /-- An affine expression is nonnegative between two endpoints at which it is
     nonnegative; there is no sign hypothesis on its slope. -/
 theorem certificate_affine_in_log {A B lo hi t : ℝ} (ht : t ∈ Icc lo hi)

@@ -22,15 +22,11 @@ private theorem endpoint_nonneg {n m : ℕ} (p : BernsteinIntTable n m)
   rw [he] at h
   exact nonneg_of_mul_nonneg_right h hD
 
-/-- The twenty polynomial signs on the rescaled unit squares. -/
-theorem mixed_odd_b_strip_signs (j : ℕ) (hj : j < 10) (z k : ℝ)
+/-- The Taylor endpoint signs on strips 1 through 9. -/
+theorem mixed_odd_b_positive_strip_signs (j : ℕ) (hj : j < 10) (hj₀ : 0 < j) (z k : ℝ)
     (hz : z ∈ Icc 0 1) (hk : k ∈ Icc 0 1) :
     0 ≤ mixedOddBStripLower j z k ∧ 0 ≤ mixedOddBStripUpper j z k := by
   interval_cases j
-  · exact ⟨endpoint_nonneg _ _ oddBLower0_check (by norm_num [oddBLower0Scale])
-      (oddBLower0_power z k) hz hk,
-      endpoint_nonneg _ _ oddBUpper0_check (by norm_num [oddBUpper0Scale])
-        (oddBUpper0_power z k) hz hk⟩
   · exact ⟨endpoint_nonneg _ _ oddBLower1_check (by norm_num [oddBLower1Scale])
       (oddBLower1_power z k) hz hk,
       endpoint_nonneg _ _ oddBUpper1_check (by norm_num [oddBUpper1Scale])
@@ -67,5 +63,17 @@ theorem mixed_odd_b_strip_signs (j : ℕ) (hj : j < 10) (z k : ℝ)
       (oddBLower9_power z k) hz hk,
       endpoint_nonneg _ _ oddBUpper9_check (by norm_num [oddBUpper9Scale])
         (oddBUpper9_power z k) hz hk⟩
+
+/-- The twenty polynomial signs on the rescaled unit squares. -/
+theorem mixed_odd_b_strip_signs (j : ℕ) (hj : j < 10) (z k : ℝ)
+    (hz : z ∈ Icc 0 1) (hk : k ∈ Icc 0 1) :
+    0 ≤ mixedOddBStripLower j z k ∧ 0 ≤ mixedOddBStripUpper j z k := by
+  by_cases hj₀ : j = 0
+  · subst j
+    exact ⟨endpoint_nonneg _ _ oddBLower0_check (by norm_num [oddBLower0Scale])
+        (oddBLower0_power z k) hz hk,
+        endpoint_nonneg _ _ oddBUpper0_check (by norm_num [oddBUpper0Scale])
+          (oddBUpper0_power z k) hz hk⟩
+  · exact mixed_odd_b_positive_strip_signs j hj (Nat.pos_of_ne_zero hj₀) z k hz hk
 
 end NoEmbeddedEigenvalues

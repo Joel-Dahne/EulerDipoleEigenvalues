@@ -120,7 +120,7 @@ theorem mixed_odd_b_identity {p : ℝ × ℝ} (hp : p ∈ mixedQuarterCell) :
     At `(1,1)` the potential uses its specified continuous value. -/
 theorem mixed_odd_b_residual_nonneg {h k : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1)
     (hk : k ∈ Icc (0 : ℝ) 1) : 0 ≤ mixedOddBResidual (h, k) :=
-  mixed_odd_b_residual_nonneg_of_strips mixed_odd_b_strip_signs hh hk
+  mixed_odd_b_residual_nonneg_of_strips mixed_odd_b_positive_strip_signs hh hk
 
 private theorem cos_mem_unit {t : ℝ} (ht : t ∈ Ioo 0 (Real.pi / 2)) :
     Real.cos t ∈ Ioo 0 1 := by

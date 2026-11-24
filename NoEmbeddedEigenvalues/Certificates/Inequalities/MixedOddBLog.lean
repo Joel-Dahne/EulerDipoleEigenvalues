@@ -2,6 +2,7 @@ module
 
 public import NoEmbeddedEigenvalues.Certificates.Tools.Logarithm
 public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBAlgebra
+import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBFirstStrip
 
 /-!
 # Logarithm reduction for the mixed odd-in-b sign
@@ -171,9 +172,10 @@ private theorem dyadic_cover (n : ℕ) {h : ℝ} (hlo : (1 / 2 : ℝ) ^ n < h) (
     · obtain ⟨j, hj, hbox⟩ := ih ht
       exact ⟨j, Nat.lt_succ_of_lt hj, hbox⟩
 
-/-- Sign on the full rectangle from the twenty polynomial endpoint inequalities. -/
+/-- Sign on the full rectangle, using the corner and short-log rectangles
+on strip zero and the Taylor endpoints only on positive-index strips. -/
 theorem mixed_odd_b_residual_nonneg_of_strips
-    (hstrips : ∀ j < 10, ∀ z k : ℝ, z ∈ Icc 0 1 → k ∈ Icc 0 1 →
+    (hstrips : ∀ j < 10, 0 < j → ∀ z k : ℝ, z ∈ Icc 0 1 → k ∈ Icc 0 1 →
       0 ≤ mixedOddBStripLower j z k ∧ 0 ≤ mixedOddBStripUpper j z k)
     {h k : ℝ} (hh : h ∈ Ioc (0 : ℝ) 1) (hk : k ∈ Icc (0 : ℝ) 1) :
     0 ≤ mixedOddBResidual (h, k) := by
@@ -181,6 +183,9 @@ theorem mixed_odd_b_residual_nonneg_of_strips
   · exact mixed_odd_b_small_strip ⟨hh.1, hsmall⟩ hk
   have hlo : (1 / 2 : ℝ) ^ (10 : ℕ) < h := by norm_num at hlarge ⊢; exact hlarge
   obtain ⟨j, hj, hbox⟩ := dyadic_cover 10 hlo hh.2
+  by_cases hj₀ : j = 0
+  · subst j
+    exact mixed_odd_b_first_strip ⟨by simpa using hbox.1, hh.2⟩ hk
   let p : ℝ := (1 / 2) ^ j
   let z := 2 * (1 - h / p)
   have hp : 0 < p := by dsimp [p]; positivity
@@ -195,7 +200,7 @@ theorem mixed_odd_b_residual_nonneg_of_strips
     change p * (1 - 2 * (1 - h / p) / 2) = h
     field_simp [hp.ne']
     ring
-  obtain ⟨hl, hu⟩ := hstrips j hj z k hz hk
+  obtain ⟨hl, hu⟩ := hstrips j hj (Nat.pos_of_ne_zero hj₀) z k hz hk
   rw [← he]
   exact mixed_odd_b_of_strip_endpoints hz hk hl hu
 
