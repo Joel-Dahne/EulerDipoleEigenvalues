@@ -531,7 +531,7 @@ theorem IsTransportPair.angularMode_eq_zero_of_resonant (hp : IsTransportPair la
   have hβc : ∀ᶠ h in 𝓝 hk, |lam| / 2 < |β h| := by
     have : |β hk| = |lam| := by simp only [β, hres]
     exact (hβd.continuousAt.abs).eventually (lt_mem_nhds (by
-      show |lam| / 2 < |β hk|
+      change |lam| / 2 < |β hk|
       rw [this]; linarith [abs_pos.2 hlam]))
   have hfk : ∀ᶠ h in 𝓝 hk, m / 2 < ‖angularMode h k f‖ :=
     (continuousAt_angularMode hfc h₁0 h₂1 hA k hkI).norm.eventually (lt_mem_nhds (by linarith))

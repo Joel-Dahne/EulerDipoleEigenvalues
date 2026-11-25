@@ -17,7 +17,7 @@ open MeasureTheory Set
 /-- Weighted numerator regularity with the quantitative bounds used downstream
 (`lem:weighted-numerator-estimates`). No rotation character is needed here. -/
 theorem weighted_numerator_estimates {lam : ℝ} {U : Set (ℝ × ℝ)} {v f g : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hb : Bornology.IsBounded U)
+    (hp : IsTransportPair lam U v f) (_hb : Bornology.IsBounded U)
     (hcell : closure cellSquare ⊆ U) (hg : ContinuousOn g U)
     (hfg : f =ᵐ[volume.restrict U] g) {D : List (Fin 2) → ℝ × ℝ → ℂ}
     (hD : HasWeakJetOn 2 U g D)

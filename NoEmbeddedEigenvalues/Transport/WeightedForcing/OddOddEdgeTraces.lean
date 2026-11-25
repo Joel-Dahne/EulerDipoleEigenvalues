@@ -108,7 +108,7 @@ theorem HasTransverseH1Trace.reflected_sector {ω : L2} {e₁ e₂ : Bool}
     filter_upwards [liftL2_diagonalTraceChart_character_ae hs j side] with q hq
     change liftL2 ω (diagonalTraceChart j (normalReflection (2 * cellEdgeNormal side) q)) =
       χ * liftL2 ω (diagonalTraceChart j q) at hq
-    simpa only [Function.comp_apply, hq, ← mul_assoc, hχ, one_mul]
+    simp only [Function.comp_apply, hq, ← mul_assoc, hχ, one_mul]
   refine ⟨hR.1.congr_ae he, ?_⟩
   have htrace := hR.2.congr_ae_pullback (C' := diagonalTraceChart j) (F' := liftL2 ω)
     (ae_restrict_of_ae he)

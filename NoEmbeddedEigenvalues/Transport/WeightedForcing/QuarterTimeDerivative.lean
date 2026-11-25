@@ -65,12 +65,11 @@ The spatial data are L² only on the bounded cell, not on the whole plane. -/
 theorem HasWeakL0On.quarter_time {b : ℝ} (hb : b < 1)
     {U : Set (ℝ × ℝ)} {F D : ℝ × ℝ → ℂ}
     (hA : orbitAnnulus 0 b ⊆ U) (hd : HasWeakL0On U F D)
-    (hmF : Measurable F) (hmD : Measurable D)
+    (_hmF : Measurable F) (_hmD : Measurable D)
     (hF : MemLp F 2 (volume.restrict cellSquare))
     (hD : MemLp D 2 (volume.restrict cellSquare)) :
     HasWeakPartialOn (quarterOrbitStrip b) 1
       (fun q ↦ F (dipoleOrbit q.1 q.2)) (fun q ↦ D (dipoleOrbit q.1 q.2)) := by
-  clear hmF hmD
   exact hd.quarter_time_of_memLp hb hA hF hD
 
 end NoEmbeddedEigenvalues

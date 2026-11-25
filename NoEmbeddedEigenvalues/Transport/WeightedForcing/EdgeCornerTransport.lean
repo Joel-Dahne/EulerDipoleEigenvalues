@@ -86,13 +86,16 @@ private theorem inwardEdge_left_corner_mem_saddle (j : Fin 2) (side : Bool) :
   have hn : -Real.pi / 2 = -(Real.pi / 2) := neg_div _ _
   fin_cases j <;> cases side
   · refine ⟨-1, 0, by decide, ?_⟩
-    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn] <;> ring
+    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn]
+    ring
   · refine ⟨0, 1, by decide, ?_⟩
     simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn]
   · refine ⟨-1, 0, by decide, ?_⟩
-    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn] <;> ring
+    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn]
+    ring
   · refine ⟨0, -1, by decide, ?_⟩
-    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn] <;> ring
+    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, hn]
+    ring
 
 /-- On the shifted Cartesian cone, the original saddle distance is at most
 three times the tangential distance to the endpoint. -/

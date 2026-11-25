@@ -169,7 +169,7 @@ private theorem smoothForcing_odd_flat {P : Plane} (hP : P ∈ saddleSet)
       have h := (((Real.hasDerivAt_cos P.2).ofReal_comp.const_mul
         (Complex.I / (lam : ℂ))).const_add 1).const_mul (b * (↑(Real.sqrt 2) : ℂ)⁻¹)
       unfold coordPartial partialY
-      try simp only [Fin.reduceEq, ite_false]
+      simp only [Fin.reduceEq, ite_false]
       rw [h.deriv]
       simp [hsin.2]
   · simp only [List.length_cons] at hw

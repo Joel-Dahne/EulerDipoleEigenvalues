@@ -136,6 +136,6 @@ theorem cylinderCartesianFirst_hasWeakPartial {a : ℝ}
   · rw [coordPartial_cylinderRadialFrame_lift, coordPartial_cylinderAngularFrame_lift]
     fin_cases j <;>
       (simp [cylinderLift, cylinderCartesianFirst, cylinderCartesianFirstAngle]; ring_nf)
-    all_goals simp
+    simp
 
 end NoEmbeddedEigenvalues

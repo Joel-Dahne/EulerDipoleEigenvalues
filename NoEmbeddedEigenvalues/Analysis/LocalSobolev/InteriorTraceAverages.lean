@@ -163,7 +163,7 @@ theorem HasTransverseH1Trace.tendsto_square_oscillation {l r a b : ℝ}
   apply (div_le_iff₀ (sq_pos_of_pos (by positivity : 0 < 2 * ε))).mpr
   convert hAll using 1
   field_simp [he.ne']
-  <;> ring
+  ring
 
 private theorem continuous_det_plane : Continuous (fun A : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ) ↦ A.det) := by
   have he (A : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) :

@@ -58,10 +58,10 @@ theorem arcSegment_subset_closure_cellSquare : arcSegment ⊆ closure cellSquare
     rw [diagCoord_diagInv]
     have ha' : |a| ≤ π / 2 := abs_le.2 ⟨ha.1, ha.2⟩
     constructor
-    · show |t * a| < π / 2
+    · change |t * a| < π / 2
       rw [abs_mul, abs_of_pos ht.1]
       nlinarith [ht.2, abs_nonneg a, mul_le_mul_of_nonneg_left ha' ht.1.le]
-    · show |t * b| < π / 2
+    · change |t * b| < π / 2
       rw [abs_mul, abs_of_pos ht.1, hb', abs_of_pos (by linarith : (0 : ℝ) < π / 2)]
       nlinarith [ht.2]
 
@@ -683,7 +683,6 @@ theorem melnikov_character {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : 
       exact hes n
     have heL : e (Ls n) = e (-Ls n) * κ⁻¹ := by
       rw [he_def, ← hphase, ← Complex.exp_add]
-      congr 1
       simp only [Ls]
       push_cast
       ring
@@ -763,7 +762,7 @@ theorem melnikov_character {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : 
       have := (Real.le_log_iff_exp_le hpos).2 hb
       rw [Real.log_div hCe0.ne' (Real.sqrt_pos.2 h0).ne', Real.log_sqrt h0.le] at this
       have hlog : Real.log (1 / h) = -Real.log h := by rw [one_div, Real.log_inv]
-      show eighthPeriod h ≤ _
+      change eighthPeriod h ≤ _
       rw [hlog]
       linarith
     have hpow : (Co' * √h) ^ (1 / 2 : ℝ) = Co' ^ (1 / 2 : ℝ) * h ^ (1 / 4 : ℝ) := by

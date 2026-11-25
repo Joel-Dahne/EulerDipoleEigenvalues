@@ -134,7 +134,11 @@ theorem mixed_field_algebra :
     simp only [mixedFieldA, mixedFieldB, mixedFieldCoeff, mixed_field_cos_sum,
       mixedFieldX, mixedFieldY, tan_eq_sin_div_cos]
     simp only [ha, hb, sin_add, sin_sub]
-    refine ⟨?_, ?_, ?_⟩ <;> (field_simp <;> ring)
+    refine ⟨?_, ?_, ?_⟩
+    · field_simp
+    · field_simp
+    · field_simp
+      ring
   constructor
   · intro p hp
     obtain ⟨dx, dy, cx, cy⟩ := mixed_field_cartesian_partials hp

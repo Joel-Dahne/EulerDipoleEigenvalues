@@ -273,7 +273,7 @@ private theorem integrated_current_error (φ : L2) {ε : ℝ} (hε : ε ∈ Ioo 
 
 /-- The error in replacing the actual current coefficient by `-(8/3)(1-B)` integrates
     to zero: the uniform `O(ε)` coefficient error times the logarithmic period vanishes. -/
-theorem dd_current_remainder_limit {φ : L2} (hφ : MemSobolev 2 φ) :
+theorem dd_current_remainder_limit {φ : L2} (_hφ : MemSobolev 2 φ) :
     Tendsto (fun ε ↦ ddGroundCurrent φ ε + (8 / 3 : ℝ) * ddLevelMass φ ε -
       (8 / 3 : ℝ) * ddLevelBMass φ ε) (𝓝[>] 0) (𝓝 0) := by
   have hlog : Tendsto (fun ε : ℝ ↦ ε * Real.log (1 / ε)) (𝓝[>] 0) (𝓝 0) := by

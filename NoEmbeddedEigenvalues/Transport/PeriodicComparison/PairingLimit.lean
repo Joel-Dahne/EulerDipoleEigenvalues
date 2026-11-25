@@ -252,7 +252,8 @@ theorem quarter_pairing_limit {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f
     dsimp [z, canonicalUnknown, g, Function.comp_def]
     ring
   have hzd := ae_hasDerivAt_canonicalUnknown_sub hp.ne_zero hgi hgdiff
-  have hκnorm : ‖(κ : ℂ)‖ = 1 := by rcases hκ with rfl | rfl | rfl | rfl <;> simp [← pow_two, Complex.I_sq]
+  have hκnorm : ‖(κ : ℂ)‖ = 1 := by
+    rcases hκ with rfl | rfl | rfl | rfl <;> simp
   have hends : f (0, -π) = κ * f (π, 0) := by
     simpa using hfR (π, 0) (hK saddle_neg_mem_arcSegment)
   let D : ℝ := 2 * (B + C) / |lam|

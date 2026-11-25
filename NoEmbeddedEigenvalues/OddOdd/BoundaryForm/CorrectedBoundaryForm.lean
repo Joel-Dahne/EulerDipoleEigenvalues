@@ -1139,13 +1139,13 @@ theorem HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_opposite {F D E : ℝ
 
 /-- Nonnegativity on the weighted second-order domain, including integrability.
     The exclusion needs no strict positivity or boundary equality classification. -/
-theorem correctedBoundaryForm_nonneg {lam : ℝ} (hlam : lam ≠ 0) {κ : Bool}
+theorem correctedBoundaryForm_nonneg {lam : ℝ} (_hlam : lam ≠ 0) {κ : Bool}
     {F D E : ℝ → ℂ} (hF : HasWeightedBoundaryH2 F D E)
     (hends : intervalH1Extension (-1) 1 F D 1 =
       paritySign κ * intervalH1Extension (-1) 1 F D (-1)) :
     IntegrableOn (correctedBoundaryTerm lam F D) (Ioo (-1) 1) ∧
       0 ≤ correctedBoundaryForm lam F D E := by
-  clear hlam
+  clear _hlam
   refine ⟨hF.integrable_correctedBoundaryTerm lam, ?_⟩
   cases κ with
   | false => exact hF.correctedBoundaryForm_nonneg_opposite lam (by simpa [paritySign] using hends)
