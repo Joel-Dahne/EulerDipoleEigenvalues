@@ -1428,7 +1428,8 @@ theorem h20Window : Window 3 (9 / 128) (145 / 2048) (-1391883 / 524288) (-694127
     (by norm_num [X, certificateLogTaylor, Finset.sum_range_succ])
     (by norm_num [X, certificateLogTaylor, Finset.sum_range_succ])
 
-theorem h20MidWindow : Window 3 (289 / 4096) (289 / 4096) (-2780131 / 1048576) (-1390065 / 524288) :=
+theorem h20MidWindow : Window 3 (289 / 4096) (289 / 4096)
+    (-2780131 / 1048576) (-1390065 / 524288) :=
   window (by constructor <;> norm_num)
     (by norm_num [X, certificateLogTaylor, Finset.sum_range_succ])
     (by norm_num [X, certificateLogTaylor, Finset.sum_range_succ])

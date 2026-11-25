@@ -128,7 +128,8 @@ theorem formulaH (h k l : ℝ) : groupedDH h k l =
     ((DH7 h l) + (DH8 h l) * k) * k) * k) * k) * k) * k) * k) * k)
     := by
   unfold groupedDH
-  norm_num [horner, DH0, DH1, DH2, DH3, DH4, DH5, DH6, DH7, DH8, bPadded, mixedOddBAInt, mixedOddBBInt,
+  norm_num [horner, DH0, DH1, DH2, DH3, DH4, DH5, DH6, DH7, DH8, bPadded, mixedOddBAInt,
+    mixedOddBBInt,
     Fin.val_zero, Fin.val_succ, Matrix.cons_val_zero, Matrix.cons_val_zero',
     Matrix.cons_val_succ, Matrix.cons_val_succ']
 

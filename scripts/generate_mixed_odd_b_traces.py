@@ -13,6 +13,7 @@ from mixed_odd_b_trace_boxes import (
 )
 
 CAP = 8_000
+STYLE_LINE_LENGTH = 100
 BASE = 'NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBTrace'
 OUT = ROOT / BASE.replace('.', '/')
 
@@ -72,7 +73,8 @@ def expr_identity(fn, form, name, k_derivative=False):
     else:
         yield f'  unfold {fn}'
     defs = ', '.join(f'{form}{j}' for j in range(8 if form == 'B' else 9))
-    yield f'  norm_num [horner, {defs}, bPadded, mixedOddBAInt, mixedOddBBInt,'
+    yield from wrap(f'  norm_num [horner, {defs}, bPadded, mixedOddBAInt, mixedOddBBInt,',
+                    STYLE_LINE_LENGTH, subsequent_indent='    ', break_long_words=False)
     yield "    Fin.val_zero, Fin.val_succ, Matrix.cons_val_zero, Matrix.cons_val_zero',"
     if k_derivative:
         yield "    Matrix.cons_val_succ, Matrix.cons_val_succ', mul_comm (2 : ℝ), mul_comm (3 : ℝ),"
@@ -215,8 +217,11 @@ class StripTrace:
 
 
     def proof_window(self, name, h, l):
-        return [f'theorem {name} : Window {self.strip_arg}{self.q(h[0])} {self.q(h[1])} {self.q(l[0])} {self.q(l[1])} :=',
-                f'  window {self.strip_proof}',
+        head = f'theorem {name} : Window {self.strip_arg}{self.q(h[0])} {self.q(h[1])}'
+        tail = f'{self.q(l[0])} {self.q(l[1])} :='
+        declaration = ([f'{head} {tail}'] if len(head) + 1 + len(tail) <= STYLE_LINE_LENGTH
+                       else [head, f'    {tail}'])
+        return [*declaration, f'  window {self.strip_proof}',
                 '    (by norm_num [X, certificateLogTaylor, Finset.sum_range_succ])',
                 '    (by norm_num [X, certificateLogTaylor, Finset.sum_range_succ])', '']
 
