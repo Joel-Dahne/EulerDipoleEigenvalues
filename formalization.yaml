@@ -37,6 +37,7 @@ sources:
 automation:
   methods:
     - method: agent
+      models: ["GPT-6.1 Sol", "GPT-6.2 Sol"]
       framework: Pi
       cost:
         spend_usd: "$20/month subscription for roughly two months"

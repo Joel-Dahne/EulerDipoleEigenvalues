@@ -30,10 +30,10 @@ records what changed.
 ## AI-assisted formalization
 
 This was our first experience formalizing a proof, and our workflow evolved
-as we learned Lean. We used AI agents extensively to break the argument
-into lemmas and to write and revise Lean proofs. The blueprint became the
-map for that work: it tracked dependencies, linked lemmas to Lean, and
-recorded gaps or changes to the original argument.
+as we learned Lean. We used AI agents to break the argument into lemmas
+and to write and revise Lean proofs, primarily using GPT-6.1 Sol and
+GPT-6.2 Sol through Pi. The blueprint tracked dependencies, linked lemmas
+to Lean, and recorded gaps or changes to the original argument.
 
 [AGENTS.md](AGENTS.md) records the instructions we developed for the agents,
 from how to work through a blueprint lemma to how to report a gap in the
@@ -43,8 +43,11 @@ adapted from Scott Armstrong's [LeanAutoformalizationSkills](https://github.com/
 See the [attribution notice](.agents/skills/ATTRIBUTION.md) for the source
 revision and details of the adaptations.
 
-The full Git history is preserved, so readers can see how both the proof
-and the workflow evolved from the first commits.
+In preparing the repository for release, we removed some obsolete files and
+updated the documentation. The repository still reflects how the proof
+developed rather than how we might organize it if we were starting from
+scratch. We've kept the full Git history so readers can follow how both the
+proof and the workflow evolved.
 
 We used a $20/month subscription for the Pi work over roughly two months.
 Saved Pi sessions on the main development machine record about 2.07 billion
@@ -107,10 +110,18 @@ of transport with a first-order differential operator. The identities are
 first used away from the separatrix, the boundary between the flow cells.
 Transport and regularity estimates justify taking limits there. The resulting
 bulk and boundary sign estimates force the eigenfunction to vanish.
+
 Some of the coefficient inequalities are proved using exact-arithmetic
 certificates: a Python script searches for bounds and subdivisions, and
 Lean verifies the resulting inequalities and checks that the boxes cover
 the required region.
+
+One group of these certificates accounts for roughly 660,000 lines of Lean
+spread across hundreds of mostly generated files. An earlier version of the
+proof used certificates based on Bernstein polynomials. Lean's kernel
+accepted that proof, but Nanoda ran out of memory checking it. That was one
+reason we replaced most of those certificates with explicit bounds that
+both checkers could verify on a 32 GB machine.
 
 The [blueprint](blueprint/README.md) gives the details and records where
 the Lean proof departs from the working manuscript. Its
