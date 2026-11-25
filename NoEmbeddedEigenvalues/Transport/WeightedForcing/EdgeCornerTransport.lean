@@ -106,8 +106,13 @@ theorem saddleDist_inwardEdge_corner_le {r u : ℝ} (hu : u ∈ Ioo 0 r)
   apply (Metric.infDist_le_dist_of_mem hc).trans
   have hr : 0 < r := hu.1.trans hu.2
   fin_cases j <;> cases side <;>
-    simp [inwardEdgeChart, diagonalTraceChart, edgeSideSign, Prod.dist_eq, Real.dist_eq,
-      abs_le] <;> exact ⟨⟨by linarith [hu.1, hu.2], by linarith [hu.1, hu.2]⟩,
+    simp only [inwardEdgeChart, Fin.zero_eta, Fin.mk_one, Fin.isValue, edgeCornerShift_apply,
+      Function.comp_apply, diagonalTraceChart, one_ne_zero, ↓reduceIte, edgeInward_apply,
+      edgeSideSign, Bool.false_eq_true, neg_mul, one_mul, neg_sub, diagInv_apply,
+      sub_sub_sub_cancel_right, sub_add_sub_cancel', sub_add_sub_cancel, sub_zero, Prod.dist_eq,
+      Real.dist_eq, dist_sub_eq_dist_add_right, dist_sub_eq_dist_add_left, sub_neg_eq_add,
+      sup_le_iff, abs_le, neg_le_sub_iff_le_add, neg_add_le_iff_le_add, add_neg_le_iff_le_add,
+      tsub_le_iff_right] <;> exact ⟨⟨by linarith [hu.1, hu.2], by linarith [hu.1, hu.2]⟩,
       ⟨by linarith [hu.1, hu.2], by linarith [hu.1, hu.2]⟩⟩
 
 /-- The original area-weighted norm and H¹ norm exclude the common mode

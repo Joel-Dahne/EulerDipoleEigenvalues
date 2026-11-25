@@ -152,9 +152,9 @@ theorem hasL0_charLp (k : ℤ × ℤ) :
   have c3 : (j1 - 1 = k1 ∧ j2 = k2) ↔ (j1 = k1 + 1 ∧ j2 = k2) := by omega
   have c4 : (j1 + 1 = k1 ∧ j2 = k2) ↔ (j1 = k1 - 1 ∧ j2 = k2) := by omega
   simp only [c1, c2, c3, c4]
-  split_ifs <;> first | (exfalso; omega) | skip
-  all_goals
-    try obtain ⟨rfl, rfl⟩ := ‹(_ : ℤ) = _ ∧ (_ : ℤ) = _›
+  split_ifs <;> first
+  | exfalso; omega
+  | try obtain ⟨rfl, rfl⟩ := ‹(_ : ℤ) = _ ∧ (_ : ℤ) = _›
     push_cast
     ring
 
