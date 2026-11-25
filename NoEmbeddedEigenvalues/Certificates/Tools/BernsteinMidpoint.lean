@@ -67,7 +67,8 @@ noncomputable def BernsteinMidpointAux.axisEval {n : ℕ} (c : Fin (n + 1) → �
   ∑ i, c i * certificateBernsteinBasis n i.val x
 
 private theorem axisEval_succ {n : ℕ} (c : Fin (n + 2) → ℝ) (x : ℝ) :
-    BernsteinMidpointAux.axisEval c x = (1 - x) * BernsteinMidpointAux.axisEval (fun i ↦ c i.castSucc) x +
+    BernsteinMidpointAux.axisEval c x =
+      (1 - x) * BernsteinMidpointAux.axisEval (fun i ↦ c i.castSucc) x +
       x * BernsteinMidpointAux.axisEval (fun i ↦ c i.succ) x := by
   let C (i : ℕ) : ℝ := if hi : i < n + 2 then c ⟨i, hi⟩ else 0
   have hs := rawEval_succ n C x
@@ -79,7 +80,8 @@ private theorem axisEval_succ {n : ℕ} (c : Fin (n + 2) → ℝ) (x : ℝ) :
     Fin.castSucc, Fin.castAdd, Fin.castLE, Fin.succ] using hs
 
 private theorem axisEval_rev {n : ℕ} (c : Fin (n + 1) → ℝ) (x : ℝ) :
-    BernsteinMidpointAux.axisEval (fun i ↦ c i.rev) x = BernsteinMidpointAux.axisEval c (1 - x) := by
+    BernsteinMidpointAux.axisEval (fun i ↦ c i.rev) x =
+      BernsteinMidpointAux.axisEval c (1 - x) := by
   unfold BernsteinMidpointAux.axisEval
   rw [← Equiv.sum_comp (Fin.revPerm : Fin (n + 1) ≃ Fin (n + 1))
     (fun i ↦ c i.rev * certificateBernsteinBasis n i.val x)]
@@ -95,7 +97,8 @@ private theorem axisEval_rev {n : ℕ} (c : Fin (n + 1) → ℝ) (x : ℝ) :
   ring
 
 private theorem axisEval_add {n : ℕ} (c d : Fin (n + 1) → ℝ) (x : ℝ) :
-    BernsteinMidpointAux.axisEval (fun i ↦ c i + d i) x = BernsteinMidpointAux.axisEval c x + BernsteinMidpointAux.axisEval d x := by
+    BernsteinMidpointAux.axisEval (fun i ↦ c i + d i) x =
+      BernsteinMidpointAux.axisEval c x + BernsteinMidpointAux.axisEval d x := by
   simp [BernsteinMidpointAux.axisEval, add_mul, sum_add_distrib]
 
 private theorem axisEval_mul {n : ℕ} (c : Fin (n + 1) → ℝ) (a x : ℝ) :
@@ -178,14 +181,16 @@ abbrev BernsteinIntTable (n m : ℕ) := Vector (Vector ℤ (m + 1)) (n + 1)
 
 /-- Tensor Bernstein evaluation before dividing by the common positive scale. -/
 noncomputable def bernsteinIntEval {n m : ℕ} (c : BernsteinIntTable n m) (x y : ℝ) : ℝ :=
-  BernsteinMidpointAux.axisEval (fun i ↦ BernsteinMidpointAux.axisEval (fun j ↦ ((c.get i).get j : ℝ)) y) x
+  BernsteinMidpointAux.axisEval
+    (fun i ↦ BernsteinMidpointAux.axisEval (fun j ↦ ((c.get i).get j : ℝ)) y) x
 
 def BernsteinMidpointAux.transpose {n m : ℕ} (c : BernsteinIntTable n m) : BernsteinIntTable m n :=
   Vector.ofFn fun j ↦ Vector.ofFn fun i ↦ (c.get i).get j
 
 private theorem eval_transpose {n m : ℕ} (c : BernsteinIntTable n m) (x y : ℝ) :
     bernsteinIntEval (BernsteinMidpointAux.transpose c) y x = bernsteinIntEval c x y := by
-  simp only [bernsteinIntEval, BernsteinMidpointAux.axisEval, BernsteinMidpointAux.transpose, get_ofFn, sum_mul]
+  simp only [bernsteinIntEval, BernsteinMidpointAux.axisEval,
+    BernsteinMidpointAux.transpose, get_ofFn, sum_mul]
   rw [sum_comm]
   exact sum_congr rfl fun i _ ↦ sum_congr rfl fun j _ ↦ by ring
 
@@ -197,15 +202,18 @@ def BernsteinMidpointAux.midRow {n m : ℕ} (right : Bool) (c : BernsteinIntTabl
 def bernsteinMidTable {n m : ℕ} (vertical right : Bool) (c : BernsteinIntTable n m) :
     BernsteinIntTable n m :=
   if vertical then BernsteinMidpointAux.midRow right c
-  else BernsteinMidpointAux.transpose (BernsteinMidpointAux.midRow right (BernsteinMidpointAux.transpose c))
+  else BernsteinMidpointAux.transpose
+    (BernsteinMidpointAux.midRow right (BernsteinMidpointAux.transpose c))
 
-noncomputable def BernsteinMidpointAux.child (right : Bool) (x : ℝ) : ℝ := if right then (1 + x) / 2 else x / 2
+noncomputable def BernsteinMidpointAux.child (right : Bool) (x : ℝ) : ℝ :=
+  if right then (1 + x) / 2 else x / 2
 
 private theorem eval_midRow {n m : ℕ} (right : Bool) (c : BernsteinIntTable n m) (x y : ℝ) :
     bernsteinIntEval (BernsteinMidpointAux.midRow right c) x y =
       (2 : ℝ) ^ m * bernsteinIntEval c x (BernsteinMidpointAux.child right y) := by
   cases right <;>
-    simp only [bernsteinIntEval, BernsteinMidpointAux.midRow, BernsteinMidpointAux.child, get_ofFn, Bool.false_eq_true, ite_false, ite_true,
+    simp only [bernsteinIntEval, BernsteinMidpointAux.midRow, BernsteinMidpointAux.child, get_ofFn,
+      Bool.false_eq_true, ite_false, ite_true,
       axisEval_midLeft, axisEval_midRight, axisEval_mul]
 
 /-- The midpoint algorithm is exact up to its positive scale. -/
@@ -396,7 +404,8 @@ theorem bernsteinIntFromPower_eq {n m : ℕ} {p middle root : BernsteinIntTable 
   apply table_ext_get
   intro i j
   have h : ((BernsteinMidpointAux.transpose middle).map bernsteinAxisFromPower).get j =
-      bernsteinAxisFromPower ((BernsteinMidpointAux.transpose middle).get j) := Vector.getElem_map _ j.isLt
+      bernsteinAxisFromPower ((BernsteinMidpointAux.transpose middle).get j) :=
+    Vector.getElem_map _ j.isLt
   simp only [BernsteinMidpointAux.transpose, get_ofFn] at h ⊢
   rw [h]
   exact hcol i j

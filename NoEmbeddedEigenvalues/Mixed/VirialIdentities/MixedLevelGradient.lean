@@ -95,7 +95,8 @@ theorem mixed_level_actual_mass_limit {ω : L2} (d : MixedQuotientData ω)
     congr 1
     apply integral_congr_ae
     refine Eventually.of_forall fun a ↦ ?_
-    cases σ <;> simp only [V, E, mixedQuarterSidePoint, mixedQuarterPoint, mixedQuarterHeight, cellEdgeNormal,
+    cases σ <;> simp only [V, E, mixedQuarterSidePoint, mixedQuarterPoint, mixedQuarterHeight,
+      cellEdgeNormal,
       Bool.false_eq_true, ite_true, ite_false, one_mul, neg_mul, neg_div, mul_sub]
   have L := tendsto_finsetSum Finset.univ fun j _ ↦ tendsto_finsetSum Finset.univ fun σ _ ↦ hl j σ
   simp only [Finset.sum_const_zero] at L

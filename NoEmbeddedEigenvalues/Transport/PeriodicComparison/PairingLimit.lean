@@ -528,7 +528,8 @@ theorem pairing_limit_character_of_goodLevels {lam : ℝ} {κ : ℂ}
 /-- The limit of the vorticity pairing for any of the four rotation characters.
 The good sequence can avoid an arbitrary prescribed null set. -/
 theorem pairing_limit_character {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : ℝ × ℝ → ℂ}
-    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U) (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I)
+    (hp : IsTransportPair lam U v f) (hU : closure cellSquare ⊆ U)
+    (hκ : κ = 1 ∨ κ = -1 ∨ κ = I ∨ κ = -I)
     (hUR : ∀ p ∈ U, (p.2, -p.1) ∈ U) (hfR : ∀ p ∈ U, f (p.2, -p.1) = κ * f p)
     (hfc : ContinuousOn f U)
     {N : Set ℝ} (hN : volume N = 0) :

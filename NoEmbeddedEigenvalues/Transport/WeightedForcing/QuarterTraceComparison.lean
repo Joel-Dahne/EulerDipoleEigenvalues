@@ -158,7 +158,8 @@ theorem quarterEndpointTrace_compare {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     change dipoleOrbit h ((θ + 0) * orbitPeriod h) = _
     rw [ht]
     cases side <;> simpa using hp
-  have hFU := locallyIntegrableOn_of_locallyIntegrable_restrict (hF.1.locallyIntegrable (by norm_num))
+  have hFU :=
+    locallyIntegrableOn_of_locallyIntegrable_restrict (hF.1.locallyIntegrable (by norm_num))
   have hRay := ae_quarterEndpointRadius hd hρ (quarterRay_physical_square hU hcell hF side)
   have hNorm : ∀ᵐ h ∂volume.restrict (Ioo 0 d),
       HasContinuousSectionGerm (fun s ↦ F (C (h, s))) ∧

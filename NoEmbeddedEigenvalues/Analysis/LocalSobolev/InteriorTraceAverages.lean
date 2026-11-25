@@ -45,7 +45,8 @@ theorem HasTransverseH1Trace.tendsto_square_oscillation {l r a b : ℝ}
   let J := Ioo a b
   let E : ℝ → ℝ := fun x ↦ ∫ t in J, ‖D (x, t)‖ ^ 2
   let P : ℝ → ℝ := fun x ↦ Real.sqrt (E x)
-  have ht : IntegrableOn T I := ((hACL.l2_trace hab hGm hG hD 0 ⟨ha.le, hb.le⟩).1.ae_eq hT.symm).integrable
+  have ht : IntegrableOn T I :=
+    ((hACL.l2_trace hab hGm hG hD 0 ⟨ha.le, hb.le⟩).1.ae_eq hT.symm).integrable
     (by norm_num : (1 : ENNReal) ≤ 2)
   have hDp : MemLp D 2 ((volume.restrict I).prod (volume.restrict J)) := by
     simpa only [Measure.prod_restrict, Measure.volume_eq_prod] using hD
@@ -54,7 +55,8 @@ theorem HasTransverseH1Trace.tendsto_square_oscillation {l r a b : ℝ}
     have hi : Integrable E (volume.restrict I) := hE
     have h1 : IntegrableOn (fun _ : ℝ ↦ (1 : ℝ)) (Icc l r) :=
       integrableOn_const isCompact_Icc.measure_lt_top.ne
-    apply (hi.add (h1.mono_set Ioo_subset_Icc_self)).mono' (Real.continuous_sqrt.comp_aestronglyMeasurable hE.aestronglyMeasurable)
+    apply (hi.add (h1.mono_set Ioo_subset_Icc_self)).mono'
+      (Real.continuous_sqrt.comp_aestronglyMeasurable hE.aestronglyMeasurable)
     apply Eventually.of_forall
     intro x
     rw [Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _)]
@@ -106,7 +108,9 @@ theorem HasTransverseH1Trace.tendsto_square_oscillation {l r a b : ℝ}
     simpa only [Real.sqrt_zero] using (Real.continuous_sqrt.tendsto 0).mono_left nhdsWithin_le_nhds
   have hlim := htlim.add (hsqrt.mul (hplim.add (tendsto_const_nhds (x := P x))))
   rw [zero_add, zero_mul] at hlim
-  refine squeeze_zero' (Eventually.of_forall fun _ ↦ div_nonneg (integral_nonneg fun _ ↦ norm_nonneg _) (sq_nonneg _)) ?_ hlim
+  refine squeeze_zero'
+    (Eventually.of_forall fun _ ↦
+      div_nonneg (integral_nonneg fun _ ↦ norm_nonneg _) (sq_nonneg _)) ?_ hlim
   filter_upwards [hsmall] with ε he
   obtain ⟨he, hXI, hYJ⟩ := he
   let X := closedBall x ε
@@ -127,13 +131,15 @@ theorem HasTransverseH1Trace.tendsto_square_oscillation {l r a b : ℝ}
       fun _ hq ↦ congrArg (fun z : ℂ ↦ ‖z - T x‖) hq.symm)
   have hBound : ∀ᵐ y ∂(volume.restrict X), (∫ t in Y, ‖G (y, t) - T x‖) ≤
       (2 * ε) * (‖T y - T x‖ + Real.sqrt ε * (‖P y - P x‖ + P x)) := by
-    filter_upwards [hGtp.prod_right_ae, hinc.filter_mono (ae_mono (Measure.restrict_mono_set _ hXI))]
+    filter_upwards [hGtp.prod_right_ae,
+      hinc.filter_mono (ae_mono (Measure.restrict_mono_set _ hXI))]
       with y hGy hy
     have hid : (∫ _ in Y, ‖T y - T x‖ + Real.sqrt ε * (‖P y - P x‖ + P x)) =
         (2 * ε) * (‖T y - T x‖ + Real.sqrt ε * (‖P y - P x‖ + P x)) := by
       rw [setIntegral_const, Real.volume_real_closedBall he.le, smul_eq_mul]
     rw [← hid]
-    apply integral_mono_ae hGy (integrableOn_const (isCompact_closedBall (0 : ℝ) ε).measure_lt_top.ne)
+    apply integral_mono_ae hGy
+      (integrableOn_const (isCompact_closedBall (0 : ℝ) ε).measure_lt_top.ne)
     filter_upwards [ae_restrict_mem isClosed_closedBall.measurableSet] with t ht'
     have ht'' : |t| ≤ ε := by simpa [Y, Real.dist_eq, Metric.mem_closedBall] using ht'
     have h₁ : ‖G (y, t) - T x‖ ≤ ‖G (y, t) - T y‖ + ‖T y - T x‖ := by
@@ -196,7 +202,8 @@ theorem tendsto_physical_square_oscillation {U R : Set (ℝ × ℝ)} (hU : IsOpe
   have hqe : q ∈ e.source := hc.mem_toOpenPartialHomeomorph_source hA (by simp)
   have hqet : C q ∈ e.target := hc.image_mem_toOpenPartialHomeomorph_target hA (by simp)
   have heinv : e.symm (C q) = q := e.left_inv hqe
-  have hi : DifferentiableAt ℝ e.symm (C q) := (hc.to_localInverse hA (by simp)).differentiableAt (by simp)
+  have hi : DifferentiableAt ℝ e.symm (C q) :=
+    (hc.to_localInverse hA (by simp)).differentiableAt (by simp)
   obtain ⟨L, hL, hLb⟩ := hi.isBigO_sub.exists_pos
   have hLd : ∀ᶠ p in 𝓝 (C q), dist (e.symm p) q ≤ L * dist p (C q) := by
     simpa only [dist_eq_norm, heinv] using hLb.bound
@@ -254,7 +261,8 @@ theorem tendsto_physical_square_oscillation {U R : Set (ℝ × ℝ)} (hU : IsOpe
       (integrableOn_const hSc.measure_lt_top.ne)).norm
   have hI := (setIntegral_mono_set hKi (Eventually.of_forall fun p ↦ norm_nonneg (F p - z))
     (Eventually.of_forall fun _ hp ↦ him hp))
-  rw [integral_image_eq_integral_abs_det_fderiv_smul volume isClosed_closedBall.measurableSet hder hSin] at hI
+  rw [integral_image_eq_integral_abs_det_fderiv_smul volume
+    isClosed_closedBall.measurableSet hder hSin] at hI
   have hJ := (integrableOn_image_iff_integrableOn_abs_det_fderiv_smul volume
     isClosed_closedBall.measurableSet hder hSin _).mp hKi
   have hIm := integral_mono_ae hJ (hiC.const_mul M) (by

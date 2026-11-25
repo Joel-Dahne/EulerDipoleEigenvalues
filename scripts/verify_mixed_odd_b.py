@@ -7,6 +7,7 @@ import argparse
 from fractions import Fraction
 from functools import lru_cache
 from math import factorial, lcm
+from textwrap import fill
 
 import sympy as sp
 
@@ -109,7 +110,9 @@ def lean_strip(j, polynomials, tree, replay=False, private=False, prefix='oddB')
     if not replay:
         region = f'rectangle {j}' if private else f'strip {j}'
         print(f'/-- Common midpoint schedule for {region}. -/')
-        print(f'{visibility}def {prefix}Tree{j} : BernsteinMidTree :=\n  {lean_tree(tree)}\n')
+        schedule = fill(lean_tree(tree), width=100, initial_indent='  ', subsequent_indent='    ',
+                        break_long_words=False, break_on_hyphens=False)
+        print(f'{visibility}def {prefix}Tree{j} : BernsteinMidTree :=\n{schedule}\n')
     for p, label in zip(polynomials, ('Lower', 'Upper')):
         coeffs = rows(p)
         scale = lcm(*(v.denominator for row in coeffs for v in row))

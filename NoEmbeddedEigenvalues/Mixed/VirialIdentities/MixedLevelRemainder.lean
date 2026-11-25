@@ -87,10 +87,12 @@ private theorem cosWeight_limit (j : Fin 2) (σ : Bool) {a : ℝ} (ha : a ∈ Js
     cases σ <;> simpa [cellEdgeNormal, neg_div, cos_neg] using h
 
 private theorem side_denom_ne (j : Fin 2) (σ : Bool) {a : ℝ} (ha : a ∈ Jside) :
-    mixedLevelR (mixedQuarterSidePoint j σ a) ^ 2 + mixedLevelS (mixedQuarterSidePoint j σ a) ^ 2 ≠ 0 := by
+    mixedLevelR (mixedQuarterSidePoint j σ a) ^ 2 +
+      mixedLevelS (mixedQuarterSidePoint j σ a) ^ 2 ≠ 0 := by
   have hc := (cos_pos_of_mem_Ioo ha).ne'
   fin_cases j <;> cases σ <;>
-    simp [mixedLevelR, mixedLevelS, mixedQuarterSidePoint, traceSideCoords, cellEdgeNormal, neg_div, hc]
+    simp [mixedLevelR, mixedLevelS, mixedQuarterSidePoint, traceSideCoords,
+      cellEdgeNormal, neg_div, hc]
 
 set_option maxHeartbeats 600000 in
 -- Elaborating the specialized ACL limit and the two integral sum rewrites exceeds the default.
@@ -250,12 +252,14 @@ private theorem firstB_bound (r : Fin 3) (q : Plane) : ‖firstB r q‖ ≤ 1 :=
 
 /-- The first-order term in the geometric level density after absorbing
 the time weight by the Dirichlet cosine. -/
-@[no_expose] def MixedQuotientData.levelFirstRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
+@[no_expose] def MixedQuotientData.levelFirstRemainder {ω : L2} (d : MixedQuotientData ω)
+    (q : Plane) : ℝ :=
   ∑ r, firstB r q * (d.levelField (firstI r) q * conj (d.phi q)).re
 
 /-- The part of the signed gradient other than the leading mass, after
 factoring out the Dirichlet cosine. -/
-@[no_expose] def MixedQuotientData.levelGradientRemainder {ω : L2} (d : MixedQuotientData ω) (q : Plane) : ℝ :=
+@[no_expose] def MixedQuotientData.levelGradientRemainder {ω : L2} (d : MixedQuotientData ω)
+    (q : Plane) : ℝ :=
   ∑ r, gradB r q * (d.levelField (gradI r) q * conj (d.levelField (gradJ r) q)).re
 
 theorem MixedQuotientData.level_first_remainder_eq {ω : L2} (d : MixedQuotientData ω) (q : Plane) :
@@ -283,9 +287,11 @@ theorem MixedQuotientData.level_gradient_remainder_eq {ω : L2} (d : MixedQuotie
   ring
 
 private theorem side_sign_cross (σ : Bool) {a : ℝ} (ha : a ∈ Jside) :
-    mixedLevelSign (mixedQuarterSidePoint 0 σ a) = 1 ∧ mixedLevelCross (mixedQuarterSidePoint 0 σ a) = 0 := by
+    mixedLevelSign (mixedQuarterSidePoint 0 σ a) = 1 ∧
+      mixedLevelCross (mixedQuarterSidePoint 0 σ a) = 0 := by
   have hc := (cos_pos_of_mem_Ioo ha).ne'
-  cases σ <;> simp [mixedLevelSign, mixedLevelCross, mixedLevelR, mixedLevelS, mixedQuarterSidePoint,
+  cases σ <;> simp [mixedLevelSign, mixedLevelCross, mixedLevelR, mixedLevelS,
+    mixedQuarterSidePoint,
     traceSideCoords, cellEdgeNormal, neg_div, hc]
 
 private theorem first_trace_eq_zero {ω : L2} (d : MixedQuotientData ω) (j : Fin 2) (σ : Bool)
@@ -311,7 +317,8 @@ private theorem grad_trace_eval {ω : L2} (d : MixedQuotientData ω) (j : Fin 2)
     change mixedLevelSign (a, cellEdgeNormal σ) = 1 at hS
     change mixedLevelCross (a, cellEdgeNormal σ) = 0 at hX
     simp [gradB, gradI, gradJ, Fin.sum_univ_succ, MixedQuotientData.levelTrace, hS, hX,
-      mixedQuarterSidePoint, traceSideCoords, mixedRellichEdgeDensity, Complex.sq_norm, Complex.normSq_apply]
+      mixedQuarterSidePoint, traceSideCoords, mixedRellichEdgeDensity, Complex.sq_norm,
+      Complex.normSq_apply]
     ring
   · simp [hj]
 
@@ -353,7 +360,8 @@ theorem mixed_quarter_gradient_remainder_limit {ω : L2} (d : MixedQuotientData 
     fin_cases r <;> unfold gradB mixedLevelSign mixedLevelCross mixedLevelS mixedLevelR <;>
       simp only [Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue, Matrix.cons_val_zero,
         Matrix.cons_val_one, Matrix.cons_val, measurable_neg_iff] <;> fun_prop
-  have hc (r : Fin 6) (a : ℝ) (ha : a ∈ Jside) : ContinuousAt (gradB r) (mixedQuarterSidePoint j σ a) := by
+  have hc (r : Fin 6) (a : ℝ) (ha : a ∈ Jside) :
+      ContinuousAt (gradB r) (mixedQuarterSidePoint j σ a) := by
     have hs := sign_continuousAt (side_denom_ne j σ ha)
     have hx := cross_continuousAt (side_denom_ne j σ ha)
     have hc : ContinuousAt (fun q : Plane ↦ cos q.1) (mixedQuarterSidePoint j σ a) := by fun_prop

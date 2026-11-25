@@ -348,7 +348,8 @@ theorem mixed_weighted_forcing_remainder {lam : ℝ} (hlam : lam ≠ 0) {vort : 
   refine ⟨v₀, f₀, hp, hv₀, hf₀, ?_, fun j ↦ ?_⟩
   · have hloc : MemSobolevLocOn 0 cellNeighbourhood (J []) := by
       intro V hV hVc _
-      exact memLp_two_restrict_of_continuous ((continuous_contStream vort).sub hf₀.continuous) hV hVc
+      exact memLp_two_restrict_of_continuous
+        ((continuous_contStream vort).sub hf₀.continuous) hV hVc
     have hx := hloc.div_saddleDist_on hU (s := 2) (by norm_num) (fun P hP hPU ↦ by
       obtain ⟨ρ, hρ, hw⟩ := hw P hP hPU
       exact ⟨ρ, hρ, memLp_div_localRadius_rpow (m := 3) (t := 2) (by norm_num)

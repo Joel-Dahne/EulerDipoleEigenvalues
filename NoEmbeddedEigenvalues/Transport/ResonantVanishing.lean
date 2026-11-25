@@ -580,7 +580,8 @@ theorem IsTransportPair.angularMode_eq_zero_of_resonant (hp : IsTransportPair la
   -- Integrate.
   have hfin := lintegral_enorm_angularMode_lt_top hp.memLp h₁0 h₁₂ h₂1 hA k
   have hI : ∫⁻ h in Ioc hk (hk + δ'), ENNReal.ofReal (h - hk)⁻¹ < ⊤ := by
-    have h1 : ENNReal.ofReal (c₀ / C') * ∫⁻ h in Ioc hk (hk + δ'), ENNReal.ofReal (h - hk)⁻¹ < ⊤ := by
+    have h1 : ENNReal.ofReal (c₀ / C') *
+        ∫⁻ h in Ioc hk (hk + δ'), ENNReal.ofReal (h - hk)⁻¹ < ⊤ := by
       rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
       exact ((lintegral_mono_ae hlow).trans (lintegral_mono_set hIsub)).trans_lt hfin
     exact (ENNReal.mul_lt_top_iff.1 h1).elim (fun h ↦ h.2) (fun h ↦ h.elim

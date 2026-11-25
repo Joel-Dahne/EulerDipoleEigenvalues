@@ -738,7 +738,8 @@ def oddBUpper2Power : BernsteinIntTable 22 8 := #v[
 
 /-- Common midpoint schedule for strip 3. -/
 def oddBTree3 : BernsteinMidTree :=
-  (.split true (.split true (.split true .leaf (.split true .leaf (.split true .leaf .leaf))) .leaf) .leaf)
+  (.split true (.split true (.split true .leaf (.split true .leaf (.split true .leaf .leaf))) .leaf)
+    .leaf)
 
 /-- Common power denominator of the lower endpoint on strip 3. -/
 def oddBLower3Scale : ℕ := 2313707369893971400172563210180299563689888972800
@@ -1075,7 +1076,8 @@ def oddBUpper3Power : BernsteinIntTable 22 8 := #v[
 
 /-- Common midpoint schedule for strip 4. -/
 def oddBTree4 : BernsteinMidTree :=
-  (.split true (.split true (.split true .leaf (.split true (.split true .leaf (.split false .leaf .leaf)) (.split false (.split true .leaf .leaf) .leaf))) .leaf) .leaf)
+  (.split true (.split true (.split true .leaf (.split true (.split true .leaf (.split false .leaf
+    .leaf)) (.split false (.split true .leaf .leaf) .leaf))) .leaf) .leaf)
 
 /-- Common power denominator of the lower endpoint on strip 4. -/
 def oddBLower4Scale : ℕ := 3553854520157140070665057090836940129827669462220800

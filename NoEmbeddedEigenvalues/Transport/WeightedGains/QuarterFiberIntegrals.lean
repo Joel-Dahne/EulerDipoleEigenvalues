@@ -49,7 +49,8 @@ theorem memLp_quarterStrip_sections {b : ℝ} {F : ℝ × ℝ → ℂ}
     ∀ᵐ h ∂(volume.restrict (Ioo 0 b)),
       MemLp (fun t ↦ F (h, t)) 2
         (volume.restrict (Ioo (-eighthPeriod h) (eighthPeriod h))) := by
-  have hI := (memLp_indicator_iff_restrict (measurableSet_quarterOrbitStrip b).nullMeasurableSet).2 hF
+  have hI :=
+    (memLp_indicator_iff_restrict (measurableSet_quarterOrbitStrip b).nullMeasurableSet).2 hF
   have hR := hI.mono_measure
     (Measure.restrict_le_self (s := Ioo 0 b ×ˢ (univ : Set ℝ)))
   filter_upwards [ae_memLp_sections hR, ae_restrict_mem measurableSet_Ioo] with h hh hhI

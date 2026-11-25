@@ -337,7 +337,8 @@ private theorem memLp_actionReconstruct {F : ℝ × ℝ → ℂ}
         eLpNorm F 2 (actionMeasure.withDensity actionWeight) := by
   refine ⟨(memLp_indicator_iff_restrict measurableSet_cellSquare.nullMeasurableSet).mpr
     (hF.comp_measurePreserving measurePreserving_actionCoordinates), ?_⟩
-  rw [actionReconstruct, eLpNorm_indicator_eq_eLpNorm_restrict measurableSet_cellSquare.nullMeasurableSet]
+  rw [actionReconstruct, eLpNorm_indicator_eq_eLpNorm_restrict
+    measurableSet_cellSquare.nullMeasurableSet]
   exact eLpNorm_comp_measurePreserving hF.aestronglyMeasurable
     measurePreserving_actionCoordinates
 

@@ -329,7 +329,8 @@ theorem exists_resonant_level_index {lam : ℝ} (hlam : lam ≠ 0) (r : ℕ)
   have hμ : 0 < μ := abs_pos.2 hlam
   obtain ⟨m, hm⟩ := exists_nat_gt (orbitPeriod η' * μ / (8 * π))
   set n : ℕ := 4 * (m + 1) + r
-  have hn : (4 * ((m : ℝ) + 1)) ≤ n := by simp only [n]; push_cast; linarith [(r.cast_nonneg : (0 : ℝ) ≤ r)]
+  have hn : (4 * ((m : ℝ) + 1)) ≤ n := by
+    simp only [n]; push_cast; linarith [(r.cast_nonneg : (0 : ℝ) ≤ r)]
   set T := 2 * π * n / μ
   have hT : orbitPeriod η' ≤ T := by
     have h1 : orbitPeriod η' * μ < 8 * π * m := by

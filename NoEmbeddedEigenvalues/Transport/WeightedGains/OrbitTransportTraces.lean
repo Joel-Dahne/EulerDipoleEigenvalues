@@ -133,7 +133,8 @@ theorem memLp_actionAngleInv_band {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     rw [tsupport, hχs, closure_Ioo (by linarith)]
     exact Icc_subset_Ioo (by linarith) (by linarith)
   have hui : MemLp (U.indicator u) 2 (volume.restrict cellSquare) :=
-    ((memLp_indicator_iff_restrict hU.measurableSet.nullMeasurableSet).2 hu).mono_measure Measure.restrict_le_self
+    ((memLp_indicator_iff_restrict hU.measurableSet.nullMeasurableSet).2 hu).mono_measure
+      Measure.restrict_le_self
   have hm := memLp_cutoff_actionInput hχ hχt hui
   have hm' := hm.mono_measure
     (show volume.restrict (Ioo a b ×ˢ Ioo (-1 / 4 : ℝ) (3 / 4)) ≤

@@ -16,14 +16,18 @@ namespace NoEmbeddedEigenvalues
 
 private theorem logTwoLower_real : (certificateLogTwoLower : ℝ) =
     (52112452242329513449286024495168 : ℝ) / 75182376418571730210283091385675 := by
-  have h : certificateLogTwoLower = (52112452242329513449286024495168 : ℚ) / 75182376418571730210283091385675 := by decide +kernel
+  have h : certificateLogTwoLower =
+      (52112452242329513449286024495168 : ℚ) / 75182376418571730210283091385675 := by
+    decide +kernel
   rw [h]
   push_cast
   rfl
 
 private theorem logTwoUpper_real : (certificateLogTwoUpper : ℝ) =
     (8546442167742040205701459862544577 : ℝ) / 12329909732645763754486426987250700 := by
-  have h : certificateLogTwoUpper = (8546442167742040205701459862544577 : ℚ) / 12329909732645763754486426987250700 := by decide +kernel
+  have h : certificateLogTwoUpper =
+      (8546442167742040205701459862544577 : ℚ) / 12329909732645763754486426987250700 := by
+    decide +kernel
   rw [h]
   push_cast
   rfl

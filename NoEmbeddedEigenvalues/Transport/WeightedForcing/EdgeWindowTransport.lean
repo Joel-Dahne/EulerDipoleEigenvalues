@@ -267,21 +267,25 @@ theorem inwardEdgeChart_mem_collar {ε s u : ℝ} (hu : u ∈ Ioo 0 Real.pi) (he
       _ ≤ 2 * u := by linarith [Real.sin_le hu.1.le]
       _ < ε := he
   have ht : |(edgeInward side (s, u)).2| < Real.pi / 2 := by
-    cases side <;> simp only [edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false, ite_true,
+    cases side <;> simp only [edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false,
+      ite_true,
       one_mul, neg_one_mul, abs_neg] <;> exact hut
   have htc : Real.cos (edgeInward side (s, u)).2 = Real.sin u := by
-    cases side <;> simp only [edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false, ite_true,
+    cases side <;> simp only [edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false,
+      ite_true,
       one_mul, neg_one_mul, Real.cos_neg,
       Real.cos_pi_div_two_sub]
   have htf : (edgeInward side (s, u)).1 = s := by simp
   unfold inwardEdgeChart
   fin_cases j
   · change diagInv ((edgeInward side (s, u)).2, (edgeInward side (s, u)).1) ∈ _
-    simp only [cellSeparatrixStrip, mem_ofPred_eq, cellSquare, dipoleLift_eq_diag, diagCoord_diagInv,
+    simp only [cellSeparatrixStrip, mem_ofPred_eq, cellSquare, dipoleLift_eq_diag,
+      diagCoord_diagInv,
       ht, htc, htf, hs', and_self, true_and]
     exact ⟨by positivity, by simpa [mul_comm, mul_left_comm, mul_assoc] using hupper⟩
   · change diagInv (edgeInward side (s, u)) ∈ _
-    simp only [cellSeparatrixStrip, mem_ofPred_eq, cellSquare, dipoleLift_eq_diag, diagCoord_diagInv,
+    simp only [cellSeparatrixStrip, mem_ofPred_eq, cellSquare, dipoleLift_eq_diag,
+      diagCoord_diagInv,
       ht, htc, htf, hs', and_self, true_and]
     exact ⟨by positivity, hupper⟩
 
@@ -333,10 +337,12 @@ theorem IsTransportPair.inward_edge_window_transport {lam ε : ℝ}
         (Real.sin q.1 * Real.sin q.2 : ℝ) * B' q) = Complex.I * (lam * v (C q)) := by
     filter_upwards [he'] with q hq
     have ht : Real.sin (E q).2 = edgeSideSign side * Real.cos q.2 := by
-      cases side <;> simp only [E, edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false, ite_true,
+      cases side <;> simp only [E, edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false,
+        ite_true,
         one_mul, neg_one_mul, Real.sin_neg, Real.sin_pi_div_two_sub]
     have hc : Real.cos (E q).2 = Real.sin q.2 := by
-      cases side <;> simp only [E, edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false, ite_true,
+      cases side <;> simp only [E, edgeInward_apply, edgeSideSign, Bool.false_eq_true, ite_false,
+        ite_true,
         one_mul, neg_one_mul, Real.cos_neg, Real.cos_pi_div_two_sub]
     have hs' : (E q).1 = q.1 := by simp [E]
     change (if j = 0 then 1 else -1 : ℂ) *

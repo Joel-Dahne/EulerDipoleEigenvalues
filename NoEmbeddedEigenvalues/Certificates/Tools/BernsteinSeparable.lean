@@ -25,33 +25,38 @@ def BernsteinSeparableAux.bernsteinWeight {n : ℕ} (i k : Fin (n + 1)) : ℚ :=
 
 /-- The rational affine and Bernstein transforms along one axis. -/
 def certificateAxisBox {n : ℕ} (a b : ℚ) (p : Fin (n + 1) → ℚ) (i : Fin (n + 1)) : ℚ :=
-  ∑ k, (∑ l, p l * BernsteinSeparableAux.affineWeight a b k l) * BernsteinSeparableAux.bernsteinWeight i k
+  ∑ k, (∑ l, p l * BernsteinSeparableAux.affineWeight a b k l)
+    * BernsteinSeparableAux.bernsteinWeight i k
 
 private theorem certificateAffineCoeff_eq {n m : ℕ}
     (p : Fin (n + 1) → Fin (m + 1) → ℚ) (a b c d : ℚ) (i j) :
     certificateAffineCoeff p a b c d i j =
-      ∑ k, ∑ l, p k l * BernsteinSeparableAux.affineWeight a b i k * BernsteinSeparableAux.affineWeight c d j l := by
+      ∑ k, ∑ l, p k l * BernsteinSeparableAux.affineWeight a b i k
+        * BernsteinSeparableAux.affineWeight c d j l := by
   unfold certificateAffineCoeff
   apply sum_congr rfl
   intro k _
   apply sum_congr rfl
   intro l _
   by_cases h₁ : i.val ≤ k.val <;> by_cases h₂ : j.val ≤ l.val <;>
-    simp only [BernsteinSeparableAux.affineWeight, h₁, h₂, true_and, false_and, and_false, ite_true, ite_false,
+    simp only [BernsteinSeparableAux.affineWeight, h₁, h₂, true_and, false_and, and_false,
+      ite_true, ite_false,
       mul_zero, zero_mul]
   ring
 
 private theorem certificateBernsteinCoeff_eq {n m : ℕ}
     (p : Fin (n + 1) → Fin (m + 1) → ℚ) (i j) :
     certificateBernsteinCoeff p i j =
-      ∑ k, ∑ l, p k l * BernsteinSeparableAux.bernsteinWeight i k * BernsteinSeparableAux.bernsteinWeight j l := by
+      ∑ k, ∑ l, p k l * BernsteinSeparableAux.bernsteinWeight i k
+        * BernsteinSeparableAux.bernsteinWeight j l := by
   unfold certificateBernsteinCoeff
   apply sum_congr rfl
   intro k _
   apply sum_congr rfl
   intro l _
   by_cases h₁ : k.val ≤ i.val <;> by_cases h₂ : l.val ≤ j.val <;>
-    simp only [BernsteinSeparableAux.bernsteinWeight, h₁, h₂, true_and, false_and, and_false, ite_true, ite_false,
+    simp only [BernsteinSeparableAux.bernsteinWeight, h₁, h₂, true_and, false_and, and_false,
+      ite_true, ite_false,
       mul_zero, zero_mul]
   ring
 
