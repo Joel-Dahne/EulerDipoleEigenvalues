@@ -1,15 +1,13 @@
 \chapter{About this blueprint}
 \label{chap:intro}
 
-This blueprint is a restructured, fine-grained version of the argument in
-\texttt{Manuscript/eigenvalues.tex}. It serves two purposes:
-\begin{itemize}
-  \item a \emph{to-do list} for the Lean formalization, organized as a
-        dependency graph;
-  \item a place to \emph{digest} the manuscript: every node should be small
-        enough that its statement is precise and its proof is a short,
-        checkable argument.
-\end{itemize}
+This blueprint documents the Lean proof of Theorem~\ref{thm:main}, that the
+Euler equation linearized around the dipole has no nonzero purely imaginary
+eigenvalues. The proof is admission-free. The blueprint organizes the proof
+as a dependency graph and explains where it follows or departs from
+\texttt{Manuscript/eigenvalues.tex}. The manuscript is preserved as a
+historical source, not as a checked proof. The Lean source is in the
+\href{https://github.com/Joel-Dahne/EulerDipoleEigenvalues}{project repository}.
 
 \section*{How to read the nodes}
 
@@ -32,8 +30,8 @@ pdf but drive the colours of the dependency graph in the web version.
   \item \verb|\notready|: the statement is not yet precise enough to be
         formalized; it needs to be digested first.
 \end{itemize}
-At the start nothing is formalized, so no node carries \verb|\lean| or
-\verb|\leanok| yet.
+Proof markers describe individual nodes; they do not check transitive
+dependencies or certify that a Lean statement matches the prose.
 
 \section*{Organization}
 
@@ -41,9 +39,9 @@ Chapters~\ref{chap:setup} and~\ref{chap:symmetry} set up the problem, state the
 main theorem, and reduce it to four symmetry sectors.
 Chapter~\ref{chap:geometry} collects the explicit geometry of the dipole flow
 (identities for $\Psi$, the separatrix, the period function, orbit
-comparisons). Chapter~\ref{chap:analysis} lists the analytic background that
-the argument uses as a black box; this is the natural boundary between
-``what we formalize'' and ``what we assume, at least initially''.
+comparisons). Chapter~\ref{chap:analysis} collects the analytic tools used
+in the proof, including the local Sobolev and trace results developed in
+Lean for this argument.
 Chapters~\ref{chap:virial} and~\ref{chap:transport} isolate the two general
 mechanisms used in every sector: virial (commutator) identities, and the
 transport equation along orbits near the separatrix.
@@ -60,8 +58,7 @@ manuscript are:
 \begin{itemize}
   \item Algebraic identities (commutators, sums of squares, coefficient
         computations) are separated from the analytic justification that
-        they hold on the original $L^2$ domain. The algebraic nodes are the
-        natural first formalization targets.
+        they hold on the original $L^2$ domain.
   \item The transport arguments that the manuscript reuses by referring back
         to the \emph{proofs} of earlier results (for instance
         ``apply the transport-only argument of

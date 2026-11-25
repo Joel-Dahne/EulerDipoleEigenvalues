@@ -1,6 +1,6 @@
 # Odd–odd status
 
-[Project status](../../STATUS.md) · [Generated sector report](generated.md#odd-odd)
+[Project status](../../STATUS.md) · [Local status report](../../blueprint/README.md#generated-status-report)
 · [Blueprint chapter](../../blueprint/src/chapters/odd_odd.tex)
 
 Odd–odd exclusion (`thm:dd-exclusion`) is transitively admission-free. The

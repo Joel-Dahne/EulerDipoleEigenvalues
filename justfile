@@ -89,9 +89,10 @@ view: web serve
 # Build both versions of the blueprint
 blueprint: pdf web
 
-# Check that every \lean{...} name in the blueprint exists (needs checkdecls in the lakefile)
-checkdecls: build web
-    leanblueprint checkdecls
+# Check that the declaration links from the HTML build resolve in the Lean library
+checkdecls: web
+    lake -q build --log-level=error EulerDipoleEigenvalues
+    lake env lean --run scripts/CheckBlueprintDecls.lean
 
 # Remove generated blueprint files
 clean:

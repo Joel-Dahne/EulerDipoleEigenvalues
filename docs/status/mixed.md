@@ -1,6 +1,6 @@
 # Mixed-sector status
 
-[Project status](../../STATUS.md) · [Generated sector report](generated.md#mixed)
+[Project status](../../STATUS.md) · [Local status report](../../blueprint/README.md#generated-status-report)
 · [Blueprint chapter](../../blueprint/src/chapters/mixed.tex)
 
 `thm:mixed-exclusion` (odd–even) is proved from `prop:mixed-quotient-domain`,

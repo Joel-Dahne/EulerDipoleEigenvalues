@@ -138,9 +138,10 @@ are in \texttt{TorusL2.lean} and \texttt{Fourier.lean}; the inverse
 Laplacian, the transport operator and the eigenvalue problem are in
 \texttt{Setup.lean}. Fourier-defined derivatives, and for first partial
 derivatives the equivalence with testing against smooth periodic test pairs
-(Lemma~\ref{lem:partial-weak-equivalence}), are in \texttt{Derivatives.lean}. The corresponding bridges for
-$L_0$, second-order derivatives and the Laplacian are not formalized; no
-Sobolev or trace theory is used in this chapter.
+(Lemma~\ref{lem:partial-weak-equivalence}), are in \texttt{Derivatives.lean}.
+Lemma~\ref{lem:L0-h1-tests} supplies the test-function bridge for $L_0$.
+The setup uses the Fourier definitions; the regularity arguments are
+developed separately.
 \end{remark}
 
 \begin{remark}
@@ -670,7 +671,7 @@ The implication from $A\omega=0$ uses the eigenvalue equation and $\mu\ne0$.
 \end{remark}
 
 \begin{remark}[Lean model]
-Decided 2026-10-13, as a first attempt. $L^2$ is Mathlib's \texttt{Lp} for
+Here $L^2$ is Mathlib's \texttt{Lp} for
 Lebesgue measure on $\T^2=\texttt{Real.Angle}\times\texttt{Real.Angle}$
 (\texttt{EulerDipoleEigenvalues/Setup/TorusL2.lean}), not $\ell^2(\Z^2)$, because the
 later chapters argue in physical space. The operators are defined through

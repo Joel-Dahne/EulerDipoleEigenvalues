@@ -1,6 +1,6 @@
 # Even–even status
 
-[Project status](../../STATUS.md) · [Generated sector report](generated.md#even-even)
+[Project status](../../STATUS.md) · [Local status report](../../blueprint/README.md#generated-status-report)
 · [Blueprint chapter](../../blueprint/src/chapters/even_even.tex)
 
 Even–even exclusion (`thm:ee-exclusion`) and its character-wise version

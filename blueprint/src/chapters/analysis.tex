@@ -19,14 +19,13 @@ where Sobolev spaces enter.
         integration tools; our first-order interval API is in
         \texttt{IntervalH1.lean}.
   \item Definition~\ref{def:sobolev-torus}: $H^s(\T^2)$ through Fourier
-        coefficients. Cheap to define and use ourselves.
+        coefficients.
   \item Definition~\ref{def:sobolev-local}: Sobolev spaces on open sets,
-        weighted spaces and traces. This is the real infrastructure gap.
+        weighted spaces and traces.
 \end{enumerate}
 The main theorem's statement and the sector reduction use none of them.
-The candidates for the initial \emph{assumptions} of the formalization are
-the lemmas of Section~\ref{sec:local-sobolev}: they would be stated in a single
-Lean file, each with a reference, and proved later or never.
+Section~\ref{sec:local-sobolev} records the local Sobolev tools used later,
+with links to their Lean proofs.
 
 \section{Function spaces}
 
@@ -173,7 +172,7 @@ The first-order bounded-interval predicates, endpoint theorem, zero-trace
 definition and first-order zero-extension theorem are implemented. The model uses locally absolutely continuous
 representatives, not a bundled normed space of a.e. equivalence classes.
 As usual, $H^1_{\mathrm{loc}}(I)$ elsewhere means $H^1$ on every compact
-subinterval; this local notation is not yet formalized. The condition
+subinterval. The condition
 $(1-\xi^2)F''\in L^2$ in the boundary argument is a further weighted-domain
 condition, not membership in ordinary $H^2(-1,1)$. Its representative model
 is now Definition~\ref{def:weighted-boundary-domain}; unlike weighted PDE

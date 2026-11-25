@@ -1,6 +1,6 @@
 # Shared infrastructure status
 
-[Project status](../../STATUS.md) · [Generated report](generated.md) ·
+[Project status](../../STATUS.md) · [Local status report](../../blueprint/README.md#generated-status-report) ·
 [Module map](../architecture.md)
 
 ## Reuse across sectors

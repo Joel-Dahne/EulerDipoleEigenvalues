@@ -1,7 +1,9 @@
 # Blueprint
 
 A [leanblueprint](https://github.com/PatrickMassot/leanblueprint) for the
-formalization of `Manuscript/eigenvalues.tex`.
+Lean proof of `thm:main`, based on the argument in
+[`Manuscript/eigenvalues.tex`](../Manuscript/eigenvalues.tex). See the
+[project status](../STATUS.md) for the verification boundary.
 
 ## What a blueprint is
 
@@ -57,7 +59,8 @@ questions and problems found in the manuscript, and collect them in
 
 Run these recipes from the repository root. The web build needs `just`,
 `leanblueprint` (Python package) and Python 3; the PDF also needs a TeX
-installation. The dependency graphs are rendered in the browser.
+installation. The dependency graphs are rendered in the browser. These
+are local build recipes; the repository does not deploy a hosted site.
 
 ```sh
 just check-blueprint # source consistency checks (Python 3 only)
@@ -67,6 +70,7 @@ just web --verbose   # same build with full output (also accepts -v)
 just serve           # view it at http://localhost:8000
 just pdf             # PDF in blueprint/print
 just graph LABEL     # optional custom dependency view, after just web
+just checkdecls      # build the HTML and verify its Lean declaration links
 ```
 
 `just web` prints a short success summary and the path to the full build log
@@ -118,9 +122,12 @@ Ordinary cross-references do not create dependency edges. Proof dependencies
 belong to the preceding node, or the explicit `\proves{label}` target.
 
 This is not a full LaTeX checker, a Lean declaration/axiom audit, or a check of
-`\leanok` annotations or mathematical correctness. Run `just test-blueprint` for
-the checker's regression tests. For another source tree, use
-`python3 scripts/check_blueprint.py --src PATH` from the repository root.
+`\leanok` annotations or mathematical correctness. Run `just checkdecls` to
+verify that the declaration names collected by the HTML build exist in the
+Lean library. This checks names, not statement fidelity or proof status.
+Run `just test-blueprint` for the source checker's regression tests. For
+another source tree, use `python3 scripts/check_blueprint.py --src PATH`
+from the repository root.
 
 ## Generated status report
 
@@ -151,12 +158,3 @@ python3 scripts/blueprint_status.py --src PATH --output REPORT.md
 ```
 
 `just test-blueprint` covers both the checker and report generator.
-
-## Publication setup
-
-Not set up yet (it needs Lean declarations and a GitHub remote first):
-- `checkdecls` in the lakefile, so `leanblueprint checkdecls` verifies that
-  every `\lean{...}` name exists;
-- the `\home`, `\github`, `\dochome` links in `src/web.tex`;
-- `blueprint: true` in the docgen CI step, to publish the blueprint on GitHub
-  Pages.

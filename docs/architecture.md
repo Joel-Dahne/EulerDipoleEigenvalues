@@ -865,6 +865,9 @@ The certificate code is in [`Certificates/`](../EulerDipoleEigenvalues/Certifica
   bounds and coverage independently of Python.
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,
   references, metadata and dependency cycles, without Lean or plasTeX.
+- `scripts/CheckBlueprintDecls.lean` (`just checkdecls`): verifies that the
+  Lean declaration names collected by the blueprint HTML build exist in the
+  built library.
 - `scripts/blueprint_status.py` (`just status-blueprint`, also `just web`):
   generates Git-ignored `docs/status/generated.md` from the same source model.
   Blueprint markers do not audit Lean declarations or axioms.
@@ -876,5 +879,3 @@ The certificate code is in [`Certificates/`](../EulerDipoleEigenvalues/Certifica
   dependencies with source locations, using the built library.
 - `scripts/tests/` (`just test-blueprint`): checker/report regression tests.
 - `.mcp.json`, `docs/tooling/`: Lean MCP configuration and agent-tooling notes.
-- `.github/workflows/`: Lean CI and docgen.
-  Publication setup is described in [blueprint/README.md](../blueprint/README.md).

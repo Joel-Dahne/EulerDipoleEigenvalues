@@ -11,22 +11,22 @@ code, commands, and diagnostics, not in place of labels in user-facing reports.
 
 ## Project
 
-Formalization in Lean 4 + Mathlib of the paper *Absence of nonzero embedded
+Formalization in Lean 4 + Mathlib of the result in the working manuscript
+*Absence of nonzero embedded
 eigenvalues for the two-dimensional Euler equation linearized around the
 dipole* (Joel Dahne, Hao Jia). The dipole is the stream function
 `cos x + cos y` on the torus `(R/2πZ)^2`. The argument uses virial identities
 and explicit comparison functions whose signs are certified by exact
 arithmetic.
 
-**Current priority: complete the Lean formalization of the main theorem
-without admissions.** Defer a standalone review of the argument and a rewrite
-of the manuscript until then. As part of formalizing, investigate gaps and
-errors, look for simpler proofs, and record what you learn in the blueprint.
+`thm:main` is admission-free. Keep mathematical review separate from proof
+completion and record any divergences or corrections in the blueprint.
+See [STATUS.md](STATUS.md) for the current verification boundary.
 
 - `Manuscript/eigenvalues.tex` is the unchanged original reference. In this
   repository "the manuscript" means this file. It is **not** a trusted source.
-- `blueprint/` is the dependency graph, formalization plan and staging area
-  for corrections. See `blueprint/README.md` and `blueprint/src/chapters/intro.tex`.
+- `blueprint/` documents the Lean proof, its dependencies, and corrections
+  to the manuscript. See `blueprint/README.md` and `blueprint/src/chapters/intro.tex`.
 - `EulerDipoleEigenvalues/` is the Lean library.
 
 ## Working on the mathematics
@@ -51,7 +51,8 @@ errors, look for simpler proofs, and record what you learn in the blueprint.
 
 Start with [STATUS.md](STATUS.md) and the relevant topic page. Use the
 [blueprint graph](blueprint/README.md#building) and
-[generated report](docs/status/generated.md) to find unfinished prerequisites.
+[locally generated report](blueprint/README.md#generated-status-report) to
+inspect prerequisites and status markers.
 Consult [the architecture guide](docs/architecture.md) as needed for the module
 map and verification tools.
 
@@ -69,8 +70,9 @@ map and verification tools.
 
 ## Building and verification
 
-- Use `just check-blueprint` for source consistency checks and
-  `just test-blueprint` for checker/report regression tests.
+- Use `just check-blueprint` for source consistency checks,
+  `just test-blueprint` for checker/report regression tests, and
+  `just checkdecls` to resolve declaration links against the built library.
 - Use `just web`, not `leanblueprint web`: the recipe handles read-only plasTeX
   assets and regenerates the graphs and status report. Use `just status-blueprint`
   when only the report is needed. See the [blueprint build guide](blueprint/README.md#building)

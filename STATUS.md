@@ -1,9 +1,9 @@
 # Project status
 
-Use the [blueprint dependency graphs](blueprint/README.md#building) to choose
-proof work and the [generated report](docs/status/generated.md) for the list of
-unfinished nodes. Refresh the report with `just status-blueprint`; `just web`
-rebuilds both the graphs and the report.
+Use the [blueprint dependency graphs](blueprint/README.md#building) to explore
+the proof. Run `just status-blueprint` to generate the
+[local status report](blueprint/README.md#generated-status-report);
+`just web` builds both the graphs and the report.
 
 ## Overall state
 
@@ -32,4 +32,5 @@ human review of the Lean statements against the intended mathematics.
 
 See [AGENTS.md](AGENTS.md) for workflow, [architecture](docs/architecture.md)
 for the module map, and the [digest notes](blueprint/src/chapters/notes.tex)
-for mathematical gaps. Keep per-node progress in the blueprint and history in Git.
+for differences from the manuscript. Keep per-node status in the blueprint
+and history in Git.

@@ -1,11 +1,11 @@
 \chapter{Digest notes}
 \label{chap:notes}
 
-A running list of questions about the manuscript, collected while writing
-the blueprint. Each item points to the node where it arises. Items are removed
-once resolved; record the resolution in the relevant node.
+These notes record differences from the manuscript and observations made
+while formalizing the proof. They are not a list of open requirements for
+Theorem~\ref{thm:main}.
 
-\section*{Gaps and unverified steps}
+\section*{Hypotheses used in the odd--odd argument}
 \begin{enumerate}
   \item \textbf{Final odd--odd interfaces}
         (Lemmas~\ref{lem:dd-bulk-picone} and~\ref{lem:dd-picone-current}).
@@ -17,7 +17,7 @@ once resolved; record the resolution in the relevant node.
         positivity is unnecessary.
 \end{enumerate}
 
-\section*{Possible simplifications}
+\section*{Simplifications and proof choices}
 \begin{enumerate}
   \item \textbf{Reuse of even--even gradient traces}
         (Lemma~\ref{lem:dd-quotient-gradient-traces}). Reconstruct an even
@@ -111,9 +111,9 @@ once resolved; record the resolution in the relevant node.
         Chapters~\ref{chap:geometry} and~\ref{chap:mixed}).
 \end{enumerate}
 
-\section*{Checks done so far}
-Scratch computations (not part of the repository) confirmed numerically or
-symbolically:
+\section*{Historical sanity checks}
+During development, scratch computations (not part of the repository)
+checked numerically or symbolically:
 the odd--odd and mixed field identities
 (Lemmas~\ref{lem:dd-virial-algebra} and \ref{lem:mixed-field-algebra}, the
 last apart from the formula for $M$);
@@ -121,6 +121,5 @@ the sums of squares and the affine splitting
 on test polynomials (compare Lemmas~\ref{lem:trace-sos-smooth},
 \ref{lem:weighted-affine-splitting}, and~\ref{lem:mixed-boundary-square-weighted});
 and the determinant formula of Lemma~\ref{lem:mixed-G-positive}.
-These are sanity checks, not proofs. The dipole identities
-(Lemma~\ref{lem:dipole-identities}) and the normal field identities
-(Lemma~\ref{lem:normal-field-algebra}) are now proved in Lean.
+These experiments were not used as proof evidence. Follow the Lean links
+at the individual nodes for the formal results.
