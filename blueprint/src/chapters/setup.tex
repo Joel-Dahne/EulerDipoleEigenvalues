@@ -8,9 +8,9 @@ or equivalently distributionally.
 
 \begin{definition}[Torus and Lebesgue spaces]
 \label{def:torus}
-\lean{NoEmbeddedEigenvalues.L2, NoEmbeddedEigenvalues.char,
-  NoEmbeddedEigenvalues.charLp, NoEmbeddedEigenvalues.fourierCoeff,
-  NoEmbeddedEigenvalues.MeanZero}
+\lean{EulerDipoleEigenvalues.L2, EulerDipoleEigenvalues.char,
+  EulerDipoleEigenvalues.charLp, EulerDipoleEigenvalues.fourierCoeff,
+  EulerDipoleEigenvalues.MeanZero}
 \leanok
 Let $\T^2=(\R/2\pi\Z)^2$ with Lebesgue measure $dx\,dy$. Write $L^2=L^2(\T^2;\C)$,
 $e_k(x)=e^{ik\cdot x}$ for the characters,
@@ -26,15 +26,15 @@ these agree with the definitions above.
 \begin{lemma}[Integral characterizations]
 \label{lem:fourier-integral}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.integrable_L2,
-  NoEmbeddedEigenvalues.integrable_char_pairing,
-  NoEmbeddedEigenvalues.fourierCoeff_eq_integral,
-  NoEmbeddedEigenvalues.fourierCoeff_eq_integral_char_neg,
-  NoEmbeddedEigenvalues.fourierCoeff_zero,
-  NoEmbeddedEigenvalues.meanZero_iff_integral_eq_zero,
-  NoEmbeddedEigenvalues.fourierCoeff_add, NoEmbeddedEigenvalues.fourierCoeff_sub,
-  NoEmbeddedEigenvalues.fourierCoeff_smul, NoEmbeddedEigenvalues.MeanZero.add,
-  NoEmbeddedEigenvalues.MeanZero.smul}
+\lean{EulerDipoleEigenvalues.integrable_L2,
+  EulerDipoleEigenvalues.integrable_char_pairing,
+  EulerDipoleEigenvalues.fourierCoeff_eq_integral,
+  EulerDipoleEigenvalues.fourierCoeff_eq_integral_char_neg,
+  EulerDipoleEigenvalues.fourierCoeff_zero,
+  EulerDipoleEigenvalues.meanZero_iff_integral_eq_zero,
+  EulerDipoleEigenvalues.fourierCoeff_add, EulerDipoleEigenvalues.fourierCoeff_sub,
+  EulerDipoleEigenvalues.fourierCoeff_smul, EulerDipoleEigenvalues.MeanZero.add,
+  EulerDipoleEigenvalues.MeanZero.smul}
 \leanok
 Every $g\in L^2$ is integrable, as is $\bar e_k g$ for each $k$. The
 inner-product definition of the Fourier coefficient agrees with
@@ -59,12 +59,12 @@ $\bar e_k=e_{-k}$ and $e_0=1$, and cancel the nonzero normalization factor.
 \begin{lemma}[Fourier Hilbert basis]
 \label{lem:torus-fourier-basis}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.normalizedChar,
-  NoEmbeddedEigenvalues.orthonormal_normalizedChar,
-  NoEmbeddedEigenvalues.span_normalizedChar_closure_eq_top,
-  NoEmbeddedEigenvalues.torusFourierBasis,
-  NoEmbeddedEigenvalues.torusFourierBasis_apply,
-  NoEmbeddedEigenvalues.torusFourierBasis_repr}
+\lean{EulerDipoleEigenvalues.normalizedChar,
+  EulerDipoleEigenvalues.orthonormal_normalizedChar,
+  EulerDipoleEigenvalues.span_normalizedChar_closure_eq_top,
+  EulerDipoleEigenvalues.torusFourierBasis,
+  EulerDipoleEigenvalues.torusFourierBasis_apply,
+  EulerDipoleEigenvalues.torusFourierBasis_repr}
 \leanok
 The normalized characters $b_k=(2\pi)^{-1}e_k$, $k\in\Z^2$, form a Hilbert
 basis of $L^2$. Its coordinate map is the unitary map
@@ -83,11 +83,11 @@ functions, then use density of continuous functions in $L^2$.
 \begin{lemma}[Fourier reconstruction and Parseval]
 \label{lem:torus-fourier}
 \uses{lem:torus-fourier-basis}
-\lean{NoEmbeddedEigenvalues.hasSum_fourier_series,
-  NoEmbeddedEigenvalues.fourierCoeff_ext,
-  NoEmbeddedEigenvalues.hasSum_sq_fourierCoeff,
-  NoEmbeddedEigenvalues.summable_sq_fourierCoeff,
-  NoEmbeddedEigenvalues.exists_fourierCoeff}
+\lean{EulerDipoleEigenvalues.hasSum_fourier_series,
+  EulerDipoleEigenvalues.fourierCoeff_ext,
+  EulerDipoleEigenvalues.hasSum_sq_fourierCoeff,
+  EulerDipoleEigenvalues.summable_sq_fourierCoeff,
+  EulerDipoleEigenvalues.exists_fourierCoeff}
 \leanok
 For every $g\in L^2$,
 \[
@@ -109,10 +109,10 @@ $2\pi\hat g_k$. Surjectivity of the coordinate map gives the last assertion.
 \begin{lemma}[Bounded Fourier multipliers]
 \label{lem:fourier-multiplier}
 \uses{lem:torus-fourier}
-\lean{NoEmbeddedEigenvalues.summable_sq_mul_fourierCoeff,
-  NoEmbeddedEigenvalues.fourierMultiplier,
-  NoEmbeddedEigenvalues.fourierCoeff_fourierMultiplier,
-  NoEmbeddedEigenvalues.norm_fourierMultiplier_apply_le}
+\lean{EulerDipoleEigenvalues.summable_sq_mul_fourierCoeff,
+  EulerDipoleEigenvalues.fourierMultiplier,
+  EulerDipoleEigenvalues.fourierCoeff_fourierMultiplier,
+  EulerDipoleEigenvalues.norm_fourierMultiplier_apply_le}
 \leanok
 Let $m:\Z^2\to\C$ with $|m_k|\le C$ for all $k$. For $g\in L^2$ the series
 \[
@@ -151,10 +151,10 @@ $L_0^2$ (the square of the operator $L_0$) are typeset identically.
 \begin{definition}[Fourier-defined derivatives]
 \label{def:fourier-derivatives}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.frequencyComponent,
-  NoEmbeddedEigenvalues.HasFourierPartial,
-  NoEmbeddedEigenvalues.HasFourierSecondPartial,
-  NoEmbeddedEigenvalues.HasFourierLaplacian}
+\lean{EulerDipoleEigenvalues.frequencyComponent,
+  EulerDipoleEigenvalues.HasFourierPartial,
+  EulerDipoleEigenvalues.HasFourierSecondPartial,
+  EulerDipoleEigenvalues.HasFourierLaplacian}
 \leanok
 For $g,h\in L^2$, define $\partial_jg=h$ in the Fourier sense by
 $\hat h_k=ik_j\hat g_k$, and $\partial_i\partial_jg=h$ by
@@ -166,8 +166,8 @@ Lean indexes coordinates by \texttt{Fin 2}, with $0$ for $x$ and $1$ for $y$.
 \begin{lemma}[Composition of Fourier derivatives]
 \label{lem:fourier-derivative-composition}
 \uses{def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.hasFourierPartial_iff_second,
-  NoEmbeddedEigenvalues.hasFourierLaplacian_of_second}
+\lean{EulerDipoleEigenvalues.hasFourierPartial_iff_second,
+  EulerDipoleEigenvalues.hasFourierLaplacian_of_second}
 \leanok
 If $d=\partial_jg$ belongs to $L^2$, then the relation
 $\partial_i d=h$ is equivalent to $\partial_i\partial_jg=h$.
@@ -201,11 +201,11 @@ proved separately below; the second-order and Laplace bridges remain deferred.
 \begin{definition}[Classical periodic test pairs]
 \label{def:classical-tests}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.coordinateLine,
-  NoEmbeddedEigenvalues.HasClassicalPartial,
-  NoEmbeddedEigenvalues.IsSmoothTorusTest,
-  NoEmbeddedEigenvalues.HasWeakPartial,
-  NoEmbeddedEigenvalues.HasSmoothWeakPartial}
+\lean{EulerDipoleEigenvalues.coordinateLine,
+  EulerDipoleEigenvalues.HasClassicalPartial,
+  EulerDipoleEigenvalues.IsSmoothTorusTest,
+  EulerDipoleEigenvalues.HasWeakPartial,
+  EulerDipoleEigenvalues.HasSmoothWeakPartial}
 \leanok
 A coordinate-test pair consists of continuous functions $\varphi,d\varphi$
 on $\T^2$ such that, with the other coordinate fixed, the periodic real lift
@@ -225,7 +225,7 @@ In Lean the derivative is supplied as part of the test pair and certified by
 \begin{lemma}[Classical test derivative coefficients]
 \label{lem:classical-partial-fourier}
 \uses{def:classical-tests, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.HasClassicalPartial.hasFourierPartial}
+\lean{EulerDipoleEigenvalues.HasClassicalPartial.hasFourierPartial}
 \leanok
 Every coordinate-test pair satisfies
 $\widehat{d\varphi}_k=ik_j\hat\varphi_k$.
@@ -242,8 +242,8 @@ Fubini and the coefficient integral formula give the result on $\T^2$.
 \begin{lemma}[Fourier and arbitrary-test weak partial derivatives]
 \label{lem:partial-weak-equivalence}
 \uses{def:fourier-derivatives, def:classical-tests}
-\lean{NoEmbeddedEigenvalues.hasFourierPartial_iff_smoothWeakPartial,
-  NoEmbeddedEigenvalues.hasFourierPartial_iff_weakPartial}
+\lean{EulerDipoleEigenvalues.hasFourierPartial_iff_smoothWeakPartial,
+  EulerDipoleEigenvalues.hasFourierPartial_iff_weakPartial}
 \leanok
 For $g,h\in L^2$, the Fourier relation $\hat h_k=ik_j\hat g_k$ for every $k$
 is equivalent to
@@ -272,13 +272,13 @@ smooth tests together with their derivatives.
 \begin{lemma}[Product rule and integration by parts in $L^2$]
 \label{lem:l2-product-rule}
 \uses{def:fourier-derivatives, def:classical-tests}
-\lean{NoEmbeddedEigenvalues.mulL2,
-  NoEmbeddedEigenvalues.mulL2_ae,
-  NoEmbeddedEigenvalues.HasClassicalPartial.mul,
-  NoEmbeddedEigenvalues.hasFourierPartial_mulL2,
-  NoEmbeddedEigenvalues.inner_swap_of_hasFourierPartial,
-  NoEmbeddedEigenvalues.inner_mulL2,
-  NoEmbeddedEigenvalues.inner_mulL2_swap}
+\lean{EulerDipoleEigenvalues.mulL2,
+  EulerDipoleEigenvalues.mulL2_ae,
+  EulerDipoleEigenvalues.HasClassicalPartial.mul,
+  EulerDipoleEigenvalues.hasFourierPartial_mulL2,
+  EulerDipoleEigenvalues.inner_swap_of_hasFourierPartial,
+  EulerDipoleEigenvalues.inner_mulL2,
+  EulerDipoleEigenvalues.inner_mulL2_swap}
 \leanok
 Let $g,\partial_jg\in L^2$, with $\partial_jg$ the Fourier partial derivative, and let
 $(c,\partial_jc)$ be a coordinate-test pair. Then $cg\in L^2$ has the Fourier partial
@@ -300,8 +300,8 @@ $\overline{\hat b_k}\,ik_j\hat a_k$ and $-\overline{ik_j\hat b_k}\,\hat a_k$ agr
 \begin{definition}[Inverse Laplacian]
 \label{def:inverse-laplacian}
 \uses{def:torus, lem:fourier-multiplier}
-\lean{NoEmbeddedEigenvalues.normSq, NoEmbeddedEigenvalues.invLapSymbol,
-  NoEmbeddedEigenvalues.invLap}
+\lean{EulerDipoleEigenvalues.normSq, EulerDipoleEigenvalues.invLapSymbol,
+  EulerDipoleEigenvalues.invLap}
 \leanok
 For $\omega\in L^2$ let
 \[
@@ -318,13 +318,13 @@ and~\ref{lem:inverse-laplacian-derivatives}).
 \begin{lemma}[Inverse-Laplacian Fourier series]
 \label{lem:inverse-laplacian-fourier}
 \uses{def:inverse-laplacian, def:torus}
-\lean{NoEmbeddedEigenvalues.normSq_pos,
-  NoEmbeddedEigenvalues.norm_invLapSymbol_le,
-  NoEmbeddedEigenvalues.fourierCoeff_invLap_eq_mul,
-  NoEmbeddedEigenvalues.fourierCoeff_invLap,
-  NoEmbeddedEigenvalues.hasSum_invLap,
-  NoEmbeddedEigenvalues.norm_invLap_apply_le,
-  NoEmbeddedEigenvalues.meanZero_invLap}
+\lean{EulerDipoleEigenvalues.normSq_pos,
+  EulerDipoleEigenvalues.norm_invLapSymbol_le,
+  EulerDipoleEigenvalues.fourierCoeff_invLap_eq_mul,
+  EulerDipoleEigenvalues.fourierCoeff_invLap,
+  EulerDipoleEigenvalues.hasSum_invLap,
+  EulerDipoleEigenvalues.norm_invLap_apply_le,
+  EulerDipoleEigenvalues.meanZero_invLap}
 \leanok
 The multiplier of $\Delta^{-1}$ satisfies $|m_k|\le1$. Hence $\Delta^{-1}$ is
 a bounded linear operator on $L^2$ with $\|\Delta^{-1}\omega\|\le\|\omega\|$,
@@ -344,8 +344,8 @@ Apply Lemma~\ref{lem:fourier-multiplier}.
 \begin{definition}[Derivatives of the stream function]
 \label{def:stream-derivatives}
 \uses{def:inverse-laplacian, def:fourier-derivatives, lem:fourier-multiplier}
-\lean{NoEmbeddedEigenvalues.streamPartial,
-  NoEmbeddedEigenvalues.streamSecondPartial}
+\lean{EulerDipoleEigenvalues.streamPartial,
+  EulerDipoleEigenvalues.streamSecondPartial}
 \leanok
 The operators $\partial_j\Delta^{-1}$ and $\partial_i\partial_j\Delta^{-1}$ on $L^2(\T^2)$
 are the Fourier multipliers with symbols $ik_j\cdot(-1/|k|^2)$ and
@@ -356,18 +356,18 @@ $\psi_j=\partial_j\Delta^{-1}\omega$ and $\psi_{ij}=\partial_i\partial_j\Delta^{
 \begin{lemma}[Inverse-Laplacian derivatives]
 \label{lem:inverse-laplacian-derivatives}
 \uses{def:inverse-laplacian, def:fourier-derivatives, def:stream-derivatives}
-\lean{NoEmbeddedEigenvalues.norm_intCast_mul_invLapSymbol_le,
-  NoEmbeddedEigenvalues.abs_frequencyComponent_le_normSq,
-  NoEmbeddedEigenvalues.abs_frequencyProduct_le_normSq,
-  NoEmbeddedEigenvalues.norm_streamPartialSymbol_le,
-  NoEmbeddedEigenvalues.norm_streamSecondPartialSymbol_le,
-  NoEmbeddedEigenvalues.hasFourierPartial_streamPartial,
-  NoEmbeddedEigenvalues.hasFourierSecondPartial_streamSecondPartial,
-  NoEmbeddedEigenvalues.hasFourierPartial_streamPartial_streamSecondPartial,
-  NoEmbeddedEigenvalues.exists_fourierPartial_invLap,
-  NoEmbeddedEigenvalues.exists_fourierSecondPartial_invLap,
-  NoEmbeddedEigenvalues.hasFourierLaplacian_invLap,
-  NoEmbeddedEigenvalues.streamSecondPartial_add}
+\lean{EulerDipoleEigenvalues.norm_intCast_mul_invLapSymbol_le,
+  EulerDipoleEigenvalues.abs_frequencyComponent_le_normSq,
+  EulerDipoleEigenvalues.abs_frequencyProduct_le_normSq,
+  EulerDipoleEigenvalues.norm_streamPartialSymbol_le,
+  EulerDipoleEigenvalues.norm_streamSecondPartialSymbol_le,
+  EulerDipoleEigenvalues.hasFourierPartial_streamPartial,
+  EulerDipoleEigenvalues.hasFourierSecondPartial_streamSecondPartial,
+  EulerDipoleEigenvalues.hasFourierPartial_streamPartial_streamSecondPartial,
+  EulerDipoleEigenvalues.exists_fourierPartial_invLap,
+  EulerDipoleEigenvalues.exists_fourierSecondPartial_invLap,
+  EulerDipoleEigenvalues.hasFourierLaplacian_invLap,
+  EulerDipoleEigenvalues.streamSecondPartial_add}
 \leanok
 For every $\omega\in L^2$, all first and second Fourier-defined partial
 derivatives of $\psi=\Delta^{-1}\omega$ belong to $L^2$: they are $\psi_j$ and
@@ -392,8 +392,8 @@ multiplier. At $k=0$, the equation uses $\hat\omega_0=0$.
 \begin{definition}[The dipole and the transport operator]
 \label{def:dipole}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.L0char, NoEmbeddedEigenvalues.L0charLp,
-  NoEmbeddedEigenvalues.transportCoeff, NoEmbeddedEigenvalues.HasL0}
+\lean{EulerDipoleEigenvalues.L0char, EulerDipoleEigenvalues.L0charLp,
+  EulerDipoleEigenvalues.transportCoeff, EulerDipoleEigenvalues.HasL0}
 \leanok
 The steady state is the symmetric dipole with stream function
 $\Psi(x,y)=\cos x+\cos y$, vorticity $\Omega=-\Psi$ and velocity
@@ -421,10 +421,10 @@ characters gives the formula above.
 \begin{lemma}[Transport in Fourier coordinates]
 \label{lem:transport-fourier}
 \uses{def:dipole, def:torus}
-\lean{NoEmbeddedEigenvalues.L0char_fourier,
-  NoEmbeddedEigenvalues.L0charLp_fourier,
-  NoEmbeddedEigenvalues.fourier_transport_pairing,
-  NoEmbeddedEigenvalues.hasL0_iff_fourierCoeff}
+\lean{EulerDipoleEigenvalues.L0char_fourier,
+  EulerDipoleEigenvalues.L0charLp_fourier,
+  EulerDipoleEigenvalues.fourier_transport_pairing,
+  EulerDipoleEigenvalues.hasL0_iff_fourierCoeff}
 \leanok
 For every $k\in\Z^2$,
 \[
@@ -452,8 +452,8 @@ implication also reverses. No Fourier completeness or Sobolev theory is needed.
 \begin{lemma}[Transport into $L^2$]
 \label{lem:transport-l2}
 \uses{def:dipole}
-\lean{NoEmbeddedEigenvalues.HasL0.unique,
-  NoEmbeddedEigenvalues.exists_hasL0_iff_summable}
+\lean{EulerDipoleEigenvalues.HasL0.unique,
+  EulerDipoleEigenvalues.exists_hasL0_iff_summable}
 \leanok
 For $g\in L^2$ there is at most one $h\in L^2$ with $L_0g=h$, and such an $h$
 exists if and only if the sequence $\widehat{(L_0g)}_k$ of
@@ -473,8 +473,8 @@ sequence is the coefficient sequence of some $h\in L^2$
 \begin{lemma}[Linearity of weak transport]
 \label{lem:L0-linearity}
 \uses{def:dipole}
-\lean{NoEmbeddedEigenvalues.HasL0.zero, NoEmbeddedEigenvalues.HasL0.add,
-  NoEmbeddedEigenvalues.HasL0.sub, NoEmbeddedEigenvalues.HasL0.smul}
+\lean{EulerDipoleEigenvalues.HasL0.zero, EulerDipoleEigenvalues.HasL0.add,
+  EulerDipoleEigenvalues.HasL0.sub, EulerDipoleEigenvalues.HasL0.smul}
 \leanok
 The character-tested weak relation $L_0g=h$ is complex linear:
 $L_0 0=0$, and if $L_0g_1=h_1$ and $L_0g_2=h_2$, then
@@ -494,8 +494,8 @@ inner-product argument, so complex scalars are not conjugated.
 \begin{lemma}[Weak transport against $H^1$ tests]
 \label{lem:L0-h1-tests}
 \uses{def:dipole, def:fourier-derivatives, def:classical-tests}
-\lean{NoEmbeddedEigenvalues.L0charLp_eq_mulL2, NoEmbeddedEigenvalues.HasL0.inner_eq,
-  NoEmbeddedEigenvalues.HasL0.integral_mul_eq}
+\lean{EulerDipoleEigenvalues.L0charLp_eq_mulL2, EulerDipoleEigenvalues.HasL0.inner_eq,
+  EulerDipoleEigenvalues.HasL0.integral_mul_eq}
 \leanok
 Let $L_0g=h$ in the character-tested sense. If $u\in L^2$ has Fourier partial derivatives
 $u_x,u_y\in L^2$, then
@@ -527,7 +527,7 @@ test, not on $g$.
 \begin{definition}[Operator domain]
 \label{def:domain}
 \uses{def:dipole, def:torus}
-\lean{NoEmbeddedEigenvalues.Dom}
+\lean{EulerDipoleEigenvalues.Dom}
 \leanok
 $\Dom=\{g\in X: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \end{definition}
@@ -535,10 +535,10 @@ $\Dom=\{g\in X: L_0g\in L^2\}$ (manuscript \texttt{(Intm3)}).
 \begin{lemma}[The stream function is in the domain]
 \label{lem:L0-stream}
 \uses{def:inverse-laplacian, def:dipole}
-\lean{NoEmbeddedEigenvalues.abs_components_le_normSq,
-  NoEmbeddedEigenvalues.norm_mul_fourierCoeff_invLap_le,
-  NoEmbeddedEigenvalues.summable_sq_transportCoeff_invLap,
-  NoEmbeddedEigenvalues.exists_hasL0_invLap}
+\lean{EulerDipoleEigenvalues.abs_components_le_normSq,
+  EulerDipoleEigenvalues.norm_mul_fourierCoeff_invLap_le,
+  EulerDipoleEigenvalues.summable_sq_transportCoeff_invLap,
+  EulerDipoleEigenvalues.exists_hasL0_invLap}
 \leanok
 For $\omega\in X$, $L_0\Delta^{-1}\omega\in L^2$.
 \end{lemma}
@@ -569,7 +569,7 @@ $\omega$ is unnecessary here: $\Delta^{-1}$ discards the zero mode.
 \begin{definition}[Linearized operator]
 \label{def:linearized-operator}
 \uses{def:domain, def:inverse-laplacian, lem:L0-stream}
-\lean{NoEmbeddedEigenvalues.HasL}
+\lean{EulerDipoleEigenvalues.HasL}
 \leanok
 Let $A=I+\Delta^{-1}$ on $X$ and $L=L_0A$ with domain $\Dom$; by
 Lemma~\ref{lem:L0-stream}, $L\omega\in L^2$ for $\omega\in\Dom$.
@@ -578,7 +578,7 @@ Lemma~\ref{lem:L0-stream}, $L\omega\in L^2$ for $\omega\in\Dom$.
 \begin{theorem}[Main theorem]
 \label{thm:main}
 \uses{def:linearized-operator}
-\lean{NoEmbeddedEigenvalues.main}
+\lean{EulerDipoleEigenvalues.main}
 \leanok
 For every $\lambda\in\R\setminus\{0\}$ and $\omega\in\Dom$, if
 $L\omega=i\lambda\omega$ then $\omega=0$. That is, $\ker(L-i\lambda)=\{0\}$
@@ -602,7 +602,7 @@ the identity, $\omega=0$.
 \begin{definition}[The eigenvalue problem]
 \label{def:eigen-problem}
 \uses{def:dipole, def:inverse-laplacian}
-\lean{NoEmbeddedEigenvalues.IsEigenSolution}
+\lean{EulerDipoleEigenvalues.IsEigenSolution}
 \leanok
 A \emph{solution of the eigenvalue problem with parameter
 $\lambda\in\R\setminus\{0\}$} is a function $\omega\in X$ such that, with
@@ -620,7 +620,7 @@ $\omega$ is an \emph{eigenfunction}.
 \begin{lemma}[Reduction to the real-parameter equation]
 \label{lem:reduction}
 \uses{def:eigen-problem, def:linearized-operator}
-\lean{NoEmbeddedEigenvalues.hasL_iff_isEigenSolution}
+\lean{EulerDipoleEigenvalues.hasL_iff_isEigenSolution}
 \leanok
 Let $\lambda\in\R\setminus\{0\}$. A function $\omega\in\Dom$ satisfies
 $L\omega=i\lambda\omega$ if and only if $\omega\in X$ is a solution of the
@@ -672,7 +672,7 @@ The implication from $A\omega=0$ uses the eigenvalue equation and $\mu\ne0$.
 \begin{remark}[Lean model]
 Decided 2026-10-13, as a first attempt. $L^2$ is Mathlib's \texttt{Lp} for
 Lebesgue measure on $\T^2=\texttt{Real.Angle}\times\texttt{Real.Angle}$
-(\texttt{NoEmbeddedEigenvalues/Setup/TorusL2.lean}), not $\ell^2(\Z^2)$, because the
+(\texttt{EulerDipoleEigenvalues/Setup/TorusL2.lean}), not $\ell^2(\Z^2)$, because the
 later chapters argue in physical space. The operators are defined through
 the characters $e_k$:
 (i) $L_0$ is a relation, \texttt{HasL0 g h} (``$L_0g=h$''), given by the weak

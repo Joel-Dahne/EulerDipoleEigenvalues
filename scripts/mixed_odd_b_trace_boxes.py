@@ -8,7 +8,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 
 TABLES = (ROOT /
-          'NoEmbeddedEigenvalues/Certificates/Inequalities/MixedOddBAlgebra.lean')
+          'EulerDipoleEigenvalues/Certificates/Inequalities/MixedOddBAlgebra.lean')
 
 
 def power_tables():

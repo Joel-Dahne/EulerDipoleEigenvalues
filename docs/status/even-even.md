@@ -5,7 +5,7 @@
 
 Even–even exclusion (`thm:ee-exclusion`) and its character-wise version
 are transitively admission-free. The assembly is in
-[EvenEven.lean](../../NoEmbeddedEigenvalues/EvenEven/Conclusion/EvenEven.lean).
+[EvenEven.lean](../../EulerDipoleEigenvalues/EvenEven/Conclusion/EvenEven.lean).
 
 The remaining work is human review of the Lean statements, especially the
 setup, sector reduction, interval representatives, and weighted boundary

@@ -4,7 +4,7 @@ An on-demand map, not a progress report or a required session read.
 Start with [STATUS.md](../STATUS.md) for current priorities; consult the
 relevant module docstrings and blueprint nodes for exact statements and
 proof mechanisms. Module names below are relative to
-`NoEmbeddedEigenvalues/`.
+`EulerDipoleEigenvalues/`.
 
 ## Mathematical sources and audit entry points
 
@@ -19,11 +19,11 @@ proof mechanisms. Module names below are relative to
 - `Challenge.lean`, `Solution.lean`, `comparator.json`: external statement
   boundary, library bridges, and permitted axioms. See the change restrictions
   in [AGENTS.md](../AGENTS.md).
-- `NoEmbeddedEigenvalues.lean`: library root importing every module.
+- `EulerDipoleEigenvalues.lean`: library root importing every module.
 
 ## Lean directory layout
 
-`NoEmbeddedEigenvalues/` mirrors the blueprint's mathematical chapters and
+`EulerDipoleEigenvalues/` mirrors the blueprint's mathematical chapters and
 numbered sections. Files before a chapter's first section live directly in
 that chapter directory. `Intro` and `Digest notes` are prose, so they do
 not have Lean directories.
@@ -52,7 +52,7 @@ compiled certificate data and proof-only helpers have no blueprint node;
 they live with the argument they support.
 
 Lean declaration names stay in their original namespaces. Imports of specific
-files must use the new module paths; `import NoEmbeddedEigenvalues` is unchanged.
+files must use the new module paths; `import EulerDipoleEigenvalues` is unchanged.
 
 ## Find a Lean capability
 
@@ -300,7 +300,7 @@ files must use the new module paths; `import NoEmbeddedEigenvalues` is unchanged
 ### Eigenfunction regularity
 
 The Lean results for [Regularity of eigenfunctions](../blueprint/src/chapters/regularity.tex)
-live in `Regularity/`, retaining the namespace `NoEmbeddedEigenvalues`.
+live in `Regularity/`, retaining the namespace `EulerDipoleEigenvalues`.
 General Sobolev/jet, trace and weighted-transport prerequisites remain shared
 in the sections above.
 
@@ -785,7 +785,7 @@ in the sections above.
 
 ### Certified polynomial inequalities
 
-The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificates/).
+The certificate code is in [`Certificates/`](../EulerDipoleEigenvalues/Certificates/).
 
 - `Certificates/Tools/Bernstein.lean`: exact rational power and Bernstein arrays, affine
   box pullback, expansion and positivity. Uses Mathlib's Bernstein basis.

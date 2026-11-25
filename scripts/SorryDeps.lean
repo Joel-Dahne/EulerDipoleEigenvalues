@@ -6,7 +6,7 @@ Usage (after `lake build`; `just sorries` does both):
     lake env lean --run scripts/SorryDeps.lean [--count] NAME...
     lake env lean --run scripts/SorryDeps.lean --all
 
-Each NAME may omit the `NoEmbeddedEigenvalues.` prefix. For each NAME the script
+Each NAME may omit the `EulerDipoleEigenvalues.` prefix. For each NAME the script
 follows constants used in types and values through the project modules and reports
 every declaration whose own elaborated term contains `sorryAx`, with its source
 location. Auxiliary declarations (`foo._proof_1`, `foo.match_1`, ...) are reported
@@ -27,7 +27,7 @@ open Lean
 
 namespace SorryDeps
 
-def project : Name := `NoEmbeddedEigenvalues
+def project : Name := `EulerDipoleEigenvalues
 
 def inProject (env : Environment) (n : Name) : Bool :=
   match env.getModuleIdxFor? n with

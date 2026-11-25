@@ -12,11 +12,11 @@ of the identities connecting them to the differential expressions.
 
 \begin{definition}[Bernstein coefficients]
 \label{def:bernstein}
-\lean{NoEmbeddedEigenvalues.certificatePolynomial,
- NoEmbeddedEigenvalues.certificateBernsteinCoeff,
- NoEmbeddedEigenvalues.certificateAffineCoeff,
- NoEmbeddedEigenvalues.certificateBoxCoeff,
- NoEmbeddedEigenvalues.certificateBernsteinBasis}
+\lean{EulerDipoleEigenvalues.certificatePolynomial,
+ EulerDipoleEigenvalues.certificateBernsteinCoeff,
+ EulerDipoleEigenvalues.certificateAffineCoeff,
+ EulerDipoleEigenvalues.certificateBoxCoeff,
+ EulerDipoleEigenvalues.certificateBernsteinBasis}
 \leanok
 For a rational polynomial $\sum_{k\le n,\,l\le m}a_{kl}\xi^k\eta^l$
 with degree bounds $(n,m)$,
@@ -32,10 +32,10 @@ onto $[0,1]^2$.
 \begin{lemma}[Bernstein positivity criterion]
 \label{lem:bernstein-positivity}
 \uses{def:bernstein}
-\lean{NoEmbeddedEigenvalues.certificate_bernstein_expansion,
- NoEmbeddedEigenvalues.certificate_box_expansion,
- NoEmbeddedEigenvalues.certificate_bernstein_nonneg,
- NoEmbeddedEigenvalues.certificate_bernstein_pos}
+\lean{EulerDipoleEigenvalues.certificate_bernstein_expansion,
+ EulerDipoleEigenvalues.certificate_box_expansion,
+ EulerDipoleEigenvalues.certificate_bernstein_nonneg,
+ EulerDipoleEigenvalues.certificate_bernstein_pos}
 \leanok
 For rational power coefficients on a nondegenerate rational box, the Bernstein
 expansion represents the same polynomial after affine pullback.
@@ -59,7 +59,7 @@ coefficient gives a strictly positive summand.
 \begin{lemma}[Separable Bernstein box transform]
 \label{lem:bernstein-separable}
 \uses{def:bernstein}
-\lean{NoEmbeddedEigenvalues.certificateAxisBox, NoEmbeddedEigenvalues.certificateBoxCoeff_separable}
+\lean{EulerDipoleEigenvalues.certificateAxisBox, EulerDipoleEigenvalues.certificateBoxCoeff_separable}
 \leanok
 The Bernstein coefficients on a rational box can be computed by applying the
 one-variable box transform first to each column and then to each row.
@@ -74,8 +74,8 @@ product of one-variable weights. Expand the sums and exchange their order.
 \begin{lemma}[Integer midpoint subdivision]
 \label{lem:bernstein-midpoint}
 \uses{def:bernstein}
-\lean{NoEmbeddedEigenvalues.bernsteinIntFromPower_eval,
- NoEmbeddedEigenvalues.bernsteinIntEval_midTable, NoEmbeddedEigenvalues.BernsteinMidTree.power_nonneg}
+\lean{EulerDipoleEigenvalues.bernsteinIntFromPower_eval,
+ EulerDipoleEigenvalues.bernsteinIntEval_midTable, EulerDipoleEigenvalues.BernsteinMidTree.power_nonneg}
 \leanok
 An integer power table of bidegree at most $(n,m)$ converts to the
 Bernstein table scaled by $n!m!$. A midpoint restriction in a coordinate
@@ -98,13 +98,13 @@ the tree using the positivity of the Bernstein basis at each leaf.
 
 \begin{lemma}[Rational bounds for the logarithm]
 \label{lem:log-bounds}
-\lean{NoEmbeddedEigenvalues.certificateLogTaylor,
- NoEmbeddedEigenvalues.certificateLogTwoLower,
- NoEmbeddedEigenvalues.certificateLogTwoUpper,
- NoEmbeddedEigenvalues.certificate_log_ratio_bounds,
- NoEmbeddedEigenvalues.certificate_log_one_sub_bounds,
- NoEmbeddedEigenvalues.certificate_log_two_bounds,
- NoEmbeddedEigenvalues.certificate_log_cayley_bounds}
+\lean{EulerDipoleEigenvalues.certificateLogTaylor,
+ EulerDipoleEigenvalues.certificateLogTwoLower,
+ EulerDipoleEigenvalues.certificateLogTwoUpper,
+ EulerDipoleEigenvalues.certificate_log_ratio_bounds,
+ EulerDipoleEigenvalues.certificate_log_one_sub_bounds,
+ EulerDipoleEigenvalues.certificate_log_two_bounds,
+ EulerDipoleEigenvalues.certificate_log_cayley_bounds}
 \leanok
 For $0<r\le2$,
 \[
@@ -131,7 +131,7 @@ tail by its first denominator, then sum the resulting geometric series.
 
 \begin{lemma}[Affine dependence on the logarithm]
 \label{lem:affine-in-log}
-\lean{NoEmbeddedEigenvalues.certificate_affine_in_log}
+\lean{EulerDipoleEigenvalues.certificate_affine_in_log}
 \leanok
 If $A+B\ell\ge0$ for $\ell=\ell_-$ and for $\ell=\ell_+$, then $A+B\ell\ge0$ for
 every $\ell\in[\ell_-,\ell_+]$, regardless of the sign of $B$.
@@ -153,7 +153,7 @@ Lemma~\ref{lem:log-bounds}.
 
 \begin{lemma}[Odd--odd lower logarithm endpoint]
 \label{cert:dd-residual-lower}
-\lean{NoEmbeddedEigenvalues.dd_residual_lower_nonneg}
+\lean{EulerDipoleEigenvalues.dd_residual_lower_nonneg}
 \leanok
 On $0<s<2$, $s(2-s)\le r\le2-s^2/2$, one has $R_0+R_1 L_-(r)\ge0$.
 \end{lemma}
@@ -171,7 +171,7 @@ on $[0,\frac12]\times[0,1]$ and $[\frac12,1]\times[0,1]$ by exact arithmetic.
 
 \begin{lemma}[Odd--odd upper logarithm endpoint]
 \label{cert:dd-residual-upper}
-\lean{NoEmbeddedEigenvalues.dd_residual_upper_nonneg}
+\lean{EulerDipoleEigenvalues.dd_residual_upper_nonneg}
 \leanok
 On the same range, $0<s<2$, $s(2-s)\le r\le2-s^2/2$, one has
 $R_0+R_1 L_+(r)\ge0$.
@@ -191,9 +191,9 @@ These boxes cover the unit square.
 \begin{lemma}[Odd--odd residual]
 \label{cert:dd-residual}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.ddResidualA, NoEmbeddedEigenvalues.ddResidualB,
- NoEmbeddedEigenvalues.ddResidualExpression,
- NoEmbeddedEigenvalues.dd_residual_identity, NoEmbeddedEigenvalues.dd_residual_nonneg}
+\lean{EulerDipoleEigenvalues.ddResidualA, EulerDipoleEigenvalues.ddResidualB,
+ EulerDipoleEigenvalues.ddResidualExpression,
+ EulerDipoleEigenvalues.dd_residual_identity, EulerDipoleEigenvalues.dd_residual_nonneg}
 \leanok
 Let $R(s,r)=s\mathsf A(s,r)/(384r^3)
 +s\mathsf B(s,r)\log(r/2)/(1536r^2)$, with the integer polynomials
@@ -217,7 +217,7 @@ the logarithm interval.
 \begin{lemma}[Odd-in-$b$ differential reduction]
 \label{lem:mixed-v-residual-identity}
 \uses{def:odd-b-comparison}
-\lean{NoEmbeddedEigenvalues.mixedOddBResidual, NoEmbeddedEigenvalues.mixed_odd_b_identity}
+\lean{EulerDipoleEigenvalues.mixedOddBResidual, EulerDipoleEigenvalues.mixed_odd_b_identity}
 \leanok
 On $Q$, $\mathcal Pw_v-h^2w_v/100=v\mathcal R_v(h,k)$, where
 $\mathcal R_v$ is the normalized residual of manuscript
@@ -234,9 +234,9 @@ using $\partial_a h=-u$ and $\partial_b k=-v$.
 \begin{lemma}[Odd-in-$b$ polynomial reduction]
 \label{lem:mixed-odd-b-clear}
 \uses{lem:mixed-v-residual-identity, def:bernstein}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_clear, NoEmbeddedEigenvalues.mixed_odd_b_cleared_affine,
- NoEmbeddedEigenvalues.mixed_odd_b_a_table, NoEmbeddedEigenvalues.mixed_odd_b_b_table,
- NoEmbeddedEigenvalues.mixed_odd_b_residual_center}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_clear, EulerDipoleEigenvalues.mixed_odd_b_cleared_affine,
+ EulerDipoleEigenvalues.mixed_odd_b_a_table, EulerDipoleEigenvalues.mixed_odd_b_b_table,
+ EulerDipoleEigenvalues.mixed_odd_b_residual_center}
 \leanok
 For $h>0$, $S=h+k>0$, $R=2-h^2-k^2\ne0$,
 $10^6 S^3R\mathcal R_v(h,k)=A(h,k)+B(h,k)\log h$ for integer power tables
@@ -254,7 +254,7 @@ Evaluate the expanded residual directly at the center, without clearing $R$.
 \begin{lemma}[Odd-in-$b$ corner sign]
 \label{cert:odd-b-corner}
 \uses{lem:mixed-v-residual-identity}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_residual_corner}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_residual_corner}
 \leanok
 The residual $\mathcal R_v$ is nonnegative on $[15/16,1]^2$.
 \end{lemma}
@@ -280,7 +280,7 @@ At $(1,1)$ use the direct residual value.
 \begin{lemma}[Odd-in-$b$ small-strip sign]
 \label{cert:odd-b-small}
 \uses{lem:mixed-odd-b-clear}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_small_strip}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_small_strip}
 \leanok
 The residual is nonnegative on $(0,2^{-10}]\times[0,1]$.
 \end{lemma}
@@ -294,7 +294,7 @@ As $\log h\le-6$, their signs give the residual bound.
 \begin{lemma}[Odd-in-$b$ first-strip sign]
 \label{cert:odd-b-first-strip}
 \uses{lem:mixed-v-residual-identity}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_first_strip}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_first_strip}
 \leanok
 The residual $\mathcal R_v$ is nonnegative on $[1/2,1]\times[0,1]$.
 \end{lemma}
@@ -319,8 +319,8 @@ the endpoints to obtain the residual bound.
 \begin{lemma}[Odd-in-$b$ strip endpoint polynomial signs]
 \label{cert:odd-b-strips}
 \uses{lem:mixed-odd-b-clear, lem:log-bounds}
-\lean{NoEmbeddedEigenvalues.mixedOddBStripLower, NoEmbeddedEigenvalues.mixedOddBStripUpper,
- NoEmbeddedEigenvalues.mixed_odd_b_positive_strip_signs}
+\lean{EulerDipoleEigenvalues.mixedOddBStripLower, EulerDipoleEigenvalues.mixedOddBStripUpper,
+ EulerDipoleEigenvalues.mixed_odd_b_positive_strip_signs}
 \leanok
 For $j=1,\dots,9$, set $h=2^{-j}(1-z/2)$, $z\in[0,1]$.
 Let $\ell_-,\ell_+$ enclose $\log 2$ as in Lemma~\ref{lem:log-bounds}.
@@ -350,7 +350,7 @@ value bound. The same certificate applies to both endpoints.
 \begin{lemma}[Odd-in-$b$ residual sign]
 \label{cert:odd-b}
 \uses{lem:mixed-v-residual-identity}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_residual_nonneg}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_residual_nonneg}
 \leanok
 The normalized residual $\mathcal R_v(h,k)$ is nonnegative on
 $(0,1]\times[0,1]$. At $(h,k)=(1,1)$ the potential uses its continuous value.
@@ -370,7 +370,7 @@ because $h=2^{-j}(1-z/2)$. Interpolate between the two endpoint signs.
 \begin{lemma}[Odd-in-$a$ differential reduction]
 \label{lem:mixed-u-residual-identity}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixedOddAResidual, NoEmbeddedEigenvalues.mixed_odd_a_identity}
+\lean{EulerDipoleEigenvalues.mixedOddAResidual, EulerDipoleEigenvalues.mixed_odd_a_identity}
 \leanok
 On $Q$, $\mathcal Pw_u-h^2w_u/200=w_u\mathcal R_u(h,k)$, with the
 normalized rational residual from manuscript \texttt{(lem:mixed-u-comparison)}.
@@ -386,9 +386,9 @@ of the mixed second derivatives of $F_u$ on $h+k>0$.
 \begin{lemma}[Odd-in-$a$ residual sign]
 \label{cert:odd-a}
 \uses{lem:mixed-u-residual-identity}
-\lean{NoEmbeddedEigenvalues.mixed_odd_a_residual_nonneg,
- NoEmbeddedEigenvalues.mixed_odd_a_clear, NoEmbeddedEigenvalues.mixed_odd_a_power1_identity,
- NoEmbeddedEigenvalues.mixed_odd_a_power2_identity}
+\lean{EulerDipoleEigenvalues.mixed_odd_a_residual_nonneg,
+ EulerDipoleEigenvalues.mixed_odd_a_clear, EulerDipoleEigenvalues.mixed_odd_a_power1_identity,
+ EulerDipoleEigenvalues.mixed_odd_a_power2_identity}
 \leanok
 The normalized residual $\mathcal R_u$ is nonnegative for $0<h,k<1$.
 \end{lemma}
@@ -411,7 +411,7 @@ The data generator is not used as proof evidence.
 \begin{lemma}[Odd-in-$a$ Robin polynomial identity]
 \label{lem:mixed-robin-identity}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixedRobinPolynomial, NoEmbeddedEigenvalues.mixed_robin_identity}
+\lean{EulerDipoleEigenvalues.mixedRobinPolynomial, EulerDipoleEigenvalues.mixed_robin_identity}
 \leanok
 Write
 $P(h)=\tfrac1{1000}(673h^7-1953h^6-3213h^5+7317h^4+109h^3-4647h^2+1718h+1)-\tfrac h{250}$.
@@ -431,7 +431,7 @@ quotient rule with $h$ fixed and then set $k=0$.
 \begin{lemma}[Odd-in-$a$ Robin polynomial sign]
 \label{cert:robin}
 \uses{lem:mixed-robin-identity}
-\lean{NoEmbeddedEigenvalues.mixed_robin_nonneg}
+\lean{EulerDipoleEigenvalues.mixed_robin_nonneg}
 \leanok
 $P(h)\ge0$ for $h\in[0,1]$.
 \end{lemma}

@@ -8,7 +8,7 @@ public import Mathlib
 This file is the statement a reader audits. It imports only Mathlib, defines the few objects the
 statement needs, and states the main theorem together with some sanity checks of the
 definitions. Every theorem here is proved in `Solution.lean` from the development in
-`NoEmbeddedEigenvalues/`. The definitions are copied there verbatim. That the copies and the
+`EulerDipoleEigenvalues/`. The definitions are copied there verbatim. That the copies and the
 statements agree, and which axioms the proofs use, is checked by `lake comparator` with
 `comparator.json`. The local check `just challenge` is a quicker, unsandboxed diagnostic.
 

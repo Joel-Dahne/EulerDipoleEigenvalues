@@ -14,7 +14,7 @@ from mixed_odd_b_trace_boxes import (
 
 CAP = 8_000
 STYLE_LINE_LENGTH = 100
-BASE = 'NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBTrace'
+BASE = 'EulerDipoleEigenvalues.Certificates.Inequalities.MixedOddBTrace'
 OUT = ROOT / BASE.replace('.', '/')
 
 
@@ -140,7 +140,7 @@ class StripTrace:
     def __init__(self, strip):
         self.strip = strip
         self.sub = Path(f'Strip{strip}')
-        self.namespace = f'NoEmbeddedEigenvalues.MixedOddBTrace.Strip{strip}'
+        self.namespace = f'EulerDipoleEigenvalues.MixedOddBTrace.Strip{strip}'
         # Retain the original strip-4 proof and use its polynomial formulae
         # from the other strips. The scaled support takes one strip hypothesis
         # in place of strip 4's two bounds.
@@ -469,7 +469,7 @@ def strip_nine_trace(index, a, b, c, d):
 def strip_nine_source():
     head = '''module
 
-public import NoEmbeddedEigenvalues.Certificates.Inequalities.MixedOddBTrace.Basic
+public import EulerDipoleEigenvalues.Certificates.Inequalities.MixedOddBTrace.Basic
 
 /-!
 # Explicit Horner traces for strip 9
@@ -480,12 +480,12 @@ in Lean. The horizontal, vertical and logarithm endpoints are in real units.
 
 public section
 
-namespace NoEmbeddedEigenvalues.MixedOddBTrace.Strip9
+namespace EulerDipoleEigenvalues.MixedOddBTrace.Strip9
 
 open Set'''
     return '\n\n'.join([
         head, strip_nine_identity(), *(strip_nine_trace(i, *box) for i, box in enumerate(STRIP_NINE_BOXES)),
-        'end NoEmbeddedEigenvalues.MixedOddBTrace.Strip9',
+        'end EulerDipoleEigenvalues.MixedOddBTrace.Strip9',
     ]) + '\n'
 
 

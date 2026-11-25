@@ -17,9 +17,9 @@ $n=\nabla s/\sqrt r$, and $t$ the unit tangent.
 \begin{definition}[Odd--odd quotient]
 \label{def:dd-quotient}
 \uses{def:eigen-problem, def:cells, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.ddStreamQuotient,
- NoEmbeddedEigenvalues.ddVorticityQuotient, NoEmbeddedEigenvalues.ddCellMeasure,
- NoEmbeddedEigenvalues.ddOperator, NoEmbeddedEigenvalues.HasDDOperator}
+\lean{EulerDipoleEigenvalues.ddStreamQuotient,
+ EulerDipoleEigenvalues.ddVorticityQuotient, EulerDipoleEigenvalues.ddCellMeasure,
+ EulerDipoleEigenvalues.ddOperator, EulerDipoleEigenvalues.HasDDOperator}
 \leanok
 For an odd--odd eigenfunction let $\phi=\psi/\Psi$ and $\nu=\omega/\Psi$, and
 on $\Cell$ define $E=1-s^{-2}\Div(s^2\nabla)$.
@@ -33,7 +33,7 @@ Classical differential expressions are used only for smooth functions.
 \label{def:dd-exclusion-domain}
 \uses{def:dd-quotient, def:sobolev-torus, def:reflections, def:transport-pair,
  def:torus-of-lift, def:cell-arcs, lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.DDQuotientData}
+\lean{EulerDipoleEigenvalues.DDQuotientData}
 \leanok
 At parameter $\lambda$ and vorticity $\omega$, quotient data consist of
 $\phi,\nu\in L^2(\T^2)$, with $\phi\in H^2(\T^2)$ even under both
@@ -47,7 +47,7 @@ there. Weighted corner remainders are not part of these data.
 \begin{corollary}[Existence of the exclusion quotient data]
 \label{cor:dd-exclusion-domain}
 \uses{def:eigen-problem, def:sectors, def:dd-exclusion-domain}
-\lean{NoEmbeddedEigenvalues.dd_exclusion_domain}
+\lean{EulerDipoleEigenvalues.dd_exclusion_domain}
 \leanok
 For every odd--odd eigenfunction with $\lambda\ne0$, the quotient data of
 Definition~\ref{def:dd-exclusion-domain} exist.
@@ -73,9 +73,9 @@ No separate corner remainder of $\phi$ is an input.
 \begin{lemma}[Quotient equations]
 \label{lem:dd-quotient-equations}
 \uses{def:dd-quotient, def:dd-exclusion-domain}
-\lean{NoEmbeddedEigenvalues.dd_quotient_equations,
- NoEmbeddedEigenvalues.DDQuotientData.operator_eq,
- NoEmbeddedEigenvalues.dd_cell_unitary, NoEmbeddedEigenvalues.dd_operator_conjugation}
+\lean{EulerDipoleEigenvalues.dd_quotient_equations,
+ EulerDipoleEigenvalues.DDQuotientData.operator_eq,
+ EulerDipoleEigenvalues.dd_cell_unitary, EulerDipoleEigenvalues.dd_operator_conjugation}
 \leanok
 $\nu=-E\phi$ weakly on the open cell, both for the original quotients
 and for supplied exclusion quotient data with specified Fourier first derivatives.
@@ -133,8 +133,8 @@ unbounded operators.
 \begin{lemma}[Fourier pairing with the dipole]
 \label{lem:dipole-fourier-pairing}
 \uses{def:dipole, def:torus}
-\lean{NoEmbeddedEigenvalues.dipole_eq_char_sum,
- NoEmbeddedEigenvalues.integral_dipole_mul_eq_fourier}
+\lean{EulerDipoleEigenvalues.dipole_eq_char_sum,
+ EulerDipoleEigenvalues.integral_dipole_mul_eq_fourier}
 \leanok
 The dipole is $\Psi=(e_{e_1}+e_{-e_1}+e_{e_2}+e_{-e_2})/2$.
 For every $g\in L^2(\T^2)$,
@@ -155,8 +155,8 @@ the displayed normalization.
 \begin{lemma}[Dipole orthogonality from weak transport]
 \label{lem:dipole-transport-orthogonality}
 \uses{def:dipole, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.HasL0.integral_dipole_mul_eq_zero,
- NoEmbeddedEigenvalues.IsEigenSolution.integral_dipole_mul_eq_zero}
+\lean{EulerDipoleEigenvalues.HasL0.integral_dipole_mul_eq_zero,
+ EulerDipoleEigenvalues.IsEigenSolution.integral_dipole_mul_eq_zero}
 \leanok
 If $g,h\in L^2(\T^2)$ satisfy $L_0g=h$ in the weak character-tested sense,
 then $\int\Psi h=0$. Consequently every eigenfunction at a real
@@ -176,7 +176,7 @@ No self-adjointness theorem is used.
 \begin{lemma}[Dipole pairing through the inverse Laplacian]
 \label{lem:dipole-invlap-pairing}
 \uses{def:dipole, def:inverse-laplacian}
-\lean{NoEmbeddedEigenvalues.integral_dipole_mul_invLap}
+\lean{EulerDipoleEigenvalues.integral_dipole_mul_invLap}
 \leanok
 For every $g\in L^2(\T^2)$,
 $\int\Psi\Delta^{-1}g=-\int\Psi g$; no mean-zero hypothesis is needed.
@@ -192,7 +192,7 @@ its inverse-Laplacian multiplier is $-1$.
 \begin{lemma}[Dipole pairing on one cell]
 \label{lem:odd-dipole-cell-pairing}
 \uses{def:dipole, def:cells, def:reflections, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.integral_dipole_mul_eq_two_cell}
+\lean{EulerDipoleEigenvalues.integral_dipole_mul_eq_two_cell}
 \leanok
 If $g\in L^2(\T^2)$ is odd under $S_1^*$, then
 \[
@@ -215,7 +215,7 @@ needed for this decomposition.
 \begin{lemma}[Orthogonality and parity of the quotient]
 \label{lem:dd-orthogonality}
 \uses{def:dd-quotient, def:dd-exclusion-domain, def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.dd_orthogonality}
+\lean{EulerDipoleEigenvalues.dd_orthogonality}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and any quotient data of
 Definition~\ref{def:dd-exclusion-domain}, $\int_\Cell\Psi^2\phi=0$ and
@@ -248,11 +248,11 @@ transport fields of those data.
 \begin{definition}[Odd--odd virial field]
 \label{def:dd-virial-field}
 \uses{def:dd-quotient}
-\lean{NoEmbeddedEigenvalues.ddVirialQ, NoEmbeddedEigenvalues.ddVirialField₁,
- NoEmbeddedEigenvalues.ddVirialField₂, NoEmbeddedEigenvalues.ddVirialCoeff,
- NoEmbeddedEigenvalues.ddF, NoEmbeddedEigenvalues.ddC, NoEmbeddedEigenvalues.ddA,
- NoEmbeddedEigenvalues.ddMxx, NoEmbeddedEigenvalues.ddMxy, NoEmbeddedEigenvalues.ddMyy,
- NoEmbeddedEigenvalues.ddPiconeOperator}
+\lean{EulerDipoleEigenvalues.ddVirialQ, EulerDipoleEigenvalues.ddVirialField₁,
+ EulerDipoleEigenvalues.ddVirialField₂, EulerDipoleEigenvalues.ddVirialCoeff,
+ EulerDipoleEigenvalues.ddF, EulerDipoleEigenvalues.ddC, EulerDipoleEigenvalues.ddA,
+ EulerDipoleEigenvalues.ddMxx, EulerDipoleEigenvalues.ddMxy, EulerDipoleEigenvalues.ddMyy,
+ EulerDipoleEigenvalues.ddPiconeOperator}
 \leanok
 Let $q(s)=(s^3-8)/(3s^2)$, $W=q(s)\nabla s/r$, and
 \[
@@ -267,7 +267,7 @@ and $P=-\Div(M\nabla)-F$. Note $\delta^2=4-2r-s^2$.
 \begin{lemma}[Odd--odd virial algebra]
 \label{lem:dd-virial-algebra}
 \uses{def:dd-virial-field, def:adapted-field}
-\lean{NoEmbeddedEigenvalues.dd_virial_algebra}
+\lean{EulerDipoleEigenvalues.dd_virial_algebra}
 \leanok
 On the positive cell with its center removed, $W$ is adapted with coefficient $f=F/\mu$, it has constant defect
 $f-\Div_\mu W=-1$ where $\Div_\mu W=\mu^{-1}\Div(\mu W)$, and
@@ -296,12 +296,12 @@ Now $q'=1/3+16/(3s^3)$, giving the asserted $A_0$.
 \begin{definition}[Weighted generator, bulk density and level term]
 \label{def:dd-virial-densities}
 \uses{def:dd-virial-field}
-\lean{NoEmbeddedEigenvalues.ddWeightedLaplacian, NoEmbeddedEigenvalues.ddWeightedDiv,
- NoEmbeddedEigenvalues.ddWeightedGenerator, NoEmbeddedEigenvalues.ddVirialDensity,
- NoEmbeddedEigenvalues.ddVirialLevel, NoEmbeddedEigenvalues.ddInwardNormal,
- NoEmbeddedEigenvalues.ddRegularCell, NoEmbeddedEigenvalues.ddBoundaryDensity,
- NoEmbeddedEigenvalues.ddWeakGreenFlux₁, NoEmbeddedEigenvalues.ddWeakGreenFlux₂,
- NoEmbeddedEigenvalues.ddGreenNormalFlux}
+\lean{EulerDipoleEigenvalues.ddWeightedLaplacian, EulerDipoleEigenvalues.ddWeightedDiv,
+ EulerDipoleEigenvalues.ddWeightedGenerator, EulerDipoleEigenvalues.ddVirialDensity,
+ EulerDipoleEigenvalues.ddVirialLevel, EulerDipoleEigenvalues.ddInwardNormal,
+ EulerDipoleEigenvalues.ddRegularCell, EulerDipoleEigenvalues.ddBoundaryDensity,
+ EulerDipoleEigenvalues.ddWeakGreenFlux₁, EulerDipoleEigenvalues.ddWeakGreenFlux₂,
+ EulerDipoleEigenvalues.ddGreenNormalFlux}
 \leanok
 On the punctured positive cell put
 \[
@@ -346,7 +346,7 @@ These definitions do not assert that the supplied gradient is classical.
 \begin{lemma}[Annular cutoffs of the weighted virial field]
 \label{lem:dd-field-annulus}
 \uses{def:dd-virial-field, def:adapted-field}
-\lean{NoEmbeddedEigenvalues.annularCutoff_ddVirialField}
+\lean{EulerDipoleEigenvalues.annularCutoff_ddVirialField}
 \leanok
 Let $0<a\le b<2$ and let $\chi:\R\to\R$ be smooth and zero outside $[a,b]$.
 Then $\chi(s)W$ and $\chi(s)f$ are smooth and periodic on the whole lift,
@@ -367,7 +367,7 @@ cutoffs of Lemma~\ref{lem:normal-field-annulus}.
 \begin{lemma}[The weighted first identity on an annulus]
 \label{lem:dd-weighted-first}
 \uses{def:dd-virial-densities, def:eigen-problem, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_weighted_first}
+\lean{EulerDipoleEigenvalues.dd_weighted_first}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and real
 $\chi\in C_c^\infty(0,2)$, put
@@ -418,8 +418,8 @@ hypothesis is retained in Lean, although the proof does not use it.
 \begin{lemma}[Local weighted Green identity]
 \label{lem:dd-green}
 \uses{def:dd-virial-densities}
-\lean{NoEmbeddedEigenvalues.dd_green,
- NoEmbeddedEigenvalues.ddGreenFlux₁, NoEmbeddedEigenvalues.ddGreenFlux₂}
+\lean{EulerDipoleEigenvalues.dd_green,
+ EulerDipoleEigenvalues.ddGreenFlux₁, EulerDipoleEigenvalues.ddGreenFlux₂}
 \leanok
 For every complex $C^3$ function $u$ on the punctured cell,
 \[
@@ -457,7 +457,7 @@ This proves the identity without differentiating $e$, $f$ or $d_\mu$.
 \begin{lemma}[Smooth weighted Green identity with annular cutoff]
 \label{lem:dd-smooth-green}
 \uses{def:dd-virial-densities, def:dd-quotient}
-\lean{NoEmbeddedEigenvalues.dd_smooth_green}
+\lean{EulerDipoleEigenvalues.dd_smooth_green}
 \leanok
 Let $u\in C_c^\infty(\Cell;\mathbb C)$, $e=Eu$ and $g=\nabla u$.
 For real $\chi\in C_c^\infty(0,2)$, put
@@ -500,7 +500,7 @@ gives the displayed identity.
 \begin{definition}[Weighted operator on a specified jet]
 \label{def:dd-operator-jet}
 \uses{def:dd-quotient, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.ddJetOperator}
+\lean{EulerDipoleEigenvalues.ddJetOperator}
 \leanok
 For a complex jet $D$, define
 \[
@@ -517,7 +517,7 @@ is differentiated classically.
 \begin{lemma}[Identification of the weighted operator from weak jets]
 \label{lem:dd-operator-jet}
 \uses{def:dd-operator-jet, def:local-weak-jets, def:dd-quotient}
-\lean{NoEmbeddedEigenvalues.HasDDOperator.ae_eq_jet}
+\lean{EulerDipoleEigenvalues.HasDDOperator.ae_eq_jet}
 \leanok
 Let $V\subset\Cell$ be open and let $D$ be a specified second weak jet
 of $u$ on $V$. If $Eu=e$ weakly on $\Cell$, for specified first
@@ -548,9 +548,9 @@ gives the asserted formula.
 \begin{lemma}[Weighted-operator convergence under strong jet approximation]
 \label{lem:dd-operator-jet-stability}
 \uses{def:dd-operator-jet, def:local-weak-jets, def:dd-quotient}
-\lean{NoEmbeddedEigenvalues.ddOperator_eq_jet,
- NoEmbeddedEigenvalues.ddOperator_tendsto_L2_of_jet,
- NoEmbeddedEigenvalues.HasDDOperator.tendsto_L2_of_jet}
+\lean{EulerDipoleEigenvalues.ddOperator_eq_jet,
+ EulerDipoleEigenvalues.ddOperator_tendsto_L2_of_jet,
+ EulerDipoleEigenvalues.HasDDOperator.tendsto_L2_of_jet}
 \leanok
 Let $V$ be open with compact closure contained in $\Cell$.
 Suppose $v_n$ are smooth on the plane, all $\partial_wv_n,D_w$ lie in
@@ -580,7 +580,7 @@ No puncture at the elliptic center is needed for this operator estimate.
 \begin{corollary}[Local smooth approximation with prescribed weak forcing]
 \label{cor:dd-operator-smooth-approximation}
 \uses{def:dd-quotient, def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.HasDDOperator.local_smooth_approximation}
+\lean{EulerDipoleEigenvalues.HasDDOperator.local_smooth_approximation}
 \leanok
 Let $u\in H^2_{\mathrm{loc}}(\Cell)$ and $Eu=e$ weakly for specified first
 derivatives. On every open $V$ with compact closure in $\Cell$,
@@ -603,7 +603,7 @@ Lemma~\ref{lem:dd-operator-jet-stability} to its specified jet.
 \begin{lemma}[Weak weighted Green identity on an annulus]
 \label{lem:dd-weak-green}
 \uses{def:dd-virial-densities, def:dd-quotient, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.dd_weak_green}
+\lean{EulerDipoleEigenvalues.dd_weak_green}
 \leanok
 Let $u\in H^2_{\mathrm{loc}}(\Cell)$ and $e\in L^2_{\mathrm{loc}}(\Cell)$,
 with $Eu=e$ weakly on the open cell for specified first weak derivatives
@@ -652,7 +652,7 @@ No differentiation of $e$ occurs.
 \begin{lemma}[Identification of the weighted boundary flux]
 \label{lem:dd-boundary-flux}
 \uses{def:dd-virial-densities}
-\lean{NoEmbeddedEigenvalues.dd_boundary_flux}
+\lean{EulerDipoleEigenvalues.dd_boundary_flux}
 \leanok
 At every point of the punctured positive cell, for arbitrary complex
 values $u,e$ and supplied gradient $g$,
@@ -679,7 +679,7 @@ This is exactly $b[u,e]$, with the inward normal convention.
 \begin{lemma}[Odd--odd weak cutoff identity]
 \label{lem:dd-cutoff-identity}
 \uses{def:dd-virial-densities, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.dd_cutoff_identity}
+\lean{EulerDipoleEigenvalues.dd_cutoff_identity}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$, use the original
 quotients $\phi=\psi/s$, $\nu=\omega/s$ on the open cell and any supplied
@@ -721,7 +721,7 @@ Finally $\chi'(s)=\eta'(s/2)/2$.
 \begin{lemma}[Odd--odd annular virial]
 \label{lem:dd-annular-virial}
 \uses{def:dd-virial-densities, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.dd_annular_virial}
+\lean{EulerDipoleEigenvalues.dd_annular_virial}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$, $j[\phi]$ is integrable
 on every compact level annulus. There is a null set $N\subset(0,2)$ such
@@ -752,7 +752,7 @@ for both endpoints. Rescale it by $s=2h$.
 \begin{lemma}[Odd--odd truncated virial]
 \label{lem:dd-truncated-virial}
 \uses{def:dd-virial-densities, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.dd_truncated_virial}
+\lean{EulerDipoleEigenvalues.dd_truncated_virial}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and almost every
 $\epsilon\in(0,2)$, the density $j[\phi]$ is integrable on $\{s>\epsilon\}$
@@ -805,7 +805,7 @@ no higher eigenfunction regularity there are required.
 \begin{lemma}[Gradient traces for even $H^2$ functions]
 \label{lem:dd-quotient-gradient-traces}
 \uses{def:sobolev-torus, def:reflections, def:cell-arcs, def:dd-virial-field}
-\lean{NoEmbeddedEigenvalues.dd_quotient_gradient_traces}
+\lean{EulerDipoleEigenvalues.dd_quotient_gradient_traces}
 \leanok
 Let $u\in H^2(\T^2)$ be even under both separatrix reflections, with
 continuous representative and arc traces $g_k=u\circ\gamma_k$. Then
@@ -866,7 +866,7 @@ Proposition~\ref{prop:dd-stream-quotient-h2}.
 \begin{lemma}[Squared dipole integral on the cell]
 \label{lem:dd-weight-integral}
 \uses{def:dd-virial-field, def:cells}
-\lean{NoEmbeddedEigenvalues.integral_cellSquare_ddWeight}
+\lean{EulerDipoleEigenvalues.integral_cellSquare_ddWeight}
 \leanok
 The squared dipole has the cell integral $\int_\Cell s^2=2\pi^2$.
 \end{lemma}
@@ -881,8 +881,8 @@ Each cosine-square integral over $(-\pi/2,\pi/2)$ is $\pi/2$.
 \begin{lemma}[Truncated bulk coefficient integral]
 \label{lem:dd-coefficient-integral}
 \uses{def:dd-virial-field, def:period, def:dd-picone-truncations}
-\lean{NoEmbeddedEigenvalues.ddF_integrable_truncation,
- NoEmbeddedEigenvalues.ddF_integral_truncation}
+\lean{EulerDipoleEigenvalues.ddF_integrable_truncation,
+ EulerDipoleEigenvalues.ddF_integral_truncation}
 \leanok
 For $0<\epsilon<2$, $F$ is integrable on $C_\epsilon$ and
 \[
@@ -934,7 +934,7 @@ positive level.
 \begin{lemma}[Finite part of the bulk weight]
 \label{lem:dd-finite-part}
 \uses{def:dd-virial-field, def:period}
-\lean{NoEmbeddedEigenvalues.dd_finite_part}
+\lean{EulerDipoleEigenvalues.dd_finite_part}
 \leanok
 With $T(s)=S(s/2)$ the period on the level $\{\Psi=s\}$,
 \[
@@ -968,9 +968,9 @@ coefficient equally among the four corners.
 \begin{definition}[Value renormalization data]
 \label{def:dd-value-renormalization}
 \uses{def:continuous-representative, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ddArcEnd, NoEmbeddedEigenvalues.ddCornerMass,
- NoEmbeddedEigenvalues.ddArcValueRemainder, NoEmbeddedEigenvalues.ddValueFinitePart,
- NoEmbeddedEigenvalues.ddLogCounterterm}
+\lean{EulerDipoleEigenvalues.ddArcEnd, EulerDipoleEigenvalues.ddCornerMass,
+ EulerDipoleEigenvalues.ddArcValueRemainder, EulerDipoleEigenvalues.ddValueFinitePart,
+ EulerDipoleEigenvalues.ddLogCounterterm}
 \leanok
 For the fixed continuous representative of $u$, let $c_{k,-}$ and $c_{k,+}$
 be its values at $R^k(\pi,0)$ and $R^k(0,-\pi)$, and put
@@ -988,7 +988,7 @@ distinct torus saddles. The choice at $t=0$ is immaterial to integration.
 \begin{lemma}[Integrability of endpoint-subtracted arc values]
 \label{lem:dd-arc-value-remainder}
 \uses{def:sobolev-torus, def:dd-value-renormalization}
-\lean{NoEmbeddedEigenvalues.ddArcValueRemainder_integrable}
+\lean{EulerDipoleEigenvalues.ddArcValueRemainder_integrable}
 \leanok
 For every $u\in H^2(\T^2)$ and each cell arc $k$, the endpoint-subtracted
 squared value $v_k$ is absolutely integrable on $\R$.
@@ -1006,7 +1006,7 @@ This is an integrable majorant; the value at $t=0$ is immaterial.
 \begin{lemma}[Finite part of the level values]
 \label{lem:dd-value-finite-part}
 \uses{def:sobolev-torus, def:cell-arcs, def:period, def:dd-value-renormalization}
-\lean{NoEmbeddedEigenvalues.dd_value_finite_part}
+\lean{EulerDipoleEigenvalues.dd_value_finite_part}
 \leanok
 Let $u\in H^2(\T^2)$ have its continuous representative, let
 $g_k=u\circ\gamma_k$, and write $c_{k,\pm}=g_k(\pm\infty)$. Put
@@ -1061,7 +1061,7 @@ enters only in the final normalization.
 \begin{lemma}[Saddle-weighted bound for the forcing coefficient]
 \label{lem:dd-forcing-coefficient-bound}
 \uses{def:dd-virial-field, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ddF_mul_saddleDist_sq_bound}
+\lean{EulerDipoleEigenvalues.ddF_mul_saddleDist_sq_bound}
 \leanok
 On the whole open lifted cell, including the totalized center value,
 $F\ge0$ and $Fd^2\le16\pi^2$.
@@ -1096,7 +1096,7 @@ $0\le Fd^2\le16\pi^2$ holds on the whole open cell.
 \begin{lemma}[Integrability of a supplied forcing density]
 \label{lem:dd-forcing-density-integrable}
 \uses{def:dd-virial-field, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.dd_forcing_density_integrable}
+\lean{EulerDipoleEigenvalues.dd_forcing_density_integrable}
 \leanok
 Let $e:\Cell\to\C$ satisfy $e/d\in L^2(\Cell)$. Then
 $F|e|^2\in L^1(\Cell)$. No equation, periodicity or separate unweighted
@@ -1116,7 +1116,7 @@ function $|e/d|^2$ by it and use $F|e|^2=(Fd^2)|e/d|^2$ a.e.
 \label{lem:dd-potential-mass-finite-part}
 \uses{def:sobolev-torus, def:dd-virial-field, def:dd-value-renormalization,
  def:dd-picone-truncations}
-\lean{NoEmbeddedEigenvalues.dd_potential_mass_finite_part}
+\lean{EulerDipoleEigenvalues.dd_potential_mass_finite_part}
 \leanok
 For $u\in H^2(\T^2)$, the finite limit
 \[
@@ -1176,7 +1176,7 @@ the logarithmic coefficient $A_u/4$ explicit.
 \label{lem:dd-renormalized-bulk}
 \uses{def:dd-virial-densities, def:sobolev-torus, def:reflections, def:cell-arcs,
  def:dd-value-renormalization}
-\lean{NoEmbeddedEigenvalues.dd_renormalized_bulk}
+\lean{EulerDipoleEigenvalues.dd_renormalized_bulk}
 \leanok
 Let $u\in H^2(\T^2)$ be even under both separatrix reflections and suppose
 $(Eu)/d\in L^2(\Cell)$. Then $F|Eu|^2$ and
@@ -1243,8 +1243,8 @@ separate, and does not invoke the bundled corner-domain proposition.
 \begin{definition}[Logarithmic ground state]
 \label{def:dd-ground-state}
 \uses{def:dd-virial-field}
-\lean{NoEmbeddedEigenvalues.ddGround, NoEmbeddedEigenvalues.ddBoundaryGround,
- NoEmbeddedEigenvalues.ddBoundaryB}
+\lean{EulerDipoleEigenvalues.ddGround, EulerDipoleEigenvalues.ddBoundaryGround,
+ EulerDipoleEigenvalues.ddBoundaryB}
 \leanok
 Let
 \[
@@ -1260,10 +1260,10 @@ Let
 \begin{lemma}[First-order ground-state estimates]
 \label{lem:dd-ground-first-order}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.one_le_ddGround,
- NoEmbeddedEigenvalues.contDiffAt_ddGround,
- NoEmbeddedEigenvalues.contDiffAt_ddGround_partials,
- NoEmbeddedEigenvalues.partialX_ddGround, NoEmbeddedEigenvalues.partialY_ddGround}
+\lean{EulerDipoleEigenvalues.one_le_ddGround,
+ EulerDipoleEigenvalues.contDiffAt_ddGround,
+ EulerDipoleEigenvalues.contDiffAt_ddGround_partials,
+ EulerDipoleEigenvalues.partialX_ddGround, EulerDipoleEigenvalues.partialY_ddGround}
 \leanok
 The ground state satisfies $w_*\ge1$. It is smooth wherever $r\ne0$,
 and there
@@ -1285,9 +1285,9 @@ the explicit formula. Differentiate and use $r+s^2=2+2\cos x\cos y$.
 \begin{lemma}[Boundary ground-state algebra]
 \label{lem:dd-boundary-ground-algebra}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.ddBoundaryGround_pos,
- NoEmbeddedEigenvalues.hasDerivAt_ddBoundaryGround,
- NoEmbeddedEigenvalues.ddBoundaryB_eq}
+\lean{EulerDipoleEigenvalues.ddBoundaryGround_pos,
+ EulerDipoleEigenvalues.hasDerivAt_ddBoundaryGround,
+ EulerDipoleEigenvalues.ddBoundaryB_eq}
 \leanok
 For $0<r\le2$, $w_b(r)>0$,
 $w_b'(r)=1/16-(r/128)\log(r/2)-r/256$, and
@@ -1308,9 +1308,9 @@ $\log(r/2)$.
 \label{def:dd-exclusion-forms}
 \uses{def:dd-ground-state, def:sobolev-torus, def:fourier-derivatives,
  def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.ddPiconeGradient,
- NoEmbeddedEigenvalues.ddPiconePotential,
- NoEmbeddedEigenvalues.ddVorticityDensity, NoEmbeddedEigenvalues.ddMassDensity}
+\lean{EulerDipoleEigenvalues.ddPiconeGradient,
+ EulerDipoleEigenvalues.ddPiconePotential,
+ EulerDipoleEigenvalues.ddVorticityDensity, EulerDipoleEigenvalues.ddMassDensity}
 \leanok
 For $\phi\in H^2(\T^2)$ with specified Fourier first derivatives, use their
 lifts in the quotient rule for $\nabla(\phi/w_*)$. Denote the resulting
@@ -1324,8 +1324,8 @@ separately, not built into their definitions.
 \begin{definition}[Picone truncations and bulk integrals]
 \label{def:dd-picone-truncations}
 \uses{def:dd-exclusion-forms, def:dd-virial-densities}
-\lean{NoEmbeddedEigenvalues.ddTruncatedCell, NoEmbeddedEigenvalues.ddRawEnergy,
- NoEmbeddedEigenvalues.ddRawBulk, NoEmbeddedEigenvalues.ddPiconeBulk}
+\lean{EulerDipoleEigenvalues.ddTruncatedCell, EulerDipoleEigenvalues.ddRawEnergy,
+ EulerDipoleEigenvalues.ddRawBulk, EulerDipoleEigenvalues.ddPiconeBulk}
 \leanok
 Write $C_\epsilon=\{p\in\text{cell square}:s(p)>\epsilon\}$.
 For specified Fourier first derivatives of $u$, let
@@ -1340,9 +1340,9 @@ No integrability assertion is part of these definitions.
 \label{def:dd-ground-current}
 \uses{def:dd-ground-state, def:dd-virial-field, def:cell-arcs,
  def:continuous-representative, def:level-integral}
-\lean{NoEmbeddedEigenvalues.ddGroundCurrentCoeff,
- NoEmbeddedEigenvalues.ddGroundCurrent, NoEmbeddedEigenvalues.ddLevelMass,
- NoEmbeddedEigenvalues.ddLevelBMass, NoEmbeddedEigenvalues.ddArcCorrection}
+\lean{EulerDipoleEigenvalues.ddGroundCurrentCoeff,
+ EulerDipoleEigenvalues.ddGroundCurrent, EulerDipoleEigenvalues.ddLevelMass,
+ EulerDipoleEigenvalues.ddLevelBMass, EulerDipoleEigenvalues.ddArcCorrection}
 \leanok
 Define
 \[
@@ -1360,7 +1360,7 @@ $d_k(t)=B(2\sech^2t)|g_k(t)|^2$ and $D_u=\sum_k\int d_k$.
 \begin{lemma}[Integrability of the vorticity density]
 \label{lem:dd-vorticity-density-integrable}
 \uses{def:dd-exclusion-forms, lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.dd_vorticityDensity_integrable}
+\lean{EulerDipoleEigenvalues.dd_vorticityDensity_integrable}
 \leanok
 If $\nu\in L^2(\T^2)$ and its lift satisfies $\nu/d\in L^2$ on the
 fixed cell neighbourhood, then $F|\nu|^2\in L^1$ on the cell.
@@ -1377,8 +1377,8 @@ vorticity. No separate unweighted estimate is needed.
 \begin{lemma}[Diagonal domination of the gradient form]
 \label{lem:dd-diagonal-matrix-bound}
 \uses{def:dd-virial-field, def:normal-tangent, def:cells}
-\lean{NoEmbeddedEigenvalues.ddMatrixForm_diagonal_bound,
- NoEmbeddedEigenvalues.ddMatrixForm_integrable_of_diagonal}
+\lean{EulerDipoleEigenvalues.ddMatrixForm_diagonal_bound,
+ EulerDipoleEigenvalues.ddMatrixForm_integrable_of_diagonal}
 \leanok
 For $p$ in the cell with $r(p)\ne0$ and arbitrary complex $v_x,v_y$, put
 $d_a=(v_x+v_y)/\cos a$ and $d_b=(v_x-v_y)/\cos b$. Then
@@ -1411,7 +1411,7 @@ handles arbitrary a.e. representatives; the excluded critical set is null.
 \begin{lemma}[Integrability of both gradient energies]
 \label{lem:dd-gradient-energies-integrable}
 \uses{def:sobolev-torus, def:dd-exclusion-forms, def:reflections}
-\lean{NoEmbeddedEigenvalues.dd_gradient_energies_integrable}
+\lean{EulerDipoleEigenvalues.dd_gradient_energies_integrable}
 \leanok
 For even $u\in H^2(\T^2)$ and its specified Fourier first derivatives,
 both $\langle M\nabla u,\nabla u\rangle$ and
@@ -1457,7 +1457,7 @@ divided-gradient step needs no additional boundary hypothesis or bound on $u$.
 
 \begin{definition}[Residual polynomial in bounded coordinates]
 \label{def:dd-residual-polynomial}
-\lean{NoEmbeddedEigenvalues.ddGroundResidualPolynomial}
+\lean{EulerDipoleEigenvalues.ddGroundResidualPolynomial}
 \leanok
 Define $\mathcal P(s,r,z,l)=p_0(s,r,z)+l\,p_1(s,r,z)$, where
 \begin{align*}
@@ -1476,7 +1476,7 @@ p_1={}&\frac{z^3(s+2)^2(s^2+2s+4)}{192}
 \begin{lemma}[Factorization of the differentiated ground residual]
 \label{lem:dd-ground-residual-factorization}
 \uses{def:dd-ground-state, def:dd-residual-polynomial}
-\lean{NoEmbeddedEigenvalues.ddGroundResidual_eq_polynomial}
+\lean{EulerDipoleEigenvalues.ddGroundResidual_eq_polynomial}
 \leanok
 Where $s\ne0$ and $r\ne0$, the actual differentiated operator satisfies
 \[
@@ -1506,7 +1506,7 @@ by exact ring arithmetic. This does not use the residual sign certificate.
 \begin{lemma}[Uniform bound for the ground residual]
 \label{lem:dd-ground-residual-bounded}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.exists_bound_ddGroundResidual}
+\lean{EulerDipoleEigenvalues.exists_bound_ddGroundResidual}
 \leanok
 There is $C\ge0$ such that $|Pw_*|\le C$ everywhere $0<s<2$.
 No limiting value at the center or saddles is asserted.
@@ -1524,8 +1524,8 @@ $[0,2]^2\times[0,1]\times[-2,2]$. Apply the exact factorization.
 \begin{lemma}[Absolute integrability of the Picone potential]
 \label{lem:dd-picone-potential-integrable}
 \uses{def:sobolev-torus, def:dd-exclusion-forms}
-\lean{NoEmbeddedEigenvalues.dd_piconePotential_integrable,
- NoEmbeddedEigenvalues.ddPiconePotential_integrable}
+\lean{EulerDipoleEigenvalues.dd_piconePotential_integrable,
+ EulerDipoleEigenvalues.ddPiconePotential_integrable}
 \leanok
 For every $u\in H^2(\T^2)$, $(Pw_*/w_*)|u|^2$ is absolutely integrable
 on the cell. In fact this holds for every $u\in L^2(\T^2)$.
@@ -1559,7 +1559,7 @@ sign certificate.
 \begin{lemma}[Integrability on a positive Picone truncation]
 \label{lem:dd-truncated-picone-integrability}
 \uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
-\lean{NoEmbeddedEigenvalues.dd_truncated_picone_integrability}
+\lean{EulerDipoleEigenvalues.dd_truncated_picone_integrability}
 \leanok
 For $u\in H^2(\T^2)$, specified Fourier first derivatives, and every
 $0<\epsilon<2$, the raw energy, Picone gradient and Picone potential
@@ -1598,10 +1598,10 @@ time interval.
 \begin{lemma}[Regularity and center limit of the Picone current]
 \label{lem:dd-picone-current-regularity}
 \uses{def:sobolev-torus, def:dd-ground-current}
-\lean{NoEmbeddedEigenvalues.abs_ddGroundCurrentCoeff_le,
- NoEmbeddedEigenvalues.abs_ddGroundCurrent_le,
- NoEmbeddedEigenvalues.tendsto_ddGroundCurrent_center,
- NoEmbeddedEigenvalues.continuousAt_ddGroundCurrent_level}
+\lean{EulerDipoleEigenvalues.abs_ddGroundCurrentCoeff_le,
+ EulerDipoleEigenvalues.abs_ddGroundCurrent_le,
+ EulerDipoleEigenvalues.tendsto_ddGroundCurrent_center,
+ EulerDipoleEigenvalues.continuousAt_ddGroundCurrent_level}
 \leanok
 For $u\in H^2(\T^2)$, $h\mapsto I_{2h}[u]$ is continuous on $(0,1)$.
 On $1<s<2$, the current coefficient satisfies $|b|\le12(2-s)$.
@@ -1630,7 +1630,7 @@ is continuous, so its integral with variable upper endpoint is continuous.
 \begin{lemma}[Weak Picone testing by a stream cutoff]
 \label{lem:dd-picone-cutoff}
 \uses{def:dd-picone-truncations, def:dd-ground-current, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.ddPicone_cutoff_zero}
+\lean{EulerDipoleEigenvalues.ddPicone_cutoff_zero}
 \leanok
 For $u,u_x,u_y\in L^2$ with the specified Fourier derivative relations
 and $\chi\in C^\infty_c((0,2))$, write
@@ -1666,7 +1666,7 @@ restricts the period square to the positive cell.
 \begin{lemma}[Annular Picone identity]
 \label{lem:dd-picone-annular}
 \uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
-\lean{NoEmbeddedEigenvalues.ddPicone_annular}
+\lean{EulerDipoleEigenvalues.ddPicone_annular}
 \leanok
 For $u\in H^2(\T^2)$ and specified Fourier first derivatives, there is
 one null set $N$ such that for all $0<h<h'<1$ outside $N$,
@@ -1692,7 +1692,7 @@ the factor $1/2$ in the level derivative.
 \begin{lemma}[Sobolev Picone identity on a positive truncation]
 \label{lem:dd-truncated-picone}
 \uses{def:sobolev-torus, def:dd-picone-truncations, def:dd-ground-current}
-\lean{NoEmbeddedEigenvalues.dd_truncated_picone}
+\lean{EulerDipoleEigenvalues.dd_truncated_picone}
 \leanok
 For $u\in H^2(\T^2)$, specified Fourier first derivatives, and every
 $0<\epsilon<2$, the raw energy, Picone gradient and Picone potential
@@ -1733,7 +1733,7 @@ smooth density theorem or Sobolev gradient trace is needed.
 \label{lem:dd-character-virial-limit}
 \uses{def:dd-exclusion-domain, def:dd-picone-truncations,
  def:dd-value-renormalization, def:rotation-characters, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.dd_character_virial_limit}
+\lean{EulerDipoleEigenvalues.dd_character_virial_limit}
 \leanok
 For an odd--odd eigenfunction at $\lambda\ne0$, supplied quotient data,
 a character $\kappa=\pm1$, and specified Fourier first derivatives, put
@@ -1776,7 +1776,7 @@ existence nor character recombination.
 \begin{lemma}[The $B$-weighted level trace]
 \label{lem:dd-boundaryB-trace-limit}
 \uses{def:sobolev-torus, def:dd-ground-current}
-\lean{NoEmbeddedEigenvalues.dd_boundaryB_trace_limit}
+\lean{EulerDipoleEigenvalues.dd_boundaryB_trace_limit}
 \leanok
 For $u\in H^2(\T^2)$, every $d_k$ is absolutely integrable and
 $H^B_\epsilon[u]\to D_u$ as all positive $\epsilon\to0$.
@@ -1813,7 +1813,7 @@ continuous periodic value function, not just the quotient in the exclusion.
 \begin{lemma}[The integrated current remainder]
 \label{lem:dd-current-remainder-limit}
 \uses{def:sobolev-torus, def:dd-ground-current}
-\lean{NoEmbeddedEigenvalues.dd_current_remainder_limit}
+\lean{EulerDipoleEigenvalues.dd_current_remainder_limit}
 \leanok
 For $u\in H^2(\T^2)$,
 $I_\epsilon[u]+\tfrac83H_\epsilon[u]-\tfrac83H^B_\epsilon[u]\to0$.
@@ -1850,7 +1850,7 @@ No Sobolev derivative trace or exceptional levels are used.
 \begin{lemma}[Renormalized limit of the actual current]
 \label{lem:dd-ground-current-limit}
 \uses{def:sobolev-torus, def:dd-ground-current, def:dd-value-renormalization}
-\lean{NoEmbeddedEigenvalues.dd_ground_current_limit}
+\lean{EulerDipoleEigenvalues.dd_ground_current_limit}
 \leanok
 For $u\in H^2(\T^2)$,
 $I_\epsilon[u]+L_u(\epsilon)\to-\tfrac83(V_u-D_u)$.
@@ -1868,7 +1868,7 @@ leaving $I_\epsilon+L_u(\epsilon)$ and the stated finite limit.
 \begin{lemma}[Ordinary integral exhaustion by stream levels]
 \label{lem:dd-truncation-exhaustion}
 \uses{def:dd-picone-truncations}
-\lean{NoEmbeddedEigenvalues.tendsto_ddTruncatedCell_integral}
+\lean{EulerDipoleEigenvalues.tendsto_ddTruncatedCell_integral}
 \leanok
 If $f\in L^1(\text{cell square})$, then
 $\int_{C_\epsilon}f\to\int_{\text{cell square}}f$ as positive
@@ -1886,7 +1886,7 @@ positive cell. Dominate their products with $f$ by $|f|$.
 \label{lem:dd-picone-current}
 \uses{def:dd-exclusion-domain, def:dd-exclusion-forms,
  def:dd-boundary-data, def:corrected-boundary-form, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.dd_picone_current}
+\lean{EulerDipoleEigenvalues.dd_picone_current}
 \leanok
 Fix an odd--odd eigenfunction with $\lambda\ne0$ and rotation character
 $\kappa=\pm1$, quotient data of Definition~\ref{def:dd-exclusion-domain},
@@ -1938,9 +1938,9 @@ logarithmically diverging period.
 \begin{definition}[Weighted cell form domain]
 \label{def:dd-weighted-h1}
 \uses{def:sobolev-local, def:cells, def:dipole}
-\lean{NoEmbeddedEigenvalues.DDWeightedH1, NoEmbeddedEigenvalues.ddCellMeasure,
- NoEmbeddedEigenvalues.ddWeightedMean, NoEmbeddedEigenvalues.ddWeightedNormSq,
- NoEmbeddedEigenvalues.ddWeightedEnergy, NoEmbeddedEigenvalues.ddWeightedVariance}
+\lean{EulerDipoleEigenvalues.DDWeightedH1, EulerDipoleEigenvalues.ddCellMeasure,
+ EulerDipoleEigenvalues.ddWeightedMean, EulerDipoleEigenvalues.ddWeightedNormSq,
+ EulerDipoleEigenvalues.ddWeightedEnergy, EulerDipoleEigenvalues.ddWeightedVariance}
 \leanok
 On the lifted positive cell $C$, put $d\rho=\mu\,dx$ with $\mu=\Psi^2$.
 A weighted $H^1$ triple $(z,z_x,z_y)$ consists of functions with
@@ -1960,8 +1960,8 @@ Only the mean is normalized; the norms, energy and variance are not.
 \begin{lemma}[Weighted cell mass and finite integrals]
 \label{lem:dd-weighted-integrals}
 \uses{def:sobolev-local, def:dd-weighted-h1}
-\lean{NoEmbeddedEigenvalues.ddCellMeasure_mass,
- NoEmbeddedEigenvalues.DDWeightedH1.integrable}
+\lean{EulerDipoleEigenvalues.ddCellMeasure_mass,
+ EulerDipoleEigenvalues.DDWeightedH1.integrable}
 \leanok
 The mass is $Z=2\pi^2$. For every weighted $H^1$ triple, $z$, $|z|^2$,
 $|z_x|^2+|z_y|^2$ and $|z-m_z|^2$ are integrable with respect to $\rho$.
@@ -1979,7 +1979,7 @@ from the specified weighted $L^2$ bounds.
 \begin{lemma}[Ground-state range and matrix lower bound]
 \label{lem:dd-ground-matrix-bounds}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.dd_ground_matrix_bounds}
+\lean{EulerDipoleEigenvalues.dd_ground_matrix_bounds}
 \leanok
 On the positive cell with $r=|\nabla\Psi|^2\ne0$, writing $w=w_*$,
 \[
@@ -2005,7 +2005,7 @@ $4544-1984t\ge576$ and $312-28t\ge256$ on $[0,2]$.
 \begin{lemma}[Bulk coefficient bounds]
 \label{lem:dd-bulk-coefficients}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.dd_bulk_coefficients}
+\lean{EulerDipoleEigenvalues.dd_bulk_coefficients}
 \leanok
 On the positive cell with $r\ne0$, writing $w=w_*$,
 \[
@@ -2033,7 +2033,7 @@ center play no role in the integral inequalities.
 
 \begin{definition}[Zonal modes]
 \label{def:zonal-modes}
-\lean{NoEmbeddedEigenvalues.zonalMode, NoEmbeddedEigenvalues.zonalEigenvalue}
+\lean{EulerDipoleEigenvalues.zonalMode, EulerDipoleEigenvalues.zonalEigenvalue}
 \leanok
 For $n,m\in\mathbb N$, let
 \[
@@ -2046,13 +2046,13 @@ where $U_n=C_n^{(1)}$ is the Chebyshev polynomial of the second kind.
 \begin{lemma}[Zonal mode identities and gap]
 \label{lem:zonal-mode-identities}
 \uses{def:zonal-modes}
-\lean{NoEmbeddedEigenvalues.zonalMode_zero,
- NoEmbeddedEigenvalues.contDiff_zonalMode,
- NoEmbeddedEigenvalues.zonalMode_neg,
- NoEmbeddedEigenvalues.zonalMode_mul_cos,
- NoEmbeddedEigenvalues.zonalMode_deriv_bound,
- NoEmbeddedEigenvalues.hasDerivAt_zonalMode_flux,
- NoEmbeddedEigenvalues.zonalEigenvalue_gap}
+\lean{EulerDipoleEigenvalues.zonalMode_zero,
+ EulerDipoleEigenvalues.contDiff_zonalMode,
+ EulerDipoleEigenvalues.zonalMode_neg,
+ EulerDipoleEigenvalues.zonalMode_mul_cos,
+ EulerDipoleEigenvalues.zonalMode_deriv_bound,
+ EulerDipoleEigenvalues.hasDerivAt_zonalMode_flux,
+ EulerDipoleEigenvalues.zonalEigenvalue_gap}
 \leanok
 The modes are smooth on $\mathbb R$, $q_0=1$, and
 \[
@@ -2078,9 +2078,9 @@ For the gap, $n^2\ge n$, $m^2\ge m$ and $n+m\ge2$.
 \begin{lemma}[Weighted zonal basis]
 \label{lem:zonal-mode-basis}
 \uses{def:zonal-modes}
-\lean{NoEmbeddedEigenvalues.zonalMeasure_isProbabilityMeasure,
- NoEmbeddedEigenvalues.zonalBasis, NoEmbeddedEigenvalues.zonalBasis_apply,
- NoEmbeddedEigenvalues.coeFn_zonalModeLp}
+\lean{EulerDipoleEigenvalues.zonalMeasure_isProbabilityMeasure,
+ EulerDipoleEigenvalues.zonalBasis, EulerDipoleEigenvalues.zonalBasis_apply,
+ EulerDipoleEigenvalues.coeFn_zonalModeLp}
 \leanok
 Put $I=(-\pi/2,\pi/2)$ and
 \[
@@ -2120,8 +2120,8 @@ weighted Sobolev norm.
 \begin{lemma}[Diagonal weighted domain]
 \label{lem:zonal-diagonal-domain}
 \uses{def:sobolev-local, def:dd-weighted-h1, lem:zonal-mode-basis}
-\lean{NoEmbeddedEigenvalues.map_diagInv_zonalMeasure,
- NoEmbeddedEigenvalues.DDWeightedH1.zonal_diagonal_domain}
+\lean{EulerDipoleEigenvalues.map_diagInv_zonalMeasure,
+ EulerDipoleEigenvalues.DDWeightedH1.zonal_diagonal_domain}
 \leanok
 For $T(a,b)=(a+b,a-b)$, the weighted measures satisfy
 \[
@@ -2146,12 +2146,12 @@ $\partial_b=\partial_x-\partial_y$ in the distributional identities.
 
 \begin{lemma}[Zonal endpoint cutoffs]
 \label{lem:zonal-cutoffs}
-\lean{NoEmbeddedEigenvalues.contDiff_zonalCutoff,
- NoEmbeddedEigenvalues.zonalCutoff_mem_Icc,
- NoEmbeddedEigenvalues.tsupport_zonalCutoff_subset,
- NoEmbeddedEigenvalues.hasCompactSupport_zonalCutoff,
- NoEmbeddedEigenvalues.zonalCutoff_eventually,
- NoEmbeddedEigenvalues.zonalCutoff_deriv_cos_bound}
+\lean{EulerDipoleEigenvalues.contDiff_zonalCutoff,
+ EulerDipoleEigenvalues.zonalCutoff_mem_Icc,
+ EulerDipoleEigenvalues.tsupport_zonalCutoff_subset,
+ EulerDipoleEigenvalues.hasCompactSupport_zonalCutoff,
+ EulerDipoleEigenvalues.zonalCutoff_eventually,
+ EulerDipoleEigenvalues.zonalCutoff_deriv_cos_bound}
 \leanok
 There are smooth functions $\chi_j:\mathbb R\to[0,1]$,
 $j\in\mathbb N$, compactly supported inside $I=(-\pi/2,\pi/2)$,
@@ -2179,8 +2179,8 @@ $|\chi_j'(a)\cos a|\le4\|\theta'\|_\infty$.
 \label{lem:zonal-weak-pairing}
 \uses{def:sobolev-local, def:dd-weighted-h1, def:zonal-modes,
  lem:zonal-mode-basis}
-\lean{NoEmbeddedEigenvalues.DDWeightedH1.zonal_weak_pairing,
- NoEmbeddedEigenvalues.zonal_weak_pairing_square}
+\lean{EulerDipoleEigenvalues.DDWeightedH1.zonal_weak_pairing,
+ EulerDipoleEigenvalues.zonal_weak_pairing_square}
 \leanok
 Let $(z,z_x,z_y)$ be a weighted $H^1$ triple and let $T(a,b)=(a+b,a-b)$.
 Write $Z=z\circ T$, $Z_a=(z_x+z_y)\circ T$ and
@@ -2226,7 +2226,7 @@ or approximation in weighted $H^1$ is needed.
 
 \begin{lemma}[Spectral gap from weak mode pairings]
 \label{lem:weak-mode-bessel}
-\lean{NoEmbeddedEigenvalues.poincare_of_weak_modes}
+\lean{EulerDipoleEigenvalues.poincare_of_weak_modes}
 \leanok
 Let $(v_i)_{i\in J}$ be an orthonormal family in a complex inner product
 space $F$, let $D\in F$, $c_i\in\mathbb C$, and let
@@ -2248,10 +2248,10 @@ The gradient family need not be complete.
 \begin{lemma}[Normalized zonal gradient modes]
 \label{lem:zonal-gradient-modes}
 \uses{def:sobolev-local, def:zonal-modes, lem:zonal-mode-basis}
-\lean{NoEmbeddedEigenvalues.zonalEigenvalue_pos,
- NoEmbeddedEigenvalues.inner_zonalGradientLp_modes,
- NoEmbeddedEigenvalues.orthonormal_zonalUnitGradient,
- NoEmbeddedEigenvalues.inner_zonalUnitGradient}
+\lean{EulerDipoleEigenvalues.zonalEigenvalue_pos,
+ EulerDipoleEigenvalues.inner_zonalGradientLp_modes,
+ EulerDipoleEigenvalues.orthonormal_zonalUnitGradient,
+ EulerDipoleEigenvalues.inner_zonalUnitGradient}
 \leanok
 Let $J=\{(n,m)\in\mathbb N^2:(n,m)\ne(0,0)\}$.
 Then $2\lambda_{nm}>0$ on $J$, and
@@ -2282,9 +2282,9 @@ gives orthonormality. Weak pairing for the supplied $Z$ gives the last formula.
 \begin{lemma}[Central parity of zonal coefficients]
 \label{lem:zonal-coefficient-parity}
 \uses{def:zonal-modes, lem:zonal-mode-basis}
-\lean{NoEmbeddedEigenvalues.zonalProduct_neg,
- NoEmbeddedEigenvalues.integral_neg_zonalMeasure,
- NoEmbeddedEigenvalues.zonalCoeff_central_parity, NoEmbeddedEigenvalues.zonalCoeff_even}
+\lean{EulerDipoleEigenvalues.zonalProduct_neg,
+ EulerDipoleEigenvalues.integral_neg_zonalMeasure,
+ EulerDipoleEigenvalues.zonalCoeff_central_parity, EulerDipoleEigenvalues.zonalCoeff_even}
 \leanok
 For $Z\in L^2(\nu)$ centrally even almost everywhere, put
 $c_{nm}=\int ZQ_{nm}\,d\nu$. Then
@@ -2306,7 +2306,7 @@ $Q_{nm}(-a,-b)=(-1)^{n+m}Q_{nm}(a,b)$.
 \begin{lemma}[Weighted Poincar\'e inequality]
 \label{lem:zonal-poincare}
 \uses{def:sobolev-local, def:dd-weighted-h1}
-\lean{NoEmbeddedEigenvalues.zonal_poincare}
+\lean{EulerDipoleEigenvalues.zonal_poincare}
 \leanok
 For a weighted $H^1$ triple $(z,z_x,z_y)$, assume
 $z(-x,-y)=z(x,y)$ for almost every point of the cell. Then
@@ -2369,8 +2369,8 @@ identification is an additional mathematical hypothesis.
 \begin{lemma}[Constrained weighted Poincar\'e bound]
 \label{lem:dd-constrained-poincare}
 \uses{def:sobolev-local, def:dd-weighted-h1}
-\lean{NoEmbeddedEigenvalues.dd_weighted_constraint,
- NoEmbeddedEigenvalues.dd_constrained_poincare}
+\lean{EulerDipoleEigenvalues.dd_weighted_constraint,
+ EulerDipoleEigenvalues.dd_constrained_poincare}
 \leanok
 Let $z\in L^2(d\rho)$ and let $w$ be real, measurable and satisfy
 $1\le w\le5/4$ almost everywhere. If $\int_C wz\,d\rho=0$, then
@@ -2405,8 +2405,8 @@ bulk coercivity route. The identity and its integration are checked in Lean.
 \begin{lemma}[First-order regularity of the ground state]
 \label{lem:dd-ground-c1}
 \uses{def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.one_le_ddGround,
- NoEmbeddedEigenvalues.contDiff_one_ddGround}
+\lean{EulerDipoleEigenvalues.one_le_ddGround,
+ EulerDipoleEigenvalues.contDiff_one_ddGround}
 \leanok
 The lifted ground state $w_*$ is $C^1$ on all of $\R^2$ and satisfies
 $w_*\ge1$ everywhere, including at the critical points of $\Psi$.
@@ -2427,7 +2427,7 @@ $w_*$ is nonnegative, giving $w_*\ge1$.
 \label{lem:dd-bulk-form-domain}
 \uses{def:sobolev-torus, def:dd-exclusion-forms, def:dd-weighted-h1,
  def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.dd_bulk_form_domain}
+\lean{EulerDipoleEigenvalues.dd_bulk_form_domain}
 \leanok
 Let $\phi\in H^2(\T^2)$ be centrally even, with
 $\int_C\mu\phi=0$, and specify its Fourier first derivatives.
@@ -2463,7 +2463,7 @@ proof needs neither the matrix lower bound nor a point-removal theorem.
 \label{lem:dd-bulk-gradient-bound}
 \uses{def:sobolev-torus, def:dd-exclusion-forms, def:fourier-derivatives,
  lem:dd-bulk-form-domain}
-\lean{NoEmbeddedEigenvalues.dd_bulk_gradient_bound}
+\lean{EulerDipoleEigenvalues.dd_bulk_gradient_bound}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:dd-bulk-form-domain},
 \[
@@ -2483,7 +2483,7 @@ $Mw_*^2\ge(25/16)\mu I$.
 \begin{lemma}[Picone potential lower bound]
 \label{lem:dd-bulk-potential-bound}
 \uses{def:dd-exclusion-forms}
-\lean{NoEmbeddedEigenvalues.dd_bulk_potential_bound}
+\lean{EulerDipoleEigenvalues.dd_bulk_potential_bound}
 \leanok
 For $\phi\in L^2(\T^2)$ with absolutely integrable Picone potential density,
 \[
@@ -2501,7 +2501,7 @@ are integrable. No Poincar\'e inequality enters here.
 \begin{lemma}[Bulk Picone bound]
 \label{lem:dd-bulk-picone}
 \uses{def:dd-exclusion-forms, def:sobolev-torus, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.dd_bulk_picone}
+\lean{EulerDipoleEigenvalues.dd_bulk_picone}
 \leanok
 Let $\phi\in H^2(\T^2)$ be centrally even with
 $\int_\Cell\mu\phi=0$, and specify its Fourier first derivatives.
@@ -2535,10 +2535,10 @@ estimates do not prove either.
 \label{def:corrected-boundary-form}
 \uses{def:boundary-form, def:boundary-form-xi, def:dd-ground-state,
  def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.correctedBoundaryTrace,
- NoEmbeddedEigenvalues.correctedBoundaryBeta,
- NoEmbeddedEigenvalues.correctedBoundaryTerm,
- NoEmbeddedEigenvalues.correctedBoundaryForm}
+\lean{EulerDipoleEigenvalues.correctedBoundaryTrace,
+ EulerDipoleEigenvalues.correctedBoundaryBeta,
+ EulerDipoleEigenvalues.correctedBoundaryTerm,
+ EulerDipoleEigenvalues.correctedBoundaryForm}
 \leanok
 With $x=\tanh t$, $w=1-x^2$, let
 \[
@@ -2558,8 +2558,8 @@ the $H^1$ traces of $f$, not its raw endpoint values.
 \uses{def:corrected-boundary-form, def:canonical-profile, def:cell-arcs,
  def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints,
  def:continuous-representative}
-\lean{NoEmbeddedEigenvalues.ddArcTrace, NoEmbeddedEigenvalues.ddBoundaryUnknown,
- NoEmbeddedEigenvalues.DDBoundaryData}
+\lean{EulerDipoleEigenvalues.ddArcTrace, EulerDipoleEigenvalues.ddBoundaryUnknown,
+ EulerDipoleEigenvalues.DDBoundaryData}
 \leanok
 For a quotient $\phi$ and $\kappa=\pm1$, put
 $g_k=\widetilde\phi\circ\gamma_k$ and
@@ -2577,9 +2577,9 @@ the endpoint traces satisfy $f_k(1)=\kappa f_k(-1)$, and
 \label{lem:dd-continuous-character}
 \uses{def:dd-exclusion-domain, def:rotation-characters,
  def:continuous-representative, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.DDQuotientData.contStream_eq,
- NoEmbeddedEigenvalues.DDQuotientData.continuousRep_rotLift,
- NoEmbeddedEigenvalues.DDQuotientData.continuousRep_iterate_rotLift}
+\lean{EulerDipoleEigenvalues.DDQuotientData.contStream_eq,
+ EulerDipoleEigenvalues.DDQuotientData.continuousRep_rotLift,
+ EulerDipoleEigenvalues.DDQuotientData.continuousRep_iterate_rotLift}
 \leanok
 For supplied quotient data, the continuous lifts satisfy
 $\tilde\psi=\Psi\widetilde\phi$ pointwise.
@@ -2602,7 +2602,7 @@ extends the character identity to every point. Then iterate.
 \label{lem:dd-arc-melnikov}
 \uses{def:dd-exclusion-domain, def:rotation-characters,
  def:cell-arcs, def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.DDQuotientData.arc_melnikov}
+\lean{EulerDipoleEigenvalues.DDQuotientData.arc_melnikov}
 \leanok
 For supplied quotient data and a character $\kappa=\pm1$ of $\omega$,
 each continuous quotient arc trace $g_k$ satisfies
@@ -2621,7 +2621,7 @@ every rotated arc.
 \begin{lemma}[Weighted boundary regularity of the quotient]
 \label{lem:dd-boundary-regularity}
 \uses{def:dd-exclusion-domain, def:dd-boundary-data, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.dd_boundary_regularity}
+\lean{EulerDipoleEigenvalues.dd_boundary_regularity}
 \leanok
 Given quotient data at $\lambda\ne0$ and a rotation character $\kappa$ of
 $\omega$, the boundary data of Definition~\ref{def:dd-boundary-data} exist.
@@ -2656,8 +2656,8 @@ separatrix by continuity, without pointwise division there.
 \begin{lemma}[Normalization of the boundary correction]
 \label{lem:dd-boundaryB-beta}
 \uses{def:corrected-boundary-form, def:dd-ground-state}
-\lean{NoEmbeddedEigenvalues.ddBoundaryB_two_weight,
- NoEmbeddedEigenvalues.ddBoundaryB_cosh}
+\lean{EulerDipoleEigenvalues.ddBoundaryB_two_weight,
+ EulerDipoleEigenvalues.ddBoundaryB_cosh}
 \leanok
 For $w=1-x^2$, the explicit formulas satisfy
 $B(2w)=w\beta(x)$. Hence
@@ -2675,9 +2675,9 @@ numerator and denominator. Then use $1-\tanh^2t=\sech^2t$.
 \label{lem:dd-boundary-form-identification}
 \uses{def:dd-exclusion-domain, def:dd-boundary-data,
  def:dd-ground-current, def:corrected-boundary-form, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.dd_boundary_correction_eq,
- NoEmbeddedEigenvalues.DDQuotientData.canonicalArcForm_eq_boundaryForm,
- NoEmbeddedEigenvalues.DDQuotientData.correctedBoundaryForm_eq}
+\lean{EulerDipoleEigenvalues.dd_boundary_correction_eq,
+ EulerDipoleEigenvalues.DDQuotientData.canonicalArcForm_eq_boundaryForm,
+ EulerDipoleEigenvalues.DDQuotientData.correctedBoundaryForm_eq}
 \leanok
 For supplied quotient and boundary data in a character at $\lambda\ne0$,
 each interval correction density is absolutely integrable and
@@ -2705,7 +2705,7 @@ the uncorrected terms for the specified interval derivatives.
 \begin{lemma}[Pointwise lower bound for $\beta$]
 \label{lem:beta-lower}
 \uses{def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.correctedBoundaryBeta_lower}
+\lean{EulerDipoleEigenvalues.correctedBoundaryBeta_lower}
 \leanok
 $\beta\ge\tfrac12+\tfrac14\log w$ on $(-1,1)$ (manuscript
 \texttt{(eq:beta-lower)}).
@@ -2722,8 +2722,8 @@ $0<w\le1$.
 \begin{lemma}[Logarithmic control of the correction coefficient]
 \label{lem:beta-log-bound}
 \uses{def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.correctedBoundaryBeta_denominator_ge_one,
- NoEmbeddedEigenvalues.abs_correctedBoundaryBeta_le}
+\lean{EulerDipoleEigenvalues.correctedBoundaryBeta_denominator_ge_one,
+ EulerDipoleEigenvalues.abs_correctedBoundaryBeta_le}
 \leanok
 On $(-1,1)$ the denominator defining $\beta$ is at least one and
 $|\beta|\le1+|\log w|$.
@@ -2739,9 +2739,9 @@ value at most one, giving the asserted bound after division.
 \begin{lemma}[Central positivity and rational endpoint localization]
 \label{lem:beta-central-tail}
 \uses{def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.correctedBoundaryBeta_central,
- NoEmbeddedEigenvalues.log_seven_lt_two,
- NoEmbeddedEigenvalues.correctedBoundaryBeta_negative_le}
+\lean{EulerDipoleEigenvalues.correctedBoundaryBeta_central,
+ EulerDipoleEigenvalues.log_seven_lt_two,
+ EulerDipoleEigenvalues.correctedBoundaryBeta_negative_le}
 \leanok
 Put $d=1-|x|$, $a=1/7$ and $K_a(d)=\max\{\log(a/d),0\}$.
 On $[-1/2,1/2]$, $\beta\ge5/12$; throughout $(-1,1)$,
@@ -2762,8 +2762,8 @@ Take negative parts.
 \begin{definition}[Forcing derivative and affine forcing]
 \label{def:corrected-forcing-derivative}
 \uses{def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.correctedBoundaryTraceDerivative,
- NoEmbeddedEigenvalues.correctedAffineForcing}
+\lean{EulerDipoleEigenvalues.correctedBoundaryTraceDerivative,
+ EulerDipoleEigenvalues.correctedAffineForcing}
 \leanok
 Set $v_\lambda[D,E]=-iwE+(2ix-\lambda)D$ and
 $g_b=b(-iw-\lambda x)$.
@@ -2773,9 +2773,9 @@ $g_b=b(-iw-\lambda x)$.
 \label{lem:corrected-forcing-h1}
 \uses{def:h1-interval, def:weighted-boundary-domain,
  def:corrected-forcing-derivative}
-\lean{NoEmbeddedEigenvalues.hasDerivAt_correctedBoundaryTrace,
- NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryTrace_h1,
- NoEmbeddedEigenvalues.correctedAffineForcing_h1}
+\lean{EulerDipoleEigenvalues.hasDerivAt_correctedBoundaryTrace,
+ EulerDipoleEigenvalues.HasWeightedBoundaryH2.correctedBoundaryTrace_h1,
+ EulerDipoleEigenvalues.correctedAffineForcing_h1}
 \leanok
 For a weighted-domain triple $(f,D,E)$ and any real $\lambda$,
 $(g,v_\lambda[D,E])$ is an interval $H^1$ pair.
@@ -2793,10 +2793,10 @@ bounds. The affine forcing is polynomial.
 \begin{lemma}[Absolute integrability of the logarithmic correction]
 \label{lem:corrected-correction-integrable}
 \uses{def:h1-interval, def:weighted-boundary-domain, def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.integrableOn_log_boundaryWeight,
- NoEmbeddedEigenvalues.integrableOn_correctedBoundaryBeta,
- NoEmbeddedEigenvalues.HasIntervalH1.integrable_correctedBoundaryBeta,
- NoEmbeddedEigenvalues.HasWeightedBoundaryH2.integrable_correctedBoundaryTerm}
+\lean{EulerDipoleEigenvalues.integrableOn_log_boundaryWeight,
+ EulerDipoleEigenvalues.integrableOn_correctedBoundaryBeta,
+ EulerDipoleEigenvalues.HasIntervalH1.integrable_correctedBoundaryBeta,
+ EulerDipoleEigenvalues.HasWeightedBoundaryH2.integrable_correctedBoundaryTerm}
 \leanok
 The functions $\log w$ and $\beta$ belong to $L^1(-1,1)$.
 For every $g\in H^1(-1,1)$, $\beta|g|^2\in L^1$.
@@ -2816,7 +2816,7 @@ Apply this to the forcing.
 \begin{lemma}[Half-interval Dirichlet bound]
 \label{lem:corrected-half-poincare}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_le_half_derivative}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.integral_sq_le_half_derivative}
 \leanok
 For an $H^1$ pair $(G,V)$ with zero endpoint traces,
 $\int|G|^2\le\tfrac12\int|V|^2$.
@@ -2835,7 +2835,7 @@ not needed.
 \label{lem:corrected-zero-energy}
 \uses{def:h1-interval, def:weighted-boundary-domain,
  lem:h1-interval-endpoints, def:corrected-forcing-derivative}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryTrace_zero_energy}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.correctedBoundaryTrace_zero_energy}
 \leanok
 For a zero-trace weighted-domain function $u$, let
 $F_0=\mathcal F_\lambda(u)$ and $g_u=-iwu'-\lambda u$.
@@ -2859,7 +2859,7 @@ this forces the limit of $wu'$ to be zero, and hence the trace of $g_u$ is zero.
 
 \begin{lemma}[Logarithmic endpoint moments]
 \label{lem:corrected-log-moments}
-\lean{NoEmbeddedEigenvalues.logarithmic_endpoint_moment}
+\lean{EulerDipoleEigenvalues.logarithmic_endpoint_moment}
 \leanok
 For $a>0$ and every integer $j\ge0$ (in particular $j=0,1,2$),
 the nonnegative integrand is integrable and
@@ -2881,7 +2881,7 @@ its value at $a$ is the stated expression.
 \begin{lemma}[Midpoint bound for the correction]
 \label{lem:corrected-midpoint-bound}
 \uses{def:h1-interval, def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.correctedBoundaryBeta_midpoint_bound}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.correctedBoundaryBeta_midpoint_bound}
 \leanok
 For any $H^1$ pair $(G,V)$,
 \[
@@ -2910,7 +2910,7 @@ $a|G(0)|^2+(a/2)\int|V|^2$. Subtract with $a=1/7$.
 \label{lem:corrected-negative-affine}
 \uses{def:h1-interval, lem:h1-interval-endpoints,
  def:corrected-forcing-derivative}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.correctedBoundary_negative_affine}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.correctedBoundary_negative_affine}
 \leanok
 For a zero-trace $H^1$ pair $(G,V)$, every real $\lambda$ and $b\in\mathbb C$,
 \[
@@ -2935,8 +2935,8 @@ $|g_b|^2=|b|^2(w^2+\lambda^2x^2)$.
 \label{lem:corrected-positive-affine}
 \uses{def:h1-interval, lem:h1-interval-endpoints,
  def:corrected-forcing-derivative}
-\lean{NoEmbeddedEigenvalues.integral_correctedAffineForcing_central,
- NoEmbeddedEigenvalues.HasIntervalH1.correctedBoundary_positive_affine}
+\lean{EulerDipoleEigenvalues.integral_correctedAffineForcing_central,
+ EulerDipoleEigenvalues.HasIntervalH1.correctedBoundary_positive_affine}
 \leanok
 For a zero-trace $H^1$ pair $(G,V)$, every real $\lambda$ and $b\in\mathbb C$,
 \[
@@ -2961,7 +2961,7 @@ $\frac14\int_I|G|^2\le\frac18\int|V|^2$.
 \label{lem:corrected-equal-endpoints}
 \uses{def:h1-interval, def:weighted-boundary-domain,
  lem:h1-interval-endpoints, def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_equal}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_equal}
 \leanok
 For a weighted-domain triple with equal endpoint traces and any real
 $\lambda$, $\mathcal B_\lambda(f)\ge0$.
@@ -2981,8 +2981,8 @@ $\mathcal B_\lambda(f)\ge(59/112)F_0+(5/112)|g(0)|^2\ge0$.
 \label{lem:corrected-opposite-endpoints}
 \uses{def:h1-interval, def:weighted-boundary-domain,
  lem:h1-interval-endpoints, def:corrected-boundary-form}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_eq_parts,
- NoEmbeddedEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_opposite}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_eq_parts,
+ EulerDipoleEigenvalues.HasWeightedBoundaryH2.correctedBoundaryForm_nonneg_opposite}
 \leanok
 For a weighted-domain triple with opposite endpoint traces and any real
 $\lambda$, $\mathcal B_\lambda(f)\ge0$.
@@ -3008,7 +3008,7 @@ In particular no unverified decimal approximation is used in this margin.
 \label{lem:corrected-trace-nonneg}
 \uses{def:corrected-boundary-form, def:h1-interval,
  def:weighted-boundary-domain, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.correctedBoundaryForm_nonneg}
+\lean{EulerDipoleEigenvalues.correctedBoundaryForm_nonneg}
 \leanok
 Let $(f,D,E)$ belong to the weighted second-order domain and let its
 endpoint traces satisfy $f(1)=\kappa f(-1)$, $\kappa\in\{1,-1\}$.
@@ -3043,7 +3043,7 @@ instead of the auxiliary scalar comparison function.
 \begin{lemma}[Nonnegative vorticity density]
 \label{lem:dd-vorticity-density-nonneg}
 \uses{def:dd-exclusion-forms}
-\lean{NoEmbeddedEigenvalues.ddVorticityDensity_nonneg}
+\lean{EulerDipoleEigenvalues.ddVorticityDensity_nonneg}
 \leanok
 For every $\nu\in L^2(\T^2)$, $F|\nu|^2\ge0$ on the lifted positive cell.
 \end{lemma}
@@ -3058,8 +3058,8 @@ $3r^2$ is nonnegative. The totalized coefficient is zero when $r=0$.
 \begin{lemma}[Vanishing from the quotient mass]
 \label{lem:dd-mass-vanishing}
 \uses{def:dd-exclusion-forms, def:sectors}
-\lean{NoEmbeddedEigenvalues.integrableOn_ddMassDensity,
- NoEmbeddedEigenvalues.dd_eq_zero_of_mass_eq_zero}
+\lean{EulerDipoleEigenvalues.integrableOn_ddMassDensity,
+ EulerDipoleEigenvalues.dd_eq_zero_of_mass_eq_zero}
 \leanok
 For every $\phi\in L^2(\T^2)$ the mass density $\Psi^2|\phi|^2$ is
 integrable on the lifted positive cell. If $\phi$ is even--even and its
@@ -3078,7 +3078,7 @@ vanishing to the torus.
 \begin{lemma}[Recovering vorticity from a zero quotient]
 \label{lem:dd-vorticity-from-quotient}
 \uses{def:dd-exclusion-domain, def:torus}
-\lean{NoEmbeddedEigenvalues.DDQuotientData.vorticity_eq_zero}
+\lean{EulerDipoleEigenvalues.DDQuotientData.vorticity_eq_zero}
 \leanok
 For quotient data with mean-zero $\omega$, $\phi=0$ implies $\omega=0$.
 \end{lemma}
@@ -3093,7 +3093,7 @@ relation $\Delta\psi=\omega$ then gives zero at every Fourier coefficient.
 \begin{lemma}[Odd--odd exclusion in one rotation character]
 \label{lem:dd-character-exclusion}
 \uses{def:eigen-problem, def:sectors, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.odd_odd_character_exclusion}
+\lean{EulerDipoleEigenvalues.odd_odd_character_exclusion}
 \leanok
 An odd--odd eigenfunction with $\lambda\ne0$ and rotation character
 $\kappa=\pm1$ vanishes.
@@ -3120,7 +3120,7 @@ and $\omega=0$.
 \begin{theorem}[Odd--odd exclusion]
 \label{thm:dd-exclusion}
 \uses{def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.odd_odd_exclusion}
+\lean{EulerDipoleEigenvalues.odd_odd_exclusion}
 \leanok
 If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
 $S_1^*\omega=S_2^*\omega=-\omega$, then $\omega=0$ (manuscript

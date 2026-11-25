@@ -30,11 +30,11 @@ should be unified in the paper.
 \begin{definition}[Mixed field]
 \label{def:mixed-field}
 \uses{def:cells, lem:cell-square, lem:diagonal-calculus, def:adapted-field}
-\lean{NoEmbeddedEigenvalues.mixedFieldX,
- NoEmbeddedEigenvalues.mixedFieldY,
- NoEmbeddedEigenvalues.mixedFieldA,
- NoEmbeddedEigenvalues.mixedFieldB,
- NoEmbeddedEigenvalues.mixedFieldCoeff}
+\lean{EulerDipoleEigenvalues.mixedFieldX,
+ EulerDipoleEigenvalues.mixedFieldY,
+ EulerDipoleEigenvalues.mixedFieldA,
+ EulerDipoleEigenvalues.mixedFieldB,
+ EulerDipoleEigenvalues.mixedFieldCoeff}
 \leanok
 On $\Cell$ let
 $W=\tan(x/2)\partial_x+\tan(y/2)\partial_y=\frac{u}{p}\partial_a+\frac{v}{p}\partial_b$
@@ -44,7 +44,7 @@ and $f=R/p^2$.
 \begin{lemma}[Mixed field algebra]
 \label{lem:mixed-field-algebra}
 \uses{def:mixed-field}
-\lean{NoEmbeddedEigenvalues.mixed_field_algebra, NoEmbeddedEigenvalues.mixedFieldMatrixOffDiagonal}
+\lean{EulerDipoleEigenvalues.mixed_field_algebra, EulerDipoleEigenvalues.mixedFieldMatrixOffDiagonal}
 \leanok
 $W\Psi=\Psi-2$, $W$ is adapted with coefficient $f$, $\Div W=f+1$, and in the
 orthonormal directions parallel to the $a$, $b$ axes
@@ -65,10 +65,10 @@ partials have the common denominator $p^2$.
 \begin{lemma}[Normal virial bulk on the mixed quotient domain]
 \label{lem:mixed-normal-bulk}
 \uses{def:normal-field, def:ee-bulk-density, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_normal_coeff_bounds,
- NoEmbeddedEigenvalues.mixed_normal_virial_integrable,
- NoEmbeddedEigenvalues.mixed_normal_virial_cartesian_ae,
- NoEmbeddedEigenvalues.mixed_normal_virial_cartesian}
+\lean{EulerDipoleEigenvalues.mixed_normal_coeff_bounds,
+ EulerDipoleEigenvalues.mixed_normal_virial_integrable,
+ EulerDipoleEigenvalues.mixed_normal_virial_cartesian_ae,
+ EulerDipoleEigenvalues.mixed_normal_virial_cartesian}
 \leanok
 On the diagonal cell, $0\le f_0 h^2\le 2$ and $0\le c_0\le 1$.
 The normal-field bulk is integrable on the full cell, and the quotient
@@ -89,7 +89,7 @@ identifies the product-rule gradient with the Fourier gradient.
 \begin{lemma}[Normal virial along regular truncations]
 \label{lem:mixed-normal-level-limit}
 \uses{def:ee-level-term, lem:mixed-normal-bulk}
-\lean{NoEmbeddedEigenvalues.mixed_normal_level_limit}
+\lean{EulerDipoleEigenvalues.mixed_normal_level_limit}
 \leanok
 Along any sequence of levels tending to zero on which the truncated
 normal identity holds, the level term tends to the full normal-field bulk.
@@ -104,7 +104,7 @@ the dominator is the integrable full-cell bulk.
 \begin{lemma}[Canonical pairing on common good levels]
 \label{lem:mixed-pairing-levels}
 \uses{def:canonical-profile, def:ee-level-term, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.pairing_limit_half_turn_odd, NoEmbeddedEigenvalues.mixed_normal_and_pairing_levels}
+\lean{EulerDipoleEigenvalues.pairing_limit_half_turn_odd, EulerDipoleEigenvalues.mixed_normal_and_pairing_levels}
 \leanok
 For the mixed eigenfunction, one can choose levels tending to zero that
 satisfy any prescribed almost-everywhere level property. Along these levels
@@ -127,7 +127,7 @@ alternate in sign over the four arcs.
 \begin{lemma}[Canonical cutoff pairings on the Neumann arcs]
 \label{lem:mixed-canonical-cutoff}
 \uses{def:mixed-quotient-data, def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.mixed_canonical_pairing_cutoff_limit}
+\lean{EulerDipoleEigenvalues.mixed_canonical_pairing_cutoff_limit}
 \leanok
 The canonical Neumann pairing densities are integrable on the full
 line. The sum of their centered cutoff integrals converges to the sum
@@ -147,8 +147,8 @@ time derivative. Apply dominated convergence to the centered cutoffs.
 \begin{lemma}[Paired edge mass]
 \label{lem:mixed-edge-mass}
 \uses{def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_edge_mass_defect_integrable,
-  NoEmbeddedEigenvalues.mixed_trace_mass_cutoff_limit}
+\lean{EulerDipoleEigenvalues.mixed_edge_mass_defect_integrable,
+  EulerDipoleEigenvalues.mixed_trace_mass_cutoff_limit}
 \leanok
 Use the same straight tangential parameter $a$ on all four sides, and let
 $E(a)$ be the sum of the Dirichlet squared quotient traces minus the sum
@@ -171,7 +171,7 @@ two oppositely oriented arcs. The time measure is $da/\cos a$.
 \begin{lemma}[Centered signed gradient cutoff]
 \label{lem:mixed-gradient-cutoff}
 \uses{def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixedGradientFluxFinitePart, NoEmbeddedEigenvalues.mixed_gradient_cutoff_limit}
+\lean{EulerDipoleEigenvalues.mixedGradientFluxFinitePart, EulerDipoleEigenvalues.mixed_gradient_cutoff_limit}
 \leanok
 The signed gradient cutoff converges, with twice its limit given by
 the paired edge mass minus the two weighted Neumann energies plus the
@@ -190,10 +190,10 @@ values of that edge. All finite cutoff integrals are integrable.
 \begin{lemma}[Exact level weight for the paired corner model]
 \label{lem:mixed-level-model}
 \uses{def:mixed-quotient-data, lem:quarter-orbit-diagonal}
-\lean{NoEmbeddedEigenvalues.mixed_level_frame_swap,
-  NoEmbeddedEigenvalues.mixed_quarter_weight_bound,
-  NoEmbeddedEigenvalues.mixed_quarter_height_defect_bound,
-  NoEmbeddedEigenvalues.mixed_level_model_trace_limit}
+\lean{EulerDipoleEigenvalues.mixed_level_frame_swap,
+  EulerDipoleEigenvalues.mixed_quarter_weight_bound,
+  EulerDipoleEigenvalues.mixed_quarter_height_defect_bound,
+  EulerDipoleEigenvalues.mixed_level_model_trace_limit}
 \leanok
 On the upper quarter at level $s$, write $b=\beta_s(a)$,
 $R=\cos a\sin b$, and $S=\cos b\sin a$. Swapping the coordinates reverses
@@ -216,10 +216,10 @@ Apply dominated convergence against $2|E(a)|/\cos a$.
 \begin{lemma}[Diagonal geometric level densities]
 \label{lem:mixed-level-density}
 \uses{def:ee-level-term, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.MixedQuotientData.level_first_order_ae,
-  NoEmbeddedEigenvalues.MixedQuotientData.level_signed_gradient_ae,
-  NoEmbeddedEigenvalues.MixedQuotientData.level_gradient_split,
-  NoEmbeddedEigenvalues.mixed_level_cross_norm_le}
+\lean{EulerDipoleEigenvalues.MixedQuotientData.level_first_order_ae,
+  EulerDipoleEigenvalues.MixedQuotientData.level_signed_gradient_ae,
+  EulerDipoleEigenvalues.MixedQuotientData.level_gradient_split,
+  EulerDipoleEigenvalues.mixed_level_cross_norm_le}
 \leanok
 Write $A=\psi_a$, $B=\psi_b$, $C=(R^2-S^2)/(R^2+S^2)$ and
 $K=4SR/(R^2+S^2)$, with $R=\cos a\sin b$ and $S=\cos b\sin a$.
@@ -244,10 +244,10 @@ $\sin^2a=1-\cos^2a$.
 \begin{lemma}[Moving-quarter Sobolev trace estimates]
 \label{lem:mixed-quarter-section-envelope}
 \uses{def:sobolev-local, lem:quarter-orbit-diagonal}
-\lean{NoEmbeddedEigenvalues.HasACLSectionsOn.exists_l2_section_envelope,
-  NoEmbeddedEigenvalues.HasACLSectionsOn.exists_l2_section_increment,
-  NoEmbeddedEigenvalues.ae_mixed_quarterGraph_of_ae,
-  NoEmbeddedEigenvalues.mixed_quarter_pair_limit}
+\lean{EulerDipoleEigenvalues.HasACLSectionsOn.exists_l2_section_envelope,
+  EulerDipoleEigenvalues.HasACLSectionsOn.exists_l2_section_increment,
+  EulerDipoleEigenvalues.ae_mixed_quarterGraph_of_ae,
+  EulerDipoleEigenvalues.mixed_quarter_pair_limit}
 \leanok
 A function with one square-integrable normal derivative has an $L^2$
 tangential envelope bounding the entire canonical normal section.
@@ -274,7 +274,7 @@ almost-everywhere identities.
 \begin{lemma}[Replacement of the leading level mass by its trace]
 \label{lem:mixed-quarter-mass-replacement}
 \uses{def:mixed-quotient-data, lem:mixed-level-model}
-\lean{NoEmbeddedEigenvalues.mixed_quarter_all_side_mass_replacement}
+\lean{EulerDipoleEigenvalues.mixed_quarter_all_side_mass_replacement}
 \leanok
 On each of the four quarters, the integral against the exact signed
 model weight of the squared quotient on the quarter graph minus its
@@ -295,9 +295,9 @@ opposite sides.
 \begin{lemma}[Full level integrals in signed quarter coordinates]
 \label{lem:mixed-signed-quarters}
 \uses{lem:quarter-orbit-diagonal}
-\lean{NoEmbeddedEigenvalues.mixed_levelIntegral_eq_signed_quarters,
-  NoEmbeddedEigenvalues.ae_mixedQuarterPoint_of_ae,
-  NoEmbeddedEigenvalues.ae_mixedQuarter_integrable}
+\lean{EulerDipoleEigenvalues.mixed_levelIntegral_eq_signed_quarters,
+  EulerDipoleEigenvalues.ae_mixedQuarterPoint_of_ae,
+  EulerDipoleEigenvalues.ae_mixedQuarter_integrable}
 \leanok
 A level integral is the sum of the four integrable signed-side graph
 integrals, all with time density $(\cos^2 a-s^2)^{-1/2}$.
@@ -317,10 +317,10 @@ almost-everywhere identity.
 \begin{lemma}[Finite parts on the four mixed quarters]
 \label{lem:mixed-level-remainders}
 \uses{lem:mixed-level-density, lem:mixed-signed-quarters}
-\lean{NoEmbeddedEigenvalues.mixed_level_first_limit,
-  NoEmbeddedEigenvalues.mixed_quarter_gradient_remainder_limit,
-  NoEmbeddedEigenvalues.mixed_quarter_signed_weight,
-  NoEmbeddedEigenvalues.mixed_neumann_weighted_energy_eq}
+\lean{EulerDipoleEigenvalues.mixed_level_first_limit,
+  EulerDipoleEigenvalues.mixed_quarter_gradient_remainder_limit,
+  EulerDipoleEigenvalues.mixed_quarter_signed_weight,
+  EulerDipoleEigenvalues.mixed_neumann_weighted_energy_eq}
 \leanok
 The full first-order integral tends to zero. After subtracting the
 leading signed quotient mass on a quarter, the remaining gradient
@@ -347,7 +347,7 @@ from $\tanh t$ to the straight side parameter in the weighted energy.
 \begin{lemma}[Signed gradient limit on regular levels]
 \label{lem:mixed-level-signed-gradient}
 \uses{def:ee-level-term, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_level_signed_gradient_limit}
+\lean{EulerDipoleEigenvalues.mixed_level_signed_gradient_limit}
 \leanok
 Outside a null set of levels, twice the normal-minus-tangential
 gradient energy tends to the integral of the paired trace mass defect
@@ -370,7 +370,7 @@ integrals on the Neumann sides.
 \begin{lemma}[Geometric trace limit on regular levels]
 \label{lem:mixed-geometric-level}
 \uses{def:ee-level-term, def:mixed-quotient-data, lem:mixed-gradient-cutoff}
-\lean{NoEmbeddedEigenvalues.mixed_geometric_level_limit}
+\lean{EulerDipoleEigenvalues.mixed_geometric_level_limit}
 \leanok
 Outside a null set of levels, the normal-field level term with the
 vorticity pairing omitted tends to the finite part of twice the centered
@@ -390,7 +390,7 @@ cutoff finite part.
 \begin{lemma}[Geometric part of the mixed flux limit]
 \label{lem:mixed-geometric-flux}
 \uses{def:ee-level-term, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_geometric_flux_limit}
+\lean{EulerDipoleEigenvalues.mixed_geometric_flux_limit}
 \leanok
 The signed gradient cutoff (Dirichlet normal energies minus Neumann
 tangential energies) has a finite limit $L$. With the vorticity pairing
@@ -409,7 +409,7 @@ itself.
 \begin{proposition}[Paired flux identity for the normal field]
 \label{prop:mixed-paired-flux}
 \uses{def:normal-field, def:canonical-profile, prop:mixed-quotient-domain}
-\lean{NoEmbeddedEigenvalues.mixed_paired_flux}
+\lean{EulerDipoleEigenvalues.mixed_paired_flux}
 \leanok
 Write $f_0,c_0$ for the coefficients in Definition~\ref{def:normal-field}.
 For a mixed eigenfunction and its quotient,
@@ -438,9 +438,9 @@ are integrable separately.
 \begin{lemma}[Exact tangential field and model cancellation]
 \label{lem:mixed-tangential-factor}
 \uses{def:mixed-field, def:normal-field}
-\lean{NoEmbeddedEigenvalues.mixed_field_tangential_factor,
- NoEmbeddedEigenvalues.mixedTangentialCornerKernel,
- NoEmbeddedEigenvalues.mixed_tangential_corner_cancel}
+\lean{EulerDipoleEigenvalues.mixed_field_tangential_factor,
+ EulerDipoleEigenvalues.mixedTangentialCornerKernel,
+ EulerDipoleEigenvalues.mixed_tangential_corner_cancel}
 \leanok
 Write $D=k^2u^2+h^2v^2$. On the punctured cell the diagonal components of
 $W-W_0$ are
@@ -465,11 +465,11 @@ the swap preserves cell measure.
 \begin{lemma}[Tangential shell current and integrable remainder]
 \label{lem:mixed-tangential-current}
 \uses{def:mixed-quotient-data, lem:mixed-tangential-factor}
-\lean{NoEmbeddedEigenvalues.mixedTangentialCurrent,
- NoEmbeddedEigenvalues.mixed_tangential_current_eq,
- NoEmbeddedEigenvalues.mixed_tangential_current_split,
- NoEmbeddedEigenvalues.mixed_tangential_remainder_integrable,
- NoEmbeddedEigenvalues.mixed_tangential_remainder_limit}
+\lean{EulerDipoleEigenvalues.mixedTangentialCurrent,
+ EulerDipoleEigenvalues.mixed_tangential_current_eq,
+ EulerDipoleEigenvalues.mixed_tangential_current_split,
+ EulerDipoleEigenvalues.mixed_tangential_remainder_integrable,
+ EulerDipoleEigenvalues.mixed_tangential_remainder_limit}
 \leanok
 In the level variable $\ell=hk$, the outward tangential current splits
 as $K|\phi|^2+\ell R$, where $K$ is the model kernel of
@@ -492,10 +492,10 @@ Normal Hardy and Hölder give $R\in L^1$; then use dominated convergence.
 \begin{lemma}[Antisymmetrization of the shell model term]
 \label{lem:mixed-tangential-model}
 \uses{def:mixed-quotient-data, lem:mixed-tangential-factor, lem:mixed-tangential-current}
-\lean{NoEmbeddedEigenvalues.mixed_tangential_corner_kernel_bound,
- NoEmbeddedEigenvalues.mixed_tangential_model_defect,
- NoEmbeddedEigenvalues.mixed_tangential_model_antisymmetrize,
- NoEmbeddedEigenvalues.mixed_tangential_current_limit_of_model}
+\lean{EulerDipoleEigenvalues.mixed_tangential_corner_kernel_bound,
+ EulerDipoleEigenvalues.mixed_tangential_model_defect,
+ EulerDipoleEigenvalues.mixed_tangential_model_antisymmetrize,
+ EulerDipoleEigenvalues.mixed_tangential_current_limit_of_model}
 \leanok
 The model kernel satisfies $|K|\le 4hk/(h+k)^2$. Against any integrable
 swap-invariant weight, its pairing with $|\phi|^2$ equals its pairing with
@@ -517,9 +517,9 @@ Add the vanishing remainder.
 \begin{lemma}[Vanishing on shrinking tangential level shells]
 \label{lem:mixed-tangential-shell}
 \uses{lem:mixed-tangential-current, lem:mixed-tangential-model}
-\lean{NoEmbeddedEigenvalues.mixed_tangential_shell_mass,
- NoEmbeddedEigenvalues.mixed_tangential_shell_defect_limit,
- NoEmbeddedEigenvalues.mixed_tangential_shell_limit}
+\lean{EulerDipoleEigenvalues.mixed_tangential_shell_mass,
+ EulerDipoleEigenvalues.mixed_tangential_shell_defect_limit,
+ EulerDipoleEigenvalues.mixed_tangential_shell_limit}
 \leanok
 The model kernel has uniformly bounded absolute mass after division by
 $\epsilon$ on $\{\epsilon<hk<2\epsilon\}$. For swap-invariant measurable
@@ -545,7 +545,7 @@ apply dominated convergence. Add the vanishing Hardy remainder.
 \begin{lemma}[Tangential virial with an annular cutoff]
 \label{lem:mixed-tangential-cutoff}
 \uses{def:mixed-quotient-data, def:mixed-field, def:normal-field, lem:mixed-tangential-current}
-\lean{NoEmbeddedEigenvalues.mixed_tangential_cutoff_identity}
+\lean{EulerDipoleEigenvalues.mixed_tangential_cutoff_identity}
 \leanok
 For a smooth $\chi$ compactly supported in $(0,1)$, the bulk difference
 weighted by $\chi(hk)$ integrates to the outward tangential current weighted
@@ -568,7 +568,7 @@ Fourier derivatives; changing coordinates yields the stated normalization.
 \begin{lemma}[Tangential current near the maximum]
 \label{lem:mixed-tangential-center}
 \uses{lem:mixed-tangential-current}
-\lean{NoEmbeddedEigenvalues.mixed_tangential_center_bound}
+\lean{EulerDipoleEigenvalues.mixed_tangential_center_bound}
 \leanok
 On $hk\ge1/2$, the absolute tangential current is bounded by
 $4(1-hk)(|A|+|B|)^2$ for $A=\partial_a\psi$ and $B=\partial_b\psi$.
@@ -583,7 +583,7 @@ $2hk|uv|\le (ku)^2+(hv)^2$ in the exact factored current.
 \begin{lemma}[Integrated tangential comparison]
 \label{lem:mixed-tangential-virial}
 \uses{def:mixed-field, def:normal-field, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_tangential_virial}
+\lean{EulerDipoleEigenvalues.mixed_tangential_virial}
 \leanok
 The adapted-field and normal-field bulk integrals agree for a mixed eigenfunction.
 \end{lemma}
@@ -603,7 +603,7 @@ convergence.
 \begin{proposition}[Mixed virial identity]
 \label{prop:mixed-virial}
 \uses{def:mixed-field, prop:mixed-quotient-domain}
-\lean{NoEmbeddedEigenvalues.mixed_virial}
+\lean{EulerDipoleEigenvalues.mixed_virial}
 \leanok
 For a mixed eigenfunction and its quotient, with the same centered flow-time
 cutoff on all four edges,
@@ -630,8 +630,8 @@ Lemma~\ref{lem:mixed-boundary-square-traces}.
 
 \begin{definition}[Mixed boundary transport and square]
 \label{def:mixed-boundary-operators}
-\lean{NoEmbeddedEigenvalues.mixedBoundaryTransport,
- NoEmbeddedEigenvalues.mixedBoundarySquare}
+\lean{EulerDipoleEigenvalues.mixedBoundaryTransport,
+ EulerDipoleEigenvalues.mixedBoundarySquare}
 \leanok
 For $w=1-x^2$, set $T_\lambda F=-i(wF'-xF)-\lambda F$.
 The second-order expression in the boundary square is
@@ -641,7 +641,7 @@ $wF''-(3x+i\lambda)F'$.
 \begin{lemma}[Mixed boundary square on the weighted domain]
 \label{lem:mixed-boundary-square-weighted}
 \uses{def:h1-interval, def:mixed-boundary-operators}
-\lean{NoEmbeddedEigenvalues.mixed_boundary_square_weighted}
+\lean{EulerDipoleEigenvalues.mixed_boundary_square_weighted}
 \leanok
 Let $\lambda\in\R$, $w=1-x^2$, and let $F,G$ be locally absolutely
 continuous on $(-1,1)$. Suppose $G=T_\lambda F$ almost everywhere,
@@ -677,7 +677,7 @@ Integrate on compact subintervals and exhaust $(-1,1)$.
 \begin{lemma}[Stream trace on a mixed Neumann edge]
 \label{lem:mixed-neumann-stream-trace}
 \uses{def:mixed-quotient-data, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.mixed_neumann_stream_trace}
+\lean{EulerDipoleEigenvalues.mixed_neumann_stream_trace}
 \leanok
 Let $g=\psi|_N$, $x=\tanh t$, $w=1-x^2$, and $g=\sqrt w\,G$.
 Then $g$ and $G$ are locally absolutely continuous, $g'\in L^1(dt)$,
@@ -702,9 +702,9 @@ $\int |hwG'|\,dt=\int_{-1}^1\sqrt w\,|G'|\,dx$.
 \begin{lemma}[Critical trace weight on an inward strip]
 \label{lem:mixed-neumann-strip-weight}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.left_memLp_div_sqrt,
-  NoEmbeddedEigenvalues.mixed_neumann_strip_memLp_flow,
-  NoEmbeddedEigenvalues.mixed_neumann_inward_trace_memLp}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.left_memLp_div_sqrt,
+  EulerDipoleEigenvalues.mixed_neumann_strip_memLp_flow,
+  EulerDipoleEigenvalues.mixed_neumann_inward_trace_memLp}
 \leanok
 On an inward strip $I\times(0,w)$, let $T$ be the canonical trace
 of $F$ at normal coordinate $0$. Suppose $F/k$ and the weak normal
@@ -732,7 +732,7 @@ inward subwindow.
 \begin{lemma}[Physical vorticity trace on a mixed Neumann edge]
 \label{lem:mixed-neumann-vorticity-trace}
 \uses{def:mixed-quotient-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_neumann_vorticity_trace}
+\lean{EulerDipoleEigenvalues.mixed_neumann_vorticity_trace}
 \leanok
 For a mixed eigenfunction with $\lambda\ne0$, the one-sided vorticity trace
 on a Neumann edge has a representative $q$ in flow time with $q\in L^2(dt)$,
@@ -763,7 +763,7 @@ of $\omega$ is needed.
 \begin{lemma}[Decay of a square-integrable vorticity profile]
 \label{lem:mixed-vorticity-profile-decay}
 \uses{def:canonical-profile, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.mixed_vorticity_profile_decay}
+\lean{EulerDipoleEigenvalues.mixed_vorticity_profile_decay}
 \leanok
 If $g'\in L^1(dt)$ and a locally absolutely continuous $q\in L^2(dt)$
 satisfies $q'=i\lambda q-g'$, then $q$ tends to zero at both ends.
@@ -781,7 +781,7 @@ contradicting $q\in L^2(dt)$.
 \begin{lemma}[Transformed canonical transport on a mixed Neumann edge]
 \label{lem:mixed-neumann-canonical-transport}
 \uses{def:canonical-profile, def:h1-interval, def:mixed-boundary-operators}
-\lean{NoEmbeddedEigenvalues.mixed_neumann_canonical_transport}
+\lean{EulerDipoleEigenvalues.mixed_neumann_canonical_transport}
 \leanok
 Write $g=\sech t\,G(\tanh t)$ for the stream trace associated to a
 quotient on a Neumann edge. Let $\lambda\ne0$ and suppose $G$ is bounded
@@ -807,7 +807,7 @@ $G=T_\lambda F$.
 \label{lem:mixed-boundary-square-traces}
 \uses{def:mixed-quotient-data, def:canonical-profile,
   lem:mixed-boundary-square-weighted, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.mixed_boundary_square_traces}
+\lean{EulerDipoleEigenvalues.mixed_boundary_square_traces}
 \leanok
 Let $\omega$ be a mixed-sector eigenfunction with $\lambda\ne0$.
 On a Neumann edge, use directed flow time $t$, put $x=\tanh t$ and
@@ -843,10 +843,10 @@ is still needed to construct the supplied quotient data.
 \begin{definition}[Trace mass and static form]
 \label{def:mixed-K}
 \uses{def:mixed-field, prop:mixed-quotient-domain}
-\lean{NoEmbeddedEigenvalues.mixedStaticForm,
- NoEmbeddedEigenvalues.mixedTraceMassCutoff,
- NoEmbeddedEigenvalues.mixedTraceMassDensity,
- NoEmbeddedEigenvalues.mixedVirialDensity}
+\lean{EulerDipoleEigenvalues.mixedStaticForm,
+ EulerDipoleEigenvalues.mixedTraceMassCutoff,
+ EulerDipoleEigenvalues.mixedTraceMassDensity,
+ EulerDipoleEigenvalues.mixedVirialDensity}
 \leanok
 With $\psi=h\phi$, define
 \[
@@ -861,7 +861,7 @@ The volume definition avoids taking a limit before its existence is known.
 \begin{lemma}[Signed trace-mass field]
 \label{lem:mixed-trace-field}
 \uses{def:mixed-field}
-\lean{NoEmbeddedEigenvalues.mixed_trace_mass_field, NoEmbeddedEigenvalues.mixed_trace_mass_edge_flux}
+\lean{EulerDipoleEigenvalues.mixed_trace_mass_field, EulerDipoleEigenvalues.mixed_trace_mass_edge_flux}
 \leanok
 The field $V=\frac up\partial_a-\frac vp\partial_b$ has zero divergence in
 the diagonal rectangle and satisfies $Vp=h-k$. Its outer normal flux is
@@ -879,7 +879,7 @@ outward normal.
 \begin{lemma}[Trace mass as a volume integral]
 \label{lem:mixed-trace-mass}
 \uses{def:mixed-K}
-\lean{NoEmbeddedEigenvalues.mixed_trace_mass_volume_eq, NoEmbeddedEigenvalues.mixed_trace_mass}
+\lean{EulerDipoleEigenvalues.mixed_trace_mass_volume_eq, EulerDipoleEigenvalues.mixed_trace_mass}
 \leanok
 The field $V=\frac up\partial_a-\frac vp\partial_b$ is divergence free in the
 $(a,b)$ rectangle, with outer normal flux $1/k$ on $D$ and $-1/h$ on $N$.
@@ -911,8 +911,8 @@ integral.
 \begin{lemma}[Renormalized Neumann flux]
 \label{lem:mixed-neumann-renormalization}
 \uses{def:mixed-quotient-data, def:canonical-profile, lem:mixed-boundary-square-traces}
-\lean{NoEmbeddedEigenvalues.mixedNeumannFluxCutoff,
-  NoEmbeddedEigenvalues.mixed_neumann_flux_renormalized}
+\lean{EulerDipoleEigenvalues.mixedNeumannFluxCutoff,
+  EulerDipoleEigenvalues.mixed_neumann_flux_renormalized}
 \leanok
 For a mixed eigenfunction and either Neumann side $N$, set
 $B_N(T)=\int_{-T}^T (|\psi_t|^2_{\mathrm{tan}}+
@@ -942,7 +942,7 @@ Lemma~\ref{lem:mixed-boundary-square-traces}.
 \begin{lemma}[Static identity]
 \label{lem:mixed-K-identity}
 \uses{def:mixed-K, lem:mixed-boundary-square-traces}
-\lean{NoEmbeddedEigenvalues.mixed_static_identity}
+\lean{EulerDipoleEigenvalues.mixed_static_identity}
 \leanok
 Every mixed eigenfunction satisfies
 $0=K[\phi]+\sum_N\int_{-1}^1w|wF''-3xF'-i\lambda F'|^2$. In particular
@@ -966,8 +966,8 @@ identity then gives $0=K[\phi]$ plus the nonnegative sum of squares.
 \begin{lemma}[Cosine division of the normal derivatives]
 \label{lem:mixed-rellich-hardy}
 \uses{def:mixed-quotient-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MixedQuotientData.memLp_normal_div_cos,
-  NoEmbeddedEigenvalues.MixedQuotientData.memLp_partials_div_corner}
+\lean{EulerDipoleEigenvalues.MixedQuotientData.memLp_normal_div_cos,
+  EulerDipoleEigenvalues.MixedQuotientData.memLp_partials_div_corner}
 \leanok
 The quotient data give $\phi_a/h,\phi_b/k\in L^2(\Cell)$ and hence also
 $\phi_a/(h+k),\phi_b/(h+k)\in L^2(\Cell)$.
@@ -985,7 +985,7 @@ bounds in the tangential variable.
 \begin{lemma}[Rellich volume integrability]
 \label{lem:mixed-rellich-volume}
 \uses{def:mixed-K, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_rellich_volume_integrable}
+\lean{EulerDipoleEigenvalues.mixed_rellich_volume_integrable}
 \leanok
 The virial density, the trace-mass density, and the diagonal-coordinate
 Rellich density
@@ -1008,11 +1008,11 @@ bounded coefficients.
 \begin{lemma}[Corrected Rellich current algebra]
 \label{lem:mixed-rellich-current}
 \uses{def:mixed-field}
-\lean{NoEmbeddedEigenvalues.mixedRellichCurrent,
-  NoEmbeddedEigenvalues.mixed_rellich_current_factor,
-  NoEmbeddedEigenvalues.mixed_rellich_current_product_rule,
-  NoEmbeddedEigenvalues.mixed_rellich_current_dirichlet,
-  NoEmbeddedEigenvalues.mixed_rellich_current_neumann}
+\lean{EulerDipoleEigenvalues.mixedRellichCurrent,
+  EulerDipoleEigenvalues.mixed_rellich_current_factor,
+  EulerDipoleEigenvalues.mixed_rellich_current_product_rule,
+  EulerDipoleEigenvalues.mixed_rellich_current_dirichlet,
+  EulerDipoleEigenvalues.mixed_rellich_current_neumann}
 \leanok
 Subtract $(W_a,-W_b)|\phi|^2$ from the Rellich current in diagonal
 coordinates. The corrected current factors as $h/p$ times a quadratic
@@ -1038,7 +1038,7 @@ diagonal field terms cancel, as do the mixed Hessian terms.
 \begin{lemma}[Canonical Neumann traces of the quotient jet]
 \label{lem:mixed-quotient-neumann-traces}
 \uses{def:sobolev-local, def:mixed-quotient-data, def:axis-trace-chart}
-\lean{NoEmbeddedEigenvalues.mixed_quotient_side_traces, NoEmbeddedEigenvalues.mixed_quotient_neumann_traces}
+\lean{EulerDipoleEigenvalues.mixed_quotient_side_traces, EulerDipoleEigenvalues.mixed_quotient_neumann_traces}
 \leanok
 On each side the continuous quotient trace $T$ is absolutely continuous
 and has $T'\in L^2$. The canonical traces of $\phi$ and its weak
@@ -1057,8 +1057,8 @@ value, including the endpoints of its absolutely continuous representative.
 \begin{lemma}[Corrected Neumann flux integral]
 \label{lem:mixed-rellich-edge}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.mixedRellichEdgeDensity,
-  NoEmbeddedEigenvalues.mixed_rellich_edge_integral}
+\lean{EulerDipoleEigenvalues.mixedRellichEdgeDensity,
+  EulerDipoleEigenvalues.mixed_rellich_edge_integral}
 \leanok
 For an absolutely continuous Neumann edge value $T$ with $T'\in L^2$,
 the corrected edge density and $h|T'|^2$ are integrable. The integral of
@@ -1075,7 +1075,7 @@ on the closed side, using $u=\pm1$ at the endpoints.
 \begin{lemma}[Interior section divergence of the corrected current]
 \label{lem:mixed-rellich-divergence}
 \uses{def:sobolev-local, def:mixed-K, lem:mixed-rellich-current}
-\lean{NoEmbeddedEigenvalues.mixed_rellich_section_divergence}
+\lean{EulerDipoleEigenvalues.mixed_rellich_section_divergence}
 \leanok
 At an interior crossing of two sectional representatives whose value
 and first normal derivatives match the prescribed jet there, the sum
@@ -1096,8 +1096,8 @@ by $h$ identifies that sum with $2\omega$.
 \begin{lemma}[Sectionwise flux at regular endpoints]
 \label{lem:mixed-rellich-section}
 \uses{def:h1-interval, lem:h1-interval-endpoints, lem:mixed-rellich-current}
-\lean{NoEmbeddedEigenvalues.mixed_rellich_normal_section_ac,
-  NoEmbeddedEigenvalues.mixed_rellich_normal_section_integral}
+\lean{EulerDipoleEigenvalues.mixed_rellich_normal_section_ac,
+  EulerDipoleEigenvalues.mixed_rellich_normal_section_integral}
 \leanok
 On a normal section at a fixed interior tangential coordinate, the
 current computed from absolutely continuous extensions of the quotient
@@ -1119,8 +1119,8 @@ side formulas.
 \begin{lemma}[Integrable normal derivatives of the corrected current]
 \label{lem:mixed-rellich-integrable-sections}
 \uses{def:sobolev-local, def:mixed-K, lem:mixed-rellich-current}
-\lean{NoEmbeddedEigenvalues.MixedRellichNormalDerivative,
-  NoEmbeddedEigenvalues.mixed_rellich_integrable_sections}
+\lean{EulerDipoleEigenvalues.MixedRellichNormalDerivative,
+  EulerDipoleEigenvalues.mixed_rellich_integrable_sections}
 \leanok
 Both normal derivatives of the corrected current have integrable bulk
 representatives, agreeing with the derivatives on the corresponding
@@ -1151,7 +1151,7 @@ follows by differentiating the test function twice.
 \begin{lemma}[Sobolev flux of the corrected Rellich current]
 \label{lem:mixed-rellich-flux}
 \uses{def:mixed-K, def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_rellich_current_integral}
+\lean{EulerDipoleEigenvalues.mixed_rellich_current_integral}
 \leanok
 The integral of the virial density minus the Rellich and trace-mass
 densities equals the sum of the two corrected Neumann flux integrals.
@@ -1169,7 +1169,7 @@ stated edge densities. No corner flux is assigned separately.
 \begin{lemma}[Rellich form of $K$]
 \label{lem:mixed-rellich}
 \uses{def:mixed-K}
-\lean{NoEmbeddedEigenvalues.mixed_rellich}
+\lean{EulerDipoleEigenvalues.mixed_rellich}
 \leanok
 $K[\phi]=\int_\Cell\big(f|\omega|^2+|\nabla\psi|^2-2\operatorname{Re}((W\psi)\bar\omega)\big)\,dx\,dy
 -\sum_N\int h|\phi_a|^2\,da$ (manuscript \texttt{(eq:mixed-static-rellich)}).
@@ -1187,11 +1187,11 @@ one copy of each corner mass, cancelling the corner sum in $K$.
 \begin{definition}[Second-order coefficients]
 \label{def:mixed-coefficients}
 \uses{def:cells, lem:cell-square, lem:diagonal-calculus}
-\lean{NoEmbeddedEigenvalues.mixedOpenCell, NoEmbeddedEigenvalues.mixedQuarterCell,
- NoEmbeddedEigenvalues.mixedD, NoEmbeddedEigenvalues.mixedC, NoEmbeddedEigenvalues.mixedV,
- NoEmbeddedEigenvalues.mixedComparisonDiagonal,
- NoEmbeddedEigenvalues.mixedComparisonOffDiagonal,
- NoEmbeddedEigenvalues.mixedComparisonPotential, NoEmbeddedEigenvalues.mixedComparisonOperator}
+\lean{EulerDipoleEigenvalues.mixedOpenCell, EulerDipoleEigenvalues.mixedQuarterCell,
+ EulerDipoleEigenvalues.mixedD, EulerDipoleEigenvalues.mixedC, EulerDipoleEigenvalues.mixedV,
+ EulerDipoleEigenvalues.mixedComparisonDiagonal,
+ EulerDipoleEigenvalues.mixedComparisonOffDiagonal,
+ EulerDipoleEigenvalues.mixedComparisonPotential, EulerDipoleEigenvalues.mixedComparisonOperator}
 \leanok
 In the local notation of this chapter let
 \[
@@ -1205,7 +1205,7 @@ $\mathcal P=-\Div(G\nabla)+V$ in the $(a,b)$ variables.
 \begin{lemma}[Bounded second-order coefficients]
 \label{lem:mixed-coefficient-bounds}
 \uses{def:mixed-coefficients}
-\lean{NoEmbeddedEigenvalues.mixed_comparison_coefficient_bounds}
+\lean{EulerDipoleEigenvalues.mixed_comparison_coefficient_bounds}
 \leanok
 On the open diagonal-coordinate cell, $0\le-V\le4$, $g\le3$ and $|j|\le2$.
 \end{lemma}
@@ -1221,8 +1221,8 @@ and $j$ follow from $h^2\le1$, $h/p\le1$ and $|uv|\le1$.
 \begin{lemma}[Completion of the square]
 \label{lem:mixed-completion}
 \uses{def:mixed-K, def:mixed-quotient-data, def:mixed-coefficients, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixedSecondOrderForm, NoEmbeddedEigenvalues.mixed_completion,
- NoEmbeddedEigenvalues.mixed_second_order_form_bounded}
+\lean{EulerDipoleEigenvalues.mixedSecondOrderForm, EulerDipoleEigenvalues.mixed_completion,
+ EulerDipoleEigenvalues.mixed_second_order_form_bounded}
 \leanok
 \[
   K[\phi]=\int_\Cell\frac{\mu f}2\Big|L_\mu\phi+\frac{C_0}f\phi\Big|^2\,da\,db+Q_2[\phi],
@@ -1262,7 +1262,7 @@ estimate with the specified normal derivative.
 \begin{lemma}[Positivity of the second-order matrix]
 \label{lem:mixed-G-positive}
 \uses{def:mixed-coefficients}
-\lean{NoEmbeddedEigenvalues.mixed_comparison_matrix_positive}
+\lean{EulerDipoleEigenvalues.mixed_comparison_matrix_positive}
 \leanok
 $G$ is positive definite in the open cell:
 \[
@@ -1282,9 +1282,9 @@ for $0<h,k\le1$.
 \begin{definition}[Comparison form on the quarter cell]
 \label{def:comparison-form}
 \uses{def:mixed-coefficients, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixedQuarterForm,
- NoEmbeddedEigenvalues.MixedQuarterFormDomain,
- NoEmbeddedEigenvalues.MixedQuarterZeroTrace}
+\lean{EulerDipoleEigenvalues.mixedQuarterForm,
+ EulerDipoleEigenvalues.MixedQuarterFormDomain,
+ EulerDipoleEigenvalues.MixedQuarterZeroTrace}
 \leanok
 On $Q=(0,\pi/2)^2$, for $z\in H^1(Q)$, let
 \[
@@ -1296,7 +1296,7 @@ On $Q=(0,\pi/2)^2$, for $z\in H^1(Q)$, let
 
 \begin{definition}[Robin multiplier with logarithmic derivative bound]
 \label{def:mixed-robin-multiplier}
-\lean{NoEmbeddedEigenvalues.MixedRobinMultiplier}
+\lean{EulerDipoleEigenvalues.MixedRobinMultiplier}
 \leanok
 A Robin multiplier $\rho(h,k)$ is continuous on $[0,1]^2$, with
 $0<m\le\rho\le M$ there, and smooth on an open neighbourhood of
@@ -1307,7 +1307,7 @@ $|\rho_h|+|\rho_k|\le C(1+|\log h|)$ for some $C\ge0$.
 \begin{lemma}[Pointwise mixed Picone inequality]
 \label{lem:mixed-robin-picone}
 \uses{def:mixed-robin-multiplier, def:mixed-coefficients}
-\lean{NoEmbeddedEigenvalues.mixed_robin_picone}
+\lean{EulerDipoleEigenvalues.mixed_robin_picone}
 \leanok
 Let $\rho$ be a Robin multiplier and take $g=u\rho$ or $g=v\rho$.
 If $\mathcal Pg\ge ch^2g$ in $Q$, then for $z\in C^1(Q)$,
@@ -1328,9 +1328,9 @@ divergence identity and drop its nonnegative gradient square.
 \begin{lemma}[Regular conormal currents]
 \label{lem:mixed-robin-currents}
 \uses{def:mixed-robin-multiplier, def:mixed-coefficients}
-\lean{NoEmbeddedEigenvalues.mixed_robin_ground_logPartials,
- NoEmbeddedEigenvalues.mixed_robin_top_current,
- NoEmbeddedEigenvalues.mixed_robin_even_axis_current}
+\lean{EulerDipoleEigenvalues.mixed_robin_ground_logPartials,
+ EulerDipoleEigenvalues.mixed_robin_top_current,
+ EulerDipoleEigenvalues.mixed_robin_even_axis_current}
 \leanok
 The components of $\nabla g/g$ are
 $X=\mathbf1_{g=u\rho}\,h/u-u\rho_h/\rho$ and
@@ -1356,7 +1356,7 @@ both vanish.
 \begin{lemma}[Mixed comparison on a regular rectangle]
 \label{lem:mixed-robin-rectangle}
 \uses{def:mixed-coefficients, def:mixed-robin-multiplier}
-\lean{NoEmbeddedEigenvalues.mixed_robin_rectangle}
+\lean{EulerDipoleEigenvalues.mixed_robin_rectangle}
 \leanok
 Suppose $\mathcal Pg\ge ch^2g$ in $Q$ and the Robin numerator is
 nonnegative on the top. Let $R=(a_0,A)\times(b_0,\pi/2)$, with
@@ -1382,9 +1382,9 @@ current with the Robin term and discard their nonnegative sum.
 \begin{lemma}[Mixed Robin comparison for smooth tests]
 \label{lem:mixed-robin-smooth}
 \uses{def:mixed-coefficients, def:mixed-robin-multiplier}
-\lean{NoEmbeddedEigenvalues.mixed_robin_odd_current_bound,
- NoEmbeddedEigenvalues.mixed_robin_right_current_bound,
- NoEmbeddedEigenvalues.mixed_robin_comparison_smooth}
+\lean{EulerDipoleEigenvalues.mixed_robin_odd_current_bound,
+ EulerDipoleEigenvalues.mixed_robin_right_current_bound,
+ EulerDipoleEigenvalues.mixed_robin_comparison_smooth}
 \leanok
 Suppose $\mathcal Pg\ge ch^2g$ in $Q$ and the Robin numerator is nonnegative.
 For any globally $C^2$ test $z$ vanishing on the chosen odd axis,
@@ -1415,8 +1415,8 @@ convergence pass the bulk and Robin integrals to the full quarter.
 \begin{lemma}[Smooth approximation with zero odd-axis trace]
 \label{lem:mixed-quarter-smooth-approximation}
 \uses{def:comparison-form, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MixedQuarterSmoothApproximation,
- NoEmbeddedEigenvalues.mixed_quarter_smooth_approximation}
+\lean{EulerDipoleEigenvalues.MixedQuarterSmoothApproximation,
+ EulerDipoleEigenvalues.mixed_quarter_smooth_approximation}
 \leanok
 For $H^1(Q)$ data with zero canonical trace on the chosen odd axis,
 there are globally $C^2$ functions vanishing pointwise on that axis
@@ -1439,7 +1439,7 @@ trace by the limits of the continuous normal sections.
 \begin{lemma}[Comparison lemma with logarithmic weights]
 \label{lem:robin-comparison}
 \uses{def:comparison-form, def:mixed-robin-multiplier, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_robin_comparison, NoEmbeddedEigenvalues.mixedRobinNumerator}
+\lean{EulerDipoleEigenvalues.mixed_robin_comparison, EulerDipoleEigenvalues.mixedRobinNumerator}
 \leanok
 Let $\rho$ be a Robin multiplier. The Robin inequalities below are only
 on the regular edge $k=0$, $0<h\le1$. If $g=v\rho$
@@ -1465,7 +1465,7 @@ by the same pairing argument on the top trace.
 \begin{definition}[Odd-in-$b$ comparison function]
 \label{def:odd-b-comparison}
 \uses{def:mixed-coefficients}
-\lean{NoEmbeddedEigenvalues.mixedOddBMultiplier, NoEmbeddedEigenvalues.mixedOddBComparison}
+\lean{EulerDipoleEigenvalues.mixedOddBMultiplier, EulerDipoleEigenvalues.mixedOddBComparison}
 \leanok
 Let $w_v=vF_v(h,k)$ with
 \[
@@ -1477,11 +1477,11 @@ Let $w_v=vF_v(h,k)$ with
 \begin{lemma}[Odd-in-$b$ multiplier and edge bounds]
 \label{lem:mixed-v-multiplier-bounds}
 \uses{def:odd-b-comparison}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_multiplier_robin,
- NoEmbeddedEigenvalues.mixed_odd_b_multiplier_closed_bounds,
- NoEmbeddedEigenvalues.mixed_odd_b_multiplier_derivative_bound,
- NoEmbeddedEigenvalues.mixedOddBMultiplier_continuous,
- NoEmbeddedEigenvalues.mixedOddBMultiplier_contDiffAt}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_multiplier_robin,
+ EulerDipoleEigenvalues.mixed_odd_b_multiplier_closed_bounds,
+ EulerDipoleEigenvalues.mixed_odd_b_multiplier_derivative_bound,
+ EulerDipoleEigenvalues.mixedOddBMultiplier_continuous,
+ EulerDipoleEigenvalues.mixedOddBMultiplier_contDiffAt}
 \leanok
 $F_v$ is continuous on the closed square and smooth wherever $h>0$.
 There are strict bounds $\tfrac34<F_v<\tfrac53$ on $(0,1]\times[0,1]$,
@@ -1510,7 +1510,7 @@ $h>0$. The log term is nonnegative, and $h,h^2,h^3\le1$ give the margin.
 \begin{lemma}[Odd-in-$b$ comparison]
 \label{lem:mixed-v-comparison}
 \uses{def:odd-b-comparison}
-\lean{NoEmbeddedEigenvalues.mixed_odd_b_interior}
+\lean{EulerDipoleEigenvalues.mixed_odd_b_interior}
 \leanok
 $\mathcal Pw_v\ge\tfrac1{100}h^2w_v$ in $Q$
 (manuscript \texttt{(lem:mixed-v-comparison)}).
@@ -1525,7 +1525,7 @@ Use the interior residual identity and the nonnegativity of $v\mathcal R_v$.
 \begin{definition}[Odd-in-$a$ comparison function]
 \label{def:odd-a-comparison}
 \uses{def:mixed-coefficients}
-\lean{NoEmbeddedEigenvalues.mixedOddAExponent, NoEmbeddedEigenvalues.mixedOddAComparison}
+\lean{EulerDipoleEigenvalues.mixedOddAExponent, EulerDipoleEigenvalues.mixedOddAComparison}
 \leanok
 Let $w_u=ue^{F_u}$, where, with $S=h+k$,
 \begin{align*}
@@ -1541,9 +1541,9 @@ Let $w_u=ue^{F_u}$, where, with $S=h+k$,
 \begin{lemma}[Bounded exponent and first derivatives]
 \label{lem:mixed-u-exponent-bounds}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixed_odd_a_exponent_bounds_regular,
- NoEmbeddedEigenvalues.mixedOddAExponent_continuousOn,
- NoEmbeddedEigenvalues.mixedOddAExponent_contDiffAt}
+\lean{EulerDipoleEigenvalues.mixed_odd_a_exponent_bounds_regular,
+ EulerDipoleEigenvalues.mixedOddAExponent_continuousOn,
+ EulerDipoleEigenvalues.mixedOddAExponent_contDiffAt}
 \leanok
 $F_u$ is continuous on the closed square and smooth on $h+k>0$.
 There is a finite constant bounding $|F_u|$, $|\partial_hF_u|$ and
@@ -1563,8 +1563,8 @@ continuous gradient at $(0,0)$.
 \begin{lemma}[Odd-in-$a$ comparison]
 \label{lem:mixed-u-comparison}
 \uses{def:odd-a-comparison}
-\lean{NoEmbeddedEigenvalues.mixed_odd_a_robin,
- NoEmbeddedEigenvalues.mixed_odd_a_interior}
+\lean{EulerDipoleEigenvalues.mixed_odd_a_robin,
+ EulerDipoleEigenvalues.mixed_odd_a_interior}
 \leanok
 $\mathcal Pw_u\ge\tfrac1{200}h^2w_u$ in $Q$, and on the regular edge
 $k=0$, $0<h\le1$,
@@ -1586,7 +1586,7 @@ function, and apply the Robin sign to the regular-edge identity.
 \begin{lemma}[Parity splitting]
 \label{lem:mixed-parity-split}
 \uses{def:mixed-quotient-data, lem:mixed-completion, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_parity_split, NoEmbeddedEigenvalues.mixed_parity_mass}
+\lean{EulerDipoleEigenvalues.mixed_parity_split, EulerDipoleEigenvalues.mixed_parity_mass}
 \leanok
 Write $\phi=\phi_u+\phi_v$ with $\phi_u$ odd in $a$ and even in $b$, $\phi_v$
 even in $a$ and odd in $b$ (possible since $\phi$ is centrally odd). Then
@@ -1609,7 +1609,7 @@ for the weighted mass.
 \begin{lemma}[Admissibility of the explicit Robin multipliers]
 \label{lem:mixed-robin-multipliers}
 \uses{def:mixed-robin-multiplier, def:odd-a-comparison, def:odd-b-comparison}
-\lean{NoEmbeddedEigenvalues.mixed_explicit_robin_multipliers}
+\lean{EulerDipoleEigenvalues.mixed_explicit_robin_multipliers}
 \leanok
 Both $e^{F_u}$ and $F_v$ are Robin multipliers.
 \end{lemma}
@@ -1626,7 +1626,7 @@ bound there. For $F_v$, apply the multiplier bounds directly.
 \begin{lemma}[Coercivity on the quarter cell]
 \label{lem:mixed-quarter-coercivity}
 \uses{def:comparison-form, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_quarter_coercivity}
+\lean{EulerDipoleEigenvalues.mixed_quarter_coercivity}
 \leanok
 For quarter-form data with zero Sobolev trace on either odd axis,
 $\mathcal Q[z]\ge \frac1{200}\int_Q h^2|z|^2$.
@@ -1644,7 +1644,7 @@ Robin numerator; in the other case weaken $1/100$ to $1/200$.
 \begin{lemma}[Quarter reduction with canonical traces]
 \label{lem:mixed-fold-quarter}
 \uses{def:comparison-form, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.mixed_fold_to_quarter}
+\lean{EulerDipoleEigenvalues.mixed_fold_to_quarter}
 \leanok
 An $H^1$ function continuous on the closed cell, odd in one axis and even
 in the other, restricts to quarter-form data. Its Robin trace is its
@@ -1668,7 +1668,7 @@ integrals have the same factor of four by reflection in both axes.
 \begin{lemma}[Second-order coercivity on the cell]
 \label{lem:mixed-second-order-coercivity}
 \uses{def:mixed-quotient-data, lem:mixed-completion}
-\lean{NoEmbeddedEigenvalues.mixed_second_order_coercivity}
+\lean{EulerDipoleEigenvalues.mixed_second_order_coercivity}
 \leanok
 $Q_2[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db$ for the mixed quotient.
 \end{lemma}
@@ -1683,7 +1683,7 @@ The reflection factors are the same for the form and the mass.
 \begin{lemma}[Cartesian and diagonal stream mass]
 \label{lem:mixed-stream-mass}
 \uses{def:mixed-quotient-data, lem:cell-square}
-\lean{NoEmbeddedEigenvalues.MixedQuotientData.stream_mass}
+\lean{EulerDipoleEigenvalues.MixedQuotientData.stream_mass}
 \leanok
 $\int_\Cell|\psi|^2\,dx\,dy=2\int_\Cell h^2|\phi|^2\,da\,db$ for the mixed quotient.
 \end{lemma}
@@ -1697,7 +1697,7 @@ Change coordinates and use the stream factorization almost everywhere.
 \begin{theorem}[Static coercivity]
 \label{thm:mixed-coercivity}
 \uses{lem:mixed-completion}
-\lean{NoEmbeddedEigenvalues.mixed_static_coercivity}
+\lean{EulerDipoleEigenvalues.mixed_static_coercivity}
 \leanok
 For the mixed quotient,
 $K[\phi]\ge\frac1{200}\int_\Cell h^2|\phi|^2\,da\,db=\frac1{400}\int_\Cell|\psi|^2\,dx\,dy$
@@ -1714,7 +1714,7 @@ coercivity bound. The Cartesian mass introduces a factor of two.
 \begin{theorem}[Mixed exclusion]
 \label{thm:mixed-exclusion}
 \uses{def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.mixed_exclusion}
+\lean{EulerDipoleEigenvalues.mixed_exclusion}
 \leanok
 If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
 $S_1^*\omega=-\omega$, $S_2^*\omega=\omega$, then $\omega=0$.
@@ -1735,7 +1735,7 @@ then gives $\omega=0$.
 \begin{corollary}[The other mixed sector]
 \label{cor:mixed-other-exclusion}
 \uses{def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.mixed_other_exclusion}
+\lean{EulerDipoleEigenvalues.mixed_other_exclusion}
 \leanok
 If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
 $S_1^*\omega=\omega$, $S_2^*\omega=-\omega$, then $\omega=0$.

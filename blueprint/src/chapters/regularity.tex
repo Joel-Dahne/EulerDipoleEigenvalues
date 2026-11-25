@@ -13,8 +13,8 @@ In this chapter $d$ is distance to the saddle set and $r$ distance to a fixed sa
 \begin{definition}[Cylinder parity and harmonic jets]
 \label{def:cylinder-inverse-data}
 \uses{def:local-plane-geometry, def:local-weak-jets, def:sectors}
-\lean{NoEmbeddedEigenvalues.HasAxisParityOn, NoEmbeddedEigenvalues.AllowedSaddleDegree,
- NoEmbeddedEigenvalues.classicalComplexJet, NoEmbeddedEigenvalues.IsPlaneHarmonicOn}
+\lean{EulerDipoleEigenvalues.HasAxisParityOn, EulerDipoleEigenvalues.AllowedSaddleDegree,
+ EulerDipoleEigenvalues.classicalComplexJet, EulerDipoleEigenvalues.IsPlaneHarmonicOn}
 \leanok
 Prescribed axis parity means $u$ has the selected reflection signs a.e.
 Allowed angular degrees are $0,2,4,\ldots$ for even--even,
@@ -27,7 +27,7 @@ Its degree-$m$ jet means its order-$m$ derivatives at zero.
 \begin{lemma}[Axis parity of the weak Poisson forcing]
 \label{lem:cylinder-forcing-parity}
 \uses{def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasAxisParityOn.weak_laplacian}
+\lean{EulerDipoleEigenvalues.HasAxisParityOn.weak_laplacian}
 \leanok
 If $u$ has prescribed axis parity on $D_\rho(0)$ and a specified weak
 second jet with Laplacian $F$ a.e., then $F$ has the same axis parity.
@@ -45,8 +45,8 @@ under the volume-preserving reflection.
 \begin{lemma}[Forbidden Taylor jets from smooth axis parity]
 \label{lem:cylinder-forbidden-jets}
 \uses{def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasAxisParityOn.classicalJet_at_zero,
- NoEmbeddedEigenvalues.HasAxisParityOn.forbidden_jet_zero}
+\lean{EulerDipoleEigenvalues.HasAxisParityOn.classicalJet_at_zero,
+ EulerDipoleEigenvalues.HasAxisParityOn.forbidden_jet_zero}
 \leanok
 Let $\rho>0$ and let $f$ be smooth on $D_\rho(0)$ with prescribed axis
 parity $\varepsilon$. Every ordered jet of forbidden total degree vanishes:
@@ -72,7 +72,7 @@ have a nonzero value. This also excludes the odd--odd constant mode.
 \begin{definition}[Axis parity on the angular circle]
 \label{def:cylinder-angular-parity}
 \uses{def:cylinder-inverse-data}
-\lean{NoEmbeddedEigenvalues.HasCircleAxisParity}
+\lean{EulerDipoleEigenvalues.HasCircleAxisParity}
 \leanok
 For $f:\R/(2\pi\Z)\to\C$, angular axis parity means the Haar-a.e.\ identities
 \[
@@ -85,13 +85,13 @@ Angular Haar measure has total mass one.
 \begin{lemma}[Allowed support of the angular Fourier coefficients]
 \label{lem:cylinder-angular-support}
 \uses{def:cylinder-angular-parity}
-\lean{NoEmbeddedEigenvalues.cylinderAngularCharacter_pi,
- NoEmbeddedEigenvalues.cylinderAngularCoeff_translate,
- NoEmbeddedEigenvalues.cylinderAngularCoeff_neg,
- NoEmbeddedEigenvalues.HasCircleAxisParity.half_turn,
- NoEmbeddedEigenvalues.HasCircleAxisParity.coeff_characters,
- NoEmbeddedEigenvalues.HasCircleAxisParity.fourierCoeff_forbidden,
- NoEmbeddedEigenvalues.HasCircleAxisParity.fourierCoeff_support}
+\lean{EulerDipoleEigenvalues.cylinderAngularCharacter_pi,
+ EulerDipoleEigenvalues.cylinderAngularCoeff_translate,
+ EulerDipoleEigenvalues.cylinderAngularCoeff_neg,
+ EulerDipoleEigenvalues.HasCircleAxisParity.half_turn,
+ EulerDipoleEigenvalues.HasCircleAxisParity.coeff_characters,
+ EulerDipoleEigenvalues.HasCircleAxisParity.fourierCoeff_forbidden,
+ EulerDipoleEigenvalues.HasCircleAxisParity.fourierCoeff_support}
 \leanok
 Let $f$ be integrable on the angular circle with the prescribed axis parity.
 Every coefficient integral
@@ -125,9 +125,9 @@ arbitrarily chosen circle does not provide these premises.
 
 \begin{definition}[Logarithmic-polar coordinates and cylinder measure]
 \label{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.logPolarPlane, NoEmbeddedEigenvalues.logPolarStrip,
- NoEmbeddedEigenvalues.logPolarDeriv, NoEmbeddedEigenvalues.logCylinderPlane,
- NoEmbeddedEigenvalues.logCylinderProjection, NoEmbeddedEigenvalues.logCylinderMeasure}
+\lean{EulerDipoleEigenvalues.logPolarPlane, EulerDipoleEigenvalues.logPolarStrip,
+ EulerDipoleEigenvalues.logPolarDeriv, EulerDipoleEigenvalues.logCylinderPlane,
+ EulerDipoleEigenvalues.logCylinderProjection, EulerDipoleEigenvalues.logCylinderMeasure}
 \leanok
 Write $C=\R/(2\pi\Z)$ and $d\mu_{\rm cyl}=dt\,d\theta/(2\pi)$ on $\R\times C$.
 Set
@@ -146,14 +146,14 @@ Projection sends a real angle to its class in $C$.
 \begin{lemma}[Joint logarithmic-polar measure transport]
 \label{lem:log-cylinder-measure}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.hasFDerivAt_logPolarPlane,
- NoEmbeddedEigenvalues.det_logPolarDeriv,
- NoEmbeddedEigenvalues.image_logPolarPlane_strip,
- NoEmbeddedEigenvalues.measurePreserving_logPolarPlane,
- NoEmbeddedEigenvalues.quasiMeasurePreserving_logPolarPlane,
- NoEmbeddedEigenvalues.measurePreserving_logCylinderProjection,
- NoEmbeddedEigenvalues.logCylinderMeasure_eq_smul_length,
- NoEmbeddedEigenvalues.quasiMeasurePreserving_logCylinderPlane}
+\lean{EulerDipoleEigenvalues.hasFDerivAt_logPolarPlane,
+ EulerDipoleEigenvalues.det_logPolarDeriv,
+ EulerDipoleEigenvalues.image_logPolarPlane_strip,
+ EulerDipoleEigenvalues.measurePreserving_logPolarPlane,
+ EulerDipoleEigenvalues.quasiMeasurePreserving_logPolarPlane,
+ EulerDipoleEigenvalues.measurePreserving_logCylinderProjection,
+ EulerDipoleEigenvalues.logCylinderMeasure_eq_smul_length,
+ EulerDipoleEigenvalues.quasiMeasurePreserving_logCylinderPlane}
 \leanok
 The real-angle map has derivative $A(t,\theta)$ and is injective on $S$,
 with Jacobian determinant $-e^{-2t}$,
@@ -179,7 +179,7 @@ differs from angular length by the positive factor $1/(2\pi)$.
 \begin{definition}[Square-root-Jacobian cylinder pullback]
 \label{def:log-cylinder-l2-pullback}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.logCylinderL2Pullback}
+\lean{EulerDipoleEigenvalues.logCylinderL2Pullback}
 \leanok
 For a planar function $f$, define $Tf(t,\theta)=e^{-t}f(\Gamma(t,\theta))$.
 \end{definition}
@@ -187,11 +187,11 @@ For a planar function $f$, define $Tf(t,\theta)=e^{-t}f(\Gamma(t,\theta))$.
 \begin{lemma}[Finite cylinder mass and exact normalization]
 \label{lem:log-cylinder-l2-mass}
 \uses{def:log-cylinder-l2-pullback}
-\lean{NoEmbeddedEigenvalues.memLp_logPolarPlane_scaled,
- NoEmbeddedEigenvalues.memLp_logCylinderL2Pullback,
- NoEmbeddedEigenvalues.integral_sq_logPolarPlane_scaled,
- NoEmbeddedEigenvalues.integral_sq_logCylinderL2Pullback,
- NoEmbeddedEigenvalues.memLp_logCylinder_slices}
+\lean{EulerDipoleEigenvalues.memLp_logPolarPlane_scaled,
+ EulerDipoleEigenvalues.memLp_logCylinderL2Pullback,
+ EulerDipoleEigenvalues.integral_sq_logPolarPlane_scaled,
+ EulerDipoleEigenvalues.integral_sq_logCylinderL2Pullback,
+ EulerDipoleEigenvalues.memLp_logCylinder_slices}
 \leanok
 If $f\in L^2(\R^2)$, then $Tf\in L^2(\mu_{\rm cyl})$, with
 \[
@@ -216,7 +216,7 @@ representative and joint a.e.\ agreement.
 \begin{definition}[Angular analysis of cylinder data]
 \label{def:cylinder-angular-analysis}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.cylinderAngularCoeff}
+\lean{EulerDipoleEigenvalues.cylinderAngularCoeff}
 \leanok
 For cylinder data $G$, set
 \[
@@ -228,9 +228,9 @@ For cylinder data $G$, set
 \begin{lemma}[Angular Parseval and real-line coefficient mass]
 \label{lem:cylinder-angular-analysis}
 \uses{def:cylinder-angular-analysis}
-\lean{NoEmbeddedEigenvalues.hasSum_sq_circle_fourierCoeff,
- NoEmbeddedEigenvalues.cylinderAngularCoeff_parseval,
- NoEmbeddedEigenvalues.cylinderAngularCoeff_memLp}
+\lean{EulerDipoleEigenvalues.hasSum_sq_circle_fourierCoeff,
+ EulerDipoleEigenvalues.cylinderAngularCoeff_parseval,
+ EulerDipoleEigenvalues.cylinderAngularCoeff_memLp}
 \leanok
 If $G\in L^2(\mu_{\rm cyl})$, each $G_n$ is an actual L2 function on $\R$.
 For almost every $t$,
@@ -254,9 +254,9 @@ L2 membership without assuming time integrability of $G_n$.
 \begin{lemma}[Radius and reflections of the cylinder plane map]
 \label{lem:log-cylinder-pointwise-geometry}
 \uses{def:log-cylinder-coordinates, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.localRadius_logCylinderPlane,
- NoEmbeddedEigenvalues.logCylinderPlane_reflect_fst,
- NoEmbeddedEigenvalues.logCylinderPlane_reflect_snd}
+\lean{EulerDipoleEigenvalues.localRadius_logCylinderPlane,
+ EulerDipoleEigenvalues.logCylinderPlane_reflect_fst,
+ EulerDipoleEigenvalues.logCylinderPlane_reflect_snd}
 \leanok
 For every $q=(t,\theta)$, $r_0(\Gamma(q))=e^{-t}$.
 Reflection of $\Gamma(t,\theta)$ in the first or second Cartesian coordinate
@@ -273,8 +273,8 @@ of $e^{-t}$, and the two trigonometric reflection identities.
 \begin{definition}[Physical forcing on the logarithmic cylinder]
 \label{def:cylinder-physical-forcing}
 \uses{def:log-cylinder-l2-pullback, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.cylinderWeightedExtension,
- NoEmbeddedEigenvalues.cylinderForcing}
+\lean{EulerDipoleEigenvalues.cylinderWeightedExtension,
+ EulerDipoleEigenvalues.cylinderForcing}
 \leanok
 For planar forcing $F$ on $D_\rho(0)$, extend
 $W=\mathbf1_{D_\rho(0)}F/r^{a-1}$ by zero and define $G=TW$.
@@ -283,7 +283,7 @@ $W=\mathbf1_{D_\rho(0)}F/r^{a-1}$ by zero and define $G=TW$.
 \begin{lemma}[Pointwise physical forcing formula]
 \label{lem:cylinder-physical-forcing-formula}
 \uses{def:cylinder-physical-forcing}
-\lean{NoEmbeddedEigenvalues.cylinderForcing_apply}
+\lean{EulerDipoleEigenvalues.cylinderForcing_apply}
 \leanok
 For arbitrary planar $F$ and real $a,\rho$, the forcing is
 $G(t,\theta)=e^{(a-2)t}F(\Gamma(t,\theta))$ when $e^{-t}<\rho$ and zero otherwise.
@@ -302,12 +302,12 @@ the square-root area Jacobian $e^{-t}$. Real-power algebra gives $e^{(a-2)t}$.
 \uses{def:cylinder-physical-forcing, def:cylinder-inverse-data,
  def:cylinder-angular-parity, def:cylinder-angular-analysis,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinderForcing_memLp,
- NoEmbeddedEigenvalues.cylinderForcing_sq_mass,
- NoEmbeddedEigenvalues.HasAxisParityOn.cylinderWeightedExtension,
- NoEmbeddedEigenvalues.HasAxisParityOn.logCylinder_slices,
- NoEmbeddedEigenvalues.cylinder_forcing_data,
- NoEmbeddedEigenvalues.cylinder_forcing_modes}
+\lean{EulerDipoleEigenvalues.cylinderForcing_memLp,
+ EulerDipoleEigenvalues.cylinderForcing_sq_mass,
+ EulerDipoleEigenvalues.HasAxisParityOn.cylinderWeightedExtension,
+ EulerDipoleEigenvalues.HasAxisParityOn.logCylinder_slices,
+ EulerDipoleEigenvalues.cylinder_forcing_data,
+ EulerDipoleEigenvalues.cylinder_forcing_modes}
 \leanok
 Suppose $u$ has prescribed axis parity, a specified second weak jet with
 Laplacian $F$ on $D_\rho(0)$, and $F/r^{a-1}\in L^2(D_\rho(0))$.
@@ -348,7 +348,7 @@ not an additional analytic prerequisite.
 \begin{definition}[Real-line L2 Fourier modes]
 \label{def:cylinder-fourier-modes}
 \uses{def:cylinder-angular-analysis, lem:cylinder-angular-analysis}
-\lean{NoEmbeddedEigenvalues.cylinderTimeMode, NoEmbeddedEigenvalues.cylinderFourierMode}
+\lean{EulerDipoleEigenvalues.cylinderTimeMode, EulerDipoleEigenvalues.cylinderFourierMode}
 \leanok
 For cylinder L2 data $G$, let $g_n=[G_n]_{L^2(\R)}$ and
 $\mathscr F_nG=\mathcal F_{\rm cyc}g_n$.
@@ -360,13 +360,13 @@ No real-line L1 assumption is made on $G_n$.
 \begin{lemma}[Integrated angular Parseval and real-line Plancherel]
 \label{lem:cylinder-fourier-modes}
 \uses{def:cylinder-fourier-modes}
-\lean{NoEmbeddedEigenvalues.cylinderTimeMode_ae,
- NoEmbeddedEigenvalues.cylinderFourierMode_inverse,
- NoEmbeddedEigenvalues.cylinderRealL2_norm_sq,
- NoEmbeddedEigenvalues.cylinderTimeMode_hasSum_mass,
- NoEmbeddedEigenvalues.cylinderFourierMode_hasSum_mass,
- NoEmbeddedEigenvalues.cylinderFourierMode_smul_of_coeff_ae,
- NoEmbeddedEigenvalues.cylinderFourierMode_eq_zero}
+\lean{EulerDipoleEigenvalues.cylinderTimeMode_ae,
+ EulerDipoleEigenvalues.cylinderFourierMode_inverse,
+ EulerDipoleEigenvalues.cylinderRealL2_norm_sq,
+ EulerDipoleEigenvalues.cylinderTimeMode_hasSum_mass,
+ EulerDipoleEigenvalues.cylinderFourierMode_hasSum_mass,
+ EulerDipoleEigenvalues.cylinderFourierMode_smul_of_coeff_ae,
+ EulerDipoleEigenvalues.cylinderFourierMode_eq_zero}
 \leanok
 The class $g_n$ agrees with the specified coefficient $G_n$ a.e., and
 $\mathcal F_{\rm cyc}^{-1}\mathscr F_nG=g_n$.
@@ -394,9 +394,9 @@ Representative identities pass to L2 classes before using linearity.
 \begin{definition}[Normalized angular-frequency data]
 \label{def:cylinder-normalized-frequency-data}
 \uses{def:cylinder-fourier-modes}
-\lean{NoEmbeddedEigenvalues.cylinderFrequencyMeasure,
- NoEmbeddedEigenvalues.cylinderFourierMeasure,
- NoEmbeddedEigenvalues.cylinderFourierData}
+\lean{EulerDipoleEigenvalues.cylinderFrequencyMeasure,
+ EulerDipoleEigenvalues.cylinderFourierMeasure,
+ EulerDipoleEigenvalues.cylinderFourierData}
 \leanok
 Set $d\nu(\xi)=d\xi/(2\pi)$ and
 $d\mu_{\mathcal F}(\xi,n)=d\nu(\xi)\,d\#(n)$ on $\R\times\Z$.
@@ -411,10 +411,10 @@ a possibly non-L1 coefficient.
 \begin{lemma}[Cycle-to-angular frequency measure transport]
 \label{lem:cylinder-frequency-transport}
 \uses{def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.measurePreserving_cylinderCycleFrequency,
- NoEmbeddedEigenvalues.measurePreserving_cylinderAngularFrequency,
- NoEmbeddedEigenvalues.measurableEmbedding_cylinderCycleFrequency,
- NoEmbeddedEigenvalues.cylinderFrequencyMeasure_le_volume}
+\lean{EulerDipoleEigenvalues.measurePreserving_cylinderCycleFrequency,
+ EulerDipoleEigenvalues.measurePreserving_cylinderAngularFrequency,
+ EulerDipoleEigenvalues.measurableEmbedding_cylinderCycleFrequency,
+ EulerDipoleEigenvalues.cylinderFrequencyMeasure_le_volume}
 \leanok
 The maps $\xi\mapsto\xi/(2\pi)$ and $\eta\mapsto2\pi\eta$ preserve measure
 from $\nu$ to Lebesgue measure and conversely.
@@ -431,16 +431,16 @@ The comparison follows from $2\pi>1$.
 \begin{lemma}[Finite normalized product spectral mass and support]
 \label{lem:cylinder-normalized-fourier-data}
 \uses{def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierData_ae,
- NoEmbeddedEigenvalues.measurable_cylinderFourierData,
- NoEmbeddedEigenvalues.cylinderFourierData_mode_memLp,
- NoEmbeddedEigenvalues.cylinderFourierData_mode_mass,
- NoEmbeddedEigenvalues.memLp_two_prod_count_of_summable_mass,
- NoEmbeddedEigenvalues.cylinderFourierData_memLp,
- NoEmbeddedEigenvalues.cylinderFourierData_sq_mass,
- NoEmbeddedEigenvalues.cylinderFourierData_smul_modes,
- NoEmbeddedEigenvalues.cylinderFourierData_mode_eq_zero,
- NoEmbeddedEigenvalues.cylinderFourierData_support}
+\lean{EulerDipoleEigenvalues.cylinderFourierData_ae,
+ EulerDipoleEigenvalues.measurable_cylinderFourierData,
+ EulerDipoleEigenvalues.cylinderFourierData_mode_memLp,
+ EulerDipoleEigenvalues.cylinderFourierData_mode_mass,
+ EulerDipoleEigenvalues.memLp_two_prod_count_of_summable_mass,
+ EulerDipoleEigenvalues.cylinderFourierData_memLp,
+ EulerDipoleEigenvalues.cylinderFourierData_sq_mass,
+ EulerDipoleEigenvalues.cylinderFourierData_smul_modes,
+ EulerDipoleEigenvalues.cylinderFourierData_mode_eq_zero,
+ EulerDipoleEigenvalues.cylinderFourierData_support}
 \leanok
 For cylinder L2 data $G$, $\Phi_G$ is jointly measurable and genuinely in
 $L^2(\mu_{\mathcal F})$. Each frequency slice is L2 in $\nu$, and
@@ -470,8 +470,8 @@ before passing to the product measure.
 \label{lem:cylinder-forcing-fourier-data}
 \uses{def:cylinder-physical-forcing, def:cylinder-inverse-data,
  def:cylinder-normalized-frequency-data, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_forcing_fourier_data,
- NoEmbeddedEigenvalues.cylinder_forcing_fourier_neg}
+\lean{EulerDipoleEigenvalues.cylinder_forcing_fourier_data,
+ EulerDipoleEigenvalues.cylinder_forcing_fourier_neg}
 \leanok
 Under the original specified Poisson, parity and weighted-forcing hypotheses,
 $\Phi_G$ is genuinely L2 on $\mu_{\mathcal F}$ and
@@ -510,12 +510,12 @@ distinct assertions.
 \begin{definition}[Cylinder spectral data and synthesis]
 \label{def:cylinder-spectral-data}
 \uses{def:cylinder-inverse-data}
-\lean{NoEmbeddedEigenvalues.cylinderSymbol,
- NoEmbeddedEigenvalues.cylinderSobolevWeight,
- NoEmbeddedEigenvalues.cylinderSpectralMeasure,
- NoEmbeddedEigenvalues.cylinderAngularMode,
- NoEmbeddedEigenvalues.cylinderSynthesisKernel,
- NoEmbeddedEigenvalues.cylinderSynthesis}
+\lean{EulerDipoleEigenvalues.cylinderSymbol,
+ EulerDipoleEigenvalues.cylinderSobolevWeight,
+ EulerDipoleEigenvalues.cylinderSpectralMeasure,
+ EulerDipoleEigenvalues.cylinderAngularMode,
+ EulerDipoleEigenvalues.cylinderSynthesisKernel,
+ EulerDipoleEigenvalues.cylinderSynthesis}
 \leanok
 For $\xi\in\R$, $m\in\N$, set
 \[
@@ -535,8 +535,8 @@ Set
 \begin{lemma}[Factorization of the cylinder symbol]
 \label{lem:cylinder-symbol-factorization}
 \uses{def:cylinder-spectral-data}
-\lean{NoEmbeddedEigenvalues.cylinderSymbol_norm_sq,
- NoEmbeddedEigenvalues.cylinderSymbol_ne_zero}
+\lean{EulerDipoleEigenvalues.cylinderSymbol_norm_sq,
+ EulerDipoleEigenvalues.cylinderSymbol_ne_zero}
 \leanok
 For every real $a,\xi$ and $m\in\N$,
 \[
@@ -555,8 +555,8 @@ positive, and $a+m>0$ makes the second positive.
 \begin{lemma}[Uniform ellipticity on the allowed cylinder modes]
 \label{lem:cylinder-symbol-gap}
 \uses{def:cylinder-spectral-data}
-\lean{NoEmbeddedEigenvalues.exists_uniform_nat_frequency_gap,
- NoEmbeddedEigenvalues.cylinderSymbol_elliptic_bound}
+\lean{EulerDipoleEigenvalues.exists_uniform_nat_frequency_gap,
+ EulerDipoleEigenvalues.cylinderSymbol_elliptic_bound}
 \leanok
 Let $M\subset\N$ and suppose $a\ne m$ for every $m\in M$.
 There is $0<\delta\le1$ with $\delta\le|a-m|$ for all $m\in M$.
@@ -587,10 +587,10 @@ $B=L/\delta^2\ge1$ suffices.
 \begin{lemma}[Integrable spectral mass for cylinder synthesis]
 \label{lem:cylinder-spectral-mass}
 \uses{def:cylinder-spectral-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.summable_inv_one_add_nat_sq,
- NoEmbeddedEigenvalues.integrable_sq_inv_cylinderSobolevWeight,
- NoEmbeddedEigenvalues.memLp_inv_cylinderSobolevWeight,
- NoEmbeddedEigenvalues.integrable_of_memLp_cylinderSobolevWeight}
+\lean{EulerDipoleEigenvalues.summable_inv_one_add_nat_sq,
+ EulerDipoleEigenvalues.integrable_sq_inv_cylinderSobolevWeight,
+ EulerDipoleEigenvalues.memLp_inv_cylinderSobolevWeight,
+ EulerDipoleEigenvalues.integrable_of_memLp_cylinderSobolevWeight}
 \leanok
 The reciprocal weight $w^{-1}$ belongs to $L^2(\mu_{\rm sp})$.
 If $\mu\le\mu_{\rm sp}$, $V$ is a.e.\ strongly measurable and
@@ -612,11 +612,11 @@ Hölder applied to $w^{-1}|wV|=|V|$ gives the last assertion.
 \begin{lemma}[Pointwise reflection parity of cylinder synthesis]
 \label{lem:cylinder-trig-parity}
 \uses{def:cylinder-spectral-data, def:cylinder-inverse-data}
-\lean{NoEmbeddedEigenvalues.cylinderAngularMode_neg,
- NoEmbeddedEigenvalues.AllowedSaddleDegree.neg_one_pow,
- NoEmbeddedEigenvalues.cylinderAngularMode_pi_sub,
- NoEmbeddedEigenvalues.cylinderSynthesis_neg,
- NoEmbeddedEigenvalues.cylinderSynthesis_pi_sub}
+\lean{EulerDipoleEigenvalues.cylinderAngularMode_neg,
+ EulerDipoleEigenvalues.AllowedSaddleDegree.neg_one_pow,
+ EulerDipoleEigenvalues.cylinderAngularMode_pi_sub,
+ EulerDipoleEigenvalues.cylinderSynthesis_neg,
+ EulerDipoleEigenvalues.cylinderSynthesis_pi_sub}
 \leanok
 If $m$ is allowed by $\varepsilon$, then
 \[
@@ -640,9 +640,9 @@ The exceptional set is spectral, not a set of angular evaluation points.
 \begin{lemma}[Inverse Fourier integral represents the L2 inverse]
 \label{lem:l2-inverse-fourier-integral}
 \uses{def:cylinder-fourier-modes}
-\lean{NoEmbeddedEigenvalues.integral_fourierInv_mul_swap,
- NoEmbeddedEigenvalues.fourierInv_L2_ae_integral,
- NoEmbeddedEigenvalues.fourierInv_integral_memLp}
+\lean{EulerDipoleEigenvalues.integral_fourierInv_mul_swap,
+ EulerDipoleEigenvalues.fourierInv_L2_ae_integral,
+ EulerDipoleEigenvalues.fourierInv_integral_memLp}
 \leanok
 If $f\in L^1(\R)\cap L^2(\R)$, its actual cycle-frequency inverse integral
 represents $\mathcal F_{\rm cyc}^{-1}[f]_{L^2}$ a.e.\ and is genuinely L2.
@@ -661,8 +661,8 @@ it is not assumed in the comparison.
 \begin{definition}[Normalized time inverse integral and class]
 \label{def:cylinder-time-synthesis}
 \uses{def:cylinder-normalized-frequency-data, lem:cylinder-frequency-transport}
-\lean{NoEmbeddedEigenvalues.cylinderTimeSynthesis,
- NoEmbeddedEigenvalues.cylinderTimeInverseClass}
+\lean{EulerDipoleEigenvalues.cylinderTimeSynthesis,
+ EulerDipoleEigenvalues.cylinderTimeInverseClass}
 \leanok
 For frequency data $f$, set
 \[
@@ -675,11 +675,11 @@ $K_\nu f=\mathcal F_{\rm cyc}^{-1}[f(2\pi\,\cdot)]_{L^2(\R)}$.
 \begin{lemma}[Normalized time integral has the specified inverse class and mass]
 \label{lem:cylinder-time-synthesis}
 \uses{def:cylinder-time-synthesis}
-\lean{NoEmbeddedEigenvalues.measurableEmbedding_cylinderAngularFrequency,
- NoEmbeddedEigenvalues.cylinderTimeSynthesis_eq_fourierInv,
- NoEmbeddedEigenvalues.cylinderTimeSynthesis_ae_inverse,
- NoEmbeddedEigenvalues.cylinderTimeSynthesis_memLp,
- NoEmbeddedEigenvalues.cylinderTimeSynthesis_sq_mass}
+\lean{EulerDipoleEigenvalues.measurableEmbedding_cylinderAngularFrequency,
+ EulerDipoleEigenvalues.cylinderTimeSynthesis_eq_fourierInv,
+ EulerDipoleEigenvalues.cylinderTimeSynthesis_ae_inverse,
+ EulerDipoleEigenvalues.cylinderTimeSynthesis_memLp,
+ EulerDipoleEigenvalues.cylinderTimeSynthesis_sq_mass}
 \leanok
 For $f\in L^1(\nu)\cap L^2(\nu)$, the actual integral $T_\nu f$ agrees a.e.\
 with $K_\nu f$, is genuinely L2 in time, and
@@ -703,9 +703,9 @@ representative congruence for the squared-mass identity.
 \begin{definition}[Joint signed cylinder synthesis]
 \label{def:cylinder-joint-synthesis}
 \uses{def:cylinder-normalized-frequency-data, def:cylinder-time-synthesis}
-\lean{NoEmbeddedEigenvalues.cylinderJointKernel,
- NoEmbeddedEigenvalues.cylinderJointSynthesis,
- NoEmbeddedEigenvalues.cylinderJointTimeModes}
+\lean{EulerDipoleEigenvalues.cylinderJointKernel,
+ EulerDipoleEigenvalues.cylinderJointSynthesis,
+ EulerDipoleEigenvalues.cylinderJointTimeModes}
 \leanok
 Write $\chi_n([\vartheta])=e^{in\vartheta}$ on
 $\R/(2\pi\Z)$. For signed spectral data $H$, set
@@ -720,15 +720,15 @@ These are actual integrals; their finiteness is established separately.
 \begin{lemma}[Actual joint synthesis and its angular coefficients]
 \label{lem:cylinder-joint-coefficients}
 \uses{def:cylinder-joint-synthesis, def:cylinder-angular-analysis}
-\lean{NoEmbeddedEigenvalues.norm_cylinderJointKernel,
- NoEmbeddedEigenvalues.continuous_cylinderJointKernel,
- NoEmbeddedEigenvalues.integrable_cylinderJointSynthesis,
- NoEmbeddedEigenvalues.continuous_cylinderJointSynthesis,
- NoEmbeddedEigenvalues.norm_cylinderJointSynthesis_le,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_slice_memLp,
- NoEmbeddedEigenvalues.cylinderFourierMeasure_mode_integrable,
- NoEmbeddedEigenvalues.cylinderFourierMeasure_mode_memLp,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_coeff}
+\lean{EulerDipoleEigenvalues.norm_cylinderJointKernel,
+ EulerDipoleEigenvalues.continuous_cylinderJointKernel,
+ EulerDipoleEigenvalues.integrable_cylinderJointSynthesis,
+ EulerDipoleEigenvalues.continuous_cylinderJointSynthesis,
+ EulerDipoleEigenvalues.norm_cylinderJointSynthesis_le,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_slice_memLp,
+ EulerDipoleEigenvalues.cylinderFourierMeasure_mode_integrable,
+ EulerDipoleEigenvalues.cylinderFourierMeasure_mode_memLp,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_coeff}
 \leanok
 For $H\in L^1(\mu_{\mathcal F})$, the actual integral $JH$ is continuous and
 bounded by $\int|H|\,d\mu_{\mathcal F}$ on the whole cylinder.
@@ -756,12 +756,12 @@ frequency slice used by $T_\nu$.
 \begin{lemma}[Genuine joint inverse Plancherel]
 \label{lem:cylinder-joint-l2}
 \uses{def:cylinder-joint-synthesis}
-\lean{NoEmbeddedEigenvalues.measurable_cylinderJointTimeModes,
- NoEmbeddedEigenvalues.cylinderJointTimeModes_memLp,
- NoEmbeddedEigenvalues.cylinderJointTimeModes_sq_mass,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_slice_mass,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_memLp,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_sq_mass}
+\lean{EulerDipoleEigenvalues.measurable_cylinderJointTimeModes,
+ EulerDipoleEigenvalues.cylinderJointTimeModes_memLp,
+ EulerDipoleEigenvalues.cylinderJointTimeModes_sq_mass,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_slice_mass,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_memLp,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_sq_mass}
 \leanok
 For $H\in L^1(\mu_{\mathcal F})\cap L^2(\mu_{\mathcal F})$, the actual family
 $B_H$ is jointly L2 in $dt\,d\#(n)$, and $JH$ is jointly L2 in $\mu_{\rm cyl}$.
@@ -792,9 +792,9 @@ mass identities follow.
 \begin{lemma}[Pointwise parity of signed joint synthesis]
 \label{lem:cylinder-joint-parity}
 \uses{def:cylinder-joint-synthesis, def:cylinder-inverse-data}
-\lean{NoEmbeddedEigenvalues.cylinderJointSynthesis_neg,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_half_turn,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_parity}
+\lean{EulerDipoleEigenvalues.cylinderJointSynthesis_neg,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_half_turn,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_parity}
 \leanok
 Suppose $H\in L^1(\mu_{\mathcal F})$ vanishes jointly a.e.\ at forbidden degrees,
 and for each $n$, $H(\xi,-n)=\operatorname{sgn}(\varepsilon_1)H(\xi,n)$ for
@@ -821,8 +821,8 @@ No a.e.\ representative is evaluated on a selected circle or time slice.
 \begin{definition}[Signed spectral weight and inverse]
 \label{def:cylinder-signed-inverse}
 \uses{def:cylinder-spectral-data, def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderSignedWeight,
- NoEmbeddedEigenvalues.cylinderSignedInverse}
+\lean{EulerDipoleEigenvalues.cylinderSignedWeight,
+ EulerDipoleEigenvalues.cylinderSignedInverse}
 \leanok
 On the original normalized signed spectrum set
 \[
@@ -834,12 +834,12 @@ On the original normalized signed spectrum set
 \begin{lemma}[Finite reciprocal signed spectral mass]
 \label{lem:cylinder-signed-mass}
 \uses{def:cylinder-signed-inverse}
-\lean{NoEmbeddedEigenvalues.measurable_cylinderAbsModes,
- NoEmbeddedEigenvalues.measurable_cylinderSignedWeight,
- NoEmbeddedEigenvalues.one_le_cylinderSignedWeight,
- NoEmbeddedEigenvalues.summable_inv_one_add_int_natAbs_sq,
- NoEmbeddedEigenvalues.memLp_inv_cylinderSignedWeight,
- NoEmbeddedEigenvalues.integrable_of_memLp_cylinderSignedWeight}
+\lean{EulerDipoleEigenvalues.measurable_cylinderAbsModes,
+ EulerDipoleEigenvalues.measurable_cylinderSignedWeight,
+ EulerDipoleEigenvalues.one_le_cylinderSignedWeight,
+ EulerDipoleEigenvalues.summable_inv_one_add_int_natAbs_sq,
+ EulerDipoleEigenvalues.memLp_inv_cylinderSignedWeight,
+ EulerDipoleEigenvalues.integrable_of_memLp_cylinderSignedWeight}
 \leanok
 One has $w_{\Z}\ge1$ and $w_{\Z}^{-1}\in L^2(\mu_{\mathcal F})$.
 Consequently, genuinely measurable spectral data with
@@ -859,8 +859,8 @@ $H=w_{\Z}^{-1}(w_{\Z}H)$.
 \begin{lemma}[Finite signed spectral inverse on the actual support]
 \label{lem:cylinder-signed-inverse}
 \uses{def:cylinder-signed-inverse}
-\lean{NoEmbeddedEigenvalues.measurable_cylinderSignedInverse,
- NoEmbeddedEigenvalues.cylinderSignedInverse_bounds}
+\lean{EulerDipoleEigenvalues.measurable_cylinderSignedInverse,
+ EulerDipoleEigenvalues.cylinderSignedInverse_bounds}
 \leanok
 Let $a\ge1$ avoid $M\subset\N$, and let $G$ be genuine cylinder L2 data with
 $\Phi_G(\xi,n)=0$ jointly a.e.\ whenever $|n|\notin M$.
@@ -887,8 +887,8 @@ degrees and use zero input at the remaining degrees.
 \label{lem:cylinder-forcing-signed-inverse}
 \uses{def:cylinder-signed-inverse, def:cylinder-physical-forcing,
  def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_forcing_signed_inverse_bounds,
- NoEmbeddedEigenvalues.cylinder_forcing_signed_inverse_neg}
+\lean{EulerDipoleEigenvalues.cylinder_forcing_signed_inverse_bounds,
+ EulerDipoleEigenvalues.cylinder_forcing_signed_inverse_neg}
 \leanok
 Under the original weak Poisson, parity, weighted-forcing and nonresonance
 hypotheses, the actual forcing $G$ gives $W_{a,G}$ with all finite spectral
@@ -911,7 +911,7 @@ $|-n|=|n|$ and hence the two symbols coincide, even at totalized forbidden modes
 \uses{def:cylinder-joint-synthesis, def:cylinder-signed-inverse,
  def:cylinder-physical-forcing, def:cylinder-inverse-data,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_forcing_joint_inverse}
+\lean{EulerDipoleEigenvalues.cylinder_forcing_joint_inverse}
 \leanok
 Under those original hypotheses, let $S=J(W_{a,G})$ for the actual physical
 forcing's signed inverse. Then $S$ is continuous, bounded by one positive
@@ -950,7 +950,7 @@ L2 reconstruction remain distinct from the weak cylinder jet and PDE.
 \label{def:cylinder-l2-inverse}
 \uses{def:cylinder-joint-synthesis, def:cylinder-normalized-frequency-data,
  def:log-cylinder-coordinates, lem:cylinder-joint-l2}
-\lean{NoEmbeddedEigenvalues.cylinderInverseL2}
+\lean{EulerDipoleEigenvalues.cylinderInverseL2}
 \leanok
 Let $\mathcal D$ be the subspace of spectral L2 classes whose representatives
 are also L1. Define $\mathcal I_2$ on joint spectral L2 by continuous-linear
@@ -961,9 +961,9 @@ Both measures retain the normalized signed convention.
 \begin{lemma}[Isometric L2 synthesis and actual integral agreement]
 \label{lem:cylinder-l2-inverse}
 \uses{def:cylinder-l2-inverse, def:cylinder-joint-synthesis}
-\lean{NoEmbeddedEigenvalues.cylinderInverseL2_ae_integral,
- NoEmbeddedEigenvalues.cylinderInverseL2_memLp,
- NoEmbeddedEigenvalues.cylinderInverseL2_sq_mass}
+\lean{EulerDipoleEigenvalues.cylinderInverseL2_ae_integral,
+ EulerDipoleEigenvalues.cylinderInverseL2_memLp,
+ EulerDipoleEigenvalues.cylinderInverseL2_sq_mass}
 \leanok
 The extension is well-defined, linear and isometric. For every genuinely
 spectral L2 function $H$, its inverse witness $\mathcal I_2[H]$ is genuinely
@@ -993,9 +993,9 @@ inputs, not just the simple functions used for density.
 \begin{lemma}[Representative-compatible cylinder Fourier relations]
 \label{lem:cylinder-fourier-relations}
 \uses{def:cylinder-angular-analysis, def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierData_congr_ae,
- NoEmbeddedEigenvalues.cylinderFourierData_add_ae,
- NoEmbeddedEigenvalues.cylinderFourierData_smul_ae}
+\lean{EulerDipoleEigenvalues.cylinderFourierData_congr_ae,
+ EulerDipoleEigenvalues.cylinderFourierData_add_ae,
+ EulerDipoleEigenvalues.cylinderFourierData_smul_ae}
 \leanok
 Joint cylinder a.e.\ equality of genuine L2 inputs gives joint normalized
 spectral a.e.\ equality. Addition and complex scalar multiplication of inputs
@@ -1018,7 +1018,7 @@ assertion.
 \label{def:cylinder-fourier-l2}
 \uses{def:cylinder-normalized-frequency-data, lem:cylinder-fourier-relations,
  lem:cylinder-normalized-fourier-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierL2}
+\lean{EulerDipoleEigenvalues.cylinderFourierL2}
 \leanok
 Define $\mathcal F_2[G]=[\Phi_G]$ on genuine cylinder L2 classes, using the
 specified normalized spectral data of a representative.
@@ -1027,8 +1027,8 @@ specified normalized spectral data of a representative.
 \begin{lemma}[Normalized cylinder analysis is a linear isometry]
 \label{lem:cylinder-fourier-l2}
 \uses{def:cylinder-fourier-l2, def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierL2_ae,
- NoEmbeddedEigenvalues.cylinderFourierL2_toLp}
+\lean{EulerDipoleEigenvalues.cylinderFourierL2_ae,
+ EulerDipoleEigenvalues.cylinderFourierL2_toLp}
 \leanok
 The map $\mathcal F_2$ is well-defined, complex-linear and isometric.
 For every genuine raw cylinder-L2 $G$, passing $G$ to its class and applying
@@ -1046,8 +1046,8 @@ The genuine joint normalized Plancherel identity gives equality of class norms.
 \label{lem:cylinder-synthesis-spectrum}
 \uses{def:cylinder-fourier-l2, def:cylinder-joint-synthesis,
  def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierData_synthesis_ae,
- NoEmbeddedEigenvalues.cylinderFourierL2_synthesis}
+\lean{EulerDipoleEigenvalues.cylinderFourierData_synthesis_ae,
+ EulerDipoleEigenvalues.cylinderFourierL2_synthesis}
 \leanok
 For actual spectral $H\in L^1\cap L^2$,
 $\Phi_{JH}=H$ jointly a.e., and $\mathcal F_2[JH]=[H]$.
@@ -1068,9 +1068,9 @@ the countably many signed indices. No degree is exceptional.
 \label{lem:cylinder-fourier-roundtrip}
 \uses{def:cylinder-fourier-l2, def:cylinder-l2-inverse,
  def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderFourierL2_inverse,
- NoEmbeddedEigenvalues.cylinderInverseL2_fourier,
- NoEmbeddedEigenvalues.cylinderInverseL2_fourierData_ae}
+\lean{EulerDipoleEigenvalues.cylinderFourierL2_inverse,
+ EulerDipoleEigenvalues.cylinderInverseL2_fourier,
+ EulerDipoleEigenvalues.cylinderInverseL2_fourierData_ae}
 \leanok
 On all spectral and cylinder L2 classes,
 \[
@@ -1095,8 +1095,8 @@ Representative agreement recovers the original raw function a.e.
 \begin{definition}[Ordered cylinder derivative spectra]
 \label{def:cylinder-spectral-jets}
 \uses{def:cylinder-normalized-frequency-data, def:cylinder-signed-inverse}
-\lean{NoEmbeddedEigenvalues.cylinderDerivativeSymbol,
- NoEmbeddedEigenvalues.cylinderJetSymbol, NoEmbeddedEigenvalues.cylinderSpectralJet}
+\lean{EulerDipoleEigenvalues.cylinderDerivativeSymbol,
+ EulerDipoleEigenvalues.cylinderJetSymbol, EulerDipoleEigenvalues.cylinderSpectralJet}
 \leanok
 For $p=(\xi,n)$ put $d_0(p)=i\xi$, $d_1(p)=in$.
 For ordered words define $d_\emptyset=1$ and $d_{j::w}=d_jd_w$.
@@ -1106,8 +1106,8 @@ The specified candidate spectrum is $H_w=d_wH$.
 \begin{lemma}[Finite derivative spectra from the quadratic weight]
 \label{lem:cylinder-spectral-jet-l2}
 \uses{def:cylinder-spectral-jets, def:cylinder-signed-inverse}
-\lean{NoEmbeddedEigenvalues.norm_cylinderJetSymbol_le,
- NoEmbeddedEigenvalues.cylinderSpectralJet_memLp}
+\lean{EulerDipoleEigenvalues.norm_cylinderJetSymbol_le,
+ EulerDipoleEigenvalues.cylinderSpectralJet_memLp}
 \leanok
 For every $p$ and every ordered word $|w|\le2$,
 $|d_w(p)|\le w_{\Z}(p)$.
@@ -1130,7 +1130,7 @@ $|w_{\Z}H|$ give the genuine L2 assertions.
 \label{def:cylinder-inverse-jet-entries}
 \uses{def:cylinder-l2-inverse, def:cylinder-spectral-jets,
  def:cylinder-joint-synthesis, lem:cylinder-spectral-jet-l2}
-\lean{NoEmbeddedEigenvalues.cylinderInverseJetEntries}
+\lean{EulerDipoleEigenvalues.cylinderInverseJetEntries}
 \leanok
 For a.e.\ strongly measurable $H$ with $w_{\Z}H$ genuinely spectral L2,
 set $E_\emptyset=JH$ pointwise. For $1\le|w|\le2$, choose the specified raw
@@ -1142,10 +1142,10 @@ not a definition of weak derivatives.
 \begin{lemma}[Genuine joint L2 inverse candidate entries]
 \label{lem:cylinder-inverse-jet-candidates}
 \uses{def:cylinder-inverse-jet-entries, def:cylinder-spectral-jets}
-\lean{NoEmbeddedEigenvalues.cylinderInverseJetEntries_nil,
- NoEmbeddedEigenvalues.cylinderInverseJetEntries_memLp,
- NoEmbeddedEigenvalues.cylinderInverseJetEntries_ae,
- NoEmbeddedEigenvalues.cylinderInverseJetEntries_sq_mass}
+\lean{EulerDipoleEigenvalues.cylinderInverseJetEntries_nil,
+ EulerDipoleEigenvalues.cylinderInverseJetEntries_memLp,
+ EulerDipoleEigenvalues.cylinderInverseJetEntries_ae,
+ EulerDipoleEigenvalues.cylinderInverseJetEntries_sq_mass}
 \leanok
 For every $|w|\le2$, the specified entry $E_w$ is genuinely jointly cylinder L2,
 agrees a.e.\ with $\mathcal I_2[H_w]$, and satisfies
@@ -1170,7 +1170,7 @@ mass identities.
 \begin{lemma}[Finite derivative spectra for the allowed signed inverse]
 \label{lem:cylinder-signed-inverse-jet-l2}
 \uses{def:cylinder-signed-inverse, def:cylinder-spectral-jets}
-\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_spectral_jet_memLp}
+\lean{EulerDipoleEigenvalues.cylinder_signed_inverse_spectral_jet_memLp}
 \leanok
 Let $a\ge1$ avoid $M$, and let genuinely cylinder-L2 $G$ have its actual
 normalized spectrum zero jointly a.e.\ when $|n|\notin M$.
@@ -1188,7 +1188,7 @@ so the derivative spectrum estimate applies to that same measurable quotient.
 \begin{definition}[Algebraic cylinder jet operator]
 \label{def:cylinder-jet-operator}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.cylinderJetOperator}
+\lean{EulerDipoleEigenvalues.cylinderJetOperator}
 \leanok
 For any ordered family of cylinder functions $E$, set
 \[
@@ -1201,7 +1201,7 @@ are weak derivatives.
 \begin{lemma}[The symbol as an ordered jet polynomial]
 \label{lem:cylinder-symbol-jet}
 \uses{def:cylinder-spectral-jets, def:cylinder-spectral-data}
-\lean{NoEmbeddedEigenvalues.cylinderSymbol_eq_jetSymbols}
+\lean{EulerDipoleEigenvalues.cylinderSymbol_eq_jetSymbols}
 \leanok
 For every signed spectral point $(\xi,n)$,
 \[
@@ -1220,7 +1220,7 @@ The signed angular multiplier is $in$, not $i|n|$.
 \label{lem:cylinder-candidate-equation}
 \uses{def:cylinder-jet-operator, def:cylinder-inverse-jet-entries,
  def:cylinder-normalized-frequency-data, def:cylinder-spectral-data}
-\lean{NoEmbeddedEigenvalues.cylinderInverseJetEntries_equation}
+\lean{EulerDipoleEigenvalues.cylinderInverseJetEntries_equation}
 \leanok
 Let $H$ be a.e.\ strongly measurable with $w_{\Z}H$ genuinely spectral L2,
 and let $G$ be genuinely cylinder L2.
@@ -1245,7 +1245,7 @@ The specified entry identifications then give the joint raw a.e.\ equation.
 \uses{def:cylinder-jet-operator, def:cylinder-signed-inverse,
  def:cylinder-l2-inverse, def:cylinder-spectral-jets,
  def:cylinder-normalized-frequency-data, lem:cylinder-signed-inverse-jet-l2}
-\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_candidates_equation}
+\lean{EulerDipoleEigenvalues.cylinder_signed_inverse_candidates_equation}
 \leanok
 Let $a\ge1$ avoid $M$, and let genuinely cylinder-L2 $G$ have its actual
 normalized spectrum zero jointly a.e.\ when $|n|\notin M$.
@@ -1266,8 +1266,8 @@ Its actual spectral multiplier equation supplies the generic forcing identity.
 \begin{lemma}[Finite local mass on the full real-angle lift]
 \label{lem:cylinder-lift-local-mass}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.memLp_logCylinderProjection_strip,
- NoEmbeddedEigenvalues.locallyIntegrableOn_logCylinderProjection}
+\lean{EulerDipoleEigenvalues.memLp_logCylinderProjection_strip,
+ EulerDipoleEigenvalues.locallyIntegrableOn_logCylinderProjection}
 \leanok
 For every genuine cylinder-L2 $S$ and every real $b$, the joint lift
 $\widehat S(t,\vartheta)=S(t,[\vartheta])$ has finite planar L2 on
@@ -1289,9 +1289,9 @@ neighbourhoods, not by a null-seam argument.
 \begin{lemma}[Joint convergence and null-set transport on the real-angle lift]
 \label{lem:cylinder-lift-l2-convergence}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.integral_sq_logCylinderProjection_strip,
- NoEmbeddedEigenvalues.tendsto_L2_logCylinderProjection_strip,
- NoEmbeddedEigenvalues.ae_logCylinderProjection}
+\lean{EulerDipoleEigenvalues.integral_sq_logCylinderProjection_strip,
+ EulerDipoleEigenvalues.tendsto_L2_logCylinderProjection_strip,
+ EulerDipoleEigenvalues.ae_logCylinderProjection}
 \leanok
 For genuinely cylinder-L2 $S$ and any $b\in\R$,
 \[
@@ -1318,9 +1318,9 @@ pull back the joint null set on each strip and take their countable union.
 \label{lem:cylinder-kernel-derivative}
 \uses{def:cylinder-joint-synthesis, def:cylinder-spectral-jets,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.cylinderJointKernel_lift,
- NoEmbeddedEigenvalues.contDiff_cylinderJointKernel_lift,
- NoEmbeddedEigenvalues.coordPartial_cylinderJointKernel_lift}
+\lean{EulerDipoleEigenvalues.cylinderJointKernel_lift,
+ EulerDipoleEigenvalues.contDiff_cylinderJointKernel_lift,
+ EulerDipoleEigenvalues.coordPartial_cylinderJointKernel_lift}
 \leanok
 For each signed spectral point $p=(\xi,n)$, the lifted kernel is
 \[
@@ -1341,8 +1341,8 @@ In particular the angular multiplier is $in$ with no extra $2\pi$ factor.
 \label{lem:cylinder-integral-weak-partial}
 \uses{def:cylinder-joint-synthesis, def:cylinder-spectral-jets,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.integral_cylinderJointSynthesis_lift_mul_swap,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_hasWeakPartial}
+\lean{EulerDipoleEigenvalues.integral_cylinderJointSynthesis_lift_mul_swap,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_hasWeakPartial}
 \leanok
 If $H$ and $d_jH$ are genuinely spectral L1, then
 $\partial_j\widehat{JH}=\widehat{J(d_jH)}$ weakly on all of $\R^2$.
@@ -1364,7 +1364,7 @@ The two L1 premises are used for these integrable approximants only.
 \begin{definition}[Common finite-mass cylinder spectral cutoffs]
 \label{def:cylinder-spectral-cutoff}
 \uses{def:cylinder-normalized-frequency-data}
-\lean{NoEmbeddedEigenvalues.cylinderSpectralCutoff}
+\lean{EulerDipoleEigenvalues.cylinderSpectralCutoff}
 \leanok
 Choose the fixed measurable increasing finite-mass exhaustion $A_N$ of the
 sigma-finite normalized signed spectral measure, and put
@@ -1376,12 +1376,12 @@ Use the same $A_N$ for every ordered derivative spectrum.
 \label{lem:cylinder-spectral-cutoff}
 \uses{def:cylinder-spectral-cutoff, def:cylinder-spectral-jets,
  def:cylinder-l2-inverse, def:cylinder-joint-synthesis}
-\lean{NoEmbeddedEigenvalues.cylinderSpectralCutoff_memLp,
- NoEmbeddedEigenvalues.cylinderSpectralCutoff_integrable,
- NoEmbeddedEigenvalues.cylinderSpectralJet_cutoff,
- NoEmbeddedEigenvalues.cylinderSpectralCutoff_tendsto,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_cutoff_memLp,
- NoEmbeddedEigenvalues.cylinderJointSynthesis_cutoff_tendsto}
+\lean{EulerDipoleEigenvalues.cylinderSpectralCutoff_memLp,
+ EulerDipoleEigenvalues.cylinderSpectralCutoff_integrable,
+ EulerDipoleEigenvalues.cylinderSpectralJet_cutoff,
+ EulerDipoleEigenvalues.cylinderSpectralCutoff_tendsto,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_cutoff_memLp,
+ EulerDipoleEigenvalues.cylinderJointSynthesis_cutoff_tendsto}
 \leanok
 For every genuine spectral-L2 $H$, each $H^{(N)}$ is genuinely L1 and L2,
 $[H^{(N)}]\to[H]$ strongly, and
@@ -1409,7 +1409,7 @@ No frequency bounds or higher spectral moments are required.
 \label{lem:cylinder-l2-weak-partial}
 \uses{def:cylinder-l2-inverse, def:cylinder-spectral-jets,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.cylinderInverseL2_hasWeakPartial}
+\lean{EulerDipoleEigenvalues.cylinderInverseL2_hasWeakPartial}
 \leanok
 If $H$ and $d_jH$ are genuinely spectral L2, the specified raw inverse
 representatives satisfy
@@ -1441,7 +1441,7 @@ on the whole plane. No weak identity is inferred from a null seam.
 \label{lem:cylinder-l2-weak-jet}
 \uses{def:cylinder-l2-inverse, def:cylinder-spectral-jets,
  def:cylinder-joint-synthesis, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinderInverseL2_family_hasWeakJet}
+\lean{EulerDipoleEigenvalues.cylinderInverseL2_family_hasWeakJet}
 \leanok
 Let $H$ be a.e.\ strongly measurable with $w_{\Z}H$ genuinely spectral L2.
 Suppose one family $E$ has $E_\emptyset=JH$ pointwise and
@@ -1466,7 +1466,7 @@ The nil entry remains the pointwise same actual integral.
 \label{def:cylinder-weak-jet}
 \uses{def:cylinder-joint-synthesis, def:log-cylinder-coordinates,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinderLift, NoEmbeddedEigenvalues.HasCylinderH2Jet}
+\lean{EulerDipoleEigenvalues.cylinderLift, EulerDipoleEigenvalues.HasCylinderH2Jet}
 \leanok
 For a function $S$ on the angular cylinder write
 $\widehat S(t,\vartheta)=S(t,[\vartheta])$ for its real-angle lift.
@@ -1482,7 +1482,7 @@ No commutation of mixed weak entries is assumed.
 \label{lem:cylinder-weak-inverse}
 \uses{def:cylinder-weak-jet, def:cylinder-jet-operator, def:cylinder-signed-inverse,
  def:cylinder-normalized-frequency-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_signed_inverse_weak}
+\lean{EulerDipoleEigenvalues.cylinder_signed_inverse_weak}
 \leanok
 Let $a\ge1$ avoid $M\subset\N$ and let $G\in L^2(\mu_{\rm cyl})$ with its
 actual normalized spectrum zero jointly a.e.\ whenever $|n|\notin M$.
@@ -1510,7 +1510,7 @@ forcing, not merely a polynomial of unrelated L2 entries.
 \begin{definition}[Circle-valued inverse logarithmic-polar coordinates]
 \label{def:log-cylinder-inverse-coordinates}
 \uses{def:log-cylinder-coordinates, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.logCylinderCoordinates}
+\lean{EulerDipoleEigenvalues.logCylinderCoordinates}
 \leanok
 For $p=(x,y)$, let $z=x+iy$, $r=r_0(p)$, and set
 \[
@@ -1523,12 +1523,12 @@ The angle is a circle value, not a chosen real angular branch.
 \begin{lemma}[Whole-puncture inverse coordinates and joint null sets]
 \label{lem:log-cylinder-inverse-coordinates}
 \uses{def:log-cylinder-inverse-coordinates}
-\lean{NoEmbeddedEigenvalues.localRadius_eq_complex_norm,
- NoEmbeddedEigenvalues.measurable_logCylinderCoordinates,
- NoEmbeddedEigenvalues.continuousAt_logCylinderCoordinates,
- NoEmbeddedEigenvalues.logCylinderCoordinates_plane,
- NoEmbeddedEigenvalues.logCylinderPlane_coordinates,
- NoEmbeddedEigenvalues.quasiMeasurePreserving_logCylinderCoordinates}
+\lean{EulerDipoleEigenvalues.localRadius_eq_complex_norm,
+ EulerDipoleEigenvalues.measurable_logCylinderCoordinates,
+ EulerDipoleEigenvalues.continuousAt_logCylinderCoordinates,
+ EulerDipoleEigenvalues.logCylinderCoordinates_plane,
+ EulerDipoleEigenvalues.logCylinderPlane_coordinates,
+ EulerDipoleEigenvalues.quasiMeasurePreserving_logCylinderCoordinates}
 \leanok
 $Q$ is measurable and continuous at every $p\ne0$, including all real-angle seams.
 The two pointwise identities are
@@ -1551,7 +1551,7 @@ joint null-set transport in the inverse direction.
 \begin{definition}[Pointwise physical cylinder reconstruction]
 \label{def:cylinder-physical-value}
 \uses{def:log-cylinder-inverse-coordinates}
-\lean{NoEmbeddedEigenvalues.cylinderPhysicalValue}
+\lean{EulerDipoleEigenvalues.cylinderPhysicalValue}
 \leanok
 For a cylinder function $S$ and real $a$, define
 $U_a(S)(p)=r_0(p)^aS(Q(p))$.
@@ -1560,12 +1560,12 @@ $U_a(S)(p)=r_0(p)^aS(Q(p))$.
 \begin{lemma}[Physical values, continuity, growth and parity]
 \label{lem:cylinder-physical-value}
 \uses{def:cylinder-physical-value, def:sectors}
-\lean{NoEmbeddedEigenvalues.cylinderPhysicalValue_plane,
- NoEmbeddedEigenvalues.cylinderPhysicalValue_zero,
- NoEmbeddedEigenvalues.norm_cylinderPhysicalValue_le,
- NoEmbeddedEigenvalues.continuousAt_cylinderPhysicalValue,
- NoEmbeddedEigenvalues.continuous_cylinderPhysicalValue,
- NoEmbeddedEigenvalues.cylinderPhysicalValue_axis_parity}
+\lean{EulerDipoleEigenvalues.cylinderPhysicalValue_plane,
+ EulerDipoleEigenvalues.cylinderPhysicalValue_zero,
+ EulerDipoleEigenvalues.norm_cylinderPhysicalValue_le,
+ EulerDipoleEigenvalues.continuousAt_cylinderPhysicalValue,
+ EulerDipoleEigenvalues.continuous_cylinderPhysicalValue,
+ EulerDipoleEigenvalues.cylinderPhysicalValue_axis_parity}
 \leanok
 For any $a$ and $S$, $U_a(S)(\Gamma(t,\theta))=e^{-at}S(t,\theta)$ pointwise.
 If $a>0$, $S$ is continuous and $|S|\le C$, then $U_a(S)$ is continuous on the
@@ -1589,7 +1589,7 @@ the center without evaluating any a.e.\ identity there.
 \begin{definition}[Inverse square-root-Jacobian reconstruction]
 \label{def:cylinder-physical-l2-inverse}
 \uses{def:log-cylinder-inverse-coordinates}
-\lean{NoEmbeddedEigenvalues.cylinderPhysicalL2Inverse}
+\lean{EulerDipoleEigenvalues.cylinderPhysicalL2Inverse}
 \leanok
 Put $V(S)(p)=S(Q(p))/r_0(p)$, with totalized division at zero.
 \end{definition}
@@ -1597,9 +1597,9 @@ Put $V(S)(p)=S(Q(p))/r_0(p)$, with totalized division at zero.
 \begin{lemma}[Genuine inverse-Jacobian L2 and exact mass]
 \label{lem:cylinder-physical-l2-inverse}
 \uses{def:cylinder-physical-l2-inverse, def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.logCylinderL2Pullback_physicalInverse,
- NoEmbeddedEigenvalues.memLp_cylinderPhysicalL2Inverse,
- NoEmbeddedEigenvalues.integral_sq_cylinderPhysicalL2Inverse}
+\lean{EulerDipoleEigenvalues.logCylinderL2Pullback_physicalInverse,
+ EulerDipoleEigenvalues.memLp_cylinderPhysicalL2Inverse,
+ EulerDipoleEigenvalues.integral_sq_cylinderPhysicalL2Inverse}
 \leanok
 The square-root-Jacobian pullback of $V(S)$ is exactly $S$, pointwise.
 If $S$ is genuinely cylinder L2, then $V(S)$ is genuinely planar L2 and
@@ -1622,8 +1622,8 @@ apply the forward square-root-Jacobian mass identity to obtain the factor $2\pi$
 \begin{lemma}[Weighted L2 for every physical homogeneity]
 \label{lem:cylinder-physical-weighted-l2}
 \uses{def:cylinder-physical-value, def:cylinder-physical-l2-inverse}
-\lean{NoEmbeddedEigenvalues.cylinderPhysicalValue_weighted_ae,
- NoEmbeddedEigenvalues.memLp_cylinderPhysicalValue_weighted}
+\lean{EulerDipoleEigenvalues.cylinderPhysicalValue_weighted_ae,
+ EulerDipoleEigenvalues.memLp_cylinderPhysicalValue_weighted}
 \leanok
 For any real $b$, $U_b(S)/r^{b+1}=V(S)$ jointly a.e.
 Consequently genuine cylinder L2 of $S$ gives genuine planar L2 of this
@@ -1641,7 +1641,7 @@ No raw representative is restricted to a selected ray.
 \begin{lemma}[Restoring a nonnegative radial weight on a bounded disk]
 \label{lem:radial-weight-restore-l2}
 \uses{def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.memLp_of_div_localRadius_rpow}
+\lean{EulerDipoleEigenvalues.memLp_of_div_localRadius_rpow}
 \leanok
 For $s\ge0$, $f/r^s\in L^2(D_\rho)$ implies $f\in L^2(D_\rho)$.
 No continuity or weak derivative is assumed.
@@ -1657,12 +1657,12 @@ Use multiplication of L-infinity and L2 functions, followed by a.e.\ congruence.
 \begin{definition}[Ordered physical cylinder-jet candidates]
 \label{def:cylinder-cartesian-jet-candidates}
 \uses{def:cylinder-physical-value, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.cylinderRadialFrame,
- NoEmbeddedEigenvalues.cylinderAngularFrame,
- NoEmbeddedEigenvalues.cylinderCartesianFirst,
- NoEmbeddedEigenvalues.cylinderCartesianFirstAngle,
- NoEmbeddedEigenvalues.cylinderCartesianSecond,
- NoEmbeddedEigenvalues.cylinderCartesianJet}
+\lean{EulerDipoleEigenvalues.cylinderRadialFrame,
+ EulerDipoleEigenvalues.cylinderAngularFrame,
+ EulerDipoleEigenvalues.cylinderCartesianFirst,
+ EulerDipoleEigenvalues.cylinderCartesianFirstAngle,
+ EulerDipoleEigenvalues.cylinderCartesianSecond,
+ EulerDipoleEigenvalues.cylinderCartesianJet}
 \leanok
 Write $c=(\cos\theta,\sin\theta)$ and $b=(-\sin\theta,\cos\theta)$,
 using the real and imaginary parts of the unit angular character.
@@ -1684,12 +1684,12 @@ In particular $J_{01}$ and $J_{10}$ remain distinct ordered inputs.
 \begin{lemma}[Finite weighted and whole-disk Cartesian candidate norms]
 \label{lem:cylinder-cartesian-candidate-norms}
 \uses{def:cylinder-cartesian-jet-candidates}
-\lean{NoEmbeddedEigenvalues.cylinderRadialFrame_memLp,
- NoEmbeddedEigenvalues.cylinderAngularFrame_memLp,
- NoEmbeddedEigenvalues.cylinderCartesianFirst_memLp,
- NoEmbeddedEigenvalues.cylinderCartesianSecond_memLp,
- NoEmbeddedEigenvalues.cylinderCartesianJet_weighted,
- NoEmbeddedEigenvalues.cylinderCartesianJet_memLp}
+\lean{EulerDipoleEigenvalues.cylinderRadialFrame_memLp,
+ EulerDipoleEigenvalues.cylinderAngularFrame_memLp,
+ EulerDipoleEigenvalues.cylinderCartesianFirst_memLp,
+ EulerDipoleEigenvalues.cylinderCartesianSecond_memLp,
+ EulerDipoleEigenvalues.cylinderCartesianJet_weighted,
+ EulerDipoleEigenvalues.cylinderCartesianJet_memLp}
 \leanok
 If every $J_w$, $|w|\le2$, is genuinely cylinder L2, then for any real $a$
 \[
@@ -1714,9 +1714,9 @@ Every norm is established before any weak-jet identification.
 \label{lem:cylinder-cartesian-candidate-forcing}
 \uses{def:cylinder-cartesian-jet-candidates, def:cylinder-jet-operator,
  def:cylinder-physical-forcing}
-\lean{NoEmbeddedEigenvalues.cylinderCartesianSecond_trace,
- NoEmbeddedEigenvalues.cylinderCartesianJet_laplacian,
- NoEmbeddedEigenvalues.cylinderCartesianJet_forcing}
+\lean{EulerDipoleEigenvalues.cylinderCartesianSecond_trace,
+ EulerDipoleEigenvalues.cylinderCartesianJet_laplacian,
+ EulerDipoleEigenvalues.cylinderCartesianJet_forcing}
 \leanok
 Pointwise, $B_{00}+B_{11}=\mathcal P_aJ$, hence
 \[
@@ -1740,7 +1740,7 @@ $r^{2-a}F$ by $r^{a-2}$.
 \begin{definition}[Two open logarithmic-polar charts]
 \label{def:log-polar-open-atlas}
 \uses{def:log-cylinder-coordinates}
-\lean{NoEmbeddedEigenvalues.logPolarBaseChart, NoEmbeddedEigenvalues.logPolarChart}
+\lean{EulerDipoleEigenvalues.logPolarBaseChart, EulerDipoleEigenvalues.logPolarChart}
 \leanok
 Let $e_0$ be $\Gamma(t,\vartheta)$ on the strip $-\pi<\vartheta<\pi$,
 with inverse $(-\log r,\arg(x+iy))$ and target the plane slit along
@@ -1753,13 +1753,13 @@ Write these as $e_b$, $b\in\{0,1\}$.
 \begin{lemma}[An actual open cover of the whole punctured plane]
 \label{lem:log-polar-open-atlas}
 \uses{def:log-polar-open-atlas}
-\lean{NoEmbeddedEigenvalues.logPolarChart_apply,
- NoEmbeddedEigenvalues.logPolarChart_target,
- NoEmbeddedEigenvalues.contDiff_logPolarPlane,
- NoEmbeddedEigenvalues.contDiff_logPolarChart,
- NoEmbeddedEigenvalues.fderiv_logPolarChart,
- NoEmbeddedEigenvalues.det_fderiv_logPolarChart,
- NoEmbeddedEigenvalues.exists_logPolarChart_target}
+\lean{EulerDipoleEigenvalues.logPolarChart_apply,
+ EulerDipoleEigenvalues.logPolarChart_target,
+ EulerDipoleEigenvalues.contDiff_logPolarPlane,
+ EulerDipoleEigenvalues.contDiff_logPolarChart,
+ EulerDipoleEigenvalues.fderiv_logPolarChart,
+ EulerDipoleEigenvalues.det_fderiv_logPolarChart,
+ EulerDipoleEigenvalues.exists_logPolarChart_target}
 \leanok
 Both forward chart maps are exactly $\Gamma$ on their entire real source
 coordinate plane. They are smooth, with determinant $-e^{-2t}$.
@@ -1782,18 +1782,18 @@ This is an open cover, not a cover only modulo a null seam.
 \label{lem:cylinder-cartesian-source-calculus}
 \uses{def:cylinder-cartesian-jet-candidates, def:cylinder-weak-jet,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinderRadialFrame_lift,
- NoEmbeddedEigenvalues.cylinderAngularFrame_lift,
- NoEmbeddedEigenvalues.contDiff_cylinderRadialFrame_lift,
- NoEmbeddedEigenvalues.contDiff_cylinderAngularFrame_lift,
- NoEmbeddedEigenvalues.coordPartial_cylinderRadialFrame_lift,
- NoEmbeddedEigenvalues.coordPartial_cylinderAngularFrame_lift,
- NoEmbeddedEigenvalues.cylinderSourceWeight,
- NoEmbeddedEigenvalues.contDiff_cylinderSourceWeight,
- NoEmbeddedEigenvalues.coordPartial_cylinderSourceWeight,
- NoEmbeddedEigenvalues.cylinderSourceWeight_pred,
- NoEmbeddedEigenvalues.cylinderSourceWeight_hasWeakPartial,
- NoEmbeddedEigenvalues.cylinderCartesianFirst_hasWeakPartial}
+\lean{EulerDipoleEigenvalues.cylinderRadialFrame_lift,
+ EulerDipoleEigenvalues.cylinderAngularFrame_lift,
+ EulerDipoleEigenvalues.contDiff_cylinderRadialFrame_lift,
+ EulerDipoleEigenvalues.contDiff_cylinderAngularFrame_lift,
+ EulerDipoleEigenvalues.coordPartial_cylinderRadialFrame_lift,
+ EulerDipoleEigenvalues.coordPartial_cylinderAngularFrame_lift,
+ EulerDipoleEigenvalues.cylinderSourceWeight,
+ EulerDipoleEigenvalues.contDiff_cylinderSourceWeight,
+ EulerDipoleEigenvalues.coordPartial_cylinderSourceWeight,
+ EulerDipoleEigenvalues.cylinderSourceWeight_pred,
+ EulerDipoleEigenvalues.cylinderSourceWeight_hasWeakPartial,
+ EulerDipoleEigenvalues.cylinderCartesianFirst_hasWeakPartial}
 \leanok
 The lifted frames are smooth, with zero time derivatives and
 $\partial_\vartheta c_i=b_i$, $\partial_\vartheta b_i=-c_i$.
@@ -1827,9 +1827,9 @@ tests; no global multiplier bound is used.
 \begin{lemma}[Weak physical homogeneous reconstruction through both cuts]
 \label{lem:cylinder-physical-weak-partial}
 \uses{def:cylinder-cartesian-jet-candidates, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.chartCofactor_logPolarChart,
- NoEmbeddedEigenvalues.cylinderPhysicalValue_logPolarPlane,
- NoEmbeddedEigenvalues.cylinderPhysical_hasWeakPartial}
+\lean{EulerDipoleEigenvalues.chartCofactor_logPolarChart,
+ EulerDipoleEigenvalues.cylinderPhysicalValue_logPolarPlane,
+ EulerDipoleEigenvalues.cylinderPhysical_hasWeakPartial}
 \leanok
 Let $a\in\R$ and $\partial_k\widehat K_\emptyset=\widehat K_k$ weakly
 on the entire real-angle plane.
@@ -1864,8 +1864,8 @@ on a selected ray.
 \label{lem:cylinder-cartesian-weak-pairs}
 \uses{def:cylinder-cartesian-jet-candidates, def:cylinder-weak-jet,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinderCartesianJet_locallyIntegrable,
- NoEmbeddedEigenvalues.cylinderCartesianJet_hasWeakPartial}
+\lean{EulerDipoleEigenvalues.cylinderCartesianJet_locallyIntegrable,
+ EulerDipoleEigenvalues.cylinderCartesianJet_hasWeakPartial}
 \leanok
 For $a>1$ and a specified finite second weak cylinder jet $J$, every candidate
 entry $E_w$, $|w|\le2$, is locally integrable on the whole plane.
@@ -1891,7 +1891,7 @@ of $J_{01}$ and $J_{10}$ and no null-seam weak gluing.
 \label{lem:cylinder-cartesian-particular}
 \uses{def:cylinder-weak-jet, def:cylinder-jet-operator, def:cylinder-physical-forcing,
  def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_cartesian_particular}
+\lean{EulerDipoleEigenvalues.cylinder_cartesian_particular}
 \leanok
 Let $\rho>0$, $a>1$, and let $S$ have a specified finite weak cylinder jet $J$
 with $\mathcal P_aJ=G$, where $G$ is the zero-extended physical forcing for
@@ -1940,7 +1940,7 @@ punctured-disk weak test identities.
 \uses{def:cylinder-inverse-data, def:cylinder-physical-forcing,
  def:cylinder-signed-inverse, def:cylinder-joint-synthesis,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.cylinder_forcing_particular}
+\lean{EulerDipoleEigenvalues.cylinder_forcing_particular}
 \leanok
 Under the original weak Poisson, parity, weighted-forcing and nonresonance
 hypotheses, with $a>1$ and $\rho>0$, the physical particular solution of the
@@ -1965,7 +1965,7 @@ uniform bound. Apply Cartesian reconstruction to that same candidate and jet.
 \begin{lemma}[Smooth harmonic comparison of weak Poisson solutions]
 \label{lem:weak-poisson-harmonic-comparison}
 \uses{def:cylinder-inverse-data, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.weak_poisson_harmonic_comparison}
+\lean{EulerDipoleEigenvalues.weak_poisson_harmonic_comparison}
 \leanok
 Let $\rho>0$. Suppose $u,v\in H^2(D_\rho)$ have specified second weak jets
 $D,E$ on that same whole disk, with
@@ -1997,7 +1997,7 @@ is used.
 \begin{lemma}[Cylinder inverse]
 \label{lem:cylinder-inverse}
 \uses{def:sobolev-local, def:local-weak-jets, def:cylinder-inverse-data}
-\lean{NoEmbeddedEigenvalues.cylinder_inverse}
+\lean{EulerDipoleEigenvalues.cylinder_inverse}
 \leanok
 Work on $D_\rho(0)$ in orthonormal saddle coordinates. Let $u\in H^2$
 with a specified second weak jet, prescribed axis parity and weak Laplacian
@@ -2050,10 +2050,10 @@ comparison; restricting the parity alone does not remove these analytic steps.
 \label{lem:stream-saddle-cylinder-data}
 \uses{def:sobolev-local, def:stream-second-jet, def:sectors,
  def:saddle-ortho-chart, def:affine-jet}
-\lean{NoEmbeddedEigenvalues.memSobolevOn_contStream_saddleChart,
- NoEmbeddedEigenvalues.streamJet2_saddle_weak,
- NoEmbeddedEigenvalues.streamJet2_saddle_laplacian,
- NoEmbeddedEigenvalues.contStream_chart_parity}
+\lean{EulerDipoleEigenvalues.memSobolevOn_contStream_saddleChart,
+ EulerDipoleEigenvalues.streamJet2_saddle_weak,
+ EulerDipoleEigenvalues.streamJet2_saddle_laplacian,
+ EulerDipoleEigenvalues.contStream_chart_parity}
 \leanok
 For mean-zero odd--odd $\omega$, let $u=\psi\circ\Xi_P$ and let $E$ be
 the affine transform of the fixed Fourier second stream jet.
@@ -2080,9 +2080,9 @@ the chart and each axis reflection to identify the parity.
 \label{lem:stream-saddle-cylinder-inverse}
 \uses{def:sobolev-local, def:sectors, def:stream-lifts,
  def:cylinder-inverse-data, def:local-weak-jets, def:saddle-ortho-chart}
-\lean{NoEmbeddedEigenvalues.oddOdd_stream_cylinder_inverse,
- NoEmbeddedEigenvalues.cylinder_gap_three_halves,
- NoEmbeddedEigenvalues.oddOdd_cylinder_gap_three}
+\lean{EulerDipoleEigenvalues.oddOdd_stream_cylinder_inverse,
+ EulerDipoleEigenvalues.cylinder_gap_three_halves,
+ EulerDipoleEigenvalues.oddOdd_cylinder_gap_three}
 \leanok
 Let $\omega$ be mean-zero and odd--odd, $P$ a lifted saddle, $\rho>0$,
 and $a>1$ avoid the allowed angular degrees. Put
@@ -2113,7 +2113,7 @@ This application supplies no weighted-vorticity bootstrap by itself.
 \begin{definition}[Normalized saddle quadratic]
 \label{def:saddle-quadratic}
 \uses{def:dipole, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.saddleQuadratic, NoEmbeddedEigenvalues.saddleAxisQuadratic}
+\lean{EulerDipoleEigenvalues.saddleQuadratic, EulerDipoleEigenvalues.saddleAxisQuadratic}
 \leanok
 For a saddle $P$ and $a\in\C$ put
 \[
@@ -2127,7 +2127,7 @@ The remainders are $R_0=\psi-Q_{P,a}$ and $R=\psi-a\Psi$.
 \begin{proposition}[First weighted vorticity estimate]
 \label{prop:saddle-first-gain}
 \uses{def:eigen-problem, lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.saddle_first_gain}
+\lean{EulerDipoleEigenvalues.saddle_first_gain}
 \leanok
 Every eigenfunction satisfies $\widetilde\omega/d\in L^2(U_*)$, where
 $U_*$ is the fixed bounded cell neighbourhood (manuscript
@@ -2147,9 +2147,9 @@ equation. No parity assumption or four-character decomposition is needed.
 \label{lem:saddle-coefficient-uniqueness}
 \uses{def:local-weak-jets, def:saddle-quadratic, def:sobolev-local,
  def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.saddle_coefficient_unique,
- NoEmbeddedEigenvalues.existsUnique_saddle_coefficient_iff,
- NoEmbeddedEigenvalues.second_fst_saddleQuadratic}
+\lean{EulerDipoleEigenvalues.saddle_coefficient_unique,
+ EulerDipoleEigenvalues.existsUnique_saddle_coefficient_iff,
+ EulerDipoleEigenvalues.second_fst_saddleQuadratic}
 \leanok
 Let $P$ be a lifted saddle and $F$ any complex-valued function.
 Suppose $F-Q_{P,a}$ and $F-Q_{P,b}$ have specified second weak jets
@@ -2175,10 +2175,10 @@ $\cos P_x=\pm1$ gives $a=b$. Only the order-two weight is needed.
 \label{lem:odd-odd-smooth-quadratic-remainder}
 \uses{def:cylinder-inverse-data, def:saddle-quadratic, def:sobolev-local,
  def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.HasAxisParityOn.eqOn_disk,
- NoEmbeddedEigenvalues.oddOdd_pure_second_zero,
- NoEmbeddedEigenvalues.oddOdd_quadratic_flat_jet,
- NoEmbeddedEigenvalues.oddOdd_quadratic_remainder_mass}
+\lean{EulerDipoleEigenvalues.HasAxisParityOn.eqOn_disk,
+ EulerDipoleEigenvalues.oddOdd_pure_second_zero,
+ EulerDipoleEigenvalues.oddOdd_quadratic_flat_jet,
+ EulerDipoleEigenvalues.oddOdd_quadratic_remainder_mass}
 \leanok
 Suppose $h$ is smooth on $D_\rho(0)$, $\rho>0$, is odd in both axes a.e.,
 and its forbidden-degree jets vanish at zero.
@@ -2205,7 +2205,7 @@ beyond the supplied finite-jet data is needed.
 \begin{lemma}[Subcritical mass of the smooth cylinder summand]
 \label{lem:odd-odd-subcritical-smooth-mass}
 \uses{def:cylinder-inverse-data, def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.oddOdd_subcritical_smooth_mass}
+\lean{EulerDipoleEigenvalues.oddOdd_subcritical_smooth_mass}
 \leanok
 Let $h$ be smooth on $D_\rho(0)$, $\rho>0$, with the forbidden-degree
 jets of odd--odd cylinder data zero at the center.
@@ -2227,7 +2227,7 @@ multiply by the genuine L2 function $r^{-1/2}$.
 \label{lem:dd-saddle-subcritical-cylinder}
 \uses{def:stream-second-jet, def:sectors, def:sobolev-local,
  def:saddle-ortho-chart, def:affine-jet, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.oddOdd_stream_cylinder_subcritical}
+\lean{EulerDipoleEigenvalues.oddOdd_stream_cylinder_subcritical}
 \leanok
 Let $\omega$ be mean-zero and odd--odd and $P$ a lifted saddle.
 If $(\widetilde\omega\circ\Xi_P)/r^{1/2}\in L^2(D_\rho(0))$, $\rho>0$,
@@ -2256,7 +2256,7 @@ The physical vorticity weight remains an explicit input.
 \label{lem:dd-saddle-subcritical-from-first-weight}
 \uses{def:sectors, def:stream-derivatives, def:stream-lifts,
  def:sobolev-local, def:local-plane-geometry, lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.oddOdd_saddle_subcritical_of_first_weight}
+\lean{EulerDipoleEigenvalues.oddOdd_saddle_subcritical_of_first_weight}
 \leanok
 Let $\omega$ be mean-zero and odd--odd, with
 $\widetilde\omega/d\in L^2(U_*)$.
@@ -2287,7 +2287,7 @@ back pointwise, including at the center.
 \label{lem:saddle-remainder-jet-pushforward}
 \uses{def:sobolev-local, def:local-weak-jets, def:saddle-ortho-chart,
  def:saddle-quadratic, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.saddle_quadratic_jet_pushforward}
+\lean{EulerDipoleEigenvalues.saddle_quadratic_jet_pushforward}
 \leanok
 A specified second weak jet of $\psi\circ\Xi_P-q_a$ on $D_\rho(0)$,
 with its order-$k$ entries divided by $r^{4-k}$ in L2 for $0\le k\le2$,
@@ -2309,8 +2309,8 @@ its original coefficient.
 \label{lem:dd-saddle-jet-from-radial-vorticity}
 \uses{def:sectors, def:sobolev-local, def:stream-lifts,
  def:local-weak-jets, def:saddle-quadratic}
-\lean{NoEmbeddedEigenvalues.oddOdd_stream_cylinder_quadratic,
- NoEmbeddedEigenvalues.oddOdd_saddle_jet_of_radial_vorticity}
+\lean{EulerDipoleEigenvalues.oddOdd_stream_cylinder_quadratic,
+ EulerDipoleEigenvalues.oddOdd_saddle_jet_of_radial_vorticity}
 \leanok
 Let $\omega$ be mean-zero and odd--odd and $P$ a lifted saddle.
 If $\widetilde\omega/r_P^2\in L^2(D_\rho(P))$, $\rho>0$, there is
@@ -2338,7 +2338,7 @@ This does not produce the weighted vorticity input.
 \label{prop:saddle-dd}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:local-weak-jets, def:saddle-quadratic, lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.saddle_dd}
+\lean{EulerDipoleEigenvalues.saddle_dd}
 \leanok
 In the odd--odd sector, $\widetilde\omega/d^2\in L^2(U_*)$ on the fixed
 bounded cell neighbourhood, and at each lifted saddle $P$ there is a
@@ -2396,7 +2396,7 @@ summands to identify the a.e.\ cylinder decomposition everywhere.
 \label{cor:mixed-saddle-jet}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:local-weak-jets,
   def:saddle-ortho-chart}
-\lean{NoEmbeddedEigenvalues.mixedAxisLinear, NoEmbeddedEigenvalues.mixed_saddle_jet}
+\lean{EulerDipoleEigenvalues.mixedAxisLinear, EulerDipoleEigenvalues.mixed_saddle_jet}
 \leanok
 Let $\lambda\ne0$ and let $\omega$ solve the eigenproblem in either mixed
 sector. At each lifted saddle $P$, work in the orthonormal chart $\Xi_P$,
@@ -2431,8 +2431,8 @@ $r^{-2}$-weighted $L^2$ norm unless it is zero.
 \begin{lemma}[Continuous stream vanishes on the odd fixed lines]
 \label{lem:continuous-stream-zero-separatrix}
 \uses{def:sectors, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.contStream_eq_zero_of_odd_first,
-  NoEmbeddedEigenvalues.contStream_eq_zero_on_separatrix}
+\lean{EulerDipoleEigenvalues.contStream_eq_zero_of_odd_first,
+  EulerDipoleEigenvalues.contStream_eq_zero_on_separatrix}
 \leanok
 If $\omega\in L^2$ is odd under $S_1$, the continuous stream vanishes
 on the lifts of its fixed lines. In the odd--odd sector it vanishes at
@@ -2456,7 +2456,7 @@ This does not assign point values to a raw L2 representative.
 \label{lem:dd-saddle-forcing-mass}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:stream-second-jet, def:cell-arcs, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.dd_saddle_forcing_mass}
+\lean{EulerDipoleEigenvalues.dd_saddle_forcing_mass}
 \leanok
 For an odd--odd eigenfunction and each lifted saddle $c$, some common
 radius $\rho>0$ gives
@@ -2493,7 +2493,7 @@ second transport gain or the critical quadratic remainder.
 \label{lem:dd-weighted-forcing}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local,
  lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.dd_weighted_forcing}
+\lean{EulerDipoleEigenvalues.dd_weighted_forcing}
 \leanok
 For an odd--odd eigenfunction,
 \[
@@ -2525,7 +2525,7 @@ pointwise zero stream values on the entire lifted separatrix.
 \begin{definition}[Zero canonical trace on separatrix lines]
 \label{def:zero-separatrix-trace}
 \uses{def:h1-interval, def:diagonal-trace-chart, lem:trace-acl, lem:trace-l2}
-\lean{NoEmbeddedEigenvalues.HasZeroSeparatrixTraceOn}
+\lean{EulerDipoleEigenvalues.HasZeroSeparatrixTraceOn}
 \leanok
 Use a diagonal chart whose first coordinate is tangential and second
 coordinate normal. For every compact chart rectangle inside $U$ and every
@@ -2542,7 +2542,7 @@ each rectangle, not any value of a raw $L^2$ representative on a line.
 \label{lem:dd-cell-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-arcs,
  def:cell-separatrix-collar, def:cell-edge-trace}
-\lean{NoEmbeddedEigenvalues.dd_cell_separatrix_h1}
+\lean{EulerDipoleEigenvalues.dd_cell_separatrix_h1}
 \leanok
 For an odd--odd eigenfunction,
 $\widetilde\omega/d^2\in L^2(\mathrm{cellSquare})$.
@@ -2571,7 +2571,7 @@ one-sided zero traces by the whole-edge trace theorem.
 \label{lem:dd-cell-edge-trace-pairs}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-edge-trace,
  def:cell-separatrix-collar, def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.dd_cell_edge_trace_pairs}
+\lean{EulerDipoleEigenvalues.dd_cell_edge_trace_pairs}
 \leanok
 For an odd--odd eigenfunction there is one $0<\varepsilon<1$ with
 $\widetilde\omega\in H^1(V_\varepsilon^{\rm cell})$ such that
@@ -2596,8 +2596,8 @@ to every translated physical chart.
 \label{lem:dd-cell-edge-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-edge-trace,
  def:cell-separatrix-collar, def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.dd_cell_edge_h1,
- NoEmbeddedEigenvalues.dd_cell_edge_spatial_h1}
+\lean{EulerDipoleEigenvalues.dd_cell_edge_h1,
+ EulerDipoleEigenvalues.dd_cell_edge_spatial_h1}
 \leanok
 There is one $0<\varepsilon<1$ with the ordinary cell H1 gain such that,
 for every admissible source rectangle $(l,r)\times(a,b)$ at edge $t_*$,
@@ -2631,8 +2631,8 @@ All value and gradient norms are actual finite whole-patch norms.
 \begin{lemma}[Gluing a first-odd cell collar]
 \label{lem:cell-separatrix-gluing}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.cell_separatrix_regular_h1,
-  NoEmbeddedEigenvalues.cell_separatrix_h1_of_regular_edges}
+\lean{EulerDipoleEigenvalues.cell_separatrix_regular_h1,
+  EulerDipoleEigenvalues.cell_separatrix_h1_of_regular_edges}
 \leanok
 Suppose $\omega$ is odd under $S_1$ and belongs to $H^1$ on the
 inward cell collar of width $\varepsilon>0$. If the reflected,
@@ -2658,7 +2658,7 @@ Remove the isolated saddles using the local norms of the value and gradient.
 \label{lem:dd-regular-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:weak-derivative-local, def:cell-arcs, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.dd_regular_separatrix_h1}
+\lean{EulerDipoleEigenvalues.dd_regular_separatrix_h1}
 \leanok
 For an odd--odd eigenfunction there is $0<\varepsilon<1$ such that,
 with $C_\varepsilon=\{|\Psi|<\varepsilon\}$ and lifted saddle set $\mathcal S$,
@@ -2681,7 +2681,7 @@ regular-collar construction. Use the same inward strip for all conclusions.
 \begin{lemma}[Ordinary vorticity H1 on the whole lifted collar]
 \label{lem:dd-separatrix-vorticity-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.dd_separatrix_vorticity_h1}
+\lean{EulerDipoleEigenvalues.dd_separatrix_vorticity_h1}
 \leanok
 For an odd--odd eigenfunction there is $0<\varepsilon<1$ with
 $\widetilde\omega\in H^1_{\rm loc}(\{|\Psi|<\varepsilon\})$,
@@ -2699,7 +2699,7 @@ No stronger corner or radial-tail premise is introduced.
 \begin{proposition}[$H^1$ gain near the separatrix, odd--odd]
 \label{prop:dd-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:zero-separatrix-trace}
-\lean{NoEmbeddedEigenvalues.dd_separatrix_h1}
+\lean{EulerDipoleEigenvalues.dd_separatrix_h1}
 \leanok
 In the odd--odd sector there is an open lifted neighbourhood $U$ of
 $\{\Psi=0\}$ such that $\omega\in H^1_{\rm loc}(U)$ has zero canonical
@@ -2748,7 +2748,7 @@ value of the raw vorticity at a seam or saddle.
 \label{lem:dd-log-ordinary-bulk}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:log-level-weight, def:stream-second-jet}
-\lean{NoEmbeddedEigenvalues.dd_log_ordinary_bulk}
+\lean{EulerDipoleEigenvalues.dd_log_ordinary_bulk}
 \leanok
 For an odd--odd eigenfunction there is an open lifted neighbourhood $U$ of
 the whole separatrix such that
@@ -2769,7 +2769,7 @@ neighbourhood. Apply the physical logarithmic multiplier to each entry.
 \label{lem:canonical-saddle-first-jet}
 \uses{def:stream-second-jet, def:saddle-quadratic, def:local-weak-jets,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.canonical_saddle_first}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.canonical_saddle_first}
 \leanok
 For any specified second weak jet $D$ of $\psi-Q_{c,a}$ on $D_\rho(c)$,
 its first entries satisfy $D_j=J_j-\partial_jQ_{c,a}$ a.e.\ on that disk,
@@ -2789,7 +2789,7 @@ of $\psi$ with the canonical weak jet.
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:log-level-weight, def:stream-second-jet, def:saddle-quadratic,
  def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.dd_log_saddle_remainder}
+\lean{EulerDipoleEigenvalues.dd_log_saddle_remainder}
 \leanok
 For an odd--odd eigenfunction and every lifted saddle $c$, there are
 $\rho>0$ and $a\in\C$ such that, on the disk of radius $\rho$ about $c$,
@@ -2817,7 +2817,7 @@ No raw gradient value is evaluated on a ray.
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:log-level-weight, def:stream-second-jet, def:cell-arcs,
  def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.dd_log_saddle_gradient}
+\lean{EulerDipoleEigenvalues.dd_log_saddle_gradient}
 \leanok
 For an odd--odd eigenfunction and every lifted saddle $c$, there is $\rho>0$
 such that $\sqrt{\Lambda_\Psi}\,J_j/d^{3/2}\in L^2_{\rm loc}(D_\rho(c))$
@@ -2837,7 +2837,7 @@ $L^2$ functions, and transfer the Euclidean-radius weight to saddle distance.
 \label{lem:dd-log-bulk}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:log-level-weight, def:stream-second-jet, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.dd_log_bulk}
+\lean{EulerDipoleEigenvalues.dd_log_bulk}
 \leanok
 For an odd--odd eigenfunction there is one open lifted neighbourhood $U$ of
 $\{\Psi=0\}$ on which
@@ -2861,7 +2861,7 @@ No finite full-plane norm is asserted.
 \label{lem:dd-saddle-ray-quotients-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:stream-second-jet,
  def:saddle-quadratic, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.dd_saddle_ray_quotients_h1}
+\lean{EulerDipoleEigenvalues.dd_saddle_ray_quotients_h1}
 \leanok
 For each lifted saddle $c$ and odd--odd eigenfunction, some $\rho>0$
 and one coefficient $a$ give
@@ -2886,7 +2886,7 @@ uniqueness transfers the gradient quotients to the canonical entries.
 \label{lem:dd-log-ray-bounds}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:stream-second-jet,
  def:quarter-endpoint-rays, def:interior-section-trace, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.dd_log_ray_bounds}
+\lean{EulerDipoleEigenvalues.dd_log_ray_bounds}
 \leanok
 For each of the eight quarter-endpoint rays $\gamma(r)=C(r,0)$ of an
 odd--odd eigenfunction, there is $0<\delta<1$ such that
@@ -2916,7 +2916,7 @@ Only the saddle jet input is used, not ordinary separatrix H3.
 \label{lem:dd-log-forcing}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:log-level-weight,
  def:cell-arcs, def:period, def:stream-second-jet, def:quarter-endpoint-rays}
-\lean{NoEmbeddedEigenvalues.dd_log_forcing}
+\lean{EulerDipoleEigenvalues.dd_log_forcing}
 \leanok
 For an odd--odd eigenfunction there is an open lifted neighbourhood $U$ of
 $\{\Psi=0\}$ such that, for every compact $K\subset U$,
@@ -2972,7 +2972,7 @@ All four recentered quarters' endpoint rays are included.
 \uses{def:eigen-problem, def:sectors, def:numerator, def:log-level-weight,
  def:cell-arcs, def:sobolev-local, def:stream-second-jet,
  def:weighted-numerator-data}
-\lean{NoEmbeddedEigenvalues.dd_log_numerators}
+\lean{EulerDipoleEigenvalues.dd_log_numerators}
 \leanok
 For an odd--odd eigenfunction with fixed rotation character
 $\kappa\in\{1,-1\}$, let $N$ be its quarter numerator and put
@@ -3034,7 +3034,7 @@ division, not for these weighted numerator bounds.
 \uses{def:eigen-problem, def:sectors, def:weighted-numerator-data,
  def:quarter-midpoint, def:quarter-reconstruction-level, def:h1-interval,
  def:h1-local-interval, def:log-level-weight, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_log_midpoint}
+\lean{EulerDipoleEigenvalues.dd_log_midpoint}
 \leanok
 Fix a rotation character of an odd--odd eigenfunction.
 There are a cutoff $0<h_0<1/2$ and compatible numerator data $d$
@@ -3093,7 +3093,7 @@ All choices use the same $\psi$, $d$, $C$ and cutoff.
 \label{lem:dd-quarter-level}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_quarter_level}
+\lean{EulerDipoleEigenvalues.dd_quarter_level}
 \leanok
 For an odd--odd eigenfunction with fixed rotation character there are
 $0<b<1/2$ and a specified $H\in L^2(Q_b)$ with
@@ -3122,7 +3122,7 @@ Restrict the two $L^2$ estimates to this same strip and add them.
 \begin{definition}[Specified vorticity time derivative]
 \label{def:vorticity-time-derivative}
 \uses{def:eigen-problem, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.vorticityTimeDerivative}
+\lean{EulerDipoleEigenvalues.vorticityTimeDerivative}
 \leanok
 Using the canonical Fourier first partial lifts of the stream, put
 \[
@@ -3136,10 +3136,10 @@ Using the canonical Fourier first partial lifts of the stream, put
 \label{lem:eigen-quarter-time}
 \uses{def:eigen-problem, def:vorticity-time-derivative,
  def:cell-separatrix-collar, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.measurable_vorticityTimeDerivative,
- NoEmbeddedEigenvalues.memLp_vorticityTimeDerivative,
- NoEmbeddedEigenvalues.hasWeakL0On_vorticityTimeDerivative,
- NoEmbeddedEigenvalues.eigenfunction_quarter_time}
+\lean{EulerDipoleEigenvalues.measurable_vorticityTimeDerivative,
+ EulerDipoleEigenvalues.memLp_vorticityTimeDerivative,
+ EulerDipoleEigenvalues.hasWeakL0On_vorticityTimeDerivative,
+ EulerDipoleEigenvalues.eigenfunction_quarter_time}
 \leanok
 For an eigenfunction with $\lambda\ne0$ and every $0<b<1$,
 \[
@@ -3169,7 +3169,7 @@ of a raw $L^2$ representative or a separate packed-jet admission.
 \label{lem:dd-quarter-time}
 \uses{def:eigen-problem, def:sectors, def:vorticity-time-derivative,
  def:cell-separatrix-collar, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_quarter_time}
+\lean{EulerDipoleEigenvalues.dd_quarter_time}
 \leanok
 For an odd--odd eigenfunction with $\lambda\ne0$ and every $0<b<1$,
 the weak time identity of Lemma~\ref{lem:eigen-quarter-time} holds and
@@ -3196,7 +3196,7 @@ this actual spatial weighted function by coarea.
 \label{lem:dd-base-quarter-weighted-derivatives}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_base_quarter_weighted_derivatives}
+\lean{EulerDipoleEigenvalues.dd_base_quarter_weighted_derivatives}
 \leanok
 For an odd--odd eigenfunction with fixed rotation character there are
 $0<b<1/2$ and specified weak derivatives $H_0,T_0$ of the same raw
@@ -3236,7 +3236,7 @@ the candidate alone would not imply it.
 \begin{lemma}[Specified separatrix gradient, odd--odd]
 \label{lem:dd-separatrix-weak-gradient}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.dd_separatrix_weak_gradient}
+\lean{EulerDipoleEigenvalues.dd_separatrix_weak_gradient}
 \leanok
 For an odd--odd eigenfunction there are an open lifted neighbourhood
 $U$ of $\{\Psi=0\}$ and globally measurable functions $D_x,D_y$
@@ -3256,7 +3256,7 @@ This does not require a new trace or jump calculation.
 \label{lem:dd-base-quarter-inverse-frame}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
  def:quarter-inverse-frame, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_base_quarter_inverse_frame}
+\lean{EulerDipoleEigenvalues.dd_base_quarter_inverse_frame}
 \leanok
 For an odd--odd eigenfunction with fixed rotation character there
 are $0<b<1/2$ and specified weak coordinate derivatives $H,T$ of
@@ -3281,8 +3281,8 @@ to that strip, then apply the inverse-frame estimate.
 \label{lem:dd-base-quarter-spatial-gradient}
 \uses{def:eigen-problem, def:sectors, def:quarter-image,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_character_base_quarter_spatial_gradient,
- NoEmbeddedEigenvalues.dd_base_quarter_spatial_gradient}
+\lean{EulerDipoleEigenvalues.dd_character_base_quarter_spatial_gradient,
+ EulerDipoleEigenvalues.dd_base_quarter_spatial_gradient}
 \leanok
 For an odd--odd eigenfunction there are $0<b<1/2$ and specified
 Cartesian weak derivatives $E_x,E_y$ on $V_b$ with
@@ -3305,8 +3305,8 @@ which transfers the weak identities; division is linear for the weighted norms.
 \label{lem:dd-cell-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-separatrix-collar,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.dd_character_cell_weighted_gradient,
- NoEmbeddedEigenvalues.dd_cell_weighted_gradient}
+\lean{EulerDipoleEigenvalues.dd_character_cell_weighted_gradient,
+ EulerDipoleEigenvalues.dd_cell_weighted_gradient}
 \leanok
 For an odd--odd eigenfunction there are $0<b<1/2$ and a specified
 Cartesian weak gradient $E$ on $V_{2b}^{\rm cell}$ such that
@@ -3332,7 +3332,7 @@ projected raw lifts with the original raw lift.
 \begin{proposition}[Weighted vorticity gradient, odd--odd]
 \label{prop:dd-weighted-gradient}
 \uses{def:eigen-problem, def:sectors, def:cell-arcs, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.dd_weighted_gradient}
+\lean{EulerDipoleEigenvalues.dd_weighted_gradient}
 \leanok
 For an odd--odd eigenfunction there is an open lifted neighbourhood $U$
 of $\{\Psi=0\}$ and a weak gradient $G$ of $\omega$ on $U$ such that
@@ -3373,7 +3373,7 @@ by itself an $H^2$ division argument.
 \label{lem:dd-weighted-third-stream}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local,
  def:local-weak-jets, def:saddle-quadratic}
-\lean{NoEmbeddedEigenvalues.dd_weighted_third_stream}
+\lean{EulerDipoleEigenvalues.dd_weighted_third_stream}
 \leanok
 At each saddle there is a disk and a coefficient $a$ such that both
 $R_0=\psi-Q_{P,a}$ and $R=\psi-a\Psi$ have specified third weak jets with
@@ -3426,7 +3426,7 @@ The same normalized coefficient is retained throughout.
 \begin{proposition}[H2 stream quotient]
 \label{prop:dd-stream-quotient-h2}
 \uses{def:eigen-problem, def:sectors, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.dd_stream_quotient_h2}
+\lean{EulerDipoleEigenvalues.dd_stream_quotient_h2}
 \leanok
 For an odd--odd eigenfunction at $\lambda\ne0$, the a.e. quotient
 $\phi=\psi/\Psi$ extends to $H^2(\T^2)$ and is even under both
@@ -3541,7 +3541,7 @@ The weighted operator $E$ is not used in this construction.
 \begin{corollary}[Periodic quotient transport]
 \label{cor:dd-quotient-transport-periodic}
 \uses{def:dipole}
-\lean{NoEmbeddedEigenvalues.dd_quotient_transport}
+\lean{EulerDipoleEigenvalues.dd_quotient_transport}
 \leanok
 Let $\omega,\psi,\nu,\phi\in L^2(\T^2)$ and $\lambda\in\R$.
 If $L_0(\omega+\psi)=i\lambda\omega$ in the character-tested sense,
@@ -3583,7 +3583,7 @@ not an additional hypothesis of the exclusion.
 \label{lem:mixed-weighted-forcing-remainder}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:transport-pair,
   lem:cell-square, lem:orbit-saddle-distance}
-\lean{NoEmbeddedEigenvalues.mixed_weighted_forcing_remainder}
+\lean{EulerDipoleEigenvalues.mixed_weighted_forcing_remainder}
 \leanok
 For a mixed eigenfunction in the sector $(-,+)$ with $\lambda\ne0$,
 there is a smooth transport pair $(\omega_0,\psi_0)$ on the bounded
@@ -3610,7 +3610,7 @@ to Cartesian coordinates. Away from the saddles the weights are bounded.
 \begin{lemma}[Mixed vorticity on the inward cell collar]
 \label{lem:mixed-cell-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, lem:cell-square}
-\lean{NoEmbeddedEigenvalues.mixed_cell_separatrix_h1}
+\lean{EulerDipoleEigenvalues.mixed_cell_separatrix_h1}
 \leanok
 For a mixed eigenfunction in the sector $(-,+)$ with $\lambda\ne0$,
 there exists $0<\epsilon<1$ such that the vorticity is $H^1$ on
@@ -3633,7 +3633,7 @@ trace estimate. This does not require gluing across the separatrix.
 \begin{lemma}[Mixed Sobolev regularity on the full separatrix collar]
 \label{lem:mixed-separatrix-h1}
 \uses{def:eigen-problem, def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.mixed_separatrix_h1}
+\lean{EulerDipoleEigenvalues.mixed_separatrix_h1}
 \leanok
 In the sector $(-,+)$ with $\lambda\ne0$ there exists $0<\varepsilon<1$
 such that $\widetilde\omega\in H^1_{\rm loc}(\{|\Psi|<\varepsilon\})$
@@ -3657,7 +3657,7 @@ then gains one more derivative on the stream.
 \begin{lemma}[One-factor Hardy division of vorticity]
 \label{lem:mixed-vorticity-division}
 \uses{def:sectors, def:sobolev-local, lem:cell-square, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.mixed_vorticity_divided_of_collar}
+\lean{EulerDipoleEigenvalues.mixed_vorticity_divided_of_collar}
 \leanok
 If $\omega$ is odd under $S_1$ and its lift is locally $H^1$ on
 $\{|\Psi|<\varepsilon\}$ for some $\varepsilon>0$, then
@@ -3678,7 +3678,7 @@ vorticity. For the remaining term the cosine is bounded away from zero.
 \begin{lemma}[One-factor division of the stream near the closed cell]
 \label{lem:mixed-stream-division}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.mixed_stream_quotient_local_h2}
+\lean{EulerDipoleEigenvalues.mixed_stream_quotient_local_h2}
 \leanok
 If $\omega$ is odd under $S_1$ and the continuous stream is locally
 $H^3$ on $\{|\Psi|<\varepsilon\}$ for some $\varepsilon>0$, then
@@ -3703,7 +3703,7 @@ $H^2$ stream and a smooth nonvanishing denominator.
 \label{lem:mixed-quotient-normal-zero}
 \uses{def:sectors, def:sobolev-local, def:local-weak-jets, def:canonical-transverse-trace,
   lem:cell-square}
-\lean{NoEmbeddedEigenvalues.mixed_quotient_normal_zero}
+\lean{EulerDipoleEigenvalues.mixed_quotient_normal_zero}
 \leanok
 In the sector $(-,+)$ let $\phi$ agree a.e.\ with the raw quotient
 $\psi\circ\operatorname{diagInv}/\cos a$ on $(-3\pi/4,3\pi/4)^2$ and
@@ -3727,7 +3727,7 @@ restricting to the whole inward rectangle retains trace zero.
 \begin{lemma}[Divided diagonal Poisson equation]
 \label{lem:mixed-divided-equation}
 \uses{def:sobolev-local, def:local-weak-jets, lem:cell-square}
-\lean{NoEmbeddedEigenvalues.mixed_divided_equation}
+\lean{EulerDipoleEigenvalues.mixed_divided_equation}
 \leanok
 For mean-zero vorticity, suppose the lifted stream agrees a.e.\ on the cell
 with $\cos a\,\phi$ for a quotient with specified $H^2$ weak jet. This jet
@@ -3747,7 +3747,7 @@ jet by weak uniqueness. Divide by the nonzero $\cos a$ in the open cell.
 \begin{definition}[Mixed cell quotient data]
 \label{def:mixed-quotient-data}
 \uses{def:eigen-problem, lem:cell-square, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MixedQuotientData}
+\lean{EulerDipoleEigenvalues.MixedQuotientData}
 \leanok
 The quotient data for a vorticity $\omega$ consist of a closed-cell
 continuous, centrally odd representative $\phi$ with an $H^2$ weak jet.
@@ -3762,7 +3762,7 @@ $(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
 \label{prop:mixed-quotient-domain}
 \uses{def:eigen-problem, def:sectors, def:cells, lem:cell-square, def:sobolev-local,
   def:mixed-quotient-data}
-\lean{NoEmbeddedEigenvalues.mixed_quotient_domain}
+\lean{EulerDipoleEigenvalues.mixed_quotient_domain}
 \leanok
 For $\lambda\ne0$ in the mixed sector $(-,+)$ (odd across $a=\pm\pi/2$, even across
 $b=\pm\pi/2$), $\omega\in H^1$ near the separatrix with zero trace on the odd
@@ -3783,7 +3783,7 @@ $(\partial_a^2-2\tan a\,\partial_a+\partial_b^2)\phi=2\nu+\phi$.
 \uses{lem:mixed-separatrix-h1, lem:mixed-vorticity-division, lem:mixed-stream-division,
   lem:local-h2-continuous-representative, lem:finite-weak-jet-sobolev,
   lem:mixed-quotient-normal-zero, lem:mixed-divided-equation}
-\lean{NoEmbeddedEigenvalues.mixed_quotient_data_of_collar}
+\lean{EulerDipoleEigenvalues.mixed_quotient_data_of_collar}
 \leanok
 Use the same full Sobolev collar for both divisions. Choose the continuous
 $H^2_{\rm loc}$ representative on an open neighbourhood of the closed cell

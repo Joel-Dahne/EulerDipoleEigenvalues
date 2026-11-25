@@ -32,7 +32,7 @@ Lean file, each with a reference, and proved later or never.
 
 \begin{definition}[$H^1$ on a bounded interval]
 \label{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1, NoEmbeddedEigenvalues.MemIntervalH1}
+\lean{EulerDipoleEigenvalues.HasIntervalH1, EulerDipoleEigenvalues.MemIntervalH1}
 \leanok
 Let $a<b$ be real. An $H^1(a,b)$ representative is a function $F:\R\to\C$
 that is absolutely continuous on each $[c,d]\subset(a,b)$, with
@@ -45,12 +45,12 @@ The raw values of $F$ at $a,b$ and outside the interval are unrestricted.
 \begin{lemma}[Endpoint extension and traces]
 \label{lem:h1-interval-endpoints}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.extension_eq,
-  NoEmbeddedEigenvalues.HasIntervalH1.continuousOn_extension,
-  NoEmbeddedEigenvalues.HasIntervalH1.extension_unique,
-  NoEmbeddedEigenvalues.HasIntervalH1.extension_independent,
-  NoEmbeddedEigenvalues.HasIntervalH1.integral_eq_extension_sub,
-  NoEmbeddedEigenvalues.MemIntervalH1.exists_extension}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.extension_eq,
+  EulerDipoleEigenvalues.HasIntervalH1.continuousOn_extension,
+  EulerDipoleEigenvalues.HasIntervalH1.extension_unique,
+  EulerDipoleEigenvalues.HasIntervalH1.extension_independent,
+  EulerDipoleEigenvalues.HasIntervalH1.integral_eq_extension_sub,
+  EulerDipoleEigenvalues.MemIntervalH1.exists_extension}
 \leanok
 Every $H^1(a,b)$ representative $F$ has a continuous extension from $(a,b)$
 to $[a,b]$, unique on $[a,b]$. Given an a.e. derivative $D$, this extension is
@@ -76,7 +76,7 @@ extensions agree on the dense subset $(a,b)$, hence everywhere on $[a,b]$.
 \begin{definition}[Zero-trace $H^1$ on an interval]
 \label{def:h1-zero-interval}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.MemIntervalH10}
+\lean{EulerDipoleEigenvalues.MemIntervalH10}
 \leanok
 For $a<b$, $H^1_0(a,b)$ consists of the $H^1(a,b)$ representatives whose
 continuous extensions have zero values at both endpoints.
@@ -84,7 +84,7 @@ continuous extensions have zero values at both endpoints.
 
 \begin{definition}[Zero extension from an interval]
 \label{def:interval-zero-extension}
-\lean{NoEmbeddedEigenvalues.intervalZeroExtension}
+\lean{EulerDipoleEigenvalues.intervalZeroExtension}
 \leanok
 For $a<b$ and $F:\R\to\C$, define $Z_{a,b}F$ to equal $F$ on $(a,b)$
 and zero elsewhere, including at $a,b$. Raw endpoint values are ignored.
@@ -93,12 +93,12 @@ and zero elsewhere, including at $a,b$. Raw endpoint values are ignored.
 \begin{lemma}[$L^2$ zero extension]
 \label{lem:interval-zero-extension-l2}
 \uses{def:interval-zero-extension}
-\lean{NoEmbeddedEigenvalues.memLp_intervalZeroExtension,
-  NoEmbeddedEigenvalues.integrable_intervalZeroExtension,
-  NoEmbeddedEigenvalues.tsupport_intervalZeroExtension_subset,
-  NoEmbeddedEigenvalues.hasCompactSupport_intervalZeroExtension,
-  NoEmbeddedEigenvalues.integral_sq_intervalZeroExtension,
-  NoEmbeddedEigenvalues.intervalIntegral_intervalZeroExtension}
+\lean{EulerDipoleEigenvalues.memLp_intervalZeroExtension,
+  EulerDipoleEigenvalues.integrable_intervalZeroExtension,
+  EulerDipoleEigenvalues.tsupport_intervalZeroExtension_subset,
+  EulerDipoleEigenvalues.hasCompactSupport_intervalZeroExtension,
+  EulerDipoleEigenvalues.integral_sq_intervalZeroExtension,
+  EulerDipoleEigenvalues.intervalIntegral_intervalZeroExtension}
 \leanok
 For $F\in L^2(a,b)$, $Z_{a,b}F\in L^1(\R)\cap L^2(\R)$, with compact
 support contained in $[a,b]$, and
@@ -120,13 +120,13 @@ in the compact interval $[a,b]$.
 \label{lem:h1-zero-extension}
 \uses{def:h1-interval, def:h1-zero-interval, lem:h1-interval-endpoints,
   def:interval-zero-extension}
-\lean{NoEmbeddedEigenvalues.absolutelyContinuous_complex_primitive,
-  NoEmbeddedEigenvalues.HasIntervalH1.integrable_zeroExtension_derivative,
-  NoEmbeddedEigenvalues.HasIntervalH1.zeroExtension_eq_integral,
-  NoEmbeddedEigenvalues.HasIntervalH1.absolutelyContinuous_zeroExtension,
-  NoEmbeddedEigenvalues.HasIntervalH1.continuous_zeroExtension,
-  NoEmbeddedEigenvalues.HasIntervalH1.hasDerivAt_zeroExtension_ae,
-  NoEmbeddedEigenvalues.HasIntervalH1.zeroExtension}
+\lean{EulerDipoleEigenvalues.absolutelyContinuous_complex_primitive,
+  EulerDipoleEigenvalues.HasIntervalH1.integrable_zeroExtension_derivative,
+  EulerDipoleEigenvalues.HasIntervalH1.zeroExtension_eq_integral,
+  EulerDipoleEigenvalues.HasIntervalH1.absolutelyContinuous_zeroExtension,
+  EulerDipoleEigenvalues.HasIntervalH1.continuous_zeroExtension,
+  EulerDipoleEigenvalues.HasIntervalH1.hasDerivAt_zeroExtension_ae,
+  EulerDipoleEigenvalues.HasIntervalH1.zeroExtension}
 \leanok
 Let $(F,D)$ be interval $H^1(a,b)$ data with zero value traces.
 Then on all of $\R$,
@@ -161,8 +161,8 @@ traces, not merely the value traces of the original function.
 \begin{definition}[$H^2$ on an interval]
 \label{def:h2-interval}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH2,
-  NoEmbeddedEigenvalues.MemIntervalH2}
+\lean{EulerDipoleEigenvalues.HasIntervalH2,
+  EulerDipoleEigenvalues.MemIntervalH2}
 \leanok
 For a bounded interval $I=(a,b)$, $H^2(I)$ consists of the $F\in H^1(I)$
 whose a.e. first derivative has an $H^1(I)$ representative.
@@ -184,10 +184,10 @@ interval API.
 \begin{definition}[Sobolev spaces on the torus]
 \label{def:sobolev-torus}
 \uses{def:torus, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.sobolevWeight,
-  NoEmbeddedEigenvalues.MemSobolev,
-  NoEmbeddedEigenvalues.sobolevNormSq,
-  NoEmbeddedEigenvalues.sobolevSubmodule}
+\lean{EulerDipoleEigenvalues.sobolevWeight,
+  EulerDipoleEigenvalues.MemSobolev,
+  EulerDipoleEigenvalues.sobolevNormSq,
+  EulerDipoleEigenvalues.sobolevSubmodule}
 \leanok
 For $s\ge0$, $H^s(\T^2)=\{g\in L^2:\sum_k(1+|k|^2)^s|\hat g_k|^2<\infty\}$,
 with $\|g\|_{H^s}^2=\sum_k(1+|k|^2)^s|\hat g_k|^2$.
@@ -199,11 +199,11 @@ real $s$; for $s\le0$ it is all of $L^2$.
 \begin{lemma}[Basic properties of $H^s(\T^2)$]
 \label{lem:sobolev-torus-basic}
 \uses{def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.memSobolev_zero,
-  NoEmbeddedEigenvalues.MemSobolev.mono,
-  NoEmbeddedEigenvalues.memSobolev_of_nonpos,
-  NoEmbeddedEigenvalues.MemSobolev.add,
-  NoEmbeddedEigenvalues.MemSobolev.smul}
+\lean{EulerDipoleEigenvalues.memSobolev_zero,
+  EulerDipoleEigenvalues.MemSobolev.mono,
+  EulerDipoleEigenvalues.memSobolev_of_nonpos,
+  EulerDipoleEigenvalues.MemSobolev.add,
+  EulerDipoleEigenvalues.MemSobolev.smul}
 \leanok
 $H^0(\T^2)=L^2$, $H^t\subset H^s$ for $s\le t$, and $H^s$ is a linear subspace
 of $L^2$.
@@ -219,9 +219,9 @@ $|a+b|^2\le2|a|^2+2|b|^2$.
 \begin{definition}[Weak derivatives on open sets]
 \label{def:weak-derivative-local}
 \uses{def:lift-operators}
-\lean{NoEmbeddedEigenvalues.IsTestFunctionOn,
-  NoEmbeddedEigenvalues.coordPartial,
-  NoEmbeddedEigenvalues.HasWeakPartialOn}
+\lean{EulerDipoleEigenvalues.IsTestFunctionOn,
+  EulerDipoleEigenvalues.coordPartial,
+  EulerDipoleEigenvalues.HasWeakPartialOn}
 \leanok
 Let $U\subset\R^2$. A test function on $U$ is a smooth function with compact
 support contained in $U$. A function $h$ is the weak $j$-th partial derivative of
@@ -233,10 +233,10 @@ Open subsets of $\T^2$ are treated through their lifts to $\R^2$.
 \begin{definition}[Local Sobolev spaces]
 \label{def:sobolev-local}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevOnWith,
-  NoEmbeddedEigenvalues.MemSobolevOn,
-  NoEmbeddedEigenvalues.MemWeightedSobolevOn,
-  NoEmbeddedEigenvalues.MemSobolevLocOn}
+\lean{EulerDipoleEigenvalues.MemSobolevOnWith,
+  EulerDipoleEigenvalues.MemSobolevOn,
+  EulerDipoleEigenvalues.MemWeightedSobolevOn,
+  EulerDipoleEigenvalues.MemSobolevLocOn}
 \leanok
 For $U\subset\R^2$ and an integer $k\ge0$, $H^k(U)$ is the space of $L^2(U)$
 functions whose weak derivatives up to order $k$ exist and are in $L^2(U)$, and
@@ -247,7 +247,7 @@ $H^k(U,w)$ uses $L^2(U,w\,dx)$ instead of $L^2(U)$.
 
 \begin{definition}[Gagliardo seminorm]
 \label{def:gagliardo}
-\lean{NoEmbeddedEigenvalues.gagliardoSq}
+\lean{EulerDipoleEigenvalues.gagliardoSq}
 \leanok
 For $a\colon\R\to\C$,
 $[a]^2=\int_\R\int_\R|a(u)-a(w)|^2(u-w)^{-2}\,dw\,du\in[0,\infty]$.
@@ -255,7 +255,7 @@ $[a]^2=\int_\R\int_\R|a(u)-a(w)|^2(u-w)^{-2}\,dw\,du\in[0,\infty]$.
 
 \begin{lemma}[du Bois-Reymond]
 \label{lem:du-bois-reymond}
-\lean{NoEmbeddedEigenvalues.exists_null_sub_eq_intervalIntegral}
+\lean{EulerDipoleEigenvalues.exists_null_sub_eq_intervalIntegral}
 \leanok
 Let $m,G$ be integrable on every compact subinterval of $(\alpha,\beta)$, and suppose
 $\int\varphi m=\int\varphi'G$ for every smooth $\varphi$ with compact support in
@@ -277,19 +277,19 @@ $G(h)-G(h')=M(h')-M(h)=\int_h^{h'}m$ wherever $D(h)=D(h')=k$.
 \begin{lemma}[Basic properties of local Sobolev spaces]
 \label{lem:weak-derivative-basic}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.integrable_mul_of_tsupport_subset,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.mono,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.add,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.const_mul,
-  NoEmbeddedEigenvalues.MemSobolevOnWith.of_succ,
-  NoEmbeddedEigenvalues.MemSobolevOnWith.add,
-  NoEmbeddedEigenvalues.MemSobolevOnWith.const_mul,
-  NoEmbeddedEigenvalues.MemSobolevOn.mono,
-  NoEmbeddedEigenvalues.MemSobolevOn.zero,
-  NoEmbeddedEigenvalues.MemSobolevOn.finset_sum,
-  NoEmbeddedEigenvalues.MemSobolevOn.memSobolevLocOn,
-  NoEmbeddedEigenvalues.MemSobolevLocOn.of_succ,
-  NoEmbeddedEigenvalues.MemSobolevLocOn.add}
+\lean{EulerDipoleEigenvalues.integrable_mul_of_tsupport_subset,
+  EulerDipoleEigenvalues.HasWeakPartialOn.mono,
+  EulerDipoleEigenvalues.HasWeakPartialOn.add,
+  EulerDipoleEigenvalues.HasWeakPartialOn.const_mul,
+  EulerDipoleEigenvalues.MemSobolevOnWith.of_succ,
+  EulerDipoleEigenvalues.MemSobolevOnWith.add,
+  EulerDipoleEigenvalues.MemSobolevOnWith.const_mul,
+  EulerDipoleEigenvalues.MemSobolevOn.mono,
+  EulerDipoleEigenvalues.MemSobolevOn.zero,
+  EulerDipoleEigenvalues.MemSobolevOn.finset_sum,
+  EulerDipoleEigenvalues.MemSobolevOn.memSobolevLocOn,
+  EulerDipoleEigenvalues.MemSobolevLocOn.of_succ,
+  EulerDipoleEigenvalues.MemSobolevLocOn.add}
 \leanok
 Weak derivatives and the spaces $H^k(U)$, $H^k(U,w)$ are linear, restrict to
 smaller sets, decrease in $k$, and $H^k(U)\subset H^k_{\mathrm{loc}}(U)$.
@@ -304,7 +304,7 @@ in $U$ is integrable, so the defining integrals split.
 \begin{lemma}[Locality of a specified weak derivative]
 \label{lem:weak-partial-locality}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_of_locally}
+\lean{EulerDipoleEigenvalues.hasWeakPartialOn_of_locally}
 \leanok
 Let $U\subset\R^2$. If every point of $U$ has an open neighbourhood on
 which the same functions $F,D$ satisfy $\partial_jF=D$ weakly, then
@@ -323,7 +323,7 @@ justifies each finite integral decomposition.
 
 \begin{lemma}[Continuity of an L2 test pairing]
 \label{lem:l2-test-pairing-limit}
-\lean{NoEmbeddedEigenvalues.tendsto_integral_mul_of_L2}
+\lean{EulerDipoleEigenvalues.tendsto_integral_mul_of_L2}
 \leanok
 On any measure space, if genuine complex-L2 $f_i$ converge strongly to $F$ and
 $\psi$ is genuinely L2, then $\int f_i\psi\to\int F\psi$.
@@ -339,7 +339,7 @@ representative agreement gives the actual integrals.
 \begin{lemma}[Strong L2 limits retain a specified weak partial]
 \label{lem:weak-partial-l2-limit}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.of_tendsto_L2}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.of_tendsto_L2}
 \leanok
 Let $U\subset\R^2$. Suppose $\partial_jf_N=d_N$ weakly on $U$,
 all $f_N,d_N,F,D$ are genuinely in $L^2(U)$, and
@@ -361,9 +361,9 @@ No pointwise convergence, Sobolev density, or trace hypothesis is needed.
 \begin{lemma}[Specified gradient from local $H^1$]
 \label{lem:local-h1-specified-gradient}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.exists_weakPartial_of_locally,
- NoEmbeddedEigenvalues.MemSobolevLocOn.exists_weakGradient,
- NoEmbeddedEigenvalues.MemSobolevLocOn.exists_measurable_weakGradient}
+\lean{EulerDipoleEigenvalues.exists_weakPartial_of_locally,
+ EulerDipoleEigenvalues.MemSobolevLocOn.exists_weakGradient,
+ EulerDipoleEigenvalues.MemSobolevLocOn.exists_measurable_weakGradient}
 \leanok
 If $U$ is open and $F\in H^1_{\rm loc}(U)$, there are globally measurable
 functions $D_x,D_y:\R^2\to\C$ with $\partial_jF=D_j$ weakly on $U$
@@ -392,7 +392,7 @@ properties by a.e.\ congruence.
 \begin{lemma}[Compact tests through any smooth open chart]
 \label{lem:smooth-chart-test-pullback}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.chartTest, NoEmbeddedEigenvalues.isTestFunctionOn_chartTest}
+\lean{EulerDipoleEigenvalues.chartTest, EulerDipoleEigenvalues.isTestFunctionOn_chartTest}
 \leanok
 Let $e:S\to V$ be an open plane chart smooth on $S$.
 For a test $\phi$ supported compactly in $V$,
@@ -409,10 +409,10 @@ On $S$ use smooth composition; outside that compact set use local vanishing.
 \begin{lemma}[Tests and integrability through a smooth chart]
 \label{lem:smooth-chart-tests}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.locallyIntegrableOn_comp_chart_symm,
- NoEmbeddedEigenvalues.memLp_two_comp_chart_symm,
- NoEmbeddedEigenvalues.integral_mul_test_chart,
- NoEmbeddedEigenvalues.ae_eq_comp_chart}
+\lean{EulerDipoleEigenvalues.locallyIntegrableOn_comp_chart_symm,
+ EulerDipoleEigenvalues.memLp_two_comp_chart_symm,
+ EulerDipoleEigenvalues.integral_mul_test_chart,
+ EulerDipoleEigenvalues.ae_eq_comp_chart}
 \leanok
 Let $e:S\to V$ be a partial homeomorphism between open plane sets,
 smooth on $S$, with $\det De=2$.
@@ -451,18 +451,18 @@ cast to $\C$, and define
  C_{j0}=\partial_tQ_j,\qquad C_{j1}=-\partial_hQ_j,\qquad
  \mathcal G_j(G)=\tfrac12(C_{j0}G_0+C_{j1}G_1).
 \]
-\lean{NoEmbeddedEigenvalues.chartDualPotential,
- NoEmbeddedEigenvalues.chartCofactor, NoEmbeddedEigenvalues.chartGradient}
+\lean{EulerDipoleEigenvalues.chartDualPotential,
+ EulerDipoleEigenvalues.chartCofactor, EulerDipoleEigenvalues.chartGradient}
 \leanok
 \end{definition}
 
 \begin{lemma}[Cofactor calculus for a variable Jacobian]
 \label{lem:smooth-chart-cofactor-calculus}
 \uses{def:smooth-chart-cofactor, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.contDiffOn_chartCofactor,
- NoEmbeddedEigenvalues.chartCofactor_divergence,
- NoEmbeddedEigenvalues.chartCofactor_values,
- NoEmbeddedEigenvalues.chartTest_cofactor_chain_det}
+\lean{EulerDipoleEigenvalues.contDiffOn_chartCofactor,
+ EulerDipoleEigenvalues.chartCofactor_divergence,
+ EulerDipoleEigenvalues.chartCofactor_values,
+ EulerDipoleEigenvalues.chartTest_cofactor_chain_det}
 \leanok
 For any smooth open plane chart, each cofactor column is smooth and
 $\partial_0C_{j0}+\partial_1C_{j1}=0$ on its source.
@@ -485,8 +485,8 @@ Only smooth chart derivatives commute here, not supplied weak derivatives.
 \begin{lemma}[Specified weak pair through an oriented variable Jacobian]
 \label{lem:oriented-weak-chart}
 \uses{def:smooth-chart-cofactor, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.of_comp_chart_oriented,
- NoEmbeddedEigenvalues.HasWeakPartialOn.of_comp_chart_pos}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.of_comp_chart_oriented,
+ EulerDipoleEigenvalues.HasWeakPartialOn.of_comp_chart_pos}
 \leanok
 Let $e:S\to V$ be a smooth open plane chart and suppose
 $|\det De|=\sigma\det De$ on $S$, for a fixed real $\sigma$.
@@ -516,7 +516,7 @@ all integrals.
 \begin{lemma}[Specified weak pair through a negative variable Jacobian]
 \label{lem:negative-jacobian-weak-partial}
 \uses{def:smooth-chart-cofactor, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.of_comp_chart_neg}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.of_comp_chart_neg}
 \leanok
 Let $e:S\to V$ be a smooth open plane chart with $\det De<0$.
 Suppose $\partial_iF=G_i$ weakly on $S$, while the specified physical
@@ -540,8 +540,8 @@ the same original functions and local integrability data are retained.
 \begin{lemma}[Weak gradient reconstructed through a chart]
 \label{lem:smooth-chart-weak-gradient}
 \uses{def:smooth-chart-cofactor, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.chartTest_cofactor_chain,
- NoEmbeddedEigenvalues.HasWeakPartialOn.comp_chart_symm}
+\lean{EulerDipoleEigenvalues.chartTest_cofactor_chain,
+ EulerDipoleEigenvalues.HasWeakPartialOn.comp_chart_symm}
 \leanok
 For a smooth open chart $e:S\to V$ with $\det De=2$,
 the cofactor columns are smooth on $S$ and divergence-free.
@@ -569,8 +569,8 @@ $\mathcal G_j(G)$. No approximation or smoothness of the raw $F$ is used.
 
 \begin{lemma}[Integration by parts for a specified AC derivative]
 \label{lem:ac-integration-by-parts}
-\lean{NoEmbeddedEigenvalues.integral_mul_deriv_of_ac,
- NoEmbeddedEigenvalues.integral_mul_deriv_of_ac_zero_test}
+\lean{EulerDipoleEigenvalues.integral_mul_deriv_of_ac,
+ EulerDipoleEigenvalues.integral_mul_deriv_of_ac_zero_test}
 \leanok
 Let $A:[a,b]\to\C$ be absolutely continuous with specified a.e.\
 derivative $D\in L^1(a,b)$. For $C^1$ $\beta$,
@@ -591,7 +591,7 @@ zero test endpoints give the stated special case.
 \begin{lemma}[Integration by parts with canonical interval traces]
 \label{lem:interval-trace-integration}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.integral_mul_deriv}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.integral_mul_deriv}
 \leanok
 For $F\in H^1(a,b)$ with specified derivative $D$, $a<b$, and $C^1$ $\beta$,
 \[
@@ -613,7 +613,7 @@ Apply AC integration by parts and discard the null endpoints in the integrals.
 \begin{lemma}[Interval $H^1$ as a planar weak derivative]
 \label{lem:interval-h1-weak-lift}
 \uses{def:h1-interval, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.weak_fst}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.weak_fst}
 \leanok
 If $A\in H^1(a,b)$ with specified derivative $A_1$, then
 $\partial_h[A(h)]=A_1(h)$ weakly on $(a,b)\times\R$.
@@ -634,8 +634,8 @@ Only interior interval values are used, not endpoint traces.
 \begin{lemma}[Smooth multiplication for weak derivatives]
 \label{lem:weak-derivative-product}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.mul_smooth,
- NoEmbeddedEigenvalues.HasWeakPartialOn.mul_contDiffOn}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.mul_smooth,
+ EulerDipoleEigenvalues.HasWeakPartialOn.mul_contDiffOn}
 \leanok
 Let $U\subset\R^2$ be open and let $h=\partial_jg$ weakly on $U$.
 For every $\chi:\R^2\to\mathbb C$ smooth on $U$,
@@ -660,7 +660,7 @@ Multiplication by a continuous function preserves local integrability.
 \begin{lemma}[Removing a transverse-coordinate level line]
 \label{lem:weak-transverse-line-removal}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.remove_transverse_line}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.remove_transverse_line}
 \leanok
 Let $F,D\in L^1_{\rm loc}(U)$ and
 $L=\{p:p_{1-j}=t\}$, a line parallel to the $j$th coordinate direction.
@@ -683,8 +683,8 @@ Dominated convergence for the integrable test products gives the identity.
 \begin{lemma}[Isolated-point removal for a weak partial derivative]
 \label{lem:weak-point-removal}
 \uses{def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.remove_point,
- NoEmbeddedEigenvalues.MemSobolevOn.remove_point}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.remove_point,
+ EulerDipoleEigenvalues.MemSobolevOn.remove_point}
 \leanok
 Let $F,D\in L^1_{\rm loc}(U)$, $U\subset\R^2$, and $c\in\R^2$.
 If $\partial_jF=D$ weakly on $U\setminus\{c\}$, the same specified
@@ -707,7 +707,7 @@ extension to those same derivative witnesses.
 \begin{lemma}[Finite-norm H1 removal of the saddle lattice]
 \label{lem:saddle-set-h1-removal}
 \uses{def:sobolev-local, def:weak-derivative-local, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.memSobolevLocOn_of_weakGradient_off_saddleSet}
+\lean{EulerDipoleEigenvalues.memSobolevLocOn_of_weakGradient_off_saddleSet}
 \leanok
 Let $U$ be open, let $\mathcal S$ be the lifted saddle lattice, and suppose
 $F,D_j\in L^2_{\rm loc}(U)$ with
@@ -733,9 +733,9 @@ No global norm on the periodic lift or radial tail estimate is needed.
 \begin{lemma}[Sobolev congruence on the domain]
 \label{lem:sobolev-congr-ae}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.congr_ae_on,
-  NoEmbeddedEigenvalues.MemSobolevOn.congr_ae_on,
-  NoEmbeddedEigenvalues.MemSobolevLocOn.congr_ae_on}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.congr_ae_on,
+  EulerDipoleEigenvalues.MemSobolevOn.congr_ae_on,
+  EulerDipoleEigenvalues.MemSobolevLocOn.congr_ae_on}
 \leanok
 Let $U\subset\R^2$ be measurable, and let $g=g'$ and $h=h'$ almost
 everywhere on $U$. If $h$ is a weak partial derivative of $g$ on $U$,
@@ -758,8 +758,8 @@ the a.e.\ identity to each open $V\Subset U$ and apply the preceding assertion.
 \begin{lemma}[Uniqueness of weak partial derivatives]
 \label{lem:weak-derivative-unique}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.ae_eq_zero_of_forall_test,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.ae_eq}
+\lean{EulerDipoleEigenvalues.ae_eq_zero_of_forall_test,
+  EulerDipoleEigenvalues.HasWeakPartialOn.ae_eq}
 \leanok
 Let $U\subset\R^2$ be open. A locally integrable function whose integral
 against every test function on $U$ vanishes is zero almost everywhere on $U$.
@@ -777,11 +777,11 @@ identities give zero pairing against every test function.
 \begin{lemma}[Classical derivatives are weak derivatives]
 \label{lem:weak-derivative-classical}
 \uses{def:sobolev-local, lem:lift-calculus}
-\lean{NoEmbeddedEigenvalues.integral_partialX_eq_zero,
-  NoEmbeddedEigenvalues.integral_partialY_eq_zero,
-  NoEmbeddedEigenvalues.integral_mul_coordPartial,
-  NoEmbeddedEigenvalues.hasWeakPartialOn_of_contDiff,
-  NoEmbeddedEigenvalues.memSobolevLocOn_of_contDiff}
+\lean{EulerDipoleEigenvalues.integral_partialX_eq_zero,
+  EulerDipoleEigenvalues.integral_partialY_eq_zero,
+  EulerDipoleEigenvalues.integral_mul_coordPartial,
+  EulerDipoleEigenvalues.hasWeakPartialOn_of_contDiff,
+  EulerDipoleEigenvalues.memSobolevLocOn_of_contDiff}
 \leanok
 For $C^1$ functions $u$ on $\R^2$ and every $U$, the classical partial derivatives
 are weak partial derivatives on $U$. Hence $C^k(\R^2)\subset H^k_{\mathrm{loc}}(U)$.
@@ -798,10 +798,10 @@ Continuous functions are square integrable on open sets with compact closure.
 \begin{lemma}[Localization by cutoffs]
 \label{lem:localization-cutoff}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.cutoff,
-  NoEmbeddedEigenvalues.memLp_cutoff,
-  NoEmbeddedEigenvalues.MemSobolevLocOn.cutoff,
-  NoEmbeddedEigenvalues.contDiff_coordPartial_top}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.cutoff,
+  EulerDipoleEigenvalues.memLp_cutoff,
+  EulerDipoleEigenvalues.MemSobolevLocOn.cutoff,
+  EulerDipoleEigenvalues.contDiff_coordPartial_top}
 \leanok
 Let $U\subset\R^2$ be open and $\chi$ smooth with compact support in $U$. If $h$
 is the weak derivative of $g$ on an open $V\supset\operatorname{supp}\chi$, then
@@ -822,8 +822,8 @@ $H^{k-1}_{\mathrm{loc}}(V)$ functions.
 
 \begin{definition}[Mollification in one variable]
 \label{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.stdBump, NoEmbeddedEigenvalues.mollifierKernel,
-  NoEmbeddedEigenvalues.mollifyFst, NoEmbeddedEigenvalues.mollifyFstDeriv}
+\lean{EulerDipoleEigenvalues.stdBump, EulerDipoleEigenvalues.mollifierKernel,
+  EulerDipoleEigenvalues.mollifyFst, EulerDipoleEigenvalues.mollifyFstDeriv}
 \leanok
 Fix a smooth even $\rho\ge0$, positive exactly on $(-1,1)$, with $\int\rho=1$, and let
 $\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variables $(h,\theta)$,
@@ -836,15 +836,15 @@ $\rho_\epsilon(h)=\epsilon^{-1}\rho(h/\epsilon)$. For $F$ on $\R^2$, with variab
 \begin{lemma}[Kernel properties]
 \label{lem:line-mollifier-kernel}
 \uses{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.contDiff_stdBump, NoEmbeddedEigenvalues.stdBump_nonneg,
-  NoEmbeddedEigenvalues.stdBump_neg, NoEmbeddedEigenvalues.support_stdBump,
-  NoEmbeddedEigenvalues.integral_stdBump,
-  NoEmbeddedEigenvalues.integral_mollifierKernel,
-  NoEmbeddedEigenvalues.contDiff_mollifierKernel,
-  NoEmbeddedEigenvalues.hasCompactSupport_mollifierKernel,
-  NoEmbeddedEigenvalues.integral_deriv_mollifierKernel,
-  NoEmbeddedEigenvalues.deriv_mollifierKernel,
-  NoEmbeddedEigenvalues.hasCompactSupport_deriv_stdBump}
+\lean{EulerDipoleEigenvalues.contDiff_stdBump, EulerDipoleEigenvalues.stdBump_nonneg,
+  EulerDipoleEigenvalues.stdBump_neg, EulerDipoleEigenvalues.support_stdBump,
+  EulerDipoleEigenvalues.integral_stdBump,
+  EulerDipoleEigenvalues.integral_mollifierKernel,
+  EulerDipoleEigenvalues.contDiff_mollifierKernel,
+  EulerDipoleEigenvalues.hasCompactSupport_mollifierKernel,
+  EulerDipoleEigenvalues.integral_deriv_mollifierKernel,
+  EulerDipoleEigenvalues.deriv_mollifierKernel,
+  EulerDipoleEigenvalues.hasCompactSupport_deriv_stdBump}
 \leanok
 Such a $\rho$ exists. For $\epsilon>0$, $\rho_\epsilon$ is smooth and compactly
 supported, with $\int\rho_\epsilon=1$ and $\int\rho_\epsilon'=0$.
@@ -863,7 +863,7 @@ identities for $\rho_\epsilon'$ have opposite boundary contributions.
 \begin{lemma}[$L^2$ contraction in one variable]
 \label{lem:line-mollifier-contraction}
 \uses{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.eLpNorm_mollifyFst_le}
+\lean{EulerDipoleEigenvalues.eLpNorm_mollifyFst_le}
 \leanok
 Let $\mu$ be an s-finite Borel measure on $\R$, $\epsilon>0$, and
 $F\in L^2(dh\otimes\mu)$. Then $M_\epsilon F\in L^2(dh\otimes\mu)$ and
@@ -887,7 +887,7 @@ representative or pointwise integrability on every line is required.
 \begin{lemma}[$L^2$ convergence in one variable]
 \label{lem:line-mollifier-convergence}
 \uses{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.tendsto_mollifyFst}
+\lean{EulerDipoleEigenvalues.tendsto_mollifyFst}
 \leanok
 For every s-finite Borel measure $\mu$ on $\R$ and
 $F\in L^2(dh\otimes\mu)$, $M_\epsilon F\to F$ in $L^2(dh\otimes\mu)$
@@ -916,8 +916,8 @@ on almost every line.
 \begin{lemma}[Derivative-kernel cancellation]
 \label{lem:line-mollifier-cancellation}
 \uses{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.smul_mollifyFstDeriv_eq_integral,
-  NoEmbeddedEigenvalues.tendsto_smul_mollifyFstDeriv}
+\lean{EulerDipoleEigenvalues.smul_mollifyFstDeriv_eq_integral,
+  EulerDipoleEigenvalues.tendsto_smul_mollifyFstDeriv}
 \leanok
 For every s-finite Borel measure $\mu$ on $\R$ and $F\in L^2(dh\otimes\mu)$,
 $M'_\epsilon F\in L^2(dh\otimes\mu)$ for $\epsilon>0$, and
@@ -951,7 +951,7 @@ integral is justified on almost every fiber by $L^2(\nu)\subset L^1(\nu)$.
 \begin{lemma}[Lipschitz commutator in one variable]
 \label{lem:line-mollifier-commutator}
 \uses{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.eLpNorm_mollifyFst_mul_sub_le}
+\lean{EulerDipoleEigenvalues.eLpNorm_mollifyFst_mul_sub_le}
 \leanok
 Let $\mu$ be an s-finite Borel measure on $\R$, $\epsilon>0$ and
 $F\in L^2(dh\otimes\mu)$. If $s:\R\to\R$ is $L$-Lipschitz, then
@@ -979,9 +979,9 @@ $s(h)$ justifies the displayed commutator identity even when $s$ is unbounded.
 \begin{lemma}[Mollification in one variable]
 \label{lem:line-mollifier}
 \uses{def:line-mollifier, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_mollifyFst,
-  NoEmbeddedEigenvalues.HasWeakPartialOn.mollify,
-  NoEmbeddedEigenvalues.mollifyFstDeriv_ae_eq}
+\lean{EulerDipoleEigenvalues.hasWeakPartialOn_mollifyFst,
+  EulerDipoleEigenvalues.HasWeakPartialOn.mollify,
+  EulerDipoleEigenvalues.mollifyFstDeriv_ae_eq}
 \leanok
 Let $\mu$ be a $\sigma$-finite measure on $\R$ and $F\in L^2(dh\otimes\mu)$,
 $\epsilon>0$. Then
@@ -1034,9 +1034,9 @@ variations identifies them almost everywhere.
 \begin{definition}[Angular periodization]
 \label{def:angular-periodization}
 \uses{def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.HasBoundedSndSupport,
-  NoEmbeddedEigenvalues.periodizeSnd, NoEmbeddedEigenvalues.angleWindow,
-  NoEmbeddedEigenvalues.anglePartition, NoEmbeddedEigenvalues.cutoffPeriodicSnd}
+\lean{EulerDipoleEigenvalues.HasBoundedSndSupport,
+  EulerDipoleEigenvalues.periodizeSnd, EulerDipoleEigenvalues.angleWindow,
+  EulerDipoleEigenvalues.anglePartition, EulerDipoleEigenvalues.cutoffPeriodicSnd}
 \leanok
 A function has bounded angular support if $f(h,\theta)\ne0$ implies
 $|\theta|\le R$ for some fixed $R$. Define
@@ -1053,19 +1053,19 @@ $\mathcal CF=\eta F$.
 \begin{lemma}[Periodization of angular tests]
 \label{lem:angular-periodization}
 \uses{def:angular-periodization, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.periodizeSnd_periodic,
-  NoEmbeddedEigenvalues.contDiff_periodizeSnd,
-  NoEmbeddedEigenvalues.partialX_periodizeSnd,
-  NoEmbeddedEigenvalues.partialY_periodizeSnd,
-  NoEmbeddedEigenvalues.periodizeSnd_eq_zero,
-  NoEmbeddedEigenvalues.integral_periodizeSnd,
-  NoEmbeddedEigenvalues.integral_mul_periodizeSnd_strip,
-  NoEmbeddedEigenvalues.contDiff_anglePartition,
-  NoEmbeddedEigenvalues.anglePartition_support_le,
-  NoEmbeddedEigenvalues.periodize_anglePartition,
-  NoEmbeddedEigenvalues.isTestFunctionOn_cutoffPeriodicSnd,
-  NoEmbeddedEigenvalues.periodize_cutoffPeriodicSnd,
-  NoEmbeddedEigenvalues.periodize_partialY_cutoffPeriodicSnd}
+\lean{EulerDipoleEigenvalues.periodizeSnd_periodic,
+  EulerDipoleEigenvalues.contDiff_periodizeSnd,
+  EulerDipoleEigenvalues.partialX_periodizeSnd,
+  EulerDipoleEigenvalues.partialY_periodizeSnd,
+  EulerDipoleEigenvalues.periodizeSnd_eq_zero,
+  EulerDipoleEigenvalues.integral_periodizeSnd,
+  EulerDipoleEigenvalues.integral_mul_periodizeSnd_strip,
+  EulerDipoleEigenvalues.contDiff_anglePartition,
+  EulerDipoleEigenvalues.anglePartition_support_le,
+  EulerDipoleEigenvalues.periodize_anglePartition,
+  EulerDipoleEigenvalues.isTestFunctionOn_cutoffPeriodicSnd,
+  EulerDipoleEigenvalues.periodize_cutoffPeriodicSnd,
+  EulerDipoleEigenvalues.periodize_partialY_cutoffPeriodicSnd}
 \leanok
 For functions with bounded angular support, periodization is locally a
 finite sum, is $1$-periodic, preserves vanishing outside any fixed level
@@ -1115,13 +1115,13 @@ subset of the strip.
 \begin{lemma}[Elliptic regularity on the torus]
 \label{lem:elliptic-torus}
 \uses{def:sobolev-torus, def:inverse-laplacian, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.MemSobolev.invLap,
-  NoEmbeddedEigenvalues.sobolevNormSq_invLap_le,
-  NoEmbeddedEigenvalues.memSobolev_two_invLap,
-  NoEmbeddedEigenvalues.MemSobolev.of_hasFourierPartial,
-  NoEmbeddedEigenvalues.sobolevNormSq_partial_le,
-  NoEmbeddedEigenvalues.MemSobolev.exists_hasFourierPartial,
-  NoEmbeddedEigenvalues.memSobolev_add_one_of_hasFourierPartial}
+\lean{EulerDipoleEigenvalues.MemSobolev.invLap,
+  EulerDipoleEigenvalues.sobolevNormSq_invLap_le,
+  EulerDipoleEigenvalues.memSobolev_two_invLap,
+  EulerDipoleEigenvalues.MemSobolev.of_hasFourierPartial,
+  EulerDipoleEigenvalues.sobolevNormSq_partial_le,
+  EulerDipoleEigenvalues.MemSobolev.exists_hasFourierPartial,
+  EulerDipoleEigenvalues.memSobolev_add_one_of_hasFourierPartial}
 \leanok
 $\Delta^{-1}:H^s\to H^{s+2}$ is bounded, $\|\Delta^{-1}\omega\|_{H^{s+2}}^2\le
 4\|\omega\|_{H^s}^2$, and $\partial_j:H^{s+1}\to H^s$ with
@@ -1143,7 +1143,7 @@ existence of an $L^2$ function with prescribed square summable coefficients.
 \begin{definition}[Continuous representative]
 \label{def:continuous-representative}
 \uses{lem:torus-fourier}
-\lean{NoEmbeddedEigenvalues.continuousRep}
+\lean{EulerDipoleEigenvalues.continuousRep}
 \leanok
 For $g\in L^2(\T^2)$ let $\tilde g=\sum_k\hat g_ke_k$, summed in the space of continuous
 functions with the sup norm (and $\tilde g=0$ if the series does not converge there).
@@ -1152,15 +1152,15 @@ functions with the sup norm (and $\tilde g=0$ if the series does not converge th
 \begin{lemma}[$H^2$ functions are continuous]
 \label{lem:continuous-representative}
 \uses{def:continuous-representative, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.norm_char_le,
-  NoEmbeddedEigenvalues.summable_inv_one_add_sq,
-  NoEmbeddedEigenvalues.summable_inv_sobolevWeight_two,
-  NoEmbeddedEigenvalues.MemSobolev.summable_norm_fourierCoeff,
-  NoEmbeddedEigenvalues.MemSobolev.summable_fourier_char,
-  NoEmbeddedEigenvalues.MemSobolev.hasSum_continuousRep,
-  NoEmbeddedEigenvalues.continuousRep_toLp,
-  NoEmbeddedEigenvalues.coeFn_eq_continuousRep,
-  NoEmbeddedEigenvalues.coeFn_invLap_eq_continuousRep}
+\lean{EulerDipoleEigenvalues.norm_char_le,
+  EulerDipoleEigenvalues.summable_inv_one_add_sq,
+  EulerDipoleEigenvalues.summable_inv_sobolevWeight_two,
+  EulerDipoleEigenvalues.MemSobolev.summable_norm_fourierCoeff,
+  EulerDipoleEigenvalues.MemSobolev.summable_fourier_char,
+  EulerDipoleEigenvalues.MemSobolev.hasSum_continuousRep,
+  EulerDipoleEigenvalues.continuousRep_toLp,
+  EulerDipoleEigenvalues.coeFn_eq_continuousRep,
+  EulerDipoleEigenvalues.coeFn_invLap_eq_continuousRep}
 \leanok
 For $g\in H^2(\T^2)$ the coefficients are absolutely summable, the Fourier series
 converges absolutely and uniformly, and $\tilde g=g$ almost everywhere. In particular
@@ -1182,8 +1182,8 @@ series of $g$ have the same limit in $L^2$. For $\psi$ use $\psi\in H^2$
 \label{lem:h2-laplacian-reconstruction}
 \uses{def:sobolev-torus, def:fourier-derivatives, def:inverse-laplacian,
  def:continuous-representative}
-\lean{NoEmbeddedEigenvalues.MemSobolev.exists_hasFourierLaplacian,
- NoEmbeddedEigenvalues.HasFourierLaplacian.continuousRep_eq}
+\lean{EulerDipoleEigenvalues.MemSobolev.exists_hasFourierLaplacian,
+ EulerDipoleEigenvalues.HasFourierLaplacian.continuousRep_eq}
 \leanok
 Every $\phi\in H^2(\T^2)$ has a Fourier Laplacian $\zeta\in L^2(\T^2)$.
 For any such $\zeta$, the continuous representatives satisfy
@@ -1203,11 +1203,11 @@ series of the continuous representatives; only the zero mode remains.
 \begin{definition}[Functions on the torus from periodic lifts]
 \label{def:torus-of-lift}
 \uses{def:torus, def:square-integral}
-\lean{NoEmbeddedEigenvalues.torusProj,
-  NoEmbeddedEigenvalues.torusOfLift,
-  NoEmbeddedEigenvalues.torusFun,
-  NoEmbeddedEigenvalues.torusL2,
-  NoEmbeddedEigenvalues.liftL2}
+\lean{EulerDipoleEigenvalues.torusProj,
+  EulerDipoleEigenvalues.torusOfLift,
+  EulerDipoleEigenvalues.torusFun,
+  EulerDipoleEigenvalues.torusL2,
+  EulerDipoleEigenvalues.liftL2}
 \leanok
 Let $\pi:\R^2\to\T^2$ be the covering map. A continuous periodic lift $u$
 defines the function $u\circ\pi^{-1}$ on $\T^2$, as a continuous function and as an
@@ -1218,10 +1218,10 @@ $g\circ\pi$ on $\R^2$, through a representative.
 \begin{definition}[Lifts of the stream function]
 \label{def:stream-lifts}
 \uses{def:torus-of-lift, def:stream-derivatives, def:continuous-representative}
-\lean{NoEmbeddedEigenvalues.streamLift,
-  NoEmbeddedEigenvalues.streamLiftX,
-  NoEmbeddedEigenvalues.streamLiftY,
-  NoEmbeddedEigenvalues.contStream}
+\lean{EulerDipoleEigenvalues.streamLift,
+  EulerDipoleEigenvalues.streamLiftX,
+  EulerDipoleEigenvalues.streamLiftY,
+  EulerDipoleEigenvalues.contStream}
 \leanok
 For $\omega\in L^2$, the functions $\psi$, $\psi_x$, $\psi_y$ on $\R^2$ are the lifts of
 $\Delta^{-1}\omega$, $\psi_1$, $\psi_2$ through their representatives, and $\tilde\psi$ is the
@@ -1231,21 +1231,21 @@ lift of the continuous representative of $\Delta^{-1}\omega$.
 \begin{lemma}[Lifts and the torus]
 \label{lem:lift-torus}
 \uses{def:torus-of-lift, def:lift-operators, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.isOpenQuotientMap_torusProj,
-  NoEmbeddedEigenvalues.IsPeriodicLift.eq_of_torusProj_eq,
-  NoEmbeddedEigenvalues.torusOfLift_torusProj,
-  NoEmbeddedEigenvalues.continuous_torusOfLift,
-  NoEmbeddedEigenvalues.hasClassicalPartial_torusFun_x,
-  NoEmbeddedEigenvalues.hasClassicalPartial_torusFun_y,
-  NoEmbeddedEigenvalues.hasFourierPartial_torusL2_x,
-  NoEmbeddedEigenvalues.hasFourierPartial_torusL2_y,
-  NoEmbeddedEigenvalues.squareIntegral_eq_integral_torus,
-  NoEmbeddedEigenvalues.squareIntegral_comp_torusProj,
-  NoEmbeddedEigenvalues.periodSquare_ae_eq,
-  NoEmbeddedEigenvalues.integrableOn_periodSquare_comp,
-  NoEmbeddedEigenvalues.isPeriodicLift_liftL2,
-  NoEmbeddedEigenvalues.integrableOn_liftL2_mul_conj,
-  NoEmbeddedEigenvalues.squarePairing_eq_inner}
+\lean{EulerDipoleEigenvalues.isOpenQuotientMap_torusProj,
+  EulerDipoleEigenvalues.IsPeriodicLift.eq_of_torusProj_eq,
+  EulerDipoleEigenvalues.torusOfLift_torusProj,
+  EulerDipoleEigenvalues.continuous_torusOfLift,
+  EulerDipoleEigenvalues.hasClassicalPartial_torusFun_x,
+  EulerDipoleEigenvalues.hasClassicalPartial_torusFun_y,
+  EulerDipoleEigenvalues.hasFourierPartial_torusL2_x,
+  EulerDipoleEigenvalues.hasFourierPartial_torusL2_y,
+  EulerDipoleEigenvalues.squareIntegral_eq_integral_torus,
+  EulerDipoleEigenvalues.squareIntegral_comp_torusProj,
+  EulerDipoleEigenvalues.periodSquare_ae_eq,
+  EulerDipoleEigenvalues.integrableOn_periodSquare_comp,
+  EulerDipoleEigenvalues.isPeriodicLift_liftL2,
+  EulerDipoleEigenvalues.integrableOn_liftL2_mul_conj,
+  EulerDipoleEigenvalues.squarePairing_eq_inner}
 \leanok
 Periodic lifts are constant on the fibres of $\pi$, so $u\circ\pi^{-1}$ is well
 defined, takes the value $u(x,y)$ at $\pi(x,y)$, and is continuous if $u$ is.
@@ -1274,7 +1274,7 @@ null set.
 \begin{definition}[Periodization of compactly supported functions]
 \label{def:lift-periodization}
 \uses{def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.liftShift, NoEmbeddedEigenvalues.liftPeriodize}
+\lean{EulerDipoleEigenvalues.liftShift, EulerDipoleEigenvalues.liftPeriodize}
 \leanok
 For $\varphi:\R^2\to\C$ with compact support, $P\varphi(p)=\sum_{n\in\Z^2}\varphi(p+2\pi n)$.
 \end{definition}
@@ -1282,15 +1282,15 @@ For $\varphi:\R^2\to\C$ with compact support, $P\varphi(p)=\sum_{n\in\Z^2}\varph
 \begin{lemma}[Periodization and unfolding]
 \label{lem:lift-periodization}
 \uses{def:lift-periodization, def:torus-of-lift, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.liftPeriodize_eq_sum,
-  NoEmbeddedEigenvalues.isPeriodicLift_liftPeriodize,
-  NoEmbeddedEigenvalues.contDiff_liftPeriodize,
-  NoEmbeddedEigenvalues.partialX_liftPeriodize,
-  NoEmbeddedEigenvalues.partialY_liftPeriodize,
-  NoEmbeddedEigenvalues.liftPeriodize_classicalL0,
-  NoEmbeddedEigenvalues.integral_liftPeriodize,
-  NoEmbeddedEigenvalues.locallyIntegrable_comp_torusProj,
-  NoEmbeddedEigenvalues.integral_liftL2_mul_eq}
+\lean{EulerDipoleEigenvalues.liftPeriodize_eq_sum,
+  EulerDipoleEigenvalues.isPeriodicLift_liftPeriodize,
+  EulerDipoleEigenvalues.contDiff_liftPeriodize,
+  EulerDipoleEigenvalues.partialX_liftPeriodize,
+  EulerDipoleEigenvalues.partialY_liftPeriodize,
+  EulerDipoleEigenvalues.liftPeriodize_classicalL0,
+  EulerDipoleEigenvalues.integral_liftPeriodize,
+  EulerDipoleEigenvalues.locallyIntegrable_comp_torusProj,
+  EulerDipoleEigenvalues.integral_liftL2_mul_eq}
 \leanok
 Let $\varphi$ have compact support. Near each point the sum $P\varphi$ has finitely many
 nonzero terms. $P\varphi$ is periodic; if $\varphi$ is $C^k$, so is $P\varphi$, with
@@ -1316,10 +1316,10 @@ A compact set meets finitely many $Q_n$, which gives local integrability.
 \begin{lemma}[Lifts of torus Sobolev functions]
 \label{lem:lift-sobolev-local}
 \uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.memLp_liftL2,
-  NoEmbeddedEigenvalues.integral_liftL2_mul_coordPartial,
-  NoEmbeddedEigenvalues.hasWeakPartialOn_liftL2,
-  NoEmbeddedEigenvalues.memSobolevOn_liftL2}
+\lean{EulerDipoleEigenvalues.memLp_liftL2,
+  EulerDipoleEigenvalues.integral_liftL2_mul_coordPartial,
+  EulerDipoleEigenvalues.hasWeakPartialOn_liftL2,
+  EulerDipoleEigenvalues.memSobolevOn_liftL2}
 \leanok
 The lift of $g\in L^2(\T^2)$ lies in $L^2(U)$ for every bounded $U\subset\R^2$. On every
 $U$, the weak derivatives of a lift are the lifts of the Fourier derivatives of
@@ -1344,8 +1344,8 @@ $g\in H^{k+1}$ has Fourier derivatives in $H^k$ (Lemma~\ref{lem:elliptic-torus})
 \begin{lemma}[C1 multipliers of lifted Fourier functions]
 \label{lem:fourier-c1-multiplier}
 \uses{def:fourier-derivatives, def:torus-of-lift, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.integral_liftL2_mul_coordPartial_of_contDiff,
- NoEmbeddedEigenvalues.HasFourierPartial.weak_mul_contDiff}
+\lean{EulerDipoleEigenvalues.integral_liftL2_mul_coordPartial_of_contDiff,
+ EulerDipoleEigenvalues.HasFourierPartial.weak_mul_contDiff}
 \leanok
 Let $g,d\in L^2(\T^2)$ with specified Fourier relation $\partial_jg=d$.
 For every compactly supported $C^1$ test $\eta:\R^2\to\C$,
@@ -1372,8 +1372,8 @@ support, so all integrals are genuine finite integrals.
 \begin{lemma}[Summability of lattice Sobolev weights]
 \label{lem:sobolev-weight-summable}
 \uses{def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.summable_one_add_int_sq_rpow,
-  NoEmbeddedEigenvalues.summable_sobolevWeight_of_lt_neg_one}
+\lean{EulerDipoleEigenvalues.summable_one_add_int_sq_rpow,
+  EulerDipoleEigenvalues.summable_sobolevWeight_of_lt_neg_one}
 \leanok
 If $s<-1$, then
 \[
@@ -1397,7 +1397,7 @@ convergent one-dimensional sums.
 \begin{lemma}[The H\"older Sobolev embedding on the torus]
 \label{lem:sobolev-holder}
 \uses{def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.exists_holderWith_of_memSobolev_two}
+\lean{EulerDipoleEigenvalues.exists_holderWith_of_memSobolev_two}
 \leanok
 For every $0\le\alpha<1$ there is a constant $C_\alpha$ such that every
 $g\in H^2(\T^2)$ has a representative $u$ with
@@ -1441,7 +1441,7 @@ no local Sobolev embedding or density theorem is invoked.
 \begin{lemma}[H\"older continuity of squared values]
 \label{lem:sobolev-squared-values}
 \uses{def:sobolev-torus, def:continuous-representative}
-\lean{NoEmbeddedEigenvalues.exists_continuousRep_norm_sq_holder}
+\lean{EulerDipoleEigenvalues.exists_continuousRep_norm_sq_holder}
 \leanok
 For every $u\in H^2(\T^2)$, its fixed continuous representative satisfies
 \[
@@ -1470,8 +1470,8 @@ If $|u|\le M$ and $u$ has one-half H\"older constant $H$, use
 \begin{lemma}[Local Sobolev gluing]
 \label{lem:sobolev-local-gluing}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.memSobolevLocOn_of_locally,
-  NoEmbeddedEigenvalues.memSobolevLocOn_of_locally_ae}
+\lean{EulerDipoleEigenvalues.memSobolevLocOn_of_locally,
+  EulerDipoleEigenvalues.memSobolevLocOn_of_locally_ae}
 \leanok
 Let $k\ge0$ be an integer, $U\subset\R^2$ and $f:\R^2\to\C$.
 Suppose each $p\in U$ has an open neighbourhood $W$ and a function
@@ -1497,9 +1497,9 @@ Their finite sum equals $f$ on $V$, giving $f\in H^k(V)$.
 \begin{lemma}[Local L2 multiplication]
 \label{lem:local-l2-multiplier}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_bounded,
- NoEmbeddedEigenvalues.MemSobolevLocOn.zero_mul_continuousOn,
- NoEmbeddedEigenvalues.MemSobolevLocOn.zero_memLp_of_isBounded}
+\lean{EulerDipoleEigenvalues.MemSobolevLocOn.zero_mul_bounded,
+ EulerDipoleEigenvalues.MemSobolevLocOn.zero_mul_continuousOn,
+ EulerDipoleEigenvalues.MemSobolevLocOn.zero_memLp_of_isBounded}
 \leanok
 If $F\in L^2_{\rm loc}(U)$ and $G$ is measurable and bounded on $U$, then
 $GF\in L^2_{\rm loc}(U)$. The same conclusion holds if $G$ is continuous
@@ -1519,8 +1519,8 @@ neighbourhood, use its actual local L2 norm, then restrict.
 \begin{lemma}[Local smooth Sobolev multiplication]
 \label{lem:sobolev-local-multiplier}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.mul_contDiffOn,
- NoEmbeddedEigenvalues.MemSobolevLocOn.div_smooth}
+\lean{EulerDipoleEigenvalues.MemSobolevLocOn.mul_contDiffOn,
+ EulerDipoleEigenvalues.MemSobolevLocOn.div_smooth}
 \leanok
 Let $U\subset\R^2$ be open and $k\ge0$ an integer.
 If $f\in H^k_{\mathrm{loc}}(U)$ and $g\in C^\infty(U;\C)$, then
@@ -1545,8 +1545,8 @@ For division, apply multiplication to $g^{-1}$ on its nonzero open set.
 \begin{lemma}[Localization]
 \label{lem:local-to-global}
 \uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.memSobolev_compactPeriodize,
- NoEmbeddedEigenvalues.exists_memSobolev_periodize}
+\lean{EulerDipoleEigenvalues.memSobolev_compactPeriodize,
+ EulerDipoleEigenvalues.exists_memSobolev_periodize}
 \leanok
 A compactly supported $H^k(\R^2)$ function has an $H^k(\T^2)$ periodization.
 For this assertion no injectivity of the projection on its support is required.
@@ -1587,7 +1587,7 @@ $p+2\pi n\in U$, so the sum reduces to $F(p)$. Injectivity is used only here.
 \begin{lemma}[Continuous representative of local $H^2$ data]
 \label{lem:local-h2-continuous-representative}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.exists_continuousOn_rep_of_memSobolevLocOn_two}
+\lean{EulerDipoleEigenvalues.exists_continuousOn_rep_of_memSobolevLocOn_two}
 \leanok
 If $U\subset\R^2$ is open and $f\in H^2_{\mathrm{loc}}(U)$, there is
 $g:\R^2\to\C$ continuous on $U$ with $f=g$ a.e.\ on $U$.
@@ -1614,12 +1614,12 @@ agreement with the original raw $f$ on all of $U$.
 \begin{lemma}[Periodic Sobolev reconstruction]
 \label{lem:periodic-sobolev-reconstruction}
 \uses{def:sobolev-local, def:sobolev-torus, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.torusPartition,
- NoEmbeddedEigenvalues.contDiff_torusPartition,
- NoEmbeddedEigenvalues.hasCompactSupport_torusPartition,
- NoEmbeddedEigenvalues.liftPeriodize_torusPartition,
- NoEmbeddedEigenvalues.exists_memSobolev_of_periodic_lift,
- NoEmbeddedEigenvalues.memSobolev_of_liftL2_loc}
+\lean{EulerDipoleEigenvalues.torusPartition,
+ EulerDipoleEigenvalues.contDiff_torusPartition,
+ EulerDipoleEigenvalues.hasCompactSupport_torusPartition,
+ EulerDipoleEigenvalues.liftPeriodize_torusPartition,
+ EulerDipoleEigenvalues.exists_memSobolev_of_periodic_lift,
+ EulerDipoleEigenvalues.memSobolev_of_liftL2_loc}
 \leanok
 For each integer $k\ge0$, a $2\pi\Z^2$-periodic function
 $F\in H^k_{\mathrm{loc}}(\R^2)$ is a.e.\ the lift of some
@@ -1645,10 +1645,10 @@ by restricting to a fundamental box.
 \begin{definition}[Specified local weak jets and radial energies]
 \label{def:local-weak-jets}
 \uses{def:sobolev-local, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn, NoEmbeddedEigenvalues.classicalComplexJet,
- NoEmbeddedEigenvalues.RadialJetLp,
- NoEmbeddedEigenvalues.RadialJetRpowLp,
- NoEmbeddedEigenvalues.radialJetEnergy, NoEmbeddedEigenvalues.weakJetEnergy}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn, EulerDipoleEigenvalues.classicalComplexJet,
+ EulerDipoleEigenvalues.RadialJetLp,
+ EulerDipoleEigenvalues.RadialJetRpowLp,
+ EulerDipoleEigenvalues.radialJetEnergy, EulerDipoleEigenvalues.weakJetEnergy}
 \leanok
 Use the Euclidean disks and axis notation of
 Definition~\ref{def:local-plane-geometry}.
@@ -1672,7 +1672,7 @@ coordinates when the normal index is $1$ instead of $0$.
 \begin{lemma}[Finite specified weak jets give Sobolev membership]
 \label{lem:finite-weak-jet-sobolev}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.memSobolevOn}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.memSobolevOn}
 \leanok
 If $D$ is a specified order-$n$ weak jet of $f$ on $U$ and
 $D_w\in L^2(U)$ for every $|w|\le n$, then $f\in H^n(U)$.
@@ -1690,7 +1690,7 @@ Every norm is on the original domain $U$.
 \begin{lemma}[Finite norms of the original specified jet]
 \label{lem:specified-jet-lp}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.memLp_weakJet}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.memLp_weakJet}
 \leanok
 Let $U$ be open, $f\in H^n(U)$, and let $D$ be a specified order-$n$
 weak jet of $f$ there. Then every original $D_w$, $|w|\le n$,
@@ -1711,7 +1711,7 @@ The nil entry is exactly $f$.
 \begin{lemma}[Extend the supplied first gradient to a second jet]
 \label{lem:specified-first-jet-extension}
 \uses{def:local-weak-jets, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.exists_weakJet_two_with_first}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.exists_weakJet_two_with_first}
 \leanok
 Let $U$ be open, $f\in H^2(U)$, and retain given weak partials
 $\partial_jf=D_j$.
@@ -1732,7 +1732,7 @@ The word head is the outer derivative. Entries beyond order two are immaterial.
 \begin{lemma}[Point removal for a finite specified weak jet]
 \label{lem:weak-jet-point-removal}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.remove_point}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.remove_point}
 \leanok
 If $D$ is a specified order-$n$ weak jet of $f$ on $U\setminus\{c\}$ and
 every $D_w$, $|w|\le n$, has finite L2 norm on the whole $U$, then the
@@ -1751,9 +1751,9 @@ pair separately. No mixed derivatives are commuted and no entries are changed.
 \begin{lemma}[Sobolev regularity of a specified weak jet]
 \label{lem:weak-jet-regularity}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.memSobolevOn,
- NoEmbeddedEigenvalues.HasWeakPartialOn.memSobolevLocOn,
- NoEmbeddedEigenvalues.HasWeakJetOn.memSobolevLocOn}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.memSobolevOn,
+ EulerDipoleEigenvalues.HasWeakPartialOn.memSobolevLocOn,
+ EulerDipoleEigenvalues.HasWeakJetOn.memSobolevLocOn}
 \leanok
 If $f\in H^{k+1}(U)$ on an open set and $\partial_jf=g$ weakly,
 then the specified $g$ belongs to $H^k(U)$.
@@ -1775,11 +1775,11 @@ claim, then induct on the word. No jet representative is replaced.
 \begin{lemma}[Weak radial multiplication]
 \label{lem:radial-weak-multiplier}
 \uses{def:sobolev-local, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.radialMultiplier_eq,
- NoEmbeddedEigenvalues.coordPartial_radialMultiplier,
- NoEmbeddedEigenvalues.HasWeakPartialOn.radial_div,
- NoEmbeddedEigenvalues.memSobolevOn_radial_div,
- NoEmbeddedEigenvalues.memLp_div_localRadius_rpow}
+\lean{EulerDipoleEigenvalues.radialMultiplier_eq,
+ EulerDipoleEigenvalues.coordPartial_radialMultiplier,
+ EulerDipoleEigenvalues.HasWeakPartialOn.radial_div,
+ EulerDipoleEigenvalues.memSobolevOn_radial_div,
+ EulerDipoleEigenvalues.memLp_div_localRadius_rpow}
 \leanok
 Let $U\subset\R^2$ be open, $r=r_c$, and $s\in\R$.
 Suppose $\partial_jF=D_j$ weakly and
@@ -1808,8 +1808,8 @@ $r^{m-t}$; the cancellation is needed only off the null center.
 \begin{lemma}[Inverse-radius mass in two physical dimensions]
 \label{lem:inverse-radius-mass}
 \uses{def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.integrableOn_inv_localRadius,
- NoEmbeddedEigenvalues.memLp_inv_sqrt_localRadius}
+\lean{EulerDipoleEigenvalues.integrableOn_inv_localRadius,
+ EulerDipoleEigenvalues.memLp_inv_sqrt_localRadius}
 \leanok
 On every bounded Euclidean disk $D_\rho(c)\subset\R^2$,
 $r_c^{-1}\in L^1$ and $r_c^{-1/2}\in L^2$.
@@ -1830,8 +1830,8 @@ measure by translation. Squaring the inverse square root gives $r_c^{-1}$.
 \begin{lemma}[Critical inverse-square nonintegrability]
 \label{lem:inverse-square-nonintegrability}
 \uses{def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.not_integrableOn_inv_sq_localRadius,
- NoEmbeddedEigenvalues.memLp_const_div_sq_localRadius_iff}
+\lean{EulerDipoleEigenvalues.not_integrableOn_inv_sq_localRadius,
+ EulerDipoleEigenvalues.memLp_const_div_sq_localRadius_iff}
 \leanok
 For every $c$ and $\rho>0$, $r_c^{-2}\notin L^1(D_\rho(c))$.
 For $z\in\C$, $z/r_c^2\in L^2(D_\rho(c))$ if and only if $z=0$.
@@ -1854,8 +1854,8 @@ in L2, hence L1 on the finite-measure disk.
 \begin{lemma}[Ordinary forcing mass of a saddle quadratic]
 \label{lem:saddle-quadratic-forcing-mass}
 \uses{def:saddle-quadratic, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.norm_saddleQuadratic_le,
- NoEmbeddedEigenvalues.saddleQuadratic_forcing_mass}
+\lean{EulerDipoleEigenvalues.norm_saddleQuadratic_le,
+ EulerDipoleEigenvalues.saddleQuadratic_forcing_mass}
 \leanok
 For every $c,a$ and bounded disk about $c$, the original quadratic satisfies
 \[
@@ -1878,9 +1878,9 @@ Multiply this bounded factor by the actual L2 function $r_c^{-1/2}$.
 \begin{lemma}[Transfer from radius to saddle distance]
 \label{lem:saddle-distance-weight-transfer}
 \uses{def:sobolev-local, def:cell-arcs, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_of_radius,
- NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist_on,
- NoEmbeddedEigenvalues.MemSobolevLocOn.div_saddleDist}
+\lean{EulerDipoleEigenvalues.MemSobolevLocOn.div_saddleDist_of_radius,
+ EulerDipoleEigenvalues.MemSobolevLocOn.div_saddleDist_on,
+ EulerDipoleEigenvalues.MemSobolevLocOn.div_saddleDist}
 \leanok
 Let $c$ be a saddle, $U\subset B(c,\pi/2)$ in the product metric, and $s\ge0$.
 If $F/r_c^s\in L^2_{\rm loc}(U)$, then $F/d^s\in L^2_{\rm loc}(U)$.
@@ -1906,9 +1906,9 @@ localizations have finite norms.
 \label{lem:periodic-box-weighted-mass}
 \uses{def:torus-of-lift, def:sobolev-local, lem:cell-neighbourhood,
  def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.memLp_of_periodic_periodBox,
- NoEmbeddedEigenvalues.periodBox_subset_cellNeighbourhood,
- NoEmbeddedEigenvalues.memLp_saddleDist_of_neighbourhood}
+\lean{EulerDipoleEigenvalues.memLp_of_periodic_periodBox,
+ EulerDipoleEigenvalues.periodBox_subset_cellNeighbourhood,
+ EulerDipoleEigenvalues.memLp_saddleDist_of_neighbourhood}
 \leanok
 A periodic function square integrable on $(-\pi,\pi]^2$ is square integrable
 on every bounded lift set. In particular, if
@@ -1929,8 +1929,8 @@ vorticity and saddle distance are periodic. There is no whole-plane norm claim.
 \label{lem:reflected-cell-weighted-mass}
 \uses{def:local-plane-geometry, def:cells, def:periodic-cell-folds,
  def:sobolev-local, def:sectors}
-\lean{NoEmbeddedEigenvalues.memLp_saddleDist_of_reflected_cells,
- NoEmbeddedEigenvalues.memLp_saddleDist_of_oddOdd_cell}
+\lean{EulerDipoleEigenvalues.memLp_saddleDist_of_reflected_cells,
+ EulerDipoleEigenvalues.memLp_saddleDist_of_oddOdd_cell}
 \leanok
 If both $\widetilde\omega/d^s$ and
 $(\widetilde\omega\circ S)/d^s$ belong to L2 on the positive cell, where
@@ -1952,7 +1952,7 @@ with the original norm.
 \begin{lemma}[Weakening a lattice-distance norm to a radial norm]
 \label{lem:saddle-distance-to-radius-mass}
 \uses{def:local-plane-geometry, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.memLp_div_radius_of_saddleDist}
+\lean{EulerDipoleEigenvalues.memLp_div_radius_of_saddleDist}
 \leanok
 For a measurable $F$, a lifted saddle $P$ and $s\ge0$,
 $F/d^s\in L^2(U)$ implies $F/r_P^s\in L^2(U)$.
@@ -1971,7 +1971,7 @@ This transfers norms, not weak derivative identities.
 \begin{lemma}[Divided saddle-jet gradients in H1]
 \label{lem:radial-gradient-h1}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.radial_gradient_h1}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.radial_gradient_h1}
 \leanok
 Let $D$ be a specified second weak jet on a disk about $c$, with
 $D_j/r_c^3$ and $D_{ij}/r_c^2$ in $L^2$ for every $i,j$.
@@ -1990,7 +1990,7 @@ $\partial_iD_j=D_{ij}$.
 \begin{lemma}[Cartesian H1 quotients for subcritical rays]
 \label{lem:radial-ray-quotients-h1}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.radial_ray_quotients_h1}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.radial_ray_quotients_h1}
 \leanok
 Let $D$ be a specified second weak jet of $R$ on a disk about $c$, with
 $R/r_c^4$, $D_j/r_c^3$ and $D_{ij}/r_c^2$ in $L^2$.
@@ -2017,8 +2017,8 @@ transverse-cutoff argument needs no extra trace or radial-tail hypothesis.
 \begin{lemma}[Comparison of specified jets with a.e.-equal values]
 \label{lem:weak-jet-ae-comparison}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.ae_eq_of_value_ae,
- NoEmbeddedEigenvalues.HasWeakJetOn.sub}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.ae_eq_of_value_ae,
+ EulerDipoleEigenvalues.HasWeakJetOn.sub}
 \leanok
 On an open set $U$, specified order-$n$ weak jets of functions equal a.e.\
 have a.e.-equal entries at every order through $n$.
@@ -2036,7 +2036,7 @@ Subtraction follows from addition and multiplication by $-1$.
 \begin{definition}[Cartesian test Laplacian]
 \label{def:cartesian-test-laplacian}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.planeLaplacian}
+\lean{EulerDipoleEigenvalues.planeLaplacian}
 \leanok
 For a complex-valued plane function put
 $\Delta_{\rm cart}f=\partial_0\partial_0f+\partial_1\partial_1f$.
@@ -2046,9 +2046,9 @@ No inner product on the maximum-norm product is imposed.
 \begin{lemma}[Specified weak jets identify the test Laplacian]
 \label{lem:weak-jet-laplacian-test}
 \uses{def:cartesian-test-laplacian, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.IsTestFunctionOn.coordPartial,
- NoEmbeddedEigenvalues.IsTestFunctionOn.planeLaplacian,
- NoEmbeddedEigenvalues.HasWeakJetOn.integral_laplacian_test}
+\lean{EulerDipoleEigenvalues.IsTestFunctionOn.coordPartial,
+ EulerDipoleEigenvalues.IsTestFunctionOn.planeLaplacian,
+ EulerDipoleEigenvalues.HasWeakJetOn.integral_laplacian_test}
 \leanok
 Coordinate derivatives and $\Delta_{\rm cart}$ preserve compact tests on $U$.
 If $D$ is a specified second weak jet of $f$ on $U$, then
@@ -2071,7 +2071,7 @@ adding the two repeated-coordinate identities.
 \begin{lemma}[Classical zero Laplacian from compact tests]
 \label{lem:classical-laplacian-from-tests}
 \uses{def:cartesian-test-laplacian, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.planeLaplacian_eq_zero_of_test}
+\lean{EulerDipoleEigenvalues.planeLaplacian_eq_zero_of_test}
 \leanok
 Let $U$ be open and $g\in C^\infty(\R^2)$.
 If $\int g\Delta_{\rm cart}\phi=0$ for every compact test on $U$,
@@ -2090,13 +2090,13 @@ Continuity upgrades this to equality everywhere on the open set.
 \begin{lemma}[Euclidean and translated Cartesian Laplacians]
 \label{lem:cartesian-complex-laplacian}
 \uses{def:cartesian-test-laplacian}
-\lean{NoEmbeddedEigenvalues.coordPartial_eq_fderiv_plane,
- NoEmbeddedEigenvalues.coordPartial_two_eq_iteratedFDeriv,
- NoEmbeddedEigenvalues.planeLaplacian_eq_iteratedFDeriv,
- NoEmbeddedEigenvalues.laplacian_complex_of_plane,
- NoEmbeddedEigenvalues.coordPartial_comp_sub_left,
- NoEmbeddedEigenvalues.planeLaplacian_comp_sub_left,
- NoEmbeddedEigenvalues.harmonicOnNhd_complex_of_plane}
+\lean{EulerDipoleEigenvalues.coordPartial_eq_fderiv_plane,
+ EulerDipoleEigenvalues.coordPartial_two_eq_iteratedFDeriv,
+ EulerDipoleEigenvalues.planeLaplacian_eq_iteratedFDeriv,
+ EulerDipoleEigenvalues.laplacian_complex_of_plane,
+ EulerDipoleEigenvalues.coordPartial_comp_sub_left,
+ EulerDipoleEigenvalues.planeLaplacian_comp_sub_left,
+ EulerDipoleEigenvalues.harmonicOnNhd_complex_of_plane}
 \leanok
 Write $e(z)=(\Re z,\Im z)$. For smooth $g$,
 \[
@@ -2118,7 +2118,7 @@ two cancelling signs. None of this differentiates a raw weak representative.
 
 \begin{definition}[Explicit Euclidean radial mean kernel]
 \label{def:radial-plane-mean-kernel}
-\lean{NoEmbeddedEigenvalues.radialPlaneBump, NoEmbeddedEigenvalues.radialPlaneKernel}
+\lean{EulerDipoleEigenvalues.radialPlaneBump, EulerDipoleEigenvalues.radialPlaneKernel}
 \leanok
 Let $\vartheta$ be the fixed smooth transition from zero to one and
 $b(z)=\vartheta(2-\lVert z\rVert)$.
@@ -2133,15 +2133,15 @@ viewing the normalized kernel as complex-valued.
 \begin{lemma}[Finite normalized genuinely radial kernel]
 \label{lem:radial-plane-mean-kernel}
 \uses{def:radial-plane-mean-kernel}
-\lean{NoEmbeddedEigenvalues.contDiff_radialPlaneBump,
- NoEmbeddedEigenvalues.radialPlaneBump_support,
- NoEmbeddedEigenvalues.hasCompactSupport_radialPlaneBump,
- NoEmbeddedEigenvalues.integral_radialPlaneBump_pos,
- NoEmbeddedEigenvalues.contDiff_radialPlaneKernel,
- NoEmbeddedEigenvalues.hasCompactSupport_radialPlaneKernel,
- NoEmbeddedEigenvalues.integral_radialPlaneKernel,
- NoEmbeddedEigenvalues.radialPlaneKernel_norm_eq,
- NoEmbeddedEigenvalues.tsupport_radialPlaneKernel}
+\lean{EulerDipoleEigenvalues.contDiff_radialPlaneBump,
+ EulerDipoleEigenvalues.radialPlaneBump_support,
+ EulerDipoleEigenvalues.hasCompactSupport_radialPlaneBump,
+ EulerDipoleEigenvalues.integral_radialPlaneBump_pos,
+ EulerDipoleEigenvalues.contDiff_radialPlaneKernel,
+ EulerDipoleEigenvalues.hasCompactSupport_radialPlaneKernel,
+ EulerDipoleEigenvalues.integral_radialPlaneKernel,
+ EulerDipoleEigenvalues.radialPlaneKernel_norm_eq,
+ EulerDipoleEigenvalues.tsupport_radialPlaneKernel}
 \leanok
 For $R>0$ the bump and kernel are smooth and compactly supported,
 the bump has a genuine finite positive integral, and $\int K_R=1$.
@@ -2161,7 +2161,7 @@ alone would not justify the mean-value argument.
 
 \begin{definition}[Actual plane convolution]
 \label{def:plane-convolution}
-\lean{NoEmbeddedEigenvalues.planeConvolution}
+\lean{EulerDipoleEigenvalues.planeConvolution}
 \leanok
 For complex plane functions let
 $(f*k)(x)=\int_{\R^2}f(y)k(x-y)\,dy$.
@@ -2171,8 +2171,8 @@ The integral value alone makes no assertion of finiteness.
 \begin{lemma}[Actual convolution symmetries]
 \label{lem:plane-convolution-basic}
 \uses{def:plane-convolution}
-\lean{NoEmbeddedEigenvalues.planeConvolution_comm,
- NoEmbeddedEigenvalues.planeConvolution_ofReal}
+\lean{EulerDipoleEigenvalues.planeConvolution_comm,
+ EulerDipoleEigenvalues.planeConvolution_ofReal}
 \leanok
 Actual plane convolution is commutative, and a real kernel agrees with the
 corresponding real-scalar convolution. These are value identities and do
@@ -2189,10 +2189,10 @@ of complex multiplication. For real kernels use the real scalar action on $\C$.
 \label{lem:plane-convolution-calculus}
 \uses{def:plane-convolution, def:cartesian-test-laplacian,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.contDiff_planeConvolution,
- NoEmbeddedEigenvalues.coordPartial_planeConvolution,
- NoEmbeddedEigenvalues.planeLaplacian_planeConvolution,
- NoEmbeddedEigenvalues.isTestFunctionOn_kernelTranslate}
+\lean{EulerDipoleEigenvalues.contDiff_planeConvolution,
+ EulerDipoleEigenvalues.coordPartial_planeConvolution,
+ EulerDipoleEigenvalues.planeLaplacian_planeConvolution,
+ EulerDipoleEigenvalues.isTestFunctionOn_kernelTranslate}
 \leanok
 For $f\in L^1_{\rm loc}(\R^2)$ and a smooth compact kernel $k$,
 \[
@@ -2218,7 +2218,7 @@ translation homeomorphism for compact support and its smoothness.
 \label{lem:weak-harmonic-smoothing}
 \uses{def:plane-convolution, def:cartesian-test-laplacian,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.planeLaplacian_smoothing_eq_zero}
+\lean{EulerDipoleEigenvalues.planeLaplacian_smoothing_eq_zero}
 \leanok
 Suppose $f\in L^1_{\rm loc}(\R^2)$ and
 $\int f\Delta_{\rm cart}\phi=0$ for all compact tests on $U$.
@@ -2239,8 +2239,8 @@ Its whole support is inside the weak domain, so the supplied test identity appli
 \begin{lemma}[Finite Fubini exchange of two smoothing kernels]
 \label{lem:plane-convolution-kernel-exchange}
 \uses{def:plane-convolution}
-\lean{NoEmbeddedEigenvalues.planeConvolution_assoc,
- NoEmbeddedEigenvalues.planeConvolution_swap_kernels}
+\lean{EulerDipoleEigenvalues.planeConvolution_assoc,
+ EulerDipoleEigenvalues.planeConvolution_swap_kernels}
 \leanok
 If $k,l$ are continuous compact kernels and $f\in L^1(\R^2)$, then
 $(k*l)*f=k*(l*f)$ and $k*(l*f)=l*(k*f)$ pointwise.
@@ -2258,8 +2258,8 @@ Fubini, translation invariance and commutativity give the identities.
 \begin{lemma}[Fixed radial smoothing reproduces classical harmonic values]
 \label{lem:radial-plane-harmonic-mean}
 \uses{def:radial-plane-mean-kernel, def:plane-convolution}
-\lean{NoEmbeddedEigenvalues.harmonic_integral_polar_angle,
- NoEmbeddedEigenvalues.integral_radialPlaneKernel_mul_harmonic}
+\lean{EulerDipoleEigenvalues.harmonic_integral_polar_angle,
+ EulerDipoleEigenvalues.integral_radialPlaneKernel_mul_harmonic}
 \leanok
 Let $g$ be continuous on the plane and classically harmonic in a neighbourhood
 of the closed Euclidean disk of radius $R>0$ about $x$.
@@ -2281,7 +2281,7 @@ Circle means are applied only to a classical representative, not raw weak data.
 
 \begin{definition}[Shrinking bounded-shape plane kernels]
 \label{def:plane-approximate-kernel}
-\lean{NoEmbeddedEigenvalues.planeApproxBump, NoEmbeddedEigenvalues.planeApproxKernel}
+\lean{EulerDipoleEigenvalues.planeApproxBump, EulerDipoleEigenvalues.planeApproxKernel}
 \leanok
 Let $r_n=(n+1)^{-1}$. Choose the standard normed-space bump with inner radius
 $r_n/2$ and outer radius $r_n$ for the product maximum norm.
@@ -2292,8 +2292,8 @@ Unlike $K_R$, no Euclidean radiality is specified.
 \begin{lemma}[Actual approximate-identity limits]
 \label{lem:plane-approximate-identity}
 \uses{def:plane-approximate-kernel, def:plane-convolution}
-\lean{NoEmbeddedEigenvalues.planeApproxConvolution_tendsto_ae,
- NoEmbeddedEigenvalues.planeApproxConvolution_tendsto_continuous}
+\lean{EulerDipoleEigenvalues.planeApproxConvolution_tendsto_ae,
+ EulerDipoleEigenvalues.planeApproxConvolution_tendsto_continuous}
 \leanok
 If $f\in L^1_{\rm loc}(\R^2)$, then $(f*\kappa_n)(x)\to f(x)$ for a.e.\ $x$.
 For continuous $f$ this convergence holds at every $x$.
@@ -2310,7 +2310,7 @@ using Lebesgue differentiation for the a.e.\ assertion.
 
 \begin{lemma}[Joint a.e. equality transports compact test pairings]
 \label{lem:joint-ae-compact-test}
-\lean{NoEmbeddedEigenvalues.integral_mul_test_congr_ae}
+\lean{EulerDipoleEigenvalues.integral_mul_test_congr_ae}
 \leanok
 If $U$ is measurable, $f=g$ jointly a.e.\ on $U$, and
 $\operatorname{tsupp}\phi\subset U$, then $\int f\phi=\int g\phi$.
@@ -2327,7 +2327,7 @@ The two product functions are a.e.\ equal on the entire plane.
 \label{lem:weak-harmonic-local-smoothing}
 \uses{def:cartesian-test-laplacian, def:plane-convolution,
  def:radial-plane-mean-kernel, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.weak_harmonic_local_smoothing}
+\lean{EulerDipoleEigenvalues.weak_harmonic_local_smoothing}
 \leanok
 Suppose $f\in L^1(\R^2)$ and
 $\int f\Delta_{\rm cart}\phi=0$ for all compact tests on $U$.
@@ -2360,7 +2360,7 @@ data to a circle is used.
 \begin{lemma}[Smooth weak-harmonic representative on the entire original domain]
 \label{lem:weak-harmonic-smooth-representative}
 \uses{def:cartesian-test-laplacian, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.weak_harmonic_smooth_rep}
+\lean{EulerDipoleEigenvalues.weak_harmonic_smooth_rep}
 \leanok
 Let $U$ be open, $f\in L^1(\R^2)$, and
 $\int f\Delta_{\rm cart}\phi=0$ for every compact test on $U$.
@@ -2384,12 +2384,12 @@ A countable subcover gives its joint a.e.\ agreement on the whole domain.
 \begin{lemma}[Differentiated bounds from a flat finite classical jet]
 \label{lem:classical-jet-flat-bounds}
 \uses{def:local-plane-geometry, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.classicalComplexJet_append,
- NoEmbeddedEigenvalues.contDiffOn_classicalComplexJet,
- NoEmbeddedEigenvalues.norm_le_pow_of_flat_jet,
- NoEmbeddedEigenvalues.exists_bound_top_classicalJet,
- NoEmbeddedEigenvalues.exists_classicalJet_flat_bounds,
- NoEmbeddedEigenvalues.exists_radial_classicalJet_flat_bounds}
+\lean{EulerDipoleEigenvalues.classicalComplexJet_append,
+ EulerDipoleEigenvalues.contDiffOn_classicalComplexJet,
+ EulerDipoleEigenvalues.norm_le_pow_of_flat_jet,
+ EulerDipoleEigenvalues.exists_bound_top_classicalJet,
+ EulerDipoleEigenvalues.exists_classicalJet_flat_bounds,
+ EulerDipoleEigenvalues.exists_radial_classicalJet_flat_bounds}
 \leanok
 Let $f$ be smooth on an open neighbourhood $U$ of $c$ and let its ordered
 classical jets of orders less than $n$ vanish at $c$.
@@ -2416,8 +2416,8 @@ No value-only big-O estimate is differentiated.
 \begin{lemma}[Local classical weak jets]
 \label{lem:local-classical-weak-jet}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_of_contDiffOn,
- NoEmbeddedEigenvalues.classicalComplexJet_weakOn}
+\lean{EulerDipoleEigenvalues.hasWeakPartialOn_of_contDiffOn,
+ EulerDipoleEigenvalues.classicalComplexJet_weakOn}
 \leanok
 A function smooth on an open set $U$ has its actual classical jet as a
 specified weak jet of every finite order on the whole of $U$.
@@ -2435,7 +2435,7 @@ Apply this to each smooth classical jet entry.
 \begin{lemma}[Radial mass of a flat finite jet]
 \label{lem:flat-jet-radial-mass}
 \uses{def:local-weak-jets, def:sobolev-local, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.exists_radial_classicalJet_flat_memLp}
+\lean{EulerDipoleEigenvalues.exists_radial_classicalJet_flat_memLp}
 \leanok
 Under the flat-jet hypotheses of Lemma~\ref{lem:classical-jet-flat-bounds},
 one positive-radius disk has the classical specified weak jet and
@@ -2455,8 +2455,8 @@ observation.
 \begin{definition}[Affine pullback of a specified jet]
 \label{def:affine-jet}
 \uses{def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.planeAffine, NoEmbeddedEigenvalues.planeDirection,
- NoEmbeddedEigenvalues.affineCoeff, NoEmbeddedEigenvalues.affineJet}
+\lean{EulerDipoleEigenvalues.planeAffine, EulerDipoleEigenvalues.planeDirection,
+ EulerDipoleEigenvalues.affineCoeff, EulerDipoleEigenvalues.affineJet}
 \leanok
 Let $T(q)=Aq+c$, where $A$ is an invertible real $2\times2$ matrix.
 For a jet family $D$, define its transformed family by
@@ -2471,13 +2471,13 @@ Thus each derivative index is transformed, not merely its argument.
 \begin{lemma}[Affine pullback of weak jets and radial bounds]
 \label{lem:affine-jet-pullback}
 \uses{def:affine-jet, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.measurePreserving_planeAffine,
- NoEmbeddedEigenvalues.HasWeakPartialOn.comp_planeAffine,
- NoEmbeddedEigenvalues.HasWeakJetOn.comp_planeAffine,
- NoEmbeddedEigenvalues.MemSobolevOn.comp_planeAffine,
- NoEmbeddedEigenvalues.MemSobolevOn.comp_planeAffine_symm,
- NoEmbeddedEigenvalues.MemSobolevLocOn.comp_planeAffine,
- NoEmbeddedEigenvalues.RadialJetLp.comp_planeAffine}
+\lean{EulerDipoleEigenvalues.measurePreserving_planeAffine,
+ EulerDipoleEigenvalues.HasWeakPartialOn.comp_planeAffine,
+ EulerDipoleEigenvalues.HasWeakJetOn.comp_planeAffine,
+ EulerDipoleEigenvalues.MemSobolevOn.comp_planeAffine,
+ EulerDipoleEigenvalues.MemSobolevOn.comp_planeAffine_symm,
+ EulerDipoleEigenvalues.MemSobolevLocOn.comp_planeAffine,
+ EulerDipoleEigenvalues.RadialJetLp.comp_planeAffine}
 \leanok
 Suppose $|\det A|=1$ and $U\subset\R^2$ is open.
 A specified order-$n$ weak jet of $f$ on $U$ pulls back to the
@@ -2507,9 +2507,9 @@ composition; finite linear combinations preserve $L^2$.
 \begin{lemma}[Reflection parity of a specified weak jet]
 \label{lem:axis-reflection-weak-jet}
 \uses{def:local-weak-jets, def:affine-jet, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.affineJet_axisReflectionLinear,
- NoEmbeddedEigenvalues.HasWeakJetOn.axisReflect_entries,
- NoEmbeddedEigenvalues.HasWeakJetOn.axisReflect_laplacian}
+\lean{EulerDipoleEigenvalues.affineJet_axisReflectionLinear,
+ EulerDipoleEigenvalues.HasWeakJetOn.axisReflect_entries,
+ EulerDipoleEigenvalues.HasWeakJetOn.axisReflect_laplacian}
 \leanok
 Let $U\subset\R^2$ be open and invariant under the coordinate reflection $R_j$.
 Let $D$ be a specified order-$n$ weak jet of $f$, and suppose
@@ -2537,7 +2537,7 @@ reflection and add the two entries. No mixed entries are commuted.
 \begin{lemma}[Saddle-chart pullback of Sobolev and radial jet data]
 \label{lem:saddle-chart-pullback}
 \uses{def:saddle-ortho-chart, def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.saddle_chart_pullback, NoEmbeddedEigenvalues.saddle_chart_pushforward}
+\lean{EulerDipoleEigenvalues.saddle_chart_pullback, EulerDipoleEigenvalues.saddle_chart_pushforward}
 \leanok
 Let $P$ be a lifted saddle. If $f\in H^n(D_\rho(P))$ has a specified
 order-$n$ weak jet $D$, then $f\circ\Xi_P\in H^n(D_\rho(0))$ has a
@@ -2563,7 +2563,7 @@ weights in the other direction as well.
 \begin{lemma}[Laplacian of the transformed saddle jet]
 \label{lem:saddle-chart-laplacian}
 \uses{def:affine-jet, def:saddle-ortho-chart}
-\lean{NoEmbeddedEigenvalues.affineJet_saddle_laplacian}
+\lean{EulerDipoleEigenvalues.affineJet_saddle_laplacian}
 \leanok
 For any formal array $D$ and lifted saddle $P$, let $E$ be its affine
 jet transform under $\Xi_P$. Pointwise,
@@ -2584,7 +2584,7 @@ $(\cos P_x)^2=1$ and $(\sqrt2)^2=2$.
 \begin{lemma}[Sobolev membership via specified jets]
 \label{lem:sobolev-weak-jets}
 \uses{def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.memSobolevOn_iff_exists_weakJet}
+\lean{EulerDipoleEigenvalues.memSobolevOn_iff_exists_weakJet}
 \leanok
 $f\in H^n(U)$ if and only if it has a specified weak jet of order $n$
 whose entries of orders $0,\ldots,n$ all belong to $L^2(U)$.
@@ -2614,7 +2614,7 @@ needed for this equivalence.
 \begin{lemma}[Local $H^2$ smooth approximation]
 \label{lem:local-h2-smooth-approximation}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.local_h2_smooth_approximation}
+\lean{EulerDipoleEigenvalues.local_h2_smooth_approximation}
 \leanok
 Let $U,V\subset\R^2$ be open, with $\overline V$ compact and contained
 in $U$, and let $u\in H^2_{\mathrm{loc}}(U)$. There are a specified
@@ -2651,7 +2651,7 @@ agrees with $u$.
 
 \begin{lemma}[Stability of bounded-coefficient $L^2$ product integrals]
 \label{lem:l2-product-integral-stability}
-\lean{NoEmbeddedEigenvalues.tendsto_integral_mul_conj_of_L2}
+\lean{EulerDipoleEigenvalues.tendsto_integral_mul_conj_of_L2}
 \leanok
 On a measure space $(X,m)$, let $c\in L^\infty(m)$ be complex-valued.
 If $f_n,F,g_n,G\in L^2(m)$ with
@@ -2672,7 +2672,7 @@ integrable by Hölder's inequality.
 \begin{definition}[Canonical second stream jet]
 \label{def:stream-second-jet}
 \uses{def:stream-lifts, def:stream-derivatives, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.streamJet2}
+\lean{EulerDipoleEigenvalues.streamJet2}
 \leanok
 Let $J_\varnothing=\widetilde\psi$, $J_j$ be the lift of the existing
 Fourier multiplier $\partial_j\Delta^{-1}\omega$, and $J_{ij}$ the lift of
@@ -2682,7 +2682,7 @@ $\partial_i\partial_j\Delta^{-1}\omega$. Set unused higher entries to zero.
 \begin{lemma}[Weak second stream jet]
 \label{lem:stream-weak-second-jet}
 \uses{def:stream-second-jet, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.streamJet2_weak}
+\lean{EulerDipoleEigenvalues.streamJet2_weak}
 \leanok
 For every $\omega\in L^2$ and every $U$, $J$ is a specified second weak jet
 of the continuous stream lift on $U$.
@@ -2698,7 +2698,7 @@ lift bridges; change the value representative to the continuous stream.
 \begin{lemma}[Canonical stream Poisson identity]
 \label{lem:canonical-stream-poisson}
 \uses{def:torus, def:stream-second-jet}
-\lean{NoEmbeddedEigenvalues.streamJet2_laplacian}
+\lean{EulerDipoleEigenvalues.streamJet2_laplacian}
 \leanok
 For every mean-zero $\omega$, the canonical second stream entries satisfy
 $J_{00}+J_{11}=\widetilde\omega$ a.e.\ on the whole plane.
@@ -2715,7 +2715,7 @@ in torus L2. Lift its a.e.\ representative identity to the plane.
 \begin{lemma}[Local elliptic regularity]
 \label{lem:elliptic-local}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.elliptic_local_h3}
+\lean{EulerDipoleEigenvalues.elliptic_local_h3}
 \leanok
 On an open $U$, let $u\in H^2_{\rm loc}(U)$ and $F\in H^1_{\rm loc}(U)$.
 If a specified second weak jet of $u$ has trace $F$, then
@@ -2756,7 +2756,7 @@ Thus this is an interior argument, with no boundary condition on $u$.
 \begin{lemma}[Stream H3 from local vorticity H1]
 \label{lem:stream-h3-of-vorticity-h1}
 \uses{def:torus, def:stream-lifts, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.stream_h3_of_vorticity_h1}
+\lean{EulerDipoleEigenvalues.stream_h3_of_vorticity_h1}
 \leanok
 For a mean-zero $\omega$ and open $U$, if
 $\widetilde\omega\in H^1_{\rm loc}(U)$, then the same continuous stream
@@ -2776,7 +2776,7 @@ Apply interior elliptic regularity on the same open domain.
 \begin{lemma}[Uniform dyadic elliptic estimate]
 \label{lem:elliptic-dyadic}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.elliptic_dyadic}
+\lean{EulerDipoleEigenvalues.elliptic_dyadic}
 \leanok
 Let $A_r=\{r<|p-c|<2r\}$ and $A_r^*=\{r/2<|p-c|<4r\}$.
 Suppose $u\in H^2(A_r^*)$, $F\in H^1(A_r^*)$, with specified weak jets
@@ -2832,7 +2832,7 @@ sum over the eight ordered third derivatives.
 \begin{lemma}[Weighted third-order elliptic gain]
 \label{lem:elliptic-weighted-third}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.elliptic_weighted_third}
+\lean{EulerDipoleEigenvalues.elliptic_weighted_third}
 \leanok
 On a disk $D_\rho(c)$ let $D$ be a specified second weak jet of $u$, with
 $D^ku/r^{4-k}\in L^2$ for $0\le k\le2$, where $r=|p-c|$.
@@ -2876,7 +2876,7 @@ default-valued Bochner integral.
 \begin{lemma}[One-coordinate division of an odd H3 function]
 \label{lem:odd-h3-division}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.odd_h3_division}
+\lean{EulerDipoleEigenvalues.odd_h3_division}
 \leanok
 Let $R\in H^3(I\times(-b,b))$ be odd in $v$, where $I$ is a bounded
 interval and $b>0$. Then $R/v$ has an even $H^2$ extension across $v=0$,
@@ -2912,7 +2912,7 @@ of normal derivative traces.
 \begin{lemma}[Weighted double division near crossing axes]
 \label{lem:weighted-double-division}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.weighted_double_division}
+\lean{EulerDipoleEigenvalues.weighted_double_division}
 \leanok
 Let $R\in H^3(D)$ on a disk $D$ centered at the origin be odd under both
 axis reflections, and put $r=(u^2+v^2)^{1/2}$. Suppose
@@ -2962,7 +2962,7 @@ center is null.
 \begin{lemma}[Weighted removal of a point in H2]
 \label{lem:weighted-h2-point-removal}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.weighted_h2_point_removal}
+\lean{EulerDipoleEigenvalues.weighted_h2_point_removal}
 \leanok
 If $V\in H^2_{\mathrm{loc}}(D\setminus\{0\})$ and
 $V/r^2$, $\nabla V/r$ and $D^2V$ are in $L^2(D)$, then $V$ extends
@@ -2991,7 +2991,7 @@ and letting $s$ tend to zero gives a contradiction.
 \begin{lemma}[Cosine Hardy division for an odd normal reflection]
 \label{lem:cosine-hardy-reflection}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.memLp_div_cos_snd_of_reflection}
+\lean{EulerDipoleEigenvalues.memLp_div_cos_snd_of_reflection}
 \leanok
 Let $F$ and its specified weak normal derivative be $L^2$ on
 $(-\pi/2,\pi/2)\times(-2\pi,2\pi)$. Suppose $F$ is odd a.e.\ under
@@ -3013,7 +3013,7 @@ in the tangential coordinate.
 \label{lem:even-h2-diagonal-hardy}
 \uses{def:sobolev-torus, def:fourier-derivatives, def:reflections,
  def:torus-of-lift, def:cells}
-\lean{NoEmbeddedEigenvalues.even_h2_diagonal_gradient_division}
+\lean{EulerDipoleEigenvalues.even_h2_diagonal_gradient_division}
 \leanok
 Let $u\in H^2(\T^2)$ be even under both separatrix reflections, with specified
 Fourier first derivatives $u_x,u_y$. On the lifted cell,
@@ -3048,7 +3048,7 @@ map. No value of a raw representative on an edge is prescribed.
 \begin{lemma}[Divided Laplacian of an even H2 function]
 \label{lem:even-h2-dipole-laplacian}
 \uses{def:sobolev-torus, def:reflections, def:dipole, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.even_h2_dipole_laplacian}
+\lean{EulerDipoleEigenvalues.even_h2_dipole_laplacian}
 \leanok
 Let $F,\psi,\zeta\in L^2(\T^2)$, with $F\in H^2(\T^2)$ even under both
 separatrix reflections, $\psi=\Psi F$ a.e., and $\Delta\psi=\zeta$ in the
@@ -3082,8 +3082,8 @@ null. Take $N_F=\zeta/\Psi$ almost everywhere.
 \begin{lemma}[ACL slicing for a single weak partial derivative]
 \label{lem:acl-slicing}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_acl_sections,
-  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_eqOn}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.exists_acl_sections,
+  EulerDipoleEigenvalues.HasACLSectionsOn.ae_eqOn}
 \leanok
 Let $I,J$ be nonempty open intervals, possibly unbounded, and let
 $F,D\in L^1_{\mathrm{loc}}(I\times J)$ satisfy $\partial_tF=D$ weakly.
@@ -3126,7 +3126,7 @@ section; continuity makes them equal everywhere on those sections.
 \begin{lemma}[Weak time derivative from orbitwise ACL data]
 \label{lem:acl-weak-converse}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.hasWeakPartialOn_snd_of_ae_ac}
+\lean{EulerDipoleEigenvalues.hasWeakPartialOn_snd_of_ae_ac}
 \leanok
 Let $I,J$ be bounded open intervals and $F,D\in L^1(I\times J)$.
 Suppose that for a.e.\ $h\in I$ there is a locally absolutely
@@ -3150,10 +3150,10 @@ identities. The representatives are never assembled into a joint function.
 \begin{lemma}[Weak differentiation under a signed parameter integral]
 \label{lem:weak-parameter-integral}
 \uses{def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.integral_parameterPrimitive_mul_deriv,
- NoEmbeddedEigenvalues.integrableOn_parameterPrimitive_rectangle,
- NoEmbeddedEigenvalues.locallyIntegrableOn_parameterPrimitive_rectangle,
- NoEmbeddedEigenvalues.HasWeakPartialOn.parameterPrimitive_rectangle}
+\lean{EulerDipoleEigenvalues.integral_parameterPrimitive_mul_deriv,
+ EulerDipoleEigenvalues.integrableOn_parameterPrimitive_rectangle,
+ EulerDipoleEigenvalues.locallyIntegrableOn_parameterPrimitive_rectangle,
+ EulerDipoleEigenvalues.HasWeakPartialOn.parameterPrimitive_rectangle}
 \leanok
 Let $U=(a,b)\times(c,d)$ with $c<0<d$, and suppose
 $\partial_hF=D$ weakly on $U$. Then
@@ -3190,9 +3190,9 @@ Compact rectangles containing the test support and the midpoint suffice.
 \begin{lemma}[Fixed-window parameter integrals in H1]
 \label{lem:fixed-window-h1}
 \uses{def:weak-derivative-local, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.memLp_setIntegral_Icc,
- NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h1,
- NoEmbeddedEigenvalues.HasIntervalH1.with_deriv}
+\lean{EulerDipoleEigenvalues.memLp_setIntegral_Icc,
+ EulerDipoleEigenvalues.HasWeakPartialOn.setIntegral_h1,
+ EulerDipoleEigenvalues.HasIntervalH1.with_deriv}
 \leanok
 Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
 Suppose $F$ is continuous on $Q$, $F,A\in L^2(Q)$, and
@@ -3223,7 +3223,7 @@ almost everywhere on every compact subinterval.
 \begin{lemma}[Rough fixed-window integrals have H1 representatives]
 \label{lem:fixed-window-h1-rough}
 \uses{def:weak-derivative-local, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_setIntegral_h1_rep}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.exists_setIntegral_h1_rep}
 \leanok
 Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
 If $F,D\in L^2(Q)$ and $\partial_hF=D$ weakly, there is $A$ with
@@ -3253,7 +3253,7 @@ raw averaged derivative.
 \begin{lemma}[Fixed-window parameter integrals in H2]
 \label{lem:fixed-window-h2}
 \uses{def:weak-derivative-local, def:h1-interval, def:h2-interval}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h2}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.setIntegral_h2}
 \leanok
 On the same rectangle and window, suppose $F$ is continuous,
 $F,D,E\in L^2(Q)$, and $\partial_hF=D$, $\partial_hD=E$ weakly.
@@ -3273,8 +3273,8 @@ Replace only the scalar derivative a.e.; retain the original value function.
 \begin{lemma}[Continuous interval derivatives give pointwise derivatives]
 \label{lem:interval-h1-continuous-derivative}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.continuousOn_Ioo,
- NoEmbeddedEigenvalues.HasIntervalH1.hasDerivAt_of_continuous}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.continuousOn_Ioo,
+ EulerDipoleEigenvalues.HasIntervalH1.hasDerivAt_of_continuous}
 \leanok
 Let $a<b$. An interval H1 representative is continuous in the interior.
 If $\operatorname{HasIntervalH1}(a,b;F,D)$ and $D$ is continuous there,
@@ -3293,7 +3293,7 @@ No raw endpoint value is used.
 \begin{lemma}[Ordinary derivatives are compatible interval H2 data]
 \label{lem:interval-h2-canonical-derivatives}
 \uses{def:h1-interval, def:h2-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH2.with_deriv}
+\lean{EulerDipoleEigenvalues.HasIntervalH2.with_deriv}
 \leanok
 For $a<b$, if $\operatorname{HasIntervalH2}(a,b;F,D,E)$, then
 \[
@@ -3315,9 +3315,9 @@ Thus different local constructions give the same derivative functions.
 \begin{lemma}[Boundary flux for fixed-window parameter integrals]
 \label{lem:fixed-window-flux}
 \uses{def:weak-derivative-local, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.congr_derivative,
- NoEmbeddedEigenvalues.HasWeakPartialOn.ae_vertical_integral_eq,
- NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h1_flux}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.congr_derivative,
+ EulerDipoleEigenvalues.HasWeakPartialOn.ae_vertical_integral_eq,
+ EulerDipoleEigenvalues.HasWeakPartialOn.setIntegral_h1_flux}
 \leanok
 Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
 Suppose $F,P$ are continuous on $Q$, the five fields
@@ -3350,7 +3350,7 @@ its $L^2$ norm and weak derivative identity even for arbitrary $\beta$.
 
 \begin{lemma}[Integrable cancellation at differentiable divisor zeros]
 \label{lem:integrable-divisor-cancellation}
-\lean{NoEmbeddedEigenvalues.eq_zero_of_integrable_divisor}
+\lean{EulerDipoleEigenvalues.eq_zero_of_integrable_divisor}
 \leanok
 Let $z\in(a,b)$, let $N$ be continuous at $z$, and let $D$ be
 differentiable there, with $D(z)=0$. If $E\in L^1(a,b)$ and
@@ -3370,8 +3370,8 @@ The latter function is not integrable, contradicting $E\in L^1$.
 \begin{lemma}[Interval trace energy on an interior window]
 \label{lem:interval-window-trace}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.restrict_interval,
- NoEmbeddedEigenvalues.HasIntervalH1.point_sq_le_subinterval}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.restrict_interval,
+ EulerDipoleEigenvalues.HasIntervalH1.point_sq_le_subinterval}
 \leanok
 Specified interval H1 data $(F,D)$ restrict to smaller open intervals without
 changing either function.
@@ -3395,7 +3395,7 @@ Apply the constant-two interval extension estimate on that window.
 \begin{lemma}[Clock endpoint trace on a unit-time window]
 \label{lem:clock-endpoint-trace}
 \uses{def:h1-interval, def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.clock_endpoint_trace_sq_le}
+\lean{EulerDipoleEigenvalues.clock_endpoint_trace_sq_le}
 \leanok
 Let $S\ge4$ and suppose $W$ has interval H1 on $(-1/4,3/4)$ with specified
 derivative $S H(S\theta)$, and $W(\theta)=F(S\theta)$ a.e. there.
@@ -3420,7 +3420,7 @@ section germ, not the raw line value of $F$, supplies the evaluation.
 
 \begin{lemma}[Global L2 from local data and a common square majorant]
 \label{lem:local-l2-square-majorant}
-\lean{NoEmbeddedEigenvalues.memLp_two_of_local_sq_bound}
+\lean{EulerDipoleEigenvalues.memLp_two_of_local_sq_bound}
 \leanok
 Let $E\in L^1(0,r)$. Suppose a raw $T$ belongs to $L^2(a,b)$ on every
 $0<a<b<r$, with $|T|^2\le E$ a.e. on each such interval.
@@ -3438,10 +3438,10 @@ L2 norm. No representatives on distinct intervals are selected or patched.
 \begin{lemma}[An elementary $L^2$ trace estimate]
 \label{lem:trace-l2}
 \uses{def:weak-derivative-local, lem:acl-slicing}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_l2_trace,
-  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_trace_eq,
-  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_tendsto_trace,
-  NoEmbeddedEigenvalues.HasACLSectionsOn.ae_trace_independent}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.exists_l2_trace,
+  EulerDipoleEigenvalues.HasACLSectionsOn.ae_trace_eq,
+  EulerDipoleEigenvalues.HasACLSectionsOn.ae_tendsto_trace,
+  EulerDipoleEigenvalues.HasACLSectionsOn.ae_trace_independent}
 \leanok
 Let $I$ be a nonempty open interval, $J=(b_1,b_2)$ with
 $\ell=b_2-b_1>0$, and let $F,D\in L^2(I\times J)$ satisfy
@@ -3479,7 +3479,7 @@ Lemma~\ref{lem:acl-slicing} also identifies the endpoint limits.
 \begin{lemma}[Distance-sensitive interval trace increment]
 \label{lem:interval-trace-increment}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.extension_sub_sq_le_distance}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.extension_sub_sq_le_distance}
 \leanok
 If $F\in H^1(a,b)$ has derivative $D$ and canonical extension
 $\widetilde F$, then for all $s,t\in[a,b]$,
@@ -3502,8 +3502,8 @@ when necessary.
 \begin{lemma}[Strong L2 continuity up to the normal endpoints]
 \label{lem:l2-trace-continuity}
 \uses{def:canonical-transverse-trace, lem:acl-slicing}
-\lean{NoEmbeddedEigenvalues.HasACLSectionsOn.trace_sub_sq_le,
- NoEmbeddedEigenvalues.HasACLSectionsOn.tendsto_trace_sq}
+\lean{EulerDipoleEigenvalues.HasACLSectionsOn.trace_sub_sq_le,
+ EulerDipoleEigenvalues.HasACLSectionsOn.tendsto_trace_sq}
 \leanok
 Let $G$ be one measurable joint transverse ACL field on $I\times(a,b)$,
 with derivative $D$ and $G,D\in L^2$. Its canonical traces $T_t$ satisfy,
@@ -3529,8 +3529,8 @@ $|t-s|$ times that fixed finite energy.
 \begin{lemma}[Canonical trace from a specified normal derivative]
 \label{lem:canonical-trace-from-partial}
 \uses{def:canonical-transverse-trace, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_transverse_trace,
- NoEmbeddedEigenvalues.HasWeakPartialOn.exists_left_trace}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.exists_transverse_trace,
+ EulerDipoleEigenvalues.HasWeakPartialOn.exists_left_trace}
 \leanok
 On an open rectangle with positive side lengths, a value and its
 specified weak normal derivative in $L^2$ give a canonical trace at
@@ -3546,8 +3546,8 @@ The trace estimate uses the given value and derivative classes.
 \begin{lemma}[Comparison of canonical traces across inward windows]
 \label{lem:one-sided-trace-comparison}
 \uses{def:canonical-transverse-trace}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq_inward,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.congr_trace}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.ae_eq_inward,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.congr_trace}
 \leanok
 Suppose two rectangles have canonical traces, the first at its left
 normal endpoint $u=0$, the second at normal coordinate $t$.
@@ -3571,7 +3571,7 @@ when their reported endpoint classes agree almost everywhere.
 \begin{lemma}[Convergence of canonical trace pairings]
 \label{lem:trace-pairing-convergence}
 \uses{def:canonical-transverse-trace}
-\lean{NoEmbeddedEigenvalues.HasACLSectionsOn.tendsto_trace_pairing}
+\lean{EulerDipoleEigenvalues.HasACLSectionsOn.tendsto_trace_pairing}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:l2-trace-continuity}, let
 $\beta\in L^2(I)$ be fixed. Then $\int_I T_u\beta\to\int_I T_t\beta$
@@ -3587,9 +3587,9 @@ difference by $\|T_u-T_t\|_2\|\beta\|_2$, which tends to zero.
 \begin{definition}[Logarithmic level weight]
 \label{def:log-level-weight}
 \uses{def:dipole, def:cells}
-\lean{NoEmbeddedEigenvalues.logLevelWeight, NoEmbeddedEigenvalues.torusDipoleLogWeight,
- NoEmbeddedEigenvalues.dipoleLogWeight, NoEmbeddedEigenvalues.logRadiusWeight,
- NoEmbeddedEigenvalues.logRectangleWeight}
+\lean{EulerDipoleEigenvalues.logLevelWeight, EulerDipoleEigenvalues.torusDipoleLogWeight,
+ EulerDipoleEigenvalues.dipoleLogWeight, EulerDipoleEigenvalues.logRadiusWeight,
+ EulerDipoleEigenvalues.logRectangleWeight}
 \leanok
 For $0<h\le1$ put $\Lambda(h)=1+\log(1/h)$. On the torus define
 $\Lambda_\Psi=\Lambda(|\Psi|/2)$ off the separatrix, and assign it the
@@ -3601,9 +3601,9 @@ $W(u,v)=1+|\log|u||+|\log|v||$, with arbitrary axis values.
 \begin{lemma}[Integrable coordinate-weight multiplier]
 \label{lem:coordinate-weight-multiplier}
 \uses{def:sobolev-local, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.sqrt_weight_snd,
- NoEmbeddedEigenvalues.HasWeakPartialOn.sqrt_weight_fst,
- NoEmbeddedEigenvalues.memLp_sqrt_weight_of_le_sum}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.sqrt_weight_snd,
+ EulerDipoleEigenvalues.HasWeakPartialOn.sqrt_weight_fst,
+ EulerDipoleEigenvalues.memLp_sqrt_weight_of_le_sum}
 \leanok
 Let $a<b$, $c<d$, and $F,D\in L^2(Q)$, $Q=(a,b)\times(c,d)$,
 with $\partial_tF=D$ weakly. For a nonnegative measurable
@@ -3631,10 +3631,10 @@ For the sum weight, add the three genuine squared-norm integrals.
 \begin{lemma}[Physical logarithmic multiplier]
 \label{lem:dipole-log-multiplier}
 \uses{def:sobolev-local, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.dipoleLogWeight_bounds,
- NoEmbeddedEigenvalues.measurable_dipoleLogWeight,
- NoEmbeddedEigenvalues.MemSobolevOn.log_dipole_mul,
- NoEmbeddedEigenvalues.MemSobolevLocOn.log_dipole_mul}
+\lean{EulerDipoleEigenvalues.dipoleLogWeight_bounds,
+ EulerDipoleEigenvalues.measurable_dipoleLogWeight,
+ EulerDipoleEigenvalues.MemSobolevOn.log_dipole_mul,
+ EulerDipoleEigenvalues.MemSobolevLocOn.log_dipole_mul}
 \leanok
 If $U\subset\R^2$ is open and $F\in H^1_{\rm loc}(U)$, then
 $\sqrt{\Lambda_\Psi}F\in L^2_{\rm loc}(U)$.
@@ -3663,9 +3663,9 @@ and use local $L^2$ gluing. No full-plane norm of a periodic lift is asserted.
 \begin{lemma}[Logarithmic mass divided by radius]
 \label{lem:logarithmic-radial-mass}
 \uses{def:local-plane-geometry, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.integrableOn_abs_rpow,
- NoEmbeddedEigenvalues.logRectangleWeight_div_radius_le,
- NoEmbeddedEigenvalues.integrableOn_logRectangleWeight_div_radius}
+\lean{EulerDipoleEigenvalues.integrableOn_abs_rpow,
+ EulerDipoleEigenvalues.logRectangleWeight_div_radius_le,
+ EulerDipoleEigenvalues.integrableOn_logRectangleWeight_div_radius}
 \leanok
 For $s>-1$, $|t|^s$ is integrable on every bounded symmetric interval.
 On $(-1,1)^2$ off the coordinate axes,
@@ -3688,9 +3688,9 @@ Fubini for the product majorant; both excluded axes are null.
 \begin{lemma}[Positive powers absorb the radial logarithm]
 \label{lem:radial-log-absorption}
 \uses{def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.logRadiusWeight_mul_rpow_le,
- NoEmbeddedEigenvalues.memLp_logRadius_mul_rpow,
- NoEmbeddedEigenvalues.memLp_logRadius_nat_mul_div}
+\lean{EulerDipoleEigenvalues.logRadiusWeight_mul_rpow_le,
+ EulerDipoleEigenvalues.memLp_logRadius_mul_rpow,
+ EulerDipoleEigenvalues.memLp_logRadius_nat_mul_div}
 \leanok
 For $s>0$ and $0<r\le1$,
 $r^s(1+|\log r|)\le1+1/s$.
@@ -3710,8 +3710,8 @@ so it also supplies a bounded multiplier when multiplied by $r^s$.
 \begin{lemma}[Physical logarithmic mass at a saddle]
 \label{lem:saddle-logarithmic-mass}
 \uses{def:saddle-ortho-chart, def:cell-arcs, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.exists_saddle_log_bound,
- NoEmbeddedEigenvalues.exists_integrableOn_dipoleLogWeight_div_radius}
+\lean{EulerDipoleEigenvalues.exists_saddle_log_bound,
+ EulerDipoleEigenvalues.exists_integrableOn_dipoleLogWeight_div_radius}
 \leanok
 Near zero in every normalized saddle chart,
 $\Lambda_\Psi(\Xi_c(q))\le(1+2\log2)\Lambda_{\rm rect}(q)$,
@@ -3734,7 +3734,7 @@ back by the volume- and radius-preserving affine chart.
 \begin{lemma}[Quadratic logarithmic gradient mass]
 \label{lem:saddle-quadratic-log-gradient}
 \uses{def:saddle-quadratic, def:local-weak-jets, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.saddleQuadratic_log_gradient}
+\lean{EulerDipoleEigenvalues.saddleQuadratic_log_gradient}
 \leanok
 For every saddle $c$ there is $\rho>0$, independent of $a$, such that
 $\sqrt{\Lambda_\Psi}\,\partial_jQ_{c,a}/r_c^{3/2}\in L^2(D_\rho(c))$
@@ -3755,7 +3755,7 @@ The totalized center values do not affect membership.
 \label{lem:log-radial-gradient}
 \uses{def:local-weak-jets, def:sobolev-local, def:log-level-weight,
  lem:radial-gradient-h1}
-\lean{NoEmbeddedEigenvalues.HasWeakJetOn.log_radial_gradient}
+\lean{EulerDipoleEigenvalues.HasWeakJetOn.log_radial_gradient}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:radial-gradient-h1},
 $\sqrt{\Lambda_\Psi}\,D_j/r_c^{3/2}\in L^2_{\rm loc}$ on the whole disk.
@@ -3778,7 +3778,7 @@ step, not the inverse-distance saddle estimate or the ray estimates.
 \begin{definition}[Canonical transverse chart trace]
 \label{def:canonical-transverse-trace}
 \uses{def:h1-interval, lem:h1-interval-endpoints, lem:acl-slicing, lem:trace-l2}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace}
 \leanok
 For $l<r$, $a<b$ and $t\in[a,b]$, a trace $T$ of $F$ in a chart $\Xi$
 means that on $(l,r)\times(a,b)$ there are a measurable ACL representative
@@ -3791,9 +3791,9 @@ canonical interval $H^1$ extension, including endpoints.
 \label{lem:transverse-trace-window-consistency}
 \uses{def:canonical-transverse-trace, def:weak-derivative-local,
  def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.with_weak_snd,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.extend_normal,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.restrict_normal}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.with_weak_snd,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.extend_normal,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.restrict_normal}
 \leanok
 A canonical trace construction may use the specified weak normal derivative
 of $F\circ C$ whenever that derivative belongs to L2 on the same rectangle.
@@ -3820,10 +3820,10 @@ canonical values on the whole smaller closed interval.
 \begin{lemma}[Matching-trace gluing with specified weak gradients]
 \label{lem:transverse-trace-weak-gluing}
 \uses{def:canonical-transverse-trace, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.weak_snd_glue,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.glue_trace,
- NoEmbeddedEigenvalues.HasWeakPartialOn.glue_fst_across_snd,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.h1_glue}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.weak_snd_glue,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.glue_trace,
+ EulerDipoleEigenvalues.HasWeakPartialOn.glue_fst_across_snd,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.h1_glue}
 \leanok
 Let $l<r$, $a<t<b$, and $Q=(l,r)\times(a,b)$.
 Suppose $F,D_0,D_1\in L^2(Q)$, the same $D_j$ are the specified weak
@@ -3855,12 +3855,12 @@ finite Sobolev norms; omitting the null line is not used to assert weak gluing.
 \begin{lemma}[Reflection of canonical transverse traces]
 \label{lem:transverse-trace-reflection}
 \uses{def:canonical-transverse-trace, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.normalReflectionLinear,
- NoEmbeddedEigenvalues.normalReflection,
- NoEmbeddedEigenvalues.measurePreserving_normalReflection,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.congr_ae_pullback,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq_reflected,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.reflect_normal}
+\lean{EulerDipoleEigenvalues.normalReflectionLinear,
+ EulerDipoleEigenvalues.normalReflection,
+ EulerDipoleEigenvalues.measurePreserving_normalReflection,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.congr_ae_pullback,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.ae_eq_reflected,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.reflect_normal}
 \leanok
 Put $R_c(s,y)=(s,c-y)$.
 If $F\circ C\in H^1((l,r)\times(a,b))$ has canonical trace $T$ at
@@ -3888,7 +3888,7 @@ Raw boundary assignments never enter the comparison.
 \begin{lemma}[Ordinary rectangle H1 gluing from matching traces]
 \label{lem:rectangle-h1-gluing}
 \uses{def:sobolev-local, def:canonical-transverse-trace}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.glue_matching_trace}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.glue_matching_trace}
 \leanok
 Let $l<r$ and $a<t<b$.
 If the same raw $F$ belongs to H1 on $(l,r)\times(a,t)$ and
@@ -3912,7 +3912,7 @@ cutoffs, not from the nullity of the line.
 \begin{lemma}[Interior traces from shrinking coordinate squares]
 \label{lem:interior-trace-square-averages}
 \uses{def:canonical-transverse-trace, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.tendsto_square_oscillation}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.tendsto_square_oscillation}
 \leanok
 For a transverse $H^1$ trace $T$ at $t=0$ in a rectangle chart $C$,
 the mean of $|F(C(y,s))-T(x)|$ over the square of radius $\epsilon$
@@ -3931,8 +3931,8 @@ on the shrinking squares.
 \begin{lemma}[Interior traces from physical squares]
 \label{lem:interior-trace-physical-averages}
 \uses{def:canonical-transverse-trace, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.tendsto_physical_square_oscillation,
- NoEmbeddedEigenvalues.eq_of_tendsto_physical_square_oscillation}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.tendsto_physical_square_oscillation,
+ EulerDipoleEigenvalues.eq_of_tendsto_physical_square_oscillation}
 \leanok
 Suppose $F$ is locally integrable in the physical domain and $C$ is smooth
 with nonsingular derivative along the trace line. At almost every base point
@@ -3950,9 +3950,9 @@ the coordinate oscillation. Uniqueness follows by the triangle inequality.
 
 \begin{definition}[Interior trace by continuous section germs]
 \label{def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.HasContinuousSectionGerm,
- NoEmbeddedEigenvalues.interiorSectionTrace,
- NoEmbeddedEigenvalues.interiorChartTrace}
+\lean{EulerDipoleEigenvalues.HasContinuousSectionGerm,
+ EulerDipoleEigenvalues.interiorSectionTrace,
+ EulerDipoleEigenvalues.interiorChartTrace}
 \leanok
 A continuous section germ of $f:\R\to\C$ is a function $g$, continuous on
 some $(a,b)$ with $a<0<b$, agreeing with $f$ a.e.\ there.
@@ -3966,14 +3966,14 @@ $T_C F(r)=\tau(t\mapsto F(C(r,t)))$.
 \label{lem:interior-section-trace}
 \uses{def:interior-section-trace, def:canonical-transverse-trace,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.interiorSectionTrace_eq,
- NoEmbeddedEigenvalues.interiorSectionTrace_of_continuous,
- NoEmbeddedEigenvalues.interiorSectionTrace_congr,
- NoEmbeddedEigenvalues.interiorSectionTrace_mul_continuous,
- NoEmbeddedEigenvalues.interiorSectionTrace_add_continuous,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq_interiorChartTrace,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_hasContinuousSectionGerm,
- NoEmbeddedEigenvalues.MemSobolevOn.hasInteriorChartTrace}
+\lean{EulerDipoleEigenvalues.interiorSectionTrace_eq,
+ EulerDipoleEigenvalues.interiorSectionTrace_of_continuous,
+ EulerDipoleEigenvalues.interiorSectionTrace_congr,
+ EulerDipoleEigenvalues.interiorSectionTrace_mul_continuous,
+ EulerDipoleEigenvalues.interiorSectionTrace_add_continuous,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.ae_eq_interiorChartTrace,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.ae_hasContinuousSectionGerm,
+ EulerDipoleEigenvalues.MemSobolevOn.hasInteriorChartTrace}
 \leanok
 The value $\tau(f)$ is independent of the chosen continuous germ.
 An a.e.\ change on a neighbourhood of zero preserves an existing germ value.
@@ -4004,8 +4004,8 @@ Exceptional sections may use the fallback value without changing any trace.
 \begin{lemma}[Interior traces at arbitrary transverse points]
 \label{lem:interior-trace-at}
 \uses{def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.interiorSectionTrace_eq_at,
- NoEmbeddedEigenvalues.HasACLSectionsOn.ae_interiorSectionTrace_eq}
+\lean{EulerDipoleEigenvalues.interiorSectionTrace_eq_at,
+ EulerDipoleEigenvalues.HasACLSectionsOn.ae_interiorSectionTrace_eq}
 \leanok
 For $t\in(c,d)$, write
 $\tau_t f=\tau(s\mapsto f(t+s))$.
@@ -4032,8 +4032,8 @@ no uncountable intersection of exceptional sets is taken.
 \begin{lemma}[Canonical transverse L2 traces and weak FTC]
 \label{lem:canonical-transverse-trace}
 \uses{def:weak-derivative-local, def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.memLp_interiorSectionTrace,
- NoEmbeddedEigenvalues.HasWeakPartialOn.ae_vertical_integral_eq_trace}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.memLp_interiorSectionTrace,
+ EulerDipoleEigenvalues.HasWeakPartialOn.ae_vertical_integral_eq_trace}
 \leanok
 Let $Q=(a,b)\times(c,d)$, $a<b$, $c<d$.
 If $F,D\in L^2(Q)$ and $\partial_\theta F=D$ weakly, then for each
@@ -4058,8 +4058,8 @@ membership, not merely integrability of a squared norm.
 \begin{lemma}[Rough fixed-window flux with canonical boundary values]
 \label{lem:rough-window-flux}
 \uses{def:weak-derivative-local, def:h1-interval, def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.exists_setIntegral_h1_flux_rep,
- NoEmbeddedEigenvalues.HasWeakPartialOn.setIntegral_h1_flux_of_ae_eq}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.exists_setIntegral_h1_flux_rep,
+ EulerDipoleEigenvalues.HasWeakPartialOn.setIntegral_h1_flux_of_ae_eq}
 \leanok
 Let $Q=(a,b)\times(c,d)$, $a<b$, and $c<l\le r<d$.
 Suppose $F,D,H,P,B\in L^2(Q)$,
@@ -4093,7 +4093,7 @@ the interior, so the supplied value representative is retained.
 \begin{lemma}[Tangential differentiation of continuous interior traces]
 \label{lem:tangential-interior-trace}
 \uses{def:weak-derivative-local, def:h1-interval, def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.trace_hasIntervalH1}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.trace_hasIntervalH1}
 \leanok
 Let $Q=(a,b)\times(c,d)$ with $a<b$, $c<d$, and $t\in(c,d)$.
 If $F$ is continuous, $F,D,E\in L^2(Q)$,
@@ -4124,7 +4124,7 @@ on a null line.
 \begin{definition}[Diagonal trace chart]
 \label{def:diagonal-trace-chart}
 \uses{def:cells}
-\lean{NoEmbeddedEigenvalues.diagonalTraceChart}
+\lean{EulerDipoleEigenvalues.diagonalTraceChart}
 \leanok
 Use tangential coordinate first and normal coordinate second:
 $\Xi_0(s,t)=\operatorname{diagInv}(t,s)$ and
@@ -4134,7 +4134,7 @@ $\Xi_1(s,t)=\operatorname{diagInv}(s,t)$.
 \begin{lemma}[Dipole product in either diagonal trace chart]
 \label{lem:diagonal-trace-product}
 \uses{def:diagonal-trace-chart}
-\lean{NoEmbeddedEigenvalues.dipoleLift_diagonalTraceChart}
+\lean{EulerDipoleEigenvalues.dipoleLift_diagonalTraceChart}
 \leanok
 For $j=0,1$, $\Psi(\Xi_j(s,y))=2\cos s\cos y$.
 \end{lemma}
@@ -4149,8 +4149,8 @@ does not change the product.
 \begin{lemma}[Raw diagonal L2 transport]
 \label{lem:diagonal-l2-transport}
 \uses{def:cells}
-\lean{NoEmbeddedEigenvalues.memLp_comp_diagInv,
- NoEmbeddedEigenvalues.memLp_of_comp_diagInv}
+\lean{EulerDipoleEigenvalues.memLp_comp_diagInv,
+ EulerDipoleEigenvalues.memLp_of_comp_diagInv}
 \leanok
 For measurable $U$,
 $F\in L^2(U)$ if and only if
@@ -4169,14 +4169,14 @@ multiplying by two reverses the transport. Neither factor is zero or infinite.
 \begin{lemma}[Ordinary H1 pullback in diagonal trace charts]
 \label{lem:diagonal-h1-pullback}
 \uses{def:sobolev-local, def:weak-derivative-local, def:diagonal-trace-chart}
-\lean{NoEmbeddedEigenvalues.continuous_diagonalTraceChart,
- NoEmbeddedEigenvalues.isOpenMap_diagonalTraceChart,
- NoEmbeddedEigenvalues.quasiMeasurePreserving_diagonalTraceChart,
- NoEmbeddedEigenvalues.HasWeakPartialOn.comp_diagInv_fst,
- NoEmbeddedEigenvalues.HasWeakPartialOn.comp_diagInv_snd,
- NoEmbeddedEigenvalues.MemSobolevOn.comp_diagInv,
- NoEmbeddedEigenvalues.MemSobolevOn.comp_diagonalTraceChart,
- NoEmbeddedEigenvalues.MemSobolevLocOn.diagonal_trace_rectangle}
+\lean{EulerDipoleEigenvalues.continuous_diagonalTraceChart,
+ EulerDipoleEigenvalues.isOpenMap_diagonalTraceChart,
+ EulerDipoleEigenvalues.quasiMeasurePreserving_diagonalTraceChart,
+ EulerDipoleEigenvalues.HasWeakPartialOn.comp_diagInv_fst,
+ EulerDipoleEigenvalues.HasWeakPartialOn.comp_diagInv_snd,
+ EulerDipoleEigenvalues.MemSobolevOn.comp_diagInv,
+ EulerDipoleEigenvalues.MemSobolevOn.comp_diagonalTraceChart,
+ EulerDipoleEigenvalues.MemSobolevLocOn.diagonal_trace_rectangle}
 \leanok
 The two trace charts are continuous and open; their pullbacks preserve a.e.\
 identities. On open $U$, specified weak derivatives $F_x,F_y$ give
@@ -4206,8 +4206,8 @@ compact open subset of $U$, use the actual finite H1 there, then restrict.
 \begin{lemma}[Diagonal pullback of higher weak derivatives]
 \label{lem:diagonal-sobolev-pullback}
 \uses{def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.comp_diagInv_order,
-  NoEmbeddedEigenvalues.MemSobolevLocOn.comp_diagInv}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.comp_diagInv_order,
+  EulerDipoleEigenvalues.MemSobolevLocOn.comp_diagInv}
 \leanok
 The inverse diagonal coordinate map pulls back each integer-order Sobolev
 space, finite or local, on an open set to the same order on its preimage.
@@ -4224,7 +4224,7 @@ preserved by the coordinate homeomorphism.
 \begin{lemma}[Poisson equation in diagonal coordinates]
 \label{lem:diagonal-stream-poisson}
 \uses{def:sobolev-local, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.contStream_diagInv_weak_poisson}
+\lean{EulerDipoleEigenvalues.contStream_diagInv_weak_poisson}
 \leanok
 For mean-zero vorticity, the pulled-back stream has a weak second jet
 with diagonal Laplacian equal a.e.\ to twice the pulled-back vorticity.
@@ -4242,9 +4242,9 @@ twice the Cartesian Laplacian.
 \begin{lemma}[Cartesian H1 from diagonal H1]
 \label{lem:diagonal-h1-inverse}
 \uses{def:sobolev-local, def:diagonal-trace-chart}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.of_comp_diagInv,
- NoEmbeddedEigenvalues.MemSobolevOn.of_comp_diagonalTraceChart,
- NoEmbeddedEigenvalues.MemSobolevOn.diagonalTraceChart_image}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.of_comp_diagInv,
+ EulerDipoleEigenvalues.MemSobolevOn.of_comp_diagonalTraceChart,
+ EulerDipoleEigenvalues.MemSobolevOn.diagonalTraceChart_image}
 \leanok
 For open $U$, $F\circ\Xi_j\in H^1(\Xi_j^{-1}U)$ implies $F\in H^1(U)$.
 Equivalently, H1 of the actual pullback on an open parameter set $Q$
@@ -4270,7 +4270,7 @@ The other ordering follows by swapping parameters.
 \begin{lemma}[Cartesian H1 on a translated diagonal image]
 \label{lem:translated-diagonal-h1}
 \uses{def:sobolev-local, def:diagonal-trace-chart, def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.liftShift_diagonalTraceChart_image}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.liftShift_diagonalTraceChart_image}
 \leanok
 Let $C$ be $\Xi_j$ followed by an integer torus-period translation.
 If $\widetilde\omega\circ C$ belongs to $H^1(Q)$ on an open parameter
@@ -4286,7 +4286,7 @@ translation, an affine map with determinant one.
 
 \begin{definition}[Cartesian trace chart]
 \label{def:axis-trace-chart}
-\lean{NoEmbeddedEigenvalues.axisTraceChart}
+\lean{EulerDipoleEigenvalues.axisTraceChart}
 \leanok
 The Cartesian trace chart with tangential coordinate $s$ and normal
 coordinate $t$ maps $(s,t)$ to $(t,s)$ for the first coordinate as normal,
@@ -4296,7 +4296,7 @@ and to $(s,t)$ for the second.
 \begin{definition}[Canonical cell-edge trace]
 \label{def:cell-edge-trace}
 \uses{def:canonical-transverse-trace, def:diagonal-trace-chart}
-\lean{NoEmbeddedEigenvalues.cellEdgeNormal, NoEmbeddedEigenvalues.HasCellEdgeTrace}
+\lean{EulerDipoleEigenvalues.cellEdgeNormal, EulerDipoleEigenvalues.HasCellEdgeTrace}
 \leanok
 The chosen normal edge coordinate is $t_*=\pi/2$ or $-\pi/2$.
 A trace from a cellwise region $V$ is a canonical transverse trace
@@ -4308,7 +4308,7 @@ for $t_*=-\pi/2$.
 
 \begin{definition}[Cartesian interior-ray cone]
 \label{def:cartesian-ray-cone}
-\lean{NoEmbeddedEigenvalues.cartesianRayCone}
+\lean{EulerDipoleEigenvalues.cartesianRayCone}
 \leanok
 For $R>0$ put
 \[
@@ -4321,7 +4321,7 @@ coordinate, not Euclidean distance off that ray.
 \begin{lemma}[Weighted rectangle trace on a radial band]
 \label{lem:weighted-band-trace}
 \uses{def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.weighted_band_trace}
+\lean{EulerDipoleEigenvalues.weighted_band_trace}
 \leanok
 Let $a>0$, $S_a=(a,2a)\times(-a,a)$, and suppose $F$ is continuous
 on $S_a$, with specified weak transverse derivative $\partial_t F=D$.
@@ -4358,7 +4358,7 @@ $16r^{-4}$ and $16r^{-2}$.
 \begin{lemma}[Weighted interior-ray trace in a cone]
 \label{lem:weighted-cone-trace}
 \uses{def:cartesian-ray-cone, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.weighted_cone_trace}
+\lean{EulerDipoleEigenvalues.weighted_cone_trace}
 \leanok
 Let $R>0$ and let $F$ be continuous on $\mathcal C_R$, with specified
 weak transverse derivative $\partial_tF=D$.
@@ -4389,7 +4389,7 @@ then gives the stated bound.
 \begin{lemma}[Summing cone estimates on radial bands]
 \label{lem:cone-band-energy}
 \uses{def:cartesian-ray-cone}
-\lean{NoEmbeddedEigenvalues.memLp_two_of_cone_band_energy}
+\lean{EulerDipoleEigenvalues.memLp_two_of_cone_band_energy}
 \leanok
 Let $R>0$, $K\ge0$, and let $G\ge0$ be integrable on $\mathcal C_R$.
 Suppose for every $a>0$ with $2a\le R$, the same $W$ belongs to
@@ -4418,7 +4418,7 @@ fiberwise ACL representatives.
 \begin{lemma}[Canonical interior rectangle trace estimate]
 \label{lem:canonical-rectangle-trace}
 \uses{def:interior-section-trace, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.canonical_rectangle_trace}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.canonical_rectangle_trace}
 \leanok
 Let $a<b$, $w>0$, and $S=(a,b)\times(-w,w)$.
 If $\partial_tF=D$ weakly and $F,D\in L^2(S)$, the canonical interior
@@ -4441,7 +4441,7 @@ Transfer both the L2 norm and its energy through this a.e. equality.
 \begin{lemma}[Canonical weighted trace on a radial band]
 \label{lem:canonical-weighted-band-trace}
 \uses{def:interior-section-trace, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.canonical_weighted_band_trace}
+\lean{EulerDipoleEigenvalues.canonical_weighted_band_trace}
 \leanok
 For $a>0$ and $S_a=(a,2a)\times(-a,a)$, suppose
 $\partial_tF=D$ weakly, $F/r\in L^2(S_a)$ and $D\in L^2(S_a)$.
@@ -4467,7 +4467,7 @@ $a^{-2}\le4r^{-2}$ since $r<2a$.
 \label{lem:canonical-weighted-cone-trace}
 \uses{def:cartesian-ray-cone, def:interior-section-trace,
  def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.canonical_weighted_cone_trace}
+\lean{EulerDipoleEigenvalues.canonical_weighted_cone_trace}
 \leanok
 Let $R>0$, $\partial_tF=D$ weakly on $\mathcal C_R$,
 $F/r\in L^2(\mathcal C_R)$ and $D\in L^2(\mathcal C_R)$.
@@ -4490,7 +4490,7 @@ then sum with its genuinely integrable nonnegative bulk density.
 
 \begin{definition}[Cartesian half-cone at a boundary]
 \label{def:cartesian-half-cone}
-\lean{NoEmbeddedEigenvalues.cartesianHalfCone}
+\lean{EulerDipoleEigenvalues.cartesianHalfCone}
 \leanok
 For $R>0$ put
 \[
@@ -4502,7 +4502,7 @@ The side $u=0$ is the boundary, and $r$ is tangential distance to its endpoint.
 \begin{lemma}[One-sided trace energy with a specified derivative]
 \label{lem:one-sided-trace-energy}
 \uses{def:canonical-transverse-trace, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.l2_estimate_of_weak_snd}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.l2_estimate_of_weak_snd}
 \leanok
 Let $T$ be a canonical trace of $F$ in a chart $\Xi$ on
 $(l,r)\times(a,b)$ at $t\in[a,b]$.
@@ -4527,7 +4527,7 @@ the original planar value and the supplied trace.
 \begin{lemma}[Summing one-sided cone band energies]
 \label{lem:half-cone-band-energy}
 \uses{def:cartesian-half-cone}
-\lean{NoEmbeddedEigenvalues.memLp_two_of_half_cone_band_energy}
+\lean{EulerDipoleEigenvalues.memLp_two_of_half_cone_band_energy}
 \leanok
 Let $R>0$, $K\ge0$, and $E\ge0$ be integrable on $\mathcal H_R$.
 Suppose the same $W$ belongs to $L^2(a,2a)$ for each $a>0$, $2a\le R$,
@@ -4553,7 +4553,7 @@ and the bound, including measurability up to null sets.
 \begin{lemma}[Critical one-sided trace on a radial band]
 \label{lem:boundary-weighted-band-trace}
 \uses{def:canonical-transverse-trace, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.boundary_weighted_band_trace}
+\lean{EulerDipoleEigenvalues.boundary_weighted_band_trace}
 \leanok
 Let $a>0$, $B_a=(a,2a)\times(0,a)$, and let $T$ be a canonical endpoint
 trace at $u=0$ of the same raw $F$.
@@ -4579,8 +4579,8 @@ Only canonical traces are evaluated.
 \label{lem:critical-boundary-mode}
 \uses{def:cartesian-half-cone, def:canonical-transverse-trace,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.constant_modulus_eq_zero_of_critical_memLp,
- NoEmbeddedEigenvalues.constant_modulus_boundary_trace_eq_zero}
+\lean{EulerDipoleEigenvalues.constant_modulus_eq_zero_of_critical_memLp,
+ EulerDipoleEigenvalues.constant_modulus_boundary_trace_eq_zero}
 \leanok
 If $R>0$, $T/\sqrt r\in L^2(0,R)$ and $|T|=c$ almost everywhere,
 then $c=0$.
@@ -4613,7 +4613,7 @@ derivative norms.
 \begin{lemma}[Transverse ACL representatives in diagonal coordinates]
 \label{lem:trace-acl}
 \uses{def:sobolev-local, def:cells}
-\lean{NoEmbeddedEigenvalues.exists_diagonal_acl_rep}
+\lean{EulerDipoleEigenvalues.exists_diagonal_acl_rep}
 \leanok
 Fix $a_0<a_1$, $b_1<b_2$, and let
 $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
@@ -4638,8 +4638,8 @@ of $F,F_x,F_y$, not square integrability.
 
 \begin{lemma}[Hardy inequality for integral averages]
 \label{lem:hardy-average}
-\lean{NoEmbeddedEigenvalues.lintegral_hardy_average_sq_le,
-  NoEmbeddedEigenvalues.lintegral_sq_primitive_div_sq_le_of_integrable}
+\lean{EulerDipoleEigenvalues.lintegral_hardy_average_sq_le,
+  EulerDipoleEigenvalues.lintegral_sq_primitive_div_sq_le_of_integrable}
 \leanok
 For every measurable $f:\R\to[0,\infty]$,
 \[
@@ -4672,7 +4672,7 @@ handle null-set changes of $D$.
 \begin{lemma}[The Gagliardo trace bound]
 \label{lem:trace-gagliardo}
 \uses{def:sobolev-local, def:gagliardo, def:cells, lem:trace-acl}
-\lean{NoEmbeddedEigenvalues.exists_acl_trace}
+\lean{EulerDipoleEigenvalues.exists_acl_trace}
 \leanok
 Fix $a_0<a_1$, $b_1<b_0<b_2$, and let
 $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
@@ -4743,7 +4743,7 @@ Lemma~\ref{lem:trace-acl}, so no line values are reassigned.
 \begin{lemma}[Differentiation of the trace of an $H^2$ function]
 \label{lem:trace-h2}
 \uses{def:sobolev-local, def:cells}
-\lean{NoEmbeddedEigenvalues.absolutelyContinuous_trace_of_H2}
+\lean{EulerDipoleEigenvalues.absolutelyContinuous_trace_of_H2}
 \leanok
 Fix $a_0<a_1$, $b_1<b_0<b_2$, and let
 $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates.
@@ -4787,7 +4787,7 @@ trace estimate is needed.
 \begin{lemma}[Tangential derivative of an $H^2$ boundary trace]
 \label{lem:trace-h2-boundary}
 \uses{def:sobolev-local, def:local-weak-jets, lem:trace-l2}
-\lean{NoEmbeddedEigenvalues.hasWeakJetOn_h2_boundary_trace}
+\lean{EulerDipoleEigenvalues.hasWeakJetOn_h2_boundary_trace}
 \leanok
 Let $I,J$ be nonempty bounded open intervals, $Q=I\times J$, and
 $u\in H^2(Q)$.
@@ -4845,7 +4845,7 @@ bound in Gagliardo form avoids identifying it with a Bessel potential norm.
 \begin{definition}[Line representatives]
 \label{def:line-representative}
 \uses{def:cells}
-\lean{NoEmbeddedEigenvalues.IsLineRep}
+\lean{EulerDipoleEigenvalues.IsLineRep}
 \leanok
 Let $Q=\{a_0<a<a_1,\ b_1<b<b_2\}$ in diagonal coordinates. A line representative of $F$ on $Q$
 with $b$-derivative $G_b$ is a function $G$ with $G=F$ almost everywhere on $Q$, $G_b$
@@ -4857,10 +4857,10 @@ derivative $G_b(a,b)$ for almost every $b$.
 \begin{lemma}[Line representatives]
 \label{lem:line-representatives}
 \uses{def:line-representative, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.exists_isLineRep_liftL2,
-  NoEmbeddedEigenvalues.IsLineRep.ae_continuousOn,
-  NoEmbeddedEigenvalues.ae_eqOn_line,
-  NoEmbeddedEigenvalues.IsLineRep.lintegral_lt_top}
+\lean{EulerDipoleEigenvalues.exists_isLineRep_liftL2,
+  EulerDipoleEigenvalues.IsLineRep.ae_continuousOn,
+  EulerDipoleEigenvalues.ae_eqOn_line,
+  EulerDipoleEigenvalues.IsLineRep.lintegral_lt_top}
 \leanok
 \begin{enumerate}
   \item If $g\in L^2(\T^2)$ has Fourier derivatives $g_x,g_y\in L^2$, then on every bounded
@@ -4908,7 +4908,7 @@ arguments above.
 \begin{lemma}[Restriction to almost every orbit]
 \label{lem:coarea}
 \uses{def:orbit-coordinates, def:transport-pair}
-\lean{NoEmbeddedEigenvalues.ae_orbit_restriction}
+\lean{EulerDipoleEigenvalues.ae_orbit_restriction}
 \leanok
 Let $U\subset\R^2$ contain the orbit annulus $A(h_1,h_2)$, $0<h_1<h_2<1$, and let
 $L_0g=k$ on $U$ in the weak sense of Definition~\ref{def:transport-pair} (which includes local
@@ -4972,9 +4972,9 @@ every orbit.
 \begin{lemma}[Endpoint Cauchy--Schwarz estimates]
 \label{lem:h1-endpoint-estimates}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.extension_sub_sq_le,
-  NoEmbeddedEigenvalues.HasIntervalH1.extension_sq_le_left,
-  NoEmbeddedEigenvalues.HasIntervalH1.extension_sq_le_right}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.extension_sub_sq_le,
+  EulerDipoleEigenvalues.HasIntervalH1.extension_sq_le_left,
+  EulerDipoleEigenvalues.HasIntervalH1.extension_sq_le_right}
 \leanok
 Let $F\in H^1(a,b)$ have a.e.\ derivative $D$, and write $\widetilde F$ for
 its continuous extension. For $a\le c\le d\le b$,
@@ -5000,8 +5000,8 @@ inequality and Cauchy--Schwarz to $|D|$ and the constant function $1$.
 
 \begin{lemma}[Square-integrable functions along endpoint sequences]
 \label{lem:l2-endpoint-liminf}
-\lean{NoEmbeddedEigenvalues.frequently_sub_mul_sq_lt_right,
-  NoEmbeddedEigenvalues.frequently_sub_mul_sq_lt_left}
+\lean{EulerDipoleEigenvalues.frequently_sub_mul_sq_lt_right,
+  EulerDipoleEigenvalues.frequently_sub_mul_sq_lt_left}
 \leanok
 Let $a<b$ and let $g:(a,b)\to\C$ satisfy $\int_a^b|g|^2<\infty$. Then
 \[
@@ -5024,7 +5024,7 @@ bound, so no regularity of $g$ is needed.
 \begin{definition}[Local interval H1 with a specified derivative]
 \label{def:h1-local-interval}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc}
+\lean{EulerDipoleEigenvalues.HasIntervalH1Loc}
 \leanok
 $\operatorname{HasIntervalH1Loc}(a,b;N,N_1)$ means interval $H^1$ data
 $(N,N_1)$ on every $(c,d)$ with $a<c<d<b$, using the same derivative.
@@ -5033,7 +5033,7 @@ $(N,N_1)$ on every $(c,d)$ with $a<c<d<b$, using the same derivative.
 \begin{definition}[Local interval H2 with specified derivatives]
 \label{def:h2-local-interval}
 \uses{def:h1-interval, def:h2-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH2Loc}
+\lean{EulerDipoleEigenvalues.HasIntervalH2Loc}
 \leanok
 $\operatorname{HasIntervalH2Loc}(a,b;N,N_1,N_2)$ means
 $\operatorname{HasIntervalH2}(c,d;N,N_1,N_2)$ for every
@@ -5044,7 +5044,7 @@ subintervals.
 \begin{lemma}[Endpoint Hardy inequality]
 \label{lem:hardy-endpoint}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_endpoint}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.hardy_endpoint}
 \leanok
 If $\eta>0$, $F\in H^1(0,\eta)$ and its trace $F(0)=0$, then $F/x\in L^2(0,\eta)$ and
 \[
@@ -5084,9 +5084,9 @@ instead of Hardy's inequality to control its endpoint flux.
 \begin{lemma}[Interior linear Hardy energy]
 \label{lem:hardy-interior-linear}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.hardy_interior,
- NoEmbeddedEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le,
- NoEmbeddedEigenvalues.HasIntervalH1.lintegral_hardy_interior}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.hardy_interior,
+ EulerDipoleEigenvalues.HasIntervalH1.integral_sq_linear_quotient_le,
+ EulerDipoleEigenvalues.HasIntervalH1.lintegral_hardy_interior}
 \leanok
 Let $N\in H^1(a,b)$ have specified derivative $D$, and let
 $z\in(a,b)$ with $N(z)=0$. If $U$ is a.e.\ strongly measurable and satisfies
@@ -5116,7 +5116,7 @@ The single value $U(z)$ does not enter the integral.
 \begin{lemma}[Segment averaging preserves H1]
 \label{lem:segment-average-h1}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.segmentAverage}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.segmentAverage}
 \leanok
 Let $a<b$, $z\in[a,b]$ and $F\in H^1(a,b)$ have specified derivative $D$.
 Writing $\widetilde F$ for its canonical continuous extension, define
@@ -5150,7 +5150,7 @@ $\int_a^b|A_1|^2\le\int_a^b\int_0^1|B|^2\le\int_a^b|D|^2$.
 \begin{lemma}[Second Hardy division]
 \label{lem:hardy-second}
 \uses{def:h1-interval, def:h2-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.interval_h2_div_sub}
+\lean{EulerDipoleEigenvalues.interval_h2_div_sub}
 \leanok
 There is a universal $K>0$ such that, whenever $a<b$, $x_0\in[a,b]$,
 $N\in H^2(a,b)$ and its canonical trace at $x_0$ is zero, the quotient
@@ -5182,8 +5182,8 @@ No division at $x_0$ or raw endpoint assignment is used.
 \begin{lemma}[Bounded smooth interval multipliers]
 \label{lem:h1-smooth-multiplier}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.mul_smooth,
- NoEmbeddedEigenvalues.HasIntervalH1.mul_contDiffOn_open}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.mul_smooth,
+ EulerDipoleEigenvalues.HasIntervalH1.mul_contDiffOn_open}
 \leanok
 Let $U\in H^1(a,b)$ have specified derivative $U_1$. Suppose
 $R\in C^\infty([a,b];\C)$, $R'=R_1$ on $(a,b)$ and
@@ -5202,7 +5202,7 @@ For the neighborhood version, compactness bounds both $R$ and its derivative.
 
 \begin{lemma}[Cauchy--Schwarz from a square-density majorant]
 \label{lem:square-density-cauchy-schwarz}
-\lean{NoEmbeddedEigenvalues.norm_integral_sq_le_of_sq_le_mul}
+\lean{EulerDipoleEigenvalues.norm_integral_sq_le_of_sq_le_mul}
 \leanok
 Let $F$ be an a.e.\ strongly measurable complex field on a measure space,
 and let $W,E$ be integrable real fields, nonnegative a.e.
@@ -5223,8 +5223,8 @@ Integral Cauchy--Schwarz and the triangle inequality then give the bound.
 
 \begin{lemma}[Transfer of cell energies to a comparable weight]
 \label{lem:cell-weight-transfer}
-\lean{NoEmbeddedEigenvalues.sqrt_weight_cell_energy,
- NoEmbeddedEigenvalues.memLp_of_sqrt_weight_ge_one}
+\lean{EulerDipoleEigenvalues.sqrt_weight_cell_energy,
+ EulerDipoleEigenvalues.memLp_of_sqrt_weight_ge_one}
 \leanok
 On a measured cell, let $W$ be measurable with $0\le w\le W\le Aw$ almost
 everywhere for constants $w,A\ge0$. If $F\in L^2$, $G$ is nonnegative and
@@ -5243,7 +5243,7 @@ measurable square root recovers measurability and $|F|\le|\sqrt W F|$.
 
 \begin{lemma}[Countable cell energy summation]
 \label{lem:countable-cell-energy}
-\lean{NoEmbeddedEigenvalues.memLp_two_of_cell_energy}
+\lean{EulerDipoleEigenvalues.memLp_two_of_cell_energy}
 \leanok
 Let $(S_n)_{n\ge0}$ be pairwise disjoint measurable sets in a measure
 space, $G$ integrable on $S=\bigcup_nS_n$ with $G(x)\ge0$ for every
@@ -5265,7 +5265,7 @@ $K\int_SG<\infty$, proving the global L2 norm is finite.
 \begin{lemma}[Local interval H1 gives the classical derivative almost everywhere]
 \label{lem:local-h1-classical-derivative}
 \uses{def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc.hasDerivAt_ae}
+\lean{EulerDipoleEigenvalues.HasIntervalH1Loc.hasDerivAt_ae}
 \leanok
 Compatible local interval H1 data $(F,D)$ on $(a,b)$ give
 $\operatorname{HasDerivAt}F(D(x))\,x$ for almost every $x\in(a,b)$.
@@ -5280,7 +5280,7 @@ A countable interval cover globalizes its exceptional set.
 
 \begin{lemma}[Nondegenerate scalar parameters preserve almost-everywhere properties]
 \label{lem:nondegenerate-scalar-ae}
-\lean{NoEmbeddedEigenvalues.ae_comp_of_hasDerivWithinAt_ne_zero}
+\lean{EulerDipoleEigenvalues.ae_comp_of_hasDerivWithinAt_ne_zero}
 \leanok
 Let $s,t\subset\R$ with $s$ measurable, and let $r,r_1:\R\to\R$
 be measurable. Suppose $r$ is injective on $s$, $r(s)\subset t$, and at
@@ -5300,7 +5300,7 @@ The strictly positive density removes the weight without changing null sets.
 \begin{lemma}[Finite derivative globalizes local interval H1]
 \label{lem:h1-local-finite-derivative}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.hasIntervalH1_of_local_derivative}
+\lean{EulerDipoleEigenvalues.hasIntervalH1_of_local_derivative}
 \leanok
 Let $a<b$ and $D\in L^2(a,b)$.
 Suppose every $x\in(a,b)$ lies in an interval $(c,d)\subset(a,b)$,
@@ -5327,7 +5327,7 @@ and the specified a.e. derivative.
 \begin{lemma}[Local interval H1 data with global finite energy]
 \label{lem:h1-local-global}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.hasIntervalH1_of_local}
+\lean{EulerDipoleEigenvalues.hasIntervalH1_of_local}
 \leanok
 Let $a<b$ and $F,D\in L^2(a,b)$. Suppose every $x\in(a,b)$ lies
 in an interval $(c,d)\subset(a,b)$, allowing $c=a$ or $d=b$, on which
@@ -5349,7 +5349,7 @@ Together with the supplied L2 norms, this gives interval H1.
 \begin{lemma}[Reciprocal-distance energy forces zero endpoint trace]
 \label{lem:h1-div-zero-trace}
 \uses{def:h1-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.trace_zero_of_div_memLp}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.trace_zero_of_div_memLp}
 \leanok
 If $b>0$, $F\in H^1(0,b)$ and $F(x)/x\in L^2(0,b)$, then the
 canonical H1 trace of $F$ at zero is zero.
@@ -5368,7 +5368,7 @@ contradicting nonintegrability of $1/x$ at zero.
 
 \begin{lemma}[Smooth linear factorization]
 \label{lem:smooth-linear-factor}
-\lean{NoEmbeddedEigenvalues.smooth_linear_factor}
+\lean{EulerDipoleEigenvalues.smooth_linear_factor}
 \leanok
 Let $f\in C^\infty((l,r);\C)$, $[a,b]\subset(l,r)$,
 $z\in[a,b]$ and $f(z)=0$. If $M\ge0$ and $|f''|\le M$ on $[a,b]$,
@@ -5393,7 +5393,7 @@ $(x-z)g(x)=f(x)-f(z)$, including $x=z$.
 \begin{lemma}[Critical Hardy inequality for odd functions]
 \label{lem:odd-hardy}
 \uses{def:gagliardo}
-\lean{NoEmbeddedEigenvalues.lintegral_sq_div_le_gagliardoSq}
+\lean{EulerDipoleEigenvalues.lintegral_sq_div_le_gagliardoSq}
 \leanok
 If $a\colon\R\to\C$ is measurable and odd, then
 $\int_0^\infty|a(u)|^2\,du/u\le2[a]^2$ (manuscript \texttt{(ee:odd-hardy)}).
@@ -5426,8 +5426,8 @@ Lemma~\ref{lem:trace-gagliardo}, so no link between the Gagliardo seminorm and $
 
 \begin{lemma}[Segment estimate]
 \label{lem:segment-estimate}
-\lean{NoEmbeddedEigenvalues.lintegral_segment_le, NoEmbeddedEigenvalues.ae_segment_le,
-  NoEmbeddedEigenvalues.ofReal_norm_sub_sq_le}
+\lean{EulerDipoleEigenvalues.lintegral_segment_le, EulerDipoleEigenvalues.ae_segment_le,
+  EulerDipoleEigenvalues.ofReal_norm_sub_sq_le}
 \leanok
 Let $I$ be a measurable set, $J=(b_1,b_2)$, $b_0\in J$, $\beta\colon I\to J$, $w\ge0$ on $I$,
 $\partial_bG$ measurable, and let $G$ be such that for almost every $a\in I$ the function
@@ -5454,7 +5454,7 @@ segment from $b_0$ to $\beta(a)$, then integrate the measurable bound.
 \begin{lemma}[Local odd Hardy inequality]
 \label{lem:local-odd-hardy}
 \uses{def:gagliardo}
-\lean{NoEmbeddedEigenvalues.lintegral_sq_div_le_localGagliardoSq}
+\lean{EulerDipoleEigenvalues.lintegral_sq_div_le_localGagliardoSq}
 \leanok
 Let $\delta>0$ and let $f$ be measurable with $f(-u)=-f(u)$ for $|u|<\delta$. Then
 \[
@@ -5474,8 +5474,8 @@ the manuscript's ``even cutoff'', and there is no lower-order term.
 
 \begin{lemma}[Picone identity]
 \label{lem:picone}
-\lean{NoEmbeddedEigenvalues.picone_algebra, NoEmbeddedEigenvalues.picone_identity,
- NoEmbeddedEigenvalues.picone_divergence, NoEmbeddedEigenvalues.picone_integral}
+\lean{EulerDipoleEigenvalues.picone_algebra, EulerDipoleEigenvalues.picone_identity,
+ EulerDipoleEigenvalues.picone_divergence, EulerDipoleEigenvalues.picone_integral}
 \leanok
 Let $G$ be a real symmetric matrix field, $g>0$ real and $z$ complex,
 with $g,z$ differentiable. Then pointwise
@@ -5513,7 +5513,7 @@ points are separate analytic justifications, not consequences of this algebra.
 \begin{lemma}[Quadratic weak integration by parts on the torus]
 \label{lem:quadratic-weak-ibp}
 \uses{def:square-integral, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.squareIntegral_weak_value_divergence}
+\lean{EulerDipoleEigenvalues.squareIntegral_weak_value_divergence}
 \leanok
 Let $W=(W_1,W_2)$ be a real periodic $C^2$ field and let $u,u_x,u_y\in L^2$
 with the specified Fourier first-derivative relations. On a period square $Q$,

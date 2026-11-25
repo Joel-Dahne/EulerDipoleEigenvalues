@@ -12,7 +12,7 @@ from proof/statement work. After arranging memory headroom and checking that
 project dependencies are built, a typical targeted command is:
 
 ```sh
-lake env lean --profile NoEmbeddedEigenvalues/<File>.lean
+lake env lean --profile EulerDipoleEigenvalues/<File>.lean
 ```
 
 Replace the path with an actual module. This is an occasional diagnostic, not

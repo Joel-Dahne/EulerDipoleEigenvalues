@@ -4,8 +4,8 @@
 \begin{definition}[Reflections and rotation]
 \label{def:reflections}
 \uses{def:torus}
-\lean{NoEmbeddedEigenvalues.S₁, NoEmbeddedEigenvalues.S₂, NoEmbeddedEigenvalues.R,
-  NoEmbeddedEigenvalues.Ic}
+\lean{EulerDipoleEigenvalues.S₁, EulerDipoleEigenvalues.S₂, EulerDipoleEigenvalues.R,
+  EulerDipoleEigenvalues.Ic}
 \leanok
 On $\T^2$ define (manuscript \texttt{(ee:reflections)})
 \[
@@ -21,12 +21,12 @@ of $\T^2$ write $T^*g=g\circ T$.
 \begin{lemma}[Group relations]
 \label{lem:reflection-algebra}
 \uses{def:reflections, def:dipole}
-\lean{NoEmbeddedEigenvalues.S₁_comp_S₁, NoEmbeddedEigenvalues.S₂_comp_S₂,
-  NoEmbeddedEigenvalues.S₁_comp_S₂, NoEmbeddedEigenvalues.S₂_comp_S₁,
-  NoEmbeddedEigenvalues.R_comp_R, NoEmbeddedEigenvalues.R_comp_S₁,
-  NoEmbeddedEigenvalues.R_comp_S₂, NoEmbeddedEigenvalues.Ψ_comp_S₁,
-  NoEmbeddedEigenvalues.Ψ_comp_S₂, NoEmbeddedEigenvalues.Ψ_comp_R,
-  NoEmbeddedEigenvalues.Ψ_comp_Ic}
+\lean{EulerDipoleEigenvalues.S₁_comp_S₁, EulerDipoleEigenvalues.S₂_comp_S₂,
+  EulerDipoleEigenvalues.S₁_comp_S₂, EulerDipoleEigenvalues.S₂_comp_S₁,
+  EulerDipoleEigenvalues.R_comp_R, EulerDipoleEigenvalues.R_comp_S₁,
+  EulerDipoleEigenvalues.R_comp_S₂, EulerDipoleEigenvalues.Ψ_comp_S₁,
+  EulerDipoleEigenvalues.Ψ_comp_S₂, EulerDipoleEigenvalues.Ψ_comp_R,
+  EulerDipoleEigenvalues.Ψ_comp_Ic}
 \leanok
 $S_1^2=S_2^2=I$, $S_1S_2=S_2S_1=I_c$, $R^2=I_c$, $RS_1=S_2R$ and $RS_2=S_1R$.
 Moreover $\Psi\circ S_j=-\Psi$ and $\Psi\circ R=\Psi\circ I_c=\Psi$.
@@ -40,16 +40,16 @@ Direct computation modulo $2\pi$.
 \begin{lemma}[The symmetries commute with the equation]
 \label{lem:symmetries-commute}
 \uses{def:reflections, def:dipole, def:inverse-laplacian, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.pullback, NoEmbeddedEigenvalues.reflect₁,
-  NoEmbeddedEigenvalues.reflect₂, NoEmbeddedEigenvalues.rotate,
-  NoEmbeddedEigenvalues.CharacterSymmetry,
-  NoEmbeddedEigenvalues.CharacterSymmetry.coefficient,
-  NoEmbeddedEigenvalues.CharacterSymmetry.meanZero,
-  NoEmbeddedEigenvalues.CharacterSymmetry.invLap_commute,
-  NoEmbeddedEigenvalues.CharacterSymmetry.hasL0,
-  NoEmbeddedEigenvalues.IsEigenSolution.reflect₁,
-  NoEmbeddedEigenvalues.IsEigenSolution.reflect₂,
-  NoEmbeddedEigenvalues.IsEigenSolution.rotate}
+\lean{EulerDipoleEigenvalues.pullback, EulerDipoleEigenvalues.reflect₁,
+  EulerDipoleEigenvalues.reflect₂, EulerDipoleEigenvalues.rotate,
+  EulerDipoleEigenvalues.CharacterSymmetry,
+  EulerDipoleEigenvalues.CharacterSymmetry.coefficient,
+  EulerDipoleEigenvalues.CharacterSymmetry.meanZero,
+  EulerDipoleEigenvalues.CharacterSymmetry.invLap_commute,
+  EulerDipoleEigenvalues.CharacterSymmetry.hasL0,
+  EulerDipoleEigenvalues.IsEigenSolution.reflect₁,
+  EulerDipoleEigenvalues.IsEigenSolution.reflect₂,
+  EulerDipoleEigenvalues.IsEigenSolution.rotate}
 \leanok
 For $T\in\{S_1,S_2,R\}$, the map $T^*$ is a linear isometry of $L^2$,
 preserves $X$, commutes with $\Delta^{-1}$, and commutes with $L_0$ in the
@@ -92,8 +92,8 @@ are not needed for this.
 \begin{definition}[Parity sectors]
 \label{def:sectors}
 \uses{def:reflections}
-\lean{NoEmbeddedEigenvalues.paritySign, NoEmbeddedEigenvalues.InSector,
-  NoEmbeddedEigenvalues.sectorProjection}
+\lean{EulerDipoleEigenvalues.paritySign, EulerDipoleEigenvalues.InSector,
+  EulerDipoleEigenvalues.sectorProjection}
 \leanok
 For $\epsilon=(\epsilon_1,\epsilon_2)\in\{1,-1\}^2$ let
 \[
@@ -111,14 +111,14 @@ $\frac14(I+\epsilon_1S_1^*+\epsilon_2S_2^*+\epsilon_1\epsilon_2S_1^*S_2^*)$.
 \begin{lemma}[Sector decomposition]
 \label{lem:sector-reduction}
 \uses{def:sectors, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.reflect₁_involutive,
-  NoEmbeddedEigenvalues.reflect₂_involutive,
-  NoEmbeddedEigenvalues.reflect_commute,
-  NoEmbeddedEigenvalues.sectorProjection_mem,
-  NoEmbeddedEigenvalues.sectorProjection_sum,
-  NoEmbeddedEigenvalues.IsEigenSolution.add,
-  NoEmbeddedEigenvalues.IsEigenSolution.smul,
-  NoEmbeddedEigenvalues.IsEigenSolution.sectorProjection}
+\lean{EulerDipoleEigenvalues.reflect₁_involutive,
+  EulerDipoleEigenvalues.reflect₂_involutive,
+  EulerDipoleEigenvalues.reflect_commute,
+  EulerDipoleEigenvalues.sectorProjection_mem,
+  EulerDipoleEigenvalues.sectorProjection_sum,
+  EulerDipoleEigenvalues.IsEigenSolution.add,
+  EulerDipoleEigenvalues.IsEigenSolution.smul,
+  EulerDipoleEigenvalues.IsEigenSolution.sectorProjection}
 \leanok
 $P_\epsilon$ maps $L^2$ into sector $\epsilon$, and
 $\sum_\epsilon P_\epsilon=I$. If $\omega$ solves the eigenvalue problem with
@@ -139,8 +139,8 @@ $S_1^*$ and $S_2^*$ by Lemma~\ref{lem:symmetries-commute}.
 \begin{lemma}[Laplacian and reflection parities]
 \label{lem:laplacian-symmetries}
 \uses{def:fourier-derivatives, def:reflections, def:sectors}
-\lean{NoEmbeddedEigenvalues.CharacterSymmetry.hasFourierLaplacian,
- NoEmbeddedEigenvalues.InSector.even_laplacian}
+\lean{EulerDipoleEigenvalues.CharacterSymmetry.hasFourierLaplacian,
+ EulerDipoleEigenvalues.InSector.even_laplacian}
 \leanok
 The Fourier Laplacian commutes with the character symmetries of
 Lemma~\ref{lem:symmetries-commute}. In particular, if $\phi$ is even under
@@ -159,7 +159,7 @@ Laplacian and $\zeta$ therefore have the same Fourier coefficients.
 \begin{lemma}[The stream function has the parities of $\omega$]
 \label{lem:stream-sector}
 \uses{def:sectors, def:inverse-laplacian}
-\lean{NoEmbeddedEigenvalues.InSector.invLap}
+\lean{EulerDipoleEigenvalues.InSector.invLap}
 \leanok
 If $\omega\in X$ lies in sector $\epsilon$, then so does
 $\psi=\Delta^{-1}\omega$.
@@ -175,11 +175,11 @@ using that $\Delta^{-1}$ is linear.
 \begin{lemma}[Parities of the stream derivatives]
 \label{lem:stream-derivative-parities}
 \uses{def:sectors, def:stream-derivatives}
-\lean{NoEmbeddedEigenvalues.CharacterSymmetry.invLapSymbol_frequency,
-  NoEmbeddedEigenvalues.CharacterSymmetry.streamPartial_action,
-  NoEmbeddedEigenvalues.ae_comp_of_pullback_eq,
-  NoEmbeddedEigenvalues.InSector.reflect₁_streamPartial,
-  NoEmbeddedEigenvalues.InSector.reflect₂_streamPartial}
+\lean{EulerDipoleEigenvalues.CharacterSymmetry.invLapSymbol_frequency,
+  EulerDipoleEigenvalues.CharacterSymmetry.streamPartial_action,
+  EulerDipoleEigenvalues.ae_comp_of_pullback_eq,
+  EulerDipoleEigenvalues.InSector.reflect₁_streamPartial,
+  EulerDipoleEigenvalues.InSector.reflect₂_streamPartial}
 \leanok
 If $\omega\in L^2$ lies in sector $(\epsilon_1,\epsilon_2)$ and $\psi=\Delta^{-1}\omega$, then
 almost everywhere
@@ -203,9 +203,9 @@ $(k_1,k_2)\mapsto(k_2,k_1)$ gives $\sigma=1$. Insert $S_j^*\omega=\epsilon_j\ome
 \begin{lemma}[Swapping the mixed sectors]
 \label{lem:sector-swap}
 \uses{def:sectors, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.reflect₁_rotate,
-  NoEmbeddedEigenvalues.reflect₂_rotate,
-  NoEmbeddedEigenvalues.InSector.rotate}
+\lean{EulerDipoleEigenvalues.reflect₁_rotate,
+  EulerDipoleEigenvalues.reflect₂_rotate,
+  EulerDipoleEigenvalues.InSector.rotate}
 \leanok
 If $\omega$ lies in sector $(\epsilon_1,\epsilon_2)$, then $R^*\omega$ lies in
 sector $(\epsilon_2,\epsilon_1)$. In particular $R^*$ maps solutions in sector
@@ -230,8 +230,8 @@ needed.
 \begin{definition}[Rotation characters and components]
 \label{def:rotation-characters}
 \uses{def:reflections}
-\lean{NoEmbeddedEigenvalues.centralInversion,
-  NoEmbeddedEigenvalues.InRotationCharacter, NoEmbeddedEigenvalues.rotationProjection}
+\lean{EulerDipoleEigenvalues.centralInversion,
+  EulerDipoleEigenvalues.InRotationCharacter, EulerDipoleEigenvalues.rotationProjection}
 \leanok
 On $L^2$, write $I_c^*g=g\circ I_c$. For $\kappa\in\{1,-1\}$, the rotation-character
 space is $\mathcal E_\kappa=\{g:R^*g=\kappa g\}$, and the corresponding component
@@ -246,15 +246,15 @@ In Lean, the character is a boolean, \texttt{true} for $+1$ and
 \begin{lemma}[Rotation characters]
 \label{lem:rotation-characters}
 \uses{def:sectors, def:eigen-problem, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.rotate_rotate,
-  NoEmbeddedEigenvalues.centralInversion_eq_reflections,
-  NoEmbeddedEigenvalues.InSector.rotate_rotate,
-  NoEmbeddedEigenvalues.InSector.rotationProjection_mem,
-  NoEmbeddedEigenvalues.InSector.rotationProjection_character,
-  NoEmbeddedEigenvalues.rotationProjection_sum,
-  NoEmbeddedEigenvalues.rotation_characters_disjoint,
-  NoEmbeddedEigenvalues.IsEigenSolution.rotationProjection,
-  NoEmbeddedEigenvalues.IsEigenSolution.rotation_decomposition}
+\lean{EulerDipoleEigenvalues.rotate_rotate,
+  EulerDipoleEigenvalues.centralInversion_eq_reflections,
+  EulerDipoleEigenvalues.InSector.rotate_rotate,
+  EulerDipoleEigenvalues.InSector.rotationProjection_mem,
+  EulerDipoleEigenvalues.InSector.rotationProjection_character,
+  EulerDipoleEigenvalues.rotationProjection_sum,
+  EulerDipoleEigenvalues.rotation_characters_disjoint,
+  EulerDipoleEigenvalues.IsEigenSolution.rotationProjection,
+  EulerDipoleEigenvalues.IsEigenSolution.rotation_decomposition}
 \leanok
 On the sectors $(+,+)$ and $(-,-)$ one has $(R^*)^2=I_c^*=S_1^*S_2^*=I$.
 For $g$ in either sector, both $Q_\kappa g$ remain in that sector and satisfy

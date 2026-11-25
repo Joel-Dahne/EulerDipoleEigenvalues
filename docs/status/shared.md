@@ -16,7 +16,7 @@ the mixed saddle jet or quotient domain; see [Mixed](mixed.md).
 
 The general Bernstein criterion (`lem:bernstein-positivity`) and logarithm
 tools (`lem:log-bounds`, `lem:affine-in-log`) are proved in
-[`Certificates/`](../../NoEmbeddedEigenvalues/Certificates/). The
+[`Certificates/`](../../EulerDipoleEigenvalues/Certificates/). The
 [certificate chapter](../../blueprint/src/chapters/certificates.tex) separates
 operator identities from sign claims. For both odd–odd endpoints
 (`cert:dd-residual-lower`, `cert:dd-residual-upper`), Lean checks the
@@ -37,6 +37,6 @@ strip-zero replay. For the remaining strips in `cert:odd-b-strips`, the
 two endpoints on each strip share a subdivision tree. Lean checks
 explicit bounds for grouped Horner steps, using a centered derivative
 bound where direct bounds are too wide. The generated traces in
-[`MixedOddBTrace/`](../../NoEmbeddedEigenvalues/Certificates/Inequalities/MixedOddBTrace/)
+[`MixedOddBTrace/`](../../EulerDipoleEigenvalues/Certificates/Inequalities/MixedOddBTrace/)
 share horizontal bounds between boxes. The Python search is not part of
 the proof.

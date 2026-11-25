@@ -21,10 +21,10 @@ results for a general transport pair.
 \begin{definition}[Transport pair]
 \label{def:transport-pair}
 \uses{def:eigen-problem, def:lift-operators, def:dipole-flow, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.IsOrbitUnion,
-  NoEmbeddedEigenvalues.HasWeakL0On,
-  NoEmbeddedEigenvalues.IsTransportPair,
-  NoEmbeddedEigenvalues.transportUnknown}
+\lean{EulerDipoleEigenvalues.IsOrbitUnion,
+  EulerDipoleEigenvalues.HasWeakL0On,
+  EulerDipoleEigenvalues.IsTransportPair,
+  EulerDipoleEigenvalues.transportUnknown}
 \leanok
 An \emph{open union of orbits} is an open set $U\subset\R^2$ with
 $\varphi_t(U)\subset U$ for all $t$. On such $U$, $L_0g=h$ \emph{weakly} means that
@@ -54,7 +54,7 @@ the neighbouring cells is a bounded open union of orbits.
 \begin{lemma}[Weak partial derivatives give weak transport]
 \label{lem:weak-gradient-transport}
 \uses{def:transport-pair, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.hasWeakL0On}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.hasWeakL0On}
 \leanok
 On any open $U\subset\R^2$, if $u$ has weak partial derivatives
 $g_x,g_y$, then $L_0u=\sin y\,g_x-\sin x\,g_y$ weakly on $U$.
@@ -71,7 +71,7 @@ directions, so there is no zeroth-order term.
 \begin{lemma}[Recovering a weak partial from transverse transport]
 \label{lem:transport-transverse-partial}
 \uses{def:transport-pair, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.partial_of_transverse}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.partial_of_transverse}
 \leanok
 Let $W$ be open, $F,D_0,D_1\in L^1_{\rm loc}(W)$, and suppose
 \[
@@ -101,7 +101,7 @@ not to estimate a global norm.
 \begin{lemma}[No-jump H1 gluing at Cartesian axes]
 \label{lem:transport-axis-h1-gluing}
 \uses{def:transport-pair, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.h1_of_off_axes}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.h1_of_off_axes}
 \leanok
 Let $W$ be open, $0\notin W$, and suppose each coordinate's only sine zero
 on $W$ is zero: $\sin p_j=0$ implies $p_j=0$ for $p\in W$.
@@ -132,9 +132,9 @@ Their full-domain L2 norms were supplied before this argument.
 \begin{lemma}[The transport unknown]
 \label{lem:transport-unknown}
 \uses{def:transport-pair}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.const_mul,
-  NoEmbeddedEigenvalues.IsTransportPair.hasWeakL0On_transportUnknown,
-  NoEmbeddedEigenvalues.IsTransportPair.hasWeakL0On_transportUnknown_sub}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.const_mul,
+  EulerDipoleEigenvalues.IsTransportPair.hasWeakL0On_transportUnknown,
+  EulerDipoleEigenvalues.IsTransportPair.hasWeakL0On_transportUnknown_sub}
 \leanok
 For a transport pair, the transport unknown satisfies $Hz=-v$ and $(H-\lambda)z=f$
 weakly on $U$.
@@ -149,7 +149,7 @@ $L_0z=-i v$ and $i(\lambda z+f)=-iv$.
 \begin{lemma}[Periodic relations give transport pairs]
 \label{lem:periodic-transport-pair}
 \uses{def:transport-pair, def:sobolev-torus, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.isTransportPair_continuousRep}
+\lean{EulerDipoleEigenvalues.isTransportPair_continuousRep}
 \leanok
 Let $\nu,\phi\in L^2(\T^2)$, $\phi\in H^2(\T^2)$, $\lambda\ne0$, and
 $L_0(\nu+\phi)=i\lambda\nu$ in the character-tested sense.
@@ -169,7 +169,7 @@ and the weak identity persist under this change of representative.
 \begin{lemma}[Eigenfunctions give transport pairs]
 \label{lem:transport-pair-eigen}
 \uses{def:transport-pair, def:eigen-problem, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.isTransportPair_of_isEigenSolution}
+\lean{EulerDipoleEigenvalues.isTransportPair_of_isEigenSolution}
 \leanok
 Let $\omega$ be an eigenfunction with parameter $\lambda$, $\psi=\Delta^{-1}\omega$,
 and $U$ a bounded open union of orbits. Then the lifts of $\omega$ and $\psi$ form a
@@ -208,7 +208,7 @@ written out.
 \begin{lemma}[Orbitwise transport and resonant vanishing]
 \label{lem:resonant-vanishing}
 \uses{def:transport-pair, def:period, def:orbit-coordinates, def:level-integral}
-\lean{NoEmbeddedEigenvalues.resonant_vanishing}
+\lean{EulerDipoleEigenvalues.resonant_vanishing}
 \leanok
 Let $(v,f)$ be a transport pair on an open set $U$ containing the orbit annulus
 $A(h_1,h_2)$, $0<h_1<h_2<1$. For almost every $h\in(h_1,h_2)$, the transport unknown
@@ -270,7 +270,7 @@ $z=-(v+f)/\lambda$.
 \begin{lemma}[One exceptional set for transport in the cell]
 \label{lem:cell-orbit-transport}
 \uses{def:transport-pair, def:cells, def:period}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.ae_orbit_transport_cell}
+\lean{EulerDipoleEigenvalues.IsTransportPair.ae_orbit_transport_cell}
 \leanok
 If $(v,f)$ is a transport pair on $U\supset\Cell$, there is a single null set
 of levels outside which $z\circ\gamma_h$ agrees almost everywhere in time
@@ -299,8 +299,8 @@ $c_+=\kappa c_-$.
 \begin{lemma}[Melnikov condition]
 \label{lem:melnikov}
 \uses{def:transport-pair, def:separatrix-arc, def:canonical-profile, def:cells}
-\lean{NoEmbeddedEigenvalues.melnikov_character, NoEmbeddedEigenvalues.melnikov,
-  NoEmbeddedEigenvalues.exists_resonant_level_character}
+\lean{EulerDipoleEigenvalues.melnikov_character, EulerDipoleEigenvalues.melnikov,
+  EulerDipoleEigenvalues.exists_resonant_level_character}
 \leanok
 Let $(v,f)$ be a transport pair on an open union of orbits $U$ containing the
 closed square $|a|,|b|\le\pi/2$, with $U$ invariant under the rotation
@@ -374,9 +374,9 @@ proved without admitted dependencies.
 
 \begin{definition}[Canonical transport profile]
 \label{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.profileIntegrand,
-  NoEmbeddedEigenvalues.canonicalProfile,
-  NoEmbeddedEigenvalues.canonicalUnknown}
+\lean{EulerDipoleEigenvalues.profileIntegrand,
+  EulerDipoleEigenvalues.canonicalProfile,
+  EulerDipoleEigenvalues.canonicalUnknown}
 \leanok
 Let $\lambda\in\R$ and $g\colon\R\to\C$ with $g'\in L^1(\R)$; in the applications $g$ is
 the trace on a separatrix arc (Definition~\ref{def:separatrix-arc}). The
@@ -404,14 +404,14 @@ continuous $g$ represents the weak derivative.
 \begin{lemma}[The profile equation]
 \label{lem:canonical-profile-ode}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.integrable_profileIntegrand,
-  NoEmbeddedEigenvalues.continuous_canonicalProfile,
-  NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalProfile,
-  NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalUnknown,
-  NoEmbeddedEigenvalues.ae_hasDerivAt_canonicalUnknown_sub,
-  NoEmbeddedEigenvalues.tendsto_canonicalProfile_atTop,
-  NoEmbeddedEigenvalues.tendsto_canonicalProfile_atBot_iff,
-  NoEmbeddedEigenvalues.canonicalProfile_eq_Iic}
+\lean{EulerDipoleEigenvalues.integrable_profileIntegrand,
+  EulerDipoleEigenvalues.continuous_canonicalProfile,
+  EulerDipoleEigenvalues.ae_hasDerivAt_canonicalProfile,
+  EulerDipoleEigenvalues.ae_hasDerivAt_canonicalUnknown,
+  EulerDipoleEigenvalues.ae_hasDerivAt_canonicalUnknown_sub,
+  EulerDipoleEigenvalues.tendsto_canonicalProfile_atTop,
+  EulerDipoleEigenvalues.tendsto_canonicalProfile_atBot_iff,
+  EulerDipoleEigenvalues.canonicalProfile_eq_Iic}
 \leanok
 Let $g'\in L^1(\R)$. Then $\Omega$ is continuous and
 $\Omega'=i\lambda\Omega-g'$ almost everywhere. If moreover
@@ -436,7 +436,7 @@ $\int_{-\infty}^sq+\int_s^\infty q=\int_\R q$.
 \begin{lemma}[Local absolute continuity of the canonical profile]
 \label{lem:canonical-profile-ac}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.absolutelyContinuousOnInterval_canonicalProfile}
+\lean{EulerDipoleEigenvalues.absolutelyContinuousOnInterval_canonicalProfile}
 \leanok
 Let $g'\in L^1(\R)$. Then $\Omega$ is absolutely continuous on every compact
 interval. No absolute-continuity hypothesis on $g$ or Melnikov condition is needed.
@@ -455,7 +455,7 @@ is locally absolutely continuous.
 \begin{lemma}[Uniqueness of the canonical profile]
 \label{lem:canonical-profile-unique}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.canonicalProfile_unique}
+\lean{EulerDipoleEigenvalues.canonicalProfile_unique}
 \leanok
 Let $g'\in L^1(\R)$. If $U\colon\R\to\C$ is locally absolutely continuous,
 $U'=i\lambda U-g'$ almost everywhere, and $U(s)\to0$ as $s\to+\infty$,
@@ -481,7 +481,7 @@ Thus the two-ended uniqueness assertion needs no separate theorem.
 \begin{lemma}[Exponential decay of the canonical profile]
 \label{lem:canonical-profile-decay}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.norm_canonicalProfile_le_exp}
+\lean{EulerDipoleEigenvalues.norm_canonicalProfile_le_exp}
 \leanok
 Let $g$ be locally absolutely continuous, with $g'\in L^1(\R)$ satisfying the
 Melnikov condition. Suppose $c_+,c_-\in\C$, $\alpha>0$, and
@@ -520,7 +520,7 @@ proof above is unchanged. The corrected statement and its decay proof are now fo
 \begin{lemma}[Weighted $L^2$ bound for the canonical profile]
 \label{lem:canonical-profile-weighted}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.eLpNorm_exp_mul_canonicalProfile_le}
+\lean{EulerDipoleEigenvalues.eLpNorm_exp_mul_canonicalProfile_le}
 \leanok
 Let $g'\in L^1(\R)$ satisfy the Melnikov condition. Then
 \[
@@ -559,8 +559,8 @@ continuity supplies measurability of the profile.
 
 \begin{lemma}[Finite-interval transport estimate]
 \label{lem:transport-boundary-estimate}
-\lean{NoEmbeddedEigenvalues.transport_integratingFactor,
-  NoEmbeddedEigenvalues.norm_transport_le_of_boundary}
+\lean{EulerDipoleEigenvalues.transport_integratingFactor,
+  EulerDipoleEigenvalues.norm_transport_le_of_boundary}
 \leanok
 Let $a\le b$, $\lambda\in\R$, $\kappa\in\C$, and let $W$ be absolutely
 continuous on $[a,b]$, with $W'=i(\lambda W+F)$ almost everywhere and
@@ -589,8 +589,8 @@ on $[a,x]$ and use $x-a\le b-a$.
 
 \begin{lemma}[Periodic uniqueness and inherited characters]
 \label{lem:periodic-transport-character}
-\lean{NoEmbeddedEigenvalues.eq_of_periodic_transport,
-  NoEmbeddedEigenvalues.transport_character_of_periodic}
+\lean{EulerDipoleEigenvalues.eq_of_periodic_transport,
+  EulerDipoleEigenvalues.transport_character_of_periodic}
 \leanok
 Let $S>0$ and $e^{i\lambda S}\ne1$. The equation
 $Z'=i(\lambda Z+F)$ has at most one $S$-periodic, locally absolutely
@@ -611,7 +611,7 @@ preserves local absolute continuity and the almost-everywhere derivative equatio
 
 \begin{lemma}[Finite-interval pairing error]
 \label{lem:transport-pairing-error}
-\lean{NoEmbeddedEigenvalues.abs_integral_pairing_sub_le}
+\lean{EulerDipoleEigenvalues.abs_integral_pairing_sub_le}
 \leanok
 Let $a\le b$ and suppose the two real pairings below are integrable on $[a,b]$.
 If $|V-\Omega|\le A$, $|\Omega|\le B$, $|G|\le M$ and $|G-H|\le\epsilon$
@@ -632,10 +632,10 @@ Take real parts, bound by the complex norm, and integrate the constant bound.
 \begin{lemma}[Good windows]
 \label{lem:good-windows}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.volume_goodWindows_pos,
-  NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow,
-  NoEmbeddedEigenvalues.norm_exp_sub_ge_of_goodWindow_fourthRoot,
-  NoEmbeddedEigenvalues.exp_orbitPeriod_ne_one_of_goodWindow}
+\lean{EulerDipoleEigenvalues.volume_goodWindows_pos,
+  EulerDipoleEigenvalues.norm_exp_sub_ge_of_goodWindow,
+  EulerDipoleEigenvalues.norm_exp_sub_ge_of_goodWindow_fourthRoot,
+  EulerDipoleEigenvalues.exp_orbitPeriod_ne_one_of_goodWindow}
 \leanok
 Let $\lambda\ne0$. The set of levels $h$ with $|\lambda S(h)-2\pi(j+\tfrac12)|<\pi/3$
 for some integer $j$ has positive measure in every interval $(0,\eta)$, and on it
@@ -678,7 +678,7 @@ $\pm1$.
 \begin{lemma}[Selecting good levels]
 \label{lem:good-level-selection}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.exists_goodLevels_avoiding}
+\lean{EulerDipoleEigenvalues.exists_goodLevels_avoiding}
 \leanok
 Let $\lambda\ne0$, let $N$ be null, and let $P(h)$ hold for almost every
 $h\in(0,1)$. There are good levels $h_j\in(0,1)\setminus N$ with
@@ -697,7 +697,7 @@ remaining level. The displayed bound implies convergence to zero.
 \begin{lemma}[Transport representatives on a good sequence]
 \label{lem:good-level-transport}
 \uses{def:transport-pair, def:cells, def:period, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.exists_goodLevels_transport}
+\lean{EulerDipoleEigenvalues.IsTransportPair.exists_goodLevels_transport}
 \leanok
 Let $(v,f)$ be a transport pair on $U\supset\Cell$, and suppose
 $f(Rp)=\kappa f(p)$ for $p\in U$, with $\kappa\in\C$. For any null set $N$
@@ -723,7 +723,7 @@ Full-period nonresonance and periodic uniqueness transfer this character to $Z_j
 \begin{lemma}[Forcing comparison near the separatrix]
 \label{lem:forcing-comparison}
 \uses{def:sobolev-local, def:cells, def:period, def:separatrix-arc}
-\lean{NoEmbeddedEigenvalues.exists_forcing_comparison}
+\lean{EulerDipoleEigenvalues.exists_forcing_comparison}
 \leanok
 Let $U$ be open and contain $\overline\Cell$, and let $f\in H^2(U)$ be continuous.
 Put $g=f\circ\gamma$, $g_h=f\circ\gamma_h$, and
@@ -756,7 +756,7 @@ shrinking $h_0\le1$.
 \label{lem:quarter-pairing-limit}
 \uses{def:transport-pair, def:canonical-profile, def:separatrix-arc, def:period,
   def:cells, lem:good-windows}
-\lean{NoEmbeddedEigenvalues.quarter_pairing_limit}
+\lean{EulerDipoleEigenvalues.quarter_pairing_limit}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:melnikov}, let $h_n\in(0,1)$ be any
 sequence of good levels tending to zero, and put $L_n=L(h_n)$.
@@ -807,8 +807,8 @@ pairing tends to the full integral.
 \begin{lemma}[Limit of the vorticity pairing]
 \label{lem:pairing-limit}
 \uses{def:canonical-profile, def:transport-pair, lem:good-windows, def:cell-arcs, def:level-integral, def:cells}
-\lean{NoEmbeddedEigenvalues.pairing_limit_character, NoEmbeddedEigenvalues.pairing_limit,
-  NoEmbeddedEigenvalues.pairing_limit_character_of_goodLevels}
+\lean{EulerDipoleEigenvalues.pairing_limit_character, EulerDipoleEigenvalues.pairing_limit,
+  EulerDipoleEigenvalues.pairing_limit_character_of_goodLevels}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:melnikov}, for every null set $N$ there are levels
 $h_j\to0$ outside $N$, in the good windows of Lemma~\ref{lem:good-windows}, such that
@@ -870,7 +870,7 @@ select a common sequence and recombine the two complex-character components.
 \begin{definition}[Scalar phase and complete-cell endpoints]
 \label{def:phase-cell-scalars}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.quarterPhase, NoEmbeddedEigenvalues.IsPhaseCellEndpoint}
+\lean{EulerDipoleEigenvalues.quarterPhase, EulerDipoleEigenvalues.IsPhaseCellEndpoint}
 \leanok
 For real $\lambda$ put $\Phi_\lambda(h)=2\lambda L(h)$.
 A complete-cell endpoint for the quarter character $\kappa$ satisfies
@@ -881,7 +881,7 @@ not at a zero of the divisor.
 \begin{definition}[Quarter character on a region]
 \label{def:quarter-character}
 \uses{def:reflections, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.HasQuarterCharacterOn}
+\lean{EulerDipoleEigenvalues.HasQuarterCharacterOn}
 \leanok
 A function has quarter character $\kappa$ on $A$ if
 $F(Rp)=\kappa F(p)$ a.e. on $A$.
@@ -891,8 +891,8 @@ $F(Rp)=\kappa F(p)$ a.e. on $A$.
 \label{def:numerator}
 \uses{def:transport-pair, def:period, def:reflections, lem:period-orbit,
  def:phase-cell-scalars}
-\lean{NoEmbeddedEigenvalues.quarterNumerator, NoEmbeddedEigenvalues.quarterDivisor,
- NoEmbeddedEigenvalues.quarterQuotient}
+\lean{EulerDipoleEigenvalues.quarterNumerator, EulerDipoleEigenvalues.quarterDivisor,
+ EulerDipoleEigenvalues.quarterQuotient}
 \leanok
 For the continuous forcing representative of a transport pair,
 $\kappa\in\{1,-1,i,-i\}$, and the quarter orbits of
@@ -914,9 +914,9 @@ extension. Raw values on an exceptional orbit are not resonance data.
 \begin{definition}[Quarter endpoint rays and traces]
 \label{def:quarter-endpoint-rays}
 \uses{def:canonical-transverse-trace, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterEndpointRadius, NoEmbeddedEigenvalues.quarterEndpointRay,
- NoEmbeddedEigenvalues.quarterEndpointChart, NoEmbeddedEigenvalues.rotatedQuarterEndpointRay,
- NoEmbeddedEigenvalues.rotatedQuarterEndpointChart, NoEmbeddedEigenvalues.HasQuarterRayTrace}
+\lean{EulerDipoleEigenvalues.quarterEndpointRadius, EulerDipoleEigenvalues.quarterEndpointRay,
+ EulerDipoleEigenvalues.quarterEndpointChart, EulerDipoleEigenvalues.rotatedQuarterEndpointRay,
+ EulerDipoleEigenvalues.rotatedQuarterEndpointChart, EulerDipoleEigenvalues.HasQuarterRayTrace}
 \leanok
 Put $r(h)=2\arcsin\sqrt h$, $p_-(r)=(\pi-r,0)$ and $p_+(r)=(0,-\pi+r)$.
 The transverse charts are $(r,n)\mapsto(\pi-r,n)$ and
@@ -929,7 +929,7 @@ rectangle compactly contained in the specified open neighbourhood.
 \begin{lemma}[Planar a.e. congruence on full orbit restrictions]
 \label{lem:orbit-ae-congruence}
 \uses{def:orbit-coordinates, def:period}
-\lean{NoEmbeddedEigenvalues.ae_orbit_congr}
+\lean{EulerDipoleEigenvalues.ae_orbit_congr}
 \leanok
 Let $0<h_0\le1$. If $u=v$ almost everywhere on the orbit annulus
 $0<h<h_0$, then for almost every such $h$,
@@ -950,8 +950,8 @@ No assertion is made at a prescribed exceptional level.
 \begin{lemma}[Locally L2 endpoints of weak transport representatives]
 \label{lem:orbit-l2-endpoints}
 \uses{def:transport-pair, def:orbit-coordinates, def:period}
-\lean{NoEmbeddedEigenvalues.exists_l2_orbit_endpoints,
- NoEmbeddedEigenvalues.orbit_endpoint_functions}
+\lean{EulerDipoleEigenvalues.exists_l2_orbit_endpoints,
+ EulerDipoleEigenvalues.orbit_endpoint_functions}
 \leanok
 Let $U$ be open, $u,k\in L^2(U)$ and $L_0u=k$ weakly.
 Suppose $0<h_0<1$ and the annulus $0<h<h_0$ lies in $U$.
@@ -983,7 +983,7 @@ agree almost everywhere with these rectangle traces.
 \begin{lemma}[Quarter-orbit endpoint formula]
 \label{lem:quarter-endpoint-formula}
 \uses{def:numerator, def:quarter-character}
-\lean{NoEmbeddedEigenvalues.quarter_endpoint_formula}
+\lean{EulerDipoleEigenvalues.quarter_endpoint_formula}
 \leanok
 Assume both $v$ and the forcing have quarter character $\kappa$, $\kappa^4=1$.
 On a level interval $0<h<h_0<1$ whose orbit annulus lies in the pair's
@@ -1016,9 +1016,9 @@ No spatial trace of $v$ on an endpoint ray is assumed.
 \begin{lemma}[Local H1 regularity of the continuous-forcing numerator]
 \label{lem:numerator-local-h1}
 \uses{def:numerator, def:sobolev-local, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterNumerator_eq_normalized,
- NoEmbeddedEigenvalues.quarterNumerator_memIntervalH1,
- NoEmbeddedEigenvalues.quarterNumerator_h1Loc}
+\lean{EulerDipoleEigenvalues.quarterNumerator_eq_normalized,
+ EulerDipoleEigenvalues.quarterNumerator_memIntervalH1,
+ EulerDipoleEigenvalues.quarterNumerator_h1Loc}
 \leanok
 Let $U$ be open and contain the annulus $0<h<h_0<1$.
 If $g\in H^1(U)$ is continuous on $U$, then, for every real $\lambda$,
@@ -1053,9 +1053,9 @@ level intervals.
 \label{lem:numerator-local-h2}
 \uses{def:numerator, def:sobolev-local, def:h1-interval,
  def:h2-interval, def:h2-local-interval, def:transport-pair}
-\lean{NoEmbeddedEigenvalues.quarterNumerator_memIntervalH2,
- NoEmbeddedEigenvalues.quarterNumerator_h2Loc,
- NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_h2Loc}
+\lean{EulerDipoleEigenvalues.quarterNumerator_memIntervalH2,
+ EulerDipoleEigenvalues.quarterNumerator_h2Loc,
+ EulerDipoleEigenvalues.IsTransportPair.quarterNumerator_h2Loc}
 \leanok
 Let $U$ be open and contain the annulus $0<h<h_0<1$.
 If $g\in H^2(U)$ is continuous, its original numerator $N_\mu$ satisfies
@@ -1099,7 +1099,7 @@ of the canonical endpoint terms in Lemma~\ref{lem:numerator-second-moving-endpoi
 \begin{definition}[Normalized action--angle gradient contraction]
 \label{def:action-angle-pullback-gradient}
 \uses{def:action-angle}
-\lean{NoEmbeddedEigenvalues.actionAnglePullbackGradient}
+\lean{EulerDipoleEigenvalues.actionAnglePullbackGradient}
 \leanok
 For a supplied Cartesian field $D=(D_x,D_y)$ and $P=\operatorname{actionAngleInv}$,
 put
@@ -1115,10 +1115,10 @@ This is a formal contraction; no derivative identity is part of the definition.
 \label{lem:orbit-tangential-trace}
 \uses{def:action-angle-pullback-gradient, def:interior-section-trace,
  def:transport-pair, def:sobolev-local, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.normalizedOrbitTrace_hasIntervalH1,
- NoEmbeddedEigenvalues.IsTransportPair.normalizedOrbitTrace_hasIntervalH1,
- NoEmbeddedEigenvalues.IsTransportPair.normalizedOrbitTrace_h1Loc,
- NoEmbeddedEigenvalues.IsTransportPair.quarterEndpoint_forcing_h1Loc}
+\lean{EulerDipoleEigenvalues.normalizedOrbitTrace_hasIntervalH1,
+ EulerDipoleEigenvalues.IsTransportPair.normalizedOrbitTrace_hasIntervalH1,
+ EulerDipoleEigenvalues.IsTransportPair.normalizedOrbitTrace_h1Loc,
+ EulerDipoleEigenvalues.IsTransportPair.quarterEndpoint_forcing_h1Loc}
 \leanok
 Let $U$ be open, contain the cell, and let $g\in H^2(U)$ be continuous
 with specified Cartesian weak derivatives $D$.
@@ -1168,9 +1168,9 @@ weighted norms near $h=0$ or the full moving-endpoint second derivative formula.
 \begin{definition}[Quarter-jet densities and level contraction]
 \label{def:quarter-jet-data}
 \uses{def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterJetDensity,
- NoEmbeddedEigenvalues.QuarterJetIntegrable, NoEmbeddedEigenvalues.quarterJetEnergy,
- NoEmbeddedEigenvalues.quarterForcingLevelDerivative}
+\lean{EulerDipoleEigenvalues.quarterJetDensity,
+ EulerDipoleEigenvalues.QuarterJetIntegrable, EulerDipoleEigenvalues.quarterJetEnergy,
+ EulerDipoleEigenvalues.quarterForcingLevelDerivative}
 \leanok
 For any family $D_w:\R^2\to\C$ indexed by coordinate words, set
 \[
@@ -1193,7 +1193,7 @@ is a weak jet.
 \begin{definition}[Moving-endpoint numerator derivative candidate]
 \label{def:numerator-derivative}
 \uses{def:numerator, def:quarter-jet-data}
-\lean{NoEmbeddedEigenvalues.quarterNumeratorDerivative}
+\lean{EulerDipoleEigenvalues.quarterNumeratorDerivative}
 \leanok
 For continuous forcing $g$, a supplied family $D$, and real $\lambda$, set
 \[
@@ -1209,7 +1209,7 @@ its bulk term are separate assertions.
 \label{lem:orbit-window-flux}
 \uses{def:quarter-jet-data, def:period, def:sobolev-local, def:h1-interval,
  def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.normalizedOrbitWindow_hasIntervalH1_flux}
+\lean{EulerDipoleEigenvalues.normalizedOrbitWindow_hasIntervalH1_flux}
 \leanok
 Let open $U$ contain the cell, let $g$ be continuous on $U$, and suppose
 $g,D_{[0]},D_{[1]}\in L^2(U)$ with $\partial_jg=D_{[j]}$ weakly.
@@ -1246,9 +1246,9 @@ No gradient is evaluated on an endpoint curve.
 \label{lem:numerator-moving-endpoints}
 \uses{def:numerator-derivative, def:sobolev-local,
  def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterIntervalIntegral_eq_normalized,
- NoEmbeddedEigenvalues.quarterNumerator_hasIntervalH1_derivative,
- NoEmbeddedEigenvalues.quarterNumerator_derivative_h1Loc}
+\lean{EulerDipoleEigenvalues.quarterIntervalIntegral_eq_normalized,
+ EulerDipoleEigenvalues.quarterNumerator_hasIntervalH1_derivative,
+ EulerDipoleEigenvalues.quarterNumerator_derivative_h1Loc}
 \leanok
 Let $U$ be open and contain the cell, and let $g$ be continuous on $U$.
 Suppose $g,D_{[0]},D_{[1]}\in L^2(U)$ with
@@ -1292,7 +1292,7 @@ no gradient value on a moving endpoint ray is differentiated.
 \begin{lemma}[Numerator vanishes at divisor zeros]
 \label{lem:numerator-zeros}
 \uses{def:numerator, def:quarter-character, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.numerator_zeros}
+\lean{EulerDipoleEigenvalues.numerator_zeros}
 \leanok
 Under the endpoint lemma's hypotheses, $N$ has a specified local $H^1$
 derivative on $(0,h_0)$ and $N(h)=0$ at every zero of $D$ there.
@@ -1317,8 +1317,8 @@ and no simplicity or enumeration of the divisor zeros, is used.
 \begin{definition}[Half numerator and its derivative candidate]
 \label{def:half-numerator-derivative}
 \uses{def:period, def:quarter-jet-data}
-\lean{NoEmbeddedEigenvalues.quarterHalfNumerator,
- NoEmbeddedEigenvalues.quarterHalfNumeratorDerivative}
+\lean{EulerDipoleEigenvalues.quarterHalfNumerator,
+ EulerDipoleEigenvalues.quarterHalfNumeratorDerivative}
 \leanok
 For continuous $g$ and the supplied family $D$, put
 \[
@@ -1335,10 +1335,10 @@ This is a candidate weak derivative, not a regularity assertion.
 \label{lem:half-numerator-moving-endpoints}
 \uses{def:half-numerator-derivative, def:sobolev-local,
  def:h1-interval, def:h1-local-interval, lem:orbit-window-flux}
-\lean{NoEmbeddedEigenvalues.quarterHalfIntervalIntegral_eq_normalized,
- NoEmbeddedEigenvalues.quarterHalfNumerator_eq_normalized,
- NoEmbeddedEigenvalues.quarterHalfNumerator_hasIntervalH1_derivative,
- NoEmbeddedEigenvalues.quarterHalfNumerator_derivative_h1Loc}
+\lean{EulerDipoleEigenvalues.quarterHalfIntervalIntegral_eq_normalized,
+ EulerDipoleEigenvalues.quarterHalfNumerator_eq_normalized,
+ EulerDipoleEigenvalues.quarterHalfNumerator_hasIntervalH1_derivative,
+ EulerDipoleEigenvalues.quarterHalfNumerator_derivative_h1Loc}
 \leanok
 Under the forcing and weak-gradient hypotheses of
 Lemma~\ref{lem:orbit-window-flux}, for every
@@ -1361,7 +1361,7 @@ the actual integral on $[-L,0]$.
 \begin{lemma}[Geometry of quarter-divisor zeros]
 \label{lem:quarter-divisor-geometry}
 \uses{def:numerator, def:phase-cell-scalars}
-\lean{NoEmbeddedEigenvalues.quarter_divisor_geometry}
+\lean{EulerDipoleEigenvalues.quarter_divisor_geometry}
 \leanok
 For real $\lambda\ne0$ and $\kappa^4=1$, arbitrarily small cutoffs
 $0<\rho<1$ admit a decreasing enumeration $(h_j)_{j\ge0}$ of all divisor
@@ -1405,8 +1405,8 @@ Only ratio bounds, not an exact progression in the level, are asserted.
 \begin{lemma}[Derivative bounds for the quarter divisor]
 \label{lem:quarter-divisor-derivatives}
 \uses{def:numerator, def:phase-cell-scalars}
-\lean{NoEmbeddedEigenvalues.contDiffOn_quarterDivisor,
- NoEmbeddedEigenvalues.quarterDivisor_derivative_bounds}
+\lean{EulerDipoleEigenvalues.contDiffOn_quarterDivisor,
+ EulerDipoleEigenvalues.quarterDivisor_derivative_bounds}
 \leanok
 For every real $\lambda\ne0$ there are $c,C>0$ and $0<r<1$ such that,
 for every $\kappa\in\C$, the actual divisor $D$ is smooth on $(0,1)$ and
@@ -1431,7 +1431,7 @@ upper constant. No bound on the phase value or the character is needed.
 \begin{lemma}[Smooth inverse divisor factor on complete cells]
 \label{lem:quarter-divisor-inverse-factor}
 \uses{def:numerator, def:phase-cell-scalars}
-\lean{NoEmbeddedEigenvalues.quarterDivisor_inverse_factor}
+\lean{EulerDipoleEigenvalues.quarterDivisor_inverse_factor}
 \leanok
 For real $\lambda\ne0$ there are $B,H>0$ and $0<r<1$, independent of
 the character, such that every cell
@@ -1469,7 +1469,7 @@ $|R'|=|g'/g^2|\le H$, with constants depending only on $\lambda$.
 \begin{lemma}[First-derivative mass estimate on a complete cell]
 \label{lem:phase-cell-mass-estimates}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.phase_cell_mass_estimates}
+\lean{EulerDipoleEigenvalues.phase_cell_mass_estimates}
 \leanok
 For every real $\lambda\ne0$ there are $K>0$ and $0<r<1$, independent
 of the character and numerator, with the following property.
@@ -1515,7 +1515,7 @@ $\lambda$ and every character admitting the displayed central zero.
 \begin{lemma}[Second-mass estimate on a complete cell]
 \label{lem:phase-cell-second-mass-estimates}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.phase_cell_second_mass_estimates}
+\lean{EulerDipoleEigenvalues.phase_cell_second_mass_estimates}
 \leanok
 For every real $\lambda\ne0$ there are $K>0$ and $0<r<1$, independent
 of the character and numerator, with the following property.
@@ -1554,7 +1554,7 @@ integrability or the energy. Take $K=8B^4$ on the same collar.
 \begin{lemma}[Uniform complete-cell division estimates]
 \label{lem:phase-cell-estimates}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval}
-\lean{NoEmbeddedEigenvalues.phase_cell_estimates}
+\lean{EulerDipoleEigenvalues.phase_cell_estimates}
 \leanok
 For every real $\lambda\ne0$ there are $K>0$ and $0<h_*<1$, uniform over
 the four quarter characters, with the following property.
@@ -1596,10 +1596,10 @@ both signs of $\lambda$ and all four characters.
 \begin{lemma}[Complete phase cells accumulating at zero]
 \label{lem:complete-phase-cells}
 \uses{def:numerator, def:phase-cell-scalars}
-\lean{NoEmbeddedEigenvalues.exists_complete_phase_cells,
- NoEmbeddedEigenvalues.descending_cells_disjoint,
- NoEmbeddedEigenvalues.mem_descending_cell_or_endpoint,
- NoEmbeddedEigenvalues.descending_cells_ae_cover}
+\lean{EulerDipoleEigenvalues.exists_complete_phase_cells,
+ EulerDipoleEigenvalues.descending_cells_disjoint,
+ EulerDipoleEigenvalues.mem_descending_cell_or_endpoint,
+ EulerDipoleEigenvalues.descending_cells_ae_cover}
 \leanok
 For real $\lambda\ne0$, $\kappa^4=1$ and every $\eta>0$, there are
 strictly decreasing positive phase-cell endpoints $e_n<\eta$, tending
@@ -1631,7 +1631,7 @@ an endpoint it lies strictly between two consecutive endpoints.
 \begin{lemma}[First-derivative phase-cell mass division]
 \label{lem:phase-cell-mass-division}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.phase_cell_mass_division}
+\lean{EulerDipoleEigenvalues.phase_cell_mass_division}
 \leanok
 Let $\lambda\ne0$, $\kappa^4=1$ and $h_0>0$.
 Suppose $N$ has compatible local interval H1 data $(N,N_1)$ on
@@ -1665,7 +1665,7 @@ endpoints. Set $\eta=e_0$.
 \begin{lemma}[Second-mass phase-cell division]
 \label{lem:phase-cell-second-mass-division}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.phase_cell_second_mass_division}
+\lean{EulerDipoleEigenvalues.phase_cell_second_mass_division}
 \leanok
 Let $\lambda\ne0$, $\kappa^4=1$ and $h_0>0$.
 Suppose $N$ has compatible local interval H1 data $(N,N_1)$ on
@@ -1698,7 +1698,7 @@ and canonical zero trace.
 \label{lem:comparable-weight-phase-division}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval, def:h2-interval,
  def:h2-local-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.phase_cell_division_of_comparable_weight}
+\lean{EulerDipoleEigenvalues.phase_cell_division_of_comparable_weight}
 \leanok
 In the phase-cell division problem, suppose $W\ge1$ is measurable and
 on every sufficiently small complete cell $I$ there is a constant $w_I\ge0$
@@ -1732,7 +1732,7 @@ and use $C/h\in L^2$ to force the canonical zero trace.
 \begin{lemma}[Logarithmic weight comparison on complete phase cells]
 \label{lem:log-phase-weight-comparison}
 \uses{def:log-level-weight, def:phase-cell-scalars}
-\lean{NoEmbeddedEigenvalues.logLevelWeight_phase_cell_comparable}
+\lean{EulerDipoleEigenvalues.logLevelWeight_phase_cell_comparable}
 \leanok
 On every sufficiently small complete cell $(a,b)$, the logarithmic
 weight satisfies $1\le \Lambda(b)\le\Lambda(h)\le A\Lambda(b)$
@@ -1751,7 +1751,7 @@ $|\log B^2|$. Since $\Lambda(b)\ge1$, this gives the desired comparison.
 \label{lem:phase-cell-division}
 \uses{def:numerator, def:phase-cell-scalars, def:h1-interval,
  def:h2-interval, def:h2-local-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.phase_cell_division}
+\lean{EulerDipoleEigenvalues.phase_cell_division}
 \leanok
 Suppose $N\in H^2_{\mathrm{loc}}(0,h_0)$, $N(h_j)=0$ at every zero
 of $D$, and $N',hN''\in L^2(0,h_0)$. After decreasing $h_0$ to a
@@ -1769,7 +1769,7 @@ Apply comparable-weight phase-cell division with $W=1$.
 \label{lem:log-phase-cell-division}
 \uses{def:numerator, def:log-level-weight, def:h1-interval, def:h2-interval,
  def:h2-local-interval, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.log_phase_cell_division}
+\lean{EulerDipoleEigenvalues.log_phase_cell_division}
 \leanok
 Suppose $N\in H^2_{\mathrm{loc}}(0,h_0)$, $N(h_j)=0$ at each divisor zero,
 and
@@ -1794,8 +1794,8 @@ its canonical zero trace without differentiating $\Lambda$.
 \begin{definition}[Quarter midpoint coefficients]
 \label{def:quarter-midpoint}
 \uses{def:numerator, def:period}
-\lean{NoEmbeddedEigenvalues.quarterMidpointPhase, NoEmbeddedEigenvalues.quarterMidpoint,
- NoEmbeddedEigenvalues.quarterMidpointDerivative}
+\lean{EulerDipoleEigenvalues.quarterMidpointPhase, EulerDipoleEigenvalues.quarterMidpoint,
+ EulerDipoleEigenvalues.quarterMidpointDerivative}
 \leanok
 For $L=L(h)$, $B(h)=\int_{-L(h)}^0 g(\gamma_h(t))e^{-i\lambda t}dt$,
 and specified functions $C,C_1,B_1$, put
@@ -1811,7 +1811,7 @@ raw spatial midpoint values.
 \label{lem:log-midpoint-gain}
 \uses{def:quarter-midpoint, def:log-level-weight,
  def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.log_midpoint_gain}
+\lean{EulerDipoleEigenvalues.log_midpoint_gain}
 \leanok
 Let $b<1$, $C\in H^1(0,b)$ with derivative $C_1$ and
 $B\in H^1_{\rm loc}(0,b)$ with derivative $B_1$.
@@ -1839,7 +1839,7 @@ All three terms are $L^2$. The logarithmic weight is never differentiated.
 \begin{lemma}[Quarter resonances are null near zero]
 \label{lem:quarter-divisor-ae}
 \uses{def:numerator}
-\lean{NoEmbeddedEigenvalues.exists_ae_quarterDivisor_ne_zero}
+\lean{EulerDipoleEigenvalues.exists_ae_quarterDivisor_ne_zero}
 \leanok
 For $\lambda\ne0$, $\kappa^4=1$ and every $\eta>0$, there is
 $0<\rho<\eta$ such that $D(h)\ne0$ for a.e.\ $h\in(0,\rho)$.
@@ -1855,7 +1855,7 @@ Their range is Lebesgue null.
 \begin{lemma}[Identification of the quarter midpoint]
 \label{lem:quarter-midpoint-reconstruction}
 \uses{def:transport-pair, def:quarter-character, def:quarter-midpoint}
-\lean{NoEmbeddedEigenvalues.quarter_midpoint_reconstruction}
+\lean{EulerDipoleEigenvalues.quarter_midpoint_reconstruction}
 \leanok
 Let $(v,g)$ be a transport pair, with $g$ continuous on the lift, and let
 $0<b<1$ with its orbit annulus inside the pair's domain.
@@ -1889,8 +1889,8 @@ midpoint curve is used.
 \begin{definition}[Cell collars and recentered quarter profiles]
 \label{def:cell-separatrix-collar}
 \uses{def:cells, def:dipole, def:period, def:reflections, lem:period-orbit}
-\lean{NoEmbeddedEigenvalues.cellSeparatrixStrip, NoEmbeddedEigenvalues.quarterOrbitStrip,
- NoEmbeddedEigenvalues.recenteredQuarterMap}
+\lean{EulerDipoleEigenvalues.cellSeparatrixStrip, EulerDipoleEigenvalues.quarterOrbitStrip,
+ EulerDipoleEigenvalues.recenteredQuarterMap}
 \leanok
 Put $V_\epsilon=\{p\in\Cell:0<\Psi(p)<\epsilon\}$,
 $Q_{h_0}=\{(h,t):0<h<h_0,\ -L(h)<t<L(h)\}$, and
@@ -1901,7 +1901,7 @@ Thus $v_k=v\circ\Gamma_k$ denotes the separately recentered quarter profile.
 \begin{lemma}[Global cell bound from corner forcing growth]
 \label{lem:cell-forcing-growth}
 \uses{def:cells, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.exists_cell_forcing_rpow_bound}
+\lean{EulerDipoleEigenvalues.exists_cell_forcing_rpow_bound}
 \leanok
 Let $U\subset\R^2$ be bounded and contain the closed cell, and let $g$
 be continuous on $U$. For $s>0$, suppose there are $C,\epsilon>0$ with
@@ -1922,7 +1922,7 @@ near-corner bound. This retains the original continuous representative.
 \begin{lemma}[Orbit bounds from pointwise forcing growth]
 \label{lem:subcritical-forcing-orbit-bounds}
 \uses{def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.forcing_rpow_orbit_bounds}
+\lean{EulerDipoleEigenvalues.forcing_rpow_orbit_bounds}
 \leanok
 Let $s,K>0$ and suppose $|g(p)|\le Kd(p)^s$ on $\Cell$.
 There are $M>0$ and $0<h_0<1/2$ such that
@@ -1947,8 +1947,8 @@ One may use the common constant $M=K(|B|^s+\pi^s)+1$.
 \begin{lemma}[Zero-saddle forcing decay]
 \label{lem:zero-saddle-forcing-decay}
 \uses{def:sobolev-local, def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.zero_saddle_forcing_decay,
- NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_forcing_decay}
+\lean{EulerDipoleEigenvalues.zero_saddle_forcing_decay,
+ EulerDipoleEigenvalues.IsTransportPair.zero_saddle_forcing_decay}
 \leanok
 Let $U$ be open and contain the closed base separatrix segment joining
 $(\pi,0)$ and $(0,-\pi)$. Suppose $g\in H^2(U)$ is continuous and
@@ -1988,8 +1988,8 @@ closed cell.
 
 \begin{lemma}[Oscillatory tails with arbitrary exponential rate]
 \label{lem:exponential-forcing-tails}
-\lean{NoEmbeddedEigenvalues.oscillatory_integral_exp_bound,
- NoEmbeddedEigenvalues.forcing_exp_decay_tail_bounds}
+\lean{EulerDipoleEigenvalues.oscillatory_integral_exp_bound,
+ EulerDipoleEigenvalues.forcing_exp_decay_tail_bounds}
 \leanok
 Let $L,C\ge0$, $a>0$, and $F:[-L,L]\to\C$ be continuous with
 $|F(t)|\le Ce^{-a|t|}$. For every real $\mu$ the two oscillatory tail
@@ -2017,8 +2017,8 @@ $(C/a)(e^{-at}-e^{-aL})$; drop the nonnegative endpoint terms.
 \begin{lemma}[Oscillatory tails of zero-saddle forcing]
 \label{lem:zero-saddle-forcing-tails}
 \uses{def:transport-pair, def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.forcing_decay_tail_bounds,
- NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_forcing_tails}
+\lean{EulerDipoleEigenvalues.forcing_decay_tail_bounds,
+ EulerDipoleEigenvalues.IsTransportPair.zero_saddle_forcing_tails}
 \leanok
 Let $L,C\ge0$ and $F:[-L,L]\to\C$ be continuous with
 $|F(s)|\le Ce^{-|s|/2}$. For every real $\mu$, both tail integrands
@@ -2052,9 +2052,9 @@ forcing's continuity domain. The bounds use no sign of $\mu$.
 \begin{lemma}[Unweighted quarter-gradient fiber energy]
 \label{lem:quarter-gradient-energy}
 \uses{def:quarter-jet-data, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.memLp_quarterStrip_sections,
- NoEmbeddedEigenvalues.integrable_quarterStrip_sections,
- NoEmbeddedEigenvalues.quarterGradient_energy_integrable}
+\lean{EulerDipoleEigenvalues.memLp_quarterStrip_sections,
+ EulerDipoleEigenvalues.integrable_quarterStrip_sections,
+ EulerDipoleEigenvalues.quarterGradient_energy_integrable}
 \leanok
 Let $0<b\le1$ and suppose $D_{[j]}\in L^2(\Cell)$ for $j=0,1$.
 Then
@@ -2086,7 +2086,7 @@ on exceptional orbits.
 \begin{lemma}[Actual quarter-jet energy at every order]
 \label{lem:quarter-jet-energy}
 \uses{def:quarter-jet-data, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterJet_energy_integrable}
+\lean{EulerDipoleEigenvalues.quarterJet_energy_integrable}
 \leanok
 Let $b\le1$, $k\in\N$ and $s\in\R$.
 If $D_w/d^s\in L^2(\Cell)$ for every $|w|=k$, then
@@ -2110,7 +2110,7 @@ sections on the same good-level set; interval endpoints are null.
 \begin{lemma}[Measurability of raw moving-strip integrals]
 \label{lem:quarter-strip-measurable-integrals}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterStrip_integral}
+\lean{EulerDipoleEigenvalues.aestronglyMeasurable_quarterStrip_integral}
 \leanok
 Let $b\le1$ and let $F$ be a.e.\ strongly measurable on $Q_b$.
 Then $h\mapsto\int_{-L(h)}^{L(h)}F(h,t)\,dt$ is a.e.\ strongly measurable
@@ -2133,7 +2133,7 @@ to the signed interval integral; endpoints are null.
 \begin{lemma}[Weighted quarter-gradient energy]
 \label{lem:weighted-quarter-gradient}
 \uses{def:quarter-jet-data, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterWeightedGradient_energy_integrable}
+\lean{EulerDipoleEigenvalues.quarterWeightedGradient_energy_integrable}
 \leanok
 Let $0<b\le1$, $s\in\R$, and suppose
 $D_{[j]}/d^s\in L^2(\Cell)$ for $j=0,1$.
@@ -2158,7 +2158,7 @@ measure zero, so the same norms hold on the closed time window.
 \begin{lemma}[Weighted bulk bound on arbitrary time subsets]
 \label{lem:weighted-numerator-subinterval}
 \uses{def:quarter-jet-data, def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterForcingLevelDerivative_weighted_setIntegral_bound}
+\lean{EulerDipoleEigenvalues.quarterForcingLevelDerivative_weighted_setIntegral_bound}
 \leanok
 Fix $0<h<1$, $s\in\R$, $C\ge0$ and $A\in\R$.
 Suppose $D_{[j]}\circ\gamma_h/d^s\in L^2[-L,L]$, $d>0$ there,
@@ -2188,10 +2188,10 @@ This avoids a time-window length factor.
 \begin{lemma}[Weighted fixed-time numerator bound]
 \label{lem:weighted-numerator-bulk}
 \uses{def:quarter-jet-data, def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.norm_integral_mul_sq_le,
- NoEmbeddedEigenvalues.norm_add_sq_le,
- NoEmbeddedEigenvalues.continuous_orbit_level_derivative,
- NoEmbeddedEigenvalues.quarterForcingLevelDerivative_weighted_integral_bound}
+\lean{EulerDipoleEigenvalues.norm_integral_mul_sq_le,
+ EulerDipoleEigenvalues.norm_add_sq_le,
+ EulerDipoleEigenvalues.continuous_orbit_level_derivative,
+ EulerDipoleEigenvalues.quarterForcingLevelDerivative_weighted_integral_bound}
 \leanok
 Fix $0<h<1$, $s\in\R$, $C\ge0$ and $A\in\R$.
 Suppose the weighted components $D_{[j]}\circ\gamma_h/d^s$ have
@@ -2224,8 +2224,8 @@ $|x+y|^2\le2(|x|^2+|y|^2)$ to their sum. The phases all have modulus one.
 
 \begin{lemma}[Endpoint reconstruction at any positive exponential rate]
 \label{lem:transport-endpoint-exponential-decay}
-\lean{NoEmbeddedEigenvalues.norm_transport_le_endpoint,
- NoEmbeddedEigenvalues.norm_transport_le_endpoints_of_exp_decay}
+\lean{EulerDipoleEigenvalues.norm_transport_le_endpoint,
+ EulerDipoleEigenvalues.norm_transport_le_endpoints_of_exp_decay}
 \leanok
 Let $\lambda\in\R$, $L,C\ge0$ and $a>0$.
 Suppose $F$ is continuous on $[-L,L]$ with $|F(t)|\le Ce^{-a|t|}$,
@@ -2252,7 +2252,7 @@ The full decay rate $a$, not a fixed weaker exponent, is retained.
 
 \begin{lemma}[Endpoint reconstruction preserves forcing decay]
 \label{lem:transport-endpoint-decay}
-\lean{NoEmbeddedEigenvalues.norm_transport_le_endpoints_of_decay}
+\lean{EulerDipoleEigenvalues.norm_transport_le_endpoints_of_decay}
 \leanok
 Let $\lambda\in\R$, $L,C\ge0$, and let $F$ be continuous on $[-L,L]$
 with $|F(t)|\le Ce^{-|t|/2}$.
@@ -2282,7 +2282,7 @@ The endpoint values are those of this specified ACL function.
 \begin{lemma}[First weighted mass from an exponential quarter bound]
 \label{lem:quarter-first-mass}
 \uses{def:cell-separatrix-collar, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.memLp_quarter_div_saddleDist_of_exp_bound}
+\lean{EulerDipoleEigenvalues.memLp_quarter_div_saddleDist_of_exp_bound}
 \leanok
 Let $0<b<1$, $c>0$, $\alpha,\beta\ge0$, and suppose
 \[
@@ -2324,7 +2324,7 @@ a supremum, avoids a logarithmic loss on the amplitude energy.
 \begin{lemma}[Second weighted mass from an exponential quarter bound]
 \label{lem:quarter-second-mass}
 \uses{def:cell-separatrix-collar, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.memLp_quarter_div_saddleDist_sq_of_exp_bound}
+\lean{EulerDipoleEigenvalues.memLp_quarter_div_saddleDist_sq_of_exp_bound}
 \leanok
 Let $0<b<1$, $c>0$, $\alpha,\beta\ge0$, $0<\delta<1$, and suppose
 \[
@@ -2369,10 +2369,10 @@ Neither a jointly selected ACL family nor raw endpoint values are needed.
 \label{lem:zero-saddle-numerator-derivative}
 \uses{def:transport-pair, def:numerator-derivative, def:sobolev-local,
  def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterForcingLevelDerivative_integral_bound,
- NoEmbeddedEigenvalues.quarterNumeratorDerivative_sq_le,
- NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_numerator_estimates_of_gradient,
- NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_numerator_estimates}
+\lean{EulerDipoleEigenvalues.quarterForcingLevelDerivative_integral_bound,
+ EulerDipoleEigenvalues.quarterNumeratorDerivative_sq_le,
+ EulerDipoleEigenvalues.IsTransportPair.zero_saddle_numerator_estimates_of_gradient,
+ EulerDipoleEigenvalues.IsTransportPair.zero_saddle_numerator_estimates}
 \leanok
 Let $(v,f)$ be a transport pair near the closed cell, with continuous
 forcing representative $g$ vanishing at its four corners.
@@ -2422,10 +2422,10 @@ occur in the weak formula, the coarea energy and the estimate.
 \label{lem:subcritical-numerator-derivative}
 \uses{def:transport-pair, def:numerator-derivative, def:quarter-jet-data,
  def:sobolev-local, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc.aestronglyMeasurable_derivative,
- NoEmbeddedEigenvalues.quarterNumeratorDerivative_subcritical_sq_le,
- NoEmbeddedEigenvalues.IsTransportPair.subcritical_numerator_estimates,
- NoEmbeddedEigenvalues.IsTransportPair.subcritical_numerator_estimates_of_first_gradient}
+\lean{EulerDipoleEigenvalues.HasIntervalH1Loc.aestronglyMeasurable_derivative,
+ EulerDipoleEigenvalues.quarterNumeratorDerivative_subcritical_sq_le,
+ EulerDipoleEigenvalues.IsTransportPair.subcritical_numerator_estimates,
+ EulerDipoleEigenvalues.IsTransportPair.subcritical_numerator_estimates_of_first_gradient}
 \leanok
 Let $(v,f)$ be a transport pair on bounded $U$ containing the closed cell,
 and let $g$ be its supplied continuous forcing representative.
@@ -2488,7 +2488,7 @@ not merely an inequality between totalized energy integrals.
 \begin{lemma}[Subcritical scalar quotient mass]
 \label{lem:subcritical-quotient-mass}
 \uses{def:transport-pair, def:quarter-character, def:numerator, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.subcritical_quarterQuotient_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.subcritical_quarterQuotient_memLp}
 \leanok
 Let $(v,f)$ be a transport pair on bounded $U$ containing the closed cell,
 with its original continuous forcing representative $g$.
@@ -2525,7 +2525,7 @@ Neither the forcing representative nor the weak gradient is changed.
 \label{lem:subcritical-quarter-mass}
 \uses{def:transport-pair, def:quarter-character, def:cell-separatrix-collar,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.subcritical_quarter_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.subcritical_quarter_memLp}
 \leanok
 Assume the transport-pair, bounded-domain, original continuous forcing and
 specified weighted first-gradient hypotheses of
@@ -2578,7 +2578,7 @@ the distance lower bound, rather than to a choice of $Z_h$ across levels.
 \begin{lemma}[Subcritical second mass for one quarter character]
 \label{lem:subcritical-character-mass}
 \uses{def:transport-pair, def:quarter-character, def:cell-arcs, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.subcritical_character_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.subcritical_character_memLp}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:subcritical-quarter-mass},
 the original raw unknown has genuine full physical-cell mass
@@ -2606,7 +2606,7 @@ No trace or pointwise assignment of the original spatial unknown is used.
 \begin{lemma}[Zero-saddle scalar quotient mass]
 \label{lem:zero-saddle-quotient-mass}
 \uses{def:transport-pair, def:quarter-character, def:numerator}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_quarterQuotient_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.zero_saddle_quarterQuotient_memLp}
 \leanok
 Let $(v,f)$ be a transport pair near the closed cell and let $g$ be
 its supplied continuous forcing representative, vanishing at the four
@@ -2647,7 +2647,7 @@ the analytic collar, for either sign of $\lambda$ and all four characters.
 \label{lem:zero-saddle-quarter-mass}
 \uses{def:transport-pair, def:quarter-character, def:cell-separatrix-collar,
  def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_quarter_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.zero_saddle_quarter_memLp}
 \leanok
 Let $(v,f)$ be a transport pair near the closed cell with supplied continuous
 forcing representative $g$ vanishing at the four cell corners.
@@ -2696,7 +2696,7 @@ Both signs of $\lambda$ and all four characters are covered.
 \begin{lemma}[Zero-saddle first mass for one quarter character]
 \label{lem:zero-saddle-character-mass}
 \uses{def:transport-pair, def:quarter-character, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.zero_saddle_character_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.zero_saddle_character_memLp}
 \leanok
 Let $(v,f)$ be a transport pair near the closed cell and let $g$ be its
 supplied continuous forcing representative, zero at the four cell corners.
@@ -2731,16 +2731,16 @@ Both signs of $\lambda$ and all four fourth-root characters are included.
 \begin{lemma}[Rotation and linearity of transport pairs]
 \label{lem:transport-pair-rotation}
 \uses{def:transport-pair, def:reflections, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.rotLift_dipoleFlow,
- NoEmbeddedEigenvalues.IsOrbitUnion.preimage_rotLift,
- NoEmbeddedEigenvalues.IsOrbitUnion.inter,
- NoEmbeddedEigenvalues.classicalL0_comp_rotLift,
- NoEmbeddedEigenvalues.HasWeakL0On.comp_rotLift,
- NoEmbeddedEigenvalues.HasWeakL0On.add,
- NoEmbeddedEigenvalues.IsTransportPair.mono,
- NoEmbeddedEigenvalues.IsTransportPair.comp_rotLift,
- NoEmbeddedEigenvalues.IsTransportPair.const_mul,
- NoEmbeddedEigenvalues.IsTransportPair.add}
+\lean{EulerDipoleEigenvalues.rotLift_dipoleFlow,
+ EulerDipoleEigenvalues.IsOrbitUnion.preimage_rotLift,
+ EulerDipoleEigenvalues.IsOrbitUnion.inter,
+ EulerDipoleEigenvalues.classicalL0_comp_rotLift,
+ EulerDipoleEigenvalues.HasWeakL0On.comp_rotLift,
+ EulerDipoleEigenvalues.HasWeakL0On.add,
+ EulerDipoleEigenvalues.IsTransportPair.mono,
+ EulerDipoleEigenvalues.IsTransportPair.comp_rotLift,
+ EulerDipoleEigenvalues.IsTransportPair.const_mul,
+ EulerDipoleEigenvalues.IsTransportPair.add}
 \leanok
 The quarter rotation $R(x,y)=(y,-x)$ commutes with the dipole flow and,
 for differentiable $\phi$, with $L_0$:
@@ -2778,9 +2778,9 @@ restriction uses the original fields on the smaller domain.
 \begin{lemma}[Rotation-invariant transport neighbourhood]
 \label{lem:transport-rotation-neighbourhood}
 \uses{def:transport-pair, def:cell-arcs, def:reflections}
-\lean{NoEmbeddedEigenvalues.rotLift_mem_closure_cellSquare,
- NoEmbeddedEigenvalues.rotLift_mem_saddleSet,
- NoEmbeddedEigenvalues.exists_rotationInvariant_transport_neighbourhood}
+\lean{EulerDipoleEigenvalues.rotLift_mem_closure_cellSquare,
+ EulerDipoleEigenvalues.rotLift_mem_saddleSet,
+ EulerDipoleEigenvalues.exists_rotationInvariant_transport_neighbourhood}
 \leanok
 Rotation preserves the closed cell and its boundary saddles.
 If $U$ is a bounded open union of orbits containing the closed cell,
@@ -2804,7 +2804,7 @@ gives boundedness.
 \begin{definition}[Quarter-character projection of a raw field]
 \label{def:transport-quarter-projection}
 \uses{def:reflections}
-\lean{NoEmbeddedEigenvalues.quarterCharacterProjection}
+\lean{EulerDipoleEigenvalues.quarterCharacterProjection}
 \leanok
 For any complex number $\kappa$ and raw field $F:\R^2\to\C$, define
 \[
@@ -2817,12 +2817,12 @@ For any complex number $\kappa$ and raw field $F:\R^2\to\C$, define
 \label{lem:transport-quarter-projections}
 \uses{def:transport-quarter-projection, def:transport-pair,
  def:quarter-character, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterCharacterProjection_rotLift,
- NoEmbeddedEigenvalues.quarterCharacterProjection_sum,
- NoEmbeddedEigenvalues.IsTransportPair.quarterCharacterProjection,
- NoEmbeddedEigenvalues.continuousOn_quarterCharacterProjection,
- NoEmbeddedEigenvalues.quarterCharacterProjection_congr_ae,
- NoEmbeddedEigenvalues.quarterCharacterProjection_zero_at_saddles}
+\lean{EulerDipoleEigenvalues.quarterCharacterProjection_rotLift,
+ EulerDipoleEigenvalues.quarterCharacterProjection_sum,
+ EulerDipoleEigenvalues.IsTransportPair.quarterCharacterProjection,
+ EulerDipoleEigenvalues.continuousOn_quarterCharacterProjection,
+ EulerDipoleEigenvalues.quarterCharacterProjection_congr_ae,
+ EulerDipoleEigenvalues.quarterCharacterProjection_zero_at_saddles}
 \leanok
 If $\kappa^4=1$, then $P_\kappa F(Rp)=\kappa P_\kappa F(p)$ everywhere,
 and, for every raw $F$,
@@ -2857,8 +2857,8 @@ term in its projected continuous forcing value is zero.
 \begin{lemma}[Weighted first derivatives and growth under quarter projections]
 \label{lem:weighted-quarter-projections}
 \uses{def:transport-quarter-projection, def:cell-arcs, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.exists_weightedGradient_quarterCharacterProjection,
- NoEmbeddedEigenvalues.quarterCharacterProjection_rpow_bound}
+\lean{EulerDipoleEigenvalues.exists_weightedGradient_quarterCharacterProjection,
+ EulerDipoleEigenvalues.quarterCharacterProjection_rpow_bound}
 \leanok
 Let $U$ be open and rotation invariant, and let $s\in\R$.
 Suppose $D_j$ are specified weak first derivatives of $F$ on $U$ with
@@ -2894,7 +2894,7 @@ The triangle inequality and the factor $1/4$ retain the same constant $K$.
 \begin{lemma}[First transport gain with zero saddle values]
 \label{lem:transport-first-gain-zero}
 \uses{def:transport-pair, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.transport_first_gain_zero}
+\lean{EulerDipoleEigenvalues.transport_first_gain_zero}
 \leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square. If the continuous representative of $f$ vanishes
@@ -2920,9 +2920,9 @@ Both signs of $\lambda$ are included.
 \begin{lemma}[Smooth transport pairs with first weighted mass]
 \label{lem:smooth-transport-pair}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.classicalL0_eq_zero_of_mem_saddleSet,
- NoEmbeddedEigenvalues.memLp_classicalL0_div_saddleDist,
- NoEmbeddedEigenvalues.smooth_transport_pair, NoEmbeddedEigenvalues.exists_smooth_transport_pair}
+\lean{EulerDipoleEigenvalues.classicalL0_eq_zero_of_mem_saddleSet,
+ EulerDipoleEigenvalues.memLp_classicalL0_div_saddleDist,
+ EulerDipoleEigenvalues.smooth_transport_pair, EulerDipoleEigenvalues.exists_smooth_transport_pair}
 \leanok
 For a $C^1$ profile $P:\R^2\to\C$ and bounded open $U$,
 $L_0P/d\in L^2(U)$. Also $L_0P(Q)=0$ at every lifted saddle $Q$,
@@ -2960,8 +2960,8 @@ $v_*(Q)=0$ and $f_*(Q)=P(Q)$. No sign of $\lambda$ is preferred.
 \begin{lemma}[Smooth interpolation of cell-saddle values]
 \label{lem:saddle-value-interpolation}
 \uses{def:cells, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.eq_corner_of_mem_saddleSet_closure_cellSquare,
- NoEmbeddedEigenvalues.exists_smooth_saddle_interpolant}
+\lean{EulerDipoleEigenvalues.eq_corner_of_mem_saddleSet_closure_cellSquare,
+ EulerDipoleEigenvalues.exists_smooth_saddle_interpolant}
 \leanok
 For any raw $g:\R^2\to\C$, there is a globally smooth $P:\R^2\to\C$
 with $P(Q)=g(Q)$ at every saddle in the closed cell.
@@ -2987,7 +2987,7 @@ This quadratic interpolation needs no cutoff or neighbourhood size.
 \begin{lemma}[First transport gain]
 \label{lem:transport-first-gain}
 \uses{def:transport-pair, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.transport_first_gain}
+\lean{EulerDipoleEigenvalues.transport_first_gain}
 \leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square. Then $v/d\in L^2(\Cell)$. No elliptic relation
@@ -3030,7 +3030,7 @@ formula, not the separatrix Melnikov limit.
 \begin{corollary}[Periodic first transport gain]
 \label{cor:transport-first-gain-periodic}
 \uses{def:sobolev-torus, def:dipole, def:cell-arcs, lem:cell-neighbourhood}
-\lean{NoEmbeddedEigenvalues.transport_first_gain_periodic}
+\lean{EulerDipoleEigenvalues.transport_first_gain_periodic}
 \leanok
 Let $\nu,\phi\in L^2(\T^2)$, $\phi\in H^2(\T^2)$, $\lambda\ne0$, and
 $L_0(\nu+\phi)=i\lambda\nu$ in the character-tested sense.
@@ -3062,7 +3062,7 @@ the torus relation also supplies data beyond its boundary saddles.
 \begin{lemma}[Second transport gain]
 \label{lem:transport-second-gain}
 \uses{def:transport-pair, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.transport_second_gain}
+\lean{EulerDipoleEigenvalues.transport_second_gain}
 \leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square, and let $0<\delta<1$. If
@@ -3110,10 +3110,10 @@ a.e.\ congruence identifies its weak derivative role without changing that gradi
 \uses{def:numerator, def:quarter-jet-data, def:quarter-endpoint-rays, def:local-weak-jets,
  def:cell-separatrix-collar, def:h1-interval, def:h1-local-interval,
  def:h2-interval, def:h2-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterHalfNumerator,
- NoEmbeddedEigenvalues.quarterEndpointValueEnergy,
- NoEmbeddedEigenvalues.quarterEndpointGradientEnergy,
- NoEmbeddedEigenvalues.WeightedQuarterNumeratorData}
+\lean{EulerDipoleEigenvalues.quarterHalfNumerator,
+ EulerDipoleEigenvalues.quarterEndpointValueEnergy,
+ EulerDipoleEigenvalues.quarterEndpointGradientEnergy,
+ EulerDipoleEigenvalues.WeightedQuarterNumeratorData}
 \leanok
 For continuous forcing $g$ and second jet $D$, use the energies of
 Definition~\ref{def:quarter-jet-data} and put
@@ -3146,11 +3146,11 @@ $Q_T=\sum_{\sigma,j}|T_{\sigma,j}(r(h))|^2/h$.
 \begin{lemma}[Affine Cartesian quarter-ray charts]
 \label{lem:quarter-ray-affine-chart}
 \uses{def:quarter-endpoint-rays, def:local-plane-geometry, def:affine-jet}
-\lean{NoEmbeddedEigenvalues.planeAffine_quarterRayChart,
- NoEmbeddedEigenvalues.measurePreserving_rotatedQuarterEndpointChart,
- NoEmbeddedEigenvalues.localRadius_quarterRayChart,
- NoEmbeddedEigenvalues.quarterRayCenter_mem_saddleSet,
- NoEmbeddedEigenvalues.quarterRayRectangle_subset_disk}
+\lean{EulerDipoleEigenvalues.planeAffine_quarterRayChart,
+ EulerDipoleEigenvalues.measurePreserving_rotatedQuarterEndpointChart,
+ EulerDipoleEigenvalues.localRadius_quarterRayChart,
+ EulerDipoleEigenvalues.quarterRayCenter_mem_saddleSet,
+ EulerDipoleEigenvalues.quarterRayRectangle_subset_disk}
 \leanok
 Each radial/transverse quarter-ray chart $C$ is affine and volume-preserving,
 with center $c=C(0,0)$ in the saddle lattice and
@@ -3169,9 +3169,9 @@ On the rectangle, $r_0(q)^2\le2\delta^2<R^2$.
 \begin{lemma}[Canonical interior quarter-ray traces]
 \label{lem:quarter-ray-interior-trace}
 \uses{def:quarter-endpoint-rays, def:interior-section-trace, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.comp_quarterRayChart,
- NoEmbeddedEigenvalues.MemSobolevLocOn.comp_quarterRayChart,
- NoEmbeddedEigenvalues.MemSobolevLocOn.quarterRayTrace}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.comp_quarterRayChart,
+ EulerDipoleEigenvalues.MemSobolevLocOn.comp_quarterRayChart,
+ EulerDipoleEigenvalues.MemSobolevLocOn.quarterRayTrace}
 \leanok
 For open $U$, the quarter-ray affine pullback preserves integer-order
 Sobolev regularity, globally on the preimage and locally.
@@ -3194,7 +3194,7 @@ The interior trace construction uses the same section germ for every window.
 \label{lem:quarter-ray-radial-trace}
 \uses{def:quarter-endpoint-rays, def:interior-section-trace, def:sobolev-local,
  def:local-plane-geometry, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.logarithmic_quarterRay_trace}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.logarithmic_quarterRay_trace}
 \leanok
 Let $C$ be a quarter-ray chart with center $c$, let $n\in\N$, $t<n$,
 and $0<\delta\le1$ with $2\delta<R$.
@@ -3219,10 +3219,10 @@ Absorb the remaining positive power $r^{n-t}$ against the logarithm.
 \begin{lemma}[Quadratic logarithmic quarter-ray bounds]
 \label{lem:saddle-quadratic-ray}
 \uses{def:saddle-quadratic, def:quarter-endpoint-rays, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.saddleQuadratic_quarterRay,
- NoEmbeddedEigenvalues.first_saddleQuadratic_quarterRay,
- NoEmbeddedEigenvalues.saddleQuadratic_log_quarterRay_value,
- NoEmbeddedEigenvalues.saddleQuadratic_log_quarterRay_gradient}
+\lean{EulerDipoleEigenvalues.saddleQuadratic_quarterRay,
+ EulerDipoleEigenvalues.first_saddleQuadratic_quarterRay,
+ EulerDipoleEigenvalues.saddleQuadratic_log_quarterRay_value,
+ EulerDipoleEigenvalues.saddleQuadratic_log_quarterRay_gradient}
 \leanok
 Along each ray $\gamma$ with center $c=\gamma(0)$, put $q=Q_{c,a}$.
 Then $q(\gamma(r))=r^2q(\gamma(1))$ and
@@ -3248,8 +3248,8 @@ No saddle factorization or polar trace input is needed.
 \begin{lemma}[Canonical quarter-ray trace uniqueness]
 \label{lem:quarter-ray-trace-unique}
 \uses{def:quarter-endpoint-rays, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.ae_eq,
- NoEmbeddedEigenvalues.HasQuarterRayTrace.ae_eq}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.ae_eq,
+ EulerDipoleEigenvalues.HasQuarterRayTrace.ae_eq}
 \leanok
 Two canonical traces of the same raw function on the same quarter-endpoint
 ray agree a.e.\ on any common radial interval $(0,\rho)$ contained
@@ -3269,10 +3269,10 @@ interval cover gives equality a.e.\ on $(0,\rho)$.
 \label{lem:log-quarter-jet-mass}
 \uses{def:weighted-numerator-data, def:log-level-weight,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.logLevelWeight_nonneg,
- NoEmbeddedEigenvalues.dipoleLogWeight_dipoleOrbit,
- NoEmbeddedEigenvalues.integrable_quarter_fiberIntegral,
- NoEmbeddedEigenvalues.integrable_log_quarterJetEnergy}
+\lean{EulerDipoleEigenvalues.logLevelWeight_nonneg,
+ EulerDipoleEigenvalues.dipoleLogWeight_dipoleOrbit,
+ EulerDipoleEigenvalues.integrable_quarter_fiberIntegral,
+ EulerDipoleEigenvalues.integrable_log_quarterJetEnergy}
 \leanok
 Let $0<b\le1$, and let a measurable spatial set $V$ contain
 $V_{2b}^{\rm cell}$. If, for each word of length $k$,
@@ -3295,15 +3295,15 @@ Sum the finitely many components, zero-extend off the moving strip, and use Fubi
 \begin{lemma}[Logarithmic endpoint change of variables]
 \label{lem:log-endpoint-change-variables}
 \uses{def:quarter-endpoint-rays, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.quarterEndpointRadius_pos,
- NoEmbeddedEigenvalues.monotone_quarterEndpointRadius,
- NoEmbeddedEigenvalues.hasDerivAt_quarterEndpointRadius,
- NoEmbeddedEigenvalues.quarterEndpointRadius_le_four_sqrt,
- NoEmbeddedEigenvalues.logLevelWeight_le_endpoint,
- NoEmbeddedEigenvalues.integrable_log_endpoint_pullback,
- NoEmbeddedEigenvalues.integrable_log_endpoint_of_memLp,
- NoEmbeddedEigenvalues.integrable_log_endpoint_value,
- NoEmbeddedEigenvalues.integrable_log_endpoint_gradient}
+\lean{EulerDipoleEigenvalues.quarterEndpointRadius_pos,
+ EulerDipoleEigenvalues.monotone_quarterEndpointRadius,
+ EulerDipoleEigenvalues.hasDerivAt_quarterEndpointRadius,
+ EulerDipoleEigenvalues.quarterEndpointRadius_le_four_sqrt,
+ EulerDipoleEigenvalues.logLevelWeight_le_endpoint,
+ EulerDipoleEigenvalues.integrable_log_endpoint_pullback,
+ EulerDipoleEigenvalues.integrable_log_endpoint_of_memLp,
+ EulerDipoleEigenvalues.integrable_log_endpoint_value,
+ EulerDipoleEigenvalues.integrable_log_endpoint_gradient}
 \leanok
 Let $0<b<1$, $r(h)=2\arcsin\sqrt h$, $r(b)<\rho$, and $n\in\{1,2\}$.
 Suppose $F(r(h))/h^{n/2}\in L^2(0,b)$ and
@@ -3333,9 +3333,9 @@ composed with the radius map without justification.
 \label{lem:log-numerator-summation}
 \uses{def:weighted-numerator-data, def:log-level-weight,
  def:h1-interval, def:h1-local-interval, def:h2-interval, def:h2-local-interval}
-\lean{NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.restrict,
- NoEmbeddedEigenvalues.memLp_log_of_sq_bound,
- NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.log_estimates}
+\lean{EulerDipoleEigenvalues.WeightedQuarterNumeratorData.restrict,
+ EulerDipoleEigenvalues.memLp_log_of_sq_bound,
+ EulerDipoleEigenvalues.WeightedQuarterNumeratorData.log_estimates}
 \leanok
 Compatible numerator data restrict to a smaller level interval without
 changing any derivative or ray-trace witness.
@@ -3360,8 +3360,8 @@ measurability. No logarithmic weight is differentiated.
 \label{lem:quarter-endpoint-cones}
 \uses{def:cartesian-ray-cone, def:quarter-endpoint-rays, def:orbit-coordinates,
  def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterEndpointChart_cone,
- NoEmbeddedEigenvalues.dipoleOrbit_quarterEndpointRay}
+\lean{EulerDipoleEigenvalues.quarterEndpointChart_cone,
+ EulerDipoleEigenvalues.dipoleOrbit_quarterEndpointRay}
 \leanok
 For either endpoint chart $\Phi_\sigma$ and $(r,t)\in\mathcal C_{1/2}$,
 \[
@@ -3391,7 +3391,7 @@ $\arccos x=\pi/2-\arcsin x$.
 \label{lem:weighted-quarter-ray-values}
 \uses{def:quarter-endpoint-rays, def:weak-derivative-local, def:sobolev-local,
  def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.weighted_quarter_ray_values}
+\lean{EulerDipoleEigenvalues.weighted_quarter_ray_values}
 \leanok
 Let open $U$ contain the closed cell, let $g$ be continuous on $U$,
 and specify its weak Cartesian derivatives $D_j$ there.
@@ -3418,8 +3418,8 @@ $D_j/r$ norm. Apply that lemma to the continuous pullback.
 \begin{lemma}[Weighted endpoint value transport]
 \label{lem:weighted-endpoint-value-transport}
 \uses{def:quarter-endpoint-rays, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.memLp_endpoint_value_of_ray,
- NoEmbeddedEigenvalues.weighted_quarter_endpoint_values}
+\lean{EulerDipoleEigenvalues.memLp_endpoint_value_of_ray,
+ EulerDipoleEigenvalues.weighted_quarter_endpoint_values}
 \leanok
 If $B$ is continuous on $(0,\rho)$,
 $B(r)/(r\sqrt r)\in L^2(0,\rho)$,
@@ -3449,7 +3449,7 @@ apply the first assertion to each continuous forcing ray.
 \begin{definition}[Canonical quarter-gradient trace choice]
 \label{def:canonical-quarter-gradient-trace}
 \uses{def:interior-section-trace, def:quarter-endpoint-rays}
-\lean{NoEmbeddedEigenvalues.quarterGradientTrace}
+\lean{EulerDipoleEigenvalues.quarterGradientTrace}
 \leanok
 For any supplied Cartesian family $D_j:\R^2\to\C$, define
 \[
@@ -3463,7 +3463,7 @@ Its trace property and finite norms are separate assertions.
 \begin{lemma}[Weighted H1 fields have canonical quarter-ray mass]
 \label{lem:weighted-h1-ray-traces}
 \uses{def:quarter-endpoint-rays, def:interior-section-trace, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.weighted_quarter_ray_trace}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.weighted_quarter_ray_trace}
 \leanok
 Let open $U$ contain the closed cell, $F\in H^1(U)$, and
 $F/d^{3/2}\in L^2(\Cell)$.
@@ -3494,7 +3494,7 @@ same interior-section choice as the all-window quarter-ray trace.
 \begin{lemma}[Gradient endpoint change of variables without continuity]
 \label{lem:gradient-endpoint-change-variables}
 \uses{def:quarter-endpoint-rays}
-\lean{NoEmbeddedEigenvalues.memLp_endpoint_gradient_of_ray}
+\lean{EulerDipoleEigenvalues.memLp_endpoint_gradient_of_ray}
 \leanok
 Let $b<1$, $r(h)=2\arcsin\sqrt h$, and $r(b)<\rho$.
 For any complex function $T$, if $T/\sqrt r\in L^2(0,\rho)$, then
@@ -3529,8 +3529,8 @@ not give measurability of its complex-valued representative.
 \label{lem:weighted-gradient-ray-traces}
 \uses{def:canonical-quarter-gradient-trace, def:quarter-endpoint-rays,
  def:sobolev-local, def:transport-pair}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.weighted_gradient_endpoint_traces,
- NoEmbeddedEigenvalues.IsTransportPair.weighted_gradient_endpoint_traces}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.weighted_gradient_endpoint_traces,
+ EulerDipoleEigenvalues.IsTransportPair.weighted_gradient_endpoint_traces}
 \leanok
 Let open $U$ contain the closed cell, let $f\in H^2(U)$, and retain
 specified weak partials $\partial_jf=D_j$ with
@@ -3565,8 +3565,8 @@ Sobolev or trace premise is introduced.
 \label{lem:weighted-gradient-endpoint-energy}
 \uses{def:weighted-numerator-data, def:canonical-quarter-gradient-trace,
  def:sobolev-local, def:transport-pair, lem:weighted-gradient-ray-traces}
-\lean{NoEmbeddedEigenvalues.quarterEndpointGradientEnergy_integrable,
- NoEmbeddedEigenvalues.IsTransportPair.weighted_gradient_endpoint_energy}
+\lean{EulerDipoleEigenvalues.quarterEndpointGradientEnergy_integrable,
+ EulerDipoleEigenvalues.IsTransportPair.weighted_gradient_endpoint_energy}
 \leanok
 Under the original transport-pair and weighted-gradient hypotheses of
 Lemma~\ref{lem:weighted-gradient-ray-traces}, for $0<b\le1/256$,
@@ -3591,8 +3591,8 @@ For $h>0$, $|\sqrt h|^2=h$ identifies that sum a.e. with $Q_T$.
 \uses{def:transport-pair, def:numerator-derivative, def:quarter-jet-data,
  def:weak-derivative-local, def:sobolev-local, def:h1-interval,
  def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterNumeratorDerivative_weighted_sq_le,
- NoEmbeddedEigenvalues.IsTransportPair.weighted_first_numerator_estimates}
+\lean{EulerDipoleEigenvalues.quarterNumeratorDerivative_weighted_sq_le,
+ EulerDipoleEigenvalues.IsTransportPair.weighted_first_numerator_estimates}
 \leanok
 Let $(v,f)$ be a transport pair on an open orbit neighbourhood containing
 the closed cell. Specify a continuous $g=f$ a.e.\ on that neighbourhood
@@ -3644,8 +3644,8 @@ or gradient-ray trace is required as an input to this first-numerator step.
 \uses{def:transport-pair, def:numerator-derivative,
  def:half-numerator-derivative, def:sobolev-local,
  def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterHalfNumeratorDerivative_weighted_sq_le,
- NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_first_derivatives}
+\lean{EulerDipoleEigenvalues.quarterHalfNumeratorDerivative_weighted_sq_le,
+ EulerDipoleEigenvalues.IsTransportPair.weighted_numerator_first_derivatives}
 \leanok
 Let $(v,f)$ be a transport pair on an open orbit neighbourhood containing
 the closed cell. Retain a supplied continuous representative $g=f$ a.e.
@@ -3689,7 +3689,7 @@ both genuine L2 norms without any pointwise forcing envelope.
 \uses{def:transport-pair, def:numerator-derivative,
  def:half-numerator-derivative, def:sobolev-local, def:h1-interval,
  lem:weighted-half-numerator}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerators_h1}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_numerators_h1}
 \leanok
 Under the original weighted hypotheses of
 Lemma~\ref{lem:weighted-half-numerator}, there is one $0<h_0<1/2$ such that,
@@ -3721,8 +3721,8 @@ the collar or changing a representative.
 \label{lem:weighted-transport-second-mass}
 \uses{def:transport-pair, def:weak-derivative-local, def:sobolev-local,
  def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.weighted_transport_second_mass_with_rep,
- NoEmbeddedEigenvalues.weighted_transport_second_mass}
+\lean{EulerDipoleEigenvalues.weighted_transport_second_mass_with_rep,
+ EulerDipoleEigenvalues.weighted_transport_second_mass}
 \leanok
 Let $(v,f)$ be a transport pair on a bounded open orbit neighbourhood
 containing the closed cell. Specify the original weak Cartesian
@@ -3766,8 +3766,8 @@ The component collars need not agree.
 \uses{def:transport-pair, def:numerator-derivative, def:half-numerator-derivative,
  def:sobolev-local, def:h1-interval, def:h2-interval, def:h2-local-interval,
  lem:weighted-numerators-h1}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_local_h2,
- NoEmbeddedEigenvalues.IsTransportPair.exists_weighted_numerator_local_h2}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_numerator_local_h2,
+ EulerDipoleEigenvalues.IsTransportPair.exists_weighted_numerator_local_h2}
 \leanok
 Under the original weighted forcing and supplied first-gradient hypotheses,
 there is one $0<h_0<1/2$ such that, for every real $\mu$,
@@ -3800,8 +3800,8 @@ same construction; no Sobolev, Hessian or ray premise is added.
 \begin{definition}[Formal second level contraction and its bulk integral]
 \label{def:second-level-bulk}
 \uses{def:quarter-jet-data, def:dipole-flow, def:period}
-\lean{NoEmbeddedEigenvalues.quarterForcingSecondLevelDerivative,
- NoEmbeddedEigenvalues.quarterSecondBulk}
+\lean{EulerDipoleEigenvalues.quarterForcingSecondLevelDerivative,
+ EulerDipoleEigenvalues.quarterSecondBulk}
 \leanok
 For the original ordered family $D$, put $V=\partial_h\gamma_h(t)$,
 $W=\partial_h^2\gamma_h(t)$ and
@@ -3818,7 +3818,7 @@ moving-endpoint identity is asserted.
 \begin{lemma}[Pointwise second-level density bound]
 \label{lem:second-level-density-bound}
 \uses{def:second-level-bulk, def:quarter-jet-data}
-\lean{NoEmbeddedEigenvalues.quarterForcingSecondLevelDerivative_sq_le_density}
+\lean{EulerDipoleEigenvalues.quarterForcingSecondLevelDerivative_sq_le_density}
 \leanok
 At a point $(h,t)$ with $d=d(\gamma_h(t))>0$, suppose $C\ge1$,
 $|V|\le C/d$ and $|W|\le C/d^2$. Then
@@ -3841,7 +3841,7 @@ That sum is exactly the specified pair of jet densities.
 \begin{lemma}[Joint measurability of the second level contraction]
 \label{lem:second-level-measurable}
 \uses{def:second-level-bulk, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterSecondLevelDerivative}
+\lean{EulerDipoleEigenvalues.aestronglyMeasurable_quarterSecondLevelDerivative}
 \leanok
 If every $D_w$, $|w|\le2$, has its actual L2 norm on $\Cell$,
 then $G_{2,D}$ is jointly a.e.\ strongly measurable on $Q_b$ for $b\le1$.
@@ -3859,7 +3859,7 @@ Finite products and sums preserve a.e. measurability on this same strip.
 \begin{lemma}[Actual second fixed-time bulk bound]
 \label{lem:second-numerator-bulk-bound}
 \uses{def:second-level-bulk, def:quarter-jet-data, def:period}
-\lean{NoEmbeddedEigenvalues.quarterForcingSecondLevelDerivative_integral_bound}
+\lean{EulerDipoleEigenvalues.quarterForcingSecondLevelDerivative_integral_bound}
 \leanok
 Let $0<h<1$ and $C\ge1$. Suppose the first and second unweighted
 densities are integrable on the quarter-time interval,
@@ -3892,8 +3892,8 @@ The inverse-fourth moment cancels the factor $h^2$.
 \label{lem:second-numerator-bulk}
 \uses{def:second-level-bulk, def:quarter-jet-data,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.second_numerator_bulk_estimates,
- NoEmbeddedEigenvalues.MemSobolevOn.second_numerator_bulk_estimates}
+\lean{EulerDipoleEigenvalues.second_numerator_bulk_estimates,
+ EulerDipoleEigenvalues.MemSobolevOn.second_numerator_bulk_estimates}
 \leanok
 Suppose every $D_w$, $|w|\le2$, has an actual L2 norm on $\Cell$.
 There are $0<b<1/2$ and $K>0$ such that
@@ -3937,7 +3937,7 @@ zero-frequency quarter integral is $2L(h)f$ and varies with the period.
 
 \begin{lemma}[Level identity under time rescaling]
 \label{lem:time-rescaling-level}
-\lean{NoEmbeddedEigenvalues.timeRescaling_level_identity}
+\lean{EulerDipoleEigenvalues.timeRescaling_level_identity}
 \leanok
 Let $E$ be a real normed space, $S$ be differentiable at $h$ with derivative
 $s$, and $F:\R^2\to E$ be differentiable at $(h,\theta S(h))$.
@@ -3962,7 +3962,7 @@ give the identity without division.
 \begin{definition}[Canonical first-bulk endpoint potential]
 \label{def:first-bulk-endpoint-trace}
 \uses{def:quarter-jet-data, def:period, def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.quarterFirstBulkTrace}
+\lean{EulerDipoleEigenvalues.quarterFirstBulkTrace}
 \leanok
 For any supplied family $D$ and real frequency $\mu$, put
 \[
@@ -3978,8 +3978,8 @@ of the entire rough potential, not its raw value on the endpoint curve.
 \label{lem:first-bulk-moving-endpoints}
 \uses{def:first-bulk-endpoint-trace, def:second-level-bulk,
  def:weak-derivative-local, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.quarterFirstBulk_hasIntervalH1_rep,
- NoEmbeddedEigenvalues.quarterFirstBulk_hasIntervalH1_of_ae_eq}
+\lean{EulerDipoleEigenvalues.quarterFirstBulk_hasIntervalH1_rep,
+ EulerDipoleEigenvalues.quarterFirstBulk_hasIntervalH1_of_ae_eq}
 \leanok
 Let open $U$ contain the cell. Suppose
 $D_{[j]},D_{[i,j]}\in L^2(U)$ and
@@ -4028,8 +4028,8 @@ back to time in both bulk integrals.
 \begin{definition}[Numerator endpoint coefficients and flux]
 \label{def:numerator-endpoint-flux}
 \uses{def:numerator, def:period, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterEndpointCoefficient,
- NoEmbeddedEigenvalues.quarterNumeratorEndpointFlux}
+\lean{EulerDipoleEigenvalues.quarterEndpointCoefficient,
+ EulerDipoleEigenvalues.quarterNumeratorEndpointFlux}
 \leanok
 For $\varepsilon\in\{-1,1\}$ put
 \[
@@ -4044,8 +4044,8 @@ For $\varepsilon\in\{-1,1\}$ put
 \label{def:numerator-second-derivative}
 \uses{def:numerator-endpoint-flux, def:action-angle-pullback-gradient,
  def:interior-section-trace, def:first-bulk-endpoint-trace, def:second-level-bulk}
-\lean{NoEmbeddedEigenvalues.quarterNumeratorEndpointDerivative,
- NoEmbeddedEigenvalues.quarterNumeratorSecondDerivative}
+\lean{EulerDipoleEigenvalues.quarterNumeratorEndpointDerivative,
+ EulerDipoleEigenvalues.quarterNumeratorSecondDerivative}
 \leanok
 For the supplied first entries $D_1=(D_{[0]},D_{[1]})$, set
 \[
@@ -4070,9 +4070,9 @@ These are definitions; no weak identity or weighted norm is asserted here.
 \uses{def:transport-pair, def:sobolev-local, def:h1-interval,
  def:numerator-endpoint-flux, def:numerator-second-derivative,
  def:numerator-derivative}
-\lean{NoEmbeddedEigenvalues.quarterNumeratorDerivative_eq_bulk_add_endpoints,
- NoEmbeddedEigenvalues.contDiffOn_quarterEndpointCoefficient,
- NoEmbeddedEigenvalues.IsTransportPair.quarterNumeratorEndpointFlux_hasIntervalH1}
+\lean{EulerDipoleEigenvalues.quarterNumeratorDerivative_eq_bulk_add_endpoints,
+ EulerDipoleEigenvalues.contDiffOn_quarterEndpointCoefficient,
+ EulerDipoleEigenvalues.IsTransportPair.quarterNumeratorEndpointFlux_hasIntervalH1}
 \leanok
 For the original transport pair, continuous forcing representative $g$,
 and supplied weak first entries $D_{[j]}$, the coefficients $r_{\mu,\varepsilon}$
@@ -4100,12 +4100,12 @@ also gives the exact first-candidate splitting.
 \uses{def:transport-pair, def:sobolev-local, def:local-weak-jets,
  def:numerator-second-derivative, def:numerator, def:h1-interval,
  def:h2-interval, def:h2-local-interval}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_hasIntervalH2_derivative,
- NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_hasIntervalH2_derivative_of_rep_jet,
- NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_second_derivative_h2Loc,
- NoEmbeddedEigenvalues.IsTransportPair.quarterNumerator_second_derivative_ae,
- NoEmbeddedEigenvalues.IsTransportPair.exists_quarterNumerator_second_derivative_with_rep,
- NoEmbeddedEigenvalues.IsTransportPair.exists_quarterNumerator_second_derivative}
+\lean{EulerDipoleEigenvalues.IsTransportPair.quarterNumerator_hasIntervalH2_derivative,
+ EulerDipoleEigenvalues.IsTransportPair.quarterNumerator_hasIntervalH2_derivative_of_rep_jet,
+ EulerDipoleEigenvalues.IsTransportPair.quarterNumerator_second_derivative_h2Loc,
+ EulerDipoleEigenvalues.IsTransportPair.quarterNumerator_second_derivative_ae,
+ EulerDipoleEigenvalues.IsTransportPair.exists_quarterNumerator_second_derivative_with_rep,
+ EulerDipoleEigenvalues.IsTransportPair.exists_quarterNumerator_second_derivative}
 \leanok
 Let the original transport pair be defined on $U$ containing the closed cell,
 and retain its continuous forcing representative $g$ and any supplied true
@@ -4153,7 +4153,7 @@ provide the original-input producer; neither shrinks the collar.
 \label{lem:quarter-ray-tangential-derivative}
 \uses{def:quarter-endpoint-rays, def:canonical-quarter-gradient-trace,
  def:sobolev-local, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.quarterEndpointRay_hasIntervalH1}
+\lean{EulerDipoleEigenvalues.quarterEndpointRay_hasIntervalH1}
 \leanok
 Let open $U$ contain the closed cell, let $g\in H^2(U)$ be continuous,
 and retain specified weak first derivatives $D_0,D_1$.
@@ -4183,7 +4183,7 @@ and all three finite norms. No mixed entries are commuted.
 \begin{definition}[Canonical normalized endpoint level trace]
 \label{def:quarter-endpoint-level-trace}
 \uses{def:action-angle-pullback-gradient, def:interior-section-trace}
-\lean{NoEmbeddedEigenvalues.quarterEndpointLevelTrace}
+\lean{EulerDipoleEigenvalues.quarterEndpointLevelTrace}
 \leanok
 For the supplied Cartesian first gradient $D$, define
 \[
@@ -4198,8 +4198,8 @@ This is the trace of the normalized level contraction, including period drift.
 \label{lem:endpoint-tangential-trace-identity}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-endpoint-level-trace,
  def:canonical-quarter-gradient-trace, def:quarter-endpoint-rays}
-\lean{NoEmbeddedEigenvalues.ae_quarterEndpointRadius,
- NoEmbeddedEigenvalues.IsTransportPair.quarterEndpointLevelTrace_eq_ae}
+\lean{EulerDipoleEigenvalues.ae_quarterEndpointRadius,
+ EulerDipoleEigenvalues.IsTransportPair.quarterEndpointLevelTrace_eq_ae}
 \leanok
 For the original pair, continuous forcing representative $g$, and supplied weak
 first gradient $D$, put $r(h)=2\arcsin\sqrt h$.
@@ -4231,7 +4231,7 @@ two identities. Thus no general covariance theorem for transverse traces is need
 \begin{lemma}[Critical L2 norm of the normalized endpoint-value derivative]
 \label{lem:weighted-endpoint-tangential-trace}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-endpoint-level-trace}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.quarterEndpointLevelTrace_memLp}
+\lean{EulerDipoleEigenvalues.IsTransportPair.quarterEndpointLevelTrace_memLp}
 \leanok
 Under the original pair and supplied-gradient hypotheses, retain a continuous
 forcing representative and suppose $D_j/d^{3/2}\in L^2$ on the cell.
@@ -4254,8 +4254,8 @@ the minus sign on the negative ray, and transfer by the a.e. scalar identity.
 \begin{lemma}[Weighted bounds for endpoint scalar coefficients]
 \label{lem:endpoint-coefficient-bounds}
 \uses{def:numerator-endpoint-flux}
-\lean{NoEmbeddedEigenvalues.hasDerivAt_quarterEndpointCoefficient,
- NoEmbeddedEigenvalues.quarterEndpointCoefficient_weighted_bounds}
+\lean{EulerDipoleEigenvalues.hasDerivAt_quarterEndpointCoefficient,
+ EulerDipoleEigenvalues.quarterEndpointCoefficient_weighted_bounds}
 \leanok
 The coefficient $r_{\mu,\varepsilon}=L'e^{-i\mu\varepsilon L}$ satisfies
 \[
@@ -4286,8 +4286,8 @@ The phase has unit norm for either sign.
 \label{lem:weighted-numerator-endpoint-derivative}
 \uses{def:transport-pair, def:sobolev-local, def:numerator-second-derivative,
  def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_endpoint_derivative,
- NoEmbeddedEigenvalues.IsTransportPair.exists_weighted_numerator_endpoint_data}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_numerator_endpoint_derivative,
+ EulerDipoleEigenvalues.IsTransportPair.exists_weighted_numerator_endpoint_data}
 \leanok
 For the original pair and any continuous forcing representative $g$, retain
 the supplied weak first entries $D_{[j]}$ and suppose
@@ -4339,7 +4339,7 @@ and endpoint-value estimates before asserting global $hN_\mu''\in L^2$.
 \begin{lemma}[Simultaneous first numerator and subinterval estimates]
 \label{lem:weighted-first-numerator-fiber-bounds}
 \uses{def:weighted-numerator-data, def:numerator}
-\lean{NoEmbeddedEigenvalues.weighted_first_numerator_fiber_bounds}
+\lean{EulerDipoleEigenvalues.weighted_first_numerator_fiber_bounds}
 \leanok
 A specified gradient divided by $d^{3/2}$ in $L^2$ on the cell gives one
 small level interval and one constant, independent of the frequency.
@@ -4364,7 +4364,7 @@ exceptional set. Add the full and half estimates with a common constant.
 \begin{lemma}[Pointwise energy bound for the endpoint-value flux derivative]
 \label{lem:numerator-endpoint-flux-energy}
 \uses{def:transport-pair, def:weighted-numerator-data, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.quarterNumeratorEndpointDerivative_sq_le}
+\lean{EulerDipoleEigenvalues.IsTransportPair.quarterNumeratorEndpointDerivative_sq_le}
 \leanok
 For the supplied weak gradient and continuous forcing, the squared norm of
 the derivative of the endpoint-value flux multiplied by $h$ is bounded
@@ -4385,7 +4385,7 @@ tangential derivative of the forcing value is compared across charts.
 \begin{lemma}[Quantitative numerator assembly from a boundary energy bound]
 \label{lem:weighted-numerator-assembly}
 \uses{def:transport-pair, def:sobolev-local, def:weighted-numerator-data}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_data_of_boundary_bound}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_numerator_data_of_boundary_bound}
 \leanok
 Under the weighted forcing and specified jet hypotheses of the numerator
 estimates, suppose the squared norm of the canonical first-bulk boundary
@@ -4411,7 +4411,7 @@ bulk forcing; the affine ray traces are unchanged on all admissible windows.
 \begin{lemma}[Agreement of normalized and affine quarter traces]
 \label{lem:quarter-endpoint-trace-comparison}
 \uses{def:interior-section-trace, def:quarter-endpoint-rays, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.quarterEndpointTrace_compare}
+\lean{EulerDipoleEigenvalues.quarterEndpointTrace_compare}
 \leanok
 An $H^1$ field on an open neighbourhood of the closed cell has canonical
 section germs at the normalized quarter endpoints for a.e.\ level in any
@@ -4434,7 +4434,7 @@ cover gives the assertion on the whole collar.
 \label{lem:first-bulk-boundary-square}
 \uses{def:first-bulk-endpoint-trace, def:canonical-quarter-gradient-trace,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.quarter_first_bulk_boundary_sq_le}
+\lean{EulerDipoleEigenvalues.quarter_first_bulk_boundary_sq_le}
 \leanok
 For the two supplied first jet entries in $H^1$ on a neighbourhood of
 the closed cell, the squared norm of $hS'(h)$ times the first-bulk boundary
@@ -4455,7 +4455,7 @@ unit modulus and $hS'$ is bounded. Square and add the two endpoint bounds.
 \label{lem:weighted-numerator-estimates}
 \uses{def:transport-pair, def:numerator, def:sobolev-local,
  def:weighted-numerator-data}
-\lean{NoEmbeddedEigenvalues.weighted_numerator_estimates}
+\lean{EulerDipoleEigenvalues.weighted_numerator_estimates}
 \leanok
 For a transport pair on a bounded open union of orbits containing the
 closed cell square, suppose $f/d^2,\nabla f/d^{3/2}\in L^2$ near its corners.
@@ -4551,7 +4551,7 @@ and the actual weak derivatives.
 \begin{definition}[Joint level-reconstruction candidate]
 \label{def:quarter-reconstruction-level}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterReconstructionLevel}
+\lean{EulerDipoleEigenvalues.quarterReconstructionLevel}
 \leanok
 For $A_1:\R\to\C$ and $G:\R^2\to\C$, define
 \[
@@ -4565,9 +4565,9 @@ identity.
 \begin{lemma}[Measurability of the moving-strip primitive]
 \label{lem:quarter-primitive-measurable}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.measurableSet_quarterOrbitStrip,
- NoEmbeddedEigenvalues.aestronglyMeasurable_quarterPrimitive,
- NoEmbeddedEigenvalues.aestronglyMeasurable_level_quarterStrip}
+\lean{EulerDipoleEigenvalues.measurableSet_quarterOrbitStrip,
+ EulerDipoleEigenvalues.aestronglyMeasurable_quarterPrimitive,
+ EulerDipoleEigenvalues.aestronglyMeasurable_level_quarterStrip}
 \leanok
 The strip $Q_b$ is measurable.
 If $G$ is a.e.\ strongly measurable on $Q_b$, then
@@ -4591,9 +4591,9 @@ projection of product Lebesgue measure, then restrict to $Q_b$.
 \begin{lemma}[Spatial $L^2$ pulls back to the base quarter]
 \label{lem:quarter-l2-pullback}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterOrbitStrip_subset_orbitDomain,
- NoEmbeddedEigenvalues.memLp_comp_quarterOrbitStrip,
- NoEmbeddedEigenvalues.memLp_comp_quarterOrbitStrip_of_memLp}
+\lean{EulerDipoleEigenvalues.quarterOrbitStrip_subset_orbitDomain,
+ EulerDipoleEigenvalues.memLp_comp_quarterOrbitStrip,
+ EulerDipoleEigenvalues.memLp_comp_quarterOrbitStrip_of_memLp}
 \leanok
 If the raw function $F:\R^2\to\C$ belongs to $L^2(\Cell)$, then
 $F\circ\Gamma_0\in L^2(Q_b)$ for every $0<b\le1$.
@@ -4615,7 +4615,7 @@ No isometry or first-coordinate measure preservation is claimed.
 \begin{lemma}[Weak transport pulls back to weak quarter time]
 \label{lem:quarter-time-pullback}
 \uses{def:transport-pair, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.quarter_time}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.quarter_time}
 \leanok
 Let $0<b<1$ and let $U$ contain the orbit annulus $0<h<b$.
 Suppose $F,D$ are measurable, both in $L^2(\Cell)$, and
@@ -4636,10 +4636,10 @@ Their additional global measurability is not needed.
 \begin{lemma}[Saddle weights for the forcing transport derivative]
 \label{lem:saddle-transport-weights}
 \uses{def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.abs_sin_axis_le_saddleDist,
- NoEmbeddedEigenvalues.abs_sin_axis_le_sqrt_saddleDist,
- NoEmbeddedEigenvalues.norm_sin_mul_div_saddleDist_sq_le,
- NoEmbeddedEigenvalues.memLp_sin_mul_div_saddleDist_sq}
+\lean{EulerDipoleEigenvalues.abs_sin_axis_le_saddleDist,
+ EulerDipoleEigenvalues.abs_sin_axis_le_sqrt_saddleDist,
+ EulerDipoleEigenvalues.norm_sin_mul_div_saddleDist_sq_le,
+ EulerDipoleEigenvalues.memLp_sin_mul_div_saddleDist_sq}
 \leanok
 For either coordinate $j$, everywhere on the plane,
 \[
@@ -4666,8 +4666,8 @@ No small-level cutoff or upper bound on $d$ is needed.
 \begin{lemma}[Fiber-integral criterion for quarter-strip $L^2$]
 \label{lem:quarter-fiber-summation}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterStrip_sections,
- NoEmbeddedEigenvalues.memLp_quarterStrip_of_integral_bound}
+\lean{EulerDipoleEigenvalues.aestronglyMeasurable_quarterStrip_sections,
+ EulerDipoleEigenvalues.memLp_quarterStrip_of_integral_bound}
 \leanok
 Let $F$ be a.e.\ strongly measurable on $Q_b$.
 Then its time sections are a.e.\ strongly measurable on
@@ -4694,7 +4694,7 @@ density is required.
 \begin{lemma}[Moving quarter-strip summation]
 \label{lem:quarter-strip-summation}
 \uses{def:cell-separatrix-collar, def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.memLp_quarterStrip_of_sq_bound}
+\lean{EulerDipoleEigenvalues.memLp_quarterStrip_of_sq_bound}
 \leanok
 Let $0<b<1$, and suppose $2L(h)\le C\Lambda(h)$ on $(0,b)$.
 Let $F$ be a.e.\ strongly measurable on $Q_b$, let $B\ge0$ a.e.\ on
@@ -4718,9 +4718,9 @@ measurability of the raw representative is needed.
 \label{lem:quarter-reconstruction-level-gain}
 \uses{def:weighted-numerator-data, def:quarter-reconstruction-level,
  def:log-level-weight}
-\lean{NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.midpoint_integral_bound,
- NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.midpoint_intervalIntegrable,
- NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.reconstruction_level_memLp}
+\lean{EulerDipoleEigenvalues.WeightedQuarterNumeratorData.midpoint_integral_bound,
+ EulerDipoleEigenvalues.WeightedQuarterNumeratorData.midpoint_intervalIntegrable,
+ EulerDipoleEigenvalues.WeightedQuarterNumeratorData.reconstruction_level_memLp}
 \leanok
 Let $d$ be compatible numerator data on $(0,h_0)$, $0<b\le h_0<1/2$,
 $G$ its specified weak forcing-level derivative and $K$ its first
@@ -4761,9 +4761,9 @@ $h<1/2$. Apply Lemma~\ref{lem:quarter-strip-summation}.
 \begin{lemma}[Forcing-level $L^2$ gain on a quarter strip]
 \label{lem:quarter-forcing-level-gain}
 \uses{def:weighted-numerator-data}
-\lean{NoEmbeddedEigenvalues.quarterJetDensity_one,
- NoEmbeddedEigenvalues.quarterForcingLevelDerivative_sq_le_density,
- NoEmbeddedEigenvalues.WeightedQuarterNumeratorData.forcing_level_memLp}
+\lean{EulerDipoleEigenvalues.quarterJetDensity_one,
+ EulerDipoleEigenvalues.quarterForcingLevelDerivative_sq_le_density,
+ EulerDipoleEigenvalues.WeightedQuarterNumeratorData.forcing_level_memLp}
 \leanok
 Let $d$ be compatible numerator data on $(0,h_0)$ with specified
 forcing-level derivative $G$. There is $0<\delta<1$ such that
@@ -4803,7 +4803,7 @@ Lemma~\ref{lem:quarter-fiber-summation} finishes the proof.
 \begin{definition}[Joint midpoint reconstruction]
 \label{def:quarter-reconstruction}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterDuhamel, NoEmbeddedEigenvalues.quarterReconstruction}
+\lean{EulerDipoleEigenvalues.quarterDuhamel, EulerDipoleEigenvalues.quarterReconstruction}
 \leanok
 For an amplitude $A$ and forcing $F$ on the quarter strip, put
 \[
@@ -4816,9 +4816,9 @@ For an amplitude $A$ and forcing $F$ on the quarter strip, put
 \begin{lemma}[Weak midpoint primitive on a moving quarter strip]
 \label{lem:quarter-primitive-weak}
 \uses{def:cell-separatrix-collar, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.quarterStrip_midpoint_rectangle,
- NoEmbeddedEigenvalues.isOpen_quarterOrbitStrip,
- NoEmbeddedEigenvalues.HasWeakPartialOn.quarterPrimitive}
+\lean{EulerDipoleEigenvalues.quarterStrip_midpoint_rectangle,
+ EulerDipoleEigenvalues.isOpen_quarterOrbitStrip,
+ EulerDipoleEigenvalues.HasWeakPartialOn.quarterPrimitive}
 \leanok
 For $0<b\le1$, the strip $Q_b$ is open. If $\partial_hF=D$ weakly there,
 then $\partial_hP_F=P_D$ weakly there, with $P_F,P_D$ as in
@@ -4840,10 +4840,10 @@ locality. There is no moving-endpoint differentiation.
 \label{lem:quarter-reconstruction-weak}
 \uses{def:quarter-reconstruction, def:quarter-reconstruction-level,
  def:weak-derivative-local, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1Loc.weak_fst,
- NoEmbeddedEigenvalues.HasWeakPartialOn.quarterDuhamel,
- NoEmbeddedEigenvalues.quarterReconstruction_eq,
- NoEmbeddedEigenvalues.quarterReconstruction_weak_of_intervalH1Loc}
+\lean{EulerDipoleEigenvalues.HasIntervalH1Loc.weak_fst,
+ EulerDipoleEigenvalues.HasWeakPartialOn.quarterDuhamel,
+ EulerDipoleEigenvalues.quarterReconstruction_eq,
+ EulerDipoleEigenvalues.quarterReconstruction_weak_of_intervalH1Loc}
 \leanok
 Let $0<b\le1$, $A\in H^1_{\rm loc}(0,b)$ with specified derivative $A_1$,
 and $\partial_hF=D$ weakly on $Q_b$. Then
@@ -4871,7 +4871,7 @@ even for signed intervals.
 \begin{lemma}[From orbitwise to joint a.e. equality]
 \label{lem:quarter-profile-ae}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.ae_eq_quarterStrip_of_ae_sections}
+\lean{EulerDipoleEigenvalues.ae_eq_quarterStrip_of_ae_sections}
 \leanok
 Let $F,G$ be a.e.\ strongly measurable on $Q_b$.
 If, for a.e.\ $h\in(0,b)$, they agree for a.e.\
@@ -4891,7 +4891,7 @@ The measurability hypotheses cannot be dropped.
 \begin{lemma}[Spatial a.e. equality pulls back to a quarter]
 \label{lem:quarter-ae-pullback}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.ae_eq_comp_quarterOrbitStrip}
+\lean{EulerDipoleEigenvalues.ae_eq_comp_quarterOrbitStrip}
 \leanok
 Let $0<b\le1$ and let $F,G:\R^2\to\C$ be measurable and equal
 a.e.\ on the plane. Then $F\circ\Gamma_0=G\circ\Gamma_0$ jointly
@@ -4912,10 +4912,10 @@ Lemma~\ref{lem:quarter-profile-ae} gives joint a.e.\ equality.
 \label{lem:quarter-rotation-character}
 \uses{def:rotation-characters, def:cell-separatrix-collar,
  def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.liftL2_iterate_rotLift_ae,
- NoEmbeddedEigenvalues.liftL2_recenteredQuarterMap_ae,
- NoEmbeddedEigenvalues.saddleDist_rotLift,
- NoEmbeddedEigenvalues.saddleDist_rotLift_iterate}
+\lean{EulerDipoleEigenvalues.liftL2_iterate_rotLift_ae,
+ EulerDipoleEigenvalues.liftL2_recenteredQuarterMap_ae,
+ EulerDipoleEigenvalues.saddleDist_rotLift,
+ EulerDipoleEigenvalues.saddleDist_rotLift_iterate}
 \leanok
 Let $\omega\in L^2(\T^2)$ have rotation character $\kappa\in\{1,-1\}$.
 For every $0<b\le1$ and $k=0,1,2,3$,
@@ -4943,7 +4943,7 @@ and iterate.
 
 \begin{lemma}[Weighted two-column frame estimate]
 \label{lem:weighted-frame}
-\lean{NoEmbeddedEigenvalues.memLp_weighted_frame}
+\lean{EulerDipoleEigenvalues.memLp_weighted_frame}
 \leanok
 For a measure $\mu$, let $a,b,H,T$ be complex functions and $r$ a real
 function. Assume $a/r$ and $br$ are a.e.\ strongly measurable and bounded.
@@ -4964,7 +4964,7 @@ Bounded multipliers preserve $L^2$; add the two terms.
 \begin{definition}[Open base-quarter image]
 \label{def:quarter-image}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterImage}
+\lean{EulerDipoleEigenvalues.quarterImage}
 \leanok
 Write $C(p)=(h(p),t(p))$ for the canonical orbit coordinates.
 Define
@@ -4977,11 +4977,11 @@ where $b(p)$ denotes the second diagonal coordinate, not the cutoff.
 \begin{lemma}[Open base-quarter chart]
 \label{lem:quarter-open-chart}
 \uses{def:quarter-image}
-\lean{NoEmbeddedEigenvalues.quarterChart, NoEmbeddedEigenvalues.isOpen_quarterImage,
- NoEmbeddedEigenvalues.quarterCoordinates_dipoleOrbit,
- NoEmbeddedEigenvalues.contDiffOn_quarterChart,
- NoEmbeddedEigenvalues.contDiffOn_quarterCoordinates,
- NoEmbeddedEigenvalues.det_fderiv_quarterChart}
+\lean{EulerDipoleEigenvalues.quarterChart, EulerDipoleEigenvalues.isOpen_quarterImage,
+ EulerDipoleEigenvalues.quarterCoordinates_dipoleOrbit,
+ EulerDipoleEigenvalues.contDiffOn_quarterChart,
+ EulerDipoleEigenvalues.contDiffOn_quarterCoordinates,
+ EulerDipoleEigenvalues.det_fderiv_quarterChart}
 \leanok
 For $b\le1$, $\Gamma_0:Q_b\to V_b$ is a smooth open chart with smooth
 inverse $C$. Thus $V_b=\Gamma_0(Q_b)$, and its Jacobian is exactly two.
@@ -5001,9 +5001,9 @@ The flow map is jointly smooth and has determinant two.
 \begin{definition}[Base-quarter inverse-frame candidates]
 \label{def:quarter-inverse-frame}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterLevelDual,
- NoEmbeddedEigenvalues.quarterTimeDual,
- NoEmbeddedEigenvalues.quarterInverseGradient}
+\lean{EulerDipoleEigenvalues.quarterLevelDual,
+ EulerDipoleEigenvalues.quarterTimeDual,
+ EulerDipoleEigenvalues.quarterInverseGradient}
 \leanok
 At $q=(h,t)$ write $p=\gamma_h(t)$ and $J=\partial_h\gamma_h(t)$.
 Define
@@ -5019,12 +5019,12 @@ a spatial weak derivative.
 \begin{lemma}[Inverse-frame algebra and coefficient bounds]
 \label{lem:quarter-inverse-frame-algebra}
 \uses{def:quarter-inverse-frame, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.measurable_quarterLevelDual,
- NoEmbeddedEigenvalues.measurable_quarterTimeDual,
- NoEmbeddedEigenvalues.norm_quarterLevelDual_div_le,
- NoEmbeddedEigenvalues.norm_quarterTimeDual_le,
- NoEmbeddedEigenvalues.quarter_level_variation_normal,
- NoEmbeddedEigenvalues.quarterInverseGradient_of_coordinate_rows}
+\lean{EulerDipoleEigenvalues.measurable_quarterLevelDual,
+ EulerDipoleEigenvalues.measurable_quarterTimeDual,
+ EulerDipoleEigenvalues.norm_quarterLevelDual_div_le,
+ EulerDipoleEigenvalues.norm_quarterTimeDual_le,
+ EulerDipoleEigenvalues.quarter_level_variation_normal,
+ EulerDipoleEigenvalues.quarterInverseGradient_of_coordinate_rows}
 \leanok
 The coefficients $a_j,b_j$ are measurable. With $r=d(p)$,
 $|a_j/r|\le1$ and $|b_j|\le|J|$.
@@ -5052,7 +5052,7 @@ The factor two fixes both the sign and the normalization.
 \begin{lemma}[Weighted inverse-frame candidates]
 \label{lem:quarter-inverse-frame-estimate}
 \uses{def:quarter-inverse-frame, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterInverseGradient_memLp}
+\lean{EulerDipoleEigenvalues.quarterInverseGradient_memLp}
 \leanok
 There is $0<\delta<1$, independent of $H,T$, such that for every
 $0<b\le\delta$, if $H,T/(d\circ\Gamma_0)^2\in L^2(Q_b)$, then
@@ -5074,11 +5074,11 @@ Apply Lemma~\ref{lem:weighted-frame} to the two given $L^2$ functions.
 \begin{lemma}[Spatial gradient reconstructed on a base quarter]
 \label{lem:quarter-spatial-reconstruction}
 \uses{def:quarter-image, def:quarter-inverse-frame, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.quarterSpatialGradient,
- NoEmbeddedEigenvalues.chartGradient_quarterChart,
- NoEmbeddedEigenvalues.quarterSpatialGradient_weak,
- NoEmbeddedEigenvalues.memLp_quarterSpatialGradient,
- NoEmbeddedEigenvalues.memLp_div_saddleDist_of_quarter}
+\lean{EulerDipoleEigenvalues.quarterSpatialGradient,
+ EulerDipoleEigenvalues.chartGradient_quarterChart,
+ EulerDipoleEigenvalues.quarterSpatialGradient_weak,
+ EulerDipoleEigenvalues.memLp_quarterSpatialGradient,
+ EulerDipoleEigenvalues.memLp_div_saddleDist_of_quarter}
 \leanok
 If $\partial_h(F\circ\Gamma_0)=H$ and
 $\partial_t(F\circ\Gamma_0)=T$ weakly on $Q_b$, $b\le1$, then
@@ -5110,11 +5110,11 @@ The whole quarter image need not lie in $U$.
 \begin{lemma}[The four open quarters cover a cell collar]
 \label{lem:quarter-cell-cover}
 \uses{def:quarter-image, def:cell-arcs, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.abs_diag_fst_lt_quarterRadius,
- NoEmbeddedEigenvalues.mem_quarterImage_of_quadrant,
- NoEmbeddedEigenvalues.rotLift_cell_level,
- NoEmbeddedEigenvalues.exists_rotLift_mem_quarterImage,
- NoEmbeddedEigenvalues.ae_cell_collar_covered}
+\lean{EulerDipoleEigenvalues.abs_diag_fst_lt_quarterRadius,
+ EulerDipoleEigenvalues.mem_quarterImage_of_quadrant,
+ EulerDipoleEigenvalues.rotLift_cell_level,
+ EulerDipoleEigenvalues.exists_rotLift_mem_quarterImage,
+ EulerDipoleEigenvalues.ae_cell_collar_covered}
 \leanok
 For $0<b\le1$, every point in the positive cell with
 $0<h(p)<b$, $x>0$, $y<0$ belongs to $V_b$.
@@ -5143,7 +5143,7 @@ Rotate any point off the axes into this quadrant. Both axes are null by Fubini.
 \begin{lemma}[Physical-area $L^2$ from the base quarter]
 \label{lem:quarter-l2-pushforward}
 \uses{def:quarter-image, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.memLp_of_comp_quarterOrbitStrip}
+\lean{EulerDipoleEigenvalues.memLp_of_comp_quarterOrbitStrip}
 \leanok
 For $b\le1$ and an arbitrary raw function $F:\R^2\to\C$, if
 $(h,t)\mapsto F(\gamma_h(t))$ belongs to $L^2(Q_b,dh\,dt)$,
@@ -5164,10 +5164,10 @@ at every target point.
 \begin{lemma}[Rotation characters on a restricted cell collar]
 \label{lem:collar-rotation-character}
 \uses{def:quarter-character, def:cell-separatrix-collar, def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.measurePreserving_rotLift,
- NoEmbeddedEigenvalues.preimage_rotLift_cellSeparatrixStrip,
- NoEmbeddedEigenvalues.cellSeparatrixStrip_eq_orbitAnnulus,
- NoEmbeddedEigenvalues.HasQuarterCharacterOn.iterate_cell_collar}
+\lean{EulerDipoleEigenvalues.measurePreserving_rotLift,
+ EulerDipoleEigenvalues.preimage_rotLift_cellSeparatrixStrip,
+ EulerDipoleEigenvalues.cellSeparatrixStrip_eq_orbitAnnulus,
+ EulerDipoleEigenvalues.HasQuarterCharacterOn.iterate_cell_collar}
 \leanok
 Rotation $R$ preserves planar volume and every collar
 $A_\varepsilon=V_\varepsilon^{\rm cell}$.
@@ -5197,7 +5197,7 @@ $b\le1$ excludes the center, exactly as the orbit annulus does.
 \begin{lemma}[Physical cell-collar mass from one quarter character]
 \label{lem:quarter-character-cell-mass}
 \uses{def:quarter-character, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.memLp_cell_collar_of_quarter_character}
+\lean{EulerDipoleEigenvalues.memLp_cell_collar_of_quarter_character}
 \leanok
 Let $b\le1$, $\kappa\ne0$, and let $F:\R^2\to\C$ be a raw function.
 Suppose $F(Rp)=\kappa F(p)$ a.e.\ on $A=V_{2b}^{\rm cell}$ and
@@ -5224,8 +5224,8 @@ No weak derivative is glued across those null seams.
 \begin{lemma}[Interior complement of a first mass collar]
 \label{lem:cell-interior-mass}
 \uses{def:cell-arcs, def:cell-separatrix-collar, def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.levelCoord_le_saddleDist,
- NoEmbeddedEigenvalues.memLp_div_saddleDist_of_cell_collar}
+\lean{EulerDipoleEigenvalues.levelCoord_le_saddleDist,
+ EulerDipoleEigenvalues.memLp_div_saddleDist_of_cell_collar}
 \leanok
 For every $p\in\Cell$, $h(p)\le d(p)$.
 Consequently, if $b>0$, $F\in L^2(\Cell)$ and
@@ -5252,9 +5252,9 @@ complement; combine with the supplied collar norm.
 \begin{lemma}[A uniform cell collar inside a separatrix neighbourhood]
 \label{lem:compact-cell-collar}
 \uses{def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.isOpen_cellSeparatrixStrip,
- NoEmbeddedEigenvalues.exists_cell_collar_subset,
- NoEmbeddedEigenvalues.exists_compact_cell_collar}
+\lean{EulerDipoleEigenvalues.isOpen_cellSeparatrixStrip,
+ EulerDipoleEigenvalues.exists_cell_collar_subset,
+ EulerDipoleEigenvalues.exists_compact_cell_collar}
 \leanok
 The positive cell collar is open. If $U$ is open and contains the lifted
 separatrix, some $\varepsilon>0$ and open $V$ satisfy
@@ -5278,11 +5278,11 @@ positive $\delta/2$-collar. Place it inside an open set with compact closure in 
 \begin{lemma}[Weighted gradients under quarter rotation]
 \label{lem:weighted-gradient-rotation}
 \uses{def:weak-derivative-local, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.rotLinear,
- NoEmbeddedEigenvalues.HasWeakPartialOn.comp_rotLift,
- NoEmbeddedEigenvalues.memLp_div_saddleDist_comp_rotLift,
- NoEmbeddedEigenvalues.exists_weightedGradient_rotLift,
- NoEmbeddedEigenvalues.exists_weightedGradient_iterate_rotLift}
+\lean{EulerDipoleEigenvalues.rotLinear,
+ EulerDipoleEigenvalues.HasWeakPartialOn.comp_rotLift,
+ EulerDipoleEigenvalues.memLp_div_saddleDist_comp_rotLift,
+ EulerDipoleEigenvalues.exists_weightedGradient_rotLift,
+ EulerDipoleEigenvalues.exists_weightedGradient_iterate_rotLift}
 \leanok
 If $\partial_jF=E_j$ weakly on an open $V$, then the two weak
 derivatives of $F\circ R$ on $R^{-1}V$ are $-E_y\circ R,E_x\circ R$.
@@ -5306,7 +5306,7 @@ congruence of the actual functions; iterate on the rotated domains.
 \label{lem:weighted-gradient-cell-cover}
 \uses{def:weak-derivative-local, def:quarter-image,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.memLp_weighted_gradient_cell_collar}
+\lean{EulerDipoleEigenvalues.memLp_weighted_gradient_cell_collar}
 \leanok
 Let $0<b\le1$, let $D$ be a measurable specified weak gradient of $F$
 on an open $U$, and suppose $F\circ R=aF$ a.e., $a\ne0$.
@@ -5327,7 +5327,7 @@ Discarding the null axes affects only integrability, not weak identities.
 \begin{lemma}[Weighted gradients under an affine symmetry]
 \label{lem:weighted-gradient-affine}
 \uses{def:weak-derivative-local, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.exists_weightedGradient_planeAffine}
+\lean{EulerDipoleEigenvalues.exists_weightedGradient_planeAffine}
 \leanok
 Let $T(p)=Ap+c$ be an invertible volume-preserving affine map with
 $d\circ T=d$. If $F$ has a weak gradient $E$ on an open $V$ with
@@ -5345,9 +5345,9 @@ $d\circ T=d$, and the constant coefficients give its weighted norm.
 
 \begin{definition}[Reflected periodic cell folds]
 \label{def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.separatrixReflect,
- NoEmbeddedEigenvalues.cellFoldLinear,
- NoEmbeddedEigenvalues.cellFoldTranslation, NoEmbeddedEigenvalues.cellFold}
+\lean{EulerDipoleEigenvalues.separatrixReflect,
+ EulerDipoleEigenvalues.cellFoldLinear,
+ EulerDipoleEigenvalues.cellFoldTranslation, EulerDipoleEigenvalues.cellFold}
 \leanok
 For $n\in\mathbb Z^2$ define
 \[
@@ -5359,17 +5359,17 @@ For $n\in\mathbb Z^2$ define
 \begin{lemma}[Finite reflected periodic cell covering]
 \label{lem:periodic-cell-cover}
 \uses{def:periodic-cell-folds, def:cell-arcs, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.measurePreserving_cellFold,
- NoEmbeddedEigenvalues.isometry_cellFold,
- NoEmbeddedEigenvalues.saddleDist_cellFold,
- NoEmbeddedEigenvalues.dipoleLift_liftShift,
- NoEmbeddedEigenvalues.dipoleLift_separatrixReflect,
- NoEmbeddedEigenvalues.dipoleLift_cellFold,
- NoEmbeddedEigenvalues.cellFold_preimage_strip_subset,
- NoEmbeddedEigenvalues.exists_liftShift_eq,
- NoEmbeddedEigenvalues.exists_cellFold_mem_collar,
- NoEmbeddedEigenvalues.norm_le_pi_of_mem_cellSquare,
- NoEmbeddedEigenvalues.cellFold_mem_shiftBox}
+\lean{EulerDipoleEigenvalues.measurePreserving_cellFold,
+ EulerDipoleEigenvalues.isometry_cellFold,
+ EulerDipoleEigenvalues.saddleDist_cellFold,
+ EulerDipoleEigenvalues.dipoleLift_liftShift,
+ EulerDipoleEigenvalues.dipoleLift_separatrixReflect,
+ EulerDipoleEigenvalues.dipoleLift_cellFold,
+ EulerDipoleEigenvalues.cellFold_preimage_strip_subset,
+ EulerDipoleEigenvalues.exists_liftShift_eq,
+ EulerDipoleEigenvalues.exists_cellFold_mem_collar,
+ EulerDipoleEigenvalues.norm_le_pi_of_mem_cellSquare,
+ EulerDipoleEigenvalues.cellFold_mem_shiftBox}
 \leanok
 The folds preserve volume and saddle distance.
 They preserve $\Psi$ for $s=0$ and negate it for $s=1$.
@@ -5398,8 +5398,8 @@ $2\pi+R$, giving the stated finite bound on its integer index.
 \begin{lemma}[Raw first-odd parity under cell folds]
 \label{lem:odd-odd-cell-fold-parity}
 \uses{def:sectors, def:periodic-cell-folds, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.liftL2_separatrixReflect_ae,
- NoEmbeddedEigenvalues.liftL2_cellFold_ae}
+\lean{EulerDipoleEigenvalues.liftL2_separatrixReflect_ae,
+ EulerDipoleEigenvalues.liftL2_cellFold_ae}
 \leanok
 If $\omega$ is odd under $S_1$, its raw lift $F=\widetilde\omega$ satisfies
 $F\circ S=-F$ a.e.\ and $F\circ T_{s,n}=(-1)^sF$ a.e.
@@ -5415,8 +5415,8 @@ Lift the torus a.e.\ parity identity and use exact periodicity of the raw lift.
 \begin{lemma}[Actual local L2 from a finite cell-fold cover]
 \label{lem:cell-fold-l2-cover}
 \uses{def:sobolev-local, def:periodic-cell-folds, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.ae_dipoleLift_ne_zero,
- NoEmbeddedEigenvalues.memSobolevLocOn_zero_of_cellFold_cover}
+\lean{EulerDipoleEigenvalues.ae_dipoleLift_ne_zero,
+ EulerDipoleEigenvalues.memSobolevLocOn_zero_of_cellFold_cover}
 \leanok
 The lifted separatrix is null.
 Let $F:\R^2\to\C$ be measurable and $U\subset\R^2$.
@@ -5439,8 +5439,8 @@ not just a bound for a totalized norm.
 \label{lem:periodic-regular-edge-cover}
 \uses{def:periodic-cell-folds, def:diagonal-trace-chart, def:cell-arcs,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.exists_periodic_regular_edge,
- NoEmbeddedEigenvalues.exists_regular_edge_window}
+\lean{EulerDipoleEigenvalues.exists_periodic_regular_edge,
+ EulerDipoleEigenvalues.exists_regular_edge_window}
 \leanok
 Every lifted separatrix point outside the saddle lattice is
 $T_{0,n}\Xi_j(s,t_*)$ with $|s|<\pi/2$ and $t_*=\pm\pi/2$.
@@ -5473,9 +5473,9 @@ The full reflected normal window contains the edge point in its interior.
 \label{lem:odd-odd-h1-cell-fold}
 \uses{def:sectors, def:sobolev-local, def:periodic-cell-folds,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_cellFold,
- NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_punctured_collar,
- NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_collar_value}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.oddOdd_cellFold,
+ EulerDipoleEigenvalues.MemSobolevOn.oddOdd_punctured_collar,
+ EulerDipoleEigenvalues.MemSobolevOn.oddOdd_collar_value}
 \leanok
 For odd--odd $\omega$ and open $V$, $F=\widetilde\omega\in H^1(V)$
 implies $F\in H^1(T_{s,n}^{-1}V)$.
@@ -5501,11 +5501,11 @@ full-collar local L2 conclusion.
 \begin{lemma}[Odd--odd parity at every lifted diagonal zero line]
 \label{lem:odd-odd-diagonal-reflection-parity}
 \uses{def:sectors, def:diagonal-trace-chart}
-\lean{NoEmbeddedEigenvalues.torusProj_diagonalTraceChart_reflection,
- NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_reflection_ae,
- NoEmbeddedEigenvalues.torusProj_diagonalTraceChart_reflection_of_cos_eq_zero,
- NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_reflection_of_cos_eq_zero_ae,
- NoEmbeddedEigenvalues.dipoleLift_diagonalTraceChart_reflection}
+\lean{EulerDipoleEigenvalues.torusProj_diagonalTraceChart_reflection,
+ EulerDipoleEigenvalues.liftL2_diagonalTraceChart_reflection_ae,
+ EulerDipoleEigenvalues.torusProj_diagonalTraceChart_reflection_of_cos_eq_zero,
+ EulerDipoleEigenvalues.liftL2_diagonalTraceChart_reflection_of_cos_eq_zero_ae,
+ EulerDipoleEigenvalues.dipoleLift_diagonalTraceChart_reflection}
 \leanok
 If $\cos t_*=0$, reflection $(s,y)\mapsto(s,2t_*-y)$ composed with $\Xi_j$
 projects exactly to $S_1\circ\Xi_0$ or $S_2\circ\Xi_1$ on the torus.
@@ -5528,10 +5528,10 @@ No raw value on a zero line is used.
 \begin{lemma}[Sector traces on reflected cell edges]
 \label{lem:odd-odd-reflected-edge-traces}
 \uses{def:sectors, def:sobolev-local, def:cell-edge-trace, def:periodic-cell-folds}
-\lean{NoEmbeddedEigenvalues.liftL2_diagonalTraceChart_character_ae,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.reflected_sector,
- NoEmbeddedEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.liftShift}
+\lean{EulerDipoleEigenvalues.liftL2_diagonalTraceChart_character_ae,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.reflected_sector,
+ EulerDipoleEigenvalues.HasCellEdgeTrace.oddOdd_reflected,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.liftShift}
 \leanok
 Let $F=\widetilde\omega$ come from a reflection sector. If its pullback
 on a regular source rectangle $(l,r)\times(a,b)$ is $H^1$ with
@@ -5562,7 +5562,7 @@ so the trace witnesses transport without any null-line evaluation.
 \label{lem:odd-odd-collar-zero-traces}
 \uses{def:sectors, def:sobolev-local, def:zero-separatrix-trace,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.MemSobolevLocOn.oddOdd_collar_zero_traces}
+\lean{EulerDipoleEigenvalues.MemSobolevLocOn.oddOdd_collar_zero_traces}
 \leanok
 If $\omega$ is odd--odd and
 $\widetilde\omega\in H^1_{\rm loc}(C_\varepsilon)$ for
@@ -5592,7 +5592,7 @@ is involved, even when $t_*=a$ or $t_*=b$.
 \begin{lemma}[Off-separatrix gradient with full-collar L2 norms]
 \label{lem:odd-odd-collar-gradient}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.MemSobolevOn.oddOdd_collar_gradient}
+\lean{EulerDipoleEigenvalues.MemSobolevOn.oddOdd_collar_gradient}
 \leanok
 Let $\omega$ be odd--odd and
 $\widetilde\omega\in H^1(V_\varepsilon^{\rm cell})$.
@@ -5618,7 +5618,7 @@ This norm transfer does not eliminate possible distributional jumps.
 \begin{lemma}[Lifted weighted gradient from a cell estimate]
 \label{lem:weighted-gradient-periodic-cover}
 \uses{def:sectors, def:sobolev-local, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.weighted_gradient_neighbourhood_of_cell}
+\lean{EulerDipoleEigenvalues.weighted_gradient_neighbourhood_of_cell}
 \leanok
 Let $\omega$ be odd--odd and let $D$ be a measurable specified weak
 gradient of its raw lift on an open neighbourhood $U$ of $\{\Psi=0\}$.
@@ -5647,7 +5647,7 @@ nor seams are used to glue them.
 
 \begin{lemma}[Damped transport energy]
 \label{lem:damped-transport-energy}
-\lean{NoEmbeddedEigenvalues.damped_transport_energy}
+\lean{EulerDipoleEigenvalues.damped_transport_energy}
 \leanok
 Let $\alpha\le\beta$, $a>0$, $\mu\in\R$, and let $W$ be absolutely
 continuous on $[\alpha,\beta]$. If $G\in L^2([\alpha,\beta])$ and
@@ -5681,9 +5681,9 @@ theorem, and discard the nonnegative terminal energy $E(\beta)$.
 
 \begin{lemma}[Exponential-weighted endpoint energy]
 \label{lem:transport-weighted-endpoint-energy}
-\lean{NoEmbeddedEigenvalues.transport_left_weighted_energy,
- NoEmbeddedEigenvalues.transport_right_weighted_energy,
- NoEmbeddedEigenvalues.transport_weighted_endpoint_energy}
+\lean{EulerDipoleEigenvalues.transport_left_weighted_energy,
+ EulerDipoleEigenvalues.transport_right_weighted_energy,
+ EulerDipoleEigenvalues.transport_weighted_endpoint_energy}
 \leanok
 Let $a>0$, $\mu\in\R$, and suppose the specified locally absolutely continuous
 function $W$ solves $W'=i(\mu W+F)$ a.e.
@@ -5722,8 +5722,8 @@ exactly $a^{-2}$; at $a=2$ it is $1/4$.
 
 \begin{lemma}[Saddle-weighted canonical endpoint energy]
 \label{lem:transport-saddle-endpoint-energy}
-\lean{NoEmbeddedEigenvalues.transport_saddle_endpoint_energy,
- NoEmbeddedEigenvalues.transport_saddle_vorticity_energy}
+\lean{EulerDipoleEigenvalues.transport_saddle_endpoint_energy,
+ EulerDipoleEigenvalues.transport_saddle_vorticity_energy}
 \leanok
 Let $L\ge0$, $c>0$, $\mu\in\R$ and let the measurable real function $d$ satisfy
 \[
@@ -5773,7 +5773,7 @@ a.e. obligation when applying the estimate.
 \label{lem:weighted-quarter-mass}
 \uses{def:transport-pair, def:quarter-character, def:numerator,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_quarter_memLp_of_quotient}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_quarter_memLp_of_quotient}
 \leanok
 Let $(v,f)$ be a transport pair on an open orbit neighbourhood containing
 the closed cell, and let $g$ be the supplied continuous forcing
@@ -5837,8 +5837,8 @@ No jointly measurable choice of $Z_h$ is made.
 \label{lem:weighted-character-mass}
 \uses{def:transport-pair, def:quarter-character, def:numerator,
  def:cell-arcs, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_character_memLp_of_quotient,
- NoEmbeddedEigenvalues.IsTransportPair.weighted_character_memLp_of_numerator}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_character_memLp_of_quotient,
+ EulerDipoleEigenvalues.IsTransportPair.weighted_character_memLp_of_numerator}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:weighted-quarter-mass},
 $v/d^2\in L^2(\Cell)$. Boundedness of the ambient neighbourhood is not needed.
@@ -5888,7 +5888,7 @@ for this mass step. This specialization does not construct the supplied data.
 \label{lem:weighted-transport-mass-data}
 \uses{def:transport-pair, def:transport-quarter-projection, def:numerator,
  def:cell-arcs, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.weighted_transport_mass_of_first_numerators}
+\lean{EulerDipoleEigenvalues.weighted_transport_mass_of_first_numerators}
 \leanok
 Let $(v,f)$ be a transport pair on a bounded open orbit neighbourhood
 containing the closed cell, and specify a continuous representative $g=f$
@@ -5928,7 +5928,7 @@ The component collars may differ.
 \label{def:quarter-h1-scalar-data}
 \uses{def:numerator, def:half-numerator-derivative, def:h1-interval,
  lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasQuarterH1ScalarData}
+\lean{EulerDipoleEigenvalues.HasQuarterH1ScalarData}
 \leanok
 For a continuous forcing representative $g$, ordinary scalar data on $(0,b)$
 mean that there are $Q,Q_1$ such that
@@ -5947,7 +5947,7 @@ No logarithmic or pointwise energy bounds are part of this definition.
 \begin{definition}[Weighted weak recentered quarter data]
 \label{def:weighted-quarter-derivative-data}
 \uses{def:cell-separatrix-collar, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives}
+\lean{EulerDipoleEigenvalues.HasWeightedQuarterDerivatives}
 \leanok
 For the same raw spatial field $v$, joint fields $A_k,B_k$ are weighted
 weak quarter data on $Q_b$ if, for every $k\in\{0,1,2,3\}$,
@@ -5966,8 +5966,8 @@ fiberwise derivatives. No unweighted global quarter-coordinate H1 norm is assert
 \begin{lemma}[Restriction and addition of weighted weak quarter data]
 \label{lem:weighted-quarter-data-algebra}
 \uses{def:weighted-quarter-derivative-data}
-\lean{NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.mono,
- NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.add}
+\lean{EulerDipoleEigenvalues.HasWeightedQuarterDerivatives.mono,
+ EulerDipoleEigenvalues.HasWeightedQuarterDerivatives.add}
 \leanok
 Weighted weak quarter data restrict from $Q_b$ to $Q_c$ whenever $c\le b$,
 keeping the original joint fields.
@@ -5986,7 +5986,7 @@ actual L2 functions; the distance weights distribute over the sums.
 \label{lem:quarter-clock-trace}
 \uses{def:period, def:cell-separatrix-collar, def:interior-section-trace,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.memLp_quarter_clock_trace}
+\lean{EulerDipoleEigenvalues.memLp_quarter_clock_trace}
 \leanok
 Let $F,H\in L^2(Q_r)$ and suppose $S(h)\ge4$ on $(0,r)$.
 On every compact level band, assume the normalized pullbacks
@@ -6017,7 +6017,7 @@ witnesses are never selected as a joint family.
 \begin{definition}[Formal time derivative of the first level contraction]
 \label{def:first-bulk-time-derivative}
 \uses{def:numerator-derivative, def:quarter-jet-data, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.quarterForcingLevelTimeDerivative}
+\lean{EulerDipoleEigenvalues.quarterForcingLevelTimeDerivative}
 \leanok
 For a supplied array $J$, put $p=(x,y)=\gamma_h(t)$ and $V=\partial_h\gamma_h(t)$.
 Define the formal field
@@ -6032,8 +6032,8 @@ The order $[i,j]$ is retained.
 \begin{lemma}[Physical-time energy of the first bulk]
 \label{lem:first-bulk-time-energy}
 \uses{def:first-bulk-time-derivative, def:quarter-jet-data, def:numerator-derivative}
-\lean{NoEmbeddedEigenvalues.aestronglyMeasurable_quarterFirstLevelDerivative,
- NoEmbeddedEigenvalues.quarter_first_bulk_time_energy}
+\lean{EulerDipoleEigenvalues.aestronglyMeasurable_quarterFirstLevelDerivative,
+ EulerDipoleEigenvalues.quarter_first_bulk_time_energy}
 \leanok
 Raw L2 singleton entries make the fixed-time level field $G_J$ jointly
 a.e. strongly measurable on every $Q_b$, $b\le1$.
@@ -6066,7 +6066,7 @@ four terms without a logarithmic factor.
 \begin{lemma}[Raw L2 pullback on compact orbit bands]
 \label{lem:orbit-band-l2-pullback}
 \uses{def:action-angle, def:period}
-\lean{NoEmbeddedEigenvalues.memLp_actionAngleInv_band}
+\lean{EulerDipoleEigenvalues.memLp_actionAngleInv_band}
 \leanok
 Let $U$ be open, $u\in L^2(U)$, and $0<a<b<h_0<1$.
 If the annulus $0<h<h_0$ lies in $U$, then the raw pullback
@@ -6087,7 +6087,7 @@ level band. Restriction and a.e. equality retain the original raw pullback.
 \begin{lemma}[Local normalized weak time data for the first bulk]
 \label{lem:first-bulk-clock-data}
 \uses{def:first-bulk-time-derivative, def:weak-derivative-local, def:period}
-\lean{NoEmbeddedEigenvalues.quarter_first_bulk_clock_data}
+\lean{EulerDipoleEigenvalues.quarter_first_bulk_clock_data}
 \leanok
 Let $U$ be open and contain the cell. Suppose
 $\partial_iJ_{[j]}=J_{[i,j]}$ weakly on $U$, and the singleton and ordered
@@ -6117,7 +6117,7 @@ for both candidates. No weak mixed entries commute.
 \begin{lemma}[L2 energy of the complete first-bulk endpoint potentials]
 \label{lem:first-bulk-endpoint-energy}
 \uses{def:first-bulk-endpoint-trace, def:weak-derivative-local, def:quarter-jet-data}
-\lean{NoEmbeddedEigenvalues.quarter_first_bulk_endpoint_energy}
+\lean{EulerDipoleEigenvalues.quarter_first_bulk_endpoint_energy}
 \leanok
 Let $U$ be open and contain the cell, with
 $\partial_iJ_{[j]}=J_{[i,j]}$ weakly on $U$.
@@ -6146,7 +6146,7 @@ The collar and the underlying energy do not depend on frequency.
 \begin{lemma}[Weighted first-bulk boundary norm]
 \label{lem:weighted-first-bulk-boundary}
 \uses{def:first-bulk-endpoint-trace, def:weak-derivative-local, def:quarter-jet-data}
-\lean{NoEmbeddedEigenvalues.quarter_first_bulk_boundary_weighted_memLp}
+\lean{EulerDipoleEigenvalues.quarter_first_bulk_boundary_weighted_memLp}
 \leanok
 Under the hypotheses of Lemma~\ref{lem:first-bulk-endpoint-energy},
 one smaller $0<b<1/2$ works for every real $\mu$ with
@@ -6170,7 +6170,7 @@ potential.
 \begin{lemma}[Global weighted second numerator norm]
 \label{lem:weighted-numerator-second-norm}
 \uses{def:transport-pair, def:sobolev-local, def:numerator}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_numerator_second_norm}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_numerator_second_norm}
 \leanok
 Let the original pair be defined on an orbit neighbourhood containing the
 closed cell. Retain any continuous forcing representative $g=f$ a.e. and the
@@ -6206,7 +6206,7 @@ All radii are chosen before the real frequency.
 \label{lem:quarter-h1-scalar-data}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-character,
  def:h1-interval, def:quarter-h1-scalar-data}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.quarter_h1_scalar_data_of_second_norm}
+\lean{EulerDipoleEigenvalues.IsTransportPair.quarter_h1_scalar_data_of_second_norm}
 \leanok
 Under the original weighted forcing and supplied-gradient hypotheses, retain
 $g=f$ a.e. continuous and suppose both raw fields have the same quarter
@@ -6233,7 +6233,7 @@ its producer or the logarithmic numerator package.
 \begin{lemma}[Ordinary midpoint gain]
 \label{lem:ordinary-midpoint-gain}
 \uses{def:quarter-midpoint, def:h1-interval, def:h1-local-interval}
-\lean{NoEmbeddedEigenvalues.quarterMidpoint_h1Loc, NoEmbeddedEigenvalues.midpoint_gain}
+\lean{EulerDipoleEigenvalues.quarterMidpoint_h1Loc, EulerDipoleEigenvalues.midpoint_gain}
 \leanok
 Let $b<1$, $Q\in H^1(0,b)$ with specified derivative $Q_1$, and let the
 original half numerator have compatible local interval H1 data $(B,B_1)$.
@@ -6258,7 +6258,7 @@ multipliers. Apply them to the actual L2 functions $Q_1,Q/h,B_1$ and add.
 \begin{lemma}[Global ordinary midpoint H1 on a smaller collar]
 \label{lem:ordinary-midpoint-collar}
 \uses{def:quarter-midpoint, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.ordinary_midpoint_h1}
+\lean{EulerDipoleEigenvalues.ordinary_midpoint_h1}
 \leanok
 For $0<r<1$, suppose the original quotient and half numerator have interval
 H1 data $(Q,Q_1)$ and $(B,B_1)$ on $(0,r)$, and $Q/h\in L^2(0,r)$.
@@ -6281,8 +6281,8 @@ without changing either scalar function.
 \begin{definition}[Fixed-time quarter forward gradient]
 \label{def:quarter-forward-gradient}
 \uses{def:period, def:transport-pair}
-\lean{NoEmbeddedEigenvalues.quarterForwardVector,
- NoEmbeddedEigenvalues.quarterPullbackDerivative}
+\lean{EulerDipoleEigenvalues.quarterForwardVector,
+ EulerDipoleEigenvalues.quarterPullbackDerivative}
 \leanok
 For $\gamma(h,t)=\gamma_h(t)$ put
 $V_0(h,t)=\partial_h\gamma_h(t)$ and
@@ -6299,7 +6299,7 @@ differentiability claim about the forcing.
 \begin{lemma}[Forward weak gradient on the fixed-time quarter]
 \label{lem:quarter-forward-weak}
 \uses{def:quarter-forward-gradient, def:quarter-image, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_quarterOrbit}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.comp_quarterOrbit}
 \leanok
 Let $b\le1$ and let $U$ contain the actual quarter image.
 Suppose $\partial_jF=D_j$ weakly on $U$ and
@@ -6328,8 +6328,8 @@ local integrability of the derivative candidates.
 \begin{lemma}[Joint raw congruence and character on recentered quarters]
 \label{lem:quarter-raw-congruence}
 \uses{def:cell-separatrix-collar, def:quarter-character}
-\lean{NoEmbeddedEigenvalues.ae_eq_comp_quarterOrbitStrip_of_memLp,
- NoEmbeddedEigenvalues.HasQuarterCharacterOn.recentered_ae}
+\lean{EulerDipoleEigenvalues.ae_eq_comp_quarterOrbitStrip_of_memLp,
+ EulerDipoleEigenvalues.HasQuarterCharacterOn.recentered_ae}
 \leanok
 Let $b\le1$. If raw $F,G\in L^2(\Cell)$ agree a.e. on a set containing
 the annulus $0<h<b$, then $F\circ\gamma=G\circ\gamma$ jointly a.e. on $Q_b$.
@@ -6358,7 +6358,7 @@ No time shift is differentiated.
 \begin{lemma}[Weak quarter time for raw L2 representatives]
 \label{lem:quarter-time-raw}
 \uses{def:transport-pair, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.quarter_time_of_memLp}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.quarter_time_of_memLp}
 \leanok
 Let $b<1$ and let $U$ contain the annulus $0<h<b$.
 If the raw fields $F,D$ belong to $L^2(\Cell)$ and $L_0F=D$ weakly on $U$,
@@ -6383,7 +6383,7 @@ fields; local weak identities glue. There is no joint selection of ACL witnesses
 \begin{lemma}[Ordinary weighted quarter forcing data]
 \label{lem:ordinary-quarter-forcing-data}
 \uses{def:quarter-jet-data, def:numerator-derivative}
-\lean{NoEmbeddedEigenvalues.ordinary_quarter_forcing_data}
+\lean{EulerDipoleEigenvalues.ordinary_quarter_forcing_data}
 \leanok
 Let $0<r<1$. Suppose the specified singleton entries satisfy
 $J_{[j]}/d^{3/2}\in L^2(\Cell)$ and the fixed-time level field
@@ -6423,8 +6423,8 @@ do not depend on frequency.
 \label{lem:quarter-reconstruction-raw-ae}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-character,
  def:quarter-midpoint, def:quarter-reconstruction, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.quarter_midpoint_reconstruction_with_rep,
- NoEmbeddedEigenvalues.IsTransportPair.quarterReconstruction_ae}
+\lean{EulerDipoleEigenvalues.quarter_midpoint_reconstruction_with_rep,
+ EulerDipoleEigenvalues.IsTransportPair.quarterReconstruction_ae}
 \leanok
 Retain a transport pair on a neighbourhood containing the closed cell,
 its continuous forcing representative $g=f$ a.e., and $0<b<1$.
@@ -6455,8 +6455,8 @@ upgrades to joint a.e. equality, without selecting the ACL witnesses jointly.
 \begin{lemma}[Distance-weighted level reconstruction without logarithmic loss]
 \label{lem:quarter-weighted-level-bound}
 \uses{def:quarter-reconstruction-level, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.memLp_saddleDist_mul_of_level_bound,
- NoEmbeddedEigenvalues.quarterReconstructionLevel_weighted_memLp}
+\lean{EulerDipoleEigenvalues.memLp_saddleDist_mul_of_level_bound,
+ EulerDipoleEigenvalues.quarterReconstructionLevel_weighted_memLp}
 \leanok
 Let $b<1$ and suppose the distance-square time moment is at most $C$ on $(0,b)$.
 A jointly a.e. strongly measurable field $F$ with
@@ -6485,7 +6485,7 @@ period-length majorant that would cost a logarithm.
 \label{lem:weighted-character-base-derivatives}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-character,
  def:h1-interval, def:quarter-h1-scalar-data, def:weighted-quarter-derivative-data}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_character_base_derivatives}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_character_base_derivatives}
 \leanok
 Under the original weighted forcing and supplied-gradient hypotheses,
 let the raw pair have character $\kappa$ on the cell, $\kappa^4=1$, and retain
@@ -6532,7 +6532,7 @@ the identities are weak identities, not only fiberwise classical derivatives.
 \label{lem:weighted-character-quarter-derivatives}
 \uses{def:transport-pair, def:sobolev-local, def:quarter-character,
  def:h1-interval, def:quarter-h1-scalar-data, def:weighted-quarter-derivative-data}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.weighted_character_quarter_derivatives}
+\lean{EulerDipoleEigenvalues.IsTransportPair.weighted_character_quarter_derivatives}
 \leanok
 Under the original weighted forcing and supplied-gradient hypotheses,
 let the raw pair have character $\kappa$ a.e. on the cell, $\kappa^4=1$.
@@ -6559,7 +6559,7 @@ No differentiated time shift or physical seam gluing enters this step.
 \begin{lemma}[Four-character assembly of weighted weak quarter derivatives]
 \label{lem:weighted-transport-quarter-assembly}
 \uses{def:transport-pair, def:sobolev-local, def:weighted-quarter-derivative-data}
-\lean{NoEmbeddedEigenvalues.weighted_transport_quarter_derivatives}
+\lean{EulerDipoleEigenvalues.weighted_transport_quarter_derivatives}
 \leanok
 For the original pair on a bounded orbit neighbourhood containing the closed
 cell, and its supplied weak gradient with
@@ -6590,8 +6590,8 @@ value field with the original raw $v$.
 \begin{lemma}[Ordinary inverse-frame norms on the same collar]
 \label{lem:ordinary-quarter-gradient-norm}
 \uses{def:quarter-inverse-frame, def:quarter-image, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.quarterInverseGradient_ordinary_memLp,
- NoEmbeddedEigenvalues.memLp_quarterSpatialGradient_ordinary}
+\lean{EulerDipoleEigenvalues.quarterInverseGradient_ordinary_memLp,
+ EulerDipoleEigenvalues.memLp_quarterSpatialGradient_ordinary}
 \leanok
 Let $0<b<1/2$. If
 $(d\circ\Gamma_0)H,T/(d\circ\Gamma_0)\in L^2(Q_b)$, then the ordinary
@@ -6624,7 +6624,7 @@ transports it to the physical image. The collar is never shrunk.
 \begin{definition}[Rotated physical quarter images]
 \label{def:rotated-quarter-image}
 \uses{def:quarter-image, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.rotatedQuarterImage}
+\lean{EulerDipoleEigenvalues.rotatedQuarterImage}
 \leanok
 For $b\le1$ and $k=0,\ldots,3$, define the physical quarter image by
 $\mathcal V_{k,b}=R^k(\Gamma_0(Q_b))$.
@@ -6634,8 +6634,8 @@ $\mathcal V_{k,b}=R^k(\Gamma_0(Q_b))$.
 \label{lem:weighted-quarter-physical-h1}
 \uses{def:rotated-quarter-image, def:weighted-quarter-derivative-data,
  def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.isOpen_rotatedQuarterImage,
- NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.physical_quarters}
+\lean{EulerDipoleEigenvalues.isOpen_rotatedQuarterImage,
+ EulerDipoleEigenvalues.HasWeightedQuarterDerivatives.physical_quarters}
 \leanok
 The images $\mathcal V_{k,b}$ are open for $b\le1$.
 Let $U$ be open and contain the cell, $v\in L^2(U)$, and $0<b<1/2$.
@@ -6659,7 +6659,7 @@ to $\mathcal V_{k,b}$, with value exactly the original raw $v$.
 \begin{lemma}[Physical quarter cover off the axes]
 \label{lem:rotated-quarter-point-cover}
 \uses{def:rotated-quarter-image, def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.exists_mem_rotatedQuarterImage}
+\lean{EulerDipoleEigenvalues.exists_mem_rotatedQuarterImage}
 \leanok
 For $b\le1$, every $p\in V_{2b}$ with both Cartesian coordinates nonzero
 belongs to some $\mathcal V_{k,b}$.
@@ -6677,7 +6677,7 @@ Use $R^4=\mathrm{id}$ to put $p$ in the physical image for $k=-m$ modulo four.
 \label{lem:weighted-quarter-off-axis-gradient}
 \uses{def:weighted-quarter-derivative-data, def:cell-separatrix-collar,
  def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeightedQuarterDerivatives.exists_off_axis_gradient}
+\lean{EulerDipoleEigenvalues.HasWeightedQuarterDerivatives.exists_off_axis_gradient}
 \leanok
 Let $U$ be open and contain the cell, $v\in L^2(U)$, and $0<b<1/2$.
 If $v$ has the supplied weighted weak quarter data, then there are specified
@@ -6706,7 +6706,7 @@ norm. No weak identity has been extended through a seam at this stage.
 \label{lem:transport-quarter-h1-gluing}
 \uses{def:transport-pair, def:sobolev-local, def:weighted-quarter-derivative-data,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.IsTransportPair.cell_h1_of_weighted_quarter_derivatives}
+\lean{EulerDipoleEigenvalues.IsTransportPair.cell_h1_of_weighted_quarter_derivatives}
 \leanok
 Let the original pair be defined on an orbit neighbourhood containing the
 closed cell. If $0<b<1/2$ and the same raw $v$ has weighted weak quarter
@@ -6742,7 +6742,7 @@ The separatrix and saddle vertices are outside this positive-level domain.
 \label{lem:weighted-transport-h1}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
  def:cell-separatrix-collar}
-\lean{NoEmbeddedEigenvalues.weighted_transport_h1}
+\lean{EulerDipoleEigenvalues.weighted_transport_h1}
 \leanok
 Let $(v,f)$ be a transport pair on a bounded open union of orbits containing
 the closed cell square. Specify the weak Cartesian derivatives of $f$ on
@@ -6775,7 +6775,7 @@ Whole-edge zero trace and elliptic H3 are separate conclusions.
 \begin{lemma}[Bulk transport in diagonal trace charts]
 \label{lem:diagonal-boundary-transport}
 \uses{def:diagonal-trace-chart, def:weak-derivative-local}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.diagonalTraceChart_partials}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.diagonalTraceChart_partials}
 \leanok
 Let $U$ be open, let $L_0F=R$ weakly there, and suppose both specified
 Cartesian weak partials of $F$ are in $L^2(U)$.
@@ -6802,7 +6802,7 @@ the displayed coefficients. The swap exchanges the two derivatives.
 \begin{lemma}[Boundary weak ODE with a vanishing normal coefficient]
 \label{lem:boundary-transport-ode}
 \uses{def:canonical-transverse-trace, def:weak-derivative-local, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.boundary_weak_tangent}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.boundary_weak_tangent}
 \leanok
 On $Q=(a,b)\times(0,w)$, suppose $F,R$ have canonical
 left-normal traces $T_F,T_R$ and specified weak normal partials in $L^2(Q)$.
@@ -6834,7 +6834,7 @@ trace $L^2$ norms. No normal derivative trace is used.
 \begin{lemma}[Modulus conservation for an imaginary derivative coefficient]
 \label{lem:imaginary-derivative-modulus}
 \uses{def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasIntervalH1.norm_eq_of_imaginary_derivative}
+\lean{EulerDipoleEigenvalues.HasIntervalH1.norm_eq_of_imaginary_derivative}
 \leanok
 If $T$ is the interval $H^1(a,b)$ representative with specified
 derivative $D$, and $D=i\alpha T$ almost everywhere with $\alpha$ real,
@@ -6852,8 +6852,8 @@ values, and taking nonnegative square roots preserves equality.
 \begin{lemma}[Local constant modulus for zero-forcing boundary transport]
 \label{lem:boundary-mode-modulus}
 \uses{def:canonical-transverse-trace, def:h1-interval}
-\lean{NoEmbeddedEigenvalues.HasTransverseH1Trace.boundary_mode,
- NoEmbeddedEigenvalues.HasTransverseH1Trace.exists_norm_eq_of_boundary_mode}
+\lean{EulerDipoleEigenvalues.HasTransverseH1Trace.boundary_mode,
+ EulerDipoleEigenvalues.HasTransverseH1Trace.exists_norm_eq_of_boundary_mode}
 \leanok
 Suppose $F,V,R$ on $(a,b)\times(0,w)$ have canonical left-normal traces
 $T_F,T_V,T_R$. Suppose $F=V+g$ and $R=i\alpha(s)V$ almost everywhere,
@@ -6876,8 +6876,8 @@ and apply modulus conservation to its $H^1$ representative.
 \begin{definition}[Inward physical edge chart]
 \label{def:edge-inward-chart}
 \uses{def:diagonal-trace-chart}
-\lean{NoEmbeddedEigenvalues.edgeSideSign, NoEmbeddedEigenvalues.edgeInward,
- NoEmbeddedEigenvalues.inwardEdgeChart}
+\lean{EulerDipoleEigenvalues.edgeSideSign, EulerDipoleEigenvalues.edgeInward,
+ EulerDipoleEigenvalues.inwardEdgeChart}
 \leanok
 For an edge with normal coordinate $\eta\pi/2$, $\eta\in\{-1,1\}$,
 put $E_\eta(s,u)=(s,\eta(\pi/2-u))$ and $C_{j,\eta}=\Xi_j\circ E_\eta$.
@@ -6886,12 +6886,12 @@ put $E_\eta(s,u)=(s,\eta(\pi/2-u))$ and $C_{j,\eta}=\Xi_j\circ E_\eta$.
 \begin{lemma}[Inward chart pullback and a flat collar strip]
 \label{lem:edge-inward-pullback}
 \uses{def:edge-inward-chart, def:cell-separatrix-collar, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.edgeInward_apply,
- NoEmbeddedEigenvalues.measurePreserving_edgeInward,
- NoEmbeddedEigenvalues.continuous_inwardEdgeChart,
- NoEmbeddedEigenvalues.memLp_comp_inwardEdgeChart,
- NoEmbeddedEigenvalues.MemSobolevOn.comp_inwardEdgeChart,
- NoEmbeddedEigenvalues.inwardEdgeChart_mem_collar}
+\lean{EulerDipoleEigenvalues.edgeInward_apply,
+ EulerDipoleEigenvalues.measurePreserving_edgeInward,
+ EulerDipoleEigenvalues.continuous_inwardEdgeChart,
+ EulerDipoleEigenvalues.memLp_comp_inwardEdgeChart,
+ EulerDipoleEigenvalues.MemSobolevOn.comp_inwardEdgeChart,
+ EulerDipoleEigenvalues.inwardEdgeChart_mem_collar}
 \leanok
 $E_\eta$ preserves area. The continuous physical chart $C_{j,\eta}$
 pulls back $L^2$ and $H^1$ on any open set to its preimage.
@@ -6909,8 +6909,8 @@ which is positive and at most $2u$ in the indicated strip.
 \label{lem:edge-window-transport}
 \uses{def:transport-pair, def:edge-inward-chart, def:canonical-transverse-trace,
  def:cell-separatrix-collar, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.edge_window_transport,
- NoEmbeddedEigenvalues.IsTransportPair.inward_edge_window_transport}
+\lean{EulerDipoleEigenvalues.edge_window_transport,
+ EulerDipoleEigenvalues.IsTransportPair.inward_edge_window_transport}
 \leanok
 Let $v\in H^1$ in the cell collar and let $(v,f)$ be a transport pair
 on a neighbourhood of the closed cell, with $f$ represented by a continuous
@@ -6935,8 +6935,8 @@ and identify the trace of $v+f$ by continuity of the normal forcing sections.
 \label{lem:edge-window-modulus}
 \uses{def:transport-pair, def:edge-inward-chart, def:canonical-transverse-trace,
  def:cell-separatrix-collar, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.edge_window_modulus,
- NoEmbeddedEigenvalues.IsTransportPair.inward_edge_window_modulus}
+\lean{EulerDipoleEigenvalues.edge_window_modulus,
+ EulerDipoleEigenvalues.IsTransportPair.inward_edge_window_modulus}
 \leanok
 Under the hypotheses of the zero edge trace lemma except for the weighted
 mass and the positive cutoff, take a regular window $(a,b)\times(0,w)$
@@ -6954,7 +6954,7 @@ equation for the trace of $v$. Apply the modulus law.
 \begin{lemma}[One modulus on all regular edge windows]
 \label{lem:common-edge-modulus}
 \uses{def:canonical-transverse-trace}
-\lean{NoEmbeddedEigenvalues.common_edge_window_modulus}
+\lean{EulerDipoleEigenvalues.common_edge_window_modulus}
 \leanok
 Suppose for a fixed positive normal width every compact regular edge interval
 has a canonical inward trace of the same bulk field with constant modulus.
@@ -6971,7 +6971,7 @@ so its modulus is the common one.
 
 \begin{definition}[Tangential translation at the left saddle]
 \label{def:edge-corner-shift}
-\lean{NoEmbeddedEigenvalues.edgeCornerShift}
+\lean{EulerDipoleEigenvalues.edgeCornerShift}
 \leanok
 In the inward coordinates put $J(r,u)=(r-\pi/2,u)$.
 \end{definition}
@@ -6979,9 +6979,9 @@ In the inward coordinates put $J(r,u)=(r-\pi/2,u)$.
 \begin{lemma}[Saddle distance in the inward half-cone]
 \label{lem:edge-corner-distance}
 \uses{def:edge-corner-shift, def:edge-inward-chart, lem:saddle-distance-comparison}
-\lean{NoEmbeddedEigenvalues.edgeCornerShift_apply,
- NoEmbeddedEigenvalues.measurePreserving_edgeCornerShift,
- NoEmbeddedEigenvalues.saddleDist_inwardEdge_corner_le}
+\lean{EulerDipoleEigenvalues.edgeCornerShift_apply,
+ EulerDipoleEigenvalues.measurePreserving_edgeCornerShift,
+ EulerDipoleEigenvalues.saddleDist_inwardEdge_corner_le}
 \leanok
 $J$ preserves area, and for $0<u<r$ the saddle distance of
 $C_{j,\eta}(J(r,u))$ is at most $3r$.
@@ -6998,7 +6998,7 @@ Distance to this saddle bounds the infimum distance.
 \label{lem:edge-corner-mode-exclusion}
 \uses{def:edge-inward-chart, def:canonical-transverse-trace,
  def:cell-separatrix-collar, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.inward_edge_common_modulus_eq_zero}
+\lean{EulerDipoleEigenvalues.inward_edge_common_modulus_eq_zero}
 \leanok
 Let $0<w<\pi$ and $2w\le\epsilon$. If $v\in H^1(V_\epsilon)$,
 $v/d\in L^2(V_\epsilon)$, and the canonical inward traces on all regular
@@ -7020,7 +7020,7 @@ out a nonzero common modulus.
 \label{lem:transport-zero-edge-trace}
 \uses{def:transport-pair, def:cell-arcs, def:sobolev-local,
  def:cell-separatrix-collar, def:cell-edge-trace}
-\lean{NoEmbeddedEigenvalues.transport_zero_edge_trace}
+\lean{EulerDipoleEigenvalues.transport_zero_edge_trace}
 \leanok
 Suppose a transport pair is defined on an orbit neighbourhood containing
 $\overline\Cell$. Let $\epsilon>0$, $v\in H^1(V_\epsilon)$ and

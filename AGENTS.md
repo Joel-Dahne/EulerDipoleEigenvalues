@@ -27,7 +27,7 @@ errors, look for simpler proofs, and record what you learn in the blueprint.
   repository "the manuscript" means this file. It is **not** a trusted source.
 - `blueprint/` is the dependency graph, formalization plan and staging area
   for corrections. See `blueprint/README.md` and `blueprint/src/chapters/intro.tex`.
-- `NoEmbeddedEigenvalues/` is the Lean library.
+- `EulerDipoleEigenvalues/` is the Lean library.
 
 ## Working on the mathematics
 
@@ -55,8 +55,8 @@ Start with [STATUS.md](STATUS.md) and the relevant topic page. Use the
 Consult [the architecture guide](docs/architecture.md) as needed for the module
 map and verification tools.
 
-- `NoEmbeddedEigenvalues.lean` imports every library module. Add new modules
-  there; declarations belong to namespace `NoEmbeddedEigenvalues` regardless
+- `EulerDipoleEigenvalues.lean` imports every library module. Add new modules
+  there; declarations belong to namespace `EulerDipoleEigenvalues` regardless
   of subdirectory.
 - `Challenge.lean` states the main theorem and definition sanity checks with
   Mathlib only and `sorry` proofs; it is the reader's audit target.

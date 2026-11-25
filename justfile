@@ -8,7 +8,7 @@ default:
 build:
     lake build
 
-# Names may omit the `NoEmbeddedEigenvalues.` prefix; `--all` lists every admission.
+# Names may omit the `EulerDipoleEigenvalues.` prefix; `--all` lists every admission.
 # List the declarations with `sorry` (and project axioms) that Lean declarations depend on
 sorries +args="main":
     lake -q build --log-level=error

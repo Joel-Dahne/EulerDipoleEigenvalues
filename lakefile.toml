@@ -1,7 +1,7 @@
-name = "NoEmbeddedEigenvalues"
+name = "EulerDipoleEigenvalues"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["NoEmbeddedEigenvalues", "Challenge", "Solution"]
+defaultTargets = ["EulerDipoleEigenvalues", "Challenge", "Solution"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -16,7 +16,7 @@ scope = "leanprover-community"
 rev = "v4.36.0"
 
 [[lean_lib]]
-name = "NoEmbeddedEigenvalues"
+name = "EulerDipoleEigenvalues"
 
 # The trusted statement (`Challenge.lean`, Mathlib only) and its proof (`Solution.lean`),
 # compared by the comparator, see `comparator.json`.

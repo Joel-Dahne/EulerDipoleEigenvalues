@@ -20,12 +20,12 @@ and $d$ for distance to the saddle set. Local deviations are flagged.
 \begin{definition}[Cells and diagonal coordinates]
 \label{def:cells}
 \uses{def:dipole}
-\lean{NoEmbeddedEigenvalues.positiveCell,
-  NoEmbeddedEigenvalues.negativeCell,
-  NoEmbeddedEigenvalues.separatrix,
-  NoEmbeddedEigenvalues.diagCoord,
-  NoEmbeddedEigenvalues.cellSquare,
-  NoEmbeddedEigenvalues.diagRect}
+\lean{EulerDipoleEigenvalues.positiveCell,
+  EulerDipoleEigenvalues.negativeCell,
+  EulerDipoleEigenvalues.separatrix,
+  EulerDipoleEigenvalues.diagCoord,
+  EulerDipoleEigenvalues.cellSquare,
+  EulerDipoleEigenvalues.diagRect}
 \leanok
 The positive cell is $\Cell=\{\Psi>0\}$, the negative cell $\{\Psi<0\}$, and the
 separatrix $\{\Psi=0\}$. On the lift $\R^2$ the diagonal coordinates are
@@ -36,12 +36,12 @@ set $\{a\in I,\ b\in J\}$ for intervals $I,J$.
 \begin{lemma}[Separatrix lines]
 \label{lem:separatrix-lines}
 \uses{def:cells, def:reflections, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.dipoleLift_eq_diag,
-  NoEmbeddedEigenvalues.Ψ_torusProj,
-  NoEmbeddedEigenvalues.Ψ_eq_zero_iff,
-  NoEmbeddedEigenvalues.S₁_eq_self_iff,
-  NoEmbeddedEigenvalues.S₂_eq_self_iff,
-  NoEmbeddedEigenvalues.mem_separatrix_iff}
+\lean{EulerDipoleEigenvalues.dipoleLift_eq_diag,
+  EulerDipoleEigenvalues.Ψ_torusProj,
+  EulerDipoleEigenvalues.Ψ_eq_zero_iff,
+  EulerDipoleEigenvalues.S₁_eq_self_iff,
+  EulerDipoleEigenvalues.S₂_eq_self_iff,
+  EulerDipoleEigenvalues.mem_separatrix_iff}
 \leanok
 $\Psi=2\cos a\cos b$. The separatrix is the union of the two closed lines
 $\{x+y\equiv\pi\}$ and $\{x-y\equiv\pi\}$, which are exactly the fixed lines of
@@ -58,16 +58,16 @@ $x+y\equiv\pi$; for $S_2$ use $-\pi\equiv\pi$.
 \begin{lemma}[Critical points]
 \label{lem:dipole-critical-points}
 \uses{def:cells, lem:dipole-identities}
-\lean{NoEmbeddedEigenvalues.gradSq_dipoleLift_eq_zero_iff,
-  NoEmbeddedEigenvalues.critical_points_iff,
-  NoEmbeddedEigenvalues.Ψ_center,
-  NoEmbeddedEigenvalues.Ψ_anticenter,
-  NoEmbeddedEigenvalues.Ψ_saddle₁,
-  NoEmbeddedEigenvalues.Ψ_saddle₂,
-  NoEmbeddedEigenvalues.Ψ_le_two,
-  NoEmbeddedEigenvalues.neg_two_le_Ψ,
-  NoEmbeddedEigenvalues.Ψ_eq_two_iff,
-  NoEmbeddedEigenvalues.Ψ_eq_neg_two_iff}
+\lean{EulerDipoleEigenvalues.gradSq_dipoleLift_eq_zero_iff,
+  EulerDipoleEigenvalues.critical_points_iff,
+  EulerDipoleEigenvalues.Ψ_center,
+  EulerDipoleEigenvalues.Ψ_anticenter,
+  EulerDipoleEigenvalues.Ψ_saddle₁,
+  EulerDipoleEigenvalues.Ψ_saddle₂,
+  EulerDipoleEigenvalues.Ψ_le_two,
+  EulerDipoleEigenvalues.neg_two_le_Ψ,
+  EulerDipoleEigenvalues.Ψ_eq_two_iff,
+  EulerDipoleEigenvalues.Ψ_eq_neg_two_iff}
 \leanok
 $\nabla\Psi=0$ exactly where $\sin x=\sin y=0$, that is at the elliptic centers
 $(0,0)$ and $(\pi,\pi)$ and at the two saddles $(\pi,0)$, $(0,\pi)$. Moreover
@@ -84,13 +84,13 @@ circle. $\Psi=2$ forces $\cos x=\cos y=1$.
 \begin{lemma}[The cell is a square]
 \label{lem:cell-square}
 \uses{def:cells, def:reflections, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.injOn_torusProj_cellSquare,
-  NoEmbeddedEigenvalues.image_torusProj_cellSquare,
-  NoEmbeddedEigenvalues.torusProj_mem_positiveCell,
-  NoEmbeddedEigenvalues.exists_mem_cellSquare,
-  NoEmbeddedEigenvalues.S₁_torusProj_of_edge,
-  NoEmbeddedEigenvalues.S₂_torusProj_of_edge,
-  NoEmbeddedEigenvalues.torusProj_corner}
+\lean{EulerDipoleEigenvalues.injOn_torusProj_cellSquare,
+  EulerDipoleEigenvalues.image_torusProj_cellSquare,
+  EulerDipoleEigenvalues.torusProj_mem_positiveCell,
+  EulerDipoleEigenvalues.exists_mem_cellSquare,
+  EulerDipoleEigenvalues.S₁_torusProj_of_edge,
+  EulerDipoleEigenvalues.S₂_torusProj_of_edge,
+  EulerDipoleEigenvalues.torusProj_corner}
 \leanok
 The covering map is injective on the open square $|a|,|b|<\pi/2$ and maps it
 onto $\Cell$. The edges $a=\pm\pi/2$ lie on the fixed line of $S_1$, the edges
@@ -113,7 +113,7 @@ $\cos a\cos b>0$ and $\cos a\ge0$, both lie in $(-\pi/2,\pi/2)$.
 \begin{lemma}[Integrals of periodic functions over the cell]
 \label{lem:cell-periodic-integral}
 \uses{def:cells, def:square-integral}
-\lean{NoEmbeddedEigenvalues.squareIntegral_eq_setIntegral_cellSquare}
+\lean{EulerDipoleEigenvalues.squareIntegral_eq_setIntegral_cellSquare}
 \leanok
 Let $F$ be periodic and measurable on $\R^2$ and vanish where $\Psi\le0$. Then its integral
 over the period square $[0,2\pi]^2$ equals its integral over the cell square.
@@ -131,7 +131,7 @@ $|x+y|,|x-y|>\pi$, impossible since $|x+y|+|x-y|=2\max(|x|,|y|)\le2\pi$.
 \begin{lemma}[Torus and lifted positive-cell integrals]
 \label{lem:cell-lift-integral}
 \uses{def:cells, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.setIntegral_lift_cellSquare}
+\lean{EulerDipoleEigenvalues.setIntegral_lift_cellSquare}
 \leanok
 For every almost-everywhere strongly measurable $F:\T^2\to\C$,
 \[
@@ -152,13 +152,13 @@ Apply the measure identity to $\mathbf1_\Cell F$ and remove the indicator.
 \begin{lemma}[Calculus in diagonal coordinates]
 \label{lem:diagonal-calculus}
 \uses{def:cells, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.integral_eq_two_smul_integral_diagInv,
-  NoEmbeddedEigenvalues.lintegral_comp_diagInv,
-  NoEmbeddedEigenvalues.setLIntegral_setLIntegral_diagInv,
-  NoEmbeddedEigenvalues.ae_ae_diagInv, NoEmbeddedEigenvalues.ae_ae_diagRect,
-  NoEmbeddedEigenvalues.partialX_comp_diagInv,
-  NoEmbeddedEigenvalues.partialY_comp_diagInv,
-  NoEmbeddedEigenvalues.laplacian_comp_diagInv}
+\lean{EulerDipoleEigenvalues.integral_eq_two_smul_integral_diagInv,
+  EulerDipoleEigenvalues.lintegral_comp_diagInv,
+  EulerDipoleEigenvalues.setLIntegral_setLIntegral_diagInv,
+  EulerDipoleEigenvalues.ae_ae_diagInv, EulerDipoleEigenvalues.ae_ae_diagRect,
+  EulerDipoleEigenvalues.partialX_comp_diagInv,
+  EulerDipoleEigenvalues.partialY_comp_diagInv,
+  EulerDipoleEigenvalues.laplacian_comp_diagInv}
 \leanok
 Let $T(a,b)=(a+b,a-b)$, the inverse of the diagonal coordinates. Then
 $dx\,dy=2\,da\,db$, that is $\int f\,dx\,dy=2\int f\circ T\,da\,db$ (also for
@@ -184,14 +184,14 @@ needed.
 \begin{definition}[Classical operators on the lift]
 \label{def:lift-operators}
 \uses{def:dipole}
-\lean{NoEmbeddedEigenvalues.partialX,
-  NoEmbeddedEigenvalues.partialY,
-  NoEmbeddedEigenvalues.laplacian,
-  NoEmbeddedEigenvalues.classicalL0,
-  NoEmbeddedEigenvalues.gradDot,
-  NoEmbeddedEigenvalues.gradSq,
-  NoEmbeddedEigenvalues.dipoleLift,
-  NoEmbeddedEigenvalues.dipoleVelocity}
+\lean{EulerDipoleEigenvalues.partialX,
+  EulerDipoleEigenvalues.partialY,
+  EulerDipoleEigenvalues.laplacian,
+  EulerDipoleEigenvalues.classicalL0,
+  EulerDipoleEigenvalues.gradDot,
+  EulerDipoleEigenvalues.gradSq,
+  EulerDipoleEigenvalues.dipoleLift,
+  EulerDipoleEigenvalues.dipoleVelocity}
 \leanok
 Pointwise differential identities are stated for functions on the real lift
 $\R^2$ of $\T^2$: $\partial_x,\partial_y$ are ordinary partial derivatives,
@@ -204,19 +204,19 @@ is $Y=\nabla^\perp\Psi=(\sin y,-\sin x)$, so that $L_0=Y\cdot\nabla$.
 \begin{lemma}[Calculus on the lift]
 \label{lem:lift-calculus}
 \uses{def:lift-operators}
-\lean{NoEmbeddedEigenvalues.partialX_add,
-  NoEmbeddedEigenvalues.partialX_sub,
-  NoEmbeddedEigenvalues.partialX_smul,
-  NoEmbeddedEigenvalues.partialX_const_smul,
-  NoEmbeddedEigenvalues.partialY_add,
-  NoEmbeddedEigenvalues.partialY_sub,
-  NoEmbeddedEigenvalues.partialY_smul,
-  NoEmbeddedEigenvalues.partialY_const_smul,
-  NoEmbeddedEigenvalues.partialX_eq_zero_of_eventually,
-  NoEmbeddedEigenvalues.partialY_eq_zero_of_eventually,
-  NoEmbeddedEigenvalues.partialY_partialX,
-  NoEmbeddedEigenvalues.contDiff_partialX,
-  NoEmbeddedEigenvalues.contDiff_partialY}
+\lean{EulerDipoleEigenvalues.partialX_add,
+  EulerDipoleEigenvalues.partialX_sub,
+  EulerDipoleEigenvalues.partialX_smul,
+  EulerDipoleEigenvalues.partialX_const_smul,
+  EulerDipoleEigenvalues.partialY_add,
+  EulerDipoleEigenvalues.partialY_sub,
+  EulerDipoleEigenvalues.partialY_smul,
+  EulerDipoleEigenvalues.partialY_const_smul,
+  EulerDipoleEigenvalues.partialX_eq_zero_of_eventually,
+  EulerDipoleEigenvalues.partialY_eq_zero_of_eventually,
+  EulerDipoleEigenvalues.partialY_partialX,
+  EulerDipoleEigenvalues.contDiff_partialX,
+  EulerDipoleEigenvalues.contDiff_partialY}
 \leanok
 The partial derivatives satisfy the sum and product rules at points of
 differentiability, vanish at $p$ for functions vanishing near $p$, map $C^{n+1}$
@@ -233,10 +233,10 @@ partials is symmetry of the second Fréchet derivative of a $C^2$ function.
 \begin{definition}[Integration over the torus on the lift]
 \label{def:square-integral}
 \uses{def:lift-operators}
-\lean{NoEmbeddedEigenvalues.IsPeriodicLift,
-  NoEmbeddedEigenvalues.periodSquare,
-  NoEmbeddedEigenvalues.squareIntegral,
-  NoEmbeddedEigenvalues.squarePairing}
+\lean{EulerDipoleEigenvalues.IsPeriodicLift,
+  EulerDipoleEigenvalues.periodSquare,
+  EulerDipoleEigenvalues.squareIntegral,
+  EulerDipoleEigenvalues.squarePairing}
 \leanok
 A function on $\R^2$ is a \emph{periodic lift} if it is $2\pi$-periodic in both
 variables. For such functions, $\int_{\T^2}g$ means $\int_{[0,2\pi]^2}g$, and
@@ -246,10 +246,10 @@ $\ip uv=\int_{[0,2\pi]^2}u\bar v$.
 \begin{lemma}[Integrals of derivatives vanish]
 \label{lem:square-integral-partial}
 \uses{def:square-integral, lem:lift-calculus}
-\lean{NoEmbeddedEigenvalues.squareIntegral_partialX,
-  NoEmbeddedEigenvalues.squareIntegral_partialY,
-  NoEmbeddedEigenvalues.IsPeriodicLift.partialX,
-  NoEmbeddedEigenvalues.IsPeriodicLift.partialY}
+\lean{EulerDipoleEigenvalues.squareIntegral_partialX,
+  EulerDipoleEigenvalues.squareIntegral_partialY,
+  EulerDipoleEigenvalues.IsPeriodicLift.partialX,
+  EulerDipoleEigenvalues.IsPeriodicLift.partialY}
 \leanok
 Partial derivatives of periodic lifts are periodic lifts, and
 $\int_{\T^2}\partial_xg=\int_{\T^2}\partial_yg=0$ for every periodic $C^1$ lift $g$.
@@ -264,12 +264,12 @@ $\int_0^{2\pi}\partial_yg(x,y)\,dy=g(x,2\pi)-g(x,0)=0$.
 \begin{lemma}[The pairing]
 \label{lem:square-pairing}
 \uses{def:square-integral}
-\lean{NoEmbeddedEigenvalues.squarePairing_add_left,
-  NoEmbeddedEigenvalues.squarePairing_sub_left,
-  NoEmbeddedEigenvalues.squarePairing_const_mul_left,
-  NoEmbeddedEigenvalues.squarePairing_const_mul_right,
-  NoEmbeddedEigenvalues.squarePairing_comm,
-  NoEmbeddedEigenvalues.squarePairing_real_smul}
+\lean{EulerDipoleEigenvalues.squarePairing_add_left,
+  EulerDipoleEigenvalues.squarePairing_sub_left,
+  EulerDipoleEigenvalues.squarePairing_const_mul_left,
+  EulerDipoleEigenvalues.squarePairing_const_mul_right,
+  EulerDipoleEigenvalues.squarePairing_comm,
+  EulerDipoleEigenvalues.squarePairing_real_smul}
 \leanok
 For continuous periodic lifts, $\ip uv$ is additive and $\C$-linear in $u$,
 conjugate linear in $v$, $\ip vu=\overline{\ip uv}$, and $\ip{fu}v=\ip u{fv}$
@@ -284,20 +284,20 @@ Continuous functions are integrable on the compact square.
 \begin{lemma}[Algebraic identities for the dipole]
 \label{lem:dipole-identities}
 \uses{def:dipole, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.Ψ_coe,
-  NoEmbeddedEigenvalues.partialX_dipoleLift,
-  NoEmbeddedEigenvalues.partialY_dipoleLift,
-  NoEmbeddedEigenvalues.gradSq_dipoleLift,
-  NoEmbeddedEigenvalues.laplacian_dipoleLift,
-  NoEmbeddedEigenvalues.classicalL0_dipoleLift,
-  NoEmbeddedEigenvalues.gradSq_dipoleLift_sub,
-  NoEmbeddedEigenvalues.dipoleLift_mul_le_gradSq,
-  NoEmbeddedEigenvalues.sq_cos_sub_cos,
-  NoEmbeddedEigenvalues.gradDot_dipoleLift_gradSq,
-  NoEmbeddedEigenvalues.laplacian_gradSq_dipoleLift,
-  NoEmbeddedEigenvalues.gradSq_gradSq_dipoleLift,
-  NoEmbeddedEigenvalues.laplacian_sin_fst,
-  NoEmbeddedEigenvalues.laplacian_sin_snd}
+\lean{EulerDipoleEigenvalues.Ψ_coe,
+  EulerDipoleEigenvalues.partialX_dipoleLift,
+  EulerDipoleEigenvalues.partialY_dipoleLift,
+  EulerDipoleEigenvalues.gradSq_dipoleLift,
+  EulerDipoleEigenvalues.laplacian_dipoleLift,
+  EulerDipoleEigenvalues.classicalL0_dipoleLift,
+  EulerDipoleEigenvalues.gradSq_dipoleLift_sub,
+  EulerDipoleEigenvalues.dipoleLift_mul_le_gradSq,
+  EulerDipoleEigenvalues.sq_cos_sub_cos,
+  EulerDipoleEigenvalues.gradDot_dipoleLift_gradSq,
+  EulerDipoleEigenvalues.laplacian_gradSq_dipoleLift,
+  EulerDipoleEigenvalues.gradSq_gradSq_dipoleLift,
+  EulerDipoleEigenvalues.laplacian_sin_fst,
+  EulerDipoleEigenvalues.laplacian_sin_snd}
 \leanok
 Write $s=\Psi$, $\rho^2=|\nabla\Psi|^2$, $\delta=\cos x-\cos y$. Then
 \begin{align*}
@@ -324,8 +324,8 @@ $\rho^2=2-p^2-q^2$ and $\nabla s\cdot\nabla\rho^2=-2p(1-p^2)-2q(1-q^2)$.
 
 \begin{lemma}[Global flows]
 \label{lem:global-flow}
-\lean{NoEmbeddedEigenvalues.exists_local_solution,
-  NoEmbeddedEigenvalues.exists_global_solution}
+\lean{EulerDipoleEigenvalues.exists_local_solution,
+  EulerDipoleEigenvalues.exists_global_solution}
 \leanok
 Let $E$ be a Banach space and $f\colon E\to E$ bounded and globally Lipschitz. For
 every $x\in E$ there is $\gamma\colon\R\to E$ with $\gamma(0)=x$ and
@@ -342,8 +342,8 @@ so they glue to a global solution.
 \begin{lemma}[The dipole velocity]
 \label{lem:dipole-velocity}
 \uses{def:lift-operators}
-\lean{NoEmbeddedEigenvalues.norm_dipoleVelocity_le,
-  NoEmbeddedEigenvalues.lipschitzWith_dipoleVelocity}
+\lean{EulerDipoleEigenvalues.norm_dipoleVelocity_le,
+  EulerDipoleEigenvalues.lipschitzWith_dipoleVelocity}
 \leanok
 In the sup norm on $\R^2$, $|Y|\le1$ and $Y$ is $1$-Lipschitz.
 \end{lemma}
@@ -356,8 +356,8 @@ $|\sin u|\le1$ and $|\sin u-\sin v|\le|u-v|$.
 \begin{definition}[The dipole flow]
 \label{def:dipole-flow}
 \uses{def:lift-operators, lem:global-flow, lem:dipole-velocity}
-\lean{NoEmbeddedEigenvalues.dipoleFlow,
-  NoEmbeddedEigenvalues.dipoleOrbit}
+\lean{EulerDipoleEigenvalues.dipoleFlow,
+  EulerDipoleEigenvalues.dipoleOrbit}
 \leanok
 The flow $\varphi_t(x)$ of $Y$ on $\R^2$ is the global solution of
 $\partial_t\varphi_t(x)=Y(\varphi_t(x))$, $\varphi_0(x)=x$, given by
@@ -369,14 +369,14 @@ diagonal coordinates.
 \begin{lemma}[Properties of the flow]
 \label{lem:dipole-flow}
 \uses{def:dipole-flow, def:cells}
-\lean{NoEmbeddedEigenvalues.dipoleFlow_zero,
-  NoEmbeddedEigenvalues.hasDerivAt_dipoleFlow,
-  NoEmbeddedEigenvalues.eq_dipoleFlow,
-  NoEmbeddedEigenvalues.dipoleFlow_add,
-  NoEmbeddedEigenvalues.dipoleFlow_reverse,
-  NoEmbeddedEigenvalues.dipoleLift_dipoleFlow,
-  NoEmbeddedEigenvalues.hasDerivAt_diag_fst,
-  NoEmbeddedEigenvalues.hasDerivAt_diag_snd}
+\lean{EulerDipoleEigenvalues.dipoleFlow_zero,
+  EulerDipoleEigenvalues.hasDerivAt_dipoleFlow,
+  EulerDipoleEigenvalues.eq_dipoleFlow,
+  EulerDipoleEigenvalues.dipoleFlow_add,
+  EulerDipoleEigenvalues.dipoleFlow_reverse,
+  EulerDipoleEigenvalues.dipoleLift_dipoleFlow,
+  EulerDipoleEigenvalues.hasDerivAt_diag_fst,
+  EulerDipoleEigenvalues.hasDerivAt_diag_snd}
 \leanok
 Every global integral curve of $Y$ through $x$ is $t\mapsto\varphi_t(x)$;
 $\varphi_{s+t}=\varphi_t\circ\varphi_s$; and $\Psi\circ\varphi_t=\Psi$. A linear map
@@ -400,8 +400,8 @@ $y=a-b$.
 \begin{definition}[Heteroclinic arc]
 \label{def:separatrix-arc}
 \uses{def:cells}
-\lean{NoEmbeddedEigenvalues.arcAngle,
-  NoEmbeddedEigenvalues.separatrixArc}
+\lean{EulerDipoleEigenvalues.arcAngle,
+  EulerDipoleEigenvalues.separatrixArc}
 \leanok
 Let $\gamma(s)=\big(2\arctan(e^{-s}),\,2\arctan(e^{-s})-\pi\big)$, $s\in\R$
 (manuscript \texttt{(ee:arc)}).
@@ -415,16 +415,16 @@ bounding $\Cell$. This is not yet a separate node or formalized.
 \begin{lemma}[Arc parametrization]
 \label{lem:separatrix-arc}
 \uses{def:separatrix-arc}
-\lean{NoEmbeddedEigenvalues.sin_arcAngle,
-  NoEmbeddedEigenvalues.hasDerivAt_arcAngle,
-  NoEmbeddedEigenvalues.separatrixArc_velocity,
-  NoEmbeddedEigenvalues.hasDerivAt_separatrixArc,
-  NoEmbeddedEigenvalues.separatrixArc_speed,
-  NoEmbeddedEigenvalues.separatrixArc_fst_sub_snd,
-  NoEmbeddedEigenvalues.tendsto_separatrixArc_atBot,
-  NoEmbeddedEigenvalues.tendsto_separatrixArc_atTop,
-  NoEmbeddedEigenvalues.hasDerivAt_tanh,
-  NoEmbeddedEigenvalues.one_sub_tanh_sq}
+\lean{EulerDipoleEigenvalues.sin_arcAngle,
+  EulerDipoleEigenvalues.hasDerivAt_arcAngle,
+  EulerDipoleEigenvalues.separatrixArc_velocity,
+  EulerDipoleEigenvalues.hasDerivAt_separatrixArc,
+  EulerDipoleEigenvalues.separatrixArc_speed,
+  EulerDipoleEigenvalues.separatrixArc_fst_sub_snd,
+  EulerDipoleEigenvalues.tendsto_separatrixArc_atBot,
+  EulerDipoleEigenvalues.tendsto_separatrixArc_atTop,
+  EulerDipoleEigenvalues.hasDerivAt_tanh,
+  EulerDipoleEigenvalues.one_sub_tanh_sq}
 \leanok
 $\gamma$ is an integral curve of the velocity $(\sin y,-\sin x)$, lies on
 $\{x-y=\pi\}$, runs from the saddle $(\pi,0)$ ($s\to-\infty$) to the saddle
@@ -442,7 +442,7 @@ $y=x-\pi$, $\sin y=-\sin x$.
 \begin{lemma}[Exponential approach to the arc endpoints]
 \label{lem:arc-endpoint-distance}
 \uses{def:separatrix-arc}
-\lean{NoEmbeddedEigenvalues.dist_arc_pos_le, NoEmbeddedEigenvalues.dist_arc_neg_le}
+\lean{EulerDipoleEigenvalues.dist_arc_pos_le, EulerDipoleEigenvalues.dist_arc_neg_le}
 \leanok
 In the lifted product metric, for every $t\in\R$,
 \[
@@ -462,10 +462,10 @@ Use $\arctan r\le r$ for $r\ge0$.
 \begin{definition}[The cell arcs and the saddle distance]
 \label{def:cell-arcs}
 \uses{def:separatrix-arc, lem:dipole-critical-points}
-\lean{NoEmbeddedEigenvalues.rotLift,
-  NoEmbeddedEigenvalues.cellArc,
-  NoEmbeddedEigenvalues.saddleSet,
-  NoEmbeddedEigenvalues.saddleDist}
+\lean{EulerDipoleEigenvalues.rotLift,
+  EulerDipoleEigenvalues.cellArc,
+  EulerDipoleEigenvalues.saddleSet,
+  EulerDipoleEigenvalues.saddleDist}
 \leanok
 Let $R(x,y)=(y,-x)$ on the lift. The four arcs bounding the cell are
 $\gamma_k=R^k\circ\gamma$, $k=0,\dots,3$, each parametrized by flow time. The saddle set
@@ -476,9 +476,9 @@ is $\{(m\pi,n\pi):m+n\text{ odd}\}$, and $d$ denotes the distance to it.
 
 \begin{definition}[Quarter orbits and the period]
 \label{def:period}
-\lean{NoEmbeddedEigenvalues.eighthPeriod,
-  NoEmbeddedEigenvalues.orbitPeriod,
-  NoEmbeddedEigenvalues.orbitFrequency}
+\lean{EulerDipoleEigenvalues.eighthPeriod,
+  EulerDipoleEigenvalues.orbitPeriod,
+  EulerDipoleEigenvalues.orbitFrequency}
 \leanok
 For $0<h<1$ let
 \[
@@ -491,11 +491,11 @@ integrand is bounded, since $\cos^2a\ge h>h^2$ on the interval of integration.
 \begin{lemma}[Second formula for the period]
 \label{lem:period-integral}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.eighthPeriod_eq,
-  NoEmbeddedEigenvalues.eighthPeriod_pos,
-  NoEmbeddedEigenvalues.orbitPeriod_pos,
-  NoEmbeddedEigenvalues.orbitFrequency_pos,
-  NoEmbeddedEigenvalues.eighthPeriod_le_inv}
+\lean{EulerDipoleEigenvalues.eighthPeriod_eq,
+  EulerDipoleEigenvalues.eighthPeriod_pos,
+  EulerDipoleEigenvalues.orbitPeriod_pos,
+  EulerDipoleEigenvalues.orbitFrequency_pos,
+  EulerDipoleEigenvalues.eighthPeriod_le_inv}
 \leanok
 For $0<h<1$,
 \[
@@ -514,12 +514,12 @@ $1-(1-h)t^2$ and $1+h-t^2$ are at least $h$, so the integrand is at most $1/h$.
 \begin{lemma}[Orbits and their period]
 \label{lem:period-orbit}
 \uses{def:period, def:dipole-flow, def:cells, lem:cell-square}
-\lean{NoEmbeddedEigenvalues.dipoleLift_dipoleOrbit,
-  NoEmbeddedEigenvalues.dipoleOrbit_mem_cellSquare,
-  NoEmbeddedEigenvalues.diagCoord_dipoleOrbit_eighthPeriod,
-  NoEmbeddedEigenvalues.dipoleOrbit_add_quarter,
-  NoEmbeddedEigenvalues.dipoleOrbit_periodic,
-  NoEmbeddedEigenvalues.dipoleOrbit_ne_zero}
+\lean{EulerDipoleEigenvalues.dipoleLift_dipoleOrbit,
+  EulerDipoleEigenvalues.dipoleOrbit_mem_cellSquare,
+  EulerDipoleEigenvalues.diagCoord_dipoleOrbit_eighthPeriod,
+  EulerDipoleEigenvalues.dipoleOrbit_add_quarter,
+  EulerDipoleEigenvalues.dipoleOrbit_periodic,
+  EulerDipoleEigenvalues.dipoleOrbit_ne_zero}
 \leanok
 Let $0<h<1$ and write $(a(t),b(t))$ for the diagonal coordinates of $\gamma_h(t)$.
 The orbit stays on the level $\{\Psi=2h\}$ and in the square $|a|,|b|<\pi/2$, so it
@@ -579,9 +579,9 @@ frequency $b(h)$; the paper should rename one of them.
 \begin{lemma}[Quarter orbits]
 \label{lem:quarter-orbit-decomposition}
 \uses{def:period, def:dipole-flow, def:level-integral}
-\lean{NoEmbeddedEigenvalues.levelIntegral_eq_sum_quarter,
-  NoEmbeddedEigenvalues.levelIntegral_eq_sum_quarter',
-  NoEmbeddedEigenvalues.dipoleOrbit_add_mul_quarter}
+\lean{EulerDipoleEigenvalues.levelIntegral_eq_sum_quarter,
+  EulerDipoleEigenvalues.levelIntegral_eq_sum_quarter',
+  EulerDipoleEigenvalues.dipoleOrbit_add_mul_quarter}
 \leanok
 Let $0<h<1$ and let $f$ be such that $t\mapsto f(R^k\gamma_h(t))$ is integrable over $[-L,L]$ for
 $k=0,\dots,3$ (equivalently, $t\mapsto f(\gamma_h(t))$ is integrable over a period).
@@ -598,9 +598,9 @@ Split one period into four windows of length $2L$ centered at $2kL$.
 \begin{lemma}[Quarter orbits in diagonal coordinates]
 \label{lem:quarter-orbit-diagonal}
 \uses{def:period, def:dipole-flow, def:cells}
-\lean{NoEmbeddedEigenvalues.integral_quarter_eq, NoEmbeddedEigenvalues.integrableOn_quarter_iff,
-  NoEmbeddedEigenvalues.quarterHeight,
-  NoEmbeddedEigenvalues.orbitB_eq_quarterHeight, NoEmbeddedEigenvalues.image_orbitA_quarter}
+\lean{EulerDipoleEigenvalues.integral_quarter_eq, EulerDipoleEigenvalues.integrableOn_quarter_iff,
+  EulerDipoleEigenvalues.quarterHeight,
+  EulerDipoleEigenvalues.orbitB_eq_quarterHeight, EulerDipoleEigenvalues.image_orbitA_quarter}
 \leanok
 Let $0<h<1$, $a_h=\arccos\sqrt h$ and $\beta_h(a)=\arccos(h/\cos a)$ for $|a|\le a_h$. In
 diagonal coordinates the quarter orbit $\gamma_h([-L,L])$ is the graph $b=\beta_h(a)$,
@@ -624,9 +624,9 @@ $b=\beta_h(a)$ and $\dot a=-\cos a\sin b=-\sqrt{\cos^2a-h^2}$; $a$ runs from $a_
 \begin{lemma}[The arc in diagonal coordinates]
 \label{lem:arc-diagonal}
 \uses{def:separatrix-arc, def:cells}
-\lean{NoEmbeddedEigenvalues.integral_separatrixArc_eq,
-  NoEmbeddedEigenvalues.lintegral_separatrixArc_eq, NoEmbeddedEigenvalues.arcAngle_mem_Ioo,
-  NoEmbeddedEigenvalues.strictAnti_arcAngle}
+\lean{EulerDipoleEigenvalues.integral_separatrixArc_eq,
+  EulerDipoleEigenvalues.lintegral_separatrixArc_eq, EulerDipoleEigenvalues.arcAngle_mem_Ioo,
+  EulerDipoleEigenvalues.strictAnti_arcAngle}
 \leanok
 On the arc $\gamma$, $b=\pi/2$, $a=\alpha(s)-\pi/2$ with $\alpha(s)=2\arctan e^{-s}$, and
 $\cos a=\sech s=-\,da/ds$. Hence $\int_\R F(\gamma(s))\,ds=\int_{-\pi/2}^{\pi/2}F(a,\pi/2)\,da/\cos a$,
@@ -642,8 +642,8 @@ $\sin\alpha(s)=\sech s$ and $\alpha'(s)=-\sech s$ (Lemma~\ref{lem:separatrix-arc
 \begin{lemma}[The quarter orbits approach the arc]
 \label{lem:quarter-height-limit}
 \uses{lem:quarter-orbit-diagonal}
-\lean{NoEmbeddedEigenvalues.pi_div_two_sub_quarterHeight_le,
-  NoEmbeddedEigenvalues.pi_div_two_sub_quarterHeight_le_of_abs_le}
+\lean{EulerDipoleEigenvalues.pi_div_two_sub_quarterHeight_le,
+  EulerDipoleEigenvalues.pi_div_two_sub_quarterHeight_le_of_abs_le}
 \leanok
 If $0\le h\le\cos a$, then $0\le\pi/2-\beta_h(a)\le\frac\pi2\,h/\cos a$. In particular, if
 $0<\delta\le\pi/2$ and $h\le\sin\delta$, then $0\le\pi/2-\beta_h(a)\le\frac\pi2\,h/\sin\delta$ for
@@ -659,9 +659,9 @@ $\sin x\ge\frac2\pi x$ on $[0,\pi/2]$. On $|a|\le\pi/2-\delta$, $\cos a\ge\cos(\
 \begin{lemma}[The flow-time weight]
 \label{lem:quarter-weight}
 \uses{lem:quarter-orbit-diagonal}
-\lean{NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le,
-  NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le_corner,
-  NoEmbeddedEigenvalues.one_div_sqrt_cos_sq_sub_le_two_div}
+\lean{EulerDipoleEigenvalues.one_div_sqrt_cos_sq_sub_le,
+  EulerDipoleEigenvalues.one_div_sqrt_cos_sq_sub_le_corner,
+  EulerDipoleEigenvalues.one_div_sqrt_cos_sq_sub_le_two_div}
 \leanok
 If $0\le h\le\cos^2a$ (that is, $|a|\le a_h$), $\cos a>0$ and $\sin a\ne0$, then
 $1/\sqrt{\cos^2a-h^2}\le1/(\cos a\,|\sin a|)$. Near the corners, where $|\sin a|\ge\frac12$, this is
@@ -677,8 +677,8 @@ $\cos^2a>\frac34$ and $h^2\le\frac1{16}\le\frac34\cos^2a$, so $\cos^2a-h^2\ge\fr
 \begin{lemma}[Null sets on the quarter orbits]
 \label{lem:quarter-null-sets}
 \uses{lem:quarter-orbit-diagonal}
-\lean{NoEmbeddedEigenvalues.ae_quarterGraph_of_ae,
-  NoEmbeddedEigenvalues.sqrt_lt_cos_of_abs_lt_arccos}
+\lean{EulerDipoleEigenvalues.ae_quarterGraph_of_ae,
+  EulerDipoleEigenvalues.sqrt_lt_cos_of_abs_lt_arccos}
 \leanok
 If a property holds almost everywhere in the plane, then for almost every $h\in(0,1)$ it holds
 at $(a,\beta_h(a))$ for almost every $|a|<a_h$.
@@ -707,11 +707,11 @@ replace the orbit-comparison lemmas in the even--even trace limits.
 \begin{definition}[Orbit coordinates]
 \label{def:orbit-coordinates}
 \uses{def:cells, def:period, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.levelCoord,
-  NoEmbeddedEigenvalues.timeCoord,
-  NoEmbeddedEigenvalues.puncturedCell,
-  NoEmbeddedEigenvalues.orbitDomain,
-  NoEmbeddedEigenvalues.orbitAnnulus}
+\lean{EulerDipoleEigenvalues.levelCoord,
+  EulerDipoleEigenvalues.timeCoord,
+  EulerDipoleEigenvalues.puncturedCell,
+  EulerDipoleEigenvalues.orbitDomain,
+  EulerDipoleEigenvalues.orbitAnnulus}
 \leanok
 On the punctured cell (the square $|a|,|b|<\pi/2$ minus the center) let $h=\Psi/2$ and
 \[
@@ -725,12 +725,12 @@ $A(h_1,h_2)$ is the set of points of the punctured cell with $h_1<h<h_2$.
 \begin{lemma}[Inverse identities for orbit coordinates]
 \label{lem:orbit-coordinates-inverse}
 \uses{def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.bijOn_orbitCoordinates,
-  NoEmbeddedEigenvalues.mem_orbitDomain,
-  NoEmbeddedEigenvalues.dipoleOrbit_levelCoord_timeCoord,
-  NoEmbeddedEigenvalues.timeCoord_dipoleOrbit,
-  NoEmbeddedEigenvalues.levelCoord_dipoleOrbit,
-  NoEmbeddedEigenvalues.levelCoord_mem_Ioo}
+\lean{EulerDipoleEigenvalues.bijOn_orbitCoordinates,
+  EulerDipoleEigenvalues.mem_orbitDomain,
+  EulerDipoleEigenvalues.dipoleOrbit_levelCoord_timeCoord,
+  EulerDipoleEigenvalues.timeCoord_dipoleOrbit,
+  EulerDipoleEigenvalues.levelCoord_dipoleOrbit,
+  EulerDipoleEigenvalues.levelCoord_mem_Ioo}
 \leanok
 The map $p\mapsto(h(p),t(p))$ is a bijection from the punctured cell
 onto the orbit domain, with inverse $(h,t)\mapsto\gamma_h(t)$.
@@ -765,8 +765,8 @@ gives the level identity for every time.
 \begin{lemma}[Local smoothness of orbit coordinates]
 \label{lem:orbit-coordinates-smooth}
 \uses{def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.contDiffAt_timeCoord,
-  NoEmbeddedEigenvalues.contDiffAt_orbitCoordinates}
+\lean{EulerDipoleEigenvalues.contDiffAt_timeCoord,
+  EulerDipoleEigenvalues.contDiffAt_orbitCoordinates}
 \leanok
 The time coordinate is smooth on the punctured cell off the cut
 $\{b=0,a>0\}$. Consequently the pair $(h,t)$ is smooth there.
@@ -801,7 +801,7 @@ No differentiable dependence theorem for ODE flows is needed.
 \begin{lemma}[Jacobian of the orbit map]
 \label{lem:orbit-jacobian}
 \uses{def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.det_fderiv_orbitMap}
+\lean{EulerDipoleEigenvalues.det_fderiv_orbitMap}
 \leanok
 For $0<h<1$ and $t\in\R$, the Jacobian determinant of the orbit map
 $G(h,t)=\gamma_h(t)$ is $\det DG(h,t)=2$.
@@ -824,9 +824,9 @@ Consequently $\det DG=2$.
 \begin{lemma}[Area formula in orbit coordinates]
 \label{lem:orbit-coordinates-area}
 \uses{def:orbit-coordinates}
-\lean{NoEmbeddedEigenvalues.lintegral_cellSquare_eq,
-  NoEmbeddedEigenvalues.integral_cellSquare_eq,
-  NoEmbeddedEigenvalues.integrableOn_comp_orbitMap}
+\lean{EulerDipoleEigenvalues.lintegral_cellSquare_eq,
+  EulerDipoleEigenvalues.integral_cellSquare_eq,
+  EulerDipoleEigenvalues.integrableOn_comp_orbitMap}
 \leanok
 For integrable $f$ on the cell, the function
 $t\mapsto f(\gamma_h(t))$ is integrable over $[-2L(h),6L(h))$ for
@@ -875,9 +875,9 @@ lemma, and Lemma~\ref{lem:orbit-coordinates-area} turns the manuscript's coarea 
 \begin{definition}[Integrals over levels]
 \label{def:level-integral}
 \uses{def:period, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.levelIntegral,
-  NoEmbeddedEigenvalues.quarterIntegral,
-  NoEmbeddedEigenvalues.angularMode}
+\lean{EulerDipoleEigenvalues.levelIntegral,
+  EulerDipoleEigenvalues.quarterIntegral,
+  EulerDipoleEigenvalues.angularMode}
 \leanok
 For $0<h<1$ and $g$ on $\R^2$, the flow-time integral over the level $\{\Psi=2h\}$ is
 $\oint g\,dt=\int_0^{S(h)}g(\gamma_h(t))\,dt$, and over the quarter orbit it is
@@ -889,9 +889,9 @@ $g_k(h)=S(h)^{-1}\int_0^{S(h)}e^{-ikb(h)t}g(\gamma_h(t))\,dt$.
 \begin{lemma}[Continuity of the flow]
 \label{lem:flow-continuity}
 \uses{def:dipole-flow, def:period}
-\lean{NoEmbeddedEigenvalues.continuous_dipoleFlow,
-  NoEmbeddedEigenvalues.continuous_dipoleOrbit,
-  NoEmbeddedEigenvalues.measurable_eighthPeriod}
+\lean{EulerDipoleEigenvalues.continuous_dipoleFlow,
+  EulerDipoleEigenvalues.continuous_dipoleOrbit,
+  EulerDipoleEigenvalues.measurable_eighthPeriod}
 \leanok
 The flow $(x,t)\mapsto\varphi_t(x)$ and the orbit map $(h,t)\mapsto\gamma_h(t)$ are jointly
 continuous, and $h\mapsto L(h)$ is measurable.
@@ -910,9 +910,9 @@ of $L$ is Fubini for the measurable integrand of Definition~\ref{def:period}.
 \begin{lemma}[Changing representatives on levels]
 \label{lem:level-integral-congr}
 \uses{def:level-integral}
-\lean{NoEmbeddedEigenvalues.ae_levelIntegral_congr,
-  NoEmbeddedEigenvalues.ae_level_of_ae_cellSquare,
-  NoEmbeddedEigenvalues.levelIntegral_eq_setIntegral}
+\lean{EulerDipoleEigenvalues.ae_levelIntegral_congr,
+  EulerDipoleEigenvalues.ae_level_of_ae_cellSquare,
+  EulerDipoleEigenvalues.levelIntegral_eq_setIntegral}
 \leanok
 Let $f,g$ be measurable on $\R^2$ with $f=g$ almost everywhere. Then
 $\oint_{\{\Psi=2h\}}f\,dt=\oint_{\{\Psi=2h\}}g\,dt$ for almost every $h\in(0,1)$. More
@@ -934,9 +934,9 @@ assumption on $f$ or $g$.
 \begin{lemma}[Coarea with a cutoff in the level]
 \label{lem:coarea-level-cutoff}
 \uses{def:level-integral, def:cells}
-\lean{NoEmbeddedEigenvalues.integrableOn_levelIntegral,
-  NoEmbeddedEigenvalues.integral_cellSquare_level_mul,
-  NoEmbeddedEigenvalues.levelIntegral_eq_integral_orbitWindow}
+\lean{EulerDipoleEigenvalues.integrableOn_levelIntegral,
+  EulerDipoleEigenvalues.integral_cellSquare_level_mul,
+  EulerDipoleEigenvalues.levelIntegral_eq_integral_orbitWindow}
 \leanok
 Let $0<a\le b<1$ and let $F$ be integrable on $\{2a\le\Psi\le2b\}\cap\Cell$. Then
 $h\mapsto\oint_{\{\Psi=2h\}}F\,dt$ is integrable on $[a,b]$, and for every bounded measurable
@@ -969,7 +969,7 @@ outer integral to $[a,b]$.
 \begin{lemma}[Annular extraction from a stream-cutoff identity]
 \label{lem:annular-from-cutoff}
 \uses{def:level-integral, def:cells}
-\lean{NoEmbeddedEigenvalues.annular_virial_of_cutoff_identity}
+\lean{EulerDipoleEigenvalues.annular_virial_of_cutoff_identity}
 \leanok
 Let $J,B$ be real densities integrable on every closed regular level band
 $\{2a\le s\le2b\}\cap\Cell$, $0<a\le b<1$. Suppose that for every smooth
@@ -997,8 +997,8 @@ Apply du Bois-Reymond, then use coarea again for the open-band indicator.
 \begin{definition}[Action-angle coordinates]
 \label{def:action-angle}
 \uses{def:orbit-coordinates, def:period}
-\lean{NoEmbeddedEigenvalues.angleCoord, NoEmbeddedEigenvalues.actionAngle,
-  NoEmbeddedEigenvalues.actionAngleInv, NoEmbeddedEigenvalues.actionStrip}
+\lean{EulerDipoleEigenvalues.angleCoord, EulerDipoleEigenvalues.actionAngle,
+  EulerDipoleEigenvalues.actionAngleInv, EulerDipoleEigenvalues.actionStrip}
 \leanok
 On the punctured cell, the action-angle coordinates are $(h,\theta)$ with $h$ the level
 coordinate and $\theta=t/S(h)\in[-\frac14,\frac34)$, where $t$ is the time coordinate of
@@ -1009,10 +1009,10 @@ parametrization is $P(h,\theta)=\gamma_h(\theta S(h))$ on the strip $(0,1)\times
 \begin{lemma}[Regularity of the action-angle coordinates]
 \label{lem:action-angle-regularity}
 \uses{def:action-angle}
-\lean{NoEmbeddedEigenvalues.contDiffOn_actionAngleInv,
-  NoEmbeddedEigenvalues.contDiffAt_angleCoord,
-  NoEmbeddedEigenvalues.contDiffOn_comp_actionAngle,
-  NoEmbeddedEigenvalues.contDiffAt_orbitMap}
+\lean{EulerDipoleEigenvalues.contDiffOn_actionAngleInv,
+  EulerDipoleEigenvalues.contDiffAt_angleCoord,
+  EulerDipoleEigenvalues.contDiffOn_comp_actionAngle,
+  EulerDipoleEigenvalues.contDiffAt_orbitMap}
 \leanok
 The parametrization $P$ is smooth on $(0,1)\times\R$. The angle $\theta$
 is smooth off the cut $\{b=0,a>0\}$. If $F$ is smooth on the strip and
@@ -1062,13 +1062,13 @@ area formula use the smooth orbit map without a dependency cycle.
 \begin{lemma}[The action-angle chart]
 \label{lem:action-angle-chart}
 \uses{def:action-angle, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.actionAngleInv_mem_puncturedCell,
-  NoEmbeddedEigenvalues.levelCoord_actionAngleInv,
-  NoEmbeddedEigenvalues.actionAngleInv_add_one,
-  NoEmbeddedEigenvalues.actionAngleInv_actionAngle,
-  NoEmbeddedEigenvalues.actionAngle_actionAngleInv,
-  NoEmbeddedEigenvalues.hasDerivAt_actionAngleInv_snd,
-  NoEmbeddedEigenvalues.lintegral_cellSquare_actionAngle}
+\lean{EulerDipoleEigenvalues.actionAngleInv_mem_puncturedCell,
+  EulerDipoleEigenvalues.levelCoord_actionAngleInv,
+  EulerDipoleEigenvalues.actionAngleInv_add_one,
+  EulerDipoleEigenvalues.actionAngleInv_actionAngle,
+  EulerDipoleEigenvalues.actionAngle_actionAngleInv,
+  EulerDipoleEigenvalues.hasDerivAt_actionAngleInv_snd,
+  EulerDipoleEigenvalues.lintegral_cellSquare_actionAngle}
 \leanok
 $S$ is smooth on $(0,1)$. The parametrization $P$ is smooth on the strip $(0,1)\times\R$,
 $1$-periodic in $\theta$, takes values in the punctured cell, and $\Psi(P(h,\theta))=2h$ and
@@ -1100,9 +1100,9 @@ with $t=S(h)\theta$.
 \begin{lemma}[Classical test functions in action-angle coordinates]
 \label{lem:action-angle-test-chain}
 \uses{def:action-angle, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.partialY_comp_actionAngleInv,
-  NoEmbeddedEigenvalues.comp_actionAngle_actionAngleInv,
-  NoEmbeddedEigenvalues.classicalL0_comp_actionAngle}
+\lean{EulerDipoleEigenvalues.partialY_comp_actionAngleInv,
+  EulerDipoleEigenvalues.comp_actionAngle_actionAngleInv,
+  EulerDipoleEigenvalues.classicalL0_comp_actionAngle}
 \leanok
 If $\varphi$ is differentiable at $P(q)$, then
 \[
@@ -1131,13 +1131,13 @@ cut. Apply the forward chain rule to it and cancel the positive period.
 \begin{lemma}[Local integrability in action-angle coordinates]
 \label{lem:action-angle-local-integrability}
 \uses{def:action-angle}
-\lean{NoEmbeddedEigenvalues.integrableOn_comp_actionAngleInv_levelBand,
-  NoEmbeddedEigenvalues.locallyIntegrableOn_comp_actionAngleInv,
-  NoEmbeddedEigenvalues.integrableOn_levelBand_of_comp_actionAngleInv,
-  NoEmbeddedEigenvalues.locallyIntegrableOn_of_comp_actionAngleInv,
-  NoEmbeddedEigenvalues.locallyIntegrableOn_actionAngleInv_iff,
-  NoEmbeddedEigenvalues.locallyIntegrableOn_period_mul_actionAngleInv_iff,
-  NoEmbeddedEigenvalues.locallyIntegrableOn_comp_actionAngle}
+\lean{EulerDipoleEigenvalues.integrableOn_comp_actionAngleInv_levelBand,
+  EulerDipoleEigenvalues.locallyIntegrableOn_comp_actionAngleInv,
+  EulerDipoleEigenvalues.integrableOn_levelBand_of_comp_actionAngleInv,
+  EulerDipoleEigenvalues.locallyIntegrableOn_of_comp_actionAngleInv,
+  EulerDipoleEigenvalues.locallyIntegrableOn_actionAngleInv_iff,
+  EulerDipoleEigenvalues.locallyIntegrableOn_period_mul_actionAngleInv_iff,
+  EulerDipoleEigenvalues.locallyIntegrableOn_comp_actionAngle}
 \leanok
 For arbitrary representatives $u,k$ on the punctured cell,
 \[
@@ -1187,9 +1187,9 @@ multiplication by $S$ preserves and reflects local integrability.
 \begin{lemma}[Weak transport in action-angle coordinates]
 \label{lem:action-angle-transport}
 \uses{def:action-angle, def:transport-pair, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakL0On.comp_actionAngleInv,
-  NoEmbeddedEigenvalues.hasWeakL0On_of_actionAngle,
-  NoEmbeddedEigenvalues.hasWeakL0On_iff_actionAngle}
+\lean{EulerDipoleEigenvalues.HasWeakL0On.comp_actionAngleInv,
+  EulerDipoleEigenvalues.hasWeakL0On_of_actionAngle,
+  EulerDipoleEigenvalues.hasWeakL0On_iff_actionAngle}
 \leanok
 For arbitrary functions $u,k$ on the punctured cell, write $U=u\circ P$
 and $K=k\circ P$. Then $L_0u=k$ weakly on the punctured cell if and only if
@@ -1234,7 +1234,7 @@ function is multiplied by a compactly supported test function.
 \begin{lemma}[Local integrability of the pulled-back gradient]
 \label{lem:action-angle-gradient-local-integrability}
 \uses{def:action-angle}
-\lean{NoEmbeddedEigenvalues.locallyIntegrableOn_actionAngleInv_gradient}
+\lean{EulerDipoleEigenvalues.locallyIntegrableOn_actionAngleInv_gradient}
 \leanok
 If $g_x,g_y$ are locally integrable on the punctured cell, then, for
 $j=h,\theta$,
@@ -1257,7 +1257,7 @@ addition preserve local integrability.
 \begin{lemma}[The angular weak chain rule]
 \label{lem:action-angle-weak-angular}
 \uses{def:action-angle, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv_snd}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.comp_actionAngleInv_snd}
 \leanok
 If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then
 \[
@@ -1281,7 +1281,7 @@ or an assumption of local square integrability.
 \begin{definition}[The dual level field]
 \label{def:level-dual-field}
 \uses{def:action-angle}
-\lean{NoEmbeddedEigenvalues.levelDualCoeff}
+\lean{EulerDipoleEigenvalues.levelDualCoeff}
 \leanok
 On the plane put $E(p)=e^{2\pi i\theta(p)}$ and
 \[
@@ -1296,10 +1296,10 @@ $(\partial_y\theta,-\partial_x\theta)$.
 \begin{lemma}[Regularity and normalization of the dual level field]
 \label{lem:level-dual-field}
 \uses{def:level-dual-field}
-\lean{NoEmbeddedEigenvalues.contDiffOn_levelDualCoeff,
-  NoEmbeddedEigenvalues.levelDualCoeff_eq,
-  NoEmbeddedEigenvalues.levelDualCoeff_divergence_ae,
-  NoEmbeddedEigenvalues.levelDualCoeff_normalized}
+\lean{EulerDipoleEigenvalues.contDiffOn_levelDualCoeff,
+  EulerDipoleEigenvalues.levelDualCoeff_eq,
+  EulerDipoleEigenvalues.levelDualCoeff_divergence_ae,
+  EulerDipoleEigenvalues.levelDualCoeff_normalized}
 \leanok
 The coefficients of $B$ are smooth on the whole punctured cell and
 $\operatorname{div}B=0$ almost everywhere there. Off the angle cut,
@@ -1330,7 +1330,7 @@ $2S\,\theta_y=X$ and $2S\,\theta_x=-Y$.
 \begin{lemma}[Weak integration by parts for the dual level field]
 \label{lem:level-dual-weak}
 \uses{def:level-dual-field, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.integral_mul_levelDualCoeff}
+\lean{EulerDipoleEigenvalues.integral_mul_levelDualCoeff}
 \leanok
 If $u$ has weak derivatives $g_x,g_y$ on the punctured cell and $\psi$
 is a test function there, then
@@ -1353,7 +1353,7 @@ are supported in a compact subset of the punctured cell.
 \begin{lemma}[The level weak chain rule]
 \label{lem:action-angle-weak-level}
 \uses{def:action-angle, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv_fst}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.comp_actionAngleInv_fst}
 \leanok
 If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then
 \[
@@ -1397,7 +1397,7 @@ to the required strip test identity. No density theorem is used.
 \begin{lemma}[Weak derivatives pulled back to action-angle coordinates]
 \label{lem:action-angle-weak}
 \uses{def:action-angle, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngleInv}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.comp_actionAngleInv}
 \leanok
 If $u$ has weak derivatives $g_x,g_y$ on the punctured cell, then, for
 $j=h,\theta$,
@@ -1418,7 +1418,7 @@ without admitted dependencies.
 \begin{lemma}[Weak derivatives descending to the cell]
 \label{lem:action-angle-weak-cell}
 \uses{def:action-angle, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.comp_actionAngle}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.comp_actionAngle}
 \leanok
 If $F$ on the strip is $1$-periodic in $\theta$, with weak derivatives
 $G_h,G_\theta$, then, for $j=x,y$,
@@ -1509,11 +1509,11 @@ $G_i$ or separate seam-gluing input is needed.
 \begin{definition}[Normal and tangential derivatives]
 \label{def:normal-tangent}
 \uses{def:lift-operators, def:stream-derivatives, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.gradNorm,
-  NoEmbeddedEigenvalues.normalDeriv,
-  NoEmbeddedEigenvalues.tangentDeriv,
-  NoEmbeddedEigenvalues.streamNormal,
-  NoEmbeddedEigenvalues.streamTangent}
+\lean{EulerDipoleEigenvalues.gradNorm,
+  EulerDipoleEigenvalues.normalDeriv,
+  EulerDipoleEigenvalues.tangentDeriv,
+  EulerDipoleEigenvalues.streamNormal,
+  EulerDipoleEigenvalues.streamTangent}
 \leanok
 Let $\rho=|\nabla\Psi|=(\sin^2x+\sin^2y)^{1/2}$. For a function $\psi$ with partial
 derivatives $\psi_x,\psi_y$, the normal derivative along the outward normal
@@ -1526,7 +1526,7 @@ eigenfunction, $\psi_x,\psi_y$ are the lifts of $\psi_1,\psi_2$
 \begin{lemma}[The normal--tangential frame]
 \label{lem:normal-tangent-frame}
 \uses{def:normal-tangent}
-\lean{NoEmbeddedEigenvalues.norm_normalDeriv_sq_add_norm_tangentDeriv_sq}
+\lean{EulerDipoleEigenvalues.norm_normalDeriv_sq_add_norm_tangentDeriv_sq}
 \leanok
 Where $\rho\ne0$, $|\psi_n|^2+|\psi_t|^2=|\psi_x|^2+|\psi_y|^2$.
 \end{lemma}
@@ -1541,12 +1541,12 @@ imaginary parts).
 \begin{lemma}[Regularity and monotonicity of the period]
 \label{lem:period-regularity}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.contDiffOn_eighthPeriod,
-  NoEmbeddedEigenvalues.contDiffOn_orbitPeriod,
-  NoEmbeddedEigenvalues.deriv_eighthPeriod_neg,
-  NoEmbeddedEigenvalues.eighthPeriod_strictAntiOn,
-  NoEmbeddedEigenvalues.deriv_orbitPeriod_neg,
-  NoEmbeddedEigenvalues.orbitPeriod_strictAntiOn}
+\lean{EulerDipoleEigenvalues.contDiffOn_eighthPeriod,
+  EulerDipoleEigenvalues.contDiffOn_orbitPeriod,
+  EulerDipoleEigenvalues.deriv_eighthPeriod_neg,
+  EulerDipoleEigenvalues.eighthPeriod_strictAntiOn,
+  EulerDipoleEigenvalues.deriv_orbitPeriod_neg,
+  EulerDipoleEigenvalues.orbitPeriod_strictAntiOn}
 \leanok
 The functions $L$ and $S=8L$ are smooth on $(0,1)$, with $L'<0$.
 Thus they are strictly decreasing and $S'=8L'<0$; the level sets of
@@ -1573,7 +1573,7 @@ for $S$, and the mean value theorem gives strict decrease.
 \begin{lemma}[Coarse bounds for period derivatives]
 \label{lem:period-derivative-bounds}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.eighthPeriod_derivative_bounds}
+\lean{EulerDipoleEigenvalues.eighthPeriod_derivative_bounds}
 \leanok
 There are $c,C>0$ and $0<h_0<1$ such that
 \[
@@ -1615,12 +1615,12 @@ $c=1/64$, $C=512$ and $h_0=1/2$.
 \begin{lemma}[Coarse logarithmic bounds for the period]
 \label{lem:period-coarse}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.eighthPeriod_sub_log_bounds,
-  NoEmbeddedEigenvalues.eighthPeriod_coarse,
-  NoEmbeddedEigenvalues.tendsto_eighthPeriod_atTop,
-  NoEmbeddedEigenvalues.exp_neg_eighthPeriod_bounds,
-  NoEmbeddedEigenvalues.exp_eighthPeriod_mul_sqrt_le,
-  NoEmbeddedEigenvalues.exp_eighthPeriod_le}
+\lean{EulerDipoleEigenvalues.eighthPeriod_sub_log_bounds,
+  EulerDipoleEigenvalues.eighthPeriod_coarse,
+  EulerDipoleEigenvalues.tendsto_eighthPeriod_atTop,
+  EulerDipoleEigenvalues.exp_neg_eighthPeriod_bounds,
+  EulerDipoleEigenvalues.exp_eighthPeriod_mul_sqrt_le,
+  EulerDipoleEigenvalues.exp_eighthPeriod_le}
 \leanok
 There are $C\ge0$ and $0<h_0<1$ such that, for $0<h<h_0$,
 \[
@@ -1658,10 +1658,10 @@ No sharp elliptic asymptotics or period monotonicity is needed.
 \begin{lemma}[Continuity and blow-up of the period]
 \label{lem:period-basic}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.continuousOn_eighthPeriod,
-  NoEmbeddedEigenvalues.continuousOn_orbitPeriod,
-  NoEmbeddedEigenvalues.log_le_eighthPeriod,
-  NoEmbeddedEigenvalues.tendsto_orbitPeriod_atTop}
+\lean{EulerDipoleEigenvalues.continuousOn_eighthPeriod,
+  EulerDipoleEigenvalues.continuousOn_orbitPeriod,
+  EulerDipoleEigenvalues.log_le_eighthPeriod,
+  EulerDipoleEigenvalues.tendsto_orbitPeriod_atTop}
 \leanok
 $L$ and $S$ are continuous on $(0,1)$, and $L(h)\ge\tfrac12\log(1/h)$ there. In particular
 $S(h)\to\infty$ as $h\to0^+$.
@@ -1687,8 +1687,8 @@ what the good windows (Lemma~\ref{lem:good-windows}) use.
 \begin{lemma}[Leading separatrix asymptotic of the period]
 \label{lem:period-leading-asymptotic}
 \uses{def:period}
-\lean{NoEmbeddedEigenvalues.eighthPeriod_leading_asymptotic,
- NoEmbeddedEigenvalues.orbitPeriod_leading_asymptotic}
+\lean{EulerDipoleEigenvalues.eighthPeriod_leading_asymptotic,
+ EulerDipoleEigenvalues.orbitPeriod_leading_asymptotic}
 \leanok
 As $h\to0^+$,
 \[
@@ -1727,8 +1727,8 @@ the sharp remainders in the manuscript are needed.
 \begin{lemma}[Orbit comparison]
 \label{lem:orbit-comparison}
 \uses{def:period, def:dipole-flow, def:separatrix-arc}
-\lean{NoEmbeddedEigenvalues.norm_dipoleOrbit_sub_arc_le,
-  NoEmbeddedEigenvalues.orbit_close_arc}
+\lean{EulerDipoleEigenvalues.norm_dipoleOrbit_sub_arc_le,
+  EulerDipoleEigenvalues.orbit_close_arc}
 \leanok
 For small $h$ and $|t|\le L(h)$, $|\gamma_h(t)-\gamma(t)|\le C\sqrt h$, where both orbits
 are centered at $a=0$ at time $0$ (manuscript \texttt{(ee:orbit-comparison)}).
@@ -1754,12 +1754,12 @@ No differentiable dependence on the initial point is used.
 \begin{lemma}[Distance to the saddles along an orbit]
 \label{lem:orbit-saddle-distance}
 \uses{def:period, def:dipole-flow, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.saddleDist_dipoleOrbit,
-  NoEmbeddedEigenvalues.saddleDist_dipoleOrbit_endpoints,
-  NoEmbeddedEigenvalues.dist_dipoleOrbit_pos_saddle_le_cos,
-  NoEmbeddedEigenvalues.dist_dipoleOrbit_saddle_le_cos,
-  NoEmbeddedEigenvalues.dist_dipoleOrbit_saddle_le,
-  NoEmbeddedEigenvalues.dist_dipoleOrbit_saddle_endpoints_le}
+\lean{EulerDipoleEigenvalues.saddleDist_dipoleOrbit,
+  EulerDipoleEigenvalues.saddleDist_dipoleOrbit_endpoints,
+  EulerDipoleEigenvalues.dist_dipoleOrbit_pos_saddle_le_cos,
+  EulerDipoleEigenvalues.dist_dipoleOrbit_saddle_le_cos,
+  EulerDipoleEigenvalues.dist_dipoleOrbit_saddle_le,
+  EulerDipoleEigenvalues.dist_dipoleOrbit_saddle_endpoints_le}
 \leanok
 For small $h$ and $|t|\le L(h)$, $ce^{-|t|}\le d(\gamma_h(t))\le Ce^{-|t|}$; in particular
 both endpoints of the quarter orbit are at distance $\sim\sqrt h$ from a saddle.
@@ -1822,8 +1822,8 @@ comparison are proved in Lean without admitted dependencies.
 \begin{lemma}[Joint smoothness of the level variation vectors]
 \label{lem:orbit-level-vectors-smooth}
 \uses{def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.contDiffAt_orbit_level_derivative,
- NoEmbeddedEigenvalues.contDiffAt_orbit_level_second_derivative}
+\lean{EulerDipoleEigenvalues.contDiffAt_orbit_level_derivative,
+ EulerDipoleEigenvalues.contDiffAt_orbit_level_second_derivative}
 \leanok
 The two vectors
 $V(h,t)=\partial_h\gamma_h(t)$ and $W(h,t)=\partial_h^2\gamma_h(t)$
@@ -1843,7 +1843,7 @@ iterated scalar derivatives, so smoothness transfers to the specified vectors.
 \begin{lemma}[Time equation for the level variation]
 \label{lem:orbit-level-time-equation}
 \uses{def:period, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.hasDerivAt_orbit_level_time}
+\lean{EulerDipoleEigenvalues.hasDerivAt_orbit_level_time}
 \leanok
 For $0<h<1$ and every real $t$, put $V=\partial_h\gamma_h(t)$.
 The actual fixed-time level variation is differentiable in time and satisfies
@@ -1864,9 +1864,9 @@ Only smooth orbit derivatives commute; no supplied weak forcing entries do.
 \begin{lemma}[Derivatives in the level]
 \label{lem:orbit-level-derivatives}
 \uses{def:period, def:dipole-flow}
-\lean{NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le_all_time,
-  NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le,
-  NoEmbeddedEigenvalues.deriv_dipoleOrbit_level_le_saddleDist}
+\lean{EulerDipoleEigenvalues.deriv_dipoleOrbit_level_le_all_time,
+  EulerDipoleEigenvalues.deriv_dipoleOrbit_level_le,
+  EulerDipoleEigenvalues.deriv_dipoleOrbit_level_le_saddleDist}
 \leanok
 For small $h$ and $|t|\le L(h)$, $h\mapsto\gamma_h(t)$ is twice differentiable with
 $|\partial_h\gamma_h(t)|\le Ce^{|t|}$ and $|\partial_h^2\gamma_h(t)|\le Ce^{2|t|}$
@@ -1914,7 +1914,7 @@ a general ODE parameter-dependence theorem is not required.
 \begin{lemma}[Level variation on a specified quarter collar]
 \label{lem:orbit-level-distance-collar}
 \uses{def:period, def:dipole-flow, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.orbit_level_variation_mul_distance_bound}
+\lean{EulerDipoleEigenvalues.orbit_level_variation_mul_distance_bound}
 \leanok
 For every $0<b<1/2$ there is a finite $C_b$ such that
 \[
@@ -1938,7 +1938,7 @@ bound their product on this rectangle. Take the maximum of the two constants.
 \begin{definition}[Recentered quarter-orbit times]
 \label{def:quarter-orbit-time}
 \uses{def:orbit-coordinates, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.quarterTimeCoord}
+\lean{EulerDipoleEigenvalues.quarterTimeCoord}
 \leanok
 For $k=0,\ldots,3$, define the recentered time by
 $t_k(p)=t(R^{-k}p)=t(R^{3k}p)$, where $t$ is the global time coordinate and $R$ the
@@ -1948,8 +1948,8 @@ quarter rotation. Lean uses the expression $R^{3k}$.
 \begin{lemma}[Gradients of the orbit coordinates]
 \label{lem:orbit-coordinate-gradients}
 \uses{def:quarter-orbit-time, def:normal-tangent, def:period}
-\lean{NoEmbeddedEigenvalues.gradNorm_le_saddleDist,
-  NoEmbeddedEigenvalues.norm_fderiv_quarterTimeCoord_le}
+\lean{EulerDipoleEigenvalues.gradNorm_le_saddleDist,
+  EulerDipoleEigenvalues.norm_fderiv_quarterTimeCoord_le}
 \leanok
 On the cell $|\nabla h|=\rho/2\le Cd$. There are $C$ and $0<h_0<1$ such that,
 for $k=0,\ldots,3$, $0<h<h_0$ and $|\tau|\le L(h)$, the recentered time $t_k$ is
@@ -2001,7 +2001,7 @@ statement remains false.
 
 \begin{lemma}[Symmetric exponential time moment]
 \label{lem:exponential-time-moment}
-\lean{NoEmbeddedEigenvalues.integral_exp_mul_abs}
+\lean{EulerDipoleEigenvalues.integral_exp_mul_abs}
 \leanok
 For real $a\ne0$ and $L\ge0$,
 \[
@@ -2019,8 +2019,8 @@ Continuity supplies integrability on both intervals.
 \begin{lemma}[Flow-time integrals of the saddle distance]
 \label{lem:orbit-time-integrals}
 \uses{def:period, def:dipole-flow, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.integral_saddleDist_rpow_le,
-  NoEmbeddedEigenvalues.integral_saddleDist_rpow_pos_le}
+\lean{EulerDipoleEigenvalues.integral_saddleDist_rpow_le,
+  EulerDipoleEigenvalues.integral_saddleDist_rpow_pos_le}
 \leanok
 For small $h$, $\int_{-L}^{L}d^{-2}\,dt\le C/h$, $\int_{-L}^{L}d^{-4}\,dt\le C/h^2$, and
 $\int_{-L}^{L}d^{\,p}\,dt\le C$ for $p>0$.
@@ -2074,9 +2074,9 @@ Lemma~\ref{lem:orbit-coordinate-gradients}.
 \begin{definition}[Local Euclidean disk and axis notation]
 \label{def:local-plane-geometry}
 \uses{def:lift-operators}
-\lean{NoEmbeddedEigenvalues.localRadius, NoEmbeddedEigenvalues.localDisk,
- NoEmbeddedEigenvalues.axisCoord, NoEmbeddedEigenvalues.axisReflect,
- NoEmbeddedEigenvalues.axisRectangle, NoEmbeddedEigenvalues.classicalRealJet}
+\lean{EulerDipoleEigenvalues.localRadius, EulerDipoleEigenvalues.localDisk,
+ EulerDipoleEigenvalues.axisCoord, EulerDipoleEigenvalues.axisReflect,
+ EulerDipoleEigenvalues.axisRectangle, EulerDipoleEigenvalues.classicalRealJet}
 \leanok
 Write $r_c(p)=\sqrt{(p_x-c_x)^2+(p_y-c_y)^2}$ and
 $D_\rho(c)=\{r_c<\rho\}$. The axis reflection negates the selected
@@ -2089,14 +2089,14 @@ classical-calculus definitions, independent of Sobolev spaces.
 \begin{lemma}[Saddle lattice distance and Euclidean radius]
 \label{lem:saddle-distance-comparison}
 \uses{def:cell-arcs, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.pi_le_dist_saddles,
- NoEmbeddedEigenvalues.isClosed_saddleSet,
- NoEmbeddedEigenvalues.saddleDist_eq_zero_iff,
- NoEmbeddedEigenvalues.ae_saddleDist_ne_zero,
- NoEmbeddedEigenvalues.saddleDist_eq_dist,
- NoEmbeddedEigenvalues.dist_le_localRadius,
- NoEmbeddedEigenvalues.localRadius_le_two_dist,
- NoEmbeddedEigenvalues.localRadius_le_two_saddleDist}
+\lean{EulerDipoleEigenvalues.pi_le_dist_saddles,
+ EulerDipoleEigenvalues.isClosed_saddleSet,
+ EulerDipoleEigenvalues.saddleDist_eq_zero_iff,
+ EulerDipoleEigenvalues.ae_saddleDist_ne_zero,
+ EulerDipoleEigenvalues.saddleDist_eq_dist,
+ EulerDipoleEigenvalues.dist_le_localRadius,
+ EulerDipoleEigenvalues.localRadius_le_two_dist,
+ EulerDipoleEigenvalues.localRadius_le_two_saddleDist}
 \leanok
 The lifted saddle set is closed, and two distinct saddles are at product-metric
 distance at least $\pi$. Its distance vanishes exactly at the saddles, and
@@ -2124,7 +2124,7 @@ the $\pi/2$ ball no other saddle is closer than $c$.
 \begin{lemma}[Compact uniformity of pointwise saddle growth]
 \label{lem:saddle-growth-compact-bound}
 \uses{def:local-plane-geometry, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.saddle_growth_bound_on_compact}
+\lean{EulerDipoleEigenvalues.saddle_growth_bound_on_compact}
 \leanok
 Let $F$ be continuous on the plane and $s\ge0$. Suppose that at each lifted
 saddle $P$ there are $\rho_P,C_P>0$ with
@@ -2147,8 +2147,8 @@ The ratio need not be continuous at a saddle; local boundedness suffices.
 \begin{definition}[Normalized orthonormal saddle chart]
 \label{def:saddle-ortho-chart}
 \uses{def:cells, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.saddleOrthoChart, NoEmbeddedEigenvalues.saddleOrthoCoord,
- NoEmbeddedEigenvalues.saddleFactor}
+\lean{EulerDipoleEigenvalues.saddleOrthoChart, EulerDipoleEigenvalues.saddleOrthoCoord,
+ EulerDipoleEigenvalues.saddleFactor}
 \leanok
 For a saddle $P$, set $s=\cos P_x$ and
 \[
@@ -2163,7 +2163,7 @@ The sinc factors use their value $1$ at zero.
 \begin{lemma}[Orthonormal saddle-chart identities]
 \label{lem:saddle-chart-orthogonal}
 \uses{def:saddle-ortho-chart, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.saddleOrthoChart_orthogonal}
+\lean{EulerDipoleEigenvalues.saddleOrthoChart_orthogonal}
 \leanok
 At every lifted saddle $P$, the displayed chart and coordinate map are
 mutual inverses and $r_P(\Xi_P(q))=r_0(q)$ for every $q$.
@@ -2180,7 +2180,7 @@ same identity. No assertion about equality with the product metric is made.
 \begin{lemma}[Exact saddle dipole factorization]
 \label{lem:saddle-dipole-factorization}
 \uses{def:saddle-ortho-chart, def:dipole}
-\lean{NoEmbeddedEigenvalues.saddle_dipole_factorization}
+\lean{EulerDipoleEigenvalues.saddle_dipole_factorization}
 \leanok
 For every lifted saddle $P$ and every $q=(u,v)$,
 $\Psi(\Xi_P(q))=uv\,m(q)$.
@@ -2199,7 +2199,7 @@ Use $t\,\operatorname{sinc}(t)=\sin t$, including $t=0$.
 \begin{lemma}[Regularity and positivity of the saddle factor]
 \label{lem:saddle-factor-regular}
 \uses{def:saddle-ortho-chart, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.saddleFactor_regular}
+\lean{EulerDipoleEigenvalues.saddleFactor_regular}
 \leanok
 The factor $m$ is smooth, even in each coordinate, equals one at zero,
 and is positive on a sufficiently small Euclidean disk.
@@ -2218,11 +2218,11 @@ coordinate, and continuity at zero gives a positive neighbourhood.
 \begin{lemma}[Saddle normal form]
 \label{lem:saddle-normal-form}
 \uses{def:saddle-ortho-chart, def:local-plane-geometry, def:cells, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.saddleFactor_regular,
- NoEmbeddedEigenvalues.saddleOrthoChart_orthogonal,
- NoEmbeddedEigenvalues.saddle_dipole_factorization,
- NoEmbeddedEigenvalues.saddleOrthoChart_mem_separatrix_iff,
- NoEmbeddedEigenvalues.saddle_normal_form_derivatives}
+\lean{EulerDipoleEigenvalues.saddleFactor_regular,
+ EulerDipoleEigenvalues.saddleOrthoChart_orthogonal,
+ EulerDipoleEigenvalues.saddle_dipole_factorization,
+ EulerDipoleEigenvalues.saddleOrthoChart_mem_separatrix_iff,
+ EulerDipoleEigenvalues.saddle_normal_form_derivatives}
 \leanok
 The chart and inverse-coordinate formulas are mutually inverse and
 $r_P(\Xi_P(q))=r_0(q)$. Near each saddle its coordinate axes are exactly
@@ -2248,7 +2248,7 @@ smaller disk if needed.
 \begin{lemma}[Compatibility of the normalized saddle quadratic]
 \label{lem:saddle-quadratic-chart}
 \uses{def:saddle-ortho-chart, def:saddle-quadratic}
-\lean{NoEmbeddedEigenvalues.saddleQuadratic_comp_chart}
+\lean{EulerDipoleEigenvalues.saddleQuadratic_comp_chart}
 \leanok
 For a lifted saddle $P$, $Q_{P,a}(\Xi_P(u,v))=a\,uv$.
 The Cartesian and orthonormal versions therefore use the same coefficient.
@@ -2271,7 +2271,7 @@ there is no extra sign or factor of two in the coefficient $a$.
 \begin{lemma}[Differentiated saddle Taylor estimates]
 \label{lem:saddle-normal-form-derivatives}
 \uses{def:saddle-ortho-chart, def:local-plane-geometry}
-\lean{NoEmbeddedEigenvalues.saddle_normal_form_derivatives}
+\lean{EulerDipoleEigenvalues.saddle_normal_form_derivatives}
 \leanok
 For each saddle there are $\rho,C>0$ such that on $D_\rho(0)$, for all
 ordered coordinate derivatives of orders $0\le k\le3$,
@@ -2299,7 +2299,7 @@ the differences of squares gives the fourth-order gradient bound.
 \begin{lemma}[Harmonicity of the normalized quadratic]
 \label{lem:saddle-quadratic-harmonic}
 \uses{def:saddle-quadratic}
-\lean{NoEmbeddedEigenvalues.saddleQuadratic_harmonic}
+\lean{EulerDipoleEigenvalues.saddleQuadratic_harmonic}
 \leanok
 For every center $P\in\R^2$ and coefficient $a\in\C$,
 $\Delta Q_{P,a}=0$.
@@ -2313,10 +2313,10 @@ The two pure second derivatives are $-a\cos P_x$ and $a\cos P_x$.
 \begin{lemma}[Classical first jet of the saddle quadratic]
 \label{lem:saddle-quadratic-first-jet}
 \uses{def:saddle-quadratic, def:local-weak-jets}
-\lean{NoEmbeddedEigenvalues.first_saddleQuadratic,
- NoEmbeddedEigenvalues.norm_first_saddleQuadratic_le,
- NoEmbeddedEigenvalues.continuous_saddleQuadratic,
- NoEmbeddedEigenvalues.continuous_first_saddleQuadratic}
+\lean{EulerDipoleEigenvalues.first_saddleQuadratic,
+ EulerDipoleEigenvalues.norm_first_saddleQuadratic_le,
+ EulerDipoleEigenvalues.continuous_saddleQuadratic,
+ EulerDipoleEigenvalues.continuous_first_saddleQuadratic}
 \leanok
 For every center $c$ and coefficient $a$, the quadratic $Q_{c,a}$ and its
 classical first entries are continuous. These entries are
@@ -2334,7 +2334,7 @@ Each coordinate displacement is at most its Euclidean radius.
 \label{lem:saddle-taylor-correction}
 \uses{def:saddle-quadratic, def:cell-arcs, def:dipole,
  def:local-weak-jets, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.saddle_taylor_correction}
+\lean{EulerDipoleEigenvalues.saddle_taylor_correction}
 \leanok
 For each saddle $P$ and $a\in\C$, the smooth function
 $T=Q_{P,a}-a\Psi$ has a specified third weak jet on some disk about $P$,
@@ -2360,9 +2360,9 @@ weak jet and weighted norms through order three.
 \begin{lemma}[Odd--odd parity in saddle coordinates]
 \label{lem:saddle-chart-parity}
 \uses{def:saddle-ortho-chart, def:sectors, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.saddle_chart_parity,
- NoEmbeddedEigenvalues.torusProj_saddleChart_axisReflect,
- NoEmbeddedEigenvalues.measurePreserving_axisReflect}
+\lean{EulerDipoleEigenvalues.saddle_chart_parity,
+ EulerDipoleEigenvalues.torusProj_saddleChart_axisReflect,
+ EulerDipoleEigenvalues.measurePreserving_axisReflect}
 \leanok
 If $f$ is odd under both torus separatrix reflections, then
 $\widetilde f\circ\Xi_P$ is odd in both coordinate axes a.e.
@@ -2380,8 +2380,8 @@ the invertible affine chart.
 \begin{corollary}[Linearized saddle Hamiltonian]
 \label{cor:saddle-linearization}
 \uses{def:dipole-flow, def:saddle-ortho-chart}
-\lean{NoEmbeddedEigenvalues.saddleLinearVelocity, NoEmbeddedEigenvalues.saddleLinearHamiltonian,
-  NoEmbeddedEigenvalues.saddle_linearization}
+\lean{EulerDipoleEigenvalues.saddleLinearVelocity, EulerDipoleEigenvalues.saddleLinearHamiltonian,
+  EulerDipoleEigenvalues.saddle_linearization}
 \leanok
 For a lifted saddle $P$, write $s=\cos P_x$. The linearized velocity in
 the normalized chart is $(-su,sv)$; the Hamiltonian $H_s=-iL_s$ acts

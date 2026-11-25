@@ -11,7 +11,7 @@ lies.
 \begin{definition}[Adapted vector field]
 \label{def:adapted-field}
 \uses{def:dipole, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.IsAdaptedOn}
+\lean{EulerDipoleEigenvalues.IsAdaptedOn}
 \leanok
 Let $Y=\nabla^\perp\Psi=(\sin y,-\sin x)$, so that $L_0=Y\cdot\nabla$. A real
 vector field $W=(W_1,W_2)$ on a subset $U$ of $\T^2$ (or of its lift $\R^2$) is
@@ -27,9 +27,9 @@ $C^2$ functions (Lemma~\ref{lem:commutator-pointwise}).
 \begin{definition}[Half-density generator]
 \label{def:half-density-generator}
 \uses{def:adapted-field, def:lift-operators}
-\lean{NoEmbeddedEigenvalues.fieldDeriv,
-  NoEmbeddedEigenvalues.divergence,
-  NoEmbeddedEigenvalues.halfDensityGen}
+\lean{EulerDipoleEigenvalues.fieldDeriv,
+  EulerDipoleEigenvalues.divergence,
+  EulerDipoleEigenvalues.halfDensityGen}
 \leanok
 For a $C^1$ vector field $W$ on $\T^2$ (or on its lift), its
 \emph{half-density generator} is $D=W\cdot\nabla+\tfrac12\Div W$, where
@@ -40,9 +40,9 @@ $\Div W=\partial_xW_1+\partial_yW_2$.
 \begin{lemma}[Pointwise commutator identities]
 \label{lem:commutator-pointwise}
 \uses{def:adapted-field, def:half-density-generator}
-\lean{NoEmbeddedEigenvalues.IsAdaptedOn.classicalL0_fieldDeriv,
-  NoEmbeddedEigenvalues.IsAdaptedOn.classicalL0_divergence,
-  NoEmbeddedEigenvalues.IsAdaptedOn.classicalL0_halfDensityGen}
+\lean{EulerDipoleEigenvalues.IsAdaptedOn.classicalL0_fieldDeriv,
+  EulerDipoleEigenvalues.IsAdaptedOn.classicalL0_divergence,
+  EulerDipoleEigenvalues.IsAdaptedOn.classicalL0_halfDensityGen}
 \leanok
 Let $U$ be open, $W$ of class $C^2$ and adapted on $U$ with a differentiable
 coefficient $f$, and $d=\Div W$. Then on $U$, for every $C^2$ function $u$,
@@ -70,10 +70,10 @@ For (3), $[L_0,D]u=[L_0,W\cdot\nabla]u+\tfrac12(L_0d)u=fL_0u+\tfrac12(L_0f)u
 \begin{lemma}[Skew-symmetry]
 \label{lem:commutator-algebra}
 \uses{def:half-density-generator, def:square-integral}
-\lean{NoEmbeddedEigenvalues.squarePairing_halfDensityGen,
-  NoEmbeddedEigenvalues.halfDensityGen_mul_conj_add,
-  NoEmbeddedEigenvalues.squarePairing_classicalL0,
-  NoEmbeddedEigenvalues.halfDensityGen_velocity}
+\lean{EulerDipoleEigenvalues.squarePairing_halfDensityGen,
+  EulerDipoleEigenvalues.halfDensityGen_mul_conj_add,
+  EulerDipoleEigenvalues.squarePairing_classicalL0,
+  EulerDipoleEigenvalues.halfDensityGen_velocity}
 \leanok
 Let $W$ be a periodic $C^1$ vector field. For periodic $C^1$ functions $u,v$,
 \begin{enumerate}
@@ -100,7 +100,7 @@ $[H,D]=\tfrac12(fH+Hf)$, the form used in the manuscript.
 \begin{lemma}[Virial identity, smooth case]
 \label{lem:virial-smooth}
 \uses{def:adapted-field, def:half-density-generator, def:eigen-problem, def:square-integral}
-\lean{NoEmbeddedEigenvalues.virial_smooth}
+\lean{EulerDipoleEigenvalues.virial_smooth}
 \leanok
 Let $W$ be a periodic $C^2$ vector field, adapted on $\R^2$ with a periodic $C^1$
 coefficient $f$. Let $\omega,\psi$ be periodic $C^2$ functions with
@@ -129,15 +129,15 @@ $\operatorname{Re}\ip{D\omega}{\omega}=0$. Divide by $\lambda$.
 \begin{lemma}[Virial identity, smooth case, quadratic form]
 \label{lem:virial-smooth-quadratic}
 \uses{lem:virial-smooth}
-\lean{NoEmbeddedEigenvalues.virial_smooth_quadratic,
-  NoEmbeddedEigenvalues.squarePairing_partialX,
-  NoEmbeddedEigenvalues.squarePairing_partialY,
-  NoEmbeddedEigenvalues.re_squarePairing_smul_partialX,
-  NoEmbeddedEigenvalues.re_squarePairing_smul_partialY,
-  NoEmbeddedEigenvalues.re_squarePairing_smul_laplacian,
-  NoEmbeddedEigenvalues.partialX_halfDensityGen,
-  NoEmbeddedEigenvalues.partialY_halfDensityGen,
-  NoEmbeddedEigenvalues.re_squarePairing_halfDensityGen_self}
+\lean{EulerDipoleEigenvalues.virial_smooth_quadratic,
+  EulerDipoleEigenvalues.squarePairing_partialX,
+  EulerDipoleEigenvalues.squarePairing_partialY,
+  EulerDipoleEigenvalues.re_squarePairing_smul_partialX,
+  EulerDipoleEigenvalues.re_squarePairing_smul_partialY,
+  EulerDipoleEigenvalues.re_squarePairing_smul_laplacian,
+  EulerDipoleEigenvalues.partialX_halfDensityGen,
+  EulerDipoleEigenvalues.partialY_halfDensityGen,
+  EulerDipoleEigenvalues.re_squarePairing_halfDensityGen_self}
 \leanok
 In the setting of Lemma~\ref{lem:virial-smooth}, assume moreover $\Delta\psi=\omega$,
 with $\psi\in C^4$, $W\in C^3$ and $f\in C^2$. Then
@@ -179,8 +179,8 @@ cut out in Lemma~\ref{lem:ee-truncated-virial}).
 \label{lem:half-density-skew-h1}
 \uses{def:half-density-generator, def:sobolev-torus, def:fourier-derivatives,
   def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.inner_halfDensityGenL2,
-  NoEmbeddedEigenvalues.squarePairing_halfDensityGen_h1}
+\lean{EulerDipoleEigenvalues.inner_halfDensityGenL2,
+  EulerDipoleEigenvalues.squarePairing_halfDensityGen_h1}
 \leanok
 Let $W\in C^2$ be periodic. For $u,v\in H^1(\T^2)$, $\ip{Du}{v}=-\ip{u}{Dv}$, where
 $D=W\cdot\nabla+\tfrac12\Div W$ uses the $L^2$ Fourier partial derivatives of $u$ and
@@ -204,7 +204,7 @@ needed, and $W\in C^1$ would suffice.
 \label{lem:virial-h1}
 \uses{def:adapted-field, def:half-density-generator, def:sobolev-torus,
   def:fourier-derivatives, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.virial_h1, NoEmbeddedEigenvalues.virial_h1_torus}
+\lean{EulerDipoleEigenvalues.virial_h1, EulerDipoleEigenvalues.virial_h1_torus}
 \leanok
 Let $W\in C^2$ be periodic and adapted with periodic coefficient $f\in C^1$. For every
 $u\in H^1(\T^2)$, $2\operatorname{Re}\ip{Du}{Hu}=\operatorname{Re}\ip{fHu}{u}$.
@@ -261,7 +261,7 @@ Lagrangian), so the identity is continuous on $H^1$ term by term.
 \begin{lemma}[Integration by parts for the stream function]
 \label{lem:stream-ibp}
 \uses{def:stream-lifts, def:square-integral, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.stream_ibp}
+\lean{EulerDipoleEigenvalues.stream_ibp}
 \leanok
 Let $\omega\in X$, $\psi=\Delta^{-1}\omega$ and $K=|\nabla\psi|^2+\operatorname{Re}(\omega\bar\psi)$. For
 every smooth periodic real $\phi$,
@@ -295,7 +295,7 @@ $\psi\in H^2$ or on the smooth $\phi$.
 \begin{lemma}[The two forms of the virial identity on $X$]
 \label{lem:virial-forms}
 \uses{def:half-density-generator, def:stream-lifts, def:square-integral, def:sobolev-torus}
-\lean{NoEmbeddedEigenvalues.re_virialForm_eq_quadratic}
+\lean{EulerDipoleEigenvalues.re_virialForm_eq_quadratic}
 \leanok
 Let $W\in C^3$ and $f\in C^2$ be real and periodic, $\omega\in X$ and
 $\psi=\Delta^{-1}\omega$. Then
@@ -324,7 +324,7 @@ Lemma~\ref{lem:half-density-skew-h1}. No approximation of $\psi$ is needed.
 \begin{definition}[The transversal mollifier]
 \label{def:transversal-mollifier}
 \uses{def:action-angle, def:line-mollifier}
-\lean{NoEmbeddedEigenvalues.cellCutoff, NoEmbeddedEigenvalues.transversalMollifier}
+\lean{EulerDipoleEigenvalues.cellCutoff, EulerDipoleEigenvalues.transversalMollifier}
 \leanok
 Let $\chi$ be a smooth function on $\R$ with support in $(0,1)$. The cell cutoff is
 $\hat\chi=\chi(\Psi/2)$ on the cell and $0$ elsewhere. For a function $u$ on the cell let
@@ -337,7 +337,7 @@ elsewhere, with $M_\epsilon$ the mollification in $h$ at fixed $\theta$
 \begin{lemma}[Support of the transversal mollifier]
 \label{lem:transversal-mollifier-support}
 \uses{def:transversal-mollifier}
-\lean{NoEmbeddedEigenvalues.transversalMollifier_eq_zero}
+\lean{EulerDipoleEigenvalues.transversalMollifier_eq_zero}
 \leanok
 Assume only that the closed support of $\chi:\R\to\R$ lies in $(0,1)$.
 There are a compact $K$ in the punctured cell and $\epsilon_0>0$ such that
@@ -367,7 +367,7 @@ or analytic orbit-coordinate input.
 \begin{lemma}[Representative invariance of the transversal mollifier]
 \label{lem:transversal-mollifier-congr}
 \uses{def:transversal-mollifier}
-\lean{NoEmbeddedEigenvalues.transversalMollifier_congr_ae}
+\lean{EulerDipoleEigenvalues.transversalMollifier_congr_ae}
 \leanok
 Assume only that the closed support of $\chi:\R\to\R$ lies in $(0,1)$.
 If $u=v$ almost everywhere on the cell, then $J_\epsilon u=J_\epsilon v$
@@ -420,8 +420,8 @@ additivity statement is proved in Lemma~\ref{lem:transversal-mollifier-linear}.
 \begin{lemma}[Additivity and scalar multiplication]
 \label{lem:transversal-mollifier-linear}
 \uses{def:transversal-mollifier}
-\lean{NoEmbeddedEigenvalues.transversalMollifier_const_mul,
-  NoEmbeddedEigenvalues.transversalMollifier_add}
+\lean{EulerDipoleEigenvalues.transversalMollifier_const_mul,
+  EulerDipoleEigenvalues.transversalMollifier_add}
 \leanok
 Let $\chi$ be smooth with closed support in $(0,1)$ and $\epsilon>0$.
 For $u,v\in L^2(\Cell)$ and $c\in\C$,
@@ -459,8 +459,8 @@ three outputs vanish.
 \begin{lemma}[The transversal mollifier on $L^2$]
 \label{lem:transversal-mollifier}
 \uses{def:transversal-mollifier}
-\lean{NoEmbeddedEigenvalues.memLp_transversalMollifier,
-  NoEmbeddedEigenvalues.tendsto_transversalMollifier}
+\lean{EulerDipoleEigenvalues.memLp_transversalMollifier,
+  EulerDipoleEigenvalues.tendsto_transversalMollifier}
 \leanok
 $J_\epsilon$ is linear, up to null sets, and $J_\epsilon u$ depends only on $u$ almost everywhere on the
 cell. There are a compact $K$ in the punctured cell, $\epsilon_0>0$ and $C$ such that for
@@ -513,8 +513,8 @@ on $[-\frac14,\frac34)$. No weak-derivative statement is used.
 \begin{lemma}[Derivatives of the transversal mollifier]
 \label{lem:transversal-mollifier-derivatives}
 \uses{def:transversal-mollifier, def:transport-pair, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.tendsto_transversalMollifier_partial,
-  NoEmbeddedEigenvalues.transversalMollifier_hasWeakPartialOn}
+\lean{EulerDipoleEigenvalues.tendsto_transversalMollifier_partial,
+  EulerDipoleEigenvalues.transversalMollifier_hasWeakPartialOn}
 \leanok
 \begin{enumerate}
   \item If $u\in H^1(\Cell)$, then $J_\epsilon u\in H^1(\R^2)$ for small $\epsilon$ and
@@ -565,7 +565,7 @@ commutator, so only the chain rule from the strip to the cell
 \begin{lemma}[The commutator with the transport operator]
 \label{lem:transversal-mollifier-commutator}
 \uses{def:transversal-mollifier, def:transport-pair}
-\lean{NoEmbeddedEigenvalues.transversalMollifier_hasWeakL0On}
+\lean{EulerDipoleEigenvalues.transversalMollifier_hasWeakL0On}
 \leanok
 There are $\epsilon_0>0$ and $C$ such that for $0<\epsilon<\epsilon_0$ and $u,k\in L^2(\Cell)$ with
 $L_0u=k$ weakly on the cell, $L_0J_\epsilon u$ exists weakly on $\R^2$, lies in $L^2$, and
@@ -622,7 +622,7 @@ $\theta$.
 \begin{definition}[Periodization through the box]
 \label{def:box-periodization}
 \uses{def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.periodBox, NoEmbeddedEigenvalues.boxPeriodize}
+\lean{EulerDipoleEigenvalues.periodBox, EulerDipoleEigenvalues.boxPeriodize}
 \leanok
 Let $B=(-\pi,\pi]^2$, a fundamental domain of $\T^2$ containing the cell square. For
 $F:\R^2\to\C$ with $F\in L^2(B)$, the \emph{box periodization} $PF\in L^2(\T^2)$ is the
@@ -632,9 +632,9 @@ function whose lift equals $F$ on $B$.
 \begin{lemma}[Box periodization]
 \label{lem:box-periodization}
 \uses{def:box-periodization, def:sobolev-local, def:fourier-derivatives}
-\lean{NoEmbeddedEigenvalues.norm_boxPeriodize_le, NoEmbeddedEigenvalues.boxPeriodize_add,
-  NoEmbeddedEigenvalues.boxPeriodize_const_mul, NoEmbeddedEigenvalues.boxPeriodize_mul,
-  NoEmbeddedEigenvalues.boxPeriodize_liftL2, NoEmbeddedEigenvalues.hasFourierPartial_boxPeriodize}
+\lean{EulerDipoleEigenvalues.norm_boxPeriodize_le, EulerDipoleEigenvalues.boxPeriodize_add,
+  EulerDipoleEigenvalues.boxPeriodize_const_mul, EulerDipoleEigenvalues.boxPeriodize_mul,
+  EulerDipoleEigenvalues.boxPeriodize_liftL2, EulerDipoleEigenvalues.hasFourierPartial_boxPeriodize}
 \leanok
 $P$ is linear, $\|PF\|\le\|F\|_{L^2(\R^2)}$, $P(gF)=g\,PF$ for continuous periodic $g$, and
 $P$ maps the lift of $u\in L^2(\T^2)$ to $u$. If $F,\partial_jF\in L^2(\R^2)$, with
@@ -659,7 +659,7 @@ characters avoids any density argument.
 \begin{lemma}[Virial identity on the original domain]
 \label{lem:virial-l2}
 \uses{def:adapted-field, def:eigen-problem, def:half-density-generator, def:square-integral, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.virial_l2, NoEmbeddedEigenvalues.virial_l2_first}
+\lean{EulerDipoleEigenvalues.virial_l2, EulerDipoleEigenvalues.virial_l2_first}
 \leanok
 Let $0<h_1\le h_2<1$ and let $W$ be a periodic $C^3$ vector field, adapted with periodic
 coefficient $f\in C^2$, with $W$ and $f$ supported in $\{2h_1\le\Psi\le2h_2\}$ (a compact

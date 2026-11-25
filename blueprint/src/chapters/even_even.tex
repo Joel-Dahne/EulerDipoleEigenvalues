@@ -48,10 +48,10 @@ integrability is used, not integrability up to the saddles.
 \begin{definition}[Normal field]
 \label{def:normal-field}
 \uses{def:cells, lem:dipole-critical-points, lem:dipole-identities}
-\lean{NoEmbeddedEigenvalues.normalField₁,
-  NoEmbeddedEigenvalues.normalField₂,
-  NoEmbeddedEigenvalues.normalCoeff,
-  NoEmbeddedEigenvalues.normalC}
+\lean{EulerDipoleEigenvalues.normalField₁,
+  EulerDipoleEigenvalues.normalField₂,
+  EulerDipoleEigenvalues.normalCoeff,
+  EulerDipoleEigenvalues.normalC}
 \leanok
 On $\Cell$ minus its center, with $\rho^2=|\nabla\Psi|^2$ and
 $\delta=\cos x-\cos y$, let (manuscript \texttt{(ee:normal-field)})
@@ -65,14 +65,14 @@ $\delta=\cos x-\cos y$, let (manuscript \texttt{(ee:normal-field)})
 \begin{lemma}[Normal field algebra]
 \label{lem:normal-field-algebra}
 \uses{def:normal-field, def:adapted-field}
-\lean{NoEmbeddedEigenvalues.isAdaptedOn_normalField,
-  NoEmbeddedEigenvalues.div_normalField,
-  NoEmbeddedEigenvalues.normalJacForm,
-  NoEmbeddedEigenvalues.normalJacForm_normal,
-  NoEmbeddedEigenvalues.normalJacForm_tangent,
-  NoEmbeddedEigenvalues.normalJacForm_mixed,
-  NoEmbeddedEigenvalues.gradSq_dipoleLift_pos,
-  NoEmbeddedEigenvalues.normalC_pos_le_one}
+\lean{EulerDipoleEigenvalues.isAdaptedOn_normalField,
+  EulerDipoleEigenvalues.div_normalField,
+  EulerDipoleEigenvalues.normalJacForm,
+  EulerDipoleEigenvalues.normalJacForm_normal,
+  EulerDipoleEigenvalues.normalJacForm_tangent,
+  EulerDipoleEigenvalues.normalJacForm_mixed,
+  EulerDipoleEigenvalues.gradSq_dipoleLift_pos,
+  EulerDipoleEigenvalues.normalC_pos_le_one}
 \leanok
 $W$ is adapted with coefficient $f$, $\Div W=f+1$, and in the orthonormal
 normal--tangent frame $(\nabla\Psi/\rho,\nabla^\perp\Psi/\rho)$,
@@ -118,7 +118,7 @@ Lemma~\ref{lem:ee-center-limit}. No higher regularity at the center is used.
 \begin{lemma}[The normal field cut off to an annulus]
 \label{lem:normal-field-annulus}
 \uses{def:normal-field, def:adapted-field}
-\lean{NoEmbeddedEigenvalues.annularCutoff_normalField}
+\lean{EulerDipoleEigenvalues.annularCutoff_normalField}
 \leanok
 Let $0<\epsilon_1\le\epsilon_2<2$ and let $\chi$ be smooth and zero outside
 $[\epsilon_1,\epsilon_2]$. Then $\chi(\Psi)W$ and $\chi(\Psi)f$ are smooth and periodic on the
@@ -137,7 +137,7 @@ $\chi(\Psi)$ multiplies its coefficient by $\chi(\Psi)$.
 \begin{lemma}[Cutoff algebra]
 \label{lem:normal-field-cutoff-algebra}
 \uses{def:normal-field, def:adapted-field, def:half-density-generator}
-\lean{NoEmbeddedEigenvalues.cutoff_normalField_algebra}
+\lean{EulerDipoleEigenvalues.cutoff_normalField_algebra}
 \leanok
 In the setting of Lemma~\ref{lem:normal-field-annulus}, with $W_\chi=\chi(\Psi)W$ and
 $f_\chi=\chi(\Psi)f$: $f_\chi-\Div W_\chi=-\chi(\Psi)-(\Psi-2)\chi'(\Psi)$, and for
@@ -160,10 +160,10 @@ numerically at random points for a non-polynomial $\chi$ (October 2026).
 \begin{lemma}[Positivity of the bulk density]
 \label{lem:ee-density}
 \uses{lem:normal-field-algebra}
-\lean{NoEmbeddedEigenvalues.eeDensity,
-  NoEmbeddedEigenvalues.normalCoeff_nonneg,
-  NoEmbeddedEigenvalues.eeDensity_nonneg,
-  NoEmbeddedEigenvalues.eeDensity_gradient_pos}
+\lean{EulerDipoleEigenvalues.eeDensity,
+  EulerDipoleEigenvalues.normalCoeff_nonneg,
+  EulerDipoleEigenvalues.eeDensity_nonneg,
+  EulerDipoleEigenvalues.eeDensity_gradient_pos}
 \leanok
 The density $\mathcal J=f|\omega|^2+(2-c)|\psi_n|^2+c|\psi_t|^2$ is
 nonnegative on $\Cell$ minus its center, and its gradient part is strictly positive at every
@@ -180,7 +180,7 @@ $f\ge0$ and $0<c\le1$.
 \begin{lemma}[A bound for the vorticity coefficient]
 \label{lem:normal-coeff-bound}
 \uses{def:normal-field}
-\lean{NoEmbeddedEigenvalues.normalCoeff_le}
+\lean{EulerDipoleEigenvalues.normalCoeff_le}
 \leanok
 On $\Cell$ minus its center, $f\le(2-\Psi)/\Psi$. In particular $f$ is bounded on
 $\{\Psi\ge\epsilon\}$ for every $\epsilon>0$, and $f\to0$ at the center.
@@ -198,7 +198,7 @@ $(\rho^2+\Psi^2)^2\ge4\Psi^2$, which is $\rho^2\ge\Psi(2-\Psi)$
 \begin{definition}[Bulk density on an $L^2$ vorticity]
 \label{def:ee-bulk-density}
 \uses{lem:ee-density, def:stream-lifts, def:normal-tangent}
-\lean{NoEmbeddedEigenvalues.eeBulkDensity}
+\lean{EulerDipoleEigenvalues.eeBulkDensity}
 \leanok
 For $\omega\in L^2(\T^2)$, write
 $\mathcal J_\omega(p)=\mathcal J(p,\omega(p),\psi_n(p),\psi_t(p))$
@@ -208,7 +208,7 @@ on the lift, using the representatives of Definition~\ref{def:stream-lifts}.
 \begin{definition}[Level terms]
 \label{def:ee-level-term}
 \uses{def:level-integral, def:normal-tangent, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.eeLevelTerm}
+\lean{EulerDipoleEigenvalues.eeLevelTerm}
 \leanok
 For $\omega\in L^2$ and $0<h<1$, with $\psi_n$ along $n=-\nabla\Psi/\rho$,
 \[
@@ -221,9 +221,9 @@ For $\omega\in L^2$ and $0<h<1$, with $\psi_n$ along $n=-\nabla\Psi/\rho$,
 \begin{lemma}[Integrability of the bulk density]
 \label{lem:ee-bulk-integrable}
 \uses{def:ee-bulk-density}
-\lean{NoEmbeddedEigenvalues.integrableOn_eeBulkDensity,
-  NoEmbeddedEigenvalues.norm_normalDeriv_le,
-  NoEmbeddedEigenvalues.norm_tangentDeriv_le}
+\lean{EulerDipoleEigenvalues.integrableOn_eeBulkDensity,
+  EulerDipoleEigenvalues.norm_normalDeriv_le,
+  EulerDipoleEigenvalues.norm_tangentDeriv_le}
 \leanok
 For $\omega\in L^2$ and $h>0$, $\mathcal J_\omega$ is integrable on $\{p\in\Cell:\Psi>2h\}$.
 Pointwise, $|\psi_n|,|\psi_t|\le|\psi_x|+|\psi_y|$.
@@ -241,7 +241,7 @@ by Lemma~\ref{lem:lift-representatives}, since $\omega,\psi_x,\psi_y\in L^2(\T^2
 \begin{definition}[Boundary density]
 \label{def:ee-boundary-density}
 \uses{def:stream-lifts, def:normal-tangent}
-\lean{NoEmbeddedEigenvalues.eeBoundaryDensity}
+\lean{EulerDipoleEigenvalues.eeBoundaryDensity}
 \leanok
 For $\omega\in L^2$, on the lift,
 $E_\omega=\rho\operatorname{Re}(\psi\overline{\psi_n})+(2-\Psi)\bigl(|\psi_n|^2-|\psi_t|^2
@@ -251,8 +251,8 @@ $E_\omega=\rho\operatorname{Re}(\psi\overline{\psi_n})+(2-\Psi)\bigl(|\psi_n|^2-
 \begin{lemma}[The boundary density]
 \label{lem:ee-boundary-integrable}
 \uses{def:ee-boundary-density, def:ee-level-term}
-\lean{NoEmbeddedEigenvalues.integrableOn_eeBoundaryDensity,
-  NoEmbeddedEigenvalues.ae_levelIntegral_eeBoundaryDensity}
+\lean{EulerDipoleEigenvalues.integrableOn_eeBoundaryDensity,
+  EulerDipoleEigenvalues.ae_levelIntegral_eeBoundaryDensity}
 \leanok
 For $\omega\in L^2$, $E_\omega$ is integrable on the cell, and
 $\oint_{\{\Psi=2h\}}E_\omega\,dt=G_\omega(h)$ for almost every $h\in(0,1)$.
@@ -274,7 +274,7 @@ integral splits (Lemma~\ref{lem:level-integral-congr} for the period interval).
 \begin{lemma}[The cutoff identity]
 \label{lem:ee-cutoff-identity}
 \uses{def:ee-bulk-density, def:ee-boundary-density, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.ee_cutoff_identity}
+\lean{EulerDipoleEigenvalues.ee_cutoff_identity}
 \leanok
 Let $\lambda\ne0$ and let $\chi$ be smooth and vanish outside a compact subinterval of
 $(0,2)$. Then $\int_\Cell\chi(\Psi)\mathcal J_\omega=\int_\Cell\chi'(\Psi)E_\omega$.
@@ -313,7 +313,7 @@ Lemmas~\ref{lem:ee-bulk-integrable} and~\ref{lem:ee-boundary-integrable}.
 \begin{lemma}[Virial identity on an annulus]
 \label{lem:ee-annular-virial}
 \uses{def:ee-bulk-density, def:ee-level-term, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.ee_annular_virial}
+\lean{EulerDipoleEigenvalues.ee_annular_virial}
 \leanok
 Let $\lambda\ne0$. There is a null set $N$ such that for all $0<h<h'<1$ outside $N$,
 \[
@@ -339,7 +339,7 @@ $\varphi=\mathbf 1_{(h,h')}$. Finally $\tilde G=G_\omega$ almost everywhere.
 \begin{lemma}[The level terms at the center]
 \label{lem:ee-center-limit}
 \uses{def:ee-level-term}
-\lean{NoEmbeddedEigenvalues.ee_center_limit}
+\lean{EulerDipoleEigenvalues.ee_center_limit}
 \leanok
 For $\omega\in L^2$ and every null set $N$ there are $h_j\in(0,1)\setminus N$ with $h_j\to1$
 and $G_\omega(h_j)\to0$.
@@ -374,7 +374,7 @@ Both bounds tend to $0$ along $h_j$.
 \begin{lemma}[Truncated virial identity]
 \label{lem:ee-truncated-virial}
 \uses{def:ee-bulk-density, def:eigen-problem, def:level-integral, def:normal-tangent, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.ee_truncated_virial}
+\lean{EulerDipoleEigenvalues.ee_truncated_virial}
 \leanok
 Let $\lambda\ne0$. For almost every $h\in(0,1)$, put $\epsilon=2h$. The density $\mathcal J_\omega$ is
 integrable on $\{p\in\Cell:\Psi(p)>\epsilon\}$. With $n$ pointing out of this set, the level
@@ -420,7 +420,7 @@ separatrix arc and obtain the zero normal trace.
 \begin{lemma}[Energy of the arc traces]
 \label{lem:ee-arc-energy}
 \uses{def:sectors, def:stream-lifts, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ee_arc_energy, NoEmbeddedEigenvalues.lintegral_arcTrace_lt_top}
+\lean{EulerDipoleEigenvalues.ee_arc_energy, EulerDipoleEigenvalues.lintegral_arcTrace_lt_top}
 \leanok
 Let $\psi=\Delta^{-1}\omega$, $\omega\in X$, be even under $S_1,S_2$, and let
 $g_k=\tilde\psi\circ\gamma_k$ be its traces on the four arcs. Then
@@ -448,9 +448,9 @@ twice the Gagliardo seminorm, and $\cos a=\sin(\pi/2-|a|)\ge\frac2\pi(\pi/2-|a|)
 \begin{lemma}[Level traces at the separatrix]
 \label{lem:ee-level-traces}
 \uses{def:sectors, def:normal-tangent, def:stream-lifts, def:level-integral, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ee_level_traces, NoEmbeddedEigenvalues.ee_quarter_traces,
-  NoEmbeddedEigenvalues.tendsto_quarter_integral,
-  NoEmbeddedEigenvalues.continuousAt_line_normalDeriv}
+\lean{EulerDipoleEigenvalues.ee_level_traces, EulerDipoleEigenvalues.ee_quarter_traces,
+  EulerDipoleEigenvalues.tendsto_quarter_integral,
+  EulerDipoleEigenvalues.continuousAt_line_normalDeriv}
 \leanok
 For $\psi$ as in Lemma~\ref{lem:ee-arc-energy}, as $h\to0$ outside a null set,
 \[
@@ -499,8 +499,8 @@ these quadratic trace limits need no coarea formula.
 \label{lem:arc-trace-identification}
 \uses{def:sectors, def:stream-lifts, def:normal-tangent, def:separatrix-arc,
   def:line-representative}
-\lean{NoEmbeddedEigenvalues.ee_arc_trace_identification,
-  NoEmbeddedEigenvalues.lintegral_arc_energy_eq}
+\lean{EulerDipoleEigenvalues.ee_arc_trace_identification,
+  EulerDipoleEigenvalues.lintegral_arc_energy_eq}
 \leanok
 Let $\psi$ be as in Lemma~\ref{lem:ee-arc-energy}, and let $G_x,G_y$ be line representatives
 (Definition~\ref{def:line-representative}) of $\psi_x,\psi_y$ on the diagonal rectangle
@@ -564,7 +564,7 @@ identifies the tangential trace with the derivative of the stream trace.
 \begin{lemma}[A dominating function on the quarter orbits]
 \label{lem:ee-quarter-bound}
 \uses{def:sectors, def:stream-lifts, def:normal-tangent, def:line-representative}
-\lean{NoEmbeddedEigenvalues.ee_quarter_bound}
+\lean{EulerDipoleEigenvalues.ee_quarter_bound}
 \leanok
 Let $\psi$ and $G_x,G_y$ be as in Lemma~\ref{lem:arc-trace-identification}. There is $\Phi\ge0$ with
 $\int_{-\pi/2}^{\pi/2}\Phi<\infty$ such that for $h\in(0,1)$ and almost every $|a|<a_h$ with
@@ -602,11 +602,11 @@ not be measurable in $a$.
 \begin{lemma}[The first-order trace term]
 \label{lem:ee-first-trace-limit}
 \uses{def:normal-tangent, def:stream-lifts, def:level-integral}
-\lean{NoEmbeddedEigenvalues.ee_first_trace_limit,
-  NoEmbeddedEigenvalues.abs_levelIntegral_first_le,
-  NoEmbeddedEigenvalues.abs_levelIntegral_first_le_of_bounded,
-  NoEmbeddedEigenvalues.levelIntegral_gradNorm_sq,
-  NoEmbeddedEigenvalues.levelIntegral_gradNorm_sq_le}
+\lean{EulerDipoleEigenvalues.ee_first_trace_limit,
+  EulerDipoleEigenvalues.abs_levelIntegral_first_le,
+  EulerDipoleEigenvalues.abs_levelIntegral_first_le_of_bounded,
+  EulerDipoleEigenvalues.levelIntegral_gradNorm_sq,
+  EulerDipoleEigenvalues.levelIntegral_gradNorm_sq_le}
 \leanok
 If $\oint|\psi_n|^2\,dt\to0$ as $h\to0$ outside a null set $N$, then
 $\oint\operatorname{Re}(\psi\overline{\psi_n})\,d\ell\to0$ outside a null set containing $N$
@@ -635,7 +635,7 @@ theorem.)
 \begin{lemma}[Weighted gradient traces]
 \label{lem:ee-gradient-traces}
 \uses{lem:ee-arc-energy, lem:ee-level-traces}
-\lean{NoEmbeddedEigenvalues.ee_gradient_traces}
+\lean{EulerDipoleEigenvalues.ee_gradient_traces}
 \leanok
 For $\psi$ as in Lemma~\ref{lem:ee-arc-energy}, $\int\cosh^2s\,|g_k'|^2\,ds<\infty$, and as
 $h\to0$ outside a null set,
@@ -675,10 +675,10 @@ Lemma~\ref{lem:arc-trace-ac}.
 \begin{definition}[Boundary form]
 \label{def:boundary-form}
 \uses{def:boundary-form-xi}
-\lean{NoEmbeddedEigenvalues.flowBoundaryForm,
-  NoEmbeddedEigenvalues.flowValue,
-  NoEmbeddedEigenvalues.flowFirst,
-  NoEmbeddedEigenvalues.flowSecond}
+\lean{EulerDipoleEigenvalues.flowBoundaryForm,
+  EulerDipoleEigenvalues.flowValue,
+  EulerDipoleEigenvalues.flowFirst,
+  EulerDipoleEigenvalues.flowSecond}
 \leanok
 For a function $z$ on $\R$ with $P=-i\partial_s$, let
 (manuscript \texttt{(ee:trace-form)})
@@ -696,7 +696,7 @@ as explicit arguments, and integrates the real part in the second term.
 
 \begin{definition}[Finite-interval boundary form]
 \label{def:boundary-form-xi}
-\lean{NoEmbeddedEigenvalues.boundaryWeight, NoEmbeddedEigenvalues.boundaryForm}
+\lean{EulerDipoleEigenvalues.boundaryWeight, EulerDipoleEigenvalues.boundaryForm}
 \leanok
 For $\lambda\in\R$ and $F,D,E:\R\to\C$, put $w(\xi)=1-\xi^2$ and
 \[
@@ -712,7 +712,7 @@ applications below ensure that the integrands are integrable.
 
 \begin{definition}[Classical boundary jet]
 \label{def:boundary-jet}
-\lean{NoEmbeddedEigenvalues.BoundaryJet}
+\lean{EulerDipoleEigenvalues.BoundaryJet}
 \leanok
 A classical boundary jet is a triple $(F,D,E)$ of functions $\R\to\C$,
 continuous on $[-1,1]$, with $F'(\xi)=D(\xi)$ and $D'(\xi)=E(\xi)$ at every
@@ -723,8 +723,8 @@ derivatives of the functions on $\R$.
 \begin{definition}[Weighted second-order boundary domain]
 \label{def:weighted-boundary-domain}
 \uses{def:h1-interval, def:boundary-form-xi}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2,
-  NoEmbeddedEigenvalues.MemWeightedBoundaryH2}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2,
+  EulerDipoleEigenvalues.MemWeightedBoundaryH2}
 \leanok
 Write $I=(-1,1)$ and $w(\xi)=1-\xi^2$. A weighted boundary triple $(F,D,E)$
 consists of $H^1(I)$ data $(F,D)$, with $D$ absolutely continuous on every
@@ -737,8 +737,8 @@ $D$, and no restriction on raw endpoint or outside values.
 \begin{lemma}[Classical inclusion and traces]
 \label{lem:boundary-jet-weighted}
 \uses{def:boundary-jet, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.BoundaryJet.hasWeightedBoundaryH2,
-  NoEmbeddedEigenvalues.BoundaryJet.weighted_extension_eq}
+\lean{EulerDipoleEigenvalues.BoundaryJet.hasWeightedBoundaryH2,
+  EulerDipoleEigenvalues.BoundaryJet.weighted_extension_eq}
 \leanok
 Every classical boundary jet $(F,D,E)$ is a weighted boundary triple, and
 its canonical $H^1$ extension agrees with $F$ on $[-1,1]$. In particular
@@ -758,12 +758,12 @@ continuous extension identifies the traces.
 \begin{lemma}[Linear and affine stability]
 \label{lem:weighted-boundary-linear}
 \uses{def:h1-interval, def:weighted-boundary-domain}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memH1,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.add,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.smul,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.sub,
-  NoEmbeddedEigenvalues.hasWeightedBoundaryH2_affine,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.subAffine}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.memH1,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.add,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.smul,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.sub,
+  EulerDipoleEigenvalues.hasWeightedBoundaryH2_affine,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.subAffine}
 \leanok
 Weighted boundary triples are closed under addition, subtraction and complex
 scalar multiplication, with the corresponding operations on all three
@@ -782,8 +782,8 @@ Affine functions are classical boundary jets.
 \begin{lemma}[Interior regularity of the first derivative]
 \label{lem:weighted-boundary-local}
 \uses{def:h1-interval, def:weighted-boundary-domain}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memLp_second_local,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.first_hasIntervalH1}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.memLp_second_local,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.first_hasIntervalH1}
 \leanok
 For every weighted boundary triple $(F,D,E)$ and $-1<c<d<1$, one has
 $E\in L^2(c,d)$ and $D\in H^1(c,d)$ with a.e.\ derivative $E$.
@@ -808,11 +808,11 @@ $\int|E|^2$ diverges logarithmically: the domain is larger than $H^2$.
 \begin{lemma}[Boundary form in the $\xi$ variable]
 \label{lem:boundary-form-xi}
 \uses{def:boundary-form, def:boundary-form-xi, def:weighted-boundary-domain}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.flowBoundaryForm_eq,
-  NoEmbeddedEigenvalues.hasDerivAt_flowValue,
-  NoEmbeddedEigenvalues.hasDerivAt_flowFirst,
-  NoEmbeddedEigenvalues.integral_tanh_subst,
-  NoEmbeddedEigenvalues.boundaryWeight_tanh}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.flowBoundaryForm_eq,
+  EulerDipoleEigenvalues.hasDerivAt_flowValue,
+  EulerDipoleEigenvalues.hasDerivAt_flowFirst,
+  EulerDipoleEigenvalues.integral_tanh_subst,
+  EulerDipoleEigenvalues.boundaryWeight_tanh}
 \leanok
 Let $(F,D,E)$ be a weighted boundary triple. Then
 \[
@@ -842,10 +842,10 @@ second integral.
 \begin{lemma}[Almost-everywhere flow derivatives]
 \label{lem:weighted-flow-derivatives}
 \uses{def:boundary-form, def:h1-interval, def:weighted-boundary-domain}
-\lean{NoEmbeddedEigenvalues.ae_comp_tanh,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.ae_hasDerivAt_flowValue,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.ae_hasDerivAt_flowFirst,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.continuous_flowFirst}
+\lean{EulerDipoleEigenvalues.ae_comp_tanh,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.ae_hasDerivAt_flowValue,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.ae_hasDerivAt_flowFirst,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.continuous_flowFirst}
 \leanok
 Composition with $\tanh$ preserves almost-everywhere statements on $\R$.
 For a weighted boundary triple $(F,D,E)$, put
@@ -867,8 +867,8 @@ Local absolute continuity makes $D$ continuous in the interior, hence $z_1$ cont
 \begin{lemma}[Classical completion of squares]
 \label{lem:trace-completion-classical}
 \uses{def:boundary-form-xi, def:boundary-jet}
-\lean{NoEmbeddedEigenvalues.BoundaryJet.completion,
-  NoEmbeddedEigenvalues.BoundaryJet.sum_of_squares}
+\lean{EulerDipoleEigenvalues.BoundaryJet.completion,
+  EulerDipoleEigenvalues.BoundaryJet.sum_of_squares}
 \leanok
 For a classical boundary jet $(F,D,E)$ and real $\lambda$, put
 $A=wE-\xi D+F-i\lambda D$. Then
@@ -896,7 +896,7 @@ Since $w(\pm1)=0$, $K(1)-K(-1)$ is exactly the displayed endpoint correction.
 \begin{lemma}[Sum of squares, smooth case]
 \label{lem:trace-sos-smooth}
 \uses{lem:boundary-form-xi, def:boundary-jet}
-\lean{NoEmbeddedEigenvalues.BoundaryJet.sum_of_squares}
+\lean{EulerDipoleEigenvalues.BoundaryJet.sum_of_squares}
 \leanok
 For a classical boundary jet $(F,D,E)$ with $F(-1)=F(1)=0$ and real $\lambda$,
 \[
@@ -931,10 +931,10 @@ sequences, which follows from $D\in L^2$ alone.
 \begin{lemma}[Pointwise flux identity]
 \label{lem:boundary-flux}
 \uses{def:boundary-form-xi}
-\lean{NoEmbeddedEigenvalues.boundaryFlux,
-  NoEmbeddedEigenvalues.boundaryFluxDerivative,
-  NoEmbeddedEigenvalues.boundary_density_completion,
-  NoEmbeddedEigenvalues.hasDerivAt_boundaryFlux}
+\lean{EulerDipoleEigenvalues.boundaryFlux,
+  EulerDipoleEigenvalues.boundaryFluxDerivative,
+  EulerDipoleEigenvalues.boundary_density_completion,
+  EulerDipoleEigenvalues.hasDerivAt_boundaryFlux}
 \leanok
 Let $\lambda\in\R$, $\xi\in\R$, and let $F,D,E:\R\to\C$ with
 $F'(\xi)=D(\xi)$ and $D'(\xi)=E(\xi)$. Put
@@ -958,11 +958,11 @@ parts of $F(\xi),D(\xi),E(\xi)$.
 \begin{lemma}[Integrability on the weighted domain]
 \label{lem:weighted-boundary-integrable}
 \uses{def:h1-interval, def:weighted-boundary-domain, def:boundary-form-xi}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memLp_boundarySquare,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.memLp_formSquare,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.integrable_weight_normSq,
-  NoEmbeddedEigenvalues.integrable_normSq_of_memLp,
-  NoEmbeddedEigenvalues.integrable_im_mul_conj_of_memLp}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.memLp_boundarySquare,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.memLp_formSquare,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.integrable_weight_normSq,
+  EulerDipoleEigenvalues.integrable_normSq_of_memLp,
+  EulerDipoleEigenvalues.integrable_im_mul_conj_of_memLp}
 \leanok
 For a weighted boundary triple $(F,D,E)$ and $\lambda\in\R$, the functions
 $F$, $D$, $wE$, $A$ and $wE-2\xi D-i\lambda D$ are in $L^2(-1,1)$. Hence
@@ -981,8 +981,8 @@ integrable.
 \label{lem:weighted-completion}
 \uses{def:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain,
   lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.completion,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.sum_of_squares}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.completion,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.sum_of_squares}
 \leanok
 Let $(F,D,E)$ be a weighted boundary triple with traces $\widetilde F(\pm1)$
 (Lemma~\ref{lem:h1-interval-endpoints}), and $\lambda\in\R$. With
@@ -1031,11 +1031,11 @@ the cluster value.
 \label{lem:weighted-affine-splitting}
 \uses{def:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain,
   lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.affine_splitting,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.extension_subAffine,
-  NoEmbeddedEigenvalues.HasWeightedBoundaryH2.integral_boundarySquare_eq,
-  NoEmbeddedEigenvalues.boundaryPrimitive,
-  NoEmbeddedEigenvalues.hasDerivAt_boundaryPrimitive}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.affine_splitting,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.extension_subAffine,
+  EulerDipoleEigenvalues.HasWeightedBoundaryH2.integral_boundarySquare_eq,
+  EulerDipoleEigenvalues.boundaryPrimitive,
+  EulerDipoleEigenvalues.hasDerivAt_boundaryPrimitive}
 \leanok
 Let $(F,D,E)$ be a weighted boundary triple, $\lambda\in\R$, and $a,b\in\C$
 with $\widetilde F(-1)=a-b$ and $\widetilde F(1)=a+b$. Then
@@ -1074,7 +1074,7 @@ by Lemma~\ref{lem:weighted-completion} applied to both triples,
 \label{lem:weighted-boundary-positivity}
 \uses{def:boundary-form-xi, def:h1-interval, def:weighted-boundary-domain,
   lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.boundaryForm_nonneg}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.boundaryForm_nonneg}
 \leanok
 For a weighted boundary triple $(F,D,E)$, real $\lambda$, and
 $\widetilde F(1)=\pm\widetilde F(-1)$, one has
@@ -1107,7 +1107,7 @@ the endpoint correction for arbitrary value traces.
 \label{lem:trace-sos-extension}
 \uses{lem:trace-sos-smooth, def:h1-interval, def:h1-zero-interval,
  def:weighted-boundary-domain, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.sum_of_squares}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.sum_of_squares}
 \leanok
 The identity of Lemma~\ref{lem:trace-sos-smooth} holds for $F\in\mathcal D_w$
 with zero endpoint traces (equivalently, $F\in H^1_0(-1,1)$ with the
@@ -1128,9 +1128,9 @@ Lemma~\ref{lem:weighted-boundary-positivity}.
 \begin{lemma}[Absolute continuity of the arc traces]
 \label{lem:arc-trace-ac}
 \uses{def:separatrix-arc, def:stream-lifts}
-\lean{NoEmbeddedEigenvalues.absolutelyContinuous_contStream_separatrixArc,
-  NoEmbeddedEigenvalues.AbsolutelyContinuousOnInterval.comp_antitoneOn,
-  NoEmbeddedEigenvalues.AbsolutelyContinuousOnInterval.comp_monotoneOn}
+\lean{EulerDipoleEigenvalues.absolutelyContinuous_contStream_separatrixArc,
+  EulerDipoleEigenvalues.AbsolutelyContinuousOnInterval.comp_antitoneOn,
+  EulerDipoleEigenvalues.AbsolutelyContinuousOnInterval.comp_monotoneOn}
 \leanok
 For every $\omega\in L^2$, the trace $\tilde\psi\circ\gamma$ of the continuous stream function
 on the separatrix arc is absolutely continuous on every compact interval and differentiable
@@ -1155,7 +1155,7 @@ bounded variation and are therefore differentiable almost everywhere.
 \label{lem:even-h2-arc-regularity}
 \uses{def:sobolev-torus, def:sectors, def:continuous-representative,
  def:cell-arcs, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.even_sobolev_arc_regularity}
+\lean{EulerDipoleEigenvalues.even_sobolev_arc_regularity}
 \leanok
 Let $\phi\in H^2(\T^2)$ be even under both reflections. On each cell arc,
 $g_k(t)=\widetilde\phi(\pi(\gamma_k(t)))$ is absolutely continuous on
@@ -1178,7 +1178,7 @@ absolute continuity and does not change the arc derivative.
 \label{lem:canonical-boundary-regularity}
 \uses{def:canonical-profile, def:h1-interval, def:weighted-boundary-domain,
  lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.canonical_boundary_regularity}
+\lean{EulerDipoleEigenvalues.canonical_boundary_regularity}
 \leanok
 Let $\lambda\in\R\setminus\{0\}$ and let $g:\R\to\C$ be bounded,
 locally absolutely continuous and differentiable almost everywhere.
@@ -1219,7 +1219,7 @@ identifies its endpoint traces.
 \begin{lemma}[Regularity of the boundary unknown]
 \label{lem:ee-boundary-regularity}
 \uses{def:boundary-form, def:canonical-profile, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints, def:cell-arcs, def:stream-lifts, def:sectors, def:rotation-characters, def:eigen-problem}
-\lean{NoEmbeddedEigenvalues.ee_boundary_regularity}
+\lean{EulerDipoleEigenvalues.ee_boundary_regularity}
 \leanok
 Let $\omega$ be an even--even eigenfunction with $\lambda\ne0$ and $R^*\omega=\kappa\omega$. On each
 arc $\gamma_k$ let $g=\tilde\psi\circ\gamma_k$, $z=-(\Omega+g)/\lambda$ its canonical transport
@@ -1268,7 +1268,7 @@ distinct inputs; integrability of $g'$ alone does not replace them.
 \begin{lemma}[Positivity of the boundary form]
 \label{lem:ee-trace-positivity}
 \uses{def:boundary-form, def:h1-interval, def:weighted-boundary-domain, lem:h1-interval-endpoints}
-\lean{NoEmbeddedEigenvalues.HasWeightedBoundaryH2.flowBoundaryForm_nonneg}
+\lean{EulerDipoleEigenvalues.HasWeightedBoundaryH2.flowBoundaryForm_nonneg}
 \leanok
 If $F\in\mathcal D_w$ and $F(1)=\pm F(-1)$, then
 $\mathcal F_\lambda(F)\ge0$ (manuscript \texttt{(ee:trace-positivity)}).
@@ -1294,7 +1294,7 @@ steps combine the virial, trace and positivity results.
 \begin{definition}[Canonical arc form]
 \label{def:canonical-arc-form}
 \uses{def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.canonicalArcForm}
+\lean{EulerDipoleEigenvalues.canonicalArcForm}
 \leanok
 For $\lambda\in\R$ and $g:\R\to\C$, define
 \[
@@ -1309,7 +1309,7 @@ total integrals; the following lemma supplies the analytic hypotheses.
 \begin{lemma}[Canonical arc form and the explicit boundary form]
 \label{lem:canonical-arc-form}
 \uses{def:canonical-arc-form, def:boundary-form, def:h1-interval, def:weighted-boundary-domain}
-\lean{NoEmbeddedEigenvalues.canonicalArcForm_eq_flowBoundaryForm}
+\lean{EulerDipoleEigenvalues.canonicalArcForm_eq_flowBoundaryForm}
 \leanok
 Let $\lambda\ne0$, $g'\in L^1(\R)$ and
 $\cosh^2s\,|g'(s)|^2\in L^1(\R)$. Set $z=-(\Omega+g)/\lambda$ and
@@ -1344,11 +1344,11 @@ in the second term because $Pz=-\Omega$.
 \begin{lemma}[An invariant neighbourhood of the cell]
 \label{lem:cell-neighbourhood}
 \uses{def:cells, def:transport-pair}
-\lean{NoEmbeddedEigenvalues.cellNeighbourhood,
-  NoEmbeddedEigenvalues.isOrbitUnion_cellNeighbourhood,
-  NoEmbeddedEigenvalues.isBounded_cellNeighbourhood,
-  NoEmbeddedEigenvalues.closure_cellSquare_subset_cellNeighbourhood,
-  NoEmbeddedEigenvalues.rotLift_mem_cellNeighbourhood}
+\lean{EulerDipoleEigenvalues.cellNeighbourhood,
+  EulerDipoleEigenvalues.isOrbitUnion_cellNeighbourhood,
+  EulerDipoleEigenvalues.isBounded_cellNeighbourhood,
+  EulerDipoleEigenvalues.closure_cellSquare_subset_cellNeighbourhood,
+  EulerDipoleEigenvalues.rotLift_mem_cellNeighbourhood}
 \leanok
 The square $U=\{|a|<3\pi/2,\ |b|<3\pi/2\}$ in diagonal coordinates is a bounded open
 union of orbits. It contains the closed cell and is invariant under the rotation
@@ -1368,13 +1368,13 @@ continuity, an orbit starting in $U$ stays in $U$. The rotation swaps $a$ and $-
 \begin{lemma}[Representatives of the eigenfunction lifts]
 \label{lem:lift-representatives}
 \uses{def:stream-lifts, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.measurePreserving_torusProj_square,
-  NoEmbeddedEigenvalues.integrableOn_norm_liftL2_sq,
-  NoEmbeddedEigenvalues.ae_torusProj,
-  NoEmbeddedEigenvalues.streamLift_ae_eq_contStream,
-  NoEmbeddedEigenvalues.continuous_contStream,
-  NoEmbeddedEigenvalues.contStream_rotLift,
-  NoEmbeddedEigenvalues.liftL2_rotLift_ae}
+\lean{EulerDipoleEigenvalues.measurePreserving_torusProj_square,
+  EulerDipoleEigenvalues.integrableOn_norm_liftL2_sq,
+  EulerDipoleEigenvalues.ae_torusProj,
+  EulerDipoleEigenvalues.streamLift_ae_eq_contStream,
+  EulerDipoleEigenvalues.continuous_contStream,
+  EulerDipoleEigenvalues.contStream_rotLift,
+  EulerDipoleEigenvalues.liftL2_rotLift_ae}
 \leanok
 The covering map is measure preserving from each translate of $(0,2\pi]^2$ onto $\T^2$, so
 $|g|^2$ is integrable on $(-2\pi,2\pi]^2\supset\overline\Cell$ for $g\in L^2(\T^2)$, and
@@ -1396,10 +1396,10 @@ almost everywhere on $\T^2$ agree everywhere, since Haar measure charges open se
 \begin{lemma}[Symmetries of the continuous stream function]
 \label{lem:continuous-stream-symmetries}
 \uses{def:stream-lifts, def:sectors}
-\lean{NoEmbeddedEigenvalues.continuousRep_invLap_comp,
-  NoEmbeddedEigenvalues.contStream_rotate, NoEmbeddedEigenvalues.contStream_iterate_rotate,
-  NoEmbeddedEigenvalues.contStream_reflect₁, NoEmbeddedEigenvalues.contStream_add_two_pi,
-  NoEmbeddedEigenvalues.inSector_iterate_rotate}
+\lean{EulerDipoleEigenvalues.continuousRep_invLap_comp,
+  EulerDipoleEigenvalues.contStream_rotate, EulerDipoleEigenvalues.contStream_iterate_rotate,
+  EulerDipoleEigenvalues.contStream_reflect₁, EulerDipoleEigenvalues.contStream_add_two_pi,
+  EulerDipoleEigenvalues.inSector_iterate_rotate}
 \leanok
 For every $\omega\in L^2$ and every $(x,y)$, the continuous stream function of the rotated
 vorticity $\omega\circ R$ is $\tilde\psi\circ R$, and $\tilde\psi$ is $2\pi$-periodic in each
@@ -1418,9 +1418,9 @@ everywhere. $R$ and $S_1$ commute with $\Delta^{-1}$; $R$ exchanges the two refl
 \begin{lemma}[Rotation of the normal and tangential derivatives]
 \label{lem:normal-tangent-rotation}
 \uses{def:normal-tangent, def:stream-derivatives}
-\lean{NoEmbeddedEigenvalues.measurePreserving_rotLift, NoEmbeddedEigenvalues.liftL2_rotate_ae,
-  NoEmbeddedEigenvalues.streamPartial_rotate, NoEmbeddedEigenvalues.streamNormal_rotate_ae,
-  NoEmbeddedEigenvalues.streamNormal_iterate_rotate_ae}
+\lean{EulerDipoleEigenvalues.measurePreserving_rotLift, EulerDipoleEigenvalues.liftL2_rotate_ae,
+  EulerDipoleEigenvalues.streamPartial_rotate, EulerDipoleEigenvalues.streamNormal_rotate_ae,
+  EulerDipoleEigenvalues.streamNormal_iterate_rotate_ae}
 \leanok
 For every $\omega\in L^2$ and $k\ge0$, the normal and tangential derivatives of the stream
 function of $\omega\circ R^k$ are those of $\psi$ composed with $R^k$, almost everywhere.
@@ -1438,10 +1438,10 @@ $Rp$. Induct on $k$; $R$ is measure preserving on $\R^2$.
 \begin{lemma}[Transport pairs with the continuous stream function]
 \label{lem:transport-pair-continuous}
 \uses{def:transport-pair, def:stream-lifts, def:weak-derivative-local, def:sobolev-local}
-\lean{NoEmbeddedEigenvalues.HasWeakPartialOn.congr_value,
-  NoEmbeddedEigenvalues.MemSobolevOn.congr_value,
-  NoEmbeddedEigenvalues.HasWeakL0On.congr_value,
-  NoEmbeddedEigenvalues.isTransportPair_contStream}
+\lean{EulerDipoleEigenvalues.HasWeakPartialOn.congr_value,
+  EulerDipoleEigenvalues.MemSobolevOn.congr_value,
+  EulerDipoleEigenvalues.HasWeakL0On.congr_value,
+  EulerDipoleEigenvalues.isTransportPair_contStream}
 \leanok
 Weak derivatives, local Sobolev membership and weak transport are unchanged by an
 almost-everywhere change of representative. Hence for an eigenfunction with $\lambda\ne0$
@@ -1460,8 +1460,8 @@ everywhere.
 \label{lem:ee-transport-traces}
 \uses{def:eigen-problem, def:sectors, def:rotation-characters, def:stream-lifts,
   def:cell-arcs, def:level-integral, def:canonical-profile}
-\lean{NoEmbeddedEigenvalues.ee_transport_traces, NoEmbeddedEigenvalues.ee_melnikov,
-  NoEmbeddedEigenvalues.contStream_iterate_rotLift}
+\lean{EulerDipoleEigenvalues.ee_transport_traces, EulerDipoleEigenvalues.ee_melnikov,
+  EulerDipoleEigenvalues.contStream_iterate_rotLift}
 \leanok
 Let $\omega$ be an even--even eigenfunction with $\lambda\ne0$ and rotation character
 $\kappa$. Put $g_k=\tilde\psi\circ\gamma_k$. Then $g_k'\in L^1(\R)$ and
@@ -1507,7 +1507,7 @@ from the identification of the canonical and explicit boundary forms.
 \label{lem:ee-canonical-arc-nonneg}
 \uses{def:canonical-arc-form, def:eigen-problem, def:sectors, def:rotation-characters,
   def:stream-lifts, def:cell-arcs}
-\lean{NoEmbeddedEigenvalues.ee_canonicalArcForm_nonneg}
+\lean{EulerDipoleEigenvalues.ee_canonicalArcForm_nonneg}
 \leanok
 Under the eigenfunction and character hypotheses above, if $g_k'\in L^1$ and
 $\cosh^2s\,|g_k'|^2\in L^1$, then $\mathcal A_\lambda(g_k)\ge0$.
@@ -1523,7 +1523,7 @@ $\mathcal A_\lambda(g_k)$ by Lemma~\ref{lem:canonical-arc-form}.
 
 \begin{lemma}[Null cosine diagonal]
 \label{lem:cos-diagonal-null}
-\lean{NoEmbeddedEigenvalues.ae_cos_fst_ne_cos_snd}
+\lean{EulerDipoleEigenvalues.ae_cos_fst_ne_cos_snd}
 \leanok
 The set $\{(x,y)\in\R^2:\cos x=\cos y\}$ is null.
 \end{lemma}
@@ -1537,7 +1537,7 @@ $\{2m\pi+x,2m\pi-x:m\in\Z\}$. Apply Fubini to the measurable set.
 \begin{lemma}[Nonnegativity of the evaluated bulk]
 \label{lem:ee-bulk-density-nonneg}
 \uses{def:ee-bulk-density, def:cells}
-\lean{NoEmbeddedEigenvalues.eeBulkDensity_nonneg}
+\lean{EulerDipoleEigenvalues.eeBulkDensity_nonneg}
 \leanok
 For every $\omega\in L^2$, $\mathcal J_\omega\ge0$ on the entire lifted cell,
 including its center.
@@ -1553,8 +1553,8 @@ give $f=c=0$, and the remaining term is $2|\psi_n|^2\ge0$.
 \begin{lemma}[Vorticity from zero bulk density]
 \label{lem:ee-vorticity-from-density}
 \uses{def:ee-bulk-density, def:normal-field, def:cells, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.normalCoeff_pos_of_cos_ne,
-  NoEmbeddedEigenvalues.lift_ae_zero_of_eeBulkDensity_ae_zero}
+\lean{EulerDipoleEigenvalues.normalCoeff_pos_of_cos_ne,
+  EulerDipoleEigenvalues.lift_ae_zero_of_eeBulkDensity_ae_zero}
 \leanok
 Where $\Psi>0$ and $\cos x\ne\cos y$, the coefficient $f$ is strictly positive.
 Consequently, if $\mathcal J_\omega=0$ almost everywhere on the lifted cell, then
@@ -1573,7 +1573,7 @@ are nonnegative. Thus zero density forces $\omega=0$ off the null cosine diagona
 \begin{lemma}[Vanishing on the lifted positive cell]
 \label{lem:ee-cell-vanishing}
 \uses{def:sectors, def:cells, def:torus-of-lift}
-\lean{NoEmbeddedEigenvalues.InSector.eq_zero_of_lift_ae_zero_on_cellSquare}
+\lean{EulerDipoleEigenvalues.InSector.eq_zero_of_lift_ae_zero_on_cellSquare}
 \leanok
 If $\omega$ lies in any reflection sector and its lift vanishes almost
 everywhere on the lifted positive cell, then $\omega=0$ in $L^2(\T^2)$.
@@ -1593,7 +1593,7 @@ vanishing on the negative cell.
 
 \begin{lemma}[Nonnegative exhaustion without global integrability]
 \label{lem:nonnegative-exhaustion}
-\lean{NoEmbeddedEigenvalues.ae_zero_of_truncated_integral_tendsto}
+\lean{EulerDipoleEigenvalues.ae_zero_of_truncated_integral_tendsto}
 \leanok
 Let $(X,\mu)$ be a measure space, $s$ measurable, $r:X\to\R$ measurable and positive on
 $s$, and $J:X\to\R$ nonnegative on $s$. Suppose $t_j>0$, $t_j\to0$, and $J$ is integrable
@@ -1612,7 +1612,7 @@ Neither monotonicity of the sequence nor integrability on all of $s$ is needed.
 \begin{lemma}[Even--even exclusion in one rotation character]
 \label{lem:ee-character-exclusion}
 \uses{def:eigen-problem, def:sectors, def:rotation-characters}
-\lean{NoEmbeddedEigenvalues.even_even_character_exclusion}
+\lean{EulerDipoleEigenvalues.even_even_character_exclusion}
 \leanok
 An even--even eigenfunction with $\lambda\ne0$ and rotation character $\kappa=\pm1$
 vanishes.
@@ -1638,7 +1638,7 @@ lift, and Lemma~\ref{lem:ee-cell-vanishing} gives $\omega=0$.
 \begin{theorem}[Even--even exclusion]
 \label{thm:ee-exclusion}
 \uses{def:eigen-problem, def:sectors}
-\lean{NoEmbeddedEigenvalues.even_even_exclusion}
+\lean{EulerDipoleEigenvalues.even_even_exclusion}
 \leanok
 If $\omega$ solves the eigenvalue problem with $\lambda\ne0$ and
 $S_1^*\omega=S_2^*\omega=\omega$, then $\omega=0$ (manuscript
