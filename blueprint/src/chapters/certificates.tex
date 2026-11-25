@@ -333,13 +333,18 @@ With $T$ its degree-fourteen Taylor bound, the polynomials
 are nonnegative on $(z,k)\in[0,1]^2$. Here both $A,B$ are evaluated at $(h,k)$.
 \end{lemma}
 \begin{proof}
-\uses{lem:bernstein-midpoint}
 \leanok
-Identify each endpoint with a positively scaled integer power table by
-polynomial normalization. Compute its Bernstein table once, one axis
-at a time, and verify each child table by the scaled integer midpoint
-rule. Inspect the leaf signs by kernel reduction. The two endpoints
-share a tree on each strip.
+Subdivide each strip in $(h,k)$ with a tree that covers the full rectangle.
+On each leaf, bound the Taylor endpoints by explicit dyadic constants.
+Group the coefficients of $A+B\ell$ by the power of $k$ and check
+explicit bounds for each Horner step.
+
+Where direct bounds are too wide, write $\ell=\log h+e$, with $|e|$
+bounded by the gap between the Taylor endpoints. Keep $e$ fixed and
+move from the center of the box first in $h$ and then in $k$. The
+derivative in $h$ includes the term $B/h$. Subtract the sum of the two
+derivative bounds times their respective distances from the center
+value bound. The same certificate applies to both endpoints.
 \end{proof}
 
 \begin{lemma}[Odd-in-$b$ residual sign]

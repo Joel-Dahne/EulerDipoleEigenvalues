@@ -95,8 +95,8 @@ admission-free. See [the module map](../architecture.md).
   The parity splitting of the form and mass, the Cartesian mass conversion,
   and the matrix positivity and coefficient bounds are admission-free.
   The signs `cert:odd-a`, `cert:robin`, and `cert:odd-b` are admission-free.
-  For `cert:odd-b-strips`, Lean checks each root conversion and then verifies
-  scaled integer midpoint restrictions on a shared tree for each strip.
+  For `cert:odd-b-strips`, Lean verifies a covering tree and explicit
+  Horner bounds, with centered derivative bounds on the harder boxes.
   Both interior differential identities and the Robin polynomial identity
   are admission-free. In `lem:mixed-robin-multipliers`, homogeneity controls
   the rational exponent and its first derivatives up to the regular Robin

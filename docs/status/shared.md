@@ -34,8 +34,9 @@ center value, logarithm reduction, and `cert:odd-b-small` are checked.
 The proof of `cert:odd-b` uses `cert:odd-b-first-strip` for `h ≥ 1/2`:
 `cert:odd-b-corner` and two short-log rectangles replace the original
 strip-zero replay. For the remaining strips in `cert:odd-b-strips`, the
-two endpoints on each strip share a dyadic tree.
-Lean checks the root power conversion once and verifies each scaled integer
-midpoint split against its parent. The independent
-[search script](../../scripts/verify_mixed_odd_b.py) produces the certificate
-data; the Lean proof does not trust the script.
+two endpoints on each strip share a subdivision tree. Lean checks
+explicit bounds for grouped Horner steps, using a centered derivative
+bound where direct bounds are too wide. The generated traces in
+[`MixedOddBTrace/`](../../NoEmbeddedEigenvalues/Certificates/Inequalities/MixedOddBTrace/)
+share horizontal bounds between boxes. The Python search is not part of
+the proof.
