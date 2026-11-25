@@ -1,4 +1,5 @@
 /.lake
+/scratch/
 /blueprint/web/
 /blueprint/print/
 /blueprint/src/web.paux

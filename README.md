@@ -41,12 +41,19 @@ lake build
 lake comparator --config comparator.json
 ```
 
-Comparator needs a supported sandbox. See [STATUS.md](STATUS.md) for the
-local admissions audit and [docs/architecture.md](docs/architecture.md) for
-the module map and [certificate generators](docs/architecture.md#source-checks-and-verification-tools).
+A clean build can take a while. On a memory-constrained machine, start with
+`LEAN_NUM_THREADS=2 lake build`. Comparator needs a supported sandbox and
+more resources than a routine Lean check; use a larger machine for the full
+run. The [local checks](STATUS.md#review-and-verification) are useful for
+quicker feedback but do not replace Comparator.
+
+To read the blueprint, follow the [local build guide](blueprint/README.md#building)
+for HTML and PDF. See [docs/architecture.md](docs/architecture.md) for the
+module map and [certificate generators](docs/architecture.md#source-checks-and-verification-tools).
 
 ## License
 
-The Lean source code is licensed under the [MIT License](LICENSE). This
-grant covers only the Lean source files, not the manuscript, blueprint, or
-other material.
+The original material in this repository, including the Lean code, scripts,
+blueprint, and manuscript, is licensed under the [MIT License](LICENSE).
+The [adapted agent skills](.agents/skills/ATTRIBUTION.md) retain their upstream
+CC BY 4.0 terms.
