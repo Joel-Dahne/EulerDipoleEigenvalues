@@ -43,7 +43,7 @@ lake comparator --config comparator.json
 
 Comparator needs a supported sandbox. See [STATUS.md](STATUS.md) for the
 local admissions audit and [docs/architecture.md](docs/architecture.md) for
-the module map.
+the module map and [certificate generators](docs/architecture.md#source-checks-and-verification-tools).
 
 ## License
 

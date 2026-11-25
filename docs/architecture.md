@@ -826,8 +826,12 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   and trees. `Certificates/Inequalities/MixedOddBStripPower.lean` verifies the evaluation
   identities. `Certificates/Inequalities/MixedOddBReplay/Strip*.lean` checks each root by
   two axis transforms and each child by a midpoint restriction; the leaves
-  are checked by exact integer signs. `Certificates/Inequalities/MixedOddBStrips.lean`
-  combines the identities, signs, and strip coverage.
+  are checked by exact integer signs. The standalone endpoint certificate uses
+  this replay on strip 0. `MixedOddBFirstStrip.lean` instead checks the residual
+  there using a short-log estimate and a separate corner bound. For strips 1–9,
+  `MixedOddBTrace/` supplies explicit Horner bounds, with centered derivative
+  bounds where direct bounds are too wide. `MixedOddBStrips.lean` combines the
+  endpoint signs and checks strip coverage.
 
 ## Source checks and verification tools
 
@@ -841,7 +845,24 @@ The certificate code is in [`Certificates/`](../NoEmbeddedEigenvalues/Certificat
   mixed odd-in-b power tables and searches for common dyadic trees for the
   two endpoints in each strip, replaying the signs using exact integers.
   `--lean-strips` emits power tables and schedules; `--lean-replay J`
-  emits locally checked intermediate tables and proofs for strip `J`.
+  emits locally checked intermediate tables and proofs for strip `J` using the
+  earlier Bernstein replay.
+- [`scripts/generate_mixed_odd_b_traces.py`](../scripts/generate_mixed_odd_b_traces.py)
+  (Python 3.9+, standard library only): regenerates the committed Horner traces
+  for strips 1–9 of `cert:odd-b-strips`. Run from the repository root:
+
+  ```sh
+  python3 scripts/generate_mixed_odd_b_traces.py --check
+  ```
+
+  This compares the generated Lean files byte for byte and reports missing,
+  changed, or stale generated files. Omit `--check` to write into `MixedOddBTrace/`,
+  or add `--output-dir DIR` to write or check a separate directory. Optional
+  positional strip numbers select a subset. The committed headers still name the
+  original scratch scripts to preserve byte-for-byte output; no `scratch/`
+  files are needed. The generator reads the Lean power tables and uses exact
+  dyadic interval search on strips 1–8 and the fixed partition on strip 9. Lean
+  checks the bounds and coverage independently of Python.
 - `scripts/check_blueprint.py` (`just check-blueprint`): source labels,
   references, metadata and dependency cycles, without Lean or plasTeX.
 - `scripts/blueprint_status.py` (`just status-blueprint`, also `just web`):
