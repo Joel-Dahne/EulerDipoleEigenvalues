@@ -37,9 +37,17 @@ sources:
 automation:
   methods:
     - method: agent
+      framework: Pi
+      cost:
+        spend_usd: "$20/month subscription for roughly two months"
   notes: >-
-    AI agents were used in the formalization. The roles and extent of
-    automation will be documented before submission.
+    Pi agents helped break the argument into blueprint lemmas and develop
+    Lean proofs. The saved Pi sessions for the main development machine
+    record about 2.07 billion tokens through 2026-11-25: 66.3 million uncached
+    input tokens, 10.2 million output tokens, and 1.99 billion cached input
+    tokens. Cached input counts each reuse, not unique text. This estimate
+    includes session data from before the project usage log was added but
+    excludes the early Claude work and Pi sessions on another machine.
 
 review:
   status: unchecked
