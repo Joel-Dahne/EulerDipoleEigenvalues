@@ -1,13 +1,12 @@
 # Absence of nonzero embedded eigenvalues for the linearized two-dimensional Euler equation around the symmetric dipole
 
-In [*Dynamics of the linearized two-dimensional Euler equation around the
-symmetric dipole*][companion-paper], Theorem 1.2 proves inviscid damping and vorticity depletion
+In *Dynamics of the linearized two-dimensional Euler equation around the
+symmetric dipole*, Theorem 1.2 proves inviscid damping and vorticity depletion
 under the assumption that the linearized operator has no nonzero embedded
 eigenvalues. This repository proves that spectral assumption in Lean. It does
 not formalize the damping or depletion estimates.
 
-<!-- TODO: Replace ARXIV_ID with the companion paper's arXiv ID. -->
-[companion-paper]: https://arxiv.org/abs/ARXIV_ID
+<!-- Link the companion paper to https://arxiv.org/abs/ARXIV_ID once it is live. -->
 
 ## Background
 
