@@ -199,7 +199,7 @@ theorem norm_exp_sub_ge_of_goodWindow_fourthRoot {lam h : ℝ} {j : ℤ}
     rw [show q = exp ((lam * orbitPeriod h / 4 : ℝ) * I) by
       unfold q
       push_cast
-      ring, ← exp_nat_mul]
+      exact congrArg exp (mul_comm _ _), ← exp_nat_mul]
     have hangle : (4 : ℂ) * ((lam * orbitPeriod h / 4 : ℝ) * I) =
         (j : ℂ) * (2 * Real.pi * I) + Real.pi * I + (err : ℂ) * I := by
       dsimp [err]

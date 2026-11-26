@@ -133,6 +133,7 @@ theorem dd_character_virial_limit {lam : ℝ} (hlam : lam ≠ 0) {ω : L2}
       ring
     · simp only [canonicalArcForm, Finset.sum_add_distrib, zero_sub,
         mul_zero, sub_zero, zero_div, add_zero]
+      apply congrArg nhds
       ring
   have hident := tendsto_nhds_unique (hbulk.comp hpos) htarget
   exact hident ▸ hbulk

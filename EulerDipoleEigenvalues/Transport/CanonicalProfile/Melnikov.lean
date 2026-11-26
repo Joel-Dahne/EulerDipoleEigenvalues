@@ -686,6 +686,7 @@ theorem melnikov_character {lam : ℝ} {κ : ℂ} {U : Set (ℝ × ℝ)} {v f : 
       rw [he_def, ← hphase, ← Complex.exp_add]
       simp only [Ls]
       push_cast
+      apply congrArg Complex.exp
       ring
     rw [heL, show g (Ls n) * (e (-Ls n) * κ⁻¹) - g (-Ls n) * e (-Ls n) =
       e (-Ls n) * (κ⁻¹ * g (Ls n) - g (-Ls n)) by ring, norm_mul, hen, one_mul]
