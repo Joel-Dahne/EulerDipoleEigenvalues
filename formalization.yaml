@@ -3,12 +3,13 @@ version: "v0.4"
 project:
   name: "Absence of nonzero embedded eigenvalues for the linearized Euler dipole"
   description: >-
-    Lean formalization of the absence of nonzero purely imaginary eigenvalues
-    for the two-dimensional Euler equation linearized around the dipole on
-    the flat torus. The compared results include the Fourier-character
-    formulas, the existence and uniqueness of the mean-zero inverse Laplacian,
-    agreement of the weak transport operator with classical transport on
-    Fourier characters, and an example showing that zero is an eigenvalue.
+    This Lean formalization proves that the two-dimensional Euler equation
+    linearized around the symmetric dipole on the square torus has no nonzero
+    purely imaginary eigenvalues on mean-zero complex L². Zero is an
+    eigenvalue. This result establishes the spectral hypothesis used to
+    prove inviscid damping and vorticity depletion in Theorem 1.2 of the
+    companion paper, Dynamics of the linearized two-dimensional Euler
+    equation around the symmetric dipole.
   authors:
     - Joel Dahne
     - Hao Jia
@@ -18,7 +19,7 @@ project:
 
 classification:
   arxiv: [math.AP]
-  msc2020: [35Q31, 76E09]
+  msc2020: ["35Q31", "76E09"]
 
 sources:
   - title: "Absence of nonzero embedded eigenvalues for the two-dimensional Euler equation linearized around the dipole"
